@@ -7,7 +7,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
-from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
