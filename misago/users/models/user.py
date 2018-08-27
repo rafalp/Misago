@@ -130,22 +130,10 @@ class UserManager(BaseUserManager):
         return self.get(email_hash=hash_email(email))
 
     def get_by_username_or_email(self, login):
-        email_hash = hash_email(login)
-        slug = slugify(login)
-        
-        queryset = self.filter(Q(slug=slug) | Q(email_hash=email_hash))
+        if '@' in login:
+            return self.get(email_hash=hash_email(login))
 
-        # find user by email hash (more accurate)
-        for user in queryset:
-            if user.email_hash == email_hash:
-                return user
-
-        # fallback to find user by slug (safe if email hash failed)
-        for user in queryset:
-            if user.slug == slug:
-                return user
-
-        raise User.DoesNotExist()
+        return self.get(slug=slugify(login))
 
 
 class User(AbstractBaseUser, PermissionsMixin):
