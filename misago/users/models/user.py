@@ -7,7 +7,6 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
-from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -130,17 +129,9 @@ class UserManager(BaseUserManager):
         return self.get(email_hash=hash_email(email))
 
     def get_by_username_or_email(self, login):
-        email_hash = hash_email(login)
-        slug = slugify(login)
-        
-        users = list(self.filter(Q(slug=slug) | Q(email_hash=email_hash)))
-        for user in users:
-            if user.email_hash == email_hash:
-                return user
-        for user in users:
-            if user.slug == slug:
-                return user
-        raise User.DoesNotExist()
+        if '@' in login:
+            return self.get(email_hash=hash_email(login))
+        return self.get(slug=slugify(login))
 
 
 class User(AbstractBaseUser, PermissionsMixin):

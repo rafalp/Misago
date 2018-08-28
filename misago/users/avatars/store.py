@@ -16,15 +16,15 @@ def normalize_image(image):
     return image.copy().convert('RGBA')
 
 
-def delete_avatar(user):
-    if user.avatar_tmp:
-        user.avatar_tmp.delete(False)
+def delete_avatar(user, delete_tmp=True, delete_src=True):
+    if delete_tmp and user.avatar_tmp:
+        user.avatar_tmp.delete(save=False)
 
-    if user.avatar_src:
-        user.avatar_src.delete(False)
+    if delete_src and user.avatar_src:
+        user.avatar_src.delete(save=False)
 
     for avatar in user.avatar_set.all():
-        avatar.image.delete(False)
+        avatar.image.delete(save=False)
     user.avatar_set.all().delete()
 
 
@@ -51,8 +51,8 @@ def store_avatar(user, image):
     user.save(update_fields=['avatars'])
 
 
-def store_new_avatar(user, image):
-    delete_avatar(user)
+def store_new_avatar(user, image, delete_tmp=True, delete_src=True):
+    delete_avatar(user, delete_tmp=delete_tmp, delete_src=delete_src)
     store_avatar(user, image)
 
 
@@ -63,7 +63,7 @@ def store_temporary_avatar(user, image):
     image.save(image_stream, "PNG")
 
     if user.avatar_tmp:
-        user.avatar_tmp.delete(False)
+        user.avatar_tmp.delete(save=False)
 
     user.avatar_tmp = ContentFile(image_stream.getvalue(), 'avatar')
     user.save(update_fields=['avatar_tmp'])
@@ -71,7 +71,7 @@ def store_temporary_avatar(user, image):
 
 def store_original_avatar(user):
     if user.avatar_src:
-        user.avatar_src.delete(False)
+        user.avatar_src.delete(save=False)
     user.avatar_src = user.avatar_tmp
     user.avatar_tmp = None
     user.save(update_fields=['avatar_tmp', 'avatar_src'])

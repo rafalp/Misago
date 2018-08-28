@@ -6,6 +6,7 @@ from path import Path
 from django.contrib.auth import get_user_model
 
 from misago.acl.testutils import override_acl
+from misago.conf import settings
 from misago.users.avatars import gallery, store
 from misago.users.models import AvatarGallery
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -23,9 +24,15 @@ class UserAvatarTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserAvatarTests, self).setUp()
         self.link = '/api/users/%s/avatar/' % self.user.pk
+        self.client.post(self.link, data={'avatar': 'generated'})
 
     def get_current_user(self):
         return UserModel.objects.get(pk=self.user.pk)
+
+    def assertOldAvatarsAreDeleted(self, user):
+        self.assertEqual(
+            user.avatar_set.count(), len(settings.MISAGO_AVATARS_SIZES)
+        )
 
     def test_avatars_off(self):
         """custom avatars are not allowed"""
@@ -109,16 +116,17 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link, data={'avatar': 'gravatar'})
         self.assertContains(response, "Gravatar was downloaded and set")
 
+        self.assertOldAvatarsAreDeleted(self.user)
+
     def test_generation_request(self):
         """generated avatar is set"""
         response = self.client.post(self.link, data={'avatar': 'generated'})
         self.assertContains(response, "New avatar based on your account")
 
+        self.assertOldAvatarsAreDeleted(self.user)
+
     def test_avatar_upload_and_crop(self):
         """avatar can be uploaded and cropped"""
-        response = self.client.post(self.link, data={'avatar': 'generated'})
-        self.assertEqual(response.status_code, 200)
-
         response = self.client.post(self.link, data={'avatar': 'upload'})
         self.assertContains(response, "No file was sent.", status_code=400)
 
@@ -156,6 +164,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertContains(response, "Uploaded avatar was set.")
 
         self.assertFalse(self.get_current_user().avatar_tmp)
+        self.assertOldAvatarsAreDeleted(self.user)
 
         avatar = Path(self.get_current_user().avatar_src.path)
         self.assertTrue(avatar.exists())
@@ -192,6 +201,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             content_type="application/json",
         )
         self.assertContains(response, "Avatar was re-cropped.")
+        self.assertOldAvatarsAreDeleted(self.user)
 
         # delete user avatars, test if it deletes src and tmp
         store.delete_avatar(self.get_current_user())
@@ -280,6 +290,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         )
 
         self.assertContains(response, "Avatar from gallery was set.")
+        self.assertOldAvatarsAreDeleted(self.user)
 
 
 class UserAvatarModerationTests(AuthenticatedUserTestCase):
