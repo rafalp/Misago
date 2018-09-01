@@ -17,27 +17,47 @@ dev_paths=(
     "./devproject"
     "./media"
     "./static"
+    "./theme"
     "./userdata"
+    "./cron.txt"
     "./manage.py"
 )
 
-print_dev_paths() {
-    for x in "${dev_paths[@]}"; do
-        echo "next element is '$x'"
-    done
-}
+# Required ports
+# Some tasks test for those ports before continuing
+port_django=8000
+port_postgresql=5432
+
+required_ports=($port_postgresql)
 
 # Some commond shorthands
 docker_stop() {
     docker-compose stop
 }
 
-# Test required ports
-# We test if those ports are free before running docker
-port_django=8000
-port_postgresql=5432
+docker_rebuild() {
+    docker_stop
+    docker-compose build --no-cache
+}
 
-required_ports=($port_postgresql)
+docker_down() {
+    docker_stop
+    docker-compose down --remove-orphans
+}
+
+error() {
+    echo -e "${RED}Error:${NORMAL} $1"
+}
+
+wait_for_db() {
+    export PGPASSWORD=$POSTGRES_PASSWORD
+    RETRIES=10
+
+    until psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+        echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
+        sleep 5
+    done
+}
 
 # Commands
 intro() {
@@ -64,7 +84,7 @@ invalid_option() {
 init() {
     for dev_path in "${dev_paths[@]}"; do
         if [ -e $dev_path ]; then
-            echo -e "${RED}Error:${NORMAL} Dev project already exists, or was not deleted completely."
+            error "Dev project already exists, or was not deleted completely."
             echo
             echo "Please use \"clear\" option to clear any pissible remaining files and try again."
             exit 1
@@ -74,16 +94,33 @@ init() {
     for port in "${required_ports[@]}"; do
         nc "127.0.0.1" "$port" < /dev/null
         if [[ $? = "0" ]]; then
-            echo -e "${RED}Error:${NORMAL} Port ${BOLD}$port${NORMAL} is not available."
-            echo
             if [[ $port = $port_django ]]; then
-                echo "Django application appears to already be running on http://127.0.0.1:8000"
+                error "Django application appears to already be running on http://127.0.0.1:8000"
             elif [[ $port = $port_postgresql ]]; then
-                echo "PostgreSQL appears to already be running on port $port."
+                error "PostgreSQL appears to already be running on port $port."
             fi
             exit 1
         fi
     done
+    
+    docker_rebuild
+    docker-compose run --rm misago ./dev init_in_docker
+}
+
+init_in_docker() {
+    wait_for_db
+    # initialize django project
+    python misago/bin/misago-start-devproject.py
+    # move items of interest up one level
+    mv devproject/devproject devproject_tmp
+    mv devproject/avatargallery ./avatargallery
+    mv devproject/media ./media
+    mv devproject/userdata ./userdata
+    mv devproject/manage.py ./manage.py
+    rm -rf devproject
+    mv devproject_tmp devproject
+    # migrate the DB
+    python manage.py migrate
 }
 
 # Clear existing dev project
@@ -131,8 +168,7 @@ clear() {
 
 # Rebuild docker containers
 rebuild() {
-    docker_stop
-    docker-compose build --no-cache
+    docker_rebuild
     exit 0
 }
 
@@ -147,6 +183,8 @@ test() {
 if [[ $1 ]]; then
     if [[ $1 = "init" ]]; then
         init
+    elif [[ $1 = "init_in_docker" ]]; then
+        init_in_docker
     elif [[ $1 = "clear" ]]; then
         clear
     elif [[ $1 = "rebuild" ]]; then
