@@ -107,6 +107,7 @@ init() {
     docker-compose run --rm misago ./dev init_in_docker
 }
 
+# Initialization step that has to occur inside docker
 init_in_docker() {
     wait_for_db
     # initialize django project
