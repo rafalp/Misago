@@ -224,6 +224,19 @@ class UserCreateTests(UserTestCase):
             'email': ["You can't register account like this."],
         })
 
+    def test_registration_requires_password(self):
+        """api uses django's validate_password to validate registrations"""
+        response = self.client.post(
+            self.api_link,
+            data={
+                'username': 'Bob',
+                'email': 'loremipsum@dolor.met',
+                'password': '',
+            },
+        )
+        
+        self.assertContains(response, "This field is required", status_code=400)
+
     def test_registration_validates_password(self):
         """api uses django's validate_password to validate registrations"""
         response = self.client.post(

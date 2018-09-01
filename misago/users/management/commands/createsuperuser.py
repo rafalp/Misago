@@ -6,6 +6,7 @@ import sys
 from getpass import getpass
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
@@ -36,13 +37,13 @@ class Command(BaseCommand):
             '--email',
             dest='email',
             default=None,
-            help="Specifies the username for the superuser.",
+            help="Specifies the e-mail for the superuser.",
         )
         parser.add_argument(
             '--password',
             dest='password',
             default=None,
-            help="Specifies the username for the superuser.",
+            help="Specifies the password for the superuser.",
         )
         parser.add_argument(
             '--noinput',
@@ -130,12 +131,26 @@ class Command(BaseCommand):
                         self.stderr.write(u'\n'.join(e.messages))
 
                 while not password:
-                    password = getpass("Enter password: ")
-                    password2 = getpass("Repeat password")
-                    if password != password2:
+                    raw_value = getpass("Enter password: ")
+                    password_repeat = getpass("Repeat password:")
+                    if raw_value != password_repeat:
                         self.stderr.write("Error: Your passwords didn't match.")
-                    if password.strip() == '':
+                        # Don't validate passwords that don't match.
+                        continue
+                    if raw_value.strip() == '':
                         self.stderr.write("Error: Blank passwords aren't allowed.")
+                        # Don't validate blank passwords.
+                        continue
+                    try:
+                        validate_password(
+                            raw_value, user=UserModel(username=username, email=email)
+                        )
+                    except ValidationError as e:
+                        self.stderr.write(u'\n'.join(e.messages))
+                        response = input('Bypass password validation and create user anyway? [y/N]: ')
+                        if response.lower() != 'y':
+                            continue
+                    password = raw_value
 
                 # Call User manager's create_superuser using our wrapper
                 self.create_superuser(username, email, password, verbosity)
