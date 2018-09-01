@@ -122,6 +122,8 @@ init_in_docker() {
     mv devproject_tmp devproject
     # migrate the DB
     python manage.py migrate
+    # create superuser Admin with password "password"
+    python manage.py createsuperuser --username Admin --email admin@example.com --password password
 }
 
 # Clear existing dev project
