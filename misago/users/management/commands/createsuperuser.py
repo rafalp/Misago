@@ -6,7 +6,6 @@ import sys
 from getpass import getpass
 
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
@@ -47,6 +46,7 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             '--noinput',
+            '--no-input',
             action='store_false',
             dest='interactive',
             default=True,
@@ -84,7 +84,7 @@ class Command(BaseCommand):
                 username = username.strip()
                 validate_username(username)
             except ValidationError as e:
-                self.stderr.write(e.messages[0])
+                self.stderr.write(u'\n'.join(e.messages))
                 username = None
 
         if email is not None:
@@ -92,16 +92,13 @@ class Command(BaseCommand):
                 email = email.strip()
                 validate_email(email)
             except ValidationError as e:
-                self.stderr.write(e.messages[0])
+                self.stderr.write(u'\n'.join(e.messages))
                 email = None
 
         if password is not None:
-            try:
-                password = password.strip()
-                validate_password(password)
-            except ValidationError as e:
-                self.stderr.write(e.messages[0])
-                password = None
+            password = password.strip()
+            if password == '':
+                self.stderr.write("Error: Blank passwords aren't allowed.")
 
         if not interactive:
             if username and email and password:
@@ -122,29 +119,23 @@ class Command(BaseCommand):
                         validate_username(raw_value)
                         username = raw_value
                     except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                        self.stderr.write(u'\n'.join(e.messages))
 
                 while not email:
                     try:
-                        raw_value = input("Enter E-mail address: ").strip()
+                        raw_value = input("Enter e-mail address: ").strip()
                         validate_email(raw_value)
                         email = raw_value
                     except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                        self.stderr.write(u'\n'.join(e.messages))
 
                 while not password:
-                    try:
-                        raw_value = getpass("Enter password: ").strip()
-                        validate_password(
-                            raw_value, user=UserModel(username=username, email=email)
-                        )
-
-                        repeat_raw_value = getpass("Repeat password: ").strip()
-                        if raw_value != repeat_raw_value:
-                            raise ValidationError("Entered passwords are different.")
-                        password = raw_value
-                    except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                    password = getpass("Enter password: ")
+                    password2 = getpass("Repeat password")
+                    if password != password2:
+                        self.stderr.write("Error: Your passwords didn't match.")
+                    if password.strip() == '':
+                        self.stderr.write("Error: Blank passwords aren't allowed.")
 
                 # Call User manager's create_superuser using our wrapper
                 self.create_superuser(username, email, password, verbosity)
