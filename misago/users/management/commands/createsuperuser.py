@@ -37,16 +37,17 @@ class Command(BaseCommand):
             '--email',
             dest='email',
             default=None,
-            help="Specifies the username for the superuser.",
+            help="Specifies the e-mail for the superuser.",
         )
         parser.add_argument(
             '--password',
             dest='password',
             default=None,
-            help="Specifies the username for the superuser.",
+            help="Specifies the password for the superuser.",
         )
         parser.add_argument(
             '--noinput',
+            '--no-input',
             action='store_false',
             dest='interactive',
             default=True,
@@ -84,7 +85,7 @@ class Command(BaseCommand):
                 username = username.strip()
                 validate_username(username)
             except ValidationError as e:
-                self.stderr.write(e.messages[0])
+                self.stderr.write(u'\n'.join(e.messages))
                 username = None
 
         if email is not None:
@@ -92,16 +93,13 @@ class Command(BaseCommand):
                 email = email.strip()
                 validate_email(email)
             except ValidationError as e:
-                self.stderr.write(e.messages[0])
+                self.stderr.write(u'\n'.join(e.messages))
                 email = None
 
         if password is not None:
-            try:
-                password = password.strip()
-                validate_password(password)
-            except ValidationError as e:
-                self.stderr.write(e.messages[0])
-                password = None
+            password = password.strip()
+            if password == '':
+                self.stderr.write("Error: Blank passwords aren't allowed.")
 
         if not interactive:
             if username and email and password:
@@ -122,29 +120,37 @@ class Command(BaseCommand):
                         validate_username(raw_value)
                         username = raw_value
                     except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                        self.stderr.write(u'\n'.join(e.messages))
 
                 while not email:
                     try:
-                        raw_value = input("Enter E-mail address: ").strip()
+                        raw_value = input("Enter e-mail address: ").strip()
                         validate_email(raw_value)
                         email = raw_value
                     except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                        self.stderr.write(u'\n'.join(e.messages))
 
                 while not password:
+                    raw_value = getpass("Enter password: ")
+                    password_repeat = getpass("Repeat password:")
+                    if raw_value != password_repeat:
+                        self.stderr.write("Error: Your passwords didn't match.")
+                        # Don't validate passwords that don't match.
+                        continue
+                    if raw_value.strip() == '':
+                        self.stderr.write("Error: Blank passwords aren't allowed.")
+                        # Don't validate blank passwords.
+                        continue
                     try:
-                        raw_value = getpass("Enter password: ").strip()
                         validate_password(
                             raw_value, user=UserModel(username=username, email=email)
                         )
-
-                        repeat_raw_value = getpass("Repeat password: ").strip()
-                        if raw_value != repeat_raw_value:
-                            raise ValidationError("Entered passwords are different.")
-                        password = raw_value
                     except ValidationError as e:
-                        self.stderr.write(e.messages[0])
+                        self.stderr.write(u'\n'.join(e.messages))
+                        response = input('Bypass password validation and create user anyway? [y/N]: ')
+                        if response.lower() != 'y':
+                            continue
+                    password = raw_value
 
                 # Call User manager's create_superuser using our wrapper
                 self.create_superuser(username, email, password, verbosity)

@@ -8,7 +8,7 @@ UserModel = get_user_model()
 
 
 class CreateSuperuserTests(TestCase):
-    def test_create_superuser(self):
+    def test_valid_input_creates_superuser(self):
         """command creates superuser"""
         out = StringIO()
 
