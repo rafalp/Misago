@@ -1,0 +1,161 @@
+#!/bin/bash
+# devctl is an utility script for automating some development tasks and actions.
+# To find out what options are available, run it without any arguments.
+
+# Text styles
+RED='\033[0;31m'
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+# Docker aliases
+misago_run="docker-compose run --rm misago"
+
+# Define dev paths
+# Those are paths to dirs and files created for dev project
+dev_paths=(
+    "./avatargallery"
+    "./devproject"
+    "./media"
+    "./static"
+    "./userdata"
+    "./manage.py"
+)
+
+print_dev_paths() {
+    for x in "${dev_paths[@]}"; do
+        echo "next element is '$x'"
+    done
+}
+
+# Some commond shorthands
+docker_stop() {
+    docker-compose stop
+}
+
+# Test required ports
+# We test if those ports are free before running docker
+port_django=8000
+port_postgresql=5432
+
+required_ports=($port_postgresql)
+
+# Commands
+intro() {
+    echo "Development project:"
+    echo
+    echo "  ${BOLD}init${NORMAL}        initialize new dev project for development, do nothing if project already exists."
+    echo "  ${BOLD}clear${NORMAL}       if dev project exists, delete it's files and destroy docker containers."
+    echo "  ${BOLD}rebuild${NORMAL}     rebuild docker containers (uses --no-cache)."
+    echo
+    echo "Testing:"
+    echo
+    echo "  ${BOLD}test${NORMAL}        run tests suite."
+    echo "  ${BOLD}test module${NORMAL} run tests suite in specified python module, eg. misago.users."
+}
+
+invalid_option() {
+    echo -e "Invalid option: ${RED}$1${NORMAL}"
+    echo "Please run this script without any arguments to see the list of available options."
+    exit 1
+}
+
+
+# Initialize new dev project
+init() {
+    for dev_path in "${dev_paths[@]}"; do
+        if [ -e $dev_path ]; then
+            echo -e "${RED}Error:${NORMAL} Dev project already exists, or was not deleted completely."
+            echo
+            echo "Please use \"clear\" option to clear any pissible remaining files and try again."
+            exit 1
+        fi
+    done
+
+    for port in "${required_ports[@]}"; do
+        nc "127.0.0.1" "$port" < /dev/null
+        if [[ $? = "0" ]]; then
+            echo -e "${RED}Error:${NORMAL} Port ${BOLD}$port${NORMAL} is not available."
+            echo
+            if [[ $port = $port_django ]]; then
+                echo "Django application appears to already be running on http://127.0.0.1:8000"
+            elif [[ $port = $port_postgresql ]]; then
+                echo "PostgreSQL appears to already be running on port $port."
+            fi
+            exit 1
+        fi
+    done
+}
+
+# Clear existing dev project
+clear() {
+    echo -e "${RED}Warning:${NORMAL} You are going clear current development project."
+    echo
+
+    will_delete_files=false
+    for dev_path in "${dev_paths[@]}"; do
+        if [ -e $dev_path ]; then
+            will_delete_files=true
+        fi
+    done
+    if [[ $will_delete_files = true ]]; then
+        echo "Following files and directories will be deleted:"
+        for dev_path in "${dev_paths[@]}"; do
+            if [ -e $dev_path ]; then
+                echo "  $dev_path"
+            fi
+        done
+        echo
+    fi
+
+    echo "This will also stop and remove docker containers used by this project."
+    echo
+    echo "Enter \"y\" to confirm:"
+
+    read confirmation
+    if [[ $confirmation = "y" ]]; then
+        for dev_path in "${dev_paths[@]}"; do
+            if [ -e $dev_path ]; then
+                echo "Removing $dev_path"
+                rm -rf $dev_path
+            fi
+        done
+
+        docker-compose stop
+        docker-compose down
+        exit 0
+    else
+        echo "Operation canceled."
+        exit 0
+    fi
+}
+
+# Rebuild docker containers
+rebuild() {
+    docker_stop
+    docker-compose build --no-cache
+    exit 0
+}
+
+# Run tests suite
+test() {
+    $misago_run runtests.py $1
+    docker_stop
+    exit 0
+}
+
+# Command dispatcher
+if [[ $1 ]]; then
+    if [[ $1 = "init" ]]; then
+        init
+    elif [[ $1 = "clear" ]]; then
+        clear
+    elif [[ $1 = "rebuild" ]]; then
+        rebuild
+    elif [[ $1 = "test" ]]; then
+        test $2
+    else
+        invalid_option $1
+    fi
+else
+    intro
+fi
