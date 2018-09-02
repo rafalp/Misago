@@ -7,9 +7,6 @@ RED='\033[0;31m'
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
-# Docker aliases
-misago_run="docker-compose run --rm misago"
-
 # Define dev paths
 # Those are paths to dirs and files created for dev project
 dev_paths=(
@@ -35,6 +32,10 @@ username="Admin"
 password="password"
 
 # Some commond shorthands
+error() {
+    echo -e "${RED}Error:${NORMAL} $1"
+}
+
 docker_stop() {
     docker-compose stop
 }
@@ -49,40 +50,55 @@ docker_down() {
     docker-compose down --remove-orphans
 }
 
-error() {
-    echo -e "${RED}Error:${NORMAL} $1"
+require_docker() {
+    if [[ ! $IN_DOCKER = 1 ]]; then
+        error "This command can only be ran inside the running Misago container."
+        exit 1
+    fi
 }
 
 wait_for_db() {
+    require_docker
+
     export PGPASSWORD=$POSTGRES_PASSWORD
     RETRIES=10
 
     until psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
         echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
-        sleep 5
+        sleep 3
     done
 }
 
 # Commands
 intro() {
-    echo 
+    echo "Usage: ./dev [arg] ..."
+    echo "Arguments grouped by type:"
     echo
     echo "Development project:"
     echo
-    echo "    ${BOLD}init${NORMAL}        initialize new dev project for development, do nothing if project already exists."
-    echo "    ${BOLD}clear${NORMAL}       if dev project exists, delete it's files and destroy docker containers."
-    echo "    ${BOLD}rebuild${NORMAL}     rebuild docker containers (uses --no-cache)."
+    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, do nothing if project already exists."
+    echo "    ${BOLD}clear${NORMAL}             if dev project exists, delete it's files and destroy docker containers."
+    echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers (uses --no-cache)."
     echo
     echo "Testing:"
     echo
-    echo "    ${BOLD}test${NORMAL}        run tests suite."
-    echo "    ${BOLD}test module${NORMAL} run tests suite in specified python module, eg. misago.users."
+    echo "    ${BOLD}test${NORMAL}              run tests suite."
+    echo "    ${BOLD}test module${NORMAL}       run tests suite in specified python module, eg. misago.users."
+    echo
+    echo "Translations:"
+    echo
+    echo "    ${BOLD}makemessages${NORMAL}      update translation files for \"en\" language."
+    echo "    ${BOLD}makemessages lang${NORMAL} update translation files for \"lang\" language."
+    echo "    ${BOLD}compilemessages${NORMAL}   compile translation files to \"mo\" format."
+    echo "    ${BOLD}txpull${NORMAL}            pull translations from Transifex."
+    echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
     echo
 }
 
-invalid_option() {
-    echo -e "Invalid option: ${RED}$1${NORMAL}"
-    echo "Please run this script without any arguments to see the list of available options."
+# Handle invalid option message
+invalid_argument() {
+    echo -e "Invalid argument: ${RED}$1${NORMAL}"
+    echo "Please run this script without any arguments to see the list of available arguments."
     exit 1
 }
 
@@ -116,6 +132,7 @@ init() {
 
 # Initialization step that has to occur inside docker
 init_in_docker() {
+    require_docker
     wait_for_db
     # initialize django project
     python misago/bin/misago-start-devproject.py
@@ -146,7 +163,7 @@ init_in_docker() {
     echo "Username:    $username"
     echo "Password:    $password"
     echo
-    echo "To see development project configuration see files in the \"devproject\" directory."
+    echo "For development project configuration see files in the \"devproject\" directory."
     echo
 }
 
@@ -184,8 +201,7 @@ clear() {
             fi
         done
 
-        docker-compose stop
-        docker-compose down
+        docker_down
         exit 0
     else
         echo "Operation canceled."
@@ -201,9 +217,40 @@ rebuild() {
 
 # Run tests suite
 test() {
-    $misago_run runtests.py $1
+    docker-compose run --rm misago runtests.py $1
     docker_stop
     exit 0
+}
+
+# Make messages
+makemessages() {
+    docker-compose run --rm --no-deps misago ./dev makemessages_in_docker $1
+}
+
+# Docker part of makemessages
+makemessages_in_docker() {
+    require_docker
+    
+    echo "Extracting messages for $1 language:"
+    cd ./misago
+
+    echo "Processing .py and .html files..."
+    django-admin.py makemessages -l $1 -e html,txt,py > /dev/null
+
+    echo "Processing .js files..."
+    django-admin.py makemessages -l $1 -d djangojs > /dev/null
+}
+
+# Compile messages
+compilemessages() {
+    docker-compose run --rm --no-deps misago ./dev compilemessages_in_docker
+}
+
+# Docker part of compile messages
+compilemessages_in_docker() {
+    require_docker
+    cd ./misago
+    django-admin.py compilemessages
 }
 
 # Command dispatcher
@@ -218,8 +265,16 @@ if [[ $1 ]]; then
         rebuild
     elif [[ $1 = "test" ]]; then
         test $2
+    elif [[ $1 = "makemessages" ]]; then
+        makemessages ${2:-en}
+    elif [[ $1 = "makemessages_in_docker" ]]; then
+        makemessages_in_docker $2
+    elif [[ $1 = "compilemessages" ]]; then
+        compilemessages
+    elif [[ $1 = "compilemessages_in_docker" ]]; then
+        compilemessages_in_docker
     else
-        invalid_option $1
+        invalid_argument $1
     fi
 else
     intro

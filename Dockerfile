@@ -4,6 +4,7 @@
 FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
+ENV IN_DOCKER 1
 ENV PATH "$PATH:/srv/misago"
 
 # Install dependencies in one single command/layer
