@@ -36,20 +36,6 @@ error() {
     echo -e "${RED}Error:${NORMAL} $1"
 }
 
-docker_stop() {
-    docker-compose stop
-}
-
-docker_rebuild() {
-    docker_stop
-    docker-compose build --no-cache
-}
-
-docker_down() {
-    docker_stop
-    docker-compose down --remove-orphans
-}
-
 require_in_docker() {
     if [[ ! $IN_DOCKER = 1 ]]; then
         error "This command can only be ran inside the running Misago container."
@@ -65,18 +51,20 @@ wait_for_db() {
 
     until psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
         echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
-        sleep 3
+        sleep 2
     done
 }
 
 # Check if user has docker-compose
-if ! command -v docker-compsose >/dev/null 2>&1; then
-    error "You need to have Docker installed to use this tool."
-    echo
-    echo "Docker release for your system can be downloaded for free from this page:"
-    echo "https://www.docker.com/get-started"
-    echo
-    exit 1
+if [[ ! $IN_DOCKER = 1 ]]; then
+    if ! command -v docker-compose >/dev/null 2>&1; then
+        error "You need to have Docker installed to use this tool."
+        echo
+        echo "Docker release for your system can be downloaded for free from this page:"
+        echo "https://www.docker.com/get-started"
+        echo
+        exit 1
+    fi
 fi
 
 # Commands
@@ -88,7 +76,10 @@ intro() {
     echo
     echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, do nothing if project already exists."
     echo "    ${BOLD}clear${NORMAL}             if dev project exists, delete it's files and destroy docker containers."
-    echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers (uses --no-cache)."
+    echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
+    echo "    ${BOLD}reset${NORMAL}             shortcut for running clear and init."
+    echo
+    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be forwarded to docker-compose build."
     echo
     echo "Testing:"
     echo
@@ -102,6 +93,7 @@ intro() {
     echo "    ${BOLD}compilemessages${NORMAL}   compile translation files to \"mo\" format."
     echo "    ${BOLD}txpull${NORMAL}            pull translations from Transifex."
     echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
+    echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations."
     echo
 }
 
@@ -136,7 +128,8 @@ init() {
         fi
     done
     
-    docker_rebuild
+    docker-compose stop
+    docker-compose build "${@:2}"
     docker-compose run --rm misago ./dev init_in_docker
 }
 
@@ -211,25 +204,23 @@ clear() {
             fi
         done
 
-        docker_down
-        exit 0
+        docker-compose stop
+        docker-compose down --remove-orphans
     else
         echo "Operation canceled."
-        exit 0
     fi
 }
 
 # Rebuild docker containers
 rebuild() {
-    docker_rebuild
-    exit 0
+    docker-compose stop
+    docker-compose build "${@:2}"
 }
 
 # Run tests suite
 test() {
     docker-compose run --rm misago runtests.py $1
-    docker_stop
-    exit 0
+    docker-compose stop
 }
 
 # Make messages
@@ -269,7 +260,7 @@ txpull() {
     compilemessages
 }
 
-# Push translation files to transifex
+# Push translation sources to transifex
 txpush() {
     tx push --source
 }
@@ -277,13 +268,16 @@ txpush() {
 # Command dispatcher
 if [[ $1 ]]; then
     if [[ $1 = "init" ]]; then
-        init
+        init $@
     elif [[ $1 = "init_in_docker" ]]; then
         init_in_docker
     elif [[ $1 = "clear" ]]; then
         clear
+    elif [[ $1 = "reset" ]]; then
+        clear
+        init $@
     elif [[ $1 = "rebuild" ]]; then
-        rebuild
+        rebuild $@
     elif [[ $1 = "test" ]]; then
         test $2
     elif [[ $1 = "makemessages" ]]; then
@@ -298,6 +292,11 @@ if [[ $1 ]]; then
         txpull
     elif [[ $1 = "txpush" ]]; then
         txpush
+    elif [[ $1 = "txsync" ]]; then
+        makemessages
+        txpush
+        txpull
+        compilemessages
     else
         invalid_argument $1
     fi
