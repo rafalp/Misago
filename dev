@@ -95,6 +95,12 @@ intro() {
     echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
     echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations."
     echo
+    echo "Shortcuts"
+    echo
+    echo "    ${BOLD}bash${NORMAL}              shortcut for entering bash session inside Misago container."
+    echo "    ${BOLD}run${NORMAL}               shortcut for \"docker-compose run --rm misago\"."
+    echo "    ${BOLD}psql${NORMAL}              shortcut for dev database's psql."
+    echo
 }
 
 # Handle invalid option message
@@ -265,6 +271,26 @@ txpush() {
     tx push --source
 }
 
+# Shortcut for starting bash session in running container
+docker_run_bash() {
+    docker exec -it misago_misago_1 bash
+}
+
+# Shortcut for docker-compose run...
+docker_run() {
+    docker-compose run --rm misago "${@:2}"
+}
+
+# Shortcut for psql
+docker_run_psql() {
+    docker-compose run --rm misago ./dev psql_in_docker
+}
+
+psql_in_docker() {
+    wait_for_db
+    PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
+}
+
 # Command dispatcher
 if [[ $1 ]]; then
     if [[ $1 = "init" ]]; then
@@ -297,6 +323,14 @@ if [[ $1 ]]; then
         txpush
         txpull
         compilemessages
+    elif [[ $1 = "bash" ]]; then
+        docker_run_bash
+    elif [[ $1 = "run" ]]; then
+        docker_run $@
+    elif [[ $1 = "psql" ]]; then
+        docker_run_psql
+    elif [[ $1 = "psql_in_docker" ]]; then
+        psql_in_docker
     else
         invalid_argument $1
     fi
