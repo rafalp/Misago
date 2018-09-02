@@ -77,7 +77,7 @@ intro() {
     echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, do nothing if project already exists."
     echo "    ${BOLD}clear${NORMAL}             if dev project exists, delete it's files and destroy docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
-    echo "    ${BOLD}reset${NORMAL}             shortcut for running clear and init."
+    echo "    ${BOLD}reset${NORMAL}             run clear followed by init."
     echo
     echo "    Both init and rebuild args can be followed with any number of extra args and options that should be forwarded to docker-compose build."
     echo
@@ -95,9 +95,9 @@ intro() {
     echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
     echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations."
     echo
-    echo "Shortcuts"
+    echo "Shortcuts:"
     echo
-    echo "    ${BOLD}bash${NORMAL}              shortcut for entering bash session inside Misago container."
+    echo "    ${BOLD}bash${NORMAL}              shortcut for entering bash session inside running Misago container."
     echo "    ${BOLD}run${NORMAL}               shortcut for \"docker-compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              shortcut for dev database's psql."
     echo
@@ -109,7 +109,6 @@ invalid_argument() {
     echo "Please run this script without any arguments to see the list of available arguments."
     exit 1
 }
-
 
 # Initialize new dev project
 init() {
