@@ -30,6 +30,10 @@ port_postgresql=5432
 
 required_ports=($port_postgresql)
 
+# Default superuser
+username="Admin"
+password="password"
+
 # Some commond shorthands
 docker_stop() {
     docker-compose stop
@@ -61,16 +65,19 @@ wait_for_db() {
 
 # Commands
 intro() {
+    echo 
+    echo
     echo "Development project:"
     echo
-    echo "  ${BOLD}init${NORMAL}        initialize new dev project for development, do nothing if project already exists."
-    echo "  ${BOLD}clear${NORMAL}       if dev project exists, delete it's files and destroy docker containers."
-    echo "  ${BOLD}rebuild${NORMAL}     rebuild docker containers (uses --no-cache)."
+    echo "    ${BOLD}init${NORMAL}        initialize new dev project for development, do nothing if project already exists."
+    echo "    ${BOLD}clear${NORMAL}       if dev project exists, delete it's files and destroy docker containers."
+    echo "    ${BOLD}rebuild${NORMAL}     rebuild docker containers (uses --no-cache)."
     echo
     echo "Testing:"
     echo
-    echo "  ${BOLD}test${NORMAL}        run tests suite."
-    echo "  ${BOLD}test module${NORMAL} run tests suite in specified python module, eg. misago.users."
+    echo "    ${BOLD}test${NORMAL}        run tests suite."
+    echo "    ${BOLD}test module${NORMAL} run tests suite in specified python module, eg. misago.users."
+    echo
 }
 
 invalid_option() {
@@ -123,7 +130,24 @@ init_in_docker() {
     # migrate the DB
     python manage.py migrate
     # create superuser Admin with password "password"
-    python manage.py createsuperuser --username Admin --email admin@example.com --password password
+    python manage.py createsuperuser --username $username --email admin@example.com --password $password
+
+    echo
+    echo "================================================================================"
+    echo
+    echo "You can now start the development server using:"
+    echo
+    echo "    docker-compose up"
+    echo
+    echo "Running server will be available in the browser under the http://127.0.0.1:8000 address."
+    echo
+    echo "Default superuser has been created with following credentials:"
+    echo
+    echo "Username:    $username"
+    echo "Password:    $password"
+    echo
+    echo "To see development project configuration see files in the \"devproject\" directory."
+    echo
 }
 
 # Clear existing dev project
