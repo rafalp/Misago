@@ -10,13 +10,13 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://badges.gitter.im/Misago/Misago.svg
-   :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-   :alt: Development Chat
-
 .. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 2.7, 3.5, 3,6
+
+.. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
+   :target: https://discord.gg/fwvrZgB
+   :alt: Community Chat
 
 
 **Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
@@ -63,8 +63,7 @@ As of now Misago implements all features considered "must have" on live internet
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
-* Optionally enable users to delete their own account.
-* Anonymise user data on their account's deletion.
+* Features and settings for achieving GDPR compliance.
 
 Even more features will follow in future releases:
 
@@ -78,6 +77,8 @@ Even more features will follow in future releases:
 * WYSIWYM content editor for even easier post formatting.
 * Ranking system for forum search results based on post links, likes, author and thread importance.
 * Post reactions in place of likes.
+
+...and more!
 
 If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
@@ -160,7 +161,7 @@ English sentences used within ``misago.faker.phrases`` were extracted from `Nati
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2016 `Rafał Pitoń <http://github.com/ralfp>`_
+**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/ralfp>`_
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.
