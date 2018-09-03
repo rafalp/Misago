@@ -19,7 +19,7 @@ Misago
    :alt: Community Chat
 
 
-**Development Status:** Big changes happening on master branch, use `latest release <https://github.com/rafalp/Misago/releases>`_ for working code.
+**Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
 
 Misago aims to be complete, featured and modern forum solution that has no fear to say 'NO' to common and outdated opinions about how forum software should be made and what it should do.
 
@@ -63,8 +63,7 @@ As of now Misago implements all features considered "must have" on live internet
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
-* Optionally enable users to delete their own account.
-* Anonymise user data on their account's deletion.
+* Features and settings for achieving GDPR compliance.
 
 Even more features will follow in future releases:
 
@@ -115,14 +114,6 @@ If you'll ever want to destroy Docker setup because you no longer need it, run t
 
 Frontend
 --------
-
-.. image:: https://img.shields.io/badge/github-Misago--Frontend-blue.svg
-   :target: https://github.com/rafalp/Misago-Frontend
-   :alt: Tests Result
-
-.. image:: https://travis-ci.org/rafalp/Misago-Frontend.svg?branch=master
-   :target: https://travis-ci.org/rafalp/Misago-Frontend
-   :alt: Tests Result
 
 With exception of Admin Panel, Misago frontend relies heavily on React.js components backed by Django API. This application relies on custom Gulp.js-based toolkit for development. As of current, Misago's ``gulpfile.js`` defines following tasks:
 
