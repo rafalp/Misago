@@ -25,7 +25,7 @@ dev_paths=(
 port_django=8000
 port_postgresql=5432
 
-required_ports=($port_postgresql)
+required_ports=($port_postgresql $port_django)
 
 # Default superuser
 username="Admin"
