@@ -116,7 +116,7 @@ init() {
         if [ -e $dev_path ]; then
             error "Dev project already exists, or was not deleted completely."
             echo
-            echo "Please use \"clear\" option to clear any pissible remaining files and try again."
+            echo "Please use \"clear\" option to clear any possible remaining files and try again."
             exit 1
         fi
     done
@@ -125,10 +125,12 @@ init() {
         nc "127.0.0.1" "$port" < /dev/null
         if [[ $? = "0" ]]; then
             if [[ $port = $port_django ]]; then
-                error "Django application appears to already be running on http://127.0.0.1:8000"
+                error "Other application appears to already be running on http://127.0.0.1:8000"
             elif [[ $port = $port_postgresql ]]; then
-                error "PostgreSQL appears to already be running on port $port."
+                error "Other PostgreSQL instance appears to already be running on port $port."
             fi
+            echo
+            echo "Please stop other process and try again."
             exit 1
         fi
     done
