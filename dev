@@ -37,7 +37,7 @@ error() {
 }
 
 require_in_docker() {
-    if [[ ! $IN_DOCKER = 1 ]]; then
+    if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
         error "This command can only be ran inside the running Misago container."
         exit 1
     fi
@@ -75,6 +75,7 @@ intro() {
     echo "Development project:"
     echo
     echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, do nothing if project already exists."
+    echo "    ${BOLD}afterinit${NORMAL}         display help message displayed after init command is complete."
     echo "    ${BOLD}clear${NORMAL}             if dev project exists, delete it's files and destroy docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
     echo "    ${BOLD}reset${NORMAL}             run clear followed by init."
@@ -112,6 +113,11 @@ invalid_argument() {
 
 # Initialize new dev project
 init() {
+    if [[ $2 = "message" ]]; then
+        after_init_message
+        exit 0
+    fi
+
     for dev_path in "${dev_paths[@]}"; do
         if [ -e $dev_path ]; then
             error "Dev project already exists, or was not deleted completely."
@@ -136,7 +142,7 @@ init() {
     done
     
     docker-compose stop
-    docker-compose build "${@:2}"
+    docker-compose build --pull --force-rm "${@:2}"
     docker-compose run --rm misago ./dev init_in_docker
 }
 
@@ -159,8 +165,14 @@ init_in_docker() {
     # create superuser Admin with password "password"
     python manage.py createsuperuser --username $username --email admin@example.com --password $password
 
+    # display after init message
     echo
     echo "================================================================================"
+    after_init_message
+}
+
+# After-init message
+after_init_message() {
     echo
     echo "You can now start the development server using:"
     echo
@@ -168,12 +180,27 @@ init_in_docker() {
     echo
     echo "Running server will be available in the browser under the http://127.0.0.1:8000 address."
     echo
-    echo "Default superuser has been created with following credentials:"
+    echo "Default superuser has been created with this username and password:"
     echo
     echo "Username:    $username"
     echo "Password:    $password"
     echo
-    echo "For development project configuration see files in the \"devproject\" directory."
+    echo "Development project directories:"
+    echo
+    echo "devproject        contains configuration files for development instance."
+    echo "media             user uploaded files."
+    echo "userdata          working directory for user data exports."
+    echo "avatargallery     example avatar gallery."
+    echo
+    echo "To connect to development database use following credentials:"
+    echo
+    echo "User:         misago"
+    echo "Password:     misago"
+    echo "Database:     misago"
+    echo "Host:         postgres"
+    echo "Port:         5432"
+    echo
+    echo "Note: development server must be running for connection to be possible."
     echo
 }
 
@@ -221,7 +248,7 @@ clear() {
 # Rebuild docker containers
 rebuild() {
     docker-compose stop
-    docker-compose build "${@:2}"
+    docker-compose build --pull --force-rm "${@:2}"
 }
 
 # Run tests suite
@@ -298,6 +325,8 @@ if [[ $1 ]]; then
         init $@
     elif [[ $1 = "init_in_docker" ]]; then
         init_in_docker
+    elif [[ $1 = "afterinit" ]]; then
+        after_init_message
     elif [[ $1 = "clear" ]]; then
         clear
     elif [[ $1 = "reset" ]]; then
