@@ -298,12 +298,12 @@ txpush() {
 }
 
 # Shortcut for starting bash session in running container
-docker_run_bash() {
+run_bash() {
     docker exec -it misago_misago_1 bash
 }
 
 # Shortcut for docker-compose run --rm misago python manage.py
-docker_run_managepy() {
+run_managepy() {
     docker-compose run --rm misago python manage.py "${@:2}"
 }
 
@@ -313,7 +313,7 @@ docker_run() {
 }
 
 # Shortcut for psql
-docker_run_psql() {
+run_psql() {
     docker-compose run --rm misago ./dev psql_in_docker
 }
 
@@ -357,13 +357,13 @@ if [[ $1 ]]; then
         txpull
         compilemessages
     elif [[ $1 = "bash" ]]; then
-        docker_run_bash
+        run_bash
     elif [[ $1 = "manage.py" ]]; then
-        docker_run_managepy $@
+        run_managepy $@
     elif [[ $1 = "run" ]]; then
         docker_run $@
     elif [[ $1 = "psql" ]]; then
-        docker_run_psql
+        run_psql
     elif [[ $1 = "psql_in_docker" ]]; then
         psql_in_docker
     else
