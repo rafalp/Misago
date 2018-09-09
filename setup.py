@@ -8,21 +8,19 @@ from misago import __version__ as version
 
 SETUP_DIR = os.path.dirname(__file__)
 
-README = open(os.path.join(SETUP_DIR, 'README.rst'), 'rb').read().decode('utf-8')
+with open(os.path.join(SETUP_DIR, 'README.rst'), 'rb') as f:
+    README = f.read().decode('utf-8')
 
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = f.read()
-
-
-# allow setup.py to be run from any path
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
-
 
 EXCLUDE_FROM_PACKAGES = [
     'misago.project_template',
     'misago.bin'
 ]
 
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='Misago',
