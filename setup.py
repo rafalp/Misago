@@ -11,16 +11,7 @@ SETUP_DIR = os.path.dirname(__file__)
 README = open(os.path.join(SETUP_DIR, 'README.rst'), 'rb').read().decode('utf-8')
 
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
-    REQUIREMENTS = []
-    for line in f.readlines():
-        line = line.strip()
-        if not line:
-            continue
-        if line.startswith('#'):
-            continue
-        if '#' in line:
-            line = line[:line.find('#')].strip()
-        REQUIREMENTS.append(line)
+    REQUIREMENTS = f.read()
 
 
 # allow setup.py to be run from any path
