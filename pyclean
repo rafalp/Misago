@@ -1,3 +1,0 @@
-#!/bin/bash
-
-find ./misago -name '*.pyc' -delete -not -path './misago/frontend/*'
