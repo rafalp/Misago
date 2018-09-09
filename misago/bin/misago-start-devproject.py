@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 
 def main():
-    project_name = os.environ['PROJECT_NAME']
+    project_name = 'devproject'
 
     # Allow for overriding project name
     if len(sys.argv) > 1:

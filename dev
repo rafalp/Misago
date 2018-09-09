@@ -30,8 +30,9 @@ required_ports=($port_postgresql $port_django)
 # Default superuser
 username="Admin"
 password="password"
+email="admin@example.com"
 
-# Some commond shorthands
+# Utils used elsewhere
 error() {
     echo -e "${RED}Error:${NORMAL} $1"
 }
@@ -56,7 +57,7 @@ wait_for_db() {
 }
 
 # Check if user has docker-compose
-if [[ ! $IN_DOCKER = 1 ]]; then
+if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
     if ! command -v docker-compose >/dev/null 2>&1; then
         error "You need to have Docker installed to use this tool."
         echo
@@ -74,11 +75,11 @@ intro() {
     echo
     echo "Development project:"
     echo
-    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, do nothing if project already exists."
-    echo "    ${BOLD}afterinit${NORMAL}         display help message displayed after init command is complete."
-    echo "    ${BOLD}clear${NORMAL}             if dev project exists, delete it's files and destroy docker containers."
+    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, does nothing if project already exists."
+    echo "    ${BOLD}afterinit${NORMAL}         repeat help message displayed after init command is complete."
+    echo "    ${BOLD}remove${NORMAL}            if dev project exists, delete it's files and destroy docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
-    echo "    ${BOLD}reset${NORMAL}             run clear followed by init."
+    echo "    ${BOLD}reset${NORMAL}             run remove followed by init."
     echo
     echo "    Both init and rebuild args can be followed with any number of extra args and options that should be forwarded to docker-compose build."
     echo
@@ -98,9 +99,10 @@ intro() {
     echo
     echo "Shortcuts:"
     echo
-    echo "    ${BOLD}bash${NORMAL}              shortcut for entering bash session inside running Misago container."
-    echo "    ${BOLD}run${NORMAL}               shortcut for \"docker-compose run --rm misago\"."
-    echo "    ${BOLD}psql${NORMAL}              shortcut for dev database's psql."
+    echo "    ${BOLD}manage.py${NORMAL}         runs \"python manage.py\" inside docker."
+    echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
+    echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
+    echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo
 }
 
@@ -113,16 +115,12 @@ invalid_argument() {
 
 # Initialize new dev project
 init() {
-    if [[ $2 = "message" ]]; then
-        after_init_message
-        exit 0
-    fi
-
     for dev_path in "${dev_paths[@]}"; do
         if [ -e $dev_path ]; then
             error "Dev project already exists, or was not deleted completely."
             echo
-            echo "Please use \"clear\" option to clear any possible remaining files and try again."
+            echo "Please use \"remove\" option to remove any possible remaining files and try again."
+            echo
             exit 1
         fi
     done
@@ -133,10 +131,12 @@ init() {
             if [[ $port = $port_django ]]; then
                 error "Other application appears to already be running on http://127.0.0.1:8000"
             elif [[ $port = $port_postgresql ]]; then
-                error "Other PostgreSQL instance appears to already be running on port $port."
+                error "PostgreSQL appears to already be running on the port $port."
+                echo
+                echo "Misago runs its own PostgreSQL instance in the docker container and uses port $port to expose it to other programs."
+                echo "Please stop your PostgreSQL server and try again."
+                echo
             fi
-            echo
-            echo "Please stop other process and try again."
             exit 1
         fi
     done
@@ -163,7 +163,7 @@ init_in_docker() {
     # migrate the DB
     python manage.py migrate
     # create superuser Admin with password "password"
-    python manage.py createsuperuser --username $username --email admin@example.com --password $password
+    python manage.py createsuperuser --username $username --email $email --password $password
 
     # display after init message
     echo
@@ -187,7 +187,7 @@ after_init_message() {
     echo
     echo "Development project directories:"
     echo
-    echo "devproject        contains configuration files for development instance."
+    echo "devproject        configuration files for development instance."
     echo "media             user uploaded files."
     echo "userdata          working directory for user data exports."
     echo "avatargallery     example avatar gallery."
@@ -204,9 +204,9 @@ after_init_message() {
     echo
 }
 
-# Clear existing dev project
-clear() {
-    echo -e "${RED}Warning:${NORMAL} You are going clear current development project."
+# Remove existing dev project
+remove() {
+    echo -e "${RED}Warning:${NORMAL} You are going remove current development project."
     echo
 
     will_delete_files=false
@@ -225,8 +225,6 @@ clear() {
         echo
     fi
 
-    echo "This will also stop and remove docker containers used by this project."
-    echo
     echo "Enter \"y\" to confirm:"
 
     read confirmation
@@ -304,7 +302,12 @@ docker_run_bash() {
     docker exec -it misago_misago_1 bash
 }
 
-# Shortcut for docker-compose run...
+# Shortcut for docker-compose run --rm misago python manage.py
+docker_run_managepy() {
+    docker-compose run --rm misago python manage.py "${@:2}"
+}
+
+# Shortcut for docker-compose run --rm misago...
 docker_run() {
     docker-compose run --rm misago "${@:2}"
 }
@@ -327,10 +330,10 @@ if [[ $1 ]]; then
         init_in_docker
     elif [[ $1 = "afterinit" ]]; then
         after_init_message
-    elif [[ $1 = "clear" ]]; then
-        clear
+    elif [[ $1 = "remove" ]]; then
+        remove
     elif [[ $1 = "reset" ]]; then
-        clear
+        remove
         init $@
     elif [[ $1 = "rebuild" ]]; then
         rebuild $@
@@ -355,6 +358,8 @@ if [[ $1 ]]; then
         compilemessages
     elif [[ $1 = "bash" ]]; then
         docker_run_bash
+    elif [[ $1 = "manage.py" ]]; then
+        docker_run_managepy $@
     elif [[ $1 = "run" ]]; then
         docker_run $@
     elif [[ $1 = "psql" ]]; then
