@@ -29,7 +29,7 @@ def fill_in_settings(f):
     with open(f, 'r') as fd:
         s = fd.read()
 
-        # Postgres
+        # Read PostgreSQL's config from env variables
         s = s.replace("'NAME': '',", "'NAME': os.environ.get('POSTGRES_DB'),")
         s = s.replace("'USER': '',", "'USER': os.environ.get('POSTGRES_USER'),")
         s = s.replace("'PASSWORD': '',", "'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),")
