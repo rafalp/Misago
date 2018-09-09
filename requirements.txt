@@ -13,7 +13,7 @@ django-debug-toolbar==1.8
 django-htmlmin==0.10.0
 django-mptt==0.8.7
 django==1.11.15
-djangorestframework==2.4.8
+djangorestframework==3.6.4
 faker==0.8.18
 html5lib==0.999999999
 idna==2.7                 # via requests
