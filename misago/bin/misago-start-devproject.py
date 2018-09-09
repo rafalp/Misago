@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# pylint: disable=E0401
 """
 Creates a dev project for local development
 """
@@ -6,20 +7,13 @@ Creates a dev project for local development
 import os
 import sys
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+PROJECT_NAME = 'devproject'
 
 
 def main():
-    project_name = 'devproject'
-
-    # Allow for overriding project name
-    if len(sys.argv) > 1:
-        project_name = sys.argv[1]
-    else:
-        sys.argv.append(project_name)
-
-    settings_file = os.path.join(BASE_DIR, project_name, project_name, 'settings.py')
+    settings_file = os.path.join(BASE_DIR, PROJECT_NAME, PROJECT_NAME, 'settings.py')
 
     # Avoid recreating if already present
     if os.path.exists(settings_file):
@@ -48,7 +42,7 @@ def fill_in_settings(f):
         pos = s.find('STATICFILES_DIRS')
         s = s[:s.find('[', pos) + 1] + s[s.find(']', pos):]
 
-        # Remote theme dir from template dirs
+        # Remove theme dir from template dirs
         pos = s.find("'DIRS': [")
         s = s[:s.find('[', pos) + 1] + s[s.find(']', pos):]
 
@@ -57,5 +51,6 @@ def fill_in_settings(f):
 
 
 if __name__ == '__main__':
+    sys.argv.append(PROJECT_NAME)
     sys.path.append(BASE_DIR)
     main()
