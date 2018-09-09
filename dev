@@ -32,14 +32,14 @@ username="Admin"
 password="password"
 email="admin@example.com"
 
-# Utils used elsewhere
+# Utility functions used by action commands
 error() {
     echo -e "${RED}Error:${NORMAL} $1"
 }
 
 require_in_docker() {
     if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
-        error "This command can only be ran inside the running Misago container."
+        error "This command can only be ran inside the running Misago docker container."
         exit 1
     fi
 }
@@ -51,7 +51,7 @@ wait_for_db() {
     RETRIES=10
 
     until psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
-        echo "Waiting for postgres server, $((RETRIES--)) remaining attempts..."
+        echo "Waiting for PostgreSQL to start, $((RETRIES--)) remaining attempts..."
         sleep 2
     done
 }
@@ -77,11 +77,11 @@ intro() {
     echo
     echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, does nothing if project already exists."
     echo "    ${BOLD}afterinit${NORMAL}         repeat help message displayed after init command is complete."
-    echo "    ${BOLD}remove${NORMAL}            if dev project exists, delete it's files and destroy docker containers."
+    echo "    ${BOLD}remove${NORMAL}            if dev project exists, remove its files and docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
     echo "    ${BOLD}reset${NORMAL}             run remove followed by init."
     echo
-    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be forwarded to docker-compose build."
+    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be appended to docker-compose build."
     echo
     echo "Testing:"
     echo
@@ -95,7 +95,7 @@ intro() {
     echo "    ${BOLD}compilemessages${NORMAL}   compile translation files to \"mo\" format."
     echo "    ${BOLD}txpull${NORMAL}            pull translations from Transifex."
     echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
-    echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations."
+    echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations with Transifex."
     echo
     echo "Shortcuts:"
     echo
@@ -106,7 +106,7 @@ intro() {
     echo
 }
 
-# Handle invalid option message
+# Handle invalid argument
 invalid_argument() {
     echo -e "Invalid argument: ${RED}$1${NORMAL}"
     echo "Please run this script without any arguments to see the list of available arguments."
@@ -160,7 +160,7 @@ init_in_docker() {
     mv devproject/manage.py ./manage.py
     rm -rf devproject
     mv devproject_tmp devproject
-    # migrate the DB
+    # migrate the database
     python manage.py migrate
     # create superuser Admin with password "password"
     python manage.py createsuperuser --username $username --email $email --password $password
@@ -317,6 +317,7 @@ run_psql() {
     docker-compose run --rm misago ./dev psql_in_docker
 }
 
+# Docker part of psql shortcut
 psql_in_docker() {
     wait_for_db
     PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
