@@ -86,31 +86,16 @@ If you are looking into using Misago to run live forum, you are absolutely invit
 Development
 ===========
 
-Preferred way to setup Misago for local development is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies one besides the other with just three terminal commands.
+Preferred way to run Misago development instances on your machine is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies besides each other.
 
-To start, clone repository to your machine and then run following commands::
+To start, clone the repository and run ``./dev init`` command in your terminal. This will build necessary docker containers, install python dependencies, initialize the database and create development project for you. After command does its magic, you will be able to start development server using the ``docker-compose up`` command.
 
-   docker-compose build
-   docker-compose run --rm misago initdev
-   docker-compose up
+After development server starts, visit the ``http://127.0.0.1:8000/`` in your browser to see your Misago installation.
 
-Those commands will install necessary dependencies, create new Misago project ``devproject`` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
-in your browser and see the forum index. You should now be able to sign in with the superuser account, using ``Admin`` username and ``password`` password.
+Admin Control Panel is available under the ``http://127.0.0.1:8000/admincp/`` address. To log in to it use ``Admin`` username and ``password`` password.
 
-Admin Control Panel is available under the ``127.0.0.1:8000/admincp/`` url.
-
-`manage.py` is available through Docker's `run` command::
-    
-    docker-compose run --rm misago python manage.py
-
-Docker also allows you to run tests suite::
-    
-    docker-compose run --rm misago python runtests.py
-
-If you'll ever want to destroy Docker setup because you no longer need it, run this command::
-
-    docker-compose down
-
+The ``./dev`` utility implements other features besides the ``init``. Run it without any arguments to get the list of available actions.
+ 
 
 Frontend
 --------
