@@ -27,7 +27,6 @@ pillow==4.1.1
 psycopg2-binary==2.7.5
 pyjwt==1.6.4              # via social-auth-core
 python-dateutil==2.7.3    # via faker
-python-openid==2.2.5      # via social-auth-core
 pytz==2018.5
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.19.1
