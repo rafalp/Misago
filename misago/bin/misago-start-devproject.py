@@ -36,7 +36,18 @@ def fill_in_settings(f):
         s = s.replace("'HOST': 'localhost',", "'HOST': os.environ.get('POSTGRES_HOST'),")
 
         # Specify console backend for email
-        s += "\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'\n"
+        s += "\n# Set dev instance to send e-mails to console"
+        s += "\n"
+        s += "\nEMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'"
+        s += "\n"
+
+        # Tie Debug Toolbar visibility to env variable
+        s += "\n# Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to \"1\""
+        s += "\n"
+        s += "\nDEBUG_TOOLBAR_CONFIG = {"
+        s += "\n    'SHOW_TOOLBAR_CALLBACK': 'misago.conf.debugtoolbar.enable_debug_toolbar'"
+        s += "\n}"
+        s += "\n"
 
         # Empty the contents of STATICFILES_DIRS (STATICFILES_DIRS = [])
         pos = s.find('STATICFILES_DIRS')
