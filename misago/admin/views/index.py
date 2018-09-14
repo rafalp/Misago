@@ -1,12 +1,6 @@
 import requests
 from requests.exceptions import RequestException
 
-try:
-    from packaging.version import parse as parse_version
-    ALLOW_VERSION_CHECK = True
-except ImportError:
-    ALLOW_VERSION_CHECK = False
-
 from django.contrib.auth import get_user_model
 from django.http import Http404, JsonResponse
 from django.utils.translation import ugettext as _
@@ -40,8 +34,6 @@ def admin_index(request):
         request, 'misago/admin/index.html', {
             'db_stats': db_stats,
             'address_check': check_misago_address(request),
-
-            'allow_version_check': ALLOW_VERSION_CHECK,
             'version_check': cache.get(VERSION_CHECK_CACHE_KEY),
         }
     )
@@ -59,36 +51,31 @@ def check_misago_address(request):
 
 
 def check_version(request):
-    if not ALLOW_VERSION_CHECK or request.method != "POST":
+    if request.method != "POST":
         raise Http404()
 
     version = cache.get(VERSION_CHECK_CACHE_KEY, 'nada')
 
     if version == 'nada':
         try:
-            api_url = 'https://api.github.com/repos/rafalp/Misago/releases'
+            api_url = 'https://pypi.org/pypi/Misago/json'
             r = requests.get(api_url)
+            r.raise_for_status()
 
-            if r.status_code != requests.codes.ok:
-                r.raise_for_status()
+            latest_version = r.json()['info']['version']
 
-            latest_version = r.json()[0]['tag_name']
-
-            latest = parse_version(latest_version)
-            current = parse_version(__version__)
-
-            if latest > current:
+            if latest_version == __version__:
                 version = {
-                    'is_error': True,
-                    'message': _("Outdated: %(current)s! (latest: %(latest)s)") % {
-                        'latest': latest_version,
+                    'is_error': False,
+                    'message': _("Up to date! (%(current)s)") % {
                         'current': __version__,
                     },
                 }
             else:
                 version = {
-                    'is_error': False,
-                    'message': _("Up to date! (%(current)s)") % {
+                    'is_error': True,
+                    'message': _("Outdated: %(current)s! (latest: %(latest)s)") % {
+                        'latest': latest_version,
                         'current': __version__,
                     },
                 }
@@ -97,7 +84,7 @@ def check_version(request):
         except (RequestException, IndexError, KeyError, ValueError) as e:
             version = {
                 'is_error': True,
-                'message': _("Failed to connect to GitHub API. Try again later."),
+                'message': _("Failed to connect to pypi.org API. Try again later."),
             }
 
     return JsonResponse(version)
