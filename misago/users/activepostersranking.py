@@ -1,11 +1,12 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.conf import settings
+from misago.threads.models import Post
 
 from .models import ActivityRanking
 
@@ -37,11 +38,16 @@ def build_active_posters_ranking():
     for category in Category.objects.all_categories():
         ranked_categories.append(category.pk)
 
-    queryset = UserModel.objects.filter(
-        is_active=True, posts__gt=0
-    ).filter(
-        post__posted_on__gte=tracked_since, post__category__in=ranked_categories
-    ).annotate(score=Count('post'))
+    ranked_posts = Q(posted_on__gte=tracked_since) & Q(category__in=ranked_categories)
 
-    for ranking in queryset[:settings.MISAGO_RANKING_SIZE].iterator():
-        ActivityRanking.objects.create(user=ranking, score=ranking.score)
+    queryset = (
+        UserModel.objects
+        .filter(is_active=True)
+        .annotate(score=Count('post', filter=ranked_posts))
+        .order_by('-score')
+    )[:settings.MISAGO_RANKING_SIZE]
+
+    new_ranking = []
+    for ranking in queryset.iterator():
+        new_ranking.append(ActivityRanking(user=ranking, score=ranking.score))
+    ActivityRanking.objects.bulk_create(new_ranking)    
