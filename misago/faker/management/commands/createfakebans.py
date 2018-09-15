@@ -93,8 +93,6 @@ class Command(BaseCommand):
         message = 'Creating %s fake bans...\n'
         self.stdout.write(message % fake_bans_to_create)
 
-        message = '\n\nSuccessfully created %s fake bans'
-
         created_count = 0
         show_progress(self, created_count, fake_bans_to_create)
         for _ in range(fake_bans_to_create):
@@ -120,4 +118,5 @@ class Command(BaseCommand):
             created_count += 1
             show_progress(self, created_count, fake_bans_to_create)
 
+        message = '\n\nSuccessfully created %s fake bans'
         self.stdout.write(message % created_count)
