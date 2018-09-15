@@ -26,7 +26,7 @@ corpus_short = EnglishCorpus(max_length=150)
 
 
 class Command(BaseCommand):
-    help = 'Creates random threads and posts for dev and testing purposes.'
+    help = 'Creates random threads for dev and testing purposes.'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -44,9 +44,8 @@ class Command(BaseCommand):
 
         fake = Factory.create()
 
-        self.stdout.write('Creating fake threads...\n')
-
-        message = '\nSuccessfully created %s fake threads in %s'
+        message = 'Creating %s fake threads...\n'
+        self.stdout.write(message % items_to_create)
 
         created_threads = 0
         start_time = time.time()
@@ -160,6 +159,7 @@ class Command(BaseCommand):
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write('\nPinning %s threads...' % pinned_threads)
+        
         for _ in range(0, pinned_threads):
             thread = Thread.objects.order_by('?')[:1][0]
             if random.randint(0, 100) > 75:
@@ -174,6 +174,7 @@ class Command(BaseCommand):
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        message = '\nSuccessfully created %s fake threads in %s'
         self.stdout.write(message % (created_threads, total_humanized))
 
     def fake_post_content(self):

@@ -44,8 +44,6 @@ class Command(BaseCommand):
         message = 'Creating %s fake categories...\n'
         self.stdout.write(message % items_to_create)
 
-        message = '\n\nSuccessfully created %s fake categories in %s'
-
         created_count = 0
         start_time = time.time()
         show_progress(self, created_count, items_to_create)
@@ -91,4 +89,5 @@ class Command(BaseCommand):
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        message = '\n\nSuccessfully created %s fake categories in %s'
         self.stdout.write(message % (created_count, total_humanized))
