@@ -353,7 +353,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "txpush" ]]; then
         txpush
     elif [[ $1 = "txsync" ]]; then
-        makemessages
+        makemessages en
         txpush
         txpull
         compilemessages
