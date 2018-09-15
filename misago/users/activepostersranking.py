@@ -42,8 +42,8 @@ def build_active_posters_ranking():
 
     queryset = (
         UserModel.objects
-        .filter(is_active=True)
         .annotate(score=Count('post', filter=ranked_posts))
+        .filter(is_active=True, score__gt=0)
         .order_by('-score')
     )[:settings.MISAGO_RANKING_SIZE]
 
