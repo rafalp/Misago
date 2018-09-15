@@ -127,10 +127,10 @@ Lorem ipsum [Lorem ipsum](https://placekitten.com/g/1200/500)
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum <a href="http://placekitten.com/g/300/300" rel="nofollow">placekitten.com/g/300/300</a></p>
-<p>Lorem ipsum <a href="https://placekitten.com/g/600/600" rel="nofollow">placekitten.com/g/600/600</a></p>
-<p>Lorem ipsum <a href="https://placekitten.com/g/400/400" rel="nofollow">Label text!</a></p>
-<p>Lorem ipsum <a href="https://placekitten.com/g/1200/500" rel="nofollow">Lorem ipsum</a></p>
+<p>Lorem ipsum <a href="http://placekitten.com/g/300/300" rel="nofollow noopener">placekitten.com/g/300/300</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/600/600" rel="nofollow noopener">placekitten.com/g/600/600</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/400/400" rel="nofollow noopener">Label text!</a></p>
+<p>Lorem ipsum <a href="https://placekitten.com/g/1200/500" rel="nofollow noopener">Lorem ipsum</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=False)
@@ -240,7 +240,7 @@ Lorem ipsum: http://somewhere.com
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum: <a href="http://somewhere.com" rel="nofollow">somewhere.com</a></p>
+<p>Lorem ipsum: <a href="http://somewhere.com" rel="nofollow noopener">somewhere.com</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)
@@ -256,7 +256,7 @@ Lorem ipsum: http://somewhere.com/somewhere-something/
 """.strip()
 
         expected_result = """
-<p>Lorem ipsum: <a href="http://somewhere.com/somewhere-something/" rel="nofollow">somewhere.com/somewhere-something/</a></p>
+<p>Lorem ipsum: <a href="http://somewhere.com/somewhere-something/" rel="nofollow noopener">somewhere.com/somewhere-something/</a></p>
 """.strip()
 
         result = parse(test_text, MockRequest(), MockPoster(), minify=True)

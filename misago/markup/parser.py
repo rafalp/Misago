@@ -172,7 +172,7 @@ def clean_links(request, result, force_shva=False):
         else:
             result['outgoing_links'].append(clean_link_prefix(link['href']))
             link['href'] = assert_link_prefix(link['href'])
-            link['rel'] = 'nofollow'
+            link['rel'] = 'nofollow noopener'
 
         if link.string:
             link.string = clean_link_prefix(link.string)
