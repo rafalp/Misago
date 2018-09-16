@@ -56,7 +56,6 @@
           <tr>
             <th colspan="2">
               <h4>
-                <span class="fa fa-github"></span>
                 {% trans "Misago version" %}
               </h4>
             </th>
@@ -65,17 +64,16 @@
         <tbody>
           <tr>
             <td class="text-center">
-              {% if allow_version_check %}
-                {% if version_check %}
+              {% if version_check %}
                 <p class="lead text-{% if version_check.is_error %}danger{% else %}success{% endif %}">
                   {% if version_check.is_error %}
-                  <span class="fa fa-times fa-lg fa-fw"></span>
+                    <span class="fa fa-times fa-lg fa-fw"></span>
                   {% else %}
-                  <span class="fa fa-check fa-lg fa-fw"></span>
+                    <span class="fa fa-check fa-lg fa-fw"></span>
                   {% endif %}
                   {{ version_check.message }}
                 </p>
-                {% else %}
+              {% else %}
                 <form method="POST">
                   {% csrf_token %}
                   <button type="submit" class="btn btn-default">
@@ -83,11 +81,6 @@
                     <span class="name">{% trans "Check version" %}</span>
                   </button>
                 </form>
-                {% endif %}
-              {% else %}
-                <p class="lead">
-                  {% trans 'This feature requires "packaging" python module.' %}
-                </p>
               {% endif %}
             </td>
           </tr>

@@ -1,0 +1,375 @@
+#!/bin/bash
+# devctl is an utility script for automating some development tasks and actions.
+# To find out what options are available, run it without any arguments.
+
+# Text styles
+RED='\033[0;31m'
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+# Define dev paths
+# Those are paths to dirs and files created for dev project
+dev_paths=(
+    "./avatargallery"
+    "./devproject"
+    "./media"
+    "./static"
+    "./theme"
+    "./userdata"
+    "./cron.txt"
+    "./manage.py"
+)
+
+# Required ports
+# Some tasks test for those ports before continuing
+port_django=8000
+port_postgresql=5432
+
+required_ports=($port_postgresql $port_django)
+
+# Default superuser
+username="Admin"
+password="password"
+email="admin@example.com"
+
+# Utility functions used by action commands
+error() {
+    echo -e "${RED}Error:${NORMAL} $1"
+}
+
+require_in_docker() {
+    if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
+        error "This command can only be ran inside the running Misago docker container."
+        exit 1
+    fi
+}
+
+wait_for_db() {
+    require_in_docker
+
+    export PGPASSWORD=$POSTGRES_PASSWORD
+    RETRIES=10
+
+    until psql -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+        echo "Waiting for PostgreSQL to start, $((RETRIES--)) remaining attempts..."
+        sleep 2
+    done
+}
+
+# Check if user has docker-compose
+if [[ ! $IN_MISAGO_DOCKER = 1 ]]; then
+    if ! command -v docker-compose >/dev/null 2>&1; then
+        error "You need to have Docker installed to use this tool."
+        echo
+        echo "Docker release for your system can be downloaded for free from this page:"
+        echo "https://www.docker.com/get-started"
+        echo
+        exit 1
+    fi
+fi
+
+# Commands
+intro() {
+    echo "Usage: ./dev [arg] ..."
+    echo "Arguments grouped by type:"
+    echo
+    echo "Development project:"
+    echo
+    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, does nothing if project already exists."
+    echo "    ${BOLD}afterinit${NORMAL}         repeat help message displayed after init command is complete."
+    echo "    ${BOLD}remove${NORMAL}            if dev project exists, remove its files and docker containers."
+    echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
+    echo "    ${BOLD}reset${NORMAL}             run remove followed by init."
+    echo
+    echo "    Both init and rebuild args can be followed with any number of extra args and options that should be appended to docker-compose build."
+    echo
+    echo "Testing:"
+    echo
+    echo "    ${BOLD}test${NORMAL}              run tests suite."
+    echo "    ${BOLD}test module${NORMAL}       run tests suite in specified python module, eg. misago.users."
+    echo
+    echo "Translations:"
+    echo
+    echo "    ${BOLD}makemessages${NORMAL}      update translation files for \"en\" language."
+    echo "    ${BOLD}makemessages lang${NORMAL} update translation files for \"lang\" language."
+    echo "    ${BOLD}compilemessages${NORMAL}   compile translation files to \"mo\" format."
+    echo "    ${BOLD}txpull${NORMAL}            pull translations from Transifex."
+    echo "    ${BOLD}txpush${NORMAL}            push new source files to Transifex."
+    echo "    ${BOLD}txsync${NORMAL}            runs entire process of syncing translations with Transifex."
+    echo
+    echo "Shortcuts:"
+    echo
+    echo "    ${BOLD}manage.py${NORMAL}         runs \"python manage.py\" inside docker."
+    echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
+    echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
+    echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
+    echo
+}
+
+# Handle invalid argument
+invalid_argument() {
+    echo -e "Invalid argument: ${RED}$1${NORMAL}"
+    echo "Please run this script without any arguments to see the list of available arguments."
+    exit 1
+}
+
+# Initialize new dev project
+init() {
+    for dev_path in "${dev_paths[@]}"; do
+        if [ -e $dev_path ]; then
+            error "Dev project already exists, or was not deleted completely."
+            echo
+            echo "Please use \"remove\" option to remove any possible remaining files and try again."
+            echo
+            exit 1
+        fi
+    done
+
+    for port in "${required_ports[@]}"; do
+        nc "127.0.0.1" "$port" < /dev/null
+        if [[ $? = "0" ]]; then
+            if [[ $port = $port_django ]]; then
+                error "Other application appears to already be running on http://127.0.0.1:8000"
+            elif [[ $port = $port_postgresql ]]; then
+                error "PostgreSQL appears to already be running on the port $port."
+                echo
+                echo "Misago runs its own PostgreSQL instance in the docker container and uses port $port to expose it to other programs."
+                echo "Please stop your PostgreSQL server and try again."
+                echo
+            fi
+            exit 1
+        fi
+    done
+    
+    docker-compose stop
+    docker-compose build --pull --force-rm "${@:2}"
+    docker-compose run --rm misago ./dev init_in_docker
+}
+
+# Initialization step that has to occur inside docker
+init_in_docker() {
+    require_in_docker
+    wait_for_db
+    # initialize django project
+    python misago/bin/misago-start-devproject.py
+    # move items of interest up one level
+    mv devproject/devproject devproject_tmp
+    mv devproject/avatargallery ./avatargallery
+    mv devproject/media ./media
+    mv devproject/userdata ./userdata
+    mv devproject/manage.py ./manage.py
+    rm -rf devproject
+    mv devproject_tmp devproject
+    # migrate the database
+    python manage.py migrate
+    # create superuser Admin with password "password"
+    python manage.py createsuperuser --username $username --email $email --password $password
+
+    # display after init message
+    echo
+    echo "================================================================================"
+    after_init_message
+}
+
+# After-init message
+after_init_message() {
+    echo
+    echo "You can now start the development server using:"
+    echo
+    echo "    docker-compose up"
+    echo
+    echo "Running server will be available in the browser under the http://127.0.0.1:8000 address."
+    echo
+    echo "Default superuser has been created with this username and password:"
+    echo
+    echo "Username:    $username"
+    echo "Password:    $password"
+    echo
+    echo "Development project directories:"
+    echo
+    echo "devproject        configuration files for development instance."
+    echo "media             user uploaded files."
+    echo "userdata          working directory for user data exports."
+    echo "avatargallery     example avatar gallery."
+    echo
+    echo "To connect to development database use following credentials:"
+    echo
+    echo "User:         misago"
+    echo "Password:     misago"
+    echo "Database:     misago"
+    echo "Host:         postgres"
+    echo "Port:         5432"
+    echo
+    echo "Note: development server must be running for connection to be possible."
+    echo
+}
+
+# Remove existing dev project
+remove() {
+    echo -e "${RED}Warning:${NORMAL} You are going remove current development project."
+    echo
+
+    will_delete_files=false
+    for dev_path in "${dev_paths[@]}"; do
+        if [ -e $dev_path ]; then
+            will_delete_files=true
+        fi
+    done
+    if [[ $will_delete_files = true ]]; then
+        echo "Following files and directories will be deleted:"
+        for dev_path in "${dev_paths[@]}"; do
+            if [ -e $dev_path ]; then
+                echo "  $dev_path"
+            fi
+        done
+        echo
+    fi
+
+    echo "Enter \"y\" to confirm:"
+
+    read confirmation
+    if [[ $confirmation = "y" ]]; then
+        for dev_path in "${dev_paths[@]}"; do
+            if [ -e $dev_path ]; then
+                echo "Removing $dev_path"
+                rm -rf $dev_path
+            fi
+        done
+
+        docker-compose stop
+        docker-compose down --remove-orphans
+    else
+        echo "Operation canceled."
+    fi
+}
+
+# Rebuild docker containers
+rebuild() {
+    docker-compose stop
+    docker-compose build --pull --force-rm "${@:2}"
+}
+
+# Run tests suite
+test() {
+    docker-compose run --rm misago runtests.py $1
+    docker-compose stop
+}
+
+# Make messages
+makemessages() {
+    docker-compose run --rm --no-deps misago ./dev makemessages_in_docker $1
+}
+
+# Docker part of makemessages
+makemessages_in_docker() {
+    require_in_docker
+    
+    echo "Extracting messages for $1 language:"
+    cd ./misago
+
+    echo "Processing .py and .html files..."
+    django-admin.py makemessages -l $1 -e html,txt,py > /dev/null
+
+    echo "Processing .js files..."
+    django-admin.py makemessages -l $1 -d djangojs > /dev/null
+}
+
+# Compile messages
+compilemessages() {
+    docker-compose run --rm --no-deps misago ./dev compilemessages_in_docker
+}
+
+# Docker part of compile messages
+compilemessages_in_docker() {
+    require_in_docker
+    cd ./misago
+    django-admin.py compilemessages
+}
+
+# Pull translation files from transifex
+txpull() {
+    tx pull
+    compilemessages
+}
+
+# Push translation sources to transifex
+txpush() {
+    tx push --source
+}
+
+# Shortcut for starting bash session in running container
+run_bash() {
+    docker exec -it misago_misago_1 bash
+}
+
+# Shortcut for docker-compose run --rm misago python manage.py
+run_managepy() {
+    docker-compose run --rm misago python manage.py "${@:2}"
+}
+
+# Shortcut for docker-compose run --rm misago...
+docker_run() {
+    docker-compose run --rm misago "${@:2}"
+}
+
+# Shortcut for psql
+run_psql() {
+    docker-compose run --rm misago ./dev psql_in_docker
+}
+
+# Docker part of psql shortcut
+psql_in_docker() {
+    wait_for_db
+    PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
+}
+
+# Command dispatcher
+if [[ $1 ]]; then
+    if [[ $1 = "init" ]]; then
+        init $@
+    elif [[ $1 = "init_in_docker" ]]; then
+        init_in_docker
+    elif [[ $1 = "afterinit" ]]; then
+        after_init_message
+    elif [[ $1 = "remove" ]]; then
+        remove
+    elif [[ $1 = "reset" ]]; then
+        remove
+        init $@
+    elif [[ $1 = "rebuild" ]]; then
+        rebuild $@
+    elif [[ $1 = "test" ]]; then
+        test $2
+    elif [[ $1 = "makemessages" ]]; then
+        makemessages ${2:-en}
+    elif [[ $1 = "makemessages_in_docker" ]]; then
+        makemessages_in_docker $2
+    elif [[ $1 = "compilemessages" ]]; then
+        compilemessages
+    elif [[ $1 = "compilemessages_in_docker" ]]; then
+        compilemessages_in_docker
+    elif [[ $1 = "txpull" ]]; then
+        txpull
+    elif [[ $1 = "txpush" ]]; then
+        txpush
+    elif [[ $1 = "txsync" ]]; then
+        makemessages en
+        txpush
+        txpull
+        compilemessages
+    elif [[ $1 = "bash" ]]; then
+        run_bash
+    elif [[ $1 = "manage.py" ]]; then
+        run_managepy $@
+    elif [[ $1 = "run" ]]; then
+        docker_run $@
+    elif [[ $1 = "psql" ]]; then
+        run_psql
+    elif [[ $1 = "psql_in_docker" ]]; then
+        psql_in_docker
+    else
+        invalid_argument $1
+    fi
+else
+    intro
+fi

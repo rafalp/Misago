@@ -19,8 +19,6 @@ class Command(BaseCommand):
         message = 'Adding fake followers to %s users...\n'
         self.stdout.write(message % total_users)
 
-        message = '\nSuccessfully added %s fake followers in %s'
-
         total_followers = 0
         processed_count = 0
 
@@ -54,4 +52,5 @@ class Command(BaseCommand):
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
+        message = '\nSuccessfully added %s fake followers in %s'
         self.stdout.write(message % (total_followers, total_humanized))

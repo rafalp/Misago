@@ -6,18 +6,27 @@ def show_progress(command, step, total, since=None):
     filled = progress // 2
     blank = 50 - filled
 
-    line = '\r%s%% [%s%s]'
-    rendered_line = line % (str(progress).rjust(3), '=' * filled, ' ' * blank)
+    template = '\r%(step)s (%(progress)s%%) [%(progressbar)s]%(estimation)s'
+    variables = {
+        "step": str(step).rjust(len(str(total))),
+        "progress": str(progress).rjust(3),
+        "progressbar": "".join(['=' * filled, ' ' * blank]),
+        "estimation": get_estimation_str(since, progress, step, total),
+    }
 
-    if since:
-        progress_float = float(step) * 100.0 / float(total)
-        if progress_float > 0:
-            step_time = (time.time() - since) / progress_float
-            estimated_time = (100 - progress) * step_time
-            clock = time.strftime('%H:%M:%S', time.gmtime(estimated_time))
-            rendered_line = '%s %s est.' % (rendered_line, clock)
-        else:
-            rendered_line = '%s --:--:-- est.' % rendered_line
-
-    command.stdout.write(rendered_line, ending='')
+    command.stdout.write(template % variables, ending='')
     command.stdout.flush()
+
+
+def get_estimation_str(since, progress, step, total):
+    if not since:
+        return ""
+    
+    progress_float = float(step) * 100.0 / float(total)
+    if progress_float == 0:
+        return ' --:--:-- est.'
+
+    step_time = (time.time() - since) / progress_float
+    estimated_time = (100 - progress) * step_time
+    clock = time.strftime('%H:%M:%S', time.gmtime(estimated_time))
+    return ' %s est.' % clock

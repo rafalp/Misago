@@ -10,13 +10,13 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://badges.gitter.im/Misago/Misago.svg
-   :target: https://gitter.im/Misago/Misago?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-   :alt: Development Chat
-
 .. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Works on Python 2.7, 3.5, 3,6
+
+.. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
+   :target: https://discord.gg/fwvrZgB
+   :alt: Community Chat
 
 
 **Development Status:** 🍌 `Bananas <https://en.wikipedia.org/wiki/Perpetual_beta>`_ 🍌
@@ -63,8 +63,7 @@ As of now Misago implements all features considered "must have" on live internet
 * Posts edits log allowing you to see how user messages used to look in past as well as revert function protecting you from malignant users emptying their posts contents.
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
-* Optionally enable users to delete their own account.
-* Anonymise user data on their account's deletion.
+* Features and settings for achieving GDPR compliance.
 
 Even more features will follow in future releases:
 
@@ -79,37 +78,24 @@ Even more features will follow in future releases:
 * Ranking system for forum search results based on post links, likes, author and thread importance.
 * Post reactions in place of likes.
 
+...and more!
+
 If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
 
 Development
 ===========
 
-Preferred way to setup Misago for local development is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies one besides the other with just three terminal commands.
+Preferred way to run Misago development instances on your machine is with `Docker <https://www.docker.com/community-edition#/download>`_, which makes it easy to spin up arbitrary number of instances running different code with separate databases and dependencies besides each other.
 
-To start, clone repository to your machine and then run following commands::
+To start, clone the repository and run ``./dev init`` command in your terminal. This will build necessary docker containers, install python dependencies, initialize the database and create development project for you. After command does its magic, you will be able to start development server using the ``docker-compose up`` command.
 
-   docker-compose build
-   docker-compose run --rm misago initdev
-   docker-compose up
+After development server starts, visit the ``http://127.0.0.1:8000/`` in your browser to see your Misago installation.
 
-Those commands will install necessary dependencies, create new Misago project ``devproject`` that you may use for development as well as start Django developer server, enabling you to visit ``127.0.0.1:8000``
-in your browser and see the forum index. You should now be able to sign in with the superuser account, using ``Admin`` username and ``password`` password.
+Admin Control Panel is available under the ``http://127.0.0.1:8000/admincp/`` address. To log in to it use ``Admin`` username and ``password`` password.
 
-Admin Control Panel is available under the ``127.0.0.1:8000/admincp/`` url.
-
-`manage.py` is available through Docker's `run` command::
-    
-    docker-compose run --rm misago python manage.py
-
-Docker also allows you to run tests suite::
-    
-    docker-compose run --rm misago python runtests.py
-
-If you'll ever want to destroy Docker setup because you no longer need it, run this command::
-
-    docker-compose down
-
+The ``./dev`` utility implements other features besides the ``init``. Run it without any arguments to get the list of available actions.
+ 
 
 Frontend
 --------
@@ -160,7 +146,7 @@ English sentences used within ``misago.faker.phrases`` were extracted from `Nati
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2016 `Rafał Pitoń <http://github.com/ralfp>`_
+**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/ralfp>`_
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.

@@ -67,10 +67,6 @@ class UserManager(BaseUserManager):
 
         validate_username(username)
         validate_email(email)
-        
-        if password:
-            # password is conditional: users created with social-auth don't have one
-            validate_password(password, user=user)
 
         if not 'rank' in extra_fields:
             user.rank = Rank.objects.get_default()
