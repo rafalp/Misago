@@ -2,15 +2,15 @@
 # you'll likely need to change it to use
 # valid python version or paths to manage.py
 
-15 0 * * * python manage.py prunecategories
-25 0 * * * python manage.py buildactivepostersranking
-25 0 * * * python manage.py clearattachments
-25 0 * * * python manage.py clearreadtracker
-25 0 * * * python manage.py clearsessions
-25 0 * * * python manage.py clearsocial
-25 0 * * * python manage.py invalidatebans
-0 2 * * * python manage.py removeoldips
 0 1 * * * python manage.py deletemarkedusers
-25 1 * * * python manage.py deleteinactiveusers
-0 2 * * * python manage.py expireuserdatadownloads
+5 1 * * * python manage.py prunecategories
+10 1 * * * python manage.py buildactivepostersranking
+15 1 * * * python manage.py clearattachments
+20 1 * * * python manage.py clearreadtracker
+25 1 * * * python manage.py clearsessions
+30 1 * * * python manage.py clearsocial
+35 1 * * * python manage.py invalidatebans
+40 1 * * * python manage.py removeoldips
+45 1 * * * python manage.py deleteinactiveusers
+50 1 * * * python manage.py expireuserdatadownloads
 0 7 * * * python manage.py prepareuserdatadownloads
