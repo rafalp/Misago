@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 15:33+0000\n"
+"POT-Creation-Date: 2018-09-15 23:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -142,18 +142,18 @@ msgstr ""
 msgid "Action is not allowed."
 msgstr ""
 
-#: admin/views/index.py:83
-#, python-format
-msgid "Outdated: %(current)s! (latest: %(latest)s)"
-msgstr ""
-
-#: admin/views/index.py:91
+#: admin/views/index.py:70
 #, python-format
 msgid "Up to date! (%(current)s)"
 msgstr ""
 
-#: admin/views/index.py:100
-msgid "Failed to connect to GitHub API. Try again later."
+#: admin/views/index.py:77
+#, python-format
+msgid "Outdated: %(current)s! (latest: %(latest)s)"
+msgstr ""
+
+#: admin/views/index.py:87
+msgid "Failed to connect to pypi.org API. Try again later."
 msgstr ""
 
 #: categories/admin.py:47 templates/misago/categories/base.html:7
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Only members with valid permissions can post in closed categories."
 msgstr ""
 
-#: categories/forms.py:75 templates/misago/admin/index.html:110
+#: categories/forms.py:75 templates/misago/admin/index.html:103
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
 #: templates/misago/navbar.html:34 templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
@@ -524,7 +524,7 @@ msgstr ""
 #: threads/permissions/threads.py:164 threads/permissions/threads.py:178
 #: threads/permissions/threads.py:189 threads/permissions/threads.py:205
 #: threads/permissions/threads.py:216 threads/permissions/threads.py:247
-#: users/forms/admin.py:605 users/models/user.py:147
+#: users/forms/admin.py:605 users/models/user.py:143
 msgid "No"
 msgstr ""
 
@@ -1555,23 +1555,19 @@ msgstr ""
 msgid "The settings.py is missing MISAGO_ADDRESS value."
 msgstr ""
 
-#: templates/misago/admin/index.html:60
+#: templates/misago/admin/index.html:59
 msgid "Misago version"
 msgstr ""
 
-#: templates/misago/admin/index.html:83
+#: templates/misago/admin/index.html:81
 msgid "Check version"
 msgstr ""
 
-#: templates/misago/admin/index.html:89
-msgid "This feature requires \"packaging\" python module."
-msgstr ""
-
-#: templates/misago/admin/index.html:103
+#: templates/misago/admin/index.html:96
 msgid "DB Contents"
 msgstr ""
 
-#: templates/misago/admin/index.html:114
+#: templates/misago/admin/index.html:107
 #: templates/misago/admin/users/delete.html:36
 #: templates/misago/admin/users/list.html:24
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
@@ -1580,7 +1576,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: templates/misago/admin/index.html:118 templates/misago/navbar.html:40
+#: templates/misago/admin/index.html:111 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin.py:80
 #: users/migrations/0002_users_settings.py:16
@@ -1588,11 +1584,11 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: templates/misago/admin/index.html:123
+#: templates/misago/admin/index.html:116
 msgid "Inactive users"
 msgstr ""
 
-#: templates/misago/admin/index.html:149
+#: templates/misago/admin/index.html:142
 msgid "Checking..."
 msgstr ""
 
@@ -5992,7 +5988,7 @@ msgid "Enter each answer in new line. Answers are case-insensitive."
 msgstr ""
 
 #: users/migrations/0004_default_ranks.py:17
-#: users/migrations/0004_default_ranks.py:18 users/models/user.py:113
+#: users/migrations/0004_default_ranks.py:18 users/models/user.py:109
 msgid "Forum team"
 msgstr ""
 
@@ -6021,43 +6017,43 @@ msgstr ""
 msgid "User must have an email address."
 msgstr ""
 
-#: users/models/user.py:148
+#: users/models/user.py:144
 msgid "Notify"
 msgstr ""
 
-#: users/models/user.py:149
+#: users/models/user.py:145
 msgid "Notify with e-mail"
 msgstr ""
 
-#: users/models/user.py:157
+#: users/models/user.py:153
 msgid "Everybody"
 msgstr ""
 
-#: users/models/user.py:158
+#: users/models/user.py:154
 msgid "Users I follow"
 msgstr ""
 
-#: users/models/user.py:159
+#: users/models/user.py:155
 msgid "Nobody"
 msgstr ""
 
-#: users/models/user.py:177
+#: users/models/user.py:173
 msgid "joined on"
 msgstr ""
 
-#: users/models/user.py:191
+#: users/models/user.py:187
 msgid "staff status"
 msgstr ""
 
-#: users/models/user.py:193
+#: users/models/user.py:189
 msgid "Designates whether the user can log into admin sites."
 msgstr ""
 
-#: users/models/user.py:200
+#: users/models/user.py:196
 msgid "active"
 msgstr ""
 
-#: users/models/user.py:204
+#: users/models/user.py:200
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
