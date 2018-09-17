@@ -1,5 +1,5 @@
 #!/bin/bash
-# devctl is an utility script for automating some development tasks and actions.
+# "dev" is an utility script speeding up different development tasks and actions.
 # To find out what options are available, run it without any arguments.
 
 # Text styles
