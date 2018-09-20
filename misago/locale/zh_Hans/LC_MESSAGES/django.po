@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 15:33+0000\n"
+"POT-Creation-Date: 2018-09-15 23:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: cxgreat2014 <fwy1998@gmail.com>, 2018\n"
+"Last-Translator: 沐子白 <yiveco@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,19 +142,19 @@ msgstr "您必须选择一个或者多个项目"
 msgid "Action is not allowed."
 msgstr "操作不被许可"
 
-#: admin/views/index.py:83
-#, python-format
-msgid "Outdated: %(current)s! (latest: %(latest)s)"
-msgstr "已过期：%(current)s！（最新：%(latest)s）"
-
-#: admin/views/index.py:91
+#: admin/views/index.py:70
 #, python-format
 msgid "Up to date! (%(current)s)"
 msgstr "更新到 (%(current)s)"
 
-#: admin/views/index.py:100
-msgid "Failed to connect to GitHub API. Try again later."
-msgstr "访问GitHub API失败，请稍候尝试"
+#: admin/views/index.py:77
+#, python-format
+msgid "Outdated: %(current)s! (latest: %(latest)s)"
+msgstr "已过期：%(current)s！（最新：%(latest)s）"
+
+#: admin/views/index.py:87
+msgid "Failed to connect to pypi.org API. Try again later."
+msgstr ""
 
 #: categories/admin.py:47 templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:33
@@ -201,7 +201,7 @@ msgstr "已关闭版块"
 msgid "Only members with valid permissions can post in closed categories."
 msgstr "只有具备特定权限的成员可以在已经关闭的版块中发帖。"
 
-#: categories/forms.py:75 templates/misago/admin/index.html:110
+#: categories/forms.py:75 templates/misago/admin/index.html:103
 #: templates/misago/admin/users/delete.html:32 templates/misago/navbar.html:18
 #: templates/misago/navbar.html:34 templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
@@ -358,11 +358,11 @@ msgstr "在审查队列中"
 
 #: categories/migrations/0007_best_answers_roles.py:15
 msgid "Q&A user"
-msgstr ""
+msgstr "问答用户"
 
 #: categories/migrations/0007_best_answers_roles.py:27
 msgid "Q&A moderator"
-msgstr ""
+msgstr "问答主持人"
 
 #: categories/permissions.py:16
 msgid "Category access"
@@ -525,7 +525,7 @@ msgstr "是"
 #: threads/permissions/threads.py:164 threads/permissions/threads.py:178
 #: threads/permissions/threads.py:189 threads/permissions/threads.py:205
 #: threads/permissions/threads.py:216 threads/permissions/threads.py:247
-#: users/forms/admin.py:605 users/models/user.py:147
+#: users/forms/admin.py:605 users/models/user.py:143
 msgid "No"
 msgstr "否"
 
@@ -625,7 +625,7 @@ msgstr "过长"
 
 #: legal/admin.py:25 templates/misago/admin/users/edit.html:216
 msgid "Agreements"
-msgstr ""
+msgstr "协议"
 
 #: legal/api.py:18
 msgid "You have already accepted this agreement."
@@ -665,7 +665,7 @@ msgstr ""
 
 #: legal/forms.py:27
 msgid "Link"
-msgstr ""
+msgstr "链接"
 
 #: legal/forms.py:28
 msgid "If your agreement is located on other page, enter here a link to it."
@@ -973,11 +973,11 @@ msgstr ""
 
 #: templates/misago/admin/agreements/list.html:19
 msgid "Created"
-msgstr ""
+msgstr "创建"
 
 #: templates/misago/admin/agreements/list.html:20
 msgid "Modified"
-msgstr ""
+msgstr "修改"
 
 #: templates/misago/admin/agreements/list.html:33
 #, python-format
@@ -1344,11 +1344,11 @@ msgstr "更改设置"
 #: templates/misago/admin/datadownloads/form.html:11
 #: templates/misago/admin/datadownloads/form.html:17
 msgid "Request new data downloads"
-msgstr ""
+msgstr "请求新的数据下载"
 
 #: templates/misago/admin/datadownloads/list.html:9
 msgid "Request new downloads"
-msgstr ""
+msgstr "请求新的下载"
 
 #: templates/misago/admin/datadownloads/list.html:17
 #: templates/misago/admin/users/list.html:17 users/forms/admin.py:696
@@ -1366,7 +1366,7 @@ msgstr ""
 
 #: templates/misago/admin/datadownloads/list.html:21 users/forms/admin.py:700
 msgid "Requested by"
-msgstr ""
+msgstr "请求来源"
 
 #: templates/misago/admin/datadownloads/list.html:32
 #: templates/misago/admin/datadownloads/list.html:49
@@ -1381,7 +1381,7 @@ msgstr "头像"
 #: templates/misago/admin/datadownloads/list.html:73
 #: templates/misago/emails/data_download.html:11 users/apps.py:50
 msgid "Download data"
-msgstr ""
+msgstr "下载数据"
 
 #: templates/misago/admin/datadownloads/list.html:84
 msgid "No data downloads matching search criteria have been found."
@@ -1579,23 +1579,19 @@ msgstr ""
 msgid "The settings.py is missing MISAGO_ADDRESS value."
 msgstr ""
 
-#: templates/misago/admin/index.html:60
+#: templates/misago/admin/index.html:59
 msgid "Misago version"
 msgstr "论坛框架版本"
 
-#: templates/misago/admin/index.html:83
+#: templates/misago/admin/index.html:81
 msgid "Check version"
 msgstr "检查版本"
 
-#: templates/misago/admin/index.html:89
-msgid "This feature requires \"packaging\" python module."
-msgstr "此功能需要\"packaging\" Python模块"
-
-#: templates/misago/admin/index.html:103
+#: templates/misago/admin/index.html:96
 msgid "DB Contents"
 msgstr "数据库内容"
 
-#: templates/misago/admin/index.html:114
+#: templates/misago/admin/index.html:107
 #: templates/misago/admin/users/delete.html:36
 #: templates/misago/admin/users/list.html:24
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
@@ -1604,7 +1600,7 @@ msgstr "数据库内容"
 msgid "Posts"
 msgstr "发帖"
 
-#: templates/misago/admin/index.html:118 templates/misago/navbar.html:40
+#: templates/misago/admin/index.html:111 templates/misago/navbar.html:40
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin.py:80
 #: users/migrations/0002_users_settings.py:16
@@ -1612,11 +1608,11 @@ msgstr "发帖"
 msgid "Users"
 msgstr "用户"
 
-#: templates/misago/admin/index.html:123
+#: templates/misago/admin/index.html:116
 msgid "Inactive users"
 msgstr "冻结用户"
 
-#: templates/misago/admin/index.html:149
+#: templates/misago/admin/index.html:142
 msgid "Checking..."
 msgstr "检查中…"
 
@@ -5973,7 +5969,7 @@ msgid "Enter each answer in new line. Answers are case-insensitive."
 msgstr "在新行中输入每个答案。答案不区分大小写。"
 
 #: users/migrations/0004_default_ranks.py:17
-#: users/migrations/0004_default_ranks.py:18 users/models/user.py:113
+#: users/migrations/0004_default_ranks.py:18 users/models/user.py:109
 msgid "Forum team"
 msgstr "论坛团队"
 
@@ -6002,43 +5998,43 @@ msgstr ""
 msgid "User must have an email address."
 msgstr "用户必须有一个电子邮件地址。"
 
-#: users/models/user.py:148
+#: users/models/user.py:144
 msgid "Notify"
 msgstr "通知"
 
-#: users/models/user.py:149
+#: users/models/user.py:145
 msgid "Notify with e-mail"
 msgstr "通过电子邮件通知"
 
-#: users/models/user.py:157
+#: users/models/user.py:153
 msgid "Everybody"
 msgstr "大家"
 
-#: users/models/user.py:158
+#: users/models/user.py:154
 msgid "Users I follow"
 msgstr "我关注的用户"
 
-#: users/models/user.py:159
+#: users/models/user.py:155
 msgid "Nobody"
 msgstr "没有人"
 
-#: users/models/user.py:177
+#: users/models/user.py:173
 msgid "joined on"
 msgstr "加入了"
 
-#: users/models/user.py:191
+#: users/models/user.py:187
 msgid "staff status"
 msgstr "员工状态"
 
-#: users/models/user.py:193
+#: users/models/user.py:189
 msgid "Designates whether the user can log into admin sites."
 msgstr "指定用户是否可以登录管理站点。"
 
-#: users/models/user.py:200
+#: users/models/user.py:196
 msgid "active"
 msgstr "未冻结"
 
-#: users/models/user.py:204
+#: users/models/user.py:200
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."

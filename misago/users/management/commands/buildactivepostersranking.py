@@ -1,3 +1,4 @@
+from time import time
 from django.core.management.base import BaseCommand
 
 from misago.users.activepostersranking import build_active_posters_ranking
@@ -7,6 +8,10 @@ class Command(BaseCommand):
     help = 'Builds active posters ranking'
 
     def handle(self, *args, **options):
-        self.stdout.write("\n\nBuilding active posters ranking...")
+        self.stdout.write("\nBuilding active posters ranking...")
+
+        start_time = time()
         build_active_posters_ranking()
-        self.stdout.write("Done!")
+        end_time = time() - start_time
+
+        self.stdout.write("Finished after %.2fs" % end_time)

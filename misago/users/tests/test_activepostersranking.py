@@ -38,9 +38,6 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         # other user
         other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 
-        other_user.posts = 1
-        other_user.save()
-
         post_thread(self.category, poster=other_user)
 
         build_active_posters_ranking()
@@ -52,9 +49,6 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         # two users in ranking
         post_thread(self.category, poster=self.user)
         post_thread(self.category, poster=self.user)
-
-        self.user.posts = 2
-        self.user.save()
 
         build_active_posters_ranking()
         ranking = get_active_posters_ranking()
