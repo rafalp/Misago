@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
@@ -93,18 +93,18 @@ class ThreadViewSet(ViewSet):
         else:
             return Response(posting.errors, status=400)
 
-    @detail_route(methods=['post'], url_path='merge')
+    @action(detail=True, methods=['post'], url_path='merge', url_name='merge')
     @transaction.atomic
     def thread_merge(self, request, pk=None):
         thread = self.get_thread(request, pk).unwrap()
         return thread_merge_endpoint(request, thread, self.thread)
 
-    @list_route(methods=['post'], url_path='merge')
+    @action(detail=False, methods=['post'], url_path='merge', url_name='merge')
     @transaction.atomic
     def threads_merge(self, request):
         return threads_merge_endpoint(request)
 
-    @list_route(methods=['get'])
+    @action(detail=False, methods=['get'])
     def editor(self, request):
         return thread_start_editor(request)
 

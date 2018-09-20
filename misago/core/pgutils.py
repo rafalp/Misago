@@ -13,7 +13,7 @@ class PgPartialIndex(Index):
             raise ValueError('partial index requires WHERE clause')
         self.where = where
 
-        super(PgPartialIndex, self).__init__(fields, name)
+        super(PgPartialIndex, self).__init__(fields=fields, name=name)
 
     def set_name_with_model(self, model):
         table_name = model._meta.db_table
