@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load crispy_forms_filters i18n %}
+{% load i18n %}
 
 
 {% block title %}
@@ -31,9 +31,9 @@ Delete category: {{ category }}
     <legend>{% trans "Category contents" %}</legend>
 
     {% if not form.instance.is_leaf_node %}
-    {{ form.move_children_to|as_crispy_field }}
+    {{ form.move_children_to }}
     {% endif %}
-    {{ form.move_threads_to|as_crispy_field }}
+    {{ form.move_threads_to }}
 
   </fieldset>
 </div>

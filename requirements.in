@@ -3,7 +3,6 @@ bleach<2.2
 django<2
 djangorestframework<3.7
 django-debug-toolbar<1.9
-django-crispy-forms<1.7
 django-htmlmin<0.11
 django-mptt<0.9
 Faker<0.9

@@ -1,33 +1,31 @@
-{% load crispy_forms_field %}
-
 {% if field.is_hidden %}
 	{{ field }}
 {% else %}
-    {% if field|is_checkbox %}
+    {% if field %}
         <div class="form-group">
     {% endif %}
-	<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}" {% if not field|is_checkbox %}class="form-group{% else %}class="checkbox{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
-		{% if field.label and not field|is_checkbox and form_show_labels %}
+	<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}" {% if not field %}class="form-group{% else %}class="checkbox{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if form_show_errors%}{% if field.errors %} has-error{% endif %}{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+		{% if field.label and not field and form_show_labels %}
 			<label for="{{ field.id_for_label }}" class="control-label {{ label_class }}{% if field.field.required %} requiredField{% endif %}">
 				{{ field.label|safe }}:
 			</label>
 		{% endif %}
 
-        {% if field|is_checkboxselectmultiple %}
+        {% if field %}
             {% include 'bootstrap3/layout/checkboxselectmultiple.html' %}
         {% endif %}
 
-        {% if field|is_radioselect %}
+        {% if field %}
             {% include 'bootstrap3/layout/radioselect.html' %}
         {% endif %}
 
-        {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}
-            {% if field|is_checkbox and form_show_labels %}
+        {% if not field and not field %}
+            {% if field and form_show_labels %}
                 {% if label_class %}
                     <div class="controls {{ label_class }} {{ field_class }}">
                 {% endif %}
                 <label for="{{ field.id_for_label }}" class="{% if field.field.required %} requiredField{% endif %}">
-                    {% crispy_field field 'class' 'checkbox' %}
+                    {{ field }}
                     {{ field.label|safe }}
                     {% include 'bootstrap3/layout/help_text_and_errors.html' %}
                 </label>
@@ -36,13 +34,13 @@
                 {% endif %}
             {% else %}
                 <div class="controls {{ field_class }}"{% if field.field.input_formats %} data-input-format="{{ field.field.input_formats.0 }}"{% endif %}>
-                    {% crispy_field field %}
+                    {{ field }}
                     {% include 'bootstrap3/layout/help_text_and_errors.html' %}
                 </div>
             {% endif %}
         {% endif %}
 	</{% if tag %}{{ tag }}{% else %}div{% endif %}>
-    {% if field|is_checkbox %}
+    {% if field %}
         </div>
     {% endif %}
 {% endif %}
