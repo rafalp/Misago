@@ -22,7 +22,7 @@ def parse_args():
     args = []
     kwargs = {
         'verbosity': 1,
-        'noinput': True,
+        'no_input': True,
     }
 
     sys_argv = sys.argv[1:]
