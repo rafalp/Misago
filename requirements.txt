@@ -9,6 +9,7 @@ django-htmlmin==0.10.0
 django-js-asset==1.1.0
 django-mptt==0.9.1
 djangorestframework==3.8.2
+django-crispy-forms==1.7.2
 Faker==0.9.1
 html5lib==1.0.1
 idna==2.7
