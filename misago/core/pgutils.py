@@ -8,7 +8,7 @@ class PgPartialIndex(Index):
     suffix = 'part'
     max_name_length = 31
 
-    def __init__(self, fields=[], name=None, where=None):
+    def __init__(self, fields=(), name=None, where=None):
         if not where:
             raise ValueError('partial index requires WHERE clause')
         self.where = where
@@ -59,11 +59,11 @@ class PgPartialIndex(Index):
         kwargs['where'] = self.where
         return path, args, kwargs
 
-    def get_sql_create_template_values(self, model, schema_editor, using):
-        parameters = super(PgPartialIndex, self).get_sql_create_template_values(
-            model, schema_editor, '')
-        parameters['extra'] = self.get_sql_extra(model, schema_editor)
-        return parameters
+    def create_sql(self, model, schema_editor, using=''):
+        parameters = super(PgPartialIndex, self).create_sql(
+            model, schema_editor, using)
+        parameters.parts['extra'] = self.get_sql_extra(model, schema_editor)
+        return str(parameters)
 
     def get_sql_extra(self, model, schema_editor):
         quote_name = schema_editor.quote_name
