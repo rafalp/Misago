@@ -38,7 +38,7 @@ def build_active_posters_ranking():
     for category in Category.objects.all_categories():
         ranked_categories.append(category.pk)
 
-    ranked_posts = Q(posted_on__gte=tracked_since) & Q(category__in=ranked_categories)
+    ranked_posts = Q(post__posted_on__gte=tracked_since) & Q(post__category__in=ranked_categories)
 
     queryset = (
         UserModel.objects
