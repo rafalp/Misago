@@ -22,7 +22,7 @@ def posts_merge_endpoint(request, thread):
     if not serializer.is_valid():
         return Response(
             {
-                'detail': list(serializer.errors.values())[0][0],
+                'detail': list(serializer.errors.values())[0],
             },
             status=400,
         )
