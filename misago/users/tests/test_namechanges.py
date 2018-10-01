@@ -10,7 +10,7 @@ UserModel = get_user_model()
 class UsernameChangesTests(TestCase):
     def test_username_changes_helper(self):
         """username changes are tracked correctly"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
         namechanges = UsernameChanges(test_user)
         self.assertEqual(namechanges.left, 2)

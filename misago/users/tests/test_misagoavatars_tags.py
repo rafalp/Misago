@@ -9,7 +9,7 @@ UserModel = get_user_model()
 class TemplateTagsTests(TestCase):
     def test_user_avatar_filter(self):
         """avatar filter returns url to avatar image"""
-        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
 
         user.avatars = [
             {

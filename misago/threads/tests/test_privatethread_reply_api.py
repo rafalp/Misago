@@ -17,7 +17,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.api_link = self.thread.get_posts_api_url()
 
         self.other_user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123'
+            'BobBoberson', 'bob@boberson.com', 'ogasiM200_'
         )
 
     def test_reply_private_thread(self):

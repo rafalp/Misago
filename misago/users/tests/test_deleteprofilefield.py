@@ -28,7 +28,7 @@ class DeleteProfileFieldTests(TestCase):
 
     def test_delete_fields(self):
         """utility has no showstoppers when no fields are set"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
         user.profile_fields = {'gender': 'male', 'bio': "Yup!"}
         user.save()
 

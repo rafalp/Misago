@@ -17,7 +17,7 @@ class MockRequest(object):
 class SignaturesTests(TestCase):
     def test_signature_change(self):
         """signature module allows for signature change"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
         signatures.set_user_signature(MockRequest(), test_user, '')
 

@@ -127,7 +127,7 @@ class GetBanTests(TestCase):
 
 class UserBansTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'ogasiM200_')
 
     def test_no_ban(self):
         """user is not caught by ban"""
@@ -249,7 +249,7 @@ class RequestIPBansTests(TestCase):
 class BanUserTests(TestCase):
     def test_ban_user(self):
         """ban_user utility bans user"""
-        user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'ogasiM200_')
 
         ban = ban_user(user, 'User reason', 'Staff reason')
         self.assertEqual(ban.user_message, 'User reason')

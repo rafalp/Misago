@@ -12,7 +12,7 @@ UserModel = get_user_model()
 class ListUsedProfileFieldsTests(TestCase):
     def test_no_fields_set(self):
         """utility has no showstoppers when no fields are set"""
-        UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
         out = StringIO()
         call_command(listusedprofilefields.Command(), stdout=out)
@@ -22,15 +22,15 @@ class ListUsedProfileFieldsTests(TestCase):
 
     def test_fields_set(self):
         """utility lists number of users that have different fields set"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
         user.profile_fields = {'gender': 'male', 'bio': "Yup!"}
         user.save()
 
-        user = UserModel.objects.create_user('Bob2', 'bob2@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob2', 'bob2@bob.com', 'ogasiM200_')
         user.profile_fields = {'gender': 'male'}
         user.save()
 
-        user = UserModel.objects.create_user('Bob3', 'bob3@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob3', 'bob3@bob.com', 'ogasiM200_')
         user.profile_fields = {'location': ""}
         user.save()
 

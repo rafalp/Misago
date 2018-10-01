@@ -12,7 +12,7 @@ UserModel = get_user_model()
 class MailTests(TestCase):
     def test_mail_user(self):
         """mail_user sets message in backend"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
         mail_user(user, "Misago Test Mail", "misago/emails/base")
 
@@ -27,11 +27,11 @@ class MailTests(TestCase):
     def test_mail_users(self):
         """mail_users sets messages in backend"""
         test_users = [
-            UserModel.objects.create_user('Alpha', 'alpha@test.com', 'pass123'),
-            UserModel.objects.create_user('Beta', 'beta@test.com', 'pass123'),
-            UserModel.objects.create_user('Niner', 'niner@test.com', 'pass123'),
-            UserModel.objects.create_user('Foxtrot', 'foxtrot@test.com', 'pass123'),
-            UserModel.objects.create_user('Uniform', 'uniform@test.com', 'pass123'),
+            UserModel.objects.create_user('Alpha', 'alpha@test.com', 'ogasiM200_'),
+            UserModel.objects.create_user('Beta', 'beta@test.com', 'ogasiM200_'),
+            UserModel.objects.create_user('Niner', 'niner@test.com', 'ogasiM200_'),
+            UserModel.objects.create_user('Foxtrot', 'foxtrot@test.com', 'ogasiM200_'),
+            UserModel.objects.create_user('Uniform', 'uniform@test.com', 'ogasiM200_'),
         ]
 
         mail_users(test_users, "Misago Test Spam", "misago/emails/base")

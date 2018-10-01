@@ -17,7 +17,7 @@ UserModel = get_user_model()
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
@@ -84,7 +84,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'ogasiM200_')
 
         self.user.avatars = None
         self.user.save()

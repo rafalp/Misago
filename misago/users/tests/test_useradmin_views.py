@@ -43,9 +43,9 @@ class UserAdminViewsTests(AdminTestCase):
         response = self.client.get(link_base)
         self.assertEqual(response.status_code, 200)
 
-        user_a = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
-        user_b = UserModel.objects.create_user('Tyrion', 't321@test.com', 'pass123')
-        user_c = UserModel.objects.create_user('Karen', 't432@test.com', 'pass123')
+        user_a = UserModel.objects.create_user('Tyrael', 't123@test.com', 'ogasiM200_')
+        user_b = UserModel.objects.create_user('Tyrion', 't321@test.com', 'ogasiM200_')
+        user_c = UserModel.objects.create_user('Karen', 't432@test.com', 'ogasiM200_')
 
         # Search both
         response = self.client.get('%s&username=tyr' % link_base)
@@ -98,7 +98,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=1,
             )
             user_pks.append(test_user.pk)
@@ -126,7 +126,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=1,
             )
             user_pks.append(test_user.pk)
@@ -161,7 +161,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 joined_from_ip='73.95.67.27',
                 requires_activation=1,
             )
@@ -197,7 +197,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=1,
             )
             user_pks.append(test_user.pk)
@@ -220,7 +220,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=1,
             )
             request_user_data_download(test_user)
@@ -260,7 +260,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
             )
             user_pks.append(test_user.pk)
 
@@ -289,7 +289,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
             )
             user_pks.append(test_user.pk)
 
@@ -319,7 +319,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=0,
             )
             user_pks.append(test_user.pk)
@@ -329,7 +329,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Weebl%s' % i,
                 'weebl%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=0,
             )
 
@@ -366,7 +366,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
             )
             user_pks.append(test_user.pk)
 
@@ -395,7 +395,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
             )
             user_pks.append(test_user.pk)
 
@@ -424,7 +424,7 @@ class UserAdminViewsTests(AdminTestCase):
             test_user = UserModel.objects.create_user(
                 'Bob%s' % i,
                 'bob%s@test.com' % i,
-                'pass123',
+                'ogasiM200_',
                 requires_activation=1,
             )
             user_pks.append(test_user.pk)
@@ -456,7 +456,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(default_rank.pk),
                 'roles': six.text_type(authenticated_role.pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'staff_level': '0',
             }
         )
@@ -465,7 +465,7 @@ class UserAdminViewsTests(AdminTestCase):
         UserModel.objects.get_by_username('Bawww')
         test_user = UserModel.objects.get_by_email('reg@stered.com')
 
-        self.assertTrue(test_user.check_password('pass123'))
+        self.assertTrue(test_user.check_password('ogasiM200_'))
 
     def test_new_view_password_with_whitespaces(self):
         """new user view creates account with whitespaces password"""
@@ -482,7 +482,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(default_rank.pk),
                 'roles': six.text_type(authenticated_role.pk),
                 'email': 'reg@stered.com',
-                'new_password': ' pass123 ',
+                'new_password': ' ogasiM200_ ',
                 'staff_level': '0',
             }
         )
@@ -491,11 +491,11 @@ class UserAdminViewsTests(AdminTestCase):
         UserModel.objects.get_by_username('Bawww')
         test_user = UserModel.objects.get_by_email('reg@stered.com')
 
-        self.assertTrue(test_user.check_password(' pass123 '))
+        self.assertTrue(test_user.check_password(' ogasiM200_ '))
 
     def test_edit_view(self):
         """edit user view changes account"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -512,7 +512,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'newpass123',
+                'new_password': 'newogasiM200_',
                 'staff_level': '0',
                 'signature': 'Hello world!',
                 'is_signature_locked': '1',
@@ -527,7 +527,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         updated_user = UserModel.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.check_password('newpass123'))
+        self.assertTrue(updated_user.check_password('newogasiM200_'))
         self.assertEqual(updated_user.username, 'Bawww')
         self.assertEqual(updated_user.slug, 'bawww')
 
@@ -540,7 +540,7 @@ class UserAdminViewsTests(AdminTestCase):
 
         This is regression test for issue #640
         """
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -557,7 +557,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'signature': 'Hello world!',
                 'is_signature_locked': '1',
                 'is_hiding_presence': '0',
@@ -577,7 +577,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_edit_change_password_whitespaces(self):
         """edit user view changes account password to include whitespaces"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -594,7 +594,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': ' newpass123 ',
+                'new_password': ' newogasiM200_ ',
                 'staff_level': '0',
                 'signature': 'Hello world!',
                 'is_signature_locked': '1',
@@ -609,7 +609,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 302)
 
         updated_user = UserModel.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.check_password(' newpass123 '))
+        self.assertTrue(updated_user.check_password(' newogasiM200_ '))
         self.assertEqual(updated_user.username, 'Bawww')
         self.assertEqual(updated_user.slug, 'bawww')
 
@@ -618,7 +618,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_edit_make_admin(self):
         """edit user view allows super admin to make other user admin"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -636,7 +636,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -657,7 +657,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_edit_make_superadmin_admin(self):
         """edit user view allows super admin to make other user super admin"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -675,7 +675,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '0',
                 'is_superuser': '1',
                 'signature': 'Hello world!',
@@ -699,7 +699,7 @@ class UserAdminViewsTests(AdminTestCase):
         test_user = UserModel.objects.create_user(
             'Bob',
             'bob@test.com',
-            'pass123',
+            'ogasiM200_',
             is_staff=True,
             is_superuser=True,
         )
@@ -721,7 +721,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '0',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -745,7 +745,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.is_superuser = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -763,7 +763,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '1',
                 'signature': 'Hello world!',
@@ -787,7 +787,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.is_superuser = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -805,7 +805,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '0',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -831,7 +831,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.is_superuser = True
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
 
         test_user.is_staff = True
         test_user.save()
@@ -853,7 +853,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -879,7 +879,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.user.is_superuser = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
 
         test_user.is_staff = True
         test_user.save()
@@ -901,7 +901,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -924,7 +924,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_edit_is_deleting_account_cant_reactivate(self):
         """users deleting own accounts can't be reactivated"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.mark_for_delete()
 
         test_link = reverse(
@@ -944,7 +944,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -985,7 +985,7 @@ class UserAdminViewsTests(AdminTestCase):
                 'rank': six.text_type(test_user.rank_id),
                 'roles': six.text_type(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
-                'new_password': 'pass123',
+                'new_password': 'ogasiM200_',
                 'is_staff': '1',
                 'is_superuser': '0',
                 'signature': 'Hello world!',
@@ -1045,7 +1045,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_edit_agreements_list(self):
         """edit view displays list of user's agreements"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:edit', kwargs={
                 'pk': test_user.pk,
@@ -1085,7 +1085,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_threads_view_staff(self):
         """delete user threads view validates if user deletes staff"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_staff = True
         test_user.save()
 
@@ -1103,7 +1103,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_threads_view_superuser(self):
         """delete user threads view validates if user deletes superuser"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_superuser = True
         test_user.save()
 
@@ -1121,7 +1121,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_threads_view(self):
         """delete user threads view deletes threads"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:delete-threads', kwargs={
                 'pk': test_user.pk,
@@ -1161,7 +1161,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_posts_view_staff(self):
         """delete user posts view validates if user deletes staff"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_staff = True
         test_user.save()
 
@@ -1179,7 +1179,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_posts_view_superuser(self):
         """delete user posts view validates if user deletes superuser"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_superuser = True
         test_user.save()
 
@@ -1197,7 +1197,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_posts_view(self):
         """delete user posts view deletes posts"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:delete-posts', kwargs={
                 'pk': test_user.pk,
@@ -1238,7 +1238,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_account_view_staff(self):
         """delete user account view validates if user deletes staff"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_staff = True
         test_user.save()
 
@@ -1256,7 +1256,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_account_view_superuser(self):
         """delete user account view validates if user deletes superuser"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_user.is_superuser = True
         test_user.save()
 
@@ -1274,7 +1274,7 @@ class UserAdminViewsTests(AdminTestCase):
 
     def test_delete_account_view(self):
         """delete user account view deletes user account"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Bob', 'bob@test.com', 'ogasiM200_')
         test_link = reverse(
             'misago:admin:users:accounts:delete-account', kwargs={
                 'pk': test_user.pk,

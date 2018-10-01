@@ -23,7 +23,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.api_link = reverse('misago:api:private-thread-list')
 
         self.other_user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123'
+            'BobBoberson', 'bob@boberson.com', 'ogasiM200_'
         )
 
     def test_cant_start_thread_as_guest(self):

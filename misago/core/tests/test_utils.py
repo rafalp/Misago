@@ -87,7 +87,7 @@ PLAINTEXT_FORMAT_CASES = [
     ('Lorem ipsum.', '<p>Lorem ipsum.</p>'),
     ('Lorem <b>ipsum</b>.', '<p>Lorem &lt;b&gt;ipsum&lt;/b&gt;.</p>'),
     ('Lorem "ipsum" dolor met.', '<p>Lorem &quot;ipsum&quot; dolor met.</p>'),
-    ('Lorem ipsum.\nDolor met.', '<p>Lorem ipsum.<br />Dolor met.</p>'),
+    ('Lorem ipsum.\nDolor met.', '<p>Lorem ipsum.<br>Dolor met.</p>'),
     ('Lorem ipsum.\n\nDolor met.', '<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>'),
     (
         'http://misago-project.org/login/',

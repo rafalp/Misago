@@ -14,7 +14,7 @@ UserModel = get_user_model()
 
 class DeleteInactiveUsersTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_delete_user_activation_user(self):

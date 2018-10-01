@@ -36,7 +36,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             }
         )
 
-        self.other_user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'pass123')
+        self.other_user = UserModel.objects.create_user('Bob', 'bob@boberson.com', 'ogasiM200_')
 
     def override_acl(self):
         new_acl = deepcopy(self.user.acl_cache)

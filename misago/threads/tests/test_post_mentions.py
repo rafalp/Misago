@@ -90,7 +90,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         for i in range(MENTIONS_LIMIT + 5):
             users.append(
                 UserModel.objects.
-                create_user('Mention{}'.format(i), 'mention{}@bob.com'.format(i), 'pass123')
+                create_user('Mention{}'.format(i), 'mention{}@bob.com'.format(i), 'ogasiM200_')
             )
 
         mentions = ['@{}'.format(u) for u in users]
@@ -109,8 +109,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mention_update(self):
         """edit post endpoint updates mentions"""
-        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
-        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
+        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'ogasiM200_')
+        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'ogasiM200_')
 
         response = self.client.post(
             self.post_link, data={
@@ -170,8 +170,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mentions_merge(self):
         """posts merge sums mentions"""
-        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'pass123')
-        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'pass123')
+        user_a = UserModel.objects.create_user('Mention', 'mention@test.com', 'ogasiM200_')
+        user_b = UserModel.objects.create_user('MentionB', 'mentionb@test.com', 'ogasiM200_')
 
         response = self.client.post(
             self.post_link, data={

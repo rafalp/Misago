@@ -255,7 +255,7 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserRetrieveTests, self).setUp()
 
-        self.test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'ogasiM200_')
         self.link = reverse(
             'misago:api:user-detail', kwargs={
                 'pk': self.test_user.pk,
@@ -399,7 +399,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserFollowTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         self.link = '/api/users/%s/follow/' % self.other_user.pk
 
@@ -463,7 +463,7 @@ class UserBanTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserBanTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         self.link = '/api/users/%s/ban/' % self.other_user.pk
 
@@ -578,7 +578,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserDeleteTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         self.link = '/api/users/%s/delete/' % self.other_user.pk
 

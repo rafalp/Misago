@@ -170,7 +170,7 @@ Lorem ipsum.
 
     def test_complex_paragraph(self):
         """parser minifies complex paragraph"""
-        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass123')
+        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'OGASIm200_')
 
         test_text = """
 Hey there @{}, how's going?

@@ -111,7 +111,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserUsernameModerationTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         self.link = '/api/users/%s/moderate-username/' % self.other_user.pk
 

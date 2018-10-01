@@ -54,7 +54,7 @@ class Command(BaseCommand):
                 user = UserModel.objects.create_user(
                     random.choice(possible_usernames),
                     fake.email(),
-                    'pass123',
+                    'ogasiM200_',
                     set_default_avatar=False,
                     rank=random.choice(ranks),
                 )

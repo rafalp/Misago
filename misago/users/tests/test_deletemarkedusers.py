@@ -11,7 +11,7 @@ UserModel = get_user_model()
 
 class DeleteMarkedUsersTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'ogasiM200_')
         self.user.mark_for_delete()
 
     def test_delete_marked_user(self):

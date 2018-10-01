@@ -21,7 +21,7 @@ class PrivateThreadPatchApiTestCase(PrivateThreadsTestCase):
         self.api_link = self.thread.get_api_url()
 
         self.other_user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123'
+            'BobBoberson', 'bob@boberson.com', 'ogasiM200_'
         )
 
     def patch(self, api_link, ops):
@@ -433,7 +433,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
 
     def test_moderator_remove_user(self):
         """api allows moderator to remove other user"""
-        removed_user = UserModel.objects.create_user('Vigilante', 'test@test.com', 'pass123')
+        removed_user = UserModel.objects.create_user('Vigilante', 'test@test.com', 'ogasiM200_')
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user, removed_user])
@@ -703,7 +703,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
     def test_moderator_change_owner(self):
         """moderator can change thread owner to other user"""
-        new_owner = UserModel.objects.create_user('NewOwner', 'new@owner.com', 'pass123')
+        new_owner = UserModel.objects.create_user('NewOwner', 'new@owner.com', 'ogasiM200_')
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user, new_owner])

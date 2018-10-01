@@ -28,7 +28,7 @@ class AuthenticateAPITests(TestCase):
 
     def test_user_search(self):
         """api searches uses"""
-        UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'pass123')
+        UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'ogasiM200_')
 
         # exact case sensitive match
         response = self.client.get(self.api_link + '?q=BobBoberson')

@@ -299,7 +299,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(UserAvatarModerationTests, self).setUp()
 
-        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         self.link = '/api/users/%s/moderate-avatar/' % self.other_user.pk
 

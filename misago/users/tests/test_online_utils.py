@@ -11,7 +11,7 @@ UserModel = get_user_model()
 class GetUserStatusTests(AuthenticatedUserTestCase):
     def setUp(self):
         super(GetUserStatusTests, self).setUp()
-        self.other_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        self.other_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'ogasiM200_')
 
     def test_user_hiding_presence(self):
         """get_user_status has no showstopper for hidden user"""

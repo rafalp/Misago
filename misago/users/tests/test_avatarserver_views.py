@@ -10,7 +10,7 @@ UserModel = get_user_model()
 
 class AvatarServerTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'Pass123')
+        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'OGASIm200_')
 
         self.user.avatars = [
             {

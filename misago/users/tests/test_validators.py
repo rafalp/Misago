@@ -16,7 +16,7 @@ UserModel = get_user_model()
 
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'ogasiM200_')
 
     def test_valid_email(self):
         """validate_email_available allows available emails"""
@@ -64,7 +64,7 @@ class ValidateUsernameTests(TestCase):
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'ogasiM200_')
 
     def test_valid_name(self):
         """validate_username_available allows available names"""

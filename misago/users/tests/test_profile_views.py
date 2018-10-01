@@ -34,7 +34,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'ogasiM200_')
 
         test_user.is_active = False
         test_user.save()

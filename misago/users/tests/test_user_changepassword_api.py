@@ -63,7 +63,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.link,
             data={
-                'new_password': 'n',
+                'new_password': 'a2M_',
                 'password': self.USER_PASSWORD,
             },
         )

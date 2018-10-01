@@ -36,7 +36,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(empty_ranking['users_count'], 0)
 
         # other user
-        other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
+        other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "ogasiM200_")
 
         post_thread(self.category, poster=other_user)
 
@@ -60,7 +60,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking['users'][1].score, 1)
 
         # disabled users are not ranked
-        disabled = UserModel.objects.create_user("DisabledUser", "disabled@user.com", "pass123")
+        disabled = UserModel.objects.create_user("DisabledUser", "disabled@user.com", "ogasiM200_")
 
         disabled.is_active = False
         disabled.save()
