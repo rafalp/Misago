@@ -13,6 +13,10 @@ matrix:
   - python: "3.7"
     dist: xenial
     sudo: true
+  allow_failures:
+  - python: "2.7"
+  - python: "3.4"
+  - python: "3.5"
 install:
   - pip install -U pip setuptools
   - pip install coveralls
