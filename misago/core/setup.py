@@ -50,7 +50,7 @@ def start_misago_project():
     project_name = validate_project_name(parser, args[0])
 
     argv = [
-        'start-misago.py', 'startproject', project_name, dir,
+        'misago-start.py', 'startproject', project_name, dir,
         '--template=%s' % get_misago_project_template()
     ]
 
