@@ -43,14 +43,14 @@ def start_misago_project():
     if len(args) < 1:
         parser.error("project_name must be specified")
 
-    dir = None
+    directory = None
     if len(args) == 2:
-        dir = args[1]
+        directory = args[1]
 
     project_name = validate_project_name(parser, args[0])
 
     argv = [
-        'start-misago.py', 'startproject', project_name, dir,
+        'misago-start.py', 'startproject', project_name, directory,
         '--template=%s' % get_misago_project_template()
     ]
 
