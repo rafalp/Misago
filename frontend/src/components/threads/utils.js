@@ -121,7 +121,7 @@ export function getModerationActions(threads) {
       moderation.can_pin_globally = thread.acl.can_pin_globally;
     }
 
-    if (thread.acl.can_unhide > moderation.can_unhide) {
+    if (thread.is_hidden && thread.acl.can_unhide > moderation.can_unhide) {
       moderation.can_unhide = thread.acl.can_unhide;
     }
 

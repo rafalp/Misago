@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.core import threadstore
@@ -35,9 +38,21 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(empty_ranking['users'], [])
         self.assertEqual(empty_ranking['users_count'], 0)
 
-        # other user
+        # other user that will be posting
         other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 
+        # lurker user that won't post anything
+        UserModel.objects.create_user("Lurker", "lurker@user.com", "pass123")
+
+        # unranked user that posted something 400 days ago
+        unranked_user = UserModel.objects.create_user(
+            "UnrankedUser", "unranked@user.com", "pass123"
+        )
+
+        started_on = timezone.now() - timedelta(days=400)
+        post_thread(self.category, poster=unranked_user, started_on=started_on)
+
+        # Start testing scenarios
         post_thread(self.category, poster=other_user)
 
         build_active_posters_ranking()

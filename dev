@@ -1,5 +1,5 @@
 #!/bin/bash
-# devctl is an utility script for automating some development tasks and actions.
+# "dev" is an utility script speeding up different development tasks and actions.
 # To find out what options are available, run it without any arguments.
 
 # Text styles
@@ -356,7 +356,6 @@ if [[ $1 ]]; then
         makemessages en
         txpush
         txpull
-        compilemessages
     elif [[ $1 = "bash" ]]; then
         run_bash
     elif [[ $1 = "manage.py" ]]; then
