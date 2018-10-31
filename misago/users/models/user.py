@@ -462,3 +462,26 @@ class AnonymousUser(DjangoAnonymousUser):
 
     def update_acl_key(self):
         raise TypeError("Can't update ACL key on anonymous users")
+
+class DeletedUser(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='userdeletes',
+        on_delete=models.CASCADE,
+    )
+    deleted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        related_name='user_deletes',
+        on_delete=models.SET_NULL,
+    )
+    deleted_by_username = models.CharField(max_length=30)
+    deleted_on = models.DateTimeField(default=timezone.now)
+    deletion_reason = models.CharField(max_length=255)
+    
+    class Meta:
+        get_latest_by = "deleted_on"
+
+    def get_deletion_reason(self):
+        return self.deletion_reason
