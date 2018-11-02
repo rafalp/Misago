@@ -1,4 +1,4 @@
-from path import Path
+from pathlib import Path
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -102,7 +102,7 @@ class UserModelTests(TestCase):
         for avatar in user.avatar_set.all():
             avatar_path = Path(avatar.image.path)
             self.assertTrue(avatar_path.exists())
-            self.assertTrue(avatar_path.isfile())
+            self.assertTrue(avatar_path.is_file())
             user_avatars.append(avatar)
         self.assertNotEqual(user_avatars, [])
         
@@ -111,7 +111,7 @@ class UserModelTests(TestCase):
         for removed_avatar in user_avatars:
             avatar_path = Path(removed_avatar.image.path)
             self.assertFalse(avatar_path.exists())
-            self.assertFalse(avatar_path.isfile())
+            self.assertFalse(avatar_path.is_file())
 
             with self.assertRaises(Avatar.DoesNotExist):
                 Avatar.objects.get(pk=removed_avatar.pk)

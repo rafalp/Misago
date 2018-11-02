@@ -1,7 +1,6 @@
 import json
 import os
-
-from path import Path
+from pathlib import Path
 
 from django.contrib.auth import get_user_model
 
@@ -142,7 +141,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         avatar = Path(self.get_current_user().avatar_tmp.path)
         self.assertTrue(avatar.exists())
-        self.assertTrue(avatar.isfile())
+        self.assertTrue(avatar.is_file())
 
         response = self.client.post(
             self.link,
@@ -168,7 +167,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         avatar = Path(self.get_current_user().avatar_src.path)
         self.assertTrue(avatar.exists())
-        self.assertTrue(avatar.isfile())
+        self.assertTrue(avatar.is_file())
 
         response = self.client.post(
             self.link,
@@ -210,7 +209,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         avatar = Path(self.get_current_user().avatar_src.path)
         self.assertFalse(avatar.exists())
-        self.assertFalse(avatar.isfile())
+        self.assertFalse(avatar.is_file())
 
     def test_gallery_set_empty_gallery(self):
         """gallery handles set avatar on empty gallery"""

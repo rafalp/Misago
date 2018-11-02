@@ -10,7 +10,6 @@ Faker<0.9
 html5lib==0.999999999
 markdown<2.7
 misago-social-auth-app-django
-path.py<10.4
 pillow<4.2
 psycopg2-binary<2.8
 pytz
