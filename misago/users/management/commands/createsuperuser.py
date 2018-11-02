@@ -11,7 +11,6 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
-from django.utils.six.moves import input
 
 from misago.users.validators import validate_email, validate_username
 
