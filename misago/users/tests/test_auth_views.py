@@ -67,7 +67,7 @@ class AuthViewsTests(TestCase):
         response = self.client.post(
             reverse('misago:login'),
             data={
-                'redirect_to': u'łelcome!',
+                'redirect_to': 'łelcome!',
             },
         )
 

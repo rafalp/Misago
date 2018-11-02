@@ -161,10 +161,10 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         return categories_acl
 
     def assertContainsThread(self, response, thread):
-        self.assertContains(response, u' href="{}"'.format(thread.get_absolute_url()))
+        self.assertContains(response, ' href="{}"'.format(thread.get_absolute_url()))
 
     def assertNotContainsThread(self, response, thread):
-        self.assertNotContains(response, u' href="{}"'.format(thread.get_absolute_url()))
+        self.assertNotContains(response, ' href="{}"'.format(thread.get_absolute_url()))
 
 
 class ApiTests(ThreadsListTestCase):

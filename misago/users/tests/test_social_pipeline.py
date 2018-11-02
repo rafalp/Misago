@@ -579,14 +579,14 @@ class GetUsernameTests(PipelineTestCase):
 
     def test_normalize_username(self):
         """pipeline step normalizes username"""
-        result = get_username(None, {'username': u'Błop Błoperson'}, None)
+        result = get_username(None, {'username': 'Błop Błoperson'}, None)
         self.assertEqual(result, {'clean_username': 'BlopBloperson'})
 
     def test_resolve_to_first_name(self):
         """pipeline attempts to use first name because username is taken"""
         details = {
             'username': self.user.username,
-            'first_name': u'Błob',
+            'first_name': 'Błob',
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': 'Blob'})
@@ -595,7 +595,7 @@ class GetUsernameTests(PipelineTestCase):
         """pipeline will not fallback to last name because username is taken"""
         details = {
             'username': self.user.username,
-            'last_name': u'Błob',
+            'last_name': 'Błob',
         }
         result = get_username(None, details, None)
         self.assertIsNone(result)
@@ -604,7 +604,7 @@ class GetUsernameTests(PipelineTestCase):
         """pipeline will construct username from first name and first char of surname"""
         details = {
             'first_name': self.user.username,
-            'last_name': u'Błob',
+            'last_name': 'Błob',
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': self.user.username + 'B'})
@@ -614,7 +614,7 @@ class GetUsernameTests(PipelineTestCase):
         Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
         details = {
             'username': 'Misago Admin',
-            'first_name': u'Błob',
+            'first_name': 'Błob',
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': 'Blob'})
@@ -624,7 +624,7 @@ class GetUsernameTests(PipelineTestCase):
         Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
         details = {
             'username': 'Misago Admin',
-            'full_name': u'Błob Błopo',
+            'full_name': 'Błob Błopo',
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': 'BlobBlopo'})
@@ -632,7 +632,7 @@ class GetUsernameTests(PipelineTestCase):
     def test_resolve_to_cut_name(self):
         """pipeline will resolve cut too long name on second pass"""
         details = {
-            'username': u'Abrakadabrapokuskonstantynopolitańczykowianeczkatrzy',
+            'username': 'Abrakadabrapokuskonstantynopolitańczykowianeczkatrzy',
         }
         result = get_username(None, details, None)
         self.assertEqual(result, {'clean_username': 'Abrakadabrapok'})

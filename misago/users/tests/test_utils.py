@@ -10,4 +10,4 @@ class HashEmailTests(TestCase):
 
     def test_handles_unicode(self):
         """util works with unicode strings"""
-        self.assertEqual(hash_email(u'łóć@test.com'), hash_email(u'ŁÓĆ@tEst.cOm'))
+        self.assertEqual(hash_email('łóć@test.com'), hash_email('ŁÓĆ@tEst.cOm'))

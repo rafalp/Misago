@@ -55,7 +55,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
     def test_add_text_str(self):
         """add_dict method creates text file with string"""
         with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            data_to_write = u"Hello, łorld!"
+            data_to_write = "Hello, łorld!"
             file_path = archive.add_text('testfile', data_to_write)
             self.assertTrue(os.path.isfile(file_path))
 
@@ -83,7 +83,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
     def test_add_dict(self):
         """add_dict method creates text file from dict"""
         with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            data_to_write = {'first': u"łorld!", 'second': u"łup!"}
+            data_to_write = {'first': "łorld!", 'second': "łup!"}
             file_path = archive.add_dict('testfile', data_to_write)
             self.assertTrue(os.path.isfile(file_path))
 
@@ -94,13 +94,13 @@ class DataArchiveTests(AuthenticatedUserTestCase):
                 saved_data = fp.read().strip()
                 # order of dict items in py<3.6 is non-deterministic
                 # making testing for exact match a mistake
-                self.assertIn(u"first: łorld!", saved_data)
-                self.assertIn(u"second: łup!", saved_data)
+                self.assertIn("first: łorld!", saved_data)
+                self.assertIn("second: łup!", saved_data)
 
     def test_add_dict_ordered(self):
         """add_dict method creates text file form ordered dict"""
         with DataArchive(self.user, DATA_DOWNLOADS_WORKING_DIR) as archive:
-            data_to_write = OrderedDict((('first', u"łorld!"), ('second', u"łup!")))
+            data_to_write = OrderedDict((('first', "łorld!"), ('second', "łup!")))
             file_path = archive.add_dict('testfile', data_to_write)
             self.assertTrue(os.path.isfile(file_path))
 
@@ -109,7 +109,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
 
             with io.open(file_path, 'r', encoding="utf-8") as fp:
                 saved_data = fp.read().strip()
-                self.assertEqual(saved_data, u"first: łorld!\nsecond: łup!")
+                self.assertEqual(saved_data, "first: łorld!\nsecond: łup!")
 
     def test_add_model_file(self):
         """add_model_file method adds model file"""

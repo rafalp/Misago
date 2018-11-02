@@ -85,8 +85,8 @@ class DataArchive(object):
     def add_dict(self, name, value, date=None, directory=None):
         text_lines = []
         for key, value in value.items():
-            text_lines.append(u"{}: {}".format(key, value))
-        text = u'\n'.join(text_lines)
+            text_lines.append("{}: {}".format(key, value))
+        text = '\n'.join(text_lines)
         return self.add_text(name, text, date=date, directory=directory)
 
     def add_model_file(self, model_file, prefix=None, date=None, directory=None):
@@ -97,7 +97,7 @@ class DataArchive(object):
 
         filename = os.path.basename(model_file.name)
         if prefix:
-            prefixed_filename = u"{}-{}".format(prefix, filename)
+            prefixed_filename = "{}-{}".format(prefix, filename)
             clean_filename = trim_long_filename(prefixed_filename)
             target_path = os.path.join(target_dir_path, clean_filename)
         else:
@@ -153,4 +153,4 @@ def trim_long_filename(filename):
 
     name, extension = os.path.splitext(filename)
     name_len = FILENAME_MAX_LEN - len(extension)
-    return u'{}{}'.format(name[:name_len], extension)
+    return '{}{}'.format(name[:name_len], extension)

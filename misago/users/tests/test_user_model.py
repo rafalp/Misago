@@ -74,13 +74,13 @@ class UserManagerTests(TestCase):
     def test_getters_unicode_handling(self):
         """get_by_ methods handle unicode"""
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username(u'łóć')
+            User.objects.get_by_username('łóć')
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_email(u'łóć@polskimail.pl')
+            User.objects.get_by_email('łóć@polskimail.pl')
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username_or_email(u'łóć@polskimail.pl')
+            User.objects.get_by_username_or_email('łóć@polskimail.pl')
 
 
 class UserModelTests(TestCase):

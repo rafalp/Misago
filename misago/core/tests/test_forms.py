@@ -23,6 +23,6 @@ class YesNoSwitchTests(TestCase):
 
     def test_dontstripme_input_is_ignored(self):
         """YesNoSwitch returns valid values for invalid input"""
-        form = YesNoForm({'test_field': u'221'})
+        form = YesNoForm({'test_field': '221'})
         form.full_clean()
         self.assertFalse(form.cleaned_data.get('test_field'))

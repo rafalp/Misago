@@ -59,7 +59,7 @@ def parse_string(request, element, mentions_dict):
 
         if mentions_dict[username]:
             user = mentions_dict[username]
-            return u'<a href="{}">@{}</a>'.format(user.get_absolute_url(), user.username)
+            return '<a href="{}">@{}</a>'.format(user.get_absolute_url(), user.username)
         else:
             # we've failed to resolve user for username
             return matchobj.group(0)

@@ -91,19 +91,19 @@ class ApiPatchTests(TestCase):
             try:
                 patch.validate_action(action)
             except InvalidAction as e:
-                self.assertEqual(e.args[0], u"undefined op")
+                self.assertEqual(e.args[0], "undefined op")
 
         # unsupported op
         try:
             patch.validate_action({'op': 'nope'})
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"nope" op is unsupported')
+            self.assertEqual(e.args[0], '"nope" op is unsupported')
 
         # op lacking patch
         try:
             patch.validate_action({'op': 'add'})
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify path')
+            self.assertEqual(e.args[0], '"add" op has to specify path')
 
         # op lacking value
         try:
@@ -112,7 +112,7 @@ class ApiPatchTests(TestCase):
                 'path': 'yolo',
             })
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value')
+            self.assertEqual(e.args[0], '"add" op has to specify value')
 
         # empty value is allowed
         try:
@@ -122,7 +122,7 @@ class ApiPatchTests(TestCase):
                 'value': '',
             })
         except InvalidAction as e:
-            self.assertEqual(e.args[0], u'"add" op has to specify value')
+            self.assertEqual(e.args[0], '"add" op has to specify value')
 
     def test_dispatch_action(self):
         """dispatch_action calls specified actions"""

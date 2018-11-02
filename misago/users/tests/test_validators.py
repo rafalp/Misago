@@ -109,9 +109,9 @@ class ValidateUsernameContentTests(TestCase):
         with self.assertRaises(ValidationError):
             validate_username_content('Bob Boberson')
         with self.assertRaises(ValidationError):
-            validate_username_content(u'Rafał')
+            validate_username_content('Rafał')
         with self.assertRaises(ValidationError):
-            validate_username_content(u'初音 ミク')
+            validate_username_content('初音 ミク')
 
 
 class ValidateUsernameLengthTests(TestCase):
