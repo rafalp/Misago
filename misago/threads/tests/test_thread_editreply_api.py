@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from datetime import timedelta
 
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart

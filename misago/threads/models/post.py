@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import copy
 
 from django.contrib.postgres.indexes import GinIndex

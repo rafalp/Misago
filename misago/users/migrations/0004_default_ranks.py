@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.db import migrations
 from django.utils.translation import ugettext
 

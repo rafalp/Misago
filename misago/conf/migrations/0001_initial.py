@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import django.db.models.deletion
 from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
