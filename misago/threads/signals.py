@@ -175,7 +175,7 @@ def archive_user_polls(sender, archive=None, **kwargs):
             item_name,
             OrderedDict([
                 (_("Question"), poll.question),
-                (_("Choices"), u', '.join([c['label'] for c in poll.choices])),
+                (_("Choices"), ', '.join([c['label'] for c in poll.choices])),
             ]),
             date=poll.posted_on,
         )

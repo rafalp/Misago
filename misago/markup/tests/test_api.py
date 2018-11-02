@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.urls import reverse
 
 from misago.users.testutils import AuthenticatedUserTestCase
@@ -8,7 +5,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ParseMarkupApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ParseMarkupApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:parse-markup')
 

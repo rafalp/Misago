@@ -4,7 +4,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserDataDownloadsApiTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/data-downloads/' % self.user.pk
 
     def test_get_other_user_exports_anonymous(self):

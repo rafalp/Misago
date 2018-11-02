@@ -1,7 +1,6 @@
 from django import forms
 from django.db.models import Q
 from django.utils import html
-from django.utils.six import text_type
 
 from misago.core.utils import format_plaintext_for_html
 
@@ -67,7 +66,7 @@ class ProfileField(object):
 
         data.update({
             'fieldname': self.fieldname,
-            'name': text_type(self.get_label(user)),
+            'name': str(self.get_label(user)),
         })
 
         return data
@@ -124,7 +123,7 @@ class ChoiceProfileField(ProfileField):
         for key, name in self.get_choices():
             if key == value:
                 return {
-                    'text': text_type(name),
+                    'text': str(name),
                 }
         return None
 
@@ -135,7 +134,7 @@ class ChoiceProfileField(ProfileField):
         })
 
         for key, choice in self.get_choices():
-            if key and criteria.lower() in text_type(choice).lower():
+            if key and criteria.lower() in str(choice).lower():
                 q_obj = q_obj | Q(**{
                     'profile_fields__{}'.format(self.fieldname): key
                 })

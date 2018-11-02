@@ -10,7 +10,7 @@ UserModel = get_user_model()
 
 class GetUserStatusTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(GetUserStatusTests, self).setUp()
+        super().setUp()
         self.other_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
 
     def test_user_hiding_presence(self):

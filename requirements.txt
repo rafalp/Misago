@@ -22,7 +22,6 @@ markdown==2.6.11
 misago-social-auth-app-django==2.1.0
 oauthlib==2.1.0           # via requests-oauthlib, social-auth-core
 olefile==0.45.1           # via pillow
-path.py==10.3.1
 pillow==4.1.1
 psycopg2-binary==2.7.5
 pyjwt==1.6.4              # via social-auth-core

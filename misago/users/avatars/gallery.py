@@ -1,6 +1,6 @@
 import random
+from pathlib import Path
 
-from path import Path
 from PIL import Image
 
 from django.core.files.base import ContentFile
@@ -48,21 +48,29 @@ def load_avatar_galleries():
     from misago.users.models import AvatarGallery
 
     galleries = []
-    for directory in Path(settings.MISAGO_AVATAR_GALLERY).dirs():
-        gallery_name = directory.name
+    for directory in Path(settings.MISAGO_AVATAR_GALLERY).iterdir():
+        if not directory.is_dir():
+            continue
 
-        images = directory.files('*.gif')
-        images += directory.files('*.jpg')
-        images += directory.files('*.jpeg')
-        images += directory.files('*.png')
+        name = directory.name
+        images = glob_gallery_images(directory)
 
         for image in images:
             with open(image, 'rb') as image_file:
                 galleries.append(
                     AvatarGallery.objects.
-                    create(gallery=gallery_name, image=ContentFile(image_file.read(), 'image'))
+                    create(gallery=name, image=ContentFile(image_file.read(), 'image'))
                 )
     return galleries
+
+
+def glob_gallery_images(directory):
+    images = []
+    images.extend(directory.glob('*.gif'))
+    images.extend(directory.glob('*.jpg'))
+    images.extend(directory.glob('*.jpeg'))
+    images.extend(directory.glob('*.png'))
+    return images
 
 
 def set_avatar(user, avatar):

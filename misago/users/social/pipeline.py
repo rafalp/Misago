@@ -181,7 +181,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
     if request.method == 'POST':
         try:
-            request_data = json.loads(request.body.decode('utf-8'))
+            request_data = json.loads(request.body)
         except (TypeError, ValueError):
             request_data = request.POST.copy()
             

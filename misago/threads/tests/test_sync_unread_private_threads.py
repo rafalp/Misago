@@ -11,7 +11,7 @@ UserModel = get_user_model()
 
 class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
     def setUp(self):
-        super(SyncUnreadPrivateThreadsTestCase, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user(
             'BobBoberson', 'bob@boberson.com', 'pass123'

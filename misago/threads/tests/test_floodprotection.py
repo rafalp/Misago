@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.urls import reverse
 
 from misago.acl.testutils import override_acl
@@ -11,7 +8,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class PostMentionsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PostMentionsTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django.core.paginator import Paginator
 from django.db.models import Index
 
@@ -13,7 +11,7 @@ class PgPartialIndex(Index):
             raise ValueError('partial index requires WHERE clause')
         self.where = where
 
-        super(PgPartialIndex, self).__init__(fields, name)
+        super().__init__(fields, name)
 
     def set_name_with_model(self, model):
         table_name = model._meta.db_table
@@ -52,15 +50,15 @@ class PgPartialIndex(Index):
                 'where': "'{}'".format(', '.join(where_items)),
             }
         else:
-            return super(PgPartialIndex, self).__repr__()
+            return super().__repr__()
 
     def deconstruct(self):
-        path, args, kwargs = super(PgPartialIndex, self).deconstruct()
+        path, args, kwargs = super().deconstruct()
         kwargs['where'] = self.where
         return path, args, kwargs
 
     def get_sql_create_template_values(self, model, schema_editor, using):
-        parameters = super(PgPartialIndex, self).get_sql_create_template_values(
+        parameters = super().get_sql_create_template_values(
             model, schema_editor, '')
         parameters['extra'] = self.get_sql_extra(model, schema_editor)
         return parameters

@@ -52,7 +52,7 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
 
 class CategoryAPIViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(CategoryAPIViewsTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
 

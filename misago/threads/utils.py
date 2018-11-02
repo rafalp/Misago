@@ -1,6 +1,6 @@
+from urllib.parse import urlparse
+
 from django.urls import resolve
-from django.utils import six
-from django.utils.six.moves.urllib.parse import urlparse
 
 from .models import PostLike
 
@@ -40,7 +40,7 @@ SUPPORTED_THREAD_ROUTES = {
 
 def get_thread_id_from_url(request, url):
     try:
-        clean_url = six.text_type(url).strip()
+        clean_url = str(url).strip()
         bits = urlparse(clean_url)
     except:
         return None

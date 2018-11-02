@@ -11,7 +11,7 @@ from misago.users.djangoadmin import UserAdminModel
 @override_settings(ROOT_URLCONF='misago.core.testproject.urls')
 class TestDjangoAdminUserForm(AdminTestCase):
     def setUp(self):
-        super(TestDjangoAdminUserForm, self).setUp()
+        super().setUp()
         self.test_user = get_user_model().objects.create_user(
             username='Bob',
             email='bob@test.com',

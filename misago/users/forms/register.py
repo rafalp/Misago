@@ -21,7 +21,7 @@ class BaseRegisterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.agreements = kwargs.pop('agreements')
         self.request = kwargs.pop('request')
-        super(BaseRegisterForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_username(self):
         data = self.cleaned_data['username']
@@ -62,7 +62,7 @@ class BaseRegisterForm(forms.Form):
 
 class SocialAuthRegisterForm(BaseRegisterForm):
     def clean(self):
-        cleaned_data = super(SocialAuthRegisterForm, self).clean()
+        cleaned_data = super().clean()
 
         self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()
@@ -89,7 +89,7 @@ class RegisterForm(BaseRegisterForm):
             )
 
     def clean(self):
-        cleaned_data = super(RegisterForm, self).clean()
+        cleaned_data = super().clean()
 
         self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()

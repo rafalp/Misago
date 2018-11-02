@@ -17,7 +17,7 @@ TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 
 class EditorApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(EditorApiTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
 
@@ -71,7 +71,7 @@ class EditorApiTestCase(AuthenticatedUserTestCase):
 
 class ThreadPostEditorApiTests(EditorApiTestCase):
     def setUp(self):
-        super(ThreadPostEditorApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:thread-editor')
 
@@ -257,7 +257,7 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
 
 class ThreadReplyEditorApiTests(EditorApiTestCase):
     def setUp(self):
-        super(ThreadReplyEditorApiTests, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(category=self.category)
         self.api_link = reverse(
@@ -400,7 +400,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
 class EditReplyEditorApiTests(EditorApiTestCase):
     def setUp(self):
-        super(EditReplyEditorApiTests, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(category=self.category)
         self.post = testutils.reply_thread(self.thread, poster=self.user)

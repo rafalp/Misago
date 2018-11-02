@@ -12,7 +12,6 @@ from hashlib import sha256
 from time import time
 
 from django.conf import settings
-from django.utils import six
 from django.utils.encoding import force_bytes
 
 
@@ -54,7 +53,7 @@ def _make_hash(user, token_type):
         settings.SECRET_KEY,
     ]
 
-    return sha256(force_bytes('+'.join([six.text_type(s) for s in seeds]))).hexdigest()[:8]
+    return sha256(force_bytes('+'.join([str(s) for s in seeds]))).hexdigest()[:8]
 
 
 def _days_since_epoch():

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils import six
 
 from misago.admin.testutils import AdminTestCase
 from misago.acl.testutils import override_acl
@@ -11,7 +10,7 @@ UserModel = get_user_model()
 
 class JoinIpProfileFieldTests(AdminTestCase):
     def setUp(self):
-        super(JoinIpProfileFieldTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse(
             'misago:admin:users:accounts:edit',
@@ -33,8 +32,8 @@ class JoinIpProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'join_ip': '127.0.0.1',
                 'new_password': '',

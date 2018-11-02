@@ -174,7 +174,7 @@ class MergeConflictTests(TestCase):
                 'polls': [['0', 'Delete all polls']] + [
                     [
                         str(thread.poll.id),
-                        u'{} ({})'.format(thread.poll.question, thread.title),
+                        '{} ({})'.format(thread.poll.question, thread.title),
                     ] for thread in polls
                 ]
             })
@@ -238,7 +238,7 @@ class MergeConflictTests(TestCase):
                 'polls': [['0', 'Delete all polls']] + [
                     [
                         str(thread.poll.id),
-                        u'{} ({})'.format(thread.poll.question, thread.title),
+                        '{} ({})'.format(thread.poll.question, thread.title),
                     ] for thread in polls
                 ]
             })

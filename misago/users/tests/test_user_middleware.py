@@ -7,7 +7,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class UserMiddlewareTest(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserMiddlewareTest, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:auth')
         self.test_link = reverse('misago:index')

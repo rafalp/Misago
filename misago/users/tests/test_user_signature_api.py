@@ -6,7 +6,7 @@ class UserSignatureTests(AuthenticatedUserTestCase):
     """tests for user signature RPC (POST to /api/users/1/signature/)"""
 
     def setUp(self):
-        super(UserSignatureTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/signature/' % self.user.pk
 
     def test_signature_no_permission(self):

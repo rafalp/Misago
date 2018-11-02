@@ -1,5 +1,4 @@
 from django.urls import reverse
-from django.utils import six
 
 from misago.acl.testutils import override_acl
 from misago.search.searchproviders import searchproviders
@@ -8,7 +7,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SearchApiTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse('misago:api:search')
 
@@ -34,7 +33,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             )
             self.assertEqual(provider_api, provider['api'])
 
-            self.assertEqual(six.text_type(providers[i].name), provider['name'])
+            self.assertEqual(str(providers[i].name), provider['name'])
             self.assertEqual(provider['results']['results'], [])
             self.assertEqual(int(provider['time']), 0)
 
@@ -51,6 +50,6 @@ class SearchApiTests(AuthenticatedUserTestCase):
             )
             self.assertEqual(provider_api, provider['api'])
 
-            self.assertEqual(six.text_type(providers[i].name), provider['name'])
+            self.assertEqual(str(providers[i].name), provider['name'])
             self.assertEqual(provider['results']['results'], [])
             self.assertEqual(int(provider['time']), 0)

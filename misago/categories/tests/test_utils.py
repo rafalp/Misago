@@ -21,7 +21,7 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
           + Subcategory F
         """
 
-        super(CategoriesUtilsTests, self).setUp()
+        super().setUp()
         threadstore.clear()
 
         self.root = Category.objects.root_category()

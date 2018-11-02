@@ -20,7 +20,7 @@ class CacheBusterTests(MisagoTestCase):
 
 class CacheBusterCacheTests(MisagoTestCase):
     def setUp(self):
-        super(CacheBusterCacheTests, self).setUp()
+        super().setUp()
 
         self.cache_name = 'eric_the_fish'
         cachebuster.register(self.cache_name)

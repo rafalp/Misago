@@ -31,7 +31,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category E
           + Subcategory F
         """
-        super(ThreadsListTestCase, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:thread-list')
 
@@ -161,10 +161,10 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         return categories_acl
 
     def assertContainsThread(self, response, thread):
-        self.assertContains(response, u' href="{}"'.format(thread.get_absolute_url()))
+        self.assertContains(response, ' href="{}"'.format(thread.get_absolute_url()))
 
     def assertNotContainsThread(self, response, thread):
-        self.assertNotContains(response, u' href="{}"'.format(thread.get_absolute_url()))
+        self.assertNotContains(response, ' href="{}"'.format(thread.get_absolute_url()))
 
 
 class ApiTests(ThreadsListTestCase):
@@ -1530,7 +1530,7 @@ class UnapprovedListTests(ThreadsListTestCase):
 
 class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(OwnerOnlyThreadsVisibilityTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
 

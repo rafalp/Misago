@@ -11,7 +11,6 @@ from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
-from django.utils.six.moves import input
 
 from misago.users.validators import validate_email, validate_username
 
@@ -70,7 +69,7 @@ class Command(BaseCommand):
 
     def execute(self, *args, **options):
         self.stdin = options.get('stdin', sys.stdin)  # Used for testing
-        return super(Command, self).execute(*args, **options)
+        return super().execute(*args, **options)
 
     def handle(self, *args, **options):
         username = options.get('username')
@@ -85,7 +84,7 @@ class Command(BaseCommand):
                 username = username.strip()
                 validate_username(username)
             except ValidationError as e:
-                self.stderr.write(u'\n'.join(e.messages))
+                self.stderr.write('\n'.join(e.messages))
                 username = None
 
         if email is not None:
@@ -93,7 +92,7 @@ class Command(BaseCommand):
                 email = email.strip()
                 validate_email(email)
             except ValidationError as e:
-                self.stderr.write(u'\n'.join(e.messages))
+                self.stderr.write('\n'.join(e.messages))
                 email = None
 
         if password is not None:
@@ -120,7 +119,7 @@ class Command(BaseCommand):
                         validate_username(raw_value)
                         username = raw_value
                     except ValidationError as e:
-                        self.stderr.write(u'\n'.join(e.messages))
+                        self.stderr.write('\n'.join(e.messages))
 
                 while not email:
                     try:
@@ -128,7 +127,7 @@ class Command(BaseCommand):
                         validate_email(raw_value)
                         email = raw_value
                     except ValidationError as e:
-                        self.stderr.write(u'\n'.join(e.messages))
+                        self.stderr.write('\n'.join(e.messages))
 
                 while not password:
                     raw_value = getpass("Enter password: ")
@@ -146,7 +145,7 @@ class Command(BaseCommand):
                             raw_value, user=UserModel(username=username, email=email)
                         )
                     except ValidationError as e:
-                        self.stderr.write(u'\n'.join(e.messages))
+                        self.stderr.write('\n'.join(e.messages))
                         response = input('Bypass password validation and create user anyway? [y/N]: ')
                         if response.lower() != 'y':
                             continue

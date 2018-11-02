@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.urls import reverse
 
 from misago.categories.models import Category
@@ -9,7 +6,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ValidatePostTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ValidatePostTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.api_link = reverse('misago:api:thread-list')

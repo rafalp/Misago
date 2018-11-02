@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import json
 from datetime import timedelta
 
@@ -16,7 +13,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ThreadPostPatchApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadPostPatchApiTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
@@ -1137,7 +1134,7 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
 
 class ThreadEventPatchApiTestCase(ThreadPostPatchApiTestCase):
     def setUp(self):
-        super(ThreadEventPatchApiTestCase, self).setUp()
+        super().setUp()
 
         self.event = testutils.reply_thread(self.thread, poster=self.user, is_event=True)
 

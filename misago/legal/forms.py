@@ -40,7 +40,7 @@ class AgreementForm(forms.ModelForm):
         fields = ['type', 'title', 'link', 'text', 'is_active']
 
     def clean(self):
-        data = super(AgreementForm, self).clean()
+        data = super().clean()
 
         if not data.get('link') and not data.get('text'):
             raise forms.ValidationError(_("Please fill in agreement link or text."))
@@ -48,7 +48,7 @@ class AgreementForm(forms.ModelForm):
         return data
 
     def save(self):
-        agreement = super(AgreementForm, self).save()
+        agreement = super().save()
         if agreement.is_active:
             set_agreement_as_active(agreement)
         Agreement.objects.invalidate_cache()

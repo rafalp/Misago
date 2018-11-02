@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
@@ -18,7 +17,7 @@ class MockRequest(object):
 
 class ThreadViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadViewTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
@@ -528,7 +527,7 @@ class ThreadAnonViewTests(ThreadViewTestCase):
 class ThreadUnicodeSupportTests(ThreadViewTestCase):
     def test_category_name(self):
         """unicode in category name causes no showstopper"""
-        self.category.name = u'Łódź'
+        self.category.name = 'Łódź'
         self.category.slug = 'Lodz'
 
         self.category.save()
@@ -540,7 +539,7 @@ class ThreadUnicodeSupportTests(ThreadViewTestCase):
 
     def test_thread_title(self):
         """unicode in thread title causes no showstopper"""
-        self.thread.title = u'Łódź'
+        self.thread.title = 'Łódź'
         self.thread.slug = 'Lodz'
 
         self.thread.save()
@@ -552,8 +551,8 @@ class ThreadUnicodeSupportTests(ThreadViewTestCase):
 
     def test_post_content(self):
         """unicode in thread title causes no showstopper"""
-        self.thread.first_post.original = u'Łódź'
-        self.thread.first_post.parsed = u'<p>Łódź</p>'
+        self.thread.first_post.original = 'Łódź'
+        self.thread.first_post.parsed = '<p>Łódź</p>'
 
         update_post_checksum(self.thread.first_post)
 
@@ -566,9 +565,9 @@ class ThreadUnicodeSupportTests(ThreadViewTestCase):
 
     def test_user_rank(self):
         """unicode in user rank causes no showstopper"""
-        self.user.title = u'Łódź'
-        self.user.rank.name = u'Łódź'
-        self.user.rank.title = u'Łódź'
+        self.user.title = 'Łódź'
+        self.user.rank.name = 'Łódź'
+        self.user.rank.title = 'Łódź'
 
         self.user.rank.save()
         self.user.save()

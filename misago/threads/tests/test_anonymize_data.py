@@ -22,7 +22,7 @@ def get_mock_user():
 
 class AnonymizeEventsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AnonymizeEventsTests, self).setUp()
+        super().setUp()
         self.factory = RequestFactory()
 
         category = Category.objects.get(slug='first-category')
@@ -173,7 +173,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
 class AnonymizeLikesTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AnonymizeLikesTests, self).setUp()
+        super().setUp()
         self.factory = RequestFactory()
 
     def get_request(self, user=None):
@@ -212,7 +212,7 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
 
 class AnonymizePostsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AnonymizePostsTests, self).setUp()
+        super().setUp()
         self.factory = RequestFactory()
 
     def get_request(self, user=None):

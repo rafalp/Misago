@@ -47,7 +47,7 @@ class CategoryManagerTests(MisagoTestCase):
 
 class CategoryModelTests(MisagoTestCase):
     def setUp(self):
-        super(CategoryModelTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.all_categories()[:1][0]
 

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from copy import deepcopy
 from datetime import timedelta
 
@@ -21,7 +18,7 @@ UserModel = get_user_model()
 
 class EmailNotificationTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(EmailNotificationTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(

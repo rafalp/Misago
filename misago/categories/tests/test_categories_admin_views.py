@@ -342,7 +342,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
           + Category F
         """
 
-        super(CategoryAdminDeleteViewTests, self).setUp()
+        super().setUp()
 
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')

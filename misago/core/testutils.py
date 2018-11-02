@@ -12,9 +12,9 @@ class MisagoTestCase(TestCase):
         threadstore.clear()
 
     def setUp(self):
-        super(MisagoTestCase, self).setUp()
+        super().setUp()
         self.clear_state()
 
     def tearDown(self):
         self.clear_state()
-        super(MisagoTestCase, self).tearDown()
+        super().tearDown()

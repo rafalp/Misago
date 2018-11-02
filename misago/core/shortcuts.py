@@ -2,8 +2,6 @@ from rest_framework.response import Response
 
 from django.http import Http404
 
-import six
-
 
 def paginate(
         object_list,
@@ -82,7 +80,7 @@ def validate_slug(model, slug):
 
 
 def get_int_or_404(value):
-    if six.text_type(value).isdigit():
+    if str(value).isdigit():
         return int(value)
     else:
         raise Http404()

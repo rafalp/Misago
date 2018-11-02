@@ -17,7 +17,7 @@ UserModel = get_user_model()
 
 class TestActivePostersRanking(AuthenticatedUserTestCase):
     def setUp(self):
-        super(TestActivePostersRanking, self).setUp()
+        super().setUp()
 
         cache.clear()
         threadstore.clear()
@@ -25,7 +25,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug='first-category')
 
     def tearDown(self):
-        super(TestActivePostersRanking, self).tearDown()
+        super().tearDown()
 
         cache.clear()
         threadstore.clear()

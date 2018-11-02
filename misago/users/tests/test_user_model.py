@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from path import Path
+from pathlib import Path
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -75,13 +74,13 @@ class UserManagerTests(TestCase):
     def test_getters_unicode_handling(self):
         """get_by_ methods handle unicode"""
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username(u'łóć')
+            User.objects.get_by_username('łóć')
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_email(u'łóć@polskimail.pl')
+            User.objects.get_by_email('łóć@polskimail.pl')
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username_or_email(u'łóć@polskimail.pl')
+            User.objects.get_by_username_or_email('łóć@polskimail.pl')
 
 
 class UserModelTests(TestCase):
@@ -103,7 +102,7 @@ class UserModelTests(TestCase):
         for avatar in user.avatar_set.all():
             avatar_path = Path(avatar.image.path)
             self.assertTrue(avatar_path.exists())
-            self.assertTrue(avatar_path.isfile())
+            self.assertTrue(avatar_path.is_file())
             user_avatars.append(avatar)
         self.assertNotEqual(user_avatars, [])
         
@@ -112,7 +111,7 @@ class UserModelTests(TestCase):
         for removed_avatar in user_avatars:
             avatar_path = Path(removed_avatar.image.path)
             self.assertFalse(avatar_path.exists())
-            self.assertFalse(avatar_path.isfile())
+            self.assertFalse(avatar_path.is_file())
 
             with self.assertRaises(Avatar.DoesNotExist):
                 Avatar.objects.get(pk=removed_avatar.pk)

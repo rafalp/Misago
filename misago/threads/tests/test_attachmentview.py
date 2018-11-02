@@ -18,7 +18,7 @@ TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, 'small.jpg')
 
 class AttachmentViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AttachmentViewTestCase, self).setUp()
+        super().setUp()
 
         AttachmentType.objects.all().delete()
 

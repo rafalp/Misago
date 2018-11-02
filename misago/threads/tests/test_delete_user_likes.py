@@ -19,7 +19,7 @@ def get_mock_user():
 
 class DeleteUserLikesTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(DeleteUserLikesTests, self).setUp()
+        super().setUp()
         self.factory = RequestFactory()
 
     def get_request(self, user=None):

@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 import warnings
 
 import bleach
@@ -10,7 +8,6 @@ from markdown.extensions.fenced_code import FencedCodeExtension
 
 from django.http import Http404
 from django.urls import resolve
-from django.utils import six
 
 from misago.conf import settings
 
@@ -188,7 +185,7 @@ def clean_links(request, result, force_shva=False):
             img['src'] = assert_link_prefix(img['src'])
 
     # [6:-7] trims <body></body> wrap
-    result['parsed_text'] = six.text_type(soup.body)[6:-7]
+    result['parsed_text'] = str(soup.body)[6:-7]
 
 
 def is_internal_link(link, host):
@@ -250,6 +247,10 @@ def clean_attachment_link(link, force_shva=False):
 
 
 def minify_result(result):
+    result['parsed_text'] = html_minify(result['parsed_text'])
+    result['parsed_text'] = strip_html_head_body(result['parsed_text'])
+
+
+def strip_html_head_body(parsed_text):
     # [25:-14] trims <html><head></head><body> and </body></html>
-    result['parsed_text'] = html_minify(result['parsed_text'].encode('utf-8'))
-    result['parsed_text'] = result['parsed_text'][25:-14]
+    return parsed_text[25:-14]

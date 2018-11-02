@@ -12,7 +12,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     """tests for user change email RPC (/api/users/1/change-email/)"""
 
     def setUp(self):
-        super(UserChangeEmailTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/change-email/' % self.user.pk
 
     def test_unsupported_methods(self):

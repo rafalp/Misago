@@ -3,7 +3,6 @@ import re
 from bs4 import BeautifulSoup
 
 from django.contrib.auth import get_user_model
-from django.utils import six
 
 
 SUPPORTED_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p')
@@ -26,7 +25,7 @@ def add_mentions(request, result):
     for element in elements:
         add_mentions_to_element(request, element, mentions_dict)
 
-    result['parsed_text'] = six.text_type(soup.body)[6:-7].strip()
+    result['parsed_text'] = str(soup.body)[6:-7].strip()
     result['mentions'] = list(filter(bool, mentions_dict.values()))
 
 
@@ -59,7 +58,7 @@ def parse_string(request, element, mentions_dict):
 
         if mentions_dict[username]:
             user = mentions_dict[username]
-            return u'<a href="{}">@{}</a>'.format(user.get_absolute_url(), user.username)
+            return '<a href="{}">@{}</a>'.format(user.get_absolute_url(), user.username)
         else:
             # we've failed to resolve user for username
             return matchobj.group(0)

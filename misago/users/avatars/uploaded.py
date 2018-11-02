@@ -1,4 +1,5 @@
-from path import Path
+from pathlib import Path
+
 from PIL import Image
 
 from django.core.exceptions import ValidationError
@@ -62,7 +63,7 @@ def validate_uploaded_file(uploaded_file):
         try:
             temporary_file_path = Path(uploaded_file.temporary_file_path())
             if temporary_file_path.exists():
-                temporary_file_path.remove()
+                temporary_file_path.unlink()
         except Exception:
             pass
         raise e

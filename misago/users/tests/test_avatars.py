@@ -1,4 +1,5 @@
-from path import Path
+from pathlib import Path
+
 from PIL import Image
 
 from django.contrib.auth import get_user_model
@@ -47,7 +48,7 @@ class AvatarsStoreTests(TestCase):
         for old_avatar in avatars_dict.values():
             avatar_path = Path(old_avatar.image.path)
             self.assertFalse(avatar_path.exists())
-            self.assertFalse(avatar_path.isfile())
+            self.assertFalse(avatar_path.is_file())
 
             with self.assertRaises(Avatar.DoesNotExist):
                 Avatar.objects.get(pk=old_avatar.pk)
@@ -76,7 +77,7 @@ class AvatarsStoreTests(TestCase):
         for removed_avatar in new_avatars_dict.values():
             avatar_path = Path(removed_avatar.image.path)
             self.assertFalse(avatar_path.exists())
-            self.assertFalse(avatar_path.isfile())
+            self.assertFalse(avatar_path.is_file())
 
             with self.assertRaises(Avatar.DoesNotExist):
                 Avatar.objects.get(pk=removed_avatar.pk)
@@ -106,7 +107,7 @@ class AvatarSetterTests(TestCase):
         for avatar in user.avatar_set.all():
             avatar_path = Path(avatar.image.path)
             self.assertTrue(avatar_path.exists())
-            self.assertTrue(avatar_path.isfile())
+            self.assertTrue(avatar_path.is_file())
 
             avatars_dict[avatar.size] = avatar
 

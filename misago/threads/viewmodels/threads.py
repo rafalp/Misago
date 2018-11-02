@@ -164,8 +164,7 @@ class ForumThreads(ViewModel):
 
 class PrivateThreads(ViewModel):
     def get_base_queryset(self, request, threads_categories, list_type):
-        queryset = super(PrivateThreads, self).get_base_queryset(
-            request, threads_categories, list_type)
+        queryset = super().get_base_queryset(request, threads_categories, list_type)
 
         # limit queryset to threads we are participant of
         participated_threads = request.user.threadparticipant_set.values('thread_id')

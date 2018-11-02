@@ -12,7 +12,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class PostBulkDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(PostBulkDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.posts = [
             testutils.reply_thread(self.thread, poster=self.user),

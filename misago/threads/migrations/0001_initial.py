@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 import django.db.models.deletion
 import django.utils.timezone
 from django.conf import settings

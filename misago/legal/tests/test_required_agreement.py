@@ -6,7 +6,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class RequiredAgreementTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(RequiredAgreementTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse('misago:index')
 

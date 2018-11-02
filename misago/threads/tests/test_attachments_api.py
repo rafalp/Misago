@@ -3,7 +3,6 @@ import os
 from PIL import Image
 
 from django.urls import reverse
-from django.utils import six
 
 from misago.acl.models import Role
 from misago.acl.testutils import override_acl
@@ -22,7 +21,7 @@ TEST_CORRUPTEDIMG_PATH = os.path.join(TESTFILES_DIR, 'corrupted.gif')
 
 class AttachmentsApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AttachmentsApiTestCase, self).setUp()
+        super().setUp()
 
         AttachmentType.objects.all().delete()
 
@@ -218,7 +217,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertTrue(not attachment.image)
         self.assertTrue(not attachment.thumbnail)
 
-        self.assertTrue(six.text_type(attachment.file).endswith('document.pdf'))
+        self.assertTrue(str(attachment.file).endswith('document.pdf'))
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
@@ -261,7 +260,7 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNotNone(attachment.image)
         self.assertTrue(not attachment.thumbnail)
 
-        self.assertTrue(six.text_type(attachment.image).endswith('small.jpg'))
+        self.assertTrue(str(attachment.image).endswith('small.jpg'))
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
@@ -300,8 +299,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNotNone(attachment.image)
         self.assertIsNotNone(attachment.thumbnail)
 
-        self.assertTrue(six.text_type(attachment.image).endswith('large.png'))
-        self.assertTrue(six.text_type(attachment.thumbnail).endswith('large.png'))
+        self.assertTrue(str(attachment.image).endswith('large.png'))
+        self.assertTrue(str(attachment.thumbnail).endswith('large.png'))
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)
@@ -355,8 +354,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         self.assertIsNotNone(attachment.image)
         self.assertIsNotNone(attachment.thumbnail)
 
-        self.assertTrue(six.text_type(attachment.image).endswith('animated.gif'))
-        self.assertTrue(six.text_type(attachment.thumbnail).endswith('animated.gif'))
+        self.assertTrue(str(attachment.image).endswith('animated.gif'))
+        self.assertTrue(str(attachment.thumbnail).endswith('animated.gif'))
 
         self.assertIsNone(response_json['post'])
         self.assertEqual(response_json['uploader_name'], self.user.username)

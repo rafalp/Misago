@@ -6,7 +6,6 @@ Stores new e-mail and password in cache
 from hashlib import sha256
 
 from django.conf import settings
-from django.utils import six
 from django.utils.encoding import force_bytes
 
 
@@ -45,7 +44,7 @@ def read_new_credential(request, credential_type, link_token):
 def _make_change_token(user, token_type):
     seeds = (
         user.pk, user.email, user.password, user.last_login.replace(microsecond=0, tzinfo=None),
-        settings.SECRET_KEY, six.text_type(token_type)
+        settings.SECRET_KEY, str(token_type)
     )
 
-    return sha256(force_bytes('+'.join([six.text_type(s) for s in seeds]))).hexdigest()
+    return sha256(force_bytes('+'.join([str(s) for s in seeds]))).hexdigest()

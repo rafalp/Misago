@@ -12,14 +12,14 @@ class MockRequest(object):
 
 class ThreadsModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadsModerationTests, self).setUp()
+        super().setUp()
 
         self.request = MockRequest(self.user)
         self.category = Category.objects.all_categories()[:1][0]
         self.thread = testutils.post_thread(self.category)
 
     def tearDown(self):
-        super(ThreadsModerationTests, self).tearDown()
+        super().tearDown()
 
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)

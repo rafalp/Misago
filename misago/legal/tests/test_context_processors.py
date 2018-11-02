@@ -16,7 +16,7 @@ class MockRequest(object):
 
 class PrivacyPolicyTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PrivacyPolicyTests, self).setUp()
+        super().setUp()
 
         Agreement.objects.invalidate_cache()
 
@@ -102,7 +102,7 @@ class PrivacyPolicyTests(AuthenticatedUserTestCase):
 
 class TermsOfServiceTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(TermsOfServiceTests, self).setUp()
+        super().setUp()
         
         Agreement.objects.invalidate_cache()
 

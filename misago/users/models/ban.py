@@ -90,7 +90,7 @@ class Ban(models.Model):
         self.banned_value = self.banned_value.lower()
         self.is_checked = not self.is_expired
 
-        return super(Ban, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def get_serialized_message(self):
         from misago.users.serializers import BanMessageSerializer
@@ -138,7 +138,7 @@ class BanCache(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            super(BanCache, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         except IntegrityError:
             pass  # first come is first serve with ban cache
 

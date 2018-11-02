@@ -8,7 +8,7 @@ from . import PostingEndpoint, PostingMiddleware
 
 class EmailNotificationMiddleware(PostingMiddleware):
     def __init__(self, **kwargs):
-        super(EmailNotificationMiddleware, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.previous_last_post_on = self.thread.last_post_on
 

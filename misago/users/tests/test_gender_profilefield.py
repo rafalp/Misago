@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils import six
 
 from misago.admin.testutils import AdminTestCase
 
@@ -10,7 +9,7 @@ UserModel = get_user_model()
 
 class GenderProfileFieldTests(AdminTestCase):
     def setUp(self):
-        super(GenderProfileFieldTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse(
             'misago:admin:users:accounts:edit',
@@ -36,8 +35,8 @@ class GenderProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': '',
                 'signature': '',
@@ -61,8 +60,8 @@ class GenderProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'gender': 'attackcopter',
                 'new_password': '',
@@ -85,8 +84,8 @@ class GenderProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'gender': 'female',
                 'new_password': '',

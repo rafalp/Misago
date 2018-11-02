@@ -10,7 +10,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ThreadPollApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadPollApiTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(self.category, poster=self.user)

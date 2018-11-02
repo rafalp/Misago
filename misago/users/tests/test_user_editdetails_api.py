@@ -11,7 +11,7 @@ UserModel = get_user_model()
 
 class UserEditDetailsApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserEditDetailsApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse(
             'misago:api:user-edit-details',

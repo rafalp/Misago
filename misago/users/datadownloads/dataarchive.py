@@ -1,11 +1,9 @@
-import io  # fixme: remove explicit io imports after going py3k-only
 import os
 import shutil
 
 from django.core.files import File
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.utils import six
 
 from misago.core.utils import slugify
 
@@ -78,15 +76,15 @@ class DataArchive(object):
         clean_filename = slugify(str(name))
         file_dir_path = self.make_final_path(date=date, directory=directory)
         file_path = os.path.join(file_dir_path, '{}.txt'.format(clean_filename))
-        with io.open(file_path, 'w', encoding='utf-8') as fp:
-            fp.write(six.text_type(value))
+        with open(file_path, 'w') as fp:
+            fp.write(str(value))
             return file_path
 
     def add_dict(self, name, value, date=None, directory=None):
         text_lines = []
         for key, value in value.items():
-            text_lines.append(u"{}: {}".format(key, value))
-        text = u'\n'.join(text_lines)
+            text_lines.append("{}: {}".format(key, value))
+        text = '\n'.join(text_lines)
         return self.add_text(name, text, date=date, directory=directory)
 
     def add_model_file(self, model_file, prefix=None, date=None, directory=None):
@@ -97,7 +95,7 @@ class DataArchive(object):
 
         filename = os.path.basename(model_file.name)
         if prefix:
-            prefixed_filename = u"{}-{}".format(prefix, filename)
+            prefixed_filename = "{}-{}".format(prefix, filename)
             clean_filename = trim_long_filename(prefixed_filename)
             target_path = os.path.join(target_dir_path, clean_filename)
         else:
@@ -121,13 +119,13 @@ class DataArchive(object):
             final_path = data_dir_path
             path_items = [date.strftime('%Y'), date.strftime('%m'), date.strftime('%d')]
             for path_item in path_items:
-                final_path = os.path.join(final_path, six.text_type(path_item))
+                final_path = os.path.join(final_path, str(path_item))
                 if not os.path.isdir(final_path):
                     os.mkdir(final_path)
             return final_path
 
         if directory:
-            final_path = os.path.join(data_dir_path, six.text_type(directory))
+            final_path = os.path.join(data_dir_path, str(directory))
             if not os.path.isdir(final_path):
                 os.mkdir(final_path)
             return final_path
@@ -153,4 +151,4 @@ def trim_long_filename(filename):
 
     name, extension = os.path.splitext(filename)
     name_len = FILENAME_MAX_LEN - len(extension)
-    return u'{}{}'.format(name[:name_len], extension)
+    return '{}{}'.format(name[:name_len], extension)

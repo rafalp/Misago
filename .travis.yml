@@ -4,9 +4,6 @@ addons:
   postgresql: "9.4"
 language: python
 python:
-  - "2.7"
-  - "3.4"
-  - "3.5"
   - "3.6"
 install:
   - pip install -U pip setuptools

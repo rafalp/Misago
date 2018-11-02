@@ -20,7 +20,7 @@ class AttachmentTypeAdmin(generic.AdminBaseMixin):
             target.roles.add(*roles)
 
     def handle_form(self, form, request, target):
-        super(AttachmentTypeAdmin, self).handle_form(form, request, target)
+        super().handle_form(form, request, target)
         form.save()
 
 
@@ -28,7 +28,7 @@ class AttachmentTypesList(AttachmentTypeAdmin, generic.ListView):
     ordering = (('name', None), )
 
     def get_queryset(self):
-        queryset = super(AttachmentTypesList, self).get_queryset()
+        queryset = super().get_queryset()
         return queryset.annotate(num_files=Count('attachment'))
 
 

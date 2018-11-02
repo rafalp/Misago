@@ -8,7 +8,7 @@ from misago.threads.models import Attachment, AttachmentType
 
 class AttachmentAdminViewsTests(AdminTestCase):
     def setUp(self):
-        super(AttachmentAdminViewsTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.post = testutils.post_thread(category=self.category).first_post

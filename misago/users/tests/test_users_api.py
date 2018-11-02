@@ -24,7 +24,7 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
     """tests for active posters list (GET /users/?list=active)"""
 
     def setUp(self):
-        super(ActivePostersListTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/?list=active'
 
         cache.clear()
@@ -71,7 +71,7 @@ class FollowersListTests(AuthenticatedUserTestCase):
     """tests for generic list (GET /users/) filtered by followers"""
 
     def setUp(self):
-        super(FollowersListTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/followers/'
 
     def test_nonexistent_user(self):
@@ -117,7 +117,7 @@ class FollowsListTests(AuthenticatedUserTestCase):
     """tests for generic list (GET /users/) filtered by follows"""
 
     def setUp(self):
-        super(FollowsListTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/follows/'
 
     def test_nonexistent_user(self):
@@ -163,7 +163,7 @@ class RankListTests(AuthenticatedUserTestCase):
     """tests for generic list (GET /users/) filtered by rank"""
 
     def setUp(self):
-        super(RankListTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/?rank=%s'
 
     def test_nonexistent_rank(self):
@@ -237,7 +237,7 @@ class SearchNamesListTests(AuthenticatedUserTestCase):
     """tests for generic list (GET /users/) filtered by username disallowing searches"""
 
     def setUp(self):
-        super(SearchNamesListTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/?&name='
 
     def test_empty_list(self):
@@ -253,7 +253,7 @@ class SearchNamesListTests(AuthenticatedUserTestCase):
 
 class UserRetrieveTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserRetrieveTests, self).setUp()
+        super().setUp()
 
         self.test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
         self.link = reverse(
@@ -289,7 +289,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
     """tests for user forum options RPC (POST to /api/users/1/forum-options/)"""
 
     def setUp(self):
-        super(UserForumOptionsTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/forum-options/' % self.user.pk
 
     def test_empty_request(self):
@@ -397,7 +397,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
     """tests for user follow RPC (POST to /api/users/1/follow/)"""
 
     def setUp(self):
-        super(UserFollowTests, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 
@@ -461,7 +461,7 @@ class UserBanTests(AuthenticatedUserTestCase):
     """tests for ban endpoint (GET to /api/users/1/ban/)"""
 
     def setUp(self):
-        super(UserBanTests, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 
@@ -503,7 +503,7 @@ class UserBanTests(AuthenticatedUserTestCase):
 class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
     """tests for user request own account delete RPC (POST to /api/users/1/delete-own-account/)"""
     def setUp(self):
-        super(UserDeleteOwnAccountTests, self).setUp()
+        super().setUp()
         self.api_link = '/api/users/%s/delete-own-account/' % self.user.pk
 
     @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
@@ -576,7 +576,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     """tests for user delete RPC (POST to /api/users/1/delete/)"""
 
     def setUp(self):
-        super(UserDeleteTests, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 

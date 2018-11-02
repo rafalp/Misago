@@ -2,8 +2,6 @@ from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
 from django.db import models
-from django.utils import six
-from django.utils.encoding import python_2_unicode_compatible
 
 from misago.acl import version as acl_version
 from misago.acl.models import BaseRole
@@ -58,7 +56,6 @@ class CategoryManager(TreeManager):
         cache.delete(CACHE_NAME)
 
 
-@python_2_unicode_compatible
 class Category(MPTTModel):
     parent = TreeForeignKey(
         'self',
@@ -110,7 +107,7 @@ class Category(MPTTModel):
     objects = CategoryManager()
 
     def __str__(self):
-        return six.text_type(self.thread_type.get_category_name(self))
+        return str(self.thread_type.get_category_name(self))
 
     @property
     def thread_type(self):
@@ -119,7 +116,7 @@ class Category(MPTTModel):
     def delete(self, *args, **kwargs):
         Category.objects.clear_cache()
         acl_version.invalidate()
-        return super(Category, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def synchronize(self):
         threads_queryset = self.thread_set.filter(is_hidden=False, is_unapproved=False)

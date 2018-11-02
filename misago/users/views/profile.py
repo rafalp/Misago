@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
-from django.utils import six
 from django.views import View
 
 from misago.acl import add_acl
@@ -61,7 +60,7 @@ class ProfileView(View):
         request.frontend_context['PROFILE_PAGES'] = []
         for section in sections:
             request.frontend_context['PROFILE_PAGES'].append({
-                'name': six.text_type(section['name']),
+                'name': str(section['name']),
                 'icon': section['icon'],
                 'meta': section.get('metadata'),
                 'component': section['component'],

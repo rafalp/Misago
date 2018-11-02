@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from datetime import timedelta
 
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
@@ -16,7 +13,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class EditReplyTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(EditReplyTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

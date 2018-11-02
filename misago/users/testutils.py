@@ -13,7 +13,7 @@ class UserTestCase(MisagoTestCase):
     USER_IP = '127.0.0.1'
 
     def setUp(self):
-        super(UserTestCase, self).setUp()
+        super().setUp()
         self.get_initial_user()
 
     def get_initial_user(self):

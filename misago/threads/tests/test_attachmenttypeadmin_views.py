@@ -7,7 +7,7 @@ from misago.threads.models import AttachmentType
 
 class AttachmentTypeAdminViewsTests(AdminTestCase):
     def setUp(self):
-        super(AttachmentTypeAdminViewsTests, self).setUp()
+        super().setUp()
         self.admin_link = reverse('misago:admin:system:attachment-types:index')
 
     def test_link_registered(self):

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.utils.six import text_type
 
 from misago.users.profilefields import ProfileFields
 
@@ -46,7 +45,7 @@ class ProfileFieldsLoadTests(TestCase):
         try:
             profilefields.load()
         except ValueError as e:
-            error = text_type(e)
+            error = str(e)
 
             self.assertIn('misago.users.tests.testfiles.profilefields.NofieldnameField', error)
             self.assertIn('profile field has to specify fieldname attribute', error)
@@ -74,7 +73,7 @@ class ProfileFieldsLoadTests(TestCase):
         try:
             profilefields.load()
         except ValueError as e:
-            error = text_type(e)
+            error = str(e)
 
             self.assertIn('misago.users.profilefields.default.TwitterHandleField', error)
             self.assertIn('profile field has been specified twice', error)
@@ -102,7 +101,7 @@ class ProfileFieldsLoadTests(TestCase):
         try:
             profilefields.load()
         except ValueError as e:
-            error = text_type(e)
+            error = str(e)
 
             self.assertIn('misago.users.tests.testfiles.profilefields.FieldnameField', error)
             self.assertIn('misago.users.tests.testfiles.profilefields.RepeatedFieldnameField', error)

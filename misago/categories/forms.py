@@ -25,7 +25,7 @@ class AdminCategoryFieldMixin(object):
 
         kwargs.setdefault('queryset', queryset)
 
-        super(AdminCategoryFieldMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def _get_level_indicator(self, obj):
         level = getattr(obj, obj._mptt_meta.level_attr) - self.base_level
@@ -135,7 +135,7 @@ class CategoryFormBase(forms.ModelForm):
         return data
 
     def clean(self):
-        data = super(CategoryFormBase, self).clean()
+        data = super().clean()
         self.instance.set_name(data.get('name'))
         return data
 
@@ -185,7 +185,7 @@ class DeleteCategoryFormBase(forms.ModelForm):
         fields = []
 
     def clean(self):
-        data = super(DeleteCategoryFormBase, self).clean()
+        data = super().clean()
 
         if data.get('move_threads_to'):
             if data['move_threads_to'].pk == self.instance.pk:

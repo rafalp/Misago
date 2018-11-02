@@ -11,7 +11,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadMergeApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadMergeApiTests, self).setUp()
+        super().setUp()
 
         Category(
             name='Category B',
@@ -708,11 +708,11 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                     ['0', "Delete all polls"],
                     [
                         str(poll.pk),
-                        u'{} ({})'.format(poll.question, poll.thread.title),
+                        '{} ({})'.format(poll.question, poll.thread.title),
                     ],
                     [
                         str(other_poll.pk),
-                        u'{} ({})'.format(other_poll.question, other_poll.thread.title),
+                        '{} ({})'.format(other_poll.question, other_poll.thread.title),
                     ],
                 ]
             }

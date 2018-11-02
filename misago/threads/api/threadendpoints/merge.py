@@ -2,7 +2,6 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.utils.six import text_type
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -114,7 +113,7 @@ def threads_merge_endpoint(request):
             invalid_threads.append({
                 'id': thread.pk,
                 'title': thread.title,
-                'errors': [text_type(e)]
+                'errors': [str(e)]
             })
 
     if invalid_threads:

@@ -14,7 +14,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
     """tests for user change name RPC (POST to /api/users/1/username/)"""
 
     def setUp(self):
-        super(UserUsernameTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/username/' % self.user.pk
 
     def test_get_change_username_options(self):
@@ -109,7 +109,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     """tests for moderate username RPC (/api/users/1/moderate-username/)"""
 
     def setUp(self):
-        super(UserUsernameModerationTests, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 

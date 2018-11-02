@@ -8,8 +8,7 @@ class PostsPaginator(Paginator):
         per_page = int(per_page) - 1
         if orphans:
             orphans += 1
-        super(PostsPaginator,
-              self).__init__(object_list, per_page, orphans, allow_empty_first_page)
+        super().__init__(object_list, per_page, orphans, allow_empty_first_page)
 
     def page(self, number):
         """returns a Page object for the given 1-based page number."""

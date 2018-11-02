@@ -5,7 +5,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class PrivateThreadsTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PrivateThreadsTestCase, self).setUp()
+        super().setUp()
         self.category = Category.objects.private_threads()
 
         override_acl(self.user, {

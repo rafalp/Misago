@@ -1,6 +1,7 @@
+from io import StringIO
+
 from django.core import mail
 from django.core.management import call_command
-from django.utils.six import StringIO
 
 from misago.conf import settings
 from misago.users.datadownloads import request_user_data_download
