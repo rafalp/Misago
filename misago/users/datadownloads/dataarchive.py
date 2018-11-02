@@ -1,4 +1,3 @@
-import io  # fixme: remove explicit io imports after going py3k-only
 import os
 import shutil
 
@@ -78,7 +77,7 @@ class DataArchive(object):
         clean_filename = slugify(str(name))
         file_dir_path = self.make_final_path(date=date, directory=directory)
         file_path = os.path.join(file_dir_path, '{}.txt'.format(clean_filename))
-        with io.open(file_path, 'w', encoding='utf-8') as fp:
+        with open(file_path, 'w') as fp:
             fp.write(six.text_type(value))
             return file_path
 
