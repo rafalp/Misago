@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils import six
 from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
 
 from misago.acl import add_acl
@@ -398,7 +397,7 @@ class DeleteThreadsSerializer(serializers.Serializer):
                         'id': thread.id,
                         'title': thread.title
                     },
-                    'error': six.text_type(e)
+                    'error': str(e)
                 })
             except Http404 as e:
                 pass # skip invisible threads

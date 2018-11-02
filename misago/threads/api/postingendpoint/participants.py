@@ -2,9 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils import six
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import ugettext as _, ungettext
 
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.threads.participants import add_participants, set_owner
@@ -75,7 +73,7 @@ class ParticipantsSerializer(serializers.Serializer):
             try:
                 allow_message_user(self.context['user'], user)
             except PermissionDenied as e:
-                raise serializers.ValidationError(six.text_type(e))
+                raise serializers.ValidationError(str(e))
             users.append(user)
 
         if len(usernames) != len(users):

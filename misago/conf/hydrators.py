@@ -1,8 +1,7 @@
-import six
-
+# fixme: rename this moduleto serialize
 
 def hydrate_string(dry_value):
-    return six.text_type(dry_value) if dry_value else ''
+    return str(dry_value) if dry_value else ''
 
 
 def dehydrate_string(wet_value):
@@ -22,7 +21,7 @@ def hydrate_int(dry_value):
 
 
 def dehydrate_int(wet_value):
-    return six.text_type(wet_value)
+    return str(wet_value)
 
 
 def hydrate_list(dry_value):

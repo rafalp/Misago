@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
-from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.threads.models import Thread

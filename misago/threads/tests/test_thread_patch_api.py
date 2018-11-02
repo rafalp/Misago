@@ -1,7 +1,7 @@
 import json
 from datetime import timedelta
 
-from django.utils import six, timezone
+from django.utils import timezone
 
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
@@ -1388,7 +1388,7 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
     def test_subscribe_nonexistant_thread(self):
         """api makes it impossible to subscribe nonexistant thread"""
         bad_api_link = self.api_link.replace(
-            six.text_type(self.thread.pk), six.text_type(self.thread.pk + 9)
+            str(self.thread.pk), str(self.thread.pk + 9)
         )
 
         response = self.patch(

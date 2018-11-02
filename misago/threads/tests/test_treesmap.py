@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.utils import six
 
 from misago.categories.models import Category
 from misago.threads.threadtypes.treesmap import TreesMap
@@ -82,7 +81,7 @@ class TreesMapTests(TestCase):
         except KeyError as e:
             self.assertIn(
                 "tree id has no type defined",
-                six.text_type(e), "invalid exception message as given"
+                str(e), "invalid exception message as given"
             )
 
     def test_get_tree_id_for_root(self):
@@ -101,5 +100,5 @@ class TreesMapTests(TestCase):
         except KeyError as e:
             self.assertIn(
                 '"hurr_durr" root has no tree defined',
-                six.text_type(e), "invalid exception message as given"
+                str(e), "invalid exception message as given"
             )

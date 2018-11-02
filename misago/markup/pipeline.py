@@ -2,8 +2,6 @@ from importlib import import_module
 
 from bs4 import BeautifulSoup
 
-from django.utils import six
-
 from misago.conf import settings
 
 
@@ -26,7 +24,7 @@ class MarkupPipeline(object):
                 hook = getattr(module, 'clean_parsed')
                 hook.process_result(result, soup)
 
-        souped_text = six.text_type(soup.body).strip()[6:-7]
+        souped_text = str(soup.body).strip()[6:-7]
         result['parsed_text'] = souped_text.strip()
         return result
 

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils import six
 
 from misago.admin.testutils import AdminTestCase
 
@@ -36,8 +35,8 @@ class TwitterProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': '',
                 'signature': '',
@@ -61,8 +60,8 @@ class TwitterProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'twitter': 'lorem!ipsum',
                 'new_password': '',
@@ -85,8 +84,8 @@ class TwitterProfileFieldTests(AdminTestCase):
             self.test_link,
             data={
                 'username': 'Edited',
-                'rank': six.text_type(self.user.rank_id),
-                'roles': six.text_type(self.user.roles.all()[0].pk),
+                'rank': str(self.user.rank_id),
+                'roles': str(self.user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'twitter': 'lorem_ipsum',
                 'new_password': '',

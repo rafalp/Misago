@@ -1,7 +1,6 @@
 import warnings
 
 from django.test import TestCase
-from django.utils import six
 
 from misago.core.deprecations import RemovedInMisagoWarning, warn
 
@@ -13,5 +12,5 @@ class DeprecationsTests(TestCase):
             warn("test warning")
 
             self.assertEqual(len(warning), 1)
-            self.assertEqual(six.text_type(warning[0].message), "test warning")
+            self.assertEqual(str(warning[0].message), "test warning")
             self.assertTrue(issubclass(warning[0].category, RemovedInMisagoWarning))

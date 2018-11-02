@@ -5,7 +5,6 @@ from rest_framework.response import Response
 
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse
-from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.core.shortcuts import get_int_or_404
@@ -24,7 +23,7 @@ def search(request, search_provider=None):
     for provider in allowed_providers:
         provider_data = {
             'id': provider.url,
-            'name': six.text_type(provider.name),
+            'name': str(provider.name),
             'icon': provider.icon,
             'url': reverse('misago:search', kwargs={'search_provider': provider.url}),
             'api': reverse('misago:api:search', kwargs={'search_provider': provider.url}),

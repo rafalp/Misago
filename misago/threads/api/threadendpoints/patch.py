@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils import six
 from django.utils.translation import ugettext as _
 
 from misago.acl import add_acl
@@ -49,7 +48,7 @@ thread_patch_dispatcher.add('acl', patch_acl)
 
 def patch_title(request, thread, value):
     try:
-        value_cleaned = six.text_type(value).strip()
+        value_cleaned = str(value).strip()
     except (TypeError, ValueError):
         raise PermissionDenied(_('Not a valid string.'))
 
@@ -272,7 +271,7 @@ def patch_add_participant(request, thread, value):
     allow_add_participants(request.user, thread)
 
     try:
-        username = six.text_type(value).strip().lower()
+        username = str(value).strip().lower()
         if not username:
             raise PermissionDenied(_("You have to enter new participant's username."))
         participant = UserModel.objects.get(slug=username)

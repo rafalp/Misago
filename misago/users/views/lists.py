@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils import six
 from django.views import View
 
 from misago.core.utils import format_plaintext_for_html
@@ -24,7 +23,7 @@ class ListView(View):
         for page in sections:
             page['reversed_link'] = reverse(page['link'])
             request.frontend_context['USERS_LISTS'].append({
-                'name': six.text_type(page['name']),
+                'name': str(page['name']),
                 'component': page['component'],
             })
 

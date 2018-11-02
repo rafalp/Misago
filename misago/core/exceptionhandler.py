@@ -3,7 +3,6 @@ from rest_framework.views import exception_handler as rest_exception_handler
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
-from django.utils import six
 from social_core.exceptions import SocialAuthBaseException
 from social_core.utils import social_logger
 
@@ -29,7 +28,7 @@ def is_misago_exception(exception):
 def handle_ajax_error(request, exception):
     json = {
         'is_error': 1,
-        'message': six.text_type(exception.message),
+        'message': str(exception.message),
     }
     return JsonResponse(json, status=exception.code)
 

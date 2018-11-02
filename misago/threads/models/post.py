@@ -4,7 +4,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
-from django.utils import six, timezone
+from django.utils import timezone
 
 from misago.conf import settings
 from misago.core.pgutils import PgPartialIndex
@@ -132,8 +132,8 @@ class Post(models.Model):
         if self.pk == other_post.pk:
             raise ValueError("post can't be merged with itself")
 
-        other_post.original = six.text_type('\n\n').join((other_post.original, self.original))
-        other_post.parsed = six.text_type('\n').join((other_post.parsed, self.parsed))
+        other_post.original = str('\n\n').join((other_post.original, self.original))
+        other_post.parsed = str('\n').join((other_post.parsed, self.parsed))
         update_post_checksum(other_post)
 
         if self.is_protected:
@@ -213,7 +213,7 @@ class Post(models.Model):
     def short(self):
         if self.is_valid:
             if len(self.original) > 150:
-                return six.text_type('%s...') % self.original[:150].strip()
+                return str('%s...') % self.original[:150].strip()
             else:
                 return self.original
         else:

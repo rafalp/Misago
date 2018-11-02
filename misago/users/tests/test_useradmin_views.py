@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
-from django.utils import six
 
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
@@ -453,8 +452,8 @@ class UserAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:accounts:new'),
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(default_rank.pk),
-                'roles': six.text_type(authenticated_role.pk),
+                'rank': str(default_rank.pk),
+                'roles': str(authenticated_role.pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'staff_level': '0',
@@ -479,8 +478,8 @@ class UserAdminViewsTests(AdminTestCase):
             reverse('misago:admin:users:accounts:new'),
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(default_rank.pk),
-                'roles': six.text_type(authenticated_role.pk),
+                'rank': str(default_rank.pk),
+                'roles': str(authenticated_role.pk),
                 'email': 'reg@stered.com',
                 'new_password': ' pass123 ',
                 'staff_level': '0',
@@ -509,8 +508,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'newpass123',
                 'staff_level': '0',
@@ -554,8 +553,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bob',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'signature': 'Hello world!',
@@ -591,8 +590,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': ' newpass123 ',
                 'staff_level': '0',
@@ -633,8 +632,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -672,8 +671,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '0',
@@ -718,8 +717,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '0',
@@ -760,8 +759,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -802,8 +801,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '0',
@@ -850,8 +849,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -898,8 +897,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -941,8 +940,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -982,8 +981,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'new_password': 'pass123',
                 'is_staff': '1',
@@ -1022,8 +1021,8 @@ class UserAdminViewsTests(AdminTestCase):
             test_link,
             data={
                 'username': 'Bawww',
-                'rank': six.text_type(test_user.rank_id),
-                'roles': six.text_type(test_user.roles.all()[0].pk),
+                'rank': str(test_user.rank_id),
+                'roles': str(test_user.roles.all()[0].pk),
                 'email': 'reg@stered.com',
                 'is_staff': '1',
                 'is_superuser': '0',

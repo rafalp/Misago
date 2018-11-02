@@ -1,7 +1,6 @@
 from types import ModuleType
 
 from django.test import TestCase
-from django.utils import six
 
 from misago.acl.providers import PermissionProviders
 from misago.conf import settings
@@ -58,7 +57,7 @@ class PermissionProvidersTests(TestCase):
         self.assertEqual(len(providers_list), len(providers_setting))
 
         for extension, module in providers_list:
-            self.assertTrue(isinstance(extension, six.string_types))
+            self.assertTrue(isinstance(extension, str))
             self.assertEqual(type(module), ModuleType)
 
     def test_dict(self):
@@ -77,7 +76,7 @@ class PermissionProvidersTests(TestCase):
         self.assertEqual(len(providers_dict), len(providers_setting))
 
         for extension, module in providers_dict.items():
-            self.assertTrue(isinstance(extension, six.string_types))
+            self.assertTrue(isinstance(extension, str))
             self.assertEqual(type(module), ModuleType)
 
     def test_annotators(self):

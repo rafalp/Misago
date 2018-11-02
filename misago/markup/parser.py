@@ -8,7 +8,6 @@ from markdown.extensions.fenced_code import FencedCodeExtension
 
 from django.http import Http404
 from django.urls import resolve
-from django.utils import six
 
 from misago.conf import settings
 
@@ -186,7 +185,7 @@ def clean_links(request, result, force_shva=False):
             img['src'] = assert_link_prefix(img['src'])
 
     # [6:-7] trims <body></body> wrap
-    result['parsed_text'] = six.text_type(soup.body)[6:-7]
+    result['parsed_text'] = str(soup.body)[6:-7]
 
 
 def is_internal_link(link, host):
