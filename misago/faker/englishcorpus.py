@@ -1,4 +1,3 @@
-import codecs
 import os
 import random
 
@@ -12,7 +11,7 @@ class EnglishCorpus(object):
         self._previous = None
 
         self.phrases = []
-        with codecs.open(phrases_file, "r", "utf-8") as f:
+        with open(phrases_file, "r") as f:
             for phrase in [l.strip() for l in f.readlines()]:
                 if min_length and len(phrase) < min_length:
                     continue
