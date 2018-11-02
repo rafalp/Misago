@@ -9,7 +9,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ReplyThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ReplyThreadTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

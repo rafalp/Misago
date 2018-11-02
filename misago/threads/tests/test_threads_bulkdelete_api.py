@@ -15,7 +15,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadsBulkDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:thread-list')
 

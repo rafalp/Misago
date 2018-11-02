@@ -6,7 +6,7 @@ from misago.threads.tests.test_threads_api import ThreadsApiTestCase
 
 class UserThreadsApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(UserThreadsApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse(
             'misago:api:user-threads', kwargs={
@@ -92,7 +92,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
 class UserPostsApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(UserPostsApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse(
             'misago:api:user-posts', kwargs={

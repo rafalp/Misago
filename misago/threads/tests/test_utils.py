@@ -20,7 +20,7 @@ class AddCategoriesToItemsTests(MisagoTestCase):
           + Subcategory F
         """
 
-        super(AddCategoriesToItemsTests, self).setUp()
+        super().setUp()
 
         self.root = Category.objects.root_category()
 

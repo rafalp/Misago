@@ -8,7 +8,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
     """tests for user change password RPC (/api/users/1/change-password/)"""
 
     def setUp(self):
-        super(UserChangePasswordTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/change-password/' % self.user.pk
 
     def test_unsupported_methods(self):

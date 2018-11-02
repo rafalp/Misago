@@ -116,7 +116,7 @@ class Category(MPTTModel):
     def delete(self, *args, **kwargs):
         Category.objects.clear_cache()
         acl_version.invalidate()
-        return super(Category, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def synchronize(self):
         threads_queryset = self.thread_set.filter(is_hidden=False, is_unapproved=False)

@@ -40,11 +40,11 @@ class Rank(models.Model):
             self.set_order()
         else:
             acl_version.invalidate()
-        return super(Rank, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         acl_version.invalidate()
-        return super(Rank, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('misago:users-rank', kwargs={'slug': self.slug})

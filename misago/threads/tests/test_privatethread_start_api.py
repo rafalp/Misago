@@ -14,7 +14,7 @@ UserModel = get_user_model()
 
 class StartPrivateThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(StartPrivateThreadTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.private_threads()
         self.api_link = reverse('misago:api:private-thread-list')

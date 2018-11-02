@@ -14,7 +14,7 @@ UserModel = get_user_model()
 
 class UsersListTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UsersListTestCase, self).setUp()
+        super().setUp()
         override_acl(self.user, {
             'can_browse_users_list': 1,
         })

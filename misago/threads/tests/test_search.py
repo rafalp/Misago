@@ -7,7 +7,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SearchApiTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
 
@@ -209,7 +209,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
 class SearchProviderApiTests(SearchApiTests):
     def setUp(self):
-        super(SearchProviderApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse(
             'misago:api:search', kwargs={

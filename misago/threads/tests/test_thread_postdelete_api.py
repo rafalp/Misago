@@ -11,7 +11,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class PostDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(PostDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
@@ -176,7 +176,7 @@ class PostDeleteApiTests(ThreadsApiTestCase):
 
 class EventDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(EventDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.event = testutils.reply_thread(self.thread, poster=self.user, is_event=True)
 

@@ -17,7 +17,7 @@ class CategoryAdmin(generic.AdminBaseMixin):
     message_404 = _("Requested category does not exist.")
 
     def get_target(self, kwargs):
-        target = super(CategoryAdmin, self).get_target(kwargs)
+        target = super().get_target(kwargs)
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 

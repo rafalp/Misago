@@ -9,7 +9,7 @@ from .test_privatethreads import PrivateThreadsTestCase
 
 class PrivateThreadsListTests(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadsListTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse('misago:private-threads')
 

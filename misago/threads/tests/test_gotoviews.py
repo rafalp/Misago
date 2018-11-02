@@ -14,7 +14,7 @@ GOTO_PAGE_URL = '%s%s/#post-%s'
 
 class GotoViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(GotoViewTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

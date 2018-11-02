@@ -51,7 +51,7 @@ class CategorySerializer(serializers.Serializer):
         self.user = user
         self.category_cache = None
 
-        super(CategorySerializer, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate_category(self, value):
         try:

@@ -148,7 +148,7 @@ class Thread(models.Model):
         from misago.threads.signals import delete_thread
         delete_thread.send(sender=self)
 
-        super(Thread, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def merge(self, other_thread):
         if self.pk == other_thread.pk:

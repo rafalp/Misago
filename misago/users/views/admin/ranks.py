@@ -21,7 +21,7 @@ class RankAdmin(generic.AdminBaseMixin):
             target.roles.add(*roles)
 
     def handle_form(self, form, request, target):
-        super(RankAdmin, self).handle_form(form, request, target)
+        super().handle_form(form, request, target)
         self.update_roles(target, form.cleaned_data['roles'])
 
 

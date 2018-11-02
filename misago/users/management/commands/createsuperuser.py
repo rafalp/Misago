@@ -69,7 +69,7 @@ class Command(BaseCommand):
 
     def execute(self, *args, **options):
         self.stdin = options.get('stdin', sys.stdin)  # Used for testing
-        return super(Command, self).execute(*args, **options)
+        return super().execute(*args, **options)
 
     def handle(self, *args, **options):
         username = options.get('username')

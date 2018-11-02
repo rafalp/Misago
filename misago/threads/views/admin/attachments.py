@@ -14,7 +14,7 @@ class AttachmentAdmin(generic.AdminBaseMixin):
     message_404 = _("Requested attachment could not be found.")
 
     def get_queryset(self):
-        qs = super(AttachmentAdmin, self).get_queryset()
+        qs = super().get_queryset()
         return qs.select_related('filetype', 'uploader', 'post', 'post__thread', 'post__category')
 
 

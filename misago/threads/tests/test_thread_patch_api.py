@@ -443,7 +443,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
 class ThreadMoveApiTests(ThreadPatchApiTestCase):
     def setUp(self):
-        super(ThreadMoveApiTests, self).setUp()
+        super().setUp()
 
         Category(
             name='Category B',
@@ -1204,7 +1204,7 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
 
 class ThreadUnhideApiTests(ThreadPatchApiTestCase):
     def setUp(self):
-        super(ThreadUnhideApiTests, self).setUp()
+        super().setUp()
 
         self.thread.is_hidden = True
         self.thread.save()
@@ -1857,7 +1857,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
 
 class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     def setUp(self):
-        super(ThreadChangeBestAnswerApiTests, self).setUp()
+        super().setUp()
 
         self.best_answer = testutils.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, self.best_answer)
@@ -2150,7 +2150,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
 
 class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
     def setUp(self):
-        super(ThreadUnmarkBestAnswerApiTests, self).setUp()
+        super().setUp()
 
         self.best_answer = testutils.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, self.best_answer)

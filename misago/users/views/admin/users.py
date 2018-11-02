@@ -97,7 +97,7 @@ class UsersList(UserAdmin, generic.ListView):
     ]
 
     def get_queryset(self):
-        qs = super(UsersList, self).get_queryset()
+        qs = super().get_queryset()
         return qs.select_related('rank')
 
     def get_search_form(self, request):
@@ -278,7 +278,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
     def real_dispatch(self, request, target):
         target.old_username = target.username
         target.old_is_avatar_locked = target.is_avatar_locked
-        return super(EditUser, self).real_dispatch(request, target)
+        return super().real_dispatch(request, target)
 
     def initialize_form(self, form, request, target):
         if request.method == 'POST':

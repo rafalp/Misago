@@ -91,7 +91,7 @@ class AdminAuthenticationForm(AuthenticationForm):
             'not_staff': _("Your account does not have admin privileges."),
         })
 
-        super(AdminAuthenticationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def confirm_login_allowed(self, user):
         if not user.is_staff:
@@ -102,7 +102,7 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
     email = forms.CharField()
 
     def clean(self):
-        data = super(GetUserForm, self).clean()
+        data = super().clean()
 
         email = data.get('email')
         if not email or len(email) > 250:

@@ -10,7 +10,7 @@ UserModel = get_user_model()
 
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SearchApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:search')
 
@@ -138,7 +138,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
 class SearchProviderApiTests(SearchApiTests):
     def setUp(self):
-        super(SearchProviderApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse(
             'misago:api:search', kwargs={

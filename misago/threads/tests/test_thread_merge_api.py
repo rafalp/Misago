@@ -11,7 +11,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadMergeApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadMergeApiTests, self).setUp()
+        super().setUp()
 
         Category(
             name='Category B',

@@ -5,7 +5,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ParseMarkupApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ParseMarkupApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:parse-markup')
 

@@ -7,7 +7,7 @@ from .test_privatethreads import PrivateThreadsTestCase
 
 class PrivateThreadViewTests(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadViewTests, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.test_link = self.thread.get_absolute_url()

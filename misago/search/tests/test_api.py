@@ -7,7 +7,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SearchApiTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse('misago:api:search')
 

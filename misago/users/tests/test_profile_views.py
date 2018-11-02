@@ -13,7 +13,7 @@ UserModel = get_user_model()
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UserProfileViewsTests, self).setUp()
+        super().setUp()
         self.link_kwargs = {'slug': self.user.slug, 'pk': self.user.pk}
 
         self.category = Category.objects.get(slug='first-category')

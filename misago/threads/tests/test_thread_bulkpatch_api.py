@@ -12,7 +12,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadsBulkPatchApiTestCase(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadsBulkPatchApiTestCase, self).setUp()
+        super().setUp()
 
         self.threads = list(reversed([
             testutils.post_thread(category=self.category),
@@ -243,7 +243,7 @@ class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
 
 class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
     def setUp(self):
-        super(BulkThreadMoveApiTests, self).setUp()
+        super().setUp()
 
         Category(
             name='Category B',

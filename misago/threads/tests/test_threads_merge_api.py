@@ -16,7 +16,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadsMergeApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadsMergeApiTests, self).setUp()
+        super().setUp()
         self.api_link = reverse('misago:api:thread-merge')
 
         Category(

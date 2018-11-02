@@ -16,7 +16,7 @@ class UserCreateTests(UserTestCase):
     """tests for new user registration (POST to /api/users/)"""
 
     def setUp(self):
-        super(UserCreateTests, self).setUp()
+        super().setUp()
         
         Agreement.objects.invalidate_cache()
 

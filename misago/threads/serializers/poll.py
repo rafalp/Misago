@@ -160,7 +160,7 @@ class EditPollSerializer(serializers.ModelSerializer):
         if instance.choices:
             self.update_choices(instance, validated_data['choices'])
 
-        return super(EditPollSerializer, self).update(instance, validated_data)
+        return super().update(instance, validated_data)
 
     def update_choices(self, instance, cleaned_choices):
         removed_hashes = []

@@ -23,11 +23,11 @@ class BaseRole(models.Model):
     def save(self, *args, **kwargs):
         if self.pk:
             acl_version.invalidate()
-        return super(BaseRole, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         acl_version.invalidate()
-        return super(BaseRole, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
 
 class Role(BaseRole):

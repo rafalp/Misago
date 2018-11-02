@@ -229,12 +229,12 @@ class CreateUser(PipelineTestCase):
 
 class CreateUserWithFormTests(PipelineTestCase):
     def setUp(self):
-        super(CreateUserWithFormTests, self).setUp()
+        super().setUp()
 
         Agreement.objects.invalidate_cache()
 
     def tearDown(self):
-        super(CreateUserWithFormTests, self).tearDown()
+        super().tearDown()
         
         Agreement.objects.invalidate_cache()
 
@@ -640,7 +640,7 @@ class GetUsernameTests(PipelineTestCase):
 
 class RequireActivationTests(PipelineTestCase):
     def setUp(self):
-        super(RequireActivationTests, self).setUp()
+        super().setUp()
 
         self.user.requires_activation = UserModel.ACTIVATION_ADMIN
         self.user.save()

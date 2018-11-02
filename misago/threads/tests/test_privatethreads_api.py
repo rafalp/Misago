@@ -9,7 +9,7 @@ from .test_privatethreads import PrivateThreadsTestCase
 
 class PrivateThreadsListApiTests(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadsListApiTests, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:private-thread-list')
 
@@ -69,7 +69,7 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
 
 class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadRetrieveApiTests, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
@@ -167,7 +167,7 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
 class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()

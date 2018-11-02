@@ -14,7 +14,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ThreadsApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadsApiTestCase, self).setUp()
+        super().setUp()
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 
@@ -72,7 +72,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
 
 class ThreadRetrieveApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadRetrieveApiTests, self).setUp()
+        super().setUp()
 
         self.tested_links = [
             self.api_link,
@@ -196,7 +196,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
 
 class ThreadDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadDeleteApiTests, self).setUp()
+        super().setUp()
 
         self.last_thread = testutils.post_thread(category=self.category)
         self.api_link = self.last_thread.get_api_url()

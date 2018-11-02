@@ -21,7 +21,7 @@ TEST_CORRUPTEDIMG_PATH = os.path.join(TESTFILES_DIR, 'corrupted.gif')
 
 class AttachmentsApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AttachmentsApiTestCase, self).setUp()
+        super().setUp()
 
         AttachmentType.objects.all().delete()
 

@@ -7,7 +7,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadPostEditsApiTestCase, self).setUp()
+        super().setUp()
 
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
@@ -126,7 +126,7 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
 
 class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
     def setUp(self):
-        super(ThreadPostPostEditTests, self).setUp()
+        super().setUp()
         self.edits = self.mock_edit_record()
 
         self.override_acl({'can_edit_posts': 2})

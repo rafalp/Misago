@@ -10,7 +10,7 @@ from .test_thread_poll_api import ThreadPollApiTestCase
 
 class ThreadPollEditTests(ThreadPollApiTestCase):
     def setUp(self):
-        super(ThreadPollEditTests, self).setUp()
+        super().setUp()
 
         self.mock_poll()
 

@@ -14,7 +14,7 @@ class BanAdmin(generic.AdminBaseMixin):
     message_404 = _("Requested ban does not exist.")
 
     def handle_form(self, form, request, target):
-        super(BanAdmin, self).handle_form(form, request, target)
+        super().handle_form(form, request, target)
         Ban.objects.invalidate_cache()
 
 

@@ -60,7 +60,7 @@ class ExpireUserDataDownloadTests(AuthenticatedUserTestCase):
 
 class PrepareUserDataDownload(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PrepareUserDataDownload, self).setUp()
+        super().setUp()
         self.download = request_user_data_download(self.user)
 
     def assert_download_is_valid(self):

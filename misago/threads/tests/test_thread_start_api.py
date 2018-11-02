@@ -7,7 +7,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class StartThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(StartThreadTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.api_link = reverse('misago:api:thread-list')

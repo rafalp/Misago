@@ -66,7 +66,7 @@ class QuotePreprocessor(Preprocessor):
 
 class QuoteBlockProcessor(BlockProcessor):
     def __init__(self, *args, **kwargs):
-        super(QuoteBlockProcessor, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._title = None
         self._quote = 0
         self._children = []

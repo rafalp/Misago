@@ -11,7 +11,7 @@ UserModel = get_user_model()
 
 class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
     def setUp(self):
-        super(PrivateThreadReplyApiTestCase, self).setUp()
+        super().setUp()
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()

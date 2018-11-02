@@ -8,7 +8,7 @@ from .test_threads_api import ThreadsApiTestCase
 
 class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
     def setUp(self):
-        super(ThreadPostLikesApiTestCase, self).setUp()
+        super().setUp()
 
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 

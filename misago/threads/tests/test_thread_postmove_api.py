@@ -13,7 +13,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadPostMoveApiTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

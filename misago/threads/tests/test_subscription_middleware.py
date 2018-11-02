@@ -12,7 +12,7 @@ UserModel = get_user_model()
 
 class SubscriptionMiddlewareTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SubscriptionMiddlewareTestCase, self).setUp()
+        super().setUp()
         self.category = Category.objects.get(slug='first-category')
         self.override_acl()
 
@@ -31,7 +31,7 @@ class SubscriptionMiddlewareTestCase(AuthenticatedUserTestCase):
 
 class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
     def setUp(self):
-        super(SubscribeStartedThreadTests, self).setUp()
+        super().setUp()
         self.api_link = reverse('misago:api:thread-list')
 
     def test_dont_subscribe(self):
@@ -100,7 +100,7 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
 
 class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     def setUp(self):
-        super(SubscribeRepliedThreadTests, self).setUp()
+        super().setUp()
         self.thread = testutils.post_thread(self.category)
         self.api_link = reverse(
             'misago:api:thread-post-list', kwargs={

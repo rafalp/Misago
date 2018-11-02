@@ -55,10 +55,10 @@ class DetailsForm(forms.Form):
         self.request = kwargs.pop('request')
         self.user = kwargs.pop('user')
 
-        super(DetailsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         profilefields.add_fields_to_form(self.request, self.user, self)
 
     def clean(self):
-        data = super(DetailsForm, self).clean()
+        data = super().clean()
         return profilefields.clean_form(self.request, self.user, self, data)

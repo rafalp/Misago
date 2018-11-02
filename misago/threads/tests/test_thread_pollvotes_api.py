@@ -14,7 +14,7 @@ UserModel = get_user_model()
 
 class ThreadGetVotesTests(ThreadPollApiTestCase):
     def setUp(self):
-        super(ThreadGetVotesTests, self).setUp()
+        super().setUp()
 
         self.mock_poll()
 
@@ -156,7 +156,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
 
 class ThreadPostVotesTests(ThreadPollApiTestCase):
     def setUp(self):
-        super(ThreadPostVotesTests, self).setUp()
+        super().setUp()
 
         self.mock_poll()
 

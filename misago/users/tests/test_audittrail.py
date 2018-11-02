@@ -23,7 +23,7 @@ class MockRequest(object):
 
 class CreateAuditTrailTests(UserTestCase):
     def setUp(self):
-        super(CreateAuditTrailTests, self).setUp()
+        super().setUp()
 
         self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
 
@@ -95,7 +95,7 @@ class CreateAuditTrailTests(UserTestCase):
 
 class CreateUserAuditTrailTests(UserTestCase):
     def setUp(self):
-        super(CreateUserAuditTrailTests, self).setUp()
+        super().setUp()
 
         self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
 
@@ -161,7 +161,7 @@ class CreateUserAuditTrailTests(UserTestCase):
 
 class RemoveOldAuditTrailsTest(UserTestCase):
     def setUp(self):
-        super(RemoveOldAuditTrailsTest, self).setUp()
+        super().setUp()
 
         self.obj = UserModel.objects.create_user('BobBoberson', 'bob@example.com')
         

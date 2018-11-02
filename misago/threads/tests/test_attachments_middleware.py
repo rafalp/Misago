@@ -18,7 +18,7 @@ class RequestMock(object):
 
 class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(AttachmentsMiddlewareTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

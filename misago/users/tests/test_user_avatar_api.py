@@ -22,7 +22,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
     """tests for user avatar RPC (/api/users/1/avatar/)"""
 
     def setUp(self):
-        super(UserAvatarTests, self).setUp()
+        super().setUp()
         self.link = '/api/users/%s/avatar/' % self.user.pk
         self.client.post(self.link, data={'avatar': 'generated'})
 
@@ -297,7 +297,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     """tests for moderate user avatar RPC (/api/users/1/moderate-avatar/)"""
 
     def setUp(self):
-        super(UserAvatarModerationTests, self).setUp()
+        super().setUp()
 
         self.other_user = UserModel.objects.create_user("OtherUser", "other@user.com", "pass123")
 

@@ -193,7 +193,7 @@ class EditUserForm(UserBaseForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
 
-        super(EditUserForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
@@ -227,7 +227,7 @@ class EditUserForm(UserBaseForm):
         return data
 
     def clean(self):
-        data = super(EditUserForm, self).clean()
+        data = super().clean()
         return profilefields.clean_form(self.request, self.instance, self, data)
 
 
@@ -493,7 +493,7 @@ class BanUsersForm(forms.Form):
     def __init__(self, *args, **kwargs):
         users = kwargs.pop('users')
 
-        super(BanUsersForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields['ban_type'].choices = [
             ('usernames', _('Usernames')),
@@ -672,7 +672,7 @@ class RequestDataDownloadsForm(forms.Form):
         return user_identifiers
 
     def clean(self):
-        data = super(RequestDataDownloadsForm, self).clean()
+        data = super().clean()
 
         if data.get('user_identifiers'):
             username_match = Q(slug__in=data['user_identifiers'])

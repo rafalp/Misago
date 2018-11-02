@@ -6,7 +6,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class PostsModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(PostsModerationTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.all_categories()[:1][0]
         self.thread = testutils.post_thread(self.category)

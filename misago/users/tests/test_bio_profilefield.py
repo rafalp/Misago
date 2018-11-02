@@ -9,7 +9,7 @@ UserModel = get_user_model()
 
 class BioProfileFieldTests(AdminTestCase):
     def setUp(self):
-        super(BioProfileFieldTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse(
             'misago:admin:users:accounts:edit',

@@ -17,7 +17,7 @@ class MockRequest(object):
 
 class ThreadViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ThreadViewTestCase, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)

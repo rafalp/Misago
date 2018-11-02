@@ -305,7 +305,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         avatars.delete_avatar(self)
 
-        return super(User, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def delete_content(self):
         from misago.users.signals import delete_user_content
@@ -479,7 +479,7 @@ class Online(models.Model):
 
     def save(self, *args, **kwargs):
         try:
-            super(Online, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
         except IntegrityError:
             pass  # first come is first serve in online tracker
 

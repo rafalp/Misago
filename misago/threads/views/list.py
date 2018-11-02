@@ -73,7 +73,7 @@ class CategoryThreadsList(ForumThreadsList):
     template_name = 'misago/threadslist/category.html'
 
     def get_category(self, request, **kwargs):
-        category = super(CategoryThreadsList, self).get_category(request, **kwargs)
+        category = super().get_category(request, **kwargs)
         if not category.level:
             raise Http404()  # disallow root category access
         return category

@@ -10,7 +10,7 @@ UserModel = get_user_model()
 
 class JoinIpProfileFieldTests(AdminTestCase):
     def setUp(self):
-        super(JoinIpProfileFieldTests, self).setUp()
+        super().setUp()
 
         self.test_link = reverse(
             'misago:admin:users:accounts:edit',

@@ -25,7 +25,7 @@ class OptionsViewsTests(AuthenticatedUserTestCase):
 
 class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ConfirmChangeEmailTests, self).setUp()
+        super().setUp()
         link = '/api/users/%s/change-email/' % self.user.pk
 
         response = self.client.post(
@@ -64,7 +64,7 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
 
 class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(ConfirmChangePasswordTests, self).setUp()
+        super().setUp()
         link = '/api/users/%s/change-password/' % self.user.pk
 
         response = self.client.post(

@@ -38,7 +38,7 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
     ]
 
     def get_queryset(self):
-        qs = super(DataDownloadsList, self).get_queryset()
+        qs = super().get_queryset()
         return qs.select_related('user', 'requester')
         
     def get_search_form(self, request):

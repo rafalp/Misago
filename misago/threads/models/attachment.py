@@ -57,7 +57,7 @@ class Attachment(models.Model):
 
     def delete(self, *args, **kwargs):
         self.delete_files()
-        return super(Attachment, self).delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def delete_files(self):
         if self.thumbnail:

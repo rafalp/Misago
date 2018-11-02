@@ -50,4 +50,4 @@ class DataDownload(models.Model):
     def delete(self, *args, **kwargs):
         if self.file:
             self.file.delete(save=False)
-        super(DataDownload, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)

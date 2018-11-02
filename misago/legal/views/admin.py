@@ -40,7 +40,7 @@ class AgreementsList(AgreementAdmin, generic.ListView):
     }, )
 
     def get_queryset(self):
-        qs = super(AgreementsList, self).get_queryset()
+        qs = super().get_queryset()
         return qs.select_related()
 
     def action_delete(self, request, items):
@@ -53,7 +53,7 @@ class NewAgreement(AgreementAdmin, generic.ModelFormView):
     message_submit = _('New agreement "%(title)s" has been saved.')
     
     def handle_form(self, form, request, target):
-        super(NewAgreement, self).handle_form(form, request, target)
+        super().handle_form(form, request, target)
 
         form.instance.set_created_by(request.user)
         form.instance.save()
@@ -63,7 +63,7 @@ class EditAgreement(AgreementAdmin, generic.ModelFormView):
     message_submit = _('Agreement "%(title)s" has been edited.')
 
     def handle_form(self, form, request, target):
-        super(EditAgreement, self).handle_form(form, request, target)
+        super().handle_form(form, request, target)
 
         form.instance.last_modified_on = timezone.now()
         form.instance.set_last_modified_by(request.user)

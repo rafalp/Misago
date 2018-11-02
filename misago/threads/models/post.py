@@ -114,7 +114,7 @@ class Post(models.Model):
         from misago.threads.signals import delete_post
         delete_post.send(sender=self)
 
-        super(Post, self).delete(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def merge(self, other_post):
         if self.poster_id != other_post.poster_id:

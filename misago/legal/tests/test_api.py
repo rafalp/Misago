@@ -8,7 +8,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class SubmitAgreementTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(SubmitAgreementTests, self).setUp()
+        super().setUp()
 
         self.agreement = Agreement.objects.create(
             type=Agreement.TYPE_TOS,

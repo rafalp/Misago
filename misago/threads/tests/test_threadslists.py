@@ -31,7 +31,7 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         Category E
           + Subcategory F
         """
-        super(ThreadsListTestCase, self).setUp()
+        super().setUp()
 
         self.api_link = reverse('misago:api:thread-list')
 
@@ -1530,7 +1530,7 @@ class UnapprovedListTests(ThreadsListTestCase):
 
 class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(OwnerOnlyThreadsVisibilityTests, self).setUp()
+        super().setUp()
 
         self.category = Category.objects.get(slug='first-category')
 

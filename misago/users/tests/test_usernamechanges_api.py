@@ -4,7 +4,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 
 class UsernameChangesApiTests(AuthenticatedUserTestCase):
     def setUp(self):
-        super(UsernameChangesApiTests, self).setUp()
+        super().setUp()
         self.link = '/api/username-changes/'
 
     def test_user_can_always_see_his_name_changes(self):
