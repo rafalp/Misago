@@ -1,10 +1,10 @@
 from datetime import timedelta
+from io import StringIO
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.utils import timezone
-from django.utils.six import StringIO
 
 from misago.users.management.commands import deleteinactiveusers
 

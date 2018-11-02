@@ -1,9 +1,9 @@
 import os
 from datetime import timedelta
+from io import StringIO
 
 from django.core.files import File
 from django.core.management import call_command
-from django.utils.six import StringIO
 
 from misago.users.datadownloads import request_user_data_download
 from misago.users.management.commands import expireuserdatadownloads
