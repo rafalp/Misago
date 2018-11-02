@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import io  # fixme: remove explicit io imports after going py3k-only
 import os
 from collections import OrderedDict

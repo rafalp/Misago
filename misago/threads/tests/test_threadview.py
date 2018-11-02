@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings

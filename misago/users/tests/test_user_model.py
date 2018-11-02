@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from path import Path
 
 from django.core.exceptions import ValidationError
