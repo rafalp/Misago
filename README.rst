@@ -12,7 +12,7 @@ Misago
 
 .. image:: https://img.shields.io/badge/python-3.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
-   :alt: Works on Python 3,6
+   :alt: Works on Python 3.6
 
 .. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
    :target: https://discord.gg/fwvrZgB
