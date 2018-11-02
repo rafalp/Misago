@@ -10,7 +10,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
-from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
 from misago.core.utils import slugify
@@ -30,7 +29,6 @@ def upload_to(instance, filename):
     return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
 
 
-@python_2_unicode_compatible
 class Attachment(models.Model):
     secret = models.CharField(max_length=64)
     filetype = models.ForeignKey('AttachmentType', on_delete=models.CASCADE)

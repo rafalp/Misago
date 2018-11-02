@@ -1,7 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from misago.conf import settings
@@ -9,7 +8,6 @@ from misago.core.pgutils import PgPartialIndex
 from misago.core.utils import slugify
 
 
-@python_2_unicode_compatible
 class Thread(models.Model):
     WEIGHT_DEFAULT = 0
     WEIGHT_PINNED = 1

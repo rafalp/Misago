@@ -5,7 +5,6 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 from django.utils import six, timezone
-from django.utils.encoding import python_2_unicode_compatible
 
 from misago.conf import settings
 from misago.core.pgutils import PgPartialIndex
@@ -15,7 +14,6 @@ from misago.threads.checksums import is_post_valid, update_post_checksum
 from misago.threads.filtersearch import filter_search
 
 
-@python_2_unicode_compatible
 class Post(models.Model):
     category = models.ForeignKey(
         'misago_categories.Category',
