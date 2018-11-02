@@ -247,6 +247,10 @@ def clean_attachment_link(link, force_shva=False):
 
 
 def minify_result(result):
+    result['parsed_text'] = html_minify(result['parsed_text'])
+    result['parsed_text'] = strip_html_head_body(result['parsed_text'])
+
+
+def strip_html_head_body(parsed_text):
     # [25:-14] trims <html><head></head><body> and </body></html>
-    result['parsed_text'] = html_minify(result['parsed_text'].encode('utf-8'))
-    result['parsed_text'] = result['parsed_text'][25:-14]
+    return parsed_text[25:-14]
