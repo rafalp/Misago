@@ -10,9 +10,9 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://img.shields.io/badge/python-2.7%2C%203.4%2C%203.5%2C%203.6-blue.svg
+.. image:: https://img.shields.io/badge/python-3.6-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
-   :alt: Works on Python 2.7, 3.5, 3,6
+   :alt: Works on Python 3,6
 
 .. image:: https://img.shields.io/badge/chat-on_discord-7289da.svg
    :target: https://discord.gg/fwvrZgB
