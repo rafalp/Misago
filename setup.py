@@ -38,12 +38,6 @@ setup(
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
-    scripts=[
-        'misago/bin/misago-start.py',
-    ],
-    entry_points={'console_scripts': [
-        'misago-start = misago.core.setup:start_misago_project',
-    ]},
     test_suite="runtests.runtests",
     classifiers=[
         'Development Status :: 4 - Beta',

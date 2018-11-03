@@ -7,19 +7,6 @@ RED='\033[0;31m'
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
-# Define dev paths
-# Those are paths to dirs and files created for dev project
-dev_paths=(
-    "./avatargallery"
-    "./devproject"
-    "./media"
-    "./static"
-    "./theme"
-    "./userdata"
-    "./cron.txt"
-    "./manage.py"
-)
-
 # Required ports
 # Some tasks test for those ports before continuing
 port_django=8000
@@ -75,7 +62,7 @@ intro() {
     echo
     echo "Development project:"
     echo
-    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, does nothing if project already exists."
+    echo "    ${BOLD}init${NORMAL}              initialize dev project for development."
     echo "    ${BOLD}afterinit${NORMAL}         repeat help message displayed after init command is complete."
     echo "    ${BOLD}remove${NORMAL}            if dev project exists, remove its files and docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
@@ -115,16 +102,6 @@ invalid_argument() {
 
 # Initialize new dev project
 init() {
-    for dev_path in "${dev_paths[@]}"; do
-        if [ -e $dev_path ]; then
-            error "Dev project already exists, or was not deleted completely."
-            echo
-            echo "Please use \"remove\" option to remove any possible remaining files and try again."
-            echo
-            exit 1
-        fi
-    done
-
     for port in "${required_ports[@]}"; do
         nc "127.0.0.1" "$port" < /dev/null
         if [[ $? = "0" ]]; then
@@ -150,16 +127,6 @@ init() {
 init_in_docker() {
     require_in_docker
     wait_for_db
-    # initialize django project
-    python misago/bin/misago-start-devproject.py
-    # move items of interest up one level
-    mv devproject/devproject devproject_tmp
-    mv devproject/avatargallery ./avatargallery
-    mv devproject/media ./media
-    mv devproject/userdata ./userdata
-    mv devproject/manage.py ./manage.py
-    rm -rf devproject
-    mv devproject_tmp devproject
     # migrate the database
     python manage.py migrate
     # create superuser Admin with password "password"
@@ -209,35 +176,20 @@ remove() {
     echo -e "${RED}Warning:${NORMAL} You are going remove current development project."
     echo
 
-    will_delete_files=false
-    for dev_path in "${dev_paths[@]}"; do
-        if [ -e $dev_path ]; then
-            will_delete_files=true
-        fi
-    done
     if [[ $will_delete_files = true ]]; then
         echo "Following files and directories will be deleted:"
-        for dev_path in "${dev_paths[@]}"; do
-            if [ -e $dev_path ]; then
-                echo "  $dev_path"
-            fi
-        done
+        find ./devproject/media ! -name '.gitignode'
+        find ./devproject/userdata ! -name '.gitignode'
         echo
     fi
-
     echo "Enter \"y\" to confirm:"
 
     read confirmation
     if [[ $confirmation = "y" ]]; then
-        for dev_path in "${dev_paths[@]}"; do
-            if [ -e $dev_path ]; then
-                echo "Removing $dev_path"
-                rm -rf $dev_path
-            fi
-        done
-
         docker-compose stop
         docker-compose down --remove-orphans
+        find ./devproject/media ! -name '.gitignode' -delete
+        find ./devproject/userdata ! -name '.gitignode' -delete
     else
         echo "Operation canceled."
     fi
