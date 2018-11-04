@@ -23,7 +23,12 @@ def runtests():
         raise
 
     setup()
-    exit_code = call_command("test", *sys.argv[2:], verbosity=1, noinput=True)
+
+    modules = sys.argv[1:]
+    if "test" in modules:
+        modules.remove("test")
+
+    exit_code = call_command("test", *modules, verbosity=1, noinput=True)
     sys.exit(exit_code)
 
 
