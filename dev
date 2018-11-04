@@ -172,8 +172,8 @@ clear() {
     devproject_path="$(pwd)/devproject"
 
     echo "Following files and directories will be deleted:"
-    find $devproject_path/media/* ! -name '.gitignore'
-    find $devproject_path/userdata/* ! -name '.gitignore'
+    find $devproject_path/media -mindepth 1 ! -name '.gitignore'
+    find $devproject_path/userdata -mindepth 1 ! -name '.gitignore'
     echo
         
     echo "Enter \"y\" to confirm:"
@@ -182,8 +182,8 @@ clear() {
     if [[ $confirmation = "y" ]]; then
         docker-compose stop
         docker-compose down --remove-orphans
-        find $devproject_path/media/* ! -name '.gitignore' -delete
-        find $devproject_path/userdata/* ! -name '.gitignore' -delete
+        find $devproject_path/media -mindepth 1 ! -name '.gitignore' -delete
+        find $devproject_path/userdata -mindepth 1 ! -name '.gitignore' -delete
     else
         echo "Operation canceled."
     fi
