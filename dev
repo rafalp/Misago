@@ -166,7 +166,7 @@ after_init_message() {
 
 # Clear existing dev project
 clear() {
-    echo -e "${RED}Warning:${NORMAL} You are going to delete files created during development and destroy docker containers."
+    echo -e "${RED}Warning:${NORMAL} You are going to delete media files created during development and destroy docker containers."
     echo
 
     devproject_path="$(pwd)/devproject"
