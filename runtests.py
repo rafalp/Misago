@@ -20,4 +20,5 @@ def runtests():
                 "forget to activate a virtual environment?"
             )
         raise
-    execute_from_command_line(["manage.py", "test"] + sys.argv[1:] + ["--noinput", "-v", "1"])
+
+    execute_from_command_line(["manage.py", "test"] + sys.argv[2:] + ["--noinput", "-v", "1"])
