@@ -7,19 +7,6 @@ RED='\033[0;31m'
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
-# Define dev paths
-# Those are paths to dirs and files created for dev project
-dev_paths=(
-    "./avatargallery"
-    "./devproject"
-    "./media"
-    "./static"
-    "./theme"
-    "./userdata"
-    "./cron.txt"
-    "./manage.py"
-)
-
 # Required ports
 # Some tasks test for those ports before continuing
 port_django=8000
@@ -75,11 +62,11 @@ intro() {
     echo
     echo "Development project:"
     echo
-    echo "    ${BOLD}init${NORMAL}              initialize new dev project for development, does nothing if project already exists."
+    echo "    ${BOLD}init${NORMAL}              initialize dev database for development."
     echo "    ${BOLD}afterinit${NORMAL}         repeat help message displayed after init command is complete."
-    echo "    ${BOLD}remove${NORMAL}            if dev project exists, remove its files and docker containers."
+    echo "    ${BOLD}clear${NORMAL}             clear media and userdata dirs and destroy docker containers."
     echo "    ${BOLD}rebuild${NORMAL}           rebuild docker containers."
-    echo "    ${BOLD}reset${NORMAL}             run remove followed by init."
+    echo "    ${BOLD}reset${NORMAL}             run clear followed by init."
     echo
     echo "    Both init and rebuild args can be followed with any number of extra args and options that should be appended to docker-compose build."
     echo
@@ -115,16 +102,6 @@ invalid_argument() {
 
 # Initialize new dev project
 init() {
-    for dev_path in "${dev_paths[@]}"; do
-        if [ -e $dev_path ]; then
-            error "Dev project already exists, or was not deleted completely."
-            echo
-            echo "Please use \"remove\" option to remove any possible remaining files and try again."
-            echo
-            exit 1
-        fi
-    done
-
     for port in "${required_ports[@]}"; do
         nc "127.0.0.1" "$port" < /dev/null
         if [[ $? = "0" ]]; then
@@ -150,16 +127,6 @@ init() {
 init_in_docker() {
     require_in_docker
     wait_for_db
-    # initialize django project
-    python misago/bin/misago-start-devproject.py
-    # move items of interest up one level
-    mv devproject/devproject devproject_tmp
-    mv devproject/avatargallery ./avatargallery
-    mv devproject/media ./media
-    mv devproject/userdata ./userdata
-    mv devproject/manage.py ./manage.py
-    rm -rf devproject
-    mv devproject_tmp devproject
     # migrate the database
     python manage.py migrate
     # create superuser Admin with password "password"
@@ -185,13 +152,6 @@ after_init_message() {
     echo "Username:    $username"
     echo "Password:    $password"
     echo
-    echo "Development project directories:"
-    echo
-    echo "devproject        configuration files for development instance."
-    echo "media             user uploaded files."
-    echo "userdata          working directory for user data exports."
-    echo "avatargallery     example avatar gallery."
-    echo
     echo "To connect to development database use following credentials:"
     echo
     echo "User:         misago"
@@ -204,40 +164,26 @@ after_init_message() {
     echo
 }
 
-# Remove existing dev project
-remove() {
-    echo -e "${RED}Warning:${NORMAL} You are going remove current development project."
+# Clear existing dev project
+clear() {
+    echo -e "${RED}Warning:${NORMAL} You are going to delete media files created during development and destroy docker containers."
     echo
 
-    will_delete_files=false
-    for dev_path in "${dev_paths[@]}"; do
-        if [ -e $dev_path ]; then
-            will_delete_files=true
-        fi
-    done
-    if [[ $will_delete_files = true ]]; then
-        echo "Following files and directories will be deleted:"
-        for dev_path in "${dev_paths[@]}"; do
-            if [ -e $dev_path ]; then
-                echo "  $dev_path"
-            fi
-        done
-        echo
-    fi
+    devproject_path="$(pwd)/devproject"
 
+    echo "Following files and directories will be deleted:"
+    find $devproject_path/media -mindepth 1 ! -name '.gitignore'
+    find $devproject_path/userdata -mindepth 1 ! -name '.gitignore'
+    echo
+        
     echo "Enter \"y\" to confirm:"
 
     read confirmation
     if [[ $confirmation = "y" ]]; then
-        for dev_path in "${dev_paths[@]}"; do
-            if [ -e $dev_path ]; then
-                echo "Removing $dev_path"
-                rm -rf $dev_path
-            fi
-        done
-
         docker-compose stop
         docker-compose down --remove-orphans
+        find $devproject_path/media -mindepth 1 ! -name '.gitignore' -delete
+        find $devproject_path/userdata -mindepth 1 ! -name '.gitignore' -delete
     else
         echo "Operation canceled."
     fi
@@ -251,8 +197,7 @@ rebuild() {
 
 # Run tests suite
 test() {
-    docker-compose run --rm misago runtests.py $1
-    docker-compose stop
+    docker-compose run --rm misago python runtests.py $1
 }
 
 # Make messages
@@ -331,10 +276,10 @@ if [[ $1 ]]; then
         init_in_docker
     elif [[ $1 = "afterinit" ]]; then
         after_init_message
-    elif [[ $1 = "remove" ]]; then
-        remove
+    elif [[ $1 = "clear" ]]; then
+        clear
     elif [[ $1 = "reset" ]]; then
-        remove
+        clear
         init $@
     elif [[ $1 = "rebuild" ]]; then
         rebuild $@

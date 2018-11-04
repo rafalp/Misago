@@ -5,7 +5,6 @@ FROM python:3.6
 
 ENV PYTHONUNBUFFERED 1
 ENV IN_MISAGO_DOCKER 1
-ENV PATH "$PATH:/srv/misago"
 
 # Install dependencies in one single command/layer
 RUN apt-get update && apt-get install -y \
