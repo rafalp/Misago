@@ -6,13 +6,13 @@
 #
 beautifulsoup4==4.6.3
 bleach==2.1.4
-certifi==2018.8.24        # via requests
+certifi==2018.10.15       # via requests
 chardet==3.0.4            # via requests
 django-crispy-forms==1.6.1
 django-debug-toolbar==1.8
 django-htmlmin==0.10.0
 django-mptt==0.8.7
-django==1.11.15
+django==1.11.16
 djangorestframework==3.6.4
 faker==0.8.18
 html5lib==0.999999999
@@ -21,18 +21,18 @@ ipaddress==1.0.22         # via faker
 markdown==2.6.11
 misago-social-auth-app-django==2.1.0
 oauthlib==2.1.0           # via requests-oauthlib, social-auth-core
-olefile==0.45.1           # via pillow
+olefile==0.46             # via pillow
 pillow==4.1.1
 psycopg2-binary==2.7.5
 pyjwt==1.6.4              # via social-auth-core
-python-dateutil==2.7.3    # via faker
-pytz==2018.5
+python-dateutil==2.7.5    # via faker
+pytz==2018.7
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.20.0
 six==1.11.0               # via bleach, faker, html5lib, misago-social-auth-app-django, python-dateutil, social-auth-core
-social-auth-core==1.7.0   # via misago-social-auth-app-django
+social-auth-core==2.0.0   # via misago-social-auth-app-django
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.2       # via faker
 unidecode==0.4.21
-urllib3==1.23             # via requests
+urllib3==1.24.1           # via requests
 webencodings==0.5.1       # via html5lib

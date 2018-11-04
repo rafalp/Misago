@@ -197,8 +197,7 @@ rebuild() {
 
 # Run tests suite
 test() {
-    docker-compose run --rm misago runtests.py $1
-    docker-compose stop
+    docker-compose run --rm misago pytest $1
 }
 
 # Make messages
