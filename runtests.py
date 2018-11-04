@@ -6,7 +6,8 @@ import sys
 def runtests():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "devproject.test_settings")
     try:
-        from django.core.management import execute_from_command_line
+        from django import setup
+        from django.core.management import call_command
     except ImportError:
         # The above import may fail for some other reason. Ensure that the
         # issue is really that Django is missing to avoid masking other
@@ -21,4 +22,10 @@ def runtests():
             )
         raise
 
-    execute_from_command_line(["manage.py", "test"] + sys.argv[2:] + ["--noinput", "-v", "1"])
+    setup()
+    exit_code = call_command("test", *sys.argv[2:], verbosity=1, noinput=True)
+    sys.exit(exit_code)
+
+
+if __name__ == '__main__':
+    runtests()
