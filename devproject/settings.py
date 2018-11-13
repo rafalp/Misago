@@ -181,7 +181,6 @@ INSTALLED_APPS = [
 
     # 3rd party apps used by Misago
     'debug_toolbar',
-    'crispy_forms',
     'mptt',
     'rest_framework',
     'social_django',

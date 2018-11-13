@@ -1,8 +1,5 @@
-from crispy_forms.templatetags import crispy_forms_field, crispy_forms_filters
-
-from django import template
+from django import forms, template
 from django.template.loader import render_to_string
-
 
 register = template.Library()
 
@@ -60,19 +57,31 @@ class FormRowNode(template.Node):
             label_class = None
             field_class = None
 
-        template_pack = crispy_forms_filters.TEMPLATE_PACK
         return render_to_string(
-            '%s/field.html' % template_pack, {
+            'misago/admin/forms/row.html', {
                 'field': field,
-                'form_show_errors': True,
-                'form_show_labels': True,
                 'label_class': label_class or '',
                 'field_class': field_class or '',
             }
         )
 
 
-@register.tag
-def form_input(parser, token):
+@register.simple_tag
+def form_field(*args):
     """form input: renders given field input"""
-    return crispy_forms_field.crispy_field(parser, token)
+    return "TODO"
+
+
+@register.filter
+def is_checkbox(field):
+    return isinstance(field.field.widget, forms.CheckboxInput)
+
+
+@register.filter
+def is_checkboxselectmultiple(field):
+    return isinstance(field.field.widget, forms.CheckboxSelectMultiple)
+
+
+@register.filter
+def is_radioselect(field):
+    return isinstance(field.field.widget, forms.RadioSelect)

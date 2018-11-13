@@ -1,0 +1,48 @@
+{% load misago_admin_forms %}
+
+{% if field.is_hidden %}
+	{{ field }}
+{% else %}
+    {% if field|is_checkbox %}
+        <div class="form-group">
+    {% endif %}
+	<{% if tag %}{{ tag }}{% else %}div{% endif %} id="div_{{ field.auto_id }}" {% if not field|is_checkbox %}class="form-group{% else %}class="checkbox{% endif %}{% if wrapper_class %} {{ wrapper_class }}{% endif %}{% if field.errors %} has-error{% endif %}{% if field.css_classes %} {{ field.css_classes }}{% endif %}">
+		{% if field.label and not field|is_checkbox %}
+			<label for="{{ field.id_for_label }}" class="control-label {{ label_class }}{% if field.field.required %} requiredField{% endif %}">
+				{{ field.label|safe }}:
+			</label>
+		{% endif %}
+
+        {% if field|is_checkboxselectmultiple %}
+            {% include 'misago/admin/forms/checkboxselectmultiple.html' %}
+        {% endif %}
+
+        {% if field|is_radioselect %}
+            {% include 'misago/admin/forms/radioselect.html' %}
+        {% endif %}
+
+        {% if not field|is_checkboxselectmultiple and not field|is_radioselect %}
+            {% if field|is_checkbox %}
+                {% if label_class %}
+                    <div class="controls {{ label_class }} {{ field_class }}">
+                {% endif %}
+                <label for="{{ field.id_for_label }}" class="{% if field.field.required %} requiredField{% endif %}">
+                    {% form_field field 'class' 'checkbox' %}
+                    {{ field.label|safe }}
+                    {% include 'misago/admin/forms/help_text_and_errors.html' %}
+                </label>
+                {% if label_class %}
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="controls {{ field_class }}"{% if field.field.input_formats %} data-input-format="{{ field.field.input_formats.0 }}"{% endif %}>
+                    {% form_field field %}
+                    {% include 'misago/admin/forms/help_text_and_errors.html' %}
+                </div>
+            {% endif %}
+        {% endif %}
+	</{% if tag %}{{ tag }}{% else %}div{% endif %}>
+    {% if field|is_checkbox %}
+        </div>
+    {% endif %}
+{% endif %}
