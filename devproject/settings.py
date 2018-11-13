@@ -164,11 +164,13 @@ AUTHENTICATION_BACKENDS = [
 
 CSRF_FAILURE_VIEW = 'misago.core.errorpages.csrf_failure'
 
-INSTALLED_APPS = [
+MISAGO_OVERRIDES = [
     # Misago overrides for Django core feature
     'misago',
     'misago.users',
+]
 
+DJANGO_APPS = [
     # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -178,14 +180,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
 
+VENDOR_APPS = [
     # 3rd party apps used by Misago
     'debug_toolbar',
     'crispy_forms',
     'mptt',
     'rest_framework',
     'social_django',
+]
 
+MISAGO_APPS = [
     # Misago apps
     'misago.admin',
     'misago.acl',
@@ -199,6 +205,8 @@ INSTALLED_APPS = [
     'misago.search',
     'misago.faker',
 ]
+
+INSTALLED_APPS = MISAGO_OVERRIDES + DJANGO_APPS + VENDOR_APPS + MISAGO_APPS
 
 INTERNAL_IPS = [
     '127.0.0.1'
