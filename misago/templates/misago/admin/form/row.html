@@ -1,0 +1,17 @@
+{% load misago_admin_form %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+  <label for="{{ field.id_for_label }}" class="{% if label_class %}{{ label_class }} {% endif %}control-label">
+    {{ field.label }}:
+  </label>
+  <div class="{{ field_class }}">
+    {% admin_form_input field %}
+    {% for error in field.errors %}
+      <div class="text-danger">
+        <strong>{{ error }}</strong>
+      </div>
+    {% endfor %}
+    {% if field.help_text %}
+      <div class="help-block">{{ field.help_text }}</div>
+    {% endif %}
+  </div>
+</div>

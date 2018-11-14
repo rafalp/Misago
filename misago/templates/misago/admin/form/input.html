@@ -1,0 +1,13 @@
+{% load misago_admin_form misago_shorthands %}
+{{ attrs }}
+{% if field|is_select_field %}
+  <select class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{{ attrs.required|iftrue:" required" }}>
+    {% for option in attrs|extract_choices_from_attrs %}
+      <option{% if option.value %} value="{{ option.value }}"{% endif %}{{ option.selected|iftrue:" selected" }}>
+        {{ option.label }}
+      </option>
+    {% endfor %}
+  </select>
+{% else %}
+  <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" type="{{ attrs.type }}"{% if attrs.value is not None %} value="{{ attrs.value }}"{% endif %}{{ attrs.required|iftrue:" required" }}>
+{% endif %}
