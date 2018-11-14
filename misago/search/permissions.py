@@ -3,7 +3,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from misago.acl import algebra
 from misago.acl.models import Role
-from misago.core.forms import YesNoSwitch
+from misago.admin.forms import YesNoSwitch
 
 
 class PermissionsForm(forms.Form):

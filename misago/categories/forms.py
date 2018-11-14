@@ -5,7 +5,7 @@ from django.db import models
 from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import ugettext_lazy as _
 
-from misago.core.forms import YesNoSwitch
+from misago.admin.forms import YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.threads.threadtypes import trees_map
 
