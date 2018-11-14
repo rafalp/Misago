@@ -6,9 +6,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext
 
 from misago.acl.models import Role
+from misago.admin.forms import IsoDateTimeField, YesNoSwitch
 from misago.conf import settings
 from misago.core import threadstore
-from misago.core.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields

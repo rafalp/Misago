@@ -8,9 +8,9 @@ from django.utils.translation import ugettext_lazy as _, ungettext
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
+from misago.admin.forms import YesNoSwitch
 from misago.categories.models import Category, CategoryRole
 from misago.categories.permissions import get_categories_roles
-from misago.core.forms import YesNoSwitch
 from misago.threads.models import Post, Thread
 
 
