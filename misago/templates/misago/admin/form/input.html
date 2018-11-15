@@ -1,13 +1,12 @@
-{% load misago_admin_form misago_shorthands %}
-{{ attrs }}
-{% if field|is_select_field %}
-  <select class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}"{{ attrs.required|iftrue:" required" }}>
-    {% for option in attrs|extract_choices_from_attrs %}
-      <option{% if option.value %} value="{{ option.value }}"{% endif %}{{ option.selected|iftrue:" selected" }}>
-        {{ option.label }}
-      </option>
-    {% endfor %}
-  </select>
+{% load misago_admin_form %}
+{% if field|is_radio_select_field %}
+  {% include "misago/admin/form/radio_select.html" %}
+{% elif field|is_select_field %}
+  {% include "misago/admin/form/select.html" %}
+{% elif field|is_multiple_choice_field %}
+  {% include "misago/admin/form/multiple_choice.html" %}
+{% elif field|is_textarea %}
+  <textarea {% render_attrs widget class_name="form-control" %} id="{{ field.id_for_label }}" name="{{ widget.name }}" {% render_bool_attrs widget %}>{% if widget.value is not None %}{{ widget.value }}{% endif %}</textarea>
 {% else %}
-  <input class="form-control" id="{{ field.id_for_label }}" name="{{ field.html_name }}" type="{{ attrs.type }}"{% if attrs.value is not None %} value="{{ attrs.value }}"{% endif %}{{ attrs.required|iftrue:" required" }}>
+  <input {% render_attrs widget class_name="form-control" %} id="{{ field.id_for_label }}" name="{{ widget.name }}" type="{{ widget.type }}"{% if widget.value is not None %} value="{{ widget.value }}"{% endif %} {% render_bool_attrs widget %}>
 {% endif %}

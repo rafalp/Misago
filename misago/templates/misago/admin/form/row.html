@@ -1,9 +1,9 @@
 {% load misago_admin_form %}
 <div class="form-group{% if field.errors %} has-error{% endif %}">
-  <label for="{{ field.id_for_label }}" class="{% if label_class %}{{ label_class }} {% endif %}control-label">
+  <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
     {{ field.label }}:
   </label>
-  <div class="{{ field_class }}">
+  <div class="{% if field|is_radio_select_field %}controls control-radioselect {% endif %}{% if field|is_multiple_choice_field %}controls control-checkboxselect {% endif %}{{ field_class }}">
     {% admin_form_input field %}
     {% for error in field.errors %}
       <div class="text-danger">
