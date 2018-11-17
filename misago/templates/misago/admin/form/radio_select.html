@@ -1,7 +1,7 @@
 {% load misago_admin_form %}
 {% for option in field|get_options %}
   <label class="radio">
-    <input {% render_attrs widget %} id="{{ option.attrs.id }}" name="{{ widget.name }}" type="radio"{% if option.value is not None %} value="{{ option.value }}"{% endif %}{% if option.selected %} checked{% endif %}>
+    <input {% render_attrs widget class_name="form-control" %} id="{{ option.attrs.id }}" name="{{ widget.name }}" type="radio"{% if option.value is not None %} value="{{ option.value }}"{% endif %}{% if option.selected %} checked{% endif %}>
     {{ option.label }}
   </label>
 {% endfor %}

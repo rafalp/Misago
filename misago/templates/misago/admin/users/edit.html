@@ -30,17 +30,17 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Basic account settings" %}</legend>
 
-    {% admin_form_row form.username label_class field_class %}
+    {% form_row form.username label_class field_class %}
 
     {% if 'rank' in form.fields %}
-      {% admin_form_row form.rank label_class field_class %}
+      {% form_row form.rank label_class field_class %}
     {% endif %}
 
-    {% admin_form_row form.title label_class field_class %}
-    {% admin_form_row form.roles label_class field_class %}
+    {% form_row form.title label_class field_class %}
+    {% form_row form.roles label_class field_class %}
 
     {% if 'staff_level' in form.fields %}
-      {% admin_form_row form.staff_level label_class field_class %}
+      {% form_row form.staff_level label_class field_class %}
     {% endif %}
 
   </fieldset>
@@ -48,8 +48,8 @@ class="form-horizontal"
     <legend>{% trans "Administrator status" %}</legend>
 
     {% if 'is_staff' in form.fields %}
-      {% admin_form_row form.is_staff label_class field_class %}
-      {% admin_form_row form.is_superuser label_class field_class %}
+      {% form_row form.is_staff label_class field_class %}
+      {% form_row form.is_superuser label_class field_class %}
     {% else %}
       <div id="div_id_is_staff" class="form-group">
         <label for="id_is_staff_0" class="control-label {{ label_class }}">
@@ -95,8 +95,8 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
 
-    {% admin_form_row form.email label_class field_class %}
-    {% admin_form_row form.new_password label_class field_class %}
+    {% form_row form.email label_class field_class %}
+    {% form_row form.new_password label_class field_class %}
 
     {% if not target.has_usable_password %}
       <div id="div_id_has_usable_password" class="form-group">
@@ -112,18 +112,18 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Avatar" %}</legend>
 
-    {% admin_form_row form.is_avatar_locked label_class field_class %}
-    {% admin_form_row form.avatar_lock_user_message label_class field_class %}
-    {% admin_form_row form.avatar_lock_staff_message label_class field_class %}
+    {% form_row form.is_avatar_locked label_class field_class %}
+    {% form_row form.avatar_lock_user_message label_class field_class %}
+    {% form_row form.avatar_lock_staff_message label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Signature" %}</legend>
 
-    {% admin_form_row form.signature label_class field_class %}
-    {% admin_form_row form.is_signature_locked label_class field_class %}
-    {% admin_form_row form.signature_lock_user_message label_class field_class %}
-    {% admin_form_row form.signature_lock_staff_message label_class field_class %}
+    {% form_row form.signature label_class field_class %}
+    {% form_row form.is_signature_locked label_class field_class %}
+    {% form_row form.signature_lock_user_message label_class field_class %}
+    {% form_row form.signature_lock_staff_message label_class field_class %}
 
   </fieldset>
   {% for group in form.get_profile_fields_groups %}
@@ -131,7 +131,7 @@ class="form-horizontal"
       <legend>{% trans group.name %}</legend>
 
       {% for field in group.fields %}
-        {% admin_form_row field label_class field_class %}
+        {% form_row field label_class field_class %}
       {% endfor %}
 
     </fieldset>
@@ -139,15 +139,15 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Forum options" %}</legend>
 
-    {% admin_form_row form.is_hiding_presence label_class field_class %}
-    {% admin_form_row form.limits_private_thread_invites_to label_class field_class %}
+    {% form_row form.is_hiding_presence label_class field_class %}
+    {% form_row form.limits_private_thread_invites_to label_class field_class %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Automatic subscription preferences" %}</legend>
 
-    {% admin_form_row form.subscribe_to_started_threads label_class field_class %}
-    {% admin_form_row form.subscribe_to_replied_threads label_class field_class %}
+    {% form_row form.subscribe_to_started_threads label_class field_class %}
+    {% form_row form.subscribe_to_replied_threads label_class field_class %}
 
   </fieldset>
   <fieldset>
@@ -171,8 +171,8 @@ class="form-horizontal"
       </div>
     {% else %}
       {% if 'is_active' in form.fields %}
-        {% admin_form_row form.is_active label_class field_class %}
-        {% admin_form_row form.is_active_staff_message label_class field_class %}
+        {% form_row form.is_active label_class field_class %}
+        {% form_row form.is_active_staff_message label_class field_class %}
       {% else %}
         <div id="div_id_is_active" class="form-group">
           <label for="id_is_active_0" class="control-label {{ label_class }}">

@@ -3,8 +3,8 @@
   <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
     {{ field.label }}:
   </label>
-  <div class="{% if field|is_radio_select_field %}controls control-radioselect {% endif %}{% if field|is_multiple_choice_field %}controls control-checkboxselect {% endif %}{{ field_class }}">
-    {% admin_form_input field %}
+  <div class="{% if field|is_radio_select_field %}controls control-radioselect {% endif %}{% if field|is_multiple_choice_field %}controls control-checkboxselect {% endif %}{% if field_class %}{{ field_class }}{% endif %}">
+    {% form_input field %}
     {% for error in field.errors %}
       <div class="text-danger">
         <strong>{{ error }}</strong>

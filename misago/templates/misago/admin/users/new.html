@@ -30,25 +30,25 @@ class="form-horizontal"
   <fieldset>
     <legend>{% trans "Basic account settings" %}</legend>
 
-    {% admin_form_row form.username label_class field_class %}
+    {% form_row form.username label_class field_class %}
 
     {% if 'rank' in form.fields %}
-      {% admin_form_row form.rank label_class field_class %}
+      {% form_row form.rank label_class field_class %}
     {% endif %}
 
-    {% admin_form_row form.title label_class field_class %}
-    {% admin_form_row form.roles label_class field_class %}
+    {% form_row form.title label_class field_class %}
+    {% form_row form.roles label_class field_class %}
 
     {% if 'staff_level' in form.fields %}
-      {% admin_form_row form.staff_level label_class field_class %}
+      {% form_row form.staff_level label_class field_class %}
     {% endif %}
 
   </fieldset>
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
 
-    {% admin_form_row form.email label_class field_class %}
-    {% admin_form_row form.new_password label_class field_class %}
+    {% form_row form.email label_class field_class %}
+    {% form_row form.new_password label_class field_class %}
 
   </fieldset>
   {% endwith %}

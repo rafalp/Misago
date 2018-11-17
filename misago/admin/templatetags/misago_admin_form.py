@@ -5,7 +5,7 @@ register = template.Library()
 
 
 @register.inclusion_tag("misago/admin/form/row.html")
-def admin_form_row(field, label_class, field_class):
+def form_row(field, label_class=None, field_class=None):
     return {
         "field": field,
         "label_class": label_class,
@@ -14,7 +14,7 @@ def admin_form_row(field, label_class, field_class):
 
 
 @register.inclusion_tag("misago/admin/form/input.html")
-def admin_form_input(field):
+def form_input(field):
     attrs = field.field.widget.attrs
     context = field.field.widget.get_context(field.html_name, field.value(), attrs)
     context["attrs"] = attrs
