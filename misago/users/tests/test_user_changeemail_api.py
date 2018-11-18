@@ -41,7 +41,10 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': 'Lor3mIpsum',
             },
         )
-        self.assertContains(response, 'password is invalid', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'password': ["Entered password is invalid."]
+        })
 
     def test_invalid_input(self):
         """api errors correctly for invalid input"""
@@ -82,7 +85,10 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
                 'password': self.USER_PASSWORD,
             },
         )
-        self.assertContains(response, 'not available', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'new_email': ["This e-mail address is not available."]
+        })
 
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""
