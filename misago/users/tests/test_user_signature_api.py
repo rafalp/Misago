@@ -16,7 +16,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertContains(response, "You don't have permission to change", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You don't have permission to change signature.",
+        })
 
     def test_signature_locked(self):
         """locked edit signature returns 403"""
@@ -29,7 +32,11 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.get(self.link)
-        self.assertContains(response, 'Your siggy is banned', status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "Your signature is locked. You can't change it.",
+            "reason": "<p>Your siggy is banned.</p>",
+        })
 
     def test_get_signature(self):
         """GET to api returns json with no signature"""
@@ -79,7 +86,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
                 'signature': 'abcd' * 1000,
             },
         )
-        self.assertContains(response, 'too long', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Signature is too long.",
+        })
 
     def test_post_good_signature(self):
         """POST with good signature changes user signature"""
@@ -97,12 +107,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             },
         )
         self.assertEqual(response.status_code, 200)
-
         self.assertEqual(
             response.json()['signature']['html'], '<p>Hello, <strong>bros</strong>!</p>'
         )
         self.assertEqual(response.json()['signature']['plain'], 'Hello, **bros**!')
 
         self.reload_user()
-
         self.assertEqual(self.user.signature_parsed, '<p>Hello, <strong>bros</strong>!</p>')
