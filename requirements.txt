@@ -8,7 +8,6 @@ beautifulsoup4==4.6.3
 bleach==2.1.4
 certifi==2018.10.15       # via requests
 chardet==3.0.4            # via requests
-django-crispy-forms==1.6.1
 django-debug-toolbar==1.8
 django-htmlmin==0.10.0
 django-mptt==0.8.7

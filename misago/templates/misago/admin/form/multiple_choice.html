@@ -1,0 +1,7 @@
+{% load misago_admin_form %}
+{% for option in field|get_options %}
+  <label class="checkbox">
+    <input id="{{ option.attrs.id }}" name="{{ widget.name }}" type="checkbox"{% if option.value is not None %} value="{{ option.value }}"{% endif %}{% if option.selected %} checked{% endif %}>
+    {{ option.label }}
+  </label>
+{% endfor %}

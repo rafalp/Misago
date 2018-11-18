@@ -181,7 +181,6 @@ INSTALLED_APPS = [
 
     # 3rd party apps used by Misago
     'debug_toolbar',
-    'crispy_forms',
     'mptt',
     'rest_framework',
     'social_django',
@@ -307,12 +306,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'devproject.wsgi.application'
-
-
-# Django Crispy Forms
-#http://django-crispy-forms.readthedocs.io/en/latest/install.html
-
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 # Django Debug Toolbar

@@ -1,0 +1,8 @@
+{% load misago_admin_form %}
+<select {% render_attrs widget class_name="form-control" %} id="{{ field.id_for_label }}" name="{{ widget.name }}" {% render_bool_attrs widget %}>
+  {% for option in field|get_options %}
+    <option{% if option.value is not None %} value="{{ option.value }}"{% endif %} {% render_bool_attrs option.attrs %}>
+      {{ option.label }}
+    </option>
+  {% endfor %}
+</select>
