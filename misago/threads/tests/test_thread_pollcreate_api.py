@@ -41,7 +41,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.override_acl({'can_start_polls': 0})
 
         response = self.post(self.api_link)
-        self.assertContains(response, "can't start polls", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't start polls."
+        })
 
     def test_no_permission_closed_thread(self):
         """api validates that user has permission to start poll in closed thread"""
@@ -51,7 +54,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.thread.save()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "thread is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This thread is closed. You can't start polls in it."
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
@@ -66,7 +72,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.category.save()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "category is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This category is closed. You can't start polls in it."
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
@@ -81,7 +90,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.thread.save()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "can't start polls in other users threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't start polls in other users threads."
+        })
 
         self.override_acl({'can_start_polls': 2})
 
@@ -106,7 +118,10 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         )
 
         response = self.post(self.api_link)
-        self.assertContains(response, "There's already a poll in this thread.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "There's already a poll in this thread."
+        })
 
     def test_empty_data(self):
         """api handles empty request data"""
