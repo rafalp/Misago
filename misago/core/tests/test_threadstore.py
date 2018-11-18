@@ -3,7 +3,7 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 
 from misago.core import threadstore
-from misago.core.middleware.threadstore import ThreadStoreMiddleware
+from misago.core.middleware import ThreadStoreMiddleware
 
 
 class ThreadStoreTests(TestCase):

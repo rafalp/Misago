@@ -213,7 +213,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 
     'misago.users.middleware.RealIPMiddleware',
-    'misago.core.middleware.frontendcontext.FrontendContextMiddleware',
+    'misago.core.middleware.FrontendContextMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -224,11 +224,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'misago.users.middleware.UserMiddleware',
-    'misago.core.middleware.exceptionhandler.ExceptionHandlerMiddleware',
+    'misago.core.middleware.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
     'misago.threads.middleware.UnreadThreadsCountMiddleware',
-    'misago.core.middleware.threadstore.ThreadStoreMiddleware',
+    'misago.core.middleware.ThreadStoreMiddleware',
 ]
 
 ROOT_URLCONF = 'devproject.urls'

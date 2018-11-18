@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.core.middleware.exceptionhandler import ExceptionHandlerMiddleware
+from misago.core.middleware import ExceptionHandlerMiddleware
 from misago.users.models import AnonymousUser
 
 
