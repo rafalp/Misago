@@ -18,14 +18,20 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "sign in to use private threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You have to sign in to use private threads."
+        })
 
     def test_no_permission(self):
         """api requires user to have permission to be able to access it"""
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "can't use private threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't use private threads."
+        })
 
     def test_empty_list(self):
         """api has no showstoppers on returning empty list"""
@@ -79,14 +85,20 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "sign in to use private threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You have to sign in to use private threads."
+        })
 
     def test_no_permission(self):
         """user needs to have permission to see private thread"""
         override_acl(self.user, {'can_use_private_threads': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "t use private threads", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't use private threads."
+        })
 
     def test_no_participant(self):
         """user cant see thread he isn't part of"""
