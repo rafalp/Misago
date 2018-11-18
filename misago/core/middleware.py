@@ -1,6 +1,6 @@
 from django.utils.deprecation import MiddlewareMixin
 
-from misago.core import exceptionhandler
+from misago.core import exceptionhandler, threadstore
 from misago.core.utils import is_request_to_misago
 
 
@@ -13,3 +13,15 @@ class ExceptionHandlerMiddleware(MiddlewareMixin):
             return exceptionhandler.handle_misago_exception(request, exception)
         else:
             return None
+
+
+class FrontendContextMiddleware(MiddlewareMixin):
+    def process_request(self, request):
+        request.include_frontend_context = True
+        request.frontend_context = {}
+
+
+class ThreadStoreMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        threadstore.clear()
+        return response
