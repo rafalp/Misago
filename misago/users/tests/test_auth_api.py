@@ -271,7 +271,7 @@ class UserCredentialsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class SendActivationAPITests(TestCase):
+class SendActivationApiTests(TestCase):
     def setUp(self):
         self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
         self.user.requires_activation = 1
@@ -394,7 +394,7 @@ class SendActivationAPITests(TestCase):
         self.assertTrue(mail.outbox)
 
 
-class SendPasswordFormAPITests(TestCase):
+class SendPasswordFormApiTests(TestCase):
     def setUp(self):
         self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
@@ -500,7 +500,7 @@ class SendPasswordFormAPITests(TestCase):
         self.assertTrue(not mail.outbox)
 
 
-class ChangePasswordAPITests(TestCase):
+class ChangePasswordApiTests(TestCase):
     def setUp(self):
         self.user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
 
