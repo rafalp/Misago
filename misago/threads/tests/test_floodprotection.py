@@ -45,6 +45,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
                 'post': "This is test response!",
             }
         )
-        self.assertContains(
-            response, "You can't post message so quickly after previous one.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't post message so quickly after previous one."
+        })
