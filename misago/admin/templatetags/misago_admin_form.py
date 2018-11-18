@@ -26,7 +26,8 @@ def form_input(field):
 def render_attrs(widget, class_name=None):
     rendered_attrs = []
     for attr, value in widget['attrs'].items():
-        rendered_attrs.append((attr, value))
+        if value not in (True, False, None):
+            rendered_attrs.append((attr, value))
     if not widget["attrs"].get("class") and class_name:
         rendered_attrs.append(("class", class_name))
     return format_html_join(" ", '{}="{}"', rendered_attrs)
@@ -58,7 +59,7 @@ def is_multiple_choice_field(field):
 
 
 @register.filter
-def is_textarea(field):
+def is_textarea_field(field):
     return isinstance(field.field.widget, forms.Textarea)
 
 
