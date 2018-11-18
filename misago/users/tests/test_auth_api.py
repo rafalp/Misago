@@ -18,8 +18,11 @@ class GatewayTests(TestCase):
                 'password': 'nope',
             }
         )
-
-        self.assertContains(response, "Login or password is incorrect.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': "invalid_login",
+            "detail": "Login or password is incorrect.",
+        })
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
@@ -82,7 +85,11 @@ class GatewayTests(TestCase):
     def test_submit_empty(self):
         """login api errors for no body"""
         response = self.client.post('/api/auth/')
-        self.assertContains(response, 'empty_data', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': "empty_data",
+            "detail": "Fill out both fields.",
+        })
 
     def test_submit_invalid(self):
         """login api errors for invalid data"""
@@ -91,7 +98,10 @@ class GatewayTests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
+        })
 
     def test_login_not_usable_password(self):
         """login api fails to sign user with not-usable password in"""
@@ -255,7 +265,11 @@ class GatewayTests(TestCase):
                 'password': 'Pass.123',
             },
         )
-        self.assertContains(response, "Login or password is incorrect.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'invalid_login',
+            'detail': 'Login or password is incorrect.',
+        })
 
         response = self.client.get('/api/auth/')
         self.assertEqual(response.status_code, 200)
@@ -320,14 +334,22 @@ class SendActivationApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'not_found', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'not_found',
+            'detail': 'No user with this e-mail exists.',
+        })
 
         self.assertTrue(not mail.outbox)
 
     def test_submit_empty(self):
         """request activation link api errors for no body"""
         response = self.client.post(self.link)
-        self.assertContains(response, 'empty_email', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'empty_email',
+            'detail': 'Enter e-mail address.',
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -338,7 +360,10 @@ class SendActivationApiTests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
+        })
 
     def test_submit_invalid_email(self):
         """request activation link api errors for invalid email"""
@@ -348,7 +373,11 @@ class SendActivationApiTests(TestCase):
                 'email': 'fake@mail.com',
             },
         )
-        self.assertContains(response, 'not_found', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'not_found',
+            'detail': 'No user with this e-mail exists.',
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -363,7 +392,11 @@ class SendActivationApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'Bob, your account is already active.', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'already_active',
+            'detail': 'Bob, your account is already active.',
+        })
 
     def test_submit_inactive_user(self):
         """request activation link api errors for admin-activated users"""
@@ -376,7 +409,11 @@ class SendActivationApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'inactive_admin', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'inactive_admin',
+            'detail': 'Bob, only administrator may activate your account.',
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -441,14 +478,22 @@ class SendPasswordFormApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'not_found', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'not_found',
+            'detail': 'No user with this e-mail exists.',
+        })
 
         self.assertTrue(not mail.outbox)
 
     def test_submit_empty(self):
         """request change password form link api errors for no body"""
         response = self.client.post(self.link)
-        self.assertContains(response, 'empty_email', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'empty_email',
+            'detail': 'Enter e-mail address.',
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -460,7 +505,11 @@ class SendPasswordFormApiTests(TestCase):
                 'email': 'fake@mail.com',
             },
         )
-        self.assertContains(response, 'not_found', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'not_found',
+            'detail': 'No user with this e-mail exists.',
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -471,7 +520,10 @@ class SendPasswordFormApiTests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
+        })
 
     def test_submit_inactive_user(self):
         """request change password form link api errors for inactive users"""
@@ -484,7 +536,14 @@ class SendPasswordFormApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'inactive_user', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'inactive_user',
+            'detail': (
+                'You have to activate your account before you '
+                'will be able to request new password.'
+            )
+        })
 
         self.user.requires_activation = 2
         self.user.save()
@@ -495,7 +554,14 @@ class SendPasswordFormApiTests(TestCase):
                 'email': self.user.email,
             },
         )
-        self.assertContains(response, 'inactive_admin', status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'code': 'inactive_admin',
+            'detail': (
+                'Administrator has to activate your account before you '
+                'will be able to request new password.'
+            )
+        })
 
         self.assertTrue(not mail.outbox)
 
@@ -539,13 +605,18 @@ class ChangePasswordApiTests(TestCase):
             'false',
             content_type="application/json",
         )
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
+        })
 
     def test_invalid_token_link(self):
         """api errors on invalid user id link"""
         response = self.client.post(self.link % (self.user.pk, 'asda7ad89sa7d9s789as'))
-
-        self.assertContains(response, "Form link is invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': 'Form link is invalid. Please try again.'
+        })
 
     def test_banned_user_link(self):
         """request errors because user is banned"""
@@ -558,7 +629,10 @@ class ChangePasswordApiTests(TestCase):
         response = self.client.post(
             self.link % (self.user.pk, make_password_change_token(self.user))
         )
-        self.assertContains(response, "Your link has expired.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': 'Your link has expired. Please request new one.'
+        })
 
     def test_inactive_user(self):
         """change password api errors for inactive users"""
@@ -568,7 +642,10 @@ class ChangePasswordApiTests(TestCase):
         response = self.client.post(
             self.link % (self.user.pk, make_password_change_token(self.user))
         )
-        self.assertContains(response, "Your link has expired.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': 'Your link has expired. Please request new one.'
+        })
 
         self.user.requires_activation = 2
         self.user.save()
@@ -576,7 +653,10 @@ class ChangePasswordApiTests(TestCase):
         response = self.client.post(
             self.link % (self.user.pk, make_password_change_token(self.user))
         )
-        self.assertContains(response, "Your link has expired.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': 'Your link has expired. Please request new one.'
+        })
 
     def test_disabled_user(self):
         """change password api errors for disabled users"""
@@ -586,11 +666,17 @@ class ChangePasswordApiTests(TestCase):
         response = self.client.post(
             self.link % (self.user.pk, make_password_change_token(self.user))
         )
-        self.assertContains(response, "Form link is invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': 'Form link is invalid. Please try again.'
+        })
 
     def test_submit_empty(self):
         """change password api errors for empty body"""
         response = self.client.post(
             self.link % (self.user.pk, make_password_change_token(self.user))
         )
-        self.assertContains(response, "This password is too shor", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'detail': "This password is too short. It must contain at least 7 characters."
+        })
