@@ -966,7 +966,11 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "id": self.post.id,
+            "detail": ["You can't like posts in this category."],
+        })
 
     def test_like_no_like_permission(self):
         """api validates user's permission to see posts likes"""
@@ -981,7 +985,11 @@ class PostLikeApiTests(ThreadPostPatchApiTestCase):
                 },
             ]
         )
-        self.assertContains(response, "You can't like posts in this category.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "id": self.post.id,
+            "detail": ["You can't like posts in this category."],
+        })
 
     def test_like_post(self):
         """api adds user like to post"""
