@@ -62,12 +62,18 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
     def test_no_edits(self):
         """api returns 403 if post has no edits record"""
         response = self.client.get(self.api_link)
-        self.assertContains(response, "Edits record is unavailable", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "Edits record is unavailable for this post."
+        })
 
         self.logout_user()
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "Edits record is unavailable", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "Edits record is unavailable for this post."
+        })
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
