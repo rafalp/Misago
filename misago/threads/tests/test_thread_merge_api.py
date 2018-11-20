@@ -67,18 +67,20 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         self.override_acl({'can_merge_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(
-            response,
-            "You can't merge threads in this category.",
-            status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't merge threads in this category."
+        })
 
     def test_merge_no_url(self):
         """api validates if thread url was given"""
         self.override_acl({'can_merge_threads': 1})
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "Enter link to new thread.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Enter link to new thread."
+        })
 
     def test_invalid_url(self):
         """api validates thread url"""
@@ -87,7 +89,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link, {
             'other_thread': self.user.get_absolute_url(),
         })
-        self.assertContains(response, "This is not a valid thread link.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "This is not a valid thread link."
+        })
 
     def test_current_other_thread(self):
         """api validates if thread url given is to current thread"""
@@ -98,7 +103,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': self.thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, "You can't merge thread with itself.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "You can't merge thread with itself."
+        })
 
     def test_other_thread_exists(self):
         """api validates if other thread exists"""
@@ -112,9 +120,13 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
         response = self.client.post(self.api_link, {
             'other_thread': other_other_thread,
         })
-        self.assertContains(
-            response, "The thread you have entered link to doesn't exist", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": (
+                "The thread you have entered link to doesn't exist "
+                "or you don't have permission to see it."
+            )
+        })
 
     def test_other_thread_is_invisible(self):
         """api validates if other thread is visible"""
@@ -128,9 +140,13 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "The thread you have entered link to doesn't exist", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": (
+                "The thread you have entered link to doesn't exist "
+                "or you don't have permission to see it."
+            )
+        })
 
     def test_other_thread_isnt_mergeable(self):
         """api validates if other thread can be merged"""
@@ -144,10 +160,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-
-        self.assertContains(
-            response, "Other thread can't be merged with.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Other thread can't be merged with."
+        })
 
     def test_thread_category_is_closed(self):
         """api validates if thread's category is open"""
@@ -169,11 +185,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response,
-            "This category is closed. You can't merge it's threads.",
-            status_code=403,
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This category is closed. You can't merge it's threads."
+        })
 
     def test_thread_is_closed(self):
         """api validates if thread is open"""
@@ -195,11 +210,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response,
-            "This thread is closed. You can't merge it with other threads.",
-            status_code=403,
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This thread is closed. You can't merge it with other threads."
+        })
 
     def test_other_thread_category_is_closed(self):
         """api validates if other thread's category is open"""
@@ -221,9 +235,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "Other thread's category is closed. You can't merge with it.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Other thread's category is closed. You can't merge with it."
+        })
 
     def test_other_thread_is_closed(self):
         """api validates if other thread is open"""
@@ -245,9 +260,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "Other thread is closed and can't be merged with", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Other thread is closed and can't be merged with."
+        })
 
     def test_other_thread_isnt_replyable(self):
         """api validates if other thread can be replied, which is condition for merge"""
@@ -265,9 +281,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(
-            response, "You can't merge this thread into thread you can't reply.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "You can't merge this thread into thread you can't reply."
+        })
 
     def test_merge_threads(self):
         """api merges two threads successfully"""
@@ -281,7 +298,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)
@@ -305,7 +327,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # posts reads are kept
         postreads = self.user.postread_set.filter(post__is_event=False).order_by('id')
@@ -340,7 +367,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # subscriptions are kept
         self.assertEqual(self.user.subscription_set.count(), 1)
@@ -370,7 +402,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # subscriptions are kept
         self.assertEqual(self.user.subscription_set.count(), 1)
@@ -409,7 +446,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # subscriptions are kept
         self.assertEqual(self.user.subscription_set.count(), 1)
@@ -431,7 +473,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has three posts and an event now
         self.assertEqual(other_thread.post_set.count(), 4)
@@ -460,7 +507,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has three posts and an event now
         self.assertEqual(other_thread.post_set.count(), 4)
@@ -558,7 +610,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'best_answer': 0,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has four posts and an event now
         self.assertEqual(other_thread.post_set.count(), 5)
@@ -590,7 +647,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'best_answer': self.thread.pk,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has four posts and an event now
         self.assertEqual(other_thread.post_set.count(), 5)
@@ -622,7 +684,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'best_answer': other_thread.pk,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has four posts and an event now
         self.assertEqual(other_thread.post_set.count(), 5)
@@ -648,7 +715,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)
@@ -674,7 +746,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'other_thread': other_thread.get_absolute_url(),
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)
@@ -760,7 +837,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'poll': 0,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)
@@ -788,7 +870,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'poll': poll.pk,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)
@@ -823,7 +910,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
                 'poll': other_poll.pk,
             }
         )
-        self.assertContains(response, other_thread.get_absolute_url(), status_code=200)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {
+            'id': other_thread.id,
+            'title': other_thread.title,
+            'url': other_thread.get_absolute_url(),
+        })
 
         # other thread has two posts and an event now
         self.assertEqual(other_thread.post_set.count(), 3)

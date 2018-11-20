@@ -8,7 +8,7 @@ from misago.conf import settings
 UserModel = get_user_model()
 
 
-class AuthenticateAPITests(TestCase):
+class AuthenticateApiTests(TestCase):
     def setUp(self):
         self.api_link = reverse('misago:api:mention-suggestions')
 

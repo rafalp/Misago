@@ -21,7 +21,10 @@ class ValidatePostTests(AuthenticatedUserTestCase):
                 'post': 'Lorem ipsum dolor met!',
             }
         )
-        self.assertContains(response, "Don't discuss gambling!", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Don't discuss gambling!"],
+        })
 
         # clean title passes validation
         response = self.client.post(
@@ -44,7 +47,10 @@ class ValidatePostTests(AuthenticatedUserTestCase):
                 'post': 'Check our l33t CaSiNo!',
             }
         )
-        self.assertContains(response, "Don't discuss gambling!", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ["Don't discuss gambling!"],
+        })
 
         # clean post passes validation
         response = self.client.post(
@@ -65,6 +71,10 @@ class ValidatePostTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'title': ['You have to enter thread title.'],
+            'post': ['You have to enter a message.'],
+        })
 
         response = self.client.post(
             self.api_link, data={
@@ -74,3 +84,7 @@ class ValidatePostTests(AuthenticatedUserTestCase):
             }
         )
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'title': ['This field may not be blank.'],
+            'post': ['This field may not be blank.'],
+        })

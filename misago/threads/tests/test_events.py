@@ -17,7 +17,7 @@ class MockRequest(object):
         self.user_ip = '123.14.15.222'
 
 
-class EventsAPITests(TestCase):
+class EventsApiTests(TestCase):
     def setUp(self):
         self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass.123")
 

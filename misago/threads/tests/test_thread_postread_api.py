@@ -29,7 +29,10 @@ class PostReadApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This action is not available to guests."
+        })
 
     def test_read_post(self):
         """api marks post as read"""

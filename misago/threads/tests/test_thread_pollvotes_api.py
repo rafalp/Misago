@@ -190,37 +190,58 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         response = self.client.post(
             self.api_link, '[]', content_type='application/json'
         )
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "You have to make a choice.",
+        })
 
     def test_empty_vote_form(self):
         """api validates if vote that user has made was empty"""
         self.delete_user_votes()
 
         response = self.client.post(self.api_link)
-        self.assertContains(response, "You have to make a choice.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "You have to make a choice.",
+        })
 
     def test_malformed_vote(self):
         """api validates if vote that user has made was correctly structured"""
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
         response = self.post(self.api_link, data={})
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
         response = self.post(self.api_link, data='hello')
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "str".',
+        })
 
         response = self.post(self.api_link, data=123)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "int".',
+        })
 
     def test_invalid_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
         self.delete_user_votes()
 
         response = self.post(self.api_link, data=['lorem', 'ipsum'])
-        self.assertContains(response, "One or more of poll choices were invalid.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "One or more of poll choices were invalid.",
+        })
 
     def test_too_many_choices(self):
         """api validates if vote that user has made overlaps with allowed votes"""
@@ -229,19 +250,26 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.poll.save()
 
         response = self.post(self.api_link, data=['aaaaaaaaaaaa', 'bbbbbbbbbbbb'])
-        self.assertContains(
-            response, "This poll disallows voting for more than 1 choice.", status_code=400
-        )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "This poll disallows voting for more than 1 choice.",
+        })
 
     def test_revote(self):
         """api validates if user is trying to change vote in poll that disallows revoting"""
         response = self.post(self.api_link, data=['lorem', 'ipsum'])
-        self.assertContains(response, "You have already voted in this poll.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You have already voted in this poll.",
+        })
 
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
     def test_vote_in_closed_thread(self):
         """api validates is user has permission to vote poll in closed thread"""
@@ -253,12 +281,18 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "thread is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This thread is closed. You can't vote in it.",
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
     def test_vote_in_closed_category(self):
         """api validates is user has permission to vote poll in closed category"""
@@ -270,12 +304,18 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "category is closed", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This category is closed. You can't vote in it.",
+        })
 
         self.override_acl(category={'can_close_threads': 1})
 
         response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
     def test_vote_in_finished_poll(self):
         """api valdiates if poll has finished before letting user to vote in it"""
@@ -286,13 +326,19 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         self.delete_user_votes()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "This poll is over. You can't vote in it.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This poll is over. You can't vote in it.",
+        })
 
         self.poll.length = 50
         self.poll.save()
 
         response = self.post(self.api_link)
-        self.assertContains(response, "Expected a list of items", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "dict".',
+        })
 
     def test_fresh_vote(self):
         """api handles first vote in poll"""

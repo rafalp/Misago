@@ -25,14 +25,20 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         self.override_acl({'can_see_posts_likes': 0})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You can't see who liked this post.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEquals(response.json(), {
+            "detail": "You can't see who liked this post."
+        })
 
     def test_no_permission_to_list(self):
         """api errors if user has no permission to see likes, but can see likes count"""
         self.override_acl({'can_see_posts_likes': 1})
 
         response = self.client.get(self.api_link)
-        self.assertContains(response, "You can't see who liked this post.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEquals(response.json(), {
+            "detail": "You can't see who liked this post."
+        })
 
     def test_no_likes(self):
         """api returns empty list if post has no likes"""

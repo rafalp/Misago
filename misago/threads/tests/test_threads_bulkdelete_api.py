@@ -39,7 +39,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         self.logout_user()
 
         response = self.delete(self.api_link)
-        self.assertContains(response, "This action is not available to guests.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This action is not available to guests.",
+        })
 
     def test_delete_no_ids(self):
         """api requires ids to delete"""
@@ -49,7 +52,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link)
-        self.assertContains(response, "You have to specify at least one thread to delete.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You have to specify at least one thread to delete.",
+        })
 
     def test_validate_ids(self):
         """api validates that ids are list of ints"""
@@ -59,13 +65,22 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, True)
-        self.assertContains(response, "Expected a list of items", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "bool".',
+        })
 
         response = self.delete(self.api_link, 'abbss')
-        self.assertContains(response, "Expected a list of items", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": 'Expected a list of items but got type "str".',
+        })
 
         response = self.delete(self.api_link, [1, 2, 3, 'a', 'b', 'x'])
-        self.assertContains(response, "One or more thread ids received were invalid.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "One or more thread ids received were invalid.",
+        })
 
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
@@ -75,11 +90,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         })
 
         response = self.delete(self.api_link, list(range(THREADS_LIMIT + 1)))
-        self.assertContains(
-            response,
-            "No more than {} threads can be deleted at single time.".format(THREADS_LIMIT),
-            status_code=403,
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "No more than %s threads can be deleted at single time." % THREADS_LIMIT,
+        })
 
     def test_validate_thread_visibility(self):
         """api valdiates if user can see deleted thread"""
@@ -96,7 +110,10 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         threads_ids = [p.id for p in self.threads]
 
         response = self.delete(self.api_link, threads_ids)
-        self.assertContains(response, "threads to delete could not be found", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "One or more threads to delete could not be found.",
+        })
 
         # no thread was deleted
         for thread in self.threads:
@@ -199,8 +216,9 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         threads_ids = [p.id for p in self.threads]
 
         response = self.delete(self.api_link, threads_ids)
-
         self.assertEqual(response.status_code, 403)
-        self.assertContains(response, "threads to delete could not be found", status_code=403)
+        self.assertEqual(response.json(), {
+            "detail": "One or more threads to delete could not be found.",
+        })
 
         Thread.objects.get(pk=private_thread.pk)

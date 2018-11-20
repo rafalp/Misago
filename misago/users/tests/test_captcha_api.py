@@ -4,7 +4,7 @@ from django.urls import reverse
 from misago.conf import settings
 
 
-class AuthenticateAPITests(TestCase):
+class AuthenticateApiTests(TestCase):
     def setUp(self):
         self.api_link = reverse('misago:api:captcha-question')
 

@@ -72,7 +72,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl({'can_edit_posts': 0})
 
         response = self.put(self.api_link)
-        self.assertContains(response, "You can't edit posts in this category.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't edit posts in this category.",
+        })
 
     def test_cant_edit_other_user_reply(self):
         """permission to edit reply by other users is validated"""
@@ -82,9 +85,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         response = self.put(self.api_link)
-        self.assertContains(
-            response, "You can't edit other users posts in this category.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't edit other users posts in this category.",
+        })
 
     def test_edit_too_old(self):
         """permission to edit reply within timelimit is validated"""
@@ -97,9 +101,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         response = self.put(self.api_link)
-        self.assertContains(
-            response, "You can't edit posts that are older than 1 minute.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't edit posts that are older than 1 minute.",
+        })
 
     def test_closed_category(self):
         """permssion to edit reply in closed category is validated"""
@@ -109,9 +114,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.put(self.api_link)
-        self.assertContains(
-            response, "This category is closed. You can't edit posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This category is closed. You can't edit posts in it.",
+        })
 
         # allow to post in closed category
         self.override_acl({'can_close_threads': 1})
@@ -127,9 +133,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.thread.save()
 
         response = self.put(self.api_link)
-        self.assertContains(
-            response, "This thread is closed. You can't edit posts in it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This thread is closed. You can't edit posts in it.",
+        })
 
         # allow to post in closed thread
         self.override_acl({'can_close_threads': 1})
@@ -145,9 +152,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         response = self.put(self.api_link)
-        self.assertContains(
-            response, "This post is protected. You can't edit it.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This post is protected. You can't edit it.",
+        })
 
         # allow to post in closed thread
         self.override_acl({'can_protect_posts': 1})
@@ -160,8 +168,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.override_acl()
 
         response = self.put(self.api_link, data={})
-
-        self.assertContains(response, "You have to enter a message.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "post": ["You have to enter a message."],
+        })
 
     def test_invalid_data(self):
         """api errors for invalid request data"""
@@ -172,8 +182,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
             'false',
             content_type="application/json",
         )
-
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "non_field_errors": ["Invalid data. Expected a dictionary, but got bool."]
+        })
 
     def test_edit_event(self):
         """events can't be edited"""
@@ -183,8 +195,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         response = self.put(self.api_link, data={})
-
-        self.assertContains(response, "Events can't be edited.", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "Events can't be edited.",
+        })
 
     def test_post_is_validated(self):
         """post is validated"""
@@ -195,7 +209,6 @@ class EditReplyTests(AuthenticatedUserTestCase):
                 'post': "a",
             }
         )
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(), {

@@ -60,9 +60,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl({'can_reply_threads': 0})
 
         response = self.client.post(self.api_link)
-        self.assertContains(
-            response, "You can't reply to threads in this category.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't reply to threads in this category.",
+        })
 
     def test_closed_category(self):
         """permssion to reply in closed category is validated"""
@@ -72,11 +73,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(self.api_link)
-        self.assertContains(
-            response,
-            "This category is closed. You can't reply to threads in it.",
-            status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "This category is closed. You can't reply to threads in it.",
+        })
 
         # allow to post in closed category
         self.override_acl({'can_close_threads': 1})
@@ -92,9 +92,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.thread.save()
 
         response = self.client.post(self.api_link)
-        self.assertContains(
-            response, "You can't reply to closed threads in this category.", status_code=403
-        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't reply to closed threads in this category.",
+        })
 
         # allow to post in closed thread
         self.override_acl({'can_close_threads': 1})
@@ -107,8 +108,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.override_acl()
 
         response = self.client.post(self.api_link, data={})
-
-        self.assertContains(response, "You have to enter a message.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "post": ["You have to enter a message."],
+        })
 
     def test_invalid_data(self):
         """api errors for invalid request data"""
@@ -119,8 +122,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             'false',
             content_type="application/json",
         )
-
-        self.assertContains(response, "Invalid data.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
+        })
 
     def test_post_is_validated(self):
         """post is validated"""
