@@ -78,26 +78,39 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.get(self.link)
-        self.assertContains(response, "Your avatar is pwnt", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "Your avatar is locked. You can't change it.",
+            "reason": "<p>Your avatar is pwnt.</p>",
+        })
 
     def test_other_user_avatar(self):
         """requests to api error if user tries to access other user"""
         self.logout_user()
 
         response = self.client.get(self.link)
-        self.assertContains(response, "You have to sign in", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You have to sign in to perform this action.",
+        })
 
         self.login_user(
             UserModel.objects.create_user("BobUser", "bob@bob.com", self.USER_PASSWORD)
         )
 
         response = self.client.get(self.link)
-        self.assertContains(response, "can't change other users avatars", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't change other users avatars.",
+        })
 
     def test_empty_requests(self):
         """empty request errors with code 400"""
         response = self.client.post(self.link)
-        self.assertContains(response, "Unknown avatar type.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Unknown avatar type.",
+        })
 
     def test_failed_gravatar_request(self):
         """no gravatar RPC fails"""
@@ -105,7 +118,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'avatar': 'gravatar'})
-        self.assertContains(response, "No Gravatar is associated", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "No Gravatar is associated with your e-mail address.",
+        })
 
     def test_successful_gravatar_request(self):
         """gravatar RPC passes"""
@@ -113,21 +129,30 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.user.save()
 
         response = self.client.post(self.link, data={'avatar': 'gravatar'})
-        self.assertContains(response, "Gravatar was downloaded and set")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["detail"], "Gravatar was downloaded and set as new avatar."
+        )
 
         self.assertOldAvatarsAreDeleted(self.user)
 
     def test_generation_request(self):
         """generated avatar is set"""
         response = self.client.post(self.link, data={'avatar': 'generated'})
-        self.assertContains(response, "New avatar based on your account")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["detail"], "New avatar based on your account was set."
+        )
 
         self.assertOldAvatarsAreDeleted(self.user)
 
     def test_avatar_upload_and_crop(self):
         """avatar can be uploaded and cropped"""
         response = self.client.post(self.link, data={'avatar': 'upload'})
-        self.assertContains(response, "No file was sent.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "No file was sent.",
+        })
 
         with open(TEST_AVATAR_PATH, 'rb') as avatar:
             response = self.client.post(self.link, data={'avatar': 'upload', 'image': avatar})
@@ -160,7 +185,9 @@ class UserAvatarTests(AuthenticatedUserTestCase):
 
         response_json = response.json()
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Uploaded avatar was set.")
+        self.assertEqual(
+            response.json()["detail"], "Uploaded avatar was set."
+        )
 
         self.assertFalse(self.get_current_user().avatar_tmp)
         self.assertOldAvatarsAreDeleted(self.user)
@@ -183,7 +210,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "This avatar type is not allowed.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "This avatar type is not allowed.",
+        })
 
         response = self.client.post(
             self.link,
@@ -199,7 +229,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             }),
             content_type="application/json",
         )
-        self.assertContains(response, "Avatar was re-cropped.")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["detail"], "Avatar was re-cropped."
+        )
         self.assertOldAvatarsAreDeleted(self.user)
 
         # delete user avatars, test if it deletes src and tmp
@@ -217,8 +250,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(self.link, data={'avatar': 'galleries', 'image': 123})
-
-        self.assertContains(response, "This avatar type is not allowed.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "This avatar type is not allowed.",
+        })
 
     def test_gallery_image_validation(self):
         """gallery validates image to set"""
@@ -234,7 +269,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                 'avatar': 'galleries',
             },
         )
-        self.assertContains(response, "Incorrect image.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Incorrect image.",
+        })
 
         # invalid id is handled
         response = self.client.post(
@@ -244,7 +282,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                 'image': 'asdsadsadsa',
             },
         )
-        self.assertContains(response, "Incorrect image.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Incorrect image.",
+        })
 
         # nonexistant image is handled
         response = self.client.get(self.link)
@@ -261,13 +302,19 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                 'image': test_avatar + 5000,
             },
         )
-        self.assertContains(response, "Incorrect image.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Incorrect image.",
+        })
 
         # default gallery image is handled
         AvatarGallery.objects.filter(pk=test_avatar).update(gallery=gallery.DEFAULT_GALLERY)
 
         response = self.client.post(self.link, data={'avatar': 'galleries', 'image': test_avatar})
-        self.assertContains(response, "Incorrect image.", status_code=400)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json(), {
+            "detail": "Incorrect image.",
+        })
 
     def test_gallery_set_valid_avatar(self):
         """its possible to set avatar from gallery"""
@@ -287,8 +334,10 @@ class UserAvatarTests(AuthenticatedUserTestCase):
                 'image': test_avatar,
             },
         )
-
-        self.assertContains(response, "Avatar from gallery was set.")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.json()["detail"], "Avatar from gallery was set."
+        )
         self.assertOldAvatarsAreDeleted(self.user)
 
 
@@ -309,7 +358,10 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         })
 
         response = self.client.get(self.link)
-        self.assertContains(response, "can't moderate avatars", status_code=403)
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.json(), {
+            "detail": "You can't moderate avatars.",
+        })
 
     def test_moderate_avatar(self):
         """moderate avatar"""
