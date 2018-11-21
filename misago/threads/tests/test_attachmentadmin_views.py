@@ -26,7 +26,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
             uploader=self.user,
             uploader_name=self.user.username,
             uploader_slug=self.user.slug,
-            filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
+            filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
             file=None,
             image=None,
             thumbnail=None,

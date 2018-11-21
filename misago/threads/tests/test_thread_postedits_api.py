@@ -77,17 +77,17 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
-        response = self.client.get('{}?edit='.format(self.api_link))
+        response = self.client.get('%s?edit=' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_invalid_edit_id(self):
         """api handles invalid edit in querystring"""
-        response = self.client.get('{}?edit=dsa67d8sa68'.format(self.api_link))
+        response = self.client.get('%s?edit=dsa67d8sa68' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_nonexistant_edit_id(self):
         """api handles nonexistant edit in querystring"""
-        response = self.client.get('{}?edit=1321'.format(self.api_link))
+        response = self.client.get('%s?edit=1321' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_get_last_edit(self):
@@ -107,7 +107,7 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
         """api returns middle edit record"""
         edits = self.mock_edit_record()
 
-        response = self.client.get('{}?edit={}'.format(self.api_link, edits[1].id))
+        response = self.client.get('%s?edit=%s' % (self.api_link, edits[1].id))
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -120,7 +120,7 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
         """api returns middle edit record"""
         edits = self.mock_edit_record()
 
-        response = self.client.get('{}?edit={}'.format(self.api_link, edits[0].id))
+        response = self.client.get('%s?edit=%s' % (self.api_link, edits[0].id))
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
@@ -139,36 +139,36 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
-        response = self.client.post('{}?edit='.format(self.api_link))
+        response = self.client.post('%s?edit=' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_invalid_edit_id(self):
         """api handles invalid edit in querystring"""
-        response = self.client.post('{}?edit=dsa67d8sa68'.format(self.api_link))
+        response = self.client.post('%s?edit=dsa67d8sa68' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_nonexistant_edit_id(self):
         """api handles nonexistant edit in querystring"""
-        response = self.client.post('{}?edit=1321'.format(self.api_link))
+        response = self.client.post('%s?edit=1321' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
     def test_anonymous(self):
         """only signed in users can rever ports"""
         self.logout_user()
 
-        response = self.client.post('{}?edit={}'.format(self.api_link, self.edits[0].id))
+        response = self.client.post('%s?edit=%s' % (self.api_link, self.edits[0].id))
         self.assertEqual(response.status_code, 403)
 
     def test_no_permission(self):
         """api validates permission to revert post"""
         self.override_acl({'can_edit_posts': 0})
 
-        response = self.client.post('{}?edit=1321'.format(self.api_link))
+        response = self.client.post('%s?edit=1321' % self.api_link)
         self.assertEqual(response.status_code, 403)
 
     def test_revert_post(self):
         """api reverts post to version from before specified edit"""
-        response = self.client.post('{}?edit={}'.format(self.api_link, self.edits[0].id))
+        response = self.client.post('%s?edit=%s' % (self.api_link, self.edits[0].id))
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()

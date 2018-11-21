@@ -75,7 +75,7 @@ class PollMergeHandler(MergeConflictHandler):
     def get_available_resolutions(self):
         resolutions = [[0, _("Delete all polls")]]
         for poll in self.items:
-            resolutions.append([poll.id, '{} ({})'.format(poll.question, poll.thread.title)])
+            resolutions.append([poll.id, '%s (%s)' % (poll.question, poll.thread.title)])
         return resolutions
 
 
@@ -131,7 +131,7 @@ class MergeConflict(object):
     def raise_resolutions_exception(self):
         resolutions = {}
         for conflict in self._conflicts:
-            key = '{}s'.format(conflict.data_name)
+            key = '%ss' % conflict.data_name
             resolutions[key] = conflict.get_available_resolutions()
         if resolutions:
             raise ValidationError(resolutions)

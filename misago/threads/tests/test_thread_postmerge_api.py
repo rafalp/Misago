@@ -436,7 +436,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             Post.objects.get(pk=post_b.pk)
 
         merged_post = Post.objects.get(pk=post_a.pk)
-        self.assertEqual(merged_post.parsed, '{}\n{}'.format(post_a.parsed, post_b.parsed))
+        self.assertEqual(merged_post.parsed, '%s\n%s' % (post_a.parsed, post_b.parsed))
 
     def test_merge_guest_posts(self):
         """api recjects attempt to merge posts made by same guest"""

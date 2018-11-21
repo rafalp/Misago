@@ -20,4 +20,4 @@ def replace_headers(matchobj):
         quote_title = _("%(title)s has written:") % {'title': title}
     else:
         quote_title = _("Quoted message:")
-    return '<div class="quote-heading">{}</div>'.format(quote_title)
+    return '<div class="quote-heading">%s</div>' % quote_title

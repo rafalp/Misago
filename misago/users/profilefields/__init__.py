@@ -34,22 +34,20 @@ class ProfileFields(object):
 
                 if field_path in self.fields_dict:
                     raise ValueError(
-                        "{} profile field has been specified twice".format(field._field_path)
+                        "%s profile field has been specified twice" % field._field_path
                     )
 
                 if not getattr(field, 'fieldname', None):
                     raise ValueError(
-                        "{} profile field has to specify fieldname attribute".format(
-                            field._field_path,
-                        )
+                        "%s profile field has to specify fieldname attribute" % field._field_path
                     )
 
                 if field.fieldname in fieldnames:
                     raise ValueError(
                         (
-                            '{} profile field defines fieldname "{}" '
-                            'that is already in use by the {}'
-                        ).format(
+                            '%s profile field defines fieldname "%s" '
+                            'that is already in use by the %s'
+                        ) % (
                             field._field_path,
                             field.fieldname,
                             fieldnames[field.fieldname],
@@ -146,9 +144,9 @@ class ProfileFields(object):
 
     def log_profile_fields_update(self, request, user):
         if request.user == user:
-            log_message = "{} edited own profile fields".format(user.username)
+            log_message = "%s edited own profile fields" % user.username
         else:
-            log_message = "{} edited {}'s (#{}) profile fields".format(request.user, user.username, user.pk)
+            log_message = "%s edited %s's (#%s) profile fields" % (request.user, user.username, user.pk)
 
         logger.info(
             log_message,

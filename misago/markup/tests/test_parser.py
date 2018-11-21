@@ -170,12 +170,12 @@ Lorem ipsum.
         user = UserModel.objects.create_user('Bob', 'bob@test.com', 'Pass123')
 
         test_text = """
-Hey there @{}, how's going?
-""".strip().format(user)
+Hey there @%s, how's going?
+""".strip() % user
 
         expected_result = """
-<p>Hey there <a href="{}">@{}</a>, how's going?</p>
-""".strip().format(user.get_absolute_url(), user)
+<p>Hey there <a href="%s">@%s</a>, how's going?</p>
+""".strip() % (user.get_absolute_url(), user)
 
         result = parse(test_text, MockRequest(user), user, minify=True)
         self.assertEqual(expected_result, result['parsed_text'])

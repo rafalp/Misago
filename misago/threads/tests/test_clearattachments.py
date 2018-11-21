@@ -39,7 +39,7 @@ class ClearAttachmentsTests(TestCase):
                 uploaded_on=cutoff,
                 uploader_name='bob',
                 uploader_slug='bob',
-                filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
+                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
             )
 
         # create 5 expired non-orphaned attachments
@@ -55,7 +55,7 @@ class ClearAttachmentsTests(TestCase):
                 post=post,
                 uploader_name='bob',
                 uploader_slug='bob',
-                filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
+                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
             )
 
         # create 5 fresh orphaned attachments
@@ -66,7 +66,7 @@ class ClearAttachmentsTests(TestCase):
                 size=1000,
                 uploader_name='bob',
                 uploader_slug='bob',
-                filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
+                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
             )
 
         command = clearattachments.Command()

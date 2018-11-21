@@ -161,26 +161,26 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
         return categories_acl
 
     def assertContainsThread(self, response, thread):
-        self.assertContains(response, ' href="{}"'.format(thread.get_absolute_url()))
+        self.assertContains(response, ' href="%s"' % thread.get_absolute_url())
 
     def assertNotContainsThread(self, response, thread):
-        self.assertNotContains(response, ' href="{}"'.format(thread.get_absolute_url()))
+        self.assertNotContains(response, ' href="%s"' % thread.get_absolute_url())
 
 
 class ApiTests(ThreadsListTestCase):
     def test_root_category(self):
         """its possible to access threads endpoint with category=ROOT_ID"""
-        response = self.client.get('%s?category=%s' % (self.api_link, self.root.pk, ))
+        response = self.client.get('%s?category=%s' % (self.api_link, self.root.pk))
         self.assertEqual(response.status_code, 200)
 
     def test_explicit_first_page(self):
         """its possible to access threads endpoint with explicit first page"""
-        response = self.client.get('%s?category=%s&page=1' % (self.api_link, self.root.pk, ))
+        response = self.client.get('%s?category=%s&page=1' % (self.api_link, self.root.pk))
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_list_type(self):
         """api returns 404 for invalid list type"""
-        response = self.client.get('%s?category=%s&list=nope' % (self.api_link, self.root.pk, ))
+        response = self.client.get('%s?category=%s&list=nope' % (self.api_link, self.root.pk))
         self.assertEqual(response.status_code, 404)
 
 

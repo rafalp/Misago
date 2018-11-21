@@ -34,7 +34,7 @@ class DenyGuestsTests(UserTestCase):
 
     def test_ref_login(self):
         """deny_guests decorator redirected guest request to homepage if ref=login"""
-        response = self.client.post('{}?ref=login'.format(reverse('misago:options')))
+        response = self.client.post('%s?ref=login' % reverse('misago:options'))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], reverse('misago:index'))
 

@@ -41,7 +41,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             uploader=self.user if user else None,
             uploader_name=self.user.username,
             uploader_slug=self.user.slug,
-            filename='testfile_{}.zip'.format(Attachment.objects.count() + 1),
+            filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
         )
 
     def test_use_this_middleware(self):

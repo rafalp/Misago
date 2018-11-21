@@ -2,7 +2,7 @@ class MutableFields(object):
     @classmethod
     def subset_fields(cls, *fields):
         fields_in_name = [f.title().replace('_', '') for f in fields]
-        name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
+        name = '%s%sSubset' % (cls.__name__, ''.join(fields_in_name)[:100])
 
         class Meta(cls.Meta):
             pass
@@ -19,7 +19,7 @@ class MutableFields(object):
                 final_fields.append(field)
 
         fields_in_name = [f.title().replace('_', '') for f in final_fields]
-        name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
+        name = '%s%sSubset' % (cls.__name__, ''.join(fields_in_name)[:100])
 
         class Meta(cls.Meta):
             pass
@@ -36,7 +36,7 @@ class MutableFields(object):
                 final_fields.append(field)
 
         fields_in_name = [f.title().replace('_', '') for f in final_fields]
-        name = '{}{}Subset'.format(cls.__name__, ''.join(fields_in_name)[:100])
+        name = '%s%sSubset' % (cls.__name__, ''.join(fields_in_name)[:100])
 
         class Meta(cls.Meta):
             pass

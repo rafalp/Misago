@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 def get_data_upload_to(instance, filename):
     user_id_hexdigest = md5(str(instance.user_id).encode()).hexdigest()
-    return 'data-downloads/{}/{}/{}.zip'.format(
+    return 'data-downloads/%s/%s/%s.zip' % (
         user_id_hexdigest, get_random_string(64), instance.user.slug)
 
 
