@@ -3,7 +3,7 @@ from time import time
 
 from django.contrib import auth as dj_auth
 from django.contrib import messages
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.conf import settings
 

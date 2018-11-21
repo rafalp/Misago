@@ -1,6 +1,6 @@
 from django import template
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 
 register = template.Library()
@@ -28,7 +28,7 @@ def likes_label(post):
 
     formats = {'users': usernames_string, 'likes': hidden_likes}
 
-    return ungettext(
+    return ngettext(
         "%(users)s and %(likes)s other user like this.",
         "%(users)s and %(likes)s other users like this.",
         hidden_likes,

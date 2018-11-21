@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext_lazy
 
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
@@ -80,7 +80,7 @@ class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
         validators=[validate_post_length],
         error_messages={
-            'required': ugettext_lazy("You have to enter a message."),
+            'required': gettext_lazy("You have to enter a message."),
         }
     )
 
@@ -102,6 +102,6 @@ class ThreadSerializer(ReplySerializer):
     title = serializers.CharField(
         validators=[validate_title],
         error_messages={
-            'required': ugettext_lazy("You have to enter thread title."),
+            'required': gettext_lazy("You have to enter thread title."),
         }
     )

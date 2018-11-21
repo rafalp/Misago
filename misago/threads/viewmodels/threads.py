@@ -4,8 +4,8 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import F, Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from misago.acl import add_acl
 from misago.conf import settings
@@ -24,19 +24,19 @@ __all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
 
 LISTS_NAMES = {
     'all': None,
-    'my': ugettext_lazy("Your threads"),
-    'new': ugettext_lazy("New threads"),
-    'unread': ugettext_lazy("Unread threads"),
-    'subscribed': ugettext_lazy("Subscribed threads"),
-    'unapproved': ugettext_lazy("Unapproved content"),
+    'my': gettext_lazy("Your threads"),
+    'new': gettext_lazy("New threads"),
+    'unread': gettext_lazy("Unread threads"),
+    'subscribed': gettext_lazy("Subscribed threads"),
+    'unapproved': gettext_lazy("Unapproved content"),
 }
 
 LIST_DENIED_MESSAGES = {
-    'my': ugettext_lazy("You have to sign in to see list of threads that you have started."),
-    'new': ugettext_lazy("You have to sign in to see list of threads you haven't read."),
-    'unread': ugettext_lazy("You have to sign in to see list of threads with new replies."),
-    'subscribed': ugettext_lazy("You have to sign in to see list of threads you are subscribing."),
-    'unapproved': ugettext_lazy("You have to sign in to see list of threads with unapproved posts."),
+    'my': gettext_lazy("You have to sign in to see list of threads that you have started."),
+    'new': gettext_lazy("You have to sign in to see list of threads you haven't read."),
+    'unread': gettext_lazy("You have to sign in to see list of threads with new replies."),
+    'subscribed': gettext_lazy("You have to sign in to see list of threads you are subscribing."),
+    'unapproved': gettext_lazy("You have to sign in to see list of threads with unapproved posts."),
 }
 
 

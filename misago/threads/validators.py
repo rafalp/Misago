@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
@@ -41,7 +41,7 @@ def validate_title(title):
         raise ValidationError(_("You have to enter thread title."))
 
     if title_len < settings.thread_title_length_min:
-        message = ungettext(
+        message = ngettext(
             "Thread title should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
             settings.thread_title_length_min,
@@ -54,7 +54,7 @@ def validate_title(title):
         )
 
     if title_len > settings.thread_title_length_max:
-        message = ungettext(
+        message = ngettext(
             "Thread title cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Thread title cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
             settings.thread_title_length_max,
@@ -80,7 +80,7 @@ def validate_post_length(post):
         raise ValidationError(_("You have to enter a message."))
 
     if post_len < settings.post_length_min:
-        message = ungettext(
+        message = ngettext(
             "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
             settings.post_length_min,
@@ -93,7 +93,7 @@ def validate_post_length(post):
         )
 
     if settings.post_length_max and post_len > settings.post_length_max:
-        message = ungettext(
+        message = ngettext(
             "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
             settings.post_length_max,

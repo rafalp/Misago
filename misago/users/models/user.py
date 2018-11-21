@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.db import IntegrityError, models, transaction
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from misago.acl import get_user_acl
 from misago.acl.models import Role

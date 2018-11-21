@@ -8,8 +8,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
 from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from misago.conf import settings
 
@@ -75,7 +75,7 @@ def validate_username_content(value):
 
 def validate_username_length(value):
     if len(value) < settings.username_length_min:
-        message = ungettext(
+        message = ngettext(
             "Username must be at least %(limit_value)s character long.",
             "Username must be at least %(limit_value)s characters long.",
             settings.username_length_min
@@ -83,7 +83,7 @@ def validate_username_length(value):
         raise ValidationError(message % {'limit_value': settings.username_length_min})
 
     if len(value) > settings.username_length_max:
-        message = ungettext(
+        message = ngettext(
             "Username cannot be longer than %(limit_value)s characters.",
             "Username cannot be longer than %(limit_value)s characters.",
             settings.username_length_max

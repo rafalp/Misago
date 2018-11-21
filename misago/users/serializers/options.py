@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.password_validation import validate_password
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.conf import settings
 from misago.users.online.tracker import clear_tracking

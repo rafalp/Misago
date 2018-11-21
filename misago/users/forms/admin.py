@@ -2,8 +2,8 @@ from django import forms
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from misago.acl.models import Role
 from misago.admin.forms import IsoDateTimeField, YesNoSwitch
@@ -217,7 +217,7 @@ class EditUserForm(UserBaseForm):
         length_limit = settings.signature_length_max
         if len(data) > length_limit:
             raise forms.ValidationError(
-                ungettext(
+                ngettext(
                     "Signature can't be longer than %(limit)s character.",
                     "Signature can't be longer than %(limit)s characters.",
                     length_limit,

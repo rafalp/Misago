@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from misago.acl import add_acl
 from misago.conf import settings
@@ -123,7 +123,7 @@ class AttachmentsSerializer(serializers.Serializer):
 def validate_attachments_count(data):
     total_attachments = len(data)
     if total_attachments > settings.MISAGO_POST_ATTACHMENTS_LIMIT:
-        message = ungettext(
+        message = ngettext(
             "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
             "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",
             settings.MISAGO_POST_ATTACHMENTS_LIMIT,

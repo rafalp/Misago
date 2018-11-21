@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import gettext_lazy as _, ngettext
 
 from misago.acl import add_acl, algebra
 from misago.acl.decorators import return_boolean
@@ -622,7 +622,7 @@ def allow_edit_thread(user, target):
             raise PermissionDenied(_("You can't edit other users threads in this category."))
 
         if not has_time_to_edit_thread(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't edit threads that are older than %(minutes)s minute.",
                 "You can't edit threads that are older than %(minutes)s minutes.",
                 category_acl['thread_edit_time']
@@ -701,7 +701,7 @@ def allow_hide_thread(user, target):
             raise PermissionDenied(_("You can't hide other users theads in this category."))
 
         if not has_time_to_edit_thread(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't hide threads that are older than %(minutes)s minute.",
                 "You can't hide threads that are older than %(minutes)s minutes.",
                 category_acl['thread_edit_time'],
@@ -737,7 +737,7 @@ def allow_delete_thread(user, target):
             raise PermissionDenied(_("You can't delete other users theads in this category."))
 
         if not has_time_to_edit_thread(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't delete threads that are older than %(minutes)s minute.",
                 "You can't delete threads that are older than %(minutes)s minutes.",
                 category_acl['thread_edit_time'],
@@ -874,7 +874,7 @@ def allow_edit_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't edit it."))
 
         if not has_time_to_edit_post(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't edit posts that are older than %(minutes)s minute.",
                 "You can't edit posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'],
@@ -913,7 +913,7 @@ def allow_unhide_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't reveal it."))
 
         if not has_time_to_edit_post(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't reveal posts that are older than %(minutes)s minute.",
                 "You can't reveal posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'],
@@ -955,7 +955,7 @@ def allow_hide_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't hide it."))
 
         if not has_time_to_edit_post(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't hide posts that are older than %(minutes)s minute.",
                 "You can't hide posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'],
@@ -997,7 +997,7 @@ def allow_delete_post(user, target):
             raise PermissionDenied(_("This post is protected. You can't delete it."))
 
         if not has_time_to_edit_post(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't delete posts that are older than %(minutes)s minute.",
                 "You can't delete posts that are older than %(minutes)s minutes.",
                 category_acl['post_edit_time'],

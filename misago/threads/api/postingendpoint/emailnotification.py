@@ -1,4 +1,4 @@
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.core.mail import build_mail, send_messages
 from misago.threads.permissions import can_see_post, can_see_thread

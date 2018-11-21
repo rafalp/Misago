@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin
 from django.urls import reverse
 from django.utils.html import format_html
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 class UserAdminModel(ModelAdmin):

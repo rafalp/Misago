@@ -1,6 +1,6 @@
 import re
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 HEADER_RE = re.compile(

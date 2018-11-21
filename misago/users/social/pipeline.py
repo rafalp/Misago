@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from social_core.pipeline.partial import partial
 
 from misago.conf import settings

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.core.utils import format_plaintext_for_html
 from misago.users.models import Ban

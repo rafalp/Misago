@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db.models import Count
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from misago.admin.views import generic
 from misago.threads.forms import AttachmentTypeForm

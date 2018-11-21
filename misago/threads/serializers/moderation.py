@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils.translation import ugettext as _, ugettext_lazy, ungettext
+from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
@@ -37,13 +37,13 @@ __all__ = [
 
 
 class DeletePostsSerializer(serializers.Serializer):
-    error_empty_or_required = ugettext_lazy("You have to specify at least one post to delete.")
+    error_empty_or_required = gettext_lazy("You have to specify at least one post to delete.")
 
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+                'invalid': gettext_lazy("One or more post ids received were invalid."),
             },
         ),
         error_messages={
@@ -55,7 +55,7 @@ class DeletePostsSerializer(serializers.Serializer):
 
     def validate_posts(self, data):
         if len(data) > POSTS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s post can be deleted at single time.",
                 "No more than %(limit)s posts can be deleted at single time.",
                 POSTS_LIMIT,
@@ -88,12 +88,12 @@ class DeletePostsSerializer(serializers.Serializer):
 
 
 class MergePostsSerializer(serializers.Serializer):
-    error_empty_or_required = ugettext_lazy("You have to select at least two posts to merge.")
+    error_empty_or_required = gettext_lazy("You have to select at least two posts to merge.")
 
     posts = serializers.ListField(
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+                'invalid': gettext_lazy("One or more post ids received were invalid."),
             },
         ),
         error_messages={
@@ -108,7 +108,7 @@ class MergePostsSerializer(serializers.Serializer):
         if len(data) < 2:
             raise serializers.ValidationError(self.error_empty_or_required)
         if len(data) > POSTS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s post can be merged at single time.",
                 "No more than %(limit)s posts can be merged at single time.",
                 POSTS_LIMIT,
@@ -163,18 +163,18 @@ class MergePostsSerializer(serializers.Serializer):
 
 
 class MovePostsSerializer(serializers.Serializer):
-    error_empty_or_required = ugettext_lazy("You have to specify at least one post to move.")
+    error_empty_or_required = gettext_lazy("You have to specify at least one post to move.")
 
     new_thread = serializers.CharField(
         error_messages={
-            'required': ugettext_lazy("Enter link to new thread."),
+            'required': gettext_lazy("Enter link to new thread."),
         },
     )
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+                'invalid': gettext_lazy("One or more post ids received were invalid."),
             },
         ),
         error_messages={
@@ -213,7 +213,7 @@ class MovePostsSerializer(serializers.Serializer):
     def validate_posts(self, data):
         data = list(set(data))
         if len(data) > POSTS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s post can be moved at single time.",
                 "No more than %(limit)s posts can be moved at single time.",
                 POSTS_LIMIT,
@@ -305,13 +305,13 @@ class NewThreadSerializer(serializers.Serializer):
 
 
 class SplitPostsSerializer(NewThreadSerializer):
-    error_empty_or_required = ugettext_lazy("You have to specify at least one post to split.")
+    error_empty_or_required = gettext_lazy("You have to specify at least one post to split.")
 
     posts = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more post ids received were invalid."),
+                'invalid': gettext_lazy("One or more post ids received were invalid."),
             },
         ),
         error_messages={
@@ -323,7 +323,7 @@ class SplitPostsSerializer(NewThreadSerializer):
 
     def validate_posts(self, data):
         if len(data) > POSTS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s post can be split at single time.",
                 "No more than %(limit)s posts can be split at single time.",
                 POSTS_LIMIT,
@@ -355,13 +355,13 @@ class SplitPostsSerializer(NewThreadSerializer):
 
 
 class DeleteThreadsSerializer(serializers.Serializer):
-    error_empty_or_required = ugettext_lazy("You have to specify at least one thread to delete.")
+    error_empty_or_required = gettext_lazy("You have to specify at least one thread to delete.")
 
     threads = serializers.ListField(
         allow_empty=False,
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more thread ids received were invalid."),
+                'invalid': gettext_lazy("One or more thread ids received were invalid."),
             },
         ),
         error_messages={
@@ -373,7 +373,7 @@ class DeleteThreadsSerializer(serializers.Serializer):
 
     def validate_threads(self, data):
         if len(data) > THREADS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s thread can be deleted at single time.",
                 "No more than %(limit)s threads can be deleted at single time.",
                 THREADS_LIMIT,
@@ -414,19 +414,19 @@ class DeleteThreadsSerializer(serializers.Serializer):
 class MergeThreadSerializer(serializers.Serializer):
     other_thread = serializers.CharField(
         error_messages={
-            'required': ugettext_lazy("Enter link to new thread."),
+            'required': gettext_lazy("Enter link to new thread."),
         },
     )
     best_answer = serializers.IntegerField(
         required=False,
         error_messages={
-            'invalid': ugettext_lazy("Invalid choice."),
+            'invalid': gettext_lazy("Invalid choice."),
         },
     )
     poll = serializers.IntegerField(
         required=False,
         error_messages={
-            'invalid': ugettext_lazy("Invalid choice."),
+            'invalid': gettext_lazy("Invalid choice."),
         },
     )
 
@@ -472,14 +472,14 @@ class MergeThreadSerializer(serializers.Serializer):
 
 
 class MergeThreadsSerializer(NewThreadSerializer):
-    error_empty_or_required = ugettext_lazy("You have to select at least two threads to merge.")
+    error_empty_or_required = gettext_lazy("You have to select at least two threads to merge.")
 
     threads = serializers.ListField(
         allow_empty=False,
         min_length=2,
         child=serializers.IntegerField(
             error_messages={
-                'invalid': ugettext_lazy("One or more thread ids received were invalid."),
+                'invalid': gettext_lazy("One or more thread ids received were invalid."),
             },
         ),
         error_messages={
@@ -492,19 +492,19 @@ class MergeThreadsSerializer(NewThreadSerializer):
     best_answer = serializers.IntegerField(
         required=False,
         error_messages={
-            'invalid': ugettext_lazy("Invalid choice."),
+            'invalid': gettext_lazy("Invalid choice."),
         },
     )
     poll = serializers.IntegerField(
         required=False,
         error_messages={
-            'invalid': ugettext_lazy("Invalid choice."),
+            'invalid': gettext_lazy("Invalid choice."),
         },
     )
 
     def validate_threads(self, data):
         if len(data) > THREADS_LIMIT:
-            message = ungettext(
+            message = ngettext(
                 "No more than %(limit)s thread can be merged at single time.",
                 "No more than %(limit)s threads can be merged at single time.",
                 POSTS_LIMIT,

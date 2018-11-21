@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from misago.acl import add_acl
 from misago.categories import THREADS_ROOT_NAME
@@ -42,8 +42,8 @@ class CategoryMiddleware(PostingMiddleware):
 class CategorySerializer(serializers.Serializer):
     category = serializers.IntegerField(
         error_messages={
-            'required': ugettext_lazy("You have to select category to post thread in."),
-            'invalid': ugettext_lazy("Selected category is invalid."),
+            'required': gettext_lazy("You have to select category to post thread in."),
+            'invalid': gettext_lazy("Selected category is invalid."),
         }
     )
 
