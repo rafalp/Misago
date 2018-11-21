@@ -1,7 +1,3 @@
-from django.utils import timezone
-
-from misago.users.models.deleteduser import DeletedUser
-
 import hashlib
 
 from django.utils import timezone
