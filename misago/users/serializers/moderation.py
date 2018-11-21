@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
-from django.utils.translation import ungettext
+from django.utils.translation import ngettext
 
 from misago.conf import settings
 
@@ -38,7 +38,7 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
         length_limit = settings.signature_length_max
         if len(value) > length_limit:
             raise serializers.ValidationError(
-                ungettext(
+                ngettext(
                     "Signature can't be longer than %(limit)s character.",
                     "Signature can't be longer than %(limit)s characters.",
                     length_limit,

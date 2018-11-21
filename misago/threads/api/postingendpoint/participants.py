@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _, ungettext
+from django.utils.translation import gettext as _, ngettext
 
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.threads.participants import add_participants, set_owner
@@ -53,7 +53,7 @@ class ParticipantsSerializer(serializers.Serializer):
 
         max_participants = self.context['user'].acl_cache['max_private_thread_participants']
         if max_participants and len(clean_usernames) > max_participants:
-            message = ungettext(
+            message = ngettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
                 "You can't add more than %(users)s users to private thread (you've added %(added)s).",
                 max_participants,

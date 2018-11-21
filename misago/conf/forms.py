@@ -1,6 +1,6 @@
 from django import forms
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from misago.admin.forms import YesNoSwitch
 
@@ -17,7 +17,7 @@ class ValidateChoicesNum(object):
         data_len = len(data)
 
         if self.min_choices and self.min_choices > data_len:
-            message = ungettext(
+            message = ngettext(
                 'You have to select at least %(choices)d option.',
                 'You have to select at least %(choices)d options.',
                 self.min_choices,
@@ -25,7 +25,7 @@ class ValidateChoicesNum(object):
             raise forms.ValidationError(message % {'choices': self.min_choices})
 
         if self.max_choices and self.max_choices < data_len:
-            message = ungettext(
+            message = ngettext(
                 'You cannot select more than %(choices)d option.',
                 'You cannot select more than %(choices)d options.',
                 self.max_choices,

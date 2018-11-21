@@ -3,7 +3,7 @@ import re
 from django.conf import settings
 from django.db import IntegrityError, models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from misago.core import cachebuster
 from misago.users.constants import BANS_CACHEBUSTER

@@ -1,7 +1,7 @@
 from django.contrib.auth import update_session_auth_hash
 from django.db import IntegrityError
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.users.credentialchange import read_new_credential
 from misago.users.decorators import deny_guests

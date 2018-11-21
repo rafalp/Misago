@@ -1,7 +1,7 @@
 import logging
 
 from django.core.management.base import BaseCommand
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from misago.conf import settings
 from misago.core.mail import mail_user
@@ -31,7 +31,7 @@ class Command(BaseCommand):
         for data_download in chunk_queryset(queryset):
             if prepare_user_data_download(data_download, logger):
                 user = data_download.user
-                subject = ugettext("%(user)s, your data download is ready") % { 'user': user }
+                subject = gettext("%(user)s, your data download is ready") % { 'user': user }
                 mail_user(user, subject, 'misago/emails/data_download', context={
                     'data_download': data_download,
                     'expires_in': settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS,

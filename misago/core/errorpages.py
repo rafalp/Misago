@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from social_core import exceptions as social_exceptions
 
 from misago.admin.views.errorpages import admin_csrf_failure, admin_error_page

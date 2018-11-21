@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-from django.utils.translation import ugettext as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from misago.threads.models import Poll
 
@@ -137,7 +137,7 @@ class EditPollSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(_("You need to add at least two choices to a poll."))
 
         if total_choices > MAX_POLL_OPTIONS:
-            message = ungettext(
+            message = ngettext(
                 "You can't add more than %(limit_value)s option to a single poll (added %(show_value)s).",
                 "You can't add more than %(limit_value)s options to a single poll (added %(show_value)s).",
                 MAX_POLL_OPTIONS,

@@ -6,7 +6,7 @@ from . import utils
 
 class SettingsGroupsManager(models.Manager):
     def ordered_alphabetically(self):
-        from django.utils.translation import ugettext as _
+        from django.utils.translation import gettext as _
 
         groups_dict = {}
 

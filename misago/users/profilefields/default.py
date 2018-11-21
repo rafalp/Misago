@@ -1,7 +1,7 @@
 import re
 
 from django.forms import ValidationError
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 
 from . import basefields
 
@@ -74,7 +74,7 @@ class TwitterHandleField(basefields.TextProfileField):
     def clean(self, request, user, data):
         data = data.lstrip('@')
         if data and not re.search('^[A-Za-z0-9_]+$', data):
-            raise ValidationError(ugettext("This is not a valid twitter handle."))
+            raise ValidationError(gettext("This is not a valid twitter handle."))
         return data
 
 

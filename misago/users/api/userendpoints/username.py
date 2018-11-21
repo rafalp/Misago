@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from django.db import IntegrityError
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.conf import settings
 from misago.users.namechanges import UsernameChanges

@@ -1,8 +1,8 @@
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
@@ -160,7 +160,7 @@ def allow_edit_poll(user, target):
         if user.pk != target.poster_id:
             raise PermissionDenied(_("You can't edit other users polls in this category."))
         if not has_time_to_edit_poll(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't edit polls that are older than %(minutes)s minute.",
                 "You can't edit polls that are older than %(minutes)s minutes.",
                 user.acl_cache['poll_edit_time']
@@ -197,7 +197,7 @@ def allow_delete_poll(user, target):
         if user.pk != target.poster_id:
             raise PermissionDenied(_("You can't delete other users polls in this category."))
         if not has_time_to_edit_poll(user, target):
-            message = ungettext(
+            message = ngettext(
                 "You can't delete polls that are older than %(minutes)s minute.",
                 "You can't delete polls that are older than %(minutes)s minutes.",
                 user.acl_cache['poll_edit_time']

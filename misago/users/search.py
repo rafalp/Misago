@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext as _
-from django.utils.translation import ugettext_lazy
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy
 
 from misago.search import SearchProvider
 
@@ -15,7 +15,7 @@ UserModel = get_user_model()
 
 
 class SearchUsers(SearchProvider):
-    name = ugettext_lazy("Users")
+    name = gettext_lazy("Users")
     icon = 'people'
     url = 'users'
 

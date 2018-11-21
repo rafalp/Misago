@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _, ungettext
+from django.utils.translation import gettext_lazy as _, ngettext
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
@@ -200,7 +200,7 @@ def allow_change_best_answer(user, target):
             )
         if not has_time_to_change_answer(user, target):
             raise PermissionDenied(
-                ungettext(
+                ngettext(
                     (
                         "You don't have permission to change best answer that was marked for more "
                         "than %(minutes)s minute."
@@ -256,7 +256,7 @@ def allow_unmark_best_answer(user, target):
             )
         if not has_time_to_change_answer(user, target):
             raise PermissionDenied(
-                ungettext(
+                ngettext(
                     (
                         "You don't have permission to unmark best answer that was marked for more "
                         "than %(minutes)s minute."

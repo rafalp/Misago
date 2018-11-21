@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 from misago.categories.models import Category
 from misago.categories.signals import delete_category_content, move_category_content

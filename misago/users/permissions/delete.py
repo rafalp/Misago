@@ -4,8 +4,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
@@ -84,7 +84,7 @@ def allow_delete_user(user, target):
 
     if newer_than:
         if target.joined_on < timezone.now() - timedelta(days=newer_than):
-            message = ungettext(
+            message = ngettext(
                 "You can't delete users that are members for more than %(days)s day.",
                 "You can't delete users that are members for more than %(days)s days.",
                 newer_than,
@@ -92,7 +92,7 @@ def allow_delete_user(user, target):
             raise PermissionDenied(message % {'days': newer_than})
     if less_posts_than:
         if target.posts > less_posts_than:
-            message = ungettext(
+            message = ngettext(
                 "You can't delete users that made more than %(posts)s post.",
                 "You can't delete users that made more than %(posts)s posts.",
                 less_posts_than,

@@ -1,5 +1,5 @@
 from django.db import migrations
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
 
 from misago.core.utils import slugify
 
@@ -11,17 +11,17 @@ def create_default_ranks(apps, schema_editor):
     Rank = apps.get_model('misago_users', 'Rank')
 
     team = Rank.objects.create(
-        name=ugettext("Forum team"),
-        slug=slugify(ugettext("Forum team")),
-        title=ugettext("Team"),
+        name=gettext("Forum team"),
+        slug=slugify(gettext("Forum team")),
+        title=gettext("Team"),
         css_class='primary',
         is_tab=True,
         order=0,
     )
 
     member = Rank.objects.create(
-        name=ugettext("Members"),
-        slug=slugify(ugettext("Members")),
+        name=gettext("Members"),
+        slug=slugify(gettext("Members")),
         is_default=True,
         order=1,
     )

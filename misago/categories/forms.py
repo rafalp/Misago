@@ -3,7 +3,7 @@ from mptt.forms import TreeNodeChoiceField, TreeNodeMultipleChoiceField
 from django import forms
 from django.db import models
 from django.utils.html import conditional_escape, mark_safe
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from misago.admin.forms import YesNoSwitch
 from misago.core.validators import validate_sluggable
