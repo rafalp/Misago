@@ -81,7 +81,7 @@ class ProfileField(object):
             return None
 
         return Q(**{
-            'profile_fields__{}__contains'.format(self.fieldname): criteria
+            'profile_fields__%s__contains' % self.fieldname: criteria
         })
 
 
@@ -130,13 +130,13 @@ class ChoiceProfileField(ProfileField):
     def search_users(self, criteria):
         """custom search implementation for choice fields"""
         q_obj = Q(**{
-            'profile_fields__{}__contains'.format(self.fieldname): criteria
+            'profile_fields__%s__contains' % self.fieldname: criteria
         })
 
         for key, choice in self.get_choices():
             if key and criteria.lower() in str(choice).lower():
                 q_obj = q_obj | Q(**{
-                    'profile_fields__{}'.format(self.fieldname): key
+                    'profile_fields__%s' % self.fieldname: key
                 })
 
         return q_obj

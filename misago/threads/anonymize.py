@@ -13,7 +13,7 @@ ANONYMIZABLE_EVENTS = (
 
 def anonymize_event(user, event):
     if event.event_type not in ANONYMIZABLE_EVENTS:
-        raise ValueError('event of type "{}" can\'t be ananymized'.format(event.event_type))
+        raise ValueError('event of type "%s" can\'t be ananymized' % event.event_type)
 
     event.event_context = {
         'user': {

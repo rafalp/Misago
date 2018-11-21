@@ -1,13 +1,13 @@
 from misago.conf import settings
 
 
-MOMENT_STATIC_PATH = 'misago/momentjs/{}.js'
+MOMENT_STATIC_PATH = 'misago/momentjs/%s.js'
 
 
 def get_locale_url(language):
     clean_language = clean_language_name(language)
     if clean_language:
-        return MOMENT_STATIC_PATH.format(clean_language)
+        return MOMENT_STATIC_PATH % clean_language
 
     return None
 

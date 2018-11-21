@@ -26,4 +26,4 @@ class Command(BaseCommand):
                 user.delete()
                 users_deleted += 1
 
-        self.stdout.write("Deleted users: {}".format(users_deleted))
+        self.stdout.write("Deleted users: %s" % users_deleted)

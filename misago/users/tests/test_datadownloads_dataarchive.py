@@ -147,7 +147,7 @@ class DataArchiveTests(AuthenticatedUserTestCase):
             self.assertTrue(str(file_path).startswith(data_dir_path))
             
             filename = os.path.basename(self.user.avatar_tmp.name)
-            target_filename = 'prefix-{}'.format(filename)
+            target_filename = 'prefix-%s' % filename
             self.assertTrue(str(file_path).endswith(target_filename))
 
     def test_make_final_path_no_kwargs(self):
@@ -234,7 +234,7 @@ class TrimLongFilenameTests(TestCase):
         """trim_too_long_filename trims filename if its longer than allowed"""
         filename = 'filename'
         extension = '.jpg'
-        long_filename = '{}{}'.format(filename * 10, extension)
+        long_filename = '%s%s' % (filename * 10, extension)
 
         trimmed_filename = trim_long_filename(long_filename)
         

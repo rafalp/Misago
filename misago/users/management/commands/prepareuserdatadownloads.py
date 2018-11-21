@@ -39,4 +39,4 @@ class Command(BaseCommand):
 
                 downloads_prepared += 1
 
-        self.stdout.write("Data downloads prepared: {}".format(downloads_prepared))
+        self.stdout.write("Data downloads prepared: %s" % downloads_prepared)

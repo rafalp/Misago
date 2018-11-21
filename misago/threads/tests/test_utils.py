@@ -167,7 +167,7 @@ class MockRequest(object):
         self.host = host
 
         self.path_info = '/api/threads/123/merge/'
-        self.path = '{}{}'.format(wsgialias.rstrip('/'), self.path_info)
+        self.path = '%s%s' % (wsgialias.rstrip('/'), self.path_info)
 
     def get_host(self):
         return self.host
@@ -247,7 +247,7 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
             pk = get_thread_id_from_url(case['request'], case['url'])
             self.assertEqual(
                 pk, case['pk'],
-                'get_thread_id_from_url for {} should return {}'.format(case['url'], case['pk'])
+                'get_thread_id_from_url for %(url)s should return %(pk)s' % case
             )
 
     def test_get_thread_id_from_invalid_urls(self):
@@ -301,4 +301,4 @@ class GetThreadIdFromUrlTests(MisagoTestCase):
 
         for case in TEST_CASES:
             pk = get_thread_id_from_url(case['request'], case['url'])
-            self.assertIsNone(pk, 'get_thread_id_from_url for {} should fail'.format(case['url']))
+            self.assertIsNone(pk, 'get_thread_id_from_url for %s should fail' % case['url'])

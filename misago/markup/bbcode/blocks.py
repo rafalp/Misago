@@ -52,16 +52,16 @@ class QuotePreprocessor(Preprocessor):
 
     def replace(self, matchobj):
         text = matchobj.group('text')
-        return '\n\n{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, text, QUOTE_END)
+        return '\n\n%s\n\n%s\n\n%s\n\n' % (QUOTE_START, text, QUOTE_END)
 
     def replace_titled(self, matchobj):
         title = matchobj.group('title').strip()
         text = matchobj.group('text')
 
         if title:
-            return '\n\n{}{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, title, text, QUOTE_END)
+            return '\n\n%s%s\n\n%s\n\n%s\n\n' % (QUOTE_START, title, text, QUOTE_END)
         else:
-            return '\n\n{}\n\n{}\n\n{}\n\n'.format(QUOTE_START, text, QUOTE_END)
+            return '\n\n%s\n\n%s\n\n%s\n\n' % (QUOTE_START, text, QUOTE_END)
 
 
 class QuoteBlockProcessor(BlockProcessor):

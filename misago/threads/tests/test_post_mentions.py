@@ -70,7 +70,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         """endpoint mentions author"""
         response = self.client.post(
             self.post_link, data={
-                'post': "This is test response, @{}!".format(self.user),
+                'post': "This is test response, @%s!" % self.user,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -87,14 +87,14 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         for i in range(MENTIONS_LIMIT + 5):
             users.append(
                 UserModel.objects.
-                create_user('Mention{}'.format(i), 'mention{}@bob.com'.format(i), 'pass123')
+                create_user('Mention%s' % i, 'mention%s@bob.com' % i, 'pass123')
             )
 
-        mentions = ['@{}'.format(u) for u in users]
+        mentions = ['@%s' % u for u in users]
         response = self.client.post(
             self.post_link,
             data={
-                'post': "This is test response, {}!".format(', '.join(mentions)),
+                'post': "This is test response, %s!" % (', '.join(mentions)),
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -111,7 +111,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.post_link, data={
-                'post': "This is test response, @{}!".format(user_a),
+                'post': "This is test response, @%s!" % user_a,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -133,7 +133,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         response = self.put(
             edit_link,
             data={
-                'post': "This is test response, @{} and @{}!".format(user_a, user_b),
+                'post': "This is test response, @%s and @%s!" % (user_a, user_b),
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -145,7 +145,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.override_acl()
         response = self.put(
             edit_link, data={
-                'post': "This is test response, @{}!".format(user_b),
+                'post': "This is test response, @%s!" % user_b,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -172,7 +172,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.post_link, data={
-                'post': "This is test response, @{}!".format(user_a),
+                'post': "This is test response, @%s!" % user_a,
             }
         )
         self.assertEqual(response.status_code, 200)
@@ -189,7 +189,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.post_link,
             data={
-                'post': "This is test response, @{} and @{}!".format(user_a, user_b),
+                'post': "This is test response, @%s and @%s!" % (user_a, user_b),
             }
         )
         self.assertEqual(response.status_code, 200)

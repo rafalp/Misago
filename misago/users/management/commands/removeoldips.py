@@ -15,4 +15,4 @@ class Command(BaseCommand):
         remove_old_ips.send(sender=self)
 
         self.stdout.write(
-            "IP addresses older than {} days have been removed.".format(settings.MISAGO_IP_STORE_TIME))
+            "IP addresses older than %s days have been removed." % settings.MISAGO_IP_STORE_TIME)

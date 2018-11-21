@@ -67,8 +67,8 @@ class TwitterHandleField(basefields.TextProfileField):
 
     def get_value_display_data(self, request, user, value):
         return {
-            'text': '@{}'.format(value),
-            'url': 'https://twitter.com/{}'.format(value),
+            'text': '@%s' % value,
+            'url': 'https://twitter.com/%s' % value,
         }
 
     def clean(self, request, user, data):

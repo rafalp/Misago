@@ -19,7 +19,7 @@ class PgPartialIndex(Index):
         column_names = sorted(self.where.keys())
         where_items = []
         for key in sorted(self.where.keys()):
-            where_items.append('{}:{}'.format(key, repr(self.where[key])))
+            where_items.append('%s:%s' % (key, repr(self.where[key])))
 
         # The length of the parts of the name is based on the default max
         # length of 30 characters.
@@ -46,8 +46,8 @@ class PgPartialIndex(Index):
                 ]))
             return '<%(name)s: fields=%(fields)s, where=%(where)s>' % {
                 'name': self.__class__.__name__,
-                'fields': "'{}'".format(', '.join(self.fields)),
-                'where': "'{}'".format(', '.join(where_items)),
+                'fields': "'%s'" % (', '.join(self.fields)),
+                'where': "'%s'" % (', '.join(where_items)),
             }
         else:
             return super().__repr__()
@@ -88,10 +88,9 @@ class PgPartialIndex(Index):
                 compr = '='
 
             column = model._meta.get_field(field_name).column
-            clauses.append('{} {} {}'.format(
-                quote_name(column), compr, quote_value(condition)))
+            clauses.append('%s %s %s' % (quote_name(column), compr, quote_value(condition)))
         # sort clauses for their order to be determined and testable
-        return ' WHERE {}'.format(' AND '.join(sorted(clauses)))
+        return ' WHERE %s' % (' AND '.join(sorted(clauses)))
 
 
 def chunk_queryset(queryset, chunk_size=20):
