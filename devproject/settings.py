@@ -188,6 +188,7 @@ INSTALLED_APPS = [
     # Misago apps
     'misago.admin',
     'misago.acl',
+    'misago.cache',
     'misago.core',
     'misago.conf',
     'misago.markup',
