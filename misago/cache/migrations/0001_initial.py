@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='CacheVersion',
             fields=[
                 ('cache', models.CharField(max_length=128, primary_key=True, serialize=False)),
-                ('version', models.CharField(default=misago.cache.utils.get_random_version, max_length=8)),
+                ('version', models.CharField(default=misago.cache.utils.generate_version_string, max_length=8)),
             ],
         ),
     ]
