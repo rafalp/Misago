@@ -7,9 +7,7 @@ from misago.cache.cache import (
 )
 from misago.cache.models import CacheVersion
 
-
-def cache_version():
-    return CacheVersion.objects.create(cache="test_cache")
+from .conftest import cache_version
 
 
 class InvalidatingCacheTests(TestCase):
