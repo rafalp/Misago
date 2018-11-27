@@ -34,15 +34,17 @@ class MiddlewareTests(TestCase):
         middleware(request)
         get_response.assert_called_once()
 
-    def test_middleware_is_not_making_db_query(self):
+    def test_middleware_is_not_reading_db(self):
         get_response = Mock()
         request = Mock()
         with self.assertNumQueries(0):
             middleware = cache_versions_middleware(get_response)
             middleware(request)
 
-    def test_middleware_is_not_reading_cache(self):
+    @patch('django.core.cache.cache.get')
+    def test_middleware_is_not_reading_cache(self, cache_get):
         get_response = Mock()
         request = Mock()
         middleware = cache_versions_middleware(get_response)
         middleware(request)
+        cache_get.assert_not_called()
