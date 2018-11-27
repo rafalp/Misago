@@ -23,14 +23,14 @@ def get_cache_versions_from_db():
     return {i.cache: i.version for i in queryset}
 
 
-def invalidate(cache):
+def invalidate_cache(cache):
     CacheVersion.objects.filter(cache=cache).update(
         version=generate_version_string(),
     )
     cache.delete(CACHE_NAME)
 
 
-def invalidate_all():
+def invalidate_all_caches():
     for cache in get_cache_versions_from_db().keys():
         CacheVersion.objects.filter(cache=cache).update(
             version=generate_version_string(),
