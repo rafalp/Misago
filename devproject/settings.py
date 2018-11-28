@@ -188,6 +188,7 @@ INSTALLED_APPS = [
     # Misago apps
     'misago.admin',
     'misago.acl',
+    'misago.cache',
     'misago.core',
     'misago.conf',
     'misago.markup',
@@ -223,6 +224,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'misago.cache.middleware.cache_versions_middleware',
     'misago.users.middleware.UserMiddleware',
     'misago.core.middleware.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
