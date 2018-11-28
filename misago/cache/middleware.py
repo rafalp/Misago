@@ -1,6 +1,6 @@
 from django.utils.functional import SimpleLazyObject
 
-from .cache import get_cache_versions
+from .versions import get_cache_versions
 
 
 def cache_versions_middleware(get_response):

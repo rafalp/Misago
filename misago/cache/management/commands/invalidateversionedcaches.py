@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from misago.cache.cache import invalidate_all_caches
+from misago.cache.versions import invalidate_all_caches
 
 
 class Command(BaseCommand):

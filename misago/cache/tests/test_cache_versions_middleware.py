@@ -3,7 +3,7 @@ from unittest.mock import Mock, PropertyMock, patch
 from django.test import TestCase
 from django.utils.functional import SimpleLazyObject
 
-from misago.cache.cache import CACHE_NAME
+from misago.cache.versions import CACHE_NAME
 from misago.cache.middleware import cache_versions_middleware
 
 

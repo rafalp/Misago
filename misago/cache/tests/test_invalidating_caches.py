@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from misago.cache.cache import (
+from misago.cache.versions import (
     CACHE_NAME, get_cache_versions_from_db, invalidate_cache, invalidate_all_caches
 )
 from misago.cache.models import CacheVersion
