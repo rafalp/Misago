@@ -80,7 +80,7 @@ class MisagoUsersConfig(AppConfig):
             if request.user.is_authenticated:
                 if request.user.acl_cache['can_see_ban_details']:
                     from .bans import get_user_ban
-                    return bool(get_user_ban(profile))
+                    return bool(get_user_ban(profile, request.cache_versions))
                 else:
                     return False
             else:

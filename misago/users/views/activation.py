@@ -53,7 +53,7 @@ def activate_by_token(request, pk, token):
             )
             raise ActivationError(message % {'user': inactive_user.username})
 
-        ban = get_user_ban(inactive_user)
+        ban = get_user_ban(inactive_user, request.cache_versions)
         if ban:
             raise Banned(ban)
     except ActivationStopped as e:

@@ -3,6 +3,8 @@ from django.db import migrations
 
 from misago.cache.operations import StartCacheVersioning
 
+from misago.users.constants import BANS_CACHE
+
 
 class Migration(migrations.Migration):
 
@@ -12,5 +14,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        StartCacheVersioning("bans")
+        StartCacheVersioning(BANS_CACHE)
     ]

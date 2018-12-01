@@ -21,21 +21,14 @@ from .providers import providers
 def get_user_acl(user):
     """get ACL for User"""
     acl_key = 'acl_%s' % user.acl_key
-
-    acl_cache = threadstore.get(acl_key)
-    if not acl_cache:
-        acl_cache = cache.get(acl_key)
+    acl_cache = cache.get(acl_key)
 
     if acl_cache and version.is_valid(acl_cache.get('_acl_version')):
         return acl_cache
-    else:
-        new_acl = build_acl(user.get_roles())
-        new_acl['_acl_version'] = version.get_version()
 
-        threadstore.set(acl_key, new_acl)
-        cache.set(acl_key, new_acl)
-
-        return new_acl
+    new_acl = build_acl(user.get_roles())
+    cache.set(acl_key, new_acl)
+    return new_acl
 
 
 def add_acl(user, target):

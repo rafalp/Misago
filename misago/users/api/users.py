@@ -85,7 +85,7 @@ class UserViewSet(viewsets.GenericViewSet):
         profile = self.get_user(request, pk)
 
         add_acl(request.user, profile)
-        profile.status = get_user_status(request.user, profile)
+        profile.status = get_user_status(request, profile)
 
         serializer = UserProfileSerializer(profile, context={'user': request.user})
         profile_json = serializer.data
@@ -199,7 +199,7 @@ class UserViewSet(viewsets.GenericViewSet):
         profile = self.get_user(request, pk)
         allow_see_ban_details(request.user, profile)
 
-        ban = get_user_ban(profile)
+        ban = get_user_ban(profile, request.cache_versions)
         if ban:
             return Response(BanDetailsSerializer(ban).data)
         else:

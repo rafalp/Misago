@@ -7,7 +7,7 @@ from misago.users.serializers import UserCardSerializer
 class ActivePosters(object):
     def __init__(self, request):
         ranking = get_active_posters_ranking()
-        make_users_status_aware(request.user, ranking['users'], fetch_state=True)
+        make_users_status_aware(request, ranking['users'], fetch_state=True)
 
         self.count = ranking['users_count']
         self.tracked_period = settings.MISAGO_RANKING_LENGTH

@@ -1,15 +1,10 @@
-from misago.core import cachebuster
-
-from .constants import ACL_CACHEBUSTER
-
-
 def get_version():
-    return cachebuster.get_version(ACL_CACHEBUSTER)
+    return "abcdfg"  # fixme: get rid of this!
 
 
 def is_valid(version):
-    return cachebuster.is_valid(ACL_CACHEBUSTER, version)
+    return False
 
 
 def invalidate():
-    cachebuster.invalidate(ACL_CACHEBUSTER)
+    pass

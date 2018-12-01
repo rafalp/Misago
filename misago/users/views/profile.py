@@ -27,7 +27,7 @@ class ProfileView(View):
         if not active_section:
             raise Http404()
 
-        profile.status = get_user_status(request.user, profile)
+        profile.status = get_user_status(request, profile)
         context_data = self.get_context_data(request, profile)
 
         self.complete_frontend_context(request, profile, sections)
@@ -184,7 +184,7 @@ class UserBanView(ProfileView):
     template_name = 'misago/profile/ban_details.html'
 
     def get_context_data(self, request, profile):
-        ban = get_user_ban(profile)
+        ban = get_user_ban(profile, request.cache_versions)
 
         request.frontend_context['PROFILE_BAN'] = BanDetailsSerializer(ban).data
 

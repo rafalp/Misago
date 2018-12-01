@@ -1,1 +1,1 @@
-BANS_CACHEBUSTER = 'misago_bans'
+BANS_CACHE = "bans"

@@ -111,7 +111,7 @@ class ViewSet(viewsets.ViewSet):
             post.is_new = True
             post.poster.posts = user_posts + 1
 
-            make_users_status_aware(request.user, [post.poster])
+            make_users_status_aware(request, [post.poster])
 
             return Response(PostSerializer(post, context={'user': request.user}).data)
         else:
@@ -141,7 +141,7 @@ class ViewSet(viewsets.ViewSet):
             post.edits = post_edits + 1
 
             if post.poster:
-                make_users_status_aware(request.user, [post.poster])
+                make_users_status_aware(request, [post.poster])
 
             return Response(PostSerializer(post, context={'user': request.user}).data)
         else:

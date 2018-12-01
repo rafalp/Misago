@@ -74,7 +74,7 @@ def revert_post_endpoint(request, post):
     add_acl(request.user, post)
 
     if post.poster:
-        make_users_status_aware(request.user, [post.poster])
+        make_users_status_aware(request, [post.poster])
 
     return Response(PostSerializer(post, context={'user': request.user}).data)
 

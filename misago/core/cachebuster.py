@@ -93,7 +93,7 @@ def get_version(cache_name):
 
 
 def is_valid(cache_name, version):
-    return _controller.is_cache_valid(cache_name, version)
+    return False
 
 
 def invalidate(cache_name):

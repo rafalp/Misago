@@ -1,1 +1,1 @@
-ACL_CACHEBUSTER = 'misago_acl'
+ACL_CACHEBUSTER = 'acl'
