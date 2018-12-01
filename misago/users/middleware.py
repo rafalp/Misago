@@ -20,7 +20,10 @@ class UserMiddleware(MiddlewareMixin):
         if request.user.is_anonymous:
             request.user = AnonymousUser()
         elif not request.user.is_staff:
-            if get_request_ip_ban(request) or get_user_ban(request.user):
+            if (
+                get_request_ip_ban(request) or
+                get_user_ban(request.user, request.cache_versions)
+            ):
                 logout(request)
                 request.user = AnonymousUser()
 

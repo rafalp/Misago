@@ -6,6 +6,8 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
+from misago.cache.versions import get_cache_versions
+
 from misago.users import bans
 from misago.users.management.commands import invalidatebans
 from misago.users.models import Ban, BanCache
@@ -41,7 +43,7 @@ class InvalidateBansTests(TestCase):
 
         # ban user
         Ban.objects.create(banned_value="bob")
-        user_ban = bans.get_user_ban(user)
+        user_ban = bans.get_user_ban(user, get_cache_versions())
 
         self.assertIsNotNone(user_ban)
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
@@ -74,4 +76,4 @@ class InvalidateBansTests(TestCase):
 
         # see if user is banned anymore
         user = UserModel.objects.get(id=user.id)
-        self.assertIsNone(bans.get_user_ban(user))
+        self.assertIsNone(bans.get_user_ban(user, get_cache_versions()))

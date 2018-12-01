@@ -47,7 +47,7 @@ def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwa
     if not user or user.is_staff:
         return None
 
-    user_ban = get_user_ban(user)
+    user_ban = get_user_ban(user, strategy.request.cache_versions)
     if user_ban:
         raise SocialAuthBanned(backend, user_ban)
 

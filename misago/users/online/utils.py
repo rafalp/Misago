@@ -41,7 +41,7 @@ def get_user_status(request, user):
         'last_click': user.last_login or user.joined_on,
     }
 
-    user_ban = get_user_ban(user)
+    user_ban = get_user_ban(user, request.cache_versions)
     if user_ban:
         user_status['is_banned'] = True
         user_status['banned_until'] = user_ban.expires_on

@@ -31,7 +31,7 @@ class MisagoAuthMixin(object):
 
     def confirm_user_not_banned(self, user):
         if not user.is_staff:
-            self.user_ban = get_user_ban(user)
+            self.user_ban = get_user_ban(user, self.request.cache_versions)
             if self.user_ban:
                 raise ValidationError('', code='banned')
 
@@ -61,6 +61,10 @@ class AuthenticationForm(MisagoAuthMixin, BaseAuthenticationForm):
         required=False,
         widget=forms.PasswordInput,
     )
+
+    def __init__(self, *args, request=None, **kwargs):
+        self.request = request
+        super().__init__(*args, **kwargs)
 
     def clean(self):
         username = self.cleaned_data.get('username')

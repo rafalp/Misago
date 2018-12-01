@@ -191,7 +191,7 @@ def change_forgotten_password(request, pk, token):
 
         if user.requires_activation:
             raise PasswordChangeFailed(expired_message)
-        if get_user_ban(user):
+        if get_user_ban(user, request.cache_versions):
             raise PasswordChangeFailed(expired_message)
     except PasswordChangeFailed as e:
         return Response(
