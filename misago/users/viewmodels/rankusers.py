@@ -16,7 +16,7 @@ class RankUsers(object):
             queryset = queryset.filter(is_active=True)
 
         list_page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
-        make_users_status_aware(request.user, list_page.object_list)
+        make_users_status_aware(request, list_page.object_list)
 
         self.users = list_page.object_list
         self.paginator = pagination_dict(list_page)
