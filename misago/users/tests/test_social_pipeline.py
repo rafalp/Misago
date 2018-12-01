@@ -9,6 +9,7 @@ from social_django.utils import load_strategy
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 from misago.legal.models import Agreement
 
+from misago.users.constants import BANS_CACHE
 from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
     associate_by_email, create_user, create_user_with_form, get_username, require_activation,
@@ -27,6 +28,7 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
+    request.cache_versions = {BANS_CACHE: "abcdefgh"}
     request.frontend_context = {}
     request.session = {}
     request.user = AnonymousUser()

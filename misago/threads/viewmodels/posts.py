@@ -38,7 +38,7 @@ class ViewModel(object):
             if post.poster:
                 posters.append(post.poster)
 
-        make_users_status_aware(request.user, posters)
+        make_users_status_aware(request, posters)
 
         if thread.category.acl['can_see_posts_likes']:
             add_likes_to_posts(request.user, posts)
