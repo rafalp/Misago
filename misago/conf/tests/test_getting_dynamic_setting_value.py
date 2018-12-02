@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 
 from misago.conf import CACHE_NAME
@@ -10,6 +12,32 @@ cache_versions = {CACHE_NAME: "abcdefgh"}
 
 
 class GettingSettingValueTests(TestCase):
+    @patch('django.core.cache.cache.set')
+    @patch('django.core.cache.cache.get', return_value=None)
+    def test_dynamic_settings_are_loaded_from_database_if_cache_is_not_available(self, cache_get, _):
+        with self.assertNumQueries(1):
+            DynamicSettings(cache_versions)
+
+    @patch('django.core.cache.cache.set')
+    @patch('django.core.cache.cache.get', return_value={})
+    def test_dynamic_settings_are_loaded_from_cache_if_it_is_not_none(self, cache_get, _):
+        with self.assertNumQueries(0):
+            DynamicSettings(cache_versions)
+        cache_get.assert_called_once()
+
+    @patch('django.core.cache.cache.set')
+    @patch('django.core.cache.cache.get', return_value=None)
+    def test_dynamic_settings_cache_is_set_if_none_exists(self, _, cache_set):
+        DynamicSettings(cache_versions)
+        cache_set.assert_called_once()
+
+    @patch('django.core.cache.cache.set')
+    @patch('django.core.cache.cache.get', return_value={})
+    def test_dynamic_settings_cache_is_not_set_if_it_already_exists(self, _, cache_set):
+        with self.assertNumQueries(0):
+            DynamicSettings(cache_versions)
+        cache_set.assert_not_called()
+
     def test_accessing_attr_returns_setting_value(self):
         settings = DynamicSettings(cache_versions)
         assert settings.forum_name == "Misago"

@@ -9,8 +9,8 @@ from misago.cache.versions import (
 
 class CacheVersionsTests(TestCase):
     def test_db_getter_returns_cache_versions_from_db(self):
-        cache_versions = get_cache_versions_from_db()
-        assert cache_versions
+        with self.assertNumQueries(1):
+            assert get_cache_versions_from_db()
 
     @patch('django.core.cache.cache.get', return_value=True)
     def test_cache_getter_returns_cache_versions_from_cache(self, cache_get):
@@ -19,14 +19,16 @@ class CacheVersionsTests(TestCase):
 
     @patch('django.core.cache.cache.get', return_value=True)
     def test_getter_reads_from_cache(self, cache_get):
-        assert get_cache_versions() is True
+        with self.assertNumQueries(0):
+            assert get_cache_versions() is True
         cache_get.assert_called_once_with(CACHE_NAME)
 
     @patch('django.core.cache.cache.set')
     @patch('django.core.cache.cache.get', return_value=None)
     def test_getter_reads_from_db_when_cache_is_not_available(self, cache_get, _):
         db_caches = get_cache_versions_from_db()
-        assert get_cache_versions() == db_caches
+        with self.assertNumQueries(1):
+            assert get_cache_versions() == db_caches
         cache_get.assert_called_once_with(CACHE_NAME)
 
     @patch('django.core.cache.cache.set')
