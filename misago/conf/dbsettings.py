@@ -1,10 +1,11 @@
-from misago.core import threadstore
+from django.core.cache import cache
 
+from misago.core import threadstore
 
 CACHE_KEY = 'misago_db_settings'
 
 
-class DBSettings(object):
+class DBSettingsDeprecated(object):
     def __init__(self):
         self._settings = self._read_cache()
         self._overrides = {}
@@ -85,7 +86,7 @@ class _DBSettingsGateway(object):
     def get_db_settings(self):
         dbsettings = threadstore.get(CACHE_KEY)
         if not dbsettings:
-            dbsettings = DBSettings()
+            dbsettings = DBSettingsDeprecated()
             threadstore.set(CACHE_KEY, dbsettings)
         return dbsettings
 
