@@ -1,17 +1,17 @@
 from functools import wraps
 
-from misago.conf.databasesettings import DatabaseSettings
+from misago.conf.dynamicsettings import DynamicSettings
 
 
-class OverrideDatabaseSettings:
+class override_dynamic_settings:
     def __init__(self, **settings):
         self._overrides = settings
 
     def __enter__(self):
-        DatabaseSettings.override_settings(self._overrides)
+        DynamicSettings.override_settings(self._overrides)
 
     def __exit__(self, *_):
-        DatabaseSettings.remove_overrides()
+        DynamicSettings.remove_overrides()
 
     def __call__(self, f):
         @wraps(f)

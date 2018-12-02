@@ -4,7 +4,7 @@ from . import CACHE_NAME
 from .models import Setting
 
 
-class DatabaseSettings:
+class DynamicSettings:
     _overrides = {}
 
     def __init__(self, cache_versions):
