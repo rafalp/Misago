@@ -50,7 +50,8 @@ class EmailNotificationMiddleware(PostingMiddleware):
             'misago/emails/thread/reply',
             sender=self.user,
             context={
-                'thread': self.thread,
-                'post': self.post,
+                "settings": self.request.settings,
+                "thread": self.thread,
+                "post": self.post,
             },
         )

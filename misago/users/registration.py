@@ -12,7 +12,12 @@ def send_welcome_email(request, user):
     mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
     if not user.requires_activation:
-        mail_user(user, mail_subject, 'misago/emails/register/complete')
+        mail_user(
+            user,
+            mail_subject,
+            'misago/emails/register/complete',
+            context={"settings": request.settings},
+        )
         return
 
     activation_token = make_activation_token(user)
@@ -28,6 +33,7 @@ def send_welcome_email(request, user):
             'activation_token': activation_token,
             'activation_by_admin': activation_by_admin,
             'activation_by_user': activation_by_user,
+            'settings': request.settings,
         }
     )
 

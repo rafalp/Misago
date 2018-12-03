@@ -108,7 +108,8 @@ def send_activation(request):
             mail_subject,
             'misago/emails/activation/by_user',
             context={
-                'activation_token': make_activation_token(requesting_user),
+                "activation_token": make_activation_token(requesting_user),
+                "settings": request.settings,
             },
         )
 
@@ -148,7 +149,8 @@ def send_password_form(request):
             mail_subject,
             'misago/emails/change_password_form_link',
             context={
-                'confirmation_token': confirmation_token,
+                "confirmation_token": confirmation_token,
+                "settings": request.settings,
             },
         )
 

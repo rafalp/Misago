@@ -24,8 +24,13 @@ def change_password_endpoint(request, pk=None):
         mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
         mail_user(
-            request.user, mail_subject, 'misago/emails/change_password',
-            context={'token': token}
+            request.user,
+            mail_subject,
+            'misago/emails/change_password',
+            context={
+                "settings": request.settings,
+                "token": token,
+            },
         )
 
         return Response({

@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 from django.urls import reverse
 
+from misago.cache.versions import get_cache_versions
 from misago.categories.models import Category
+from misago.conf.dynamicsettings import DynamicSettings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 from misago.threads import testutils
@@ -32,7 +34,8 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         request = self.factory.get('/customer/details')
         request.user = user or self.user
         request.user_ip = '127.0.0.1'
-
+        request.cache_versions = get_cache_versions()
+        request.settings = DynamicSettings(request.cache_versions)
         request.include_frontend_context = False
         request.frontend_context = {}
 
