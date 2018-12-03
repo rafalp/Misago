@@ -6,6 +6,8 @@ from django.urls import reverse
 
 from misago.acl.useracl import get_user_acl
 from misago.users.models import AnonymousUser
+from misago.conf.dynamicsettings import DynamicSettings
+from misago.conftest import get_cache_versions
 from misago.core.testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 from misago.core.utils import encode_json_html
 
@@ -76,7 +78,8 @@ class ErrorPageViewsTests(TestCase):
 
 def test_request(url):
     request = RequestFactory().get(url)
-    request.cache_versions = {"acl": "abcdefgh"}
+    request.cache_versions = get_cache_versions()
+    request.settings = DynamicSettings(cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.include_frontend_context = True

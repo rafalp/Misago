@@ -5,6 +5,7 @@ from django.urls import reverse
 from misago.acl import useracl
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
+from misago.conftest import get_cache_versions
 from misago.threads import testutils
 from misago.threads.models import Attachment
 from misago.threads.serializers import AttachmentSerializer
@@ -14,7 +15,7 @@ from misago.users.testutils import AuthenticatedUserTestCase
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class EditorApiTestCase(AuthenticatedUserTestCase):

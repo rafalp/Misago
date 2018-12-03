@@ -8,10 +8,11 @@ from social_django.utils import load_strategy
 
 from misago.acl import ACL_CACHE
 from misago.acl.useracl import get_user_acl
+from misago.conf.dynamicsettings import DynamicSettings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.conftest import get_cache_versions
 from misago.legal.models import Agreement
 
-from misago.users.constants import BANS_CACHE
 from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
     associate_by_email, create_user, create_user_with_form, get_username, require_activation,
@@ -30,9 +31,10 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
-    request.cache_versions = {BANS_CACHE: "abcdefgh", ACL_CACHE: "abcdefgh"}
+    request.cache_versions = get_cache_versions()
     request.frontend_context = {}
     request.session = {}
+    request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.user_ip = user_ip

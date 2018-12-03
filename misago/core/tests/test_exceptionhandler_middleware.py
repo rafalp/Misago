@@ -4,6 +4,9 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 
 from misago.acl.useracl import get_user_acl
+from misago.conf.dynamicsettings import DynamicSettings
+from misago.core.middleware import ExceptionHandlerMiddleware
+from misago.conftest import get_cache_versions
 from misago.users.models import AnonymousUser
 
 from misago.core.middleware import ExceptionHandlerMiddleware
@@ -11,7 +14,8 @@ from misago.core.middleware import ExceptionHandlerMiddleware
 
 def test_request():
     request = RequestFactory().get(reverse('misago:index'))
-    request.cache_versions = {"acl": "abcdefgh"}
+    request.cache_versions = get_cache_versions()
+    request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.include_frontend_context = True

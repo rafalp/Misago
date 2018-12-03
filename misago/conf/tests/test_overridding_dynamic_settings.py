@@ -1,12 +1,13 @@
 from django.test import TestCase
 
-from misago.conf import CACHE_NAME
+from misago.conf import SETTINGS_CACHE
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting, SettingsGroup
+from misago.conftest import get_cache_versions
 
 from . import override_dynamic_settings
 
-cache_versions = {CACHE_NAME: "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class OverrideDynamicSettingsTests(TestCase):

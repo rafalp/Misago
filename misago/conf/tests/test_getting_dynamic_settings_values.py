@@ -2,14 +2,15 @@ from unittest.mock import patch
 
 from django.test import TestCase
 
-from misago.conf import CACHE_NAME
+from misago.conf import SETTINGS_CACHE
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting, SettingsGroup
+from misago.conftest import get_cache_versions
 
 from . import override_dynamic_settings
 
 cache_version = "abcdefgh"
-cache_versions = {CACHE_NAME: cache_version}
+cache_versions = get_cache_versions()
 
 
 class GettingSettingValueTests(TestCase):
@@ -44,7 +45,7 @@ class GettingSettingValueTests(TestCase):
     def test_settings_cache_key_includes_cache_name_and_version(self, _, cache_set):
         DynamicSettings(cache_versions)
         cache_key = cache_set.call_args[0][0]
-        assert CACHE_NAME in cache_key
+        assert SETTINGS_CACHE in cache_key
         assert cache_version in cache_key
 
     def test_accessing_attr_returns_setting_value(self):

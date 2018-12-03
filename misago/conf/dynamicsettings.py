@@ -1,6 +1,6 @@
 from django.core.cache import cache
 
-from . import CACHE_NAME
+from . import SETTINGS_CACHE
 from .models import Setting
 
 
@@ -49,7 +49,7 @@ class DynamicSettings:
 
 
 def get_cache_name(cache_versions):
-    return "%s_%s" % (CACHE_NAME, cache_versions[CACHE_NAME])
+    return "%s_%s" % (SETTINGS_CACHE, cache_versions[SETTINGS_CACHE])
 
 
 def get_settings_from_db():

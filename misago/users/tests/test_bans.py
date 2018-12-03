@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
+from misago.conftest import get_cache_versions
 from misago.users.bans import (
     ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban)
 from misago.users.constants import BANS_CACHE
@@ -11,7 +12,7 @@ from misago.users.models import Ban
 
 UserModel = get_user_model()
 
-cache_versions = {"bans": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class GetBanTests(TestCase):
@@ -191,9 +192,7 @@ class MockRequest(object):
     def __init__(self):
         self.user_ip = '127.0.0.1'
         self.session = {}
-        self.cache_versions = {
-            BANS_CACHE: "abcdefgh"
-        }
+        self.cache_versions = cache_versions
 
 
 class RequestIPBansTests(TestCase):

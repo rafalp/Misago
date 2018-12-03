@@ -3,7 +3,7 @@ from django.db import migrations
 
 from misago.cache.operations import StartCacheVersioning
 
-from misago.conf import CACHE_NAME
+from misago.conf import SETTINGS_CACHE
 
 
 class Migration(migrations.Migration):
@@ -13,5 +13,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        StartCacheVersioning(CACHE_NAME)
+        StartCacheVersioning(SETTINGS_CACHE)
     ]

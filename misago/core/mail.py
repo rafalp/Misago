@@ -2,7 +2,9 @@ from django.core import mail as djmail
 from django.template.loader import render_to_string
 from django.utils.translation import get_language
 
-from misago.conf import db_settings, settings
+from misago.cache.versions import get_cache_versions
+from misago.conf import settings
+from misago.conf.dynamicsettings import DynamicSettings
 
 from .utils import get_host_from_address
 
@@ -15,12 +17,14 @@ def build_mail(recipient, subject, template, sender=None, context=None):
         'LANGUAGE_CODE': get_language()[:2],
         'LOGIN_URL': settings.LOGIN_URL,
 
-        'misago_settings': db_settings,
-
         'user': recipient,
         'sender': sender,
         'subject': subject,
     })
+
+    if 'settings' not in context:
+        cache_versions = get_cache_versions()
+        context["settings"] = DynamicSettings(cache_versions)
 
     message_plain = render_to_string('%s.txt' % template, context)
     message_html = render_to_string('%s.html' % template, context)

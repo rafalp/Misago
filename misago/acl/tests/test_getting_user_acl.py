@@ -4,11 +4,12 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from misago.acl.useracl import get_user_acl
+from misago.conftest import get_cache_versions
 from misago.users.models import AnonymousUser
 
 User = get_user_model()
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class GettingUserACLTests(TestCase):
