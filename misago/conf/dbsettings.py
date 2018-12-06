@@ -46,6 +46,10 @@ class DBSettingsDeprecated(object):
         return public_settings
 
     def get_lazy_setting(self, setting):
+        from . import ENABLE_GLOBAL_STATE
+        if not ENABLE_GLOBAL_STATE:
+            raise Exception("Trying to access lazy dynamic setting: %s" % name)
+
         from .models import Setting
 
         try:
@@ -64,6 +68,10 @@ class DBSettingsDeprecated(object):
         cache.delete(CACHE_KEY)
 
     def __getattr__(self, attr):
+        from . import ENABLE_GLOBAL_STATE
+        if not ENABLE_GLOBAL_STATE:
+            raise Exception("Trying to access dynamic setting: %s" % name)
+
         try:
             return self._settings[attr]['value']
         except KeyError:

@@ -26,8 +26,9 @@ from .rank import Rank
 class UserManager(BaseUserManager):
     @transaction.atomic
     def create_user(
-            self, username, email, password=None, create_audit_trail=False,
-            joined_from_ip=None, set_default_avatar=False, **extra_fields):
+        self, username, email, password=None, create_audit_trail=False,
+        joined_from_ip=None, set_default_avatar=False, **extra_fields
+    ):
         from misago.users.validators import validate_email, validate_username
 
         email = self.normalize_email(email)

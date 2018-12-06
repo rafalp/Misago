@@ -22,6 +22,15 @@ UserModel = get_user_model()
 
 
 # E-mail validators
+
+def validate_email(value, exclude=None):
+    """shortcut function that does complete validation of email"""
+    validate_email_content(value)
+    validate_email_available(value, exclude)
+    validate_email_banned(value)
+
+
+
 def validate_email_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_email(value)
@@ -41,14 +50,15 @@ def validate_email_banned(value):
             raise ValidationError(_("This e-mail address is not allowed."))
 
 
-def validate_email(value, exclude=None):
-    """shortcut function that does complete validation of email"""
-    validate_email_content(value)
-    validate_email_available(value, exclude)
-    validate_email_banned(value)
-
-
 # Username validators
+def validate_username(value, exclude=None):
+    """shortcut function that does complete validation of username"""
+    validate_username_length(value)
+    validate_username_content(value)
+    validate_username_available(value, exclude)
+    validate_username_banned(value)
+
+
 def validate_username_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_username(value)
@@ -89,14 +99,6 @@ def validate_username_length(value):
             settings.username_length_max
         )
         raise ValidationError(message % {'limit_value': settings.username_length_max})
-
-
-def validate_username(value, exclude=None):
-    """shortcut function that does complete validation of username"""
-    validate_username_length(value)
-    validate_username_content(value)
-    validate_username_available(value, exclude)
-    validate_username_banned(value)
 
 
 # New account validators
