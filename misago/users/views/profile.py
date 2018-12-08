@@ -18,7 +18,7 @@ UserModel = get_user_model()
 
 class ProfileView(View):
     def get(self, request, *args, **kwargs):
-        profile = self.get_profile(request, kwargs.pop('pk'), kwargs.pop('slug'))
+        profile = self.get_profile(request, kwargs.get('pk'), kwargs.get('slug'))
 
         # resolve that we can display requested section
         sections = user_profile.get_sections(request, profile)

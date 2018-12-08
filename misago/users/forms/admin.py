@@ -10,11 +10,11 @@ from misago.admin.forms import IsoDateTimeField, YesNoSwitch
 from misago.conf import settings
 from misago.core import threadstore
 from misago.core.validators import validate_sluggable
+
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields
 from misago.users.utils import hash_email
 from misago.users.validators import validate_email, validate_username
-
 
 UserModel = get_user_model()
 

@@ -5,6 +5,7 @@ from django.urls import reverse
 from misago.acl import useracl
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
+from misago.conftest import get_cache_versions
 from misago.readtracker import poststracker
 from misago.threads import testutils
 from misago.threads.models import Poll, PollVote, Post, Thread
@@ -14,7 +15,7 @@ from misago.threads.test import patch_category_acl, patch_other_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class ThreadsMergeApiTests(ThreadsApiTestCase):

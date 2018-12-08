@@ -27,7 +27,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
         self.assertNotContains(response, "Join IP")
 
     def test_admin_edits_field(self):
-        """admin form allows admins to edit field"""
+        """join_ip is non-editable by admin"""
         response = self.client.post(
             self.test_link,
             data={

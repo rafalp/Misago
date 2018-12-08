@@ -1,11 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from misago.conf import settings
-
-
-UserModel = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class AuthenticateApiTests(TestCase):
@@ -28,7 +25,7 @@ class AuthenticateApiTests(TestCase):
 
     def test_user_search(self):
         """api searches uses"""
-        UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'pass123')
+        create_test_user('BobBoberson', 'bob@test.com')
 
         # exact case sensitive match
         response = self.client.get(self.api_link + '?q=BobBoberson')

@@ -18,8 +18,10 @@ from misago.users.models import Ban
 from misago.users.registration import (
     get_registration_result_json, save_user_agreements, send_welcome_email
 )
+from misago.users.setupnewuser import setup_new_user
 from misago.users.validators import (
-    ValidationError, validate_new_registration, validate_email, validate_username)
+    ValidationError, validate_new_registration, validate_email, validate_username
+)
 
 from .utils import get_social_auth_backend_name, perpare_username
 
@@ -157,14 +159,13 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
     new_user = UserModel.objects.create_user(
-        username, 
-        email, 
-        create_audit_trail=True,
+        username,
+        email,
         joined_from_ip=request.user_ip, 
-        set_default_avatar=True,
         **activation_kwargs
     )
 
+    setup_new_user(request.settings, new_user)
     send_welcome_email(request, new_user)
 
     return {'user': new_user, 'is_new': True}
@@ -187,7 +188,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             
         form = SocialAuthRegisterForm(
             request_data,
-            request=request,    
+            request=request,
             agreements=Agreement.objects.get_agreements(),
         )
         
@@ -206,11 +207,10 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             new_user = UserModel.objects.create_user(
                 form.cleaned_data['username'],
                 form.cleaned_data['email'],
-                create_audit_trail=True,
                 joined_from_ip=request.user_ip,
-                set_default_avatar=True,
                 **activation_kwargs
             )
+            setup_new_user(request.settings, new_user)
         except IntegrityError:
             return JsonResponse({'__all__': _("Please try resubmitting the form.")}, status=400)
 

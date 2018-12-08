@@ -145,18 +145,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         response = self.client.get(test_link)
         self.assertEqual(
             response.json()['groups'],
-            [
-                {
-                    'name': 'IP address',
-                    'fields': [
-                        {
-                            'fieldname': 'join_ip',
-                            'name': 'Join IP',
-                            'text': '127.0.0.1',
-                        },
-                    ],
-                },
-            ]
+            []
         )
 
         self.user.profile_fields['twitter'] = 'lorem_ipsum'
@@ -176,17 +165,7 @@ class TwitterProfileFieldTests(AdminTestCase):
                             'url': 'https://twitter.com/lorem_ipsum',
                         }
                     ],
-                },
-                {
-                    'name': 'IP address',
-                    'fields': [
-                        {
-                            'fieldname': 'join_ip',
-                            'name': 'Join IP',
-                            'text': '127.0.0.1',
-                        },
-                    ],
-                },
+                }
             ]
         )
 

@@ -3,8 +3,8 @@ from .audittrail import create_user_audit_trail
 from .models import User
 
 
-def setup_new_user(user, settings):
-    set_default_subscription_options(user, settings)
+def setup_new_user(settings, user):
+    set_default_subscription_options(settings, user)
     
     set_default_avatar(
         user, settings.default_avatar, settings.default_gravatar_fallback
@@ -21,7 +21,7 @@ SUBSCRIPTION_CHOICES = {
 }
 
 
-def set_default_subscription_options(user, settings):
+def set_default_subscription_options(settings, user):
     started_threads = SUBSCRIPTION_CHOICES[settings.subscribe_start]
     user.subscribe_to_started_threads = started_threads
     
