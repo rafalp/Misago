@@ -66,8 +66,8 @@ class ThreadsCategory(ThreadsRootCategory):
             if category.pk == int(kwargs['pk']):
                 if not category.special_role:
                     # check permissions for non-special categories
-                    allow_see_category(request.user, category)
-                    allow_browse_category(request.user, category)
+                    allow_see_category(request.user_acl, category)
+                    allow_browse_category(request.user_acl, category)
 
                 if 'slug' in kwargs:
                     validate_slug(category, kwargs['slug'])
@@ -81,7 +81,7 @@ class PrivateThreadsCategory(ViewModel):
         return [Category.objects.private_threads()]
 
     def get_category(self, request, categories, **kwargs):
-        allow_use_private_threads(request.user)
+        allow_use_private_threads(request.user_acl)
 
         return categories[0]
 

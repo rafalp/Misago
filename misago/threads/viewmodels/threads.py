@@ -77,7 +77,7 @@ class ViewModel(object):
                 thread.is_read = False
                 thread.is_new = True
         else:
-            threadstracker.make_read_aware(request.user, threads)
+            threadstracker.make_read_aware(request.user, request.user_acl, threads)
 
         self.filter_threads(request, threads)
 
@@ -188,29 +188,31 @@ def get_threads_queryset(request, categories, list_type):
     if list_type == 'all':
         return queryset
     else:
-        return filter_threads_queryset(request.user, categories, list_type, queryset)
+        return filter_threads_queryset(request, categories, list_type, queryset)
 
 
-def filter_threads_queryset(user, categories, list_type, queryset):
+def filter_threads_queryset(request, categories, list_type, queryset):
     if list_type == 'my':
-        return queryset.filter(starter=user)
+        return queryset.filter(starter=request.user)
     elif list_type == 'subscribed':
-        subscribed_threads = user.subscription_set.values('thread_id')
+        subscribed_threads = request.user.subscription_set.values('thread_id')
         return queryset.filter(id__in=subscribed_threads)
     elif list_type == 'unapproved':
         return queryset.filter(has_unapproved_posts=True)
     elif list_type in ('new', 'unread'):
-        return filter_read_threads_queryset(user, categories, list_type, queryset)
+        return filter_read_threads_queryset(request, categories, list_type, queryset)
     else:
         return queryset
 
 
-def filter_read_threads_queryset(user, categories, list_type, queryset):
+def filter_read_threads_queryset(request, categories, list_type, queryset):
     # grab cutoffs for categories
+    user = request.user
+
     cutoff_date = get_cutoff_date(user)
 
     visible_posts = Post.objects.filter(posted_on__gt=cutoff_date)
-    visible_posts = exclude_invisible_posts(user, categories, visible_posts)
+    visible_posts = exclude_invisible_posts(request.user_acl, categories, visible_posts)
 
     queryset = queryset.filter(id__in=visible_posts.distinct().values('thread'))
 
