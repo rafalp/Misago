@@ -19,7 +19,6 @@ from misago.threads.serializers import ThreadsListSerializer
 from misago.threads.subscriptions import make_subscription_aware
 from misago.threads.utils import add_categories_to_items
 
-
 __all__ = ['ForumThreads', 'PrivateThreads', 'filter_read_threads_queryset']
 
 LISTS_NAMES = {
@@ -69,7 +68,7 @@ class ViewModel(object):
             threads = list(pinned_threads) + list(list_page.object_list)
 
         add_categories_to_items(category_model, category.categories, threads)
-        add_acl(request.user, threads)
+        add_acl(request.user_acl, threads)
         make_subscription_aware(request.user, threads)
 
         if list_type in ('new', 'unread'):
@@ -96,7 +95,7 @@ class ViewModel(object):
             if list_type in LIST_DENIED_MESSAGES:
                 raise PermissionDenied(LIST_DENIED_MESSAGES[list_type])
         else:
-            has_permission = request.user.acl_cache['can_see_unapproved_content_lists']
+            has_permission = request.user_acl['can_see_unapproved_content_lists']
             if list_type == 'unapproved' and not has_permission:
                 raise PermissionDenied(
                     _("You don't have permission to see unapproved content lists.")
@@ -107,7 +106,7 @@ class ViewModel(object):
 
     def get_base_queryset(self, request, threads_categories, list_type):
         return get_threads_queryset(
-            request.user,
+            request,
             threads_categories,
             list_type,
         ).order_by('-last_post_id')
@@ -169,7 +168,7 @@ class PrivateThreads(ViewModel):
         # limit queryset to threads we are participant of
         participated_threads = request.user.threadparticipant_set.values('thread_id')
 
-        if request.user.acl_cache['can_moderate_private_threads']:
+        if request.user_acl['can_moderate_private_threads']:
             queryset = queryset.filter(Q(id__in=participated_threads) | Q(has_reported_posts=True))
         else:
             queryset = queryset.filter(id__in=participated_threads)
@@ -183,13 +182,13 @@ class PrivateThreads(ViewModel):
         make_participants_aware(request.user, threads)
 
 
-def get_threads_queryset(user, categories, list_type):
-    queryset = exclude_invisible_threads(user, categories, Thread.objects)
+def get_threads_queryset(request, categories, list_type):
+    queryset = exclude_invisible_threads(request.user_acl, categories, Thread.objects)
 
     if list_type == 'all':
         return queryset
     else:
-        return filter_threads_queryset(user, categories, list_type, queryset)
+        return filter_threads_queryset(request.user, categories, list_type, queryset)
 
 
 def filter_threads_queryset(user, categories, list_type, queryset):

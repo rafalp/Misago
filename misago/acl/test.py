@@ -3,6 +3,8 @@ from unittest.mock import patch
 
 from .useracl import get_user_acl
 
+__all__ = ["patch_user_acl"]
+
 
 class PatchUserACL:
     def patch_user_acl(self, user, patch):
@@ -27,7 +29,8 @@ class PatchUserACL:
                     "misago.acl.useracl.get_user_acl",
                     side_effect=self.patched_get_user_acl,
                 ):
-                    return f(*args, self.patch_user_acl, **kwargs)
+                    new_args = args + (self.patch_user_acl,)
+                    return f(*new_args, **kwargs)
         
         return inner
 

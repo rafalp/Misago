@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
-
+from misago.acl.test import patch_user_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -33,7 +32,8 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-    def test_other_user(self):
+    @patch_user_acl
+    def test_other_user(self, patch_user_acl):
         """api handles scenario when its other user looking at profile"""
         test_user = UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'bob123456')
 
@@ -45,7 +45,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         )
 
         # moderator has permission to edit details
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_moderate_profile_details': True,
         })
 
@@ -53,7 +53,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         # non-moderator has no permission to edit details
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_moderate_profile_details': False,
         })
 

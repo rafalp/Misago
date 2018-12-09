@@ -33,8 +33,8 @@ class UserThreads(object):
 
         add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
 
-        add_acl(request.user, threads)
-        add_acl(request.user, posts)
+        add_acl(request.user_acl, threads)
+        add_acl(request.user_acl, posts)
 
         self._user = request.user
 
@@ -42,7 +42,7 @@ class UserThreads(object):
         self.paginator = paginator
 
     def get_threads_queryset(self, request, threads_categories, profile):
-        return exclude_invisible_threads(request.user, threads_categories, profile.thread_set)
+        return exclude_invisible_threads(request.user_acl, threads_categories, profile.thread_set)
 
     def get_posts_queryset(self, user, profile, threads_queryset):
         return profile.post_set.select_related('thread', 'poster').filter(

@@ -75,7 +75,7 @@ class UserViewSet(viewsets.GenericViewSet):
         return user
 
     def list(self, request):
-        allow_browse_users_list(request.user)
+        allow_browse_users_list(request.user_acl)
         return list_endpoint(request)
 
     def create(self, request):
@@ -84,10 +84,10 @@ class UserViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         profile = self.get_user(request, pk)
 
-        add_acl(request.user, profile)
+        add_acl(request.user_acl, profile)
         profile.status = get_user_status(request, profile)
 
-        serializer = UserProfileSerializer(profile, context={'user': request.user})
+        serializer = UserProfileSerializer(profile, context={'request': request})
         profile_json = serializer.data
 
         if not profile.is_active:
@@ -153,7 +153,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def edit_details(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_edit_profile_details(request.user, profile)
+        allow_edit_profile_details(request.user_acl, profile)
         return edit_details_endpoint(request, profile)
 
     @detail_route(methods=['post'])
@@ -169,7 +169,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['post'])
     def follow(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_follow_user(request.user, profile)
+        allow_follow_user(request.user_acl, profile)
 
         profile_followers = profile.followers
 
@@ -197,7 +197,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route()
     def ban(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_see_ban_details(request.user, profile)
+        allow_see_ban_details(request.user_acl, profile)
 
         ban = get_user_ban(profile, request.cache_versions)
         if ban:
@@ -208,14 +208,14 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def moderate_avatar(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_moderate_avatar(request.user, profile)
+        allow_moderate_avatar(request.user_acl, profile)
 
         return moderate_avatar_endpoint(request, profile)
 
     @detail_route(methods=['get', 'post'])
     def moderate_username(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_rename_user(request.user, profile)
+        allow_rename_user(request.user_acl, profile)
 
         return moderate_username_endpoint(request, profile)
 
@@ -238,7 +238,7 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=['get', 'post'])
     def delete(self, request, pk=None):
         profile = self.get_user(request, pk)
-        allow_delete_user(request.user, profile)
+        allow_delete_user(request.user_acl, profile)
 
         if request.method == 'POST':
             with transaction.atomic():

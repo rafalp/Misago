@@ -13,7 +13,7 @@ event_patch_dispatcher = ApiPatch()
 def patch_acl(request, event, value):
     """useful little op that updates event acl to current state"""
     if value:
-        add_acl(request.user, event)
+        add_acl(request.user_acl, event)
         return {'acl': event.acl}
     else:
         return {'acl': None}

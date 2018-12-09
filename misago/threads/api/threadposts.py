@@ -192,7 +192,7 @@ class ViewSet(viewsets.ViewSet):
 
         attachments = []
         for attachment in post.attachment_set.order_by('-id'):
-            add_acl(request.user, attachment)
+            add_acl(request.user_acl, attachment)
             attachments.append(attachment)
         attachments_json = AttachmentSerializer(
             attachments, many=True, context={'user': request.user}

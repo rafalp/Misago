@@ -74,20 +74,23 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         return obj.acl
 
     def get_email(self, obj):
-        if (obj == self.context['user'] or self.context['user'].acl_cache['can_see_users_emails']):
+        request = self.context['request']
+        if (obj == request.user or request.user_acl['can_see_users_emails']):
             return obj.email
         else:
             return None
 
     def get_is_followed(self, obj):
+        request = self.context['request']
         if obj.acl['can_follow']:
-            return self.context['user'].is_following(obj)
+            return request.user.is_following(obj)
         else:
             return False
 
     def get_is_blocked(self, obj):
+        request = self.context['request']
         if obj.acl['can_block']:
-            return self.context['user'].is_blocking(obj)
+            return request.user.is_blocking(obj)
         else:
             return False
 

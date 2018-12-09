@@ -12,7 +12,7 @@ class ViewModel(BaseViewModel):
     def __init__(self, request, thread, pk):
         model = self.get_post(request, thread, pk)
 
-        add_acl(request.user, model)
+        add_acl(request.user_acl, model)
 
         self._model = model
 

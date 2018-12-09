@@ -33,7 +33,7 @@ def poll_vote_create(request, thread, poll):
     remove_user_votes(request.user, poll, serializer.data['choices'])
     set_new_votes(request, poll, serializer.data['choices'])
 
-    add_acl(request.user, poll)
+    add_acl(request.user_acl, poll)
     serialized_poll = PollSerializer(poll).data
 
     poll.choices = list(map(presave_clean_choice, deepcopy(poll.choices)))

@@ -38,21 +38,21 @@ def get_user_acl(user):
         return new_acl
 
 
-def add_acl(user, target):
+def add_acl(user_acl, target):
     """add valid ACL to target (iterable of objects or single object)"""
     if hasattr(target, '__iter__'):
         for item in target:
-            _add_acl_to_target(user, item)
+            _add_acl_to_target(user_acl, item)
     else:
-        _add_acl_to_target(user, target)
+        _add_acl_to_target(user_acl, target)
 
 
-def _add_acl_to_target(user, target):
+def _add_acl_to_target(user_acl, target):
     """add valid ACL to single target, helper for add_acl function"""
     target.acl = {}
 
     for annotator in providers.get_obj_type_annotators(target):
-        annotator(user, target)
+        annotator(user_acl, target)
 
 
 def serialize_acl(target):

@@ -453,16 +453,26 @@ class User(AbstractBaseUser, PermissionsMixin):
         """sends an email to this user (for compat with Django)"""
         send_mail(subject, message, from_email, [self.email], **kwargs)
 
-    def is_following(self, user):
+    def is_following(self, user_or_id):
         try:
-            self.follows.get(pk=user.pk)
+            user_id = user_or_id.id
+        except AttributeError:
+            user_id = user_or_id
+
+        try:
+            self.follows.get(id=user_id)
             return True
         except User.DoesNotExist:
             return False
 
-    def is_blocking(self, user):
+    def is_blocking(self, user_or_id):
         try:
-            self.blocks.get(pk=user.pk)
+            user_id = user_or_id.id
+        except AttributeError:
+            user_id = user_or_id
+
+        try:
+            self.blocks.get(id=user_id)
             return True
         except User.DoesNotExist:
             return False

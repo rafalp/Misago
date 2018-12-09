@@ -11,11 +11,11 @@ from misago.users.signatures import is_user_signature_valid, set_user_signature
 
 
 def signature_endpoint(request):
-    user = request.user
-
-    if not user.acl_cache['can_have_signature']:
+    if not request.user_acl['can_have_signature']:
         raise PermissionDenied(_("You don't have permission to change signature."))
 
+    user = request.user
+    
     if user.is_signature_locked:
         if user.signature_lock_user_message:
             reason = format_plaintext_for_html(user.signature_lock_user_message)

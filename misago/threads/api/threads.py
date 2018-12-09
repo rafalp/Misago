@@ -119,7 +119,7 @@ class PrivateThreadViewSet(ViewSet):
     @transaction.atomic
     def create(self, request):
         allow_use_private_threads(request.user)
-        if not request.user.acl_cache['can_start_private_threads']:
+        if not request.user_acl['can_start_private_threads']:
             raise PermissionDenied(_("You can't start private threads."))
 
         request.user.lock()

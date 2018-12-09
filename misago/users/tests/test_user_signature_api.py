@@ -1,4 +1,4 @@
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -9,9 +9,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         super().setUp()
         self.link = '/api/users/%s/signature/' % self.user.pk
 
-    def test_signature_no_permission(self):
+    @patch_user_acl
+    def test_signature_no_permission(self, patch_user_acl):
         """edit signature api with no ACL returns 403"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 0,
         })
 
@@ -21,9 +22,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             "detail": "You don't have permission to change signature.",
         })
 
-    def test_signature_locked(self):
+    @patch_user_acl
+    def test_signature_locked(self, patch_user_acl):
         """locked edit signature returns 403"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 1,
         })
 
@@ -38,9 +40,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             "reason": "<p>Your siggy is banned.</p>",
         })
 
-    def test_get_signature(self):
+    @patch_user_acl
+    def test_get_signature(self, patch_user_acl):
         """GET to api returns json with no signature"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 1,
         })
 
@@ -52,9 +55,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
 
         self.assertFalse(response.json()['signature'])
 
-    def test_post_empty_signature(self):
+    @patch_user_acl
+    def test_post_empty_signature(self, patch_user_acl):
         """empty POST empties user signature"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 1,
         })
 
@@ -71,9 +75,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
 
         self.assertFalse(response.json()['signature'])
 
-    def test_post_too_long_signature(self):
+    @patch_user_acl
+    def test_post_too_long_signature(self, patch_user_acl):
         """too long new signature errors"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 1,
         })
 
@@ -91,9 +96,10 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             "detail": "Signature is too long.",
         })
 
-    def test_post_good_signature(self):
+    @patch_user_acl
+    def test_post_good_signature(self, patch_user_acl):
         """POST with good signature changes user signature"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_have_signature': 1,
         })
 

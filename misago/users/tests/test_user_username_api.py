@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth import get_user_model
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.conf import settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -117,9 +117,10 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         self.link = '/api/users/%s/moderate-username/' % self.other_user.pk
 
-    def test_no_permission(self):
+    @patch_user_acl
+    def test_no_permission(self, patch_user_acl):
         """no permission to moderate avatar"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_rename_users': 0,
         })
 
@@ -129,19 +130,16 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             "detail": "You can't rename users.",
         })
 
-        override_acl(self.user, {
-            'can_rename_users': 0,
-        })
-
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't rename users.",
         })
 
-    def test_moderate_username(self):
+    @patch_user_acl
+    def test_moderate_username(self, patch_user_acl):
         """moderate username"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_rename_users': 1,
         })
 
@@ -151,10 +149,6 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         options = response.json()
         self.assertEqual(options['length_min'], settings.username_length_min)
         self.assertEqual(options['length_max'], settings.username_length_max)
-
-        override_acl(self.user, {
-            'can_rename_users': 1,
-        })
 
         response = self.client.post(
             self.link,
@@ -166,10 +160,6 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             "detail": "Enter new username.",
-        })
-
-        override_acl(self.user, {
-            'can_rename_users': 1,
         })
 
         response = self.client.post(
@@ -184,10 +174,6 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             "detail": "Username can only contain latin alphabet letters and digits.",
         })
 
-        override_acl(self.user, {
-            'can_rename_users': 1,
-        })
-
         response = self.client.post(
             self.link,
             json.dumps({
@@ -198,10 +184,6 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             "detail": "Username must be at least 3 characters long.",
-        })
-
-        override_acl(self.user, {
-            'can_rename_users': 1,
         })
 
         response = self.client.post(
@@ -223,9 +205,10 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['username'], other_user.username)
         self.assertEqual(options['slug'], other_user.slug)
 
-    def test_moderate_own_username(self):
+    @patch_user_acl
+    def test_moderate_own_username(self, patch_user_acl):
         """moderate own username"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_rename_users': 1,
         })
 

@@ -23,7 +23,7 @@ post_patch_dispatcher = ApiPatch()
 def patch_acl(request, post, value):
     """useful little op that updates post acl to current state"""
     if value:
-        add_acl(request.user, post)
+        add_acl(request.user_acl, post)
         return {'acl': post.acl}
     else:
         return {'acl': None}

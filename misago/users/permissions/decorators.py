@@ -9,22 +9,24 @@ __all__ = [
 
 
 def authenticated_only(f):
-    def perm_decorator(user, target):
-        if user.is_authenticated:
-            return f(user, target)
-        else:
-            messsage = _("You have to sig in to perform this action.")
-            raise PermissionDenied(messsage)
+    def perm_decorator(user_acl, target):
+        if user_acl["is_authenticated"]:
+            return f(user_acl, target)
+        else: 
+            raise PermissionDenied(
+                _("You have to sig in to perform this action.")
+            )
 
     return perm_decorator
 
 
 def anonymous_only(f):
-    def perm_decorator(user, target):
-        if user.is_anonymous:
-            return f(user, target)
+    def perm_decorator(user_acl, target):
+        if user_acl["is_anonymous"]:
+            return f(user_acl, target)
         else:
-            messsage = _("Only guests can perform this action.")
-            raise PermissionDenied(messsage)
+            raise PermissionDenied(
+                _("Only guests can perform this action.")
+            )
 
     return perm_decorator

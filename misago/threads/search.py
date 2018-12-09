@@ -27,7 +27,7 @@ class SearchThreads(SearchProvider):
 
         if len(query) > 2:
             visible_threads = exclude_invisible_threads(
-                self.request.user, threads_categories, Thread.objects
+                self.request.user_acl, threads_categories, Thread.objects
             )
             results = search_threads(self.request, query, visible_threads)
         else:

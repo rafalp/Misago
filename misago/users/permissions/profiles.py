@@ -92,10 +92,10 @@ def build_acl(acl, roles, key_name):
     )
 
 
-def add_acl_to_user(user, target):
+def add_acl_to_user(user_acl, target):
     target.acl['can_have_attitude'] = False
-    target.acl['can_follow'] = can_follow_user(user, target)
-    target.acl['can_block'] = can_block_user(user, target)
+    target.acl['can_follow'] = can_follow_user(user_acl, target)
+    target.acl['can_block'] = can_block_user(user_acl, target)
 
     mod_permissions = ('can_have_attitude', 'can_follow', 'can_block', )
 
@@ -109,8 +109,8 @@ def register_with(registry):
     registry.acl_annotator(get_user_model(), add_acl_to_user)
 
 
-def allow_browse_users_list(user):
-    if not user.acl_cache['can_browse_users_list']:
+def allow_browse_users_list(user_acl):
+    if not user_acl['can_browse_users_list']:
         raise PermissionDenied(_("You can't browse users list."))
 
 
@@ -118,10 +118,10 @@ can_browse_users_list = return_boolean(allow_browse_users_list)
 
 
 @authenticated_only
-def allow_follow_user(user, target):
-    if not user.acl_cache['can_follow_users']:
+def allow_follow_user(user_acl, target):
+    if not user_acl['can_follow_users']:
         raise PermissionDenied(_("You can't follow other users."))
-    if user.pk == target.pk:
+    if user_acl["user_id"] == target.id:
         raise PermissionDenied(_("You can't add yourself to followed."))
 
 
@@ -129,11 +129,12 @@ can_follow_user = return_boolean(allow_follow_user)
 
 
 @authenticated_only
-def allow_block_user(user, target):
+def allow_block_user(user_acl, target):
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(_("You can't block administrators."))
-    if user.pk == target.pk:
+    if user_acl["user_id"] == target.id:
         raise PermissionDenied(_("You can't block yourself."))
+    # FIXME: this will require changes in ACL checking
     if not target.acl_cache['can_be_blocked'] or target.is_superuser:
         message = _("%(user)s can't be blocked.") % {'user': target.username}
         raise PermissionDenied(message)
@@ -143,8 +144,8 @@ can_block_user = return_boolean(allow_block_user)
 
 
 @authenticated_only
-def allow_see_ban_details(user, target):
-    if not user.acl_cache['can_see_ban_details']:
+def allow_see_ban_details(user_acl, target):
+    if not user_acl['can_see_ban_details']:
         raise PermissionDenied(_("You can't see users bans details."))
 
 

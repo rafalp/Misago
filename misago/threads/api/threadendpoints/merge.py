@@ -191,5 +191,5 @@ def merge_threads(request, validated_data, threads, merge_conflict):
     new_thread.is_read = False
     new_thread.subscription = None
 
-    add_acl(request.user, new_thread)
+    add_acl(request.user_acl, new_thread)
     return new_thread

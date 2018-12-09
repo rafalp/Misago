@@ -84,7 +84,7 @@ class JoinIpField(basefields.TextProfileField):
     readonly = True
 
     def get_value_display_data(self, request, user, value):
-        if not request.user.acl_cache.get('can_see_users_ips'):
+        if not request.user_acl.get('can_see_users_ips'):
             return None
 
         if not user.joined_from_ip:

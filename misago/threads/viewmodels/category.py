@@ -15,7 +15,7 @@ __all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
 class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)
-        add_acl(request.user, self._categories)
+        add_acl(request.user_acl, self._categories)
 
         self._model = self.get_category(request, self._categories, **kwargs)
 
@@ -51,7 +51,7 @@ class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
             Category.objects.all_categories().filter(
-                id__in=request.user.acl_cache['visible_categories'],
+                id__in=request.user_acl['visible_categories'],
             ).select_related('parent')
         )
 

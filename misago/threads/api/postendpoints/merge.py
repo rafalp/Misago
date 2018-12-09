@@ -55,6 +55,6 @@ def posts_merge_endpoint(request, thread):
     first_post.thread = thread
     first_post.category = thread.category
 
-    add_acl(request.user, first_post)
+    add_acl(request.user_acl, first_post)
 
     return Response(PostSerializer(first_post, context={'user': request.user}).data)

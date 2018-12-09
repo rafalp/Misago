@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.users.models import Ban
@@ -182,9 +182,10 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertContains(response, "TestUser")
         self.assertContains(response, "RenamedAdmin")
 
-    def test_user_ban_details(self):
+    @patch_user_acl
+    def test_user_ban_details(self, patch_user_acl):
         """user ban details page has no showstoppers"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_see_ban_details': 0,
         })
 
@@ -197,7 +198,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         ))
         self.assertEqual(response.status_code, 404)
 
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_see_ban_details': 1,
         })
 
@@ -207,9 +208,6 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         ))
         self.assertEqual(response.status_code, 404)
 
-        override_acl(self.user, {
-            'can_see_ban_details': 1,
-        })
         test_user.ban_cache.delete()
 
         Ban.objects.create(

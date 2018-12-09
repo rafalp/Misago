@@ -20,7 +20,7 @@ class SearchUsers(SearchProvider):
     url = 'users'
 
     def allow_search(self):
-        if not self.request.user.acl_cache['can_search_users']:
+        if not self.request.user_acl['can_search_users']:
             raise PermissionDenied(_("You don't have permission to search users."))
 
     def search(self, query, page=1):

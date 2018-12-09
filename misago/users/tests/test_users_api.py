@@ -6,7 +6,7 @@ from django.test import override_settings
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.core import threadstore
 from misago.core.cache import cache
@@ -421,9 +421,10 @@ class UserFollowTests(AuthenticatedUserTestCase):
             "detail": "You can't add yourself to followed.",
         })
 
-    def test_cant_follow(self):
+    @patch_user_acl
+    def test_cant_follow(self, patch_user_acl):
         """no permission to follow users"""
-        override_acl(self.user, {
+        patch_user_acl(self.user, {
             'can_follow_users': 0,
         })
 
@@ -476,9 +477,10 @@ class UserBanTests(AuthenticatedUserTestCase):
 
         self.link = '/api/users/%s/ban/' % self.other_user.pk
 
-    def test_no_permission(self):
+    @patch_user_acl
+    def test_no_permission(self, patch_user_acl):
         """user has no permission to access ban"""
-        override_acl(self.user, {'can_see_ban_details': 0})
+        patch_user_acl(self.user, {'can_see_ban_details': 0})
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
@@ -486,17 +488,19 @@ class UserBanTests(AuthenticatedUserTestCase):
             "detail": "You can't see users bans details.",
         })
 
-    def test_no_ban(self):
+    @patch_user_acl
+    def test_no_ban(self, patch_user_acl):
         """api returns empty json"""
-        override_acl(self.user, {'can_see_ban_details': 1})
+        patch_user_acl(self.user, {'can_see_ban_details': 1})
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {})
 
-    def test_ban_details(self):
+    @patch_user_acl
+    def test_ban_details(self, patch_user_acl):
         """api returns ban json"""
-        override_acl(self.user, {'can_see_ban_details': 1})
+        patch_user_acl(self.user, {'can_see_ban_details': 1})
 
         Ban.objects.create(
             check_type=Ban.USERNAME,
@@ -604,9 +608,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.other_user.threads = 1
         self.other_user.save()
 
-    def test_delete_no_permission(self):
+    @patch_user_acl
+    def test_delete_no_permission(self, patch_user_acl):
         """raises 403 error when no permission to delete"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 0,
@@ -619,9 +624,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete users.",
         })
 
-    def test_delete_too_many_posts(self):
+    @patch_user_acl
+    def test_delete_too_many_posts(self, patch_user_acl):
         """raises 403 error when user has too many posts"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 0,
                 'can_delete_users_with_less_posts_than': 5,
@@ -637,9 +643,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete users that made more than 5 posts.",
         })
 
-    def test_delete_too_old_member(self):
+    @patch_user_acl
+    def test_delete_too_old_member(self, patch_user_acl):
         """raises 403 error when user is too old"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 5,
                 'can_delete_users_with_less_posts_than': 0,
@@ -656,9 +663,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete users that are members for more than 5 days.",
         })
 
-    def test_delete_self(self):
+    @patch_user_acl
+    def test_delete_self(self, patch_user_acl):
         """raises 403 error when attempting to delete oneself"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 10,
                 'can_delete_users_with_less_posts_than': 10,
@@ -671,9 +679,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete your account.",
         })
 
-    def test_delete_admin(self):
+    @patch_user_acl
+    def test_delete_admin(self, patch_user_acl):
         """raises 403 error when attempting to delete admin"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 10,
                 'can_delete_users_with_less_posts_than': 10,
@@ -689,9 +698,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete administrators.",
         })
 
-    def test_delete_superadmin(self):
+    @patch_user_acl
+    def test_delete_superadmin(self, patch_user_acl):
         """raises 403 error when attempting to delete superadmin"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 10,
                 'can_delete_users_with_less_posts_than': 10,
@@ -707,9 +717,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
             'detail': "You can't delete administrators.",
         })
 
-    def test_delete_with_content(self):
+    @patch_user_acl
+    def test_delete_with_content(self, patch_user_acl):
         """returns 200 and deletes user with content"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 10,
                 'can_delete_users_with_less_posts_than': 10,
@@ -731,9 +742,10 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.assertEqual(Thread.objects.count(), self.threads)
         self.assertEqual(Post.objects.count(), self.posts)
 
-    def test_delete_without_content(self):
+    @patch_user_acl
+    def test_delete_without_content(self, patch_user_acl):
         """returns 200 and deletes user without content"""
-        override_acl(
+        patch_user_acl(
             self.user, {
                 'can_delete_users_newer_than': 10,
                 'can_delete_users_with_less_posts_than': 10,

@@ -68,7 +68,7 @@ class ViewSet(viewsets.ViewSet):
 
         serializer.save()
 
-        add_acl(request.user, instance)
+        add_acl(request.user_acl, instance)
         for choice in instance.choices:
             choice['selected'] = False
 
@@ -91,7 +91,7 @@ class ViewSet(viewsets.ViewSet):
 
         serializer.save()
 
-        add_acl(request.user, instance)
+        add_acl(request.user_acl, instance)
         instance.make_choices_votes_aware(request.user)
 
         create_audit_trail(request, instance)

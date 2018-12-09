@@ -44,7 +44,7 @@ class ProfileView(View):
             raise Http404()
 
         validate_slug(profile, slug)
-        add_acl(request.user, profile)
+        add_acl(request.user_acl, profile)
 
         return profile
 
@@ -67,7 +67,7 @@ class ProfileView(View):
             })
 
         request.frontend_context['PROFILE'] = UserProfileSerializer(
-            profile, context={'user': request.user}
+            profile, context={'request': request}
         ).data
 
         if not profile.is_active:
@@ -92,7 +92,7 @@ class ProfileView(View):
             })
 
             if not context['show_email']:
-                context['show_email'] = request.user.acl_cache['can_see_users_emails']
+                context['show_email'] = request.user_acl['can_see_users_emails']
         else:
             context.update({
                 'is_authenticated_user': False,

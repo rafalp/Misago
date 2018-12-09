@@ -19,12 +19,12 @@ def thread_start_editor(request):
     categories = []
 
     queryset = Category.objects.filter(
-        pk__in=request.user.acl_cache['browseable_categories'],
+        pk__in=request.user_acl['browseable_categories'],
         tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
     ).order_by('-lft')
 
     for category in queryset:
-        add_acl(request.user, category)
+        add_acl(request.user_acl, category)
 
         post = False
         if can_start_thread(request.user, category):

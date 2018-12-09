@@ -71,7 +71,7 @@ def revert_post_endpoint(request, post):
     post.is_new = False
     post.edits = post_edits + 1
 
-    add_acl(request.user, post)
+    add_acl(request.user_acl, post)
 
     if post.poster:
         make_users_status_aware(request, [post.poster])

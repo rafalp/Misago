@@ -85,9 +85,9 @@ def build_category_acl(acl, category, categories_roles, key_name):
             acl['browseable_categories'].append(category.pk)
 
 
-def add_acl_to_category(user, target):
-    target.acl['can_see'] = can_see_category(user, target)
-    target.acl['can_browse'] = can_browse_category(user, target)
+def add_acl_to_category(user_acl, target):
+    target.acl['can_see'] = can_see_category(user_acl, target)
+    target.acl['can_browse'] = can_browse_category(user_acl, target)
 
 
 def serialize_categories_acls(serialized_acl):
@@ -112,21 +112,21 @@ def register_with(registry):
     registry.acl_serializer(AnonymousUser, serialize_categories_acls)
 
 
-def allow_see_category(user, target):
+def allow_see_category(user_acl, target):
     try:
         category_id = target.pk
     except AttributeError:
         category_id = int(target)
 
-    if not category_id in user.acl_cache['visible_categories']:
+    if not category_id in user_acl['visible_categories']:
         raise Http404()
 
 
 can_see_category = return_boolean(allow_see_category)
 
 
-def allow_browse_category(user, target):
-    target_acl = user.acl_cache['categories'].get(target.id, {'can_browse': False})
+def allow_browse_category(user_acl, target):
+    target_acl = user_acl['categories'].get(target.id, {'can_browse': False})
     if not target_acl['can_browse']:
         message = _('You don\'t have permission to browse "%(category)s" contents.')
         raise PermissionDenied(message % {'category': target.name})
