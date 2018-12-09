@@ -226,6 +226,7 @@ MIDDLEWARE = [
 
     'misago.cache.middleware.cache_versions_middleware',
     'misago.users.middleware.UserMiddleware',
+    'misago.acl.middleware.user_acl_middleware',
     'misago.core.middleware.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',

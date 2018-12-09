@@ -14,7 +14,7 @@ from misago.core import threadstore
 from misago.core.cache import cache
 
 from . import version
-from .builder import build_acl
+from .buildacl import build_acl
 from .providers import providers
 
 

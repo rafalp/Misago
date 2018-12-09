@@ -32,13 +32,13 @@ class CacheVersionsTests(TestCase):
     @patch('django.core.cache.cache.set')
     @patch('django.core.cache.cache.get', return_value=None)
     def test_getter_sets_new_cache_if_no_cache_is_set(self, _, cache_set):
-        assert get_cache_versions()
+        get_cache_versions()
         db_caches = get_cache_versions_from_db()
         cache_set.assert_called_once_with(CACHE_NAME, db_caches)
 
     @patch('django.core.cache.cache.set')
     @patch('django.core.cache.cache.get', return_value=True)
     def test_getter_is_not_setting_new_cache_if_cache_is_set(self, _, cache_set):
-        assert get_cache_versions()
-        db_caches = get_cache_versions_from_db()
+        get_cache_versions()
+        get_cache_versions_from_db()
         cache_set.assert_not_called()
