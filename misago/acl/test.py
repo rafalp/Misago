@@ -1,3 +1,4 @@
+from contextlib import ExitStack
 from functools import wraps
 from unittest.mock import patch
 
@@ -6,20 +7,31 @@ from .useracl import get_user_acl
 __all__ = ["patch_user_acl"]
 
 
-class patch_user_acl:
+class patch_user_acl(ExitStack):
     """Testing utility that patches get_user_acl results
 
-    Patch should be a dict or callable.
     Can be used as decorator or context manager.
+    
+    Accepts one or two arguments:
+    - patch_user_acl(acl_patch)
+    - patch_user_acl(user, acl_patch)
+
+    Patch should be a dict or callable.
     """
-    _global_patch = None
-    _user_patches = {}
 
-    def __init__(self, global_patch=None):
-        self._global_patch = global_patch
+    def __init__(self, *args):
+        super().__init__()
 
-    def patch_user_acl(self, user, patch):
-        self._user_patches[user.id] = patch
+        self._global_patch = None
+        self._user_patches = {}
+
+        if len(args) == 2:
+            user, patch = args
+            self._user_patches[user.id] = patch
+        elif len(args) == 1:
+            self._global_patch = args[0]
+        else:
+            raise ValueError("patch_user_acl takes one or two arguments.")
 
     def patched_get_user_acl(self, user, cache_versions):
         user_acl = get_user_acl(user, cache_versions)
@@ -40,10 +52,13 @@ class patch_user_acl:
             user_acl.update(acl_patch)
 
     def __enter__(self):
-        return self
-
-    def __exit__(self, *_):
-        self._user_patches = {}
+        super().__enter__()
+        self.enter_context(
+            patch(
+                "misago.acl.useracl.get_user_acl",
+                side_effect=self.patched_get_user_acl,
+            )
+        )
 
     def __call__(self, f):
         @wraps(f)
@@ -53,7 +68,6 @@ class patch_user_acl:
                     "misago.acl.useracl.get_user_acl",
                     side_effect=self.patched_get_user_acl,
                 ):
-                    new_args = args + (self.patch_user_acl,)
-                    return f(*new_args, **kwargs)
+                    return f(*args, **kwargs)
         
         return inner

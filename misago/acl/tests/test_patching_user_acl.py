@@ -13,59 +13,61 @@ def callable_acl_patch(user, user_acl):
     user_acl["patched_for_user_id"] = user.id
 
 
-class PatchingUserACLInTestsTests(TestCase):
-    @patch_user_acl()
-    def test_decorator_adds_patching_function_to_test(self, patch_user_acl):
-        assert patch_user_acl
-
-    @patch_user_acl()
-    def test_patching_function_changes_user_permission_value(self, patch_user_acl):
+class PatchingUserACLTests(TestCase):
+    @patch_user_acl({"is_patched": True})
+    def test_decorator_patches_all_users_acls_in_test(self):
         user = User.objects.create_user("User", "user@example.com")
-        patch_user_acl(user, {"can_rename_users": 123})
         user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["can_rename_users"] == 123
+        assert user_acl["is_patched"]
 
-    @patch_user_acl()
-    def test_patching_function_adds_user_permission(self, patch_user_acl):
-        user = User.objects.create_user("User", "user@example.com")
-        patch_user_acl(user, {"new_user_permission": 123})
-        user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["new_user_permission"] == 123
-
-    def test_acl_patches_are_removed_after_test(self):
+    def test_decorator_removes_patches_after_test(self):
         user = User.objects.create_user("User", "user@example.com")
 
-        @patch_user_acl()
+        @patch_user_acl({"is_patched": True})
         def test_function(patch_user_acl):
-            patch_user_acl(user, {"is_patched": True})
             user_acl = useracl.get_user_acl(user, cache_versions)
             assert user_acl["is_patched"]
 
         user_acl = useracl.get_user_acl(user, cache_versions)
         assert "is_patched" not in user_acl
-    
-    @patch_user_acl({"is_patched": True})
-    def test_decorator_given_global_patch_patches_all_users_acls(self, _):
+
+    def test_context_manager_patches_all_users_acls_in_test(self):
         user = User.objects.create_user("User", "user@example.com")
+        with patch_user_acl({"can_rename_users": "patched"}):
+            user_acl = useracl.get_user_acl(user, cache_versions)
+            assert user_acl["can_rename_users"] == "patched"
+
+    def test_context_manager_removes_patches_after_exit(self):
+        user = User.objects.create_user("User", "user@example.com")
+
+        with patch_user_acl({"is_patched": True}):
+            user_acl = useracl.get_user_acl(user, cache_versions)
+            assert user_acl["is_patched"]
+
         user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["is_patched"]
+        assert "is_patched" not in user_acl
+
+    def test_context_manager_patches_specified_user_acl(self):
+        user = User.objects.create_user("User", "user@example.com")
+        with patch_user_acl(user, {"can_rename_users": "patched"}):
+            user_acl = useracl.get_user_acl(user, cache_versions)
+            assert user_acl["can_rename_users"] == "patched"
+
+    def test_other_user_acl_is_not_changed_by_user_specific_context_manager(self):
+        patched_user = User.objects.create_user("User", "user@example.com")
+        other_user = User.objects.create_user("User2", "user2@example.com")
+        with patch_user_acl(patched_user, {"can_rename_users": "patched"}):
+            other_user_acl = useracl.get_user_acl(other_user, cache_versions)
+            assert other_user_acl["can_rename_users"] != "patched"
 
     @patch_user_acl(callable_acl_patch)
-    def test_callable_global_patch_is_called_with_user_and_user_acl(self, _):
+    def test_callable_patch_is_called_with_user_and_acl_by_decorator(self):
         user = User.objects.create_user("User", "user@example.com")
         user_acl = useracl.get_user_acl(user, cache_versions)
         assert user_acl["patched_for_user_id"] == user.id
 
-    @patch_user_acl({"is_patched": True})
-    def test_patching_function_overrides_global_patch(self, patch_user_acl):
+    def test_callable_patch_is_called_with_user_and_acl_by_context_manager(self):
         user = User.objects.create_user("User", "user@example.com")
-        patch_user_acl(user, {"is_patched": 123})
-        user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["is_patched"] == 123
-
-    @patch_user_acl()
-    def test_callable_user_patch_is_called_with_user_and_user_acl(self, patch_user_acl):
-        user = User.objects.create_user("User", "user@example.com")
-        patch_user_acl(user, callable_acl_patch)
-        user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["patched_for_user_id"] == user.id
+        with patch_user_acl(callable_acl_patch):
+            user_acl = useracl.get_user_acl(user, cache_versions)
+            assert user_acl["patched_for_user_id"] == user.id
