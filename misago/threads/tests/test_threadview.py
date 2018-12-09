@@ -15,6 +15,8 @@ class MockRequest(object):
         self.user_ip = '127.0.0.1'
 
 
+def patch_category_acl
+
 class ThreadViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()

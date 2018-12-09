@@ -8,7 +8,6 @@ from misago.acl import add_acl
 from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.core import cache, threadstore
 from misago.readtracker import poststracker, threadstracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
@@ -25,9 +24,6 @@ class AnonymousUser(object):
 
 class ThreadsTrackerTests(TestCase):
     def setUp(self):
-        cache.cache.clear()
-        threadstore.clear()
-
         self.user = User.objects.create_user("UserA", "testa@user.com", 'Pass.123')
         self.user_acl = get_user_acl(self.user, cache_versions)
         self.category = Category.objects.get(slug='first-category')
