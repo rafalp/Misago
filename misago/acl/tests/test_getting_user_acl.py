@@ -21,6 +21,14 @@ class GettingUserACLTests(TestCase):
         assert acl["is_authenticated"] is True
         assert acl["is_anonymous"] is False
 
+    def test_user_acl_includes_staff_and_superuser_false_status(self):
+        user = User.objects.create_user('Bob', 'bob@bob.com')
+        acl = get_user_acl(user, cache_versions)
+
+        assert acl
+        assert acl["is_staff"] is False
+        assert acl["is_superuser"] is False
+
     def test_getter_returns_anonymous_user_acl(self):
         user = AnonymousUser()
         acl = get_user_acl(user, cache_versions)
@@ -29,6 +37,14 @@ class GettingUserACLTests(TestCase):
         assert acl["user_id"] == user.id
         assert acl["is_authenticated"] is False
         assert acl["is_anonymous"] is True
+
+    def test_superuser_acl_includes_staff_and_superuser_true_status(self):
+        user = User.objects.create_superuser('Bob', 'bob@bob.com', 'Pass.123')
+        acl = get_user_acl(user, cache_versions)
+
+        assert acl
+        assert acl["is_staff"] is True
+        assert acl["is_superuser"] is True
 
     @patch('django.core.cache.cache.get', return_value=dict())
     def test_getter_returns_acl_from_cache(self, cache_get):
