@@ -36,7 +36,7 @@ class ViewModel(BaseViewModel):
         return post
 
     def get_queryset(self, request, thread):
-        return exclude_invisible_posts(request.user, thread.category, thread.post_set)
+        return exclude_invisible_posts(request.user_acl, thread.category, thread.post_set)
 
 
 class ThreadPost(ViewModel):
