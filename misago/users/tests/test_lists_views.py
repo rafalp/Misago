@@ -17,13 +17,9 @@ class UsersListTestCase(AuthenticatedUserTestCase):
 
 
 class UsersListLanderTests(UsersListTestCase):
-    @patch_user_acl
-    def test_lander_no_permission(self, patch_user_acl):
+    @patch_user_acl({'can_browse_users_list': 0})
+    def test_lander_no_permission(self):
         """lander returns 403 if user has no permission"""
-        patch_user_acl(self.user, {
-            'can_browse_users_list': 0,
-        })
-
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 403)
 

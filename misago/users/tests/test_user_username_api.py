@@ -117,13 +117,9 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         self.link = '/api/users/%s/moderate-username/' % self.other_user.pk
 
-    @patch_user_acl
-    def test_no_permission(self, patch_user_acl):
-        """no permission to moderate avatar"""
-        patch_user_acl(self.user, {
-            'can_rename_users': 0,
-        })
-
+    @patch_user_acl({'can_rename_users': 0})
+    def test_no_permission(self):
+        """no permission to moderate username"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
@@ -136,13 +132,9 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
             "detail": "You can't rename users.",
         })
 
-    @patch_user_acl
-    def test_moderate_username(self, patch_user_acl):
+    @patch_user_acl({'can_rename_users': 1})
+    def test_moderate_username(self):
         """moderate username"""
-        patch_user_acl(self.user, {
-            'can_rename_users': 1,
-        })
-
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
@@ -205,12 +197,8 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(options['username'], other_user.username)
         self.assertEqual(options['slug'], other_user.slug)
 
-    @patch_user_acl
-    def test_moderate_own_username(self, patch_user_acl):
+    @patch_user_acl({'can_rename_users': 1})
+    def test_moderate_own_username(self):
         """moderate own username"""
-        patch_user_acl(self.user, {
-            'can_rename_users': 1,
-        })
-
         response = self.client.get('/api/users/%s/moderate-username/' % self.user.pk)
         self.assertEqual(response.status_code, 200)

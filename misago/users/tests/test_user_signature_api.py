@@ -9,26 +9,18 @@ class UserSignatureTests(AuthenticatedUserTestCase):
         super().setUp()
         self.link = '/api/users/%s/signature/' % self.user.pk
 
-    @patch_user_acl
-    def test_signature_no_permission(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 0})
+    def test_signature_no_permission(self):
         """edit signature api with no ACL returns 403"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 0,
-        })
-
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You don't have permission to change signature.",
         })
 
-    @patch_user_acl
-    def test_signature_locked(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 1})
+    def test_signature_locked(self):
         """locked edit signature returns 403"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 1,
-        })
-
         self.user.is_signature_locked = True
         self.user.signature_lock_user_message = 'Your siggy is banned.'
         self.user.save()
@@ -40,13 +32,9 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             "reason": "<p>Your siggy is banned.</p>",
         })
 
-    @patch_user_acl
-    def test_get_signature(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 1})
+    def test_get_signature(self):
         """GET to api returns json with no signature"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 1,
-        })
-
         self.user.is_signature_locked = False
         self.user.save()
 
@@ -55,13 +43,9 @@ class UserSignatureTests(AuthenticatedUserTestCase):
 
         self.assertFalse(response.json()['signature'])
 
-    @patch_user_acl
-    def test_post_empty_signature(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 1})
+    def test_post_empty_signature(self):
         """empty POST empties user signature"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 1,
-        })
-
         self.user.is_signature_locked = False
         self.user.save()
 
@@ -75,13 +59,9 @@ class UserSignatureTests(AuthenticatedUserTestCase):
 
         self.assertFalse(response.json()['signature'])
 
-    @patch_user_acl
-    def test_post_too_long_signature(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 1})
+    def test_post_too_long_signature(self):
         """too long new signature errors"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 1,
-        })
-
         self.user.is_signature_locked = False
         self.user.save()
 
@@ -96,13 +76,9 @@ class UserSignatureTests(AuthenticatedUserTestCase):
             "detail": "Signature is too long.",
         })
 
-    @patch_user_acl
-    def test_post_good_signature(self, patch_user_acl):
+    @patch_user_acl({'can_have_signature': 1})
+    def test_post_good_signature(self):
         """POST with good signature changes user signature"""
-        patch_user_acl(self.user, {
-            'can_have_signature': 1,
-        })
-
         self.user.is_signature_locked = False
         self.user.save()
 

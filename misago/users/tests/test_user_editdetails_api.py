@@ -32,8 +32,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
 
-    @patch_user_acl
-    def test_other_user(self, patch_user_acl):
+    def test_other_user(self):
         """api handles scenario when its other user looking at profile"""
         test_user = UserModel.objects.create_user('BobBoberson', 'bob@test.com', 'bob123456')
 
@@ -45,20 +44,14 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         )
 
         # moderator has permission to edit details
-        patch_user_acl(self.user, {
-            'can_moderate_profile_details': True,
-        })
-
-        response = self.client.get(api_link)
-        self.assertEqual(response.status_code, 200)
+        with patch_user_acl(self.user, {'can_moderate_profile_details': True}):
+            response = self.client.get(api_link)
+            self.assertEqual(response.status_code, 200)
 
         # non-moderator has no permission to edit details
-        patch_user_acl(self.user, {
-            'can_moderate_profile_details': False,
-        })
-
-        response = self.client.get(api_link)
-        self.assertEqual(response.status_code, 403)
+        with patch_user_acl(self.user, {'can_moderate_profile_details': False}):
+            response = self.client.get(api_link)
+            self.assertEqual(response.status_code, 403)
 
     def test_nonexistant_user(self):
         """api handles nonexistant users"""
