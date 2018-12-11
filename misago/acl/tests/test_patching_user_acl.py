@@ -47,19 +47,6 @@ class PatchingUserACLTests(TestCase):
         user_acl = useracl.get_user_acl(user, cache_versions)
         assert "is_patched" not in user_acl
 
-    def test_context_manager_patches_specified_user_acl(self):
-        user = User.objects.create_user("User", "user@example.com")
-        with patch_user_acl(user, {"can_rename_users": "patched"}):
-            user_acl = useracl.get_user_acl(user, cache_versions)
-            assert user_acl["can_rename_users"] == "patched"
-
-    def test_other_user_acl_is_not_changed_by_user_specific_context_manager(self):
-        patched_user = User.objects.create_user("User", "user@example.com")
-        other_user = User.objects.create_user("User2", "user2@example.com")
-        with patch_user_acl(patched_user, {"can_rename_users": "patched"}):
-            other_user_acl = useracl.get_user_acl(other_user, cache_versions)
-            assert other_user_acl["can_rename_users"] != "patched"
-
     @patch_user_acl(callable_acl_patch)
     def test_callable_patch_is_called_with_user_and_acl_by_decorator(self):
         user = User.objects.create_user("User", "user@example.com")
@@ -71,3 +58,17 @@ class PatchingUserACLTests(TestCase):
         with patch_user_acl(callable_acl_patch):
             user_acl = useracl.get_user_acl(user, cache_versions)
             assert user_acl["patched_for_user_id"] == user.id
+
+    @patch_user_acl(callable_acl_patch, {"other_acl_path": True})
+    def test_multiple_acl_patches_are_applied_by_decorator(self):
+        user = User.objects.create_user("User", "user@example.com")
+        user_acl = useracl.get_user_acl(user, cache_versions)
+        assert user_acl["patched_for_user_id"] == user.id
+        assert user_acl["other_acl_path"]
+
+    def test_multiple_acl_patches_are_applied_by_context_manager(self):
+        user = User.objects.create_user("User", "user@example.com")
+        with patch_user_acl(callable_acl_patch, {"other_acl_path": True}):
+            user_acl = useracl.get_user_acl(user, cache_versions)
+            assert user_acl["patched_for_user_id"] == user.id
+            assert user_acl["other_acl_path"]

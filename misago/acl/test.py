@@ -19,19 +19,9 @@ class patch_user_acl(ExitStack):
     Patch should be a dict or callable.
     """
 
-    def __init__(self, *args):
+    def __init__(self, *patches):
         super().__init__()
-
-        self._global_patch = None
-        self._user_patches = {}
-
-        if len(args) == 2:
-            user, patch = args
-            self._user_patches[user.id] = patch
-        elif len(args) == 1:
-            self._global_patch = args[0]
-        else:
-            raise ValueError("patch_user_acl takes one or two arguments.")
+        self._patches = patches
 
     def patched_get_user_acl(self, user, cache_versions):
         user_acl = get_user_acl(user, cache_versions)
@@ -39,11 +29,8 @@ class patch_user_acl(ExitStack):
         return user_acl
 
     def apply_acl_patches(self, user, user_acl):
-        if self._global_patch:
-            self.apply_acl_patch(user, user_acl, self._global_patch)
-        if user.id in self._user_patches:
-            user_acl_patch = self._user_patches[user.id]
-            self.apply_acl_patch(user, user_acl, user_acl_patch)
+        for acl_patch in self._patches:
+            self.apply_acl_patch(user, user_acl, acl_patch)
 
     def apply_acl_patch(self, user, user_acl, acl_patch):
         if callable(acl_patch):
