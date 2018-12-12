@@ -28,25 +28,19 @@ def patch_category_acl(acl_patch):
     return patch_user_acl(patch_acl)
 
 
-def patch_categories_acl_for_move(src_acl_patch=None, dst_acl_patch=None):
+def patch_other_category_acl(acl_patch):
     def patch_acl(_, user_acl):
-        src = Category.objects.get(slug="first-category")
-        dst = Category.objects.get(slug="other-category")
+        src_category = Category.objects.get(slug="first-category")
+        category_acl = user_acl['categories'][src_category.id].copy()
 
-        src_acl = user_acl['categories'][src.id]
-        dst_acl = src_acl.copy()
-        user_acl['categories'][dst.id] = dst_acl
+        dst_category = Category.objects.get(slug="other-category")
+        user_acl['categories'][dst_category.id] = category_acl
 
-        src_acl.update(default_category_acl)
-        dst_acl.update(default_category_acl)
+        category_acl.update(default_category_acl)
+        if acl_patch:
+            category_acl.update(acl_patch)
 
-        if src_acl_patch:
-            src_acl.update(src_acl_patch)
-        if dst_acl_patch:
-            dst_acl.update(dst_acl_patch)
-
-        cleanup_patched_acl(user_acl, src_acl, src)
-        cleanup_patched_acl(user_acl, dst_acl, dst)
+        cleanup_patched_acl(user_acl, category_acl, dst_category)
 
     return patch_user_acl(patch_acl)
 

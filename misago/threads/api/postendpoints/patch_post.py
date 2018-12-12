@@ -89,7 +89,7 @@ post_patch_dispatcher.replace('is-liked', patch_is_liked)
 
 
 def patch_is_protected(request, post, value):
-    allow_protect_post(request.user, post)
+    allow_protect_post(request.user_acl, post)
     if value:
         moderation.protect_post(request.user, post)
     else:
@@ -101,7 +101,7 @@ post_patch_dispatcher.replace('is-protected', patch_is_protected)
 
 
 def patch_is_unapproved(request, post, value):
-    allow_approve_post(request.user, post)
+    allow_approve_post(request.user_acl, post)
 
     if value:
         raise PermissionDenied(_("Content approval can't be reversed."))
@@ -116,11 +116,11 @@ post_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 def patch_is_hidden(request, post, value):
     if value is True:
-        allow_hide_post(request.user, post)
-        allow_hide_best_answer(request.user, post)
+        allow_hide_post(request.user_acl, post)
+        allow_hide_best_answer(request.user_acl, post)
         moderation.hide_post(request.user, post)
     elif value is False:
-        allow_unhide_post(request.user, post)
+        allow_unhide_post(request.user_acl, post)
         moderation.unhide_post(request.user, post)
 
     return {'is_hidden': post.is_hidden}

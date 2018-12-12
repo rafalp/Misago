@@ -24,10 +24,10 @@ event_patch_dispatcher.add('acl', patch_acl)
 
 def patch_is_hidden(request, event, value):
     if value:
-        allow_hide_event(request.user, event)
+        allow_hide_event(request.user_acl, event)
         moderation.hide_post(request.user, event)
     else:
-        allow_unhide_event(request.user, event)
+        allow_unhide_event(request.user_acl, event)
         moderation.unhide_post(request.user, event)
 
     return {'is_hidden': event.is_hidden}

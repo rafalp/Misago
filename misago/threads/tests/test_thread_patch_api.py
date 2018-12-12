@@ -6,7 +6,7 @@ from django.utils import timezone
 from misago.categories.models import Category
 from misago.readtracker import poststracker
 from misago.threads import testutils
-from misago.threads.test import patch_category_acl, patch_categories_acl_for_move
+from misago.threads.test import patch_category_acl, patch_other_category_acl
 from misago.threads.models import Thread
 
 from .test_threads_api import ThreadsApiTestCase
@@ -427,9 +427,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         )
         self.dst_category = Category.objects.get(slug='other-category')
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': 2}
-    )
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_top(self):
         """api moves thread to other category, sets no top category"""
         response = self.patch(
@@ -459,9 +458,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.dst_category.pk)
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': 2}
-    )
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_with_top(self):
         """api moves thread to other category, sets top"""
         response = self.patch(
@@ -491,9 +489,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.dst_category.pk)
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': 2}
-    )
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_reads(self):
         """api moves thread reads together with thread"""
         poststracker.save_read(self.user, self.thread.first_post)
@@ -528,9 +525,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(postreads.count(), 1)
         postreads.get(category=self.dst_category)
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': 2}
-    )
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_subscriptions(self):
         """api moves thread subscriptions together with thread"""
         self.user.subscription_set.create(
@@ -568,7 +564,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(self.user.subscription_set.count(), 1)
         self.user.subscription_set.get(category=self.dst_category)
 
-    @patch_categories_acl_for_move({'can_move_threads': False})
+    @patch_category_acl({'can_move_threads': False})
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
         response = self.patch(
@@ -590,7 +586,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
-    @patch_category_acl({'can_move_threads': True, 'can_close_threads': False})
+    @patch_other_category_acl({'can_close_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_closed_category_no_permission(self):
         """api move thread from closed category with no permission fails"""
         self.category.is_closed = True
@@ -612,7 +609,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't move it's threads."
         )
 
-    @patch_category_acl({'can_move_threads': True, 'can_close_threads': False})
+    @patch_other_category_acl({'can_close_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_closed_thread_no_permission(self):
         """api move closed thread with no permission fails"""
         self.thread.is_closed = True
@@ -634,7 +632,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This thread is closed. You can't move it."
         )
 
-    @patch_categories_acl_for_move({'can_move_threads': True}, {'can_see': False})
+    @patch_other_category_acl({'can_see': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_access(self):
         """api move thread to category with no access fails"""
         response = self.patch(
@@ -654,7 +653,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
-    @patch_categories_acl_for_move({'can_move_threads': True}, {'can_browse': False})
+    @patch_other_category_acl({'can_browse': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_browse(self):
         """api move thread to category with no browsing access fails"""
         response = self.patch(
@@ -677,9 +677,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': False}
-    )
+    @patch_other_category_acl({'can_start_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_start_threads(self):
         """api move thread to category with no posting access fails"""
         response = self.patch(
@@ -702,9 +701,8 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
-    @patch_categories_acl_for_move(
-        {'can_move_threads': True}, {'can_start_threads': 2}
-    )
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_same_category(self):
         """api move thread to category it's already in fails"""
         response = self.patch(
