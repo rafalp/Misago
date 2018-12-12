@@ -27,7 +27,7 @@ def thread_start_editor(request):
         add_acl(request.user_acl, category)
 
         post = False
-        if can_start_thread(request.user, category):
+        if can_start_thread(request.user_acl, category):
             post = {
                 'close': bool(category.acl['can_close_threads']),
                 'hide': bool(category.acl['can_hide_threads']),

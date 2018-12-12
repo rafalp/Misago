@@ -86,7 +86,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def create(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
-        allow_reply_thread(request.user, thread)
+        allow_reply_thread(request.user_acl, thread)
 
         post = Post(
             thread=thread,
@@ -122,7 +122,7 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
 
-        allow_edit_post(request.user, post)
+        allow_edit_post(request.user_acl, post)
 
         posting = PostingEndpoint(
             request,
@@ -188,7 +188,7 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 
-        allow_edit_post(request.user, post)
+        allow_edit_post(request.user_acl, post)
 
         attachments = []
         for attachment in post.attachment_set.order_by('-id'):
@@ -211,7 +211,7 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
-        allow_reply_thread(request.user, thread)
+        allow_reply_thread(request.user_acl, thread)
 
         if 'reply' in request.query_params:
             reply_to = self.get_post(request, thread, request.query_params['reply']).unwrap()
@@ -242,7 +242,7 @@ class ViewSet(viewsets.ViewSet):
                 thread = self.get_thread(request, thread_pk)
                 post = self.get_post(request, thread, pk).unwrap()
 
-                allow_edit_post(request.user, post)
+                allow_edit_post(request.user_acl, post)
 
                 return revert_post_endpoint(request, post)
 
