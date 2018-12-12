@@ -59,16 +59,20 @@ class PatchingUserACLTests(TestCase):
             user_acl = useracl.get_user_acl(user, cache_versions)
             assert user_acl["patched_for_user_id"] == user.id
 
-    @patch_user_acl(callable_acl_patch, {"other_acl_path": True})
-    def test_multiple_acl_patches_are_applied_by_decorator(self):
+    @patch_user_acl({"acl_patch": 1})
+    @patch_user_acl({"acl_patch": 2})
+    def test_multiple_acl_patches_applied_by_decorator_stack(self):
         user = User.objects.create_user("User", "user@example.com")
         user_acl = useracl.get_user_acl(user, cache_versions)
-        assert user_acl["patched_for_user_id"] == user.id
-        assert user_acl["other_acl_path"]
+        assert user_acl["acl_patch"] == 2
 
-    def test_multiple_acl_patches_are_applied_by_context_manager(self):
+    def test_multiple_acl_patches_applied_by_context_manager_stack(self):
         user = User.objects.create_user("User", "user@example.com")
-        with patch_user_acl(callable_acl_patch, {"other_acl_path": True}):
+        with patch_user_acl({"acl_patch": 1}):
+            with patch_user_acl({"acl_patch": 2}):
+                user_acl = useracl.get_user_acl(user, cache_versions)
+                assert user_acl["acl_patch"] == 2
             user_acl = useracl.get_user_acl(user, cache_versions)
-            assert user_acl["patched_for_user_id"] == user.id
-            assert user_acl["other_acl_path"]
+            assert user_acl["acl_patch"] == 1
+        user_acl = useracl.get_user_acl(user, cache_versions)
+        assert "acl_patch" not in user_acl
