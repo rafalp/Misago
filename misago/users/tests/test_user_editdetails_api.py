@@ -44,12 +44,12 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         )
 
         # moderator has permission to edit details
-        with patch_user_acl(self.user, {'can_moderate_profile_details': True}):
+        with patch_user_acl({'can_moderate_profile_details': True}):
             response = self.client.get(api_link)
             self.assertEqual(response.status_code, 200)
 
         # non-moderator has no permission to edit details
-        with patch_user_acl(self.user, {'can_moderate_profile_details': False}):
+        with patch_user_acl({'can_moderate_profile_details': False}):
             response = self.client.get(api_link)
             self.assertEqual(response.status_code, 403)
 

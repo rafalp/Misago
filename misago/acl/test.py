@@ -11,10 +11,6 @@ class patch_user_acl(ContextDecorator, ExitStack):
     """Testing utility that patches get_user_acl results
 
     Can be used as decorator or context manager.
-    
-    Accepts one or two arguments:
-    - patch_user_acl(acl_patch)
-    - patch_user_acl(user, acl_patch)
 
     Patch should be a dict or callable.
     """
