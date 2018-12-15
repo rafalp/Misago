@@ -223,7 +223,7 @@ class MovePostsSerializer(serializers.Serializer):
         request = self.context['request']
         thread = self.context['thread']
 
-        posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
+        posts_queryset = exclude_invisible_posts(request.user_acl, thread.category, thread.post_set)
         posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
 
         posts = []
