@@ -12,7 +12,7 @@ def post_read_endpoint(request, thread, post):
             thread.subscription.last_read_on = post.posted_on
             thread.subscription.save()
 
-    threadstracker.make_read_aware(request.user, thread)
+    threadstracker.make_read_aware(request.user, request.user_acl, thread)
 
     # send signal if post read marked thread as read
     # used in some places, eg. syncing unread thread count
