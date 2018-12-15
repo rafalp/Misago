@@ -15,7 +15,7 @@ def posts_merge_endpoint(request, thread):
         data=request.data,
         context={
             'thread': thread,
-            'user': request.user,
+            'user_acl': request.user_acl,
         },
     )
 
