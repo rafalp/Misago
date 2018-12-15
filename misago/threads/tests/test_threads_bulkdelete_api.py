@@ -2,12 +2,12 @@ import json
 
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Thread
 from misago.threads.serializers.moderation import THREADS_LIMIT
+from misago.threads.test import patch_category_acl
 from misago.threads.threadtypes import trees_map
 
 from .test_threads_api import ThreadsApiTestCase
@@ -44,26 +44,17 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "This action is not available to guests.",
         })
 
+    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_delete_no_ids(self):
         """api requires ids to delete"""
-        self.override_acl({
-            'can_hide_own_threads': 0,
-            'can_hide_threads': 0,
-        })
-
         response = self.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You have to specify at least one thread to delete.",
         })
 
+    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_validate_ids(self):
-        """api validates that ids are list of ints"""
-        self.override_acl({
-            'can_hide_own_threads': 2,
-            'can_hide_threads': 2,
-        })
-
         response = self.delete(self.api_link, True)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
@@ -82,26 +73,18 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "One or more thread ids received were invalid.",
         })
 
+    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
-        self.override_acl({
-            'can_hide_own_threads': 2,
-            'can_hide_threads': 2,
-        })
-
         response = self.delete(self.api_link, list(range(THREADS_LIMIT + 1)))
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "No more than %s threads can be deleted at single time." % THREADS_LIMIT,
         })
 
+    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_validate_thread_visibility(self):
         """api valdiates if user can see deleted thread"""
-        self.override_acl({
-            'can_hide_own_threads': 2,
-            'can_hide_threads': 2,
-        })
-
         unapproved_thread = self.threads[1]
 
         unapproved_thread.is_unapproved = True
@@ -119,17 +102,12 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         for thread in self.threads:
             Thread.objects.get(pk=thread.pk)
 
+    @patch_category_acl({"can_hide_threads": 0, "can_hide_own_threads": 2})
     def test_delete_other_user_thread_no_permission(self):
         """api valdiates if user can delete other users threads"""
-        self.override_acl({
-            'can_hide_own_threads': 2,
-            'can_hide_threads': 0,
-        })
-
         other_thread = self.threads[1]
 
         response = self.delete(self.api_link, [p.id for p in self.threads])
-
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), [
             {
@@ -145,16 +123,15 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         for thread in self.threads:
             Thread.objects.get(pk=thread.pk)
 
+    @patch_category_acl({
+        "can_hide_threads": 2, 
+        "can_hide_own_threads": 2,
+        "can_close_threads": False,
+    })
     def test_delete_thread_closed_category_no_permission(self):
         """api tests category's closed state"""
         self.category.is_closed = True
         self.category.save()
-
-        self.override_acl({
-            'can_hide_threads': 2,
-            'can_hide_own_threads': 2,
-            'can_close_threads': False,
-        })
 
         response = self.delete(self.api_link, [p.id for p in self.threads])
 
@@ -169,17 +146,16 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             } for thread in sorted(self.threads, key=lambda i: i.pk)
         ])
 
+    @patch_category_acl({
+        "can_hide_threads": 2, 
+        "can_hide_own_threads": 2,
+        "can_close_threads": False,
+    })
     def test_delete_thread_closed_no_permission(self):
         """api tests thread's closed state"""
         closed_thread = self.threads[1]
         closed_thread.is_closed = True
         closed_thread.save()
-
-        self.override_acl({
-            'can_hide_threads': 2,
-            'can_hide_own_threads': 2,
-            'can_close_threads': False,
-        })
 
         response = self.delete(self.api_link, [p.id for p in self.threads])
 
@@ -194,6 +170,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             }
         ])
 
+    @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_delete_private_thread(self):
         """attempt to delete private thread fails"""
         private_thread = self.threads[0]
@@ -207,11 +184,6 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             user=self.user,
             is_owner=True,
         )
-
-        self.override_acl({
-            'can_hide_own_threads': 2,
-            'can_hide_threads': 2,
-        })
 
         threads_ids = [p.id for p in self.threads]
 
