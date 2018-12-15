@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.threads import testutils
 from misago.threads.models import ThreadParticipant
 
@@ -20,10 +20,9 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
         response = self.client.get(self.test_link)
         self.assertContains(response, "sign in to use private threads", status_code=403)
 
+    @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):
         """view requires user to have permission to be able to access it"""
-        override_acl(self.user, {'can_use_private_threads': 0})
-
         response = self.client.get(self.test_link)
         self.assertContains(response, "use private threads", status_code=403)
 
@@ -51,9 +50,8 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
         self.assertContains(response, visible.get_absolute_url())
 
         # threads with reported posts will also show to moderators
-        override_acl(self.user, {'can_moderate_private_threads': 1})
-
-        response = self.client.get(self.test_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, reported.get_absolute_url())
-        self.assertContains(response, visible.get_absolute_url())
+        with patch_user_acl({"can_moderate_private_threads": True}):
+            response = self.client.get(self.test_link)
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, reported.get_absolute_url())
+            self.assertContains(response, visible.get_absolute_url())

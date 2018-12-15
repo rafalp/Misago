@@ -16,7 +16,7 @@ class PrivateThreadMiddleware(PostingMiddleware):
     def pre_save(self, serializer):
         category = Category.objects.private_threads()
 
-        add_acl(self.user, category)
+        add_acl(self.user_acl, category)
 
         # set flags for savechanges middleware
         category.update_all = False

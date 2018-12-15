@@ -7,7 +7,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl import add_acl, useracl
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
@@ -281,7 +281,8 @@ def patch_add_participant(request, thread, value):
     if participant in [p.user for p in thread.participants_list]:
         raise PermissionDenied(_("This user is already thread participant."))
 
-    allow_add_participant(request.user_acl, participant)
+    participant_acl = useracl.get_user_acl(participant, request.cache_versions)
+    allow_add_participant(request.user_acl, participant, participant_acl)
     add_participant(request, thread, participant)
 
     make_participants_aware(request.user, thread)

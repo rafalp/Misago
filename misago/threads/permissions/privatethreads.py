@@ -247,10 +247,10 @@ def allow_remove_participant(user_acl, thread, target):
 can_remove_participant = return_boolean(allow_remove_participant)
 
 
-def allow_add_participant(user_acl, target):
+def allow_add_participant(user_acl, target, target_acl):
     message_format = {'user': target.username}
 
-    if not can_use_private_threads(target):
+    if not can_use_private_threads(target_acl):
         raise PermissionDenied(
             _("%(user)s can't participate in private threads.") % message_format
         )
@@ -258,7 +258,6 @@ def allow_add_participant(user_acl, target):
     if user_acl['can_add_everyone_to_private_threads']:
         return
 
-    # FIXME: User.is_blocking() needs to work with ids
     if user_acl['can_be_blocked'] and target.is_blocking(user_acl["user_id"]):
         raise PermissionDenied(_("%(user)s is blocking you.") % message_format)
 
@@ -267,7 +266,6 @@ def allow_add_participant(user_acl, target):
             _("%(user)s is not allowing invitations to private threads.") % message_format
         )
 
-    # FIXME: User.is_following() needs to work with ids
     if target.can_be_messaged_by_followed and not target.is_following(user_acl["user_id"]):
         message = _("%(user)s limits invitations to private threads to followed users.")
         raise PermissionDenied(message % message_format)
@@ -276,9 +274,9 @@ def allow_add_participant(user_acl, target):
 can_add_participant = return_boolean(allow_add_participant)
 
 
-def allow_message_user(user_acl, target):
+def allow_message_user(user_acl, target, target_acl):
     allow_use_private_threads(user_acl)
-    allow_add_participant(user_acl, target)
+    allow_add_participant(user_acl, target, target_acl)
 
 
 can_message_user = return_boolean(allow_message_user)

@@ -45,6 +45,23 @@ def patch_other_category_acl(acl_patch=None):
     return patch_user_acl(patch_acl)
 
 
+def patch_private_threads_acl(acl_patch=None):
+    def patch_acl(_, user_acl):
+        category = Category.objects.private_threads()
+        category_acl = user_acl['categories'][category.id]
+        category_acl.update(default_category_acl)
+        if acl_patch:
+            category_acl.update(acl_patch)
+        cleanup_patched_acl(user_acl, category_acl, category)
+
+    return patch_user_acl(patch_acl)
+
+
+def other_user_cant_use_private_threads(user, user_acl):
+    if user.slug == "bobboberson":
+        user_acl.update({"can_use_private_threads": False})
+
+
 def create_category_acl_patch(category_slug, acl_patch):
     def created_category_acl_patch(_, user_acl):
         category = Category.objects.get(slug=category_slug)

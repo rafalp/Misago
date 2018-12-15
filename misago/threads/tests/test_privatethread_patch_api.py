@@ -3,12 +3,12 @@ import json
 from django.contrib.auth import get_user_model
 from django.core import mail
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.threads import testutils
+from misago.threads.test import other_user_cant_use_private_threads
 from misago.threads.models import Thread, ThreadParticipant
 
 from .test_privatethreads import PrivateThreadsTestCase
-
 
 UserModel = get_user_model()
 
@@ -125,11 +125,10 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
             'detail': ["BobBoberson is blocking you."],
         })
 
+    @patch_user_acl(other_user_cant_use_private_threads)
     def test_add_no_perm_user(self):
         """can't add user that has no permission to use private threads"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
-
-        override_acl(self.other_user, {'can_use_private_threads': 0})
 
         response = self.patch(
             self.api_link, [
@@ -219,14 +218,13 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertIn(self.user.username, email.subject)
         self.assertIn(self.thread.title, email.subject)
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_add_user_to_other_user_thread_moderator(self):
         """moderators can add users to other users threads"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
 
         self.thread.has_reported_posts = True
         self.thread.save()
-
-        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         self.patch(
             self.api_link, [
@@ -246,14 +244,13 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         # notification about new private thread wasn't send because we invited ourselves
         self.assertEqual(len(mail.outbox), 0)
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_add_user_to_closed_moderator(self):
         """moderators can add users to closed threads"""
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
         self.thread.is_closed = True
         self.thread.save()
-
-        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         self.patch(
             self.api_link, [
@@ -458,14 +455,13 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(self.thread.participants.count(), 1)
         self.assertEqual(self.thread.participants.filter(pk=self.user.pk).count(), 0)
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_moderator_remove_user(self):
         """api allows moderator to remove other user"""
         removed_user = UserModel.objects.create_user('Vigilante', 'test@test.com', 'pass123')
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user, removed_user])
-
-        override_acl(self.user, {'can_moderate_private_threads': True})
 
         response = self.patch(
             self.api_link, [
@@ -742,14 +738,13 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'changed_owner')
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_moderator_change_owner(self):
         """moderator can change thread owner to other user"""
         new_owner = UserModel.objects.create_user('NewOwner', 'new@owner.com', 'pass123')
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user, new_owner])
-
-        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.patch(
             self.api_link, [
@@ -768,7 +763,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertFalse(UserModel.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(UserModel.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
-        # ownership was transfered
+        # ownership was transferred
         self.assertEqual(self.thread.participants.count(), 3)
         self.assertTrue(ThreadParticipant.objects.get(user=new_owner).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.user).is_owner)
@@ -779,12 +774,11 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'changed_owner')
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_moderator_takeover(self):
         """moderator can takeover the thread"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
-
-        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.patch(
             self.api_link, [
@@ -812,6 +806,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertTrue(event.is_event)
         self.assertTrue(event.event_type, 'tookover')
 
+    @patch_user_acl({'can_moderate_private_threads': True})
     def test_moderator_closed_thread_takeover(self):
         """moderator can takeover closed thread thread"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
@@ -819,8 +814,6 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
 
         self.thread.is_closed = True
         self.thread.save()
-
-        override_acl(self.user, {'can_moderate_private_threads': 1})
 
         response = self.patch(
             self.api_link, [
@@ -838,7 +831,7 @@ class PrivateThreadTakeOverApiTests(PrivateThreadPatchApiTestCase):
         self.assertFalse(UserModel.objects.get(pk=self.user.pk).sync_unread_private_threads)
         self.assertTrue(UserModel.objects.get(pk=self.other_user.pk).sync_unread_private_threads)
 
-        # ownership was transfered
+        # ownership was transferred
         self.assertEqual(self.thread.participants.count(), 2)
         self.assertTrue(ThreadParticipant.objects.get(user=self.user).is_owner)
         self.assertFalse(ThreadParticipant.objects.get(user=self.other_user).is_owner)
