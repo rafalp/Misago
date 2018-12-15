@@ -15,7 +15,7 @@ from misago.threads.serializers import (
 
 
 def thread_merge_endpoint(request, thread, viewmodel):
-    allow_merge_thread(request.user, thread)
+    allow_merge_thread(request.user_acl, thread)
 
     serializer = MergeThreadSerializer(
         data=request.data,
@@ -88,9 +88,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
 def threads_merge_endpoint(request):
     serializer = MergeThreadsSerializer(
         data=request.data,
-        context={
-            'user': request.user
-        },
+        context={'user_acl': request.user_acl},
     )
 
     if not serializer.is_valid():
@@ -108,7 +106,7 @@ def threads_merge_endpoint(request):
 
     for thread in threads:
         try:
-            allow_merge_thread(request.user, thread)
+            allow_merge_thread(request.user_acl, thread)
         except PermissionDenied as e:
             invalid_threads.append({
                 'id': thread.pk,

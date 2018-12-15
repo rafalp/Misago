@@ -62,10 +62,10 @@ class DeletePostsSerializer(serializers.Serializer):
             )
             raise ValidationError(message % {'limit': POSTS_LIMIT})
 
-        user = self.context['user']
+        user_acl = self.context['user_acl']
         thread = self.context['thread']
 
-        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = exclude_invisible_posts(user_acl, thread.category, thread.post_set)
         posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
 
         posts = []
@@ -74,10 +74,10 @@ class DeletePostsSerializer(serializers.Serializer):
             post.thread = thread
 
             if post.is_event:
-                allow_delete_event(user, post)
+                allow_delete_event(user_acl, post)
             else:
-                allow_delete_best_answer(user, post)
-                allow_delete_post(user, post)
+                allow_delete_best_answer(user_acl, post)
+                allow_delete_post(user_acl, post)
 
             posts.append(post)
 
@@ -115,10 +115,10 @@ class MergePostsSerializer(serializers.Serializer):
             )
             raise serializers.ValidationError(message % {'limit': POSTS_LIMIT})
 
-        user = self.context['user']
+        user_acl = self.context['user_acl']
         thread = self.context['thread']
 
-        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = exclude_invisible_posts(user_acl, thread.category, thread.post_set)
         posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
 
         posts = []
@@ -127,7 +127,7 @@ class MergePostsSerializer(serializers.Serializer):
             post.thread = thread
 
             try:
-                allow_merge_post(user, post)
+                allow_merge_post(user_acl, post)
             except PermissionDenied as e:
                 raise serializers.ValidationError(e)
 
@@ -232,7 +232,7 @@ class MovePostsSerializer(serializers.Serializer):
             post.thread = thread
 
             try:
-                allow_move_post(request.user, post)
+                allow_move_post(request.user_acl, post)
                 posts.append(post)
             except PermissionDenied as e:
                 raise serializers.ValidationError(e)
@@ -259,14 +259,15 @@ class NewThreadSerializer(serializers.Serializer):
         return validate_title(title)
 
     def validate_category(self, category_id):
-        self.category = validate_category(self.context['user'], category_id)
-        if not can_start_thread(self.context['user'], self.category):
+        user_acl = self.context['user_acl']
+        self.category = validate_category(user_acl, category_id)
+        if not can_start_thread(user_acl, self.category):
             raise ValidationError(_("You can't create new threads in selected category."))
         return self.category
 
     def validate_weight(self, weight):
         try:
-            add_acl(self.context['user'], self.category)
+            add_acl(self.context['user_acl'], self.category)
         except AttributeError:
             return weight  # don't validate weight further if category failed
 
@@ -283,7 +284,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_hidden(self, is_hidden):
         try:
-            add_acl(self.context['user'], self.category)
+            add_acl(self.context['user_acl'], self.category)
         except AttributeError:
             return is_hidden  # don't validate hidden further if category failed
 
@@ -293,7 +294,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_closed(self, is_closed):
         try:
-            add_acl(self.context['user'], self.category)
+            add_acl(self.context['user_acl'], self.category)
         except AttributeError:
             return is_closed  # don't validate closed further if category failed
 
@@ -331,9 +332,9 @@ class SplitPostsSerializer(NewThreadSerializer):
             raise ValidationError(message % {'limit': POSTS_LIMIT})
 
         thread = self.context['thread']
-        user = self.context['user']
+        user_acl = self.context['user_acl']
 
-        posts_queryset = exclude_invisible_posts(user, thread.category, thread.post_set)
+        posts_queryset = exclude_invisible_posts(user_acl, thread.category, thread.post_set)
         posts_queryset = posts_queryset.filter(id__in=data).order_by('id')
 
         posts = []
@@ -342,7 +343,7 @@ class SplitPostsSerializer(NewThreadSerializer):
             post.thread = thread
 
             try:
-                allow_split_post(user, post)
+                allow_split_post(user_acl, post)
             except PermissionDenied as e:
                 raise ValidationError(e)
 
@@ -389,7 +390,7 @@ class DeleteThreadsSerializer(serializers.Serializer):
         for thread_id in data:
             try:
                 thread = viewmodel(request, thread_id).unwrap()
-                allow_delete_thread(request.user, thread)
+                allow_delete_thread(request.user_acl, thread)
                 threads.append(thread)
             except PermissionDenied as e:
                 errors.append({
@@ -443,7 +444,7 @@ class MergeThreadSerializer(serializers.Serializer):
 
         try:
             other_thread = viewmodel(request, other_thread_id).unwrap()
-            allow_merge_thread(request.user, other_thread, otherthread=True)
+            allow_merge_thread(request.user_acl, other_thread, otherthread=True)
         except PermissionDenied as e:
             raise serializers.ValidationError(e)
         except Http404:
@@ -454,7 +455,7 @@ class MergeThreadSerializer(serializers.Serializer):
                 )
             )
 
-        if not can_reply_thread(request.user, other_thread):
+        if not can_reply_thread(request.user_acl, other_thread):
             raise ValidationError(_("You can't merge this thread into thread you can't reply."))
 
         return other_thread
@@ -518,12 +519,12 @@ class MergeThreadsSerializer(NewThreadSerializer):
             category__tree_id=threads_tree_id,
         ).select_related('category').order_by('-id')
 
-        user = self.context['user']
+        user_acl = self.context['user_acl']
 
         threads = []
         for thread in threads_queryset:
-            add_acl(user, thread)
-            if can_see_thread(user, thread):
+            add_acl(user_acl, thread)
+            if can_see_thread(user_acl, thread):
                 threads.append(thread)
 
         if len(threads) != len(data):

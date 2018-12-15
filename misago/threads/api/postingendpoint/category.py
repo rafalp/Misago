@@ -23,12 +23,12 @@ class CategoryMiddleware(PostingMiddleware):
         return False
 
     def get_serializer(self):
-        return CategorySerializer(self.user, data=self.request.data)
+        return CategorySerializer(self.user_acl, data=self.request.data)
 
     def pre_save(self, serializer):
         category = serializer.category_cache
 
-        add_acl(self.user, category)
+        add_acl(self.user_acl, category)
 
         # set flags for savechanges middleware
         category.update_all = False
@@ -47,8 +47,8 @@ class CategorySerializer(serializers.Serializer):
         }
     )
 
-    def __init__(self, user, *args, **kwargs):
-        self.user = user
+    def __init__(self, user_acl, *args, **kwargs):
+        self.user_acl = user_acl
         self.category_cache = None
 
         super().__init__(*args, **kwargs)
@@ -59,15 +59,15 @@ class CategorySerializer(serializers.Serializer):
                 pk=value, tree_id=trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
             )
 
-            can_see = can_see_category(self.user, self.category_cache)
-            can_browse = can_browse_category(self.user, self.category_cache)
+            can_see = can_see_category(self.user_acl, self.category_cache)
+            can_browse = can_browse_category(self.user_acl, self.category_cache)
             if not (self.category_cache.level and can_see and can_browse):
                 raise PermissionDenied(_("Selected category is invalid."))
 
-            allow_start_thread(self.user, self.category_cache)
-        except PermissionDenied as e:
-            raise serializers.ValidationError(e.args[0])
+            allow_start_thread(self.user_acl, self.category_cache)
         except Category.DoesNotExist:
             raise serializers.ValidationError(
                 _("Selected category doesn't exist or you don't have permission to browse it.")
             )
+        except PermissionDenied as e:
+            raise serializers.ValidationError(e.args[0])

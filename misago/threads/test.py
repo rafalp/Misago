@@ -16,7 +16,7 @@ default_category_acl = {
 }
 
 
-def patch_category_acl(acl_patch):
+def patch_category_acl(acl_patch=None):
     def patch_acl(_, user_acl):
         category = Category.objects.get(slug="first-category")
         category_acl = user_acl['categories'][category.id]
@@ -28,7 +28,7 @@ def patch_category_acl(acl_patch):
     return patch_user_acl(patch_acl)
 
 
-def patch_other_category_acl(acl_patch):
+def patch_other_category_acl(acl_patch=None):
     def patch_acl(_, user_acl):
         src_category = Category.objects.get(slug="first-category")
         category_acl = user_acl['categories'][src_category.id].copy()
