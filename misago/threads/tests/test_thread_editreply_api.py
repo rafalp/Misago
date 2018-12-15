@@ -4,10 +4,11 @@ from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+from misago.threads.test import patch_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -27,21 +28,6 @@ class EditReplyTests(AuthenticatedUserTestCase):
             }
         )
 
-    def override_acl(self, extra_acl=None):
-        new_acl = self.user.acl_cache
-        new_acl['categories'][self.category.pk].update({
-            'can_see': 1,
-            'can_browse': 1,
-            'can_start_threads': 0,
-            'can_reply_threads': 0,
-            'can_edit_posts': 1,
-        })
-
-        if extra_acl:
-            new_acl['categories'][self.category.pk].update(extra_acl)
-
-        override_acl(self.user, new_acl)
-
     def put(self, url, data=None):
         content = encode_multipart(BOUNDARY, data or {})
         return self.client.put(url, content, content_type=MULTIPART_CONTENT)
@@ -55,32 +41,30 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
-        self.override_acl({'can_see': 0})
-        response = self.put(self.api_link)
-        self.assertEqual(response.status_code, 404)
+        with patch_category_acl({'can_see': False}):
+            response = self.put(self.api_link)
+            self.assertEqual(response.status_code, 404)
 
-        self.override_acl({'can_browse': 0})
-        response = self.put(self.api_link)
-        self.assertEqual(response.status_code, 404)
+        with patch_category_acl({'can_browse': False}):
+            response = self.put(self.api_link)
+            self.assertEqual(response.status_code, 404)
 
-        self.override_acl({'can_see_all_threads': 0})
-        response = self.put(self.api_link)
-        self.assertEqual(response.status_code, 404)
+        with patch_category_acl({'can_see_all_threads': False}):
+            response = self.put(self.api_link)
+            self.assertEqual(response.status_code, 404)
 
+    @patch_category_acl({"can_edit_posts": 0})
     def test_cant_edit_reply(self):
         """permission to edit reply is validated"""
-        self.override_acl({'can_edit_posts': 0})
-
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't edit posts in this category.",
         })
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_cant_edit_other_user_reply(self):
         """permission to edit reply by other users is validated"""
-        self.override_acl({'can_edit_posts': 1})
-
         self.post.poster = None
         self.post.save()
 
@@ -90,13 +74,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "You can't edit other users posts in this category.",
         })
 
+    @patch_category_acl({"can_edit_posts": 1, "post_edit_time": 1})
     def test_edit_too_old(self):
         """permission to edit reply within timelimit is validated"""
-        self.override_acl({
-            'can_edit_posts': 1,
-            'post_edit_time': 1,
-        })
-
         self.post.posted_on = timezone.now() - timedelta(minutes=5)
         self.post.save()
 
@@ -106,10 +86,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "You can't edit posts that are older than 1 minute.",
         })
 
-    def test_closed_category(self):
+    @patch_category_acl({"can_edit_posts": 1, "can_close_threads": False})
+    def test_closed_category_no_permission(self):
         """permssion to edit reply in closed category is validated"""
-        self.override_acl({'can_close_threads': 0})
-
         self.category.is_closed = True
         self.category.save()
 
@@ -119,16 +98,18 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "This category is closed. You can't edit posts in it.",
         })
 
-        # allow to post in closed category
-        self.override_acl({'can_close_threads': 1})
+    @patch_category_acl({"can_edit_posts": 1, "can_close_threads": True})
+    def test_closed_category(self):
+        """permssion to edit reply in closed category is validated"""
+        self.category.is_closed = True
+        self.category.save()
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
-    def test_closed_thread(self):
+    @patch_category_acl({"can_edit_posts": 1, "can_close_threads": False})
+    def test_closed_thread_no_permission(self):
         """permssion to edit reply in closed thread is validated"""
-        self.override_acl({'can_close_threads': 0})
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -138,16 +119,18 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "This thread is closed. You can't edit posts in it.",
         })
 
-        # allow to post in closed thread
-        self.override_acl({'can_close_threads': 1})
+    @patch_category_acl({"can_edit_posts": 1, "can_close_threads": True})
+    def test_closed_thread(self):
+        """permssion to edit reply in closed thread is validated"""
+        self.thread.is_closed = True
+        self.thread.save()
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
-    def test_protected_post(self):
+    @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": False})
+    def test_protected_post_no_permission(self):
         """permssion to edit protected post is validated"""
-        self.override_acl({'can_protect_posts': 0})
-
         self.post.is_protected = True
         self.post.save()
 
@@ -157,26 +140,27 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "This post is protected. You can't edit it.",
         })
 
-        # allow to post in closed thread
-        self.override_acl({'can_protect_posts': 1})
+    @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": True})
+    def test_protected_post_no(self):
+        """permssion to edit protected post is validated"""
+        self.post.is_protected = True
+        self.post.save()
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_empty_data(self):
         """no data sent handling has no showstoppers"""
-        self.override_acl()
-
         response = self.put(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             "post": ["You have to enter a message."],
         })
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_invalid_data(self):
         """api errors for invalid request data"""
-        self.override_acl()
-
         response = self.client.put(
             self.api_link,
             'false',
@@ -187,10 +171,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "non_field_errors": ["Invalid data. Expected a dictionary, but got bool."]
         })
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_edit_event(self):
         """events can't be edited"""
-        self.override_acl()
-
         self.post.is_event = True
         self.post.save()
 
@@ -200,10 +183,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
             "detail": "Events can't be edited.",
         })
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_post_is_validated(self):
         """post is validated"""
-        self.override_acl()
-
         response = self.put(
             self.api_link, data={
                 'post': "a",
@@ -216,15 +198,14 @@ class EditReplyTests(AuthenticatedUserTestCase):
             }
         )
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_edit_reply_no_change(self):
         """endpoint isn't bumping edits count if no change was made to post's body"""
-        self.override_acl()
         self.assertEqual(self.post.edits_record.count(), 0)
 
         response = self.put(self.api_link, data={'post': self.post.original})
         self.assertEqual(response.status_code, 200)
 
-        self.override_acl()
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.post.parsed)
 
@@ -237,15 +218,14 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         self.assertEqual(self.post.edits_record.count(), 0)
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_edit_reply(self):
         """endpoint updates reply"""
-        self.override_acl()
         self.assertEqual(self.post.edits_record.count(), 0)
 
         response = self.put(self.api_link, data={'post': "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
-        self.override_acl()
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, "<p>This is test edit!</p>")
 
@@ -268,10 +248,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertEqual(post_edit.editor_name, self.user.username)
         self.assertEqual(post_edit.editor_slug, self.user.slug)
 
+    @patch_category_acl({"can_edit_posts": 2, "can_hide_threads": 1})
     def test_edit_first_post_hidden(self):
         """endpoint updates hidden thread's first post"""
-        self.override_acl({'can_hide_threads': 1, 'can_edit_posts': 2})
-
         self.thread.is_hidden = True
         self.thread.save()
         self.thread.first_post.is_hidden = True
@@ -288,10 +267,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         response = self.put(api_link, data={'post': "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
+    @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": True})
     def test_protect_post(self):
         """can protect post"""
-        self.override_acl({'can_protect_posts': 1})
-
         response = self.put(
             self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
@@ -303,10 +281,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.order_by('id').last()
         self.assertTrue(post.is_protected)
 
+    @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": False})
     def test_protect_post_no_permission(self):
         """cant protect post without permission"""
-        self.override_acl({'can_protect_posts': 0})
-
         response = self.put(
             self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
@@ -318,10 +295,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.order_by('id').last()
         self.assertFalse(post.is_protected)
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_post_unicode(self):
         """unicode characters can be posted"""
-        self.override_acl()
-
         response = self.put(
             self.api_link, data={
                 'post': "Chrzążczyżewoszyce, powiat Łękółody.",
@@ -329,6 +305,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_reply_category_moderation_queue(self):
         """edit sends reply to queue due to category setup"""
         self.category.require_edits_approval = True
@@ -344,10 +321,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
+    @patch_category_acl({"can_edit_posts": 1})
+    @patch_user_acl({"can_approve_content": True})
     def test_reply_category_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
-        override_acl(self.user, {'can_approve_content': 1})
-
         self.category.require_edits_approval = True
         self.category.save()
 
@@ -361,10 +338,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
+    @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
     def test_reply_user_moderation_queue(self):
         """edit sends reply to queue due to user acl"""
-        self.override_acl({'require_edits_approval': 1})
-
         response = self.put(
             self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
@@ -375,12 +351,13 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
+    @patch_category_acl({
+        "can_edit_posts": 1,
+        "require_edits_approval": True,
+    })
+    @patch_user_acl({"can_approve_content": True})
     def test_reply_user_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
-        override_acl(self.user, {'can_approve_content': 1})
-
-        self.override_acl({'require_edits_approval': 1})
-
         response = self.put(
             self.api_link, data={
                 'post': "Lorem ipsum dolor met!",
@@ -391,16 +368,16 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
+    @patch_category_acl({
+        "can_edit_posts": 1,
+        "require_threads_approval": True,
+        "require_replies_approval": True,
+    })
     def test_reply_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.category.require_threads_approval = True
         self.category.require_replies_approval = True
         self.category.save()
-
-        self.override_acl({
-            'require_threads_approval': 1,
-            'require_replies_approval': 1,
-        })
 
         response = self.put(
             self.api_link, data={
@@ -426,6 +403,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
             }
         )
 
+    @patch_category_acl({"can_edit_posts": 1})
     def test_first_reply_category_moderation_queue(self):
         """edit sends thread to queue due to category setup"""
         self.setUpFirstReplyTest()
@@ -447,11 +425,11 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = Post.objects.get(pk=self.post.pk)
         self.assertTrue(post.is_unapproved)
 
+    @patch_category_acl({"can_edit_posts": 1})
+    @patch_user_acl({'can_approve_content': True})
     def test_first_reply_category_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
         self.setUpFirstReplyTest()
-
-        override_acl(self.user, {'can_approve_content': 1})
 
         self.category.require_edits_approval = True
         self.category.save()
@@ -470,11 +448,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = Post.objects.get(pk=self.post.pk)
         self.assertFalse(post.is_unapproved)
 
+    @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
     def test_first_reply_user_moderation_queue(self):
         """edit sends thread to queue due to user acl"""
         self.setUpFirstReplyTest()
-
-        self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
             self.api_link, data={
@@ -490,13 +467,11 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = Post.objects.get(pk=self.post.pk)
         self.assertTrue(post.is_unapproved)
 
+    @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
+    @patch_user_acl({'can_approve_content': True})
     def test_first_reply_user_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
         self.setUpFirstReplyTest()
-
-        override_acl(self.user, {'can_approve_content': 1})
-
-        self.override_acl({'require_edits_approval': 1})
 
         response = self.put(
             self.api_link, data={
@@ -512,6 +487,11 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = Post.objects.get(pk=self.post.pk)
         self.assertFalse(post.is_unapproved)
 
+    @patch_category_acl({
+        "can_edit_posts": 1,
+        "require_threads_approval": True,
+        "require_replies_approval": True,
+    })
     def test_first_reply_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.setUpFirstReplyTest()
@@ -519,11 +499,6 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_threads_approval = True
         self.category.require_replies_approval = True
         self.category.save()
-
-        self.override_acl({
-            'require_threads_approval': 1,
-            'require_replies_approval': 1,
-        })
 
         response = self.put(
             self.api_link, data={
