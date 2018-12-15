@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from misago.acl.testutils import override_acl
+from misago.acl import useracl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.threads import testutils
@@ -15,6 +16,14 @@ class RequestMock(object):
     def __init__(self, data=None):
         self.data = data or {}
 
+cache_versions = {"acl": "abcdefgh"}
+
+
+def patch_attachments_acl(acl_patch=None):
+    acl_patch = acl_patch or {}
+    acl_patch.setdefault("max_attachment_size", 1024)
+    return patch_user_acl(acl_patch)
+
 
 class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def setUp(self):
@@ -26,11 +35,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         self.post.update_fields = []
 
-        self.override_acl()
         self.filetype = AttachmentType.objects.order_by('id').last()
-
-    def override_acl(self, new_acl=None):
-        override_acl(self.user, new_acl or {'max_attachment_size': 1024})
 
     def mock_attachment(self, user=True, post=None):
         return Attachment.objects.create(
@@ -46,34 +51,41 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_use_this_middleware(self):
         """use_this_middleware returns False if we can't upload attachments"""
-        middleware = AttachmentsMiddleware(user=self.user)
+        with patch_user_acl({'max_attachment_size': 0}):
+            user_acl = useracl.get_user_acl(self.user, cache_versions)
+            middleware = AttachmentsMiddleware(user=self.user, user_acl=user_acl)
+            self.assertFalse(middleware.use_this_middleware())
 
-        self.override_acl({'max_attachment_size': 0})
+        with patch_user_acl({'max_attachment_size': 1024}):
+            user_acl = useracl.get_user_acl(self.user, cache_versions)
+            middleware = AttachmentsMiddleware(user=self.user, user_acl=user_acl)
+            self.assertTrue(middleware.use_this_middleware())
 
-        self.assertFalse(middleware.use_this_middleware())
-
-        self.override_acl({'max_attachment_size': 1024})
-
-        self.assertTrue(middleware.use_this_middleware())
-
+    @patch_attachments_acl()
     def test_middleware_is_optional(self):
         """middleware is optional"""
         INPUTS = [{}, {'attachments': []}]
+
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
                 request=RequestMock(test_input),
                 mode=PostingEndpoint.START,
                 user=self.user,
+                user_acl=user_acl,
                 post=self.post,
             )
 
             serializer = middleware.get_serializer()
             self.assertTrue(serializer.is_valid())
 
+    @patch_attachments_acl()
     def test_middleware_validates_ids(self):
         """middleware validates attachments ids"""
         INPUTS = ['none', ['a', 'b', 123], range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1)]
+
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
@@ -82,18 +94,22 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
                 }),
                 mode=PostingEndpoint.START,
                 user=self.user,
+                user_acl=user_acl,
                 post=self.post,
             )
 
             serializer = middleware.get_serializer()
             self.assertFalse(serializer.is_valid(), "%r shouldn't validate" % test_input)
 
+    @patch_attachments_acl()
     def test_get_initial_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock(),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
@@ -106,16 +122,19 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         attachment = self.mock_attachment(post=self.post)
         attachments = serializer.get_initial_attachments(
-            middleware.mode, middleware.user, middleware.post
+            middleware.mode, middleware.user_acl, middleware.post
         )
         self.assertEqual(attachments, [attachment])
 
+    @patch_attachments_acl()
     def test_get_new_attachments(self):
         """get_initial_attachments returns list of attachments already existing on post"""
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock(),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
@@ -133,27 +152,27 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         attachments = serializer.get_new_attachments(middleware.user, [other_user_attachment.pk])
         self.assertEqual(attachments, [])
 
+    
+    @patch_attachments_acl({'can_delete_other_users_attachments': False})
     def test_cant_delete_attachment(self):
         """middleware validates if we have permission to delete other users attachments"""
-        self.override_acl({
-            'max_attachment_size': 1024,
-            'can_delete_other_users_attachments': False,
-        })
-
         attachment = self.mock_attachment(user=False, post=self.post)
         self.assertIsNone(attachment.uploader)
 
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         serializer = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': []
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         ).get_serializer()
 
         self.assertFalse(serializer.is_valid())
 
+    @patch_attachments_acl()
     def test_add_attachments(self):
         """middleware adds attachments to post"""
         attachments = [
@@ -161,12 +180,14 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [a.pk for a in attachments]
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
@@ -182,6 +203,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual([a['filename'] for a in self.post.attachments_cache],
                          attachments_filenames)
 
+    @patch_attachments_acl()
     def test_remove_attachments(self):
         """middleware removes attachment from post and db"""
         attachments = [
@@ -189,12 +211,14 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(post=self.post),
         ]
 
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk]
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
@@ -212,6 +236,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual([a['filename'] for a in self.post.attachments_cache],
                          attachments_filenames)
 
+    @patch_attachments_acl()
     def test_steal_attachments(self):
         """middleware validates if attachments are already assigned to other posts"""
         other_post = testutils.reply_thread(self.thread)
@@ -221,12 +246,14 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk, attachments[1].pk]
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
@@ -241,6 +268,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         self.assertEqual(Attachment.objects.get(pk=attachments[0].pk).post, other_post)
         self.assertEqual(Attachment.objects.get(pk=attachments[1].pk).post, self.post)
 
+    @patch_attachments_acl()
     def test_edit_attachments(self):
         """middleware removes and adds attachments to post"""
         attachments = [
@@ -249,12 +277,14 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             self.mock_attachment(),
         ]
 
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=RequestMock({
                 'attachments': [attachments[0].pk, attachments[2].pk]
             }),
             mode=PostingEndpoint.EDIT,
             user=self.user,
+            user_acl=user_acl,
             post=self.post,
         )
 
