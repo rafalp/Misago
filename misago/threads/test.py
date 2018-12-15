@@ -28,6 +28,21 @@ def patch_category_acl(acl_patch=None):
     return patch_user_acl(patch_acl)
 
 
+def patch_other_user_category_acl(acl_patch=None):
+    def patch_acl(user, user_acl):
+        if user.slug != "bobbobertson":
+            return
+
+        category = Category.objects.get(slug="first-category")
+        category_acl = user_acl['categories'][category.id]
+        category_acl.update(default_category_acl)
+        if acl_patch:
+            category_acl.update(acl_patch)
+        cleanup_patched_acl(user_acl, category_acl, category)
+
+    return patch_user_acl(patch_acl)
+
+
 def patch_other_category_acl(acl_patch=None):
     def patch_acl(_, user_acl):
         src_category = Category.objects.get(slug="first-category")
