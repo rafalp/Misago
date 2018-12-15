@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.search.searchproviders import searchproviders
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -11,10 +11,9 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
         self.test_link = reverse('misago:api:search')
 
+    @patch_user_acl({"can_search": False})
     def test_no_permission(self):
         """api validates permission to search"""
-        override_acl(self.user, {'can_search': 0})
-
         response = self.client.get(self.test_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
