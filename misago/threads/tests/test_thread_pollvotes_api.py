@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
+from misago.acl.test import patch_user_acl
 from misago.threads.models import Poll
+from misago.threads.test import patch_category_acl
 
 from .test_thread_poll_api import ThreadPollApiTestCase
 
@@ -88,10 +90,9 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         response = self.client.get(api_link)
         self.assertEqual(response.status_code, 404)
 
+    @patch_user_acl({"can_always_see_poll_voters": False})
     def test_no_permission(self):
         """api chcecks permission to see poll voters"""
-        self.override_acl({'can_always_see_poll_voters': False})
-
         self.poll.is_public = False
         self.poll.save()
 
@@ -128,10 +129,9 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         self.assertEqual([[v['url'] for v in c['voters']] for c in response_json][0][0],
                          user.get_absolute_url())
 
+    @patch_user_acl({"can_always_see_poll_voters": True})
     def test_get_votes_private_poll(self):
         """api returns list of voters on private poll for user with permission"""
-        self.override_acl({'can_always_see_poll_voters': True})
-
         self.poll.is_public = False
         self.poll.save()
 
@@ -271,10 +271,9 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
             "detail": 'Expected a list of items but got type "dict".',
         })
 
-    def test_vote_in_closed_thread(self):
+    @patch_category_acl({"can_close_threads": False})
+    def test_vote_in_closed_thread_no_permission(self):
         """api validates is user has permission to vote poll in closed thread"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -286,18 +285,20 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
             "detail": "This thread is closed. You can't vote in it.",
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_vote_in_closed_thread(self):
+        """api validates is user has permission to vote poll in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
+
+        self.delete_user_votes()
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            "detail": 'Expected a list of items but got type "dict".',
-        })
 
-    def test_vote_in_closed_category(self):
+    @patch_category_acl({"can_close_threads": False})
+    def test_vote_in_closed_category_no_permission(self):
         """api validates is user has permission to vote poll in closed category"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.category.is_closed = True
         self.category.save()
 
@@ -309,13 +310,16 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
             "detail": "This category is closed. You can't vote in it.",
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_vote_in_closed_category(self):
+        """api validates is user has permission to vote poll in closed category"""
+        self.category.is_closed = True
+        self.category.save()
+
+        self.delete_user_votes()
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            "detail": 'Expected a list of items but got type "dict".',
-        })
 
     def test_vote_in_finished_poll(self):
         """api valdiates if poll has finished before letting user to vote in it"""

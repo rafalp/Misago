@@ -1,6 +1,7 @@
 from django.urls import reverse
 
 from misago.threads import testutils
+from misago.threads.test import patch_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -18,8 +19,6 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
                 'pk': self.post.pk,
             }
         )
-
-        self.override_acl()
 
     def mock_edit_record(self):
         edits_record = [
@@ -135,18 +134,19 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
         super().setUp()
         self.edits = self.mock_edit_record()
 
-        self.override_acl({'can_edit_posts': 2})
-
+    @patch_category_acl({"can_edit_posts": 2})
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
         response = self.client.post('%s?edit=' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
+    @patch_category_acl({"can_edit_posts": 2})
     def test_invalid_edit_id(self):
         """api handles invalid edit in querystring"""
         response = self.client.post('%s?edit=dsa67d8sa68' % self.api_link)
         self.assertEqual(response.status_code, 404)
 
+    @patch_category_acl({"can_edit_posts": 2})
     def test_nonexistant_edit_id(self):
         """api handles nonexistant edit in querystring"""
         response = self.client.post('%s?edit=1321' % self.api_link)
@@ -159,13 +159,13 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
         response = self.client.post('%s?edit=%s' % (self.api_link, self.edits[0].id))
         self.assertEqual(response.status_code, 403)
 
+    @patch_category_acl({"can_edit_posts": 0})
     def test_no_permission(self):
         """api validates permission to revert post"""
-        self.override_acl({'can_edit_posts': 0})
-
         response = self.client.post('%s?edit=1321' % self.api_link)
         self.assertEqual(response.status_code, 403)
 
+    @patch_category_acl({"can_edit_posts": 2})
     def test_revert_post(self):
         """api reverts post to version from before specified edit"""
         response = self.client.post('%s?edit=%s' % (self.api_link, self.edits[0].id))

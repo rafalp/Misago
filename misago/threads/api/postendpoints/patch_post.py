@@ -169,7 +169,9 @@ def bulk_patch_endpoint(request, thread):
 
 
 def clean_posts_for_patch(request, thread, posts_ids):
-    posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
+    posts_queryset = exclude_invisible_posts(
+        request.user_acl, thread.category, thread.post_set
+    )
     posts_queryset = posts_queryset.filter(
         id__in=posts_ids,
         is_event=False,

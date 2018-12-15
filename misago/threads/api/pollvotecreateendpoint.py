@@ -10,7 +10,7 @@ from misago.threads.serializers import PollSerializer, NewVoteSerializer
 def poll_vote_create(request, thread, poll):
     poll.make_choices_votes_aware(request.user)
 
-    allow_vote_poll(request.user, poll)
+    allow_vote_poll(request.user_acl, poll)
 
     serializer = NewVoteSerializer(
         data={

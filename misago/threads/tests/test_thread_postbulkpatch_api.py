@@ -4,10 +4,10 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+from misago.threads.test import patch_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -34,21 +34,6 @@ class ThreadPostBulkPatchApiTestCase(AuthenticatedUserTestCase):
 
     def patch(self, api_link, ops):
         return self.client.patch(api_link, json.dumps(ops), content_type="application/json")
-
-    def override_acl(self, extra_acl=None):
-        new_acl = self.user.acl_cache
-        new_acl['categories'][self.category.pk].update({
-            'can_see': 1,
-            'can_browse': 1,
-            'can_start_threads': 0,
-            'can_reply_threads': 0,
-            'can_edit_posts': 1,
-        })
-
-        if extra_acl:
-            new_acl['categories'][self.category.pk].update(extra_acl)
-
-        override_acl(self.user, new_acl)
 
 
 class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
@@ -220,13 +205,9 @@ class PostsAddAclApiTests(ThreadPostBulkPatchApiTestCase):
 
 
 class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
+    @patch_category_acl({"can_protect_posts": True, "can_edit_posts": 2})
     def test_protect_post(self):
         """api makes it possible to protect posts"""
-        self.override_acl({
-            'can_protect_posts': 1,
-            'can_edit_posts': 2,
-        })
-
         response = self.patch(
             self.api_link, {
                 'ids': self.ids,
@@ -249,10 +230,9 @@ class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
         for post in Post.objects.filter(id__in=self.ids):
             self.assertTrue(post.is_protected)
 
+    @patch_category_acl({"can_protect_posts": False})
     def test_protect_post_no_permission(self):
         """api validates permission to protect posts and returns errors"""
-        self.override_acl({'can_protect_posts': 0})
-
         response = self.patch(
             self.api_link, {
                 'ids': self.ids,
@@ -280,6 +260,7 @@ class BulkPostProtectApiTests(ThreadPostBulkPatchApiTestCase):
 
 
 class BulkPostsApproveApiTests(ThreadPostBulkPatchApiTestCase):
+    @patch_category_acl({"can_approve_content": True})
     def test_approve_post(self):
         """api resyncs thread and categories on posts approval"""
         for post in self.posts:
@@ -290,8 +271,6 @@ class BulkPostsApproveApiTests(ThreadPostBulkPatchApiTestCase):
         self.thread.save()
 
         self.assertNotIn(self.thread.last_post_id, self.ids)
-
-        self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
             self.api_link, {

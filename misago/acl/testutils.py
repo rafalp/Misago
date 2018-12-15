@@ -16,8 +16,3 @@ def fake_post_data(target, data_dict):
             else:
                 data_dict[field.html_name] = field.value()
     return data_dict
-
-
-def override_acl(user, new_acl):
-    """overrides user permissions with specified ones"""
-    raise Exception("override_acl has been removed")

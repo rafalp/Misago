@@ -47,7 +47,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def create(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk)
-        allow_start_poll(request.user, thread)
+        allow_start_poll(request.user_acl, thread)
 
         try:
             if thread.poll and thread.poll.pk:
@@ -84,7 +84,7 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
-        allow_edit_poll(request.user, instance)
+        allow_edit_poll(request.user_acl, instance)
 
         serializer = EditPollSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -103,7 +103,7 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk)
         instance = self.get_poll(thread, pk)
 
-        allow_delete_poll(request.user, instance)
+        allow_delete_poll(request.user_acl, instance)
 
         thread.poll.delete()
 
@@ -111,7 +111,7 @@ class ViewSet(viewsets.ViewSet):
         thread.save()
 
         return Response({
-            'can_start_poll': can_start_poll(request.user, thread),
+            'can_start_poll': can_start_poll(request.user_acl, thread),
         })
 
     @detail_route(methods=['get', 'post'])
@@ -138,7 +138,7 @@ class ViewSet(viewsets.ViewSet):
         except Poll.DoesNotExist:
             raise Http404()
 
-        allow_see_poll_votes(request.user, thread.poll)
+        allow_see_poll_votes(request.user_acl, thread.poll)
 
         choices = []
         voters = {}
