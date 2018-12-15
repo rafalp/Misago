@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 from rest_framework import serializers
 
 from misago.acl import useracl
@@ -10,11 +12,6 @@ from misago.threads.api.postingendpoint.attachments import (
     AttachmentsMiddleware, validate_attachments_count)
 from misago.threads.models import Attachment, AttachmentType
 from misago.users.testutils import AuthenticatedUserTestCase
-
-
-class RequestMock(object):
-    def __init__(self, data=None):
-        self.data = data or {}
 
 cache_versions = {"acl": "abcdefgh"}
 
@@ -70,7 +67,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
-                request=RequestMock(test_input),
+                request=Mock(data=test_input),
                 mode=PostingEndpoint.START,
                 user=self.user,
                 user_acl=user_acl,
@@ -89,7 +86,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
-                request=RequestMock({
+                request=Mock(data={
                     'attachments': test_input
                 }),
                 mode=PostingEndpoint.START,
@@ -106,7 +103,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         """get_initial_attachments returns list of attachments already existing on post"""
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock(),
+            request=Mock(data={}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -131,7 +128,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         """get_initial_attachments returns list of attachments already existing on post"""
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock(),
+            request=Mock(data={}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -161,7 +158,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         serializer = AttachmentsMiddleware(
-            request=RequestMock({
+            request=Mock(data={
                 'attachments': []
             }),
             mode=PostingEndpoint.EDIT,
@@ -182,7 +179,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock({
+            request=Mock(data={
                 'attachments': [a.pk for a in attachments]
             }),
             mode=PostingEndpoint.EDIT,
@@ -213,7 +210,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock({
+            request=Mock(data={
                 'attachments': [attachments[0].pk]
             }),
             mode=PostingEndpoint.EDIT,
@@ -248,7 +245,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock({
+            request=Mock(data={
                 'attachments': [attachments[0].pk, attachments[1].pk]
             }),
             mode=PostingEndpoint.EDIT,
@@ -279,7 +276,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=RequestMock({
+            request=Mock(data={
                 'attachments': [attachments[0].pk, attachments[2].pk]
             }),
             mode=PostingEndpoint.EDIT,
