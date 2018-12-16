@@ -29,6 +29,13 @@ class GettingUserACLTests(TestCase):
         assert acl["is_staff"] is False
         assert acl["is_superuser"] is False
 
+    def test_user_acl_includes_cache_versions(self):
+        user = User.objects.create_user('Bob', 'bob@bob.com')
+        acl = get_user_acl(user, cache_versions)
+
+        assert acl
+        assert acl["cache_versions"] == cache_versions
+
     def test_getter_returns_anonymous_user_acl(self):
         user = AnonymousUser()
         acl = get_user_acl(user, cache_versions)
