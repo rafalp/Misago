@@ -4,15 +4,14 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.cache.versions import get_cache_versions_from_db
-
 from misago.users.bans import (
     ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban)
 from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
 
-
 UserModel = get_user_model()
+
+cache_versions = {"bans": "abcdefgh"}
 
 
 class GetBanTests(TestCase):
@@ -134,7 +133,7 @@ class UserBansTests(TestCase):
 
     def test_no_ban(self):
         """user is not caught by ban"""
-        self.assertIsNone(get_user_ban(self.user, get_cache_versions_from_db()))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
     def test_permanent_ban(self):
@@ -145,7 +144,7 @@ class UserBansTests(TestCase):
             staff_message='Staff reason',
         )
 
-        user_ban = get_user_ban(self.user, get_cache_versions_from_db())
+        user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, 'User reason')
         self.assertEqual(user_ban.staff_message, 'Staff reason')
@@ -160,7 +159,7 @@ class UserBansTests(TestCase):
             expires_on=timezone.now() + timedelta(days=7),
         )
 
-        user_ban = get_user_ban(self.user, get_cache_versions_from_db())
+        user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, 'User reason')
         self.assertEqual(user_ban.staff_message, 'Staff reason')
@@ -173,7 +172,7 @@ class UserBansTests(TestCase):
             expires_on=timezone.now() - timedelta(days=7),
         )
 
-        self.assertIsNone(get_user_ban(self.user, get_cache_versions_from_db()))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
     def test_expired_non_flagged_ban(self):
@@ -184,7 +183,7 @@ class UserBansTests(TestCase):
         )
         Ban.objects.update(is_checked=True)
 
-        self.assertIsNone(get_user_ban(self.user, get_cache_versions_from_db()))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
 
@@ -261,7 +260,7 @@ class BanUserTests(TestCase):
         self.assertEqual(ban.user_message, 'User reason')
         self.assertEqual(ban.staff_message, 'Staff reason')
 
-        db_ban = get_user_ban(user, get_cache_versions_from_db())
+        db_ban = get_user_ban(user, cache_versions)
         self.assertEqual(ban.pk, db_ban.ban_id)
 
 

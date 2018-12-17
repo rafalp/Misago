@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.models import Attachment, AttachmentType
 from misago.threads.serializers import AttachmentSerializer
 from misago.users.audittrail import create_audit_trail
@@ -52,7 +52,7 @@ class AttachmentViewSet(viewsets.ViewSet):
             attachment.set_file(upload)
 
         attachment.save()
-        add_acl(request.user_acl, attachment)
+        add_acl_to_obj(request.user_acl, attachment)
 
         create_audit_trail(request, attachment)
 

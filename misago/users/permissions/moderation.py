@@ -171,7 +171,7 @@ def allow_lift_ban(user_acl, target):
     if not user_acl['can_lift_bans']:
         raise PermissionDenied(_("You can't lift bans."))
     # FIXME: this will require cache version delegation
-    ban = get_user_ban(target)
+    ban = get_user_ban(target, user_ac["cache_versions"])
     if not ban:
         raise PermissionDenied(_("This user is not banned."))
     if user_acl['max_lifted_ban_length']:

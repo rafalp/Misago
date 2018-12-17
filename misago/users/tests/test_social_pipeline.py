@@ -6,6 +6,8 @@ from django.test import RequestFactory, override_settings
 from social_core.backends.github import GithubOAuth2
 from social_django.utils import load_strategy
 
+from misago.acl import ACL_CACHE
+from misago.acl.useracl import get_user_acl
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 from misago.legal.models import Agreement
 
@@ -28,10 +30,11 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
-    request.cache_versions = {BANS_CACHE: "abcdefgh"}
+    request.cache_versions = {BANS_CACHE: "abcdefgh", ACL_CACHE: "abcdefgh"}
     request.frontend_context = {}
     request.session = {}
     request.user = AnonymousUser()
+    request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.user_ip = user_ip
     return request
 

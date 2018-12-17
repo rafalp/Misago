@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear as clear_acl_cache
 from misago.categories.models import Category
 
 
@@ -19,5 +19,5 @@ class Command(BaseCommand):
         self.stdout.write("Categories tree has been rebuild.")
 
         Category.objects.clear_cache()
-        acl_version.invalidate()
+        clear_acl_cache()
         self.stdout.write("Caches have been cleared.")

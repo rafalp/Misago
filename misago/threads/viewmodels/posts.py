@@ -1,4 +1,4 @@
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker.poststracker import make_read_aware
@@ -61,7 +61,7 @@ class ViewModel(object):
             posts.sort(key=lambda p: p.pk)
 
         # make posts and events ACL and reads aware
-        add_acl(request.user_acl, posts)
+        add_acl_to_obj(request.user_acl, posts)
         make_read_aware(request.user, posts)
 
         self._user = request.user

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.readtracker import threadstracker
@@ -68,7 +68,7 @@ class ViewModel(object):
             threads = list(pinned_threads) + list(list_page.object_list)
 
         add_categories_to_items(category_model, category.categories, threads)
-        add_acl(request.user_acl, threads)
+        add_acl_to_obj(request.user_acl, threads)
         make_subscription_aware(request.user, threads)
 
         if list_type in ('new', 'unread'):

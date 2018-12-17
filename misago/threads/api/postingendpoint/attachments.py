@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.threads.serializers import AttachmentSerializer
 
@@ -75,7 +75,7 @@ class AttachmentsSerializer(serializers.Serializer):
         if mode == PostingEndpoint.EDIT:
             queryset = post.attachment_set.select_related('filetype')
             attachments = list(queryset)
-            add_acl(user_acl, attachments)
+            add_acl_to_obj(user_acl, attachments)
         return attachments
 
     def get_new_attachments(self, user, ids):

@@ -8,32 +8,44 @@ from django.utils import timezone
 from .models import UsernameChange
 
 
-class UsernameChanges(object):
-    def __init__(self, user):
-        self.left = 0
-        self.next_on = None
+def get_username_options(settings, user, user_acl):
+    changes_left = get_left_namechanges(user, user_acl)
+    next_on = get_next_available_namechange(user, user_acl, changes_left)
 
-        if user.acl_cache['name_changes_allowed']:
-            self.count_namechanges(user)
+    return {
+        'changes_left': changes_left,
+        'next_on': next_on,
+        'length_min': settings.username_length_min,
+        'length_max': settings.username_length_max,
+    }
 
-    def count_namechanges(self, user):
-        name_changes_allowed = user.acl_cache['name_changes_allowed']
-        name_changes_expire = user.acl_cache['name_changes_expire']
 
-        valid_changes_qs = user.namechanges.filter(changed_by=user)
-        if name_changes_expire:
-            cutoff = timezone.now() - timedelta(days=name_changes_expire)
-            valid_changes_qs = valid_changes_qs.filter(changed_on__gte=cutoff)
+def get_left_namechanges(user, user_acl):
+    name_changes_allowed = user_acl['name_changes_allowed']
+    if not name_changes_allowed:
+        return 0
 
-        used_changes = valid_changes_qs.count()
-        if name_changes_allowed <= used_changes:
-            self.left = 0
-        else:
-            self.left = name_changes_allowed - used_changes
+    valid_changes = get_valid_changes_queryset(user, user_acl)
+    used_changes = valid_changes.count()
+    if name_changes_allowed <= used_changes:
+        left = 0
+    return name_changes_allowed - used_changes
 
-        if not self.left and name_changes_expire:
-            try:
-                self.next_on = valid_changes_qs.latest().changed_on
-                self.next_on += timedelta(days=name_changes_expire)
-            except UsernameChange.DoesNotExist:
-                pass
+
+def get_next_available_namechange(user, user_acl, changes_left):
+    name_changes_expire = user_acl['name_changes_expire']
+    if changes_left or not name_changes_expire:
+        return None
+    
+    valid_changes = get_valid_changes_queryset(user, user_acl)
+    name_last_changed_on = valid_changes.latest().changed_on
+    return name_last_changed_on + timedelta(days=name_changes_expire)
+
+
+def get_valid_changes_queryset(user, user_acl):
+    name_changes_expire = user_acl['name_changes_expire']
+    queryset = user.namechanges.filter(changed_by=user)
+    if user_acl['name_changes_expire']:
+        cutoff = timezone.now() - timedelta(days=name_changes_expire)
+        return queryset.filter(changed_on__gte=cutoff)
+    return queryset

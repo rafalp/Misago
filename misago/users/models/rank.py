@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.urls import reverse
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear as clear_acl_cache
 from misago.core.utils import slugify
 
 
@@ -39,11 +39,11 @@ class Rank(models.Model):
         if not self.pk:
             self.set_order()
         else:
-            acl_version.invalidate()
+            clear_acl_cache()
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        acl_version.invalidate()
+        clear_acl_cache()
         return super().delete(*args, **kwargs)
 
     def get_absolute_url(self):

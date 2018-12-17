@@ -134,10 +134,7 @@ def allow_block_user(user_acl, target):
         raise PermissionDenied(_("You can't block administrators."))
     if user_acl["user_id"] == target.id:
         raise PermissionDenied(_("You can't block yourself."))
-    # FIXME: this will require changes in ACL checking
-    if not target.acl_cache['can_be_blocked'] or target.is_superuser:
-        message = _("%(user)s can't be blocked.") % {'user': target.username}
-        raise PermissionDenied(message)
+    # FIXME: check if user has "can be blocked" permission
 
 
 can_block_user = return_boolean(allow_block_user)

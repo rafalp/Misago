@@ -2,7 +2,8 @@ import os
 
 from django.urls import reverse
 
-from misago.acl import add_acl, useracl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Attachment
@@ -557,7 +558,7 @@ class EditReplyEditorApiTests(EditorApiTestCase):
         response = self.client.get(self.api_link)
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         for attachment in attachments:
-            add_acl(user_acl, attachment)
+            add_acl_to_obj(user_acl, attachment)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(

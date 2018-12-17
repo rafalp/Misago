@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
@@ -44,7 +44,7 @@ class ProfileView(View):
             raise Http404()
 
         validate_slug(profile, slug)
-        add_acl(request.user_acl, profile)
+        add_acl_to_obj(request.user_acl, profile)
 
         return profile
 

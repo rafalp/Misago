@@ -90,9 +90,9 @@ def add_acl_to_category(user_acl, target):
     target.acl['can_browse'] = can_browse_category(user_acl, target)
 
 
-def serialize_categories_acls(serialized_acl):
+def serialize_categories_acls(user_acl):
     categories_acl = []
-    for category, acl in serialized_acl.pop('categories').items():
+    for category, acl in user_acl.pop('categories').items():
         if acl['can_browse']:
             categories_acl.append({
                 'id': category,
@@ -102,14 +102,12 @@ def serialize_categories_acls(serialized_acl):
                 'can_hide_threads': acl.get('can_hide_threads', 0),
                 'can_close_threads': acl.get('can_close_threads', False),
             })
-    serialized_acl['categories'] = categories_acl
+    user_acl['categories'] = categories_acl
 
 
 def register_with(registry):
     registry.acl_annotator(Category, add_acl_to_category)
-
-    registry.acl_serializer(get_user_model(), serialize_categories_acls)
-    registry.acl_serializer(AnonymousUser, serialize_categories_acls)
+    registry.user_acl_serializer(serialize_categories_acls)
 
 
 def allow_see_category(user_acl, target):

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.core.apipatch import ApiPatch
 from misago.threads.models import PostLike
@@ -23,7 +23,7 @@ post_patch_dispatcher = ApiPatch()
 def patch_acl(request, post, value):
     """useful little op that updates post acl to current state"""
     if value:
-        add_acl(request.user_acl, post)
+        add_acl_to_obj(request.user_acl, post)
         return {'acl': post.acl}
     else:
         return {'acl': None}

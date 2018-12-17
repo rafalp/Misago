@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.utils.translation import gettext as _, gettext_lazy, ngettext
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories import THREADS_ROOT_NAME
 from misago.conf import settings
 from misago.threads.mergeconflict import MergeConflict
@@ -267,7 +267,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_weight(self, weight):
         try:
-            add_acl(self.context['user_acl'], self.category)
+            add_acl_to_obj(self.context['user_acl'], self.category)
         except AttributeError:
             return weight  # don't validate weight further if category failed
 
@@ -284,7 +284,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_hidden(self, is_hidden):
         try:
-            add_acl(self.context['user_acl'], self.category)
+            add_acl_to_obj(self.context['user_acl'], self.category)
         except AttributeError:
             return is_hidden  # don't validate hidden further if category failed
 
@@ -294,7 +294,7 @@ class NewThreadSerializer(serializers.Serializer):
 
     def validate_is_closed(self, is_closed):
         try:
-            add_acl(self.context['user_acl'], self.category)
+            add_acl_to_obj(self.context['user_acl'], self.category)
         except AttributeError:
             return is_closed  # don't validate closed further if category failed
 
@@ -523,7 +523,7 @@ class MergeThreadsSerializer(NewThreadSerializer):
 
         threads = []
         for thread in threads_queryset:
-            add_acl(user_acl, thread)
+            add_acl_to_obj(user_acl, thread)
             if can_see_thread(user_acl, thread):
                 threads.append(thread)
 

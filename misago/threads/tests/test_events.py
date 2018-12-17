@@ -4,7 +4,8 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.acl import add_acl, useracl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.threads.events import record_event
 from misago.threads.models import Thread
@@ -34,8 +35,8 @@ class EventsApiTests(TestCase):
         self.thread.save()
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
-        add_acl(user_acl, self.category)
-        add_acl(user_acl, self.thread)
+        add_acl_to_obj(user_acl, self.category)
+        add_acl_to_obj(user_acl, self.thread)
 
     def test_record_event_with_context(self):
         """record_event registers event with context in thread"""

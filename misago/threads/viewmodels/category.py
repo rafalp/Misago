@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
@@ -15,7 +15,7 @@ __all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
 class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)
-        add_acl(request.user_acl, self._categories)
+        add_acl_to_obj(request.user_acl, self._categories)
 
         self._model = self.get_category(request, self._categories, **kwargs)
 

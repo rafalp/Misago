@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.threads.permissions import exclude_invisible_posts
 
@@ -12,7 +12,7 @@ class ViewModel(BaseViewModel):
     def __init__(self, request, thread, pk):
         model = self.get_post(request, thread, pk)
 
-        add_acl(request.user_acl, model)
+        add_acl_to_obj(request.user_acl, model)
 
         self._model = model
 

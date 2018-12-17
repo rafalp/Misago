@@ -7,7 +7,7 @@ from django.db import transaction
 from django.http import Http404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Poll
 from misago.threads.permissions import (
@@ -68,7 +68,7 @@ class ViewSet(viewsets.ViewSet):
 
         serializer.save()
 
-        add_acl(request.user_acl, instance)
+        add_acl_to_obj(request.user_acl, instance)
         for choice in instance.choices:
             choice['selected'] = False
 
@@ -91,7 +91,7 @@ class ViewSet(viewsets.ViewSet):
 
         serializer.save()
 
-        add_acl(request.user_acl, instance)
+        add_acl_to_obj(request.user_acl, instance)
         instance.make_choices_votes_aware(request.user)
 
         create_audit_trail(request, instance)

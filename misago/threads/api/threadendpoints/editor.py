@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.threads.permissions import can_start_thread
@@ -24,7 +24,7 @@ def thread_start_editor(request):
     ).order_by('-lft')
 
     for category in queryset:
-        add_acl(request.user_acl, category)
+        add_acl_to_obj(request.user_acl, category)
 
         post = False
         if can_start_thread(request.user_acl, category):

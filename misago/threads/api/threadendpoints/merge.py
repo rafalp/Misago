@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.events import record_event
 from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
@@ -189,5 +189,5 @@ def merge_threads(request, validated_data, threads, merge_conflict):
     new_thread.is_read = False
     new_thread.subscription = None
 
-    add_acl(request.user_acl, new_thread)
+    add_acl_to_obj(request.user_acl, new_thread)
     return new_thread

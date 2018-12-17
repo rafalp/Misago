@@ -5,9 +5,10 @@ from django.http import Http404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
 
-from misago.acl import add_acl, algebra
+from misago.acl import algebra
 from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
+from misago.acl.objectacl import add_acl_to_obj
 from misago.admin.forms import YesNoSwitch
 from misago.categories.models import Category, CategoryRole
 from misago.categories.permissions import get_categories_roles
@@ -1251,7 +1252,7 @@ def exclude_invisible_threads(user_acl, categories, queryset):
     show_owned_visible = []
 
     for category in categories:
-        add_acl(user_acl, category)
+        add_acl_to_obj(user_acl, category)
 
         if not (category.acl['can_see'] and category.acl['can_browse']):
             continue
@@ -1360,7 +1361,7 @@ def exclude_invisible_posts_in_categories(user_acl, categories, queryset):
     hide_invisible_events = []
 
     for category in categories:
-        add_acl(user_acl, category)
+        add_acl_to_obj(user_acl, category)
 
         if category.acl['can_approve_content']:
             show_all.append(category.pk)
@@ -1413,7 +1414,7 @@ def exclude_invisible_posts_in_categories(user_acl, categories, queryset):
 
 
 def exclude_invisible_posts_in_category(user_acl, category, queryset):
-    add_acl(user_acl, category)
+    add_acl_to_obj(user_acl, category)
 
     if not category.acl['can_approve_content']:
         if user_acl["is_authenticated"]:

@@ -11,7 +11,6 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import get_user_acl
 from misago.acl.models import Role
 from misago.conf import settings
 from misago.core.pgutils import PgPartialIndex
@@ -329,22 +328,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         anonymize_user_data.send(sender=self)
 
     @property
-    def acl_cache(self):
-        try:
-            return self._acl_cache
-        except AttributeError:
-            self._acl_cache = get_user_acl(self)
-            return self._acl_cache
-
-    @acl_cache.setter
-    def acl_cache(self, value):
-        raise TypeError("acl_cache can't be assigned")
-
-    @property
-    def acl_(self):
-        raise NotImplementedError('user.acl_ property was renamed to user.acl')
-
-    @property
     def requires_activation_by_admin(self):
         return self.requires_activation == self.ACTIVATION_ADMIN
 
@@ -401,13 +384,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
             if self.pk:
                 changed_by = changed_by or self
-                self.record_name_change(changed_by, new_username, old_username)
+                namechange = self.record_name_change(
+                    changed_by, new_username, old_username
+                )
 
                 from misago.users.signals import username_changed
                 username_changed.send(sender=self)
 
+                return namechange
+
     def record_name_change(self, changed_by, new_username, old_username):
-        self.namechanges.create(
+        return self.namechanges.create(
             new_username=new_username,
             old_username=old_username,
             changed_by=changed_by,
@@ -525,11 +512,7 @@ class AnonymousUser(DjangoAnonymousUser):
 
     @property
     def acl_cache(self):
-        try:
-            return self._acl_cache
-        except AttributeError:
-            self._acl_cache = get_user_acl(self)
-            return self._acl_cache
+        raise Exception("AnonymousUser.acl_cache has been removed")
 
     @acl_cache.setter
     def acl_cache(self, value):

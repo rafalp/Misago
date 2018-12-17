@@ -93,7 +93,7 @@
         <i class="material-icon">group</i>
       </a>
     </li>
-    {% if user.acl_cache.can_search %}
+    {% if user_acl.can_search %}
       <li>
         <a href="{% url 'misago:search' %}">
           <i class="material-icon">search</i>

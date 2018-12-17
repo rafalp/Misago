@@ -1,4 +1,4 @@
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.core.shortcuts import paginate, pagination_dict
 from misago.threads.permissions import exclude_invisible_threads
@@ -33,8 +33,8 @@ class UserThreads(object):
 
         add_categories_to_items(root_category.unwrap(), threads_categories, posts + threads)
 
-        add_acl(request.user_acl, threads)
-        add_acl(request.user_acl, posts)
+        add_acl_to_obj(request.user_acl, threads)
+        add_acl_to_obj(request.user_acl, posts)
 
         self._user = request.user
 

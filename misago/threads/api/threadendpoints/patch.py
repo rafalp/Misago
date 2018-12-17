@@ -7,7 +7,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl, useracl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
@@ -37,7 +38,7 @@ thread_patch_dispatcher = ApiPatch()
 def patch_acl(request, thread, value):
     """useful little op that updates thread acl to current state"""
     if value:
-        add_acl(request.user_acl, thread)
+        add_acl_to_obj(request.user_acl, thread)
         return {'acl': thread.acl}
     else:
         return {'acl': None}
@@ -96,7 +97,7 @@ def patch_move(request, thread, value):
         Category.objects.all_categories().select_related('parent'), pk=category_pk
     )
 
-    add_acl(request.user_acl, new_category)
+    add_acl_to_obj(request.user_acl, new_category)
     allow_see_category(request.user_acl, new_category)
     allow_browse_category(request.user_acl, new_category)
     allow_start_thread(request.user_acl, new_category)

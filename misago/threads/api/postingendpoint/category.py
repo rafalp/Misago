@@ -4,7 +4,7 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.categories.permissions import can_browse_category, can_see_category
@@ -28,7 +28,7 @@ class CategoryMiddleware(PostingMiddleware):
     def pre_save(self, serializer):
         category = serializer.category_cache
 
-        add_acl(self.user_acl, category)
+        add_acl_to_obj(self.user_acl, category)
 
         # set flags for savechanges middleware
         category.update_all = False

@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.core.shortcuts import validate_slug
@@ -44,8 +44,8 @@ class ViewModel(BaseViewModel):
         if path_aware:
             model.path = self.get_thread_path(model.category)
 
-        add_acl(request.user_acl, model.category)
-        add_acl(request.user_acl, model)
+        add_acl_to_obj(request.user_acl, model.category)
+        add_acl_to_obj(request.user_acl, model)
 
         if read_aware:
             make_read_aware(request.user, request.user_acl, model)
@@ -56,7 +56,7 @@ class ViewModel(BaseViewModel):
 
         try:
             self._poll = model.poll
-            add_acl(request.user_acl, self._poll)
+            add_acl_to_obj(request.user_acl, self._poll)
 
             if poll_votes_aware:
                 self._poll.make_choices_votes_aware(request.user)

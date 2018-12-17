@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
@@ -28,7 +28,7 @@ class ThreadsTrackerTests(TestCase):
         self.user_acl = get_user_acl(self.user, cache_versions)
         self.category = Category.objects.get(slug='first-category')
 
-        add_acl(self.user_acl, self.category)
+        add_acl_to_obj(self.user_acl, self.category)
 
     def test_falsy_value(self):
         """passing falsy value to readtracker causes no errors"""

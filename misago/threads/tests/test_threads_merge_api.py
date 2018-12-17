@@ -2,7 +2,8 @@ import json
 
 from django.urls import reverse
 
-from misago.acl import add_acl, useracl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.readtracker import poststracker
 from misago.threads import testutils
@@ -552,8 +553,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         new_thread.subscription = None
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
-        add_acl(user_acl, new_thread.category)
-        add_acl(user_acl, new_thread)
+        add_acl_to_obj(user_acl, new_thread.category)
+        add_acl_to_obj(user_acl, new_thread)
 
         self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
 
@@ -617,8 +618,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertTrue(new_thread.is_hidden)
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
-        add_acl(user_acl, new_thread.category)
-        add_acl(user_acl, new_thread)
+        add_acl_to_obj(user_acl, new_thread.category)
+        add_acl_to_obj(user_acl, new_thread)
 
         self.assertEqual(response_json, ThreadsListSerializer(new_thread).data)
 

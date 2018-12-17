@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post
 from misago.threads.permissions import allow_edit_post, allow_reply_thread
@@ -192,7 +192,7 @@ class ViewSet(viewsets.ViewSet):
 
         attachments = []
         for attachment in post.attachment_set.order_by('-id'):
-            add_acl(request.user_acl, attachment)
+            add_acl_to_obj(request.user_acl, attachment)
             attachments.append(attachment)
         attachments_json = AttachmentSerializer(
             attachments, many=True, context={'user': request.user}

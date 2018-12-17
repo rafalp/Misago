@@ -3,10 +3,9 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl import serialize_acl
+from misago.acl.useracl import serialize_user_acl
 
 from .user import UserSerializer
-
 
 UserModel = get_user_model()
 
@@ -43,7 +42,10 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
         ]
 
     def get_acl(self, obj):
-        return serialize_acl(obj)
+        acl = self.context.get("acl")
+        if acl:
+            return serialize_user_acl(acl)
+        return {}
 
     def get_email(self, obj):
         return obj.email
@@ -81,7 +83,7 @@ class AnonymousUserSerializer(serializers.Serializer, AuthFlags):
     is_anonymous = serializers.SerializerMethodField()
 
     def get_acl(self, obj):
-        if hasattr(obj, 'acl_cache'):
-            return serialize_acl(obj)
-        else:
-            return {}
+        acl = self.context.get("acl")
+        if acl:
+            return serialize_user_acl(acl)
+        return {}

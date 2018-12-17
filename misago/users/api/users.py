@@ -11,7 +11,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
@@ -84,7 +84,7 @@ class UserViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         profile = self.get_user(request, pk)
 
-        add_acl(request.user_acl, profile)
+        add_acl_to_obj(request.user_acl, profile)
         profile.status = get_user_status(request, profile)
 
         serializer = UserProfileSerializer(profile, context={'request': request})

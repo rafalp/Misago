@@ -1,11 +1,11 @@
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.readtracker import categoriestracker
 
 from .models import Category
 
 
 def get_categories_tree(user, user_acl, parent=None, join_posters=False):
-    if not user.acl_cache['visible_categories']:
+    if not user_acl['visible_categories']:
         return []
 
     if parent:
@@ -32,7 +32,7 @@ def get_categories_tree(user, user_acl, parent=None, join_posters=False):
         if category.parent_id and category.level > parent_level:
             categories_dict[category.parent_id].subcategories.append(category)
 
-    add_acl(user_acl, categories_list)
+    add_acl_to_obj(user_acl, categories_list)
     categoriestracker.make_read_aware(user, user_acl, categories_list)
 
     for category in reversed(visible_categories):
