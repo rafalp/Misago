@@ -9,7 +9,10 @@ class assert_invalidates_cache:
         self.versions = get_cache_versions_from_db()
         return self
 
-    def __exit__(self, *_):
+    def __exit__(self, exc_type, *_):
+        if exc_type:
+            return False
+
         new_versions = get_cache_versions_from_db()
         for cache, version in new_versions.items():
             if cache == self.cache:

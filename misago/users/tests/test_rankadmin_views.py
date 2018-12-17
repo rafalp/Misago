@@ -1,7 +1,9 @@
 from django.urls import reverse
 
+from misago.acl import ACL_CACHE
 from misago.acl.models import Role
 from misago.admin.testutils import AdminTestCase
+from misago.cache.test import assert_invalidates_cache
 from misago.users.models import Rank
 
 
@@ -108,6 +110,35 @@ class RankAdminViewsTests(AdminTestCase):
         self.assertIn(test_role_b, test_rank.roles.all())
         self.assertTrue(test_role_a not in test_rank.roles.all())
         self.assertTrue(test_role_c not in test_rank.roles.all())
+
+    def test_editing_rank_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:users:ranks:new'),
+            data={
+                'name': 'Test Rank',
+                'description': 'Lorem ipsum dolor met',
+                'title': 'Test Title',
+                'style': 'test',
+                'is_tab': '1',
+            },
+        )
+
+        test_rank = Rank.objects.get(slug='test-rank')
+        test_role_b = Role.objects.create(name='Test Role B')
+        
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse(
+                    'misago:admin:users:ranks:edit',
+                    kwargs={
+                        'pk': test_rank.pk,
+                    },
+                ),
+                data={
+                    'name': 'Top Lel',
+                    'roles': [test_role_b.pk],
+                },
+            )
 
     def test_default_view(self):
         """default rank view has no showstoppers"""
@@ -260,6 +291,30 @@ class RankAdminViewsTests(AdminTestCase):
 
         self.assertNotContains(response, test_rank.name)
         self.assertNotContains(response, test_rank.title)
+        
+    def test_deleting_rank_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:users:ranks:new'),
+            data={
+                'name': 'Test Rank',
+                'description': 'Lorem ipsum dolor met',
+                'title': 'Test Title',
+                'style': 'test',
+                'is_tab': '1',
+            },
+        )
+
+        test_rank = Rank.objects.get(slug='test-rank')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse(
+                    'misago:admin:users:ranks:delete',
+                    kwargs={
+                        'pk': test_rank.pk,
+                    },
+                )
+            )
 
     def test_uniquess(self):
         """rank slug uniqueness is enforced by admin forms"""

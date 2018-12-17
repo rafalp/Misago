@@ -3,6 +3,8 @@ from io import StringIO
 from django.core.management import call_command
 from django.test import TestCase
 
+from misago.acl import ACL_CACHE
+from misago.cache.test import assert_invalidates_cache
 from misago.categories.management.commands import fixcategoriestree
 from misago.categories.models import Category
 
@@ -82,3 +84,8 @@ class FixCategoriesTreeTests(TestCase):
             (self.test_category, 1, 2, 3),
             (self.first_category, 1, 4, 5),
         ])
+
+    def test_fixing_categories_tree_invalidates_acl_cache(self):
+        with assert_invalidates_cache(ACL_CACHE):
+            run_command()
+
