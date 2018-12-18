@@ -43,8 +43,8 @@ class UserManager(BaseUserManager):
             user.rank = Rank.objects.get_default()
 
         now = timezone.now()
-        user.last_login=now
-        user.joined_on=now
+        user.last_login = now
+        user.joined_on = now
 
         user.save(using=self._db)
         self._assert_user_has_authenticated_role(user)
@@ -74,15 +74,13 @@ class UserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        user = self._create_user(username, email, password, **extra_fields)
-
         try:
-            user.rank = Rank.objects.get(name=_("Forum team"))
-            user.update_acl_key()
+            if not extra_fields.get('rank'):
+                extra_fields["rank"] = Rank.objects.get(name=_("Forum team"))
         except Rank.DoesNotExist:
             pass
 
-        return user
+        return self._create_user(username, email, password, **extra_fields)
 
     def get_by_username(self, username):
         return self.get(slug=slugify(username))
