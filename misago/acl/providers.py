@@ -5,13 +5,13 @@ from misago.conf import settings
 
 _NOT_INITIALIZED_ERROR = (
     "PermissionProviders instance has to load providers with load() "
-    "before get_obj_type_annotators(), get_obj_type_user_acl_serializers(), "
+    "before get_obj_type_annotators(), get_user_acl_serializers(), "
     "list() or dict() methods will be available."
 )
 
 _ALREADY_INITIALIZED_ERROR = (
     "PermissionProviders instance has already loaded providers and "
-    "acl_annotator or acl_serializer are no longer available."
+    "acl_annotator or user_acl_serializer are no longer available."
 )
 
 
