@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.urls import reverse
 
-from misago.acl.cache import clear as clear_acl_cache
+from misago.acl.cache import clear_acl_cache
 from misago.core.utils import slugify
 
 

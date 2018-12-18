@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl.cache import clear as clear_acl_cache
+from misago.acl.cache import clear_acl_cache
 from misago.acl.forms import get_permissions_forms
 from misago.acl.models import Role
 from misago.acl.views import RoleAdmin, RolesList

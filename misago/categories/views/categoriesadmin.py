@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl.cache import clear as clear_acl_cache
+from misago.acl.cache import clear_acl_cache
 from misago.admin.views import generic
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.forms import CategoryFormFactory, DeleteFormFactory

@@ -3,7 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 from django.db import models
 
-from misago.acl.cache import clear as clear_acl_cache
+from misago.acl.cache import clear_acl_cache
 from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache

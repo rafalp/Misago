@@ -5,7 +5,7 @@ from faker import Factory
 
 from django.core.management.base import BaseCommand
 
-from misago.acl.cache import clear as clear_acl_cache
+from misago.acl.cache import clear_acl_cache
 from misago.categories.models import Category, RoleCategoryACL
 from misago.core.management.progressbar import show_progress
 
