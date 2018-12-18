@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.events import record_event
 from misago.threads.mergeconflict import MergeConflict
 from misago.threads.models import Thread
@@ -15,7 +15,7 @@ from misago.threads.serializers import (
 
 
 def thread_merge_endpoint(request, thread, viewmodel):
-    allow_merge_thread(request.user, thread)
+    allow_merge_thread(request.user_acl, thread)
 
     serializer = MergeThreadSerializer(
         data=request.data,
@@ -88,9 +88,7 @@ def thread_merge_endpoint(request, thread, viewmodel):
 def threads_merge_endpoint(request):
     serializer = MergeThreadsSerializer(
         data=request.data,
-        context={
-            'user': request.user
-        },
+        context={'user_acl': request.user_acl},
     )
 
     if not serializer.is_valid():
@@ -108,7 +106,7 @@ def threads_merge_endpoint(request):
 
     for thread in threads:
         try:
-            allow_merge_thread(request.user, thread)
+            allow_merge_thread(request.user_acl, thread)
         except PermissionDenied as e:
             invalid_threads.append({
                 'id': thread.pk,
@@ -191,5 +189,5 @@ def merge_threads(request, validated_data, threads, merge_conflict):
     new_thread.is_read = False
     new_thread.subscription = None
 
-    add_acl(request.user, new_thread)
+    add_acl_to_obj(request.user_acl, new_thread)
     return new_thread

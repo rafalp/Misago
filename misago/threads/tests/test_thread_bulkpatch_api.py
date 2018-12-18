@@ -2,10 +2,10 @@ import json
 
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Thread
+from misago.threads.test import patch_category_acl, patch_other_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -183,10 +183,9 @@ class ThreadAddAclApiTests(ThreadsBulkPatchApiTestCase):
 
 
 class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
+    @patch_category_acl({"can_edit_threads": 2})
     def test_change_thread_title(self):
         """api changes thread title and resyncs the category"""
-        self.override_acl({'can_edit_threads': 2})
-
         response = self.patch(
             self.api_link,
             {
@@ -210,13 +209,12 @@ class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertEqual(thread.title, 'Changed the title!')
 
-        category = Category.objects.get(pk=self.category.pk)
+        category = Category.objects.get(pk=self.category.id)
         self.assertEqual(category.last_thread_title, 'Changed the title!')
 
+    @patch_category_acl({"can_edit_threads": 0})
     def test_change_thread_title_no_permission(self):
         """api validates permission to change title, returns errors"""
-        self.override_acl({'can_edit_threads': 0})
-
         response = self.patch(
             self.api_link,
             {
@@ -246,46 +244,19 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
         super().setUp()
 
         Category(
-            name='Category B',
-            slug='category-b',
+            name='Other Category',
+            slug='other-category',
         ).insert_at(
             self.category,
             position='last-child',
             save=True,
         )
-        self.category_b = Category.objects.get(slug='category-b')
+        self.other_category = Category.objects.get(slug='other-category')
 
-    def override_other_acl(self, acl):
-        other_category_acl = self.user.acl_cache['categories'][self.category.pk].copy()
-        other_category_acl.update({
-            'can_see': 1,
-            'can_browse': 1,
-            'can_see_all_threads': 1,
-            'can_see_own_threads': 0,
-            'can_hide_threads': 0,
-            'can_approve_content': 0,
-        })
-        other_category_acl.update(acl)
-
-        categories_acl = self.user.acl_cache['categories']
-        categories_acl[self.category_b.pk] = other_category_acl
-
-        visible_categories = [self.category.pk]
-        if other_category_acl['can_see']:
-            visible_categories.append(self.category_b.pk)
-
-        override_acl(
-            self.user, {
-                'visible_categories': visible_categories,
-                'categories': categories_acl,
-            }
-        )
-
+    @patch_category_acl({"can_move_threads": True})
+    @patch_other_category_acl({"can_start_threads": 2})
     def test_move_thread(self):
         """api moves threads to other category and syncs both categories"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         response = self.patch(
             self.api_link,
             {
@@ -294,7 +265,7 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
                     {
                         'op': 'replace',
                         'path': 'category',
-                        'value': self.category_b.pk,
+                        'value': self.other_category.id,
                     },
                     {
                         'op': 'replace',
@@ -309,23 +280,22 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
         response_json = response.json()
         for i, thread in enumerate(self.threads):
             self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(response_json[i]['category'], self.category_b.pk)
+            self.assertEqual(response_json[i]['category'], self.other_category.id)
 
         for thread in Thread.objects.filter(id__in=self.ids):
-            self.assertEqual(thread.category_id, self.category_b.pk)
+            self.assertEqual(thread.category_id, self.other_category.id)
 
-        category = Category.objects.get(pk=self.category.pk)
+        category = Category.objects.get(pk=self.category.id)
         self.assertEqual(category.threads, self.category.threads - 3)
 
-        new_category = Category.objects.get(pk=self.category_b.pk)
+        new_category = Category.objects.get(pk=self.other_category.id)
         self.assertEqual(new_category.threads, 3)
 
 
 class BulkThreadsHideApiTests(ThreadsBulkPatchApiTestCase):
+    @patch_category_acl({"can_hide_threads": 1})
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
-        self.override_acl({'can_hide_threads': 1})
-
         response = self.patch(
             self.api_link,
             {
@@ -349,11 +319,12 @@ class BulkThreadsHideApiTests(ThreadsBulkPatchApiTestCase):
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertTrue(thread.is_hidden)
 
-        category = Category.objects.get(pk=self.category.pk)
+        category = Category.objects.get(pk=self.category.id)
         self.assertNotIn(category.last_thread_id, self.ids)
 
 
 class BulkThreadsApproveApiTests(ThreadsBulkPatchApiTestCase):
+    @patch_category_acl({"can_approve_content": True})
     def test_approve_thread(self):
         """api approvse threads and syncs category"""
         for thread in self.threads:
@@ -368,8 +339,6 @@ class BulkThreadsApproveApiTests(ThreadsBulkPatchApiTestCase):
 
         self.category.synchronize()
         self.category.save()
-
-        self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
             self.api_link,
@@ -396,5 +365,5 @@ class BulkThreadsApproveApiTests(ThreadsBulkPatchApiTestCase):
             self.assertFalse(thread.is_unapproved)
             self.assertFalse(thread.has_unapproved_posts)
 
-        category = Category.objects.get(pk=self.category.pk)
+        category = Category.objects.get(pk=self.category.id)
         self.assertIn(category.last_thread_id, self.ids)

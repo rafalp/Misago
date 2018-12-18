@@ -3,11 +3,11 @@ from django.core import mail
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.models import ThreadParticipant
+from misago.threads.test import other_user_cant_use_private_threads
 from misago.users.testutils import AuthenticatedUserTestCase
-
 
 UserModel = get_user_model()
 
@@ -30,20 +30,18 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
 
+    @patch_user_acl({'can_use_private_threads': False})
     def test_cant_use_private_threads(self):
         """has no permission to use private threads"""
-        override_acl(self.user, {'can_use_private_threads': 0})
-
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't use private threads.",
         })
 
+    @patch_user_acl({'can_start_private_threads': False})
     def test_cant_start_private_thread(self):
         """permission to start private thread is validated"""
-        override_acl(self.user, {'can_start_private_threads': 0})
-
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
@@ -153,10 +151,9 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             }
         )
 
+    @patch_user_acl(other_user_cant_use_private_threads)
     def test_cant_invite_no_permission(self):
         """api validates invited user permission to private thread"""
-        override_acl(self.other_user, {'can_use_private_threads': 0})
-
         response = self.client.post(
             self.api_link,
             data={
@@ -191,8 +188,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             'to': ["BobBoberson is blocking you."],
         })
 
-        # allow us to bypass blocked check
-        override_acl(self.user, {'can_add_everyone_to_private_threads': 1})
+    @patch_user_acl({'can_add_everyone_to_private_threads': 1})
+    def test_cant_invite_blocking_override(self):
+        """api validates that you cant invite blocking user to thread"""
+        self.other_user.blocks.add(self.user)
 
         response = self.client.post(
             self.api_link,
@@ -233,26 +232,24 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         # allow us to bypass following check
-        override_acl(self.user, {'can_add_everyone_to_private_threads': 1})
+        with patch_user_acl({'can_add_everyone_to_private_threads': 1}):
+            response = self.client.post(
+                self.api_link,
+                data={
+                    'to': [self.other_user.username],
+                    'title': "-----",
+                    'post': "Lorem ipsum dolor.",
+                }
+            )
 
-        response = self.client.post(
-            self.api_link,
-            data={
-                'to': [self.other_user.username],
-                'title': "-----",
-                'post': "Lorem ipsum dolor.",
-            }
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
-        )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(), {
+                    'title': ["Thread title should contain alpha-numeric characters."],
+                }
+            )
 
         # make user follow us
-        override_acl(self.user, {'can_add_everyone_to_private_threads': 0})
         self.other_user.follows.add(self.user)
 
         response = self.client.post(
@@ -294,23 +291,22 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         # allow us to bypass user preference check
-        override_acl(self.user, {'can_add_everyone_to_private_threads': 1})
+        with patch_user_acl({'can_add_everyone_to_private_threads': 1}):
+            response = self.client.post(
+                self.api_link,
+                data={
+                    'to': [self.other_user.username],
+                    'title': "-----",
+                    'post': "Lorem ipsum dolor.",
+                }
+            )
 
-        response = self.client.post(
-            self.api_link,
-            data={
-                'to': [self.other_user.username],
-                'title': "-----",
-                'post': "Lorem ipsum dolor.",
-            }
-        )
-
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
-        )
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(
+                response.json(), {
+                    'title': ["Thread title should contain alpha-numeric characters."],
+                }
+            )
 
     def test_can_start_thread(self):
         """endpoint creates new thread"""

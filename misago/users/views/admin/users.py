@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
+from misago.acl.useracl import get_user_acl
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
 from misago.categories.models import Category
@@ -325,7 +326,10 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.roles.clear()
         target.roles.add(*form.cleaned_data['roles'])
 
-        set_user_signature(request, target, form.cleaned_data.get('signature'))
+        target_acl = get_user_acl(target, request.cache_versions)
+        set_user_signature(
+            request, target, target_acl, form.cleaned_data.get('signature')
+        )
 
         profilefields.update_user_profile_fields(request, target, form)
 

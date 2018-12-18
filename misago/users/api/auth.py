@@ -56,11 +56,12 @@ def login(request):
 def session_user(request):
     """GET /auth/ will return current auth user, either User or AnonymousUser"""
     if request.user.is_authenticated:
-        UserSerializer = AuthenticatedUserSerializer
+        serializer = AuthenticatedUserSerializer
     else:
-        UserSerializer = AnonymousUserSerializer
+        serializer = AnonymousUserSerializer
 
-    return Response(UserSerializer(request.user).data)
+    serialized_user = serializer(request.user, context={"acl": request.user_acl}).data
+    return Response(serialized_user)
 
 
 @api_view(['GET'])

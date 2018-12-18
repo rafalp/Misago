@@ -1,12 +1,10 @@
-from django.utils.functional import SimpleLazyObject
-
 from .versions import get_cache_versions
 
 
 def cache_versions_middleware(get_response):
     """Sets request.cache_versions attribute with dict of cache versions."""
     def middleware(request):
-        request.cache_versions = SimpleLazyObject(get_cache_versions)
+        request.cache_versions = get_cache_versions()
         return get_response(request)
 
     return middleware

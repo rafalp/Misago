@@ -1,10 +1,13 @@
+from unittest.mock import Mock
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
+from misago.acl.useracl import get_user_acl
 from misago.users import signatures
 
-
-UserModel = get_user_model()
+User = get_user_model()
+cache_versions = {"acl": "abcdefg"}
 
 
 class MockRequest(object):
@@ -14,22 +17,45 @@ class MockRequest(object):
         return '127.0.0.1:8000'
 
 
-class SignaturesTests(TestCase):
-    def test_signature_change(self):
-        """signature module allows for signature change"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+class UserSignatureTests(TestCase):
+    def test_user_signature_and_valid_checksum_is_set(self):
+        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user.signature = "Test"
+        user.signature_parsed = "Test"
+        user.signature_checksum = "Test"
+        user.save()
 
-        signatures.set_user_signature(MockRequest(), test_user, '')
+        request = Mock(scheme="http", get_host=Mock(return_value="127.0.0.1:800"))
+        user_acl = get_user_acl(user, cache_versions)
 
-        self.assertEqual(test_user.signature, '')
-        self.assertEqual(test_user.signature_parsed, '')
-        self.assertEqual(test_user.signature_checksum, '')
+        signatures.set_user_signature(request, user, user_acl, "Changed")
 
-        signatures.set_user_signature(MockRequest(), test_user, 'Hello, world!')
+        assert user.signature == "Changed"
+        assert user.signature_parsed == "<p>Changed</p>"
+        assert user.signature_checksum
+        assert signatures.is_user_signature_valid(user)
 
-        self.assertEqual(test_user.signature, 'Hello, world!')
-        self.assertEqual(test_user.signature_parsed, '<p>Hello, world!</p>')
-        self.assertTrue(signatures.is_user_signature_valid(test_user))
+    def test_user_signature_is_cleared(self):
+        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user.signature = "Test"
+        user.signature_parsed = "Test"
+        user.signature_checksum = "Test"
+        user.save()
 
-        test_user.signature_parsed = '<p>Injected evil HTML!</p>'
-        self.assertFalse(signatures.is_user_signature_valid(test_user))
+        request = Mock(scheme="http", get_host=Mock(return_value="127.0.0.1:800"))
+        user_acl = get_user_acl(user, cache_versions)
+
+        signatures.set_user_signature(request, user, user_acl, "")
+
+        assert not user.signature
+        assert not user.signature_parsed
+        assert not user.signature_checksum
+
+    def test_signature_validity_check_fails_for_incorrect_signature_checksum(self):
+        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user.signature = "Test"
+        user.signature_parsed = "Test"
+        user.signature_checksum = "Test"
+        user.save()
+
+        assert not signatures.is_user_signature_valid(user)

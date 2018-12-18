@@ -27,7 +27,7 @@
           {% trans "Subscribed" %}
         </a>
       </li>
-      {% if user.acl_cache.can_see_unapproved_content_lists and not hide_unapproved %}
+      {% if user_acl.can_see_unapproved_content_lists and not hide_unapproved %}
         <li{% if list_type == 'unapproved' %} class="active"{% endif %}>
           <a href="{{ category.get_absolute_url }}unapproved/">
             {% trans "Unapproved" %}

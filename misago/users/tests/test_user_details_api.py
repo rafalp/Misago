@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
-
+from misago.acl.test import patch_user_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -56,22 +55,16 @@ class UserDetailsApiTests(AuthenticatedUserTestCase):
         )
 
         # moderator has permission to edit details
-        override_acl(self.user, {
-            'can_moderate_profile_details': True,
-        })
-
-        response = self.client.get(api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(response.json()['edit'])
+        with patch_user_acl({'can_moderate_profile_details': True}):
+            response = self.client.get(api_link)
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(response.json()['edit'])
 
         # non-moderator has no permission to edit details
-        override_acl(self.user, {
-            'can_moderate_profile_details': False,
-        })
-
-        response = self.client.get(api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertFalse(response.json()['edit'])
+        with patch_user_acl({'can_moderate_profile_details': False}):
+            response = self.client.get(api_link)
+            self.assertEqual(response.status_code, 200)
+            self.assertFalse(response.json()['edit'])
 
     def test_nonexistant_user(self):
         """api handles nonexistant users"""

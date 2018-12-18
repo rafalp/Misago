@@ -1,8 +1,10 @@
 from django.urls import reverse
 
+from misago.acl import ACL_CACHE
 from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
 from misago.admin.testutils import AdminTestCase
+from misago.cache.test import assert_invalidates_cache
 from misago.categories.models import Category, CategoryRole
 
 
@@ -72,6 +74,26 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse('misago:admin:permissions:categories:index'))
         self.assertContains(response, test_role.name)
 
+    def test_editing_role_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:permissions:categories:new'),
+            data=fake_data({
+                'name': 'Test CategoryRole',
+            }),
+        )
+
+        test_role = CategoryRole.objects.get(name='Test CategoryRole')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:permissions:categories:edit', kwargs={
+                    'pk': test_role.pk,
+                }),
+                data=fake_data({
+                    'name': 'Top Lel',
+                }),
+            )
+
     def test_delete_view(self):
         """delete role view has no showstoppers"""
         self.client.post(
@@ -92,6 +114,23 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         self.client.get(reverse('misago:admin:permissions:categories:index'))
         response = self.client.get(reverse('misago:admin:permissions:categories:index'))
         self.assertNotContains(response, test_role.name)
+
+    def test_deleting_role_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:permissions:categories:new'),
+            data=fake_data({
+                'name': 'Test CategoryRole',
+            }),
+        )
+
+        test_role = CategoryRole.objects.get(name='Test CategoryRole')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:permissions:categories:delete', kwargs={
+                    'pk': test_role.pk,
+                })
+            )
 
     def test_change_category_roles_view(self):
         """change category roles perms view works"""
@@ -186,6 +225,20 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         self.assertEqual(
             category_role_set.get(role=test_role_b).category_role_id, role_comments.pk
         )
+        
+        # Check that ACL was invalidated
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse(
+                    'misago:admin:categories:nodes:permissions', kwargs={
+                        'pk': test_category.pk,
+                    }
+                ),
+                data={
+                    ('%s-category_role' % test_role_a.pk): role_full.pk,
+                    ('%s-category_role' % test_role_b.pk): role_comments.pk,
+                },
+            )
 
     def test_change_role_categories_permissions_view(self):
         """change role categories perms view works"""
@@ -323,3 +376,17 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         )
         self.assertEqual(categories_acls.get(category=category_c).category_role_id, role_full.pk)
         self.assertEqual(categories_acls.get(category=category_d).category_role_id, role_full.pk)
+
+        # Check that ACL was invalidated
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:permissions:users:categories', kwargs={
+                    'pk': test_role.pk,
+                }),
+                data={
+                    ('%s-role' % category_a.pk): role_comments.pk,
+                    ('%s-role' % category_b.pk): role_comments.pk,
+                    ('%s-role' % category_c.pk): role_full.pk,
+                    ('%s-role' % category_d.pk): role_full.pk,
+                },
+            )

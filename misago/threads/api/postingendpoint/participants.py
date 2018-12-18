@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _, ngettext
 
+from misago.acl import useracl
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.threads.participants import add_participants, set_owner
 from misago.threads.permissions import allow_message_user
@@ -21,7 +22,14 @@ class ParticipantsMiddleware(PostingMiddleware):
         return False
 
     def get_serializer(self):
-        return ParticipantsSerializer(data=self.request.data, context={'user': self.user})
+        return ParticipantsSerializer(
+            data=self.request.data,
+            context={
+                'request': self.request,
+                'user': self.user,
+                'user_acl': self.user_acl,
+            },
+        )
 
     def save(self, serializer):
         set_owner(self.thread, self.user)
@@ -51,7 +59,7 @@ class ParticipantsSerializer(serializers.Serializer):
         if not clean_usernames:
             raise serializers.ValidationError(_("You have to enter user names."))
 
-        max_participants = self.context['user'].acl_cache['max_private_thread_participants']
+        max_participants = self.context['user_acl']['max_private_thread_participants']
         if max_participants and len(clean_usernames) > max_participants:
             message = ngettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
@@ -71,7 +79,8 @@ class ParticipantsSerializer(serializers.Serializer):
         users = []
         for user in UserModel.objects.filter(slug__in=usernames):
             try:
-                allow_message_user(self.context['user'], user)
+                user_acl = useracl.get_user_acl(user, self.context["request"].cache_versions)
+                allow_message_user(self.context['user_acl'], user, user_acl)
             except PermissionDenied as e:
                 raise serializers.ValidationError(str(e))
             users.append(user)

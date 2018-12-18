@@ -108,19 +108,19 @@ def build_category_acl(acl, category, categories_roles, key_name):
     return final_acl
 
 
-def add_acl_to_thread(user, thread):
+def add_acl_to_thread(user_acl, thread):
     thread.acl.update({
-        'can_mark_best_answer': can_mark_best_answer(user, thread),
-        'can_change_best_answer': can_change_best_answer(user, thread),
-        'can_unmark_best_answer': can_unmark_best_answer(user, thread),
+        'can_mark_best_answer': can_mark_best_answer(user_acl, thread),
+        'can_change_best_answer': can_change_best_answer(user_acl, thread),
+        'can_unmark_best_answer': can_unmark_best_answer(user_acl, thread),
     })
     
 
-def add_acl_to_post(user, post):
+def add_acl_to_post(user_acl, post):
     post.acl.update({
-        'can_mark_as_best_answer': can_mark_as_best_answer(user, post),
-        'can_hide_best_answer': can_hide_best_answer(user, post),
-        'can_delete_best_answer': can_delete_best_answer(user, post),
+        'can_mark_as_best_answer': can_mark_as_best_answer(user_acl, post),
+        'can_hide_best_answer': can_hide_best_answer(user_acl, post),
+        'can_delete_best_answer': can_delete_best_answer(user_acl, post),
     })
 
 
@@ -129,11 +129,11 @@ def register_with(registry):
     registry.acl_annotator(Post, add_acl_to_post)
 
 
-def allow_mark_best_answer(user, target):
-    if user.is_anonymous:
+def allow_mark_best_answer(user_acl, target):
+    if user_acl["is_anonymous"]:
         raise PermissionDenied(_("You have to sign in to mark best answers."))
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {})
+    category_acl = user_acl['categories'].get(target.category_id, {})
 
     if not category_acl.get('can_mark_best_answers'):
         raise PermissionDenied(
@@ -144,7 +144,7 @@ def allow_mark_best_answer(user, target):
             }
         )
 
-    if category_acl['can_mark_best_answers'] == 1 and target.starter_id != user.id:
+    if category_acl['can_mark_best_answers'] == 1 and user_acl["user_id"] != target.starter_id:
         raise PermissionDenied(
             _(
                 "You don't have permission to mark best answer in this thread because you didn't "
@@ -174,11 +174,11 @@ def allow_mark_best_answer(user, target):
 can_mark_best_answer = return_boolean(allow_mark_best_answer)
 
 
-def allow_change_best_answer(user, target):
+def allow_change_best_answer(user_acl, target):
     if not target.has_best_answer:
         return # shortcircut permission test
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {})
+    category_acl = user_acl['categories'].get(target.category_id, {})
 
     if not category_acl.get('can_change_marked_answers'):
         raise PermissionDenied(
@@ -191,14 +191,14 @@ def allow_change_best_answer(user, target):
         )
 
     if category_acl['can_change_marked_answers'] == 1:
-        if target.starter_id != user.id:
+        if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 _(
                     "You don't have permission to change this thread's marked answer because you "
                     "are not a thread starter."
                 )
             )
-        if not has_time_to_change_answer(user, target):
+        if not has_time_to_change_answer(user_acl, target):
             raise PermissionDenied(
                 ngettext(
                     (
@@ -227,14 +227,14 @@ def allow_change_best_answer(user, target):
 can_change_best_answer = return_boolean(allow_change_best_answer)
 
 
-def allow_unmark_best_answer(user, target):
-    if user.is_anonymous:
+def allow_unmark_best_answer(user_acl, target):
+    if user_acl["is_anonymous"]:
         raise PermissionDenied(_("You have to sign in to unmark best answers."))
 
     if not target.has_best_answer:
         return # shortcircut test
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {})
+    category_acl = user_acl['categories'].get(target.category_id, {})
 
     if not category_acl.get('can_change_marked_answers'):
         raise PermissionDenied(
@@ -247,14 +247,14 @@ def allow_unmark_best_answer(user, target):
         )
 
     if category_acl['can_change_marked_answers'] == 1:
-        if target.starter_id != user.id:
+        if user_acl["user_id"] != target.starter_id:
             raise PermissionDenied(
                 _(
                     "You don't have permission to unmark this best answer because you are not a "
                     "thread starter."
                 )
             )
-        if not has_time_to_change_answer(user, target):
+        if not has_time_to_change_answer(user_acl, target):
             raise PermissionDenied(
                 ngettext(
                     (
@@ -301,14 +301,14 @@ def allow_unmark_best_answer(user, target):
 can_unmark_best_answer = return_boolean(allow_unmark_best_answer)
 
 
-def allow_mark_as_best_answer(user, target):
-    if user.is_anonymous:
+def allow_mark_as_best_answer(user_acl, target):
+    if user_acl["is_anonymous"]:
         raise PermissionDenied(_("You have to sign in to mark best answers."))
 
     if target.is_event:
         raise PermissionDenied(_("Events can't be marked as best answers."))
 
-    category_acl = user.acl_cache['categories'].get(target.category_id, {})
+    category_acl = user_acl['categories'].get(target.category_id, {})
 
     if not category_acl.get('can_mark_best_answers'):
         raise PermissionDenied(
@@ -319,7 +319,7 @@ def allow_mark_as_best_answer(user, target):
             }
         )
 
-    if category_acl['can_mark_best_answers'] == 1 and target.thread.starter_id != user.id:
+    if category_acl['can_mark_best_answers'] == 1 and user_acl["user_id"] != target.thread.starter_id:
         raise PermissionDenied(
             _(
                 "You don't have permission to mark best answer in this thread because you "
@@ -348,7 +348,7 @@ def allow_mark_as_best_answer(user, target):
 can_mark_as_best_answer = return_boolean(allow_mark_as_best_answer)
 
 
-def allow_hide_best_answer(user, target):
+def allow_hide_best_answer(user_acl, target):
     if target.is_best_answer:
         raise PermissionDenied(
             _("You can't hide this post because its marked as best answer.")
@@ -358,7 +358,7 @@ def allow_hide_best_answer(user, target):
 can_hide_best_answer = return_boolean(allow_hide_best_answer)
 
 
-def allow_delete_best_answer(user, target):
+def allow_delete_best_answer(user_acl, target):
     if target.is_best_answer:
         raise PermissionDenied(
             _("You can't delete this post because its marked as best answer.")
@@ -368,8 +368,8 @@ def allow_delete_best_answer(user, target):
 can_delete_best_answer = return_boolean(allow_delete_best_answer)
 
 
-def has_time_to_change_answer(user, target):
-    category_acl = user.acl_cache['categories'].get(target.category_id, {})
+def has_time_to_change_answer(user_acl, target):
+    category_acl = user_acl['categories'].get(target.category_id, {})
     change_time = category_acl.get('best_answer_change_time', 0)
 
     if change_time:

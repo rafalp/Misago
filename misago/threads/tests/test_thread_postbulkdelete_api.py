@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from misago.threads import testutils
 from misago.threads.models import Post, Thread
+from misago.threads.test import patch_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -64,13 +65,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "You have to specify at least one post to delete.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2})
     def test_validate_ids(self):
         """api validates that ids are list of ints"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-        })
-
         response = self.delete(self.api_link, True)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
@@ -89,39 +86,27 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "One or more post ids received were invalid.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2})
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-        })
-
         response = self.delete(self.api_link, list(range(100)))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {
             "detail": "No more than 24 posts can be deleted at single time.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2})
     def test_validate_posts_exist(self):
         """api validates that ids are visible posts"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         response = self.delete(self.api_link, [p.id * 10 for p in self.posts])
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "One or more posts to delete could not be found.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2})
     def test_validate_posts_visibility(self):
         """api validates that ids are visible posts"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         self.posts[1].is_unapproved = True
         self.posts[1].save()
 
@@ -131,13 +116,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "One or more posts to delete could not be found.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2})
     def test_validate_posts_same_thread(self):
         """api validates that ids are same thread posts"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-        })
-
         other_thread = testutils.post_thread(category=self.category)
         self.posts.append(testutils.reply_thread(other_thread, poster=self.user))
 
@@ -147,41 +128,35 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "One or more posts to delete could not be found.",
         })
 
+    @patch_category_acl({'can_hide_posts': 1, 'can_hide_own_posts': 1})
     def test_no_permission(self):
         """api validates permission to delete"""
-        self.override_acl({
-            'can_hide_own_posts': 1,
-            'can_hide_posts': 1,
-        })
-
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't delete posts in this category.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 0,
+        'can_hide_own_posts': 2,
+        'post_edit_time': 10,
+    })
     def test_delete_other_user_post_no_permission(self):
         """api valdiates if user can delete other users posts"""
-        self.override_acl({
-            'post_edit_time': 0,
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't delete other users posts in this category.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 0,
+        'can_hide_own_posts': 2,
+        'can_protect_posts': False,
+    })
     def test_delete_protected_post_no_permission(self):
         """api validates if user can delete protected post"""
-        self.override_acl({
-            'can_protect_posts': 0,
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         self.posts[0].is_protected = True
         self.posts[0].save()
 
@@ -191,14 +166,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "This post is protected. You can't delete it.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 0,
+        'can_hide_own_posts': 2,
+        'post_edit_time': 1,
+    })
     def test_delete_protected_post_after_edit_time(self):
         """api validates if user can delete delete post after edit time"""
-        self.override_acl({
-            'post_edit_time': 1,
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         self.posts[0].posted_on = timezone.now() - timedelta(minutes=10)
         self.posts[0].save()
 
@@ -208,13 +182,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "You can't delete posts that are older than 1 minute.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 2,
+        'can_hide_own_posts': 2,
+        'can_close_threads': False,
+    })
     def test_delete_post_closed_thread_no_permission(self):
         """api valdiates if user can delete posts in closed threads"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -224,13 +198,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "This thread is closed. You can't delete posts in it.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 2,
+        'can_hide_own_posts': 2,
+        'can_close_threads': False,
+    })
     def test_delete_post_closed_category_no_permission(self):
         """api valdiates if user can delete posts in closed categories"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -240,13 +214,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "This category is closed. You can't delete posts in it.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2, 'can_hide_own_posts': 2})
     def test_delete_first_post(self):
         """api disallows first post's deletion"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-        })
-
         ids = [p.id for p in self.posts]
         ids.append(self.thread.first_post_id)
 
@@ -256,10 +226,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "You can't delete thread's first post.",
         })
 
+    @patch_category_acl({'can_hide_posts': 2, 'can_hide_own_posts': 2})
     def test_delete_best_answer(self):
         """api disallows best answer deletion"""
-        self.override_acl({'can_hide_own_posts': 2, 'can_hide_posts': 2})
-
         self.thread.set_best_answer(self.user, self.posts[0])
         self.thread.save()
 
@@ -269,14 +238,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "You can't delete this post because its marked as best answer.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 2, 
+        'can_hide_own_posts': 2, 
+        'can_hide_events': 0,
+    })
     def test_delete_event(self):
         """api differs posts from events"""
-        self.override_acl({
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 2,
-            'can_hide_events': 0,
-        })
-
         self.posts[1].is_event = True
         self.posts[1].save()
 
@@ -286,14 +254,13 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             "detail": "You can't delete events in this category.",
         })
 
+    @patch_category_acl({
+        'can_hide_posts': 0, 
+        'can_hide_own_posts': 2, 
+        'post_edit_time': 10,
+    })
     def test_delete_owned_posts(self):
         """api deletes owned thread posts"""
-        self.override_acl({
-            'post_edit_time': 0,
-            'can_hide_own_posts': 2,
-            'can_hide_posts': 0,
-        })
-
         ids = [self.posts[0].id, self.posts[-1].id]
 
         response = self.delete(self.api_link, ids)
@@ -304,13 +271,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
             with self.assertRaises(Post.DoesNotExist):
                 self.thread.post_set.get(pk=post)
 
+    @patch_category_acl({'can_hide_posts': 2, 'can_hide_own_posts': 0})
     def test_delete_posts(self):
         """api deletes thread posts"""
-        self.override_acl({
-            'can_hide_own_posts': 0,
-            'can_hide_posts': 2,
-        })
-
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertEqual(response.status_code, 200)
 

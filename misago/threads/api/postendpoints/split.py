@@ -16,7 +16,7 @@ def posts_split_endpoint(request, thread):
         data=request.data,
         context={
             'thread': thread,
-            'user': request.user,
+            'user_acl': request.user_acl,
         },
     )
 

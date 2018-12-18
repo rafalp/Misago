@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from misago.acl.test import patch_user_acl
 from misago.admin.testutils import AdminTestCase
-from misago.acl.testutils import override_acl
 
 
 UserModel = get_user_model()
@@ -74,6 +74,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
         self.assertContains(response, "Join IP")
         self.assertContains(response, "127.0.0.1")
 
+    @patch_user_acl({'can_see_users_ips': 0})
     def test_field_hidden_no_permission(self):
         """field is hidden on user profile if user has no permission"""
         test_link = reverse(
@@ -83,10 +84,6 @@ class JoinIpProfileFieldTests(AdminTestCase):
                 'slug': self.user.slug,
             },
         )
-
-        override_acl(self.user, {
-            'can_see_users_ips': 0
-        })
 
         response = self.client.get(test_link)
         self.assertNotContains(response, "IP address")
@@ -132,13 +129,10 @@ class JoinIpProfileFieldTests(AdminTestCase):
             ]
         )
 
+    @patch_user_acl({'can_see_users_ips': 0})
     def test_field_hidden_no_permission_json(self):
         """field is not included in display json if user has no permission"""
         test_link = reverse('misago:api:user-details', kwargs={'pk': self.user.pk})
-
-        override_acl(self.user, {
-            'can_see_users_ips': 0
-        })
 
         response = self.client.get(test_link)
         self.assertEqual(response.json()['groups'], [])

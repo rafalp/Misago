@@ -58,15 +58,15 @@ def build_acl(acl, roles, key_name):
     )
 
 
-def add_acl_to_attachment(user, attachment):
-    if user.is_authenticated and user.id == attachment.uploader_id:
+def add_acl_to_attachment(user_acl, attachment):
+    if user_acl["is_authenticated"] and user_acl["user_id"] == attachment.uploader_id:
         attachment.acl.update({
             'can_delete': True,
         })
     else:
-        user_can_delete = user.acl_cache['can_delete_other_users_attachments']
+        user_can_delete = user_acl['can_delete_other_users_attachments']
         attachment.acl.update({
-            'can_delete': user.is_authenticated and user_can_delete,
+            'can_delete': user_acl["is_authenticated"] and user_can_delete,
         })
 
 

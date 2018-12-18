@@ -226,6 +226,7 @@ MIDDLEWARE = [
 
     'misago.cache.middleware.cache_versions_middleware',
     'misago.users.middleware.UserMiddleware',
+    'misago.acl.middleware.user_acl_middleware',
     'misago.core.middleware.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
@@ -285,12 +286,13 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'misago.acl.context_processors.user_acl',
+                'misago.conf.context_processors.settings',
                 'misago.core.context_processors.site_address',
                 'misago.core.context_processors.momentjs_locale',
-                'misago.conf.context_processors.settings',
+                'misago.legal.context_processors.legal_links',
                 'misago.search.context_processors.search_providers',
                 'misago.users.context_processors.user_links',
-                'misago.legal.context_processors.legal_links',
 
                 # Data preloaders
                 'misago.conf.context_processors.preload_settings_json',

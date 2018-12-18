@@ -3,7 +3,9 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
+from misago.acl.test import patch_user_acl
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
+from misago.threads.test import patch_category_acl
 
 from .test_thread_poll_api import ThreadPollApiTestCase
 
@@ -73,20 +75,18 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
         response = self.put(api_link)
         self.assertEqual(response.status_code, 404)
 
+    @patch_user_acl({"can_edit_polls": 0})
     def test_no_permission(self):
         """api validates that user has permission to edit poll in thread"""
-        self.override_acl({'can_edit_polls': 0})
-
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't edit polls.",
         })
 
+    @patch_user_acl({"can_edit_polls": 1, "poll_edit_time": 5})
     def test_no_permission_timeout(self):
         """api validates that user's window to edit poll in thread has closed"""
-        self.override_acl({'can_edit_polls': 1, 'poll_edit_time': 5})
-
         self.poll.posted_on = timezone.now() - timedelta(minutes=15)
         self.poll.save()
 
@@ -96,10 +96,9 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             "detail": "You can't edit polls that are older than 5 minutes.",
         })
 
+    @patch_user_acl({"can_edit_polls": 1})
     def test_no_permission_poll_closed(self):
         """api validates that user's window to edit poll in thread has closed"""
-        self.override_acl({'can_edit_polls': 1})
-
         self.poll.posted_on = timezone.now() - timedelta(days=15)
         self.poll.length = 5
         self.poll.save()
@@ -110,10 +109,9 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             "detail": "This poll is over. You can't edit it.",
         })
 
+    @patch_user_acl({"can_edit_polls": 1})
     def test_no_permission_other_user_poll(self):
         """api validates that user has permission to edit other user poll in thread"""
-        self.override_acl({'can_edit_polls': 1})
-
         self.poll.poster = None
         self.poll.save()
 
@@ -123,10 +121,10 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             "detail": "You can't edit other users polls in this category.",
         })
 
+    @patch_user_acl({"can_edit_polls": 1})
+    @patch_category_acl({"can_close_threads": False})
     def test_no_permission_closed_thread(self):
         """api validates that user has permission to edit poll in closed thread"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -136,15 +134,20 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             "detail": "This thread is closed. You can't edit polls in it.",
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_user_acl({"can_edit_polls": 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_closed_thread(self):
+        """api validates that user has permission to edit poll in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
 
+    @patch_user_acl({"can_edit_polls": 1})
+    @patch_category_acl({"can_close_threads": False})
     def test_no_permission_closed_category(self):
         """api validates that user has permission to edit poll in closed category"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.category.is_closed = True
         self.category.save()
 
@@ -154,7 +157,12 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
             "detail": "This category is closed. You can't edit polls in it.",
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_user_acl({"can_edit_polls": 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_closed_category(self):
+        """api validates that user has permission to edit poll in closed category"""
+        self.category.is_closed = True
+        self.category.save()
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 400)
@@ -513,10 +521,9 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
         self.assertEqual(self.user.audittrail_set.count(), 1)
 
+    @patch_user_acl({"can_edit_polls": 2, "poll_edit_time": 5})
     def test_moderate_user_poll(self):
         """api edits all poll choices out in other users poll, even if its over"""
-        self.override_acl({'can_edit_polls': 2, 'poll_edit_time': 5})
-
         self.poll.poster = None
         self.poll.posted_on = timezone.now() - timedelta(days=15)
         self.poll.length = 5

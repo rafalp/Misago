@@ -26,7 +26,12 @@ class PostingEndpoint(object):
 
         # build kwargs dict for passing to middlewares
         self.kwargs = kwargs
-        self.kwargs.update({'mode': mode, 'request': request, 'user': request.user})
+        self.kwargs.update({
+            'mode': mode,
+            'request': request,
+            'user': request.user,
+            'user_acl': request.user_acl,
+        })
 
         self.__dict__.update(kwargs)
 

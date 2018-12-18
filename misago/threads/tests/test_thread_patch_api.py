@@ -3,10 +3,10 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.readtracker import poststracker
 from misago.threads import testutils
+from misago.threads.test import patch_category_acl, patch_other_category_acl
 from misago.threads.models import Thread
 
 from .test_threads_api import ThreadsApiTestCase
@@ -48,10 +48,9 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_edit_threads': 2})
     def test_change_thread_title(self):
         """api makes it possible to change thread title"""
-        self.override_acl({'can_edit_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -69,10 +68,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['title'], "Lorem ipsum change!")
 
+    @patch_category_acl({'can_edit_threads': 0})
     def test_change_thread_title_no_permission(self):
         """api validates permission to change title"""
-        self.override_acl({'can_edit_threads': 0})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -87,13 +85,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "You can't edit threads in this category.")
 
+    @patch_category_acl({'can_edit_threads': 2, 'can_close_threads': 0})
     def test_change_thread_title_closed_category_no_permission(self):
         """api test permission to edit thread title in closed category"""
-        self.override_acl({
-            'can_edit_threads': 2,
-            'can_close_threads': 0
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -113,13 +107,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't edit threads in it."
         )
 
+    @patch_category_acl({'can_edit_threads': 2, 'can_close_threads': 0})
     def test_change_thread_title_closed_thread_no_permission(self):
         """api test permission to edit closed thread title"""
-        self.override_acl({
-            'can_edit_threads': 2,
-            'can_close_threads': 0
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -139,10 +129,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This thread is closed. You can't edit it."
         )
 
+    @patch_category_acl({'can_edit_threads': 1, 'thread_edit_time': 1})
     def test_change_thread_title_after_edit_time(self):
         """api cleans, validates and rejects too short title"""
-        self.override_acl({'thread_edit_time': 1, 'can_edit_threads': 1})
-
         self.thread.started_on = timezone.now() - timedelta(minutes=10)
         self.thread.starter = self.user
         self.thread.save()
@@ -163,10 +152,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "You can't edit threads that are older than 1 minute."
         )
 
+    @patch_category_acl({'can_edit_threads': 2})
     def test_change_thread_title_invalid(self):
         """api cleans, validates and rejects too short title"""
-        self.override_acl({'can_edit_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -186,10 +174,9 @@ class ThreadChangeTitleApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_pin_threads': 2})
     def test_pin_thread(self):
         """api makes it possible to pin globally thread"""
-        self.override_acl({'can_pin_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -207,13 +194,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
 
+    @patch_category_acl({'can_pin_threads': 2, 'can_close_threads': 0})
     def test_pin_thread_closed_category_no_permission(self):
         """api checks if category is closed"""
-        self.override_acl({
-            'can_pin_threads': 2,
-            'can_close_threads': 0,
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -233,13 +216,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't change threads weights in it."
         )
 
+    @patch_category_acl({'can_pin_threads': 2, 'can_close_threads': 0})
     def test_pin_thread_closed_no_permission(self):
         """api checks if thread is closed"""
-        self.override_acl({
-            'can_pin_threads': 2,
-            'can_close_threads': 0,
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -259,6 +238,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This thread is closed. You can't change its weight."
         )
 
+    @patch_category_acl({'can_pin_threads': 2})
     def test_unpin_thread(self):
         """api makes it possible to unpin thread"""
         self.thread.weight = 2
@@ -266,8 +246,6 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
-
-        self.override_acl({'can_pin_threads': 2})
 
         response = self.patch(
             self.api_link, [
@@ -286,10 +264,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
 
+    @patch_category_acl({'can_pin_threads': 1})
     def test_pin_thread_no_permission(self):
         """api pin thread globally with no permission fails"""
-        self.override_acl({'can_pin_threads': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -309,6 +286,7 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
 
+    @patch_category_acl({'can_pin_threads': 1})
     def test_unpin_thread_no_permission(self):
         """api unpin thread with no permission fails"""
         self.thread.weight = 2
@@ -316,8 +294,6 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 2)
-
-        self.override_acl({'can_pin_threads': 1})
 
         response = self.patch(
             self.api_link, [
@@ -340,10 +316,9 @@ class ThreadPinGloballyApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_pin_threads': 1})
     def test_pin_thread(self):
         """api makes it possible to pin locally thread"""
-        self.override_acl({'can_pin_threads': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -361,6 +336,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 1)
 
+    @patch_category_acl({'can_pin_threads': 1})
     def test_unpin_thread(self):
         """api makes it possible to unpin thread"""
         self.thread.weight = 1
@@ -368,8 +344,6 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 1)
-
-        self.override_acl({'can_pin_threads': 1})
 
         response = self.patch(
             self.api_link, [
@@ -388,10 +362,9 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
 
+    @patch_category_acl({'can_pin_threads': 0})
     def test_pin_thread_no_permission(self):
         """api pin thread locally with no permission fails"""
-        self.override_acl({'can_pin_threads': 0})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -411,6 +384,7 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 0)
 
+    @patch_category_acl({'can_pin_threads': 0})
     def test_unpin_thread_no_permission(self):
         """api unpin thread with no permission fails"""
         self.thread.weight = 1
@@ -418,8 +392,6 @@ class ThreadPinLocallyApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['weight'], 1)
-
-        self.override_acl({'can_pin_threads': 0})
 
         response = self.patch(
             self.api_link, [
@@ -446,57 +418,30 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         super().setUp()
 
         Category(
-            name='Category B',
-            slug='category-b',
+            name='Other category',
+            slug='other-category',
         ).insert_at(
             self.category,
             position='last-child',
             save=True,
         )
-        self.category_b = Category.objects.get(slug='category-b')
+        self.dst_category = Category.objects.get(slug='other-category')
 
-    def override_other_acl(self, acl):
-        other_category_acl = self.user.acl_cache['categories'][self.category.pk].copy()
-        other_category_acl.update({
-            'can_see': 1,
-            'can_browse': 1,
-            'can_see_all_threads': 1,
-            'can_see_own_threads': 0,
-            'can_hide_threads': 0,
-            'can_approve_content': 0,
-        })
-        other_category_acl.update(acl)
-
-        categories_acl = self.user.acl_cache['categories']
-        categories_acl[self.category_b.pk] = other_category_acl
-
-        visible_categories = [self.category.pk]
-        if other_category_acl['can_see']:
-            visible_categories.append(self.category_b.pk)
-
-        override_acl(
-            self.user, {
-                'visible_categories': visible_categories,
-                'categories': categories_acl,
-            }
-        )
-
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_top(self):
         """api moves thread to other category, sets no top category"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'add',
                     'path': 'top-category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'replace',
@@ -508,24 +453,21 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
-
-        self.override_other_acl({})
+        self.assertEqual(reponse_json['category'], self.dst_category.pk)
 
         thread_json = self.get_thread_json()
-        self.assertEqual(thread_json['category']['id'], self.category_b.pk)
+        self.assertEqual(thread_json['category']['id'], self.dst_category.pk)
 
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_with_top(self):
         """api moves thread to other category, sets top"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'add',
@@ -542,18 +484,15 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         reponse_json = response.json()
-        self.assertEqual(reponse_json['category'], self.category_b.pk)
-
-        self.override_other_acl({})
+        self.assertEqual(reponse_json['category'], self.dst_category.pk)
 
         thread_json = self.get_thread_json()
-        self.assertEqual(thread_json['category']['id'], self.category_b.pk)
+        self.assertEqual(thread_json['category']['id'], self.dst_category.pk)
 
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_reads(self):
         """api moves thread reads together with thread"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         poststracker.save_read(self.user, self.thread.first_post)
 
         self.assertEqual(self.user.postread_set.count(), 1)
@@ -564,12 +503,12 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'add',
                     'path': 'top-category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'replace',
@@ -584,13 +523,12 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         postreads = self.user.postread_set.filter(post__is_event=False).order_by('id')
 
         self.assertEqual(postreads.count(), 1)
-        postreads.get(category=self.category_b)
+        postreads.get(category=self.dst_category)
 
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_subscriptions(self):
         """api moves thread subscriptions together with thread"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         self.user.subscription_set.create(
             thread=self.thread,
             category=self.thread.category,
@@ -606,12 +544,12 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'add',
                     'path': 'top-category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
                 {
                     'op': 'replace',
@@ -624,19 +562,17 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
         # thread read was moved to new category
         self.assertEqual(self.user.subscription_set.count(), 1)
-        self.user.subscription_set.get(category=self.category_b)
+        self.user.subscription_set.get(category=self.dst_category)
 
+    @patch_category_acl({'can_move_threads': False})
     def test_move_thread_no_permission(self):
         """api move thread to other category with no permission fails"""
-        self.override_acl({'can_move_threads': False})
-        self.override_other_acl({})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -647,19 +583,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "You can't move threads in this category."
         )
 
-        self.override_other_acl({})
-
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
+    @patch_other_category_acl({'can_close_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_closed_category_no_permission(self):
         """api move thread from closed category with no permission fails"""
-        self.override_acl({
-            'can_move_threads': True,
-            'can_close_threads': False,
-        })
-        self.override_other_acl({})
-
         self.category.is_closed = True
         self.category.save()
 
@@ -668,7 +598,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -679,14 +609,10 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't move it's threads."
         )
 
+    @patch_other_category_acl({'can_close_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_closed_thread_no_permission(self):
         """api move closed thread with no permission fails"""
-        self.override_acl({
-            'can_move_threads': True,
-            'can_close_threads': False,
-        })
-        self.override_other_acl({})
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -695,7 +621,7 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -706,17 +632,16 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This thread is closed. You can't move it."
         )
 
+    @patch_other_category_acl({'can_see': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_access(self):
         """api move thread to category with no access fails"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_see': False})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -725,22 +650,19 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], 'NOT FOUND')
 
-        self.override_other_acl({})
-
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
+    @patch_other_category_acl({'can_browse': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_browse(self):
         """api move thread to category with no browsing access fails"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_browse': False})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -749,25 +671,22 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(
             response_json['detail'][0],
-            'You don\'t have permission to browse "Category B" contents.'
+            'You don\'t have permission to browse "Other category" contents.'
         )
-
-        self.override_other_acl({})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
+    @patch_other_category_acl({'can_start_threads': False})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_no_category_start_threads(self):
         """api move thread to category with no posting access fails"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': False})
-
         response = self.patch(
             self.api_link, [
                 {
                     'op': 'replace',
                     'path': 'category',
-                    'value': self.category_b.pk,
+                    'value': self.dst_category.pk,
                 },
             ]
         )
@@ -779,16 +698,13 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
             "You don't have permission to start new threads in this category."
         )
 
-        self.override_other_acl({})
-
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
 
+    @patch_other_category_acl({'can_start_threads': 2})
+    @patch_category_acl({'can_move_threads': True})
     def test_move_thread_same_category(self):
         """api move thread to category it's already in fails"""
-        self.override_acl({'can_move_threads': True})
-        self.override_other_acl({'can_start_threads': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -804,8 +720,6 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
         self.assertEqual(
             response_json['detail'][0], "You can't move thread to the category it's already in."
         )
-
-        self.override_other_acl({})
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['category']['id'], self.category.pk)
@@ -828,10 +742,9 @@ class ThreadMoveApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadCloseApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_close_threads': True})
     def test_close_thread(self):
         """api makes it possible to close thread"""
-        self.override_acl({'can_close_threads': True})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -849,6 +762,7 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_closed'])
 
+    @patch_category_acl({'can_close_threads': True})
     def test_open_thread(self):
         """api makes it possible to open thread"""
         self.thread.is_closed = True
@@ -856,8 +770,6 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_closed'])
-
-        self.override_acl({'can_close_threads': True})
 
         response = self.patch(
             self.api_link, [
@@ -876,10 +788,9 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_closed'])
 
+    @patch_category_acl({'can_close_threads': False})
     def test_close_thread_no_permission(self):
         """api close thread with no permission fails"""
-        self.override_acl({'can_close_threads': False})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -899,6 +810,7 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_closed'])
 
+    @patch_category_acl({'can_close_threads': False})
     def test_open_thread_no_permission(self):
         """api open thread with no permission fails"""
         self.thread.is_closed = True
@@ -906,8 +818,6 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_closed'])
-
-        self.override_acl({'can_close_threads': False})
 
         response = self.patch(
             self.api_link, [
@@ -930,6 +840,7 @@ class ThreadCloseApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadApproveApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_approve_content': True})
     def test_approve_thread(self):
         """api makes it possible to approve thread"""
         self.thread.first_post.is_unapproved = True
@@ -940,8 +851,6 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
 
         self.assertTrue(self.thread.is_unapproved)
         self.assertTrue(self.thread.has_unapproved_posts)
-
-        self.override_acl({'can_approve_content': 1})
 
         response = self.patch(
             self.api_link, [
@@ -966,6 +875,7 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         self.assertFalse(thread.is_unapproved)
         self.assertFalse(thread.has_unapproved_posts)
 
+    @patch_category_acl({'can_approve_content': True, 'can_close_threads': False})
     def test_approve_thread_category_closed_no_permission(self):
         """api checks permission for approving threads in closed categories"""
         self.thread.first_post.is_unapproved = True
@@ -979,11 +889,6 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
 
         self.category.is_closed = True
         self.category.save()
-
-        self.override_acl({
-            'can_approve_content': 1,
-            'can_close_threads': 0,
-        })
 
         response = self.patch(
             self.api_link, [
@@ -999,6 +904,7 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This category is closed. You can't approve threads in it.")
 
+    @patch_category_acl({'can_approve_content': True, 'can_close_threads': False})
     def test_approve_thread_closed_no_permission(self):
         """api checks permission for approving posts in closed categories"""
         self.thread.first_post.is_unapproved = True
@@ -1012,11 +918,6 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
 
         self.thread.is_closed = True
         self.thread.save()
-
-        self.override_acl({
-            'can_approve_content': 1,
-            'can_close_threads': 0,
-        })
 
         response = self.patch(
             self.api_link, [
@@ -1032,10 +933,9 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
         response_json = response.json()
         self.assertEqual(response_json['detail'][0], "This thread is closed. You can't approve it.")
 
+    @patch_category_acl({'can_approve_content': True})
     def test_unapprove_thread(self):
         """api returns permission error on approval removal"""
-        self.override_acl({'can_approve_content': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1052,10 +952,9 @@ class ThreadApproveApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadHideApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_hide_threads': True})
     def test_hide_thread(self):
         """api makes it possible to hide thread"""
-        self.override_acl({'can_hide_threads': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1070,15 +969,12 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         reponse_json = response.json()
         self.assertTrue(reponse_json['is_hidden'])
 
-        self.override_acl({'can_hide_threads': 1})
-
         thread_json = self.get_thread_json()
         self.assertTrue(thread_json['is_hidden'])
 
+    @patch_category_acl({'can_hide_threads': False})
     def test_hide_thread_no_permission(self):
         """api hide thread with no permission fails"""
-        self.override_acl({'can_hide_threads': 0})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1098,13 +994,9 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_hidden'])
 
+    @patch_category_acl({'can_hide_threads': False, 'can_hide_own_threads': True})
     def test_hide_non_owned_thread(self):
         """api forbids non-moderator from hiding other users threads"""
-        self.override_acl({
-            'can_hide_own_threads': 1,
-            'can_hide_threads': 0
-        })
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1121,14 +1013,13 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "You can't hide other users theads in this category."
         )
 
+    @patch_category_acl({
+        'can_hide_threads': False,
+        'can_hide_own_threads': True,
+        'thread_edit_time': 1,
+    })
     def test_hide_owned_thread_no_time(self):
         """api forbids non-moderator from hiding other users threads"""
-        self.override_acl({
-            'can_hide_own_threads': 1,
-            'can_hide_threads': 0,
-            'thread_edit_time': 1,
-        })
-
         self.thread.started_on = timezone.now() - timedelta(minutes=5)
         self.thread.starter = self.user
         self.thread.save()
@@ -1149,13 +1040,9 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "You can't hide threads that are older than 1 minute."
         )
 
+    @patch_category_acl({'can_hide_threads': True, 'can_close_threads': False})
     def test_hide_closed_category_no_permission(self):
         """api test permission to hide thread in closed category"""
-        self.override_acl({
-            'can_hide_threads': 1,
-            'can_close_threads': 0
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -1175,13 +1062,9 @@ class ThreadHideApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't hide threads in it."
         )
 
+    @patch_category_acl({'can_hide_threads': True, 'can_close_threads': False})
     def test_hide_closed_thread_no_permission(self):
         """api test permission to hide closed thread"""
-        self.override_acl({
-            'can_hide_threads': 1,
-            'can_close_threads': 0
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -1209,10 +1092,9 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
         self.thread.is_hidden = True
         self.thread.save()
 
+    @patch_category_acl({'can_hide_threads': True})
     def test_unhide_thread(self):
         """api makes it possible to unhide thread"""
-        self.override_acl({'can_hide_threads': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1227,15 +1109,12 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
         reponse_json = response.json()
         self.assertFalse(reponse_json['is_hidden'])
 
-        self.override_acl({'can_hide_threads': 1})
-
         thread_json = self.get_thread_json()
         self.assertFalse(thread_json['is_hidden'])
 
+    @patch_category_acl({'can_hide_threads': False})
     def test_unhide_thread_no_permission(self):
         """api unhide thread with no permission fails as thread is invisible"""
-        self.override_acl({'can_hide_threads': 0})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1247,13 +1126,9 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 404)
 
+    @patch_category_acl({'can_hide_threads': True, 'can_close_threads': False})
     def test_unhide_closed_category_no_permission(self):
         """api test permission to unhide thread in closed category"""
-        self.override_acl({
-            'can_hide_threads': 1,
-            'can_close_threads': 0
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -1273,13 +1148,9 @@ class ThreadUnhideApiTests(ThreadPatchApiTestCase):
             response_json['detail'][0], "This category is closed. You can't reveal threads in it."
         )
 
+    @patch_category_acl({'can_hide_threads': True, 'can_close_threads': False})
     def test_unhide_closed_thread_no_permission(self):
         """api test permission to unhide closed thread"""
-        self.override_acl({
-            'can_hide_threads': 1,
-            'can_close_threads': 0
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -1405,10 +1276,9 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
 
 class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer(self):
         """api makes it possible to mark best answer"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1442,11 +1312,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json['best_answer_marked_by_name'], self.user.username)
         self.assertEqual(thread_json['best_answer_marked_by_slug'], self.user.slug)
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_anonymous(self):
         """api validates that user is authenticated before marking best answer"""
         self.logout_user()
-
-        self.override_acl({'can_mark_best_answers': 2})
 
         best_answer = testutils.reply_thread(self.thread)
 
@@ -1467,10 +1336,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 0})
     def test_mark_best_answer_no_permission(self):
         """api validates permission to mark best answers"""
-        self.override_acl({'can_mark_best_answers': 0})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1493,10 +1361,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 1})
     def test_mark_best_answer_not_thread_starter(self):
         """api validates permission to mark best answers in owned thread"""
-        self.override_acl({'can_mark_best_answers': 1})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1524,8 +1391,6 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.thread.starter = self.user
         self.thread.save()
 
-        self.override_acl({'can_mark_best_answers': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1537,10 +1402,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_mark_best_answer_category_closed(self):
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_close_threads': False})
+    def test_mark_best_answer_category_closed_no_permission(self):
         """api validates permission to mark best answers in closed category"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 0})
-
         best_answer = testutils.reply_thread(self.thread)
 
         self.category.is_closed = True
@@ -1567,8 +1431,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
-        # passing scenario is possible
-        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 1})
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_close_threads': True})
+    def test_mark_best_answer_category_closed(self):
+        """api validates permission to mark best answers in closed category"""
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.category.is_closed = True
+        self.category.save()
 
         response = self.patch(
             self.api_link, [
@@ -1581,10 +1450,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_mark_best_answer_thread_closed(self):
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_close_threads': False})
+    def test_mark_best_answer_thread_closed_no_permission(self):
         """api validates permission to mark best answers in closed thread"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 0})
-
         best_answer = testutils.reply_thread(self.thread)
 
         self.thread.is_closed = True
@@ -1611,8 +1479,13 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
-        # passing scenario is possible
-        self.override_acl({'can_mark_best_answers': 2, 'can_close_threads': 1})
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_close_threads': True})
+    def test_mark_best_answer_thread_closed(self):
+        """api validates permission to mark best answers in closed thread"""
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.is_closed = True
+        self.thread.save()
 
         response = self.patch(
             self.api_link, [
@@ -1624,11 +1497,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             ]
         )
         self.assertEqual(response.status_code, 200)
-
+    
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_invalid_post_id(self):
         """api validates that post id is int"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1647,10 +1519,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_post_not_found(self):
         """api validates that post exists"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1668,11 +1539,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
-        
+
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_post_invisible(self):
         """api validates post visibility to action author"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
 
         response = self.patch(
@@ -1693,10 +1563,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_post_other_thread(self):
         """api validates post belongs to same thread"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         other_thread = testutils.post_thread(self.category)
 
         response = self.patch(
@@ -1717,10 +1586,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_event_id(self):
         """api validates that post is not an event"""
-        self.override_acl({'can_mark_best_answers': 2})
-
         best_answer = testutils.reply_thread(self.thread)
         best_answer.is_event = True
         best_answer.save()
@@ -1743,10 +1611,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_first_post(self):
         """api validates that post is not a first post in thread"""
-        self.override_acl({'can_mark_best_answers': 2})
-        
         response = self.patch(
             self.api_link, [
                 {
@@ -1765,10 +1632,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_hidden_post(self):
         """api validates that post is not hidden"""
-        self.override_acl({'can_mark_best_answers': 2})
-        
         best_answer = testutils.reply_thread(self.thread, is_hidden=True)
 
         response = self.patch(
@@ -1789,10 +1655,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
+    @patch_category_acl({'can_mark_best_answers': 2})
     def test_mark_best_answer_unapproved_post(self):
         """api validates that post is not unapproved"""
-        self.override_acl({'can_mark_best_answers': 2})
-        
         best_answer = testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True)
 
         response = self.patch(
@@ -1813,10 +1678,9 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
-    def test_mark_best_answer_protected_post(self):
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_protect_posts': False})
+    def test_mark_best_answer_protected_post_no_permission(self):
         """api respects post protection"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_protect_posts': 0})
-        
         best_answer = testutils.reply_thread(self.thread, is_protected=True)
 
         response = self.patch(
@@ -1840,8 +1704,10 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertIsNone(thread_json['best_answer'])
 
-        # passing scenario is possible
-        self.override_acl({'can_mark_best_answers': 2, 'can_protect_posts': 1})
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_protect_posts': True})
+    def test_mark_best_answer_protected_post(self):
+        """api respects post protection"""
+        best_answer = testutils.reply_thread(self.thread, is_protected=True)
 
         response = self.patch(
             self.api_link, [
@@ -1863,10 +1729,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         self.thread.set_best_answer(self.user, self.best_answer)
         self.thread.save()
 
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
     def test_change_best_answer(self):
         """api makes it possible to change best answer"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1900,10 +1765,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json['best_answer_marked_by_name'], self.user.username)
         self.assertEqual(thread_json['best_answer_marked_by_slug'], self.user.slug)
 
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
     def test_change_best_answer_same_post(self):
         """api validates if new best answer is same as current one"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -1922,10 +1786,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
     def test_change_best_answer_no_permission_to_mark(self):
         """api validates permission to mark best answers before allowing answer change"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1948,10 +1811,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 0})
     def test_change_best_answer_no_permission(self):
         """api validates permission to change best answers"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 0})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -1975,10 +1837,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 1})
     def test_change_best_answer_not_starter(self):
         """api validates permission to change best answers"""
-        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 1})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -2003,8 +1864,6 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
         # passing scenario is possible
-        self.override_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 1})
-        
         self.thread.starter = self.user
         self.thread.save()
 
@@ -2019,14 +1878,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_change_best_answer_timelimit(self):
+    @patch_category_acl({
+        'can_mark_best_answers': 2,
+        'can_change_marked_answers': 1,
+        'best_answer_change_time': 5,
+    })
+    def test_change_best_answer_timelimit_out_of_time(self):
         """api validates permission for starter to change best answers within timelimit"""
-        self.override_acl({
-            'can_mark_best_answers': 2,
-            'can_change_marked_answers': 1,
-            'best_answer_change_time': 5,
-        })
-
         best_answer = testutils.reply_thread(self.thread)
 
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
@@ -2054,13 +1912,19 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
-        # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 2,
-            'can_change_marked_answers': 1,
-            'best_answer_change_time': 10,
-        })
-        
+    @patch_category_acl({
+        'can_mark_best_answers': 2,
+        'can_change_marked_answers': 1,
+        'best_answer_change_time': 5,
+    })
+    def test_change_best_answer_timelimit(self):
+        """api validates permission for starter to change best answers within timelimit"""
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=1)
+        self.thread.starter = self.user
+        self.thread.save()
+
         response = self.patch(
             self.api_link, [
                 {
@@ -2072,14 +1936,13 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_change_best_answer_protected(self):
+    @patch_category_acl({
+        'can_mark_best_answers': 2,
+        'can_change_marked_answers': 2,
+        'can_protect_posts': False,
+    })
+    def test_change_best_answer_protected_no_permission(self):
         """api validates permission to change protected best answers"""
-        self.override_acl({
-            'can_mark_best_answers': 2,
-            'can_change_marked_answers': 2,
-            'can_protect_posts': 0,
-        })
-
         best_answer = testutils.reply_thread(self.thread)
 
         self.thread.best_answer_is_protected = True
@@ -2106,13 +1969,18 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
-        # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 2,
-            'can_change_marked_answers': 2,
-            'can_protect_posts': 1,
-        })
-        
+    @patch_category_acl({
+        'can_mark_best_answers': 2,
+        'can_change_marked_answers': 2,
+        'can_protect_posts': True,
+    })
+    def test_change_best_answer_protected(self):
+        """api validates permission to change protected best answers"""
+        best_answer = testutils.reply_thread(self.thread)
+
+        self.thread.best_answer_is_protected = True
+        self.thread.save()
+
         response = self.patch(
             self.api_link, [
                 {
@@ -2124,13 +1992,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    @patch_category_acl({'can_mark_best_answers': 2, 'can_change_marked_answers': 2})
     def test_change_best_answer_post_validation(self):
         """api validates new post'"""
-        self.override_acl({
-            'can_mark_best_answers': 2,
-            'can_change_marked_answers': 2,
-        })
-
         best_answer = testutils.reply_thread(self.thread, is_hidden=True)
 
         response = self.patch(
@@ -2156,10 +2020,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.thread.set_best_answer(self.user, self.best_answer)
         self.thread.save()
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
     def test_unmark_best_answer(self):
         """api makes it possible to unmark best answer"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -2190,10 +2053,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertIsNone(thread_json['best_answer_marked_by_name'])
         self.assertIsNone(thread_json['best_answer_marked_by_slug'])
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
     def test_unmark_best_answer_invalid_post_id(self):
         """api validates that post id is int"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -2212,10 +2074,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
     def test_unmark_best_answer_post_not_found(self):
         """api validates that post to unmark exists"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -2233,11 +2094,10 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
 
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
-        
+
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
     def test_unmark_best_answer_wrong_post(self):
         """api validates if post given to unmark is best answer"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 2})
-
         best_answer = testutils.reply_thread(self.thread)
 
         response = self.patch(
@@ -2260,10 +2120,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 0})
     def test_unmark_best_answer_no_permission(self):
         """api validates if user has permission to unmark best answers"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 0})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -2285,10 +2144,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
+    @patch_category_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 1})
     def test_unmark_best_answer_not_starter(self):
         """api validates if starter has permission to unmark best answers"""
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 1})
-
         response = self.patch(
             self.api_link, [
                 {
@@ -2311,8 +2169,6 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
         # passing scenario is possible
-        self.override_acl({'can_mark_best_answers': 0, 'can_change_marked_answers': 1})
-
         self.thread.starter = self.user
         self.thread.save()
 
@@ -2327,14 +2183,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 1,
+        'best_answer_change_time': 5,
+    })
     def test_unmark_best_answer_timelimit(self):
         """api validates if starter has permission to unmark best answer within time limit"""
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 1,
-            'best_answer_change_time': 5,
-        })
-
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
         self.thread.starter = self.user
         self.thread.save()
@@ -2361,11 +2216,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
         # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 1,
-            'best_answer_change_time': 10,
-        })
+        self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=2)
+        self.thread.save()
         
         response = self.patch(
             self.api_link, [
@@ -2378,14 +2230,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_unmark_best_answer_closed_category(self):
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_close_threads': False,
+    })
+    def test_unmark_best_answer_closed_category_no_permission(self):
         """api validates if user has permission to unmark best answer in closed category"""
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_close_threads': 0,
-        })
-
         self.category.is_closed = True
         self.category.save()
 
@@ -2410,13 +2261,16 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
-        # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_close_threads': 1,
-        })
-        
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_close_threads': True,
+    })
+    def test_unmark_best_answer_closed_category(self):
+        """api validates if user has permission to unmark best answer in closed category"""
+        self.category.is_closed = True
+        self.category.save()
+
         response = self.patch(
             self.api_link, [
                 {
@@ -2428,14 +2282,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_unmark_best_answer_closed_thread(self):
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_close_threads': False,
+    })
+    def test_unmark_best_answer_closed_thread_no_permission(self):
         """api validates if user has permission to unmark best answer in closed thread"""
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_close_threads': 0,
-        })
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -2460,13 +2313,16 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
-        # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_close_threads': 1,
-        })
-        
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_close_threads': True,
+    })
+    def test_unmark_best_answer_closed_thread(self):
+        """api validates if user has permission to unmark best answer in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
+
         response = self.patch(
             self.api_link, [
                 {
@@ -2478,14 +2334,13 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def test_unmark_best_answer_protected(self):
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_protect_posts': 0,
+    })
+    def test_unmark_best_answer_protected_no_permission(self):
         """api validates permission to unmark protected best answers"""
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_protect_posts': 0,
-        })
-
         self.thread.best_answer_is_protected = True
         self.thread.save()
 
@@ -2510,13 +2365,16 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         thread_json = self.get_thread_json()
         self.assertEqual(thread_json['best_answer'], self.best_answer.id)
 
-        # passing scenario is possible
-        self.override_acl({
-            'can_mark_best_answers': 0,
-            'can_change_marked_answers': 2,
-            'can_protect_posts': 1,
-        })
-        
+    @patch_category_acl({
+        'can_mark_best_answers': 0,
+        'can_change_marked_answers': 2,
+        'can_protect_posts': 1,
+    })
+    def test_unmark_best_answer_protected(self):
+        """api validates permission to unmark protected best answers"""
+        self.thread.best_answer_is_protected = True
+        self.thread.save()
+
         response = self.patch(
             self.api_link, [
                 {

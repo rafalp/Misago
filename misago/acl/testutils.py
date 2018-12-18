@@ -1,8 +1,3 @@
-from copy import deepcopy
-from hashlib import md5
-
-from misago.core import threadstore
-
 from .forms import get_permissions_forms
 
 
@@ -21,17 +16,3 @@ def fake_post_data(target, data_dict):
             else:
                 data_dict[field.html_name] = field.value()
     return data_dict
-
-
-def override_acl(user, new_acl):
-    """overrides user permissions with specified ones"""
-    final_cache = deepcopy(user.acl_cache)
-    final_cache.update(new_acl)
-    
-    if user.is_authenticated:
-        user._acl_cache = final_cache
-        user.acl_key = md5(str(user.pk).encode()).hexdigest()[:8]
-        user.save(update_fields=['acl_key'])
-        threadstore.set('acl_%s' % user.acl_key, final_cache)
-    else:
-        threadstore.set('acl_%s' % user.acl_key, final_cache)

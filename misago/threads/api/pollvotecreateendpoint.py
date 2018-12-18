@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from rest_framework.response import Response
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.permissions import allow_vote_poll
 from misago.threads.serializers import PollSerializer, NewVoteSerializer
 
@@ -10,7 +10,7 @@ from misago.threads.serializers import PollSerializer, NewVoteSerializer
 def poll_vote_create(request, thread, poll):
     poll.make_choices_votes_aware(request.user)
 
-    allow_vote_poll(request.user, poll)
+    allow_vote_poll(request.user_acl, poll)
 
     serializer = NewVoteSerializer(
         data={
@@ -33,7 +33,7 @@ def poll_vote_create(request, thread, poll):
     remove_user_votes(request.user, poll, serializer.data['choices'])
     set_new_votes(request, poll, serializer.data['choices'])
 
-    add_acl(request.user, poll)
+    add_acl_to_obj(request.user_acl, poll)
     serialized_poll = PollSerializer(poll).data
 
     poll.choices = list(map(presave_clean_choice, deepcopy(poll.choices)))

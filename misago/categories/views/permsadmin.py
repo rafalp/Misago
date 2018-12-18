@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear_acl_cache
 from misago.acl.forms import get_permissions_forms
 from misago.acl.models import Role
 from misago.acl.views import RoleAdmin, RolesList
@@ -128,7 +128,7 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
             if new_permissions:
                 RoleCategoryACL.objects.bulk_create(new_permissions)
 
-            acl_version.invalidate()
+            clear_acl_cache()
 
             message = _("Category %(name)s permissions have been changed.")
             messages.success(request, message % {'name': target.name})
@@ -196,7 +196,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
             if new_permissions:
                 RoleCategoryACL.objects.bulk_create(new_permissions)
 
-            acl_version.invalidate()
+            clear_acl_cache()
 
             message = _("Category permissions for role %(name)s have been changed.")
             messages.success(request, message % {'name': target.name})

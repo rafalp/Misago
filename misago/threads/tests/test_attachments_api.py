@@ -5,11 +5,10 @@ from PIL import Image
 from django.urls import reverse
 
 from misago.acl.models import Role
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.conf import settings
 from misago.threads.models import Attachment, AttachmentType
 from misago.users.testutils import AuthenticatedUserTestCase
-
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
@@ -27,12 +26,6 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.api_link = reverse('misago:api:attachment-list')
 
-    def override_acl(self, new_acl=None):
-        if new_acl:
-            acl = self.user.acl_cache.copy()
-            acl.update(new_acl)
-            override_acl(self.user, acl)
-
     def test_anonymous(self):
         """user has to be authenticated to be able to upload files"""
         self.logout_user()
@@ -40,10 +33,9 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
 
+    @patch_user_acl({"max_attachment_size": 0})
     def test_no_permission(self):
         """user needs permission to upload files"""
-        self.override_acl({'max_attachment_size': 0})
-
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
@@ -181,10 +173,9 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                 ),
             })
 
+    @patch_user_acl({"max_attachment_size": 100})
     def test_upload_too_big_for_user(self):
         """too big uploads are rejected"""
-        self.override_acl({'max_attachment_size': 100})
-
         AttachmentType.objects.create(
             name="Test extension",
             extensions='png',
@@ -302,10 +293,9 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.assertEqual(self.user.audittrail_set.count(), 1)
 
+    @patch_user_acl({"max_attachment_size": 10 * 1024})
     def test_large_image_upload(self):
         """successful large image upload creates orphan attachment with thumbnail"""
-        self.override_acl({'max_attachment_size': 10 * 1024})
-
         AttachmentType.objects.create(
             name="Test extension",
             extensions='png',

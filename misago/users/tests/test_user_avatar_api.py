@@ -4,7 +4,7 @@ from pathlib import Path
 
 from django.contrib.auth import get_user_model
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.conf import settings
 from misago.users.avatars import gallery, store
 from misago.users.models import AvatarGallery
@@ -351,24 +351,18 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
 
         self.link = '/api/users/%s/moderate-avatar/' % self.other_user.pk
 
+    @patch_user_acl({'can_moderate_avatars': 0})
     def test_no_permission(self):
         """no permission to moderate avatar"""
-        override_acl(self.user, {
-            'can_moderate_avatars': 0,
-        })
-
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't moderate avatars.",
         })
 
+    @patch_user_acl({'can_moderate_avatars': 1})
     def test_moderate_avatar(self):
         """moderate avatar"""
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
-
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
@@ -380,10 +374,6 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(
             options['avatar_lock_staff_message'], self.other_user.avatar_lock_staff_message
         )
-
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
 
         response = self.client.post(
             self.link,
@@ -410,10 +400,6 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
         )
 
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
-
         response = self.client.post(
             self.link,
             json.dumps({
@@ -437,10 +423,6 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         self.assertEqual(
             options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
         )
-
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
 
         response = self.client.post(
             self.link,
@@ -466,10 +448,6 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
         )
 
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
-
         response = self.client.post(
             self.link,
             json.dumps({
@@ -492,11 +470,8 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
             options['avatar_lock_staff_message'], other_user.avatar_lock_staff_message
         )
 
+    @patch_user_acl({'can_moderate_avatars': 1})
     def test_moderate_own_avatar(self):
         """moderate own avatar"""
-        override_acl(self.user, {
-            'can_moderate_avatars': 1,
-        })
-
         response = self.client.get('/api/users/%s/moderate-avatar/' % self.user.pk)
         self.assertEqual(response.status_code, 200)

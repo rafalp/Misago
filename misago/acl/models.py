@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.translation import gettext as _
 
-from . import version as acl_version
+from .cache import clear_acl_cache
 
 
 def permissions_default():
@@ -22,11 +22,11 @@ class BaseRole(models.Model):
 
     def save(self, *args, **kwargs):
         if self.pk:
-            acl_version.invalidate()
+            clear_acl_cache()
         return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        acl_version.invalidate()
+        clear_acl_cache()
         return super().delete(*args, **kwargs)
 
 

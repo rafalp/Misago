@@ -1,10 +1,10 @@
 from django.utils import timezone
 
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.readtracker.poststracker import save_read
 from misago.threads import testutils
+from misago.threads.test import patch_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -233,24 +233,18 @@ class GotoBestAnswerTests(GotoViewTestCase):
 
 
 class GotoUnapprovedTests(GotoViewTestCase):
-    def grant_permission(self):
-        self.user.acl_cache['categories'][self.category.pk]['can_approve_content'] = 1
-        override_acl(self.user, self.user.acl_cache)
-
     def test_view_validates_permission(self):
         """view validates permission to see unapproved posts"""
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertContains(response, "You need permission to approve content", status_code=403)
 
-        self.grant_permission()
+        with patch_category_acl({"can_approve_content": True}):
+            response = self.client.get(self.thread.get_unapproved_post_url())
+            self.assertEqual(response.status_code, 302)
 
-        response = self.client.get(self.thread.get_unapproved_post_url())
-        self.assertEqual(response.status_code, 302)
-
+    @patch_category_acl({"can_approve_content": True})
     def test_view_handles_no_unapproved_posts(self):
         """if thread has no unapproved posts, redirect to last post"""
-        self.grant_permission()
-
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
@@ -258,6 +252,7 @@ class GotoUnapprovedTests(GotoViewTestCase):
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
         )
 
+    @patch_category_acl({"can_approve_content": True})
     def test_view_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
@@ -266,8 +261,6 @@ class GotoUnapprovedTests(GotoViewTestCase):
         post = testutils.reply_thread(self.thread, is_unapproved=True, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
-
-        self.grant_permission()
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)

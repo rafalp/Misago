@@ -11,7 +11,7 @@ from misago.users.viewmodels import ActivePosters, RankUsers
 
 class ListView(View):
     def get(self, request, *args, **kwargs):
-        allow_browse_users_list(request.user)
+        allow_browse_users_list(request.user_acl)
 
         context_data = self.get_context_data(request, *args, **kwargs)
 
@@ -62,7 +62,7 @@ class ListView(View):
 
 
 def landing(request):
-    allow_browse_users_list(request.user)
+    allow_browse_users_list(request.user_acl)
     return redirect(users_list.get_default_link())
 
 

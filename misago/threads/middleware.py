@@ -11,7 +11,7 @@ class UnreadThreadsCountMiddleware(MiddlewareMixin):
         if request.user.is_anonymous:
             return
 
-        if not request.user.acl_cache['can_use_private_threads']:
+        if not request.user_acl['can_use_private_threads']:
             return
 
         if not request.user.sync_unread_private_threads:
@@ -22,8 +22,8 @@ class UnreadThreadsCountMiddleware(MiddlewareMixin):
         category = Category.objects.private_threads()
         threads = Thread.objects.filter(category=category, id__in=participated_threads)
 
-        new_threads = filter_read_threads_queryset(request.user, [category], 'new', threads)
-        unread_threads = filter_read_threads_queryset(request.user, [category], 'unread', threads)
+        new_threads = filter_read_threads_queryset(request, [category], 'new', threads)
+        unread_threads = filter_read_threads_queryset(request, [category], 'unread', threads)
 
         request.user.unread_private_threads = new_threads.count() + unread_threads.count()
         request.user.sync_unread_private_threads = False

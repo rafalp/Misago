@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.models import Attachment, AttachmentType
 from misago.threads.serializers import AttachmentSerializer
 from misago.users.audittrail import create_audit_trail
@@ -16,7 +16,7 @@ IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')
 
 class AttachmentViewSet(viewsets.ViewSet):
     def create(self, request):
-        if not request.user.acl_cache['max_attachment_size']:
+        if not request.user_acl['max_attachment_size']:
             raise PermissionDenied(_("You don't have permission to upload new files."))
 
         try:
@@ -31,7 +31,7 @@ class AttachmentViewSet(viewsets.ViewSet):
 
         user_roles = set(r.pk for r in request.user.get_roles())
         filetype = validate_filetype(upload, user_roles)
-        validate_filesize(upload, filetype, request.user.acl_cache['max_attachment_size'])
+        validate_filesize(upload, filetype, request.user_acl['max_attachment_size'])
 
         attachment = Attachment(
             secret=Attachment.generate_new_secret(),
@@ -52,7 +52,7 @@ class AttachmentViewSet(viewsets.ViewSet):
             attachment.set_file(upload)
 
         attachment.save()
-        add_acl(request.user, attachment)
+        add_acl_to_obj(request.user_acl, attachment)
 
         create_audit_trail(request, attachment)
 

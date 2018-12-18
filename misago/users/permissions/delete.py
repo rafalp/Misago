@@ -61,8 +61,8 @@ def build_acl(acl, roles, key_name):
     )
 
 
-def add_acl_to_user(user, target):
-    target.acl['can_delete'] = can_delete_user(user, target)
+def add_acl_to_user(user_acl, target):
+    target.acl['can_delete'] = can_delete_user(user_acl, target)
     if target.acl['can_delete']:
         target.acl['can_moderate'] = True
 
@@ -71,13 +71,13 @@ def register_with(registry):
     registry.acl_annotator(get_user_model(), add_acl_to_user)
 
 
-def allow_delete_user(user, target):
-    newer_than = user.acl_cache['can_delete_users_newer_than']
-    less_posts_than = user.acl_cache['can_delete_users_with_less_posts_than']
+def allow_delete_user(user_acl, target):
+    newer_than = user_acl['can_delete_users_newer_than']
+    less_posts_than = user_acl['can_delete_users_with_less_posts_than']
     if not newer_than and not less_posts_than:
         raise PermissionDenied(_("You can't delete users."))
 
-    if user.pk == target.pk:
+    if user_acl["user_id"] == target.id:
         raise PermissionDenied(_("You can't delete your account."))
     if target.is_staff or target.is_superuser:
         raise PermissionDenied(_("You can't delete administrators."))
@@ -106,7 +106,7 @@ can_delete_user = return_boolean(allow_delete_user)
 def allow_delete_own_account(user, target):
     if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT and not user.is_deleting_account:
         raise PermissionDenied(_("You can't delete your account."))
-    if user.pk != target.pk:
+    if user.id != target.id:
         raise PermissionDenied(_("You can't delete other users accounts."))
     if user.is_staff or user.is_superuser:
         raise PermissionDenied(

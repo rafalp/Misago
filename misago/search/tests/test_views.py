@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.threads.search import SearchThreads
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -11,27 +11,24 @@ class LandingTests(AuthenticatedUserTestCase):
 
         self.test_link = reverse('misago:search')
 
+    @patch_user_acl({'can_search': False})
     def test_no_permission(self):
         """view validates permission to search forum"""
-        override_acl(self.user, {'can_search': 0})
-
         response = self.client.get(self.test_link)
-
         self.assertContains(response, "have permission to search site", status_code=403)
 
+    @patch_user_acl({'can_search': True})
     def test_redirect_to_provider(self):
         """view validates permission to search forum"""
         response = self.client.get(self.test_link)
-
         self.assertEqual(response.status_code, 302)
         self.assertIn(SearchThreads.url, response['location'])
 
 
 class SearchTests(AuthenticatedUserTestCase):
+    @patch_user_acl({'can_search': False})
     def test_no_permission(self):
         """view validates permission to search forum"""
-        override_acl(self.user, {'can_search': 0})
-
         response = self.client.get(
             reverse('misago:search', kwargs={
                 'search_provider': 'users',
@@ -48,10 +45,9 @@ class SearchTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 404)
 
+    @patch_user_acl({'can_search': True, 'can_search_users': False})
     def test_provider_no_permission(self):
         """provider raises 403 without permission"""
-        override_acl(self.user, {'can_search_users': 0})
-
         response = self.client.get(
             reverse('misago:search', kwargs={
                 'search_provider': 'users',
@@ -64,7 +60,7 @@ class SearchTests(AuthenticatedUserTestCase):
         """provider displays no script page"""
         response = self.client.get(
             reverse('misago:search', kwargs={
-                'search_provider': 'threads',
+                'search_provider': 'users',
             })
         )
 

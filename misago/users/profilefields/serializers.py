@@ -8,7 +8,7 @@ def serialize_profilefields_data(request, profilefields, user):
         'edit': False,
     }
 
-    can_edit = can_edit_profile_details(request.user, user)
+    can_edit = can_edit_profile_details(request.user_acl, user)
     has_editable_fields = False
 
     for group in profilefields.get_fields_groups():

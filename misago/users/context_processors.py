@@ -36,8 +36,11 @@ def preload_user_json(request):
     })
 
     if request.user.is_authenticated:
-        request.frontend_context.update({'user': AuthenticatedUserSerializer(request.user).data})
+        serializer = AuthenticatedUserSerializer
     else:
-        request.frontend_context.update({'user': AnonymousUserSerializer(request.user).data})
+        serializer = AnonymousUserSerializer
+
+    serialized_user = serializer(request.user, context={"acl": request.user_acl}).data
+    request.frontend_context.update({'user': serialized_user})
 
     return {}

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.threads.serializers import AttachmentSerializer
 
@@ -12,7 +12,7 @@ from . import PostingEndpoint, PostingMiddleware
 
 class AttachmentsMiddleware(PostingMiddleware):
     def use_this_middleware(self):
-        return bool(self.user.acl_cache['max_attachment_size'])
+        return bool(self.user_acl['max_attachment_size'])
 
     def get_serializer(self):
         return AttachmentsSerializer(
@@ -20,6 +20,7 @@ class AttachmentsMiddleware(PostingMiddleware):
             context={
                 'mode': self.mode,
                 'user': self.user,
+                'user_acl': self.user_acl,
                 'post': self.post,
             }
         )
@@ -41,7 +42,7 @@ class AttachmentsSerializer(serializers.Serializer):
         validate_attachments_count(ids)
 
         attachments = self.get_initial_attachments(
-            self.context['mode'], self.context['user'], self.context['post']
+            self.context['mode'], self.context['user_acl'], self.context['post']
         )
         new_attachments = self.get_new_attachments(self.context['user'], ids)
 
@@ -69,12 +70,12 @@ class AttachmentsSerializer(serializers.Serializer):
             self.final_attachments += new_attachments
             self.final_attachments.sort(key=lambda a: a.pk, reverse=True)
 
-    def get_initial_attachments(self, mode, user, post):
+    def get_initial_attachments(self, mode, user_acl, post):
         attachments = []
         if mode == PostingEndpoint.EDIT:
             queryset = post.attachment_set.select_related('filetype')
             attachments = list(queryset)
-            add_acl(user, attachments)
+            add_acl_to_obj(user_acl, attachments)
         return attachments
 
     def get_new_attachments(self, user, ids):

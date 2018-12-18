@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread
 from misago.users.activepostersranking import build_active_posters_ranking
@@ -13,20 +13,13 @@ UserModel = get_user_model()
 
 
 class UsersListTestCase(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-        })
+    pass
 
 
 class UsersListLanderTests(UsersListTestCase):
+    @patch_user_acl({'can_browse_users_list': 0})
     def test_lander_no_permission(self):
         """lander returns 403 if user has no permission"""
-        override_acl(self.user, {
-            'can_browse_users_list': 0,
-        })
-
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 403)
 
