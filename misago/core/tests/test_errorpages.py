@@ -79,7 +79,7 @@ class ErrorPageViewsTests(TestCase):
 def test_request(url):
     request = RequestFactory().get(url)
     request.cache_versions = get_cache_versions()
-    request.settings = DynamicSettings(cache_versions)
+    request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.include_frontend_context = True
