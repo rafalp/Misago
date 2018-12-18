@@ -40,5 +40,4 @@ class CacheVersionsTests(TestCase):
     @patch('django.core.cache.cache.get', return_value=True)
     def test_getter_is_not_setting_new_cache_if_cache_is_set(self, _, cache_set):
         get_cache_versions()
-        get_cache_versions_from_db()
         cache_set.assert_not_called()
