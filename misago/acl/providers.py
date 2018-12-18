@@ -31,7 +31,7 @@ class PermissionProviders(object):
             raise RuntimeError("providers are already loaded")
 
         self._register_providers()
-        self._cast_dict_values_to_tuples(self._annotators)
+        self._coerce_dict_values_to_tuples(self._annotators)
         self._user_acl_serializers = tuple(self._user_acl_serializers)
         self._initialized = True
 
@@ -43,7 +43,7 @@ class PermissionProviders(object):
             if hasattr(self._providers_dict[namespace], 'register_with'):
                 self._providers_dict[namespace].register_with(self)
 
-    def _cast_dict_values_to_tuples(self, types_dict):
+    def _coerce_dict_values_to_tuples(self, types_dict):
         for hashType in types_dict.keys():
             types_dict[hashType] = tuple(types_dict[hashType])
 
