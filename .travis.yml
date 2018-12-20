@@ -7,11 +7,11 @@ python:
   - "3.6"
 install:
   - pip install -U pip setuptools
-  - pip install coveralls
   - python setup.py install
+  - pip install coveralls pytest-cov
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
-  - coverage run --source=pytest
+  - pytest --cov
 after_success:
   - coveralls
