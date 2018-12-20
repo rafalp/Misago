@@ -20,7 +20,6 @@ class AddCategoriesToItemsTests(TestCase):
         Category E
           + Subcategory F
         """
-
         super().setUp()
 
         self.root = Category.objects.root_category()
@@ -90,8 +89,6 @@ class AddCategoriesToItemsTests(TestCase):
             position='last-child',
             save=True,
         )
-
-        self.clear_state()
 
         Category.objects.partial_rebuild(self.root.tree_id)
 

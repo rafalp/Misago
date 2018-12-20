@@ -7,8 +7,6 @@ from django.utils.translation import ngettext
 
 from misago.acl.models import Role
 from misago.admin.forms import IsoDateTimeField, YesNoSwitch
-from misago.conf import settings
-from misago.core import threadstore
 from misago.core.validators import validate_sluggable
 
 from misago.users.models import Ban, DataDownload, Rank
@@ -308,7 +306,7 @@ def EditUserFormFactory(FormType, instance, add_is_active_fields=False, add_admi
     return FormType
 
 
-class SearchUsersFormBase(forms.Form):
+class BaseSearchUsersForm(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
     profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
@@ -349,25 +347,19 @@ class SearchUsersFormBase(forms.Form):
         return queryset
 
 
-def SearchUsersForm(*args, **kwargs):
+def create_search_users_form():
     """
     Factory that uses cache for ranks and roles,
     and makes those ranks and roles typed choice fields that play nice
     with passing values via GET
     """
-    ranks_choices = threadstore.get('misago_admin_ranks_choices', 'nada')
-    if ranks_choices == 'nada':
-        ranks_choices = [('', _("All ranks"))]
-        for rank in Rank.objects.order_by('name').iterator():
-            ranks_choices.append((rank.pk, rank.name))
-        threadstore.set('misago_admin_ranks_choices', ranks_choices)
+    ranks_choices = [('', _("All ranks"))]
+    for rank in Rank.objects.order_by('name').iterator():
+        ranks_choices.append((rank.pk, rank.name))
 
-    roles_choices = threadstore.get('misago_admin_roles_choices', 'nada')
-    if roles_choices == 'nada':
-        roles_choices = [('', _("All roles"))]
-        for role in Role.objects.order_by('name').iterator():
-            roles_choices.append((role.pk, role.name))
-        threadstore.set('misago_admin_roles_choices', roles_choices)
+    roles_choices = [('', _("All roles"))]
+    for role in Role.objects.order_by('name').iterator():
+        roles_choices.append((role.pk, role.name))
 
     extra_fields = {
         'rank': forms.TypedChoiceField(
@@ -384,8 +376,7 @@ def SearchUsersForm(*args, **kwargs):
         )
     }
 
-    FinalForm = type('SearchUsersFormFinal', (SearchUsersFormBase, ), extra_fields)
-    return FinalForm(*args, **kwargs)
+    return type('SearchUsersForm', (BaseSearchUsersForm, ), extra_fields)
 
 
 class RankForm(forms.ModelForm):

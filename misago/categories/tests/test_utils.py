@@ -2,7 +2,6 @@ from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.categories.utils import get_categories_tree, get_category_path
 from misago.conftest import get_cache_versions
-from misago.core import threadstore
 from misago.users.testutils import AuthenticatedUserTestCase
 
 cache_versions = get_cache_versions()
@@ -33,9 +32,7 @@ class CategoriesUtilsTests(AuthenticatedUserTestCase):
         Category E
           + Subcategory F
         """
-
         super().setUp()
-        threadstore.clear()
 
         self.root = Category.objects.root_category()
         self.first_category = Category.objects.get(slug='first-category')

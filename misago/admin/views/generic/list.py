@@ -116,15 +116,15 @@ class ListView(AdminView):
                 # So address ball contains copy-friendly link
                 refresh_querystring = True
 
-        SearchForm = self.get_search_form(request)
-        if SearchForm:
-            filtering_methods = self.get_filtering_methods(request)
+        search_form = self.get_search_form(request)
+        if search_form:
+            filtering_methods = self.get_filtering_methods(request, search_form)
             active_filters = self.get_filtering_method_to_use(filtering_methods)
             if request.GET.get('clear_filters'):
                 # Clear filters from querystring
                 request.session.pop(self.filters_session_key, None)
                 active_filters = {}
-            self.apply_filtering_on_context(context, active_filters, SearchForm)
+            self.apply_filtering_on_context(context, active_filters, search_form)
 
             if (filtering_methods['GET'] and
                     filtering_methods['GET'] != filtering_methods['session']):
@@ -181,12 +181,23 @@ class ListView(AdminView):
     def filters_session_key(self):
         return 'misago_admin_%s_filters' % self.root_link
 
-    def get_filters_from_GET(self, search_form, request):
+    def get_filtering_methods(self, request, search_form):
+        methods = {
+            'GET': self.get_filters_from_GET(request, search_form),
+            'session': self.get_filters_from_session(request, search_form),
+        }
+
+        if request.GET.get('set_filters'):
+            methods['session'] = {}
+
+        return methods
+
+    def get_filters_from_GET(self, request, search_form):
         form = search_form(request.GET)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
 
-    def get_filters_from_session(self, search_form, request):
+    def get_filters_from_session(self, request, search_form):
         session_filters = request.session.get(self.filters_session_key, {})
         form = search_form(session_filters)
         form.is_valid()
@@ -197,18 +208,6 @@ class ListView(AdminView):
             if not value:
                 del data[key]
         return data
-
-    def get_filtering_methods(self, request):
-        SearchForm = self.get_search_form(request)
-        methods = {
-            'GET': self.get_filters_from_GET(SearchForm, request),
-            'session': self.get_filters_from_session(SearchForm, request),
-        }
-
-        if request.GET.get('set_filters'):
-            methods['session'] = {}
-
-        return methods
 
     def get_filtering_method_to_use(self, methods):
         for method in ('GET', 'session'):
