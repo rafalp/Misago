@@ -5,7 +5,7 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting, SettingsGroup
 from misago.conftest import get_cache_versions
 
-from . import override_dynamic_settings
+from misago.conf.test import override_dynamic_settings
 
 cache_versions = get_cache_versions()
 

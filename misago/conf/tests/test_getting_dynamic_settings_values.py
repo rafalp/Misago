@@ -7,9 +7,6 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.models import Setting, SettingsGroup
 from misago.conftest import get_cache_versions
 
-from . import override_dynamic_settings
-
-cache_version = "abcdefgh"
 cache_versions = get_cache_versions()
 
 
@@ -46,7 +43,7 @@ class GettingSettingValueTests(TestCase):
         DynamicSettings(cache_versions)
         cache_key = cache_set.call_args[0][0]
         assert SETTINGS_CACHE in cache_key
-        assert cache_version in cache_key
+        assert cache_versions[SETTINGS_CACHE] in cache_key
 
     def test_accessing_attr_returns_setting_value(self):
         settings = DynamicSettings(cache_versions)
