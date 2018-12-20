@@ -72,8 +72,7 @@ intro() {
     echo
     echo "Testing:"
     echo
-    echo "    ${BOLD}test${NORMAL}              run tests suite."
-    echo "    ${BOLD}test module${NORMAL}       run tests suite in specified python module, eg. misago.users."
+    echo "    ${BOLD}test${NORMAL}              run tests suite using pytest."
     echo
     echo "Translations:"
     echo
@@ -197,7 +196,7 @@ rebuild() {
 
 # Run tests suite
 test() {
-    docker-compose run --rm misago python runtests.py $1
+    docker-compose run --rm misago pytest "${@:2}"
 }
 
 # Make messages
@@ -284,7 +283,7 @@ if [[ $1 ]]; then
     elif [[ $1 = "rebuild" ]]; then
         rebuild $@
     elif [[ $1 = "test" ]]; then
-        test $2
+        test $@
     elif [[ $1 = "makemessages" ]]; then
         makemessages ${2:-en}
     elif [[ $1 = "makemessages_in_docker" ]]; then

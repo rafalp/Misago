@@ -38,7 +38,7 @@ setup(
     install_requires=REQUIREMENTS,
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     include_package_data=True,
-    test_suite="runtests.runtests",
+    test_suite="pytest",
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',

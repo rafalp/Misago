@@ -76,7 +76,7 @@ class ErrorPageViewsTests(TestCase):
         self.assertContains(response, "Banned in auth!", status_code=403)
 
 
-def test_request(url):
+def create_request(url):
     request = RequestFactory().get(url)
     request.cache_versions = get_cache_versions()
     request.settings = DynamicSettings(request.cache_versions)
@@ -90,8 +90,8 @@ def test_request(url):
 @override_settings(ROOT_URLCONF='misago.core.testproject.urlswitherrorhandlers')
 class CustomErrorPagesTests(TestCase):
     def setUp(self):
-        self.misago_request = test_request(reverse('misago:index'))
-        self.site_request = test_request(reverse('raise-403'))
+        self.misago_request = create_request(reverse('misago:index'))
+        self.site_request = create_request(reverse('raise-403'))
 
     def test_shared_403_decorator(self):
         """shared_403_decorator calls correct error handler"""

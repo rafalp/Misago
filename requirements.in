@@ -11,6 +11,8 @@ markdown<2.7
 misago-social-auth-app-django
 pillow<4.2
 psycopg2-binary<2.8
+pytest
+pytest-django
 pytz
 requests<3
 unidecode<1
