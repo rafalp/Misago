@@ -1,8 +1,9 @@
+from unittest.mock import Mock
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from misago.conf import settings
 from misago.users.models import Ban
 from misago.users.validators import (
     validate_email, validate_email_available, validate_email_banned, validate_gmail_email,
@@ -56,14 +57,15 @@ class ValidateEmailTests(TestCase):
 class ValidateUsernameTests(TestCase):
     def test_validate_username(self):
         """validate_username has no crashes"""
-        validate_username('LeBob')
+        settings = Mock(username_length_min=1, username_length_max=5)
+        validate_username(settings, 'LeBob')
         with self.assertRaises(ValidationError):
-            validate_username('*')
+            validate_username(settings, '*')
 
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com', 'pass123')
+        self.test_user = UserModel.objects.create_user('EricTheFish', 'eric@test.com')
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
@@ -117,15 +119,17 @@ class ValidateUsernameContentTests(TestCase):
 class ValidateUsernameLengthTests(TestCase):
     def test_valid_name(self):
         """validate_username_length allows valid names"""
-        validate_username_length('a' * settings.username_length_min)
-        validate_username_length('a' * settings.username_length_max)
+        settings = Mock(username_length_min=1, username_length_max=5)
+        validate_username_length(settings, 'a' * settings.username_length_min)
+        validate_username_length(settings, 'a' * settings.username_length_max)
 
     def test_invalid_name(self):
         """validate_username_length disallows invalid names"""
+        settings = Mock(username_length_min=1, username_length_max=5)
         with self.assertRaises(ValidationError):
-            validate_username_length('a' * (settings.username_length_min - 1))
+            validate_username_length(settings, 'a' * (settings.username_length_min - 1))
         with self.assertRaises(ValidationError):
-            validate_username_length('a' * (settings.username_length_max + 1))
+            validate_username_length(settings, 'a' * (settings.username_length_max + 1))
 
 
 class ValidateGmailEmailTests(TestCase):

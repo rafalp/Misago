@@ -1,6 +1,4 @@
-from django.core.cache import cache
-
-from . import SETTINGS_CACHE
+from .cache import get_settings_cache, set_settings_cache
 from .models import Setting
 
 
@@ -8,11 +6,10 @@ class DynamicSettings:
     _overrides = {}
 
     def __init__(self, cache_versions):
-        cache_name = get_cache_name(cache_versions)
-        self._settings = cache.get(cache_name)
+        self._settings = get_settings_cache(cache_versions)
         if self._settings is None:
             self._settings = get_settings_from_db()
-            cache.set(cache_name, self._settings)
+            set_settings_cache(cache_versions, self._settings)
 
     def get_public_settings(self):
         public_settings = {}

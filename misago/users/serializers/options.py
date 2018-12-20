@@ -59,20 +59,22 @@ class ChangeUsernameSerializer(serializers.Serializer):
 
     def validate(self, data):
         username = data.get('username')
-
         if not username:
             raise serializers.ValidationError(_("Enter new username."))
 
-        if username == self.context['user'].username:
+        user = self.context['user']
+        if username == user.username:
             raise serializers.ValidationError(_("New username is same as current one."))
 
-        validate_username(username)
+        settings = self.context['settings']
+        validate_username(settings, username)
 
         return data
 
     def change_username(self, changed_by):
-        self.context['user'].set_username(self.validated_data['username'], changed_by=changed_by)
-        self.context['user'].save(update_fields=['username', 'slug'])
+        user = self.context['user']
+        user.set_username(self.validated_data['username'], changed_by=changed_by)
+        user.save(update_fields=['username', 'slug'])
 
 
 class ChangePasswordSerializer(serializers.Serializer):

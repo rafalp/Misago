@@ -9,7 +9,6 @@ from misago.acl.useracl import get_user_acl
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
 from misago.categories.models import Category
-from misago.conf import settings
 from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
@@ -119,7 +118,7 @@ class UsersList(UserAdmin, generic.ListView):
             queryset.update(requires_activation=User.ACTIVATION_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
-            mail_subject = subject % {'forum_name': settings.forum_name}
+            mail_subject = subject % {'forum_name': request.settings.forum_name}
 
             mail_users(
                 inactive_users,
@@ -252,6 +251,17 @@ class NewUser(UserAdmin, generic.ModelFormView):
     template = 'new.html'
     message_submit = _('New user "%(user)s" has been registered.')
 
+    def initialize_form(self, form, request, target):
+        if request.method == 'POST':
+            return form(
+                request.POST,
+                request.FILES,
+                instance=target,
+                request=request,
+            )
+        else:
+            return form(instance=target, request=request)
+            
     def handle_form(self, form, request, target):
         new_user = User.objects.create_user(
             form.cleaned_data['username'],

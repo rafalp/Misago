@@ -26,3 +26,8 @@ class GettingSettingValueTests(TestCase):
         settings = StaticSettings()
         with override_settings(UNDEFINED_SETTING="test"):
             assert settings.UNDEFINED_SETTING == "test"
+
+    def test_accessing_attr_for_undefined_setting_raises_attribute_error(self):
+        settings = StaticSettings()
+        with self.assertRaises(AttributeError):
+            assert settings.UNDEFINED_SETTING

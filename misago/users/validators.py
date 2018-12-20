@@ -51,9 +51,9 @@ def validate_email_banned(value):
 
 
 # Username validators
-def validate_username(value, exclude=None):
+def validate_username(settings, value, exclude=None):
     """shortcut function that does complete validation of username"""
-    validate_username_length(value)
+    validate_username_length(settings, value)
     validate_username_content(value)
     validate_username_available(value, exclude)
     validate_username_banned(value)
@@ -83,7 +83,7 @@ def validate_username_content(value):
         raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
 
 
-def validate_username_length(value):
+def validate_username_length(settings, value):
     if len(value) < settings.username_length_min:
         message = ngettext(
             "Username must be at least %(limit_value)s character long.",
@@ -143,7 +143,7 @@ validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
 REGISTRATION_VALIDATORS = list(map(import_string, validators_list))
 
 
-def raise_validation_error(fieldname, validation_error):
+def raise_validation_error(*_):
     raise ValidationError()
 
 

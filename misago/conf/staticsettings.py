@@ -18,4 +18,4 @@ class StaticSettings(object):
         except AttributeError:
             pass
 
-        raise AttributeError("Setting %s is undefined" % name)
+        raise AttributeError

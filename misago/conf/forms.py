@@ -4,8 +4,7 @@ from django.utils.translation import ngettext
 
 from misago.admin.forms import YesNoSwitch
 
-
-__ALL__ = ['ChangeSettingsForm']
+__all__ = ['ChangeSettingsForm']
 
 
 class ValidateChoicesNum(object):

@@ -3,7 +3,7 @@ import json
 from django.contrib.auth import get_user_model
 
 from misago.acl.test import patch_user_acl
-from misago.conf import settings
+from misago.conf.test import override_dynamic_settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -17,6 +17,7 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         super().setUp()
         self.link = '/api/users/%s/username/' % self.user.pk
 
+    @override_dynamic_settings(username_length_min=2, username_length_max=4)
     def test_get_change_username_options(self):
         """get to API returns options"""
         response = self.client.get(self.link)
@@ -25,8 +26,8 @@ class UserUsernameTests(AuthenticatedUserTestCase):
         response_json = response.json()
 
         self.assertIsNotNone(response_json['changes_left'])
-        self.assertEqual(response_json['length_min'], settings.username_length_min)
-        self.assertEqual(response_json['length_max'], settings.username_length_max)
+        self.assertEqual(response_json['length_min'], 2)
+        self.assertEqual(response_json['length_max'], 4)
         self.assertIsNone(response_json['next_on'])
 
         for i in range(response_json['changes_left']):
@@ -133,14 +134,15 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
         })
 
     @patch_user_acl({'can_rename_users': 1})
+    @override_dynamic_settings(username_length_min=3, username_length_max=12)
     def test_moderate_username(self):
         """moderate username"""
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
 
         options = response.json()
-        self.assertEqual(options['length_min'], settings.username_length_min)
-        self.assertEqual(options['length_max'], settings.username_length_max)
+        self.assertEqual(options['length_min'], 3)
+        self.assertEqual(options['length_max'], 12)
 
         response = self.client.post(
             self.link,

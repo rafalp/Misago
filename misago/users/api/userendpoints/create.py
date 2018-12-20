@@ -21,7 +21,7 @@ UserModel = get_user_model()
 
 @csrf_protect
 def create_endpoint(request):
-    if settings.account_activation == 'closed':
+    if request.settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
 
     form = RegisterForm(
@@ -40,9 +40,9 @@ def create_endpoint(request):
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     activation_kwargs = {}
-    if settings.account_activation == 'user':
+    if request.settings.account_activation == 'user':
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_USER}
-    elif settings.account_activation == 'admin':
+    elif request.settings.account_activation == 'admin':
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
     try:

@@ -1,4 +1,3 @@
-from .gateway import db_settings  # noqa
 from .staticsettings import StaticSettings
 
 default_app_config = 'misago.conf.apps.MisagoConfConfig'

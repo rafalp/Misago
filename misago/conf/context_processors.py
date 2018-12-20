@@ -4,7 +4,7 @@ from django.utils.translation import get_language
 
 from misago.users.social.utils import get_enabled_social_auth_sites_list
 
-from .gateway import settings
+from . import settings
 
 BLANK_AVATAR_URL = static(settings.MISAGO_BLANK_AVATAR)
 

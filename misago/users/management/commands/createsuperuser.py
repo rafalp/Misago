@@ -18,7 +18,6 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.users.setupnewuser import setup_new_user
 from misago.users.validators import validate_email, validate_username
 
-
 User = get_user_model()
 
 
@@ -89,7 +88,7 @@ class Command(BaseCommand):
         if username is not None:
             try:
                 username = username.strip()
-                validate_username(username)
+                validate_username(settings, username)
             except ValidationError as e:
                 self.stderr.write('\n'.join(e.messages))
                 username = None

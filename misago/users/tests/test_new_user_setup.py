@@ -3,7 +3,7 @@ from django.test import TestCase
 
 from misago.cache.versions import get_cache_versions
 from misago.conf.dynamicsettings import DynamicSettings
-from misago.conf.tests import override_dynamic_settings
+from misago.conf.test import override_dynamic_settings
 
 from misago.users.setupnewuser import (
     set_default_subscription_options, setup_new_user
