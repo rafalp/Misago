@@ -26,7 +26,7 @@ services:
     ports:
       # Map port 8000 in the container to port 8000 on the host
       # This way we can access the forum through http://localhost:8000
-      - "${PORT_DJANGO:-8000}:8000"
+      - "${MISAGO_DEVSERVER_PORT:-8000}:8000"
     depends_on:
       - postgres
     tty: true

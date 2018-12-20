@@ -9,7 +9,7 @@ NORMAL=$(tput sgr0)
 
 # Required ports
 # Some tasks test for those ports before continuing
-port_django=${PORT_DJANGO:-8000}
+port_django=${MISAGO_DEVSERVER_PORT:-8000}
 port_postgresql=5432
 
 required_ports=($port_postgresql $port_django)
