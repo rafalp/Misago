@@ -4,8 +4,6 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.core import threadstore
-from misago.core.cache import cache
 from misago.threads.testutils import post_thread
 from misago.users.activepostersranking import (
     build_active_posters_ranking, get_active_posters_ranking)
@@ -19,16 +17,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        cache.clear()
-        threadstore.clear()
-
         self.category = Category.objects.get(slug='first-category')
-
-    def tearDown(self):
-        super().tearDown()
-
-        cache.clear()
-        threadstore.clear()
 
     def test_get_active_posters_ranking(self):
         """get_active_posters_ranking returns list of active posters"""

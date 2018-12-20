@@ -232,7 +232,6 @@ MIDDLEWARE = [
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
     'misago.threads.middleware.UnreadThreadsCountMiddleware',
-    'misago.core.middleware.ThreadStoreMiddleware',
 ]
 
 ROOT_URLCONF = 'devproject.urls'

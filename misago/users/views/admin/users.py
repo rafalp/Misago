@@ -13,9 +13,13 @@ from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
+from misago.users.datadownloads import (
+    request_user_data_download, user_has_data_download_request
+)
 from misago.users.forms.admin import (
-    BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
+    BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm,
+    create_search_users_form
+)
 from misago.users.models import Ban
 from misago.users.profilefields import profilefields
 from misago.users.setupnewuser import setup_new_user
@@ -101,7 +105,7 @@ class UsersList(UserAdmin, generic.ListView):
         return qs.select_related('rank')
 
     def get_search_form(self, request):
-        return SearchUsersForm
+        return create_search_users_form()
 
     def action_activate(self, request, users):
         inactive_users = []

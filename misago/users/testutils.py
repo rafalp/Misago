@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
-
-from misago.core.testutils import MisagoTestCase
+from django.test import TestCase
 
 from .models import AnonymousUser, Online
 from .setupnewuser import setup_new_user
@@ -8,7 +7,7 @@ from .setupnewuser import setup_new_user
 User = get_user_model()
 
 
-class UserTestCase(MisagoTestCase):
+class UserTestCase(TestCase):
     USER_PASSWORD = "Pass.123"
     USER_IP = '127.0.0.1'
 

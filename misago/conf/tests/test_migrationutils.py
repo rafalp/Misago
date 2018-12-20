@@ -3,7 +3,6 @@ from django.test import TestCase
 
 from misago.conf import migrationutils
 from misago.conf.models import SettingsGroup
-from misago.core import threadstore
 
 
 class DBConfMigrationUtilsTests(TestCase):
@@ -35,9 +34,6 @@ class DBConfMigrationUtilsTests(TestCase):
 
         migrationutils.migrate_settings_group(apps, self.test_group)
         self.groups_count = SettingsGroup.objects.count()
-
-    def tearDown(self):
-        threadstore.clear()
 
     def test_get_custom_group_and_settings(self):
         """tests setup created settings group"""

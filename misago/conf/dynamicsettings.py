@@ -45,10 +45,6 @@ class DynamicSettings:
         cls._overrides = {}
 
 
-def get_cache_name(cache_versions):
-    return "%s_%s" % (SETTINGS_CACHE, cache_versions[SETTINGS_CACHE])
-
-
 def get_settings_from_db():
     settings = {}
     for setting in Setting.objects.iterator():

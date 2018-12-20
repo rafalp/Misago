@@ -146,8 +146,6 @@ class ThreadsListTestCase(AuthenticatedUserTestCase):
 
         self.category_f = Category.objects.get(slug='category-f')
 
-        self.clear_state()
-
         Category.objects.partial_rebuild(self.root.tree_id)
 
         self.root = Category.objects.root_category()
