@@ -1,6 +1,8 @@
 from django.urls import reverse
 
+from misago.acl import ACL_CACHE
 from misago.admin.testutils import AdminTestCase
+from misago.cache.test import assert_invalidates_cache
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.models import Thread
@@ -140,6 +142,21 @@ class CategoryAdminViewsTests(CategoryAdminTestCase):
         response = self.client.get(reverse('misago:admin:categories:nodes:index'))
         self.assertContains(response, 'Test Subcategory')
 
+    def test_creating_new_category_invalidates_acl_cache(self):
+        root = Category.objects.root_category()
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:categories:nodes:new'),
+                data={
+                    'name': 'Test Category',
+                    'description': 'Lorem ipsum dolor met',
+                    'new_parent': root.pk,
+                    'prune_started_after': 0,
+                    'prune_replied_after': 0,
+                },
+            )
+
     def test_edit_view(self):
         """edit category view has no showstoppers"""
         private_threads = Category.objects.private_threads()
@@ -227,6 +244,35 @@ class CategoryAdminViewsTests(CategoryAdminTestCase):
 
         response = self.client.get(reverse('misago:admin:categories:nodes:index'))
         self.assertContains(response, 'Test Category Edited')
+
+    def test_editing_category_invalidates_acl_cache(self):
+        root = Category.objects.root_category()
+        self.client.post(
+            reverse('misago:admin:categories:nodes:new'),
+            data={
+                'name': 'Test Category',
+                'description': 'Lorem ipsum dolor met',
+                'new_parent': root.pk,
+                'prune_started_after': 0,
+                'prune_replied_after': 0,
+            },
+        )
+        
+        test_category = Category.objects.get(slug='test-category')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:categories:nodes:edit', kwargs={
+                    'pk': test_category.pk,
+                }),
+                data={
+                    'name': 'Test Category Edited',
+                    'new_parent': root.pk,
+                    'role': 'category',
+                    'prune_started_after': 0,
+                    'prune_replied_after': 0,
+                },
+            )
 
     def test_move_views(self):
         """move up/down views have no showstoppers"""
@@ -522,3 +568,15 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
             (self.category_e, 1, 10, 13),
             (self.category_f, 2, 11, 12),
         ])
+
+    def test_deleting_category_invalidates_acl_cache(self):
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:categories:nodes:delete', kwargs={
+                    'pk': self.category_d.pk,
+                }),
+                data={
+                    'move_children_to': '',
+                    'move_threads_to': '',
+                }
+            )

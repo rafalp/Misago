@@ -1,5 +1,6 @@
 from django.utils.translation import gettext as _
 
+from misago.acl import useracl
 from misago.core.mail import build_mail, send_messages
 from misago.threads.permissions import can_see_post, can_see_thread
 
@@ -23,15 +24,16 @@ class EmailNotificationMiddleware(PostingMiddleware):
 
         notifications = []
         for subscription in queryset.iterator():
-            if self.notify_user_of_post(subscription.user):
+            if self.subscriber_can_see_post(subscription.user):
                 notifications.append(self.build_mail(subscription.user))
 
         if notifications:
             send_messages(notifications)
 
-    def notify_user_of_post(self, subscriber):
-        see_thread = can_see_thread(subscriber, self.thread)
-        see_post = can_see_post(subscriber, self.post)
+    def subscriber_can_see_post(self, subscriber):
+        user_acl = useracl.get_user_acl(subscriber, self.request.cache_versions)
+        see_thread = can_see_thread(user_acl, self.thread)
+        see_post = can_see_post(user_acl, self.post)
         return see_thread and see_post
 
     def build_mail(self, subscriber):
@@ -48,7 +50,8 @@ class EmailNotificationMiddleware(PostingMiddleware):
             'misago/emails/thread/reply',
             sender=self.user,
             context={
-                'thread': self.thread,
-                'post': self.post,
+                "settings": self.request.settings,
+                "thread": self.thread,
+                "post": self.post,
             },
         )

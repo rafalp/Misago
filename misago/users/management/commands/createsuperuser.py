@@ -12,10 +12,13 @@ from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
 
+from misago.cache.versions import get_cache_versions
+from misago.conf.dynamicsettings import DynamicSettings
+
+from misago.users.setupnewuser import setup_new_user
 from misago.users.validators import validate_email, validate_username
 
-
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class NotRunningInTTYException(Exception):
@@ -78,11 +81,14 @@ class Command(BaseCommand):
         interactive = options.get('interactive')
         verbosity = int(options.get('verbosity', 1))
 
+        cache_versions = get_cache_versions()
+        settings = DynamicSettings(cache_versions)
+
         # Validate initial inputs
         if username is not None:
             try:
                 username = username.strip()
-                validate_username(username)
+                validate_username(settings, username)
             except ValidationError as e:
                 self.stderr.write('\n'.join(e.messages))
                 username = None
@@ -103,7 +109,7 @@ class Command(BaseCommand):
         if not interactive:
             if username and email and password:
                 # Call User manager's create_superuser using our wrapper
-                self.create_superuser(username, email, password, verbosity)
+                self.create_superuser(username, email, password, settings, verbosity)
         else:
             try:
                 if hasattr(self.stdin, 'isatty') and not self.stdin.isatty():
@@ -142,7 +148,7 @@ class Command(BaseCommand):
                         continue
                     try:
                         validate_password(
-                            raw_value, user=UserModel(username=username, email=email)
+                            raw_value, user=User(username=username, email=email)
                         )
                     except ValidationError as e:
                         self.stderr.write('\n'.join(e.messages))
@@ -152,7 +158,7 @@ class Command(BaseCommand):
                     password = raw_value
 
                 # Call User manager's create_superuser using our wrapper
-                self.create_superuser(username, email, password, verbosity)
+                self.create_superuser(username, email, password, settings, verbosity)
 
             except KeyboardInterrupt:
                 self.stderr.write("\nOperation cancelled.")
@@ -164,11 +170,10 @@ class Command(BaseCommand):
                     "to create one manually."
                 )
 
-    def create_superuser(self, username, email, password, verbosity):
+    def create_superuser(self, username, email, password, settings, verbosity):
         try:
-            user = UserModel.objects.create_superuser(
-                username, email, password, set_default_avatar=True
-            )
+            user = User.objects.create_superuser(username, email, password)
+            setup_new_user(settings, user)
 
             if verbosity >= 1:
                 message = "Superuser #%s has been created successfully."

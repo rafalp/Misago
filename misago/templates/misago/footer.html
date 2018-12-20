@@ -10,11 +10,11 @@
         </p>
       </noscript>
 
-      {% if TERMS_OF_SERVICE_URL or PRIVACY_POLICY_URL or misago_settings.forum_footnote %}
+      {% if TERMS_OF_SERVICE_URL or PRIVACY_POLICY_URL or settings.forum_footnote %}
         <ul class="list-inline footer-nav">
-        {% if misago_settings.forum_footnote %}
+        {% if settings.forum_footnote %}
           <li class="site-footnote">
-            {{ misago_settings.forum_footnote }}
+            {{ settings.forum_footnote }}
           </li>
         {% endif %}
         {% if TERMS_OF_SERVICE_URL %}

@@ -188,6 +188,7 @@ INSTALLED_APPS = [
     # Misago apps
     'misago.admin',
     'misago.acl',
+    'misago.cache',
     'misago.core',
     'misago.conf',
     'misago.markup',
@@ -223,12 +224,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'misago.cache.middleware.cache_versions_middleware',
+    'misago.conf.middleware.dynamic_settings_middleware',
     'misago.users.middleware.UserMiddleware',
+    'misago.acl.middleware.user_acl_middleware',
     'misago.core.middleware.ExceptionHandlerMiddleware',
     'misago.users.middleware.OnlineTrackerMiddleware',
     'misago.admin.middleware.AdminAuthMiddleware',
     'misago.threads.middleware.UnreadThreadsCountMiddleware',
-    'misago.core.middleware.ThreadStoreMiddleware',
 ]
 
 ROOT_URLCONF = 'devproject.urls'
@@ -283,12 +286,12 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'misago.acl.context_processors.user_acl',
+                'misago.conf.context_processors.conf',
                 'misago.core.context_processors.site_address',
                 'misago.core.context_processors.momentjs_locale',
-                'misago.conf.context_processors.settings',
                 'misago.search.context_processors.search_providers',
                 'misago.users.context_processors.user_links',
-                'misago.legal.context_processors.legal_links',
 
                 # Data preloaders
                 'misago.conf.context_processors.preload_settings_json',

@@ -42,7 +42,7 @@ def reset_password_form(request, pk, token):
             message = _("%(user)s, your link is invalid. Please try again or request new link.")
             raise ResetError(message % {'user': requesting_user.username})
 
-        ban = get_user_ban(requesting_user)
+        ban = get_user_ban(requesting_user, request.cache_versions)
         if ban:
             raise Banned(ban)
     except ResetError as e:

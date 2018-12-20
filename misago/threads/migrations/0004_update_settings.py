@@ -1,7 +1,6 @@
 from django.db import migrations
 
-from misago.conf.migrationutils import delete_settings_cache, migrate_settings_group
-
+from misago.conf.migrationutils import migrate_settings_group
 
 _ = lambda s: s
 
@@ -67,8 +66,6 @@ def update_threads_settings(apps, schema_editor):
             ],
         }
     )
-
-    delete_settings_cache()
 
 
 class Migration(migrations.Migration):

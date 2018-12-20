@@ -1,7 +1,9 @@
 from django.urls import reverse
 
+from misago.acl import ACL_CACHE
 from misago.acl.models import Role
 from misago.acl.testutils import fake_post_data
+from misago.cache.test import assert_invalidates_cache
 from misago.admin.testutils import AdminTestCase
 
 
@@ -70,6 +72,25 @@ class RoleAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, test_role.name)
 
+    def test_editing_role_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role',
+            })
+        )
+
+        test_role = Role.objects.get(name='Test Role')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:permissions:users:edit', kwargs={
+                    'pk': test_role.pk,
+                }),
+                data=fake_data({
+                    'name': 'Top Lel',
+                })
+            )
+
     def test_users_view(self):
         """users with this role view has no showstoppers"""
         response = self.client.post(
@@ -106,3 +127,19 @@ class RoleAdminViewsTests(AdminTestCase):
         self.client.get(reverse('misago:admin:permissions:users:index'))
         response = self.client.get(reverse('misago:admin:permissions:users:index'))
         self.assertNotContains(response, test_role.name)
+
+    def test_deleting_role_invalidates_acl_cache(self):
+        self.client.post(
+            reverse('misago:admin:permissions:users:new'), data=fake_data({
+                'name': 'Test Role',
+            })
+        )
+
+        test_role = Role.objects.get(name='Test Role')
+
+        with assert_invalidates_cache(ACL_CACHE):
+            self.client.post(
+                reverse('misago:admin:permissions:users:delete', kwargs={
+                    'pk': test_role.pk,
+                })
+            )

@@ -17,8 +17,7 @@ DATABASES = {
 # Use in-memory cache
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'uniqu3-sn0wf14k3'
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
 

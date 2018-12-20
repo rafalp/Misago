@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
@@ -15,7 +15,7 @@ __all__ = ['ThreadsRootCategory', 'ThreadsCategory', 'PrivateThreadsCategory']
 class ViewModel(BaseViewModel):
     def __init__(self, request, **kwargs):
         self._categories = self.get_categories(request)
-        add_acl(request.user, self._categories)
+        add_acl_to_obj(request.user_acl, self._categories)
 
         self._model = self.get_category(request, self._categories, **kwargs)
 
@@ -51,7 +51,7 @@ class ThreadsRootCategory(ViewModel):
     def get_categories(self, request):
         return [Category.objects.root_category()] + list(
             Category.objects.all_categories().filter(
-                id__in=request.user.acl_cache['visible_categories'],
+                id__in=request.user_acl['visible_categories'],
             ).select_related('parent')
         )
 
@@ -66,8 +66,8 @@ class ThreadsCategory(ThreadsRootCategory):
             if category.pk == int(kwargs['pk']):
                 if not category.special_role:
                     # check permissions for non-special categories
-                    allow_see_category(request.user, category)
-                    allow_browse_category(request.user, category)
+                    allow_see_category(request.user_acl, category)
+                    allow_browse_category(request.user_acl, category)
 
                 if 'slug' in kwargs:
                     validate_slug(category, kwargs['slug'])
@@ -81,7 +81,7 @@ class PrivateThreadsCategory(ViewModel):
         return [Category.objects.private_threads()]
 
     def get_category(self, request, categories, **kwargs):
-        allow_use_private_threads(request.user)
+        allow_use_private_threads(request.user_acl)
 
         return categories[0]
 

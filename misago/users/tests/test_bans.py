@@ -4,12 +4,15 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
+from misago.conftest import get_cache_versions
 from misago.users.bans import (
     ban_ip, ban_user, get_email_ban, get_ip_ban, get_request_ip_ban, get_user_ban, get_username_ban)
+from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
 
-
 UserModel = get_user_model()
+
+cache_versions = get_cache_versions()
 
 
 class GetBanTests(TestCase):
@@ -40,13 +43,13 @@ class GetBanTests(TestCase):
         )
         self.assertEqual(get_username_ban('admiral').pk, valid_ban.pk)
 
-        regitration_ban = Ban.objects.create(
+        registration_ban = Ban.objects.create(
             banned_value='bob*',
             expires_on=timezone.now() + timedelta(days=7),
             registration_only=True,
         )
         self.assertIsNone(get_username_ban('boberson'))
-        self.assertEqual(get_username_ban('boberson', True).pk, regitration_ban.pk)
+        self.assertEqual(get_username_ban('boberson', True).pk, registration_ban.pk)
 
     def test_get_email_ban(self):
         """get_email_ban returns valid ban"""
@@ -77,14 +80,14 @@ class GetBanTests(TestCase):
         )
         self.assertEqual(get_email_ban('banned@mail.ru').pk, valid_ban.pk)
 
-        regitration_ban = Ban.objects.create(
+        registration_ban = Ban.objects.create(
             banned_value='*.ua',
             check_type=Ban.EMAIL,
             expires_on=timezone.now() + timedelta(days=7),
             registration_only=True,
         )
         self.assertIsNone(get_email_ban('banned@mail.ua'))
-        self.assertEqual(get_email_ban('banned@mail.ua', True).pk, regitration_ban.pk)
+        self.assertEqual(get_email_ban('banned@mail.ua', True).pk, registration_ban.pk)
 
     def test_get_ip_ban(self):
         """get_ip_ban returns valid ban"""
@@ -115,14 +118,14 @@ class GetBanTests(TestCase):
         )
         self.assertEqual(get_ip_ban('125.0.0.1').pk, valid_ban.pk)
 
-        regitration_ban = Ban.objects.create(
+        registration_ban = Ban.objects.create(
             banned_value='188.*',
             check_type=Ban.IP,
             expires_on=timezone.now() + timedelta(days=7),
             registration_only=True,
         )
         self.assertIsNone(get_ip_ban('188.12.12.41'))
-        self.assertEqual(get_ip_ban('188.12.12.41', True).pk, regitration_ban.pk)
+        self.assertEqual(get_ip_ban('188.12.12.41', True).pk, registration_ban.pk)
 
 
 class UserBansTests(TestCase):
@@ -131,7 +134,7 @@ class UserBansTests(TestCase):
 
     def test_no_ban(self):
         """user is not caught by ban"""
-        self.assertIsNone(get_user_ban(self.user))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
     def test_permanent_ban(self):
@@ -142,7 +145,7 @@ class UserBansTests(TestCase):
             staff_message='Staff reason',
         )
 
-        user_ban = get_user_ban(self.user)
+        user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, 'User reason')
         self.assertEqual(user_ban.staff_message, 'Staff reason')
@@ -157,7 +160,7 @@ class UserBansTests(TestCase):
             expires_on=timezone.now() + timedelta(days=7),
         )
 
-        user_ban = get_user_ban(self.user)
+        user_ban = get_user_ban(self.user, cache_versions)
         self.assertIsNotNone(user_ban)
         self.assertEqual(user_ban.user_message, 'User reason')
         self.assertEqual(user_ban.staff_message, 'Staff reason')
@@ -170,7 +173,7 @@ class UserBansTests(TestCase):
             expires_on=timezone.now() - timedelta(days=7),
         )
 
-        self.assertIsNone(get_user_ban(self.user))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
     def test_expired_non_flagged_ban(self):
@@ -181,7 +184,7 @@ class UserBansTests(TestCase):
         )
         Ban.objects.update(is_checked=True)
 
-        self.assertIsNone(get_user_ban(self.user))
+        self.assertIsNone(get_user_ban(self.user, cache_versions))
         self.assertFalse(self.user.ban_cache.is_banned)
 
 
@@ -189,6 +192,7 @@ class MockRequest(object):
     def __init__(self):
         self.user_ip = '127.0.0.1'
         self.session = {}
+        self.cache_versions = cache_versions
 
 
 class RequestIPBansTests(TestCase):
@@ -255,7 +259,7 @@ class BanUserTests(TestCase):
         self.assertEqual(ban.user_message, 'User reason')
         self.assertEqual(ban.staff_message, 'Staff reason')
 
-        db_ban = get_user_ban(user)
+        db_ban = get_user_ban(user, cache_versions)
         self.assertEqual(ban.pk, db_ban.ban_id)
 
 

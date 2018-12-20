@@ -2,11 +2,16 @@ import json
 
 from django.contrib.auth import get_user_model
 from django.core import mail
-from django.test import RequestFactory, override_settings
+from django.test import RequestFactory
 from social_core.backends.github import GithubOAuth2
 from social_django.utils import load_strategy
 
+from misago.acl import ACL_CACHE
+from misago.acl.useracl import get_user_acl
+from misago.conf.dynamicsettings import DynamicSettings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.conf.test import override_dynamic_settings
+from misago.conftest import get_cache_versions
 from misago.legal.models import Agreement
 
 from misago.users.models import AnonymousUser, Ban, BanCache
@@ -27,11 +32,19 @@ def create_request(user_ip='0.0.0.0', data=None):
     else:
         request = factory.post('/', data=json.dumps(data), content_type='application/json')
     request.include_frontend_context = True
+    request.cache_versions = get_cache_versions()
     request.frontend_context = {}
     request.session = {}
+    request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
+    request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.user_ip = user_ip
     return request
+
+
+def create_strategy():
+    request = create_request()
+    return load_strategy(request=request)
 
 
 class MockStrategy(object):
@@ -48,7 +61,8 @@ class PipelineTestCase(UserTestCase):
         self.user = self.get_authenticated_user()
 
     def assertNewUserIsCorrect(
-            self, new_user, form_data=None, activation=None, email_verified=False):
+        self, new_user, form_data=None, activation=None, email_verified=False
+    ):
         self.assertFalse(new_user.has_usable_password())
         self.assertIn('Welcome', mail.outbox[0].subject)
 
@@ -175,7 +189,7 @@ class CreateUser(PipelineTestCase):
         )
         self.assertIsNone(result)
 
-    @override_settings(account_activation='none')
+    @override_dynamic_settings(account_activation='none')
     def test_user_created_no_activation(self):
         """pipeline step creates active user for valid data and disabled activation"""
         result = create_user(
@@ -192,7 +206,7 @@ class CreateUser(PipelineTestCase):
         self.assertEqual(new_user.username, 'NewUser')
         self.assertNewUserIsCorrect(new_user, email_verified=True, activation='none')
 
-    @override_settings(account_activation='user')
+    @override_dynamic_settings(account_activation='user')
     def test_user_created_activation_by_user(self):
         """pipeline step creates active user for valid data and user activation"""
         result = create_user(
@@ -209,7 +223,7 @@ class CreateUser(PipelineTestCase):
         self.assertEqual(new_user.username, 'NewUser')
         self.assertNewUserIsCorrect(new_user, email_verified=True, activation='user')
 
-    @override_settings(account_activation='admin')
+    @override_dynamic_settings(account_activation='admin')
     def test_user_created_activation_by_admin(self):
         """pipeline step creates in user for valid data and admin activation"""
         result = create_user(
@@ -309,7 +323,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             'username': ["This username is not available."],
         })
 
-    @override_settings(account_activation='none')
+    @override_dynamic_settings(account_activation='none')
     def test_user_created_no_activation_verified_email(self):
         """active user is created for verified email and activation disabled"""
         form_data = {
@@ -333,7 +347,7 @@ class CreateUserWithFormTests(PipelineTestCase):
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='none', email_verified=True)
 
-    @override_settings(account_activation='none')
+    @override_dynamic_settings(account_activation='none')
     def test_user_created_no_activation_nonverified_email(self):
         """active user is created for non-verified email and activation disabled"""
         form_data = {
@@ -357,7 +371,7 @@ class CreateUserWithFormTests(PipelineTestCase):
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='none', email_verified=False)
 
-    @override_settings(account_activation='user')
+    @override_dynamic_settings(account_activation='user')
     def test_user_created_activation_by_user_verified_email(self):
         """active user is created for verified email and activation by user"""
         form_data = {
@@ -381,7 +395,7 @@ class CreateUserWithFormTests(PipelineTestCase):
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='user', email_verified=True)
 
-    @override_settings(account_activation='user')
+    @override_dynamic_settings(account_activation='user')
     def test_user_created_activation_by_user_nonverified_email(self):
         """inactive user is created for non-verified email and activation by user"""
         form_data = {
@@ -405,7 +419,7 @@ class CreateUserWithFormTests(PipelineTestCase):
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='user', email_verified=False)
 
-    @override_settings(account_activation='admin')
+    @override_dynamic_settings(account_activation='admin')
     def test_user_created_activation_by_admin_verified_email(self):
         """inactive user is created for verified email and activation by admin"""
         form_data = {
@@ -429,7 +443,7 @@ class CreateUserWithFormTests(PipelineTestCase):
 
         self.assertNewUserIsCorrect(new_user, form_data, activation='admin', email_verified=True)
 
-    @override_settings(account_activation='admin')
+    @override_dynamic_settings(account_activation='admin')
     def test_user_created_activation_by_admin_nonverified_email(self):
         """inactive user is created for non-verified email and activation by admin"""
         form_data = {
@@ -564,77 +578,87 @@ class CreateUserWithFormTests(PipelineTestCase):
 class GetUsernameTests(PipelineTestCase):
     def test_skip_if_user_is_set(self):
         """pipeline step is skipped if user was passed"""
-        result = get_username(None, {}, None, user=self.user)
+        strategy = create_strategy()
+        result = get_username(strategy, {}, None, user=self.user)
         self.assertIsNone(result)
 
     def test_skip_if_no_names(self):
         """pipeline step is skipped if API returned no names"""
-        result = get_username(None, {}, None)
+        strategy = create_strategy()
+        result = get_username(strategy, {}, None)
         self.assertIsNone(result)
 
     def test_resolve_to_username(self):
         """pipeline step resolves username"""
-        result = get_username(None, {'username': 'BobBoberson'}, None)
+        strategy = create_strategy()
+        result = get_username(strategy, {'username': 'BobBoberson'}, None)
         self.assertEqual(result, {'clean_username': 'BobBoberson'})
 
     def test_normalize_username(self):
         """pipeline step normalizes username"""
-        result = get_username(None, {'username': 'Błop Błoperson'}, None)
+        strategy = create_strategy()
+        result = get_username(strategy, {'username': 'Błop Błoperson'}, None)
         self.assertEqual(result, {'clean_username': 'BlopBloperson'})
 
     def test_resolve_to_first_name(self):
         """pipeline attempts to use first name because username is taken"""
+        strategy = create_strategy()
         details = {
             'username': self.user.username,
             'first_name': 'Błob',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertEqual(result, {'clean_username': 'Blob'})
 
     def test_dont_resolve_to_last_name(self):
         """pipeline will not fallback to last name because username is taken"""
+        strategy = create_strategy()
         details = {
             'username': self.user.username,
             'last_name': 'Błob',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertIsNone(result)
 
     def test_resolve_to_first_last_name_first_char(self):
         """pipeline will construct username from first name and first char of surname"""
+        strategy = create_strategy()
         details = {
             'first_name': self.user.username,
             'last_name': 'Błob',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertEqual(result, {'clean_username': self.user.username + 'B'})
 
     def test_dont_resolve_to_banned_name(self):
         """pipeline will not resolve to banned name"""
+        strategy = create_strategy()
         Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
         details = {
             'username': 'Misago Admin',
             'first_name': 'Błob',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertEqual(result, {'clean_username': 'Blob'})
 
     def test_resolve_full_name(self):
         """pipeline will resolve to full name"""
+        strategy = create_strategy()
         Ban.objects.create(banned_value='*Admin*', check_type=Ban.USERNAME)
         details = {
             'username': 'Misago Admin',
             'full_name': 'Błob Błopo',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertEqual(result, {'clean_username': 'BlobBlopo'})
 
     def test_resolve_to_cut_name(self):
         """pipeline will resolve cut too long name on second pass"""
+        strategy = create_strategy()
         details = {
             'username': 'Abrakadabrapokuskonstantynopolitańczykowianeczkatrzy',
         }
-        result = get_username(None, details, None)
+        result = get_username(strategy, details, None)
         self.assertEqual(result, {'clean_username': 'Abrakadabrapok'})
 
 

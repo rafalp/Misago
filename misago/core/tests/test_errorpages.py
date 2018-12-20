@@ -4,9 +4,12 @@ from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
 
+from misago.acl.useracl import get_user_acl
+from misago.users.models import AnonymousUser
+from misago.conf.dynamicsettings import DynamicSettings
+from misago.conftest import get_cache_versions
 from misago.core.testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 from misago.core.utils import encode_json_html
-from misago.users.models import AnonymousUser
 
 
 class CSRFErrorViewTests(TestCase):
@@ -73,20 +76,22 @@ class ErrorPageViewsTests(TestCase):
         self.assertContains(response, "Banned in auth!", status_code=403)
 
 
+def test_request(url):
+    request = RequestFactory().get(url)
+    request.cache_versions = get_cache_versions()
+    request.settings = DynamicSettings(request.cache_versions)
+    request.user = AnonymousUser()
+    request.user_acl = get_user_acl(request.user, request.cache_versions)
+    request.include_frontend_context = True
+    request.frontend_context = {}
+    return request
+
+
 @override_settings(ROOT_URLCONF='misago.core.testproject.urlswitherrorhandlers')
 class CustomErrorPagesTests(TestCase):
     def setUp(self):
-        self.misago_request = RequestFactory().get(reverse('misago:index'))
-        self.site_request = RequestFactory().get(reverse('raise-403'))
-
-        self.misago_request.user = AnonymousUser()
-        self.site_request.user = AnonymousUser()
-
-        self.misago_request.include_frontend_context = True
-        self.site_request.include_frontend_context = True
-
-        self.misago_request.frontend_context = {}
-        self.site_request.frontend_context = {}
+        self.misago_request = test_request(reverse('misago:index'))
+        self.site_request = test_request(reverse('raise-403'))
 
     def test_shared_403_decorator(self):
         """shared_403_decorator calls correct error handler"""

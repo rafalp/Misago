@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post
 from misago.threads.permissions import allow_edit_post, allow_reply_thread
@@ -86,7 +86,7 @@ class ViewSet(viewsets.ViewSet):
     @transaction.atomic
     def create(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
-        allow_reply_thread(request.user, thread)
+        allow_reply_thread(request.user_acl, thread)
 
         post = Post(
             thread=thread,
@@ -111,7 +111,7 @@ class ViewSet(viewsets.ViewSet):
             post.is_new = True
             post.poster.posts = user_posts + 1
 
-            make_users_status_aware(request.user, [post.poster])
+            make_users_status_aware(request, [post.poster])
 
             return Response(PostSerializer(post, context={'user': request.user}).data)
         else:
@@ -122,7 +122,7 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
 
-        allow_edit_post(request.user, post)
+        allow_edit_post(request.user_acl, post)
 
         posting = PostingEndpoint(
             request,
@@ -141,7 +141,7 @@ class ViewSet(viewsets.ViewSet):
             post.edits = post_edits + 1
 
             if post.poster:
-                make_users_status_aware(request.user, [post.poster])
+                make_users_status_aware(request, [post.poster])
 
             return Response(PostSerializer(post, context={'user': request.user}).data)
         else:
@@ -188,11 +188,11 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
 
-        allow_edit_post(request.user, post)
+        allow_edit_post(request.user_acl, post)
 
         attachments = []
         for attachment in post.attachment_set.order_by('-id'):
-            add_acl(request.user, attachment)
+            add_acl_to_obj(request.user_acl, attachment)
             attachments.append(attachment)
         attachments_json = AttachmentSerializer(
             attachments, many=True, context={'user': request.user}
@@ -211,7 +211,7 @@ class ViewSet(viewsets.ViewSet):
     @list_route(methods=['get'], url_path='editor')
     def reply_editor(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
-        allow_reply_thread(request.user, thread)
+        allow_reply_thread(request.user_acl, thread)
 
         if 'reply' in request.query_params:
             reply_to = self.get_post(request, thread, request.query_params['reply']).unwrap()
@@ -242,7 +242,7 @@ class ViewSet(viewsets.ViewSet):
                 thread = self.get_thread(request, thread_pk)
                 post = self.get_post(request, thread, pk).unwrap()
 
-                allow_edit_post(request.user, post)
+                allow_edit_post(request.user_acl, post)
 
                 return revert_post_endpoint(request, post)
 

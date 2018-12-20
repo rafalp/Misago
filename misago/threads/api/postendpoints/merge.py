@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.serializers import MergePostsSerializer, PostSerializer
 
 
@@ -15,7 +15,7 @@ def posts_merge_endpoint(request, thread):
         data=request.data,
         context={
             'thread': thread,
-            'user': request.user,
+            'user_acl': request.user_acl,
         },
     )
 
@@ -55,6 +55,6 @@ def posts_merge_endpoint(request, thread):
     first_post.thread = thread
     first_post.category = thread.category
 
-    add_acl(request.user, first_post)
+    add_acl_to_obj(request.user_acl, first_post)
 
     return Response(PostSerializer(first_post, context={'user': request.user}).data)

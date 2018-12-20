@@ -1,6 +1,5 @@
 from pathlib import Path
 
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.conf import settings
@@ -8,79 +7,6 @@ from misago.core.utils import slugify
 
 from misago.users.avatars import dynamic
 from misago.users.models import Avatar, User
-
-
-class UserManagerTests(TestCase):
-    def test_create_user(self):
-        """create_user created new user account successfully"""
-        user = User.objects.create_user(
-            'Bob',
-            'bob@test.com',
-            'Pass.123',
-            set_default_avatar=True,
-        )
-
-        db_user = User.objects.get(id=user.pk)
-
-        self.assertEqual(user.username, db_user.username)
-        self.assertEqual(user.slug, db_user.slug)
-        self.assertEqual(user.email, db_user.email)
-        self.assertEqual(user.email_hash, db_user.email_hash)
-
-    def test_create_user_twice(self):
-        """create_user is raising validation error for duplicate users"""
-        User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-        with self.assertRaises(ValidationError):
-            User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-
-    def test_create_superuser(self):
-        """create_superuser created new user account successfully"""
-        user = User.objects.create_superuser('Bob', 'bob@test.com', 'Pass.123')
-
-        db_user = User.objects.get(id=user.pk)
-
-        self.assertTrue(user.is_staff)
-        self.assertTrue(db_user.is_staff)
-        self.assertTrue(user.is_superuser)
-        self.assertTrue(db_user.is_superuser)
-
-    def test_get_user(self):
-        """get_by_ methods return user correctly"""
-        user = User.objects.create_user('Bob', 'bob@test.com', 'Pass.123')
-
-        db_user = User.objects.get_by_username(user.username)
-        self.assertEqual(user, db_user)
-
-        db_user = User.objects.get_by_email(user.email)
-        self.assertEqual(user, db_user)
-
-        db_user = User.objects.get_by_username_or_email(user.username)
-        self.assertEqual(user, db_user)
-
-        db_user = User.objects.get_by_username_or_email(user.email)
-        self.assertEqual(user, db_user)
-
-    def test_get_by_username_or_email_multiple_results(self):
-        """get_by_username_or_email method handles multiple results"""
-        email_match = User.objects.create_user('Bob', 'test@test.test', 'Pass.123')
-        slug_match = User.objects.create_user('TestTestTest', 'bob@test.com', 'Pass.123')
-
-        db_user = User.objects.get_by_username_or_email('test@test.test')
-        self.assertEqual(email_match, db_user)
-
-        db_user = User.objects.get_by_username_or_email('TestTestTest')
-        self.assertEqual(slug_match, db_user)
-
-    def test_getters_unicode_handling(self):
-        """get_by_ methods handle unicode"""
-        with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username('łóć')
-
-        with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_email('łóć@polskimail.pl')
-
-        with self.assertRaises(User.DoesNotExist):
-            User.objects.get_by_username_or_email('łóć@polskimail.pl')
 
 
 class UserModelTests(TestCase):

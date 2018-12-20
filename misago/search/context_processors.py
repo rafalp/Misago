@@ -8,7 +8,7 @@ def search_providers(request):
     allowed_providers = []
 
     try:
-        if request.user.acl_cache['can_search']:
+        if request.user_acl['can_search']:
             allowed_providers = searchproviders.get_allowed_providers(request)
     except AttributeError:
         # is user has no acl_cache attribute, cease entire middleware

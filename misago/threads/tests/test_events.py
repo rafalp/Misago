@@ -1,25 +1,23 @@
+from unittest.mock import Mock
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.acl import add_acl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
+from misago.conftest import get_cache_versions
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 
-
-UserModel = get_user_model()
-
-
-class MockRequest(object):
-    def __init__(self, user):
-        self.user = user
-        self.user_ip = '123.14.15.222'
+User = get_user_model()
+cache_versions = get_cache_versions()
 
 
 class EventsApiTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass.123")
 
         datetime = timezone.now()
 
@@ -37,12 +35,13 @@ class EventsApiTests(TestCase):
         self.thread.set_title("Test thread")
         self.thread.save()
 
-        add_acl(self.user, self.category)
-        add_acl(self.user, self.thread)
+        user_acl = useracl.get_user_acl(self.user, cache_versions)
+        add_acl_to_obj(user_acl, self.category)
+        add_acl_to_obj(user_acl, self.thread)
 
     def test_record_event_with_context(self):
         """record_event registers event with context in thread"""
-        request = MockRequest(self.user)
+        request = Mock(user=self.user, user_ip="123.14.15.222")
         context = {'user': 'Lorem ipsum'}
         event = record_event(request, self.thread, 'announcement', context)
 
@@ -59,7 +58,7 @@ class EventsApiTests(TestCase):
 
     def test_record_event_is_read(self):
         """record_event makes recorded event read to its author"""
-        request = MockRequest(self.user)
+        request = Mock(user=self.user, user_ip="123.14.15.222")
         event = record_event(request, self.thread, 'announcement')
 
         self.user.postread_set.get(

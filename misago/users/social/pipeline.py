@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from social_core.pipeline.partial import partial
 
-from misago.conf import settings
 from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 from misago.legal.models import Agreement
 
@@ -18,8 +17,10 @@ from misago.users.models import Ban
 from misago.users.registration import (
     get_registration_result_json, save_user_agreements, send_welcome_email
 )
+from misago.users.setupnewuser import setup_new_user
 from misago.users.validators import (
-    ValidationError, validate_new_registration, validate_email, validate_username)
+    ValidationError, validate_new_registration, validate_email, validate_username
+)
 
 from .utils import get_social_auth_backend_name, perpare_username
 
@@ -47,7 +48,7 @@ def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwa
     if not user or user.is_staff:
         return None
 
-    user_ban = get_user_ban(user)
+    user_ban = get_user_ban(user, strategy.request.cache_versions)
     if user_ban:
         raise SocialAuthBanned(backend, user_ban)
 
@@ -96,6 +97,8 @@ def get_username(strategy, details, backend, user=None, *args, **kwargs):
     if user:
         return None
 
+    settings = strategy.request.settings
+
     username = perpare_username(details.get('username', ''))
     full_name = perpare_username(details.get('full_name', ''))
     first_name = perpare_username(details.get('first_name', ''))
@@ -125,7 +128,7 @@ def get_username(strategy, details, backend, user=None, *args, **kwargs):
 
     for name in filter(bool, names_to_try):
         try:
-            validate_username(name)
+            validate_username(settings, name)
             return {'clean_username': name}
         except ValidationError:
             pass
@@ -137,6 +140,8 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
         return None
     
     request = strategy.request
+    settings = request.settings
+
     email = details.get('email')
     username = kwargs.get('clean_username')
     
@@ -157,14 +162,13 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
     new_user = UserModel.objects.create_user(
-        username, 
-        email, 
-        create_audit_trail=True,
+        username,
+        email,
         joined_from_ip=request.user_ip, 
-        set_default_avatar=True,
         **activation_kwargs
     )
 
+    setup_new_user(settings, new_user)
     send_welcome_email(request, new_user)
 
     return {'user': new_user, 'is_new': True}
@@ -177,6 +181,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         return None
 
     request = strategy.request
+    settings = request.settings
     backend_name = get_social_auth_backend_name(backend.name)
 
     if request.method == 'POST':
@@ -187,7 +192,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             
         form = SocialAuthRegisterForm(
             request_data,
-            request=request,    
+            request=request,
             agreements=Agreement.objects.get_agreements(),
         )
         
@@ -206,11 +211,10 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
             new_user = UserModel.objects.create_user(
                 form.cleaned_data['username'],
                 form.cleaned_data['email'],
-                create_audit_trail=True,
                 joined_from_ip=request.user_ip,
-                set_default_avatar=True,
                 **activation_kwargs
             )
+            setup_new_user(settings, new_user)
         except IntegrityError:
             return JsonResponse({'__all__': _("Please try resubmitting the form.")}, status=400)
 

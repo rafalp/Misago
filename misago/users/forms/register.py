@@ -4,16 +4,18 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from misago.users import validators
 from misago.users.bans import get_email_ban, get_ip_ban, get_username_ban
+from misago.users.validators import (
+    validate_email, validate_new_registration, validate_username
+)
 
 
 UserModel = get_user_model()
 
 
 class BaseRegisterForm(forms.Form):
-    username = forms.CharField(validators=[validators.validate_username])
-    email = forms.CharField(validators=[validators.validate_email])
+    username = forms.CharField()
+    email = forms.CharField(validators=[validate_email])
 
     terms_of_service = forms.IntegerField(required=False)
     privacy_policy = forms.IntegerField(required=False)
@@ -26,6 +28,7 @@ class BaseRegisterForm(forms.Form):
     def clean_username(self):
         data = self.cleaned_data['username']
 
+        validate_username(self.request.settings, data)
         ban = get_username_ban(data, registration_only=True)
         if ban:
             if ban.user_message:
@@ -67,7 +70,7 @@ class SocialAuthRegisterForm(BaseRegisterForm):
         self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()
 
-        validators.validate_new_registration(self.request, cleaned_data, self)
+        validate_new_registration(self.request, cleaned_data, self)
 
         return cleaned_data
 
@@ -99,6 +102,6 @@ class RegisterForm(BaseRegisterForm):
         except forms.ValidationError as e:
             self.add_error('password', e)
 
-        validators.validate_new_registration(self.request, cleaned_data, self.add_error)
+        validate_new_registration(self.request, cleaned_data, self.add_error)
 
         return cleaned_data

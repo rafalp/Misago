@@ -18,10 +18,10 @@ DELETE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 def delete_post(request, thread, post):
     if post.is_event:
-        allow_delete_event(request.user, post)
+        allow_delete_event(request.user_acl, post)
     else:
-        allow_delete_best_answer(request.user, post)
-        allow_delete_post(request.user, post)
+        allow_delete_best_answer(request.user_acl, post)
+        allow_delete_post(request.user_acl, post)
 
     moderation.delete_post(request.user, post)
 
@@ -34,7 +34,7 @@ def delete_bulk(request, thread):
         data={'posts': request.data},
         context={
             'thread': thread,
-            'user': request.user,
+            'user_acl': request.user_acl,
         },
     )
 

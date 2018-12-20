@@ -4,15 +4,17 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
+from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.core import cache, threadstore
+from misago.conftest import get_cache_versions
 from misago.readtracker import poststracker, categoriestracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
 
+User = get_user_model()
 
-UserModel = get_user_model()
+cache_versions = get_cache_versions()
 
 
 class AnonymousUser(object):
@@ -22,24 +24,22 @@ class AnonymousUser(object):
 
 class CategoriesTrackerTests(TestCase):
     def setUp(self):
-        cache.cache.clear()
-        threadstore.clear()
-
-        self.user = UserModel.objects.create_user("UserA", "testa@user.com", 'Pass.123')
+        self.user = User.objects.create_user("UserA", "testa@user.com", 'Pass.123')
+        self.user_acl = get_user_acl(self.user, cache_versions)
         self.category = Category.objects.get(slug='first-category')
 
     def test_falsy_value(self):
         """passing falsy value to readtracker causes no errors"""
-        categoriestracker.make_read_aware(self.user, None)
-        categoriestracker.make_read_aware(self.user, False)
-        categoriestracker.make_read_aware(self.user, [])
+        categoriestracker.make_read_aware(self.user, self.user_acl, None)
+        categoriestracker.make_read_aware(self.user, self.user_acl, False)
+        categoriestracker.make_read_aware(self.user, self.user_acl, [])
 
     def test_anon_thread_before_cutoff(self):
         """non-tracked thread is marked as read for anonymous users"""
         started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         testutils.post_thread(self.category, started_on=started_on)
 
-        categoriestracker.make_read_aware(AnonymousUser(), self.category)
+        categoriestracker.make_read_aware(AnonymousUser(), None, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -47,7 +47,7 @@ class CategoriesTrackerTests(TestCase):
         """tracked thread is marked as read for anonymous users"""
         testutils.post_thread(self.category, started_on=timezone.now())
 
-        categoriestracker.make_read_aware(AnonymousUser(), self.category)
+        categoriestracker.make_read_aware(AnonymousUser(), None, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -56,7 +56,7 @@ class CategoriesTrackerTests(TestCase):
         started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         testutils.post_thread(self.category, started_on=started_on)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -64,7 +64,7 @@ class CategoriesTrackerTests(TestCase):
         """tracked thread is marked as unread for authenticated users"""
         testutils.post_thread(self.category, started_on=timezone.now())
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -73,7 +73,7 @@ class CategoriesTrackerTests(TestCase):
         started_on = timezone.now() - timedelta(days=1)
         testutils.post_thread(self.category, started_on=started_on)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -83,7 +83,7 @@ class CategoriesTrackerTests(TestCase):
 
         poststracker.save_read(self.user, thread.first_post)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -94,7 +94,7 @@ class CategoriesTrackerTests(TestCase):
         post = testutils.reply_thread(thread, posted_on=timezone.now())
         poststracker.save_read(self.user, post)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -105,7 +105,7 @@ class CategoriesTrackerTests(TestCase):
 
         testutils.reply_thread(thread, posted_on=timezone.now(), is_event=True)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -120,7 +120,7 @@ class CategoriesTrackerTests(TestCase):
             is_hidden=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -136,7 +136,7 @@ class CategoriesTrackerTests(TestCase):
             is_hidden=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -145,7 +145,7 @@ class CategoriesTrackerTests(TestCase):
         started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         testutils.post_thread(self.category, started_on=started_on)
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -160,7 +160,7 @@ class CategoriesTrackerTests(TestCase):
             is_unapproved=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -176,7 +176,7 @@ class CategoriesTrackerTests(TestCase):
             is_unapproved=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -192,7 +192,7 @@ class CategoriesTrackerTests(TestCase):
             is_unapproved=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -204,7 +204,7 @@ class CategoriesTrackerTests(TestCase):
             is_unapproved=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)
 
@@ -217,7 +217,7 @@ class CategoriesTrackerTests(TestCase):
             is_unapproved=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
@@ -229,6 +229,6 @@ class CategoriesTrackerTests(TestCase):
             is_hidden=True,
         )
 
-        categoriestracker.make_read_aware(self.user, self.category)
+        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
         self.assertFalse(self.category.is_new)

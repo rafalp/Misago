@@ -19,9 +19,13 @@ class GotoView(View):
         thread = self.get_thread(request, pk, slug).unwrap()
         self.test_permissions(request, thread)
 
-        posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
+        posts_queryset = exclude_invisible_posts(
+            request.user_acl, thread.category, thread.post_set
+        )
 
-        target_post = self.get_target_post(request.user, thread, posts_queryset.order_by('id'), **kwargs)
+        target_post = self.get_target_post(
+            request.user, thread, posts_queryset.order_by('id'), **kwargs
+        )
         target_page = self.compute_post_page(target_post, posts_queryset)
 
         return self.get_redirect(thread, target_post, target_page)
@@ -38,7 +42,6 @@ class GotoView(View):
     def compute_post_page(self, target_post, posts_queryset):
         # filter out events, order queryset
         posts_queryset = posts_queryset.filter(is_event=False).order_by('id')
-
         thread_length = posts_queryset.count()
 
         # is target an event?

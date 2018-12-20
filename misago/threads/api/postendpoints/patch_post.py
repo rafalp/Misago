@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
 from misago.core.apipatch import ApiPatch
 from misago.threads.models import PostLike
@@ -23,7 +23,7 @@ post_patch_dispatcher = ApiPatch()
 def patch_acl(request, post, value):
     """useful little op that updates post acl to current state"""
     if value:
-        add_acl(request.user, post)
+        add_acl_to_obj(request.user_acl, post)
         return {'acl': post.acl}
     else:
         return {'acl': None}
@@ -89,7 +89,7 @@ post_patch_dispatcher.replace('is-liked', patch_is_liked)
 
 
 def patch_is_protected(request, post, value):
-    allow_protect_post(request.user, post)
+    allow_protect_post(request.user_acl, post)
     if value:
         moderation.protect_post(request.user, post)
     else:
@@ -101,7 +101,7 @@ post_patch_dispatcher.replace('is-protected', patch_is_protected)
 
 
 def patch_is_unapproved(request, post, value):
-    allow_approve_post(request.user, post)
+    allow_approve_post(request.user_acl, post)
 
     if value:
         raise PermissionDenied(_("Content approval can't be reversed."))
@@ -116,11 +116,11 @@ post_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
 
 def patch_is_hidden(request, post, value):
     if value is True:
-        allow_hide_post(request.user, post)
-        allow_hide_best_answer(request.user, post)
+        allow_hide_post(request.user_acl, post)
+        allow_hide_best_answer(request.user_acl, post)
         moderation.hide_post(request.user, post)
     elif value is False:
-        allow_unhide_post(request.user, post)
+        allow_unhide_post(request.user_acl, post)
         moderation.unhide_post(request.user, post)
 
     return {'is_hidden': post.is_hidden}
@@ -169,7 +169,9 @@ def bulk_patch_endpoint(request, thread):
 
 
 def clean_posts_for_patch(request, thread, posts_ids):
-    posts_queryset = exclude_invisible_posts(request.user, thread.category, thread.post_set)
+    posts_queryset = exclude_invisible_posts(
+        request.user_acl, thread.category, thread.post_set
+    )
     posts_queryset = posts_queryset.filter(
         id__in=posts_ids,
         is_event=False,

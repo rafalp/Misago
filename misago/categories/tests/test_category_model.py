@@ -1,11 +1,12 @@
+from django.test import TestCase
+
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
 from misago.threads.threadtypes import trees_map
 
 
-class CategoryManagerTests(MisagoTestCase):
+class CategoryManagerTests(TestCase):
     def test_private_threads(self):
         """private_threads returns private threads category"""
         category = Category.objects.private_threads()
@@ -45,7 +46,7 @@ class CategoryManagerTests(MisagoTestCase):
                 self.assertNotIn(category.id, test_dict)
 
 
-class CategoryModelTests(MisagoTestCase):
+class CategoryModelTests(TestCase):
     def setUp(self):
         super().setUp()
 

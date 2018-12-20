@@ -1,11 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.users.models import Ban
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import (
+    AuthenticatedUserTestCase, create_test_user
+)
 
 
 UserModel = get_user_model()
@@ -34,7 +36,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        test_user = create_test_user('Tyrael', 't123@test.com')
 
         test_user.is_active = False
         test_user.save()
@@ -50,7 +52,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         # profile page displays notice about user being disabled
         response = self.client.get(response['location'])
-        self.assertContains(response, "account has been disabled", status_code=200)
+        self.assertContains(response, "account has been disabled")
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
@@ -184,46 +186,37 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
-        override_acl(self.user, {
-            'can_see_ban_details': 0,
-        })
-
-        test_user = UserModel.objects.create_user("Bob", "bob@bob.com", 'pass.123')
+        test_user = create_test_user("Bob", "bob@bob.com", 'pass.123')
         link_kwargs = {'slug': test_user.slug, 'pk': test_user.pk}
 
-        response = self.client.get(reverse(
-            'misago:user-ban',
-            kwargs=link_kwargs,
-        ))
-        self.assertEqual(response.status_code, 404)
+        with patch_user_acl({'can_see_ban_details': 0}):
+            response = self.client.get(reverse(
+                'misago:user-ban',
+                kwargs=link_kwargs,
+            ))
+            self.assertEqual(response.status_code, 404)
 
-        override_acl(self.user, {
-            'can_see_ban_details': 1,
-        })
-
-        response = self.client.get(reverse(
-            'misago:user-ban',
-            kwargs=link_kwargs,
-        ))
-        self.assertEqual(response.status_code, 404)
-
-        override_acl(self.user, {
-            'can_see_ban_details': 1,
-        })
-        test_user.ban_cache.delete()
+        with patch_user_acl({'can_see_ban_details': 1}):
+            response = self.client.get(reverse(
+                'misago:user-ban',
+                kwargs=link_kwargs,
+            ))
+            self.assertEqual(response.status_code, 404)
 
         Ban.objects.create(
             banned_value=test_user.username,
             user_message="User m3ss4ge.",
             staff_message="Staff m3ss4ge.",
             is_checked=True,
-        )
+        )      
+        test_user.ban_cache.delete()
 
-        response = self.client.get(reverse(
-            'misago:user-ban',
-            kwargs=link_kwargs,
-        ))
+        with patch_user_acl({'can_see_ban_details': 1}):
+            response = self.client.get(reverse(
+                'misago:user-ban',
+                kwargs=link_kwargs,
+            ))
 
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'User m3ss4ge')
-        self.assertContains(response, 'Staff m3ss4ge')
+            self.assertEqual(response.status_code, 200)
+            self.assertContains(response, 'User m3ss4ge')
+            self.assertContains(response, 'Staff m3ss4ge')

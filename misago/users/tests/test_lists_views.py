@@ -1,32 +1,21 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
+from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.testutils import post_thread
 from misago.users.activepostersranking import build_active_posters_ranking
 from misago.users.models import Rank
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-UserModel = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class UsersListTestCase(AuthenticatedUserTestCase):
-    def setUp(self):
-        super().setUp()
-        override_acl(self.user, {
-            'can_browse_users_list': 1,
-        })
+    pass
 
 
 class UsersListLanderTests(UsersListTestCase):
+    @patch_user_acl({'can_browse_users_list': 0})
     def test_lander_no_permission(self):
         """lander returns 403 if user has no permission"""
-        override_acl(self.user, {
-            'can_browse_users_list': 0,
-        })
-
         response = self.client.get(reverse('misago:users'))
         self.assertEqual(response.status_code, 403)
 
@@ -55,10 +44,9 @@ class ActivePostersTests(UsersListTestCase):
 
         # Create 50 test users and see if errors appeared
         for i in range(50):
-            user = UserModel.objects.create_user(
+            user = create_test_user(
                 'Bob%s' % i,
                 'm%s@te.com' % i,
-                'Pass.123',
                 posts=12345,
             )
             post_thread(category, poster=user)
@@ -72,7 +60,7 @@ class ActivePostersTests(UsersListTestCase):
 class UsersRankTests(UsersListTestCase):
     def test_ranks(self):
         """ranks lists are handled correctly"""
-        rank_user = UserModel.objects.create_user('Visible', 'visible@te.com', 'Pass.123')
+        rank_user = create_test_user('Visible', 'visible@te.com')
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
@@ -94,7 +82,7 @@ class UsersRankTests(UsersListTestCase):
 
     def test_disabled_users(self):
         """ranks lists excludes disabled accounts"""
-        rank_user = UserModel.objects.create_user(
+        rank_user = create_test_user(
             'Visible',
             'visible@te.com',
             'Pass.123',
@@ -124,7 +112,7 @@ class UsersRankTests(UsersListTestCase):
         self.user.is_staff = True
         self.user.save()
 
-        rank_user = UserModel.objects.create_user(
+        rank_user = create_test_user(
             'Visible',
             'visible@te.com',
             'Pass.123',

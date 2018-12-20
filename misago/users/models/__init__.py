@@ -1,5 +1,6 @@
 from .rank import Rank
-from .user import AnonymousUser, Online, User, UsernameChange
+from .online import Online
+from .user import AnonymousUser, User, UsernameChange
 from .activityranking import ActivityRanking
 from .avatar import Avatar
 from .audittrail import AuditTrail

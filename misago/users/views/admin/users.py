@@ -5,29 +5,33 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
+from misago.acl.useracl import get_user_acl
 from misago.admin.auth import start_admin_session
 from misago.admin.views import generic
 from misago.categories.models import Category
-from misago.conf import settings
 from misago.core.mail import mail_users
 from misago.core.pgutils import chunk_queryset
 from misago.threads.models import Thread
 from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.datadownloads import request_user_data_download, user_has_data_download_request
+from misago.users.datadownloads import (
+    request_user_data_download, user_has_data_download_request
+)
 from misago.users.forms.admin import (
-    BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm, SearchUsersForm)
+    BanUsersForm, EditUserForm, EditUserFormFactory, NewUserForm,
+    create_search_users_form
+)
 from misago.users.models import Ban
 from misago.users.profilefields import profilefields
+from misago.users.setupnewuser import setup_new_user
 from misago.users.signatures import set_user_signature
 
-
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserAdmin(generic.AdminBaseMixin):
     root_link = 'misago:admin:users:accounts:index'
     templates_dir = 'misago/admin/users'
-    model = UserModel
+    model = User
 
     def create_form_type(self, request, target):
         add_is_active_fields = False
@@ -101,7 +105,7 @@ class UsersList(UserAdmin, generic.ListView):
         return qs.select_related('rank')
 
     def get_search_form(self, request):
-        return SearchUsersForm
+        return create_search_users_form()
 
     def action_activate(self, request, users):
         inactive_users = []
@@ -114,13 +118,18 @@ class UsersList(UserAdmin, generic.ListView):
             raise generic.MassActionError(message)
         else:
             activated_users_pks = [u.pk for u in inactive_users]
-            queryset = UserModel.objects.filter(pk__in=activated_users_pks)
-            queryset.update(requires_activation=UserModel.ACTIVATION_NONE)
+            queryset = User.objects.filter(pk__in=activated_users_pks)
+            queryset.update(requires_activation=User.ACTIVATION_NONE)
 
             subject = _("Your account on %(forum_name)s forums has been activated")
-            mail_subject = subject % {'forum_name': settings.forum_name}
+            mail_subject = subject % {'forum_name': request.settings.forum_name}
 
-            mail_users(inactive_users, mail_subject, 'misago/emails/activation/by_admin')
+            mail_users(
+                inactive_users,
+                mail_subject,
+                'misago/emails/activation/by_admin',
+                context={"settings": request.settings},
+            )
 
             messages.success(request, _("Selected users accounts have been activated."))
 
@@ -246,15 +255,25 @@ class NewUser(UserAdmin, generic.ModelFormView):
     template = 'new.html'
     message_submit = _('New user "%(user)s" has been registered.')
 
+    def initialize_form(self, form, request, target):
+        if request.method == 'POST':
+            return form(
+                request.POST,
+                request.FILES,
+                instance=target,
+                request=request,
+            )
+        else:
+            return form(instance=target, request=request)
+            
     def handle_form(self, form, request, target):
-        new_user = UserModel.objects.create_user(
+        new_user = User.objects.create_user(
             form.cleaned_data['username'],
             form.cleaned_data['email'],
             form.cleaned_data['new_password'],
             title=form.cleaned_data['title'],
             rank=form.cleaned_data.get('rank'),
             joined_from_ip=request.user_ip,
-            set_default_avatar=True
         )
 
         if form.cleaned_data.get('staff_level'):
@@ -264,7 +283,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
             new_user.roles.add(*form.cleaned_data['roles'])
 
         new_user.update_acl_key()
-        new_user.save()
+        setup_new_user(request.settings, new_user)
 
         messages.success(request, self.message_submit % {'user': target.username})
         return redirect('misago:admin:users:accounts:edit', pk=new_user.pk)
@@ -325,7 +344,10 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.roles.clear()
         target.roles.add(*form.cleaned_data['roles'])
 
-        set_user_signature(request, target, form.cleaned_data.get('signature'))
+        target_acl = get_user_acl(target, request.cache_versions)
+        set_user_signature(
+            request, target, target_acl, form.cleaned_data.get('signature')
+        )
 
         profilefields.update_user_profile_fields(request, target, form)
 

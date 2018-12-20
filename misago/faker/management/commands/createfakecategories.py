@@ -5,7 +5,7 @@ from faker import Factory
 
 from django.core.management.base import BaseCommand
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear_acl_cache
 from misago.categories.models import Category, RoleCategoryACL
 from misago.core.management.progressbar import show_progress
 
@@ -85,7 +85,7 @@ class Command(BaseCommand):
             created_count += 1
             show_progress(self, created_count, items_to_create, start_time)
 
-        acl_version.invalidate()
+        clear_acl_cache()
 
         total_time = time.time() - start_time
         total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))

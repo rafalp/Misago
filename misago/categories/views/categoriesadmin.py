@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear_acl_cache
 from misago.admin.views import generic
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.forms import CategoryFormFactory, DeleteFormFactory
@@ -88,7 +88,7 @@ class CategoryFormMixin(object):
             if copied_acls:
                 RoleCategoryACL.objects.bulk_create(copied_acls)
 
-        acl_version.invalidate()
+        clear_acl_cache()
         messages.success(request, self.message_submit % {'name': target.name})
 
 

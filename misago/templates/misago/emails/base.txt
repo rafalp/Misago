@@ -1,4 +1,4 @@
-{{ misago_settings.forum_name }}
+{{ settings.forum_name }}
 ================================================
 
 {% block title %}{{ subject }}{% endblock %}
@@ -7,5 +7,5 @@
 
 
 ------------------------------------------------
-{% if misago_settings.email_footer %}{{ misago_settings.email_footer }}{% endif %}
+{% if settings.email_footer %}{{ settings.email_footer }}{% endif %}
 Sent from {{ SITE_ADDRESS }}

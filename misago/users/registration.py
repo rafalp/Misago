@@ -1,6 +1,5 @@
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.core.mail import mail_user
 from misago.legal.models import Agreement
 from misago.legal.utils import save_user_agreement_acceptance
@@ -8,11 +7,18 @@ from misago.users.tokens import make_activation_token
 
 
 def send_welcome_email(request, user):
+    settings = request.settings
+
     mail_subject = _("Welcome on %(forum_name)s forums!")
     mail_subject = mail_subject % {'forum_name': settings.forum_name}
 
     if not user.requires_activation:
-        mail_user(user, mail_subject, 'misago/emails/register/complete')
+        mail_user(
+            user,
+            mail_subject,
+            'misago/emails/register/complete',
+            context={"settings": settings},
+        )
         return
 
     activation_token = make_activation_token(user)
@@ -28,6 +34,7 @@ def send_welcome_email(request, user):
             'activation_token': activation_token,
             'activation_by_admin': activation_by_admin,
             'activation_by_user': activation_by_user,
+            'settings': settings,
         }
     )
 

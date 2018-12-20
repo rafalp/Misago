@@ -149,8 +149,11 @@ def build_noticiation_email(request, thread, user):
     }
 
     return build_mail(
-        user, subject % subject_formats, 'misago/emails/privatethread/added',
-        sender=request.user, context={'thread': thread}
+        user,
+        subject % subject_formats,
+        'misago/emails/privatethread/added',
+        sender=request.user,
+        context={'settings': request.settings, 'thread': thread},
     )
 
 

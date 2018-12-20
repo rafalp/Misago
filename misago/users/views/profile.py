@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import paginate, pagination_dict, validate_slug
 from misago.users.bans import get_user_ban
 from misago.users.online.utils import get_user_status
@@ -27,7 +27,7 @@ class ProfileView(View):
         if not active_section:
             raise Http404()
 
-        profile.status = get_user_status(request.user, profile)
+        profile.status = get_user_status(request, profile)
         context_data = self.get_context_data(request, profile)
 
         self.complete_frontend_context(request, profile, sections)
@@ -44,7 +44,7 @@ class ProfileView(View):
             raise Http404()
 
         validate_slug(profile, slug)
-        add_acl(request.user, profile)
+        add_acl_to_obj(request.user_acl, profile)
 
         return profile
 
@@ -67,7 +67,7 @@ class ProfileView(View):
             })
 
         request.frontend_context['PROFILE'] = UserProfileSerializer(
-            profile, context={'user': request.user}
+            profile, context={'request': request}
         ).data
 
         if not profile.is_active:
@@ -92,7 +92,7 @@ class ProfileView(View):
             })
 
             if not context['show_email']:
-                context['show_email'] = request.user.acl_cache['can_see_users_emails']
+                context['show_email'] = request.user_acl['can_see_users_emails']
         else:
             context.update({
                 'is_authenticated_user': False,
@@ -184,7 +184,7 @@ class UserBanView(ProfileView):
     template_name = 'misago/profile/ban_details.html'
 
     def get_context_data(self, request, profile):
-        ban = get_user_ban(profile)
+        ban = get_user_ban(profile, request.cache_versions)
 
         request.frontend_context['PROFILE_BAN'] = BanDetailsSerializer(ban).data
 

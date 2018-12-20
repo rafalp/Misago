@@ -5,8 +5,8 @@ from django.db import IntegrityError, models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.core import cachebuster
-from misago.users.constants import BANS_CACHEBUSTER
+from misago.cache.versions import invalidate_cache
+from misago.users.constants import BANS_CACHE
 
 
 class BansManager(models.Manager):
@@ -29,7 +29,7 @@ class BansManager(models.Manager):
         )
 
     def invalidate_cache(self):
-        cachebuster.invalidate(BANS_CACHEBUSTER)
+        invalidate_cache(BANS_CACHE)
 
     def get_ban(self, username=None, email=None, ip=None, registration_only=False):
         checks = []
@@ -131,7 +131,7 @@ class BanCache(models.Model):
         blank=True,
         on_delete=models.SET_NULL,
     )
-    bans_version = models.PositiveIntegerField(default=0)
+    cache_version = models.CharField(max_length=8)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
     expires_on = models.DateTimeField(null=True, blank=True)
@@ -157,9 +157,8 @@ class BanCache(models.Model):
     def is_banned(self):
         return bool(self.ban)
 
-    @property
-    def is_valid(self):
-        version_is_valid = cachebuster.is_valid(BANS_CACHEBUSTER, self.bans_version)
-        expired = self.expires_on and self.expires_on < timezone.now()
+    def is_valid(self, cache_versions):
+        is_versioned = self.cache_version == cache_versions[BANS_CACHE]
+        is_expired = self.expires_on and self.expires_on < timezone.now()
 
-        return version_is_valid and not expired
+        return is_versioned and not is_expired

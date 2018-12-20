@@ -2,12 +2,10 @@ from django.contrib.auth import get_user_model
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
 
-from misago.acl.testutils import override_acl
 from misago.categories.models import Category
 from misago.markup.mentions import MENTIONS_LIMIT
 from misago.threads import testutils
 from misago.users.testutils import AuthenticatedUserTestCase
-
 
 UserModel = get_user_model()
 
@@ -18,25 +16,12 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         self.category = Category.objects.get(slug='first-category')
         self.thread = testutils.post_thread(category=self.category)
-        self.override_acl()
 
         self.post_link = reverse(
             'misago:api:thread-post-list', kwargs={
                 'thread_pk': self.thread.pk,
             }
         )
-
-    def override_acl(self):
-        new_acl = self.user.acl_cache
-        new_acl['categories'][self.category.pk].update({
-            'can_see': 1,
-            'can_browse': 1,
-            'can_start_threads': 1,
-            'can_reply_threads': 1,
-            'can_edit_posts': 1,
-        })
-
-        override_acl(self.user, new_acl)
 
     def put(self, url, data=None):
         content = encode_multipart(BOUNDARY, data or {})
@@ -129,7 +114,6 @@ class PostMentionsTests(AuthenticatedUserTestCase):
             }
         )
 
-        self.override_acl()
         response = self.put(
             edit_link,
             data={
@@ -142,7 +126,6 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(list(post.mentions.order_by('id')), [user_a, user_b])
 
         # remove first mention from post - should preserve mentions
-        self.override_acl()
         response = self.put(
             edit_link, data={
                 'post': "This is test response, @%s!" % user_b,
@@ -154,7 +137,6 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         self.assertEqual(list(post.mentions.order_by('id')), [user_a, user_b])
 
         # remove mentions from post - should preserve mentions
-        self.override_acl()
         response = self.put(
             edit_link, data={
                 'post': "This is test response!",

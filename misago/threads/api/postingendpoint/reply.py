@@ -4,7 +4,9 @@ from django.utils.translation import gettext_lazy
 
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
-from misago.threads.validators import validate_post, validate_post_length, validate_title
+from misago.threads.validators import (
+    validate_post, validate_post_length, validate_thread_title
+)
 from misago.users.audittrail import create_audit_trail
 
 from . import PostingEndpoint, PostingMiddleware
@@ -78,11 +80,14 @@ class ReplyMiddleware(PostingMiddleware):
 
 class ReplySerializer(serializers.Serializer):
     post = serializers.CharField(
-        validators=[validate_post_length],
         error_messages={
             'required': gettext_lazy("You have to enter a message."),
         }
     )
+
+    def validate_post(self, data):
+        validate_post_length(self.context["settings"], data)
+        return data
 
     def validate(self, data):
         if data.get('post'):
@@ -100,8 +105,11 @@ class ReplySerializer(serializers.Serializer):
 
 class ThreadSerializer(ReplySerializer):
     title = serializers.CharField(
-        validators=[validate_title],
         error_messages={
             'required': gettext_lazy("You have to enter thread title."),
         }
     )
+
+    def validate_title(self, data):
+        validate_thread_title(self.context["settings"], data)
+        return data

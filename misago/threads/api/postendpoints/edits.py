@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum
@@ -71,10 +71,10 @@ def revert_post_endpoint(request, post):
     post.is_new = False
     post.edits = post_edits + 1
 
-    add_acl(request.user, post)
+    add_acl_to_obj(request.user_acl, post)
 
     if post.poster:
-        make_users_status_aware(request.user, [post.poster])
+        make_users_status_aware(request, [post.poster])
 
     return Response(PostSerializer(post, context={'user': request.user}).data)
 

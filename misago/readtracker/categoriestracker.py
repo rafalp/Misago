@@ -4,7 +4,7 @@ from misago.threads.permissions import exclude_invisible_posts, exclude_invisibl
 from .dates import get_cutoff_date
 
 
-def make_read_aware(user, categories):
+def make_read_aware(user, user_acl, categories):
     if not categories:
         return
 
@@ -17,7 +17,7 @@ def make_read_aware(user, categories):
         return
 
     threads = Thread.objects.filter(category__in=categories)
-    threads = exclude_invisible_threads(user, categories, threads)
+    threads = exclude_invisible_threads(user_acl, categories, threads)
 
     queryset = Post.objects.filter(
         category__in=categories,
@@ -26,7 +26,7 @@ def make_read_aware(user, categories):
     ).values_list('category', flat=True).distinct()
 
     queryset = queryset.exclude(id__in=user.postread_set.values('post'))
-    queryset = exclude_invisible_posts(user, categories, queryset)
+    queryset = exclude_invisible_posts(user_acl, categories, queryset)
 
     unread_categories = list(queryset)
 

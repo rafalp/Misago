@@ -1,14 +1,13 @@
 from django.contrib.auth import get_user_model
-
-from misago.core.testutils import MisagoTestCase
+from django.test import TestCase
 
 from .models import AnonymousUser, Online
+from .setupnewuser import setup_new_user
+
+User = get_user_model()
 
 
-UserModel = get_user_model()
-
-
-class UserTestCase(MisagoTestCase):
+class UserTestCase(TestCase):
     USER_PASSWORD = "Pass.123"
     USER_IP = '127.0.0.1'
 
@@ -23,7 +22,7 @@ class UserTestCase(MisagoTestCase):
         return AnonymousUser()
 
     def get_authenticated_user(self):
-        return UserModel.objects.create_user(
+        return create_test_user(
             "TestUser",
             "test@user.com",
             self.USER_PASSWORD,
@@ -31,12 +30,12 @@ class UserTestCase(MisagoTestCase):
         )
 
     def get_superuser(self):
-        user = UserModel.objects.create_superuser(
-            "TestSuperUser", "test@superuser.com", self.USER_PASSWORD
+        return create_test_superuser(
+            "TestSuperUser",
+            "test@superuser.com",
+            self.USER_PASSWORD,
+            joined_from_ip=self.USER_IP,
         )
-        user.joined_from_ip = self.USER_IP
-        user.save()
-        return user
 
     def login_user(self, user, password=None):
         self.client.force_login(user)
@@ -53,10 +52,33 @@ class AuthenticatedUserTestCase(UserTestCase):
         self.login_user(self.user)
 
     def reload_user(self):
-        self.user = UserModel.objects.get(id=self.user.id)
+        self.user.refresh_from_db()
 
 
 class SuperUserTestCase(AuthenticatedUserTestCase):
     def get_initial_user(self):
         self.user = self.get_superuser()
         self.login_user(self.user)
+
+
+def create_test_user(username, email, password=None, **extra_fields):
+    """Faster counterpart of regular `create_user` followed by `setup_new_user`"""
+    if "avatars" not in extra_fields:
+        extra_fields["avatars"] = user_placeholder_avatars
+
+    return User.objects.create_user(username, email, password, **extra_fields)
+
+
+def create_test_superuser(username, email, password=None, **extra_fields):
+    """Faster counterpart of regular `create_superuser` followed by `setup_new_user`"""
+    if "avatars" not in extra_fields:
+        extra_fields["avatars"] = user_placeholder_avatars
+
+    return User.objects.create_superuser(username, email, password, **extra_fields)
+
+
+user_placeholder_avatars = [
+        {"size": 400, "url": "http://placekitten.com/400/400"},
+        {"size": 200, "url": "http://placekitten.com/200/200"},
+        {"size": 100, "url": "http://placekitten.com/100/100"},
+    ]

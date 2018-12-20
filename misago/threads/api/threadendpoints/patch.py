@@ -7,7 +7,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl import add_acl
+from misago.acl import useracl
+from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.categories.permissions import allow_browse_category, allow_see_category
 from misago.categories.serializers import CategorySerializer
@@ -25,7 +26,7 @@ from misago.threads.permissions import (
     allow_start_thread, allow_unhide_thread, allow_unmark_best_answer
 )
 from misago.threads.serializers import ThreadParticipantSerializer
-from misago.threads.validators import validate_title
+from misago.threads.validators import validate_thread_title
 
 PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
@@ -37,7 +38,7 @@ thread_patch_dispatcher = ApiPatch()
 def patch_acl(request, thread, value):
     """useful little op that updates thread acl to current state"""
     if value:
-        add_acl(request.user, thread)
+        add_acl_to_obj(request.user_acl, thread)
         return {'acl': thread.acl}
     else:
         return {'acl': None}
@@ -53,11 +54,11 @@ def patch_title(request, thread, value):
         raise PermissionDenied(_('Not a valid string.'))
 
     try:
-        validate_title(value_cleaned)
+        validate_thread_title(request.settings, value_cleaned)
     except ValidationError as e:
         raise PermissionDenied(e.args[0])
 
-    allow_edit_thread(request.user, thread)
+    allow_edit_thread(request.user_acl, thread)
 
     moderation.change_thread_title(request, thread, value_cleaned)
     return {'title': thread.title}
@@ -67,7 +68,7 @@ thread_patch_dispatcher.replace('title', patch_title)
 
 
 def patch_weight(request, thread, value):
-    allow_pin_thread(request.user, thread)
+    allow_pin_thread(request.user_acl, thread)
 
     if not thread.acl.get('can_pin_globally') and thread.weight == 2:
         raise PermissionDenied(_("You can't change globally pinned threads weights in this category."))
@@ -89,17 +90,17 @@ thread_patch_dispatcher.replace('weight', patch_weight)
 
 
 def patch_move(request, thread, value):
-    allow_move_thread(request.user, thread)
+    allow_move_thread(request.user_acl, thread)
 
     category_pk = get_int_or_404(value)
     new_category = get_object_or_404(
         Category.objects.all_categories().select_related('parent'), pk=category_pk
     )
 
-    add_acl(request.user, new_category)
-    allow_see_category(request.user, new_category)
-    allow_browse_category(request.user, new_category)
-    allow_start_thread(request.user, new_category)
+    add_acl_to_obj(request.user_acl, new_category)
+    allow_see_category(request.user_acl, new_category)
+    allow_browse_category(request.user_acl, new_category)
+    allow_start_thread(request.user_acl, new_category)
 
     if new_category == thread.category:
         raise PermissionDenied(_("You can't move thread to the category it's already in."))
@@ -123,7 +124,7 @@ thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)
 
 
 def patch_is_unapproved(request, thread, value):
-    allow_approve_thread(request.user, thread)
+    allow_approve_thread(request.user_acl, thread)
 
     if value:
         raise PermissionDenied(_("Content approval can't be reversed."))
@@ -159,10 +160,10 @@ thread_patch_dispatcher.replace('is-closed', patch_is_closed)
 
 def patch_is_hidden(request, thread, value):
     if value:
-        allow_hide_thread(request.user, thread)
+        allow_hide_thread(request.user_acl, thread)
         moderation.hide_thread(request, thread)
     else:
-        allow_unhide_thread(request.user, thread)
+        allow_unhide_thread(request.user_acl, thread)
         moderation.unhide_thread(request, thread)
 
     return {'is_hidden': thread.is_hidden}
@@ -205,20 +206,20 @@ def patch_best_answer(request, thread, value):
     except (TypeError, ValueError):
         raise PermissionDenied(_("A valid integer is required."))
 
-    allow_mark_best_answer(request.user, thread)
+    allow_mark_best_answer(request.user_acl, thread)
 
     post = get_object_or_404(thread.post_set, id=post_id)
     post.category = thread.category
     post.thread = thread
 
-    allow_see_post(request.user, post)
-    allow_mark_as_best_answer(request.user, post)
+    allow_see_post(request.user_acl, post)
+    allow_mark_as_best_answer(request.user_acl, post)
 
     if post.is_best_answer:
         raise PermissionDenied(_("This post is already marked as thread's best answer."))
 
     if thread.has_best_answer:
-        allow_change_best_answer(request.user, thread)
+        allow_change_best_answer(request.user_acl, thread)
         
     thread.set_best_answer(request.user, post)
     thread.save()
@@ -250,7 +251,7 @@ def patch_unmark_best_answer(request, thread, value):
         raise PermissionDenied(
             _("This post can't be unmarked because it's not currently marked as best answer."))
 
-    allow_unmark_best_answer(request.user, thread)
+    allow_unmark_best_answer(request.user_acl, thread)
     thread.clear_best_answer()
     thread.save()
 
@@ -268,7 +269,7 @@ thread_patch_dispatcher.remove('best-answer', patch_unmark_best_answer)
 
 
 def patch_add_participant(request, thread, value):
-    allow_add_participants(request.user, thread)
+    allow_add_participants(request.user_acl, thread)
 
     try:
         username = str(value).strip().lower()
@@ -281,7 +282,8 @@ def patch_add_participant(request, thread, value):
     if participant in [p.user for p in thread.participants_list]:
         raise PermissionDenied(_("This user is already thread participant."))
 
-    allow_add_participant(request.user, participant)
+    participant_acl = useracl.get_user_acl(participant, request.cache_versions)
+    allow_add_participant(request.user_acl, participant, participant_acl)
     add_participant(request, thread, participant)
 
     make_participants_aware(request.user, thread)
@@ -305,7 +307,7 @@ def patch_remove_participant(request, thread, value):
     else:
         raise PermissionDenied(_("Participant doesn't exist."))
 
-    allow_remove_participant(request.user, thread, participant.user)
+    allow_remove_participant(request.user_acl, thread, participant.user)
     remove_participant(request, thread, participant.user)
 
     if len(thread.participants_list) == 1:
@@ -338,7 +340,7 @@ def patch_replace_owner(request, thread, value):
     else:
         raise PermissionDenied(_("Participant doesn't exist."))
 
-    allow_change_owner(request.user, thread)
+    allow_change_owner(request.user_acl, thread)
     change_owner(request, thread, participant.user)
 
     make_participants_aware(request.user, thread)

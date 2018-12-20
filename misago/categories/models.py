@@ -3,7 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 from django.db import models
 
-from misago.acl import version as acl_version
+from misago.acl.cache import clear_acl_cache
 from misago.acl.models import BaseRole
 from misago.conf import settings
 from misago.core.cache import cache
@@ -115,7 +115,7 @@ class Category(MPTTModel):
 
     def delete(self, *args, **kwargs):
         Category.objects.clear_cache()
-        acl_version.invalidate()
+        clear_acl_cache()
         return super().delete(*args, **kwargs)
 
     def synchronize(self):

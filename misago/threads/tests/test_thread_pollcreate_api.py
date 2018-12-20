@@ -1,7 +1,9 @@
 from django.urls import reverse
 
+from misago.acl.test import patch_user_acl
 from misago.threads.models import Poll, Thread
 from misago.threads.serializers.poll import MAX_POLL_OPTIONS
+from misago.threads.test import patch_category_acl
 
 from .test_thread_poll_api import ThreadPollApiTestCase
 
@@ -36,20 +38,19 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         response = self.post(api_link)
         self.assertEqual(response.status_code, 404)
 
+    @patch_user_acl({"can_start_polls": 0})
     def test_no_permission(self):
         """api validates that user has permission to start poll in thread"""
-        self.override_acl({'can_start_polls': 0})
-
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(response.json(), {
             "detail": "You can't start polls."
         })
 
-    def test_no_permission_closed_thread(self):
+    @patch_user_acl({"can_start_polls": 1})
+    @patch_category_acl({"can_close_threads": False})
+    def test_closed_thread_no_permission(self):
         """api validates that user has permission to start poll in closed thread"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.thread.is_closed = True
         self.thread.save()
 
@@ -59,15 +60,20 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             "detail": "This thread is closed. You can't start polls in it."
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_user_acl({"can_start_polls": 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_closed_thread(self):
+        """api validates that user has permission to start poll in closed thread"""
+        self.thread.is_closed = True
+        self.thread.save()
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
 
-    def test_no_permission_closed_category(self):
+    @patch_user_acl({"can_start_polls": 1})
+    @patch_category_acl({"can_close_threads": False})
+    def test_closed_category_no_permission(self):
         """api validates that user has permission to start poll in closed category"""
-        self.override_acl(category={'can_close_threads': 0})
-
         self.category.is_closed = True
         self.category.save()
 
@@ -77,15 +83,19 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             "detail": "This category is closed. You can't start polls in it."
         })
 
-        self.override_acl(category={'can_close_threads': 1})
+    @patch_user_acl({"can_start_polls": 1})
+    @patch_category_acl({"can_close_threads": True})
+    def test_closed_category(self):
+        """api validates that user has permission to start poll in closed category"""
+        self.category.is_closed = True
+        self.category.save()
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
 
-    def test_no_permission_other_user_thread(self):
+    @patch_user_acl({"can_start_polls": 1})
+    def test_other_user_thread_no_permission(self):
         """api validates that user has permission to start poll in other user's thread"""
-        self.override_acl({'can_start_polls': 1})
-
         self.thread.starter = None
         self.thread.save()
 
@@ -95,7 +105,11 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
             "detail": "You can't start polls in other users threads."
         })
 
-        self.override_acl({'can_start_polls': 2})
+    @patch_user_acl({"can_start_polls": 2})
+    def test_other_user_thread(self):
+        """api validates that user has permission to start poll in other user's thread"""
+        self.thread.starter = None
+        self.thread.save()
 
         response = self.post(self.api_link)
         self.assertEqual(response.status_code, 400)
