@@ -1,10 +1,9 @@
-dist: trusty
-sudo: required
-addons:
-  postgresql: "9.4"
+dist: xenial
 language: python
 python:
   - "3.6"
+addons:
+  postgresql: "9.4"
 install:
   - pip install -U pip setuptools
   - python setup.py install
