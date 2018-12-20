@@ -8,9 +8,10 @@ python:
 install:
   - pip install -U pip setuptools
   - pip install coveralls
+  - python setup.py install
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
-  - coverage run --source=misago setup.py test
+  - coverage run --source=pytest
 after_success:
   - coveralls
