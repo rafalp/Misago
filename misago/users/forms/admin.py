@@ -10,11 +10,11 @@ from misago.admin.forms import IsoDateTimeField, YesNoSwitch
 from misago.conf import settings
 from misago.core import threadstore
 from misago.core.validators import validate_sluggable
+
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields
 from misago.users.utils import hash_email
 from misago.users.validators import validate_email, validate_username
-
 
 UserModel = get_user_model()
 
@@ -28,9 +28,15 @@ class UserBaseForm(forms.ModelForm):
         model = UserModel
         fields = ['username', 'email', 'title']
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.settings = self.request.settings
+
+        super().__init__(*args, **kwargs)
+
     def clean_username(self):
         data = self.cleaned_data['username']
-        validate_username(data, exclude=self.instance)
+        validate_username(self.settings, data, exclude=self.instance)
         return data
 
     def clean_email(self):
@@ -165,10 +171,10 @@ class EditUserForm(UserBaseForm):
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
-        label=_("Started threads"), coerce=int, choices=UserModel.SUBSCRIBE_CHOICES
+        label=_("Started threads"), coerce=int, choices=UserModel.SUBSCRIPTION_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=_("Replid threads"), coerce=int, choices=UserModel.SUBSCRIBE_CHOICES
+        label=_("Replid threads"), coerce=int, choices=UserModel.SUBSCRIPTION_CHOICES
     )
 
     class Meta:
@@ -191,10 +197,7 @@ class EditUserForm(UserBaseForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop('request')
-
         super().__init__(*args, **kwargs)
-
         profilefields.add_fields_to_admin_form(self.request, self.instance, self)
 
     def get_profile_fields_groups(self):
@@ -214,7 +217,7 @@ class EditUserForm(UserBaseForm):
     def clean_signature(self):
         data = self.cleaned_data['signature']
 
-        length_limit = settings.signature_length_max
+        length_limit = self.settings.signature_length_max
         if len(data) > length_limit:
             raise forms.ValidationError(
                 ngettext(

@@ -8,13 +8,14 @@ from misago.acl.objectacl import add_acl_to_obj
 from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
+from misago.conftest import get_cache_versions
 from misago.readtracker import poststracker, threadstracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
 
 User = get_user_model()
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class AnonymousUser(object):

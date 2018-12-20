@@ -34,13 +34,21 @@ def validate_category(user_acl, category_id, allow_root=False):
     return category
 
 
-def validate_title(title):
-    title_len = len(title)
+def validate_thread_title(settings, title):
+    validate_thread_title_length(settings, title)
 
-    if not title_len:
-        raise ValidationError(_("You have to enter thread title."))
+    error_not_sluggable = _("Thread title should contain alpha-numeric characters.")
+    error_slug_too_long = _("Thread title is too long.")
+    validate_sluggable(error_not_sluggable, error_slug_too_long)(title)
 
-    if title_len < settings.thread_title_length_min:
+
+def validate_thread_title_length(settings, value):
+    value_len = len(value)
+
+    if not value_len:
+        raise ValidationError(_("You have to enter an thread title."))
+
+    if value_len < settings.thread_title_length_min:
         message = ngettext(
             "Thread title should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
@@ -49,11 +57,11 @@ def validate_title(title):
         raise ValidationError(
             message % {
                 'limit_value': settings.thread_title_length_min,
-                'show_value': title_len,
+                'show_value': value_len,
             }
         )
 
-    if title_len > settings.thread_title_length_max:
+    if value_len > settings.thread_title_length_max:
         message = ngettext(
             "Thread title cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Thread title cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
@@ -62,24 +70,18 @@ def validate_title(title):
         raise ValidationError(
             message % {
                 'limit_value': settings.thread_title_length_max,
-                'show_value': title_len,
+                'show_value': value_len,
             }
         )
 
-    error_not_sluggable = _("Thread title should contain alpha-numeric characters.")
-    error_slug_too_long = _("Thread title is too long.")
-    validate_sluggable(error_not_sluggable, error_slug_too_long)(title)
 
-    return title
+def validate_post_length(settings, value):
+    value_len = len(value)
 
-
-def validate_post_length(post):
-    post_len = len(post)
-
-    if not post_len:
+    if not value_len:
         raise ValidationError(_("You have to enter a message."))
 
-    if post_len < settings.post_length_min:
+    if value_len < settings.post_length_min:
         message = ngettext(
             "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
@@ -88,11 +90,11 @@ def validate_post_length(post):
         raise ValidationError(
             message % {
                 'limit_value': settings.post_length_min,
-                'show_value': post_len,
+                'show_value': value_len,
             }
         )
 
-    if settings.post_length_max and post_len > settings.post_length_max:
+    if settings.post_length_max and value_len > settings.post_length_max:
         message = ngettext(
             "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
@@ -101,7 +103,7 @@ def validate_post_length(post):
         raise ValidationError(
             message % {
                 'limit_value': settings.post_length_max,
-                'show_value': post_len,
+                'show_value': value_len,
             }
         )
 

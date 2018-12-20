@@ -225,6 +225,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'misago.cache.middleware.cache_versions_middleware',
+    'misago.conf.middleware.dynamic_settings_middleware',
     'misago.users.middleware.UserMiddleware',
     'misago.acl.middleware.user_acl_middleware',
     'misago.core.middleware.ExceptionHandlerMiddleware',
@@ -287,10 +288,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'misago.acl.context_processors.user_acl',
-                'misago.conf.context_processors.settings',
+                'misago.conf.context_processors.conf',
                 'misago.core.context_processors.site_address',
                 'misago.core.context_processors.momentjs_locale',
-                'misago.legal.context_processors.legal_links',
                 'misago.search.context_processors.search_providers',
                 'misago.users.context_processors.user_links',
 

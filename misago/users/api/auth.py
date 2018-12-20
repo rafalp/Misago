@@ -69,8 +69,8 @@ def get_criteria(request):
     """GET /auth/criteria/ will return password and username criteria for accounts"""
     criteria = {
         'username': {
-            'min_length': settings.username_length_min,
-            'max_length': settings.username_length_max,
+            'min_length': request.settings.username_length_min,
+            'max_length': request.settings.username_length_max,
         },
         'password': [],
     }
@@ -100,7 +100,7 @@ def send_activation(request):
 
         mail_subject = _("Activate %(user)s account on %(forum_name)s forums") % {
             'user': requesting_user.username,
-            'forum_name': settings.forum_name,
+            'forum_name': request.settings.forum_name,
         }
 
         mail_user(
@@ -108,7 +108,8 @@ def send_activation(request):
             mail_subject,
             'misago/emails/activation/by_user',
             context={
-                'activation_token': make_activation_token(requesting_user),
+                "activation_token": make_activation_token(requesting_user),
+                "settings": request.settings,
             },
         )
 
@@ -138,7 +139,7 @@ def send_password_form(request):
 
         mail_subject = _("Change %(user)s password on %(forum_name)s forums") % {
             'user': requesting_user.username,
-            'forum_name': settings.forum_name,
+            'forum_name': request.settings.forum_name,
         }
 
         confirmation_token = make_password_change_token(requesting_user)
@@ -148,7 +149,8 @@ def send_password_form(request):
             mail_subject,
             'misago/emails/change_password_form_link',
             context={
-                'confirmation_token': confirmation_token,
+                "confirmation_token": confirmation_token,
+                "settings": request.settings,
             },
         )
 

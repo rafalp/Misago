@@ -4,10 +4,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from misago.acl.useracl import get_user_acl
+from misago.conftest import get_cache_versions
 from misago.users import signatures
 
 User = get_user_model()
-cache_versions = {"acl": "abcdefg"}
+cache_versions = get_cache_versions()
 
 
 class MockRequest(object):

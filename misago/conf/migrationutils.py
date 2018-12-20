@@ -1,6 +1,3 @@
-from misago.core.cache import cache as default_cache
-
-from .dbsettings import CACHE_KEY
 from .hydrators import dehydrate_value
 from .utils import get_setting_value, has_custom_value
 
@@ -91,7 +88,3 @@ def migrate_setting(Setting, group, setting_fixture, order, old_value):
     setting.field_extra = field_extra or {}
 
     setting.save()
-
-
-def delete_settings_cache():
-    default_cache.delete(CACHE_KEY)

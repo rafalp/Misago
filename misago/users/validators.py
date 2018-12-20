@@ -22,6 +22,15 @@ UserModel = get_user_model()
 
 
 # E-mail validators
+
+def validate_email(value, exclude=None):
+    """shortcut function that does complete validation of email"""
+    validate_email_content(value)
+    validate_email_available(value, exclude)
+    validate_email_banned(value)
+
+
+
 def validate_email_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_email(value)
@@ -41,14 +50,15 @@ def validate_email_banned(value):
             raise ValidationError(_("This e-mail address is not allowed."))
 
 
-def validate_email(value, exclude=None):
-    """shortcut function that does complete validation of email"""
-    validate_email_content(value)
-    validate_email_available(value, exclude)
-    validate_email_banned(value)
-
-
 # Username validators
+def validate_username(settings, value, exclude=None):
+    """shortcut function that does complete validation of username"""
+    validate_username_length(settings, value)
+    validate_username_content(value)
+    validate_username_available(value, exclude)
+    validate_username_banned(value)
+
+
 def validate_username_available(value, exclude=None):
     try:
         user = UserModel.objects.get_by_username(value)
@@ -73,7 +83,7 @@ def validate_username_content(value):
         raise ValidationError(_("Username can only contain latin alphabet letters and digits."))
 
 
-def validate_username_length(value):
+def validate_username_length(settings, value):
     if len(value) < settings.username_length_min:
         message = ngettext(
             "Username must be at least %(limit_value)s character long.",
@@ -89,14 +99,6 @@ def validate_username_length(value):
             settings.username_length_max
         )
         raise ValidationError(message % {'limit_value': settings.username_length_max})
-
-
-def validate_username(value, exclude=None):
-    """shortcut function that does complete validation of username"""
-    validate_username_length(value)
-    validate_username_content(value)
-    validate_username_available(value, exclude)
-    validate_username_banned(value)
 
 
 # New account validators
@@ -141,7 +143,7 @@ validators_list = settings.MISAGO_NEW_REGISTRATIONS_VALIDATORS
 REGISTRATION_VALIDATORS = list(map(import_string, validators_list))
 
 
-def raise_validation_error(fieldname, validation_error):
+def raise_validation_error(*_):
     raise ValidationError()
 
 

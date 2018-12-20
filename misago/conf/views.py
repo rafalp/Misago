@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 
 from misago.admin.views import render as mi_render
 
-from . import db_settings
+from .cache import clear_settings_cache
 from .forms import ChangeSettingsForm
 from .models import SettingsGroup
 
@@ -44,7 +44,7 @@ def group(request, key):
                 setting.value = new_values[setting.setting]
                 setting.save(update_fields=['dry_value'])
 
-            db_settings.flush_cache()
+            clear_settings_cache()
 
             messages.success(request, _("Changes in settings have been saved!"))
             return redirect('misago:admin:system:settings:group', key=key)

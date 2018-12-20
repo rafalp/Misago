@@ -5,7 +5,9 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.users.models import Ban
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import (
+    AuthenticatedUserTestCase, create_test_user
+)
 
 
 UserModel = get_user_model()
@@ -34,7 +36,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        test_user = UserModel.objects.create_user('Tyrael', 't123@test.com', 'pass123')
+        test_user = create_test_user('Tyrael', 't123@test.com')
 
         test_user.is_active = False
         test_user.save()
@@ -50,7 +52,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         # profile page displays notice about user being disabled
         response = self.client.get(response['location'])
-        self.assertContains(response, "account has been disabled", status_code=200)
+        self.assertContains(response, "account has been disabled")
 
     def test_user_posts_list(self):
         """user profile posts list has no showstoppers"""
@@ -184,7 +186,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
-        test_user = UserModel.objects.create_user("Bob", "bob@bob.com", 'pass.123')
+        test_user = create_test_user("Bob", "bob@bob.com", 'pass.123')
         link_kwargs = {'slug': test_user.slug, 'pk': test_user.pk}
 
         with patch_user_acl({'can_see_ban_details': 0}):

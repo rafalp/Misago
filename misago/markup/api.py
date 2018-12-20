@@ -8,7 +8,9 @@ from .serializers import MarkupSerializer
 
 @api_view(['POST'])
 def parse_markup(request):
-    serializer = MarkupSerializer(data=request.data)
+    serializer = MarkupSerializer(
+        data=request.data, context={"settings": request.settings}
+    )
     if not serializer.is_valid():
         errors_list = list(serializer.errors.values())[0]
         return Response(

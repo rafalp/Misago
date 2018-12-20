@@ -2,7 +2,7 @@ from django.core import mail as djmail
 from django.template.loader import render_to_string
 from django.utils.translation import get_language
 
-from misago.conf import db_settings, settings
+from misago.conf import settings
 
 from .utils import get_host_from_address
 
@@ -15,12 +15,13 @@ def build_mail(recipient, subject, template, sender=None, context=None):
         'LANGUAGE_CODE': get_language()[:2],
         'LOGIN_URL': settings.LOGIN_URL,
 
-        'misago_settings': db_settings,
-
         'user': recipient,
         'sender': sender,
         'subject': subject,
     })
+
+    if not context.get("settings"):
+        raise ValueError("settings key is missing from context")
 
     message_plain = render_to_string('%s.txt' % template, context)
     message_html = render_to_string('%s.html' % template, context)

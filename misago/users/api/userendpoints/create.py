@@ -14,14 +14,14 @@ from misago.users.forms.register import RegisterForm
 from misago.users.registration import (
     get_registration_result_json, save_user_agreements, send_welcome_email
 )
-
+from misago.users.setupnewuser import setup_new_user
 
 UserModel = get_user_model()
 
 
 @csrf_protect
 def create_endpoint(request):
-    if settings.account_activation == 'closed':
+    if request.settings.account_activation == 'closed':
         raise PermissionDenied(_("New users registrations are currently closed."))
 
     form = RegisterForm(
@@ -40,9 +40,9 @@ def create_endpoint(request):
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     activation_kwargs = {}
-    if settings.account_activation == 'user':
+    if request.settings.account_activation == 'user':
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_USER}
-    elif settings.account_activation == 'admin':
+    elif request.settings.account_activation == 'admin':
         activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
 
     try:
@@ -50,9 +50,7 @@ def create_endpoint(request):
             form.cleaned_data['username'],
             form.cleaned_data['email'],
             form.cleaned_data['password'],
-            create_audit_trail=True,
             joined_from_ip=request.user_ip,
-            set_default_avatar=True,
             **activation_kwargs
         )
     except IntegrityError:
@@ -63,6 +61,7 @@ def create_endpoint(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    setup_new_user(request.settings, new_user)
     save_user_agreements(new_user, form)
     send_welcome_email(request, new_user)
 

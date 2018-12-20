@@ -3,7 +3,6 @@ from rest_framework.response import Response
 
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.core.mail import mail_user
 from misago.users.credentialchange import store_new_credential
 from misago.users.serializers import ChangePasswordSerializer
@@ -21,11 +20,16 @@ def change_password_endpoint(request, pk=None):
         )
 
         mail_subject = _("Confirm password change on %(forum_name)s forums")
-        mail_subject = mail_subject % {'forum_name': settings.forum_name}
+        mail_subject = mail_subject % {'forum_name': request.settings.forum_name}
 
         mail_user(
-            request.user, mail_subject, 'misago/emails/change_password',
-            context={'token': token}
+            request.user,
+            mail_subject,
+            'misago/emails/change_password',
+            context={
+                "settings": request.settings,
+                "token": token,
+            },
         )
 
         return Response({

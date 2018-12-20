@@ -16,16 +16,24 @@ def change_email_endpoint(request, pk=None):
     )
 
     if serializer.is_valid():
-        token = store_new_credential(request, 'email', serializer.validated_data['new_email'])
+        token = store_new_credential(
+            request, 'email', serializer.validated_data['new_email']
+        )
 
         mail_subject = _("Confirm e-mail change on %(forum_name)s forums")
-        mail_subject = mail_subject % {'forum_name': settings.forum_name}
+        mail_subject = mail_subject % {'forum_name': request.settings.forum_name}
 
         # swap address with new one so email is sent to new address
         request.user.email = serializer.validated_data['new_email']
 
         mail_user(
-            request.user, mail_subject, 'misago/emails/change_email', context={'token': token}
+            request.user,
+            mail_subject,
+            'misago/emails/change_email',
+            context={
+                "settings": request.settings,
+                "token": token,
+            },
         )
 
         message = _("E-mail change confirmation link was sent to new address.")

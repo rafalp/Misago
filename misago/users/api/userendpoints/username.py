@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.users.namechanges import get_username_options
 from misago.users.serializers import ChangeUsernameSerializer
 
@@ -19,7 +18,7 @@ def username_endpoint(request):
 
 def get_username_options_from_request(request):
     return get_username_options(
-        settings, request.user, request.user_acl
+        request.settings, request.user, request.user_acl
     )
 
 
@@ -41,9 +40,9 @@ def change_username(request):
         )
 
     serializer = ChangeUsernameSerializer(
-        data=request.data, context={'user': request.user}
+        data=request.data,
+        context={'settings': request.settings, 'user': request.user},
     )
-
     if serializer.is_valid():
         try:
             serializer.change_username(changed_by=request.user)
@@ -74,7 +73,10 @@ def change_username(request):
 
 def moderate_username_endpoint(request, profile):
     if request.method == 'POST':
-        serializer = ChangeUsernameSerializer(data=request.data, context={'user': profile})
+        serializer = ChangeUsernameSerializer(
+            data=request.data,
+            context={'settings': request.settings, 'user': profile},
+        )
 
         if serializer.is_valid():
             try:
@@ -99,6 +101,6 @@ def moderate_username_endpoint(request, profile):
             )
     else:
         return Response({
-            'length_min': settings.username_length_min,
-            'length_max': settings.username_length_max,
+            'length_min': request.settings.username_length_min,
+            'length_max': request.settings.username_length_max,
         })

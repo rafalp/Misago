@@ -1,12 +1,12 @@
+from unittest.mock import Mock
+
 from django.test import TestCase
 
-from misago.conf.context_processors import settings
-from misago.conf.dbsettings import db_settings
+from misago.cache.versions import get_cache_versions
 from misago.core import threadstore
 
-
-class MockRequest(object):
-    pass
+from misago.conf.context_processors import conf
+from misago.conf.dynamicsettings import DynamicSettings
 
 
 class ContextProcessorsTests(TestCase):
@@ -15,10 +15,10 @@ class ContextProcessorsTests(TestCase):
 
     def test_db_settings(self):
         """DBSettings are exposed to templates"""
-        mock_request = MockRequest()
-        processor_settings = settings(mock_request)['misago_settings'],
-
-        self.assertEqual(id(processor_settings[0]), id(db_settings))
+        cache_versions = get_cache_versions()
+        mock_request = Mock(settings=DynamicSettings(cache_versions))
+        context_settings = conf(mock_request)['settings']
+        assert context_settings == mock_request.settings
 
     def test_preload_settings(self):
         """site configuration is preloaded by middleware"""

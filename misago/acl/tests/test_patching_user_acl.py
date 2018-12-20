@@ -3,10 +3,11 @@ from django.test import TestCase
 
 from misago.acl import useracl
 from misago.acl.test import patch_user_acl
+from misago.conftest import get_cache_versions
 
 User = get_user_model()
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 def callable_acl_patch(user, user_acl):

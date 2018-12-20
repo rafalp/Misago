@@ -3,15 +3,15 @@
 
 
 {% block title %}
-{% if misago_settings.forum_index_title %}
-{{ misago_settings.forum_index_title }}
+{% if settings.forum_index_title %}
+{{ settings.forum_index_title }}
 {% else %}
-{{ misago_settings.forum_name }}
+{{ settings.forum_name }}
 {% endif %}
 {% endblock title %}
 
 
-{% block meta-description %}{{ misago_settings.forum_index_meta_description }}{% endblock meta-description %}
+{% block meta-description %}{{ settings.forum_index_meta_description }}{% endblock meta-description %}
 
 
 {% block content %}

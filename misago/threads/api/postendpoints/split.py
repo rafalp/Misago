@@ -15,6 +15,7 @@ def posts_split_endpoint(request, thread):
     serializer = SplitPostsSerializer(
         data=request.data,
         context={
+            'settings': request.settings,
             'thread': thread,
             'user_acl': request.user_acl,
         },

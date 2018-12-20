@@ -4,10 +4,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from misago.acl.middleware import user_acl_middleware
+from misago.conftest import get_cache_versions
 
 User = get_user_model()
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class MiddlewareTests(TestCase):

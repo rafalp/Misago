@@ -7,11 +7,12 @@ from django.utils import timezone
 from misago.acl import useracl
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
+from misago.conftest import get_cache_versions
 from misago.threads.events import record_event
 from misago.threads.models import Thread
 
 User = get_user_model()
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 class EventsApiTests(TestCase):

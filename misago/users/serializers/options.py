@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.users.online.tracker import clear_tracking
 from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
@@ -48,6 +47,7 @@ class EditSignatureSerializer(serializers.ModelSerializer):
         fields = ['signature']
 
     def validate(self, data):
+        settings = self.context["settings"]
         if len(data.get('signature', '')) > settings.signature_length_max:
             raise serializers.ValidationError(_("Signature is too long."))
 
@@ -59,20 +59,22 @@ class ChangeUsernameSerializer(serializers.Serializer):
 
     def validate(self, data):
         username = data.get('username')
-
         if not username:
             raise serializers.ValidationError(_("Enter new username."))
 
-        if username == self.context['user'].username:
+        user = self.context['user']
+        if username == user.username:
             raise serializers.ValidationError(_("New username is same as current one."))
 
-        validate_username(username)
+        settings = self.context['settings']
+        validate_username(settings, username)
 
         return data
 
     def change_username(self, changed_by):
-        self.context['user'].set_username(self.validated_data['username'], changed_by=changed_by)
-        self.context['user'].save(update_fields=['username', 'slug'])
+        user = self.context['user']
+        user.set_username(self.validated_data['username'], changed_by=changed_by)
+        user.save(update_fields=['username', 'slug'])
 
 
 class ChangePasswordSerializer(serializers.Serializer):

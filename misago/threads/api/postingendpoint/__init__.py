@@ -29,6 +29,7 @@ class PostingEndpoint(object):
         self.kwargs.update({
             'mode': mode,
             'request': request,
+            'settings': request.settings,
             'user': request.user,
             'user_acl': request.user_acl,
         })

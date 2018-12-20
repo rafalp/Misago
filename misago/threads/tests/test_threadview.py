@@ -4,6 +4,7 @@ from misago.acl import useracl
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
+from misago.conftest import get_cache_versions
 from misago.threads import testutils
 from misago.threads.checksums import update_post_checksum
 from misago.threads.events import record_event
@@ -11,7 +12,7 @@ from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation import hide_post
 from misago.users.testutils import AuthenticatedUserTestCase
 
-cache_versions = {"acl": "abcdefgh"}
+cache_versions = get_cache_versions()
 
 
 def patch_category_acl(new_acl=None):

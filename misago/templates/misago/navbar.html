@@ -2,11 +2,11 @@
 <nav class="navbar navbar-misago navbar-inverse navbar-static-top" role="navigation">
 
   <div class="container navbar-full navbar-desktop-nav">
-    {% if misago_settings.forum_branding_display %}
+    {% if settings.forum_branding_display %}
       <a href="{% url 'misago:index' %}" class="navbar-brand">
         <img src="{% static 'misago/img/logo.png' %}" alt="">
-        {% if misago_settings.forum_branding_text %}
-          <span class="hidden-xs hidden-sm">{{ misago_settings.forum_branding_text}}</span>
+        {% if settings.forum_branding_text %}
+          <span class="hidden-xs hidden-sm">{{ settings.forum_branding_text}}</span>
         {% endif %}
       </a>
     {% endif %}
@@ -46,7 +46,7 @@
   </div><!-- /full navbar -->
 
   <ul class="nav navbar-nav navbar-compact-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
-    {% if misago_settings.forum_branding_display %}
+    {% if settings.forum_branding_display %}
       <li>
         <a href="{% url 'misago:index' %}" class="brand-link">
           <img src="{% static 'misago/img/logo.png' %}" alt="">
