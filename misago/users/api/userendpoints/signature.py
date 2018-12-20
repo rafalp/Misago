@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.core.utils import format_plaintext_for_html
 from misago.users.serializers import EditSignatureSerializer
 from misago.users.signatures import is_user_signature_valid, set_user_signature
@@ -22,19 +21,21 @@ def signature_endpoint(request):
         else:
             reason = None
 
-        return Response({
-            'detail': _("Your signature is locked. You can't change it."),
-            'reason': reason
-        },
-                        status=status.HTTP_403_FORBIDDEN)
+        return Response(
+            {
+                'detail': _("Your signature is locked. You can't change it."),
+                'reason': reason
+            },
+            status=status.HTTP_403_FORBIDDEN
+        )
 
     if request.method == 'POST':
         return edit_signature(request, user)
 
-    return get_signature_options(user)
+    return get_signature_options(request.settings, user)
 
 
-def get_signature_options(user):
+def get_signature_options(settings, user):
     options = {
         'signature': None,
         'limit': settings.signature_length_max,
@@ -53,14 +54,16 @@ def get_signature_options(user):
 
 
 def edit_signature(request, user):
-    serializer = EditSignatureSerializer(user, data=request.data)
+    serializer = EditSignatureSerializer(
+        user, data=request.data, context={"settings": request.settings}
+    )
     if serializer.is_valid():
         signature = serializer.validated_data['signature']
         set_user_signature(request, user, request.user_acl, signature)
         user.save(update_fields=['signature', 'signature_parsed', 'signature_checksum'])
-        return get_signature_options(user)
-    else:
-        return Response({
-            'detail': serializer.errors['non_field_errors'][0]
-        },
-                        status=status.HTTP_400_BAD_REQUEST)
+        return get_signature_options(request.settings, user)
+
+    return Response(
+        {'detail': serializer.errors['non_field_errors'][0]},
+        status=status.HTTP_400_BAD_REQUEST
+    )

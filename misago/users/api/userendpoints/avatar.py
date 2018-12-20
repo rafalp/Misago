@@ -30,14 +30,14 @@ def avatar_endpoint(request, pk=None):
             status=status.HTTP_403_FORBIDDEN,
         )
 
-    avatar_options = get_avatar_options(request.user)
+    avatar_options = get_avatar_options(request, request.user)
     if request.method == 'POST':
-        return avatar_post(avatar_options, request.user, request.data)
+        return avatar_post(request, avatar_options)
     else:
         return Response(avatar_options)
 
 
-def get_avatar_options(user):
+def get_avatar_options(request, user):
     options = {
         'avatars': user.avatars,
         'generated': True,
@@ -64,7 +64,7 @@ def get_avatar_options(user):
             })
 
     # Can't have custom avatar?
-    if not settings.allow_custom_avatars:
+    if not request.settings.allow_custom_avatars:
         return options
 
     # Allow Gravatar download
@@ -90,7 +90,7 @@ def get_avatar_options(user):
 
     # Allow upload conditions
     options['upload'] = {
-        'limit': settings.avatar_upload_limit * 1024,
+        'limit': request.settings.avatar_upload_limit * 1024,
         'allowed_extensions': avatars.uploaded.ALLOWED_EXTENSIONS,
         'allowed_mime_types': avatars.uploaded.ALLOWED_MIME_TYPES,
     }
@@ -102,9 +102,14 @@ class AvatarError(Exception):
     pass
 
 
-def avatar_post(options, user, data):
+def avatar_post(request, options):
+    user = request.user
+    data = request.data
+
+    avatar_type = data.get('avatar', 'nope')
+
     try:
-        type_options = options[data.get('avatar', 'nope')]
+        type_options = options[avatar_type]
         if not type_options:
             return Response(
                 {
@@ -113,7 +118,7 @@ def avatar_post(options, user, data):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        rpc_handler = AVATAR_TYPES[data.get('avatar', 'nope')]
+        avatar_strategy = AVATAR_TYPES[avatar_type]
     except KeyError:
         return Response(
             {
@@ -123,7 +128,11 @@ def avatar_post(options, user, data):
         )
 
     try:
-        response_dict = {'detail': rpc_handler(user, data)}
+        if avatar_type == "upload":
+            # avatar_upload strategy requires access to request.settings
+            response_dict = {'detail': avatar_upload(request, user, data)}
+        else:
+            response_dict = {'detail': avatar_strategy(user, data)}
     except AvatarError as e:
         return Response(
             {
@@ -134,7 +143,8 @@ def avatar_post(options, user, data):
 
     user.save()
 
-    response_dict.update(get_avatar_options(user))
+    updated_options = get_avatar_options(request, user)
+    response_dict.update(updated_options)
     return Response(response_dict)
 
 
@@ -165,13 +175,13 @@ def avatar_gallery(user, data):
         raise AvatarError(_("Incorrect image."))
 
 
-def avatar_upload(user, data):
+def avatar_upload(request, user, data):
     new_avatar = data.get('image')
     if not new_avatar:
         raise AvatarError(_("No file was sent."))
 
     try:
-        avatars.uploaded.handle_uploaded_file(user, new_avatar)
+        avatars.uploaded.handle_uploaded_file(request, user, new_avatar)
     except ValidationError as e:
         raise AvatarError(e.args[0])
 

@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.mock import Mock
 
 from PIL import Image
 
@@ -11,20 +12,19 @@ from misago.conf import settings
 from misago.users.avatars import dynamic, gallery, gravatar, set_default_avatar, store, uploaded
 from misago.users.models import Avatar, AvatarGallery
 
-
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
 
         # reload user
-        UserModel.objects.get(pk=user.pk)
+        User.objects.get(pk=user.pk)
 
         # assert that avatars were stored in media
         avatars_dict = {}
@@ -85,7 +85,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
+        self.user = User.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
 
         self.user.avatars = None
         self.user.save()
@@ -94,7 +94,7 @@ class AvatarSetterTests(TestCase):
         store.delete_avatar(self.user)
 
     def get_current_user(self):
-        return UserModel.objects.get(pk=self.user.pk)
+        return User.objects.get(pk=self.user.pk)
 
     def assertNoAvatarIsSet(self):
         user = self.get_current_user()
@@ -215,12 +215,14 @@ class UploadedAvatarTests(TestCase):
 
     def test_uploaded_image_size_validation(self):
         """uploaded image size is validated"""
-        image = MockAvatarFile(size=settings.avatar_upload_limit * 2024)
-        with self.assertRaises(ValidationError):
-            uploaded.validate_file_size(image)
+        settings = Mock(avatar_upload_limit=1)  # no. of MBs
 
-        image = MockAvatarFile(size=settings.avatar_upload_limit * 1000)
-        uploaded.validate_file_size(image)
+        image = MockAvatarFile(size=1025)
+        with self.assertRaises(ValidationError):
+            uploaded.validate_file_size(settings, image)
+
+        image = MockAvatarFile(size=1024)
+        uploaded.validate_file_size(settings, image)
 
     def test_uploaded_image_extension_validation(self):
         """uploaded image extension is validated"""

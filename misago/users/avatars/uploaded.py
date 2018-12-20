@@ -9,12 +9,32 @@ from misago.conf import settings
 
 from . import store
 
-
 ALLOWED_EXTENSIONS = ('.gif', '.png', '.jpg', '.jpeg')
 ALLOWED_MIME_TYPES = ('image/gif', 'image/jpeg', 'image/png', 'image/mpo')
 
 
-def validate_file_size(uploaded_file):
+def handle_uploaded_file(request, user, uploaded_file):
+    image = validate_uploaded_file(request.settings, uploaded_file)
+    store.store_temporary_avatar(user, image)
+
+
+def validate_uploaded_file(settings, uploaded_file):
+    try:
+        validate_file_size(settings, uploaded_file)
+        validate_extension(uploaded_file)
+        validate_mime(uploaded_file)
+        return validate_dimensions(uploaded_file)
+    except ValidationError as e:
+        try:
+            temporary_file_path = Path(uploaded_file.temporary_file_path())
+            if temporary_file_path.exists():
+                temporary_file_path.unlink()
+        except Exception:
+            pass
+        raise e
+
+
+def validate_file_size(settings, uploaded_file):
     upload_limit = settings.avatar_upload_limit * 1024
     if uploaded_file.size > upload_limit:
         raise ValidationError(_("Uploaded file is too big."))
@@ -51,27 +71,6 @@ def validate_dimensions(uploaded_file):
         message = _("Uploaded image ratio cannot be greater than 16:9.")
         raise ValidationError(message)
     return image
-
-
-def validate_uploaded_file(uploaded_file):
-    try:
-        validate_file_size(uploaded_file)
-        validate_extension(uploaded_file)
-        validate_mime(uploaded_file)
-        return validate_dimensions(uploaded_file)
-    except ValidationError as e:
-        try:
-            temporary_file_path = Path(uploaded_file.temporary_file_path())
-            if temporary_file_path.exists():
-                temporary_file_path.unlink()
-        except Exception:
-            pass
-        raise e
-
-
-def handle_uploaded_file(user, uploaded_file):
-    image = validate_uploaded_file(uploaded_file)
-    store.store_temporary_avatar(user, image)
 
 
 def clean_crop(image, crop):

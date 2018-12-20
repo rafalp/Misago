@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model, logout
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
 from misago.users.online.tracker import clear_tracking
 from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
@@ -48,6 +47,7 @@ class EditSignatureSerializer(serializers.ModelSerializer):
         fields = ['signature']
 
     def validate(self, data):
+        settings = self.context["settings"]
         if len(data.get('signature', '')) > settings.signature_length_max:
             raise serializers.ValidationError(_("Signature is too long."))
 
