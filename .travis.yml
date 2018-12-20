@@ -11,6 +11,6 @@ install:
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
-  - pytest --cov
+  - pytest --cov=misago
 after_success:
   - coveralls
