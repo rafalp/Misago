@@ -1,10 +1,11 @@
+from django.test import TestCase
+
 from misago.categories.models import Category
-from misago.core.testutils import MisagoTestCase
 from misago.threads import testutils
 from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
 
 
-class AddCategoriesToItemsTests(MisagoTestCase):
+class AddCategoriesToItemsTests(TestCase):
     def setUp(self):
         """
         Create categories tree for test cases:
@@ -176,7 +177,7 @@ class MockRequest(object):
         return self.scheme == 'https'
 
 
-class GetThreadIdFromUrlTests(MisagoTestCase):
+class GetThreadIdFromUrlTests(TestCase):
     def test_get_thread_id_from_valid_urls(self):
         """get_thread_id_from_url extracts thread pk from valid urls"""
         TEST_CASES = [
