@@ -88,7 +88,10 @@ def thread_merge_endpoint(request, thread, viewmodel):
 def threads_merge_endpoint(request):
     serializer = MergeThreadsSerializer(
         data=request.data,
-        context={'user_acl': request.user_acl},
+        context={
+            'settings': request.settings,
+            'user_acl': request.user_acl,
+        },
     )
 
     if not serializer.is_valid():

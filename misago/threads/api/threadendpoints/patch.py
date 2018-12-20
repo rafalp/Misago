@@ -26,7 +26,7 @@ from misago.threads.permissions import (
     allow_start_thread, allow_unhide_thread, allow_unmark_best_answer
 )
 from misago.threads.serializers import ThreadParticipantSerializer
-from misago.threads.validators import validate_title
+from misago.threads.validators import validate_thread_title
 
 PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
@@ -54,7 +54,7 @@ def patch_title(request, thread, value):
         raise PermissionDenied(_('Not a valid string.'))
 
     try:
-        validate_title(value_cleaned)
+        validate_thread_title(request.settings, value_cleaned)
     except ValidationError as e:
         raise PermissionDenied(e.args[0])
 

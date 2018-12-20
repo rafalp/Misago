@@ -17,7 +17,7 @@ from misago.threads.permissions import (
     can_start_thread, exclude_invisible_posts)
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
-from misago.threads.validators import validate_category, validate_title
+from misago.threads.validators import validate_category, validate_thread_title
 
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
@@ -256,7 +256,9 @@ class NewThreadSerializer(serializers.Serializer):
     is_closed = serializers.NullBooleanField(required=False)
 
     def validate_title(self, title):
-        return validate_title(title)
+        settings = self.context["settings"]
+        validate_thread_title(settings, title)
+        return title
 
     def validate_category(self, category_id):
         user_acl = self.context['user_acl']
