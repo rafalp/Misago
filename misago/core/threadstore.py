@@ -1,17 +1,10 @@
-from threading import local
-
-
-_thread_local = local()
-
-
 def get(key, default=None):
-    return _thread_local.__dict__.get(key, default)
+    raise NotImplementedError("threadstore.get() has been removed")
 
 
 def set(key, value):
-    _thread_local.__dict__[key] = value
-    return _thread_local.__dict__[key]
+    raise NotImplementedError("threadstore.set() has been removed")
 
 
 def clear():
-    _thread_local.__dict__.clear()
+    raise NotImplementedError("threadstore.clear() has been removed")
