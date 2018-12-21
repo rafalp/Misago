@@ -2,14 +2,14 @@ from django.urls import reverse
 
 from misago.acl import ACL_CACHE
 from misago.acl.models import Role
-from misago.acl.test import mock_form_data
+from misago.acl.test import mock_role_form_data
 from misago.admin.testutils import AdminTestCase
 from misago.cache.test import assert_invalidates_cache
 from misago.categories.models import Category, CategoryRole
 
 
 def create_data(data_dict):
-    return mock_form_data(CategoryRole(), data_dict)
+    return mock_role_form_data(CategoryRole(), data_dict)
 
 
 class CategoryRoleAdminViewsTests(AdminTestCase):
@@ -163,11 +163,11 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=mock_form_data(Role(), {'name': 'Test Role A'})
+            data=mock_role_form_data(Role(), {'name': 'Test Role A'})
         )
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=mock_form_data(Role(), {'name': 'Test Role B'})
+            data=mock_role_form_data(Role(), {'name': 'Test Role B'})
         )
 
         test_role_a = Role.objects.get(name='Test Role A')
@@ -244,7 +244,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """change role categories perms view works"""
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=mock_form_data(Role(), {'name': 'Test CategoryRole'})
+            data=mock_role_form_data(Role(), {'name': 'Test CategoryRole'})
         )
 
         test_role = Role.objects.get(name='Test CategoryRole')
