@@ -57,7 +57,7 @@ class patch_user_acl(ContextDecorator, ExitStack):
         )
 
 
-def mock_form_data(model, data):
+def mock_role_form_data(model, data):
     """
     In order for form to don't fail submission, all permission fields need
     to receive values. This function populates data dict with default values

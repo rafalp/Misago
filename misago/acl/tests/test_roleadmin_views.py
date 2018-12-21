@@ -2,13 +2,13 @@ from django.urls import reverse
 
 from misago.acl import ACL_CACHE
 from misago.acl.models import Role
-from misago.acl.test import mock_form_data
+from misago.acl.test import mock_role_form_data
 from misago.cache.test import assert_invalidates_cache
 from misago.admin.testutils import AdminTestCase
 
 
 def create_data(data_dict):
-    return mock_form_data(Role(), data_dict)
+    return mock_role_form_data(Role(), data_dict)
 
 
 class RoleAdminViewsTests(AdminTestCase):
