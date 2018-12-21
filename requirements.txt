@@ -16,29 +16,32 @@ django-mptt==0.8.7
 django==1.11.16
 djangorestframework==3.6.4
 faker==0.8.18
-funcsigs==1.0.2           # via pytest
+funcsigs==1.0.2           # via mock, pytest
 html5lib==0.999999999
 idna==2.7                 # via requests
 ipaddress==1.0.22         # via faker
 markdown==2.6.11
 misago-social-auth-app-django==2.1.0
+mock==2.0.0               # via pytest-mock
 more-itertools==4.3.0     # via pytest
 oauthlib==2.1.0           # via requests-oauthlib, social-auth-core
 olefile==0.46             # via pillow
 pathlib2==2.3.3           # via pytest, pytest-django
+pbr==5.1.1                # via mock
 pillow==4.1.1
 pluggy==0.8.0             # via pytest
 psycopg2-binary==2.7.5
 py==1.7.0                 # via pytest
 pyjwt==1.6.4              # via social-auth-core
 pytest-django==3.4.4
+pytest-mock==1.10.0
 pytest==4.0.2
 python-dateutil==2.7.5    # via faker
 pytz==2018.7
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.20.0
 scandir==1.9.0            # via pathlib2
-six==1.11.0               # via bleach, faker, html5lib, misago-social-auth-app-django, more-itertools, pathlib2, pytest, python-dateutil, social-auth-core
+six==1.11.0               # via bleach, faker, html5lib, misago-social-auth-app-django, mock, more-itertools, pathlib2, pytest, python-dateutil, social-auth-core
 social-auth-core==1.7.0   # via misago-social-auth-app-django
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.2       # via faker
