@@ -12,7 +12,7 @@ from misago.users.models import AnonymousUser
 from misago.core.middleware import ExceptionHandlerMiddleware
 
 
-def test_request():
+def create_request():
     request = RequestFactory().get(reverse('misago:index'))
     request.cache_versions = get_cache_versions()
     request.settings = DynamicSettings(request.cache_versions)
@@ -28,10 +28,10 @@ class ExceptionHandlerMiddlewareTests(TestCase):
         """Middleware returns HttpResponse for supported exception"""
         middleware = ExceptionHandlerMiddleware()
         exception = Http404()
-        assert middleware.process_exception(test_request(), exception)
+        assert middleware.process_exception(create_request(), exception)
 
     def test_middleware_returns_none_for_non_supported_exception(self):
         """Middleware returns None for non-supported exception"""
         middleware = ExceptionHandlerMiddleware()
         exception = TypeError()
-        assert middleware.process_exception(test_request(), exception) is None
+        assert middleware.process_exception(create_request(), exception) is None

@@ -1,16 +1,16 @@
-dist: trusty
-sudo: required
-addons:
-  postgresql: "9.4"
+dist: xenial
 language: python
 python:
   - "3.6"
+addons:
+  postgresql: "9.4"
 install:
   - pip install -U pip setuptools
-  - pip install coveralls
+  - python setup.py install
+  - pip install coveralls pytest-cov
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
-  - coverage run --source=misago setup.py test
+  - pytest --cov=misago
 after_success:
   - coveralls
