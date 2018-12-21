@@ -102,7 +102,7 @@ def validate_username_length(settings, value):
 
 
 # New account validators
-SFS_API_URL = 'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'  # noqa
+SFS_API_URL = 'http://api.stopforumspam.org/api?email=%(email)s&ip=%(ip)s&f=json&confidence'
 
 
 def validate_with_sfs(request, cleaned_data, add_error):
