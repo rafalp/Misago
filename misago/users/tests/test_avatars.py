@@ -9,7 +9,14 @@ from django.test import TestCase
 from django.utils.crypto import get_random_string
 
 from misago.conf import settings
-from misago.users.avatars import dynamic, gallery, gravatar, set_default_avatar, store, uploaded
+from misago.users.avatars import (
+    dynamic,
+    gallery,
+    gravatar,
+    set_default_avatar,
+    store,
+    uploaded,
+)
 from misago.users.models import Avatar, AvatarGallery
 
 User = get_user_model()
@@ -18,7 +25,7 @@ User = get_user_model()
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        user = User.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
@@ -40,8 +47,8 @@ class AvatarsStoreTests(TestCase):
         self.assertEqual(len(user.avatars), len(avatars_dict))
 
         for avatar in user.avatars:
-            self.assertIn(avatar['size'], settings.MISAGO_AVATARS_SIZES)
-            self.assertEqual(avatar['url'], avatars_dict[avatar['size']].url)
+            self.assertIn(avatar["size"], settings.MISAGO_AVATARS_SIZES)
+            self.assertEqual(avatar["url"], avatars_dict[avatar["size"]].url)
 
         # another avatar change deleted old avatars
         store.store_new_avatar(user, test_image)
@@ -68,8 +75,8 @@ class AvatarsStoreTests(TestCase):
         # asserts that user.avatars cache was updated
         self.assertEqual(len(user.avatars), len(settings.MISAGO_AVATARS_SIZES))
         for avatar in user.avatars:
-            self.assertIn(avatar['size'], settings.MISAGO_AVATARS_SIZES)
-            self.assertEqual(avatar['url'], new_avatars_dict[avatar['size']].url)
+            self.assertIn(avatar["size"], settings.MISAGO_AVATARS_SIZES)
+            self.assertEqual(avatar["url"], new_avatars_dict[avatar["size"]].url)
 
         # delete avatar
         store.delete_avatar(user)
@@ -85,7 +92,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user('Bob', 'kontakt@rpiton.com', 'pass123')
+        self.user = User.objects.create_user("Bob", "kontakt@rpiton.com", "pass123")
 
         self.user.avatars = None
         self.user.save()
@@ -138,7 +145,7 @@ class AvatarSetterTests(TestCase):
         gallery.load_avatar_galleries()
 
         self.assertNoAvatarIsSet()
-        test_avatar = AvatarGallery.objects.order_by('id').last()
+        test_avatar = AvatarGallery.objects.order_by("id").last()
         gallery.set_avatar(self.user, test_avatar)
         self.assertAvatarWasSet()
 
@@ -151,33 +158,37 @@ class AvatarSetterTests(TestCase):
     def test_default_avatar_gravatar(self):
         """default gravatar gets set"""
         self.assertNoAvatarIsSet()
-        set_default_avatar(self.user, 'gravatar', 'dynamic')
+        set_default_avatar(self.user, "gravatar", "dynamic")
         self.assertAvatarWasSet()
 
     def test_default_avatar_gravatar_fallback_dynamic(self):
         """default gravatar fails but fallback dynamic works"""
-        gibberish_email = '%s@%s.%s' % (
-            get_random_string(6), get_random_string(6), get_random_string(3)
+        gibberish_email = "%s@%s.%s" % (
+            get_random_string(6),
+            get_random_string(6),
+            get_random_string(3),
         )
 
         self.user.set_email(gibberish_email)
         self.user.save()
 
         self.assertNoAvatarIsSet()
-        set_default_avatar(self.user, 'gravatar', 'dynamic')
+        set_default_avatar(self.user, "gravatar", "dynamic")
         self.assertAvatarWasSet()
 
     def test_default_avatar_gravatar_fallback_empty_gallery(self):
         """default both gravatar and fallback fail set"""
-        gibberish_email = '%s@%s.%s' % (
-            get_random_string(6), get_random_string(6), get_random_string(3)
+        gibberish_email = "%s@%s.%s" % (
+            get_random_string(6),
+            get_random_string(6),
+            get_random_string(3),
         )
         self.user.set_email(gibberish_email)
         self.user.save()
 
         self.assertNoAvatarIsSet()
         self.user.save()
-        set_default_avatar(self.user, 'gravatar', 'gallery')
+        set_default_avatar(self.user, "gravatar", "gallery")
         self.assertAvatarWasSet()
 
 
@@ -197,21 +208,13 @@ class UploadedAvatarTests(TestCase):
         with self.assertRaises(ValidationError):
             uploaded.clean_crop(image, {})
         with self.assertRaises(ValidationError):
-            uploaded.clean_crop(image, {'offset': {'x': 'ugabuga'}})
+            uploaded.clean_crop(image, {"offset": {"x": "ugabuga"}})
 
         with self.assertRaises(ValidationError):
-            uploaded.clean_crop(image, {'offset': {
-                'x': 0,
-                'y': 0,
-            },
-                                        'zoom': -2})
+            uploaded.clean_crop(image, {"offset": {"x": 0, "y": 0}, "zoom": -2})
 
         with self.assertRaises(ValidationError):
-            uploaded.clean_crop(image, {'offset': {
-                'x': 0,
-                'y': 0,
-            },
-                                        'zoom': 2})
+            uploaded.clean_crop(image, {"offset": {"x": 0, "y": 0}, "zoom": 2})
 
     def test_uploaded_image_size_validation(self):
         """uploaded image size is validated"""
@@ -226,18 +229,18 @@ class UploadedAvatarTests(TestCase):
 
     def test_uploaded_image_extension_validation(self):
         """uploaded image extension is validated"""
-        for invalid_extension in ('.txt', '.zip', '.py', '.tiff'):
+        for invalid_extension in (".txt", ".zip", ".py", ".tiff"):
             with self.assertRaises(ValidationError):
-                image = MockAvatarFile(name='test%s' % invalid_extension)
+                image = MockAvatarFile(name="test%s" % invalid_extension)
                 uploaded.validate_extension(image)
 
         for valid_extension in uploaded.ALLOWED_EXTENSIONS:
-            image = MockAvatarFile(name='test%s' % valid_extension)
+            image = MockAvatarFile(name="test%s" % valid_extension)
             uploaded.validate_extension(image)
 
     def test_uploaded_image_mime_validation(self):
         """uploaded image mime type is validated"""
-        image = MockAvatarFile(mime='fake/mime')
+        image = MockAvatarFile(mime="fake/mime")
         with self.assertRaises(ValidationError):
             uploaded.validate_mime(image)
 

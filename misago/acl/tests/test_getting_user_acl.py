@@ -55,15 +55,17 @@ def test_staffuser_acl_includes_staff_and_superuser_true_status(
 
 
 def test_getter_returns_acl_from_cache(mocker, db, cache_versions, anonymous_user):
-    cache_get = mocker.patch('django.core.cache.cache.get', return_value=dict())
+    cache_get = mocker.patch("django.core.cache.cache.get", return_value=dict())
     get_user_acl(anonymous_user, cache_versions)
     cache_get.assert_called_once()
 
 
-def test_getter_builds_new_acl_when_cache_is_not_available(mocker, cache_versions, user):
-    mocker.patch('django.core.cache.cache.set')
-    mocker.patch('misago.acl.buildacl.build_acl', return_value=dict())
-    cache_get = mocker.patch('django.core.cache.cache.get', return_value=None)
+def test_getter_builds_new_acl_when_cache_is_not_available(
+    mocker, cache_versions, user
+):
+    mocker.patch("django.core.cache.cache.set")
+    mocker.patch("misago.acl.buildacl.build_acl", return_value=dict())
+    cache_get = mocker.patch("django.core.cache.cache.get", return_value=None)
 
     get_user_acl(user, cache_versions)
     cache_get.assert_called_once()
@@ -72,9 +74,9 @@ def test_getter_builds_new_acl_when_cache_is_not_available(mocker, cache_version
 def test_getter_sets_new_cache_if_no_cache_is_set(
     mocker, db, cache_versions, anonymous_user
 ):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('misago.acl.buildacl.build_acl', return_value=dict())
-    mocker.patch('django.core.cache.cache.get', return_value=None)
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("misago.acl.buildacl.build_acl", return_value=dict())
+    mocker.patch("django.core.cache.cache.get", return_value=None)
 
     get_user_acl(anonymous_user, cache_versions)
     cache_set.assert_called_once()
@@ -83,9 +85,9 @@ def test_getter_sets_new_cache_if_no_cache_is_set(
 def test_acl_cache_name_includes_cache_version(
     mocker, db, cache_versions, anonymous_user
 ):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('misago.acl.buildacl.build_acl', return_value=dict())
-    mocker.patch('django.core.cache.cache.get', return_value=None)
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("misago.acl.buildacl.build_acl", return_value=dict())
+    mocker.patch("django.core.cache.cache.get", return_value=None)
 
     get_user_acl(anonymous_user, cache_versions)
     cache_key = cache_set.call_args[0][0]
@@ -95,8 +97,8 @@ def test_acl_cache_name_includes_cache_version(
 def test_getter_is_not_setting_new_cache_if_cache_is_set(
     mocker, cache_versions, anonymous_user
 ):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('django.core.cache.cache.get', return_value=dict())
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("django.core.cache.cache.get", return_value=dict())
 
     get_user_acl(anonymous_user, cache_versions)
     cache_set.assert_not_called()

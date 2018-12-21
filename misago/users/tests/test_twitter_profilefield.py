@@ -12,10 +12,7 @@ class TwitterProfileFieldTests(AdminTestCase):
         super().setUp()
 
         self.test_link = reverse(
-            'misago:admin:users:accounts:edit',
-            kwargs={
-                'pk': self.user.pk,
-            },
+            "misago:admin:users:accounts:edit", kwargs={"pk": self.user.pk}
         )
 
     def test_field_displays_in_admin(self):
@@ -25,55 +22,55 @@ class TwitterProfileFieldTests(AdminTestCase):
 
     def test_admin_clears_field(self):
         """admin form allows admins to clear field"""
-        self.user.profile_fields['twitter'] = 'lorem_ipsum'
+        self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
+        self.assertEqual(self.user.profile_fields["twitter"], "lorem_ipsum")
 
         response = self.client.post(
             self.test_link,
             data={
-                'username': 'Edited',
-                'rank': str(self.user.rank_id),
-                'roles': str(self.user.roles.all()[0].pk),
-                'email': 'reg@stered.com',
-                'new_password': '',
-                'signature': '',
-                'is_signature_locked': '0',
-                'is_hiding_presence': '0',
-                'limits_private_thread_invites_to': '0',
-                'signature_lock_staff_message': '',
-                'signature_lock_user_message': '',
-                'subscribe_to_started_threads': '2',
-                'subscribe_to_replied_threads': '2',
-            }
+                "username": "Edited",
+                "rank": str(self.user.rank_id),
+                "roles": str(self.user.roles.all()[0].pk),
+                "email": "reg@stered.com",
+                "new_password": "",
+                "signature": "",
+                "is_signature_locked": "0",
+                "is_hiding_presence": "0",
+                "limits_private_thread_invites_to": "0",
+                "signature_lock_staff_message": "",
+                "signature_lock_user_message": "",
+                "subscribe_to_started_threads": "2",
+                "subscribe_to_replied_threads": "2",
+            },
         )
         self.assertEqual(response.status_code, 302)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], '')
+        self.assertEqual(self.user.profile_fields["twitter"], "")
 
     def test_admin_validates_field(self):
         """admin form allows admins to edit field"""
         response = self.client.post(
             self.test_link,
             data={
-                'username': 'Edited',
-                'rank': str(self.user.rank_id),
-                'roles': str(self.user.roles.all()[0].pk),
-                'email': 'reg@stered.com',
-                'twitter': 'lorem!ipsum',
-                'new_password': '',
-                'signature': '',
-                'is_signature_locked': '0',
-                'is_hiding_presence': '0',
-                'limits_private_thread_invites_to': '0',
-                'signature_lock_staff_message': '',
-                'signature_lock_user_message': '',
-                'subscribe_to_started_threads': '2',
-                'subscribe_to_replied_threads': '2',
-            }
+                "username": "Edited",
+                "rank": str(self.user.rank_id),
+                "roles": str(self.user.roles.all()[0].pk),
+                "email": "reg@stered.com",
+                "twitter": "lorem!ipsum",
+                "new_password": "",
+                "signature": "",
+                "is_signature_locked": "0",
+                "is_hiding_presence": "0",
+                "limits_private_thread_invites_to": "0",
+                "signature_lock_staff_message": "",
+                "signature_lock_user_message": "",
+                "subscribe_to_started_threads": "2",
+                "subscribe_to_replied_threads": "2",
+            },
         )
 
         self.assertContains(response, "This is not a valid twitter handle.")
@@ -83,166 +80,163 @@ class TwitterProfileFieldTests(AdminTestCase):
         response = self.client.post(
             self.test_link,
             data={
-                'username': 'Edited',
-                'rank': str(self.user.rank_id),
-                'roles': str(self.user.roles.all()[0].pk),
-                'email': 'reg@stered.com',
-                'twitter': 'lorem_ipsum',
-                'new_password': '',
-                'signature': '',
-                'is_signature_locked': '0',
-                'is_hiding_presence': '0',
-                'limits_private_thread_invites_to': '0',
-                'signature_lock_staff_message': '',
-                'signature_lock_user_message': '',
-                'subscribe_to_started_threads': '2',
-                'subscribe_to_replied_threads': '2',
-            }
+                "username": "Edited",
+                "rank": str(self.user.rank_id),
+                "roles": str(self.user.roles.all()[0].pk),
+                "email": "reg@stered.com",
+                "twitter": "lorem_ipsum",
+                "new_password": "",
+                "signature": "",
+                "is_signature_locked": "0",
+                "is_hiding_presence": "0",
+                "limits_private_thread_invites_to": "0",
+                "signature_lock_staff_message": "",
+                "signature_lock_user_message": "",
+                "subscribe_to_started_threads": "2",
+                "subscribe_to_replied_threads": "2",
+            },
         )
         self.assertEqual(response.status_code, 302)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
+        self.assertEqual(self.user.profile_fields["twitter"], "lorem_ipsum")
 
     def test_admin_search_field(self):
         """admin users search searches this field"""
-        test_link = reverse('misago:admin:users:accounts:index')
+        test_link = reverse("misago:admin:users:accounts:index")
 
-        response = self.client.get('%s?redirected=1&profilefields=ipsum' % test_link)
-        self.assertContains(response, "No users matching search criteria have been found.")
+        response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
+        self.assertContains(
+            response, "No users matching search criteria have been found."
+        )
 
-        self.user.profile_fields['twitter'] = 'lorem_ipsum'
+        self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
-        response = self.client.get('%s?redirected=1&profilefields=ipsum' % test_link)
-        self.assertNotContains(response, "No users matching search criteria have been found.")
+        response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
+        self.assertNotContains(
+            response, "No users matching search criteria have been found."
+        )
 
     def test_field_display(self):
         """field displays on user profile when filled in"""
         test_link = reverse(
-            'misago:user-details',
-            kwargs={
-                'pk': self.user.pk,
-                'slug': self.user.slug,
-            },
+            "misago:user-details", kwargs={"pk": self.user.pk, "slug": self.user.slug}
         )
 
         response = self.client.get(test_link)
-        self.assertNotContains(response, 'Twitter')
+        self.assertNotContains(response, "Twitter")
 
-        self.user.profile_fields['twitter'] = 'lorem_ipsum'
+        self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'Twitter')
+        self.assertContains(response, "Twitter")
         self.assertContains(response, 'href="https://twitter.com/lorem_ipsum"')
-        self.assertContains(response, '@lorem_ipsum')
+        self.assertContains(response, "@lorem_ipsum")
 
     def test_field_display_json(self):
         """field is included in display json"""
-        test_link = reverse('misago:api:user-details', kwargs={'pk': self.user.pk})
+        test_link = reverse("misago:api:user-details", kwargs={"pk": self.user.pk})
 
         response = self.client.get(test_link)
         self.assertEqual(
-            response.json()['groups'],
+            response.json()["groups"],
             [
                 {
-                    'name': 'IP address',
-                    'fields': [
-                        {
-                            'fieldname': 'join_ip',
-                            'name': 'Join IP',
-                            'text': '127.0.0.1',
-                        },
+                    "name": "IP address",
+                    "fields": [
+                        {"fieldname": "join_ip", "name": "Join IP", "text": "127.0.0.1"}
                     ],
-                },
-            ]
+                }
+            ],
         )
 
-        self.user.profile_fields['twitter'] = 'lorem_ipsum'
+        self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
         response = self.client.get(test_link)
         self.assertEqual(
-            response.json()['groups'],
+            response.json()["groups"],
             [
                 {
-                    'name': 'Contact',
-                    'fields': [
+                    "name": "Contact",
+                    "fields": [
                         {
-                            'fieldname': 'twitter',
-                            'name': 'Twitter handle',
-                            'text': '@lorem_ipsum',
-                            'url': 'https://twitter.com/lorem_ipsum',
+                            "fieldname": "twitter",
+                            "name": "Twitter handle",
+                            "text": "@lorem_ipsum",
+                            "url": "https://twitter.com/lorem_ipsum",
                         }
                     ],
                 },
                 {
-                    'name': 'IP address',
-                    'fields': [
-                        {
-                            'fieldname': 'join_ip',
-                            'name': 'Join IP',
-                            'text': '127.0.0.1',
-                        },
+                    "name": "IP address",
+                    "fields": [
+                        {"fieldname": "join_ip", "name": "Join IP", "text": "127.0.0.1"}
                     ],
                 },
-            ]
+            ],
         )
 
     def test_api_returns_field_json(self):
         """field json is returned from API"""
-        test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
+        test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
         response = self.client.get(test_link)
 
         found_field = None
         for group in response.json():
-            for field in group['fields']:
-                if field['fieldname'] == 'twitter':
+            for field in group["fields"]:
+                if field["fieldname"] == "twitter":
                     found_field = field
 
-        self.assertEqual(found_field, {
-            'fieldname': 'twitter',
-            'label': 'Twitter handle',
-            'help_text': (
-                'If you own Twitter account, here you may enter your Twitter handle for other users to find you. '
-                'Starting your handle with "@" sign is optional. Either "@testsuperuser" or "testsuperuser" are '
-                'valid values.'
-            ),
-            'input': {'type': 'text'},
-            'initial': '',
-        })
+        self.assertEqual(
+            found_field,
+            {
+                "fieldname": "twitter",
+                "label": "Twitter handle",
+                "help_text": (
+                    "If you own Twitter account, here you may enter your Twitter handle for other users to find you. "
+                    'Starting your handle with "@" sign is optional. Either "@testsuperuser" or "testsuperuser" are '
+                    "valid values."
+                ),
+                "input": {"type": "text"},
+                "initial": "",
+            },
+        )
 
     def test_api_clears_field(self):
         """field can be cleared via api"""
-        test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
+        test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        self.user.profile_fields['twitter'] = 'lorem_ipsum'
+        self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
+        self.assertEqual(self.user.profile_fields["twitter"], "lorem_ipsum")
 
         response = self.client.post(test_link, data={})
         self.assertEqual(response.status_code, 200)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], '')
+        self.assertEqual(self.user.profile_fields["twitter"], "")
 
     def test_api_validates_field(self):
         """field can be edited via api"""
-        test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
+        test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        response = self.client.post(test_link, data={'twitter': '@lorem!ipsum'})
-        self.assertContains(response, "This is not a valid twitter handle.", status_code=400)
+        response = self.client.post(test_link, data={"twitter": "@lorem!ipsum"})
+        self.assertContains(
+            response, "This is not a valid twitter handle.", status_code=400
+        )
 
     def test_api_edits_field(self):
         """field can be edited via api"""
-        test_link = reverse('misago:api:user-edit-details', kwargs={'pk': self.user.pk})
+        test_link = reverse("misago:api:user-edit-details", kwargs={"pk": self.user.pk})
 
-        response = self.client.post(test_link, data={'twitter': '@lorem_ipsum'})
+        response = self.client.post(test_link, data={"twitter": "@lorem_ipsum"})
         self.assertEqual(response.status_code, 200)
 
         self.reload_user()
-        self.assertEqual(self.user.profile_fields['twitter'], 'lorem_ipsum')
+        self.assertEqual(self.user.profile_fields["twitter"], "lorem_ipsum")

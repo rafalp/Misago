@@ -14,13 +14,13 @@ UserModel = get_user_model()
 class SubscriptionMiddlewareTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
 
 
 class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
     def setUp(self):
         super().setUp()
-        self.api_link = reverse('misago:api:thread-list')
+        self.api_link = reverse("misago:api:thread-list")
 
     @patch_category_acl({"can_start_threads": True})
     def test_dont_subscribe(self):
@@ -32,10 +32,10 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.id,
-                'title': "This is an test thread!",
-                'post': "This is test response!",
-            }
+                "category": self.category.id,
+                "title": "This is an test thread!",
+                "post": "This is test response!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -51,15 +51,15 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.id,
-                'title': "This is an test thread!",
-                'post': "This is test response!",
-            }
+                "category": self.category.id,
+                "title": "This is an test thread!",
+                "post": "This is test response!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
-        thread = self.user.thread_set.order_by('id').last()
+        thread = self.user.thread_set.order_by("id").last()
         subscription = self.user.subscription_set.get(thread=thread)
 
         self.assertEqual(subscription.category_id, self.category.id)
@@ -74,15 +74,15 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.id,
-                'title': "This is an test thread!",
-                'post': "This is test response!",
-            }
+                "category": self.category.id,
+                "title": "This is an test thread!",
+                "post": "This is test response!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         # user has subscribed to thread
-        thread = self.user.thread_set.order_by('id').last()
+        thread = self.user.thread_set.order_by("id").last()
         subscription = self.user.subscription_set.get(thread=thread)
 
         self.assertEqual(subscription.category_id, self.category.id)
@@ -94,9 +94,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         super().setUp()
         self.thread = testutils.post_thread(self.category)
         self.api_link = reverse(
-            'misago:api:thread-post-list', kwargs={
-                'thread_pk': self.thread.pk,
-            }
+            "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
     @patch_category_acl({"can_reply_threads": True})
@@ -107,9 +105,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -123,9 +119,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -142,9 +136,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -165,9 +157,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
         # reply thread
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -185,9 +175,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
         self.user.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -196,9 +184,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
 
         # reply again
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 

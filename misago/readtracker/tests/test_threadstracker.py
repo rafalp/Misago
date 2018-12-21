@@ -25,9 +25,9 @@ class AnonymousUser(object):
 
 class ThreadsTrackerTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("UserA", "testa@user.com", 'Pass.123')
+        self.user = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
         self.user_acl = get_user_acl(self.user, cache_versions)
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
 
         add_acl_to_obj(self.user_acl, self.category)
 
@@ -117,10 +117,7 @@ class ThreadsTrackerTests(TestCase):
         thread = testutils.post_thread(self.category, started_on=timezone.now())
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_event=True,
-            is_hidden=True,
+            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
         )
 
         threadstracker.make_read_aware(self.user, self.user_acl, thread)
@@ -133,10 +130,7 @@ class ThreadsTrackerTests(TestCase):
         poststracker.save_read(self.user, thread.first_post)
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_event=True,
-            is_hidden=True,
+            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
         )
 
         threadstracker.make_read_aware(self.user, self.user_acl, thread)
@@ -157,11 +151,7 @@ class ThreadsTrackerTests(TestCase):
         thread = testutils.post_thread(self.category, started_on=timezone.now())
         poststracker.save_read(self.user, thread.first_post)
 
-        testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_unapproved=True,
-        )
+        testutils.reply_thread(thread, posted_on=timezone.now(), is_unapproved=True)
 
         threadstracker.make_read_aware(self.user, self.user_acl, thread)
         self.assertTrue(thread.is_read)
@@ -173,10 +163,7 @@ class ThreadsTrackerTests(TestCase):
         poststracker.save_read(self.user, thread.first_post)
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            poster=self.user,
-            is_unapproved=True,
+            thread, posted_on=timezone.now(), poster=self.user, is_unapproved=True
         )
 
         threadstracker.make_read_aware(self.user, self.user_acl, thread)

@@ -16,17 +16,17 @@ MISAGO_ADDRESS = None
 # https://misago.readthedocs.io/en/latest/developers/acls.html#extending-permissions-system
 
 MISAGO_ACL_EXTENSIONS = [
-    'misago.users.permissions.account',
-    'misago.users.permissions.profiles',
-    'misago.users.permissions.moderation',
-    'misago.users.permissions.delete',
-    'misago.categories.permissions',
-    'misago.threads.permissions.attachments',
-    'misago.threads.permissions.polls',
-    'misago.threads.permissions.threads',
-    'misago.threads.permissions.privatethreads',
-    'misago.threads.permissions.bestanswers',
-    'misago.search.permissions',
+    "misago.users.permissions.account",
+    "misago.users.permissions.profiles",
+    "misago.users.permissions.moderation",
+    "misago.users.permissions.delete",
+    "misago.categories.permissions",
+    "misago.threads.permissions.attachments",
+    "misago.threads.permissions.polls",
+    "misago.threads.permissions.threads",
+    "misago.threads.permissions.privatethreads",
+    "misago.threads.permissions.bestanswers",
+    "misago.search.permissions",
 ]
 
 
@@ -93,60 +93,57 @@ MISAGO_POST_SEARCH_FILTERS = []
 
 MISAGO_POSTING_MIDDLEWARES = [
     # Always keep FloodProtectionMiddleware middleware first one
-    'misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware',
-
-    'misago.threads.api.postingendpoint.category.CategoryMiddleware',
-    'misago.threads.api.postingendpoint.privatethread.PrivateThreadMiddleware',
-    'misago.threads.api.postingendpoint.reply.ReplyMiddleware',
-    'misago.threads.api.postingendpoint.moderationqueue.ModerationQueueMiddleware',
-    'misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware',
-    'misago.threads.api.postingendpoint.participants.ParticipantsMiddleware',
-    'misago.threads.api.postingendpoint.pin.PinMiddleware',
-    'misago.threads.api.postingendpoint.close.CloseMiddleware',
-    'misago.threads.api.postingendpoint.hide.HideMiddleware',
-    'misago.threads.api.postingendpoint.protect.ProtectMiddleware',
-    'misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware',
-    'misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware',
-    'misago.threads.api.postingendpoint.mentions.MentionsMiddleware',
-    'misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware',
-    'misago.threads.api.postingendpoint.syncprivatethreads.SyncPrivateThreadsMiddleware',
-
+    "misago.threads.api.postingendpoint.floodprotection.FloodProtectionMiddleware",
+    "misago.threads.api.postingendpoint.category.CategoryMiddleware",
+    "misago.threads.api.postingendpoint.privatethread.PrivateThreadMiddleware",
+    "misago.threads.api.postingendpoint.reply.ReplyMiddleware",
+    "misago.threads.api.postingendpoint.moderationqueue.ModerationQueueMiddleware",
+    "misago.threads.api.postingendpoint.attachments.AttachmentsMiddleware",
+    "misago.threads.api.postingendpoint.participants.ParticipantsMiddleware",
+    "misago.threads.api.postingendpoint.pin.PinMiddleware",
+    "misago.threads.api.postingendpoint.close.CloseMiddleware",
+    "misago.threads.api.postingendpoint.hide.HideMiddleware",
+    "misago.threads.api.postingendpoint.protect.ProtectMiddleware",
+    "misago.threads.api.postingendpoint.recordedit.RecordEditMiddleware",
+    "misago.threads.api.postingendpoint.updatestats.UpdateStatsMiddleware",
+    "misago.threads.api.postingendpoint.mentions.MentionsMiddleware",
+    "misago.threads.api.postingendpoint.subscribe.SubscribeMiddleware",
+    "misago.threads.api.postingendpoint.syncprivatethreads.SyncPrivateThreadsMiddleware",
     # Always keep SaveChangesMiddleware middleware after all state-changing middlewares
-    'misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware',
-
+    "misago.threads.api.postingendpoint.savechanges.SaveChangesMiddleware",
     # Those middlewares are last because they don't change app state
-    'misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware',
+    "misago.threads.api.postingendpoint.emailnotification.EmailNotificationMiddleware",
 ]
 
 
 # Configured thread types
 
 MISAGO_THREAD_TYPES = [
-    'misago.threads.threadtypes.thread.Thread',
-    'misago.threads.threadtypes.privatethread.PrivateThread',
+    "misago.threads.threadtypes.thread.Thread",
+    "misago.threads.threadtypes.privatethread.PrivateThread",
 ]
 
 
 # Search extensions
 
 MISAGO_SEARCH_EXTENSIONS = [
-    'misago.threads.search.SearchThreads',
-    'misago.users.search.SearchUsers',
+    "misago.threads.search.SearchThreads",
+    "misago.users.search.SearchUsers",
 ]
 
 
 # Misago-admin specific date formats
 
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH = 'j M'
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = 'M \'y'
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH = "j M"
+MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = "M 'y"
 
 
 # Additional registration validators
 # https://misago.readthedocs.io/en/latest/developers/validating_registrations.html
 
 MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
-    'misago.users.validators.validate_gmail_email',
-    'misago.users.validators.validate_with_sfs',
+    "misago.users.validators.validate_gmail_email",
+    "misago.users.validators.validate_with_sfs",
 ]
 
 
@@ -164,26 +161,23 @@ MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 # Social Auth Backends Names Overrides
 # This seeting may be used to customise auth backends names displayed in the UI
 
-MISAGO_SOCIAL_AUTH_BACKENDS_NAMES = {} 
+MISAGO_SOCIAL_AUTH_BACKENDS_NAMES = {}
 
 
 # Login API URL
 
-MISAGO_LOGIN_API_URL = 'auth'
+MISAGO_LOGIN_API_URL = "auth"
 
 
 # Misago Admin Path
 # Omit starting and trailing slashes. To disable Misago admin, empty this value.
 
-MISAGO_ADMIN_PATH = 'admincp'
+MISAGO_ADMIN_PATH = "admincp"
 
 
 # Admin urls namespaces that Misago's AdminAuthMiddleware should protect
 
-MISAGO_ADMIN_NAMESPACES = [
-    'admin',
-    'misago:admin',
-]
+MISAGO_ADMIN_NAMESPACES = ["admin", "misago:admin"]
 
 
 # How long (in minutes) since previous request to admin namespace should admin session last.
@@ -212,7 +206,7 @@ MISAGO_HOURLY_POST_LIMIT = 100
 
 # Function used for generating individual avatar for user
 
-MISAGO_DYNAMIC_AVATAR_DRAWER = 'misago.users.avatars.dynamic.draw_default'
+MISAGO_DYNAMIC_AVATAR_DRAWER = "misago.users.avatars.dynamic.draw_default"
 
 
 # Path to directory containing avatar galleries
@@ -230,7 +224,7 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 
 # Path to blank avatar image used for guests and removed users.
 
-MISAGO_BLANK_AVATAR = 'blank-avatar.png'
+MISAGO_BLANK_AVATAR = "blank-avatar.png"
 
 
 # Threads lists pagination settings
@@ -274,8 +268,8 @@ MISAGO_ATTACHMENT_ORPHANED_EXPIRE = 24 * 60
 # Names of files served when user requests file that doesn't exist or is unavailable
 # Those files will be sought within STATIC_ROOT directory
 
-MISAGO_404_IMAGE = 'misago/img/error-404.png'
-MISAGO_403_IMAGE = 'misago/img/error-403.png'
+MISAGO_404_IMAGE = "misago/img/error-404.png"
+MISAGO_403_IMAGE = "misago/img/error-403.png"
 
 
 # Controls max age in days of items that Misago has to process to make rankings
@@ -313,72 +307,85 @@ MISAGO_READTRACKER_CUTOFF = 40
 # Available Moment.js locales
 
 MISAGO_MOMENT_JS_LOCALES = [
-    'af',
-    'ar-ma', 'ar-sa', 'ar-tn', 'ar',
-    'az',
-    'be',
-    'bg',
-    'bn',
-    'bo',
-    'br',
-    'bs',
-    'ca',
-    'cs',
-    'cv',
-    'cy',
-    'da',
-    'de-at', 'de',
-    'el',
-    'en-au', 'en-ca', 'en-gb',
-    'eo',
-    'es',
-    'et',
-    'eu',
-    'fa',
-    'fi',
-    'fo',
-    'fr-ca',
-    'fr',
-    'fy',
-    'gl',
-    'he',
-    'hi',
-    'hr',
-    'hu', 'hy-am',
-    'id',
-    'is',
-    'it',
-    'ja',
-    'ka',
-    'km',
-    'ko',
-    'lb',
-    'lt',
-    'lv',
-    'mk',
-    'ml',
-    'mr',
-    'ms-my', 'my',
-    'nb',
-    'ne',
-    'nl',
-    'nn',
-    'pl',
-    'pt-br', 'pt',
-    'ro',
-    'ru',
-    'sk',
-    'sl',
-    'sq',
-    'sr-cyrl', 'sr',
-    'sv',
-    'ta',
-    'th',
-    'tl-ph',
-    'tr',
-    'tzm-latn', 'tzm',
-    'uk',
-    'uz',
-    'vi',
-    'zh-cn', 'zh-hans', 'zh-tw',
+    "af",
+    "ar-ma",
+    "ar-sa",
+    "ar-tn",
+    "ar",
+    "az",
+    "be",
+    "bg",
+    "bn",
+    "bo",
+    "br",
+    "bs",
+    "ca",
+    "cs",
+    "cv",
+    "cy",
+    "da",
+    "de-at",
+    "de",
+    "el",
+    "en-au",
+    "en-ca",
+    "en-gb",
+    "eo",
+    "es",
+    "et",
+    "eu",
+    "fa",
+    "fi",
+    "fo",
+    "fr-ca",
+    "fr",
+    "fy",
+    "gl",
+    "he",
+    "hi",
+    "hr",
+    "hu",
+    "hy-am",
+    "id",
+    "is",
+    "it",
+    "ja",
+    "ka",
+    "km",
+    "ko",
+    "lb",
+    "lt",
+    "lv",
+    "mk",
+    "ml",
+    "mr",
+    "ms-my",
+    "my",
+    "nb",
+    "ne",
+    "nl",
+    "nn",
+    "pl",
+    "pt-br",
+    "pt",
+    "ro",
+    "ru",
+    "sk",
+    "sl",
+    "sq",
+    "sr-cyrl",
+    "sr",
+    "sv",
+    "ta",
+    "th",
+    "tl-ph",
+    "tr",
+    "tzm-latn",
+    "tzm",
+    "uk",
+    "uz",
+    "vi",
+    "zh-cn",
+    "zh-hans",
+    "zh-tw",
 ]

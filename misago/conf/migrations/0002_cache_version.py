@@ -8,10 +8,6 @@ from misago.conf import SETTINGS_CACHE
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_conf', '0001_initial'),
-    ]
+    dependencies = [("misago_conf", "0001_initial")]
 
-    operations = [
-        StartCacheVersioning(SETTINGS_CACHE)
-    ]
+    operations = [StartCacheVersioning(SETTINGS_CACHE)]

@@ -35,16 +35,16 @@ class UserCreationTests(TestCase):
     def test_user_is_created_with_default_rank(self):
         user = User.objects.create_user("User", "test@example.com")
         assert user.rank == Rank.objects.get_default()
-    
+
     def test_user_is_created_with_custom_rank(self):
         rank = Rank.objects.create(name="Test rank")
         user = User.objects.create_user("User", "test@example.com", rank=rank)
         assert user.rank == rank
-    
+
     def test_newly_created_user_last_login_is_same_as_join_date(self):
         user = User.objects.create_user("User", "test@example.com")
         assert user.last_login == user.joined_on
-    
+
     def test_user_is_created_with_authenticated_role(self):
         user = User.objects.create_user("User", "test@example.com")
         assert user.roles.get(special_role="authenticated")
@@ -73,8 +73,12 @@ class UserCreationTests(TestCase):
 
     def test_creating_superuser_without_staff_status_raises_value_error(self):
         with self.assertRaises(ValueError):
-            user = User.objects.create_superuser("User", "test@example.com", is_staff=False)
+            user = User.objects.create_superuser(
+                "User", "test@example.com", is_staff=False
+            )
 
     def test_creating_superuser_without_superuser_status_raises_value_error(self):
         with self.assertRaises(ValueError):
-            user = User.objects.create_superuser("User", "test@example.com", is_superuser=False)
+            user = User.objects.create_superuser(
+                "User", "test@example.com", is_superuser=False
+            )

@@ -16,16 +16,13 @@ class EditReplyTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(category=self.category)
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
-            'misago:api:thread-post-detail',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': self.post.pk,
-            }
+            "misago:api:thread-post-detail",
+            kwargs={"thread_pk": self.thread.pk, "pk": self.post.pk},
         )
 
     def put(self, url, data=None):
@@ -41,15 +38,15 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
-        with patch_category_acl({'can_see': False}):
+        with patch_category_acl({"can_see": False}):
             response = self.put(self.api_link)
             self.assertEqual(response.status_code, 404)
 
-        with patch_category_acl({'can_browse': False}):
+        with patch_category_acl({"can_browse": False}):
             response = self.put(self.api_link)
             self.assertEqual(response.status_code, 404)
 
-        with patch_category_acl({'can_see_all_threads': False}):
+        with patch_category_acl({"can_see_all_threads": False}):
             response = self.put(self.api_link)
             self.assertEqual(response.status_code, 404)
 
@@ -58,9 +55,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """permission to edit reply is validated"""
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't edit posts in this category.",
-        })
+        self.assertEqual(
+            response.json(), {"detail": "You can't edit posts in this category."}
+        )
 
     @patch_category_acl({"can_edit_posts": 1})
     def test_cant_edit_other_user_reply(self):
@@ -70,9 +67,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't edit other users posts in this category.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "You can't edit other users posts in this category."},
+        )
 
     @patch_category_acl({"can_edit_posts": 1, "post_edit_time": 1})
     def test_edit_too_old(self):
@@ -82,9 +80,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't edit posts that are older than 1 minute.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "You can't edit posts that are older than 1 minute."},
+        )
 
     @patch_category_acl({"can_edit_posts": 1, "can_close_threads": False})
     def test_closed_category_no_permission(self):
@@ -94,9 +93,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This category is closed. You can't edit posts in it.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "This category is closed. You can't edit posts in it."},
+        )
 
     @patch_category_acl({"can_edit_posts": 1, "can_close_threads": True})
     def test_closed_category(self):
@@ -115,9 +115,10 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This thread is closed. You can't edit posts in it.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "This thread is closed. You can't edit posts in it."},
+        )
 
     @patch_category_acl({"can_edit_posts": 1, "can_close_threads": True})
     def test_closed_thread(self):
@@ -136,9 +137,9 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This post is protected. You can't edit it.",
-        })
+        self.assertEqual(
+            response.json(), {"detail": "This post is protected. You can't edit it."}
+        )
 
     @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": True})
     def test_protected_post_no(self):
@@ -154,22 +155,23 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """no data sent handling has no showstoppers"""
         response = self.put(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            "post": ["You have to enter a message."],
-        })
+        self.assertEqual(response.json(), {"post": ["You have to enter a message."]})
 
     @patch_category_acl({"can_edit_posts": 1})
     def test_invalid_data(self):
         """api errors for invalid request data"""
         response = self.client.put(
-            self.api_link,
-            'false',
-            content_type="application/json",
+            self.api_link, "false", content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            "non_field_errors": ["Invalid data. Expected a dictionary, but got bool."]
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "non_field_errors": [
+                    "Invalid data. Expected a dictionary, but got bool."
+                ]
+            },
+        )
 
     @patch_category_acl({"can_edit_posts": 1})
     def test_edit_event(self):
@@ -179,23 +181,20 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         response = self.put(self.api_link, data={})
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "Events can't be edited.",
-        })
+        self.assertEqual(response.json(), {"detail": "Events can't be edited."})
 
     @patch_category_acl({"can_edit_posts": 1})
     def test_post_is_validated(self):
         """post is validated"""
-        response = self.put(
-            self.api_link, data={
-                'post': "a",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "a"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'post': ["Posted message should be at least 5 characters long (it has 1)."],
-            }
+            response.json(),
+            {
+                "post": [
+                    "Posted message should be at least 5 characters long (it has 1)."
+                ]
+            },
         )
 
     @patch_category_acl({"can_edit_posts": 1})
@@ -203,13 +202,13 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """endpoint isn't bumping edits count if no change was made to post's body"""
         self.assertEqual(self.post.edits_record.count(), 0)
 
-        response = self.put(self.api_link, data={'post': self.post.original})
+        response = self.put(self.api_link, data={"post": self.post.original})
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, self.post.parsed)
 
-        post = self.thread.post_set.order_by('id').last()
+        post = self.thread.post_set.order_by("id").last()
         self.assertEqual(post.edits, 0)
         self.assertEqual(post.original, self.post.original)
         self.assertIsNone(post.last_editor_id, self.user.id)
@@ -223,7 +222,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """endpoint updates reply"""
         self.assertEqual(self.post.edits_record.count(), 0)
 
-        response = self.put(self.api_link, data={'post': "This is test edit!"})
+        response = self.put(self.api_link, data={"post": "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(self.thread.get_absolute_url())
@@ -231,7 +230,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
 
         self.assertEqual(self.user.audittrail_set.count(), 1)
 
-        post = self.thread.post_set.order_by('id').last()
+        post = self.thread.post_set.order_by("id").last()
         self.assertEqual(post.edits, 1)
         self.assertEqual(post.original, "This is test edit!")
         self.assertEqual(post.last_editor_id, self.user.id)
@@ -257,51 +256,40 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.thread.first_post.save()
 
         api_link = reverse(
-            'misago:api:thread-post-detail',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': self.thread.first_post.pk,
-            }
+            "misago:api:thread-post-detail",
+            kwargs={"thread_pk": self.thread.pk, "pk": self.thread.first_post.pk},
         )
 
-        response = self.put(api_link, data={'post': "This is test edit!"})
+        response = self.put(api_link, data={"post": "This is test edit!"})
         self.assertEqual(response.status_code, 200)
 
     @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": True})
     def test_protect_post(self):
         """can protect post"""
         response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-                'protect': 1,
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!", "protect": 1}
         )
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.order_by('id').last()
+        post = self.user.post_set.order_by("id").last()
         self.assertTrue(post.is_protected)
 
     @patch_category_acl({"can_edit_posts": 1, "can_protect_posts": False})
     def test_protect_post_no_permission(self):
         """cant protect post without permission"""
         response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-                'protect': 1,
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!", "protect": 1}
         )
         self.assertEqual(response.status_code, 200)
 
-        post = self.user.post_set.order_by('id').last()
+        post = self.user.post_set.order_by("id").last()
         self.assertFalse(post.is_protected)
 
     @patch_category_acl({"can_edit_posts": 1})
     def test_post_unicode(self):
         """unicode characters can be posted"""
         response = self.put(
-            self.api_link, data={
-                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
-            }
+            self.api_link, data={"post": "Chrzążczyżewoszyce, powiat Łękółody."}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -311,11 +299,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_edits_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.all()[:1][0]
@@ -328,11 +312,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_edits_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.all()[:1][0]
@@ -341,49 +321,36 @@ class EditReplyTests(AuthenticatedUserTestCase):
     @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
     def test_reply_user_moderation_queue(self):
         """edit sends reply to queue due to user acl"""
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
-    @patch_category_acl({
-        "can_edit_posts": 1,
-        "require_edits_approval": True,
-    })
+    @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
     @patch_user_acl({"can_approve_content": True})
     def test_reply_user_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-    @patch_category_acl({
-        "can_edit_posts": 1,
-        "require_threads_approval": True,
-        "require_replies_approval": True,
-    })
+    @patch_category_acl(
+        {
+            "can_edit_posts": 1,
+            "require_threads_approval": True,
+            "require_replies_approval": True,
+        }
+    )
     def test_reply_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.category.require_threads_approval = True
         self.category.require_replies_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         post = self.user.post_set.all()[:1][0]
@@ -396,11 +363,8 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.post.save()
 
         self.api_link = reverse(
-            'misago:api:thread-post-detail',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': self.post.pk,
-            }
+            "misago:api:thread-post-detail",
+            kwargs={"thread_pk": self.thread.pk, "pk": self.post.pk},
         )
 
     @patch_category_acl({"can_edit_posts": 1})
@@ -411,11 +375,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_edits_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -426,7 +386,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertTrue(post.is_unapproved)
 
     @patch_category_acl({"can_edit_posts": 1})
-    @patch_user_acl({'can_approve_content': True})
+    @patch_user_acl({"can_approve_content": True})
     def test_first_reply_category_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
         self.setUpFirstReplyTest()
@@ -434,11 +394,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_edits_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -453,11 +409,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         """edit sends thread to queue due to user acl"""
         self.setUpFirstReplyTest()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -468,16 +420,12 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.assertTrue(post.is_unapproved)
 
     @patch_category_acl({"can_edit_posts": 1, "require_edits_approval": True})
-    @patch_user_acl({'can_approve_content': True})
+    @patch_user_acl({"can_approve_content": True})
     def test_first_reply_user_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
         self.setUpFirstReplyTest()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)
@@ -487,11 +435,13 @@ class EditReplyTests(AuthenticatedUserTestCase):
         post = Post.objects.get(pk=self.post.pk)
         self.assertFalse(post.is_unapproved)
 
-    @patch_category_acl({
-        "can_edit_posts": 1,
-        "require_threads_approval": True,
-        "require_replies_approval": True,
-    })
+    @patch_category_acl(
+        {
+            "can_edit_posts": 1,
+            "require_threads_approval": True,
+            "require_replies_approval": True,
+        }
+    )
     def test_first_reply_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.setUpFirstReplyTest()
@@ -500,11 +450,7 @@ class EditReplyTests(AuthenticatedUserTestCase):
         self.category.require_replies_approval = True
         self.category.save()
 
-        response = self.put(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
-        )
+        response = self.put(self.api_link, data={"post": "Lorem ipsum dolor met!"})
         self.assertEqual(response.status_code, 200)
 
         thread = Thread.objects.get(pk=self.thread.pk)

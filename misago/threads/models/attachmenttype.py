@@ -20,8 +20,12 @@ class AttachmentType(models.Model):
         ],
     )
 
-    limit_uploads_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
-    limit_downloads_to = models.ManyToManyField('misago_acl.Role', related_name='+', blank=True)
+    limit_uploads_to = models.ManyToManyField(
+        "misago_acl.Role", related_name="+", blank=True
+    )
+    limit_downloads_to = models.ManyToManyField(
+        "misago_acl.Role", related_name="+", blank=True
+    )
 
     def __str__(self):
         return self.name
@@ -33,11 +37,11 @@ class AttachmentType(models.Model):
     @property
     def extensions_list(self):
         if self.extensions:
-            return self.extensions.split(',')
+            return self.extensions.split(",")
         return []
 
     @property
     def mimetypes_list(self):
         if self.mimetypes:
-            return self.mimetypes.split(',')
+            return self.mimetypes.split(",")
         return []

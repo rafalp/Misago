@@ -17,13 +17,28 @@ from misago.core.apipatch import ApiPatch
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.moderation import threads as moderation
 from misago.threads.participants import (
-    add_participant, change_owner, make_participants_aware, remove_participant
+    add_participant,
+    change_owner,
+    make_participants_aware,
+    remove_participant,
 )
 from misago.threads.permissions import (
-    allow_add_participant, allow_add_participants, allow_approve_thread, allow_change_best_answer,
-    allow_change_owner, allow_edit_thread, allow_pin_thread, allow_hide_thread, allow_mark_as_best_answer,
-    allow_mark_best_answer, allow_move_thread, allow_remove_participant, allow_see_post,
-    allow_start_thread, allow_unhide_thread, allow_unmark_best_answer
+    allow_add_participant,
+    allow_add_participants,
+    allow_approve_thread,
+    allow_change_best_answer,
+    allow_change_owner,
+    allow_edit_thread,
+    allow_pin_thread,
+    allow_hide_thread,
+    allow_mark_as_best_answer,
+    allow_mark_best_answer,
+    allow_move_thread,
+    allow_remove_participant,
+    allow_see_post,
+    allow_start_thread,
+    allow_unhide_thread,
+    allow_unmark_best_answer,
 )
 from misago.threads.serializers import ThreadParticipantSerializer
 from misago.threads.validators import validate_thread_title
@@ -39,19 +54,19 @@ def patch_acl(request, thread, value):
     """useful little op that updates thread acl to current state"""
     if value:
         add_acl_to_obj(request.user_acl, thread)
-        return {'acl': thread.acl}
+        return {"acl": thread.acl}
     else:
-        return {'acl': None}
+        return {"acl": None}
 
 
-thread_patch_dispatcher.add('acl', patch_acl)
+thread_patch_dispatcher.add("acl", patch_acl)
 
 
 def patch_title(request, thread, value):
     try:
         value_cleaned = str(value).strip()
     except (TypeError, ValueError):
-        raise PermissionDenied(_('Not a valid string.'))
+        raise PermissionDenied(_("Not a valid string."))
 
     try:
         validate_thread_title(request.settings, value_cleaned)
@@ -61,32 +76,36 @@ def patch_title(request, thread, value):
     allow_edit_thread(request.user_acl, thread)
 
     moderation.change_thread_title(request, thread, value_cleaned)
-    return {'title': thread.title}
+    return {"title": thread.title}
 
 
-thread_patch_dispatcher.replace('title', patch_title)
+thread_patch_dispatcher.replace("title", patch_title)
 
 
 def patch_weight(request, thread, value):
     allow_pin_thread(request.user_acl, thread)
 
-    if not thread.acl.get('can_pin_globally') and thread.weight == 2:
-        raise PermissionDenied(_("You can't change globally pinned threads weights in this category."))
+    if not thread.acl.get("can_pin_globally") and thread.weight == 2:
+        raise PermissionDenied(
+            _("You can't change globally pinned threads weights in this category.")
+        )
 
     if value == 2:
-        if thread.acl.get('can_pin_globally'):
+        if thread.acl.get("can_pin_globally"):
             moderation.pin_thread_globally(request, thread)
         else:
-            raise PermissionDenied(_("You can't pin threads globally in this category."))
+            raise PermissionDenied(
+                _("You can't pin threads globally in this category.")
+            )
     elif value == 1:
         moderation.pin_thread_locally(request, thread)
     elif value == 0:
         moderation.unpin_thread(request, thread)
 
-    return {'weight': thread.weight}
+    return {"weight": thread.weight}
 
 
-thread_patch_dispatcher.replace('weight', patch_weight)
+thread_patch_dispatcher.replace("weight", patch_weight)
 
 
 def patch_move(request, thread, value):
@@ -94,7 +113,7 @@ def patch_move(request, thread, value):
 
     category_pk = get_int_or_404(value)
     new_category = get_object_or_404(
-        Category.objects.all_categories().select_related('parent'), pk=category_pk
+        Category.objects.all_categories().select_related("parent"), pk=category_pk
     )
 
     add_acl_to_obj(request.user_acl, new_category)
@@ -103,24 +122,26 @@ def patch_move(request, thread, value):
     allow_start_thread(request.user_acl, new_category)
 
     if new_category == thread.category:
-        raise PermissionDenied(_("You can't move thread to the category it's already in."))
+        raise PermissionDenied(
+            _("You can't move thread to the category it's already in.")
+        )
 
     moderation.move_thread(request, thread, new_category)
 
-    return {'category': CategorySerializer(new_category).data}
+    return {"category": CategorySerializer(new_category).data}
 
 
-thread_patch_dispatcher.replace('category', patch_move)
+thread_patch_dispatcher.replace("category", patch_move)
 
 
 def patch_flatten_categories(request, thread, value):
     try:
-        return {'category': thread.category_id}
+        return {"category": thread.category_id}
     except AttributeError:
-        return {'category': thread.category_id}
+        return {"category": thread.category_id}
 
 
-thread_patch_dispatcher.replace('flatten-categories', patch_flatten_categories)
+thread_patch_dispatcher.replace("flatten-categories", patch_flatten_categories)
 
 
 def patch_is_unapproved(request, thread, value):
@@ -132,22 +153,22 @@ def patch_is_unapproved(request, thread, value):
     moderation.approve_thread(request, thread)
 
     return {
-        'is_unapproved': thread.is_unapproved,
-        'has_unapproved_posts': thread.has_unapproved_posts,
+        "is_unapproved": thread.is_unapproved,
+        "has_unapproved_posts": thread.has_unapproved_posts,
     }
 
 
-thread_patch_dispatcher.replace('is-unapproved', patch_is_unapproved)
+thread_patch_dispatcher.replace("is-unapproved", patch_is_unapproved)
 
 
 def patch_is_closed(request, thread, value):
-    if thread.acl.get('can_close'):
+    if thread.acl.get("can_close"):
         if value:
             moderation.close_thread(request, thread)
         else:
             moderation.open_thread(request, thread)
 
-        return {'is_closed': thread.is_closed}
+        return {"is_closed": thread.is_closed}
     else:
         if value:
             raise PermissionDenied(_("You don't have permission to close this thread."))
@@ -155,7 +176,7 @@ def patch_is_closed(request, thread, value):
             raise PermissionDenied(_("You don't have permission to open this thread."))
 
 
-thread_patch_dispatcher.replace('is-closed', patch_is_closed)
+thread_patch_dispatcher.replace("is-closed", patch_is_closed)
 
 
 def patch_is_hidden(request, thread, value):
@@ -166,16 +187,16 @@ def patch_is_hidden(request, thread, value):
         allow_unhide_thread(request.user_acl, thread)
         moderation.unhide_thread(request, thread)
 
-    return {'is_hidden': thread.is_hidden}
+    return {"is_hidden": thread.is_hidden}
 
 
-thread_patch_dispatcher.replace('is-hidden', patch_is_hidden)
+thread_patch_dispatcher.replace("is-hidden", patch_is_hidden)
 
 
 def patch_subscription(request, thread, value):
     request.user.subscription_set.filter(thread=thread).delete()
 
-    if value == 'notify':
+    if value == "notify":
         thread.subscription = request.user.subscription_set.create(
             thread=thread,
             category=thread.category,
@@ -183,8 +204,8 @@ def patch_subscription(request, thread, value):
             send_email=False,
         )
 
-        return {'subscription': False}
-    elif value == 'email':
+        return {"subscription": False}
+    elif value == "email":
         thread.subscription = request.user.subscription_set.create(
             thread=thread,
             category=thread.category,
@@ -192,12 +213,12 @@ def patch_subscription(request, thread, value):
             send_email=True,
         )
 
-        return {'subscription': True}
+        return {"subscription": True}
     else:
-        return {'subscription': None}
+        return {"subscription": None}
 
 
-thread_patch_dispatcher.replace('subscription', patch_subscription)
+thread_patch_dispatcher.replace("subscription", patch_subscription)
 
 
 def patch_best_answer(request, thread, value):
@@ -216,25 +237,27 @@ def patch_best_answer(request, thread, value):
     allow_mark_as_best_answer(request.user_acl, post)
 
     if post.is_best_answer:
-        raise PermissionDenied(_("This post is already marked as thread's best answer."))
+        raise PermissionDenied(
+            _("This post is already marked as thread's best answer.")
+        )
 
     if thread.has_best_answer:
         allow_change_best_answer(request.user_acl, thread)
-        
+
     thread.set_best_answer(request.user, post)
     thread.save()
 
     return {
-        'best_answer': thread.best_answer_id,
-        'best_answer_is_protected': thread.best_answer_is_protected,
-        'best_answer_marked_on': thread.best_answer_marked_on,
-        'best_answer_marked_by': thread.best_answer_marked_by_id,
-        'best_answer_marked_by_name': thread.best_answer_marked_by_name,
-        'best_answer_marked_by_slug': thread.best_answer_marked_by_slug,
+        "best_answer": thread.best_answer_id,
+        "best_answer_is_protected": thread.best_answer_is_protected,
+        "best_answer_marked_on": thread.best_answer_marked_on,
+        "best_answer_marked_by": thread.best_answer_marked_by_id,
+        "best_answer_marked_by_name": thread.best_answer_marked_by_name,
+        "best_answer_marked_by_slug": thread.best_answer_marked_by_slug,
     }
 
 
-thread_patch_dispatcher.replace('best-answer', patch_best_answer)
+thread_patch_dispatcher.replace("best-answer", patch_best_answer)
 
 
 def patch_unmark_best_answer(request, thread, value):
@@ -249,23 +272,26 @@ def patch_unmark_best_answer(request, thread, value):
 
     if not post.is_best_answer:
         raise PermissionDenied(
-            _("This post can't be unmarked because it's not currently marked as best answer."))
+            _(
+                "This post can't be unmarked because it's not currently marked as best answer."
+            )
+        )
 
     allow_unmark_best_answer(request.user_acl, thread)
     thread.clear_best_answer()
     thread.save()
 
     return {
-        'best_answer': None,
-        'best_answer_is_protected': False,
-        'best_answer_marked_on': None,
-        'best_answer_marked_by': None,
-        'best_answer_marked_by_name': None,
-        'best_answer_marked_by_slug': None,
+        "best_answer": None,
+        "best_answer_is_protected": False,
+        "best_answer_marked_on": None,
+        "best_answer_marked_by": None,
+        "best_answer_marked_by_name": None,
+        "best_answer_marked_by_slug": None,
     }
 
 
-thread_patch_dispatcher.remove('best-answer', patch_unmark_best_answer)
+thread_patch_dispatcher.remove("best-answer", patch_unmark_best_answer)
 
 
 def patch_add_participant(request, thread, value):
@@ -289,10 +315,10 @@ def patch_add_participant(request, thread, value):
     make_participants_aware(request.user, thread)
     participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
-    return {'participants': participants.data}
+    return {"participants": participants.data}
 
 
-thread_patch_dispatcher.add('participants', patch_add_participant)
+thread_patch_dispatcher.add("participants", patch_add_participant)
 
 
 def patch_remove_participant(request, thread, value):
@@ -311,18 +337,15 @@ def patch_remove_participant(request, thread, value):
     remove_participant(request, thread, participant.user)
 
     if len(thread.participants_list) == 1:
-        return {'deleted': True}
+        return {"deleted": True}
     else:
         make_participants_aware(request.user, thread)
         participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
-        return {
-            'deleted': False,
-            'participants': participants.data,
-        }
+        return {"deleted": False, "participants": participants.data}
 
 
-thread_patch_dispatcher.remove('participants', patch_remove_participant)
+thread_patch_dispatcher.remove("participants", patch_remove_participant)
 
 
 def patch_replace_owner(request, thread, value):
@@ -345,10 +368,10 @@ def patch_replace_owner(request, thread, value):
 
     make_participants_aware(request.user, thread)
     participants = ThreadParticipantSerializer(thread.participants_list, many=True)
-    return {'participants': participants.data}
+    return {"participants": participants.data}
 
 
-thread_patch_dispatcher.replace('owner', patch_replace_owner)
+thread_patch_dispatcher.replace("owner", patch_replace_owner)
 
 
 def thread_patch_endpoint(request, thread):
@@ -378,7 +401,7 @@ def thread_patch_endpoint(request, thread):
     elif title_changed:
         thread.category.last_thread_title = thread.title
         thread.category.last_thread_slug = thread.slug
-        thread.category.save(update_fields=['last_thread_title', 'last_thread_slug'])
+        thread.category.save(update_fields=["last_thread_title", "last_thread_slug"])
 
     return response
 
@@ -388,7 +411,7 @@ def bulk_patch_endpoint(request, viewmodel):
     if not serializer.is_valid():
         return Response(serializer.errors, status=400)
 
-    threads = clean_threads_for_patch(request, viewmodel, serializer.data['ids'])
+    threads = clean_threads_for_patch(request, viewmodel, serializer.data["ids"])
 
     old_titles = [t.title for t in threads]
     old_is_hidden = [t.is_hidden for t in threads]
@@ -408,7 +431,7 @@ def bulk_patch_endpoint(request, viewmodel):
             if t.title != old_titles[i] and t.category.last_thread_id == t.pk:
                 t.category.last_thread_title = t.title
                 t.category.last_thread_slug = t.slug
-                t.category.save(update_fields=['last_thread_title', 'last_thread_slug'])
+                t.category.save(update_fields=["last_thread_title", "last_thread_slug"])
 
     # sync categories
     sync_categories = []
@@ -420,7 +443,10 @@ def bulk_patch_endpoint(request, viewmodel):
 
     if new_is_unapproved != old_is_unapproved:
         for i, t in enumerate(threads):
-            if t.is_unapproved != old_is_unapproved[i] and t.category_id not in sync_categories:
+            if (
+                t.is_unapproved != old_is_unapproved[i]
+                and t.category_id not in sync_categories
+            ):
                 sync_categories.append(t.category_id)
 
     if new_category != old_category:
@@ -445,7 +471,9 @@ def clean_threads_for_patch(request, viewmodel, threads_ids):
         try:
             threads.append(viewmodel(request, thread_id).unwrap())
         except (Http404, PermissionDenied):
-            raise PermissionDenied(_("One or more threads to update could not be found."))
+            raise PermissionDenied(
+                _("One or more threads to update could not be found.")
+            )
     return threads
 
 
@@ -456,8 +484,5 @@ class BulkPatchSerializer(serializers.Serializer):
         min_length=1,
     )
     ops = serializers.ListField(
-        child=serializers.DictField(),
-        min_length=1,
-        max_length=10,
+        child=serializers.DictField(), min_length=1, max_length=10
     )
-

@@ -22,22 +22,26 @@ class DeleteProfileFieldTests(TestCase):
     def test_no_fields_set(self):
         """utility has no showstoppers when no fields are set"""
         out = StringIO()
-        call_command(deleteprofilefield.Command(), 'gender', stdout=out)
+        call_command(deleteprofilefield.Command(), "gender", stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, '"gender" profile field has been deleted from 0 users.')
+        self.assertEqual(
+            command_output, '"gender" profile field has been deleted from 0 users.'
+        )
 
     def test_delete_fields(self):
         """utility has no showstoppers when no fields are set"""
-        user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
-        user.profile_fields = {'gender': 'male', 'bio': "Yup!"}
+        user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user.profile_fields = {"gender": "male", "bio": "Yup!"}
         user.save()
 
         out = StringIO()
-        call_command(deleteprofilefield.Command(), 'gender', stdout=out)
+        call_command(deleteprofilefield.Command(), "gender", stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, '"gender" profile field has been deleted from 1 users.')
+        self.assertEqual(
+            command_output, '"gender" profile field has been deleted from 1 users.'
+        )
 
         user = UserModel.objects.get(pk=user.pk)
-        self.assertEqual(user.profile_fields, {'bio': "Yup!"})
+        self.assertEqual(user.profile_fields, {"bio": "Yup!"})

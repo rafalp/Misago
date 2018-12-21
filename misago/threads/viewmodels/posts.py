@@ -9,7 +9,7 @@ from misago.threads.utils import add_likes_to_posts
 from misago.users.online.utils import make_users_status_aware
 
 
-__all__ = ['ThreadPosts']
+__all__ = ["ThreadPosts"]
 
 
 class ViewModel(object):
@@ -40,7 +40,7 @@ class ViewModel(object):
 
         make_users_status_aware(request, posters)
 
-        if thread.category.acl['can_see_posts_likes']:
+        if thread.category.acl["can_see_posts_likes"]:
             add_likes_to_posts(request.user, posts)
 
         # add events to posts
@@ -70,22 +70,28 @@ class ViewModel(object):
         self.paginator = paginator
 
     def get_posts_queryset(self, request, thread):
-        queryset = thread.post_set.select_related(
-            'category',
-            'poster',
-            'poster__rank',
-            'poster__ban_cache',
-            'poster__online_tracker',
-        ).filter(is_event=False).order_by('id')
+        queryset = (
+            thread.post_set.select_related(
+                "category",
+                "poster",
+                "poster__rank",
+                "poster__ban_cache",
+                "poster__online_tracker",
+            )
+            .filter(is_event=False)
+            .order_by("id")
+        )
         return exclude_invisible_posts(request.user_acl, thread.category, queryset)
 
-    def get_events_queryset(self, request, thread, limit, first_post=None, last_post=None):
+    def get_events_queryset(
+        self, request, thread, limit, first_post=None, last_post=None
+    ):
         queryset = thread.post_set.select_related(
-            'category',
-            'poster',
-            'poster__rank',
-            'poster__ban_cache',
-            'poster__online_tracker',
+            "category",
+            "poster",
+            "poster__rank",
+            "poster__ban_cache",
+            "poster__online_tracker",
         ).filter(is_event=True)
 
         if first_post:
@@ -94,11 +100,13 @@ class ViewModel(object):
             queryset = queryset.filter(pk__lt=last_post.pk)
 
         queryset = exclude_invisible_posts(request.user_acl, thread.category, queryset)
-        return list(queryset.order_by('-id')[:limit])
+        return list(queryset.order_by("-id")[:limit])
 
     def get_frontend_context(self):
         context = {
-            'results': PostSerializer(self.posts, many=True, context={'user': self._user}).data
+            "results": PostSerializer(
+                self.posts, many=True, context={"user": self._user}
+            ).data
         }
 
         context.update(self.paginator)
@@ -106,10 +114,7 @@ class ViewModel(object):
         return context
 
     def get_template_context(self):
-        return {
-            'posts': self.posts,
-            'paginator': self.paginator,
-        }
+        return {"posts": self.posts, "paginator": self.paginator}
 
 
 class ThreadPosts(ViewModel):

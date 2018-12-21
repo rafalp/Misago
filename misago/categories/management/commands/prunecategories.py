@@ -11,7 +11,8 @@ class Command(BaseCommand):
     This command is intended to work as CRON job fired
     every few days (or more often) to execute categories pruning policies
     """
-    help = 'Prunes categories'
+
+    help = "Prunes categories"
 
     def handle(self, *args, **options):
         now = timezone.now()
@@ -55,4 +56,4 @@ class Command(BaseCommand):
             category.synchronize()
             category.save()
 
-        self.stdout.write('\n\nCategories were pruned')
+        self.stdout.write("\n\nCategories were pruned")

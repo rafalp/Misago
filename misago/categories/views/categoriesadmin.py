@@ -11,9 +11,9 @@ from misago.threads.threadtypes import trees_map
 
 
 class CategoryAdmin(generic.AdminBaseMixin):
-    root_link = 'misago:admin:categories:nodes:index'
+    root_link = "misago:admin:categories:nodes:index"
     model = Category
-    templates_dir = 'misago/admin/categories'
+    templates_dir = "misago/admin/categories"
     message_404 = _("Requested category does not exist.")
 
     def get_target(self, kwargs):
@@ -35,11 +35,11 @@ class CategoriesList(CategoryAdmin, generic.ListView):
         return Category.objects.all_categories()
 
     def process_context(self, request, context):
-        context['items'] = [f for f in context['items']]
+        context["items"] = [f for f in context["items"]]
 
         children_lists = {}
 
-        for item in context['items']:
+        for item in context["items"]:
             item.level_range = range(item.level - 1)
             item.first = False
             item.last = False
@@ -58,22 +58,22 @@ class CategoryFormMixin(object):
 
     def handle_form(self, form, request, target):
         if form.instance.pk:
-            if form.instance.parent_id != form.cleaned_data['new_parent'].pk:
-                form.instance.move_to(form.cleaned_data['new_parent'], position='last-child')
+            if form.instance.parent_id != form.cleaned_data["new_parent"].pk:
+                form.instance.move_to(
+                    form.cleaned_data["new_parent"], position="last-child"
+                )
             form.instance.save()
-            if form.instance.parent_id != form.cleaned_data['new_parent'].pk:
+            if form.instance.parent_id != form.cleaned_data["new_parent"].pk:
                 Category.objects.clear_cache()
         else:
             form.instance.insert_at(
-                form.cleaned_data['new_parent'],
-                position='last-child',
-                save=True,
+                form.cleaned_data["new_parent"], position="last-child", save=True
             )
             Category.objects.clear_cache()
 
-        if form.cleaned_data.get('copy_permissions'):
+        if form.cleaned_data.get("copy_permissions"):
             form.instance.category_role_set.all().delete()
-            copy_from = form.cleaned_data['copy_permissions']
+            copy_from = form.cleaned_data["copy_permissions"]
 
             copied_acls = []
             for acl in copy_from.category_role_set.all():
@@ -89,7 +89,7 @@ class CategoryFormMixin(object):
                 RoleCategoryACL.objects.bulk_create(copied_acls)
 
         clear_acl_cache()
-        messages.success(request, self.message_submit % {'name': target.name})
+        messages.success(request, self.message_submit % {"name": target.name})
 
 
 class NewCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
@@ -102,14 +102,14 @@ class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
 
 class DeleteCategory(CategoryAdmin, generic.ModelFormView):
     message_submit = _('Category "%(name)s" has been deleted.')
-    template = 'delete.html'
+    template = "delete.html"
 
     def create_form_type(self, request, target):
         return DeleteFormFactory(target)
 
     def handle_form(self, form, request, target):
-        move_children_to = form.cleaned_data.get('move_children_to')
-        move_threads_to = form.cleaned_data.get('move_threads_to')
+        move_children_to = form.cleaned_data.get("move_children_to")
+        move_threads_to = form.cleaned_data.get("move_threads_to")
 
         if move_children_to:
             for child in target.get_children():
@@ -117,11 +117,11 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
                 move_children_to = Category.objects.get(pk=move_children_to.pk)
                 child = Category.objects.get(pk=child.pk)
 
-                child.move_to(move_children_to, 'last-child')
+                child.move_to(move_children_to, "last-child")
                 if move_threads_to and child.pk == move_threads_to.pk:
                     move_threads_to = child
         else:
-            for child in target.get_descendants().order_by('-lft'):
+            for child in target.get_descendants().order_by("-lft"):
                 child.delete_content()
                 child.delete()
 
@@ -136,7 +136,7 @@ class DeleteCategory(CategoryAdmin, generic.ModelFormView):
         instance = Category.objects.get(pk=form.instance.pk)
         instance.delete()
 
-        messages.success(request, self.message_submit % {'name': target.name})
+        messages.success(request, self.message_submit % {"name": target.name})
         return redirect(self.root_link)
 
 
@@ -148,11 +148,11 @@ class MoveDownCategory(CategoryAdmin, generic.ButtonView):
             other_target = None
 
         if other_target:
-            Category.objects.move_node(target, other_target, 'right')
+            Category.objects.move_node(target, other_target, "right")
             Category.objects.clear_cache()
 
             message = _('Category "%(name)s" has been moved below "%(other)s".')
-            targets_names = {'name': target.name, 'other': other_target.name}
+            targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)
 
 
@@ -164,9 +164,9 @@ class MoveUpCategory(CategoryAdmin, generic.ButtonView):
             other_target = None
 
         if other_target:
-            Category.objects.move_node(target, other_target, 'left')
+            Category.objects.move_node(target, other_target, "left")
             Category.objects.clear_cache()
 
             message = _('Category "%(name)s" has been moved above "%(other)s".')
-            targets_names = {'name': target.name, 'other': other_target.name}
+            targets_names = {"name": target.name, "other": other_target.name}
             messages.success(request, message % targets_names)

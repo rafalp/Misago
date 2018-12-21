@@ -17,11 +17,11 @@ except AttributeError:
 def populate_posts_reads(apps, schema_editor):
     reads_cutoff = timezone.now() - timedelta(days=READS_CUTOFF)
 
-    Post = apps.get_model('misago_threads', 'Post')
+    Post = apps.get_model("misago_threads", "Post")
 
-    CategoryRead = apps.get_model('misago_readtracker', 'CategoryRead')
-    ThreadRead = apps.get_model('misago_readtracker', 'ThreadRead')
-    PostRead = apps.get_model('misago_readtracker', 'PostRead')
+    CategoryRead = apps.get_model("misago_readtracker", "CategoryRead")
+    ThreadRead = apps.get_model("misago_readtracker", "ThreadRead")
+    PostRead = apps.get_model("misago_readtracker", "PostRead")
 
     migrated_reads = {}
 
@@ -29,8 +29,7 @@ def populate_posts_reads(apps, schema_editor):
     queryset = CategoryRead.objects.select_related().iterator()
     for category_read in queryset:
         posts_queryset = Post.objects.filter(
-            category=category_read.category,
-            posted_on__gte=reads_cutoff,
+            category=category_read.category, posted_on__gte=reads_cutoff
         )
 
         for post in posts_queryset.iterator():
@@ -51,8 +50,7 @@ def populate_posts_reads(apps, schema_editor):
     queryset = ThreadRead.objects.select_related().iterator()
     for thread_read in queryset:
         posts_queryset = Post.objects.filter(
-            thread=thread_read.thread,
-            posted_on__gte=reads_cutoff,
+            thread=thread_read.thread, posted_on__gte=reads_cutoff
         )
 
         for post in posts_queryset.iterator():
@@ -69,16 +67,12 @@ def populate_posts_reads(apps, schema_editor):
 
 
 def noop_reverse(apps, schema_editor):
-    PostRead = apps.get_model('misago_readtracker', 'PostRead')
+    PostRead = apps.get_model("misago_readtracker", "PostRead")
     PostRead.objects.all().delete()
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_readtracker', '0002_postread'),
-    ]
+    dependencies = [("misago_readtracker", "0002_postread")]
 
-    operations = [
-        migrations.RunPython(populate_posts_reads, noop_reverse),
-    ]
+    operations = [migrations.RunPython(populate_posts_reads, noop_reverse)]

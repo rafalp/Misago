@@ -25,7 +25,7 @@ def get_cache_versions_from_db():
 
 def invalidate_cache(cache_name):
     CacheVersion.objects.filter(cache=cache_name).update(
-        version=generate_version_string(),
+        version=generate_version_string()
     )
     cache.delete(CACHE_NAME)
 
@@ -33,6 +33,6 @@ def invalidate_cache(cache_name):
 def invalidate_all_caches():
     for cache_name in get_cache_versions_from_db().keys():
         CacheVersion.objects.filter(cache=cache_name).update(
-            version=generate_version_string(),
+            version=generate_version_string()
         )
     cache.delete(CACHE_NAME)

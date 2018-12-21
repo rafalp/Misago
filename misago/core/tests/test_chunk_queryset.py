@@ -12,7 +12,7 @@ class ChunkQuerysetTest(TestCase):
         # create 100 items
         items_ids = []
         for _ in range(100):
-            obj = CacheVersion.objects.create(cache='nomatter')
+            obj = CacheVersion.objects.create(cache="nomatter")
             items_ids.append(obj.id)
         self.items_ids = list(reversed(items_ids))
 
@@ -26,7 +26,7 @@ class ChunkQuerysetTest(TestCase):
                 chunked_ids.append(obj.id)
 
         self.assertEqual(chunked_ids, self.items_ids)
-            
+
     def test_chunk_shrinking_queryset(self):
         """chunk_queryset utility chunks queryset in delete action"""
         with self.assertNumQueries(121):
@@ -35,4 +35,3 @@ class ChunkQuerysetTest(TestCase):
                 obj.delete()
 
         self.assertEqual(CacheVersion.objects.count(), 0)
-            

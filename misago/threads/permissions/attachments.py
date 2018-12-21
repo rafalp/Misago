@@ -15,24 +15,28 @@ class PermissionsForm(forms.Form):
         label=_("Max attached file size (in kb)"),
         help_text=_("Enter 0 to don't allow uploading end deleting attachments."),
         initial=500,
-        min_value=0
+        min_value=0,
     )
 
     can_download_other_users_attachments = YesNoSwitch(
         label=_("Can download other users attachments")
     )
-    can_delete_other_users_attachments = YesNoSwitch(label=_("Can delete other users attachments"))
+    can_delete_other_users_attachments = YesNoSwitch(
+        label=_("Can delete other users attachments")
+    )
 
 
 class AnonymousPermissionsForm(forms.Form):
     legend = _("Attachments")
 
-    can_download_other_users_attachments = YesNoSwitch(label=_("Can download attachments"))
+    can_download_other_users_attachments = YesNoSwitch(
+        label=_("Can download attachments")
+    )
 
 
 def change_permissions_form(role):
     if isinstance(role, Role):
-        if role.special_role != 'anonymous':
+        if role.special_role != "anonymous":
             return PermissionsForm
         else:
             return AnonymousPermissionsForm
@@ -42,9 +46,9 @@ def change_permissions_form(role):
 
 def build_acl(acl, roles, key_name):
     new_acl = {
-        'max_attachment_size': 0,
-        'can_download_other_users_attachments': False,
-        'can_delete_other_users_attachments': False,
+        "max_attachment_size": 0,
+        "can_download_other_users_attachments": False,
+        "can_delete_other_users_attachments": False,
     }
     new_acl.update(acl)
 
@@ -60,14 +64,12 @@ def build_acl(acl, roles, key_name):
 
 def add_acl_to_attachment(user_acl, attachment):
     if user_acl["is_authenticated"] and user_acl["user_id"] == attachment.uploader_id:
-        attachment.acl.update({
-            'can_delete': True,
-        })
+        attachment.acl.update({"can_delete": True})
     else:
-        user_can_delete = user_acl['can_delete_other_users_attachments']
-        attachment.acl.update({
-            'can_delete': user_acl["is_authenticated"] and user_can_delete,
-        })
+        user_can_delete = user_acl["can_delete_other_users_attachments"]
+        attachment.acl.update(
+            {"can_delete": user_acl["is_authenticated"] and user_can_delete}
+        )
 
 
 def register_with(registry):

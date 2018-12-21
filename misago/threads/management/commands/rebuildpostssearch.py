@@ -25,16 +25,16 @@ class Command(BaseCommand):
         show_progress(self, rebuild_count, posts_to_reindex)
         start_time = time.time()
 
-        queryset = Post.objects.select_related('thread').filter(is_event=False)
+        queryset = Post.objects.select_related("thread").filter(is_event=False)
         for post in chunk_queryset(queryset):
             if post.id == post.thread.first_post_id:
                 post.set_search_document(post.thread.title)
             else:
                 post.set_search_document()
-            post.save(update_fields=['search_document'])
+            post.save(update_fields=["search_document"])
 
             post.update_search_vector()
-            post.save(update_fields=['search_vector'])
+            post.save(update_fields=["search_vector"])
 
             rebuild_count += 1
             show_progress(self, rebuild_count, posts_to_reindex, start_time)

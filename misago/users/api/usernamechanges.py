@@ -20,41 +20,43 @@ UserModel = get_user_model()
 class UsernameChangesViewSetPermission(BasePermission):
     def has_permission(self, request, view):
         try:
-            user_pk = int(request.query_params.get('user'))
+            user_pk = int(request.query_params.get("user"))
         except (ValueError, TypeError):
             user_pk = -1
 
         if user_pk == request.user.pk:
             return True
-        elif not request.user_acl.get('can_see_users_name_history'):
-            raise PermissionDenied(_("You don't have permission to see other users name history."))
+        elif not request.user_acl.get("can_see_users_name_history"):
+            raise PermissionDenied(
+                _("You don't have permission to see other users name history.")
+            )
         return True
 
 
 class UsernameChangesViewSet(viewsets.GenericViewSet):
-    permission_classes = (UsernameChangesViewSetPermission, )
+    permission_classes = (UsernameChangesViewSetPermission,)
     serializer_class = UsernameChangeSerializer
 
     def get_queryset(self):
         queryset = UsernameChange.objects
 
-        if self.request.query_params.get('user'):
-            user_pk = get_int_or_404(self.request.query_params.get('user'))
+        if self.request.query_params.get("user"):
+            user_pk = get_int_or_404(self.request.query_params.get("user"))
             queryset = get_object_or_404(UserModel.objects, pk=user_pk).namechanges
 
-        if self.request.query_params.get('search'):
-            search_phrase = self.request.query_params.get('search').strip()
+        if self.request.query_params.get("search"):
+            search_phrase = self.request.query_params.get("search").strip()
             if search_phrase:
                 queryset = queryset.filter(
-                    Q(changed_by_username__istartswith=search_phrase) | Q(
-                        new_username__istartswith=search_phrase
-                    ) | Q(old_username__istartswith=search_phrase)
+                    Q(changed_by_username__istartswith=search_phrase)
+                    | Q(new_username__istartswith=search_phrase)
+                    | Q(old_username__istartswith=search_phrase)
                 )
 
-        return queryset.select_related('user', 'changed_by').order_by('-id')
+        return queryset.select_related("user", "changed_by").order_by("-id")
 
     def list(self, request):
-        page = get_int_or_404(request.query_params.get('page', 0))
+        page = get_int_or_404(request.query_params.get("page", 0))
         if page == 1:
             page = 0  # api allows explicit first page
 
@@ -63,8 +65,8 @@ class UsernameChangesViewSet(viewsets.GenericViewSet):
         list_page = paginate(queryset, page, 12, 4)
 
         data = pagination_dict(list_page)
-        data.update({
-            'results': UsernameChangeSerializer(list_page.object_list, many=True).data,
-        })
+        data.update(
+            {"results": UsernameChangeSerializer(list_page.object_list, many=True).data}
+        )
 
         return Response(data)

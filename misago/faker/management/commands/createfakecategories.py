@@ -15,24 +15,24 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'categories',
+            "categories",
             help="number of categories to create",
-            nargs='?',
+            nargs="?",
             type=int,
             default=5,
         )
 
         parser.add_argument(
-            'minlevel',
+            "minlevel",
             help="min. level of created categories",
-            nargs='?',
+            nargs="?",
             type=int,
             default=0,
         )
 
     def handle(self, *args, **options):
-        items_to_create = options['categories']
-        min_level = options['minlevel']
+        items_to_create = options["categories"]
+        min_level = options["minlevel"]
 
         categories = Category.objects.all_categories(True)
 
@@ -41,7 +41,7 @@ class Command(BaseCommand):
         categories = categories.filter(level__gte=min_level)
         fake = Factory.create()
 
-        message = 'Creating %s fake categories...\n'
+        message = "Creating %s fake categories...\n"
         self.stdout.write(message % items_to_create)
 
         created_count = 0
@@ -59,15 +59,11 @@ class Command(BaseCommand):
 
             if random.randint(1, 100) > 50:
                 if random.randint(1, 100) > 80:
-                    new_category.description = '\r\n'.join(fake.paragraphs())
+                    new_category.description = "\r\n".join(fake.paragraphs())
                 else:
                     new_category.description = fake.paragraph()
 
-            new_category.insert_at(
-                parent,
-                position='last-child',
-                save=True,
-            )
+            new_category.insert_at(parent, position="last-child", save=True)
 
             copied_acls = []
             for acl in copy_acl_from.category_role_set.all():
@@ -88,6 +84,6 @@ class Command(BaseCommand):
         clear_acl_cache()
 
         total_time = time.time() - start_time
-        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
-        message = '\n\nSuccessfully created %s fake categories in %s'
+        total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
+        message = "\n\nSuccessfully created %s fake categories in %s"
         self.stdout.write(message % (created_count, total_humanized))

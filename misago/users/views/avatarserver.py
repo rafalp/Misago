@@ -18,9 +18,9 @@ def user_avatar(request, pk, size):
 
     found_avatar = user.avatars[0]
     for avatar in user.avatars:
-        if avatar['size'] >= size:
+        if avatar["size"] >= size:
             found_avatar = avatar
-    return redirect(found_avatar['url'])
+    return redirect(found_avatar["url"])
 
 
 def blank_avatar(request):

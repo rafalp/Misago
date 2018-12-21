@@ -21,7 +21,7 @@ class MergeConflictHandler(object):
             self._resolution = self.items[0]
 
     def populate_from_threads(self, threads):
-        raise NotImplementedError('merge handler must define populate_from_threads')
+        raise NotImplementedError("merge handler must define populate_from_threads")
 
     def is_merge_conflict(self):
         return len(self.items) > 1
@@ -44,8 +44,8 @@ class MergeConflictHandler(object):
 
 
 class BestAnswerMergeHandler(MergeConflictHandler):
-    data_name = 'best_answer'
-    
+    data_name = "best_answer"
+
     def populate_from_threads(self, threads):
         for thread in threads:
             if thread.has_best_answer:
@@ -61,7 +61,7 @@ class BestAnswerMergeHandler(MergeConflictHandler):
 
 
 class PollMergeHandler(MergeConflictHandler):
-    data_name = 'poll'
+    data_name = "poll"
 
     def populate_from_threads(self, threads):
         for thread in threads:
@@ -75,7 +75,9 @@ class PollMergeHandler(MergeConflictHandler):
     def get_available_resolutions(self):
         resolutions = [[0, _("Delete all polls")]]
         for poll in self.items:
-            resolutions.append([poll.id, '%s (%s)' % (poll.question, poll.thread.title)])
+            resolutions.append(
+                [poll.id, "%s (%s)" % (poll.question, poll.thread.title)]
+            )
         return resolutions
 
 
@@ -84,10 +86,8 @@ class MergeConflict(object):
     Utility class single point of entry for detecting merge conflicts on different properties
     and validating user resolutions.
     """
-    HANDLERS = (
-        BestAnswerMergeHandler,
-        PollMergeHandler,
-    )
+
+    HANDLERS = (BestAnswerMergeHandler, PollMergeHandler)
 
     def __init__(self, data=None, threads=None):
         self.data = data or {}
@@ -131,7 +131,7 @@ class MergeConflict(object):
     def raise_resolutions_exception(self):
         resolutions = {}
         for conflict in self._conflicts:
-            key = '%ss' % conflict.data_name
+            key = "%ss" % conflict.data_name
             resolutions[key] = conflict.get_available_resolutions()
         if resolutions:
             raise ValidationError(resolutions)

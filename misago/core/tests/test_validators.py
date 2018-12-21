@@ -20,19 +20,19 @@ class ValidateSluggableTests(TestCase):
         validator = validate_sluggable()
 
         with self.assertRaises(ValidationError):
-            validator('!#@! !@#@')
+            validator("!#@! !@#@")
         with self.assertRaises(ValidationError):
             validator(
-                '!#@! !@#@ 1234567890 1234567890 1234567890 1234567890'
-                '1234567890 1234567890 1234567890 1234567890 1234567890'
-                '1234567890 1234567890 1234567890 1234567890 1234567890'
-                '1234567890 1234567890 1234567890 1234567890 1234567890'
-                '1234567890 1234567890 1234567890 1234567890 1234567890'
+                "!#@! !@#@ 1234567890 1234567890 1234567890 1234567890"
+                "1234567890 1234567890 1234567890 1234567890 1234567890"
+                "1234567890 1234567890 1234567890 1234567890 1234567890"
+                "1234567890 1234567890 1234567890 1234567890 1234567890"
+                "1234567890 1234567890 1234567890 1234567890 1234567890"
             )
 
     def test_valid_input_validation(self):
         """valid values don't raise errors"""
         validator = validate_sluggable()
 
-        validator('Bob')
-        validator('Lorem ipsum123!')
+        validator("Bob")
+        validator("Lorem ipsum123!")

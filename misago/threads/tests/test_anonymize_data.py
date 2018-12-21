@@ -11,7 +11,12 @@ from misago.threads import testutils
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
 from misago.threads.participants import (
-    add_participant, change_owner, make_participants_aware, remove_participant, set_owner)
+    add_participant,
+    change_owner,
+    make_participants_aware,
+    remove_participant,
+    set_owner,
+)
 
 
 UserModel = get_user_model()
@@ -19,7 +24,9 @@ UserModel = get_user_model()
 
 def get_mock_user():
     seed = UserModel.objects.count() + 1
-    return UserModel.objects.create_user('bob%s' % seed, 'user%s@test.com' % seed, 'Pass.123')
+    return UserModel.objects.create_user(
+        "bob%s" % seed, "user%s@test.com" % seed, "Pass.123"
+    )
 
 
 class AnonymizeEventsTests(AuthenticatedUserTestCase):
@@ -27,13 +34,13 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         super().setUp()
         self.factory = RequestFactory()
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(category)
 
     def get_request(self, user=None):
-        request = self.factory.get('/customer/details')
+        request = self.factory.get("/customer/details")
         request.user = user or self.user
-        request.user_ip = '127.0.0.1'
+        request.user_ip = "127.0.0.1"
         request.cache_versions = get_cache_versions()
         request.settings = DynamicSettings(request.cache_versions)
         request.include_frontend_context = False
@@ -52,14 +59,17 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='changed_owner')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="changed_owner")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
+        )
 
     def test_anonymize_added_participant_event(self):
         """added participant event is anonymized by user.anonymize_data"""
@@ -72,14 +82,17 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='added_participant')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="added_participant")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
+        )
 
     def test_anonymize_owner_left_event(self):
         """owner left event is anonymized by user.anonymize_data"""
@@ -95,14 +108,17 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='owner_left')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="owner_left")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
+        )
 
     def test_anonymize_removed_owner_event(self):
         """removed owner event is anonymized by user.anonymize_data"""
@@ -112,20 +128,23 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         set_owner(self.thread, user)
         make_participants_aware(user, self.thread)
         add_participant(request, self.thread, self.user)
-        
+
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='removed_owner')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="removed_owner")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
+        )
 
     def test_anonymize_participant_left_event(self):
         """participant left event is anonymized by user.anonymize_data"""
@@ -141,15 +160,18 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='participant_left')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="participant_left")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
-        
+        )
+
     def test_anonymize_removed_participant_event(self):
         """removed participant event is anonymized by user.anonymize_data"""
         user = get_mock_user()
@@ -164,14 +186,17 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
 
         user.anonymize_data()
 
-        event = Post.objects.get(event_type='removed_participant')
-        self.assertEqual(event.event_context, {
-            'user': {
-                'id': None,
-                'username': user.username,
-                'url': reverse('misago:index'),
+        event = Post.objects.get(event_type="removed_participant")
+        self.assertEqual(
+            event.event_context,
+            {
+                "user": {
+                    "id": None,
+                    "username": user.username,
+                    "url": reverse("misago:index"),
+                }
             },
-        })
+        )
 
 
 class AnonymizeLikesTests(AuthenticatedUserTestCase):
@@ -180,18 +205,18 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         self.factory = RequestFactory()
 
     def get_request(self, user=None):
-        request = self.factory.get('/customer/details')
+        request = self.factory.get("/customer/details")
         request.user = user or self.user
-        request.user_ip = '127.0.0.1'
+        request.user_ip = "127.0.0.1"
 
         return request
 
     def test_anonymize_user_likes(self):
         """post's last like is anonymized by user.anonymize_data"""
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         thread = testutils.post_thread(category)
         post = testutils.reply_thread(thread)
-        post.acl = {'can_like': True}
+        post.acl = {"can_like": True}
 
         user = get_mock_user()
 
@@ -201,16 +226,13 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         user.anonymize_data()
 
         last_likes = Post.objects.get(pk=post.pk).last_likes
-        self.assertEqual(last_likes, [
-            {
-                'id': None,
-                'username': user.username,
-            },
-            {
-                'id': self.user.id,
-                'username': self.user.username,
-            },
-        ])
+        self.assertEqual(
+            last_likes,
+            [
+                {"id": None, "username": user.username},
+                {"id": self.user.id, "username": self.user.username},
+            ],
+        )
 
 
 class AnonymizePostsTests(AuthenticatedUserTestCase):
@@ -219,15 +241,15 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
         self.factory = RequestFactory()
 
     def get_request(self, user=None):
-        request = self.factory.get('/customer/details')
+        request = self.factory.get("/customer/details")
         request.user = user or self.user
-        request.user_ip = '127.0.0.1'
+        request.user_ip = "127.0.0.1"
 
         return request
 
     def test_anonymize_user_posts(self):
         """post is anonymized by user.anonymize_data"""
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         thread = testutils.post_thread(category)
 
         user = get_mock_user()

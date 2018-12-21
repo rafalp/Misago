@@ -12,14 +12,14 @@ from .decorators import authenticated_only
 
 
 __all__ = [
-    'allow_browse_users_list',
-    'can_browse_users_list',
-    'allow_follow_user',
-    'can_follow_user',
-    'allow_block_user',
-    'can_block_user',
-    'allow_see_ban_details',
-    'can_see_ban_details',
+    "allow_browse_users_list",
+    "can_browse_users_list",
+    "allow_follow_user",
+    "can_follow_user",
+    "allow_block_user",
+    "can_block_user",
+    "allow_see_ban_details",
+    "can_see_ban_details",
 ]
 
 CAN_BROWSE_USERS_LIST = YesNoSwitch(label=_("Can browse users list"), initial=1)
@@ -27,7 +27,9 @@ CAN_SEARCH_USERS = YesNoSwitch(label=_("Can search user profiles"), initial=1)
 CAN_SEE_USER_NAME_HISTORY = YesNoSwitch(label=_("Can see other members name history"))
 CAN_SEE_DETAILS = YesNoSwitch(
     label=_("Can see members bans details"),
-    help_text=_("Allows users with this permission to see user and staff ban messages.")
+    help_text=_(
+        "Allows users with this permission to see user and staff ban messages."
+    ),
 )
 
 
@@ -49,12 +51,14 @@ class PermissionsForm(LimitedPermissionsForm):
     can_see_ban_details = CAN_SEE_DETAILS
     can_see_users_emails = YesNoSwitch(label=_("Can see members e-mails"))
     can_see_users_ips = YesNoSwitch(label=_("Can see members IPs"))
-    can_see_hidden_users = YesNoSwitch(label=_("Can see members that hide their presence"))
+    can_see_hidden_users = YesNoSwitch(
+        label=_("Can see members that hide their presence")
+    )
 
 
 def change_permissions_form(role):
     if isinstance(role, Role):
-        if role.special_role == 'anonymous':
+        if role.special_role == "anonymous":
             return LimitedPermissionsForm
         else:
             return PermissionsForm
@@ -64,15 +68,15 @@ def change_permissions_form(role):
 
 def build_acl(acl, roles, key_name):
     new_acl = {
-        'can_browse_users_list': 0,
-        'can_search_users': 0,
-        'can_follow_users': 0,
-        'can_be_blocked': 1,
-        'can_see_users_name_history': 0,
-        'can_see_ban_details': 0,
-        'can_see_users_emails': 0,
-        'can_see_users_ips': 0,
-        'can_see_hidden_users': 0,
+        "can_browse_users_list": 0,
+        "can_search_users": 0,
+        "can_follow_users": 0,
+        "can_be_blocked": 1,
+        "can_see_users_name_history": 0,
+        "can_see_ban_details": 0,
+        "can_see_users_emails": 0,
+        "can_see_users_ips": 0,
+        "can_see_hidden_users": 0,
     }
     new_acl.update(acl)
 
@@ -93,15 +97,15 @@ def build_acl(acl, roles, key_name):
 
 
 def add_acl_to_user(user_acl, target):
-    target.acl['can_have_attitude'] = False
-    target.acl['can_follow'] = can_follow_user(user_acl, target)
-    target.acl['can_block'] = can_block_user(user_acl, target)
+    target.acl["can_have_attitude"] = False
+    target.acl["can_follow"] = can_follow_user(user_acl, target)
+    target.acl["can_block"] = can_block_user(user_acl, target)
 
-    mod_permissions = ('can_have_attitude', 'can_follow', 'can_block', )
+    mod_permissions = ("can_have_attitude", "can_follow", "can_block")
 
     for permission in mod_permissions:
         if target.acl[permission]:
-            target.acl['can_have_attitude'] = True
+            target.acl["can_have_attitude"] = True
             break
 
 
@@ -110,7 +114,7 @@ def register_with(registry):
 
 
 def allow_browse_users_list(user_acl):
-    if not user_acl['can_browse_users_list']:
+    if not user_acl["can_browse_users_list"]:
         raise PermissionDenied(_("You can't browse users list."))
 
 
@@ -119,7 +123,7 @@ can_browse_users_list = return_boolean(allow_browse_users_list)
 
 @authenticated_only
 def allow_follow_user(user_acl, target):
-    if not user_acl['can_follow_users']:
+    if not user_acl["can_follow_users"]:
         raise PermissionDenied(_("You can't follow other users."))
     if user_acl["user_id"] == target.id:
         raise PermissionDenied(_("You can't add yourself to followed."))
@@ -142,7 +146,7 @@ can_block_user = return_boolean(allow_block_user)
 
 @authenticated_only
 def allow_see_ban_details(user_acl, target):
-    if not user_acl['can_see_ban_details']:
+    if not user_acl["can_see_ban_details"]:
         raise PermissionDenied(_("You can't see users bans details."))
 
 

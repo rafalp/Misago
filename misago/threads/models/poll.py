@@ -8,19 +8,10 @@ from django.utils import timezone
 
 
 class Poll(models.Model):
-    category = models.ForeignKey(
-        'misago_categories.Category',
-        on_delete=models.CASCADE,
-    )
-    thread = models.OneToOneField(
-        'misago_threads.Thread',
-        on_delete=models.CASCADE,
-    )
+    category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
+    thread = models.OneToOneField("misago_threads.Thread", on_delete=models.CASCADE)
     poster = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
     )
     poster_name = models.CharField(max_length=255)
     poster_slug = models.CharField(max_length=255)
@@ -69,19 +60,19 @@ class Poll(models.Model):
     def make_choices_votes_aware(self, user):
         if user.is_anonymous:
             for choice in self.choices:
-                choice['selected'] = False
+                choice["selected"] = False
             return
 
-        queryset = self.pollvote_set.filter(voter=user).values('choice_hash')
-        user_votes = [v['choice_hash'] for v in queryset]
+        queryset = self.pollvote_set.filter(voter=user).values("choice_hash")
+        user_votes = [v["choice_hash"] for v in queryset]
 
         for choice in self.choices:
-            choice['selected'] = choice['hash'] in user_votes
+            choice["selected"] = choice["hash"] in user_votes
 
     @property
     def has_selected_choices(self):
         for choice in self.choices:
-            if choice.get('selected'):
+            if choice.get("selected"):
                 return True
         return False
 
@@ -89,15 +80,17 @@ class Poll(models.Model):
     def view_choices(self):
         view_choices = []
         for choice in self.choices:
-            if choice['votes'] and self.votes:
-                proc = int(ceil(choice['votes'] * 100 / self.votes))
+            if choice["votes"] and self.votes:
+                proc = int(ceil(choice["votes"] * 100 / self.votes))
             else:
                 proc = 0
 
-            view_choices.append({
-                'label': choice['label'],
-                'votes': choice['votes'],
-                'selected': choice['selected'],
-                'proc': proc,
-            })
+            view_choices.append(
+                {
+                    "label": choice["label"],
+                    "votes": choice["votes"],
+                    "selected": choice["selected"],
+                    "proc": proc,
+                }
+            )
         return view_choices

@@ -6,9 +6,7 @@ from misago.conf import settings
 
 
 def get_cutoff_date(user=None):
-    cutoff_date = timezone.now() - timedelta(
-        days=settings.MISAGO_READTRACKER_CUTOFF,
-    )
+    cutoff_date = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
 
     if user and user.is_authenticated and user.joined_on > cutoff_date:
         return user.joined_on

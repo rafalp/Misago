@@ -10,14 +10,14 @@ from .models import Role
 
 
 class RoleAdmin(generic.AdminBaseMixin):
-    root_link = 'misago:admin:permissions:users:index'
+    root_link = "misago:admin:permissions:users:index"
     model = Role
-    templates_dir = 'misago/admin/roles'
+    templates_dir = "misago/admin/roles"
     message_404 = _("Requested role does not exist.")
 
 
 class RolesList(RoleAdmin, generic.ListView):
-    ordering = (('name', None), )
+    ordering = (("name", None),)
 
 
 class RoleFormMixin(object):
@@ -26,7 +26,7 @@ class RoleFormMixin(object):
 
         perms_forms = get_permissions_forms(target)
 
-        if request.method == 'POST':
+        if request.method == "POST":
             perms_forms = get_permissions_forms(target, request.POST)
             valid_forms = 0
             for permissions_form in perms_forms:
@@ -43,9 +43,9 @@ class RoleFormMixin(object):
                 form.instance.permissions = new_permissions
                 form.instance.save()
 
-                messages.success(request, self.message_submit % {'name': target.name})
+                messages.success(request, self.message_submit % {"name": target.name})
 
-                if 'stay' in request.POST:
+                if "stay" in request.POST:
                     return redirect(request.path)
                 else:
                     return redirect(self.root_link)
@@ -53,11 +53,7 @@ class RoleFormMixin(object):
                 form.add_error(None, _("Form contains errors."))
 
         return self.render(
-            request, {
-                'form': form,
-                'target': target,
-                'perms_forms': perms_forms,
-            }
+            request, {"form": form, "target": target, "perms_forms": perms_forms}
         )
 
 
@@ -73,15 +69,15 @@ class DeleteRole(RoleAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.special_role:
             message = _('Role "%(name)s" is special role and can\'t be deleted.')
-            return message % {'name': target.name}
+            return message % {"name": target.name}
 
     def button_action(self, request, target):
         target.delete()
         message = _('Role "%(name)s" has been deleted.')
-        messages.success(request, message % {'name': target.name})
+        messages.success(request, message % {"name": target.name})
 
 
 class RoleUsers(RoleAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
-        redirect_url = reverse('misago:admin:users:accounts:index')
-        return redirect('%s?role=%s' % (redirect_url, target.pk))
+        redirect_url = reverse("misago:admin:users:accounts:index")
+        return redirect("%s?role=%s" % (redirect_url, target.pk))

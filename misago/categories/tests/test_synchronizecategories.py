@@ -30,4 +30,4 @@ class SynchronizeCategoriesTests(TestCase):
         self.assertEqual(category.posts, 60)
 
         command_output = out.getvalue().splitlines()[-1].strip()
-        self.assertTrue(command_output.startswith('Synchronized 3 categories in'))
+        self.assertTrue(command_output.startswith("Synchronized 3 categories in"))

@@ -6,19 +6,19 @@ from .exceptions import ModerationError
 
 
 __all__ = [
-    'approve_post',
-    'protect_post',
-    'unprotect_post',
-    'unhide_post',
-    'hide_post',
-    'delete_post',
+    "approve_post",
+    "protect_post",
+    "unprotect_post",
+    "unhide_post",
+    "hide_post",
+    "delete_post",
 ]
 
 
 def approve_post(user, post):
     if post.is_unapproved:
         post.is_unapproved = False
-        post.save(update_fields=['is_unapproved'])
+        post.save(update_fields=["is_unapproved"])
         return True
     else:
         return False
@@ -27,10 +27,10 @@ def approve_post(user, post):
 def protect_post(user, post):
     if not post.is_protected:
         post.is_protected = True
-        post.save(update_fields=['is_protected'])
+        post.save(update_fields=["is_protected"])
         if post.is_best_answer:
             post.thread.best_answer_is_protected = True
-            post.thread.save(update_fields=['best_answer_is_protected'])
+            post.thread.save(update_fields=["best_answer_is_protected"])
         return True
     else:
         return False
@@ -39,10 +39,10 @@ def protect_post(user, post):
 def unprotect_post(user, post):
     if post.is_protected:
         post.is_protected = False
-        post.save(update_fields=['is_protected'])
+        post.save(update_fields=["is_protected"])
         if post.is_best_answer:
             post.thread.best_answer_is_protected = False
-            post.thread.save(update_fields=['best_answer_is_protected'])
+            post.thread.save(update_fields=["best_answer_is_protected"])
         return True
     else:
         return False
@@ -50,11 +50,13 @@ def unprotect_post(user, post):
 
 def unhide_post(user, post):
     if post.is_first_post:
-        raise ModerationError(_("You can't make original post visible without revealing thread."))
+        raise ModerationError(
+            _("You can't make original post visible without revealing thread.")
+        )
 
     if post.is_hidden:
         post.is_hidden = False
-        post.save(update_fields=['is_hidden'])
+        post.save(update_fields=["is_hidden"])
         return True
     else:
         return False
@@ -72,11 +74,11 @@ def hide_post(user, post):
         post.hidden_on = timezone.now()
         post.save(
             update_fields=[
-                'is_hidden',
-                'hidden_by',
-                'hidden_by_name',
-                'hidden_by_slug',
-                'hidden_on',
+                "is_hidden",
+                "hidden_by",
+                "hidden_by_name",
+                "hidden_by_slug",
+                "hidden_on",
             ]
         )
         return True
@@ -87,7 +89,9 @@ def hide_post(user, post):
 @transaction.atomic
 def delete_post(user, post):
     if post.is_first_post:
-        raise ModerationError(_("You can't delete original post without deleting thread."))
+        raise ModerationError(
+            _("You can't delete original post without deleting thread.")
+        )
 
     post.delete()
     return True

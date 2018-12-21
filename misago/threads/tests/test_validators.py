@@ -28,7 +28,7 @@ class ValidatePostLengthTests(TestCase):
         """too long post is rejected"""
         settings = Mock(post_length_min=1, post_length_max=2)
         with self.assertRaises(ValidationError):
-            post = 'a' * settings.post_length_max
+            post = "a" * settings.post_length_max
             validate_post_length(settings, "abc")
 
 
@@ -37,11 +37,7 @@ class ValidateThreadTitleTests(TestCase):
         """validate_thread_title is ok with valid titles"""
         settings = Mock(thread_title_length_min=1, thread_title_length_max=50)
 
-        VALID_TITLES = [
-            'Lorem ipsum dolor met',
-            '123 456 789 112'
-            'Ugabugagagagagaga',
-        ]
+        VALID_TITLES = ["Lorem ipsum dolor met", "123 456 789 112" "Ugabugagagagagaga"]
 
         for title in VALID_TITLES:
             validate_thread_title(settings, title)

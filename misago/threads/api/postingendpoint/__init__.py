@@ -26,13 +26,15 @@ class PostingEndpoint(object):
 
         # build kwargs dict for passing to middlewares
         self.kwargs = kwargs
-        self.kwargs.update({
-            'mode': mode,
-            'request': request,
-            'settings': request.settings,
-            'user': request.user,
-            'user_acl': request.user_acl,
-        })
+        self.kwargs.update(
+            {
+                "mode": mode,
+                "request": request,
+                "settings": request.settings,
+                "user": request.user,
+                "user_acl": request.user_acl,
+            }
+        )
 
         self.__dict__.update(kwargs)
 
@@ -61,10 +63,7 @@ class PostingEndpoint(object):
 
     def _load_middlewares(self):
         kwargs = self.kwargs.copy()
-        kwargs.update({
-            'datetime': self.datetime,
-            'parsing_result': {},
-        })
+        kwargs.update({"datetime": self.datetime, "parsing_result": {}})
 
         middlewares = []
         for middleware in settings.MISAGO_POSTING_MIDDLEWARES:
@@ -75,7 +74,9 @@ class PostingEndpoint(object):
                 if middleware_obj.use_this_middleware():
                     middlewares.append((middleware, middleware_obj))
             except PostingInterrupt:
-                raise ValueError("Posting process can only be interrupted during pre_save phase")
+                raise ValueError(
+                    "Posting process can only be interrupted during pre_save phase"
+                )
 
         return middlewares
 
@@ -92,7 +93,9 @@ class PostingEndpoint(object):
                     serializers[middleware] = serializer
             return serializers
         except PostingInterrupt:
-            raise ValueError("Posting process can only be interrupted during pre_save phase")
+            raise ValueError(
+                "Posting process can only be interrupted during pre_save phase"
+            )
 
     def is_valid(self):
         """validate data against all serializers"""

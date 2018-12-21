@@ -3,7 +3,7 @@ from rest_framework import serializers
 from misago.threads.models import ThreadParticipant
 
 
-__all__ = ['ThreadParticipantSerializer']
+__all__ = ["ThreadParticipantSerializer"]
 
 
 class ThreadParticipantSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class ThreadParticipantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ThreadParticipant
-        fields = ['id', 'username', 'avatars', 'url', 'is_owner']
+        fields = ["id", "username", "avatars", "url", "is_owner"]
 
     def get_id(self, obj):
         return obj.user.id

@@ -11,22 +11,14 @@ def populate_cache_version(apps, _):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0016_cache_version'),
-    ]
+    dependencies = [("misago_users", "0016_cache_version")]
 
     operations = [
-        migrations.RemoveField(
-            model_name='bancache',
-            name='bans_version',
-        ),
-        migrations.RunPython(
-            populate_cache_version,
-            migrations.RunPython.noop,
-        ),
+        migrations.RemoveField(model_name="bancache", name="bans_version"),
+        migrations.RunPython(populate_cache_version, migrations.RunPython.noop),
         migrations.AddField(
-            model_name='bancache',
-            name='cache_version',
+            model_name="bancache",
+            name="cache_version",
             field=models.CharField(max_length=8),
         ),
     ]

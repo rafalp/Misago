@@ -1,1 +1,1 @@
-default_app_config = 'misago.faker.apps.MisagoFakerConfig'
+default_app_config = "misago.faker.apps.MisagoFakerConfig"

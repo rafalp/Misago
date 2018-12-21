@@ -4,14 +4,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_threads', '0006_redo_partial_indexes'),
-    ]
+    dependencies = [("misago_threads", "0006_redo_partial_indexes")]
 
     operations = [
         migrations.AlterField(
-            model_name='post',
-            name='posted_on',
+            model_name="post",
+            name="posted_on",
             field=models.DateTimeField(db_index=True),
-        ),
+        )
     ]

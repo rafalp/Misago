@@ -5,9 +5,7 @@ from misago.cache.versions import get_cache_versions
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.test import override_dynamic_settings
 
-from misago.users.setupnewuser import (
-    set_default_subscription_options, setup_new_user
-)
+from misago.users.setupnewuser import set_default_subscription_options, setup_new_user
 
 User = get_user_model()
 
@@ -56,7 +54,9 @@ class NewUserSetupTests(TestCase):
             assert user.subscribe_to_replied_threads == User.SUBSCRIPTION_ALL
 
     def test_if_user_ip_is_available_audit_trail_is_created_for_user(self):
-        user = User.objects.create_user("User", "test@example.com", joined_from_ip="0.0.0.0")
+        user = User.objects.create_user(
+            "User", "test@example.com", joined_from_ip="0.0.0.0"
+        )
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
         setup_new_user(settings, user)

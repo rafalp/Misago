@@ -46,7 +46,7 @@ class PruneCategoriesTests(TestCase):
             category.thread_set.get(id=thread.id)
 
         command_output = out.getvalue().strip()
-        self.assertEqual(command_output, 'Categories were pruned')
+        self.assertEqual(command_output, "Categories were pruned")
 
     def test_category_prune_by_last_reply(self):
         """command prunes category content based on last reply date"""
@@ -82,18 +82,13 @@ class PruneCategoriesTests(TestCase):
             category.thread_set.get(id=thread.id)
 
         command_output = out.getvalue().strip()
-        self.assertEqual(command_output, 'Categories were pruned')
+        self.assertEqual(command_output, "Categories were pruned")
 
     def test_category_archive_by_start_date(self):
         """command archives category content based on start date"""
         category = Category.objects.all_categories()[:1][0]
         archive = Category.objects.create(
-            lft=7,
-            rght=8,
-            tree_id=2,
-            level=0,
-            name='Archive',
-            slug='archive',
+            lft=7, rght=8, tree_id=2, level=0, name="Archive", slug="archive"
         )
 
         category.prune_started_after = 20
@@ -132,18 +127,13 @@ class PruneCategoriesTests(TestCase):
             category.thread_set.get(id=thread.id)
 
         command_output = out.getvalue().strip()
-        self.assertEqual(command_output, 'Categories were pruned')
+        self.assertEqual(command_output, "Categories were pruned")
 
     def test_category_archive_by_last_reply(self):
         """command archives category content based on last reply date"""
         category = Category.objects.all_categories()[:1][0]
         archive = Category.objects.create(
-            lft=7,
-            rght=8,
-            tree_id=2,
-            level=0,
-            name='Archive',
-            slug='archive',
+            lft=7, rght=8, tree_id=2, level=0, name="Archive", slug="archive"
         )
 
         category.prune_replied_after = 20
@@ -181,4 +171,4 @@ class PruneCategoriesTests(TestCase):
             category.thread_set.get(id=thread.id)
 
         command_output = out.getvalue().strip()
-        self.assertEqual(command_output, 'Categories were pruned')
+        self.assertEqual(command_output, "Categories were pruned")

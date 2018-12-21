@@ -11,37 +11,31 @@ from .utils import get_exception_message, is_request_to_misago
 
 
 def _ajax_error(code, exception=None, default_message=None):
-    return JsonResponse({
-        'detail': get_exception_message(exception, default_message),
-    }, status=code)
+    return JsonResponse(
+        {"detail": get_exception_message(exception, default_message)}, status=code
+    )
 
 
 @admin_error_page
 def _error_page(request, code, exception=None, default_message=None):
-    request.frontend_context.update({
-        'CURRENT_LINK': 'misago:error-%s' % code,
-    })
+    request.frontend_context.update({"CURRENT_LINK": "misago:error-%s" % code})
 
     return render(
-        request, 'misago/errorpages/%s.html' % code, {
-            'message': get_exception_message(exception, default_message),
-        }, status=code
+        request,
+        "misago/errorpages/%s.html" % code,
+        {"message": get_exception_message(exception, default_message)},
+        status=code,
     )
 
 
 def banned(request, exception):
     ban = exception.ban
 
-    request.frontend_context.update({
-        'MESSAGE': ban.get_serialized_message(),
-        'CURRENT_LINK': 'misago:error-banned',
-    })
-
-    return render(
-        request, 'misago/errorpages/banned.html', {
-            'ban': ban,
-        }, status=403
+    request.frontend_context.update(
+        {"MESSAGE": ban.get_serialized_message(), "CURRENT_LINK": "misago:error-banned"}
     )
+
+    return render(request, "misago/errorpages/banned.html", {"ban": ban}, status=403)
 
 
 def permission_denied(request, exception):
@@ -83,9 +77,9 @@ def social_auth_failed(request, exception):
             "because currently it's the only way to sign in to your account."
         )
     elif backend_name:
-        message = _("A problem was encountered when signing you in using %(backend)s.") % {
-            'backend': backend_name
-        }
+        message = _(
+            "A problem was encountered when signing you in using %(backend)s."
+        ) % {"backend": backend_name}
 
         if isinstance(exception, social_exceptions.AuthCanceled):
             help_text = _("The sign in process has been canceled by user.")
@@ -98,12 +92,17 @@ def social_auth_failed(request, exception):
     else:
         message = _("Unexpected problem has been encountered during sign in process.")
 
-    return render(request, 'misago/errorpages/social.html', {
-        'backend_name': backend_name,
-        'ban': ban,
-        'message': message,
-        'help_text': help_text,
-    }, status=403)
+    return render(
+        request,
+        "misago/errorpages/social.html",
+        {
+            "backend_name": backend_name,
+            "ban": ban,
+            "message": message,
+            "help_text": help_text,
+        },
+        status=403,
+    )
 
 
 @admin_csrf_failure
@@ -111,7 +110,7 @@ def csrf_failure(request, reason=""):
     if request.is_ajax():
         return _ajax_error(403, _("Request authentication is invalid."))
     else:
-        response = render(request, 'misago/errorpages/csrf_failure.html')
+        response = render(request, "misago/errorpages/csrf_failure.html")
         response.status_code = 403
         return response
 

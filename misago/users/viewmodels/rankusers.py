@@ -7,10 +7,8 @@ from misago.users.serializers import UserCardSerializer
 class RankUsers(object):
     def __init__(self, request, rank, page=0):
         queryset = rank.user_set.select_related(
-            'rank',
-            'ban_cache',
-            'online_tracker',
-        ).order_by('slug')
+            "rank", "ban_cache", "online_tracker"
+        ).order_by("slug")
 
         if not request.user.is_staff:
             queryset = queryset.filter(is_active=True)
@@ -22,12 +20,9 @@ class RankUsers(object):
         self.paginator = pagination_dict(list_page)
 
     def get_frontend_context(self):
-        context = {'results': UserCardSerializer(self.users, many=True).data}
+        context = {"results": UserCardSerializer(self.users, many=True).data}
         context.update(self.paginator)
         return context
 
     def get_template_context(self):
-        return {
-            'users': self.users,
-            'paginator': self.paginator,
-        }
+        return {"users": self.users, "paginator": self.paginator}

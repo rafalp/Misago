@@ -17,10 +17,13 @@ class EmailNotificationMiddleware(PostingMiddleware):
         return self.mode == PostingEndpoint.REPLY
 
     def post_save(self, serializer):
-        queryset = self.thread.subscription_set.filter(
-            send_email=True,
-            last_read_on__gte=self.previous_last_post_on,
-        ).exclude(user=self.user).select_related('user')
+        queryset = (
+            self.thread.subscription_set.filter(
+                send_email=True, last_read_on__gte=self.previous_last_post_on
+            )
+            .exclude(user=self.user)
+            .select_related("user")
+        )
 
         notifications = []
         for subscription in queryset.iterator():
@@ -40,14 +43,16 @@ class EmailNotificationMiddleware(PostingMiddleware):
         if subscriber.id == self.thread.starter_id:
             subject = _('%(user)s has replied to your thread "%(thread)s"')
         else:
-            subject = _('%(user)s has replied to thread "%(thread)s" that you are watching')
+            subject = _(
+                '%(user)s has replied to thread "%(thread)s" that you are watching'
+            )
 
-        subject_formats = {'user': self.user.username, 'thread': self.thread.title}
+        subject_formats = {"user": self.user.username, "thread": self.thread.title}
 
         return build_mail(
             subscriber,
             subject % subject_formats,
-            'misago/emails/thread/reply',
+            "misago/emails/thread/reply",
             sender=self.user,
             context={
                 "settings": self.request.settings,

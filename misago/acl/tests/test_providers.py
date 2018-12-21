@@ -33,7 +33,7 @@ def test_loading_providers_second_time_raises_runtime_error():
 def test_container_returns_list_of_providers():
     providers = PermissionProviders()
     providers.load()
-    
+
     providers_setting = settings.MISAGO_ACL_EXTENSIONS
     assert len(providers.list()) == len(providers_setting)
 
@@ -41,7 +41,7 @@ def test_container_returns_list_of_providers():
 def test_container_returns_dict_of_providers():
     providers = PermissionProviders()
     providers.load()
-    
+
     providers_setting = settings.MISAGO_ACL_EXTENSIONS
     assert len(providers.dict()) == len(providers_setting)
 
@@ -62,10 +62,8 @@ def test_getter_returns_registered_type_annotator():
     class TestType(object):
         pass
 
-
     def test_annotator():
         pass
-    
 
     providers = PermissionProviders()
     providers.acl_annotator(TestType, test_annotator)
@@ -84,7 +82,6 @@ def test_container_returns_list_of_user_acl_serializers():
 def test_getter_returns_registered_user_acl_serializer():
     def test_user_acl_serializer():
         pass
-
 
     providers = PermissionProviders()
     providers.user_acl_serializer(test_user_acl_serializer)

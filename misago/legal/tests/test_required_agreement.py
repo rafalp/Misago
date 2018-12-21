@@ -8,7 +8,7 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.test_link = reverse('misago:index')
+        self.test_link = reverse("misago:index")
 
         Agreement.objects.invalidate_cache()
 
@@ -17,9 +17,7 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
 
     def test_tos_link(self):
         Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            link='https://test-agreement.com',
-            is_active=True,
+            type=Agreement.TYPE_TOS, link="https://test-agreement.com", is_active=True
         )
 
         response = self.client.get(self.test_link)
@@ -27,9 +25,7 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
 
     def test_tos_text(self):
         Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            text='Lorem ipsum',
-            is_active=True,
+            type=Agreement.TYPE_TOS, text="Lorem ipsum", is_active=True
         )
 
         response = self.client.get(self.test_link)
@@ -38,8 +34,8 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
     def test_tos_text_and_link(self):
         Agreement.objects.create(
             type=Agreement.TYPE_TOS,
-            link='https://test-agreement.com',
-            text='Lorem ipsum',
+            link="https://test-agreement.com",
+            text="Lorem ipsum",
             is_active=True,
         )
 
@@ -49,7 +45,7 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
     def test_privacy_link(self):
         Agreement.objects.create(
             type=Agreement.TYPE_PRIVACY,
-            link='https://test-agreement.com',
+            link="https://test-agreement.com",
             is_active=True,
         )
 
@@ -58,9 +54,7 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
 
     def test_privacy_text(self):
         Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY,
-            text='Lorem ipsum',
-            is_active=True,
+            type=Agreement.TYPE_PRIVACY, text="Lorem ipsum", is_active=True
         )
 
         response = self.client.get(self.test_link)
@@ -69,8 +63,8 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
     def test_privacy_text_and_link(self):
         Agreement.objects.create(
             type=Agreement.TYPE_PRIVACY,
-            link='https://test-agreement.com',
-            text='Lorem ipsum',
+            link="https://test-agreement.com",
+            text="Lorem ipsum",
             is_active=True,
         )
 
@@ -80,15 +74,15 @@ class RequiredAgreementTests(AuthenticatedUserTestCase):
     def test_both(self):
         Agreement.objects.create(
             type=Agreement.TYPE_TOS,
-            link='https://test-agreement.com',
-            text='Lorem ipsum',
+            link="https://test-agreement.com",
+            text="Lorem ipsum",
             is_active=True,
         )
 
         Agreement.objects.create(
             type=Agreement.TYPE_PRIVACY,
-            link='https://test-agreement.com',
-            text='Lorem ipsum',
+            link="https://test-agreement.com",
+            text="Lorem ipsum",
             is_active=True,
         )
 

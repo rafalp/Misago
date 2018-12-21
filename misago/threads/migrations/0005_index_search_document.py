@@ -6,14 +6,14 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_threads', '0004_update_settings'),
-    ]
+    dependencies = [("misago_threads", "0004_update_settings")]
 
     operations = [
         BtreeGinExtension(),
         migrations.AddIndex(
-            model_name='post',
-            index=django.contrib.postgres.indexes.GinIndex(fields=['search_vector'], name='misago_thre_search__b472a2_gin'),
+            model_name="post",
+            index=django.contrib.postgres.indexes.GinIndex(
+                fields=["search_vector"], name="misago_thre_search__b472a2_gin"
+            ),
         ),
     ]

@@ -22,10 +22,7 @@ class SubscriptionsTests(TestCase):
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):
-        return testutils.post_thread(
-            category=self.category,
-            started_on=datetime,
-        )
+        return testutils.post_thread(category=self.category, started_on=datetime)
 
     def test_anon_subscription(self):
         """make single thread sub aware for anon"""

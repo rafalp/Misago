@@ -11,13 +11,13 @@ def absoluteurl(url_or_name, *args, **kwargs):
     if not settings.MISAGO_ADDRESS:
         return None
 
-    absolute_url_prefix = settings.MISAGO_ADDRESS.rstrip('/')
+    absolute_url_prefix = settings.MISAGO_ADDRESS.rstrip("/")
 
     try:
         url_or_name = reverse(url_or_name, args=args, kwargs=kwargs)
     except NoReverseMatch:
         # don't use URLValidator because its too explicit
-        if not url_or_name.startswith('/'):
+        if not url_or_name.startswith("/"):
             return url_or_name
-    
-    return '%s%s' % (absolute_url_prefix, url_or_name)
+
+    return "%s%s" % (absolute_url_prefix, url_or_name)

@@ -24,23 +24,24 @@ def upload_to(instance, filename):
         if filename_lowered.endswith(extension):
             break
 
-    filename_clean = '.'.join((slugify(filename[:(len(extension) + 1) * -1])[:16], extension))
+    filename_clean = ".".join(
+        (slugify(filename[: (len(extension) + 1) * -1])[:16], extension)
+    )
 
-    return os.path.join('attachments', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    return os.path.join(
+        "attachments", spread_path[:2], spread_path[2:4], secret, filename_clean
+    )
 
 
 class Attachment(models.Model):
     secret = models.CharField(max_length=64)
-    filetype = models.ForeignKey('AttachmentType', on_delete=models.CASCADE)
-    post = models.ForeignKey('Post', blank=True, null=True, on_delete=models.SET_NULL)
+    filetype = models.ForeignKey("AttachmentType", on_delete=models.CASCADE)
+    post = models.ForeignKey("Post", blank=True, null=True, on_delete=models.SET_NULL)
 
     uploaded_on = models.DateTimeField(default=timezone.now, db_index=True)
 
     uploader = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL
     )
     uploader_name = models.CharField(max_length=255)
     uploader_slug = models.CharField(max_length=255, db_index=True)
@@ -48,8 +49,12 @@ class Attachment(models.Model):
     filename = models.CharField(max_length=255, db_index=True)
     size = models.PositiveIntegerField(default=0, db_index=True)
 
-    thumbnail = models.ImageField(max_length=255, blank=True, null=True, upload_to=upload_to)
-    image = models.ImageField(max_length=255, blank=True, null=True, upload_to=upload_to)
+    thumbnail = models.ImageField(
+        max_length=255, blank=True, null=True, upload_to=upload_to
+    )
+    image = models.ImageField(
+        max_length=255, blank=True, null=True, upload_to=upload_to
+    )
     file = models.FileField(max_length=255, blank=True, null=True, upload_to=upload_to)
 
     def __str__(self):
@@ -81,19 +86,14 @@ class Attachment(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            'misago:attachment', kwargs={
-                'pk': self.pk,
-                'secret': self.secret,
-            }
+            "misago:attachment", kwargs={"pk": self.pk, "secret": self.secret}
         )
 
     def get_thumbnail_url(self):
         if self.thumbnail:
             return reverse(
-                'misago:attachment-thumbnail', kwargs={
-                    'pk': self.pk,
-                    'secret': self.secret,
-                }
+                "misago:attachment-thumbnail",
+                kwargs={"pk": self.pk, "secret": self.secret},
             )
         else:
             return None
@@ -111,14 +111,14 @@ class Attachment(models.Model):
             thumbnail.size[0] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[0]
             or thumbnail.size[1] > settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT[1]
         )
-        strip_animation = fileformat == 'gif'
+        strip_animation = fileformat == "gif"
 
         thumb_stream = BytesIO()
         if downscale_image:
             thumbnail.thumbnail(settings.MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT)
-            if fileformat == 'jpg':
+            if fileformat == "jpg":
                 # normalize jpg to jpeg for Pillow
-                thumbnail.save(thumb_stream, 'jpeg')
+                thumbnail.save(thumb_stream, "jpeg")
             else:
                 thumbnail.save(thumb_stream, fileformat)
         elif strip_animation:

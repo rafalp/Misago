@@ -14,7 +14,7 @@ UserModel = get_user_model()
 class PopulateOnlineTrackerTests(TestCase):
     def test_populate_user_online(self):
         """user account without online tracker gets one"""
-        test_user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        test_user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
 
         Online.objects.filter(user=test_user).delete()
         self.assertEqual(Online.objects.filter(user=test_user).count(), 0)
@@ -23,5 +23,5 @@ class PopulateOnlineTrackerTests(TestCase):
         call_command(populateonlinetracker.Command(), stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, 'Tracker entries created: 1')
+        self.assertEqual(command_output, "Tracker entries created: 1")
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)

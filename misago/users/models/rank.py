@@ -13,7 +13,7 @@ class RankManager(models.Manager):
         with transaction.atomic():
             self.filter(is_default=True).update(is_default=False)
             rank.is_default = True
-            rank.save(update_fields=['is_default'])
+            rank.save(update_fields=["is_default"])
 
 
 class Rank(models.Model):
@@ -21,7 +21,7 @@ class Rank(models.Model):
     slug = models.CharField(unique=True, max_length=255)
     description = models.TextField(null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
-    roles = models.ManyToManyField('misago_acl.Role', blank=True)
+    roles = models.ManyToManyField("misago_acl.Role", blank=True)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
     is_tab = models.BooleanField(default=False)
@@ -30,7 +30,7 @@ class Rank(models.Model):
     objects = RankManager()
 
     class Meta:
-        get_latest_by = 'order'
+        get_latest_by = "order"
 
     def __str__(self):
         return self.name
@@ -49,7 +49,7 @@ class Rank(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('misago:users-rank', kwargs={'slug': self.slug})
+        return reverse("misago:users-rank", kwargs={"slug": self.slug})
 
     def set_name(self, name):
         self.name = name
@@ -57,6 +57,6 @@ class Rank(models.Model):
 
     def set_order(self):
         try:
-            self.order = Rank.objects.latest('order').order + 1
+            self.order = Rank.objects.latest("order").order + 1
         except Rank.DoesNotExist:
             self.order = 0

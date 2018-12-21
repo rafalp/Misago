@@ -52,8 +52,7 @@ class patch_user_acl(ContextDecorator, ExitStack):
 
     def patch_user_acl(self):
         return patch(
-            "misago.acl.useracl.get_user_acl",
-            side_effect=self.patched_get_user_acl,
+            "misago.acl.useracl.get_user_acl", side_effect=self.patched_get_user_acl
         )
 
 

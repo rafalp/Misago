@@ -8,7 +8,7 @@ from misago.conf import settings
 from . import store
 
 
-GRAVATAR_URL = 'http://www.gravatar.com/avatar/%s?s=%s&d=404'
+GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?s=%s&d=404"
 
 
 class GravatarError(RuntimeError):

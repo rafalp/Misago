@@ -18,7 +18,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         users_deleted = 0
-        
+
         queryset = UserModel.objects.filter(is_deleting_account=True)
 
         for user in chunk_queryset(queryset):

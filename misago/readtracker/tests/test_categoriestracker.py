@@ -24,9 +24,9 @@ class AnonymousUser(object):
 
 class CategoriesTrackerTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("UserA", "testa@user.com", 'Pass.123')
+        self.user = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
         self.user_acl = get_user_acl(self.user, cache_versions)
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
 
     def test_falsy_value(self):
         """passing falsy value to readtracker causes no errors"""
@@ -114,10 +114,7 @@ class CategoriesTrackerTests(TestCase):
         thread = testutils.post_thread(self.category, started_on=timezone.now())
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_event=True,
-            is_hidden=True,
+            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
@@ -130,10 +127,7 @@ class CategoriesTrackerTests(TestCase):
         poststracker.save_read(self.user, thread.first_post)
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_event=True,
-            is_hidden=True,
+            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
@@ -154,11 +148,7 @@ class CategoriesTrackerTests(TestCase):
         thread = testutils.post_thread(self.category, started_on=timezone.now())
         poststracker.save_read(self.user, thread.first_post)
 
-        testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            is_unapproved=True,
-        )
+        testutils.reply_thread(thread, posted_on=timezone.now(), is_unapproved=True)
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
@@ -170,10 +160,7 @@ class CategoriesTrackerTests(TestCase):
         poststracker.save_read(self.user, thread.first_post)
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            poster=self.user,
-            is_unapproved=True,
+            thread, posted_on=timezone.now(), poster=self.user, is_unapproved=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
@@ -186,10 +173,7 @@ class CategoriesTrackerTests(TestCase):
         poststracker.save_read(self.user, thread.first_post)
 
         testutils.reply_thread(
-            thread,
-            posted_on=timezone.now(),
-            poster=self.user,
-            is_unapproved=True,
+            thread, posted_on=timezone.now(), poster=self.user, is_unapproved=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
@@ -199,9 +183,7 @@ class CategoriesTrackerTests(TestCase):
     def test_user_unapproved_thread_unread_post(self):
         """tracked unapproved thread"""
         thread = testutils.post_thread(
-            self.category,
-            started_on=timezone.now(),
-            is_unapproved=True,
+            self.category, started_on=timezone.now(), is_unapproved=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
@@ -224,9 +206,7 @@ class CategoriesTrackerTests(TestCase):
     def test_user_hidden_thread_unread_post(self):
         """tracked hidden thread"""
         thread = testutils.post_thread(
-            self.category,
-            started_on=timezone.now(),
-            is_hidden=True,
+            self.category, started_on=timezone.now(), is_hidden=True
         )
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)

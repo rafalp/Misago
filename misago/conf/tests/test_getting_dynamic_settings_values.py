@@ -7,8 +7,8 @@ from misago.conf.dynamicsettings import DynamicSettings
 def test_settings_are_loaded_from_database_if_cache_is_not_available(
     db, mocker, cache_versions, django_assert_num_queries
 ):
-    mocker.patch('django.core.cache.cache.set')
-    mocker.patch('django.core.cache.cache.get', return_value=None)
+    mocker.patch("django.core.cache.cache.set")
+    mocker.patch("django.core.cache.cache.get", return_value=None)
     with django_assert_num_queries(1):
         DynamicSettings(cache_versions)
 
@@ -16,16 +16,16 @@ def test_settings_are_loaded_from_database_if_cache_is_not_available(
 def test_settings_are_loaded_from_cache_if_it_is_not_none(
     db, mocker, cache_versions, django_assert_num_queries
 ):
-    mocker.patch('django.core.cache.cache.set')
-    cache_get = mocker.patch('django.core.cache.cache.get', return_value={})
+    mocker.patch("django.core.cache.cache.set")
+    cache_get = mocker.patch("django.core.cache.cache.get", return_value={})
     with django_assert_num_queries(0):
         DynamicSettings(cache_versions)
     cache_get.assert_called_once()
 
 
 def test_settings_cache_is_set_if_none_exists(db, mocker, cache_versions):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('django.core.cache.cache.get', return_value=None)
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("django.core.cache.cache.get", return_value=None)
 
     DynamicSettings(cache_versions)
     cache_set.assert_called_once()
@@ -34,16 +34,16 @@ def test_settings_cache_is_set_if_none_exists(db, mocker, cache_versions):
 def test_settings_cache_is_not_set_if_it_already_exists(
     db, mocker, cache_versions, django_assert_num_queries
 ):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('django.core.cache.cache.get', return_value={})
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("django.core.cache.cache.get", return_value={})
     with django_assert_num_queries(0):
         DynamicSettings(cache_versions)
     cache_set.assert_not_called()
 
 
 def test_settings_cache_key_includes_cache_name_and_version(db, mocker, cache_versions):
-    cache_set = mocker.patch('django.core.cache.cache.set')
-    mocker.patch('django.core.cache.cache.get', return_value=None)
+    cache_set = mocker.patch("django.core.cache.cache.set")
+    mocker.patch("django.core.cache.cache.get", return_value=None)
     DynamicSettings(cache_versions)
     cache_key = cache_set.call_args[0][0]
     assert SETTINGS_CACHE in cache_key
@@ -55,7 +55,9 @@ def test_accessing_attr_returns_setting_value(db, cache_versions):
     assert settings.forum_name == "Misago"
 
 
-def test_accessing_attr_for_undefined_setting_raises_attribute_error(db, cache_versions):
+def test_accessing_attr_for_undefined_setting_raises_attribute_error(
+    db, cache_versions
+):
     settings = DynamicSettings(cache_versions)
     with pytest.raises(AttributeError):
         settings.not_existing

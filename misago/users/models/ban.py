@@ -11,22 +11,13 @@ from misago.users.constants import BANS_CACHE
 
 class BansManager(models.Manager):
     def get_ip_ban(self, ip, registration_only=False):
-        return self.get_ban(
-            ip=ip,
-            registration_only=registration_only,
-        )
+        return self.get_ban(ip=ip, registration_only=registration_only)
 
     def get_username_ban(self, username, registration_only=False):
-        return self.get_ban(
-            username=username,
-            registration_only=registration_only,
-        )
+        return self.get_ban(username=username, registration_only=registration_only)
 
     def get_email_ban(self, email, registration_only=False):
-        return self.get_ban(
-            email=email,
-            registration_only=registration_only,
-        )
+        return self.get_ban(email=email, registration_only=registration_only)
 
     def invalidate_cache(self):
         invalidate_cache(BANS_CACHE)
@@ -52,17 +43,23 @@ class BansManager(models.Manager):
         elif checks:
             queryset = queryset.filter(check_type__in=checks)
 
-        for ban in queryset.order_by('-id').iterator():
+        for ban in queryset.order_by("-id").iterator():
             if ban.is_expired:
                 continue
-            elif (ban.check_type == self.model.USERNAME and username and ban.check_value(username)):
+            elif (
+                ban.check_type == self.model.USERNAME
+                and username
+                and ban.check_value(username)
+            ):
                 return ban
-            elif (ban.check_type == self.model.EMAIL and email and ban.check_value(email)):
+            elif (
+                ban.check_type == self.model.EMAIL and email and ban.check_value(email)
+            ):
                 return ban
             elif ban.check_type == self.model.IP and ip and ban.check_value(ip):
                 return ban
         else:
-            raise Ban.DoesNotExist('specified values are not banned')
+            raise Ban.DoesNotExist("specified values are not banned")
 
 
 class Ban(models.Model):
@@ -71,12 +68,14 @@ class Ban(models.Model):
     IP = 2
 
     CHOICES = [
-        (USERNAME, _('Username')),
-        (EMAIL, _('E-mail address')),
-        (IP, _('IP address')),
+        (USERNAME, _("Username")),
+        (EMAIL, _("E-mail address")),
+        (IP, _("IP address")),
     ]
 
-    check_type = models.PositiveIntegerField(default=USERNAME, choices=CHOICES, db_index=True)
+    check_type = models.PositiveIntegerField(
+        default=USERNAME, choices=CHOICES, db_index=True
+    )
     registration_only = models.BooleanField(default=False, db_index=True)
     banned_value = models.CharField(max_length=255, db_index=True)
     user_message = models.TextField(null=True, blank=True)
@@ -94,6 +93,7 @@ class Ban(models.Model):
 
     def get_serialized_message(self):
         from misago.users.serializers import BanMessageSerializer
+
         return BanMessageSerializer(self).data
 
     @property
@@ -108,9 +108,9 @@ class Ban(models.Model):
             return False
 
     def check_value(self, value):
-        if '*' in self.banned_value:
-            regex = re.escape(self.banned_value).replace('\*', '(.*?)')
-            return re.search('^%s$' % regex, value) is not None
+        if "*" in self.banned_value:
+            regex = re.escape(self.banned_value).replace("\*", "(.*?)")
+            return re.search("^%s$" % regex, value) is not None
         else:
             return self.banned_value == value
 
@@ -122,15 +122,10 @@ class BanCache(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         primary_key=True,
-        related_name='ban_cache',
+        related_name="ban_cache",
         on_delete=models.CASCADE,
     )
-    ban = models.ForeignKey(
-        Ban,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
+    ban = models.ForeignKey(Ban, null=True, blank=True, on_delete=models.SET_NULL)
     cache_version = models.CharField(max_length=8)
     user_message = models.TextField(null=True, blank=True)
     staff_message = models.TextField(null=True, blank=True)
@@ -144,6 +139,7 @@ class BanCache(models.Model):
 
     def get_serialized_message(self):
         from misago.users.serializers import BanMessageSerializer
+
         temp_ban = Ban(
             id=1,
             check_type=Ban.USERNAME,

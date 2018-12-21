@@ -13,9 +13,9 @@ class AdminAuthMiddleware(MiddlewareMixin):
         if request.admin_namespace:
             if not auth.is_admin_session(request):
                 auth.close_admin_session(request)
-                if request.resolver_match.url_name == 'index':
+                if request.resolver_match.url_name == "index":
                     return login(request)
                 else:
-                    return redirect('%s:index' % request.admin_namespace)
+                    return redirect("%s:index" % request.admin_namespace)
             else:
                 auth.update_admin_session(request)

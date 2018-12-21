@@ -11,23 +11,23 @@ class CategoryManagerTests(TestCase):
         """private_threads returns private threads category"""
         category = Category.objects.private_threads()
 
-        self.assertEqual(category.special_role, 'private_threads')
+        self.assertEqual(category.special_role, "private_threads")
 
     def test_root_category(self):
         """root_category returns categories tree root"""
         category = Category.objects.root_category()
 
-        self.assertEqual(category.special_role, 'root_category')
+        self.assertEqual(category.special_role, "root_category")
 
     def test_all_categories(self):
         """all_categories returns queryset with categories tree"""
         root = Category.objects.root_category()
 
-        test_category_a = Category(name='Test')
-        test_category_a.insert_at(root, position='last-child', save=True)
+        test_category_a = Category(name="Test")
+        test_category_a.insert_at(root, position="last-child", save=True)
 
-        test_category_b = Category(name='Test 2')
-        test_category_b.insert_at(root, position='last-child', save=True)
+        test_category_b = Category(name="Test 2")
+        test_category_b.insert_at(root, position="last-child", save=True)
 
         all_categories_from_db = list(Category.objects.all_categories(True))
 
@@ -132,12 +132,7 @@ class CategoryModelTests(TestCase):
 
         # we are using category so we don't have to fake another category
         new_category = Category.objects.create(
-            lft=7,
-            rght=8,
-            tree_id=2,
-            level=0,
-            name='Archive',
-            slug='archive',
+            lft=7, rght=8, tree_id=2, level=0, name="Archive", slug="archive"
         )
         self.category.move_content(new_category)
 

@@ -9,7 +9,7 @@ class MisagoAdminExtension(MiddlewareMixin):
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Home"),
-            icon='fa fa-home',
-            parent='misago:admin',
-            link='misago:admin:index',
+            icon="fa fa-home",
+            parent="misago:admin",
+            link="misago:admin:index",
         )

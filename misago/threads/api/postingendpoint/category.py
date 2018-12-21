@@ -42,8 +42,8 @@ class CategoryMiddleware(PostingMiddleware):
 class CategorySerializer(serializers.Serializer):
     category = serializers.IntegerField(
         error_messages={
-            'required': gettext_lazy("You have to select category to post thread in."),
-            'invalid': gettext_lazy("Selected category is invalid."),
+            "required": gettext_lazy("You have to select category to post thread in."),
+            "invalid": gettext_lazy("Selected category is invalid."),
         }
     )
 
@@ -67,7 +67,9 @@ class CategorySerializer(serializers.Serializer):
             allow_start_thread(self.user_acl, self.category_cache)
         except Category.DoesNotExist:
             raise serializers.ValidationError(
-                _("Selected category doesn't exist or you don't have permission to browse it.")
+                _(
+                    "Selected category doesn't exist or you don't have permission to browse it."
+                )
             )
         except PermissionDenied as e:
             raise serializers.ValidationError(e.args[0])

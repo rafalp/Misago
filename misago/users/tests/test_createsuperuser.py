@@ -19,11 +19,9 @@ def test_superuser_is_created_if_input_is_valid(db):
     )
 
     command_output = out.getvalue().splitlines()[-1].strip()
-    user = User.objects.order_by('-id')[:1][0]
+    user = User.objects.order_by("-id")[:1][0]
 
-    assert command_output == (
-        "Superuser #%s has been created successfully." % user.pk
-    )
+    assert command_output == ("Superuser #%s has been created successfully." % user.pk)
 
     assert user.username == "test"
     assert user.email == "test@example.com"

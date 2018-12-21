@@ -7,10 +7,8 @@ from misago.cache.operations import StartCacheVersioning
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('misago_users', '0015_user_agreements'),
-        ('misago_cache', '0001_initial'),
+        ("misago_users", "0015_user_agreements"),
+        ("misago_cache", "0001_initial"),
     ]
 
-    operations = [
-        StartCacheVersioning("bans")
-    ]
+    operations = [StartCacheVersioning("bans")]

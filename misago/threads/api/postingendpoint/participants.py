@@ -25,9 +25,9 @@ class ParticipantsMiddleware(PostingMiddleware):
         return ParticipantsSerializer(
             data=self.request.data,
             context={
-                'request': self.request,
-                'user': self.user,
-                'user_acl': self.user_acl,
+                "request": self.request,
+                "user": self.user,
+                "user_acl": self.user_acl,
             },
         )
 
@@ -48,9 +48,11 @@ class ParticipantsSerializer(serializers.Serializer):
         for name in usernames:
             clean_name = name.strip().lower()
 
-            if clean_name == self.context['user'].slug:
+            if clean_name == self.context["user"].slug:
                 raise serializers.ValidationError(
-                    _("You can't include yourself on the list of users to invite to new thread.")
+                    _(
+                        "You can't include yourself on the list of users to invite to new thread."
+                    )
                 )
 
             if clean_name and clean_name not in clean_usernames:
@@ -59,7 +61,7 @@ class ParticipantsSerializer(serializers.Serializer):
         if not clean_usernames:
             raise serializers.ValidationError(_("You have to enter user names."))
 
-        max_participants = self.context['user_acl']['max_private_thread_participants']
+        max_participants = self.context["user_acl"]["max_private_thread_participants"]
         if max_participants and len(clean_usernames) > max_participants:
             message = ngettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
@@ -67,10 +69,7 @@ class ParticipantsSerializer(serializers.Serializer):
                 max_participants,
             )
             raise serializers.ValidationError(
-                message % {
-                    'users': max_participants,
-                    'added': len(clean_usernames),
-                }
+                message % {"users": max_participants, "added": len(clean_usernames)}
             )
 
         return list(set(clean_usernames))
@@ -79,8 +78,10 @@ class ParticipantsSerializer(serializers.Serializer):
         users = []
         for user in UserModel.objects.filter(slug__in=usernames):
             try:
-                user_acl = useracl.get_user_acl(user, self.context["request"].cache_versions)
-                allow_message_user(self.context['user_acl'], user, user_acl)
+                user_acl = useracl.get_user_acl(
+                    user, self.context["request"].cache_versions
+                )
+                allow_message_user(self.context["user_acl"], user, user_acl)
             except PermissionDenied as e:
                 raise serializers.ValidationError(str(e))
             users.append(user)
@@ -90,6 +91,8 @@ class ParticipantsSerializer(serializers.Serializer):
             sorted_usernames = sorted(invalid_usernames)
 
             message = _("One or more users could not be found: %(usernames)s")
-            raise serializers.ValidationError(message % {'usernames': ', '.join(sorted_usernames)})
+            raise serializers.ValidationError(
+                message % {"usernames": ", ".join(sorted_usernames)}
+            )
 
         return users

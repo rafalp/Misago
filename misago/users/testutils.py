@@ -9,7 +9,7 @@ User = get_user_model()
 
 class UserTestCase(TestCase):
     USER_PASSWORD = "Pass.123"
-    USER_IP = '127.0.0.1'
+    USER_IP = "127.0.0.1"
 
     def setUp(self):
         super().setUp()
@@ -23,10 +23,7 @@ class UserTestCase(TestCase):
 
     def get_authenticated_user(self):
         return create_test_user(
-            "TestUser",
-            "test@user.com",
-            self.USER_PASSWORD,
-            joined_from_ip=self.USER_IP,
+            "TestUser", "test@user.com", self.USER_PASSWORD, joined_from_ip=self.USER_IP
         )
 
     def get_superuser(self):
@@ -78,7 +75,7 @@ def create_test_superuser(username, email, password=None, **extra_fields):
 
 
 user_placeholder_avatars = [
-        {"size": 400, "url": "http://placekitten.com/400/400"},
-        {"size": 200, "url": "http://placekitten.com/200/200"},
-        {"size": 100, "url": "http://placekitten.com/100/100"},
-    ]
+    {"size": 400, "url": "http://placekitten.com/400/400"},
+    {"size": 200, "url": "http://placekitten.com/200/200"},
+    {"size": 100, "url": "http://placekitten.com/100/100"},
+]

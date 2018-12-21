@@ -3,31 +3,40 @@ from django.template import Context, Template, TemplateSyntaxError
 from django.test import TestCase
 
 from misago.admin.templatetags.misago_admin_form import (
-    is_radio_select_field, is_select_field, is_multiple_choice_field, is_textarea_field,
-    render_attrs, render_bool_attrs
+    is_radio_select_field,
+    is_select_field,
+    is_multiple_choice_field,
+    is_textarea_field,
+    render_attrs,
+    render_bool_attrs,
 )
 from misago.admin.forms import YesNoSwitch
 
 
 class TestForm(forms.Form):
-    text_field = forms.CharField(label="Hello!", max_length=255, help_text="I am a help text.")
-    textarea_field = forms.CharField(label="Message", max_length=255, widget=forms.Textarea())
-    select_field = forms.ChoiceField(label="Choice", choices=(("y", "Yes"), ("n", "No")))
+    text_field = forms.CharField(
+        label="Hello!", max_length=255, help_text="I am a help text."
+    )
+    textarea_field = forms.CharField(
+        label="Message", max_length=255, widget=forms.Textarea()
+    )
+    select_field = forms.ChoiceField(
+        label="Choice", choices=(("y", "Yes"), ("n", "No"))
+    )
     checkbox_select_field = forms.MultipleChoiceField(
         label="Color",
         choices=(("r", "Red"), ("g", "Green"), ("b", "Blue")),
         widget=forms.CheckboxSelectMultiple,
     )
     multiple_select_field = forms.MultipleChoiceField(
-        label="Rank",
-        choices=(("r", "Red"), ("g", "Green"), ("b", "Blue")),
+        label="Rank", choices=(("r", "Red"), ("g", "Green"), ("b", "Blue"))
     )
     yesno_field = YesNoSwitch(label="Switch")
 
 
 def render(template_str):
     base_template = "{%% load misago_admin_form %%} %s"
-    context = Context({'form': TestForm()})
+    context = Context({"form": TestForm()})
     template = Template(base_template % template_str)
     return template.render(context).strip()
 
@@ -35,27 +44,27 @@ def render(template_str):
 class FormRowTagTests(TestCase):
     def test_row_with_field_input_is_rendered(self):
         html = render("{% form_row form.text_field %}")
-        self.assertIn('id_text_field', html)
+        self.assertIn("id_text_field", html)
 
     def test_row_with_field_input_and_label_css_class_is_rendered(self):
         html = render('{% form_row form.text_field label_class="col-md-3" %}')
-        self.assertIn('id_text_field', html)
-        self.assertIn('col-md-3', html)
+        self.assertIn("id_text_field", html)
+        self.assertIn("col-md-3", html)
 
     def test_row_with_field_input_and_field_css_class_is_rendered(self):
         html = render('{% form_row form.text_field field_class="col-md-9" %}')
-        self.assertIn('id_text_field', html)
-        self.assertIn('col-md-9', html)
+        self.assertIn("id_text_field", html)
+        self.assertIn("col-md-9", html)
 
     def test_row_with_field_input_and_label_andfield_css_classes_is_rendered(self):
         html = render('{% form_row form.text_field "col-md-3" "col-md-9" %}')
-        self.assertIn('id_text_field', html)
-        self.assertIn('col-md-3', html)
-        self.assertIn('col-md-9', html)
+        self.assertIn("id_text_field", html)
+        self.assertIn("col-md-3", html)
+        self.assertIn("col-md-9", html)
 
     def test_tag_without_field_raises_exception(self):
         with self.assertRaises(TemplateSyntaxError):
-            render('{% form_row %}')
+            render("{% form_row %}")
 
     def test_field_label_is_rendered(self):
         html = render("{% form_row form.text_field %}")
@@ -69,49 +78,49 @@ class FormRowTagTests(TestCase):
 class IsRadioSelectFieldFilterTests(TestCase):
     def test_for_field_with_radio_select_widget_filter_returns_true(self):
         form = TestForm()
-        self.assertTrue(is_radio_select_field(form['yesno_field']))
+        self.assertTrue(is_radio_select_field(form["yesno_field"]))
 
     def test_for_field_without_radio_select_widget_filter_returns_false(self):
         form = TestForm()
-        self.assertFalse(is_radio_select_field(form['text_field']))
+        self.assertFalse(is_radio_select_field(form["text_field"]))
 
 
 class IsSelectFieldFilerTests(TestCase):
     def test_for_field_with_select_widget_filter_returns_true(self):
         form = TestForm()
-        self.assertTrue(is_select_field(form['select_field']))
+        self.assertTrue(is_select_field(form["select_field"]))
 
     def teste_for_field_without_select_widget_filter_returns_false(self):
         form = TestForm()
-        self.assertFalse(is_select_field(form['text_field']))
+        self.assertFalse(is_select_field(form["text_field"]))
 
 
 class IsMultipleChoiceFieldFilerTests(TestCase):
     def test_for_field_with_checkbox_select_widget_filter_returns_true(self):
         form = TestForm()
-        self.assertTrue(is_multiple_choice_field(form['checkbox_select_field']))
+        self.assertTrue(is_multiple_choice_field(form["checkbox_select_field"]))
 
     def test_for_field_without_checkbox_select_widget_filter_returns_false(self):
         form = TestForm()
-        self.assertFalse(is_multiple_choice_field(form['text_field']))
+        self.assertFalse(is_multiple_choice_field(form["text_field"]))
 
     def test_for_field_with_multiple_select_widget_filter_returns_true(self):
         form = TestForm()
-        self.assertTrue(is_multiple_choice_field(form['multiple_select_field']))
+        self.assertTrue(is_multiple_choice_field(form["multiple_select_field"]))
 
     def test_for_field_without_multiple_select_widget_filter_returns_false(self):
         form = TestForm()
-        self.assertFalse(is_multiple_choice_field(form['text_field']))
+        self.assertFalse(is_multiple_choice_field(form["text_field"]))
 
 
 class IsTextareaFieldFilterTests(TestCase):
     def test_for_field_with_textarea_widget_filter_returns_true(self):
         form = TestForm()
-        self.assertTrue(is_textarea_field(form['textarea_field']))
+        self.assertTrue(is_textarea_field(form["textarea_field"]))
 
     def test_for_field_without_textarea_widget_filter_returns_false(self):
         form = TestForm()
-        self.assertFalse(is_textarea_field(form['text_field']))
+        self.assertFalse(is_textarea_field(form["text_field"]))
 
 
 class RenderAttrsTagTests(TestCase):
@@ -144,7 +153,7 @@ class RenderAttrsTagTests(TestCase):
         self.assertEqual(result, "")
 
     def test_attr_name_is_escaped(self):
-        result = render_attrs({"attrs": {'"': 'test'}})
+        result = render_attrs({"attrs": {'"': "test"}})
         self.assertEqual(result, '&quot;="test"')
 
     def test_attr_value_is_escaped(self):

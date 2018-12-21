@@ -14,7 +14,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         super().setUp()
 
         self.other_user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123'
+            "BobBoberson", "bob@boberson.com", "pass123"
         )
 
         self.thread = testutils.post_thread(self.category, poster=self.user)
@@ -27,7 +27,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         self.user.sync_unread_private_threads = True
         self.user.save()
 
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
 
         # user was resynced
@@ -55,7 +55,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         self.user.save()
 
         # middleware did recount and accounted for new unread post
-        response = self.client.get('/')
+        response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
 
         self.reload_user()

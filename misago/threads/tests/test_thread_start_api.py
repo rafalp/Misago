@@ -10,8 +10,8 @@ class StartThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
-        self.api_link = reverse('misago:api:thread-list')
+        self.category = Category.objects.get(slug="first-category")
+        self.api_link = reverse("misago:api:thread-list")
 
     def test_cant_start_thread_as_guest(self):
         """user has to be authenticated to be able to post thread"""
@@ -23,41 +23,46 @@ class StartThreadTests(AuthenticatedUserTestCase):
     @patch_category_acl({"can_see": False})
     def test_cant_see(self):
         """has no permission to see selected category"""
-        response = self.client.post(self.api_link, {
-            'category': self.category.pk,
-        })
+        response = self.client.post(self.api_link, {"category": self.category.pk})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': ["Selected category is invalid."],
-            'post': ['You have to enter a message.'],
-            'title': ['You have to enter thread title.'],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "category": ["Selected category is invalid."],
+                "post": ["You have to enter a message."],
+                "title": ["You have to enter thread title."],
+            },
+        )
 
     @patch_category_acl({"can_browse": False})
     def test_cant_browse(self):
         """has no permission to browse selected category"""
-        response = self.client.post(self.api_link, {
-            'category': self.category.pk,
-        })
+        response = self.client.post(self.api_link, {"category": self.category.pk})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': ['Selected category is invalid.'],
-            'post': ['You have to enter a message.'],
-            'title': ['You have to enter thread title.'],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "category": ["Selected category is invalid."],
+                "post": ["You have to enter a message."],
+                "title": ["You have to enter thread title."],
+            },
+        )
 
     @patch_category_acl({"can_start_threads": False})
     def test_cant_start_thread(self):
         """permission to start thread in category is validated"""
-        response = self.client.post(self.api_link, {
-            'category': self.category.pk,
-        })
+        response = self.client.post(self.api_link, {"category": self.category.pk})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': ["You don't have permission to start new threads in this category."],
-            'post': ['You have to enter a message.'],
-            'title': ['You have to enter thread title.'],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "category": [
+                    "You don't have permission to start new threads in this category."
+                ],
+                "post": ["You have to enter a message."],
+                "title": ["You have to enter thread title."],
+            },
+        )
 
     @patch_category_acl({"can_start_threads": True, "can_close_threads": False})
     def test_cant_start_thread_in_locked_category(self):
@@ -65,28 +70,36 @@ class StartThreadTests(AuthenticatedUserTestCase):
         self.category.is_closed = True
         self.category.save()
 
-        response = self.client.post(self.api_link, {
-            'category': self.category.pk,
-        })
+        response = self.client.post(self.api_link, {"category": self.category.pk})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': ["This category is closed. You can't start new threads in it."],
-            'post': ['You have to enter a message.'],
-            'title': ['You have to enter thread title.'],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "category": [
+                    "This category is closed. You can't start new threads in it."
+                ],
+                "post": ["You have to enter a message."],
+                "title": ["You have to enter thread title."],
+            },
+        )
 
     def test_cant_start_thread_in_invalid_category(self):
         """can't post in invalid category"""
-        response = self.client.post(self.api_link, {'category': self.category.pk * 100000})
+        response = self.client.post(
+            self.api_link, {"category": self.category.pk * 100000}
+        )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'category': [
-                "Selected category doesn't exist or "
-                "you don't have permission to browse it."
-            ],
-            'post': ['You have to enter a message.'],
-            'title': ['You have to enter thread title.'],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "category": [
+                    "Selected category doesn't exist or "
+                    "you don't have permission to browse it."
+                ],
+                "post": ["You have to enter a message."],
+                "title": ["You have to enter thread title."],
+            },
+        )
 
     @patch_category_acl({"can_start_threads": True})
     def test_empty_data(self):
@@ -94,25 +107,29 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'category': ["You have to select category to post thread in."],
-                'title': ["You have to enter thread title."],
-                'post': ["You have to enter a message."],
-            }
+            response.json(),
+            {
+                "category": ["You have to select category to post thread in."],
+                "title": ["You have to enter thread title."],
+                "post": ["You have to enter a message."],
+            },
         )
 
     @patch_category_acl({"can_start_threads": True})
     def test_invalid_data(self):
         """api errors for invalid request data"""
         response = self.client.post(
-            self.api_link,
-            'false',
-            content_type="application/json",
+            self.api_link, "false", content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "non_field_errors": [
+                    "Invalid data. Expected a dictionary, but got bool."
+                ]
+            },
+        )
 
     @patch_category_acl({"can_start_threads": True})
     def test_title_is_validated(self):
@@ -120,17 +137,16 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "------",
-                'post': "Lorem ipsum dolor met, sit amet elit!",
-            }
+                "category": self.category.pk,
+                "title": "------",
+                "post": "Lorem ipsum dolor met, sit amet elit!",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
+            response.json(),
+            {"title": ["Thread title should contain alpha-numeric characters."]},
         )
 
     @patch_category_acl({"can_start_threads": True})
@@ -139,17 +155,20 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Lorem ipsum dolor met",
-                'post': "a",
-            }
+                "category": self.category.pk,
+                "title": "Lorem ipsum dolor met",
+                "post": "a",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'post': ["Posted message should be at least 5 characters long (it has 1)."],
-            }
+            response.json(),
+            {
+                "post": [
+                    "Posted message should be at least 5 characters long (it has 1)."
+                ]
+            },
         )
 
     @patch_category_acl({"can_start_threads": True})
@@ -158,17 +177,17 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
 
         response_json = response.json()
-        self.assertEqual(response_json['url'], thread.get_absolute_url())
+        self.assertEqual(response_json["url"], thread.get_absolute_url())
 
         response = self.client.get(thread.get_absolute_url())
         self.assertContains(response, self.category.name)
@@ -193,7 +212,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
 
         post = self.user.post_set.all()[:1][0]
         self.assertEqual(post.category_id, self.category.pk)
-        self.assertEqual(post.original, 'Lorem ipsum dolor met!')
+        self.assertEqual(post.original, "Lorem ipsum dolor met!")
         self.assertEqual(post.poster_id, self.user.id)
         self.assertEqual(post.poster_name, self.user.username)
 
@@ -214,11 +233,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'close': True,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "close": True,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -231,11 +250,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'close': True,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "close": True,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -248,11 +267,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'pin': 0,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "pin": 0,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -265,11 +284,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'pin': 1,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "pin": 1,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -282,11 +301,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'pin': 2,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "pin": 2,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -299,11 +318,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'pin': 2,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "pin": 2,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -316,11 +335,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'pin': 1,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "pin": 1,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -333,11 +352,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'hide': 1,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "hide": 1,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -353,11 +372,11 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-                'hide': 1,
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+                "hide": 1,
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -370,10 +389,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Brzęczyżczykiewicz",
-                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
-            }
+                "category": self.category.pk,
+                "title": "Brzęczyżczykiewicz",
+                "post": "Chrzążczyżewoszyce, powiat Łękółody.",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -386,10 +405,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -400,7 +419,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts)
         self.assertFalse(category.last_thread_id == thread.id)
@@ -415,10 +434,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -429,7 +448,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads + 1)
         self.assertEqual(category.posts, self.category.posts + 1)
         self.assertEqual(category.last_thread_id, thread.id)
@@ -440,10 +459,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -454,7 +473,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts)
         self.assertFalse(category.last_thread_id == thread.id)
@@ -466,10 +485,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -480,16 +499,18 @@ class StartThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads + 1)
         self.assertEqual(category.posts, self.category.posts + 1)
         self.assertEqual(category.last_thread_id, thread.id)
 
-    @patch_category_acl({
-        "can_start_threads": True,
-        "require_replies_approval": True,
-        "require_edits_approval": True,
-    })
+    @patch_category_acl(
+        {
+            "can_start_threads": True,
+            "require_replies_approval": True,
+            "require_edits_approval": True,
+        }
+    )
     def test_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.category.require_replies_approval = True
@@ -499,10 +520,10 @@ class StartThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'category': self.category.pk,
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "category": self.category.pk,
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
@@ -513,7 +534,7 @@ class StartThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads + 1)
         self.assertEqual(category.posts, self.category.posts + 1)
         self.assertEqual(category.last_thread_id, thread.id)

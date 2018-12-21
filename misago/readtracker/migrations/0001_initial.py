@@ -9,64 +9,77 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('misago_threads', '0001_initial'),
+        ("misago_threads", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CategoryRead',
+            name="CategoryRead",
             fields=[
                 (
-                    'id', models.AutoField(
-                        verbose_name='ID', serialize=False, auto_created=True, primary_key=True
-                    )
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
                 ),
-                ('last_read_on', models.DateTimeField()),
+                ("last_read_on", models.DateTimeField()),
                 (
-                    'category', models.ForeignKey(
+                    "category",
+                    models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to='misago_categories.Category',
-                    )
+                        to="misago_categories.Category",
+                    ),
                 ),
                 (
-                    'user', models.ForeignKey(
+                    "user",
+                    models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
-                    )
+                    ),
                 ),
             ],
             options={},
-            bases=(models.Model, ),
+            bases=(models.Model,),
         ),
         migrations.CreateModel(
-            name='ThreadRead',
+            name="ThreadRead",
             fields=[
                 (
-                    'id', models.AutoField(
-                        verbose_name='ID', serialize=False, auto_created=True, primary_key=True
-                    )
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
                 ),
-                ('last_read_on', models.DateTimeField()),
+                ("last_read_on", models.DateTimeField()),
                 (
-                    'category', models.ForeignKey(
+                    "category",
+                    models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to='misago_categories.Category',
-                    )
+                        to="misago_categories.Category",
+                    ),
                 ),
                 (
-                    'thread', models.ForeignKey(
+                    "thread",
+                    models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to='misago_threads.Thread',
-                    )
+                        to="misago_threads.Thread",
+                    ),
                 ),
                 (
-                    'user', models.ForeignKey(
+                    "user",
+                    models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
-                    )
+                    ),
                 ),
             ],
             options={},
-            bases=(models.Model, ),
+            bases=(models.Model,),
         ),
     ]

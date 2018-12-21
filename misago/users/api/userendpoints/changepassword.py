@@ -10,30 +10,26 @@ from misago.users.serializers import ChangePasswordSerializer
 
 def change_password_endpoint(request, pk=None):
     serializer = ChangePasswordSerializer(
-        data=request.data,
-        context={'user': request.user},
+        data=request.data, context={"user": request.user}
     )
 
     if serializer.is_valid():
         token = store_new_credential(
-            request, 'password', serializer.validated_data['new_password']
+            request, "password", serializer.validated_data["new_password"]
         )
 
         mail_subject = _("Confirm password change on %(forum_name)s forums")
-        mail_subject = mail_subject % {'forum_name': request.settings.forum_name}
+        mail_subject = mail_subject % {"forum_name": request.settings.forum_name}
 
         mail_user(
             request.user,
             mail_subject,
-            'misago/emails/change_password',
-            context={
-                "settings": request.settings,
-                "token": token,
-            },
+            "misago/emails/change_password",
+            context={"settings": request.settings, "token": token},
         )
 
-        return Response({
-            'detail': _("Password change confirmation link was sent to your address.")
-        })
+        return Response(
+            {"detail": _("Password change confirmation link was sent to your address.")}
+        )
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -5,7 +5,7 @@ def make_read_aware(user, posts):
     if not posts:
         return
 
-    if not hasattr(posts, '__iter__'):
+    if not hasattr(posts, "__iter__"):
         posts = [posts]
 
     make_read(posts)
@@ -24,7 +24,7 @@ def make_read_aware(user, posts):
 
     if unresolved_posts:
         queryset = user.postread_set.filter(post__in=unresolved_posts)
-        for post_id in queryset.values_list('post_id', flat=True):
+        for post_id in queryset.values_list("post_id", flat=True):
             unresolved_posts[post_id].is_read = True
             unresolved_posts[post_id].is_new = False
 
@@ -36,8 +36,4 @@ def make_read(posts):
 
 
 def save_read(user, post):
-    user.postread_set.create(
-        category=post.category,
-        thread=post.thread,
-        post=post,
-    )
+    user.postread_set.create(category=post.category, thread=post.thread, post=post)

@@ -13,7 +13,7 @@ from misago.conf import settings
 def normalize_image(image):
     """strip image of animation, convert to RGBA"""
     image.seek(0)
-    return image.copy().convert('RGBA')
+    return image.copy().convert("RGBA")
 
 
 def delete_avatar(user, delete_tmp=True, delete_src=True):
@@ -30,6 +30,7 @@ def delete_avatar(user, delete_tmp=True, delete_src=True):
 
 def store_avatar(user, image):
     from misago.users.models import Avatar
+
     image = normalize_image(image)
 
     avatars = []
@@ -43,12 +44,12 @@ def store_avatar(user, image):
             Avatar.objects.create(
                 user=user,
                 size=size,
-                image=ContentFile(image_stream.getvalue(), 'avatar'),
+                image=ContentFile(image_stream.getvalue(), "avatar"),
             )
         )
 
-    user.avatars = [{'size': a.size, 'url': a.url} for a in avatars]
-    user.save(update_fields=['avatars'])
+    user.avatars = [{"size": a.size, "url": a.url} for a in avatars]
+    user.save(update_fields=["avatars"])
 
 
 def store_new_avatar(user, image, delete_tmp=True, delete_src=True):
@@ -65,8 +66,8 @@ def store_temporary_avatar(user, image):
     if user.avatar_tmp:
         user.avatar_tmp.delete(save=False)
 
-    user.avatar_tmp = ContentFile(image_stream.getvalue(), 'avatar')
-    user.save(update_fields=['avatar_tmp'])
+    user.avatar_tmp = ContentFile(image_stream.getvalue(), "avatar")
+    user.save(update_fields=["avatar_tmp"])
 
 
 def store_original_avatar(user):
@@ -74,12 +75,14 @@ def store_original_avatar(user):
         user.avatar_src.delete(save=False)
     user.avatar_src = user.avatar_tmp
     user.avatar_tmp = None
-    user.save(update_fields=['avatar_tmp', 'avatar_src'])
+    user.save(update_fields=["avatar_tmp", "avatar_src"])
 
 
 def upload_to(instance, filename):
     spread_path = md5(get_random_string(64).encode()).hexdigest()
     secret = get_random_string(32)
-    filename_clean = '%s.png' % get_random_string(32)
+    filename_clean = "%s.png" % get_random_string(32)
 
-    return os.path.join('avatars', spread_path[:2], spread_path[2:4], secret, filename_clean)
+    return os.path.join(
+        "avatars", spread_path[:2], spread_path[2:4], secret, filename_clean
+    )

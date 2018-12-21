@@ -12,7 +12,7 @@ UserModel = get_user_model()
 
 class DeleteMarkedUsersTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user('Bob', 'bob@bob.com', 'pass123')
+        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
         self.user.mark_for_delete()
 
     def test_delete_marked_user(self):
@@ -34,10 +34,10 @@ class DeleteMarkedUsersTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "Deleted users: 1")
-        
+
         with self.assertRaises(UserModel.DoesNotExist):
             UserModel.objects.get(pk=self.user.pk)
-            
+
     def test_delete_not_marked(self):
         """user has to be marked to be deletable"""
         self.user.is_deleting_account = False
@@ -48,7 +48,7 @@ class DeleteMarkedUsersTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "Deleted users: 0")
-        
+
         UserModel.objects.get(pk=self.user.pk)
 
     def test_delete_is_staff(self):
@@ -61,7 +61,7 @@ class DeleteMarkedUsersTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "Deleted users: 0")
-        
+
         UserModel.objects.get(pk=self.user.pk)
 
     def test_delete_superuser(self):
@@ -74,5 +74,5 @@ class DeleteMarkedUsersTests(TestCase):
         command_output = out.getvalue().splitlines()[0].strip()
 
         self.assertEqual(command_output, "Deleted users: 0")
-        
+
         UserModel.objects.get(pk=self.user.pk)

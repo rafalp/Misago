@@ -43,7 +43,9 @@ def test_callable_patch_is_called_with_user_and_acl_by_decorator(cache_versions,
     assert user_acl["patched_for_user_id"] == user.id
 
 
-def test_callable_patch_is_called_with_user_and_acl_by_context_manager(cache_versions, user):
+def test_callable_patch_is_called_with_user_and_acl_by_context_manager(
+    cache_versions, user
+):
     with patch_user_acl(callable_acl_patch):
         user_acl = useracl.get_user_acl(user, cache_versions)
         assert user_acl["patched_for_user_id"] == user.id

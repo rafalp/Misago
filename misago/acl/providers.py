@@ -40,7 +40,7 @@ class PermissionProviders(object):
             self._providers.append((namespace, import_module(namespace)))
             self._providers_dict[namespace] = import_module(namespace)
 
-            if hasattr(self._providers_dict[namespace], 'register_with'):
+            if hasattr(self._providers_dict[namespace], "register_with"):
                 self._providers_dict[namespace].register_with(self)
 
     def _coerce_dict_values_to_tuples(self, types_dict):

@@ -8,15 +8,22 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CacheVersion',
+            name="CacheVersion",
             fields=[
-                ('cache', models.CharField(max_length=128, primary_key=True, serialize=False)),
-                ('version', models.CharField(default=misago.cache.utils.generate_version_string, max_length=8)),
+                (
+                    "cache",
+                    models.CharField(max_length=128, primary_key=True, serialize=False),
+                ),
+                (
+                    "version",
+                    models.CharField(
+                        default=misago.cache.utils.generate_version_string, max_length=8
+                    ),
+                ),
             ],
-        ),
+        )
     ]

@@ -16,26 +16,45 @@ class UserAdminModel(ModelAdmin):
     """
 
     list_display = (
-        'username', 'email', 'rank', 'is_staff', 'is_superuser', 'get_edit_from_misago_url',
+        "username",
+        "email",
+        "rank",
+        "is_staff",
+        "is_superuser",
+        "get_edit_from_misago_url",
     )
-    search_fields = ('username', 'email')
-    list_filter = ('groups', 'rank', 'is_staff', 'is_superuser')
+    search_fields = ("username", "email")
+    list_filter = ("groups", "rank", "is_staff", "is_superuser")
 
     actions = None
     readonly_fields = (
-        'username', 'email', 'joined_on', 'last_login', 'rank', 'is_staff', 'is_superuser',
-        'get_edit_from_misago_url',
+        "username",
+        "email",
+        "joined_on",
+        "last_login",
+        "rank",
+        "is_staff",
+        "is_superuser",
+        "get_edit_from_misago_url",
     )
-    fieldsets = ((
-        _("Misago user data"), {
-            'fields': (
-                'username', 'email', 'joined_on', 'last_login', 'rank', 'is_staff', 'is_superuser',
-                'get_edit_from_misago_url',
-            )
-        },
-    ), (_("Edit permissions and groups"), {
-        'fields': ('groups', 'user_permissions', )
-    }, ), )
+    fieldsets = (
+        (
+            _("Misago user data"),
+            {
+                "fields": (
+                    "username",
+                    "email",
+                    "joined_on",
+                    "last_login",
+                    "rank",
+                    "is_staff",
+                    "is_superuser",
+                    "get_edit_from_misago_url",
+                )
+            },
+        ),
+        (_("Edit permissions and groups"), {"fields": ("groups", "user_permissions")}),
+    )
 
     def has_add_permission(self, request):
         return False
@@ -47,11 +66,13 @@ class UserAdminModel(ModelAdmin):
         return format_html(
             '<a href="{link}" class="{cls}" target="blank">{text}</a>',
             link=reverse(
-                viewname='misago:admin:users:accounts:edit',
-                kwargs={'pk': user_instance.pk},
+                viewname="misago:admin:users:accounts:edit",
+                kwargs={"pk": user_instance.pk},
             ),
-            cls='changelink',
+            cls="changelink",
             text=_("Edit"),
         )
 
-    get_edit_from_misago_url.short_description = _("Edit the user from Misago admin panel")
+    get_edit_from_misago_url.short_description = _(
+        "Edit the user from Misago admin panel"
+    )

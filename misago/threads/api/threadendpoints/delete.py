@@ -7,7 +7,6 @@ from misago.threads.permissions import allow_delete_thread
 from misago.threads.serializers import DeleteThreadsSerializer
 
 
-
 @transaction.atomic
 def delete_thread(request, thread):
     allow_delete_thread(request.user_acl, thread)
@@ -17,27 +16,21 @@ def delete_thread(request, thread):
 
 def delete_bulk(request, viewmodel):
     serializer = DeleteThreadsSerializer(
-        data={
-            'threads': request.data,
-        },
-        context={
-            'request': request,
-            'viewmodel': viewmodel,
-        },
+        data={"threads": request.data},
+        context={"request": request, "viewmodel": viewmodel},
     )
 
     if not serializer.is_valid():
-        if 'threads' in serializer.errors:
-            errors = serializer.errors['threads']
-            if 'details' in errors:
-                return Response(
-                    hydrate_error_details(errors['details']), status=400)
-            return Response({'detail': errors[0]}, status=403)
+        if "threads" in serializer.errors:
+            errors = serializer.errors["threads"]
+            if "details" in errors:
+                return Response(hydrate_error_details(errors["details"]), status=400)
+            return Response({"detail": errors[0]}, status=403)
         else:
             errors = list(serializer.errors)[0][0]
-            return Response({'detail': errors}, status=400)
+            return Response({"detail": errors}, status=400)
 
-    for thread in serializer.validated_data['threads']:
+    for thread in serializer.validated_data["threads"]:
         with transaction.atomic():
             delete_thread(request, thread)
 
@@ -46,5 +39,5 @@ def delete_bulk(request, viewmodel):
 
 def hydrate_error_details(errors):
     for error in errors:
-        error['thread']['id'] = int(error['thread']['id'])
+        error["thread"]["id"] = int(error["thread"]["id"])
     return errors

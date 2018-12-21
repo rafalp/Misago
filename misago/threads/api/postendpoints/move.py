@@ -7,28 +7,24 @@ from misago.threads.serializers import MovePostsSerializer
 
 
 def posts_move_endpoint(request, thread, viewmodel):
-    if not thread.acl['can_move_posts']:
+    if not thread.acl["can_move_posts"]:
         raise PermissionDenied(_("You can't move posts in this thread."))
 
     serializer = MovePostsSerializer(
         data=request.data,
-        context={
-            'request': request,
-            'thread': thread,
-            'viewmodel': viewmodel,
-        }
+        context={"request": request, "thread": thread, "viewmodel": viewmodel},
     )
 
     if not serializer.is_valid():
-        if 'new_thread' in serializer.errors:
-            errors = serializer.errors['new_thread']
+        if "new_thread" in serializer.errors:
+            errors = serializer.errors["new_thread"]
         else:
             errors = list(serializer.errors.values())[0]
-        return Response({'detail': errors[0]}, status=400)
+        return Response({"detail": errors[0]}, status=400)
 
-    new_thread = serializer.validated_data['new_thread']
+    new_thread = serializer.validated_data["new_thread"]
 
-    for post in serializer.validated_data['posts']:
+    for post in serializer.validated_data["posts"]:
         post.move(new_thread)
         post.save()
 

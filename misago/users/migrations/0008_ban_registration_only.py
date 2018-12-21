@@ -4,23 +4,21 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0007_auto_20170219_1639'),
-    ]
+    dependencies = [("misago_users", "0007_auto_20170219_1639")]
 
     operations = [
         migrations.AddField(
-            model_name='ban',
-            name='registration_only',
+            model_name="ban",
+            name="registration_only",
             field=models.BooleanField(db_index=True, default=False),
         ),
         migrations.AlterField(
-            model_name='ban',
-            name='check_type',
+            model_name="ban",
+            name="check_type",
             field=models.PositiveIntegerField(
-                choices=[(0, 'Username'), (1, 'E-mail address'), (2, 'IP address')],
+                choices=[(0, "Username"), (1, "E-mail address"), (2, "IP address")],
                 db_index=True,
-                default=0
+                default=0,
             ),
         ),
     ]

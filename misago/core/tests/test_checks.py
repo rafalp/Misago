@@ -6,9 +6,9 @@ from misago.core import SUPPORTED_ENGINES, check_db_engine
 
 
 INVALID_ENGINES = [
-    'django.db.backends.sqlite3',
-    'django.db.backends.mysql',
-    'django.db.backends.oracle',
+    "django.db.backends.sqlite3",
+    "django.db.backends.mysql",
+    "django.db.backends.oracle",
 ]
 
 
@@ -19,7 +19,7 @@ class TestCheckDBEngine(TestCase):
             warnings.simplefilter("ignore")
 
             for engine in SUPPORTED_ENGINES:
-                with self.settings(DATABASES={'default': {'ENGINE': engine}}):
+                with self.settings(DATABASES={"default": {"ENGINE": engine}}):
                     errors = check_db_engine(None)
                     self.assertEqual(errors, [])
 
@@ -29,6 +29,6 @@ class TestCheckDBEngine(TestCase):
             warnings.simplefilter("ignore")
 
             for engine in INVALID_ENGINES:
-                with self.settings(DATABASES={'default': {'ENGINE': engine}}):
+                with self.settings(DATABASES={"default": {"ENGINE": engine}}):
                     errors = check_db_engine(None)
                     self.assertTrue(errors)

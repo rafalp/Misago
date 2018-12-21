@@ -18,4 +18,3 @@ class assert_invalidates_cache:
             if cache == self.cache:
                 message = "cache %s was not invalidated" % cache
                 assert self.versions[cache] != version, message
-        

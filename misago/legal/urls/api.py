@@ -4,5 +4,5 @@ from misago.legal.api import submit_agreement
 
 
 urlpatterns = [
-    url(r'^submit-agreement/(?P<pk>\d+)/$', submit_agreement, name='submit-agreement'),
+    url(r"^submit-agreement/(?P<pk>\d+)/$", submit_agreement, name="submit-agreement")
 ]

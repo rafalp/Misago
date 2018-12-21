@@ -18,7 +18,7 @@ class TargetedView(AdminView):
                 select_for_update = select_for_update.select_for_update()
             # Does not work on Python 3:
             # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
-            (pk, ) = kwargs.values()
+            (pk,) = kwargs.values()
             return select_for_update.get(pk=pk)
         else:
             return self.get_model()()
@@ -55,13 +55,13 @@ class TargetedView(AdminView):
 
 class FormView(TargetedView):
     form = None
-    template = 'form.html'
+    template = "form.html"
 
     def create_form_type(self, request):
         return self.form
 
     def initialize_form(self, form, request):
-        if request.method == 'POST':
+        if request.method == "POST":
             return form(request.POST, request.FILES)
         else:
             return form()
@@ -75,17 +75,17 @@ class FormView(TargetedView):
         FormType = self.create_form_type(request)
         form = self.initialize_form(FormType, request)
 
-        if request.method == 'POST' and form.is_valid():
+        if request.method == "POST" and form.is_valid():
             response = self.handle_form(form, request)
 
             if response:
                 return response
-            elif 'stay' in request.POST:
+            elif "stay" in request.POST:
                 return redirect(request.path)
             else:
                 return redirect(self.root_link)
 
-        return self.render(request, {'form': form})
+        return self.render(request, {"form": form})
 
 
 class ModelFormView(FormView):
@@ -95,7 +95,7 @@ class ModelFormView(FormView):
         return self.form
 
     def initialize_form(self, form, request, target):
-        if request.method == 'POST':
+        if request.method == "POST":
             return form(request.POST, request.FILES, instance=target)
         else:
             return form(instance=target)
@@ -103,28 +103,28 @@ class ModelFormView(FormView):
     def handle_form(self, form, request, target):
         form.instance.save()
         if self.message_submit:
-            messages.success(request, self.message_submit % {'name': target.name})
+            messages.success(request, self.message_submit % {"name": target.name})
 
     def real_dispatch(self, request, target):
         FormType = self.create_form_type(request, target)
         form = self.initialize_form(FormType, request, target)
 
-        if request.method == 'POST' and form.is_valid():
+        if request.method == "POST" and form.is_valid():
             response = self.handle_form(form, request, target)
 
             if response:
                 return response
-            elif 'stay' in request.POST:
+            elif "stay" in request.POST:
                 return redirect(request.path)
             else:
                 return redirect(self.root_link)
 
-        return self.render(request, {'form': form, 'target': target})
+        return self.render(request, {"form": form, "target": target})
 
 
 class ButtonView(TargetedView):
     def real_dispatch(self, request, target):
-        if request.method == 'POST':
+        if request.method == "POST":
             new_response = self.button_action(request, target)
             if new_response:
                 return new_response

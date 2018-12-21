@@ -25,10 +25,12 @@ class ClearAttachmentsTests(TestCase):
 
     def test_attachments_sync(self):
         """command synchronizes attachments"""
-        filetype = AttachmentType.objects.order_by('id').last()
+        filetype = AttachmentType.objects.order_by("id").last()
 
         # create 5 expired orphaned attachments
-        cutoff = timezone.now() - timedelta(minutes=settings.MISAGO_ATTACHMENT_ORPHANED_EXPIRE)
+        cutoff = timezone.now() - timedelta(
+            minutes=settings.MISAGO_ATTACHMENT_ORPHANED_EXPIRE
+        )
         cutoff -= timedelta(minutes=5)
 
         for _ in range(5):
@@ -37,13 +39,13 @@ class ClearAttachmentsTests(TestCase):
                 filetype=filetype,
                 size=1000,
                 uploaded_on=cutoff,
-                uploader_name='bob',
-                uploader_slug='bob',
-                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
+                uploader_name="bob",
+                uploader_slug="bob",
+                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 
         # create 5 expired non-orphaned attachments
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         post = testutils.post_thread(category).first_post
 
         for _ in range(5):
@@ -53,9 +55,9 @@ class ClearAttachmentsTests(TestCase):
                 size=1000,
                 uploaded_on=cutoff,
                 post=post,
-                uploader_name='bob',
-                uploader_slug='bob',
-                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
+                uploader_name="bob",
+                uploader_slug="bob",
+                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 
         # create 5 fresh orphaned attachments
@@ -64,9 +66,9 @@ class ClearAttachmentsTests(TestCase):
                 secret=Attachment.generate_new_secret(),
                 filetype=filetype,
                 size=1000,
-                uploader_name='bob',
-                uploader_slug='bob',
-                filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
+                uploader_name="bob",
+                uploader_slug="bob",
+                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 
         command = clearattachments.Command()

@@ -12,13 +12,11 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(category=self.category)
 
         self.api_link = reverse(
-            'misago:api:thread-post-list', kwargs={
-                'thread_pk': self.thread.pk,
-            }
+            "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
     def test_cant_reply_thread_as_guest(self):
@@ -30,15 +28,15 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
-        with patch_category_acl({'can_see': 0}):
+        with patch_category_acl({"can_see": 0}):
             response = self.client.post(self.api_link)
             self.assertEqual(response.status_code, 404)
 
-        with patch_category_acl({'can_browse': 0}):
+        with patch_category_acl({"can_browse": 0}):
             response = self.client.post(self.api_link)
             self.assertEqual(response.status_code, 404)
 
-        with patch_category_acl({'can_see_all_threads': 0}):
+        with patch_category_acl({"can_see_all_threads": 0}):
             response = self.client.post(self.api_link)
             self.assertEqual(response.status_code, 404)
 
@@ -47,9 +45,9 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         """permission to reply thread is validated"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't reply to threads in this category.",
-        })
+        self.assertEqual(
+            response.json(), {"detail": "You can't reply to threads in this category."}
+        )
 
     @patch_category_acl({"can_reply_threads": True, "can_close_threads": False})
     def test_closed_category_no_permission(self):
@@ -59,9 +57,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This category is closed. You can't reply to threads in it.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "This category is closed. You can't reply to threads in it."},
+        )
 
     @patch_category_acl({"can_reply_threads": True, "can_close_threads": True})
     def test_closed_category(self):
@@ -80,9 +79,10 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't reply to closed threads in this category.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "You can't reply to closed threads in this category."},
+        )
 
     @patch_category_acl({"can_reply_threads": True, "can_close_threads": True})
     def test_closed_thread(self):
@@ -98,46 +98,44 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         """no data sent handling has no showstoppers"""
         response = self.client.post(self.api_link, data={})
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            "post": ["You have to enter a message."],
-        })
+        self.assertEqual(response.json(), {"post": ["You have to enter a message."]})
 
     @patch_category_acl({"can_reply_threads": True})
     def test_invalid_data(self):
         """api errors for invalid request data"""
         response = self.client.post(
-            self.api_link,
-            'false',
-            content_type="application/json",
+            self.api_link, "false", content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': ['Invalid data. Expected a dictionary, but got bool.']
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "non_field_errors": [
+                    "Invalid data. Expected a dictionary, but got bool."
+                ]
+            },
+        )
 
     @patch_category_acl({"can_reply_threads": True})
     def test_post_is_validated(self):
         """post is validated"""
-        response = self.client.post(
-            self.api_link, data={
-                'post': "a",
-            }
-        )
+        response = self.client.post(self.api_link, data={"post": "a"})
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'post': ["Posted message should be at least 5 characters long (it has 1)."],
-            }
+            response.json(),
+            {
+                "post": [
+                    "Posted message should be at least 5 characters long (it has 1)."
+                ]
+            },
         )
 
     @patch_category_acl({"can_reply_threads": True})
     def test_can_reply_thread(self):
         """endpoint creates new reply"""
         response = self.client.post(
-            self.api_link, data={
-                'post': "This is test response!",
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -177,9 +175,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
     def test_post_unicode(self):
         """unicode characters can be posted"""
         response = self.client.post(
-            self.api_link, data={
-                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
-            }
+            self.api_link, data={"post": "Chrzążczyżewoszyce, powiat Łękółody."}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -190,9 +186,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -204,7 +198,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts)
 
@@ -216,9 +210,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -230,7 +222,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts + 1)
 
@@ -238,9 +230,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
     def test_user_moderation_queue(self):
         """reply thread by user that requires approval"""
         response = self.client.post(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -252,7 +242,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertTrue(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts)
 
@@ -261,9 +251,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
     def test_user_moderation_queue_bypass(self):
         """bypass moderation queue due to user's acl"""
         response = self.client.post(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -275,15 +263,17 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts + 1)
 
-    @patch_category_acl({
-        "can_reply_threads": True,
-        "require_threads_approval": True,
-        "require_edits_approval": True,
-    })
+    @patch_category_acl(
+        {
+            "can_reply_threads": True,
+            "require_threads_approval": True,
+            "require_edits_approval": True,
+        }
+    )
     def test_omit_other_moderation_queues(self):
         """other queues are omitted"""
         self.category.require_threads_approval = True
@@ -291,9 +281,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         self.category.save()
 
         response = self.client.post(
-            self.api_link, data={
-                'post': "Lorem ipsum dolor met!",
-            }
+            self.api_link, data={"post": "Lorem ipsum dolor met!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -305,6 +293,6 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         post = self.user.post_set.all()[:1][0]
         self.assertFalse(post.is_unapproved)
 
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         self.assertEqual(category.threads, self.category.threads)
         self.assertEqual(category.posts, self.category.posts + 1)

@@ -7,10 +7,10 @@ from misago.users.models import Ban
 
 
 class BanAdmin(generic.AdminBaseMixin):
-    root_link = 'misago:admin:users:bans:index'
+    root_link = "misago:admin:users:bans:index"
     model = Ban
     form = BanForm
-    templates_dir = 'misago/admin/bans'
+    templates_dir = "misago/admin/bans"
     message_404 = _("Requested ban does not exist.")
 
     def handle_form(self, form, request, target):
@@ -21,20 +21,22 @@ class BanAdmin(generic.AdminBaseMixin):
 class BansList(BanAdmin, generic.ListView):
     items_per_page = 30
     ordering = [
-        ('-id', _("From newest")),
-        ('id', _("From oldest")),
-        ('banned_value', _("A to z")),
-        ('-banned_value', _("Z to a")),
+        ("-id", _("From newest")),
+        ("id", _("From oldest")),
+        ("banned_value", _("A to z")),
+        ("-banned_value", _("Z to a")),
     ]
     search_form = SearchBansForm
-    selection_label = _('With bans: 0')
-    empty_selection_label = _('Select bans')
-    mass_actions = ({
-        'action': 'delete',
-        'icon': 'fa fa-times',
-        'name': _('Remove bans'),
-        'confirmation': _('Are you sure you want to remove those bans?')
-    }, )
+    selection_label = _("With bans: 0")
+    empty_selection_label = _("Select bans")
+    mass_actions = (
+        {
+            "action": "delete",
+            "icon": "fa fa-times",
+            "name": _("Remove bans"),
+            "confirmation": _("Are you sure you want to remove those bans?"),
+        },
+    )
 
     def action_delete(self, request, items):
         items.delete()
@@ -55,4 +57,4 @@ class DeleteBan(BanAdmin, generic.ButtonView):
         target.delete()
         Ban.objects.invalidate_cache()
         message = _('Ban "%(name)s" has been removed.')
-        messages.success(request, message % {'name': target.name})
+        messages.success(request, message % {"name": target.name})

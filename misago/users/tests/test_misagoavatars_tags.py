@@ -9,21 +9,12 @@ UserModel = get_user_model()
 class TemplateTagsTests(TestCase):
     def test_user_avatar_filter(self):
         """avatar filter returns url to avatar image"""
-        user = UserModel.objects.create_user('Bob', 'bob@test.com', 'pass123')
+        user = UserModel.objects.create_user("Bob", "bob@test.com", "pass123")
 
         user.avatars = [
-            {
-                'size': 400,
-                'url': '/avatar/400.png'
-            },
-            {
-                'size': 128,
-                'url': '/avatar/400.png'
-            },
-            {
-                'size': 30,
-                'url': '/avatar/30.png'
-            },
+            {"size": 400, "url": "/avatar/400.png"},
+            {"size": 128, "url": "/avatar/400.png"},
+            {"size": 30, "url": "/avatar/30.png"},
         ]
 
         tpl_content = """
@@ -36,9 +27,9 @@ class TemplateTagsTests(TestCase):
 """
 
         tpl = Template(tpl_content)
-        render = tpl.render(Context({'user': user})).strip().splitlines()
+        render = tpl.render(Context({"user": user})).strip().splitlines()
 
-        self.assertEqual(render[0].strip(), user.avatars[0]['url'])
-        self.assertEqual(render[1].strip(), user.avatars[1]['url'])
-        self.assertEqual(render[2].strip(), user.avatars[2]['url'])
-        self.assertEqual(render[3].strip(), user.avatars[2]['url'])
+        self.assertEqual(render[0].strip(), user.avatars[0]["url"])
+        self.assertEqual(render[1].strip(), user.avatars[1]["url"])
+        self.assertEqual(render[2].strip(), user.avatars[2]["url"])
+        self.assertEqual(render[3].strip(), user.avatars[2]["url"])

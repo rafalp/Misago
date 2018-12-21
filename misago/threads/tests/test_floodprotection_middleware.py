@@ -6,7 +6,7 @@ from misago.threads.api.postingendpoint import PostingInterrupt
 from misago.threads.api.postingendpoint.floodprotection import FloodProtectionMiddleware
 from misago.users.testutils import AuthenticatedUserTestCase
 
-user_acl = {'can_omit_flood_protection': False}
+user_acl = {"can_omit_flood_protection": False}
 
 
 class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
@@ -42,7 +42,7 @@ class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
 
     def test_flood_permission(self):
         """middleware is respects permission to flood for team members"""
-        can_omit_flood_protection_user_acl = {'can_omit_flood_protection': True}
+        can_omit_flood_protection_user_acl = {"can_omit_flood_protection": True}
         middleware = FloodProtectionMiddleware(
             user=self.user, user_acl=can_omit_flood_protection_user_acl
         )

@@ -18,4 +18,5 @@ class override_dynamic_settings:
         def test_function_wrapper(*args, **kwargs):
             with self as context:
                 return f(*args, **kwargs)
+
         return test_function_wrapper

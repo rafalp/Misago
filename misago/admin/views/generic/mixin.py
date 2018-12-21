@@ -9,6 +9,7 @@ class AdminBaseMixin(object):
     templates_dir - directory with templates
     message_404 - string used in "requested item not found" messages
     """
+
     model = None
     root_link = None
     templates_dir = None

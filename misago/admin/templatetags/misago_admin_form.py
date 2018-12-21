@@ -6,11 +6,7 @@ register = template.Library()
 
 @register.inclusion_tag("misago/admin/form/row.html")
 def form_row(field, label_class=None, field_class=None):
-    return {
-        "field": field,
-        "label_class": label_class,
-        "field_class": field_class,
-    }
+    return {"field": field, "label_class": label_class, "field_class": field_class}
 
 
 @register.inclusion_tag("misago/admin/form/input.html")
@@ -25,7 +21,7 @@ def form_input(field):
 @register.simple_tag
 def render_attrs(widget, class_name=None):
     rendered_attrs = []
-    for attr, value in widget['attrs'].items():
+    for attr, value in widget["attrs"].items():
         if value not in (True, False, None):
             rendered_attrs.append((attr, value))
     if not widget["attrs"].get("class") and class_name:

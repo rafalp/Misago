@@ -13,7 +13,7 @@ from misago.threads.threadtypes import trees_map
 from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 
 
-CACHE_NAME = 'misago_categories_tree'
+CACHE_NAME = "misago_categories_tree"
 
 
 class CategoryManager(TreeManager):
@@ -24,10 +24,10 @@ class CategoryManager(TreeManager):
         return self.get_special(THREADS_ROOT_NAME)
 
     def get_special(self, special_role):
-        cache_name = '%s_%s' % (CACHE_NAME, special_role)
+        cache_name = "%s_%s" % (CACHE_NAME, special_role)
 
-        special_category = cache.get(cache_name, 'nada')
-        if special_category == 'nada':
+        special_category = cache.get(cache_name, "nada")
+        if special_category == "nada":
             special_category = self.get(special_role=special_role)
             cache.set(cache_name, special_category)
         return special_category
@@ -37,11 +37,11 @@ class CategoryManager(TreeManager):
         queryset = self.filter(tree_id=tree_id)
         if not include_root:
             queryset = queryset.filter(level__gt=0)
-        return queryset.order_by('lft')
+        return queryset.order_by("lft")
 
     def get_cached_categories_dict(self):
-        categories_dict = cache.get(CACHE_NAME, 'nada')
-        if categories_dict == 'nada':
+        categories_dict = cache.get(CACHE_NAME, "nada")
+        if categories_dict == "nada":
             categories_dict = self.get_categories_dict_from_db()
             cache.set(CACHE_NAME, categories_dict)
         return categories_dict
@@ -58,11 +58,7 @@ class CategoryManager(TreeManager):
 
 class Category(MPTTModel):
     parent = TreeForeignKey(
-        'self',
-        null=True,
-        blank=True,
-        related_name='children',
-        on_delete=models.CASCADE,
+        "self", null=True, blank=True, related_name="children", on_delete=models.CASCADE
     )
     special_role = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
@@ -73,8 +69,8 @@ class Category(MPTTModel):
     posts = models.PositiveIntegerField(default=0)
     last_post_on = models.DateTimeField(null=True, blank=True)
     last_thread = models.ForeignKey(
-        'misago_threads.Thread',
-        related_name='+',
+        "misago_threads.Thread",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -83,7 +79,7 @@ class Category(MPTTModel):
     last_thread_slug = models.CharField(max_length=255, null=True, blank=True)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='+',
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -96,8 +92,8 @@ class Category(MPTTModel):
     prune_started_after = models.PositiveIntegerField(default=0)
     prune_replied_after = models.PositiveIntegerField(default=0)
     archive_pruned_in = models.ForeignKey(
-        'self',
-        related_name='pruned_archive',
+        "self",
+        related_name="pruned_archive",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -123,24 +119,28 @@ class Category(MPTTModel):
         self.threads = threads_queryset.count()
 
         if self.threads:
-            replies_sum = threads_queryset.aggregate(models.Sum('replies'))
-            self.posts = self.threads + replies_sum['replies__sum']
+            replies_sum = threads_queryset.aggregate(models.Sum("replies"))
+            self.posts = self.threads + replies_sum["replies__sum"]
         else:
             self.posts = 0
 
         if self.threads:
-            last_thread_qs = threads_queryset.filter(is_hidden=False, is_unapproved=False)
-            last_thread = last_thread_qs.order_by('-last_post_on')[:1][0]
+            last_thread_qs = threads_queryset.filter(
+                is_hidden=False, is_unapproved=False
+            )
+            last_thread = last_thread_qs.order_by("-last_post_on")[:1][0]
             self.set_last_thread(last_thread)
         else:
             self.empty_last_thread()
 
     def delete_content(self):
         from .signals import delete_category_content
+
         delete_category_content.send(sender=self)
 
     def move_content(self, new_category):
         from .signals import move_category_content
+
         move_category_content.send(sender=self, new_category=new_category)
 
     def get_absolute_url(self):
@@ -187,13 +187,9 @@ class CategoryRole(BaseRole):
 
 class RoleCategoryACL(models.Model):
     role = models.ForeignKey(
-        'misago_acl.Role',
-        related_name='categories_acls',
-        on_delete=models.CASCADE,
+        "misago_acl.Role", related_name="categories_acls", on_delete=models.CASCADE
     )
     category = models.ForeignKey(
-        'Category',
-        related_name='category_role_set',
-        on_delete=models.CASCADE,
+        "Category", related_name="category_role_set", on_delete=models.CASCADE
     )
     category_role = models.ForeignKey(CategoryRole, on_delete=models.CASCADE)

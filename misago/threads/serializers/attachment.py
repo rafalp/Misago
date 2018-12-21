@@ -5,7 +5,7 @@ from django.urls import reverse
 from misago.threads.models import Attachment
 
 
-__all__ = ['AttachmentSerializer']
+__all__ = ["AttachmentSerializer"]
 
 
 class AttachmentSerializer(serializers.ModelSerializer):
@@ -20,16 +20,16 @@ class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
         fields = [
-            'id',
-            'filetype',
-            'post',
-            'uploaded_on',
-            'uploader_name',
-            'filename',
-            'size',
-            'acl',
-            'is_image',
-            'url',
+            "id",
+            "filetype",
+            "post",
+            "uploaded_on",
+            "uploader_name",
+            "filename",
+            "size",
+            "acl",
+            "is_image",
+            "url",
         ]
 
     def get_acl(self, obj):
@@ -46,18 +46,15 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return {
-            'index': obj.get_absolute_url(),
-            'thumb': obj.get_thumbnail_url(),
-            'uploader': self.get_uploader_url(obj),
+            "index": obj.get_absolute_url(),
+            "thumb": obj.get_thumbnail_url(),
+            "uploader": self.get_uploader_url(obj),
         }
 
     def get_uploader_url(self, obj):
         if obj.uploader_id:
             return reverse(
-                'misago:user', kwargs={
-                    'slug': obj.uploader_slug,
-                    'pk': obj.uploader_id,
-                }
+                "misago:user", kwargs={"slug": obj.uploader_slug, "pk": obj.uploader_id}
             )
         else:
             return None

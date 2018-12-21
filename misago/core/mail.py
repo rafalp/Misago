@@ -9,24 +9,27 @@ from .utils import get_host_from_address
 
 def build_mail(recipient, subject, template, sender=None, context=None):
     context = context.copy() if context else {}
-    context.update({
-        'SITE_ADDRESS': settings.MISAGO_ADDRESS,
-        'SITE_HOST': get_host_from_address(settings.MISAGO_ADDRESS),
-        'LANGUAGE_CODE': get_language()[:2],
-        'LOGIN_URL': settings.LOGIN_URL,
-
-        'user': recipient,
-        'sender': sender,
-        'subject': subject,
-    })
+    context.update(
+        {
+            "SITE_ADDRESS": settings.MISAGO_ADDRESS,
+            "SITE_HOST": get_host_from_address(settings.MISAGO_ADDRESS),
+            "LANGUAGE_CODE": get_language()[:2],
+            "LOGIN_URL": settings.LOGIN_URL,
+            "user": recipient,
+            "sender": sender,
+            "subject": subject,
+        }
+    )
 
     if not context.get("settings"):
         raise ValueError("settings key is missing from context")
 
-    message_plain = render_to_string('%s.txt' % template, context)
-    message_html = render_to_string('%s.html' % template, context)
+    message_plain = render_to_string("%s.txt" % template, context)
+    message_html = render_to_string("%s.html" % template, context)
 
-    message = djmail.EmailMultiAlternatives(subject, message_plain, to=[recipient.email])
+    message = djmail.EmailMultiAlternatives(
+        subject, message_plain, to=[recipient.email]
+    )
     message.attach_alternative(message_html, "text/html")
 
     return message

@@ -8,19 +8,16 @@ from misago.conf import settings
 
 UserModel = get_user_model()
 
-__all__ = [
-    'ModerateAvatarSerializer',
-    'ModerateSignatureSerializer',
-]
+__all__ = ["ModerateAvatarSerializer", "ModerateSignatureSerializer"]
 
 
 class ModerateAvatarSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = [
-            'is_avatar_locked',
-            'avatar_lock_user_message',
-            'avatar_lock_staff_message',
+            "is_avatar_locked",
+            "avatar_lock_user_message",
+            "avatar_lock_staff_message",
         ]
 
 
@@ -28,10 +25,10 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = [
-            'signature',
-            'is_signature_locked',
-            'signature_lock_user_message',
-            'signature_lock_staff_message',
+            "signature",
+            "is_signature_locked",
+            "signature_lock_user_message",
+            "signature_lock_staff_message",
         ]
 
     def validate_signature(self, value):
@@ -42,7 +39,8 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
                     "Signature can't be longer than %(limit)s character.",
                     "Signature can't be longer than %(limit)s characters.",
                     length_limit,
-                ) % {'limit': length_limit}
+                )
+                % {"limit": length_limit}
             )
 
         return value

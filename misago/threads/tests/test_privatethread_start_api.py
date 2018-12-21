@@ -17,10 +17,10 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.private_threads()
-        self.api_link = reverse('misago:api:private-thread-list')
+        self.api_link = reverse("misago:api:private-thread-list")
 
         self.other_user = UserModel.objects.create_user(
-            'BobBoberson', 'bob@boberson.com', 'pass123'
+            "BobBoberson", "bob@boberson.com", "pass123"
         )
 
     def test_cant_start_thread_as_guest(self):
@@ -30,23 +30,21 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-    @patch_user_acl({'can_use_private_threads': False})
+    @patch_user_acl({"can_use_private_threads": False})
     def test_cant_use_private_threads(self):
         """has no permission to use private threads"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't use private threads.",
-        })
+        self.assertEqual(response.json(), {"detail": "You can't use private threads."})
 
-    @patch_user_acl({'can_start_private_threads': False})
+    @patch_user_acl({"can_start_private_threads": False})
     def test_cant_start_private_thread(self):
         """permission to start private thread is validated"""
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't start private threads.",
-        })
+        self.assertEqual(
+            response.json(), {"detail": "You can't start private threads."}
+        )
 
     def test_empty_data(self):
         """no data sent handling has no showstoppers"""
@@ -54,11 +52,12 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["You have to enter user names."],
-                'title': ["You have to enter thread title."],
-                'post': ["You have to enter a message."],
-            }
+            response.json(),
+            {
+                "to": ["You have to enter user names."],
+                "title": ["You have to enter thread title."],
+                "post": ["You have to enter a message."],
+            },
         )
 
     def test_title_is_validated(self):
@@ -66,17 +65,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "------",
-                'post': "Lorem ipsum dolor met, sit amet elit!",
-            }
+                "to": [self.other_user.username],
+                "title": "------",
+                "post": "Lorem ipsum dolor met, sit amet elit!",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
+            response.json(),
+            {"title": ["Thread title should contain alpha-numeric characters."]},
         )
 
     def test_post_is_validated(self):
@@ -84,17 +82,20 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "a",
-            }
+                "to": [self.other_user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "a",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'post': ["Posted message should be at least 5 characters long (it has 1)."],
-            }
+            response.json(),
+            {
+                "post": [
+                    "Posted message should be at least 5 characters long (it has 1)."
+                ]
+            },
         )
 
     def test_cant_invite_self(self):
@@ -102,17 +103,20 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["You can't include yourself on the list of users to invite to new thread."],
-            }
+            response.json(),
+            {
+                "to": [
+                    "You can't include yourself on the list of users to invite to new thread."
+                ]
+            },
         )
 
     def test_cant_invite_nonexisting(self):
@@ -120,17 +124,15 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': ['Ab', 'Cd'],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": ["Ab", "Cd"],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["One or more users could not be found: ab, cd"],
-            }
+            response.json(), {"to": ["One or more users could not be found: ab, cd"]}
         )
 
     def test_cant_invite_too_many(self):
@@ -138,17 +140,20 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': ['Username%s' % i for i in range(50)],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": ["Username%s" % i for i in range(50)],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["You can't add more than 3 users to private thread (you've added 50)."],
-            }
+            response.json(),
+            {
+                "to": [
+                    "You can't add more than 3 users to private thread (you've added 50)."
+                ]
+            },
         )
 
     @patch_user_acl(other_user_cant_use_private_threads)
@@ -157,17 +162,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["BobBoberson can't participate in private threads."],
-            }
+            response.json(),
+            {"to": ["BobBoberson can't participate in private threads."]},
         )
 
     def test_cant_invite_blocking(self):
@@ -177,18 +181,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'to': ["BobBoberson is blocking you."],
-        })
+        self.assertEqual(response.json(), {"to": ["BobBoberson is blocking you."]})
 
-    @patch_user_acl({'can_add_everyone_to_private_threads': 1})
+    @patch_user_acl({"can_add_everyone_to_private_threads": 1})
     def test_cant_invite_blocking_override(self):
         """api validates that you cant invite blocking user to thread"""
         self.other_user.blocks.add(self.user)
@@ -196,17 +198,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "-----",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "-----",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
+            response.json(),
+            {"title": ["Thread title should contain alpha-numeric characters."]},
         )
 
     def test_cant_invite_followers_only(self):
@@ -218,35 +219,37 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["BobBoberson limits invitations to private threads to followed users."],
-            }
+            response.json(),
+            {
+                "to": [
+                    "BobBoberson limits invitations to private threads to followed users."
+                ]
+            },
         )
 
         # allow us to bypass following check
-        with patch_user_acl({'can_add_everyone_to_private_threads': 1}):
+        with patch_user_acl({"can_add_everyone_to_private_threads": 1}):
             response = self.client.post(
                 self.api_link,
                 data={
-                    'to': [self.other_user.username],
-                    'title': "-----",
-                    'post': "Lorem ipsum dolor.",
-                }
+                    "to": [self.other_user.username],
+                    "title": "-----",
+                    "post": "Lorem ipsum dolor.",
+                },
             )
 
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
-                response.json(), {
-                    'title': ["Thread title should contain alpha-numeric characters."],
-                }
+                response.json(),
+                {"title": ["Thread title should contain alpha-numeric characters."]},
             )
 
         # make user follow us
@@ -255,17 +258,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "-----",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "-----",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'title': ["Thread title should contain alpha-numeric characters."],
-            }
+            response.json(),
+            {"title": ["Thread title should contain alpha-numeric characters."]},
         )
 
     def test_cant_invite_anyone(self):
@@ -277,35 +279,33 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Lorem ipsum dolor met",
-                'post': "Lorem ipsum dolor.",
-            }
+                "to": [self.other_user.username],
+                "title": "Lorem ipsum dolor met",
+                "post": "Lorem ipsum dolor.",
+            },
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {
-                'to': ["BobBoberson is not allowing invitations to private threads."],
-            }
+            response.json(),
+            {"to": ["BobBoberson is not allowing invitations to private threads."]},
         )
 
         # allow us to bypass user preference check
-        with patch_user_acl({'can_add_everyone_to_private_threads': 1}):
+        with patch_user_acl({"can_add_everyone_to_private_threads": 1}):
             response = self.client.post(
                 self.api_link,
                 data={
-                    'to': [self.other_user.username],
-                    'title': "-----",
-                    'post': "Lorem ipsum dolor.",
-                }
+                    "to": [self.other_user.username],
+                    "title": "-----",
+                    "post": "Lorem ipsum dolor.",
+                },
             )
 
             self.assertEqual(response.status_code, 400)
             self.assertEqual(
-                response.json(), {
-                    'title': ["Thread title should contain alpha-numeric characters."],
-                }
+                response.json(),
+                {"title": ["Thread title should contain alpha-numeric characters."]},
             )
 
     def test_can_start_thread(self):
@@ -313,17 +313,17 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Hello, I am test thread!",
-                'post': "Lorem ipsum dolor met!",
-            }
+                "to": [self.other_user.username],
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
 
         response_json = response.json()
-        self.assertEqual(response_json['url'], thread.get_absolute_url())
+        self.assertEqual(response_json["url"], thread.get_absolute_url())
 
         response = self.client.get(thread.get_absolute_url())
         self.assertContains(response, self.category.name)
@@ -346,7 +346,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         post = self.user.post_set.all()[:1][0]
         self.assertEqual(post.category_id, self.category.pk)
-        self.assertEqual(post.original, 'Lorem ipsum dolor met!')
+        self.assertEqual(post.original, "Lorem ipsum dolor met!")
         self.assertEqual(post.poster_id, self.user.id)
         self.assertEqual(post.poster_name, self.user.username)
 
@@ -359,7 +359,9 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         ThreadParticipant.objects.get(thread=thread, user=self.user, is_owner=True)
 
         # other user was added to thread
-        ThreadParticipant.objects.get(thread=thread, user=self.other_user, is_owner=False)
+        ThreadParticipant.objects.get(
+            thread=thread, user=self.other_user, is_owner=False
+        )
 
         # other user has sync_unread_private_threads flag
         user_to_sync = UserModel.objects.get(sync_unread_private_threads=True)
@@ -383,9 +385,9 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                'to': [self.other_user.username],
-                'title': "Brzęczyżczykiewicz",
-                'post': "Chrzążczyżewoszyce, powiat Łękółody.",
-            }
+                "to": [self.other_user.username],
+                "title": "Brzęczyżczykiewicz",
+                "post": "Chrzążczyżewoszyce, powiat Łękółody.",
+            },
         )
         self.assertEqual(response.status_code, 200)

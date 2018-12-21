@@ -26,11 +26,8 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
         api_link = reverse(
-            'misago:api:thread-poll-detail',
-            kwargs={
-                'thread_pk': 'kjha6dsa687sa',
-                'pk': self.poll.pk,
-            }
+            "misago:api:thread-poll-detail",
+            kwargs={"thread_pk": "kjha6dsa687sa", "pk": self.poll.pk},
         )
 
         response = self.client.delete(api_link)
@@ -39,11 +36,8 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
     def test_nonexistant_thread_id(self):
         """api validates that thread exists"""
         api_link = reverse(
-            'misago:api:thread-poll-detail',
-            kwargs={
-                'thread_pk': self.thread.pk + 1,
-                'pk': self.poll.pk,
-            }
+            "misago:api:thread-poll-detail",
+            kwargs={"thread_pk": self.thread.pk + 1, "pk": self.poll.pk},
         )
 
         response = self.client.delete(api_link)
@@ -52,11 +46,8 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
     def test_invalid_poll_id(self):
         """api validates that poll id is integer"""
         api_link = reverse(
-            'misago:api:thread-poll-detail',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': 'sad98as7d97sa98',
-            }
+            "misago:api:thread-poll-detail",
+            kwargs={"thread_pk": self.thread.pk, "pk": "sad98as7d97sa98"},
         )
 
         response = self.client.delete(api_link)
@@ -65,11 +56,8 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
     def test_nonexistant_poll_id(self):
         """api validates that poll exists"""
         api_link = reverse(
-            'misago:api:thread-poll-detail',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': self.poll.pk + 123,
-            }
+            "misago:api:thread-poll-detail",
+            kwargs={"thread_pk": self.thread.pk, "pk": self.poll.pk + 123},
         )
 
         response = self.client.delete(api_link)
@@ -80,9 +68,7 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         """api validates that user has permission to delete poll in thread"""
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't delete polls."
-        })
+        self.assertEqual(response.json(), {"detail": "You can't delete polls."})
 
     @patch_user_acl({"can_delete_polls": 1, "poll_edit_time": 5})
     def test_no_permission_timeout(self):
@@ -92,9 +78,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't delete polls that are older than 5 minutes."
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "You can't delete polls that are older than 5 minutes."},
+        )
 
     @patch_user_acl({"can_delete_polls": 1})
     def test_no_permission_poll_closed(self):
@@ -105,9 +92,9 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This poll is over. You can't delete it."
-        })
+        self.assertEqual(
+            response.json(), {"detail": "This poll is over. You can't delete it."}
+        )
 
     @patch_user_acl({"can_delete_polls": 1})
     def test_no_permission_other_user_poll(self):
@@ -117,9 +104,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't delete other users polls in this category."
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "You can't delete other users polls in this category."},
+        )
 
     @patch_user_acl({"can_delete_polls": 1})
     @patch_category_acl({"can_close_threads": False})
@@ -130,9 +118,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This thread is closed. You can't delete polls in it."
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "This thread is closed. You can't delete polls in it."},
+        )
 
     @patch_user_acl({"can_delete_polls": 1})
     @patch_category_acl({"can_close_threads": True})
@@ -153,9 +142,10 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "This category is closed. You can't delete polls in it."
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "This category is closed. You can't delete polls in it."},
+        )
 
     @patch_user_acl({"can_delete_polls": 1})
     @patch_category_acl({"can_close_threads": True})
@@ -173,7 +163,7 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
         response = self.client.delete(self.api_link)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'can_start_poll': True})
+        self.assertEqual(response.json(), {"can_start_poll": True})
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)
@@ -192,7 +182,7 @@ class ThreadPollDeleteTests(ThreadPollApiTestCase):
 
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), {'can_start_poll': True})
+        self.assertEqual(response.json(), {"can_start_poll": True})
 
         self.assertEqual(Poll.objects.count(), 0)
         self.assertEqual(PollVote.objects.count(), 0)

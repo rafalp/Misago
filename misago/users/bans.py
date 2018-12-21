@@ -12,7 +12,7 @@ from django.utils.dateparse import parse_datetime
 from .constants import BANS_CACHE
 from .models import Ban, BanCache
 
-CACHE_SESSION_KEY = 'misago_ip_check'
+CACHE_SESSION_KEY = "misago_ip_check"
 
 
 def get_username_ban(username, registration_only=False):
@@ -64,9 +64,7 @@ def _set_user_ban_cache(user, cache_versions):
 
     try:
         user_ban = Ban.objects.get_ban(
-            username=user.username,
-            email=user.email,
-            registration_only=False,
+            username=user.username, email=user.email, registration_only=False
         )
 
         ban_cache.ban = user_ban
@@ -92,7 +90,7 @@ def get_request_ip_ban(request):
     """
     session_ban_cache = _get_session_bancache(request)
     if session_ban_cache:
-        if session_ban_cache['is_banned']:
+        if session_ban_cache["is_banned"]:
             return session_ban_cache
         else:
             return False
@@ -100,21 +98,21 @@ def get_request_ip_ban(request):
     found_ban = get_ip_ban(request.user_ip)
 
     ban_cache = request.session[CACHE_SESSION_KEY] = {
-        'version': request.cache_versions[BANS_CACHE],
-        'ip': request.user_ip,
+        "version": request.cache_versions[BANS_CACHE],
+        "ip": request.user_ip,
     }
 
     if found_ban:
         if found_ban.expires_on:
-            ban_cache['expires_on'] = found_ban.expires_on.isoformat()
+            ban_cache["expires_on"] = found_ban.expires_on.isoformat()
         else:
-            ban_cache['expires_on'] = None
+            ban_cache["expires_on"] = None
 
-        ban_cache.update({'is_banned': True, 'message': found_ban.user_message})
+        ban_cache.update({"is_banned": True, "message": found_ban.user_message})
         request.session[CACHE_SESSION_KEY] = ban_cache
         return _hydrate_session_cache(request.session[CACHE_SESSION_KEY])
     else:
-        ban_cache['is_banned'] = False
+        ban_cache["is_banned"] = False
         request.session[CACHE_SESSION_KEY] = ban_cache
         return None
 
@@ -123,12 +121,12 @@ def _get_session_bancache(request):
     try:
         ban_cache = request.session[CACHE_SESSION_KEY]
         ban_cache = _hydrate_session_cache(ban_cache)
-        if ban_cache['ip'] != request.user_ip:
+        if ban_cache["ip"] != request.user_ip:
             return None
-        if ban_cache['version'] != request.cache_versions[BANS_CACHE]:
+        if ban_cache["version"] != request.cache_versions[BANS_CACHE]:
             return None
-        if ban_cache.get('expires_on'):
-            if ban_cache['expires_on'] < timezone.today():
+        if ban_cache.get("expires_on"):
+            if ban_cache["expires_on"] < timezone.today():
                 return None
         return ban_cache
     except KeyError:
@@ -138,8 +136,8 @@ def _get_session_bancache(request):
 def _hydrate_session_cache(ban_cache):
     hydrated = ban_cache.copy()
 
-    if hydrated.get('expires_on'):
-        hydrated['expires_on'] = parse_datetime(hydrated['expires_on'])
+    if hydrated.get("expires_on"):
+        hydrated["expires_on"] = parse_datetime(hydrated["expires_on"])
 
     return hydrated
 
@@ -153,7 +151,7 @@ def ban_user(user, user_message=None, staff_message=None, length=None, expires_o
         banned_value=user.username.lower(),
         user_message=user_message,
         staff_message=staff_message,
-        expires_on=expires_on
+        expires_on=expires_on,
     )
     Ban.objects.invalidate_cache()
     return ban
@@ -168,7 +166,7 @@ def ban_ip(ip, user_message=None, staff_message=None, length=None, expires_on=No
         banned_value=ip,
         user_message=user_message,
         staff_message=staff_message,
-        expires_on=expires_on
+        expires_on=expires_on,
     )
     Ban.objects.invalidate_cache()
     return ban

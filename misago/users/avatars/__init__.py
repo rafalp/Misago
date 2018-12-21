@@ -2,12 +2,12 @@ from misago.conf import settings
 
 from . import store, gravatar, dynamic, gallery, uploaded
 
-AVATAR_TYPES = ('gravatar', 'dynamic', 'gallery', 'uploaded')
+AVATAR_TYPES = ("gravatar", "dynamic", "gallery", "uploaded")
 
 SET_DEFAULT_AVATAR = {
-    'gravatar': gravatar.set_avatar,
-    'dynamic': dynamic.set_avatar,
-    'gallery': gallery.set_random_avatar,
+    "gravatar": gravatar.set_avatar,
+    "dynamic": dynamic.set_avatar,
+    "gallery": gallery.set_random_avatar,
 }
 
 

@@ -1,1 +1,1 @@
-default_app_config = 'misago.cache.apps.MisagoCacheConfig'
+default_app_config = "misago.cache.apps.MisagoCacheConfig"

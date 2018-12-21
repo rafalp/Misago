@@ -10,13 +10,13 @@ def send_welcome_email(request, user):
     settings = request.settings
 
     mail_subject = _("Welcome on %(forum_name)s forums!")
-    mail_subject = mail_subject % {'forum_name': settings.forum_name}
+    mail_subject = mail_subject % {"forum_name": settings.forum_name}
 
     if not user.requires_activation:
         mail_user(
             user,
             mail_subject,
-            'misago/emails/register/complete',
+            "misago/emails/register/complete",
             context={"settings": settings},
         )
         return
@@ -29,13 +29,13 @@ def send_welcome_email(request, user):
     mail_user(
         user,
         mail_subject,
-        'misago/emails/register/inactive',
+        "misago/emails/register/inactive",
         context={
-            'activation_token': activation_token,
-            'activation_by_admin': activation_by_admin,
-            'activation_by_user': activation_by_user,
-            'settings': settings,
-        }
+            "activation_token": activation_token,
+            "activation_by_admin": activation_by_admin,
+            "activation_by_user": activation_by_user,
+            "settings": settings,
+        },
     )
 
 
@@ -48,18 +48,18 @@ def save_user_agreements(user, form):
         agreement = Agreement.objects.get(id=agreement_id)
         save_user_agreement_acceptance(user, agreement)
 
-    user.save(update_fields=['agreements'])
+    user.save(update_fields=["agreements"])
 
 
 def get_registration_result_json(user):
-    activation_method = 'active'
+    activation_method = "active"
     if user.requires_activation_by_admin:
-        activation_method = 'admin'
+        activation_method = "admin"
     elif user.requires_activation_by_user:
-        activation_method = 'user'
+        activation_method = "user"
 
     return {
-        'activation': activation_method,
-        'email': user.email,
-        'username': user.username,
+        "activation": activation_method,
+        "email": user.email,
+        "username": user.username,
     }

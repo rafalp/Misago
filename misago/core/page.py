@@ -22,16 +22,18 @@ class Page(object):
         while self._unsorted_list:
             iterations += 1
             if iterations > 512:
-                message = (
-                    "%s page hierarchy is invalid or too complex  to resolve. Sections left: %s"
-                )
+                message = "%s page hierarchy is invalid or too complex  to resolve. Sections left: %s"
                 raise ValueError(message % self._unsorted_list)
 
             for index, section in enumerate(self._unsorted_list):
-                if section['after']:
-                    section_added = self._insert_section(section, after=section['after'])
-                elif section['before']:
-                    section_added = self._insert_section(section, before=section['before'])
+                if section["after"]:
+                    section_added = self._insert_section(
+                        section, after=section["after"]
+                    )
+                elif section["before"]:
+                    section_added = self._insert_section(
+                        section, before=section["before"]
+                    )
                 else:
                     section_added = self._insert_section(section)
 
@@ -44,7 +46,7 @@ class Page(object):
             new_sorted_list = []
             for section in self._sorted_list:
                 new_sorted_list.append(section)
-                if section['link'] == after:
+                if section["link"] == after:
                     new_sorted_list.append(inserted_section)
                     self._sorted_list = new_sorted_list
                     return True
@@ -53,7 +55,7 @@ class Page(object):
         elif before:
             new_sorted_list = []
             for section in self._sorted_list:
-                if section['link'] == before:
+                if section["link"] == before:
                     new_sorted_list.append(inserted_section)
                     new_sorted_list.append(section)
                     self._sorted_list = new_sorted_list
@@ -67,22 +69,32 @@ class Page(object):
             return True
 
     def add_section(
-            self, link, after=None, before=None, visible_if=None, get_metadata=None, **kwargs
+        self,
+        link,
+        after=None,
+        before=None,
+        visible_if=None,
+        get_metadata=None,
+        **kwargs
     ):
         if self._finalized:
-            message = "%s page was initialized already and no longer accepts new sections"
+            message = (
+                "%s page was initialized already and no longer accepts new sections"
+            )
             raise RuntimeError(message % self.name)
 
         if after and before:
             raise ValueError("after and before arguments are exclusive")
 
-        kwargs.update({
-            'link': link,
-            'after': after,
-            'before': before,
-            'visible_if': visible_if,
-            'get_metadata': get_metadata,
-        })
+        kwargs.update(
+            {
+                "link": link,
+                "after": after,
+                "before": before,
+                "visible_if": visible_if,
+                "get_metadata": get_metadata,
+            }
+        )
 
         self._unsorted_list.append(kwargs)
 
@@ -91,7 +103,7 @@ class Page(object):
         url_name = request.resolver_match.url_name
 
         if namespace:
-            active_link = '%s:%s' % (namespace, url_name)
+            active_link = "%s:%s" % (namespace, url_name)
         else:
             active_link = url_name
         return active_link
@@ -105,16 +117,16 @@ class Page(object):
             section = section_definition.copy()
 
             is_visible = True
-            if section['visible_if']:
-                is_visible = section['visible_if'](request, *args)
+            if section["visible_if"]:
+                is_visible = section["visible_if"](request, *args)
 
             if is_visible:
-                if section['get_metadata']:
-                    section['metadata'] = section['get_metadata'](request, *args)
-                section['is_active'] = active_link.startswith(section['link'])
+                if section["get_metadata"]:
+                    section["metadata"] = section["get_metadata"](request, *args)
+                section["is_active"] = active_link.startswith(section["link"])
                 visible_sections.append(section)
         return visible_sections
 
     def get_default_link(self):
         self.assert_is_finalized()
-        return self._sorted_list[0]['link']
+        return self._sorted_list[0]["link"]

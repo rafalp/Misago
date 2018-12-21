@@ -8,22 +8,18 @@ from misago.admin.testutils import AdminTestCase
 from misago.users.djangoadmin import UserAdminModel
 
 
-@override_settings(ROOT_URLCONF='misago.core.testproject.urls')
+@override_settings(ROOT_URLCONF="misago.core.testproject.urls")
 class TestDjangoAdminUserForm(AdminTestCase):
     def setUp(self):
         super().setUp()
         self.test_user = get_user_model().objects.create_user(
-            username='Bob',
-            email='bob@test.com',
-            password='Pass.123',
+            username="Bob", email="bob@test.com", password="Pass.123"
         )
         self.edit_test_user_in_django_url = reverse(
-            'admin:misago_users_user_change',
-            args=[self.test_user.pk],
+            "admin:misago_users_user_change", args=[self.test_user.pk]
         )
         self.edit_test_user_in_misago_url = reverse(
-            'misago:admin:users:accounts:edit',
-            args=[self.test_user.pk],
+            "misago:admin:users:accounts:edit", args=[self.test_user.pk]
         )
 
     def test_user_edit_view_content(self):
@@ -54,8 +50,7 @@ class TestDjangoAdminUserForm(AdminTestCase):
             perms_all_pks.append(perm.pk)
 
         response = self.client.post(
-            self.edit_test_user_in_django_url,
-            data={'user_permissions': perms_all_pks},
+            self.edit_test_user_in_django_url, data={"user_permissions": perms_all_pks}
         )
         self.assertEqual(response.status_code, 302)
 
@@ -68,12 +63,12 @@ class TestDjangoAdminUserForm(AdminTestCase):
         """the url to Misago admin is present in Django admin user edit view"""
         response = self.client.get(self.edit_test_user_in_django_url)
         self.assertContains(response, self.edit_test_user_in_misago_url)
-        edit_from_misago_short_desc = UserAdminModel.get_edit_from_misago_url.short_description
+        edit_from_misago_short_desc = (
+            UserAdminModel.get_edit_from_misago_url.short_description
+        )
         self.assertContains(response, edit_from_misago_short_desc)
 
     def test_misago_admin_url_presence_in_user_list_view(self):
         """the url to Misago admin is present in Django admin user list view"""
-        response = self.client.get(
-            reverse('admin:misago_users_user_changelist'),
-        )
+        response = self.client.get(reverse("admin:misago_users_user_changelist"))
         self.assertContains(response, self.edit_test_user_in_misago_url)

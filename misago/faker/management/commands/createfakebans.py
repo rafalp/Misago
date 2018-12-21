@@ -15,20 +15,20 @@ def fake_username_ban(fake):
     fake_value = fake.first_name()
 
     if random.randint(0, 100) < 31:
-        fake_value = '%s*' % fake_value
+        fake_value = "%s*" % fake_value
     elif random.randint(0, 100) < 31:
-        fake_value = '*%s' % fake_value
+        fake_value = "*%s" % fake_value
     elif random.randint(0, 100) < 31:
         fake_value = list(fake_value)
-        fake_value.insert(random.randint(0, len(fake_value) - 1), '*')
-        fake_value = ''.join(fake_value)
+        fake_value.insert(random.randint(0, len(fake_value) - 1), "*")
+        fake_value = "".join(fake_value)
 
     return fake_value
 
 
 def fake_email_ban(fake):
     if random.randint(0, 100) < 35:
-        return '*@%s' % fake.domain_name()
+        return "*@%s" % fake.domain_name()
     else:
         return fake.email()
 
@@ -37,32 +37,32 @@ def fake_ip_ban(fake):
     if random.randint(0, 1):
         fake_value = fake.ipv4()
         if random.randint(0, 100) < 35:
-            fake_value = fake_value.split('.')
-            fake_value = '.'.join(fake_value[:random.randint(1, 3)])
-            fake_value = '%s.*' % fake_value
+            fake_value = fake_value.split(".")
+            fake_value = ".".join(fake_value[: random.randint(1, 3)])
+            fake_value = "%s.*" % fake_value
         elif random.randint(0, 100) < 35:
-            fake_value = fake_value.split('.')
-            fake_value = '.'.join(fake_value[random.randint(1, 3):])
-            fake_value = '*.%s' % fake_value
+            fake_value = fake_value.split(".")
+            fake_value = ".".join(fake_value[random.randint(1, 3) :])
+            fake_value = "*.%s" % fake_value
         elif random.randint(0, 100) < 35:
-            fake_value = fake_value.split('.')
-            fake_value[random.randint(0, 3)] = '*'
-            fake_value = '.'.join(fake_value)
+            fake_value = fake_value.split(".")
+            fake_value[random.randint(0, 3)] = "*"
+            fake_value = ".".join(fake_value)
     else:
         fake_value = fake.ipv6()
 
         if random.randint(0, 100) < 35:
-            fake_value = fake_value.split(':')
-            fake_value = ':'.join(fake_value[:random.randint(1, 7)])
-            fake_value = '%s:*' % fake_value
+            fake_value = fake_value.split(":")
+            fake_value = ":".join(fake_value[: random.randint(1, 7)])
+            fake_value = "%s:*" % fake_value
         elif random.randint(0, 100) < 35:
-            fake_value = fake_value.split(':')
-            fake_value = ':'.join(fake_value[:random.randint(1, 7)])
-            fake_value = '*:%s' % fake_value
+            fake_value = fake_value.split(":")
+            fake_value = ":".join(fake_value[: random.randint(1, 7)])
+            fake_value = "*:%s" % fake_value
         elif random.randint(0, 100) < 35:
-            fake_value = fake_value.split(':')
-            fake_value[random.randint(0, 7)] = '*'
-            fake_value = ':'.join(fake_value)
+            fake_value = fake_value.split(":")
+            fake_value[random.randint(0, 7)] = "*"
+            fake_value = ":".join(fake_value)
 
     return fake_value
 
@@ -77,7 +77,7 @@ def create_fake_test(fake, test_type):
 
 
 class Command(BaseCommand):
-    help = 'Creates random fakey bans for testing purposes'
+    help = "Creates random fakey bans for testing purposes"
 
     def handle(self, *args, **options):
         try:
@@ -90,7 +90,7 @@ class Command(BaseCommand):
 
         fake = Factory.create()
 
-        message = 'Creating %s fake bans...\n'
+        message = "Creating %s fake bans...\n"
         self.stdout.write(message % fake_bans_to_create)
 
         created_count = 0
@@ -118,5 +118,5 @@ class Command(BaseCommand):
             created_count += 1
             show_progress(self, created_count, fake_bans_to_create)
 
-        message = '\n\nSuccessfully created %s fake bans'
+        message = "\n\nSuccessfully created %s fake bans"
         self.stdout.write(message % created_count)

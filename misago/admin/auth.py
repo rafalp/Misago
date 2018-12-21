@@ -8,13 +8,13 @@ from django.utils.translation import gettext as _
 from misago.conf import settings
 
 
-KEY_TOKEN = 'misago_admin_session_token'
-KEY_UPDATED = 'misago_admin_session_updated'
+KEY_TOKEN = "misago_admin_session_token"
+KEY_UPDATED = "misago_admin_session_updated"
 
 
 def make_user_admin_token(user):
     formula = (str(user.pk), user.email, user.password, settings.SECRET_KEY)
-    return md5(':'.join(formula).encode()).hexdigest()
+    return md5(":".join(formula).encode()).hexdigest()
 
 
 # Admin session state controls
@@ -60,7 +60,7 @@ logout = dj_auth.logout
 
 # Register signal for logout to make sure eventual admin session is closed
 def django_login_handler(sender, **kwargs):
-    request, user = kwargs['request'], kwargs['user']
+    request, user = kwargs["request"], kwargs["user"]
     try:
         admin_namespace = request.admin_namespace
     except AttributeError:
@@ -73,7 +73,7 @@ dj_auth.signals.user_logged_in.connect(django_login_handler)
 
 
 def django_logout_handler(sender, **kwargs):
-    close_admin_session(kwargs['request'])
+    close_admin_session(kwargs["request"])
 
 
 dj_auth.signals.user_logged_out.connect(django_logout_handler)

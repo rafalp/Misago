@@ -15,10 +15,7 @@ from .threadtypes import trees_map
 def validate_category(user_acl, category_id, allow_root=False):
     try:
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
-        category = Category.objects.get(
-            tree_id=threads_tree_id,
-            id=category_id,
-        )
+        category = Category.objects.get(tree_id=threads_tree_id, id=category_id)
     except Category.DoesNotExist:
         category = None
 
@@ -55,10 +52,8 @@ def validate_thread_title_length(settings, value):
             settings.thread_title_length_min,
         )
         raise ValidationError(
-            message % {
-                'limit_value': settings.thread_title_length_min,
-                'show_value': value_len,
-            }
+            message
+            % {"limit_value": settings.thread_title_length_min, "show_value": value_len}
         )
 
     if value_len > settings.thread_title_length_max:
@@ -68,10 +63,8 @@ def validate_thread_title_length(settings, value):
             settings.thread_title_length_max,
         )
         raise ValidationError(
-            message % {
-                'limit_value': settings.thread_title_length_max,
-                'show_value': value_len,
-            }
+            message
+            % {"limit_value": settings.thread_title_length_max, "show_value": value_len}
         )
 
 
@@ -88,10 +81,7 @@ def validate_post_length(settings, value):
             settings.post_length_min,
         )
         raise ValidationError(
-            message % {
-                'limit_value': settings.post_length_min,
-                'show_value': value_len,
-            }
+            message % {"limit_value": settings.post_length_min, "show_value": value_len}
         )
 
     if settings.post_length_max and value_len > settings.post_length_max:
@@ -101,10 +91,7 @@ def validate_post_length(settings, value):
             settings.post_length_max,
         )
         raise ValidationError(
-            message % {
-                'limit_value': settings.post_length_max,
-                'show_value': value_len,
-            }
+            message % {"limit_value": settings.post_length_max, "show_value": value_len}
         )
 
 
