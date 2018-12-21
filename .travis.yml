@@ -14,3 +14,9 @@ script:
   - pytest --cov=misago
 after_success:
   - coveralls
+matrix:
+  include:
+    - python: 3.6
+      script:
+        - pip install black
+        - black --check devproject misago
