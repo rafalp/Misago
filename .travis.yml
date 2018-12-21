@@ -1,22 +1,17 @@
 dist: xenial
 language: python
 python:
-  - "3.6"
+  - 3.6
 addons:
-  postgresql: "9.4"
+  postgresql: 9.4
 install:
   - pip install -U pip setuptools
   - python setup.py install
-  - pip install coveralls pytest-cov
+  - pip install coveralls pytest-cov black
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
   - pytest --cov=misago
+  - black --check devproject misago
 after_success:
   - coveralls
-matrix:
-  include:
-    - python: 3.6
-      script:
-        - pip install black
-        - black --check devproject misago
