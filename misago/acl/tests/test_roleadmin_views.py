@@ -2,13 +2,13 @@ from django.urls import reverse
 
 from misago.acl import ACL_CACHE
 from misago.acl.models import Role
-from misago.acl.testutils import fake_post_data
+from misago.acl.test import mock_form_data
 from misago.cache.test import assert_invalidates_cache
 from misago.admin.testutils import AdminTestCase
 
 
-def fake_data(data_dict):
-    return fake_post_data(Role(), data_dict)
+def create_data(data_dict):
+    return mock_form_data(Role(), data_dict)
 
 
 class RoleAdminViewsTests(AdminTestCase):
@@ -28,7 +28,7 @@ class RoleAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )
@@ -42,7 +42,7 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_edit_view(self):
         """edit role view has no showstoppers"""
         self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )
@@ -61,7 +61,7 @@ class RoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:users:edit', kwargs={
                 'pk': test_role.pk,
             }),
-            data=fake_data({
+            data=create_data({
                 'name': 'Top Lel',
             })
         )
@@ -74,7 +74,7 @@ class RoleAdminViewsTests(AdminTestCase):
 
     def test_editing_role_invalidates_acl_cache(self):
         self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )
@@ -86,7 +86,7 @@ class RoleAdminViewsTests(AdminTestCase):
                 reverse('misago:admin:permissions:users:edit', kwargs={
                     'pk': test_role.pk,
                 }),
-                data=fake_data({
+                data=create_data({
                     'name': 'Top Lel',
                 })
             )
@@ -94,7 +94,7 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_users_view(self):
         """users with this role view has no showstoppers"""
         response = self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )
@@ -110,7 +110,7 @@ class RoleAdminViewsTests(AdminTestCase):
     def test_delete_view(self):
         """delete role view has no showstoppers"""
         self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )
@@ -130,7 +130,7 @@ class RoleAdminViewsTests(AdminTestCase):
 
     def test_deleting_role_invalidates_acl_cache(self):
         self.client.post(
-            reverse('misago:admin:permissions:users:new'), data=fake_data({
+            reverse('misago:admin:permissions:users:new'), data=create_data({
                 'name': 'Test Role',
             })
         )

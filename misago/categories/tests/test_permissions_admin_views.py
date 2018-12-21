@@ -2,14 +2,14 @@ from django.urls import reverse
 
 from misago.acl import ACL_CACHE
 from misago.acl.models import Role
-from misago.acl.testutils import fake_post_data
+from misago.acl.test import mock_form_data
 from misago.admin.testutils import AdminTestCase
 from misago.cache.test import assert_invalidates_cache
 from misago.categories.models import Category, CategoryRole
 
 
-def fake_data(data_dict):
-    return fake_post_data(CategoryRole(), data_dict)
+def create_data(data_dict):
+    return mock_form_data(CategoryRole(), data_dict)
 
 
 class CategoryRoleAdminViewsTests(AdminTestCase):
@@ -32,7 +32,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         response = self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test CategoryRole',
             }),
         )
@@ -46,7 +46,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """edit role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test CategoryRole',
             }),
         )
@@ -64,7 +64,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             reverse('misago:admin:permissions:categories:edit', kwargs={
                 'pk': test_role.pk,
             }),
-            data=fake_data({
+            data=create_data({
                 'name': 'Top Lel',
             }),
         )
@@ -77,7 +77,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
     def test_editing_role_invalidates_acl_cache(self):
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test CategoryRole',
             }),
         )
@@ -89,7 +89,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
                 reverse('misago:admin:permissions:categories:edit', kwargs={
                     'pk': test_role.pk,
                 }),
-                data=fake_data({
+                data=create_data({
                     'name': 'Top Lel',
                 }),
             )
@@ -98,7 +98,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """delete role view has no showstoppers"""
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test CategoryRole',
             }),
         )
@@ -118,7 +118,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
     def test_deleting_role_invalidates_acl_cache(self):
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test CategoryRole',
             }),
         )
@@ -163,11 +163,11 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=fake_post_data(Role(), {'name': 'Test Role A'})
+            data=mock_form_data(Role(), {'name': 'Test Role A'})
         )
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=fake_post_data(Role(), {'name': 'Test Role B'})
+            data=mock_form_data(Role(), {'name': 'Test Role B'})
         )
 
         test_role_a = Role.objects.get(name='Test Role A')
@@ -175,13 +175,13 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test Comments',
             }),
         )
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test Full',
             }),
         )
@@ -244,7 +244,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         """change role categories perms view works"""
         self.client.post(
             reverse('misago:admin:permissions:users:new'),
-            data=fake_post_data(Role(), {'name': 'Test CategoryRole'})
+            data=mock_form_data(Role(), {'name': 'Test CategoryRole'})
         )
 
         test_role = Role.objects.get(name='Test CategoryRole')
@@ -329,7 +329,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # Set test roles
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test Comments',
             }),
         )
@@ -337,7 +337,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         self.client.post(
             reverse('misago:admin:permissions:categories:new'),
-            data=fake_data({
+            data=create_data({
                 'name': 'Test Full',
             }),
         )
