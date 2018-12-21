@@ -2,6 +2,8 @@ import pytest
 
 from misago.acl import ACL_CACHE
 from misago.conf import SETTINGS_CACHE
+from misago.conf.dynamicsettings import DynamicSettings
+from misago.conf.staticsettings import StaticSettings
 from misago.users.constants import BANS_CACHE
 from misago.users.models import AnonymousUser
 from misago.users.testutils import create_test_superuser, create_test_user
@@ -18,6 +20,16 @@ def get_cache_versions():
 @pytest.fixture
 def cache_versions():
     return get_cache_versions()
+
+
+@pytest.fixture
+def dynamic_settings(db, cache_versions):
+    return DynamicSettings(cache_versions)
+
+
+@pytest.fixture
+def settings():
+    return StaticSettings()
 
 
 @pytest.fixture
