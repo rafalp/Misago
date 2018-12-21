@@ -34,7 +34,9 @@ class DynamicSettings:
     def __getattr__(self, setting):
         if setting in self._overrides:
             return self._overrides[setting]
-        return self._settings[setting]["value"]
+        if setting in self._settings:
+            return self._settings[setting]["value"]
+        raise AttributeError("Setting %s is not defined" % setting)
 
     @classmethod
     def override_settings(cls, overrides):

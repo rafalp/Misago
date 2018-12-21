@@ -2,6 +2,7 @@ from contextlib import ContextDecorator, ExitStack, contextmanager
 from functools import wraps
 from unittest.mock import patch
 
+from .forms import get_permissions_forms
 from .useracl import get_user_acl
 
 __all__ = ["patch_user_acl"]
@@ -54,3 +55,20 @@ class patch_user_acl(ContextDecorator, ExitStack):
             "misago.acl.useracl.get_user_acl",
             side_effect=self.patched_get_user_acl,
         )
+
+
+def mock_role_form_data(model, data):
+    """
+    In order for form to don't fail submission, all permission fields need
+    to receive values. This function populates data dict with default values
+    for permissions, making form validation pass
+    """
+    for form in get_permissions_forms(model):
+        for field in form:
+            if field.value() is True:
+                data[field.html_name] = 1
+            elif field.value() is False:
+                data[field.html_name] = 0
+            else:
+                data[field.html_name] = field.value()
+    return data

@@ -13,6 +13,7 @@ pillow<4.2
 psycopg2-binary<2.8
 pytest
 pytest-django
+pytest-mock
 pytz
 requests<3
 unidecode<1
