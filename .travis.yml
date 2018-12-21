@@ -7,11 +7,17 @@ addons:
 install:
   - pip install -U pip setuptools
   - python setup.py install
-  - pip install coveralls pytest-cov black
+  - pip install coveralls pytest-cov
 before_script:
   - psql -c "create database travis_ci_test;" -U postgres
 script:
   - pytest --cov=misago
-  - black --check devproject misago
 after_success:
   - coveralls
+jobs:
+  include:
+    - name: "lint"
+      python: 3.6
+      script:
+        - pip install black
+        - black --check devproject misago
