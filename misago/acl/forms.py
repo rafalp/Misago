@@ -29,10 +29,11 @@ def get_permissions_forms(role, data=None):
 
         if FormType:
             if data:
-                perms_forms.append(FormType(data, prefix=extension))
+                form = FormType(data, prefix=extension)
             else:
-                perms_forms.append(
-                    FormType(initial=role_permissions.get(extension), prefix=extension)
+                form = FormType(
+                    initial=role_permissions.get(extension), prefix=extension
                 )
+            perms_forms.append(form)
 
     return perms_forms
