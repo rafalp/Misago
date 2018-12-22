@@ -38,7 +38,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
         )
 
         Ban.objects.create(
-            check_type=Ban.USERNAME, banned_value="bob", user_message="Nope!"
+            check_type=Ban.USERNAME, banned_value="OtherUser", user_message="Nope!"
         )
 
         password_token = make_password_change_token(user)

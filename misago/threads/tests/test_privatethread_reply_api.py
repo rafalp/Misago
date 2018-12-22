@@ -32,7 +32,8 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.assertEqual(self.user.audittrail_set.count(), 1)
 
         # valid user was flagged to sync
-        self.assertFalse(User.objects.get(pk=self.user.pk).sync_unread_private_threads)
-        self.assertTrue(
-            User.objects.get(pk=self.other_user.pk).sync_unread_private_threads
-        )
+        self.user.refresh_from_db()
+        self.assertFalse(self.user.sync_unread_private_threads)
+
+        self.other_user.refresh_from_db()
+        self.assertTrue(self.other_user.sync_unread_private_threads)

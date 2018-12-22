@@ -12,7 +12,7 @@ class AvatarServerTests(TestCase):
     def test_get_user_avatar_exact_size(self):
         """avatar server resolved valid avatar url for user"""
         avatar_url = reverse(
-            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 100}
+            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 200}
         )
 
         response = self.client.get(avatar_url)
@@ -23,7 +23,7 @@ class AvatarServerTests(TestCase):
     def test_get_user_avatar_inexact_size(self):
         """avatar server resolved valid avatar fallback for user"""
         avatar_url = reverse(
-            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 150}
+            "misago:user-avatar", kwargs={"pk": self.user.pk, "size": 250}
         )
 
         response = self.client.get(avatar_url)

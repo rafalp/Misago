@@ -145,20 +145,19 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.link,
-            json.dumps({"username": "BobBoberson"}),
+            json.dumps({"username": "NewName"}),
             content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
-        other_user.refresh_from_db()
-
-        self.assertEqual("BobBoberson", other_user.username)
-        self.assertEqual("bobboberson", other_user.slug)
+        self.other_user.refresh_from_db()
+        self.assertEqual("NewName", self.other_user.username)
+        self.assertEqual("newname", self.other_user.slug)
 
         options = response.json()
-        self.assertEqual(options["username"], other_user.username)
-        self.assertEqual(options["slug"], other_user.slug)
+        self.assertEqual(options["username"], self.other_user.username)
+        self.assertEqual(options["slug"], self.other_user.slug)
 
     @patch_user_acl({"can_rename_users": 1})
     def test_moderate_own_username(self):

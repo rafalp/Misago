@@ -90,9 +90,7 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        user = create_test_user("User", "user@example.com")
-        self.user.avatars = None
-        self.user.save()
+        self.user = create_test_user("User", "user@example.com", avatars=None)
 
     def tearDown(self):
         store.delete_avatar(self.user)
@@ -150,6 +148,7 @@ class AvatarSetterTests(TestCase):
     def test_gravatar(self):
         """dynamic avatar gets created"""
         self.assertNoAvatarIsSet()
+        self.user.set_email("rafio.xudb@gmail.com")
         gravatar.set_avatar(self.user)
         self.assertAvatarWasSet()
 

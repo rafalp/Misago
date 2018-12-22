@@ -69,5 +69,5 @@ class InvalidateBansTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
         # see if user is banned anymore
-        user.refresh_from_db()
+        user.ban_cache = None
         self.assertIsNone(bans.get_user_ban(user, get_cache_versions()))
