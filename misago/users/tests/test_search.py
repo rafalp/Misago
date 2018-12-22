@@ -5,7 +5,7 @@ from misago.acl.test import patch_user_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class SearchApiTests(AuthenticatedUserTestCase):
@@ -101,7 +101,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_search_disabled(self):
         """api respects disabled users visibility"""
-        disabled_user = UserModel.objects.create_user(
+        disabled_user = User.objects.create_user(
             "DisabledUser", "visible@te.com", "Pass.123", is_active=False
         )
 

@@ -4,7 +4,7 @@ from django.test import TestCase
 from misago.users.profilefields import ProfileFields
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ProfileFieldsLoadTests(TestCase):

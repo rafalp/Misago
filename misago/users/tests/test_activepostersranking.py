@@ -12,7 +12,7 @@ from misago.users.activepostersranking import (
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class TestActivePostersRanking(AuthenticatedUserTestCase):
@@ -30,15 +30,13 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(empty_ranking["users_count"], 0)
 
         # other user that will be posting
-        other_user = UserModel.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
+        other_user = User.objects.create_user("OtherUser", "other@user.com", "pass123")
 
         # lurker user that won't post anything
-        UserModel.objects.create_user("Lurker", "lurker@user.com", "pass123")
+        User.objects.create_user("Lurker", "lurker@user.com", "pass123")
 
         # unranked user that posted something 400 days ago
-        unranked_user = UserModel.objects.create_user(
+        unranked_user = User.objects.create_user(
             "UnrankedUser", "unranked@user.com", "pass123"
         )
 
@@ -68,7 +66,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking["users"][1].score, 1)
 
         # disabled users are not ranked
-        disabled = UserModel.objects.create_user(
+        disabled = User.objects.create_user(
             "DisabledUser", "disabled@user.com", "pass123"
         )
 

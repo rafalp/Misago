@@ -17,7 +17,7 @@ from misago.users.serializers import (
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ProfileView(View):
@@ -40,9 +40,7 @@ class ProfileView(View):
         return render(request, self.template_name, context_data)
 
     def get_profile(self, request, pk, slug):
-        queryset = UserModel.objects.select_related(
-            "rank", "online_tracker", "ban_cache"
-        )
+        queryset = User.objects.select_related("rank", "online_tracker", "ban_cache")
 
         profile = get_object_or_404(queryset, pk=pk)
 

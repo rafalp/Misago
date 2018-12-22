@@ -11,7 +11,7 @@ from misago.readtracker.models import PostRead
 from misago.threads import testutils
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class AnonymousUser(object):
@@ -21,7 +21,7 @@ class AnonymousUser(object):
 
 class PostsTrackerTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("UserA", "testa@user.com", "Pass.123")
+        self.user = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
         self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(self.category)
 

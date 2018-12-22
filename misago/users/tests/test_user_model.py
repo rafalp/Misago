@@ -9,7 +9,7 @@ from misago.users.avatars import dynamic
 from misago.users.models import Avatar, User
 
 
-class UserModelTests(TestCase):
+class UserTests(TestCase):
     def test_anonymize_data(self):
         """anonymize_data sets username and slug to one defined in settings"""
         user = User.objects.create_user("Bob", "bob@example.com", "Pass.123")

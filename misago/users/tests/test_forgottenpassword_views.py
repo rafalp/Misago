@@ -7,7 +7,7 @@ from misago.users.testutils import UserTestCase
 from misago.users.tokens import make_password_change_token
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ForgottenPasswordViewsTests(UserTestCase):
@@ -37,7 +37,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_on_banned(self):
         """change banned user password errors"""
-        test_user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        test_user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         Ban.objects.create(
             check_type=Ban.USERNAME, banned_value="bob", user_message="Nope!"
@@ -55,7 +55,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_on_other_user(self):
         """change other user password errors"""
-        test_user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        test_user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         password_token = make_password_change_token(test_user)
 
@@ -71,7 +71,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_invalid_token(self):
         """invalid form token errors"""
-        test_user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        test_user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         response = self.client.get(
             reverse(
@@ -83,7 +83,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_form(self):
         """change user password form displays for valid token"""
-        test_user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        test_user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         password_token = make_password_change_token(test_user)
 
@@ -97,7 +97,7 @@ class ForgottenPasswordViewsTests(UserTestCase):
 
     def test_change_password_unusable_password_form(self):
         """set user first password form displays for valid token"""
-        test_user = UserModel.objects.create_user("Bob", "bob@test.com")
+        test_user = User.objects.create_user("Bob", "bob@test.com")
 
         password_token = make_password_change_token(test_user)
 

@@ -14,7 +14,7 @@ from .models import AuditTrail
 from .profilefields import profilefields
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 anonymize_user_data = Signal()
 archive_user_data = Signal()
@@ -94,7 +94,7 @@ def remove_old_registrations_ips(sender, **kwargs):
     ip_is_too_new = Q(joined_on__gt=datetime_cutoff)
     ip_is_already_removed = Q(joined_from_ip__isnull=True)
 
-    queryset = UserModel.objects.exclude(ip_is_too_new | ip_is_already_removed)
+    queryset = User.objects.exclude(ip_is_too_new | ip_is_already_removed)
     queryset.update(joined_from_ip=None)
 
 

@@ -10,7 +10,7 @@ from misago.threads.subscriptions import make_subscription_aware
 from misago.users.models import AnonymousUser
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class SubscriptionsTests(TestCase):
@@ -18,7 +18,7 @@ class SubscriptionsTests(TestCase):
         self.category = list(Category.objects.all_categories()[:1])[0]
         self.thread = self.post_thread(timezone.now() - timedelta(days=10))
 
-        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
         self.anon = AnonymousUser()
 
     def post_thread(self, datetime):

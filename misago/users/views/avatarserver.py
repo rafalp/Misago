@@ -5,15 +5,15 @@ from django.shortcuts import redirect
 from misago.conf import settings
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def user_avatar(request, pk, size):
     size = int(size)
 
     try:
-        user = UserModel.objects.get(pk=pk)
-    except UserModel.DoesNotExist:
+        user = User.objects.get(pk=pk)
+    except User.DoesNotExist:
         return blank_avatar(request)
 
     found_avatar = user.avatars[0]

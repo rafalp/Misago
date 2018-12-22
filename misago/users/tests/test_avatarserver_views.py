@@ -5,12 +5,12 @@ from django.urls import reverse
 from misago.conf import settings
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class AvatarServerTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass123")
+        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass123")
 
         self.user.avatars = [
             {"size": 200, "url": "/media/avatars/avatar-200.png"},

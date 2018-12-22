@@ -18,7 +18,7 @@ from misago.users.registration import (
 )
 from misago.users.setupnewuser import setup_new_user
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 @csrf_protect
@@ -41,12 +41,12 @@ def create_endpoint(request):
 
     activation_kwargs = {}
     if request.settings.account_activation == "user":
-        activation_kwargs = {"requires_activation": UserModel.ACTIVATION_USER}
+        activation_kwargs = {"requires_activation": User.ACTIVATION_USER}
     elif request.settings.account_activation == "admin":
-        activation_kwargs = {"requires_activation": UserModel.ACTIVATION_ADMIN}
+        activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
 
     try:
-        new_user = UserModel.objects.create_user(
+        new_user = User.objects.create_user(
             form.cleaned_data["username"],
             form.cleaned_data["email"],
             form.cleaned_data["password"],
@@ -63,7 +63,7 @@ def create_endpoint(request):
     save_user_agreements(new_user, form)
     send_welcome_email(request, new_user)
 
-    if new_user.requires_activation == UserModel.ACTIVATION_NONE:
+    if new_user.requires_activation == User.ACTIVATION_NONE:
         authenticated_user = authenticate(
             username=new_user.email, password=form.cleaned_data["password"]
         )

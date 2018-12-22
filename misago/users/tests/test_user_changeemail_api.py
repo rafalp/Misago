@@ -5,7 +5,7 @@ from django.urls import reverse
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserChangeEmailTests(AuthenticatedUserTestCase):
@@ -65,7 +65,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def test_email_taken(self):
         """api validates email usage"""
-        UserModel.objects.create_user("BobBoberson", "new@email.com", "Pass.123")
+        User.objects.create_user("BobBoberson", "new@email.com", "Pass.123")
 
         response = self.client.post(
             self.link,

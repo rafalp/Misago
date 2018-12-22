@@ -7,7 +7,7 @@ from misago.acl.useracl import serialize_user_acl
 
 from .user import UserSerializer
 
-UserModel = get_user_model()
+User = get_user_model()
 
 __all__ = ["AuthenticatedUserSerializer", "AnonymousUserSerializer"]
 
@@ -26,7 +26,7 @@ class AuthenticatedUserSerializer(UserSerializer, AuthFlags):
     is_anonymous = serializers.SerializerMethodField()
 
     class Meta:
-        model = UserModel
+        model = User
         fields = UserSerializer.Meta.fields + [
             "has_usable_password",
             "is_hiding_presence",

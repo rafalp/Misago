@@ -4,7 +4,7 @@ from django.test import TestCase
 from misago.users.authbackends import MisagoBackend
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 backend = MisagoBackend()
 
@@ -12,7 +12,7 @@ backend = MisagoBackend()
 class MisagoBackendTests(TestCase):
     def setUp(self):
         self.password = "Pass.123"
-        self.user = UserModel.objects.create_user(
+        self.user = User.objects.create_user(
             "BobBoberson", "bob@test.com", self.password
         )
 

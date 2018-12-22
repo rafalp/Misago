@@ -7,7 +7,7 @@ from django.test import TestCase
 from misago.users.management.commands import deleteprofilefield
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class DeleteProfileFieldTests(TestCase):
@@ -31,7 +31,7 @@ class DeleteProfileFieldTests(TestCase):
 
     def test_delete_fields(self):
         """utility has no showstoppers when no fields are set"""
-        user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
         user.profile_fields = {"gender": "male", "bio": "Yup!"}
         user.save()
 
@@ -43,5 +43,5 @@ class DeleteProfileFieldTests(TestCase):
             command_output, '"gender" profile field has been deleted from 1 users.'
         )
 
-        user = UserModel.objects.get(pk=user.pk)
+        user = User.objects.get(pk=user.pk)
         self.assertEqual(user.profile_fields, {"bio": "Yup!"})

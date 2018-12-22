@@ -9,7 +9,7 @@ from misago.users.datadownloads import request_user_data_download
 from misago.users.models import DataDownload
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
@@ -87,7 +87,7 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
-        other_user = UserModel.objects.create_user("bob", "bob@boberson.com")
+        other_user = User.objects.create_user("bob", "bob@boberson.com")
 
         response = self.client.post(
             reverse("misago:admin:users:data-downloads:request"),

@@ -3,7 +3,7 @@ from django.core.management.base import CommandError, BaseCommand
 
 from misago.core.pgutils import chunk_queryset
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -20,7 +20,7 @@ class Command(BaseCommand):
 
         fields_deleted = 0
 
-        queryset = UserModel.objects.filter(profile_fields__has_keys=[fieldname])
+        queryset = User.objects.filter(profile_fields__has_keys=[fieldname])
 
         for user in chunk_queryset(queryset):
             if fieldname in user.profile_fields.keys():

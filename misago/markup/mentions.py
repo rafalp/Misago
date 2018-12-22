@@ -39,7 +39,7 @@ def add_mentions_to_element(request, element, mentions_dict):
 
 
 def parse_string(request, element, mentions_dict):
-    UserModel = get_user_model()
+    User = get_user_model()
 
     def replace_mentions(matchobj):
         if len(mentions_dict) >= MENTIONS_LIMIT:
@@ -52,8 +52,8 @@ def parse_string(request, element, mentions_dict):
                 mentions_dict[username] = request.user
             else:
                 try:
-                    mentions_dict[username] = UserModel.objects.get(slug=username)
-                except UserModel.DoesNotExist:
+                    mentions_dict[username] = User.objects.get(slug=username)
+                except User.DoesNotExist:
                     mentions_dict[username] = None
 
         if mentions_dict[username]:

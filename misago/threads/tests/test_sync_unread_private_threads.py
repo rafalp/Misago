@@ -6,14 +6,14 @@ from misago.threads.models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = UserModel.objects.create_user(
+        self.other_user = User.objects.create_user(
             "BobBoberson", "bob@boberson.com", "pass123"
         )
 

@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MisagoBackend(ModelBackend):
@@ -16,20 +16,20 @@ class MisagoBackend(ModelBackend):
             return None
 
         try:
-            user = UserModel.objects.get_by_username_or_email(username)
-        except UserModel.DoesNotExist:
+            user = User.objects.get_by_username_or_email(username)
+        except User.DoesNotExist:
             # Run the default password hasher once to reduce the timing
             # difference between an existing and a non-existing user (#20760).
-            UserModel().set_password(password)
+            User().set_password(password)
         else:
             if user.check_password(password) and self.user_can_authenticate(user):
                 return user
 
     def get_user(self, pk):
         try:
-            manager = UserModel._default_manager
+            manager = User._default_manager
             relations = ("rank", "online_tracker", "ban_cache")
             user = manager.select_related(*relations).get(pk=pk)
-        except UserModel.DoesNotExist:
+        except User.DoesNotExist:
             return None
         return user if self.user_can_authenticate(user) else None

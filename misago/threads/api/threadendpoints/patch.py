@@ -45,7 +45,7 @@ from misago.threads.validators import validate_thread_title
 
 PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 
-UserModel = get_user_model()
+User = get_user_model()
 
 thread_patch_dispatcher = ApiPatch()
 
@@ -301,8 +301,8 @@ def patch_add_participant(request, thread, value):
         username = str(value).strip().lower()
         if not username:
             raise PermissionDenied(_("You have to enter new participant's username."))
-        participant = UserModel.objects.get(slug=username)
-    except UserModel.DoesNotExist:
+        participant = User.objects.get(slug=username)
+    except User.DoesNotExist:
         raise PermissionDenied(_("No user with such name exists."))
 
     if participant in [p.user for p in thread.participants_list]:

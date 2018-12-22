@@ -5,7 +5,7 @@ from misago.acl.test import patch_user_acl
 from misago.admin.testutils import AdminTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class JoinIpProfileFieldTests(AdminTestCase):

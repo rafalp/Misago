@@ -11,7 +11,7 @@ from misago.threads.test import patch_category_acl
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ThreadGetVotesTests(ThreadPollApiTestCase):
@@ -112,7 +112,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
             [[v["username"] for v in c["voters"]] for c in response_json][0][0], "bob"
         )
 
-        user = UserModel.objects.get(slug="bob")
+        user = User.objects.get(slug="bob")
 
         self.assertEqual(
             [[v["url"] for v in c["voters"]] for c in response_json][0][0],
@@ -141,7 +141,7 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
             [[v["username"] for v in c["voters"]] for c in response_json][0][0], "bob"
         )
 
-        user = UserModel.objects.get(slug="bob")
+        user = User.objects.get(slug="bob")
 
         self.assertEqual(
             [[v["url"] for v in c["voters"]] for c in response_json][0][0],

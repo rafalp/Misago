@@ -9,7 +9,7 @@ from misago.users.permissions import allow_delete_own_account
 from misago.users.validators import validate_email, validate_username
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 __all__ = [
     "ForumOptionsSerializer",
@@ -23,7 +23,7 @@ __all__ = [
 
 class ForumOptionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = [
             "is_hiding_presence",
             "limits_private_thread_invites_to",
@@ -39,7 +39,7 @@ class ForumOptionsSerializer(serializers.ModelSerializer):
 
 class EditSignatureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = ["signature"]
 
     def validate(self, data):

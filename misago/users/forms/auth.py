@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from misago.users.bans import get_user_ban
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MisagoAuthMixin(object):
@@ -126,11 +126,11 @@ class GetUserForm(MisagoAuthMixin, forms.Form):
             )
 
         try:
-            user = UserModel.objects.get_by_email(data["email"])
+            user = User.objects.get_by_email(data["email"])
             if not user.is_active:
-                raise UserModel.DoesNotExist()
+                raise User.DoesNotExist()
             self.user_cache = user
-        except UserModel.DoesNotExist:
+        except User.DoesNotExist:
             raise forms.ValidationError(
                 _("No user with this e-mail exists."), code="not_found"
             )

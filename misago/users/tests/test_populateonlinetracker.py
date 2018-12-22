@@ -8,13 +8,13 @@ from misago.users.management.commands import populateonlinetracker
 from misago.users.models import Online
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class PopulateOnlineTrackerTests(TestCase):
     def test_populate_user_online(self):
         """user account without online tracker gets one"""
-        test_user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        test_user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
 
         Online.objects.filter(user=test_user).delete()
         self.assertEqual(Online.objects.filter(user=test_user).count(), 0)

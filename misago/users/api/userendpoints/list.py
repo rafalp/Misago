@@ -9,7 +9,7 @@ from misago.users.serializers import UserCardSerializer
 from misago.users.viewmodels import ActivePosters, RankUsers
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def active(request):

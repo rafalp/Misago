@@ -7,7 +7,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from misago.conf import settings
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 @api_view()
@@ -16,9 +16,9 @@ def mention_suggestions(request):
 
     query = request.query_params.get("q", "").lower().strip()[:100]
     if query:
-        queryset = UserModel.objects.filter(
-            slug__startswith=query, is_active=True
-        ).order_by("slug")[:10]
+        queryset = User.objects.filter(slug__startswith=query, is_active=True).order_by(
+            "slug"
+        )[:10]
 
         for user in queryset:
             try:

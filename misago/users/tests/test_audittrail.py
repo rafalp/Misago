@@ -9,7 +9,7 @@ from misago.users.signals import remove_old_ips
 from misago.users.testutils import UserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 USER_IP = "13.41.51.41"
 
@@ -25,7 +25,7 @@ class CreateAuditTrailTests(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = UserModel.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
 
     def test_create_audit_require_model(self):
         """create_audit_trail requires model instance"""
@@ -89,15 +89,15 @@ class CreateAuditTrailTests(UserTestCase):
         audit_trail = user.audittrail_set.all()[0]
         audit_trail.delete()
 
-        UserModel.objects.get(id=user.id)
-        UserModel.objects.get(id=self.obj.id)
+        User.objects.get(id=user.id)
+        User.objects.get(id=self.obj.id)
 
 
 class CreateUserAuditTrailTests(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = UserModel.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
 
     def test_create_user_audit_require_model(self):
         """create_user_audit_trail requires model instance"""
@@ -155,15 +155,15 @@ class CreateUserAuditTrailTests(UserTestCase):
         audit_trail = user.audittrail_set.all()[0]
         audit_trail.delete()
 
-        UserModel.objects.get(id=user.id)
-        UserModel.objects.get(id=self.obj.id)
+        User.objects.get(id=user.id)
+        User.objects.get(id=self.obj.id)
 
 
 class RemoveOldAuditTrailsTest(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = UserModel.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
 
     def test_recent_audit_trail_is_kept(self):
         """remove_old_ips keeps recent audit trails"""

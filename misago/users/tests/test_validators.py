@@ -18,12 +18,12 @@ from misago.users.validators import (
 )
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user(
+        self.test_user = User.objects.create_user(
             "EricTheFish", "eric@test.com", "pass123"
         )
 
@@ -71,7 +71,7 @@ class ValidateUsernameTests(TestCase):
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = UserModel.objects.create_user("EricTheFish", "eric@test.com")
+        self.test_user = User.objects.create_user("EricTheFish", "eric@test.com")
 
     def test_valid_name(self):
         """validate_username_available allows available names"""

@@ -6,14 +6,14 @@ from django.utils.translation import ngettext
 from misago.conf import settings
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 __all__ = ["ModerateAvatarSerializer", "ModerateSignatureSerializer"]
 
 
 class ModerateAvatarSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = [
             "is_avatar_locked",
             "avatar_lock_user_message",
@@ -23,7 +23,7 @@ class ModerateAvatarSerializer(serializers.ModelSerializer):
 
 class ModerateSignatureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserModel
+        model = User
         fields = [
             "signature",
             "is_signature_locked",

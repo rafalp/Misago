@@ -3,13 +3,13 @@ from django.template import Context, Template
 from django.test import TestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class TemplateTagsTests(TestCase):
     def test_user_avatar_filter(self):
         """avatar filter returns url to avatar image"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@test.com", "pass123")
 
         user.avatars = [
             {"size": 400, "url": "/avatar/400.png"},
