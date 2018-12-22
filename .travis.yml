@@ -18,6 +18,8 @@ jobs:
         - coveralls
     - name: "lint"
       python: 3.6
-      script:
+      install:
+        - pip install -U pip setuptools
         - pip install black
+      script:
         - black --check devproject misago
