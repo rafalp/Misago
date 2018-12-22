@@ -10,7 +10,9 @@ from misago.conftest import get_cache_versions
 from misago.threads import testutils
 from misago.threads.api.postingendpoint import PostingEndpoint
 from misago.threads.api.postingendpoint.attachments import (
-    AttachmentsMiddleware, validate_attachments_count)
+    AttachmentsMiddleware,
+    validate_attachments_count,
+)
 from misago.threads.models import Attachment, AttachmentType
 from misago.users.testutils import AuthenticatedUserTestCase
 
@@ -27,13 +29,13 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(category=self.category)
         self.post = self.thread.first_post
 
         self.post.update_fields = []
 
-        self.filetype = AttachmentType.objects.order_by('id').last()
+        self.filetype = AttachmentType.objects.order_by("id").last()
 
     def mock_attachment(self, user=True, post=None):
         return Attachment.objects.create(
@@ -44,17 +46,17 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             uploader=self.user if user else None,
             uploader_name=self.user.username,
             uploader_slug=self.user.slug,
-            filename='testfile_%s.zip' % (Attachment.objects.count() + 1),
+            filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
         )
 
     def test_use_this_middleware(self):
         """use_this_middleware returns False if we can't upload attachments"""
-        with patch_user_acl({'max_attachment_size': 0}):
+        with patch_user_acl({"max_attachment_size": 0}):
             user_acl = useracl.get_user_acl(self.user, cache_versions)
             middleware = AttachmentsMiddleware(user=self.user, user_acl=user_acl)
             self.assertFalse(middleware.use_this_middleware())
 
-        with patch_user_acl({'max_attachment_size': 1024}):
+        with patch_user_acl({"max_attachment_size": 1024}):
             user_acl = useracl.get_user_acl(self.user, cache_versions)
             middleware = AttachmentsMiddleware(user=self.user, user_acl=user_acl)
             self.assertTrue(middleware.use_this_middleware())
@@ -62,7 +64,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     @patch_attachments_acl()
     def test_middleware_is_optional(self):
         """middleware is optional"""
-        INPUTS = [{}, {'attachments': []}]
+        INPUTS = [{}, {"attachments": []}]
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
 
@@ -81,15 +83,17 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     @patch_attachments_acl()
     def test_middleware_validates_ids(self):
         """middleware validates attachments ids"""
-        INPUTS = ['none', ['a', 'b', 123], range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1)]
+        INPUTS = [
+            "none",
+            ["a", "b", 123],
+            range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1),
+        ]
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
 
         for test_input in INPUTS:
             middleware = AttachmentsMiddleware(
-                request=Mock(data={
-                    'attachments': test_input
-                }),
+                request=Mock(data={"attachments": test_input}),
                 mode=PostingEndpoint.START,
                 user=self.user,
                 user_acl=user_acl,
@@ -97,7 +101,9 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
             )
 
             serializer = middleware.get_serializer()
-            self.assertFalse(serializer.is_valid(), "%r shouldn't validate" % test_input)
+            self.assertFalse(
+                serializer.is_valid(), "%r shouldn't validate" % test_input
+            )
 
     @patch_attachments_acl()
     def test_get_initial_attachments(self):
@@ -147,11 +153,12 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         # only own orphaned attachments may be assigned to posts
         other_user_attachment = self.mock_attachment(user=False)
-        attachments = serializer.get_new_attachments(middleware.user, [other_user_attachment.pk])
+        attachments = serializer.get_new_attachments(
+            middleware.user, [other_user_attachment.pk]
+        )
         self.assertEqual(attachments, [])
 
-    
-    @patch_attachments_acl({'can_delete_other_users_attachments': False})
+    @patch_attachments_acl({"can_delete_other_users_attachments": False})
     def test_cant_delete_attachment(self):
         """middleware validates if we have permission to delete other users attachments"""
         attachment = self.mock_attachment(user=False, post=self.post)
@@ -159,9 +166,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         serializer = AttachmentsMiddleware(
-            request=Mock(data={
-                'attachments': []
-            }),
+            request=Mock(data={"attachments": []}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -173,16 +178,11 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     @patch_attachments_acl()
     def test_add_attachments(self):
         """middleware adds attachments to post"""
-        attachments = [
-            self.mock_attachment(),
-            self.mock_attachment(),
-        ]
+        attachments = [self.mock_attachment(), self.mock_attachment()]
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=Mock(data={
-                'attachments': [a.pk for a in attachments]
-            }),
+            request=Mock(data={"attachments": [a.pk for a in attachments]}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -194,12 +194,13 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         middleware.save(serializer)
 
         # attachments were associated with post
-        self.assertEqual(self.post.update_fields, ['attachments_cache'])
+        self.assertEqual(self.post.update_fields, ["attachments_cache"])
         self.assertEqual(self.post.attachment_set.count(), 2)
 
         attachments_filenames = list(reversed([a.filename for a in attachments]))
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
-                         attachments_filenames)
+        self.assertEqual(
+            [a["filename"] for a in self.post.attachments_cache], attachments_filenames
+        )
 
     @patch_attachments_acl()
     def test_remove_attachments(self):
@@ -211,9 +212,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=Mock(data={
-                'attachments': [attachments[0].pk]
-            }),
+            request=Mock(data={"attachments": [attachments[0].pk]}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -225,30 +224,26 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         middleware.save(serializer)
 
         # attachments were associated with post
-        self.assertEqual(self.post.update_fields, ['attachments_cache'])
+        self.assertEqual(self.post.update_fields, ["attachments_cache"])
         self.assertEqual(self.post.attachment_set.count(), 1)
 
         self.assertEqual(Attachment.objects.count(), 1)
 
         attachments_filenames = [attachments[0].filename]
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
-                         attachments_filenames)
+        self.assertEqual(
+            [a["filename"] for a in self.post.attachments_cache], attachments_filenames
+        )
 
     @patch_attachments_acl()
     def test_steal_attachments(self):
         """middleware validates if attachments are already assigned to other posts"""
         other_post = testutils.reply_thread(self.thread)
 
-        attachments = [
-            self.mock_attachment(post=other_post),
-            self.mock_attachment(),
-        ]
+        attachments = [self.mock_attachment(post=other_post), self.mock_attachment()]
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=Mock(data={
-                'attachments': [attachments[0].pk, attachments[1].pk]
-            }),
+            request=Mock(data={"attachments": [attachments[0].pk, attachments[1].pk]}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -260,7 +255,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         middleware.save(serializer)
 
         # only unassociated attachment was associated with post
-        self.assertEqual(self.post.update_fields, ['attachments_cache'])
+        self.assertEqual(self.post.update_fields, ["attachments_cache"])
         self.assertEqual(self.post.attachment_set.count(), 1)
 
         self.assertEqual(Attachment.objects.get(pk=attachments[0].pk).post, other_post)
@@ -277,9 +272,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
-            request=Mock(data={
-                'attachments': [attachments[0].pk, attachments[2].pk]
-            }),
+            request=Mock(data={"attachments": [attachments[0].pk, attachments[2].pk]}),
             mode=PostingEndpoint.EDIT,
             user=self.user,
             user_acl=user_acl,
@@ -291,12 +284,13 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         middleware.save(serializer)
 
         # attachments were associated with post
-        self.assertEqual(self.post.update_fields, ['attachments_cache'])
+        self.assertEqual(self.post.update_fields, ["attachments_cache"])
         self.assertEqual(self.post.attachment_set.count(), 2)
 
         attachments_filenames = [attachments[2].filename, attachments[0].filename]
-        self.assertEqual([a['filename'] for a in self.post.attachments_cache],
-                         attachments_filenames)
+        self.assertEqual(
+            [a["filename"] for a in self.post.attachments_cache], attachments_filenames
+        )
 
 
 class ValidateAttachmentsCountTests(AuthenticatedUserTestCase):
@@ -305,4 +299,6 @@ class ValidateAttachmentsCountTests(AuthenticatedUserTestCase):
         validate_attachments_count(range(settings.MISAGO_POST_ATTACHMENTS_LIMIT))
 
         with self.assertRaises(serializers.ValidationError):
-            validate_attachments_count(range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1))
+            validate_attachments_count(
+                range(settings.MISAGO_POST_ATTACHMENTS_LIMIT + 1)
+            )

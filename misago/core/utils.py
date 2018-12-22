@@ -9,7 +9,7 @@ from django.utils.encoding import force_text
 from django.utils.module_loading import import_string
 
 
-MISAGO_SLUGIFY = getattr(settings, 'MISAGO_SLUGIFY', 'misago.core.slugify.default')
+MISAGO_SLUGIFY = getattr(settings, "MISAGO_SLUGIFY", "misago.core.slugify.default")
 
 slugify = import_string(MISAGO_SLUGIFY)
 
@@ -19,15 +19,15 @@ def format_plaintext_for_html(string):
 
 
 def encode_json_html(string):
-    return string.replace('<', r'\u003C')
+    return string.replace("<", r"\u003C")
 
 
-ISO8601_FORMATS = ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f", )
+ISO8601_FORMATS = ("%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%f")
 
 
 def parse_iso8601_string(value):
     """turns ISO 8601 string into datetime object"""
-    value = force_text(value, strings_only=True).rstrip('Z')
+    value = force_text(value, strings_only=True).rstrip("Z")
 
     for format in ISO8601_FORMATS:
         try:
@@ -40,13 +40,13 @@ def parse_iso8601_string(value):
             except ValueError:
                 pass
     else:
-        raise ValueError('failed to hydrate the %s timestamp' % value)
+        raise ValueError("failed to hydrate the %s timestamp" % value)
 
     offset_str = value[-6:]
-    if offset_str and offset_str[0] in ('-', '+'):
+    if offset_str and offset_str[0] in ("-", "+"):
         tz_offset = timedelta(hours=int(offset_str[1:3]), minutes=int(offset_str[4:6]))
         tz_offset = tz_offset.seconds // 60
-        if offset_str[0] == '-':
+        if offset_str[0] == "-":
             tz_offset *= -1
     else:
         tz_offset = 0
@@ -61,23 +61,23 @@ def hide_post_parameters(request):
     We can't use decorator because of DRF uses custom HttpRequest
     that is incompatibile with Django's decorator
     """
-    request.sensitive_post_parameters = '__ALL__'
+    request.sensitive_post_parameters = "__ALL__"
 
 
 def clean_return_path(request):
     """return path utility that returns return path from referer or POST"""
-    if request.method == 'POST' and 'return_path' in request.POST:
+    if request.method == "POST" and "return_path" in request.POST:
         return _get_return_path_from_post(request)
     else:
         return _get_return_path_from_referer(request)
 
 
 def _get_return_path_from_post(request):
-    return_path = request.POST.get('return_path')
+    return_path = request.POST.get("return_path")
     try:
         if not return_path:
             raise ValueError()
-        if not return_path.startswith('/'):
+        if not return_path.startswith("/"):
             raise ValueError()
         resolve(return_path)
         return return_path
@@ -86,17 +86,17 @@ def _get_return_path_from_post(request):
 
 
 def _get_return_path_from_referer(request):
-    referer = request.META.get('HTTP_REFERER')
+    referer = request.META.get("HTTP_REFERER")
     try:
         if not referer:
             raise ValueError()
         if not referer.startswith(request.scheme):
             raise ValueError()
-        referer = referer[len(request.scheme) + 3:]
-        if not referer.startswith(request.META['HTTP_HOST']):
+        referer = referer[len(request.scheme) + 3 :]
+        if not referer.startswith(request.META["HTTP_HOST"]):
             raise ValueError()
-        referer = referer[len(request.META['HTTP_HOST'].rstrip('/')):]
-        if not referer.startswith('/'):
+        referer = referer[len(request.META["HTTP_HOST"].rstrip("/")) :]
+        if not referer.startswith("/"):
             raise ValueError()
         resolve(referer)
         return referer
@@ -114,26 +114,26 @@ def is_request_to_misago(request):
 
 def _is_request_path_under_misago(request):
     # We are assuming that forum_index link is root of all Misago links
-    forum_index = reverse('misago:index')
+    forum_index = reverse("misago:index")
     path = request.path
 
     if len(forum_index) > len(path):
         return False
-    return path[:len(forum_index)] == forum_index
+    return path[: len(forum_index)] == forum_index
 
 
 def is_referer_local(request):
-    referer = request.META.get('HTTP_REFERER')
+    referer = request.META.get("HTTP_REFERER")
 
     if not referer:
         return False
     if not referer.startswith(request.scheme):
         return False
-    referer = referer[len(request.scheme) + 3:]
-    if not referer.startswith(request.META['HTTP_HOST']):
+    referer = referer[len(request.scheme) + 3 :]
+    if not referer.startswith(request.META["HTTP_HOST"]):
         return False
-    referer = referer[len(request.META['HTTP_HOST'].rstrip('/')):]
-    if not referer.startswith('/'):
+    referer = referer[len(request.META["HTTP_HOST"].rstrip("/")) :]
+    if not referer.startswith("/"):
         return False
 
     return True
@@ -160,16 +160,15 @@ def get_host_from_address(address):
     if not address:
         return None
 
-    if address.lower().startswith('https://'):
+    if address.lower().startswith("https://"):
         address = address[8:]
-    if address.lower().startswith('http://'):
+    if address.lower().startswith("http://"):
         address = address[7:]
-    if address[0] == '/':
-        address = address.lstrip('/')
-    if '/' in address:
-        address = address.split('/')[0] or address
-    if ':' in address:
-        address = address.split(':')[0] or address
+    if address[0] == "/":
+        address = address.lstrip("/")
+    if "/" in address:
+        address = address.split("/")[0] or address
+    if ":" in address:
+        address = address.split(":")[0] or address
 
     return address
-    

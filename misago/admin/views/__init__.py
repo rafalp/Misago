@@ -11,7 +11,7 @@ from .auth import login
 def get_protected_namespace(request):
     for namespace in settings.MISAGO_ADMIN_NAMESPACES:
         try:
-            admin_path = reverse('%s:index' % namespace)
+            admin_path = reverse("%s:index" % namespace)
             if request.path.startswith(admin_path):
                 return namespace
         except NoReverseMatch:
@@ -36,19 +36,19 @@ def render(request, template, context=None, error_page=False):
     except IndexError:
         pages = []
 
-    context.update({'sections': sections, 'actions': actions, 'pages': pages})
+    context.update({"sections": sections, "actions": actions, "pages": pages})
 
     if error_page:
         # admittedly haxy solution for displaying navs on error pages
-        context['actions'] = []
-        context['pages'] = []
+        context["actions"] = []
+        context["pages"] = []
         for item in navigation[0]:
-            item['is_active'] = False
+            item["is_active"] = False
     else:
-        context['active_link'] = None
+        context["active_link"] = None
         for item in navigation[-1]:
-            if item['is_active']:
-                context['active_link'] = item
+            if item["is_active"]:
+                context["active_link"] = item
                 break
 
     return dj_render(request, template, context)

@@ -8,8 +8,8 @@ def set_user_signature(request, user, user_acl, signature):
         user.signature_parsed = signature_flavour(request, user, user_acl, signature)
         user.signature_checksum = make_signature_checksum(user.signature_parsed, user)
     else:
-        user.signature_parsed = ''
-        user.signature_checksum = ''
+        user.signature_parsed = ""
+        user.signature_checksum = ""
 
 
 def is_user_signature_valid(user):

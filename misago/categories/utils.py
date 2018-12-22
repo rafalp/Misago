@@ -5,17 +5,17 @@ from .models import Category
 
 
 def get_categories_tree(user, user_acl, parent=None, join_posters=False):
-    if not user_acl['visible_categories']:
+    if not user_acl["visible_categories"]:
         return []
 
     if parent:
-        queryset = parent.get_descendants().order_by('lft')
+        queryset = parent.get_descendants().order_by("lft")
     else:
         queryset = Category.objects.all_categories()
 
-    queryset_with_acl = queryset.filter(id__in=user_acl['visible_categories'])
+    queryset_with_acl = queryset.filter(id__in=user_acl["visible_categories"])
     if join_posters:
-        queryset_with_acl = queryset_with_acl.select_related('last_poster')
+        queryset_with_acl = queryset_with_acl.select_related("last_poster")
 
     visible_categories = list(queryset_with_acl)
 
@@ -36,7 +36,7 @@ def get_categories_tree(user, user_acl, parent=None, join_posters=False):
     categoriestracker.make_read_aware(user, user_acl, categories_list)
 
     for category in reversed(visible_categories):
-        if category.acl['can_browse']:
+        if category.acl["can_browse"]:
             category.parent = categories_dict.get(category.parent_id)
             if category.parent:
                 category.parent.threads += category.threads

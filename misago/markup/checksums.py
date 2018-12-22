@@ -27,7 +27,7 @@ def make_checksum(parsed, unique_values=None):
     unique_values = unique_values or []
     seeds = [parsed] + [str(v) for v in unique_values]
 
-    return sha256('+'.join(seeds).encode("utf-8")).hexdigest()
+    return sha256("+".join(seeds).encode("utf-8")).hexdigest()
 
 
 def is_checksum_valid(parsed, checksum, unique_values=None):

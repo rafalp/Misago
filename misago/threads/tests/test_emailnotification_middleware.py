@@ -9,9 +9,7 @@ from django.utils.encoding import smart_str
 
 from misago.categories.models import Category
 from misago.threads import testutils
-from misago.threads.test import (
-    patch_category_acl, patch_other_user_category_acl
-)
+from misago.threads.test import patch_category_acl, patch_other_user_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
@@ -22,27 +20,24 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(
-            category=self.category,
-            started_on=timezone.now() - timedelta(seconds=5),
+            category=self.category, started_on=timezone.now() - timedelta(seconds=5)
         )
 
         self.api_link = reverse(
-            'misago:api:thread-post-list', kwargs={
-                'thread_pk': self.thread.pk,
-            }
+            "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
-        self.other_user = UserModel.objects.create_user('BobBobertson', 'bob@boberson.com')
+        self.other_user = UserModel.objects.create_user(
+            "BobBobertson", "bob@boberson.com"
+        )
 
     @patch_category_acl({"can_reply_threads": True})
     def test_no_subscriptions(self):
         """no emails are sent because noone subscibes to thread"""
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -59,9 +54,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -78,9 +71,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -98,9 +89,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -120,9 +109,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -141,9 +128,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         testutils.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -160,9 +145,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -178,7 +161,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         self.assertIn(self.thread.title, message)
         self.assertIn(self.thread.get_absolute_url(), message)
 
-        last_post = self.thread.post_set.order_by('id').last()
+        last_post = self.thread.post_set.order_by("id").last()
         self.assertIn(last_post.get_absolute_url(), message)
 
     @patch_category_acl({"can_reply_threads": True})
@@ -192,9 +175,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         )
 
         response = self.client.post(
-            self.api_link, data={
-                'post': 'This is test response!',
-            }
+            self.api_link, data={"post": "This is test response!"}
         )
         self.assertEqual(response.status_code, 200)
 
@@ -210,5 +191,5 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         self.assertIn(self.thread.title, message)
         self.assertIn(self.thread.get_absolute_url(), message)
 
-        last_post = self.thread.post_set.order_by('id').last()
+        last_post = self.thread.post_set.order_by("id").last()
         self.assertIn(last_post.get_absolute_url(), message)

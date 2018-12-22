@@ -17,43 +17,48 @@ class ListView(View):
 
         sections = users_list.get_sections(request)
 
-        context_data['pages'] = sections
+        context_data["pages"] = sections
 
-        request.frontend_context['USERS_LISTS'] = []
+        request.frontend_context["USERS_LISTS"] = []
         for page in sections:
-            page['reversed_link'] = reverse(page['link'])
-            request.frontend_context['USERS_LISTS'].append({
-                'name': str(page['name']),
-                'component': page['component'],
-            })
+            page["reversed_link"] = reverse(page["link"])
+            request.frontend_context["USERS_LISTS"].append(
+                {"name": str(page["name"]), "component": page["component"]}
+            )
 
-        active_rank = context_data.get('rank')
-        for rank in Rank.objects.filter(is_tab=True).order_by('order'):
-            context_data['pages'].append({
-                'name': rank.name,
-                'reversed_link': reverse('misago:users-rank', kwargs={'slug': rank.slug}),
-                'is_active': active_rank.pk == rank.pk if active_rank else None
-            })
+        active_rank = context_data.get("rank")
+        for rank in Rank.objects.filter(is_tab=True).order_by("order"):
+            context_data["pages"].append(
+                {
+                    "name": rank.name,
+                    "reversed_link": reverse(
+                        "misago:users-rank", kwargs={"slug": rank.slug}
+                    ),
+                    "is_active": active_rank.pk == rank.pk if active_rank else None,
+                }
+            )
 
             if rank.description:
                 description = {
-                    'plain': rank.description,
-                    'html': format_plaintext_for_html(rank.description)
+                    "plain": rank.description,
+                    "html": format_plaintext_for_html(rank.description),
                 }
             else:
                 description = None
 
-            request.frontend_context['USERS_LISTS'].append({
-                'id': rank.pk,
-                'name': rank.name,
-                'slug': rank.slug,
-                'css_class': rank.css_class,
-                'description': description,
-                'component': 'rank',
-            })
+            request.frontend_context["USERS_LISTS"].append(
+                {
+                    "id": rank.pk,
+                    "name": rank.name,
+                    "slug": rank.slug,
+                    "css_class": rank.css_class,
+                    "description": description,
+                    "component": "rank",
+                }
+            )
 
-        active_section = list(filter(lambda x: x['is_active'], sections))[0]
-        context_data['active_section'] = active_section
+        active_section = list(filter(lambda x: x["is_active"], sections))[0]
+        context_data["active_section"] = active_section
 
         return render(request, self.template_name, context_data)
 
@@ -67,28 +72,26 @@ def landing(request):
 
 
 class ActivePostersView(ListView):
-    template_name = 'misago/userslists/active_posters.html'
+    template_name = "misago/userslists/active_posters.html"
 
     def get_context_data(self, request, *args, **kwargs):
         model = ActivePosters(request)
 
-        request.frontend_context['USERS'] = model.get_frontend_context()
+        request.frontend_context["USERS"] = model.get_frontend_context()
 
         return model.get_template_context()
 
 
 class RankUsersView(ListView):
-    template_name = 'misago/userslists/rank.html'
+    template_name = "misago/userslists/rank.html"
 
     def get_context_data(self, request, slug, page=0):
         rank = get_object_or_404(Rank.objects.filter(is_tab=True), slug=slug)
         users = RankUsers(request, rank, page)
 
-        request.frontend_context['USERS'] = users.get_frontend_context()
+        request.frontend_context["USERS"] = users.get_frontend_context()
 
-        context = {
-            'rank': rank,
-        }
+        context = {"rank": rank}
         context.update(users.get_template_context())
 
         return context

@@ -12,7 +12,7 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.api_link = reverse('misago:api:private-thread-list')
+        self.api_link = reverse("misago:api:private-thread-list")
 
     def test_unauthenticated(self):
         """api requires user to sign in and be able to access it"""
@@ -20,18 +20,16 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You have to sign in to use private threads."
-        })
+        self.assertEqual(
+            response.json(), {"detail": "You have to sign in to use private threads."}
+        )
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):
         """api requires user to have permission to be able to access it"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't use private threads."
-        })
+        self.assertEqual(response.json(), {"detail": "You can't use private threads."})
 
     @patch_user_acl({"can_use_private_threads": True})
     def test_empty_list(self):
@@ -40,7 +38,7 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['count'], 0)
+        self.assertEqual(response_json["count"], 0)
 
     @patch_user_acl({"can_use_private_threads": True})
     def test_thread_visibility(self):
@@ -60,8 +58,8 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['count'], 1)
-        self.assertEqual(response_json['results'][0]['id'], visible.id)
+        self.assertEqual(response_json["count"], 1)
+        self.assertEqual(response_json["results"][0]["id"], visible.id)
 
         # threads with reported posts will also show to moderators
         with patch_user_acl({"can_moderate_private_threads": True}):
@@ -69,9 +67,9 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
             self.assertEqual(response.status_code, 200)
 
             response_json = response.json()
-            self.assertEqual(response_json['count'], 2)
-            self.assertEqual(response_json['results'][0]['id'], reported.id)
-            self.assertEqual(response_json['results'][1]['id'], visible.id)
+            self.assertEqual(response_json["count"], 2)
+            self.assertEqual(response_json["results"][0]["id"], reported.id)
+            self.assertEqual(response_json["results"][1]["id"], visible.id)
 
 
 class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
@@ -87,18 +85,16 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You have to sign in to use private threads."
-        })
+        self.assertEqual(
+            response.json(), {"detail": "You have to sign in to use private threads."}
+        )
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):
         """user needs to have permission to see private thread"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            "detail": "You can't use private threads."
-        })
+        self.assertEqual(response.json(), {"detail": "You can't use private threads."})
 
     @patch_user_acl({"can_use_private_threads": True})
     def test_no_participant(self):
@@ -106,19 +102,17 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
 
-    @patch_user_acl({
-        "can_use_private_threads": True,
-        "can_moderate_private_threads": True,
-    })
+    @patch_user_acl(
+        {"can_use_private_threads": True, "can_moderate_private_threads": True}
+    )
     def test_mod_not_reported(self):
         """moderator can't see private thread that has no reports"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 404)
 
-    @patch_user_acl({
-        "can_use_private_threads": True,
-        "can_moderate_private_threads": False,
-    })
+    @patch_user_acl(
+        {"can_use_private_threads": True, "can_moderate_private_threads": False}
+    )
     def test_reported_not_mod(self):
         """non-mod can't see private thread that has reported posts"""
         self.thread.has_reported_posts = True
@@ -136,17 +130,18 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['title'], self.thread.title)
+        self.assertEqual(response_json["title"], self.thread.title)
         self.assertEqual(
-            response_json['participants'], [
+            response_json["participants"],
+            [
                 {
-                    'id': self.user.id,
-                    'username': self.user.username,
-                    'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
-                    'is_owner': True,
-                },
-            ]
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "avatars": self.user.avatars,
+                    "url": self.user.get_absolute_url(),
+                    "is_owner": True,
+                }
+            ],
         )
 
     @patch_user_acl({"can_use_private_threads": True})
@@ -158,23 +153,23 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['title'], self.thread.title)
+        self.assertEqual(response_json["title"], self.thread.title)
         self.assertEqual(
-            response_json['participants'], [
+            response_json["participants"],
+            [
                 {
-                    'id': self.user.id,
-                    'username': self.user.username,
-                    'avatars': self.user.avatars,
-                    'url': self.user.get_absolute_url(),
-                    'is_owner': False,
-                },
-            ]
+                    "id": self.user.id,
+                    "username": self.user.username,
+                    "avatars": self.user.avatars,
+                    "url": self.user.get_absolute_url(),
+                    "is_owner": False,
+                }
+            ],
         )
 
-    @patch_user_acl({
-        "can_use_private_threads": True,
-        "can_moderate_private_threads": True,
-    })
+    @patch_user_acl(
+        {"can_use_private_threads": True, "can_moderate_private_threads": True}
+    )
     def test_mod_can_see_reported(self):
         """moderator can see private thread that has reports"""
         self.thread.has_reported_posts = True
@@ -184,8 +179,8 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['title'], self.thread.title)
-        self.assertEqual(response_json['participants'], [])
+        self.assertEqual(response_json["title"], self.thread.title)
+        self.assertEqual(response_json["participants"], [])
 
 
 class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
@@ -200,13 +195,12 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
     @patch_private_threads_acl({"can_hide_threads": 0})
     def test_hide_thread_no_permission(self):
         """api tests permission to delete threads"""
-        
+
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json()['detail'], "You can't delete threads in this category."
+            response.json()["detail"], "You can't delete threads in this category."
         )
-
 
     @patch_private_threads_acl({"can_hide_threads": 1})
     def test_delete_thread_no_permission(self):
@@ -214,7 +208,7 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
         response = self.client.delete(self.api_link)
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json()['detail'], "You can't delete threads in this category."
+            response.json()["detail"], "You can't delete threads in this category."
         )
 
     @patch_private_threads_acl({"can_hide_threads": 2})

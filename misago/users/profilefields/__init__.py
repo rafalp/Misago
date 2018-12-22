@@ -12,7 +12,7 @@ from .basefields import *
 from .serializers import serialize_profilefields_data
 
 
-logger = logging.getLogger('misago.users.ProfileFields')
+logger = logging.getLogger("misago.users.ProfileFields")
 
 
 class ProfileFields(object):
@@ -28,7 +28,7 @@ class ProfileFields(object):
         fieldnames = {}
 
         for group in self.fields_groups:
-            for field_path in group['fields']:
+            for field_path in group["fields"]:
                 field = import_string(field_path)
                 field._field_path = field_path
 
@@ -37,17 +37,19 @@ class ProfileFields(object):
                         "%s profile field has been specified twice" % field._field_path
                     )
 
-                if not getattr(field, 'fieldname', None):
+                if not getattr(field, "fieldname", None):
                     raise ValueError(
-                        "%s profile field has to specify fieldname attribute" % field._field_path
+                        "%s profile field has to specify fieldname attribute"
+                        % field._field_path
                     )
 
                 if field.fieldname in fieldnames:
                     raise ValueError(
                         (
                             '%s profile field defines fieldname "%s" '
-                            'that is already in use by the %s'
-                        ) % (
+                            "that is already in use by the %s"
+                        )
+                        % (
                             field._field_path,
                             field.fieldname,
                             fieldnames[field.fieldname],
@@ -70,16 +72,13 @@ class ProfileFields(object):
 
         groups = []
         for group in self.fields_groups:
-            group_dict = {
-                'name': _(group['name']),
-                'fields': [],
-            }
+            group_dict = {"name": _(group["name"]), "fields": []}
 
-            for field_path in group['fields']:
+            for field_path in group["fields"]:
                 field = self.fields_dict[field_path]
-                group_dict['fields'].append(field)
+                group_dict["fields"].append(field)
 
-            if group_dict['fields']:
+            if group_dict["fields"]:
                 groups.append(group_dict)
         return groups
 
@@ -101,17 +100,14 @@ class ProfileFields(object):
 
         form._profile_fields_groups = []
         for group in self.fields_groups:
-            group_dict = {
-                'name': _(group['name']),
-                'fields': [],
-            }
+            group_dict = {"name": _(group["name"]), "fields": []}
 
-            for field_path in group['fields']:
+            for field_path in group["fields"]:
                 field = self.fields_dict[field_path]
                 if field.fieldname in form._profile_fields:
-                    group_dict['fields'].append(field.fieldname)
+                    group_dict["fields"].append(field.fieldname)
 
-            if group_dict['fields']:
+            if group_dict["fields"]:
                 form._profile_fields_groups.append(group_dict)
 
     def clean_form(self, request, user, form, cleaned_data):
@@ -121,7 +117,8 @@ class ProfileFields(object):
 
             try:
                 cleaned_data[field.fieldname] = field.clean(
-                    request, user, cleaned_data[field.fieldname])
+                    request, user, cleaned_data[field.fieldname]
+                )
             except ValidationError as e:
                 form.add_error(field.fieldname, e)
 
@@ -146,21 +143,21 @@ class ProfileFields(object):
         if request.user == user:
             log_message = "%s edited own profile fields" % user.username
         else:
-            log_message = "%s edited %s's (#%s) profile fields" % (request.user, user.username, user.pk)
+            log_message = "%s edited %s's (#%s) profile fields" % (
+                request.user,
+                user.username,
+                user.pk,
+            )
 
         logger.info(
             log_message,
             extra={
-                'absolute_url': request.build_absolute_uri(
+                "absolute_url": request.build_absolute_uri(
                     reverse(
-                        'misago:user-details',
-                        kwargs={
-                            'slug': user.slug,
-                            'pk': user.pk,
-                        },
+                        "misago:user-details", kwargs={"slug": user.slug, "pk": user.pk}
                     )
-                ),
-            }
+                )
+            },
         )
 
     def search_users(self, criteria, queryset):

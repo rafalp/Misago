@@ -10,9 +10,9 @@ from misago.threads import testutils
 from misago.threads.models import Attachment, AttachmentType
 from misago.users.testutils import AuthenticatedUserTestCase
 
-TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
-TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, 'document.pdf')
-TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, 'small.jpg')
+TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
+TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, "document.pdf")
+TEST_SMALLJPG_PATH = os.path.join(TESTFILES_DIR, "small.jpg")
 
 
 def patch_attachments_acl(acl_patch=None):
@@ -28,30 +28,24 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         AttachmentType.objects.all().delete()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.post = testutils.post_thread(category=self.category).first_post
 
-        self.api_link = reverse('misago:api:attachment-list')
+        self.api_link = reverse("misago:api:attachment-list")
 
         self.attachment_type_jpg = AttachmentType.objects.create(
-            name="JPG",
-            extensions='jpeg,jpg',
+            name="JPG", extensions="jpeg,jpg"
         )
         self.attachment_type_pdf = AttachmentType.objects.create(
-            name="PDF",
-            extensions='pdf',
+            name="PDF", extensions="pdf"
         )
 
     def upload_document(self, is_orphaned=False, by_other_user=False):
-        with open(TEST_DOCUMENT_PATH, 'rb') as upload:
-            response = self.client.post(
-                self.api_link, data={
-                    'upload': upload,
-                }
-            )
+        with open(TEST_DOCUMENT_PATH, "rb") as upload:
+            response = self.client.post(self.api_link, data={"upload": upload})
         self.assertEqual(response.status_code, 200)
 
-        attachment = Attachment.objects.order_by('id').last()
+        attachment = Attachment.objects.order_by("id").last()
 
         if not is_orphaned:
             attachment.post = self.post
@@ -63,40 +57,33 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         return attachment
 
     def upload_image(self):
-        with open(TEST_SMALLJPG_PATH, 'rb') as upload:
-            response = self.client.post(
-                self.api_link, data={
-                    'upload': upload,
-                }
-            )
+        with open(TEST_SMALLJPG_PATH, "rb") as upload:
+            response = self.client.post(self.api_link, data={"upload": upload})
         self.assertEqual(response.status_code, 200)
 
-        return Attachment.objects.order_by('id').last()
+        return Attachment.objects.order_by("id").last()
 
     @patch_attachments_acl()
     def assertIs404(self, response):
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response['location'].endswith(settings.MISAGO_404_IMAGE))
+        self.assertTrue(response["location"].endswith(settings.MISAGO_404_IMAGE))
 
     @patch_attachments_acl()
     def assertIs403(self, response):
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(response['location'].endswith(settings.MISAGO_403_IMAGE))
+        self.assertTrue(response["location"].endswith(settings.MISAGO_403_IMAGE))
 
     @patch_attachments_acl()
     def assertSuccess(self, response):
         self.assertEqual(response.status_code, 302)
-        self.assertFalse(response['location'].endswith(settings.MISAGO_404_IMAGE))
-        self.assertFalse(response['location'].endswith(settings.MISAGO_403_IMAGE))
+        self.assertFalse(response["location"].endswith(settings.MISAGO_404_IMAGE))
+        self.assertFalse(response["location"].endswith(settings.MISAGO_403_IMAGE))
 
     @patch_attachments_acl()
     def test_nonexistant_file(self):
         """user tries to retrieve nonexistant file"""
         response = self.client.get(
-            reverse('misago:attachment', kwargs={
-                'pk': 123,
-                'secret': 'qwertyuiop',
-            })
+            reverse("misago:attachment", kwargs={"pk": 123, "secret": "qwertyuiop"})
         )
 
         self.assertIs404(response)
@@ -107,10 +94,10 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document()
 
         response = self.client.get(
-            reverse('misago:attachment', kwargs={
-                'pk': attachment.pk,
-                'secret': 'qwertyuiop',
-            })
+            reverse(
+                "misago:attachment",
+                kwargs={"pk": attachment.pk, "secret": "qwertyuiop"},
+            )
         )
 
         self.assertIs404(response)
@@ -131,7 +118,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs404(response)
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertIs404(response)
 
     @patch_attachments_acl()
@@ -141,11 +128,8 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
 
         response = self.client.get(
             reverse(
-                'misago:attachment-thumbnail',
-                kwargs={
-                    'pk': attachment.pk,
-                    'secret': attachment.secret,
-                }
+                "misago:attachment-thumbnail",
+                kwargs={"pk": attachment.pk, "secret": attachment.secret},
             )
         )
         self.assertIs404(response)
@@ -156,7 +140,9 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         attachment = self.upload_document()
 
         user_roles = (r.pk for r in self.user.get_roles())
-        self.attachment_type_pdf.limit_downloads_to.set(Role.objects.exclude(id__in=user_roles))
+        self.attachment_type_pdf.limit_downloads_to.set(
+            Role.objects.exclude(id__in=user_roles)
+        )
 
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs403(response)
@@ -210,7 +196,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs404(response)
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertSuccess(response)
 
     @patch_attachments_acl()
@@ -221,7 +207,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         response = self.client.get(attachment.get_absolute_url())
         self.assertIs404(response)
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertSuccess(response)
 
     @patch_attachments_acl()
@@ -232,7 +218,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         user_roles = self.user.get_roles()
         self.attachment_type_pdf.limit_downloads_to.set(user_roles)
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertSuccess(response)
 
     @patch_attachments_acl()
@@ -240,7 +226,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         """user retrieves """
         attachment = self.upload_image()
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertSuccess(response)
 
     @patch_attachments_acl()
@@ -248,5 +234,5 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         """user retrieves image's thumbnail"""
         attachment = self.upload_image()
 
-        response = self.client.get(attachment.get_absolute_url() + '?shva=1')
+        response = self.client.get(attachment.get_absolute_url() + "?shva=1")
         self.assertSuccess(response)

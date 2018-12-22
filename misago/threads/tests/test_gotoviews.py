@@ -8,15 +8,15 @@ from misago.threads.test import patch_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-GOTO_URL = '%s#post-%s'
-GOTO_PAGE_URL = '%s%s/#post-%s'
+GOTO_URL = "%s#post-%s"
+GOTO_PAGE_URL = "%s%s/#post-%s"
 
 
 class GotoViewTestCase(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(category=self.category)
 
 
@@ -26,11 +26,11 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(self.thread.first_post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
-            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response["location"],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, self.thread.first_post.get_absolute_url())
 
     def test_goto_last_post_on_page(self):
@@ -41,10 +41,10 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+            response["location"], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
     def test_goto_first_post_on_next_page(self):
@@ -55,10 +55,11 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
     def test_goto_first_post_on_page_three_out_of_five(self):
@@ -73,10 +74,11 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk),
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
     def test_goto_first_event_on_page_three_out_of_five(self):
@@ -97,10 +99,11 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 3, post.pk),
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
 
@@ -110,11 +113,11 @@ class GotoLastTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
-            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response["location"],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, self.thread.last_post.get_absolute_url())
 
     def test_goto_last_post_on_page(self):
@@ -125,10 +128,10 @@ class GotoLastTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+            response["location"], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
         )
 
-        response = self.client.get(response['location'])
+        response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
 
@@ -138,8 +141,8 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
-            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response["location"],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
     def test_goto_first_new_post(self):
@@ -153,7 +156,7 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
+            response["location"], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
         )
 
     def test_goto_first_new_post_on_next_page(self):
@@ -171,7 +174,8 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
     def test_goto_first_new_post_in_read_thread(self):
@@ -185,7 +189,8 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
     def test_guest_goto_first_new_post_in_thread(self):
@@ -198,7 +203,8 @@ class GotoNewTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
 
@@ -208,7 +214,7 @@ class GotoBestAnswerTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_best_answer_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
+            response["location"],
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
@@ -227,7 +233,7 @@ class GotoBestAnswerTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_best_answer_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
+            response["location"],
             GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, best_answer.pk),
         )
 
@@ -236,7 +242,9 @@ class GotoUnapprovedTests(GotoViewTestCase):
     def test_view_validates_permission(self):
         """view validates permission to see unapproved posts"""
         response = self.client.get(self.thread.get_unapproved_post_url())
-        self.assertContains(response, "You need permission to approve content", status_code=403)
+        self.assertContains(
+            response, "You need permission to approve content", status_code=403
+        )
 
         with patch_category_acl({"can_approve_content": True}):
             response = self.client.get(self.thread.get_unapproved_post_url())
@@ -248,8 +256,8 @@ class GotoUnapprovedTests(GotoViewTestCase):
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'],
-            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id)
+            response["location"],
+            GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
     @patch_category_acl({"can_approve_content": True})
@@ -258,32 +266,36 @@ class GotoUnapprovedTests(GotoViewTestCase):
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
 
-        post = testutils.reply_thread(self.thread, is_unapproved=True, posted_on=timezone.now())
+        post = testutils.reply_thread(
+            self.thread, is_unapproved=True, posted_on=timezone.now()
+        )
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response['location'], GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk)
+            response["location"],
+            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
 
 class ThreadGotoPostTests(GotoViewTestCase):
     """brureforcing regression tests for regression test for #869"""
+
     def test_thread_growing_post_goto(self):
         """growing thread goto views don't fail"""
         for _ in range(60):
             post = testutils.reply_thread(self.thread, posted_on=timezone.now())
 
             # go to post link is valid
-            post_url = self.client.get(post.get_absolute_url())['location']
+            post_url = self.client.get(post.get_absolute_url())["location"]
 
             response = self.client.get(post_url)
             self.assertContains(response, post.get_absolute_url())
 
             # go to last post link is valid
-            last_url = self.client.get(self.thread.get_last_post_url())['location']
+            last_url = self.client.get(self.thread.get_last_post_url())["location"]
             self.assertEqual(post_url, last_url)
 
     def test_thread_growing_event_goto(self):
@@ -296,7 +308,7 @@ class ThreadGotoPostTests(GotoViewTestCase):
             post.save()
 
             # go to post link is valid
-            post_url = self.client.get(post.get_absolute_url())['location']
+            post_url = self.client.get(post.get_absolute_url())["location"]
 
             if i == 0:
                 # manually set events flag after first event was created
@@ -307,7 +319,7 @@ class ThreadGotoPostTests(GotoViewTestCase):
             self.assertContains(response, post.get_absolute_url())
 
             # go to last post link is valid
-            last_url = self.client.get(self.thread.get_last_post_url())['location']
+            last_url = self.client.get(self.thread.get_last_post_url())["location"]
             self.assertEqual(post_url, last_url)
 
     def test_thread_post_goto(self):
@@ -315,15 +327,15 @@ class ThreadGotoPostTests(GotoViewTestCase):
         for _ in range(60):
             testutils.reply_thread(self.thread, posted_on=timezone.now())
 
-        for post in self.thread.post_set.order_by('id').iterator():
+        for post in self.thread.post_set.order_by("id").iterator():
             # go to post link is valid
-            post_url = self.client.get(post.get_absolute_url())['location']
+            post_url = self.client.get(post.get_absolute_url())["location"]
 
             response = self.client.get(post_url)
             self.assertContains(response, post.get_absolute_url())
 
         # go to last post link is valid
-        last_url = self.client.get(self.thread.get_last_post_url())['location']
+        last_url = self.client.get(self.thread.get_last_post_url())["location"]
         self.assertEqual(post_url, last_url)
 
     def test_thread_event_goto(self):
@@ -335,14 +347,15 @@ class ThreadGotoPostTests(GotoViewTestCase):
             post.is_event = True
             post.save()
 
-        for post in self.thread.post_set.filter(is_event=True).order_by('id').iterator():
+        for post in (
+            self.thread.post_set.filter(is_event=True).order_by("id").iterator()
+        ):
             # go to post link is valid
-            post_url = self.client.get(post.get_absolute_url())['location']
+            post_url = self.client.get(post.get_absolute_url())["location"]
 
             response = self.client.get(post_url)
             self.assertContains(response, post.get_absolute_url())
 
         # go to last post link is valid
-        last_url = self.client.get(self.thread.get_last_post_url())['location']
+        last_url = self.client.get(self.thread.get_last_post_url())["location"]
         self.assertEqual(post_url, last_url)
-

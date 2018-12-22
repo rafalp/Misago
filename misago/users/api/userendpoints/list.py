@@ -18,10 +18,10 @@ def active(request):
 
 
 def rank_users(request):
-    rank_pk = get_int_or_404(request.query_params.get('rank'))
+    rank_pk = get_int_or_404(request.query_params.get("rank"))
     rank = get_object_or_404(Rank.objects, pk=rank_pk, is_tab=True)
 
-    page = get_int_or_404(request.GET.get('page', 0))
+    page = get_int_or_404(request.GET.get("page", 0))
     if page == 1:
         page = 0  # api allows explicit first page
 
@@ -29,13 +29,11 @@ def rank_users(request):
     return Response(users.get_frontend_context())
 
 
-LISTS = {
-    'active': active,
-}
+LISTS = {"active": active}
 
 
 def list_endpoint(request):
-    list_type = request.query_params.get('list')
+    list_type = request.query_params.get("list")
     list_handler = LISTS.get(list_type)
 
     if list_handler:
@@ -44,4 +42,4 @@ def list_endpoint(request):
         return rank_users(request)
 
 
-ScoredUserSerializer = UserCardSerializer.extend_fields('meta')
+ScoredUserSerializer = UserCardSerializer.extend_fields("meta")

@@ -7,15 +7,15 @@ from misago.core.management.progressbar import show_progress
 
 
 class Command(BaseCommand):
-    help = 'Synchronizes categories'
+    help = "Synchronizes categories"
 
     def handle(self, *args, **options):
         categories_to_sync = Category.objects.count()
 
-        message = 'Synchronizing %s categories...\n'
+        message = "Synchronizing %s categories...\n"
         self.stdout.write(message % categories_to_sync)
 
-        message = '\n\nSynchronized %s categories in %s'
+        message = "\n\nSynchronized %s categories in %s"
 
         start_time = time.time()
 
@@ -29,6 +29,6 @@ class Command(BaseCommand):
             show_progress(self, synchronized_count, categories_to_sync)
 
         end_time = time.time() - start_time
-        total_time = time.strftime('%H:%M:%S', time.gmtime(end_time))
+        total_time = time.strftime("%H:%M:%S", time.gmtime(end_time))
 
         self.stdout.write(message % (synchronized_count, total_time))

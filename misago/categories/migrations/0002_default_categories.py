@@ -7,12 +7,12 @@ _ = lambda s: s
 
 
 def create_default_categories_tree(apps, schema_editor):
-    Category = apps.get_model('misago_categories', 'Category')
+    Category = apps.get_model("misago_categories", "Category")
 
     Category.objects.create(
-        special_role='private_threads',
-        name='Private',
-        slug='private',
+        special_role="private_threads",
+        name="Private",
+        slug="private",
         lft=1,
         rght=2,
         tree_id=0,
@@ -20,9 +20,9 @@ def create_default_categories_tree(apps, schema_editor):
     )
 
     root = Category.objects.create(
-        special_role='root_category',
-        name='Root',
-        slug='root',
+        special_role="root_category",
+        name="Root",
+        slug="root",
         lft=3,
         rght=6,
         tree_id=1,
@@ -44,10 +44,6 @@ def create_default_categories_tree(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_categories', '0001_initial'),
-    ]
+    dependencies = [("misago_categories", "0001_initial")]
 
-    operations = [
-        migrations.RunPython(create_default_categories_tree),
-    ]
+    operations = [migrations.RunPython(create_default_categories_tree)]

@@ -14,7 +14,9 @@ UserModel = get_user_model()
 
 def get_mock_user():
     seed = UserModel.objects.count() + 1
-    return UserModel.objects.create_user('bob%s' % seed, 'user%s@test.com' % seed, 'Pass.123')
+    return UserModel.objects.create_user(
+        "bob%s" % seed, "user%s@test.com" % seed, "Pass.123"
+    )
 
 
 class DeleteUserLikesTests(AuthenticatedUserTestCase):
@@ -23,18 +25,18 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
         self.factory = RequestFactory()
 
     def get_request(self, user=None):
-        request = self.factory.get('/customer/details')
+        request = self.factory.get("/customer/details")
         request.user = user or self.user
-        request.user_ip = '127.0.0.1'
+        request.user_ip = "127.0.0.1"
 
         return request
 
     def test_anonymize_user_likes(self):
         """post's last like is anonymized by user.anonymize_data"""
-        category = Category.objects.get(slug='first-category')
+        category = Category.objects.get(slug="first-category")
         thread = testutils.post_thread(category)
         post = testutils.reply_thread(thread)
-        post.acl = {'can_like': True}
+        post.acl = {"can_like": True}
 
         user = get_mock_user()
 
@@ -44,9 +46,6 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
         user.delete_content()
 
         last_likes = Post.objects.get(pk=post.pk).last_likes
-        self.assertEqual(last_likes, [
-            {
-                'id': self.user.id,
-                'username': self.user.username,
-            },
-        ])
+        self.assertEqual(
+            last_likes, [{"id": self.user.id, "username": self.user.username}]
+        )

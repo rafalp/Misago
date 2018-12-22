@@ -30,18 +30,14 @@ class Command(BaseCommand):
         synchronized_count = 0
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
-        
+
         for user in chunk_queryset(UserModel.objects.all()):
             user.threads = user.thread_set.filter(
-                category__in=categories,
-                is_hidden=False,
-                is_unapproved=False,
+                category__in=categories, is_hidden=False, is_unapproved=False
             ).count()
 
             user.posts = user.post_set.filter(
-                category__in=categories,
-                is_event=False,
-                is_unapproved=False,
+                category__in=categories, is_event=False, is_unapproved=False
             ).count()
 
             user.followers = user.followed_by.count()

@@ -14,7 +14,7 @@ QUOTE_END = get_random_string(32)
 
 
 class BBCodeHRProcessor(HRProcessor):
-    RE = r'^\[hr\]*'
+    RE = r"^\[hr\]*"
 
     # Detect hr on any line of a block.
     SEARCH_RE = re.compile(RE, re.MULTILINE | re.IGNORECASE)
@@ -24,44 +24,46 @@ class QuoteExtension(markdown.Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
 
-        md.preprocessors.add('misago_bbcode_quote', QuotePreprocessor(md), '_end')
+        md.preprocessors.add("misago_bbcode_quote", QuotePreprocessor(md), "_end")
         md.parser.blockprocessors.add(
-            'misago_bbcode_quote', QuoteBlockProcessor(md.parser), '>code'
+            "misago_bbcode_quote", QuoteBlockProcessor(md.parser), ">code"
         )
 
 
 class QuotePreprocessor(Preprocessor):
     QUOTE_BLOCK_RE = re.compile(
-        r'''
+        r"""
 \[quote\](?P<text>.*?)\[/quote\]
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+""".strip(),
+        re.IGNORECASE | re.MULTILINE | re.DOTALL,
     )
     QUOTE_BLOCK_TITLE_RE = re.compile(
-        r'''
+        r"""
 \[quote=("?)(?P<title>.*?)("?)](?P<text>.*?)\[/quote\]
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+""".strip(),
+        re.IGNORECASE | re.MULTILINE | re.DOTALL,
     )
 
     def run(self, lines):
-        text = '\n'.join(lines)
+        text = "\n".join(lines)
         while self.QUOTE_BLOCK_RE.search(text):
             text = self.QUOTE_BLOCK_RE.sub(self.replace, text)
         while self.QUOTE_BLOCK_TITLE_RE.search(text):
             text = self.QUOTE_BLOCK_TITLE_RE.sub(self.replace_titled, text)
-        return text.split('\n')
+        return text.split("\n")
 
     def replace(self, matchobj):
-        text = matchobj.group('text')
-        return '\n\n%s\n\n%s\n\n%s\n\n' % (QUOTE_START, text, QUOTE_END)
+        text = matchobj.group("text")
+        return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
 
     def replace_titled(self, matchobj):
-        title = matchobj.group('title').strip()
-        text = matchobj.group('text')
+        title = matchobj.group("title").strip()
+        text = matchobj.group("text")
 
         if title:
-            return '\n\n%s%s\n\n%s\n\n%s\n\n' % (QUOTE_START, title, text, QUOTE_END)
+            return "\n\n%s%s\n\n%s\n\n%s\n\n" % (QUOTE_START, title, text, QUOTE_END)
         else:
-            return '\n\n%s\n\n%s\n\n%s\n\n' % (QUOTE_START, text, QUOTE_END)
+            return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
 
 
 class QuoteBlockProcessor(BlockProcessor):
@@ -79,7 +81,7 @@ class QuoteBlockProcessor(BlockProcessor):
         if block.strip().startswith(QUOTE_START):
             self._quote += 1
             if self._quote == 1:
-                self._title = block[len(QUOTE_START):].strip() or None
+                self._title = block[len(QUOTE_START) :].strip() or None
 
         self._children.append(block)
 
@@ -90,14 +92,14 @@ class QuoteBlockProcessor(BlockProcessor):
             children, self._children = self._children[1:-1], []
             title, self._title = self._title, None
 
-            aside = etree.SubElement(parent, 'aside')
-            aside.set('class', 'quote-block')
+            aside = etree.SubElement(parent, "aside")
+            aside.set("class", "quote-block")
 
-            heading = etree.SubElement(aside, 'div')
-            heading.set('class', 'quote-heading')
+            heading = etree.SubElement(aside, "div")
+            heading.set("class", "quote-heading")
 
-            blockquote = etree.SubElement(aside, 'blockquote')
-            blockquote.set('class', 'quote-body')
+            blockquote = etree.SubElement(aside, "blockquote")
+            blockquote.set("class", "quote-body")
 
             if title:
                 heading.text = title
@@ -110,13 +112,14 @@ class CodeBlockExtension(markdown.Extension):
         md.registerExtension(self)
 
         md.preprocessors.add(
-            'misago_code_bbcode', CodeBlockPreprocessor(md), ">normalize_whitespace"
+            "misago_code_bbcode", CodeBlockPreprocessor(md), ">normalize_whitespace"
         )
 
 
 class CodeBlockPreprocessor(FencedBlockPreprocessor):
     FENCED_BLOCK_RE = re.compile(
-        r'''
+        r"""
 \[code(=("?)(?P<lang>.*?)("?))?](([ ]*\n)+)?(?P<code>.*?)((\s|\n)+)?\[/code\]
-''', re.IGNORECASE | re.MULTILINE | re.DOTALL | re.VERBOSE
+""",
+        re.IGNORECASE | re.MULTILINE | re.DOTALL | re.VERBOSE,
     )

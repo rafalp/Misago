@@ -25,11 +25,11 @@ class EventsApiTests(TestCase):
         self.thread = Thread(
             category=self.category,
             started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         self.thread.set_title("Test thread")
@@ -42,27 +42,25 @@ class EventsApiTests(TestCase):
     def test_record_event_with_context(self):
         """record_event registers event with context in thread"""
         request = Mock(user=self.user, user_ip="123.14.15.222")
-        context = {'user': 'Lorem ipsum'}
-        event = record_event(request, self.thread, 'announcement', context)
+        context = {"user": "Lorem ipsum"}
+        event = record_event(request, self.thread, "announcement", context)
 
-        event_post = self.thread.post_set.order_by('-id')[:1][0]
+        event_post = self.thread.post_set.order_by("-id")[:1][0]
         self.assertEqual(self.thread.last_post, event_post)
         self.assertTrue(self.thread.has_events)
         self.assertTrue(self.thread.last_post_is_event)
 
         self.assertEqual(event.pk, event_post.pk)
         self.assertTrue(event_post.is_event)
-        self.assertEqual(event_post.event_type, 'announcement')
+        self.assertEqual(event_post.event_type, "announcement")
         self.assertEqual(event_post.event_context, context)
         self.assertEqual(event_post.poster_id, request.user.pk)
 
     def test_record_event_is_read(self):
         """record_event makes recorded event read to its author"""
         request = Mock(user=self.user, user_ip="123.14.15.222")
-        event = record_event(request, self.thread, 'announcement')
+        event = record_event(request, self.thread, "announcement")
 
         self.user.postread_set.get(
-            category=self.category,
-            thread=self.thread,
-            post=event,
+            category=self.category, thread=self.thread, post=event
         )

@@ -6,15 +6,13 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0009_redo_partial_indexes'),
-    ]
+    dependencies = [("misago_users", "0009_redo_partial_indexes")]
 
     operations = [
         HStoreExtension(),
         migrations.AddField(
-            model_name='user',
-            name='profile_fields',
+            model_name="user",
+            name="profile_fields",
             field=django.contrib.postgres.fields.HStoreField(default=dict),
         ),
     ]

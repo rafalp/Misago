@@ -35,7 +35,7 @@ class SettingsManager(models.Manager):
             try:
                 setting = self.get(setting=setting)
                 setting.value = wet_value
-                setting.save(update_fields=['dry_value'])
+                setting.save(update_fields=["dry_value"])
             except Setting.DoesNotExist:
                 return 0
 
@@ -49,10 +49,10 @@ class Setting(models.Model):
     order = models.IntegerField(default=0, db_index=True)
     dry_value = models.TextField(null=True, blank=True)
     default_value = models.TextField(null=True, blank=True)
-    python_type = models.CharField(max_length=255, default='string')
+    python_type = models.CharField(max_length=255, default="string")
     is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
-    form_field = models.CharField(max_length=255, default='text')
+    form_field = models.CharField(max_length=255, default="text")
     field_extra = JSONField()
 
     objects = SettingsManager()

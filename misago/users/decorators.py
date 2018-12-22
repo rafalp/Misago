@@ -22,7 +22,7 @@ def deny_authenticated(f):
 def deny_guests(f):
     def decorator(request, *args, **kwargs):
         if request.user.is_anonymous:
-            if request.GET.get('ref') == 'login':
+            if request.GET.get("ref") == "login":
                 return redirect(settings.LOGIN_REDIRECT_URL)
             raise PermissionDenied(_("You have to sign in to access this page."))
         else:
@@ -37,8 +37,8 @@ def deny_banned_ips(f):
         if ban:
             hydrated_ban = Ban(
                 check_type=Ban.IP,
-                user_message=ban['message'],
-                expires_on=ban['expires_on'],
+                user_message=ban["message"],
+                expires_on=ban["expires_on"],
             )
             raise Banned(hydrated_ban)
         else:

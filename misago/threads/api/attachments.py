@@ -11,27 +11,27 @@ from misago.threads.serializers import AttachmentSerializer
 from misago.users.audittrail import create_audit_trail
 
 
-IMAGE_EXTENSIONS = ('jpg', 'jpeg', 'png', 'gif')
+IMAGE_EXTENSIONS = ("jpg", "jpeg", "png", "gif")
 
 
 class AttachmentViewSet(viewsets.ViewSet):
     def create(self, request):
-        if not request.user_acl['max_attachment_size']:
+        if not request.user_acl["max_attachment_size"]:
             raise PermissionDenied(_("You don't have permission to upload new files."))
 
         try:
             return self.create_attachment(request)
         except ValidationError as e:
-            return Response({'detail': e.args[0]}, status=400)
+            return Response({"detail": e.args[0]}, status=400)
 
     def create_attachment(self, request):
-        upload = request.FILES.get('upload')
+        upload = request.FILES.get("upload")
         if not upload:
             raise ValidationError(_("No file has been uploaded."))
 
         user_roles = set(r.pk for r in request.user.get_roles())
         filetype = validate_filetype(upload, user_roles)
-        validate_filesize(upload, filetype, request.user_acl['max_attachment_size'])
+        validate_filesize(upload, filetype, request.user_acl["max_attachment_size"])
 
         attachment = Attachment(
             secret=Attachment.generate_new_secret(),
@@ -56,21 +56,26 @@ class AttachmentViewSet(viewsets.ViewSet):
 
         create_audit_trail(request, attachment)
 
-        return Response(AttachmentSerializer(attachment, context={'user': request.user}).data)
+        return Response(
+            AttachmentSerializer(attachment, context={"user": request.user}).data
+        )
 
 
 def validate_filetype(upload, user_roles):
     filename = upload.name.strip().lower()
 
     queryset = AttachmentType.objects.filter(status=AttachmentType.ENABLED)
-    for filetype in queryset.prefetch_related('limit_uploads_to'):
+    for filetype in queryset.prefetch_related("limit_uploads_to"):
         for extension in filetype.extensions_list:
-            if filename.endswith('.%s' % extension):
+            if filename.endswith(".%s" % extension):
                 break
         else:
             continue
 
-        if filetype.mimetypes_list and upload.content_type not in filetype.mimetypes_list:
+        if (
+            filetype.mimetypes_list
+            and upload.content_type not in filetype.mimetypes_list
+        ):
             continue
 
         if filetype.limit_uploads_to.exists():
@@ -85,11 +90,14 @@ def validate_filetype(upload, user_roles):
 
 def validate_filesize(upload, filetype, hard_limit):
     if upload.size > hard_limit * 1024:
-        message = _("You can't upload files larger than %(limit)s (your file has %(upload)s).")
+        message = _(
+            "You can't upload files larger than %(limit)s (your file has %(upload)s)."
+        )
         raise ValidationError(
-            message % {
-                'upload': filesizeformat(upload.size).rstrip('.0'),
-                'limit': filesizeformat(hard_limit * 1024).rstrip('.0'),
+            message
+            % {
+                "upload": filesizeformat(upload.size).rstrip(".0"),
+                "limit": filesizeformat(hard_limit * 1024).rstrip(".0"),
             }
         )
 
@@ -98,9 +106,10 @@ def validate_filesize(upload, filetype, hard_limit):
             "You can't upload files of this type larger than %(limit)s (your file has %(upload)s)."
         )
         raise ValidationError(
-            message % {
-                'upload': filesizeformat(upload.size).rstrip('.0'),
-                'limit': filesizeformat(filetype.size_limit * 1024).rstrip('.0'),
+            message
+            % {
+                "upload": filesizeformat(upload.size).rstrip(".0"),
+                "limit": filesizeformat(filetype.size_limit * 1024).rstrip(".0"),
             }
         )
 
@@ -109,6 +118,6 @@ def is_upload_image(upload):
     filename = upload.name.strip().lower()
 
     for extension in IMAGE_EXTENSIONS:
-        if filename.endswith('.%s' % extension):
+        if filename.endswith(".%s" % extension):
             return True
     return False

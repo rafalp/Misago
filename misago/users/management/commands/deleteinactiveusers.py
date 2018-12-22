@@ -12,20 +12,20 @@ UserModel = get_user_model()
 
 
 class Command(BaseCommand):
-    help = (
-        "Deletes inactive user accounts older than set time."
-    )
+    help = "Deletes inactive user accounts older than set time."
 
     def handle(self, *args, **options):
         if not settings.MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS:
-            self.stdout.write("Automatic deletion of inactive users is currently disabled.")
+            self.stdout.write(
+                "Automatic deletion of inactive users is currently disabled."
+            )
             return
 
-
         users_deleted = 0
-        
+
         joined_on_cutoff = timezone.now() - timedelta(
-            days=settings.MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS)
+            days=settings.MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS
+        )
 
         queryset = UserModel.objects.filter(
             requires_activation__gt=UserModel.ACTIVATION_NONE,

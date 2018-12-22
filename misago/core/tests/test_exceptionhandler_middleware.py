@@ -13,7 +13,7 @@ from misago.core.middleware import ExceptionHandlerMiddleware
 
 
 def create_request():
-    request = RequestFactory().get(reverse('misago:index'))
+    request = RequestFactory().get(reverse("misago:index"))
     request.cache_versions = get_cache_versions()
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()

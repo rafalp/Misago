@@ -22,11 +22,11 @@ class PostModelTests(TestCase):
         self.thread = Thread(
             category=self.category,
             started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         self.thread.set_title("Test thread")
@@ -45,7 +45,7 @@ class PostModelTests(TestCase):
         )
 
         update_post_checksum(self.post)
-        self.post.save(update_fields=['checksum'])
+        self.post.save(update_fields=["checksum"])
 
         self.thread.first_post = self.post
         self.thread.last_post = self.post
@@ -62,11 +62,11 @@ class PostModelTests(TestCase):
         other_thread = Thread.objects.create(
             category=self.category,
             started_on=timezone.now(),
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=timezone.now(),
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         # can't merge with other users posts
@@ -195,11 +195,11 @@ class PostModelTests(TestCase):
         new_thread = Thread.objects.create(
             category=self.category,
             started_on=timezone.now(),
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=timezone.now(),
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         self.post.move(new_thread)

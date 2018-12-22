@@ -11,24 +11,26 @@ from misago.users.models import DataDownload
 
 UserModel = get_user_model()
 
-TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'testfiles')
-TEST_FILE_PATH = os.path.join(TESTFILES_DIR, 'avatar.png')
+TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
+TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 
 
 class DataDownloadAdminViewsTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains data downloads link"""
-        response = self.client.get(reverse('misago:admin:users:accounts:index'))
+        response = self.client.get(reverse("misago:admin:users:accounts:index"))
 
-        response = self.client.get(response['location'])
-        self.assertContains(response, reverse('misago:admin:users:data-downloads:index'))
+        response = self.client.get(response["location"])
+        self.assertContains(
+            response, reverse("misago:admin:users:data-downloads:index")
+        )
 
     def test_list_view(self):
         """data downloads list view returns 200"""
-        response = self.client.get(reverse('misago:admin:users:data-downloads:index'))
+        response = self.client.get(reverse("misago:admin:users:data-downloads:index"))
         self.assertEqual(response.status_code, 302)
 
-        view_url = response['location']
+        view_url = response["location"]
 
         response = self.client.get(view_url)
         self.assertEqual(response.status_code, 200)
@@ -41,7 +43,7 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         """expire action marks data download as expired and deletes its file"""
         data_download = request_user_data_download(self.user)
 
-        with open(TEST_FILE_PATH, 'rb') as upload:
+        with open(TEST_FILE_PATH, "rb") as upload:
             data_download.file = File(upload)
             data_download.save()
 
@@ -49,11 +51,8 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         self.assertTrue(os.path.isfile(data_download.file.path))
 
         response = self.client.post(
-            reverse('misago:admin:users:data-downloads:index'),
-            data={
-                'action': 'expire',
-                'selected_items': [data_download.pk],
-            },
+            reverse("misago:admin:users:data-downloads:index"),
+            data={"action": "expire", "selected_items": [data_download.pk]},
         )
         self.assertEqual(response.status_code, 302)
 
@@ -67,7 +66,7 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         """dele action deletes data download together with its file"""
         data_download = request_user_data_download(self.user)
 
-        with open(TEST_FILE_PATH, 'rb') as upload:
+        with open(TEST_FILE_PATH, "rb") as upload:
             data_download.file = File(upload)
             data_download.save()
 
@@ -75,11 +74,8 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         self.assertTrue(os.path.isfile(data_download.file.path))
 
         response = self.client.post(
-            reverse('misago:admin:users:data-downloads:index'),
-            data={
-                'action': 'delete',
-                'selected_items': [data_download.pk],
-            },
+            reverse("misago:admin:users:data-downloads:index"),
+            data={"action": "delete", "selected_items": [data_download.pk]},
         )
         self.assertEqual(response.status_code, 302)
 
@@ -88,18 +84,15 @@ class DataDownloadAdminViewsTests(AdminTestCase):
 
     def test_request_view(self):
         """request data downloads view initializes new downloads"""
-        response = self.client.get(reverse('misago:admin:users:data-downloads:request'))
+        response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
-        other_user = UserModel.objects.create_user('bob', 'bob@boberson.com')
+        other_user = UserModel.objects.create_user("bob", "bob@boberson.com")
 
         response = self.client.post(
-            reverse('misago:admin:users:data-downloads:request'),
+            reverse("misago:admin:users:data-downloads:request"),
             data={
-                'user_identifiers': '\n'.join([
-                    self.user.username,
-                    other_user.email,
-                ]),
+                "user_identifiers": "\n".join([self.user.username, other_user.email])
             },
         )
         self.assertEqual(response.status_code, 302)
@@ -108,12 +101,12 @@ class DataDownloadAdminViewsTests(AdminTestCase):
 
     def test_request_view_empty_data(self):
         """request data downloads view handles empty data"""
-        response = self.client.get(reverse('misago:admin:users:data-downloads:request'))
+        response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:users:data-downloads:request'),
-            data={'user_identifiers': ''},
+            reverse("misago:admin:users:data-downloads:request"),
+            data={"user_identifiers": ""},
         )
         self.assertEqual(response.status_code, 200)
 
@@ -121,12 +114,12 @@ class DataDownloadAdminViewsTests(AdminTestCase):
 
     def test_request_view_user_not_found(self):
         """request data downloads view handles empty data"""
-        response = self.client.get(reverse('misago:admin:users:data-downloads:request'))
+        response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            reverse('misago:admin:users:data-downloads:request'),
-            data={'user_identifiers': 'not@found.com'},
+            reverse("misago:admin:users:data-downloads:request"),
+            data={"user_identifiers": "not@found.com"},
         )
         self.assertEqual(response.status_code, 200)
 

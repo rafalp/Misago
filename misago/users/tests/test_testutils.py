@@ -1,6 +1,10 @@
 from django.urls import reverse
 
-from misago.users.testutils import AuthenticatedUserTestCase, SuperUserTestCase, UserTestCase
+from misago.users.testutils import (
+    AuthenticatedUserTestCase,
+    SuperUserTestCase,
+    UserTestCase,
+)
 
 
 class UserTestCaseTests(UserTestCase):
@@ -31,22 +35,22 @@ class UserTestCaseTests(UserTestCase):
         user = self.get_authenticated_user()
         self.login_user(user)
 
-        response = self.client.get('/api/auth/')
+        response = self.client.get("/api/auth/")
         self.assertEqual(response.status_code, 200)
 
         user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
+        self.assertEqual(user_json["id"], user.id)
 
     def test_login_superuser(self):
         """login_user logs superuser"""
         user = self.get_superuser()
         self.login_user(user)
 
-        response = self.client.get('/api/auth/')
+        response = self.client.get("/api/auth/")
         self.assertEqual(response.status_code, 200)
 
         user_json = response.json()
-        self.assertEqual(user_json['id'], user.id)
+        self.assertEqual(user_json["id"], user.id)
 
     def test_logout_user(self):
         """logout_user logs user out"""
@@ -54,11 +58,11 @@ class UserTestCaseTests(UserTestCase):
         self.login_user(user)
         self.logout_user()
 
-        response = self.client.get('/api/auth/')
+        response = self.client.get("/api/auth/")
         self.assertEqual(response.status_code, 200)
 
         user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        self.assertIsNone(user_json["id"])
 
     def test_logout_superuser(self):
         """logout_user logs superuser out"""
@@ -66,17 +70,17 @@ class UserTestCaseTests(UserTestCase):
         self.login_user(user)
         self.logout_user()
 
-        response = self.client.get('/api/auth/')
+        response = self.client.get("/api/auth/")
         self.assertEqual(response.status_code, 200)
 
         user_json = response.json()
-        self.assertIsNone(user_json['id'])
+        self.assertIsNone(user_json["id"])
 
 
 class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):
     def test_setup(self):
         """setup executed correctly"""
-        response = self.client.get(reverse('misago:index'))
+        response = self.client.get(reverse("misago:index"))
         self.assertContains(response, self.user.username)
 
     def test_reload_user(self):
@@ -93,8 +97,8 @@ class SuperUserTestCaseTests(SuperUserTestCase):
         self.assertTrue(self.user.is_staff)
         self.assertTrue(self.user.is_superuser)
 
-        response = self.client.get('/api/auth/')
+        response = self.client.get("/api/auth/")
         self.assertEqual(response.status_code, 200)
 
         user_json = response.json()
-        self.assertEqual(user_json['id'], self.user.id)
+        self.assertEqual(user_json["id"], self.user.id)

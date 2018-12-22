@@ -14,12 +14,12 @@ def patch_acl(request, event, value):
     """useful little op that updates event acl to current state"""
     if value:
         add_acl_to_obj(request.user_acl, event)
-        return {'acl': event.acl}
+        return {"acl": event.acl}
     else:
-        return {'acl': None}
+        return {"acl": None}
 
 
-event_patch_dispatcher.add('acl', patch_acl)
+event_patch_dispatcher.add("acl", patch_acl)
 
 
 def patch_is_hidden(request, event, value):
@@ -30,10 +30,10 @@ def patch_is_hidden(request, event, value):
         allow_unhide_event(request.user_acl, event)
         moderation.unhide_post(request.user, event)
 
-    return {'is_hidden': event.is_hidden}
+    return {"is_hidden": event.is_hidden}
 
 
-event_patch_dispatcher.replace('is-hidden', patch_is_hidden)
+event_patch_dispatcher.replace("is-hidden", patch_is_hidden)
 
 
 def event_patch_endpoint(request, event):

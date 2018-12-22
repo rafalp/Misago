@@ -24,7 +24,7 @@ class GotoView(View):
         )
 
         target_post = self.get_target_post(
-            request.user, thread, posts_queryset.order_by('id'), **kwargs
+            request.user, thread, posts_queryset.order_by("id"), **kwargs
         )
         target_page = self.compute_post_page(target_post, posts_queryset)
 
@@ -37,11 +37,13 @@ class GotoView(View):
         pass
 
     def get_target_post(self, user, thread, posts_queryset):
-        raise NotImplementedError("goto views should define their own get_target_post method")
+        raise NotImplementedError(
+            "goto views should define their own get_target_post method"
+        )
 
     def compute_post_page(self, target_post, posts_queryset):
         # filter out events, order queryset
-        posts_queryset = posts_queryset.filter(is_event=False).order_by('id')
+        posts_queryset = posts_queryset.filter(is_event=False).order_by("id")
         thread_length = posts_queryset.count()
 
         # is target an event?
@@ -68,37 +70,39 @@ class GotoView(View):
 
     def get_redirect(self, thread, target_post, target_page):
         thread_url = thread.thread_type.get_thread_absolute_url(thread, target_page)
-        return redirect('%s#post-%s' % (thread_url, target_post.pk))
+        return redirect("%s#post-%s" % (thread_url, target_post.pk))
 
 
 class ThreadGotoPostView(GotoView):
     thread = ForumThread
 
     def get_target_post(self, user, thread, posts_queryset, **kwargs):
-        return get_object_or_404(posts_queryset, pk=kwargs['post'])
+        return get_object_or_404(posts_queryset, pk=kwargs["post"])
 
 
 class ThreadGotoLastView(GotoView):
     thread = ForumThread
 
     def get_target_post(self, user, thread, posts_queryset, **kwargs):
-        return posts_queryset.order_by('id').last()
+        return posts_queryset.order_by("id").last()
 
 
 class GetFirstUnreadPostMixin(object):
     def get_first_unread_post(self, user, posts_queryset):
         if user.is_authenticated:
             expired_posts = Q(posted_on__lt=get_cutoff_date(user))
-            read_posts = Q(id__in=user.postread_set.values('post'))
+            read_posts = Q(id__in=user.postread_set.values("post"))
 
-            first_unread = posts_queryset.exclude(
-                expired_posts | read_posts,
-            ).order_by('id').first()
+            first_unread = (
+                posts_queryset.exclude(expired_posts | read_posts)
+                .order_by("id")
+                .first()
+            )
 
             if first_unread:
                 return first_unread
 
-        return posts_queryset.order_by('id').last()
+        return posts_queryset.order_by("id").last()
 
 
 class ThreadGotoNewView(GotoView, GetFirstUnreadPostMixin):
@@ -119,7 +123,7 @@ class ThreadGotoUnapprovedView(GotoView):
     thread = ForumThread
 
     def test_permissions(self, request, thread):
-        if not thread.acl['can_approve']:
+        if not thread.acl["can_approve"]:
             raise PermissionDenied(
                 _(
                     "You need permission to approve content to "
@@ -128,27 +132,27 @@ class ThreadGotoUnapprovedView(GotoView):
             )
 
     def get_target_post(self, user, thread, posts_queryset, **kwargs):
-        unapproved_post = posts_queryset.filter(
-            is_unapproved=True,
-        ).order_by('id').first()
+        unapproved_post = (
+            posts_queryset.filter(is_unapproved=True).order_by("id").first()
+        )
         if unapproved_post:
             return unapproved_post
         else:
-            return posts_queryset.order_by('id').last()
+            return posts_queryset.order_by("id").last()
 
 
 class PrivateThreadGotoPostView(GotoView):
     thread = PrivateThread
 
     def get_target_post(self, user, thread, posts_queryset, **kwargs):
-        return get_object_or_404(posts_queryset, pk=kwargs['post'])
+        return get_object_or_404(posts_queryset, pk=kwargs["post"])
 
 
 class PrivateThreadGotoLastView(GotoView):
     thread = PrivateThread
 
     def get_target_post(self, user, thread, posts_queryset, **kwargs):
-        return posts_queryset.order_by('id').last()
+        return posts_queryset.order_by("id").last()
 
 
 class PrivateThreadGotoNewView(GotoView, GetFirstUnreadPostMixin):

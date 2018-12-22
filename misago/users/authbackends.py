@@ -7,8 +7,8 @@ UserModel = get_user_model()
 
 class MisagoBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
-        if kwargs.get('email'):
-            username = kwargs['email']  # Bias to email if it was passed explictly
+        if kwargs.get("email"):
+            username = kwargs["email"]  # Bias to email if it was passed explictly
 
         if not username or not password:
             # If no username or password was given, skip rest of this auth
@@ -28,7 +28,7 @@ class MisagoBackend(ModelBackend):
     def get_user(self, pk):
         try:
             manager = UserModel._default_manager
-            relations = ('rank', 'online_tracker', 'ban_cache')
+            relations = ("rank", "online_tracker", "ban_cache")
             user = manager.select_related(*relations).get(pk=pk)
         except UserModel.DoesNotExist:
             return None

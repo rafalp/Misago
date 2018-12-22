@@ -5,7 +5,12 @@ from django.views import View
 
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.viewmodels import (
-    ForumThreads, PrivateThreads, PrivateThreadsCategory, ThreadsCategory, ThreadsRootCategory)
+    ForumThreads,
+    PrivateThreads,
+    PrivateThreadsCategory,
+    ThreadsCategory,
+    ThreadsRootCategory,
+)
 
 
 class ThreadsList(View):
@@ -15,7 +20,7 @@ class ThreadsList(View):
     template_name = None
 
     def get(self, request, list_type=None, **kwargs):
-        page = get_int_or_404(request.GET.get('page', 0))
+        page = get_int_or_404(request.GET.get("page", 0))
 
         category = self.get_category(request, **kwargs)
         threads = self.get_threads(request, category, list_type, page)
@@ -59,18 +64,16 @@ class ForumThreadsList(ThreadsList):
     category = ThreadsRootCategory
     threads = ForumThreads
 
-    template_name = 'misago/threadslist/threads.html'
+    template_name = "misago/threadslist/threads.html"
 
     def get_default_frontend_context(self):
-        return {
-            'MERGE_THREADS_API': reverse('misago:api:thread-merge'),
-        }
+        return {"MERGE_THREADS_API": reverse("misago:api:thread-merge")}
 
 
 class CategoryThreadsList(ForumThreadsList):
     category = ThreadsCategory
 
-    template_name = 'misago/threadslist/category.html'
+    template_name = "misago/threadslist/category.html"
 
     def get_category(self, request, **kwargs):
         category = super().get_category(request, **kwargs)
@@ -83,4 +86,4 @@ class PrivateThreadsList(ThreadsList):
     category = PrivateThreadsCategory
     threads = PrivateThreads
 
-    template_name = 'misago/threadslist/private_threads.html'
+    template_name = "misago/threadslist/private_threads.html"

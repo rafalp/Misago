@@ -7,7 +7,7 @@ class Online(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         primary_key=True,
-        related_name='online_tracker',
+        related_name="online_tracker",
         on_delete=models.CASCADE,
     )
     last_click = models.DateTimeField(default=timezone.now)

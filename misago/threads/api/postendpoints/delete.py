@@ -8,7 +8,10 @@ from misago.conf import settings
 from misago.core.utils import clean_ids_list
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import (
-    allow_delete_best_answer, allow_delete_event, allow_delete_post)
+    allow_delete_best_answer,
+    allow_delete_event,
+    allow_delete_post,
+)
 from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.serializers import DeletePostsSerializer
 
@@ -31,21 +34,18 @@ def delete_post(request, thread, post):
 
 def delete_bulk(request, thread):
     serializer = DeletePostsSerializer(
-        data={'posts': request.data},
-        context={
-            'thread': thread,
-            'user_acl': request.user_acl,
-        },
+        data={"posts": request.data},
+        context={"thread": thread, "user_acl": request.user_acl},
     )
 
     if not serializer.is_valid():
-        if 'posts' in serializer.errors:
-            errors = serializer.errors['posts']
+        if "posts" in serializer.errors:
+            errors = serializer.errors["posts"]
         else:
             errors = list(serializer.errors.values())[0]
-        return Response({'detail': errors[0]}, status=400)
+        return Response({"detail": errors[0]}, status=400)
 
-    for post in serializer.validated_data['posts']:
+    for post in serializer.validated_data["posts"]:
         post.delete()
 
     sync_related(thread)

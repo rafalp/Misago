@@ -54,7 +54,7 @@ def test_middleware_is_not_reading_db(
 
 
 def test_middleware_is_not_reading_cache(db, mocker, get_response, request_mock):
-    cache_get = mocker.patch('django.core.cache.cache.get')
+    cache_get = mocker.patch("django.core.cache.cache.get")
     middleware = dynamic_settings_middleware(get_response)
     middleware(request_mock)
     cache_get.assert_not_called()

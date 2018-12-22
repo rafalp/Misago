@@ -14,13 +14,17 @@ class ModerationQueueMiddleware(PostingMiddleware):
 
     def save(self, serializer):
         if self.mode == PostingEndpoint.START:
-            self.post.is_unapproved = self.thread.category.acl['require_threads_approval']
+            self.post.is_unapproved = self.thread.category.acl[
+                "require_threads_approval"
+            ]
 
         if self.mode == PostingEndpoint.REPLY:
-            self.post.is_unapproved = self.thread.category.acl['require_replies_approval']
+            self.post.is_unapproved = self.thread.category.acl[
+                "require_replies_approval"
+            ]
 
         if self.mode == PostingEndpoint.EDIT:
-            self.post.is_unapproved = self.thread.category.acl['require_edits_approval']
+            self.post.is_unapproved = self.thread.category.acl["require_edits_approval"]
 
         if self.post.is_unapproved:
-            self.post.update_fields.append('is_unapproved')
+            self.post.update_fields.append("is_unapproved")

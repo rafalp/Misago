@@ -14,9 +14,9 @@ class PinMiddleware(PostingMiddleware):
         return PinSerializer(data=self.request.data)
 
     def post_save(self, serializer):
-        allowed_pin = self.thread.category.acl['can_pin_threads']
+        allowed_pin = self.thread.category.acl["can_pin_threads"]
         if allowed_pin > 0:
-            pin = serializer.validated_data['pin']
+            pin = serializer.validated_data["pin"]
 
             if pin <= allowed_pin:
                 if pin == Thread.WEIGHT_GLOBAL:

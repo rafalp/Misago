@@ -11,8 +11,12 @@ from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Post, Thread
 from misago.threads.moderation import threads as moderation
 from misago.threads.permissions import allow_use_private_threads
-from misago.threads.viewmodels import (ForumThread, PrivateThread,
-    ThreadsRootCategory, PrivateThreadsCategory)
+from misago.threads.viewmodels import (
+    ForumThread,
+    PrivateThread,
+    ThreadsRootCategory,
+    PrivateThreadsCategory,
+)
 
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.delete import delete_bulk, delete_thread
@@ -25,7 +29,9 @@ from .threadendpoints.patch import bulk_patch_endpoint, thread_patch_endpoint
 class ViewSet(viewsets.ViewSet):
     thread = None
 
-    def get_thread(self, request, pk, path_aware=False, read_aware=False, subscription_aware=False):
+    def get_thread(
+        self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
+    ):
         return self.thread(
             request,
             get_int_or_404(pk),
@@ -36,11 +42,7 @@ class ViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, pk):
         thread = self.get_thread(
-            request,
-            pk,
-            path_aware=True,
-            read_aware=True,
-            subscription_aware=True,
+            request, pk, path_aware=True, read_aware=True, subscription_aware=True
         )
 
         return Response(thread.get_frontend_context())
@@ -85,26 +87,28 @@ class ThreadViewSet(ViewSet):
         if posting.is_valid():
             posting.save()
 
-            return Response({
-                'id': thread.pk,
-                'title': thread.title,
-                'url': thread.get_absolute_url(),
-            })
+            return Response(
+                {
+                    "id": thread.pk,
+                    "title": thread.title,
+                    "url": thread.get_absolute_url(),
+                }
+            )
         else:
             return Response(posting.errors, status=400)
 
-    @detail_route(methods=['post'], url_path='merge')
+    @detail_route(methods=["post"], url_path="merge")
     @transaction.atomic
     def thread_merge(self, request, pk=None):
         thread = self.get_thread(request, pk).unwrap()
         return thread_merge_endpoint(request, thread, self.thread)
 
-    @list_route(methods=['post'], url_path='merge')
+    @list_route(methods=["post"], url_path="merge")
     @transaction.atomic
     def threads_merge(self, request):
         return threads_merge_endpoint(request)
 
-    @list_route(methods=['get'])
+    @list_route(methods=["get"])
     def editor(self, request):
         return thread_start_editor(request)
 
@@ -119,7 +123,7 @@ class PrivateThreadViewSet(ViewSet):
     @transaction.atomic
     def create(self, request):
         allow_use_private_threads(request.user_acl)
-        if not request.user_acl['can_start_private_threads']:
+        if not request.user_acl["can_start_private_threads"]:
             raise PermissionDenied(_("You can't start private threads."))
 
         request.user.lock()
@@ -140,10 +144,12 @@ class PrivateThreadViewSet(ViewSet):
         if posting.is_valid():
             posting.save()
 
-            return Response({
-                'id': thread.pk,
-                'title': thread.title,
-                'url': thread.get_absolute_url(),
-            })
+            return Response(
+                {
+                    "id": thread.pk,
+                    "title": thread.title,
+                    "url": thread.get_absolute_url(),
+                }
+            )
         else:
             return Response(posting.errors, status=400)

@@ -25,7 +25,9 @@ class AgreementForm(forms.ModelForm):
     )
     link = forms.URLField(
         label=_("Link"),
-        help_text=_("If your agreement is located on other page, enter here a link to it."),
+        help_text=_(
+            "If your agreement is located on other page, enter here a link to it."
+        ),
         required=False,
     )
     text = forms.CharField(
@@ -37,12 +39,12 @@ class AgreementForm(forms.ModelForm):
 
     class Meta:
         model = Agreement
-        fields = ['type', 'title', 'link', 'text', 'is_active']
+        fields = ["type", "title", "link", "text", "is_active"]
 
     def clean(self):
         data = super().clean()
 
-        if not data.get('link') and not data.get('text'):
+        if not data.get("link") and not data.get("text"):
             raise forms.ValidationError(_("Please fill in agreement link or text."))
 
         return data
@@ -57,23 +59,18 @@ class AgreementForm(forms.ModelForm):
 
 class SearchAgreementsForm(forms.Form):
     type = forms.MultipleChoiceField(
-        label=_("Type"),
-        required=False,
-        choices=Agreement.TYPE_CHOICES,
+        label=_("Type"), required=False, choices=Agreement.TYPE_CHOICES
     )
-    content = forms.CharField(
-        label=_("Content"),
-        required=False,
-    )
+    content = forms.CharField(label=_("Content"), required=False)
 
     def filter_queryset(self, search_criteria, queryset):
         criteria = search_criteria
-        if criteria.get('type') is not None:
-            queryset = queryset.filter(type__in=criteria['type'])
+        if criteria.get("type") is not None:
+            queryset = queryset.filter(type__in=criteria["type"])
 
-        if criteria.get('content'):
-            search_title = Q(title__icontains=criteria['content'])
-            search_text = Q(text__icontains=criteria['content'])
+        if criteria.get("content"):
+            search_title = Q(title__icontains=criteria["content"])
+            search_text = Q(text__icontains=criteria["content"])
             queryset = queryset.filter(search_title | search_text)
 
         return queryset

@@ -11,9 +11,18 @@ from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
 from misago.threads.models import Poll
 from misago.threads.permissions import (
-    allow_delete_poll, allow_edit_poll, allow_see_poll_votes, allow_start_poll, can_start_poll)
+    allow_delete_poll,
+    allow_edit_poll,
+    allow_see_poll_votes,
+    allow_start_poll,
+    can_start_poll,
+)
 from misago.threads.serializers import (
-    EditPollSerializer, NewPollSerializer, PollSerializer, PollVoteSerializer)
+    EditPollSerializer,
+    NewPollSerializer,
+    PollSerializer,
+    PollVoteSerializer,
+)
 from misago.threads.viewmodels import ForumThread
 from misago.users.audittrail import create_audit_trail
 
@@ -24,10 +33,7 @@ class ViewSet(viewsets.ViewSet):
     thread = None
 
     def get_thread(self, request, thread_pk):
-        return self.thread(
-            request,
-            get_int_or_404(thread_pk),
-        ).unwrap()
+        return self.thread(request, get_int_or_404(thread_pk)).unwrap()
 
     def get_poll(self, thread, pk):
         try:
@@ -70,7 +76,7 @@ class ViewSet(viewsets.ViewSet):
 
         add_acl_to_obj(request.user_acl, instance)
         for choice in instance.choices:
-            choice['selected'] = False
+            choice["selected"] = False
 
         thread.has_poll = True
         thread.save()
@@ -110,13 +116,11 @@ class ViewSet(viewsets.ViewSet):
         thread.has_poll = False
         thread.save()
 
-        return Response({
-            'can_start_poll': can_start_poll(request.user_acl, thread),
-        })
+        return Response({"can_start_poll": can_start_poll(request.user_acl, thread)})
 
-    @detail_route(methods=['get', 'post'])
+    @detail_route(methods=["get", "post"])
     def votes(self, request, thread_pk, pk=None):
-        if request.method == 'POST':
+        if request.method == "POST":
             return self.post_votes(request, thread_pk, pk)
         else:
             return self.get_votes(request, thread_pk, pk)
@@ -144,17 +148,17 @@ class ViewSet(viewsets.ViewSet):
         voters = {}
 
         for choice in thread.poll.choices:
-            choice['voters'] = []
-            voters[choice['hash']] = choice['voters']
+            choice["voters"] = []
+            voters[choice["hash"]] = choice["voters"]
 
             choices.append(choice)
 
         queryset = thread.poll.pollvote_set.values(
-            'voter_id', 'voter_name', 'voter_slug', 'voted_on', 'choice_hash'
+            "voter_id", "voter_name", "voter_slug", "voted_on", "choice_hash"
         )
 
-        for voter in queryset.order_by('voter_name').iterator():
-            voters[voter['choice_hash']].append(PollVoteSerializer(voter).data)
+        for voter in queryset.order_by("voter_name").iterator():
+            voters[voter["choice_hash"]].append(PollVoteSerializer(voter).data)
 
         return Response(choices)
 

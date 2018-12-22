@@ -26,7 +26,8 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_started_threads == UserModel.SUBSCRIPTION_ALL,
+            send_email=self.user.subscribe_to_started_threads
+            == UserModel.SUBSCRIPTION_ALL,
         )
 
     def subscribe_replied_thread(self):
@@ -43,11 +44,8 @@ class SubscribeMiddleware(PostingMiddleware):
 
         # posts user's posts in this thread, minus events and current post
         posts_queryset = self.user.post_set.filter(
-            thread=self.thread,
-            is_event=False,
-        ).exclude(
-            pk=self.post.pk,
-        )
+            thread=self.thread, is_event=False
+        ).exclude(pk=self.post.pk)
 
         if posts_queryset.exists():
             return
@@ -55,5 +53,6 @@ class SubscribeMiddleware(PostingMiddleware):
         self.user.subscription_set.create(
             category=self.thread.category,
             thread=self.thread,
-            send_email=self.user.subscribe_to_replied_threads == UserModel.SUBSCRIPTION_ALL,
+            send_email=self.user.subscribe_to_replied_threads
+            == UserModel.SUBSCRIPTION_ALL,
         )

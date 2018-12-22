@@ -9,7 +9,7 @@ test_qa_help_text = 'Type in "yes".'
 
 class AuthenticateApiTests(TestCase):
     def setUp(self):
-        self.api_link = reverse('misago:api:captcha-question')
+        self.api_link = reverse("misago:api:captcha-question")
 
     @override_dynamic_settings(qa_question="")
     def test_api_no_qa_is_set(self):
@@ -26,5 +26,5 @@ class AuthenticateApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
-        self.assertEqual(response_json['question'], test_qa_question)
-        self.assertEqual(response_json['help_text'], test_qa_help_text)
+        self.assertEqual(response_json["question"], test_qa_question)
+        self.assertEqual(response_json["help_text"], test_qa_help_text)

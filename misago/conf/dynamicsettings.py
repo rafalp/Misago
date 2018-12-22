@@ -52,14 +52,14 @@ def get_settings_from_db():
     for setting in Setting.objects.iterator():
         if setting.is_lazy:
             settings[setting.setting] = {
-                'value': True if setting.value else None,
-                'is_lazy': setting.is_lazy,
-                'is_public': setting.is_public,
+                "value": True if setting.value else None,
+                "is_lazy": setting.is_lazy,
+                "is_public": setting.is_public,
             }
         else:
             settings[setting.setting] = {
-                'value': setting.value,
-                'is_lazy': setting.is_lazy,
-                'is_public': setting.is_public,
+                "value": setting.value,
+                "is_lazy": setting.is_lazy,
+                "is_public": setting.is_public,
             }
     return settings

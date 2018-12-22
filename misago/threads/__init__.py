@@ -1,1 +1,1 @@
-default_app_config = 'misago.threads.apps.MisagoThreadsConfig'
+default_app_config = "misago.threads.apps.MisagoThreadsConfig"

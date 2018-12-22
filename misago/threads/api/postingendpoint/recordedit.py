@@ -15,14 +15,20 @@ class RecordEditMiddleware(PostingMiddleware):
             return
 
         self.post.updated_on = self.datetime
-        self.post.edits = F('edits') + 1
+        self.post.edits = F("edits") + 1
 
         self.post.last_editor = self.user
         self.post.last_editor_name = self.user.username
         self.post.last_editor_slug = self.user.slug
 
         self.post.update_fields.extend(
-            ('updated_on', 'edits', 'last_editor', 'last_editor_name', 'last_editor_slug', )
+            (
+                "updated_on",
+                "edits",
+                "last_editor",
+                "last_editor_name",
+                "last_editor_slug",
+            )
         )
 
         self.post.edits_record.create(

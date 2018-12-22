@@ -4,7 +4,7 @@ from misago.cache.versions import invalidate_all_caches
 
 
 class Command(BaseCommand):
-    help = 'Invalidates versioned caches'
+    help = "Invalidates versioned caches"
 
     def handle(self, *args, **options):
         invalidate_all_caches()

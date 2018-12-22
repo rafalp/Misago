@@ -14,19 +14,24 @@ class ThreadsBulkPatchApiTestCase(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.threads = list(reversed([
-            testutils.post_thread(category=self.category),
-            testutils.post_thread(category=self.category),
-            testutils.post_thread(category=self.category),
-        ]))
+        self.threads = list(
+            reversed(
+                [
+                    testutils.post_thread(category=self.category),
+                    testutils.post_thread(category=self.category),
+                    testutils.post_thread(category=self.category),
+                ]
+            )
+        )
 
         self.ids = list(reversed([t.id for t in self.threads]))
 
-        self.api_link = reverse('misago:api:thread-list')
+        self.api_link = reverse("misago:api:thread-list")
 
     def patch(self, api_link, ops):
-        return self.client.patch(api_link, json.dumps(ops), content_type="application/json")
-
+        return self.client.patch(
+            api_link, json.dumps(ops), content_type="application/json"
+        )
 
 
 class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
@@ -35,90 +40,76 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(self.api_link, [1, 2, 3])
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'non_field_errors': [
-                "Invalid data. Expected a dictionary, but got list.",
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "non_field_errors": [
+                    "Invalid data. Expected a dictionary, but got list."
+                ]
+            },
+        )
 
     def test_missing_input_keys(self):
         """api rejects input with missing keys"""
         response = self.patch(self.api_link, {})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'ids': [
-                "This field is required.",
-            ],
-            'ops': [
-                "This field is required.",
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {"ids": ["This field is required."], "ops": ["This field is required."]},
+        )
 
     def test_empty_input_keys(self):
         """api rejects input with empty keys"""
-        response = self.patch(self.api_link, {
-            'ids': [],
-            'ops': [],
-        })
+        response = self.patch(self.api_link, {"ids": [], "ops": []})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'ids': [
-                "Ensure this field has at least 1 elements.",
-            ],
-            'ops': [
-                "Ensure this field has at least 1 elements.",
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "ids": ["Ensure this field has at least 1 elements."],
+                "ops": ["Ensure this field has at least 1 elements."],
+            },
+        )
 
     def test_invalid_input_keys(self):
         """api rejects input with invalid keys"""
-        response = self.patch(self.api_link, {
-            'ids': ['a'],
-            'ops': [1],
-        })
+        response = self.patch(self.api_link, {"ids": ["a"], "ops": [1]})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'ids': [
-                "A valid integer is required.",
-            ],
-            'ops': [
-                'Expected a dictionary of items but got type "int".',
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "ids": ["A valid integer is required."],
+                "ops": ['Expected a dictionary of items but got type "int".'],
+            },
+        )
 
     def test_too_small_id(self):
         """api rejects input with implausiple id"""
-        response = self.patch(self.api_link, {
-            'ids': [0],
-            'ops': [{}],
-        })
+        response = self.patch(self.api_link, {"ids": [0], "ops": [{}]})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'ids': [
-                "Ensure this value is greater than or equal to 1.",
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {"ids": ["Ensure this value is greater than or equal to 1."]},
+        )
 
     def test_too_large_input(self):
         """api rejects too large input"""
-        response = self.patch(self.api_link, {
-            'ids': [i + 1 for i in range(200)],
-            'ops': [{} for i in range(200)],
-        })
+        response = self.patch(
+            self.api_link,
+            {"ids": [i + 1 for i in range(200)], "ops": [{} for i in range(200)]},
+        )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {
-            'ids': [
-                "Ensure this field has no more than 40 elements.",
-            ],
-            'ops': [
-                "Ensure this field has no more than 10 elements.",
-            ],
-        })
+        self.assertEqual(
+            response.json(),
+            {
+                "ids": ["Ensure this field has no more than 40 elements."],
+                "ops": ["Ensure this field has no more than 10 elements."],
+            },
+        )
 
     def test_threads_not_found(self):
         """api fails to find threads"""
@@ -127,59 +118,46 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
             testutils.post_thread(category=self.category, is_unapproved=True),
         ]
 
-        response = self.patch(self.api_link, {
-            'ids': [t.id for t in threads],
-            'ops': [{}],
-        })
+        response = self.patch(
+            self.api_link, {"ids": [t.id for t in threads], "ops": [{}]}
+        )
 
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.json(), {
-            'detail': "One or more threads to update could not be found.",
-        })
+        self.assertEqual(
+            response.json(),
+            {"detail": "One or more threads to update could not be found."},
+        )
 
     def test_ops_invalid(self):
         """api validates descriptions"""
-        response = self.patch(self.api_link, {
-            'ids': self.ids[:1],
-            'ops': [{}],
-        })
+        response = self.patch(self.api_link, {"ids": self.ids[:1], "ops": [{}]})
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), [
-            {'id': self.ids[0], 'detail': ['undefined op']},
-        ])
+        self.assertEqual(
+            response.json(), [{"id": self.ids[0], "detail": ["undefined op"]}]
+        )
 
     def test_anonymous_user(self):
         """anonymous users can't use bulk actions"""
         self.logout_user()
 
-        response = self.patch(self.api_link, {
-            'ids': self.ids[:1],
-            'ops': [{}],
-        })
+        response = self.patch(self.api_link, {"ids": self.ids[:1], "ops": [{}]})
         self.assertEqual(response.status_code, 403)
 
 
 class ThreadAddAclApiTests(ThreadsBulkPatchApiTestCase):
     def test_add_acl_true(self):
         """api adds current threads acl to response"""
-        response = self.patch(self.api_link,
-            {
-            'ids': self.ids,
-            'ops': [
-                {
-                    'op': 'add',
-                    'path': 'acl',
-                    'value': True,
-                },
-            ]
-        })
+        response = self.patch(
+            self.api_link,
+            {"ids": self.ids, "ops": [{"op": "add", "path": "acl", "value": True}]},
+        )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertTrue(response_json[i]['acl'])
+            self.assertEqual(response_json[i]["id"], thread.id)
+            self.assertTrue(response_json[i]["acl"])
 
 
 class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
@@ -189,28 +167,24 @@ class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(
             self.api_link,
             {
-                'ids': self.ids,
-                'ops': [
-                    {
-                        'op': 'replace',
-                        'path': 'title',
-                        'value': 'Changed the title!',
-                    },
-                ]
-            }
+                "ids": self.ids,
+                "ops": [
+                    {"op": "replace", "path": "title", "value": "Changed the title!"}
+                ],
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(response_json[i]['title'], 'Changed the title!')
+            self.assertEqual(response_json[i]["id"], thread.id)
+            self.assertEqual(response_json[i]["title"], "Changed the title!")
 
         for thread in Thread.objects.filter(id__in=self.ids):
-            self.assertEqual(thread.title, 'Changed the title!')
+            self.assertEqual(thread.title, "Changed the title!")
 
         category = Category.objects.get(pk=self.category.id)
-        self.assertEqual(category.last_thread_title, 'Changed the title!')
+        self.assertEqual(category.last_thread_title, "Changed the title!")
 
     @patch_category_acl({"can_edit_threads": 0})
     def test_change_thread_title_no_permission(self):
@@ -218,24 +192,19 @@ class BulkThreadChangeTitleApiTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(
             self.api_link,
             {
-                'ids': self.ids,
-                'ops': [
-                    {
-                        'op': 'replace',
-                        'path': 'title',
-                        'value': 'Changed the title!',
-                    },
-                ]
-            }
+                "ids": self.ids,
+                "ops": [
+                    {"op": "replace", "path": "title", "value": "Changed the title!"}
+                ],
+            },
         )
         self.assertEqual(response.status_code, 400)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
+            self.assertEqual(response_json[i]["id"], thread.id)
             self.assertEqual(
-                response_json[i]['detail'],
-                ["You can't edit threads in this category."],
+                response_json[i]["detail"], ["You can't edit threads in this category."]
             )
 
 
@@ -243,15 +212,10 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
     def setUp(self):
         super().setUp()
 
-        Category(
-            name='Other Category',
-            slug='other-category',
-        ).insert_at(
-            self.category,
-            position='last-child',
-            save=True,
+        Category(name="Other Category", slug="other-category").insert_at(
+            self.category, position="last-child", save=True
         )
-        self.other_category = Category.objects.get(slug='other-category')
+        self.other_category = Category.objects.get(slug="other-category")
 
     @patch_category_acl({"can_move_threads": True})
     @patch_other_category_acl({"can_start_threads": 2})
@@ -260,27 +224,23 @@ class BulkThreadMoveApiTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(
             self.api_link,
             {
-                'ids': self.ids,
-                'ops': [
+                "ids": self.ids,
+                "ops": [
                     {
-                        'op': 'replace',
-                        'path': 'category',
-                        'value': self.other_category.id,
+                        "op": "replace",
+                        "path": "category",
+                        "value": self.other_category.id,
                     },
-                    {
-                        'op': 'replace',
-                        'path': 'flatten-categories',
-                        'value': None,
-                    },
-                ]
-            }
+                    {"op": "replace", "path": "flatten-categories", "value": None},
+                ],
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertEqual(response_json[i]['category'], self.other_category.id)
+            self.assertEqual(response_json[i]["id"], thread.id)
+            self.assertEqual(response_json[i]["category"], self.other_category.id)
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertEqual(thread.category_id, self.other_category.id)
@@ -299,22 +259,16 @@ class BulkThreadsHideApiTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(
             self.api_link,
             {
-                'ids': self.ids,
-                'ops': [
-                    {
-                    'op': 'replace',
-                    'path': 'is-hidden',
-                    'value': True,
-                    },
-                ]
-            }
+                "ids": self.ids,
+                "ops": [{"op": "replace", "path": "is-hidden", "value": True}],
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertTrue(response_json[i]['is_hidden'])
+            self.assertEqual(response_json[i]["id"], thread.id)
+            self.assertTrue(response_json[i]["is_hidden"])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertTrue(thread.is_hidden)
@@ -343,23 +297,17 @@ class BulkThreadsApproveApiTests(ThreadsBulkPatchApiTestCase):
         response = self.patch(
             self.api_link,
             {
-                'ids': self.ids,
-                'ops': [
-                    {
-                    'op': 'replace',
-                    'path': 'is-unapproved',
-                    'value': False,
-                    },
-                ]
-            }
+                "ids": self.ids,
+                "ops": [{"op": "replace", "path": "is-unapproved", "value": False}],
+            },
         )
         self.assertEqual(response.status_code, 200)
 
         response_json = response.json()
         for i, thread in enumerate(self.threads):
-            self.assertEqual(response_json[i]['id'], thread.id)
-            self.assertFalse(response_json[i]['is_unapproved'])
-            self.assertFalse(response_json[i]['has_unapproved_posts'])
+            self.assertEqual(response_json[i]["id"], thread.id)
+            self.assertFalse(response_json[i]["is_unapproved"])
+            self.assertFalse(response_json[i]["has_unapproved_posts"])
 
         for thread in Thread.objects.filter(id__in=self.ids):
             self.assertFalse(thread.is_unapproved)

@@ -10,10 +10,7 @@ class AdminTestCase(SuperUserTestCase):
 
     def login_admin(self, user):
         self.client.post(
-            reverse('misago:admin:index'),
-            data={
-                'username': user.email,
-                'password': self.USER_PASSWORD,
-            }
+            reverse("misago:admin:index"),
+            data={"username": user.email, "password": self.USER_PASSWORD},
         )
-        self.client.get(reverse('misago:admin:index'))
+        self.client.get(reverse("misago:admin:index"))

@@ -30,28 +30,28 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            '--username',
-            dest='username',
+            "--username",
+            dest="username",
             default=None,
             help="Specifies the username for the superuser.",
         )
         parser.add_argument(
-            '--email',
-            dest='email',
+            "--email",
+            dest="email",
             default=None,
             help="Specifies the e-mail for the superuser.",
         )
         parser.add_argument(
-            '--password',
-            dest='password',
+            "--password",
+            dest="password",
             default=None,
             help="Specifies the password for the superuser.",
         )
         parser.add_argument(
-            '--noinput',
-            '--no-input',
-            action='store_false',
-            dest='interactive',
+            "--noinput",
+            "--no-input",
+            action="store_false",
+            dest="interactive",
             default=True,
             help=(
                 "Tells Misago to NOT prompt the user for input "
@@ -63,23 +63,23 @@ class Command(BaseCommand):
             ),
         )
         parser.add_argument(
-            '--database',
-            action='store',
-            dest='database',
+            "--database",
+            action="store",
+            dest="database",
             default=DEFAULT_DB_ALIAS,
             help=('Specifies the database to use. Default is "default".'),
         )
 
     def execute(self, *args, **options):
-        self.stdin = options.get('stdin', sys.stdin)  # Used for testing
+        self.stdin = options.get("stdin", sys.stdin)  # Used for testing
         return super().execute(*args, **options)
 
     def handle(self, *args, **options):
-        username = options.get('username')
-        email = options.get('email')
-        password = options.get('password')
-        interactive = options.get('interactive')
-        verbosity = int(options.get('verbosity', 1))
+        username = options.get("username")
+        email = options.get("email")
+        password = options.get("password")
+        interactive = options.get("interactive")
+        verbosity = int(options.get("verbosity", 1))
 
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 username = username.strip()
                 validate_username(settings, username)
             except ValidationError as e:
-                self.stderr.write('\n'.join(e.messages))
+                self.stderr.write("\n".join(e.messages))
                 username = None
 
         if email is not None:
@@ -98,12 +98,12 @@ class Command(BaseCommand):
                 email = email.strip()
                 validate_email(email)
             except ValidationError as e:
-                self.stderr.write('\n'.join(e.messages))
+                self.stderr.write("\n".join(e.messages))
                 email = None
 
         if password is not None:
             password = password.strip()
-            if password == '':
+            if password == "":
                 self.stderr.write("Error: Blank passwords aren't allowed.")
 
         if not interactive:
@@ -112,7 +112,7 @@ class Command(BaseCommand):
                 self.create_superuser(username, email, password, settings, verbosity)
         else:
             try:
-                if hasattr(self.stdin, 'isatty') and not self.stdin.isatty():
+                if hasattr(self.stdin, "isatty") and not self.stdin.isatty():
                     raise NotRunningInTTYException("Not running in a TTY")
 
                 # Prompt for username/password, and any other required fields.
@@ -125,7 +125,7 @@ class Command(BaseCommand):
                         validate_username(raw_value)
                         username = raw_value
                     except ValidationError as e:
-                        self.stderr.write('\n'.join(e.messages))
+                        self.stderr.write("\n".join(e.messages))
 
                 while not email:
                     try:
@@ -133,7 +133,7 @@ class Command(BaseCommand):
                         validate_email(raw_value)
                         email = raw_value
                     except ValidationError as e:
-                        self.stderr.write('\n'.join(e.messages))
+                        self.stderr.write("\n".join(e.messages))
 
                 while not password:
                     raw_value = getpass("Enter password: ")
@@ -142,7 +142,7 @@ class Command(BaseCommand):
                         self.stderr.write("Error: Your passwords didn't match.")
                         # Don't validate passwords that don't match.
                         continue
-                    if raw_value.strip() == '':
+                    if raw_value.strip() == "":
                         self.stderr.write("Error: Blank passwords aren't allowed.")
                         # Don't validate blank passwords.
                         continue
@@ -151,9 +151,11 @@ class Command(BaseCommand):
                             raw_value, user=User(username=username, email=email)
                         )
                     except ValidationError as e:
-                        self.stderr.write('\n'.join(e.messages))
-                        response = input('Bypass password validation and create user anyway? [y/N]: ')
-                        if response.lower() != 'y':
+                        self.stderr.write("\n".join(e.messages))
+                        response = input(
+                            "Bypass password validation and create user anyway? [y/N]: "
+                        )
+                        if response.lower() != "y":
                             continue
                     password = raw_value
 

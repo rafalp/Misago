@@ -21,8 +21,8 @@ class AnonymousUser(object):
 
 class PostsTrackerTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("UserA", "testa@user.com", 'Pass.123')
-        self.category = Category.objects.get(slug='first-category')
+        self.user = UserModel.objects.create_user("UserA", "testa@user.com", "Pass.123")
+        self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(self.category)
 
     def test_falsy_value(self):

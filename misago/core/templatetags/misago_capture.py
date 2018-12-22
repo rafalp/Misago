@@ -19,19 +19,19 @@ def capture(parser, token):
     split_contents = token.split_contents()
 
     if len(split_contents) == 4:
-        if split_contents[1] != 'trimmed' or split_contents[2].lower() != 'as':
+        if split_contents[1] != "trimmed" or split_contents[2].lower() != "as":
             raise template.TemplateSyntaxError(SYNTAX_ERROR)
         is_trimmed = True
         variable = split_contents[3]
     elif len(split_contents) == 3:
-        if split_contents[1].lower() != 'as':
+        if split_contents[1].lower() != "as":
             raise template.TemplateSyntaxError(SYNTAX_ERROR)
         is_trimmed = False
         variable = split_contents[2]
     else:
         raise template.TemplateSyntaxError(SYNTAX_ERROR)
 
-    nodelist = parser.parse(('endcapture', ))
+    nodelist = parser.parse(("endcapture",))
     parser.delete_first_token()
     return CaptureNode(variable, nodelist, trim=is_trimmed)
 
@@ -47,4 +47,4 @@ class CaptureNode(template.Node):
         if self.is_trimmed:
             captured_output = captured_output.strip()
         context[self.variable] = captured_output
-        return ''
+        return ""

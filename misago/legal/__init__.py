@@ -1,1 +1,1 @@
-default_app_config = 'misago.legal.apps.MisagoLegalConfig'
+default_app_config = "misago.legal.apps.MisagoLegalConfig"

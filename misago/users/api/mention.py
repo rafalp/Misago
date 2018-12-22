@@ -14,22 +14,18 @@ UserModel = get_user_model()
 def mention_suggestions(request):
     suggestions = []
 
-    query = request.query_params.get('q', '').lower().strip()[:100]
+    query = request.query_params.get("q", "").lower().strip()[:100]
     if query:
         queryset = UserModel.objects.filter(
-            slug__startswith=query,
-            is_active=True,
-        ).order_by('slug')[:10]
+            slug__startswith=query, is_active=True
+        ).order_by("slug")[:10]
 
         for user in queryset:
             try:
-                avatar = user.avatars[-1]['url']
+                avatar = user.avatars[-1]["url"]
             except IndexError:
                 avatar = static(settings.MISAGO_BLANK_AVATAR)
 
-            suggestions.append({
-                'username': user.username,
-                'avatar': avatar,
-            })
+            suggestions.append({"username": user.username, "avatar": avatar})
 
     return Response(suggestions)

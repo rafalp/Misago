@@ -10,15 +10,18 @@ from . import get_protected_namespace, protected_admin_view, render
 @protected_admin_view
 def _error_page(request, code, exception=None, default_message=None):
     if is_admin_session(request):
-        template_pattern = 'misago/admin/errorpages/%s.html' % code
+        template_pattern = "misago/admin/errorpages/%s.html" % code
 
-        response = render(request, template_pattern, {
-            'message': get_exception_message(exception, default_message),
-        }, error_page=True)
+        response = render(
+            request,
+            template_pattern,
+            {"message": get_exception_message(exception, default_message)},
+            error_page=True,
+        )
         response.status_code = code
         return response
     else:
-        return redirect('misago:admin:index')
+        return redirect("misago:admin:index")
 
 
 def admin_error_page(f):
@@ -38,11 +41,11 @@ def _csrf_failure(request, reason=""):
         update_admin_session(request)
         response = render(
             request,
-            'misago/admin/errorpages/csrf_failure_authenticated.html',
+            "misago/admin/errorpages/csrf_failure_authenticated.html",
             error_page=True,
         )
     else:
-        response = render(request, 'misago/admin/errorpages/csrf_failure.html')
+        response = render(request, "misago/admin/errorpages/csrf_failure.html")
 
     response.status_code = 403
     return response

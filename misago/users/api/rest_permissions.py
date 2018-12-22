@@ -14,8 +14,8 @@ class UnbannedOnly(BasePermission):
         if ban:
             hydrated_ban = Ban(
                 check_type=Ban.IP,
-                user_message=ban['message'],
-                expires_on=ban['expires_on'],
+                user_message=ban["message"],
+                expires_on=ban["expires_on"],
             )
             raise Banned(hydrated_ban)
 
@@ -27,7 +27,9 @@ class UnbannedOnly(BasePermission):
 class UnbannedAnonOnly(UnbannedOnly):
     def has_permission(self, request, view):
         if request.user.is_authenticated:
-            raise PermissionDenied(_("This action is not available to signed in users."))
+            raise PermissionDenied(
+                _("This action is not available to signed in users.")
+            )
 
         self.is_request_banned(request)
         return True

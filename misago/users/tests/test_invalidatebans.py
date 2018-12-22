@@ -33,7 +33,7 @@ class InvalidateBansTests(TestCase):
         call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[0].strip()
 
-        self.assertEqual(command_output, 'Bans invalidated: 5')
+        self.assertEqual(command_output, "Bans invalidated: 5")
 
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
@@ -55,15 +55,12 @@ class InvalidateBansTests(TestCase):
         call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[1].strip()
 
-        self.assertEqual(command_output, 'Ban caches emptied: 0')
+        self.assertEqual(command_output, "Ban caches emptied: 0")
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 1)
 
         # expire bans
         expired_date = timezone.now() - timedelta(days=10)
-        Ban.objects.all().update(
-            expires_on=expired_date,
-            is_checked=True,
-        )
+        Ban.objects.all().update(expires_on=expired_date, is_checked=True)
         BanCache.objects.all().update(expires_on=expired_date)
 
         # invalidate expired ban cache
@@ -71,7 +68,7 @@ class InvalidateBansTests(TestCase):
         call_command(command, stdout=out)
         command_output = out.getvalue().splitlines()[1].strip()
 
-        self.assertEqual(command_output, 'Ban caches emptied: 1')
+        self.assertEqual(command_output, "Ban caches emptied: 1")
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
         # see if user is banned anymore

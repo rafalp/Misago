@@ -14,11 +14,8 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         self.post = testutils.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
-            'misago:api:thread-post-likes',
-            kwargs={
-                'thread_pk': self.thread.pk,
-                'pk': self.post.pk,
-            }
+            "misago:api:thread-post-likes",
+            kwargs={"thread_pk": self.thread.pk, "pk": self.post.pk},
         )
 
     @patch_category_acl({"can_see_posts_likes": 0})
@@ -26,18 +23,18 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         """api errors if user has no permission to see likes"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(response.json(), {
-            "detail": "You can't see who liked this post."
-        })
+        self.assertEquals(
+            response.json(), {"detail": "You can't see who liked this post."}
+        )
 
     @patch_category_acl({"can_see_posts_likes": 1})
     def test_no_permission_to_list(self):
         """api errors if user has no permission to see likes, but can see likes count"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(response.json(), {
-            "detail": "You can't see who liked this post."
-        })
+        self.assertEquals(
+            response.json(), {"detail": "You can't see who liked this post."}
+        )
 
     @patch_category_acl({"can_see_posts_likes": 2})
     def test_no_likes(self):
@@ -55,24 +52,29 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.json(), [
-                PostLikeSerializer({
-                    'id': other_like.id,
-                    'liked_on': other_like.liked_on,
-                    'liker_id': other_like.liker_id,
-                    'liker_name': other_like.liker_name,
-                    'liker_slug': other_like.liker_slug,
-                    'liker__avatars': self.user.avatars,
-                }).data,
-                PostLikeSerializer({
-                    'id': like.id,
-                    'liked_on': like.liked_on,
-                    'liker_id': like.liker_id,
-                    'liker_name': like.liker_name,
-                    'liker_slug': like.liker_slug,
-                    'liker__avatars': self.user.avatars,
-                }).data,
-            ]
+            response.json(),
+            [
+                PostLikeSerializer(
+                    {
+                        "id": other_like.id,
+                        "liked_on": other_like.liked_on,
+                        "liker_id": other_like.liker_id,
+                        "liker_name": other_like.liker_name,
+                        "liker_slug": other_like.liker_slug,
+                        "liker__avatars": self.user.avatars,
+                    }
+                ).data,
+                PostLikeSerializer(
+                    {
+                        "id": like.id,
+                        "liked_on": like.liked_on,
+                        "liker_id": like.liker_id,
+                        "liker_name": like.liker_name,
+                        "liker_slug": like.liker_slug,
+                        "liker__avatars": self.user.avatars,
+                    }
+                ).data,
+            ],
         )
 
         # api has no showstoppers for likes by deleted users
@@ -85,22 +87,27 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.json(), [
-                PostLikeSerializer({
-                    'id': other_like.id,
-                    'liked_on': other_like.liked_on,
-                    'liker_id': other_like.liker_id,
-                    'liker_name': other_like.liker_name,
-                    'liker_slug': other_like.liker_slug,
-                    'liker__avatars': None,
-                }).data,
-                PostLikeSerializer({
-                    'id': like.id,
-                    'liked_on': like.liked_on,
-                    'liker_id': like.liker_id,
-                    'liker_name': like.liker_name,
-                    'liker_slug': like.liker_slug,
-                    'liker__avatars': None,
-                }).data,
-            ]
+            response.json(),
+            [
+                PostLikeSerializer(
+                    {
+                        "id": other_like.id,
+                        "liked_on": other_like.liked_on,
+                        "liker_id": other_like.liker_id,
+                        "liker_name": other_like.liker_name,
+                        "liker_slug": other_like.liker_slug,
+                        "liker__avatars": None,
+                    }
+                ).data,
+                PostLikeSerializer(
+                    {
+                        "id": like.id,
+                        "liked_on": like.liked_on,
+                        "liker_id": like.liker_id,
+                        "liker_name": like.liker_name,
+                        "liker_slug": like.liker_slug,
+                        "liker__avatars": None,
+                    }
+                ).data,
+            ],
         )

@@ -13,7 +13,5 @@ def create_user_audit_trail(user, ip_address, obj):
         return None
 
     return user.audittrail_set.create(
-        user=user,
-        ip_address=ip_address,
-        content_object=obj,
+        user=user, ip_address=ip_address, content_object=obj
     )

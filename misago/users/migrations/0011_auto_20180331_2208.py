@@ -5,18 +5,20 @@ import misago.core.pgutils
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0010_user_profile_fields'),
-    ]
+    dependencies = [("misago_users", "0010_user_profile_fields")]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='is_deleting_account',
+            model_name="user",
+            name="is_deleting_account",
             field=models.BooleanField(default=False),
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=misago.core.pgutils.PgPartialIndex(fields=['is_deleting_account'], name='misago_user_is_dele_2798b0_part', where={'is_deleting_account': True}),
+            model_name="user",
+            index=misago.core.pgutils.PgPartialIndex(
+                fields=["is_deleting_account"],
+                name="misago_user_is_dele_2798b0_part",
+                where={"is_deleting_account": True},
+            ),
         ),
     ]

@@ -5,7 +5,7 @@ from misago.users.activepostersranking import build_active_posters_ranking
 
 
 class Command(BaseCommand):
-    help = 'Builds active posters ranking'
+    help = "Builds active posters ranking"
 
     def handle(self, *args, **options):
         self.stdout.write("\nBuilding active posters ranking...")

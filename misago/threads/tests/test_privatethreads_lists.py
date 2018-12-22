@@ -11,7 +11,7 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.test_link = reverse('misago:private-threads')
+        self.test_link = reverse("misago:private-threads")
 
     def test_unauthenticated(self):
         """view requires user to sign in and be able to access it"""

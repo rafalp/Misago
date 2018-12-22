@@ -19,10 +19,7 @@ class Thread(models.Model):
         (WEIGHT_GLOBAL, _("Pin thread globally")),
     ]
 
-    category = models.ForeignKey(
-        'misago_categories.Category',
-        on_delete=models.CASCADE,
-    )
+    category = models.ForeignKey("misago_categories.Category", on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
     replies = models.PositiveIntegerField(default=0, db_index=True)
@@ -38,24 +35,21 @@ class Thread(models.Model):
     last_post_on = models.DateTimeField(db_index=True)
 
     first_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
+        "misago_threads.Post",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
     )
     starter = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
     )
     starter_name = models.CharField(max_length=255)
     starter_slug = models.CharField(max_length=255)
 
     last_post = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
+        "misago_threads.Post",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -63,7 +57,7 @@ class Thread(models.Model):
     last_post_is_event = models.BooleanField(default=False)
     last_poster = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='last_poster_set',
+        related_name="last_poster_set",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -78,17 +72,17 @@ class Thread(models.Model):
     is_closed = models.BooleanField(default=False)
 
     best_answer = models.ForeignKey(
-        'misago_threads.Post',
-        related_name='+',
+        "misago_threads.Post",
+        related_name="+",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
     )
-    best_answer_is_protected =  models.BooleanField(default=False)
+    best_answer_is_protected = models.BooleanField(default=False)
     best_answer_marked_on = models.DateTimeField(null=True, blank=True)
     best_answer_marked_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name='marked_best_answer_set',
+        related_name="marked_best_answer_set",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -98,47 +92,30 @@ class Thread(models.Model):
 
     participants = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='privatethread_set',
-        through='ThreadParticipant',
-        through_fields=('thread', 'user'),
+        related_name="privatethread_set",
+        through="ThreadParticipant",
+        through_fields=("thread", "user"),
     )
 
     class Meta:
         indexes = [
+            PgPartialIndex(fields=["weight"], where={"weight": 2}),
+            PgPartialIndex(fields=["weight"], where={"weight": 1}),
+            PgPartialIndex(fields=["weight"], where={"weight": 0}),
+            PgPartialIndex(fields=["weight"], where={"weight__lt": 2}),
             PgPartialIndex(
-                fields=['weight'],
-                where={'weight': 2},
+                fields=["has_reported_posts"], where={"has_reported_posts": True}
             ),
             PgPartialIndex(
-                fields=['weight'],
-                where={'weight': 1},
+                fields=["has_unapproved_posts"], where={"has_unapproved_posts": True}
             ),
-            PgPartialIndex(
-                fields=['weight'],
-                where={'weight': 0},
-            ),
-            PgPartialIndex(
-                fields=['weight'],
-                where={'weight__lt': 2},
-            ),
-            PgPartialIndex(
-                fields=['has_reported_posts'],
-                where={'has_reported_posts': True},
-            ),
-            PgPartialIndex(
-                fields=['has_unapproved_posts'],
-                where={'has_unapproved_posts': True},
-            ),
-            PgPartialIndex(
-                fields=['is_hidden'],
-                where={'is_hidden': False},
-            ),
+            PgPartialIndex(fields=["is_hidden"], where={"is_hidden": False}),
         ]
 
         index_together = [
-            ['category', 'id'],
-            ['category', 'last_post_on'],
-            ['category', 'replies'],
+            ["category", "id"],
+            ["category", "last_post_on"],
+            ["category", "replies"],
         ]
 
     def __str__(self):
@@ -146,6 +123,7 @@ class Thread(models.Model):
 
     def delete(self, *args, **kwargs):
         from misago.threads.signals import delete_thread
+
         delete_thread.send(sender=self)
 
         super().delete(*args, **kwargs)
@@ -155,6 +133,7 @@ class Thread(models.Model):
             raise ValueError("thread can't be merged with itself")
 
         from misago.threads.signals import merge_thread
+
         merge_thread.send(sender=self, other_thread=other_thread)
 
     def move(self, new_category):
@@ -189,7 +168,7 @@ class Thread(models.Model):
         hidden_post_qs = self.post_set.filter(is_hidden=True)[:1]
         self.has_hidden_posts = hidden_post_qs.exists()
 
-        posts = self.post_set.order_by('id')
+        posts = self.post_set.order_by("id")
 
         first_post = posts.first()
         self.set_first_post(first_post)

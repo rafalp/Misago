@@ -39,7 +39,7 @@ class UserManager(BaseUserManager):
         user.set_email(email)
         user.set_password(password)
 
-        if not 'rank' in extra_fields:
+        if not "rank" in extra_fields:
             user.rank = Rank.objects.get_default()
 
         now = timezone.now()
@@ -54,28 +54,28 @@ class UserManager(BaseUserManager):
         return user
 
     def _assert_user_has_authenticated_role(self, user):
-        authenticated_role = Role.objects.get(special_role='authenticated')
+        authenticated_role = Role.objects.get(special_role="authenticated")
         if authenticated_role not in user.roles.all():
             user.roles.add(authenticated_role)
         user.update_acl_key()
-        user.save(update_fields=['acl_key'])
+        user.save(update_fields=["acl_key"])
 
     def create_user(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
         return self._create_user(username, email, password, **extra_fields)
 
     def create_superuser(self, username, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
 
         try:
-            if not extra_fields.get('rank'):
+            if not extra_fields.get("rank"):
                 extra_fields["rank"] = Rank.objects.get(name=_("Forum team"))
         except Rank.DoesNotExist:
             pass
@@ -89,7 +89,7 @@ class UserManager(BaseUserManager):
         return self.get(email_hash=hash_email(email))
 
     def get_by_username_or_email(self, login):
-        if '@' in login:
+        if "@" in login:
             return self.get(email_hash=hash_email(login))
         return self.get(slug=slugify(login))
 
@@ -118,7 +118,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         (LIMIT_INVITES_TO_FOLLOWED, _("Users I follow")),
         (LIMIT_INVITES_TO_NOBODY, _("Nobody")),
     ]
-    
+
     # Note that "username" field is purely for shows.
     # When searching users by their names, always use lowercased string
     # and slug field instead that is normalized around DB engines
@@ -134,30 +134,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
 
-    joined_on = models.DateTimeField(_('joined on'), default=timezone.now)
+    joined_on = models.DateTimeField(_("joined on"), default=timezone.now)
     joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 
     rank = models.ForeignKey(
-        'Rank',
-        null=True,
-        blank=True,
-        on_delete=models.deletion.PROTECT,
+        "Rank", null=True, blank=True, on_delete=models.deletion.PROTECT
     )
     title = models.CharField(max_length=255, null=True, blank=True)
     requires_activation = models.PositiveIntegerField(default=ACTIVATION_NONE)
 
     is_staff = models.BooleanField(
-        _('staff status'),
+        _("staff status"),
         default=False,
-        help_text=_('Designates whether the user can log into admin sites.'),
+        help_text=_("Designates whether the user can log into admin sites."),
     )
 
-    roles = models.ManyToManyField('misago_acl.Role')
+    roles = models.ManyToManyField("misago_acl.Role")
     acl_key = models.CharField(max_length=12, null=True, blank=True)
 
     is_active = models.BooleanField(
-        _('active'),
+        _("active"),
         db_index=True,
         default=True,
         help_text=_(
@@ -170,16 +167,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleting_account = models.BooleanField(default=False)
 
     avatar_tmp = models.ImageField(
-        max_length=255,
-        upload_to=avatars.store.upload_to,
-        null=True,
-        blank=True,
+        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
     )
     avatar_src = models.ImageField(
-        max_length=255,
-        upload_to=avatars.store.upload_to,
-        null=True,
-        blank=True,
+        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
@@ -198,30 +189,23 @@ class User(AbstractBaseUser, PermissionsMixin):
     following = models.PositiveIntegerField(default=0)
 
     follows = models.ManyToManyField(
-        'self',
-        related_name='followed_by',
-        symmetrical=False,
+        "self", related_name="followed_by", symmetrical=False
     )
     blocks = models.ManyToManyField(
-        'self',
-        related_name='blocked_by',
-        symmetrical=False,
+        "self", related_name="blocked_by", symmetrical=False
     )
 
     limits_private_thread_invites_to = models.PositiveIntegerField(
-        default=LIMIT_INVITES_TO_NONE,
-        choices=LIMIT_INVITES_TO_CHOICES,
+        default=LIMIT_INVITES_TO_NONE, choices=LIMIT_INVITES_TO_CHOICES
     )
     unread_private_threads = models.PositiveIntegerField(default=0)
     sync_unread_private_threads = models.BooleanField(default=False)
 
     subscribe_to_started_threads = models.PositiveIntegerField(
-        default=SUBSCRIPTION_NONE,
-        choices=SUBSCRIPTION_CHOICES,
+        default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
     )
     subscribe_to_replied_threads = models.PositiveIntegerField(
-        default=SUBSCRIPTION_NONE,
-        choices=SUBSCRIPTION_CHOICES,
+        default=SUBSCRIPTION_NONE, choices=SUBSCRIPTION_CHOICES
     )
 
     threads = models.PositiveIntegerField(default=0)
@@ -232,24 +216,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_fields = HStoreField(default=dict)
     agreements = ArrayField(models.PositiveIntegerField(), default=list)
 
-    USERNAME_FIELD = 'slug'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = "slug"
+    REQUIRED_FIELDS = ["email"]
 
     objects = UserManager()
 
     class Meta:
         indexes = [
+            PgPartialIndex(fields=["is_staff"], where={"is_staff": True}),
             PgPartialIndex(
-                fields=['is_staff'],
-                where={'is_staff': True},
+                fields=["requires_activation"], where={"requires_activation__gt": 0}
             ),
             PgPartialIndex(
-                fields=['requires_activation'],
-                where={'requires_activation__gt': 0},
-            ),
-            PgPartialIndex(
-                fields=['is_deleting_account'],
-                where={'is_deleting_account': True},
+                fields=["is_deleting_account"], where={"is_deleting_account": True}
             ),
         ]
 
@@ -262,7 +241,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return User.objects.select_for_update().get(pk=self.pk)
 
     def delete(self, *args, **kwargs):
-        if kwargs.pop('delete_content', False):
+        if kwargs.pop("delete_content", False):
             self.delete_content()
 
         self.anonymize_data()
@@ -273,12 +252,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def delete_content(self):
         from misago.users.signals import delete_user_content
+
         delete_user_content.send(sender=self)
 
     def mark_for_delete(self):
         self.is_active = False
         self.is_deleting_account = True
-        self.save(update_fields=['is_active', 'is_deleting_account'])
+        self.save(update_fields=["is_active", "is_deleting_account"])
 
     def anonymize_data(self):
         """Replaces username with anonymized one, then send anonymization signal.
@@ -288,8 +268,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
-        
+
         from misago.users.signals import anonymize_user_data
+
         anonymize_user_data.send(sender=self)
 
     @property
@@ -320,12 +301,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return is_user_signature_valid(self)
 
     def get_absolute_url(self):
-        return reverse(
-            'misago:user', kwargs={
-                'slug': self.slug,
-                'pk': self.pk,
-            }
-        )
+        return reverse("misago:user", kwargs={"slug": self.slug, "pk": self.pk})
 
     def get_username(self):
         """dirty hack: return real username instead of normalized slug"""
@@ -338,7 +314,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def get_real_name(self):
-        return self.profile_fields.get('real_name')
+        return self.profile_fields.get("real_name")
 
     def set_username(self, new_username, changed_by=None):
         new_username = self.normalize_username(new_username)
@@ -354,6 +330,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                 )
 
                 from misago.users.signals import username_changed
+
                 username_changed.send(sender=self)
 
                 return namechange
@@ -394,12 +371,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def update_acl_key(self):
         roles_pks = []
         for role in self.get_roles():
-            if role.origin == 'self':
-                roles_pks.append('u%s' % role.pk)
+            if role.origin == "self":
+                roles_pks.append("u%s" % role.pk)
             else:
-                roles_pks.append('%s:%s' % (self.rank.pk, role.pk))
+                roles_pks.append("%s:%s" % (self.rank.pk, role.pk))
 
-        self.acl_key = md5(','.join(roles_pks).encode()).hexdigest()[:12]
+        self.acl_key = md5(",".join(roles_pks).encode()).hexdigest()[:12]
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """sends an email to this user (for compat with Django)"""
@@ -432,15 +409,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UsernameChange(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='namechanges',
-        on_delete=models.CASCADE,
+        settings.AUTH_USER_MODEL, related_name="namechanges", on_delete=models.CASCADE
     )
     changed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
-        related_name='user_renames',
+        related_name="user_renames",
         on_delete=models.SET_NULL,
     )
     changed_by_username = models.CharField(max_length=30)
@@ -457,7 +432,7 @@ class UsernameChange(models.Model):
 
 
 class AnonymousUser(DjangoAnonymousUser):
-    acl_key = 'anonymous'
+    acl_key = "anonymous"
 
     @property
     def acl_cache(self):

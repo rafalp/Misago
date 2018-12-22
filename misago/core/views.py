@@ -6,4 +6,4 @@ def forum_index(request):
 
 
 def home_redirect(*args, **kwargs):
-    return redirect('misago:index')
+    return redirect("misago:index")

@@ -17,24 +17,24 @@ class SetupTests(TestCase):
         mock_parser = MockParser()
 
         with self.assertRaises(ValueError):
-            setup.validate_project_name(mock_parser, '-lorem')
+            setup.validate_project_name(mock_parser, "-lorem")
 
         with self.assertRaises(ValueError):
-            setup.validate_project_name(mock_parser, 'django')
+            setup.validate_project_name(mock_parser, "django")
 
         with self.assertRaises(ValueError):
-            setup.validate_project_name(mock_parser, 'dja-ngo')
+            setup.validate_project_name(mock_parser, "dja-ngo")
 
         with self.assertRaises(ValueError):
-            setup.validate_project_name(mock_parser, '123')
+            setup.validate_project_name(mock_parser, "123")
 
-        self.assertTrue(setup.validate_project_name(mock_parser, 'myforum'))
-        self.assertTrue(setup.validate_project_name(mock_parser, 'myforum123'))
+        self.assertTrue(setup.validate_project_name(mock_parser, "myforum"))
+        self.assertTrue(setup.validate_project_name(mock_parser, "myforum123"))
 
     def test_get_misago_project_template(self):
         """get_misago_project_template returns correct path to template"""
         misago_path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        test_project_path = os.path.join(misago_path, 'project_template')
+        test_project_path = os.path.join(misago_path, "project_template")
 
         self.assertEqual(
             smart_str(setup.get_misago_project_template()), smart_str(test_project_path)

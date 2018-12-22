@@ -6,8 +6,8 @@ from misago.conf import settings
 from misago.threads.models import Attachment, AttachmentType
 
 
-ATTACHMENT_404_URL = ''.join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
-ATTACHMENT_403_URL = ''.join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
+ATTACHMENT_404_URL = "".join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
+ATTACHMENT_403_URL = "".join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
 
 
 def attachment_server(request, pk, secret, thumbnail=False):
@@ -21,10 +21,10 @@ def attachment_server(request, pk, secret, thumbnail=False):
 
 
 def serve_file(request, pk, secret, thumbnail):
-    queryset = Attachment.objects.select_related('filetype')
+    queryset = Attachment.objects.select_related("filetype")
     attachment = get_object_or_404(queryset, pk=pk, secret=secret)
 
-    if not attachment.post_id and request.GET.get('shva') != '1':
+    if not attachment.post_id and request.GET.get("shva") != "1":
         # if attachment is orphaned, don't run acl test unless explictly told so
         # this saves user suprise of deleted attachment still showing in posts/quotes
         raise Http404()
@@ -50,7 +50,7 @@ def allow_file_download(request, attachment):
     if not is_authenticated or request.user.id != attachment.uploader_id:
         if not attachment.post_id:
             raise Http404()
-        if not request.user_acl['can_download_other_users_attachments']:
+        if not request.user_acl["can_download_other_users_attachments"]:
             raise PermissionDenied()
 
     allowed_roles = set(r.pk for r in attachment.filetype.limit_downloads_to.all())

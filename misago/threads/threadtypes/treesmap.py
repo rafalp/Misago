@@ -25,6 +25,7 @@ class TreesMap(object):
 
     def load_trees(self, types):
         from misago.categories.models import Category
+
         trees = {}
         for category in Category.objects.filter(level=0, special_role__in=types.keys()):
             trees[category.tree_id] = types[category.special_role]

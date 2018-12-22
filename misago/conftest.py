@@ -10,11 +10,7 @@ from misago.users.testutils import create_test_superuser, create_test_user
 
 
 def get_cache_versions():
-    return {
-        ACL_CACHE: "abcdefgh",
-        BANS_CACHE: "abcdefgh",
-        SETTINGS_CACHE: "abcdefgh",
-    }
+    return {ACL_CACHE: "abcdefgh", BANS_CACHE: "abcdefgh", SETTINGS_CACHE: "abcdefgh"}
 
 
 @pytest.fixture

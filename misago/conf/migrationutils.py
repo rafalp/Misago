@@ -3,9 +3,9 @@ from .utils import get_setting_value, has_custom_value
 
 
 def migrate_settings_group(apps, group_fixture, old_group_key=None):
-    SettingsGroup = apps.get_model('misago_conf', 'SettingsGroup')
-    Setting = apps.get_model('misago_conf', 'Setting')
-    group_key = group_fixture['key']
+    SettingsGroup = apps.get_model("misago_conf", "SettingsGroup")
+    Setting = apps.get_model("misago_conf", "Setting")
+    group_key = group_fixture["key"]
 
     # Fetch settings group
 
@@ -21,10 +21,10 @@ def migrate_settings_group(apps, group_fixture, old_group_key=None):
 
     # Update group's attributes
 
-    group.key = group_fixture['key']
-    group.name = group_fixture['name']
-    if group_fixture.get('description'):
-        group.description = group_fixture.get('description')
+    group.key = group_fixture["key"]
+    group.name = group_fixture["name"]
+    if group_fixture.get("description"):
+        group.description = group_fixture.get("description")
     group.save()
 
     # Delete groups settings and make new ones
@@ -32,8 +32,8 @@ def migrate_settings_group(apps, group_fixture, old_group_key=None):
 
     group.setting_set.all().delete()
 
-    for order, setting_fixture in enumerate(group_fixture['settings']):
-        old_value = custom_settings_values.pop(setting_fixture['setting'], None)
+    for order, setting_fixture in enumerate(group_fixture["settings"]):
+        old_value = custom_settings_values.pop(setting_fixture["setting"], None)
         migrate_setting(Setting, group, setting_fixture, order, old_value)
 
 
@@ -55,27 +55,29 @@ def get_custom_settings_values(group):
 
 
 def migrate_setting(Setting, group, setting_fixture, order, old_value):
-    setting_fixture['group'] = group
-    setting_fixture['order'] = order
+    setting_fixture["group"] = group
+    setting_fixture["order"] = order
 
-    setting_fixture['name'] = setting_fixture['name']
-    if setting_fixture.get('description'):
-        setting_fixture['description'] = setting_fixture.get('description')
+    setting_fixture["name"] = setting_fixture["name"]
+    if setting_fixture.get("description"):
+        setting_fixture["description"] = setting_fixture.get("description")
 
-    if setting_fixture.get('field_extra') and setting_fixture.get('field_extra').get('choices'):
-        untranslated_choices = setting_fixture['field_extra']['choices']
+    if setting_fixture.get("field_extra") and setting_fixture.get("field_extra").get(
+        "choices"
+    ):
+        untranslated_choices = setting_fixture["field_extra"]["choices"]
         translated_choices = []
         for val, name in untranslated_choices:
             translated_choices.append((val, name))
-        setting_fixture['field_extra']['choices'] = tuple(translated_choices)
+        setting_fixture["field_extra"]["choices"] = tuple(translated_choices)
 
     if old_value is None:
-        value = setting_fixture.pop('value', None)
+        value = setting_fixture.pop("value", None)
     else:
         value = old_value
-    setting_fixture.pop('value', None)
+    setting_fixture.pop("value", None)
 
-    field_extra = setting_fixture.pop('field_extra', None)
+    field_extra = setting_fixture.pop("field_extra", None)
 
     setting = Setting(**setting_fixture)
     setting.dry_value = dehydrate_value(setting.python_type, value)

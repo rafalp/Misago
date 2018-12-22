@@ -10,7 +10,7 @@ from misago.conf import settings
 from . import store
 
 
-DEFAULT_GALLERY = '__default__'
+DEFAULT_GALLERY = "__default__"
 
 
 def get_available_galleries(include_default=False):
@@ -30,17 +30,18 @@ def get_available_galleries(include_default=False):
             continue
 
         if image.gallery not in galleries_dicts:
-            galleries_dicts[image.gallery] = {'name': image.gallery, 'images': []}
+            galleries_dicts[image.gallery] = {"name": image.gallery, "images": []}
 
             galleries.append(galleries_dicts[image.gallery])
 
-        galleries_dicts[image.gallery]['images'].append(image)
+        galleries_dicts[image.gallery]["images"].append(image)
 
     return galleries
 
 
 def galleries_exist():
     from misago.users.models import AvatarGallery
+
     return AvatarGallery.objects.exists()
 
 
@@ -56,20 +57,21 @@ def load_avatar_galleries():
         images = glob_gallery_images(directory)
 
         for image in images:
-            with open(image, 'rb') as image_file:
+            with open(image, "rb") as image_file:
                 galleries.append(
-                    AvatarGallery.objects.
-                    create(gallery=name, image=ContentFile(image_file.read(), 'image'))
+                    AvatarGallery.objects.create(
+                        gallery=name, image=ContentFile(image_file.read(), "image")
+                    )
                 )
     return galleries
 
 
 def glob_gallery_images(directory):
     images = []
-    images.extend(directory.glob('*.gif'))
-    images.extend(directory.glob('*.jpg'))
-    images.extend(directory.glob('*.jpeg'))
-    images.extend(directory.glob('*.png'))
+    images.extend(directory.glob("*.gif"))
+    images.extend(directory.glob("*.jpg"))
+    images.extend(directory.glob("*.jpeg"))
+    images.extend(directory.glob("*.png"))
     return images
 
 
@@ -84,11 +86,11 @@ def set_random_avatar(user):
 
     avatars_list = []
     for gallery in galleries:
-        if gallery['name'] == DEFAULT_GALLERY:
-            avatars_list = gallery['images']
+        if gallery["name"] == DEFAULT_GALLERY:
+            avatars_list = gallery["images"]
             break
         else:
-            avatars_list += gallery['images']
+            avatars_list += gallery["images"]
 
     random_avatar = random.choice(avatars_list)
     store.store_new_avatar(user, Image.open(random_avatar.image))

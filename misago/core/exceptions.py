@@ -18,6 +18,7 @@ class Banned(PermissionDenied):
 
 class SocialAuthFailed(AuthException):
     """Exception used to return error messages from Misago's social auth to user."""
+
     def __init__(self, backend, message):
         self.backend = backend
         self.message = message
@@ -25,6 +26,7 @@ class SocialAuthFailed(AuthException):
 
 class SocialAuthBanned(AuthException):
     """Exception used to return ban message from Misago's social auth to user."""
+
     def __init__(self, backend, ban):
         self.backend = backend
         self.ban = ban
@@ -32,9 +34,11 @@ class SocialAuthBanned(AuthException):
 
 class ExplicitFirstPage(Exception):
     """The url that was used to reach view contained explicit first page"""
+
     pass
 
 
 class OutdatedSlug(Exception):
     """The url that was used to reach view contained outdated slug"""
+
     pass

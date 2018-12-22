@@ -17,13 +17,15 @@ class StopCacheVersioning(RunPython):
 
 def start_cache_versioning(cache):
     def migration_operation(apps, _):
-        CacheVersion = apps.get_model('misago_cache', 'CacheVersion')
+        CacheVersion = apps.get_model("misago_cache", "CacheVersion")
         CacheVersion.objects.create(cache=cache)
+
     return migration_operation
 
 
 def stop_cache_versioning(cache):
     def migration_operation(apps, _):
-        CacheVersion = apps.get_model('misago_cache', 'CacheVersion')
+        CacheVersion = apps.get_model("misago_cache", "CacheVersion")
         CacheVersion.objects.filter(cache=cache).delete()
+
     return migration_operation

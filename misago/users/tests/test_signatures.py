@@ -12,15 +12,15 @@ cache_versions = get_cache_versions()
 
 
 class MockRequest(object):
-    scheme = 'http'
+    scheme = "http"
 
     def get_host(self):
-        return '127.0.0.1:8000'
+        return "127.0.0.1:8000"
 
 
 class UserSignatureTests(TestCase):
     def test_user_signature_and_valid_checksum_is_set(self):
-        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user = User.objects.create_user("Bob", "bob@bob.com")
         user.signature = "Test"
         user.signature_parsed = "Test"
         user.signature_checksum = "Test"
@@ -37,7 +37,7 @@ class UserSignatureTests(TestCase):
         assert signatures.is_user_signature_valid(user)
 
     def test_user_signature_is_cleared(self):
-        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user = User.objects.create_user("Bob", "bob@bob.com")
         user.signature = "Test"
         user.signature_parsed = "Test"
         user.signature_checksum = "Test"
@@ -53,7 +53,7 @@ class UserSignatureTests(TestCase):
         assert not user.signature_checksum
 
     def test_signature_validity_check_fails_for_incorrect_signature_checksum(self):
-        user = User.objects.create_user('Bob', 'bob@bob.com')
+        user = User.objects.create_user("Bob", "bob@bob.com")
         user.signature = "Test"
         user.signature_parsed = "Test"
         user.signature_checksum = "Test"

@@ -25,80 +25,44 @@ class AddCategoriesToItemsTests(TestCase):
         self.root = Category.objects.root_category()
 
         Category(
-            name='Category A',
-            slug='category-a',
-            css_class='showing-category-a',
-        ).insert_at(
-            self.root,
-            position='last-child',
-            save=True,
-        )
+            name="Category A", slug="category-a", css_class="showing-category-a"
+        ).insert_at(self.root, position="last-child", save=True)
         Category(
-            name='Category E',
-            slug='category-e',
-            css_class='showing-category-e',
-        ).insert_at(
-            self.root,
-            position='last-child',
-            save=True,
-        )
+            name="Category E", slug="category-e", css_class="showing-category-e"
+        ).insert_at(self.root, position="last-child", save=True)
 
         self.root = Category.objects.root_category()
 
-        self.category_a = Category.objects.get(slug='category-a')
+        self.category_a = Category.objects.get(slug="category-a")
         Category(
-            name='Category B',
-            slug='category-b',
-            css_class='showing-category-b',
-        ).insert_at(
-            self.category_a,
-            position='last-child',
-            save=True,
-        )
+            name="Category B", slug="category-b", css_class="showing-category-b"
+        ).insert_at(self.category_a, position="last-child", save=True)
 
-        self.category_b = Category.objects.get(slug='category-b')
+        self.category_b = Category.objects.get(slug="category-b")
         Category(
-            name='Category C',
-            slug='category-c',
-            css_class='showing-category-c',
-        ).insert_at(
-            self.category_b,
-            position='last-child',
-            save=True,
-        )
+            name="Category C", slug="category-c", css_class="showing-category-c"
+        ).insert_at(self.category_b, position="last-child", save=True)
         Category(
-            name='Category D',
-            slug='category-d',
-            css_class='showing-category-d',
-        ).insert_at(
-            self.category_b,
-            position='last-child',
-            save=True,
-        )
+            name="Category D", slug="category-d", css_class="showing-category-d"
+        ).insert_at(self.category_b, position="last-child", save=True)
 
-        self.category_c = Category.objects.get(slug='category-c')
-        self.category_d = Category.objects.get(slug='category-d')
+        self.category_c = Category.objects.get(slug="category-c")
+        self.category_d = Category.objects.get(slug="category-d")
 
-        self.category_e = Category.objects.get(slug='category-e')
+        self.category_e = Category.objects.get(slug="category-e")
         Category(
-            name='Category F',
-            slug='category-f',
-            css_class='showing-category-f',
-        ).insert_at(
-            self.category_e,
-            position='last-child',
-            save=True,
-        )
+            name="Category F", slug="category-f", css_class="showing-category-f"
+        ).insert_at(self.category_e, position="last-child", save=True)
 
         Category.objects.partial_rebuild(self.root.tree_id)
 
         self.root = Category.objects.root_category()
-        self.category_a = Category.objects.get(slug='category-a')
-        self.category_b = Category.objects.get(slug='category-b')
-        self.category_c = Category.objects.get(slug='category-c')
-        self.category_d = Category.objects.get(slug='category-d')
-        self.category_e = Category.objects.get(slug='category-e')
-        self.category_f = Category.objects.get(slug='category-f')
+        self.category_a = Category.objects.get(slug="category-a")
+        self.category_b = Category.objects.get(slug="category-b")
+        self.category_c = Category.objects.get(slug="category-c")
+        self.category_d = Category.objects.get(slug="category-d")
+        self.category_e = Category.objects.get(slug="category-e")
+        self.category_f = Category.objects.get(slug="category-f")
 
         self.categories = list(Category.objects.all_categories(include_root=True))
 
@@ -160,18 +124,18 @@ class AddCategoriesToItemsTests(TestCase):
 
 
 class MockRequest(object):
-    def __init__(self, scheme, host, wsgialias=''):
+    def __init__(self, scheme, host, wsgialias=""):
         self.scheme = scheme
         self.host = host
 
-        self.path_info = '/api/threads/123/merge/'
-        self.path = '%s%s' % (wsgialias.rstrip('/'), self.path_info)
+        self.path_info = "/api/threads/123/merge/"
+        self.path = "%s%s" % (wsgialias.rstrip("/"), self.path_info)
 
     def get_host(self):
         return self.host
 
     def is_secure(self):
-        return self.scheme == 'https'
+        return self.scheme == "https"
 
 
 class GetThreadIdFromUrlTests(TestCase):
@@ -180,123 +144,126 @@ class GetThreadIdFromUrlTests(TestCase):
         TEST_CASES = [
             {
                 # perfect match
-                'request': MockRequest('https', 'testforum.com', '/discuss/'),
-                'url': 'https://testforum.com/discuss/t/test-thread/123/',
-                'pk': 123,
+                "request": MockRequest("https", "testforum.com", "/discuss/"),
+                "url": "https://testforum.com/discuss/t/test-thread/123/",
+                "pk": 123,
             },
             {
                 # we don't validate scheme in case site recently moved to https
                 # but user still has old url's saved somewhere
-                'request': MockRequest('http', 'testforum.com', '/discuss/'),
-                'url': 'http://testforum.com/discuss/t/test-thread/432/post/12321/',
-                'pk': 432,
+                "request": MockRequest("http", "testforum.com", "/discuss/"),
+                "url": "http://testforum.com/discuss/t/test-thread/432/post/12321/",
+                "pk": 432,
             },
             {
                 # extract thread id from other thread urls
-                'request': MockRequest('https', 'testforum.com', '/discuss/'),
-                'url': 'http://testforum.com/discuss/t/test-thread/432/post/12321/',
-                'pk': 432,
+                "request": MockRequest("https", "testforum.com", "/discuss/"),
+                "url": "http://testforum.com/discuss/t/test-thread/432/post/12321/",
+                "pk": 432,
             },
             {
                 # extract thread id from thread page url
-                'request': MockRequest('http', 'testforum.com', '/discuss/'),
-                'url': 'http://testforum.com/discuss/t/test-thread/432/123/',
-                'pk': 432,
+                "request": MockRequest("http", "testforum.com", "/discuss/"),
+                "url": "http://testforum.com/discuss/t/test-thread/432/123/",
+                "pk": 432,
             },
             {
                 # extract thread id from thread last post url with relative schema
-                'request': MockRequest('http', 'testforum.com', '/discuss/'),
-                'url': '//testforum.com/discuss/t/test-thread/18/last/',
-                'pk': 18,
+                "request": MockRequest("http", "testforum.com", "/discuss/"),
+                "url": "//testforum.com/discuss/t/test-thread/18/last/",
+                "pk": 18,
             },
             {
                 # extract thread id from url that lacks scheme
-                'request': MockRequest('http', 'testforum.com', ''),
-                'url': 'testforum.com/t/test-thread/12/last/',
-                'pk': 12,
+                "request": MockRequest("http", "testforum.com", ""),
+                "url": "testforum.com/t/test-thread/12/last/",
+                "pk": 12,
             },
             {
                 # extract thread id from schemaless thread last post url
-                'request': MockRequest('http', 'testforum.com', '/discuss/'),
-                'url': 'testforum.com/discuss/t/test-thread/18/last/',
-                'pk': 18,
+                "request": MockRequest("http", "testforum.com", "/discuss/"),
+                "url": "testforum.com/discuss/t/test-thread/18/last/",
+                "pk": 18,
             },
             {
                 # extract thread id from url that lacks scheme and hostname
-                'request': MockRequest('http', 'testforum.com', ''),
-                'url': '/t/test-thread/13/',
-                'pk': 13,
+                "request": MockRequest("http", "testforum.com", ""),
+                "url": "/t/test-thread/13/",
+                "pk": 13,
             },
             {
                 # extract thread id from url that has port name
-                'request': MockRequest('http', '127.0.0.1:8000', ''),
-                'url': 'https://127.0.0.1:8000/t/test-thread/13/',
-                'pk': 13,
+                "request": MockRequest("http", "127.0.0.1:8000", ""),
+                "url": "https://127.0.0.1:8000/t/test-thread/13/",
+                "pk": 13,
             },
             {
                 # extract thread id from url that isn't trimmed
-                'request': MockRequest('http', '127.0.0.1:8000', ''),
-                'url': '   /t/test-thread/13/   ',
-                'pk': 13,
-            }
+                "request": MockRequest("http", "127.0.0.1:8000", ""),
+                "url": "   /t/test-thread/13/   ",
+                "pk": 13,
+            },
         ]
 
         for case in TEST_CASES:
-            pk = get_thread_id_from_url(case['request'], case['url'])
+            pk = get_thread_id_from_url(case["request"], case["url"])
             self.assertEqual(
-                pk, case['pk'],
-                'get_thread_id_from_url for %(url)s should return %(pk)s' % case
+                pk,
+                case["pk"],
+                "get_thread_id_from_url for %(url)s should return %(pk)s" % case,
             )
 
     def test_get_thread_id_from_invalid_urls(self):
         TEST_CASES = [
             {
                 # lacking wsgi alias
-                'request': MockRequest('https', 'testforum.com'),
-                'url': 'http://testforum.com/discuss/t/test-thread-123/',
+                "request": MockRequest("https", "testforum.com"),
+                "url": "http://testforum.com/discuss/t/test-thread-123/",
             },
             {
                 # invalid wsgi alias
-                'request': MockRequest('https', 'testforum.com', '/discuss/'),
-                'url': 'http://testforum.com/forum/t/test-thread-123/',
+                "request": MockRequest("https", "testforum.com", "/discuss/"),
+                "url": "http://testforum.com/forum/t/test-thread-123/",
             },
             {
                 # invalid hostname
-                'request': MockRequest('http', 'misago-project.org', '/discuss/'),
-                'url': 'https://testforum.com/discuss/t/test-thread-432/post/12321/',
+                "request": MockRequest("http", "misago-project.org", "/discuss/"),
+                "url": "https://testforum.com/discuss/t/test-thread-432/post/12321/",
             },
             {
                 # old thread url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/thread/bobboberson-123/',
+                "request": MockRequest("http", "testforum.com"),
+                "url": "https://testforum.com/thread/bobboberson-123/",
             },
             {
                 # dashed thread url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/t/bobboberson-123/',
+                "request": MockRequest("http", "testforum.com"),
+                "url": "https://testforum.com/t/bobboberson-123/",
             },
             {
                 # non-thread url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': 'https://testforum.com/user/bobboberson-123/',
+                "request": MockRequest("http", "testforum.com"),
+                "url": "https://testforum.com/user/bobboberson-123/",
             },
             {
                 # rubbish url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': 'asdsadsasadsaSA&das8as*S(A*sa'
+                "request": MockRequest("http", "testforum.com"),
+                "url": "asdsadsasadsaSA&das8as*S(A*sa",
             },
             {
                 # blank url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': '/'
+                "request": MockRequest("http", "testforum.com"),
+                "url": "/",
             },
             {
                 # empty url
-                'request': MockRequest('http', 'testforum.com'),
-                'url': ''
-            }
+                "request": MockRequest("http", "testforum.com"),
+                "url": "",
+            },
         ]
 
         for case in TEST_CASES:
-            pk = get_thread_id_from_url(case['request'], case['url'])
-            self.assertIsNone(pk, 'get_thread_id_from_url for %s should fail' % case['url'])
+            pk = get_thread_id_from_url(case["request"], case["url"])
+            self.assertIsNone(
+                pk, "get_thread_id_from_url for %s should fail" % case["url"]
+            )

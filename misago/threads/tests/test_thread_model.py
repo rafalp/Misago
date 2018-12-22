@@ -20,11 +20,11 @@ class ThreadModelTests(TestCase):
         self.thread = Thread(
             category=self.category,
             started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         self.thread.set_title("Test thread")
@@ -33,7 +33,7 @@ class ThreadModelTests(TestCase):
         Post.objects.create(
             category=self.category,
             thread=self.thread,
-            poster_name='Tester',
+            poster_name="Tester",
             original="Hello! I am test message!",
             parsed="<p>Hello! I am test message!</p>",
             checksum="nope",
@@ -216,8 +216,8 @@ class ThreadModelTests(TestCase):
         Poll.objects.create(
             thread=self.thread,
             category=self.category,
-            poster_name='test',
-            poster_slug='test',
+            poster_name="test",
+            poster_slug="test",
             choices=[],
         )
 
@@ -338,15 +338,10 @@ class ThreadModelTests(TestCase):
     def test_move(self):
         """move(new_category) moves thread to other category"""
         root_category = Category.objects.root_category()
-        Category(
-            name='New Category',
-            slug='new-category',
-        ).insert_at(
-            root_category,
-            position='last-child',
-            save=True,
+        Category(name="New Category", slug="new-category").insert_at(
+            root_category, position="last-child", save=True
         )
-        new_category = Category.objects.get(slug='new-category')
+        new_category = Category.objects.get(slug="new-category")
 
         self.thread.move(new_category)
         self.assertEqual(self.thread.category, new_category)
@@ -364,11 +359,11 @@ class ThreadModelTests(TestCase):
         other_thread = Thread(
             category=self.category,
             started_on=datetime,
-            starter_name='Tester',
-            starter_slug='tester',
+            starter_name="Tester",
+            starter_slug="tester",
             last_post_on=datetime,
-            last_poster_name='Tester',
-            last_poster_slug='tester',
+            last_poster_name="Tester",
+            last_poster_slug="tester",
         )
 
         other_thread.set_title("Other thread")
@@ -377,7 +372,7 @@ class ThreadModelTests(TestCase):
         post = Post.objects.create(
             category=self.category,
             thread=other_thread,
-            poster_name='Admin',
+            poster_name="Admin",
             original="Hello! I am other message!",
             parsed="<p>Hello! I am other message!</p>",
             checksum="nope",
@@ -404,7 +399,9 @@ class ThreadModelTests(TestCase):
         when there are no participants left in it
         """
         user_a = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        user_b = UserModel.objects.create_user("Weebl", "weebl@weeblson.com", "Pass.123")
+        user_b = UserModel.objects.create_user(
+            "Weebl", "weebl@weeblson.com", "Pass.123"
+        )
 
         ThreadParticipant.objects.add_participants(self.thread, [user_a, user_b])
         self.assertEqual(self.thread.participants.count(), 2)

@@ -15,7 +15,7 @@ from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
 
 
-PLACEKITTEN_URL = 'https://placekitten.com/g/%s/%s'
+PLACEKITTEN_URL = "https://placekitten.com/g/%s/%s"
 
 UserModel = get_user_model()
 
@@ -24,25 +24,25 @@ corpus_short = EnglishCorpus(max_length=150)
 
 
 class Command(BaseCommand):
-    help = 'Creates random threads for dev and testing purposes.'
+    help = "Creates random threads for dev and testing purposes."
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'threads',
+            "threads",
             help="number of threads to create",
-            nargs='?',
+            nargs="?",
             type=int,
             default=5,
         )
 
     def handle(self, *args, **options):
-        items_to_create = options['threads']
+        items_to_create = options["threads"]
 
         categories = list(Category.objects.all_categories())
 
         fake = Factory.create()
 
-        message = 'Creating %s fake threads...\n'
+        message = "Creating %s fake threads...\n"
         self.stdout.write(message % items_to_create)
 
         created_threads = 0
@@ -53,7 +53,7 @@ class Command(BaseCommand):
             with atomic():
                 datetime = timezone.now()
                 category = random.choice(categories)
-                user = UserModel.objects.order_by('?')[:1][0]
+                user = UserModel.objects.order_by("?")[:1][0]
 
                 thread_is_unapproved = random.randint(0, 100) > 90
                 thread_is_hidden = random.randint(0, 100) > 90
@@ -62,11 +62,11 @@ class Command(BaseCommand):
                 thread = Thread(
                     category=category,
                     started_on=datetime,
-                    starter_name='-',
-                    starter_slug='-',
+                    starter_name="-",
+                    starter_slug="-",
                     last_post_on=datetime,
-                    last_poster_name='-',
-                    last_poster_slug='-',
+                    last_poster_name="-",
+                    last_poster_slug="-",
                     replies=0,
                     is_unapproved=thread_is_unapproved,
                     is_hidden=thread_is_hidden,
@@ -88,7 +88,7 @@ class Command(BaseCommand):
                     updated_on=datetime,
                 )
                 update_post_checksum(post)
-                post.save(update_fields=['checksum'])
+                post.save(update_fields=["checksum"])
 
                 thread.set_first_post(post)
                 thread.set_last_post(post)
@@ -108,7 +108,7 @@ class Command(BaseCommand):
 
                 for _ in range(thread_replies):
                     datetime = timezone.now()
-                    user = UserModel.objects.order_by('?')[:1][0]
+                    user = UserModel.objects.order_by("?")[:1][0]
 
                     original, parsed = self.fake_post_content()
 
@@ -135,7 +135,7 @@ class Command(BaseCommand):
                         post.is_hidden = True
 
                         if random.randint(0, 100) < 80:
-                            user = UserModel.objects.order_by('?')[:1][0]
+                            user = UserModel.objects.order_by("?")[:1][0]
                             post.hidden_by = user
                             post.hidden_by_name = user.username
                             post.hidden_by_slug = user.username
@@ -156,10 +156,10 @@ class Command(BaseCommand):
                 show_progress(self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
-        self.stdout.write('\nPinning %s threads...' % pinned_threads)
-        
+        self.stdout.write("\nPinning %s threads..." % pinned_threads)
+
         for _ in range(0, pinned_threads):
-            thread = Thread.objects.order_by('?')[:1][0]
+            thread = Thread.objects.order_by("?")[:1][0]
             if random.randint(0, 100) > 75:
                 thread.weight = 2
             else:
@@ -171,8 +171,8 @@ class Command(BaseCommand):
             category.save()
 
         total_time = time.time() - start_time
-        total_humanized = time.strftime('%H:%M:%S', time.gmtime(total_time))
-        message = '\nSuccessfully created %s fake threads in %s'
+        total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
+        message = "\nSuccessfully created %s fake threads in %s"
         self.stdout.write(message % (created_threads, total_humanized))
 
     def fake_post_content(self):
@@ -191,14 +191,14 @@ class Command(BaseCommand):
 
                 cat_url = PLACEKITTEN_URL % (cat_width, cat_height)
 
-                raw.append('!(%s)' % cat_url)
+                raw.append("!(%s)" % cat_url)
                 parsed.append('<p><img src="%s" alt=""/></p>' % cat_url)
             else:
                 if random.randint(0, 100) > 95:
                     sentences_to_make = random.randint(1, 20)
                 else:
                     sentences_to_make = random.randint(1, 7)
-                raw.append(' '.join(corpus.random_sentences(sentences_to_make)))
-                parsed.append('<p>%s</p>' % raw[-1])
+                raw.append(" ".join(corpus.random_sentences(sentences_to_make)))
+                parsed.append("<p>%s</p>" % raw[-1])
 
         return "\n\n".join(raw), "\n".join(parsed)

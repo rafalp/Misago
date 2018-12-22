@@ -5,36 +5,36 @@ from bs4 import BeautifulSoup
 from django.contrib.auth import get_user_model
 
 
-SUPPORTED_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'p')
-USERNAME_RE = re.compile(r'@[0-9a-z]+', re.IGNORECASE)
+SUPPORTED_TAGS = ("h1", "h2", "h3", "h4", "h5", "h6", "div", "p")
+USERNAME_RE = re.compile(r"@[0-9a-z]+", re.IGNORECASE)
 MENTIONS_LIMIT = 24
 
 
 def add_mentions(request, result):
-    if '@' not in result['parsed_text']:
+    if "@" not in result["parsed_text"]:
         return
 
     mentions_dict = {}
 
-    soup = BeautifulSoup(result['parsed_text'], 'html5lib')
+    soup = BeautifulSoup(result["parsed_text"], "html5lib")
 
     elements = []
     for tagname in SUPPORTED_TAGS:
-        if tagname in result['parsed_text']:
+        if tagname in result["parsed_text"]:
             elements += soup.find_all(tagname)
     for element in elements:
         add_mentions_to_element(request, element, mentions_dict)
 
-    result['parsed_text'] = str(soup.body)[6:-7].strip()
-    result['mentions'] = list(filter(bool, mentions_dict.values()))
+    result["parsed_text"] = str(soup.body)[6:-7].strip()
+    result["mentions"] = list(filter(bool, mentions_dict.values()))
 
 
 def add_mentions_to_element(request, element, mentions_dict):
     for item in element.contents:
         if item.name:
-            if item.name != 'a':
+            if item.name != "a":
                 add_mentions_to_element(request, item, mentions_dict)
-        elif '@' in item.string:
+        elif "@" in item.string:
             parse_string(request, item, mentions_dict)
 
 
@@ -64,4 +64,4 @@ def parse_string(request, element, mentions_dict):
             return matchobj.group(0)
 
     replaced_string = USERNAME_RE.sub(replace_mentions, element.string)
-    element.replace_with(BeautifulSoup(replaced_string, 'html.parser'))
+    element.replace_with(BeautifulSoup(replaced_string, "html.parser"))

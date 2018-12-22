@@ -11,7 +11,8 @@ class Command(BaseCommand):
     in the database causing MPTT's nested sets to not align correctly.
     A typical case is when injecting default data into the database from outside misago.
     """
-    help = 'Rebuilds the thread category tree'
+
+    help = "Rebuilds the thread category tree"
 
     def handle(self, *args, **options):
         root = Category.objects.root_category()

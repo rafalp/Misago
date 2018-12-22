@@ -4,9 +4,10 @@ from django.utils.translation import gettext as _
 
 
 HEADER_RE = re.compile(
-    r'''
+    r"""
 <div class="quote-heading">(?P<title>.*?)</div>
-'''.strip(), re.IGNORECASE | re.MULTILINE | re.DOTALL
+""".strip(),
+    re.IGNORECASE | re.MULTILINE | re.DOTALL,
 )
 
 
@@ -15,9 +16,9 @@ def finalise_markup(post):
 
 
 def replace_headers(matchobj):
-    title = matchobj.group('title')
+    title = matchobj.group("title")
     if title:
-        quote_title = _("%(title)s has written:") % {'title': title}
+        quote_title = _("%(title)s has written:") % {"title": title}
     else:
         quote_title = _("Quoted message:")
     return '<div class="quote-heading">%s</div>' % quote_title

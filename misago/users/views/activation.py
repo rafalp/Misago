@@ -23,10 +23,10 @@ def activation_view(f):
 
 @activation_view
 def request_activation(request):
-    request.frontend_context.update({
-        'SEND_ACTIVATION_API': reverse('misago:api:send-activation'),
-    })
-    return render(request, 'misago/activation/request.html')
+    request.frontend_context.update(
+        {"SEND_ACTIVATION_API": reverse("misago:api:send-activation")}
+    )
+    return render(request, "misago/activation/request.html")
 
 
 class ActivationStopped(Exception):
@@ -44,41 +44,32 @@ def activate_by_token(request, pk, token):
     try:
         if not inactive_user.requires_activation:
             message = _("%(user)s, your account is already active.")
-            raise ActivationStopped(message % {'user': inactive_user.username})
+            raise ActivationStopped(message % {"user": inactive_user.username})
 
         if not is_activation_token_valid(inactive_user, token):
             message = _(
                 "%(user)s, your activation link is invalid. "
                 "Try again or request new activation link."
             )
-            raise ActivationError(message % {'user': inactive_user.username})
+            raise ActivationError(message % {"user": inactive_user.username})
 
         ban = get_user_ban(inactive_user, request.cache_versions)
         if ban:
             raise Banned(ban)
     except ActivationStopped as e:
-        return render(request, 'misago/activation/stopped.html', {
-            'message': e.args[0],
-        })
+        return render(request, "misago/activation/stopped.html", {"message": e.args[0]})
     except ActivationError as e:
         return render(
-            request,
-            'misago/activation/error.html',
-            {
-                'message': e.args[0],
-            },
-            status=400,
+            request, "misago/activation/error.html", {"message": e.args[0]}, status=400
         )
 
     inactive_user.requires_activation = UserModel.ACTIVATION_NONE
-    inactive_user.save(update_fields=['requires_activation'])
+    inactive_user.save(update_fields=["requires_activation"])
 
     message = _("%(user)s, your account has been activated!")
 
     return render(
-        request, 'misago/activation/done.html', {
-            'message': message % {
-                'user': inactive_user.username,
-            },
-        }
+        request,
+        "misago/activation/done.html",
+        {"message": message % {"user": inactive_user.username}},
     )

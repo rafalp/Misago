@@ -1,5 +1,5 @@
-from .hierarchy import site  # noqa
-from .urlpatterns import urlpatterns  # noqa
-from .discoverer import discover_misago_admin  # noqa
+from .hierarchy import site
+from .urlpatterns import urlpatterns
+from .discoverer import discover_misago_admin
 
-default_app_config = 'misago.admin.apps.MisagoAdminConfig'
+default_app_config = "misago.admin.apps.MisagoAdminConfig"

@@ -29,7 +29,7 @@ class UpdatePostsChecksumsTests(TestCase):
             [testutils.reply_thread(thread) for _ in range(3)]
             thread.save()
 
-        Post.objects.update(parsed='Hello world!')
+        Post.objects.update(parsed="Hello world!")
         for post in Post.objects.all():
             self.assertFalse(post.is_valid)
 

@@ -12,7 +12,8 @@ class PostsPaginatorTests(TestCase):
 
         paginator = PostsPaginator(items, 5)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
+            self.get_paginator_items_list(paginator),
+            [
                 [1, 2, 3, 4, 5],
                 [5, 6, 7, 8, 9],
                 [9, 10, 11, 12, 13],
@@ -21,7 +22,7 @@ class PostsPaginatorTests(TestCase):
                 [21, 22, 23, 24, 25],
                 [25, 26, 27, 28, 29],
                 [29, 30],
-            ]
+            ],
         )
 
     def test_paginator_orphans(self):
@@ -30,55 +31,38 @@ class PostsPaginatorTests(TestCase):
 
         paginator = PostsPaginator(items, 8, 6)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4, 5, 6, 7, 8],
-                [8, 9, 10, 11, 12, 13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4, 5, 6, 7, 8], [8, 9, 10, 11, 12, 13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 4, 4)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4],
-                [4, 5, 6, 7],
-                [7, 8, 9, 10],
-                [10, 11, 12, 13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4], [4, 5, 6, 7], [7, 8, 9, 10], [10, 11, 12, 13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 5, 3)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4, 5],
-                [5, 6, 7, 8, 9],
-                [9, 10, 11, 12, 13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4, 5], [5, 6, 7, 8, 9], [9, 10, 11, 12, 13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 6, 2)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4, 5, 6],
-                [6, 7, 8, 9, 10, 11],
-                [11, 12, 13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4, 5, 6], [6, 7, 8, 9, 10, 11], [11, 12, 13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 7, 1)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4, 5, 6, 7],
-                [7, 8, 9, 10, 11, 12, 13],
-                [13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4, 5, 6, 7], [7, 8, 9, 10, 11, 12, 13], [13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 7, 3)
         self.assertEqual(
-            self.get_paginator_items_list(paginator), [
-                [1, 2, 3, 4, 5, 6, 7],
-                [7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
-            ]
+            self.get_paginator_items_list(paginator),
+            [[1, 2, 3, 4, 5, 6, 7], [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]],
         )
 
         paginator = PostsPaginator(items, 10, 6)
@@ -100,7 +84,8 @@ class PostsPaginatorTests(TestCase):
                     common_part = set(page) & set(compared)
                     self.assertTrue(
                         len(common_part) < 2,
-                        "invalid page %s: %s" % (max(p, c) + 1, sorted(list(common_part)))
+                        "invalid page %s: %s"
+                        % (max(p, c) + 1, sorted(list(common_part))),
                     )
 
     def get_paginator_items_list(self, paginator):

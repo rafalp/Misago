@@ -16,11 +16,11 @@ class UpdateStatsMiddleware(PostingMiddleware):
             return  # don't update category on moderated post
 
         if self.mode == PostingEndpoint.START:
-            category.threads = F('threads') + 1
+            category.threads = F("threads") + 1
 
         if self.mode != PostingEndpoint.EDIT:
             category.set_last_thread(thread)
-            category.posts = F('posts') + 1
+            category.posts = F("posts") + 1
             category.update_all = True
 
     def update_thread(self, thread, post):
@@ -33,7 +33,7 @@ class UpdateStatsMiddleware(PostingMiddleware):
                 thread.set_last_post(post)
 
             if self.mode == PostingEndpoint.REPLY:
-                thread.replies = F('replies') + 1
+                thread.replies = F("replies") + 1
 
         thread.update_all = True
 
@@ -43,9 +43,9 @@ class UpdateStatsMiddleware(PostingMiddleware):
 
         if self.thread.thread_type.root_name == THREADS_ROOT_NAME:
             if self.mode == PostingEndpoint.START:
-                user.threads = F('threads') + 1
-                user.update_fields.append('threads')
+                user.threads = F("threads") + 1
+                user.update_fields.append("threads")
 
             if self.mode != PostingEndpoint.EDIT:
-                user.posts = F('posts') + 1
-                user.update_fields.append('posts')
+                user.posts = F("posts") + 1
+                user.update_fields.append("posts")

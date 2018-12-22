@@ -18,10 +18,14 @@ UserModel = get_user_model()
 
 class ClearReadTrackerTests(TestCase):
     def setUp(self):
-        self.user_a = UserModel.objects.create_user("UserA", "testa@user.com", 'Pass.123')
-        self.user_b = UserModel.objects.create_user("UserB", "testb@user.com", 'Pass.123')
+        self.user_a = UserModel.objects.create_user(
+            "UserA", "testa@user.com", "Pass.123"
+        )
+        self.user_b = UserModel.objects.create_user(
+            "UserB", "testb@user.com", "Pass.123"
+        )
 
-        self.category = Category.objects.get(slug='first-category')
+        self.category = Category.objects.get(slug="first-category")
 
     def test_no_deleted(self):
         """command works when there are no attachments"""
@@ -42,14 +46,16 @@ class ClearReadTrackerTests(TestCase):
             category=self.category,
             thread=thread,
             post=thread.first_post,
-            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF / 4)
+            last_read_on=timezone.now()
+            - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF / 4),
         )
         deleted = PostRead.objects.create(
             user=self.user_b,
             category=self.category,
             thread=thread,
             post=thread.first_post,
-            last_read_on=timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 2)
+            last_read_on=timezone.now()
+            - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF * 2),
         )
 
         command = clearreadtracker.Command()

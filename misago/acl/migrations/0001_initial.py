@@ -12,20 +12,25 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Role',
+            name="Role",
             fields=[
                 (
-                    'id', models.AutoField(
-                        verbose_name='ID', serialize=False, auto_created=True, primary_key=True
-                    )
+                    "id",
+                    models.AutoField(
+                        verbose_name="ID",
+                        serialize=False,
+                        auto_created=True,
+                        primary_key=True,
+                    ),
                 ),
-                ('name', models.CharField(max_length=255)),
-                ('special_role', models.CharField(max_length=255, null=True, blank=True)),
-                ('permissions', JSONField(default=permissions_default)),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "special_role",
+                    models.CharField(max_length=255, null=True, blank=True),
+                ),
+                ("permissions", JSONField(default=permissions_default)),
             ],
-            options={
-                'abstract': False,
-            },
-            bases=(models.Model, ),
-        ),
+            options={"abstract": False},
+            bases=(models.Model,),
+        )
     ]

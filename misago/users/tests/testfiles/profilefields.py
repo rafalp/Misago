@@ -3,7 +3,7 @@ class NofieldnameField(object):
 
 
 class FieldnameField(object):
-    fieldname = 'hello'
+    fieldname = "hello"
 
 
 class RepeatedFieldnameField(FieldnameField):

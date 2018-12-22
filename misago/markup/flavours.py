@@ -13,11 +13,7 @@ def common(request, poster, text, allow_mentions=True, force_shva=False):
     Returns dict object
     """
     return parse(
-        text,
-        request,
-        poster,
-        allow_mentions=allow_mentions,
-        force_shva=force_shva,
+        text, request, poster, allow_mentions=allow_mentions, force_shva=force_shva
     )
 
 
@@ -40,7 +36,7 @@ def limited(request, text):
         allow_blocks=False,
     )
 
-    return result['parsed_text']
+    return result["parsed_text"]
 
 
 def signature(request, owner, user_acl, text):
@@ -49,9 +45,9 @@ def signature(request, owner, user_acl, text):
         request,
         owner,
         allow_mentions=False,
-        allow_blocks=user_acl['allow_signature_blocks'],
-        allow_links=user_acl['allow_signature_links'],
-        allow_images=user_acl['allow_signature_images'],
+        allow_blocks=user_acl["allow_signature_blocks"],
+        allow_links=user_acl["allow_signature_links"],
+        allow_images=user_acl["allow_signature_images"],
     )
 
-    return result['parsed_text']
+    return result["parsed_text"]

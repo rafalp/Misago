@@ -12,7 +12,9 @@ from misago.legal.models import Agreement
 from misago.users import captcha
 from misago.users.forms.register import RegisterForm
 from misago.users.registration import (
-    get_registration_result_json, save_user_agreements, send_welcome_email
+    get_registration_result_json,
+    save_user_agreements,
+    send_welcome_email,
 )
 from misago.users.setupnewuser import setup_new_user
 
@@ -21,43 +23,39 @@ UserModel = get_user_model()
 
 @csrf_protect
 def create_endpoint(request):
-    if request.settings.account_activation == 'closed':
+    if request.settings.account_activation == "closed":
         raise PermissionDenied(_("New users registrations are currently closed."))
 
     form = RegisterForm(
-        request.data,
-        request=request,
-        agreements=Agreement.objects.get_agreements(),
+        request.data, request=request, agreements=Agreement.objects.get_agreements()
     )
 
     try:
         if form.is_valid():
             captcha.test_request(request)
     except ValidationError as e:
-        form.add_error('captcha', e)
+        form.add_error("captcha", e)
 
     if not form.is_valid():
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
     activation_kwargs = {}
-    if request.settings.account_activation == 'user':
-        activation_kwargs = {'requires_activation': UserModel.ACTIVATION_USER}
-    elif request.settings.account_activation == 'admin':
-        activation_kwargs = {'requires_activation': UserModel.ACTIVATION_ADMIN}
+    if request.settings.account_activation == "user":
+        activation_kwargs = {"requires_activation": UserModel.ACTIVATION_USER}
+    elif request.settings.account_activation == "admin":
+        activation_kwargs = {"requires_activation": UserModel.ACTIVATION_ADMIN}
 
     try:
         new_user = UserModel.objects.create_user(
-            form.cleaned_data['username'],
-            form.cleaned_data['email'],
-            form.cleaned_data['password'],
+            form.cleaned_data["username"],
+            form.cleaned_data["email"],
+            form.cleaned_data["password"],
             joined_from_ip=request.user_ip,
             **activation_kwargs
         )
     except IntegrityError:
         return Response(
-            {
-                '__all__': _("Please try resubmitting the form.")
-            },
+            {"__all__": _("Please try resubmitting the form.")},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -67,7 +65,7 @@ def create_endpoint(request):
 
     if new_user.requires_activation == UserModel.ACTIVATION_NONE:
         authenticated_user = authenticate(
-            username=new_user.email, password=form.cleaned_data['password']
+            username=new_user.email, password=form.cleaned_data["password"]
         )
         login(request, authenticated_user)
 

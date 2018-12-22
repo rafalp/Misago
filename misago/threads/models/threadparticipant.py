@@ -5,7 +5,9 @@ from misago.conf import settings
 
 class ThreadParticipantManager(models.Manager):
     def set_owner(self, thread, user):
-        ThreadParticipant.objects.filter(thread=thread, is_owner=True).update(is_owner=False)
+        ThreadParticipant.objects.filter(thread=thread, is_owner=True).update(
+            is_owner=False
+        )
 
         self.remove_participant(thread, user)
 
@@ -23,14 +25,8 @@ class ThreadParticipantManager(models.Manager):
 
 
 class ThreadParticipant(models.Model):
-    thread = models.ForeignKey(
-        'misago_threads.Thread',
-        on_delete=models.CASCADE,
-    )
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
+    thread = models.ForeignKey("misago_threads.Thread", on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
 
     objects = ThreadParticipantManager()

@@ -9,38 +9,38 @@ _ = lambda s: s
 
 
 LEGAL_SETTINGS = [
-    'terms_of_service_title',
-    'terms_of_service_link',
-    'terms_of_service',
-    'privacy_policy_title',
-    'privacy_policy_link',
-    'privacy_policy',
+    "terms_of_service_title",
+    "terms_of_service_link",
+    "terms_of_service",
+    "privacy_policy_title",
+    "privacy_policy_link",
+    "privacy_policy",
 ]
 
 
 def create_legal_settings_group(apps, schema_editor):
-    Agreement = apps.get_model('misago_legal', 'Agreement')
-    Setting = apps.get_model('misago_conf', 'Setting')
-    
+    Agreement = apps.get_model("misago_legal", "Agreement")
+    Setting = apps.get_model("misago_conf", "Setting")
+
     legal_conf = {}
     for setting in Setting.objects.filter(setting__in=LEGAL_SETTINGS):
         legal_conf[setting.setting] = setting.dry_value
 
-    if legal_conf['terms_of_service'] or legal_conf['terms_of_service_link']:
+    if legal_conf["terms_of_service"] or legal_conf["terms_of_service_link"]:
         Agreement.objects.create(
             type=MisagoAgreement.TYPE_TOS,
-            title=legal_conf['terms_of_service_title'],
-            link=legal_conf['terms_of_service_link'],
-            text=legal_conf['terms_of_service'],
+            title=legal_conf["terms_of_service_title"],
+            link=legal_conf["terms_of_service_link"],
+            text=legal_conf["terms_of_service"],
             is_active=True,
         )
 
-    if legal_conf['privacy_policy'] or legal_conf['privacy_policy_link']:
+    if legal_conf["privacy_policy"] or legal_conf["privacy_policy_link"]:
         Agreement.objects.create(
             type=MisagoAgreement.TYPE_PRIVACY,
-            title=legal_conf['privacy_policy_title'],
-            link=legal_conf['privacy_policy_link'],
-            text=legal_conf['privacy_policy'],
+            title=legal_conf["privacy_policy_title"],
+            link=legal_conf["privacy_policy_link"],
+            text=legal_conf["privacy_policy"],
             is_active=True,
         )
 
@@ -49,31 +49,30 @@ def create_legal_settings_group(apps, schema_editor):
 
 def delete_deprecated_settings(apps, schema_editor):
     migrate_settings_group(
-        apps, {
-            'key': 'legal',
-            'name': _("Legal information"),
-            'description': _("Those settings allow you to set additional legal information for your forum."),
-            'settings': [
+        apps,
+        {
+            "key": "legal",
+            "name": _("Legal information"),
+            "description": _(
+                "Those settings allow you to set additional legal information for your forum."
+            ),
+            "settings": [
                 {
-                    'setting': 'forum_footnote',
-                    'name': _("Footnote"),
-                    'description': _("Short message displayed in forum footer."),
-                    'legend': _("Forum footer"),
-                    'field_extra': {
-                        'max_length': 300,
-                    },
-                    'is_public': True,
-                },
+                    "setting": "forum_footnote",
+                    "name": _("Footnote"),
+                    "description": _("Short message displayed in forum footer."),
+                    "legend": _("Forum footer"),
+                    "field_extra": {"max_length": 300},
+                    "is_public": True,
+                }
             ],
-        }
+        },
     )
 
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_legal', '0002_agreement_useragreement'),
-    ]
+    dependencies = [("misago_legal", "0002_agreement_useragreement")]
 
     operations = [
         migrations.RunPython(create_legal_settings_group),

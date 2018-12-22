@@ -3,6 +3,6 @@ from django.core.cache import InvalidCacheBackendError, caches
 
 
 try:
-    cache = caches['misago']
+    cache = caches["misago"]
 except InvalidCacheBackendError:
     cache = default_cache

@@ -27,11 +27,7 @@ def change_permissions_form(role):
 
 
 def build_acl(acl, roles, key_name):
-    new_acl = {
-        'visible_categories': [],
-        'browseable_categories': [],
-        'categories': {},
-    }
+    new_acl = {"visible_categories": [], "browseable_categories": [], "categories": {}}
     new_acl.update(acl)
 
     roles = get_categories_roles(roles)
@@ -44,7 +40,7 @@ def build_acl(acl, roles, key_name):
 
 def get_categories_roles(roles):
     queryset = RoleCategoryACL.objects.filter(role__in=roles)
-    queryset = queryset.select_related('category_role')
+    queryset = queryset.select_related("category_role")
 
     roles = {}
     for acl_relation in queryset.iterator():
@@ -55,19 +51,16 @@ def get_categories_roles(roles):
 
 def build_category_acl(acl, category, categories_roles, key_name):
     if category.level > 1:
-        if category.parent_id not in acl['visible_categories']:
+        if category.parent_id not in acl["visible_categories"]:
             # dont bother with child categories of invisible parents
             return
-        elif not acl['categories'][category.parent_id]['can_browse']:
+        elif not acl["categories"][category.parent_id]["can_browse"]:
             # parent's visible, but its contents aint
             return
 
     category_roles = categories_roles.get(category.pk, [])
 
-    final_acl = {
-        'can_see': 0,
-        'can_browse': 0,
-    }
+    final_acl = {"can_see": 0, "can_browse": 0}
 
     algebra.sum_acls(
         final_acl,
@@ -77,32 +70,34 @@ def build_category_acl(acl, category, categories_roles, key_name):
         can_browse=algebra.greater,
     )
 
-    if final_acl['can_see']:
-        acl['visible_categories'].append(category.pk)
-        acl['categories'][category.pk] = final_acl
+    if final_acl["can_see"]:
+        acl["visible_categories"].append(category.pk)
+        acl["categories"][category.pk] = final_acl
 
-        if final_acl['can_browse']:
-            acl['browseable_categories'].append(category.pk)
+        if final_acl["can_browse"]:
+            acl["browseable_categories"].append(category.pk)
 
 
 def add_acl_to_category(user_acl, target):
-    target.acl['can_see'] = can_see_category(user_acl, target)
-    target.acl['can_browse'] = can_browse_category(user_acl, target)
+    target.acl["can_see"] = can_see_category(user_acl, target)
+    target.acl["can_browse"] = can_browse_category(user_acl, target)
 
 
 def serialize_categories_acls(user_acl):
     categories_acl = []
-    for category, acl in user_acl.pop('categories').items():
-        if acl['can_browse']:
-            categories_acl.append({
-                'id': category,
-                'can_start_threads': acl.get('can_start_threads', False),
-                'can_reply_threads': acl.get('can_reply_threads', False),
-                'can_pin_threads': acl.get('can_pin_threads', 0),
-                'can_hide_threads': acl.get('can_hide_threads', 0),
-                'can_close_threads': acl.get('can_close_threads', False),
-            })
-    user_acl['categories'] = categories_acl
+    for category, acl in user_acl.pop("categories").items():
+        if acl["can_browse"]:
+            categories_acl.append(
+                {
+                    "id": category,
+                    "can_start_threads": acl.get("can_start_threads", False),
+                    "can_reply_threads": acl.get("can_reply_threads", False),
+                    "can_pin_threads": acl.get("can_pin_threads", 0),
+                    "can_hide_threads": acl.get("can_hide_threads", 0),
+                    "can_close_threads": acl.get("can_close_threads", False),
+                }
+            )
+    user_acl["categories"] = categories_acl
 
 
 def register_with(registry):
@@ -116,7 +111,7 @@ def allow_see_category(user_acl, target):
     except AttributeError:
         category_id = int(target)
 
-    if not category_id in user_acl['visible_categories']:
+    if not category_id in user_acl["visible_categories"]:
         raise Http404()
 
 
@@ -124,10 +119,10 @@ can_see_category = return_boolean(allow_see_category)
 
 
 def allow_browse_category(user_acl, target):
-    target_acl = user_acl['categories'].get(target.id, {'can_browse': False})
-    if not target_acl['can_browse']:
+    target_acl = user_acl["categories"].get(target.id, {"can_browse": False})
+    if not target_acl["can_browse"]:
         message = _('You don\'t have permission to browse "%(category)s" contents.')
-        raise PermissionDenied(message % {'category': target.name})
+        raise PermissionDenied(message % {"category": target.name})
 
 
 can_browse_category = return_boolean(allow_browse_category)
