@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from misago.admin.testutils import AdminTestCase
 from misago.admin.views import get_protected_namespace
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class MockRequest(object):
@@ -46,7 +43,7 @@ class AdminLoginViewTests(TestCase):
     def test_login_returns_200_on_invalid_post(self):
         """form handles invalid data gracefully"""
         response = self.client.post(
-            reverse("misago:admin:index"), data={"username": "Nope", "password": "Nope"}
+            reverse("misago:admin:index"), data={"username": "no", "password": "no"}
         )
 
         self.assertContains(response, "Login or password is incorrect.")
@@ -56,7 +53,7 @@ class AdminLoginViewTests(TestCase):
 
     def test_login_denies_non_staff_non_superuser(self):
         """login rejects user thats non staff and non superuser"""
-        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = create_test_user("User", "user@example.com", "password")
 
         user.is_staff = False
         user.is_superuser = False
@@ -64,14 +61,14 @@ class AdminLoginViewTests(TestCase):
 
         response = self.client.post(
             reverse("misago:admin:index"),
-            data={"username": "Bob", "password": "Pass.123"},
+            data={"username": "User", "password": "password"},
         )
 
         self.assertContains(response, "Your account does not have admin privileges.")
 
     def test_login_denies_non_staff_superuser(self):
         """login rejects user thats non staff and superuser"""
-        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = create_test_user("User", "user@example.com", "password")
 
         user.is_staff = False
         user.is_superuser = True
@@ -79,14 +76,14 @@ class AdminLoginViewTests(TestCase):
 
         response = self.client.post(
             reverse("misago:admin:index"),
-            data={"username": "Bob", "password": "Pass.123"},
+            data={"username": "User", "password": "password"},
         )
 
         self.assertContains(response, "Your account does not have admin privileges.")
 
     def test_login_signs_in_staff_non_superuser(self):
         """login passess user thats staff and non superuser"""
-        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = create_test_user("User", "user@example.com", "password")
 
         user.is_staff = True
         user.is_superuser = False
@@ -94,14 +91,14 @@ class AdminLoginViewTests(TestCase):
 
         response = self.client.post(
             reverse("misago:admin:index"),
-            data={"username": "Bob", "password": "Pass.123"},
+            data={"username": "User", "password": "password"},
         )
 
         self.assertEqual(response.status_code, 302)
 
     def test_login_signs_in_staff_superuser(self):
         """login passess user thats staff and superuser"""
-        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = create_test_user("User", "user@example.com", "password")
 
         user.is_staff = True
         user.is_superuser = True
@@ -109,7 +106,7 @@ class AdminLoginViewTests(TestCase):
 
         response = self.client.post(
             reverse("misago:admin:index"),
-            data={"username": "Bob", "password": "Pass.123"},
+            data={"username": "User", "password": "password"},
         )
 
         self.assertEqual(response.status_code, 302)

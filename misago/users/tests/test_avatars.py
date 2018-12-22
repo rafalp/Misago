@@ -3,7 +3,6 @@ from unittest.mock import Mock
 
 from PIL import Image
 
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.crypto import get_random_string
@@ -18,20 +17,19 @@ from misago.users.avatars import (
     uploaded,
 )
 from misago.users.models import Avatar, AvatarGallery
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class AvatarsStoreTests(TestCase):
     def test_store(self):
         """store successfully stores and deletes avatar"""
-        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = create_test_user("User", "user@example.com")
 
         test_image = Image.new("RGBA", (100, 100), 0)
         store.store_new_avatar(user, test_image)
 
         # reload user
-        User.objects.get(pk=user.pk)
+        user.refresh_from_db()
 
         # assert that avatars were stored in media
         avatars_dict = {}
@@ -92,16 +90,14 @@ class AvatarsStoreTests(TestCase):
 
 class AvatarSetterTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "kontakt@rpiton.com", "pass123")
-
-        self.user.avatars = None
-        self.user.save()
+        self.user = create_test_user("User", "user@example.com", avatars=None)
 
     def tearDown(self):
         store.delete_avatar(self.user)
 
     def get_current_user(self):
-        return User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()
+        return self.user
 
     def assertNoAvatarIsSet(self):
         user = self.get_current_user()
@@ -152,6 +148,7 @@ class AvatarSetterTests(TestCase):
     def test_gravatar(self):
         """dynamic avatar gets created"""
         self.assertNoAvatarIsSet()
+        self.user.set_email("rafio.xudb@gmail.com")
         gravatar.set_avatar(self.user)
         self.assertAvatarWasSet()
 

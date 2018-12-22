@@ -1,11 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class SearchApiTests(AuthenticatedUserTestCase):
@@ -99,10 +95,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
             if provider["id"] == "users":
                 self.assertEqual(provider["results"]["results"], [])
 
-    def test_search_disabled(self):
+    def test_search_disabled_user(self):
         """api respects disabled users visibility"""
-        disabled_user = User.objects.create_user(
-            "DisabledUser", "visible@te.com", "Pass.123", is_active=False
+        disabled_user = create_test_user(
+            "DisabledUser", "disableduser@example.com", is_active=False
         )
 
         response = self.client.get("%s?q=DisabledUser" % self.api_link)

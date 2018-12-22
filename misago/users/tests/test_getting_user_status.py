@@ -1,17 +1,13 @@
 from unittest.mock import Mock
 
-from django.contrib.auth import get_user_model
-
 from misago.users.online.utils import get_user_status
-from misago.users.testutils import AuthenticatedUserTestCase
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class GetUserStatusTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
-        self.other_user = User.objects.create_user("Tyrael", "t123@test.com", "pass123")
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
     def test_get_visible_user_status_returns_online(self):
         request = Mock(

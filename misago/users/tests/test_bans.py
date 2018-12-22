@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -16,8 +15,7 @@ from misago.users.bans import (
 )
 from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 cache_versions = get_cache_versions()
 
@@ -126,7 +124,7 @@ class GetBanTests(TestCase):
 
 class UserBansTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "bob@boberson.com", "pass123")
+        self.user = create_test_user("User", "user@example.com")
 
     def test_no_ban(self):
         """user is not caught by ban"""
@@ -136,7 +134,9 @@ class UserBansTests(TestCase):
     def test_permanent_ban(self):
         """user is caught by permanent ban"""
         Ban.objects.create(
-            banned_value="bob", user_message="User reason", staff_message="Staff reason"
+            banned_value="User",
+            user_message="User reason",
+            staff_message="Staff reason",
         )
 
         user_ban = get_user_ban(self.user, cache_versions)
@@ -148,7 +148,7 @@ class UserBansTests(TestCase):
     def test_temporary_ban(self):
         """user is caught by temporary ban"""
         Ban.objects.create(
-            banned_value="bo*",
+            banned_value="us*",
             user_message="User reason",
             staff_message="Staff reason",
             expires_on=timezone.now() + timedelta(days=7),
@@ -163,7 +163,7 @@ class UserBansTests(TestCase):
     def test_expired_ban(self):
         """user is not caught by expired ban"""
         Ban.objects.create(
-            banned_value="bo*", expires_on=timezone.now() - timedelta(days=7)
+            banned_value="us*", expires_on=timezone.now() - timedelta(days=7)
         )
 
         self.assertIsNone(get_user_ban(self.user, cache_versions))
@@ -172,7 +172,7 @@ class UserBansTests(TestCase):
     def test_expired_non_flagged_ban(self):
         """user is not caught by expired but checked ban"""
         Ban.objects.create(
-            banned_value="bo*", expires_on=timezone.now() - timedelta(days=7)
+            banned_value="us*", expires_on=timezone.now() - timedelta(days=7)
         )
         Ban.objects.update(is_checked=True)
 
@@ -243,7 +243,7 @@ class RequestIPBansTests(TestCase):
 class BanUserTests(TestCase):
     def test_ban_user(self):
         """ban_user utility bans user"""
-        user = User.objects.create_user("Bob", "bob@boberson.com", "pass123")
+        user = create_test_user("User", "user@example.com")
 
         ban = ban_user(user, "User reason", "Staff reason")
         self.assertEqual(ban.user_message, "User reason")

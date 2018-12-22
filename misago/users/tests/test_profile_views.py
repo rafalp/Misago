@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
@@ -6,9 +5,6 @@ from misago.categories.models import Category
 from misago.threads import testutils
 from misago.users.models import Ban
 from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
-
-
-User = get_user_model()
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
@@ -31,18 +27,18 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        test_user = create_test_user("Tyrael", "t123@test.com")
+        disabled_user = create_test_user("DisabledUser", "disabled@example.com")
 
-        test_user.is_active = False
-        test_user.save()
+        disabled_user.is_active = False
+        disabled_user.save()
 
-        response = self.client.get(test_user.get_absolute_url())
+        response = self.client.get(disabled_user.get_absolute_url())
         self.assertEqual(response.status_code, 404)
 
         self.user.is_staff = True
         self.user.save()
 
-        response = self.client.get(test_user.get_absolute_url())
+        response = self.client.get(disabled_user.get_absolute_url())
         self.assertEqual(response.status_code, 302)
 
         # profile page displays notice about user being disabled
@@ -104,8 +100,8 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         followers = []
         for i in range(10):
-            user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(User.objects.create_user(*user_data))
+            user_data = ("Follower%s" % i, "foll%s@test.com" % i)
+            followers.append(create_test_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
         response = self.client.get(
@@ -126,8 +122,8 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
         followers = []
         for i in range(10):
-            user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(User.objects.create_user(*user_data))
+            user_data = ("Follower%s" % i, "foll%s@test.com" % i)
+            followers.append(create_test_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
         response = self.client.get(

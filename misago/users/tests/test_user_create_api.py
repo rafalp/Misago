@@ -436,7 +436,11 @@ class UserCreateTests(UserTestCase):
         """api creates active and signed in user on POST"""
         response = self.client.post(
             self.api_link,
-            data={"username": "Bob", "email": "bob@bob.com", "password": "pass123"},
+            data={
+                "username": "Bob",
+                "email": "bob@bob.com",
+                "password": self.USER_PASSWORD,
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -449,7 +453,7 @@ class UserCreateTests(UserTestCase):
         test_user = User.objects.get_by_email("bob@bob.com")
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
-        self.assertTrue(test_user.check_password("pass123"))
+        self.assertTrue(test_user.check_password(self.USER_PASSWORD))
 
         auth_json = self.client.get(reverse("misago:api:auth")).json()
         self.assertTrue(auth_json["is_authenticated"])
@@ -464,7 +468,11 @@ class UserCreateTests(UserTestCase):
         """api creates inactive user on POST"""
         response = self.client.post(
             self.api_link,
-            data={"username": "Bob", "email": "bob@bob.com", "password": "pass123"},
+            data={
+                "username": "Bob",
+                "email": "bob@bob.com",
+                "password": self.USER_PASSWORD,
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -485,7 +493,11 @@ class UserCreateTests(UserTestCase):
         """api creates admin activated user on POST"""
         response = self.client.post(
             self.api_link,
-            data={"username": "Bob", "email": "bob@bob.com", "password": "pass123"},
+            data={
+                "username": "Bob",
+                "email": "bob@bob.com",
+                "password": self.USER_PASSWORD,
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
@@ -504,20 +516,25 @@ class UserCreateTests(UserTestCase):
     @override_dynamic_settings(account_activation="none")
     def test_registration_creates_user_with_whitespace_password(self):
         """api creates user with spaces around password"""
+        password = " %s " % self.USER_PASSWORD
         response = self.client.post(
             self.api_link,
-            data={"username": "Bob", "email": "bob@bob.com", "password": " pass123 "},
+            data={
+                "username": "User",
+                "email": "user@example.com",
+                "password": password,
+            },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"activation": "active", "username": "Bob", "email": "bob@bob.com"},
+            {"activation": "active", "username": "User", "email": "user@example.com"},
         )
 
-        User.objects.get_by_username("Bob")
+        User.objects.get_by_username("User")
 
-        test_user = User.objects.get_by_email("bob@bob.com")
+        test_user = User.objects.get_by_email("user@example.com")
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
-        self.assertTrue(test_user.check_password(" pass123 "))
+        self.assertTrue(test_user.check_password(password))
 
         self.assertIn("Welcome", mail.outbox[0].subject)

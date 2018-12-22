@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -12,8 +11,7 @@ from misago.conftest import get_cache_versions
 from misago.readtracker import poststracker, threadstracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 cache_versions = get_cache_versions()
 
@@ -25,7 +23,7 @@ class AnonymousUser(object):
 
 class ThreadsTrackerTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
+        self.user = create_test_user("User", "user@example.com")
         self.user_acl = get_user_acl(self.user, cache_versions)
         self.category = Category.objects.get(slug="first-category")
 

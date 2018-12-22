@@ -1,11 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class UserEditDetailsApiTests(AuthenticatedUserTestCase):
@@ -17,7 +13,8 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         )
 
     def get_profile_fields(self):
-        return User.objects.get(pk=self.user.pk).profile_fields
+        self.user.refresh_from_db()
+        return self.user.profile_fields
 
     def test_api_has_no_showstoppers(self):
         """api outputs response for freshly created user"""
@@ -31,7 +28,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
 
     def test_other_user(self):
         """api handles scenario when its other user looking at profile"""
-        test_user = User.objects.create_user("BobBoberson", "bob@test.com", "bob123456")
+        test_user = create_test_user("OtherUser", "otheruser@example.com")
 
         api_link = reverse("misago:api:user-edit-details", kwargs={"pk": test_user.pk})
 

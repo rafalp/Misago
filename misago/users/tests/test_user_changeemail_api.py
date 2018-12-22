@@ -1,11 +1,7 @@
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class UserChangeEmailTests(AuthenticatedUserTestCase):
@@ -65,11 +61,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
     def test_email_taken(self):
         """api validates email usage"""
-        User.objects.create_user("BobBoberson", "new@email.com", "Pass.123")
+        taken_email = "otheruser@example.com"
+        create_test_user("OtherUser", taken_email)
 
         response = self.client.post(
-            self.link,
-            data={"new_email": "new@email.com", "password": self.USER_PASSWORD},
+            self.link, data={"new_email": taken_email, "password": self.USER_PASSWORD}
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(

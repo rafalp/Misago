@@ -7,7 +7,7 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.models import ThreadParticipant
 from misago.threads.test import other_user_cant_use_private_threads
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
 
@@ -19,9 +19,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.private_threads()
         self.api_link = reverse("misago:api:private-thread-list")
 
-        self.other_user = User.objects.create_user(
-            "BobBoberson", "bob@boberson.com", "pass123"
-        )
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
     def test_cant_start_thread_as_guest(self):
         """user has to be authenticated to be able to post private thread"""
@@ -170,8 +168,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(),
-            {"to": ["BobBoberson can't participate in private threads."]},
+            response.json(), {"to": ["OtherUser can't participate in private threads."]}
         )
 
     def test_cant_invite_blocking(self):
@@ -188,7 +185,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"to": ["BobBoberson is blocking you."]})
+        self.assertEqual(response.json(), {"to": ["OtherUser is blocking you."]})
 
     @patch_user_acl({"can_add_everyone_to_private_threads": 1})
     def test_cant_invite_blocking_override(self):
@@ -230,7 +227,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "to": [
-                    "BobBoberson limits invitations to private threads to followed users."
+                    "OtherUser limits invitations to private threads to followed users."
                 ]
             },
         )
@@ -288,7 +285,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"to": ["BobBoberson is not allowing invitations to private threads."]},
+            {"to": ["OtherUser is not allowing invitations to private threads."]},
         )
 
         # allow us to bypass user preference check
@@ -364,8 +361,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         )
 
         # other user has sync_unread_private_threads flag
-        user_to_sync = User.objects.get(sync_unread_private_threads=True)
-        self.assertEqual(user_to_sync, self.other_user)
+        self.other_user.refresh_from_db()
+        self.assertTrue(self.other_user.sync_unread_private_threads)
 
         # notification about new private thread was sent to other user
         self.assertEqual(len(mail.outbox), 1)

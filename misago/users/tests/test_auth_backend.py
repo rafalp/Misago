@@ -2,19 +2,15 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from misago.users.authbackends import MisagoBackend
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 backend = MisagoBackend()
 
 
 class MisagoBackendTests(TestCase):
     def setUp(self):
-        self.password = "Pass.123"
-        self.user = User.objects.create_user(
-            "BobBoberson", "bob@test.com", self.password
-        )
+        self.password = "password"
+        self.user = create_test_user("User", "user@example.com", self.password)
 
     def test_authenticate_username(self):
         """auth authenticates with username"""

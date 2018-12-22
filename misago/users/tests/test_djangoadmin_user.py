@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import override_settings
 from django.urls import reverse
@@ -6,15 +5,14 @@ from django.utils import formats
 
 from misago.admin.testutils import AdminTestCase
 from misago.users.djangoadmin import UserAdminModel
+from misago.users.testutils import create_test_user
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
 class TestDjangoAdminUserForm(AdminTestCase):
     def setUp(self):
         super().setUp()
-        self.test_user = get_user_model().objects.create_user(
-            username="Bob", email="bob@test.com", password="Pass.123"
-        )
+        self.test_user = create_test_user("OtherUser", "otheruser@example.com")
         self.edit_test_user_in_django_url = reverse(
             "admin:misago_users_user_change", args=[self.test_user.pk]
         )

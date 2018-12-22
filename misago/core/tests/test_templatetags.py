@@ -92,8 +92,8 @@ class BatchTests(TestCase):
 class MockUser(object):
     id = 12
     pk = 12
-    username = "Bob"
-    slug = "bob"
+    username = "User"
+    slug = "user"
 
 
 class ShorthandsTests(TestCase):

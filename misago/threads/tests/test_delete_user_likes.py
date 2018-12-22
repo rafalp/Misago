@@ -1,22 +1,11 @@
-from django.contrib.auth import get_user_model
 from django.test import RequestFactory
 
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 from misago.threads import testutils
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
-
-
-User = get_user_model()
-
-
-def get_mock_user():
-    seed = User.objects.count() + 1
-    return User.objects.create_user(
-        "bob%s" % seed, "user%s@test.com" % seed, "Pass.123"
-    )
 
 
 class DeleteUserLikesTests(AuthenticatedUserTestCase):
@@ -38,7 +27,7 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
         post = testutils.reply_thread(thread)
         post.acl = {"can_like": True}
 
-        user = get_mock_user()
+        user = create_test_user("OtherUser", "otheruser@example.com")
 
         patch_is_liked(self.get_request(self.user), post, 1)
         patch_is_liked(self.get_request(user), post, 1)

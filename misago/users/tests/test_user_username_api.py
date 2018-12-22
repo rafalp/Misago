@@ -1,13 +1,8 @@
 import json
 
-from django.contrib.auth import get_user_model
-
 from misago.acl.test import patch_user_acl
 from misago.conf.test import override_dynamic_settings
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class UserUsernameTests(AuthenticatedUserTestCase):
@@ -100,10 +95,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = User.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
-
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
         self.link = "/api/users/%s/moderate-username/" % self.other_user.pk
 
     @patch_user_acl({"can_rename_users": 0})
@@ -153,20 +145,19 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.link,
-            json.dumps({"username": "BobBoberson"}),
+            json.dumps({"username": "NewName"}),
             content_type="application/json",
         )
 
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
-
-        self.assertEqual("BobBoberson", other_user.username)
-        self.assertEqual("bobboberson", other_user.slug)
+        self.other_user.refresh_from_db()
+        self.assertEqual("NewName", self.other_user.username)
+        self.assertEqual("newname", self.other_user.slug)
 
         options = response.json()
-        self.assertEqual(options["username"], other_user.username)
-        self.assertEqual(options["slug"], other_user.slug)
+        self.assertEqual(options["username"], self.other_user.username)
+        self.assertEqual(options["slug"], self.other_user.slug)
 
     @patch_user_acl({"can_rename_users": 1})
     def test_moderate_own_username(self):

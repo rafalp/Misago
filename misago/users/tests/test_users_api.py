@@ -12,7 +12,7 @@ from misago.threads.models import Post, Thread
 from misago.threads.testutils import post_thread
 from misago.users.activepostersranking import build_active_posters_ranking
 from misago.users.models import Ban, Rank
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
 
@@ -81,27 +81,23 @@ class FollowersListTests(AuthenticatedUserTestCase):
 
     def test_filled_list(self):
         """user with followers returns 200"""
-        test_follower = User.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
-        )
-        self.user.followed_by.add(test_follower)
+        follower = create_test_user("TestFollower", "test@follower.com")
+        self.user.followed_by.add(follower)
 
         response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, test_follower.username)
+        self.assertContains(response, follower.username)
 
     def test_filled_list_search(self):
         """followers list is searchable"""
-        test_follower = User.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
-        )
-        self.user.followed_by.add(test_follower)
+        follower = create_test_user("TestFollower", "test@follower.com")
+        self.user.followed_by.add(follower)
 
         api_link = self.link % self.user.pk
 
         response = self.client.get("%s?search=%s" % (api_link, "test"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, test_follower.username)
+        self.assertContains(response, follower.username)
 
 
 class FollowsListTests(AuthenticatedUserTestCase):
@@ -123,27 +119,23 @@ class FollowsListTests(AuthenticatedUserTestCase):
 
     def test_filled_list(self):
         """user with follows returns 200"""
-        test_follower = User.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
-        )
-        self.user.follows.add(test_follower)
+        follower = create_test_user("TestFollower", "test@follower.com")
+        self.user.follows.add(follower)
 
         response = self.client.get(self.link % self.user.pk)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, test_follower.username)
+        self.assertContains(response, follower.username)
 
     def test_filled_list_search(self):
         """follows list is searchable"""
-        test_follower = User.objects.create_user(
-            "TestFollower", "test@follower.com", self.USER_PASSWORD
-        )
-        self.user.follows.add(test_follower)
+        follower = create_test_user("TestFollower", "test@follower.com")
+        self.user.follows.add(follower)
 
         api_link = self.link % self.user.pk
 
         response = self.client.get("%s?search=%s" % (api_link, "test"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, test_follower.username)
+        self.assertContains(response, follower.username)
 
 
 class RankListTests(AuthenticatedUserTestCase):
@@ -191,21 +183,20 @@ class RankListTests(AuthenticatedUserTestCase):
 
     def test_disabled_users(self):
         """api follows disabled users visibility"""
-        test_rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
-
-        test_user = User.objects.create_user(
-            "Visible", "visible@te.com", "Pass.123", rank=test_rank, is_active=False
+        rank = Rank.objects.create(name="Test rank", slug="test-rank", is_tab=True)
+        user = create_test_user(
+            "DisabledUser", "disabled@example.com", rank=rank, is_active=False
         )
 
-        response = self.client.get(self.link % test_rank.pk)
-        self.assertNotContains(response, test_user.get_absolute_url())
+        response = self.client.get(self.link % rank.pk)
+        self.assertNotContains(response, user.get_absolute_url())
 
         # api shows disabled accounts to staff
         self.user.is_staff = True
         self.user.save()
 
-        response = self.client.get(self.link % test_rank.pk)
-        self.assertContains(response, test_user.get_absolute_url())
+        response = self.client.get(self.link % rank.pk)
+        self.assertContains(response, user.get_absolute_url())
 
 
 class SearchNamesListTests(AuthenticatedUserTestCase):
@@ -230,8 +221,8 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.test_user = User.objects.create_user("Tyrael", "t123@test.com", "pass123")
-        self.link = reverse("misago:api:user-detail", kwargs={"pk": self.test_user.pk})
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
+        self.link = reverse("misago:api:user-detail", kwargs={"pk": self.other_user.pk})
 
     def test_get_user(self):
         """api user retrieve endpoint has no showstoppers"""
@@ -243,8 +234,8 @@ class UserRetrieveTests(AuthenticatedUserTestCase):
         self.user.is_staff = False
         self.user.save()
 
-        self.test_user.is_active = False
-        self.test_user.save()
+        self.other_user.is_active = False
+        self.other_user.save()
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 404)
@@ -360,10 +351,7 @@ class UserFollowTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = User.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
-
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
         self.link = "/api/users/%s/follow/" % self.other_user.pk
 
     def test_follow_unauthenticated(self):
@@ -396,32 +384,32 @@ class UserFollowTests(AuthenticatedUserTestCase):
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 200)
 
-        user = User.objects.get(pk=self.user.pk)
-        self.assertEqual(user.followers, 0)
-        self.assertEqual(user.following, 1)
-        self.assertEqual(user.follows.count(), 1)
-        self.assertEqual(user.followed_by.count(), 0)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.followers, 0)
+        self.assertEqual(self.user.following, 1)
+        self.assertEqual(self.user.follows.count(), 1)
+        self.assertEqual(self.user.followed_by.count(), 0)
 
-        followed = User.objects.get(pk=self.other_user.pk)
-        self.assertEqual(followed.followers, 1)
-        self.assertEqual(followed.following, 0)
-        self.assertEqual(followed.follows.count(), 0)
-        self.assertEqual(followed.followed_by.count(), 1)
+        self.other_user.refresh_from_db()
+        self.assertEqual(self.other_user.followers, 1)
+        self.assertEqual(self.other_user.following, 0)
+        self.assertEqual(self.other_user.follows.count(), 0)
+        self.assertEqual(self.other_user.followed_by.count(), 1)
 
         response = self.client.post(self.link)
         self.assertEqual(response.status_code, 200)
 
-        user = User.objects.get(pk=self.user.pk)
-        self.assertEqual(user.followers, 0)
-        self.assertEqual(user.following, 0)
-        self.assertEqual(user.follows.count(), 0)
-        self.assertEqual(user.followed_by.count(), 0)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.followers, 0)
+        self.assertEqual(self.user.following, 0)
+        self.assertEqual(self.user.follows.count(), 0)
+        self.assertEqual(self.user.followed_by.count(), 0)
 
-        followed = User.objects.get(pk=self.other_user.pk)
-        self.assertEqual(followed.followers, 0)
-        self.assertEqual(followed.following, 0)
-        self.assertEqual(followed.follows.count(), 0)
-        self.assertEqual(followed.followed_by.count(), 0)
+        self.other_user.refresh_from_db()
+        self.assertEqual(self.other_user.followers, 0)
+        self.assertEqual(self.other_user.following, 0)
+        self.assertEqual(self.other_user.follows.count(), 0)
+        self.assertEqual(self.other_user.followed_by.count(), 0)
 
 
 class UserBanTests(AuthenticatedUserTestCase):
@@ -430,10 +418,7 @@ class UserBanTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = User.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
-
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
         self.link = "/api/users/%s/ban/" % self.other_user.pk
 
     @patch_user_acl({"can_see_ban_details": 0})
@@ -552,10 +537,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = User.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
-
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
         self.link = "/api/users/%s/delete/" % self.other_user.pk
 
         self.threads = Thread.objects.count()
@@ -658,7 +640,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.other_user.pk)
+            self.other_user.refresh_from_db()
 
         self.assertEqual(Thread.objects.count(), self.threads)
         self.assertEqual(Post.objects.count(), self.posts)
@@ -676,7 +658,7 @@ class UserDeleteTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.other_user.pk)
+            self.other_user.refresh_from_db()
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
         self.assertEqual(Post.objects.count(), self.posts + 2)

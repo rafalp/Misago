@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -10,9 +9,7 @@ from misago.threads.participants import (
     set_owner,
     set_users_unread_private_threads_sync,
 )
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class ParticipantsTests(TestCase):
@@ -51,8 +48,8 @@ class ParticipantsTests(TestCase):
     def test_has_participants(self):
         """has_participants returns true if thread has participants"""
         users = [
-            User.objects.create_user("Bob", "bob@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            create_test_user("User", "user@example.com"),
+            create_test_user("User2", "bob2@example.com"),
         ]
 
         self.assertFalse(has_participants(self.thread))
@@ -68,8 +65,8 @@ class ParticipantsTests(TestCase):
         make_participants_aware sets participants_list and participant
         annotations on list of threads
         """
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("User2", "bob2@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -93,8 +90,8 @@ class ParticipantsTests(TestCase):
         make_participants_aware sets participants_list and participant
         annotations on thread model
         """
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("User2", "bob2@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -121,7 +118,7 @@ class ParticipantsTests(TestCase):
 
     def test_set_owner(self):
         """set_owner sets user as thread owner"""
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
 
         set_owner(self.thread, user)
 
@@ -134,13 +131,14 @@ class ParticipantsTests(TestCase):
         flag on users provided to true
         """
         users = [
-            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            create_test_user("User1", "bob1@example.com"),
+            create_test_user("User2", "bob2@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users)
         for user in users:
-            User.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            user.refresh_from_db()
+            assert user.sync_unread_private_threads
 
     def test_set_participants_unread_private_threads_sync(self):
         """
@@ -148,48 +146,50 @@ class ParticipantsTests(TestCase):
         flag on participants provided to true
         """
         users = [
-            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            create_test_user("User1", "bob1@example.com"),
+            create_test_user("User2", "bob2@example.com"),
         ]
 
         participants = [ThreadParticipant(user=u) for u in users]
 
         set_users_unread_private_threads_sync(participants=participants)
         for user in users:
-            User.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            user.refresh_from_db()
+            assert user.sync_unread_private_threads
 
     def test_set_participants_users_unread_private_threads_sync(self):
         """
         set_users_unread_private_threads_sync sets sync_unread_private_threads
         flag on users and participants provided to true
         """
-        users = [User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123")]
-
+        users = [create_test_user("User1", "bob1@example.com")]
         participants = [ThreadParticipant(user=u) for u in users]
-
-        users.append(User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"))
+        users.append(create_test_user("User2", "bob2@example.com"))
 
         set_users_unread_private_threads_sync(users=users, participants=participants)
         for user in users:
-            User.objects.get(pk=user.pk, sync_unread_private_threads=True)
+            user.refresh_from_db()
+            assert user.sync_unread_private_threads
 
     def test_set_users_unread_private_threads_sync_exclude_user(self):
         """exclude_user kwarg works"""
         users = [
-            User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            create_test_user("User1", "bob1@example.com"),
+            create_test_user("User2", "bob2@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users, exclude_user=users[0])
 
-        self.assertFalse(User.objects.get(pk=users[0].pk).sync_unread_private_threads)
-        self.assertTrue(User.objects.get(pk=users[1].pk).sync_unread_private_threads)
+        [i.refresh_from_db() for i in users]
+        assert users[0].sync_unread_private_threads is False
+        assert users[1].sync_unread_private_threads
 
     def test_set_users_unread_private_threads_sync_noop(self):
         """excluding only user is noop"""
-        user = User.objects.create_user("Bob1", "bob1@boberson.com", "Pass.123")
+        user = create_test_user("User", "bob1@example.com")
 
         with self.assertNumQueries(0):
             set_users_unread_private_threads_sync(users=[user], exclude_user=user)
 
-        self.assertFalse(User.objects.get(pk=user.pk).sync_unread_private_threads)
+        user.refresh_from_db()
+        assert user.sync_unread_private_threads is False
