@@ -23,7 +23,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         """api errors if user has no permission to see likes"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(
+        self.assertEqual(
             response.json(), {"detail": "You can't see who liked this post."}
         )
 
@@ -32,7 +32,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         """api errors if user has no permission to see likes, but can see likes count"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(
+        self.assertEqual(
             response.json(), {"detail": "You can't see who liked this post."}
         )
 
