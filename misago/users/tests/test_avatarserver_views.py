@@ -1,24 +1,13 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
 from misago.conf import settings
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class AvatarServerTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass123")
-
-        self.user.avatars = [
-            {"size": 200, "url": "/media/avatars/avatar-200.png"},
-            {"size": 100, "url": "/media/avatars/avatar-100.png"},
-            {"size": 50, "url": "/media/avatars/avatar-50.png"},
-        ]
-
-        self.user.save()
+        self.user = create_test_user("User", "User@example.com")
 
     def test_get_user_avatar_exact_size(self):
         """avatar server resolved valid avatar url for user"""

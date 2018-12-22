@@ -1,21 +1,18 @@
 from rest_framework.exceptions import ValidationError
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from misago.categories.models import Category
 
 from misago.threads import testutils
 from misago.threads.mergeconflict import MergeConflict
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class MergeConflictTests(TestCase):
     def setUp(self):
         self.category = Category.objects.get(slug="first-category")
-        self.user = User.objects.create_user("bob", "bob@test.com", "Pass.123")
+        self.user = create_test_user("User", "user@example.com")
 
     def create_plain_thread(self):
         return testutils.post_thread(self.category)

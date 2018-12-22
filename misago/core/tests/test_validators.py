@@ -34,5 +34,5 @@ class ValidateSluggableTests(TestCase):
         """valid values don't raise errors"""
         validator = validate_sluggable()
 
-        validator("Bob")
+        validator("User")
         validator("Lorem ipsum123!")

@@ -7,14 +7,14 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from misago.users.management.commands import deleteinactiveusers
-
+from misago.users.testutils import create_test_user
 
 User = get_user_model()
 
 
 class DeleteInactiveUsersTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+        self.user = create_test_user("User", "user@example.com")
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_delete_user_activation_user(self):
@@ -30,7 +30,7 @@ class DeleteInactiveUsersTests(TestCase):
         self.assertEqual(command_output, "Deleted users: 1")
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.user.pk)
+            self.user.refresh_from_db()
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_delete_user_activation_admin(self):
@@ -46,7 +46,7 @@ class DeleteInactiveUsersTests(TestCase):
         self.assertEqual(command_output, "Deleted users: 1")
 
         with self.assertRaises(User.DoesNotExist):
-            User.objects.get(pk=self.user.pk)
+            self.user.refresh_from_db()
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_skip_new_user_activation_user(self):
@@ -61,7 +61,7 @@ class DeleteInactiveUsersTests(TestCase):
 
         self.assertEqual(command_output, "Deleted users: 0")
 
-        User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_skip_new_user_activation_admin(self):
@@ -76,7 +76,7 @@ class DeleteInactiveUsersTests(TestCase):
 
         self.assertEqual(command_output, "Deleted users: 0")
 
-        User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=2)
     def test_skip_active_user(self):
@@ -90,7 +90,7 @@ class DeleteInactiveUsersTests(TestCase):
 
         self.assertEqual(command_output, "Deleted users: 0")
 
-        User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()
 
     @override_settings(MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS=0)
     def test_delete_inactive_is_disabled(self):
@@ -108,4 +108,4 @@ class DeleteInactiveUsersTests(TestCase):
             "Automatic deletion of inactive users is currently disabled.",
         )
 
-        User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()

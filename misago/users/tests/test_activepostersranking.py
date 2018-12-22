@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.categories.models import Category
@@ -9,10 +8,7 @@ from misago.users.activepostersranking import (
     build_active_posters_ranking,
     get_active_posters_ranking,
 )
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class TestActivePostersRanking(AuthenticatedUserTestCase):
@@ -30,15 +26,13 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(empty_ranking["users_count"], 0)
 
         # other user that will be posting
-        other_user = User.objects.create_user("OtherUser", "other@user.com", "pass123")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         # lurker user that won't post anything
-        User.objects.create_user("Lurker", "lurker@user.com", "pass123")
+        create_test_user("Lurker", "lurker@example.com")
 
         # unranked user that posted something 400 days ago
-        unranked_user = User.objects.create_user(
-            "UnrankedUser", "unranked@user.com", "pass123"
-        )
+        unranked_user = create_test_user("UnrankedUser", "unranked@example.com")
 
         started_on = timezone.now() - timedelta(days=400)
         post_thread(self.category, poster=unranked_user, started_on=started_on)
@@ -66,9 +60,7 @@ class TestActivePostersRanking(AuthenticatedUserTestCase):
         self.assertEqual(ranking["users"][1].score, 1)
 
         # disabled users are not ranked
-        disabled = User.objects.create_user(
-            "DisabledUser", "disabled@user.com", "pass123"
-        )
+        disabled = create_test_user("DisabledUser", "disableduser@example.com")
 
         disabled.is_active = False
         disabled.save()

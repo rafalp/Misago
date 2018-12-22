@@ -1,12 +1,8 @@
-from django.contrib.auth import get_user_model
-
 from misago.threads import testutils
 from misago.threads.models import ThreadParticipant
+from misago.users.testutils import create_test_user
 
 from .test_privatethreads import PrivateThreadsTestCase
-
-
-User = get_user_model()
 
 
 class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
@@ -16,9 +12,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
         self.thread = testutils.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()
 
-        self.other_user = User.objects.create_user(
-            "BobBoberson", "bob@boberson.com", "pass123"
-        )
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
     def test_reply_private_thread(self):
         """api sets other private thread participants sync thread flag"""

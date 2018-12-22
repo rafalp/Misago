@@ -1,6 +1,5 @@
 from unittest.mock import Mock
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -10,14 +9,14 @@ from misago.categories.models import Category
 from misago.conftest import get_cache_versions
 from misago.threads.events import record_event
 from misago.threads.models import Thread
+from misago.users.testutils import create_test_user
 
-User = get_user_model()
 cache_versions = get_cache_versions()
 
 
 class EventsApiTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass.123")
+        self.user = create_test_user("User", "user@example.com")
 
         datetime = timezone.now()
 

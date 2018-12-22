@@ -1,20 +1,17 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class PostModelTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass.123")
+        self.user = create_test_user("User", "user@example.com")
 
         datetime = timezone.now()
 
@@ -57,7 +54,7 @@ class PostModelTests(TestCase):
         with self.assertRaises(ValueError):
             self.post.merge(self.post)
 
-        other_user = User.objects.create_user("Jeff", "Je@ff.com", "Pass.123")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         other_thread = Thread.objects.create(
             category=self.category,

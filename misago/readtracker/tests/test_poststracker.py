@@ -1,6 +1,5 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -9,9 +8,7 @@ from misago.conf import settings
 from misago.readtracker import poststracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class AnonymousUser(object):
@@ -21,7 +18,7 @@ class AnonymousUser(object):
 
 class PostsTrackerTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
+        self.user = create_test_user("User", "user@example.com")
         self.category = Category.objects.get(slug="first-category")
         self.thread = testutils.post_thread(self.category)
 

@@ -1,10 +1,10 @@
 from unittest.mock import Mock
 
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.users.models import Ban
+from misago.users.testutils import create_test_user
 from misago.users.validators import (
     validate_email,
     validate_email_available,
@@ -18,24 +18,19 @@ from misago.users.validators import (
 )
 
 
-User = get_user_model()
-
-
 class ValidateEmailAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user(
-            "EricTheFish", "eric@test.com", "pass123"
-        )
+        self.user = create_test_user("User", "user@example.com")
 
     def test_valid_email(self):
         """validate_email_available allows available emails"""
-        validate_email_available("bob@boberson.com")
-        validate_email_available(self.test_user.email, exclude=self.test_user)
+        validate_email_available("other@example.com")
+        validate_email_available(self.user.email, exclude=self.user)
 
     def test_invalid_email(self):
         """validate_email_available disallows unvailable emails"""
         with self.assertRaises(ValidationError):
-            validate_email_available(self.test_user.email)
+            validate_email_available(self.user.email)
 
 
 class ValidateEmailBannedTests(TestCase):
@@ -55,7 +50,7 @@ class ValidateEmailBannedTests(TestCase):
 class ValidateEmailTests(TestCase):
     def test_validate_email(self):
         """validate_email has no crashes"""
-        validate_email("bob@boberson.com")
+        validate_email("user@example.com")
         with self.assertRaises(ValidationError):
             validate_email("*")
 
@@ -71,48 +66,48 @@ class ValidateUsernameTests(TestCase):
 
 class ValidateUsernameAvailableTests(TestCase):
     def setUp(self):
-        self.test_user = User.objects.create_user("EricTheFish", "eric@test.com")
+        self.user = create_test_user("User", "user@example.com")
 
     def test_valid_name(self):
         """validate_username_available allows available names"""
-        validate_username_available("BobBoberson")
-        validate_username_available(self.test_user.username, exclude=self.test_user)
+        validate_username_available("OtherUser")
+        validate_username_available(self.user.username, exclude=self.user)
 
     def test_invalid_name(self):
         """validate_username_available disallows unvailable names"""
         with self.assertRaises(ValidationError):
-            validate_username_available(self.test_user.username)
+            validate_username_available(self.user.username)
 
 
 class ValidateUsernameBannedTests(TestCase):
     def setUp(self):
-        Ban.objects.create(check_type=Ban.USERNAME, banned_value="Bob")
+        Ban.objects.create(check_type=Ban.USERNAME, banned_value="Ban")
 
     def test_unbanned_name(self):
         """unbanned name passes validation"""
-        validate_username_banned("Luke")
+        validate_username_banned("User")
 
     def test_banned_name(self):
         """banned name fails validation"""
         with self.assertRaises(ValidationError):
-            validate_username_banned("Bob")
+            validate_username_banned("Ban")
 
 
 class ValidateUsernameContentTests(TestCase):
     def test_valid_name(self):
         """validate_username_content allows valid names"""
         validate_username_content("123")
-        validate_username_content("Bob")
-        validate_username_content("Bob123")
+        validate_username_content("User")
+        validate_username_content("User123")
 
     def test_invalid_name(self):
         """validate_username_content disallows invalid names"""
         with self.assertRaises(ValidationError):
             validate_username_content("!")
         with self.assertRaises(ValidationError):
-            validate_username_content("Bob!")
+            validate_username_content("User!")
         with self.assertRaises(ValidationError):
-            validate_username_content("Bob Boberson")
+            validate_username_content("John Doe")
         with self.assertRaises(ValidationError):
             validate_username_content("Rafał")
         with self.assertRaises(ValidationError):
@@ -145,14 +140,12 @@ class ValidateGmailEmailTests(TestCase):
 
         validate_gmail_email(None, {}, add_errors)
         validate_gmail_email(None, {"email": "invalid-email"}, add_errors)
-        validate_gmail_email(None, {"email": "the.bob.boberson@gmail.com"}, add_errors)
-        validate_gmail_email(
-            None, {"email": "the.bob.boberson@hotmail.com"}, add_errors
-        )
+        validate_gmail_email(None, {"email": "the.valid.email@gmail.com"}, add_errors)
+        validate_gmail_email(None, {"email": "the.valid.email@hotmail.com"}, add_errors)
 
         self.assertFalse(added_errors)
 
         validate_gmail_email(
-            None, {"email": "the.b.o.b.b.ob.e.r.son@gmail.com"}, add_errors
+            None, {"email": "the.s.p.a.m.my.e.ma.il@gmail.com"}, add_errors
         )
         self.assertTrue(added_errors)

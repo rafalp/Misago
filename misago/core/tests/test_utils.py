@@ -47,7 +47,7 @@ class SlugifyTests(TestCase):
     def test_valid_slugify_output(self):
         """Misago's slugify correctly slugifies string"""
         test_cases = [
-            ("Bob", "bob"),
+            ("User", "user"),
             ("Eric The Fish", "eric-the-fish"),
             ("John   Snow", "john-snow"),
             ("J0n", "j0n"),

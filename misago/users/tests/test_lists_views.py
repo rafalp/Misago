@@ -75,9 +75,7 @@ class UsersRankTests(UsersListTestCase):
 
     def test_disabled_users(self):
         """ranks lists excludes disabled accounts"""
-        rank_user = create_test_user(
-            "Visible", "visible@te.com", "Pass.123", is_active=False
-        )
+        rank_user = create_test_user("Visible", "visible@te.com", is_active=False)
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank
@@ -97,9 +95,7 @@ class UsersRankTests(UsersListTestCase):
         self.user.is_staff = True
         self.user.save()
 
-        rank_user = create_test_user(
-            "Visible", "visible@te.com", "Pass.123", is_active=False
-        )
+        rank_user = create_test_user("Visible", "visible@te.com", is_active=False)
 
         for rank in Rank.objects.iterator():
             rank_user.rank = rank

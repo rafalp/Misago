@@ -9,12 +9,10 @@ from misago.conf import settings
 from misago.conf.test import override_dynamic_settings
 from misago.users.avatars import gallery, store
 from misago.users.models import AvatarGallery
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_AVATAR_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
-
-User = get_user_model()
 
 
 class UserAvatarTests(AuthenticatedUserTestCase):
@@ -26,7 +24,8 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         self.client.post(self.link, data={"avatar": "generated"})
 
     def get_current_user(self):
-        return User.objects.get(pk=self.user.pk)
+        self.user.refresh_from_db()
+        return self.user
 
     def assertOldAvatarsAreDeleted(self, user):
         self.assertEqual(user.avatar_set.count(), len(settings.MISAGO_AVATARS_SIZES))
@@ -95,9 +94,7 @@ class UserAvatarTests(AuthenticatedUserTestCase):
             response.json(), {"detail": "You have to sign in to perform this action."}
         )
 
-        self.login_user(
-            User.objects.create_user("BobUser", "bob@bob.com", self.USER_PASSWORD)
-        )
+        self.login_user(create_test_user("OtherUser", "otheruser@example.com"))
 
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 403)
@@ -301,10 +298,7 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = User.objects.create_user(
-            "OtherUser", "other@user.com", "pass123"
-        )
-
+        self.other_user = create_test_user("OtherUser", "other@user.com")
         self.link = "/api/users/%s/moderate-avatar/" % self.other_user.pk
 
     @patch_user_acl({"can_moderate_avatars": 0})
@@ -344,20 +338,24 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
+        self.other_user.refresh_from_db()
 
         options = response.json()
-        self.assertEqual(other_user.is_avatar_locked, True)
-        self.assertEqual(other_user.avatar_lock_user_message, "Test user message.")
-        self.assertEqual(other_user.avatar_lock_staff_message, "Test staff message.")
-
-        self.assertEqual(options["avatars"], other_user.avatars)
-        self.assertEqual(options["is_avatar_locked"], other_user.is_avatar_locked)
+        self.assertEqual(self.other_user.is_avatar_locked, True)
+        self.assertEqual(self.other_user.avatar_lock_user_message, "Test user message.")
         self.assertEqual(
-            options["avatar_lock_user_message"], other_user.avatar_lock_user_message
+            self.other_user.avatar_lock_staff_message, "Test staff message."
+        )
+
+        self.assertEqual(options["avatars"], self.other_user.avatars)
+        self.assertEqual(options["is_avatar_locked"], self.other_user.is_avatar_locked)
+        self.assertEqual(
+            options["avatar_lock_user_message"],
+            self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_staff_message"], other_user.avatar_lock_staff_message
+            options["avatar_lock_staff_message"],
+            self.other_user.avatar_lock_staff_message,
         )
 
         response = self.client.post(
@@ -373,19 +371,21 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
-        self.assertFalse(other_user.is_avatar_locked)
-        self.assertIsNone(other_user.avatar_lock_user_message)
-        self.assertIsNone(other_user.avatar_lock_staff_message)
+        self.other_user.refresh_from_db()
+        self.assertFalse(self.other_user.is_avatar_locked)
+        self.assertIsNone(self.other_user.avatar_lock_user_message)
+        self.assertIsNone(self.other_user.avatar_lock_staff_message)
 
         options = response.json()
-        self.assertEqual(options["avatars"], other_user.avatars)
-        self.assertEqual(options["is_avatar_locked"], other_user.is_avatar_locked)
+        self.assertEqual(options["avatars"], self.other_user.avatars)
+        self.assertEqual(options["is_avatar_locked"], self.other_user.is_avatar_locked)
         self.assertEqual(
-            options["avatar_lock_user_message"], other_user.avatar_lock_user_message
+            options["avatar_lock_user_message"],
+            self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_staff_message"], other_user.avatar_lock_staff_message
+            options["avatar_lock_staff_message"],
+            self.other_user.avatar_lock_staff_message,
         )
 
         response = self.client.post(
@@ -401,19 +401,21 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
-        self.assertTrue(other_user.is_avatar_locked)
-        self.assertEqual(other_user.avatar_lock_user_message, "")
-        self.assertEqual(other_user.avatar_lock_staff_message, "")
+        self.other_user.refresh_from_db()
+        self.assertTrue(self.other_user.is_avatar_locked)
+        self.assertEqual(self.other_user.avatar_lock_user_message, "")
+        self.assertEqual(self.other_user.avatar_lock_staff_message, "")
 
         options = response.json()
-        self.assertEqual(options["avatars"], other_user.avatars)
-        self.assertEqual(options["is_avatar_locked"], other_user.is_avatar_locked)
+        self.assertEqual(options["avatars"], self.other_user.avatars)
+        self.assertEqual(options["is_avatar_locked"], self.other_user.is_avatar_locked)
         self.assertEqual(
-            options["avatar_lock_user_message"], other_user.avatar_lock_user_message
+            options["avatar_lock_user_message"],
+            self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_staff_message"], other_user.avatar_lock_staff_message
+            options["avatar_lock_staff_message"],
+            self.other_user.avatar_lock_staff_message,
         )
 
         response = self.client.post(
@@ -423,19 +425,21 @@ class UserAvatarModerationTests(AuthenticatedUserTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.get(pk=self.other_user.pk)
-        self.assertFalse(other_user.is_avatar_locked)
-        self.assertEqual(other_user.avatar_lock_user_message, "")
-        self.assertEqual(other_user.avatar_lock_staff_message, "")
+        self.other_user.refresh_from_db()
+        self.assertFalse(self.other_user.is_avatar_locked)
+        self.assertEqual(self.other_user.avatar_lock_user_message, "")
+        self.assertEqual(self.other_user.avatar_lock_staff_message, "")
 
         options = response.json()
-        self.assertEqual(options["avatars"], other_user.avatars)
-        self.assertEqual(options["is_avatar_locked"], other_user.is_avatar_locked)
+        self.assertEqual(options["avatars"], self.other_user.avatars)
+        self.assertEqual(options["is_avatar_locked"], self.other_user.is_avatar_locked)
         self.assertEqual(
-            options["avatar_lock_user_message"], other_user.avatar_lock_user_message
+            options["avatar_lock_user_message"],
+            self.other_user.avatar_lock_user_message,
         )
         self.assertEqual(
-            options["avatar_lock_staff_message"], other_user.avatar_lock_staff_message
+            options["avatar_lock_staff_message"],
+            self.other_user.avatar_lock_staff_message,
         )
 
     @patch_user_acl({"can_moderate_avatars": 1})

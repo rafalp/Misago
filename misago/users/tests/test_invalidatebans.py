@@ -1,7 +1,6 @@
 from datetime import timedelta
 from io import StringIO
 
-from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
@@ -11,9 +10,7 @@ from misago.cache.versions import get_cache_versions
 from misago.users import bans
 from misago.users.management.commands import invalidatebans
 from misago.users.models import Ban, BanCache
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class InvalidateBansTests(TestCase):
@@ -39,10 +36,10 @@ class InvalidateBansTests(TestCase):
 
     def test_bans_caches_updates(self):
         """ban caches are updated"""
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
 
         # ban user
-        Ban.objects.create(banned_value="bob")
+        Ban.objects.create(banned_value="user")
         user_ban = bans.get_user_ban(user, get_cache_versions())
 
         self.assertIsNotNone(user_ban)
@@ -72,5 +69,5 @@ class InvalidateBansTests(TestCase):
         self.assertEqual(Ban.objects.filter(is_checked=True).count(), 0)
 
         # see if user is banned anymore
-        user = User.objects.get(id=user.id)
+        user.refresh_from_db()
         self.assertIsNone(bans.get_user_ban(user, get_cache_versions()))

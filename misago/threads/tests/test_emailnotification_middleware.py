@@ -1,7 +1,6 @@
 from copy import deepcopy
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 from django.utils import timezone
@@ -10,10 +9,7 @@ from django.utils.encoding import smart_str
 from misago.categories.models import Category
 from misago.threads import testutils
 from misago.threads.test import patch_category_acl, patch_other_user_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
-
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class EmailNotificationTests(AuthenticatedUserTestCase):
@@ -29,7 +25,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
-        self.other_user = User.objects.create_user("BobBobertson", "bob@boberson.com")
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
     @patch_category_acl({"can_reply_threads": True})
     def test_no_subscriptions(self):

@@ -1,7 +1,6 @@
 from datetime import timedelta
 from io import StringIO
 
-from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
@@ -11,15 +10,13 @@ from misago.conf import settings
 from misago.readtracker.management.commands import clearreadtracker
 from misago.readtracker.models import PostRead
 from misago.threads import testutils
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class ClearReadTrackerTests(TestCase):
     def setUp(self):
-        self.user_a = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
-        self.user_b = User.objects.create_user("UserB", "testb@user.com", "Pass.123")
+        self.user_1 = create_test_user("User1", "user1@example.com")
+        self.user_2 = create_test_user("User2", "user2@example.com")
 
         self.category = Category.objects.get(slug="first-category")
 
@@ -38,7 +35,7 @@ class ClearReadTrackerTests(TestCase):
         thread = testutils.post_thread(self.category)
 
         existing = PostRead.objects.create(
-            user=self.user_a,
+            user=self.user_1,
             category=self.category,
             thread=thread,
             post=thread.first_post,
@@ -46,7 +43,7 @@ class ClearReadTrackerTests(TestCase):
             - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF / 4),
         )
         deleted = PostRead.objects.create(
-            user=self.user_b,
+            user=self.user_2,
             category=self.category,
             thread=thread,
             post=thread.first_post,

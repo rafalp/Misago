@@ -1,25 +1,21 @@
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
 from misago.cache.versions import get_cache_versions
 from misago.conf.dynamicsettings import DynamicSettings
-
 from misago.core.mail import build_mail, mail_user, mail_users
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class MailTests(TestCase):
     def test_building_mail_without_context_raises_value_error(self):
-        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = create_test_user("User", "user@example.com")
         with self.assertRaises(ValueError):
             build_mail(user, "Misago Test Mail", "misago/emails/base")
 
     def test_building_mail_without_settings_in_context_raises_value_error(self):
-        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = create_test_user("User", "user@example.com")
         with self.assertRaises(ValueError):
             build_mail(
                 user, "Misago Test Mail", "misago/emails/base", context={"settings": {}}
@@ -27,7 +23,7 @@ class MailTests(TestCase):
 
     def test_mail_user(self):
         """mail_user sets message in backend"""
-        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = create_test_user("User", "user@example.com")
 
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
@@ -55,11 +51,11 @@ class MailTests(TestCase):
         settings = DynamicSettings(cache_versions)
 
         test_users = [
-            User.objects.create_user("Alpha", "alpha@test.com", "pass123"),
-            User.objects.create_user("Beta", "beta@test.com", "pass123"),
-            User.objects.create_user("Niner", "niner@test.com", "pass123"),
-            User.objects.create_user("Foxtrot", "foxtrot@test.com", "pass123"),
-            User.objects.create_user("Uniform", "uniform@test.com", "pass123"),
+            create_test_user("User1", "User1@example.com"),
+            create_test_user("Use2r", "User2@example.com"),
+            create_test_user("Us3er", "User3@example.com"),
+            create_test_user("U4ser", "User4@example.com"),
+            create_test_user("5User", "User5@example.com"),
         ]
 
         mail_users(

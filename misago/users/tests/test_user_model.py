@@ -12,15 +12,15 @@ from misago.users.models import Avatar, User
 class UserTests(TestCase):
     def test_anonymize_data(self):
         """anonymize_data sets username and slug to one defined in settings"""
-        user = User.objects.create_user("Bob", "bob@example.com", "Pass.123")
+        user = User.objects.create_user("User", "user@example.com")
 
         user.anonymize_data()
         self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
         self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))
 
-    def test_delete_avatar_on_delete(self):
+    def test_user_avatar_files_are_deleted_together_with_user(self):
         """account deletion for user also deletes their avatar file"""
-        user = User.objects.create_user("Bob", "bob@example.com", "Pass.123")
+        user = User.objects.create_user("User", "user@example.com")
         dynamic.set_avatar(user)
         user.save()
 
@@ -46,25 +46,25 @@ class UserTests(TestCase):
         """set_username sets username and slug on model"""
         user = User()
 
-        user.set_username("Boberson")
-        self.assertEqual(user.username, "Boberson")
-        self.assertEqual(user.slug, "boberson")
+        user.set_username("Username")
+        self.assertEqual(user.username, "Username")
+        self.assertEqual(user.slug, "username")
 
-        self.assertEqual(user.get_username(), "Boberson")
-        self.assertEqual(user.get_full_name(), "Boberson")
-        self.assertEqual(user.get_short_name(), "Boberson")
+        self.assertEqual(user.get_username(), "Username")
+        self.assertEqual(user.get_full_name(), "Username")
+        self.assertEqual(user.get_short_name(), "Username")
 
     def test_set_email(self):
         """set_email sets email and hash on model"""
         user = User()
 
-        user.set_email("bOb@TEst.com")
-        self.assertEqual(user.email, "bOb@test.com")
+        user.set_email("us3R@EXample.com")
+        self.assertEqual(user.email, "us3R@example.com")
         self.assertTrue(user.email_hash)
 
     def test_mark_for_delete(self):
         """mark_for_delete deactivates user and sets is_deleting_account flag"""
-        user = User.objects.create_user("Bob", "bob@example.com", "Pass.123")
+        user = User.objects.create_user("User", "user@example.com")
         user.mark_for_delete()
         self.assertFalse(user.is_active)
         self.assertTrue(user.is_deleting_account)
@@ -75,8 +75,8 @@ class UserTests(TestCase):
 
     def test_get_real_name(self):
         """get_real_name returns user-set real name or none"""
-        user = User.objects.create_user("Bob", "bob@example.com", "Pass.123")
+        user = User.objects.create_user("User", "user@example.com")
         self.assertIsNone(user.get_real_name())
 
-        user.profile_fields["real_name"] = "Bob Boberson"
-        self.assertEqual(user.get_real_name(), "Bob Boberson")
+        user.profile_fields["real_name"] = "User Usererson"
+        self.assertEqual(user.get_real_name(), "User Usererson")

@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 from django.utils.encoding import smart_str
@@ -7,9 +6,7 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.models import ThreadParticipant
 from misago.threads.test import other_user_cant_use_private_threads
-from misago.users.testutils import AuthenticatedUserTestCase
-
-User = get_user_model()
+from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
 class StartPrivateThreadTests(AuthenticatedUserTestCase):
@@ -19,9 +16,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.category = Category.objects.private_threads()
         self.api_link = reverse("misago:api:private-thread-list")
 
-        self.other_user = User.objects.create_user(
-            "BobBoberson", "bob@boberson.com", "pass123"
-        )
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
     def test_cant_start_thread_as_guest(self):
         """user has to be authenticated to be able to post private thread"""

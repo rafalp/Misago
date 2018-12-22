@@ -1,12 +1,9 @@
-from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads.models import Post, Thread, ThreadParticipant
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 
 class ThreadParticipantTests(TestCase):
@@ -44,8 +41,8 @@ class ThreadParticipantTests(TestCase):
 
     def test_set_owner(self):
         """set_owner makes user thread owner"""
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("User2", "user2@example.com")
 
         ThreadParticipant.objects.set_owner(self.thread, user)
         self.assertEqual(self.thread.participants.count(), 1)
@@ -66,8 +63,8 @@ class ThreadParticipantTests(TestCase):
     def test_add_participants(self):
         """add_participant adds participant to thread"""
         users = [
-            User.objects.create_user("Bob", "bob@boberson.com", "Pass.123"),
-            User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123"),
+            create_test_user("User", "user@example.com"),
+            create_test_user("User2", "user2@example.com"),
         ]
 
         ThreadParticipant.objects.add_participants(self.thread, users)
@@ -79,8 +76,8 @@ class ThreadParticipantTests(TestCase):
 
     def test_remove_participant(self):
         """remove_participant deletes participant from thread"""
-        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        other_user = User.objects.create_user("Bob2", "bob2@boberson.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("User2", "user2@example.com")
 
         ThreadParticipant.objects.add_participants(self.thread, [user])
         ThreadParticipant.objects.add_participants(self.thread, [other_user])

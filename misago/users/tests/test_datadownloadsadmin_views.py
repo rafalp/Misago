@@ -1,15 +1,12 @@
 import os
 
-from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.urls import reverse
 
 from misago.admin.testutils import AdminTestCase
 from misago.users.datadownloads import request_user_data_download
 from misago.users.models import DataDownload
-
-
-User = get_user_model()
+from misago.users.testutils import create_test_user
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
@@ -87,7 +84,7 @@ class DataDownloadAdminViewsTests(AdminTestCase):
         response = self.client.get(reverse("misago:admin:users:data-downloads:request"))
         self.assertEqual(response.status_code, 200)
 
-        other_user = User.objects.create_user("bob", "bob@boberson.com")
+        other_user = create_test_user("OtherUser", "OtherUser@example.com")
 
         response = self.client.post(
             reverse("misago:admin:users:data-downloads:request"),

@@ -6,8 +6,7 @@ from django.utils import timezone
 from misago.users.audittrail import create_audit_trail, create_user_audit_trail
 from misago.users.models import AuditTrail
 from misago.users.signals import remove_old_ips
-from misago.users.testutils import UserTestCase
-
+from misago.users.testutils import UserTestCase, create_test_user
 
 User = get_user_model()
 
@@ -25,7 +24,7 @@ class CreateAuditTrailTests(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = create_test_user("OtherUser", "user@example.com")
 
     def test_create_audit_require_model(self):
         """create_audit_trail requires model instance"""
@@ -97,7 +96,7 @@ class CreateUserAuditTrailTests(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = create_test_user("OtherUser", "user@example.com")
 
     def test_create_user_audit_require_model(self):
         """create_user_audit_trail requires model instance"""
@@ -163,7 +162,7 @@ class RemoveOldAuditTrailsTest(UserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.obj = User.objects.create_user("BobBoberson", "bob@example.com")
+        self.obj = create_test_user("OtherUser", "user@example.com")
 
     def test_recent_audit_trail_is_kept(self):
         """remove_old_ips keeps recent audit trails"""
