@@ -15,8 +15,8 @@ from misago.users.testutils import create_test_user
 
 class ClearReadTrackerTests(TestCase):
     def setUp(self):
-        self.user_1 = create_test_user("User1", "user1@example.com")
-        self.user_2 = create_test_user("User2", "user2@example.com")
+        self.user = create_test_user("User", "user@example.com")
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         self.category = Category.objects.get(slug="first-category")
 
@@ -35,7 +35,7 @@ class ClearReadTrackerTests(TestCase):
         thread = testutils.post_thread(self.category)
 
         existing = PostRead.objects.create(
-            user=self.user_1,
+            user=self.user,
             category=self.category,
             thread=thread,
             post=thread.first_post,
@@ -43,7 +43,7 @@ class ClearReadTrackerTests(TestCase):
             - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF / 4),
         )
         deleted = PostRead.objects.create(
-            user=self.user_2,
+            user=self.other_user,
             category=self.category,
             thread=thread,
             post=thread.first_post,

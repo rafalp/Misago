@@ -395,15 +395,15 @@ class ThreadModelTests(TestCase):
         private thread gets deleted automatically
         when there are no participants left in it
         """
-        user_1 = create_test_user("User1", "user1@example.com")
-        user_2 = create_test_user("User2", "user2@example.com")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
-        ThreadParticipant.objects.add_participants(self.thread, [user_1, user_2])
+        ThreadParticipant.objects.add_participants(self.thread, [user, other_user])
         self.assertEqual(self.thread.participants.count(), 2)
 
-        user_1.delete()
+        user.delete()
         Thread.objects.get(id=self.thread.id)
 
-        user_2.delete()
+        other_user.delete()
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(id=self.thread.id)
