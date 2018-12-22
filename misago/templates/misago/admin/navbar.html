@@ -5,12 +5,12 @@
       <a class="navbar-brand" href="{% url 'misago:index' %}"></a>
       <ul class="nav navbar-nav">
         {% for node in sections %}
-        <li{% if node.is_active %} class="active"{% endif %}>
-          <a href="{{ node.link }}">
-            <span class="{{ node.icon }}"></span>
-            {{ node.name }}
-          </a>
-        </li>
+          <li{% if node.is_active %} class="active"{% endif %}>
+            <a href="{{ node.link }}">
+              <span class="{{ node.icon }}"></span>
+              {{ node.name }}
+            </a>
+          </li>
         {% endfor %}
       </ul>
       <div class="user-nav pull-right">
@@ -27,19 +27,19 @@
     </div>
   </div>
   {% if actions %}
-  <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-    <div class="container">
-      <ul class="nav navbar-nav">
-        {% for node in actions %}
-        <li{% if node.is_active %} class="active"{% endif %}>
-          <a href="{{ node.link }}">
-            <span class="{{ node.icon }}"></span>
-            {{ node.name }}
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
+    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+      <div class="container">
+        <ul class="nav navbar-nav">
+          {% for node in actions %}
+            <li{% if node.is_active %} class="active"{% endif %}>
+              <a href="{{ node.link }}">
+                <span class="{{ node.icon }}"></span>
+                {{ node.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
-  </div>
   {% endif %}
 </div>

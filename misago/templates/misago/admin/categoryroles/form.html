@@ -4,18 +4,18 @@
 
 {% block title %}
 {% if target.pk %}
-{{ target }}
+  {{ target }}
 {% else %}
-{% trans "New role" %}
+  {% trans "New role" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block page-target %}
 {% if target.pk %}
-{{ target }}
+  {{ target }}
 {% else %}
-{% trans "New role" %}
+  {% trans "New role" %}
 {% endif %}
 {% endblock page-target %}
 
@@ -23,9 +23,9 @@
 {% block form-header %}
 <h1>
   {% if target.pk %}
-  {{ target }}
+    {{ target }}
   {% else %}
-  {% trans "New role" %}
+    {% trans "New role" %}
   {% endif %}
 </h1>
 {% endblock %}
@@ -38,18 +38,13 @@ class="form-horizontal"
 
 {% block form-body %}
 <div class="form-body">
-
   <fieldset>
     <legend>{% trans "Basic settings" %}</legend>
-
     {% form_row form.name "col-md-3" "col-md-9" %}
-
   </fieldset>
-
   {% for form in perms_forms %}
-  {% include "misago/admin/permissions_table.html" %}
+    {% include "misago/admin/permissions_table.html" %}
   {% endfor %}
-
 </div>
 {% endblock form-body %}
 

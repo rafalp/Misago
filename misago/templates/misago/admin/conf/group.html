@@ -25,32 +25,31 @@
     <div class="form-header">
       <h1>{% trans active_group.name %}</h1>
       {% if active_group.description %}
-      <p>{% trans active_group.description %}</p>
+        <p>{% trans active_group.description %}</p>
       {% endif %}
     </div>
 
     {% with label_class="col-md-3" field_class="col-md-9" %}
       {% if use_single_form_template %}
-      <div class="form-body no-fieldsets">
-        {% for field in fieldsets.0.form %}
-        {% form_row field label_class field_class %}
-        {% endfor %}
-      </div>
-      {% else %}
-      <div class="form-body">
-        {% for fieldset in fieldsets %}
-        <fieldset>
-          {% if fieldset.legend %}
-          <legend>{% trans fieldset.legend %}</legend>
-          {% endif %}
-
-          {% for field in fieldset.form %}
-          {% form_row field label_class field_class %}
+        <div class="form-body no-fieldsets">
+          {% for field in fieldsets.0.form %}
+            {% form_row field label_class field_class %}
           {% endfor %}
+        </div>
+      {% else %}
+        <div class="form-body">
+          {% for fieldset in fieldsets %}
+            <fieldset>
+              {% if fieldset.legend %}
+                <legend>{% trans fieldset.legend %}</legend>
+              {% endif %}
 
-        </fieldset>
-        {% endfor %}
-      </div>
+              {% for field in fieldset.form %}
+                {% form_row field label_class field_class %}
+              {% endfor %}
+            </fieldset>
+          {% endfor %}
+        </div>
       {% endif %}
     {% endwith %}
 

@@ -1,10 +1,10 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load misago_admin_form i18n %}
+{% load i18n misago_admin_form %}
 
 
 {% block title %}
-{% blocktrans with category=target %}
-{{ category }}: Permissions
+{% blocktrans trimmed with category=target %}
+  {{ category }}: Permissions
 {% endblocktrans %} | {{ block.super }}
 {% endblock title%}
 
@@ -13,8 +13,8 @@
 {{ block.super }}
 <div class="sub">
   <span class="fa fa-chevron-right"></span>
-  {% blocktrans with category=target %}
-  {{ category }}: Permissions
+  {% blocktrans trimmed with category=target %}
+    {{ category }}: Permissions
   {% endblocktrans %}
 </div>
 {% endblock page-header %}
@@ -29,26 +29,23 @@
         <th>{% trans "Category" %}</ht>
         <th class="col-md-6">{% trans "Permissions" %}</ht>
       </tr>
-
       {% for form in forms %}
-      <tr>
-        <td class="item-name">
-          {{ form.role }}
-        </td>
-        <td>
-          {% form_input form.category_role %}
-        </td>
-      </tr>
+        <tr>
+          <td class="item-name">
+            {{ form.role }}
+          </td>
+          <td>
+            {% form_input form.category_role %}
+          </td>
+        </tr>
       {% endfor %}
     </table>
     <div class="table-footer">
       <div class="row">
         <div class="col-md-offset-6">
-
           <button class="btn btn-primary">{% trans "Save changes" %}</button>
           <button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
           <a href="{% url root_link %}" class="btn btn-default btn-cancel">{% trans "Cancel" %}</a>
-
         </div>
       </div>
     </div>

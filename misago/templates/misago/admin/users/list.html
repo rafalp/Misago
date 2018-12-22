@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n misago_avatars misago_admin_form %}
+{% load i18n misago_admin_form misago_avatars %}
 
 
 {% block page-actions %}
@@ -23,7 +23,7 @@
 <th style="width: 200px;">{% trans "Joined" %}</th>
 <th style="width: 128px;">{% trans "Posts" %}</th>
 {% for action in extra_actions %}
-<th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
@@ -52,20 +52,20 @@
 </td>
 <td class="lead text-muted">
   {% if item.requires_activation_by_admin %}
-  <span class="fa fa-eye tooltip-top" title="{% trans "Requires activation by administrator" %}"></span>
+    <span class="fa fa-eye tooltip-top" title="{% trans "Requires activation by administrator" %}"></span>
   {% elif item.requires_activation_by_user %}
-  <span class="fa fa-ticket tooltip-top" title="{% trans "Has to activate account" %}"></span>
+    <span class="fa fa-ticket tooltip-top" title="{% trans "Has to activate account" %}"></span>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td class="lead text-muted">
   {% if item.is_superuser %}
-  <span class="fa fa-star tooltip-top" title="{% trans "Super administrator" %}"></span>
+    <span class="fa fa-star tooltip-top" title="{% trans "Super administrator" %}"></span>
   {% elif item.is_staff %}
-  <span class="fa fa-star-half-o tooltip-top" title="{% trans "Administrator" %}"></span>
+    <span class="fa fa-star-half-o tooltip-top" title="{% trans "Administrator" %}"></span>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td>
@@ -88,11 +88,11 @@
   {{ item.posts }}
 </td>
 {% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
+  <td class="row-action">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+      <span class="{{ action.icon }}"></span>
+    </a>
+  </td>
 {% endfor %}
 <td class="row-action">
   <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">

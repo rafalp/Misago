@@ -5,8 +5,8 @@
   <input type="submit" id="signin-button" value="{% trans "Sign in" %}">
 </form>
 {% if user.is_authenticated %}
-<form id="hidden-logout-form" method="post" action="{% url LOGOUT_URL %}" style="display: none;">
-  {% csrf_token %}
-  <input type="submit" id="signin-button" value="{% trans "Log out" %}">
-</form>
+  <form id="hidden-logout-form" method="post" action="{% url LOGOUT_URL %}" style="display: none;">
+    {% csrf_token %}
+    <input type="submit" id="signin-button" value="{% trans "Log out" %}">
+  </form>
 {% endif %}

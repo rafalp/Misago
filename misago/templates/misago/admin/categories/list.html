@@ -15,7 +15,7 @@
 {% block table-header %}
 <th>{% trans "Category" %}</th>
 {% for action in extra_actions %}
-<th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th>&nbsp;</th>
 <th>&nbsp;</th>
@@ -27,40 +27,40 @@
 {% block table-row %}
 <td class="item-name">
   {% for i in item.level_range %}
-  &nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;
   {% endfor %}
   {{ item }}
 </td>
 <td class="row-action">
   {% if not item.last %}
-  <form action="{% url 'misago:admin:categories:nodes:down' pk=item.pk %}" method="post">
-    <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
-      {% csrf_token %}
-      <span class="fa fa-chevron-down"></span>
-    </button>
-  </form>
+    <form action="{% url 'misago:admin:categories:nodes:down' pk=item.pk %}" method="post">
+      <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
+        {% csrf_token %}
+        <span class="fa fa-chevron-down"></span>
+      </button>
+    </form>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td class="row-action">
   {% if not item.first %}
-  <form action="{% url 'misago:admin:categories:nodes:up' pk=item.pk %}" method="post">
-    <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
-      {% csrf_token %}
-      <span class="fa fa-chevron-up"></span>
-    </button>
-  </form>
+    <form action="{% url 'misago:admin:categories:nodes:up' pk=item.pk %}" method="post">
+      <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
+        {% csrf_token %}
+        <span class="fa fa-chevron-up"></span>
+      </button>
+    </form>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 {% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
+  <td class="row-action">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+      <span class="{{ action.icon }}"></span>
+    </a>
+  </td>
 {% endfor %}
 <td class="row-action">
   <a href="{% url 'misago:admin:categories:nodes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">

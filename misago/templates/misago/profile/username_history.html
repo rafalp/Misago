@@ -46,13 +46,13 @@
           </div>
           <div class="username-change-author">
             {% if change.changed_by %}
-            <a href="{{ change.changed_by.get_absolute_url }}" class="item-title">
-              {{ change.changed_by.username }}
-            </a>
+              <a href="{{ change.changed_by.get_absolute_url }}" class="item-title">
+                {{ change.changed_by.username }}
+              </a>
             {% else %}
-            <span class="item-title">
-              {{ change.changed_by_username }}
-            </span>
+              <span class="item-title">
+                {{ change.changed_by_username }}
+              </span>
             {% endif %}
           </div>
           <div class="username-change">

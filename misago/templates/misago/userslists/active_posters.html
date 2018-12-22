@@ -50,9 +50,9 @@
     {% if users_count %}
       <p class="lead">
         {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
-        {{ posters }} most active poster from last {{ days }} days.
+          {{ posters }} most active poster from last {{ days }} days.
         {% plural %}
-        {{ posters }} most active posters from last {{ days }} days.
+          {{ posters }} most active posters from last {{ days }} days.
         {% endblocktrans %}
       </p>
 
@@ -126,7 +126,7 @@
     {% else %}
       <p class="lead">
         {% blocktrans trimmed with days=tracked_period %}
-        No users have posted any new messages during last {{ days }} days.
+          No users have posted any new messages during last {{ days }} days.
         {% endblocktrans %}
       </p>
     {% endif %}

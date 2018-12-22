@@ -27,222 +27,222 @@ class="form-horizontal"
 {% block form-body %}
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
-  <fieldset>
-    <legend>{% trans "Basic account settings" %}</legend>
-
-    {% form_row form.username label_class field_class %}
-
-    {% if 'rank' in form.fields %}
-      {% form_row form.rank label_class field_class %}
-    {% endif %}
-
-    {% form_row form.title label_class field_class %}
-    {% form_row form.roles label_class field_class %}
-
-    {% if 'staff_level' in form.fields %}
-      {% form_row form.staff_level label_class field_class %}
-    {% endif %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Administrator status" %}</legend>
-
-    {% if 'is_staff' in form.fields %}
-      {% form_row form.is_staff label_class field_class %}
-      {% form_row form.is_superuser label_class field_class %}
-    {% else %}
-      <div id="div_id_is_staff" class="form-group">
-        <label for="id_is_staff_0" class="control-label {{ label_class }}">
-          {{ form.IS_STAFF_LABEL }}:
-        </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            {% if target.is_staff %}
-              <strong class="text-primary">{% trans "Yes" %}</strong>
-            {% else %}
-              <strong class="text-muted">{% trans "No" %}</strong>
-            {% endif %}
-          </p>
-          <p id="hint_id_is_staff" class="help-block">
-            {{ form.IS_STAFF_HELP_TEXT }}
-          </p>
-        </div>
-      </div>
-      <div id="div_id_is_superuser" class="form-group">
-        <label for="id_is_superuser_0" class="control-label {{ label_class }}">
-          {{ form.IS_SUPERUSER_LABEL }}:
-        </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            {% if target.is_superuser %}
-              <strong class="text-primary">{% trans "Yes" %}</strong>
-            {% else %}
-              <strong class="text-muted">{% trans "No" %}</strong>
-            {% endif %}
-          </p>
-          <p id="hint_id_is_superuser" class="help-block">
-            {{ form.IS_SUPERUSER_HELP_TEXT }}
-          </p>
-        </div>
-      </div>
-      <p class="text-center">
-        <strong>{% trans "Note" %}:</strong>
-        {% trans "Only superusers can change other users administrator status." %}
-      </p>
-    {% endif %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Sign-in credentials" %}</legend>
-
-    {% form_row form.email label_class field_class %}
-    {% form_row form.new_password label_class field_class %}
-
-    {% if not target.has_usable_password %}
-      <div id="div_id_has_usable_password" class="form-group">
-        <div class="{{ field_class }} col-md-offset-3">
-          <p class="form-control-static">
-            {% trans "This user has not set account password and uses other service to authenticate." %}
-          </p>
-        </div>
-      </div>
-    {% endif %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Avatar" %}</legend>
-
-    {% form_row form.is_avatar_locked label_class field_class %}
-    {% form_row form.avatar_lock_user_message label_class field_class %}
-    {% form_row form.avatar_lock_staff_message label_class field_class %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Signature" %}</legend>
-
-    {% form_row form.signature label_class field_class %}
-    {% form_row form.is_signature_locked label_class field_class %}
-    {% form_row form.signature_lock_user_message label_class field_class %}
-    {% form_row form.signature_lock_staff_message label_class field_class %}
-
-  </fieldset>
-  {% for group in form.get_profile_fields_groups %}
     <fieldset>
-      <legend>{% trans group.name %}</legend>
+      <legend>{% trans "Basic account settings" %}</legend>
 
-      {% for field in group.fields %}
-        {% form_row field label_class field_class %}
-      {% endfor %}
+      {% form_row form.username label_class field_class %}
+
+      {% if 'rank' in form.fields %}
+        {% form_row form.rank label_class field_class %}
+      {% endif %}
+
+      {% form_row form.title label_class field_class %}
+      {% form_row form.roles label_class field_class %}
+
+      {% if 'staff_level' in form.fields %}
+        {% form_row form.staff_level label_class field_class %}
+      {% endif %}
 
     </fieldset>
-  {% endfor %}
-  <fieldset>
-    <legend>{% trans "Forum options" %}</legend>
+    <fieldset>
+      <legend>{% trans "Administrator status" %}</legend>
 
-    {% form_row form.is_hiding_presence label_class field_class %}
-    {% form_row form.limits_private_thread_invites_to label_class field_class %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Automatic subscription preferences" %}</legend>
-
-    {% form_row form.subscribe_to_started_threads label_class field_class %}
-    {% form_row form.subscribe_to_replied_threads label_class field_class %}
-
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Account status" %}</legend>
-
-    {% if target.is_deleting_account %}
-      <div id="div_id_is_deleting_account" class="form-group">
-        <label for="id_is_ais_deleting_account_0" class="control-label {{ label_class }}">
-          {{ form.IS_ACTIVE_LABEL }}:
-        </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            <strong class="text-danger">
-              {% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}
-            </strong>
-          </p>
-          <p id="hint_id_is_active" class="help-block">
-            {% trans "No additional action is required. This account will be deleted automatically." %}
-          </p>
-        </div>
-      </div>
-    {% else %}
-      {% if 'is_active' in form.fields %}
-        {% form_row form.is_active label_class field_class %}
-        {% form_row form.is_active_staff_message label_class field_class %}
+      {% if 'is_staff' in form.fields %}
+        {% form_row form.is_staff label_class field_class %}
+        {% form_row form.is_superuser label_class field_class %}
       {% else %}
-        <div id="div_id_is_active" class="form-group">
-          <label for="id_is_active_0" class="control-label {{ label_class }}">
-            {{ form.IS_ACTIVE_LABEL }}:
+        <div id="div_id_is_staff" class="form-group">
+          <label for="id_is_staff_0" class="control-label {{ label_class }}">
+            {{ form.IS_STAFF_LABEL }}:
           </label>
           <div class="{{ field_class }}">
             <p class="form-control-static">
-              {% if target.is_active %}
-                <strong class="text-success">{% trans "Yes" %}</strong>
+              {% if target.is_staff %}
+                <strong class="text-primary">{% trans "Yes" %}</strong>
               {% else %}
-                <strong class="text-danger">{% trans "No" %}</strong>
+                <strong class="text-muted">{% trans "No" %}</strong>
               {% endif %}
             </p>
-            <p id="hint_id_is_active" class="help-block">
-              {{ form.IS_ACTIVE_HELP_TEXT }}
+            <p id="hint_id_is_staff" class="help-block">
+              {{ form.IS_STAFF_HELP_TEXT }}
             </p>
           </div>
         </div>
         <div id="div_id_is_superuser" class="form-group">
           <label for="id_is_superuser_0" class="control-label {{ label_class }}">
-            {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
+            {{ form.IS_SUPERUSER_LABEL }}:
           </label>
           <div class="{{ field_class }}">
-            <div class="form-control-static">
-              {% if target.is_active_staff_message %}
-                {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
+            <p class="form-control-static">
+              {% if target.is_superuser %}
+                <strong class="text-primary">{% trans "Yes" %}</strong>
               {% else %}
-                <em>{% trans "No staff message is available." %}</em>
+                <strong class="text-muted">{% trans "No" %}</strong>
               {% endif %}
-            </div>
+            </p>
             <p id="hint_id_is_superuser" class="help-block">
-              {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
+              {{ form.IS_SUPERUSER_HELP_TEXT }}
+            </p>
+          </div>
+        </div>
+        <p class="text-center">
+          <strong>{% trans "Note" %}:</strong>
+          {% trans "Only superusers can change other users administrator status." %}
+        </p>
+      {% endif %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Sign-in credentials" %}</legend>
+
+      {% form_row form.email label_class field_class %}
+      {% form_row form.new_password label_class field_class %}
+
+      {% if not target.has_usable_password %}
+        <div id="div_id_has_usable_password" class="form-group">
+          <div class="{{ field_class }} col-md-offset-3">
+            <p class="form-control-static">
+              {% trans "This user has not set account password and uses other service to authenticate." %}
             </p>
           </div>
         </div>
       {% endif %}
-    {% endif %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Agreements" %}</legend>
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th>{% trans "Agreement" %}</th>
-          <th style="width: 250px;">{% trans "Accepted on" %}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for agreement in target.useragreement_set.select_related.iterator %}
-          <tr>
-            <td>
-              <a href="{% url 'misago:admin:users:agreements:edit' pk=agreement.agreement_id %}">
-                {{ agreement.agreement.get_final_title }}
-              </a>
-            </td>
-            <td>
-              <abbr class="moment" data-iso="{{ agreement.accepted_on.isoformat }}" data-format="LL"></abbr>
-            </td>
-          </tr>
-        {% empty %}
-          <tr>
-            <td colspan="2">
-              {% trans "This user didn't accept any agreements." %}
-            </td>
-          </tr>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Avatar" %}</legend>
+
+      {% form_row form.is_avatar_locked label_class field_class %}
+      {% form_row form.avatar_lock_user_message label_class field_class %}
+      {% form_row form.avatar_lock_staff_message label_class field_class %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Signature" %}</legend>
+
+      {% form_row form.signature label_class field_class %}
+      {% form_row form.is_signature_locked label_class field_class %}
+      {% form_row form.signature_lock_user_message label_class field_class %}
+      {% form_row form.signature_lock_staff_message label_class field_class %}
+
+    </fieldset>
+    {% for group in form.get_profile_fields_groups %}
+      <fieldset>
+        <legend>{% trans group.name %}</legend>
+
+        {% for field in group.fields %}
+          {% form_row field label_class field_class %}
         {% endfor %}
-      </tbody>
-    </table>
-  </fieldset>
+
+      </fieldset>
+    {% endfor %}
+    <fieldset>
+      <legend>{% trans "Forum options" %}</legend>
+
+      {% form_row form.is_hiding_presence label_class field_class %}
+      {% form_row form.limits_private_thread_invites_to label_class field_class %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Automatic subscription preferences" %}</legend>
+
+      {% form_row form.subscribe_to_started_threads label_class field_class %}
+      {% form_row form.subscribe_to_replied_threads label_class field_class %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Account status" %}</legend>
+
+      {% if target.is_deleting_account %}
+        <div id="div_id_is_deleting_account" class="form-group">
+          <label for="id_is_ais_deleting_account_0" class="control-label {{ label_class }}">
+            {{ form.IS_ACTIVE_LABEL }}:
+          </label>
+          <div class="{{ field_class }}">
+            <p class="form-control-static">
+              <strong class="text-danger">
+                {% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}
+              </strong>
+            </p>
+            <p id="hint_id_is_active" class="help-block">
+              {% trans "No additional action is required. This account will be deleted automatically." %}
+            </p>
+          </div>
+        </div>
+      {% else %}
+        {% if 'is_active' in form.fields %}
+          {% form_row form.is_active label_class field_class %}
+          {% form_row form.is_active_staff_message label_class field_class %}
+        {% else %}
+          <div id="div_id_is_active" class="form-group">
+            <label for="id_is_active_0" class="control-label {{ label_class }}">
+              {{ form.IS_ACTIVE_LABEL }}:
+            </label>
+            <div class="{{ field_class }}">
+              <p class="form-control-static">
+                {% if target.is_active %}
+                  <strong class="text-success">{% trans "Yes" %}</strong>
+                {% else %}
+                  <strong class="text-danger">{% trans "No" %}</strong>
+                {% endif %}
+              </p>
+              <p id="hint_id_is_active" class="help-block">
+                {{ form.IS_ACTIVE_HELP_TEXT }}
+              </p>
+            </div>
+          </div>
+          <div id="div_id_is_superuser" class="form-group">
+            <label for="id_is_superuser_0" class="control-label {{ label_class }}">
+              {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
+            </label>
+            <div class="{{ field_class }}">
+              <div class="form-control-static">
+                {% if target.is_active_staff_message %}
+                  {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
+                {% else %}
+                  <em>{% trans "No staff message is available." %}</em>
+                {% endif %}
+              </div>
+              <p id="hint_id_is_superuser" class="help-block">
+                {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
+              </p>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Agreements" %}</legend>
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>{% trans "Agreement" %}</th>
+            <th style="width: 250px;">{% trans "Accepted on" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for agreement in target.useragreement_set.select_related.iterator %}
+            <tr>
+              <td>
+                <a href="{% url 'misago:admin:users:agreements:edit' pk=agreement.agreement_id %}">
+                  {{ agreement.agreement.get_final_title }}
+                </a>
+              </td>
+              <td>
+                <abbr class="moment" data-iso="{{ agreement.accepted_on.isoformat }}" data-format="LL"></abbr>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="2">
+                {% trans "This user didn't accept any agreements." %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

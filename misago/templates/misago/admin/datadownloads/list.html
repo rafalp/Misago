@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/list.html" %}
-{% load i18n misago_avatars misago_admin_form %}
+{% load i18n misago_admin_form misago_avatars %}
 
 
 {% block page-actions %}
@@ -20,7 +20,7 @@
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "Requested by" %}</th>
 {% for action in extra_actions %}
-<th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
@@ -62,11 +62,11 @@
   {% endif %}
 </td>
 {% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
+  <td class="row-action">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+      <span class="{{ action.icon }}"></span>
+    </a>
+  </td>
 {% endfor %}
 <td class="row-action">
   {% if item.file %}
