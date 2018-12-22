@@ -1,21 +1,21 @@
 dist: xenial
 language: python
-python:
-  - 3.6
-addons:
-  postgresql: 9.4
-install:
-  - pip install -U pip setuptools
-  - python setup.py install
-  - pip install coveralls pytest-cov
-before_script:
-  - psql -c "create database travis_ci_test;" -U postgres
-script:
-  - pytest --cov=misago
-after_success:
-  - coveralls
 jobs:
   include:
+    - python:
+        - 3.6
+      addons:
+        postgresql: 9.4
+      install:
+        - pip install -U pip setuptools
+        - python setup.py install
+        - pip install coveralls pytest-cov
+      before_script:
+        - psql -c "create database travis_ci_test;" -U postgres
+      script:
+        - pytest --cov=misago
+      after_success:
+        - coveralls
     - name: "lint"
       python: 3.6
       script:
