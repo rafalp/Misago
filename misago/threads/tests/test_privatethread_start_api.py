@@ -168,8 +168,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(),
-            {"to": ["OtherUser can't participate in private threads."]},
+            response.json(), {"to": ["OtherUser can't participate in private threads."]}
         )
 
     def test_cant_invite_blocking(self):
