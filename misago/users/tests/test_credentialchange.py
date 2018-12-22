@@ -4,7 +4,7 @@ from django.test import TestCase
 from misago.users import credentialchange
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MockRequest(object):
@@ -15,7 +15,7 @@ class MockRequest(object):
 
 class CredentialChangeTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        self.user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
 
     def test_valid_token_generation(self):
         """credentialchange module allows for store and read of change token"""

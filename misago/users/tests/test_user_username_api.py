@@ -7,7 +7,7 @@ from misago.conf.test import override_dynamic_settings
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserUsernameTests(AuthenticatedUserTestCase):
@@ -100,7 +100,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
 
-        self.other_user = UserModel.objects.create_user(
+        self.other_user = User.objects.create_user(
             "OtherUser", "other@user.com", "pass123"
         )
 
@@ -159,7 +159,7 @@ class UserUsernameModerationTests(AuthenticatedUserTestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        other_user = UserModel.objects.get(pk=self.other_user.pk)
+        other_user = User.objects.get(pk=self.other_user.pk)
 
         self.assertEqual("BobBoberson", other_user.username)
         self.assertEqual("bobboberson", other_user.slug)

@@ -9,12 +9,12 @@ from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def get_mock_user():
-    seed = UserModel.objects.count() + 1
-    return UserModel.objects.create_user(
+    seed = User.objects.count() + 1
+    return User.objects.create_user(
         "bob%s" % seed, "user%s@test.com" % seed, "Pass.123"
     )
 

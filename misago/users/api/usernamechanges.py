@@ -14,7 +14,7 @@ from misago.users.serializers import UsernameChangeSerializer
 from .rest_permissions import BasePermission
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UsernameChangesViewSetPermission(BasePermission):
@@ -42,7 +42,7 @@ class UsernameChangesViewSet(viewsets.GenericViewSet):
 
         if self.request.query_params.get("user"):
             user_pk = get_int_or_404(self.request.query_params.get("user"))
-            queryset = get_object_or_404(UserModel.objects, pk=user_pk).namechanges
+            queryset = get_object_or_404(User.objects, pk=user_pk).namechanges
 
         if self.request.query_params.get("search"):
             search_phrase = self.request.query_params.get("search").strip()

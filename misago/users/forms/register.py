@@ -12,7 +12,7 @@ from misago.users.validators import (
 )
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class BaseRegisterForm(forms.Form):
@@ -89,7 +89,7 @@ class RegisterForm(BaseRegisterForm):
         if cleaned_data.get("password"):
             validate_password(
                 cleaned_data["password"],
-                user=UserModel(
+                user=User(
                     username=cleaned_data.get("username"),
                     email=cleaned_data.get("email"),
                 ),

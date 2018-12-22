@@ -15,18 +15,18 @@ from . import render
 
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def admin_index(request):
-    inactive_users_queryset = UserModel.objects.exclude(
-        requires_activation=UserModel.ACTIVATION_NONE
+    inactive_users_queryset = User.objects.exclude(
+        requires_activation=User.ACTIVATION_NONE
     )
 
     db_stats = {
         "threads": Thread.objects.count(),
         "posts": Post.objects.count(),
-        "users": UserModel.objects.count(),
+        "users": User.objects.count(),
         "inactive_users": inactive_users_queryset.count(),
     }
 

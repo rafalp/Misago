@@ -9,17 +9,17 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.core.mail import build_mail, mail_user, mail_users
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MailTests(TestCase):
     def test_building_mail_without_context_raises_value_error(self):
-        user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
         with self.assertRaises(ValueError):
             build_mail(user, "Misago Test Mail", "misago/emails/base")
 
     def test_building_mail_without_settings_in_context_raises_value_error(self):
-        user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
         with self.assertRaises(ValueError):
             build_mail(
                 user, "Misago Test Mail", "misago/emails/base", context={"settings": {}}
@@ -27,7 +27,7 @@ class MailTests(TestCase):
 
     def test_mail_user(self):
         """mail_user sets message in backend"""
-        user = UserModel.objects.create_user("Bob", "bob@bob.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@bob.com", "pass123")
 
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
@@ -55,11 +55,11 @@ class MailTests(TestCase):
         settings = DynamicSettings(cache_versions)
 
         test_users = [
-            UserModel.objects.create_user("Alpha", "alpha@test.com", "pass123"),
-            UserModel.objects.create_user("Beta", "beta@test.com", "pass123"),
-            UserModel.objects.create_user("Niner", "niner@test.com", "pass123"),
-            UserModel.objects.create_user("Foxtrot", "foxtrot@test.com", "pass123"),
-            UserModel.objects.create_user("Uniform", "uniform@test.com", "pass123"),
+            User.objects.create_user("Alpha", "alpha@test.com", "pass123"),
+            User.objects.create_user("Beta", "beta@test.com", "pass123"),
+            User.objects.create_user("Niner", "niner@test.com", "pass123"),
+            User.objects.create_user("Foxtrot", "foxtrot@test.com", "pass123"),
+            User.objects.create_user("Uniform", "uniform@test.com", "pass123"),
         ]
 
         mail_users(

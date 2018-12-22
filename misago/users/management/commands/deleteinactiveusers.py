@@ -8,7 +8,7 @@ from misago.conf import settings
 from misago.core.pgutils import chunk_queryset
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -27,9 +27,8 @@ class Command(BaseCommand):
             days=settings.MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS
         )
 
-        queryset = UserModel.objects.filter(
-            requires_activation__gt=UserModel.ACTIVATION_NONE,
-            joined_on__lt=joined_on_cutoff,
+        queryset = User.objects.filter(
+            requires_activation__gt=User.ACTIVATION_NONE, joined_on__lt=joined_on_cutoff
         )
 
         for user in chunk_queryset(queryset):

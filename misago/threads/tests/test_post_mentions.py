@@ -7,7 +7,7 @@ from misago.markup.mentions import MENTIONS_LIMIT
 from misago.threads import testutils
 from misago.users.testutils import AuthenticatedUserTestCase
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class PostMentionsTests(AuthenticatedUserTestCase):
@@ -63,7 +63,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
         for i in range(MENTIONS_LIMIT + 5):
             users.append(
-                UserModel.objects.create_user(
+                User.objects.create_user(
                     "Mention%s" % i, "mention%s@bob.com" % i, "pass123"
                 )
             )
@@ -82,10 +82,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mention_update(self):
         """edit post endpoint updates mentions"""
-        user_a = UserModel.objects.create_user("Mention", "mention@test.com", "pass123")
-        user_b = UserModel.objects.create_user(
-            "MentionB", "mentionb@test.com", "pass123"
-        )
+        user_a = User.objects.create_user("Mention", "mention@test.com", "pass123")
+        user_b = User.objects.create_user("MentionB", "mentionb@test.com", "pass123")
 
         response = self.client.post(
             self.post_link, data={"post": "This is test response, @%s!" % user_a}
@@ -130,10 +128,8 @@ class PostMentionsTests(AuthenticatedUserTestCase):
 
     def test_mentions_merge(self):
         """posts merge sums mentions"""
-        user_a = UserModel.objects.create_user("Mention", "mention@test.com", "pass123")
-        user_b = UserModel.objects.create_user(
-            "MentionB", "mentionb@test.com", "pass123"
-        )
+        user_a = User.objects.create_user("Mention", "mention@test.com", "pass123")
+        user_b = User.objects.create_user("MentionB", "mentionb@test.com", "pass123")
 
         response = self.client.post(
             self.post_link, data={"post": "This is test response, @%s!" % user_a}

@@ -13,7 +13,7 @@ from misago.users.avatars import dynamic, gallery
 from misago.users.models import Rank
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     fake.user_name(),
                 ]
 
-                user = UserModel.objects.create_user(
+                user = User.objects.create_user(
                     random.choice(possible_usernames),
                     fake.email(),
                     "pass123",

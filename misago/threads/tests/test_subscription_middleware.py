@@ -8,7 +8,7 @@ from misago.threads.test import patch_category_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class SubscriptionMiddlewareTestCase(AuthenticatedUserTestCase):
@@ -25,8 +25,8 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_start_threads": True})
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""
-        self.user.subscribe_to_started_threads = UserModel.SUBSCRIPTION_NONE
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_NOTIFY
+        self.user.subscribe_to_started_threads = User.SUBSCRIPTION_NONE
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_NOTIFY
         self.user.save()
 
         response = self.client.post(
@@ -45,7 +45,7 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_start_threads": True})
     def test_subscribe(self):
         """middleware subscribes thread"""
-        self.user.subscribe_to_started_threads = UserModel.SUBSCRIPTION_NOTIFY
+        self.user.subscribe_to_started_threads = User.SUBSCRIPTION_NOTIFY
         self.user.save()
 
         response = self.client.post(
@@ -68,7 +68,7 @@ class SubscribeStartedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_start_threads": True})
     def test_email_subscribe(self):
         """middleware subscribes thread with an email"""
-        self.user.subscribe_to_started_threads = UserModel.SUBSCRIPTION_ALL
+        self.user.subscribe_to_started_threads = User.SUBSCRIPTION_ALL
         self.user.save()
 
         response = self.client.post(
@@ -100,8 +100,8 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_dont_subscribe(self):
         """middleware makes no subscription to thread"""
-        self.user.subscribe_to_started_threads = UserModel.SUBSCRIPTION_NOTIFY
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_NONE
+        self.user.subscribe_to_started_threads = User.SUBSCRIPTION_NOTIFY
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_NONE
         self.user.save()
 
         response = self.client.post(
@@ -115,7 +115,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_subscribe(self):
         """middleware subscribes thread"""
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_NOTIFY
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_NOTIFY
         self.user.save()
 
         response = self.client.post(
@@ -132,7 +132,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_email_subscribe(self):
         """middleware subscribes thread with an email"""
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_ALL
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_ALL
         self.user.save()
 
         response = self.client.post(
@@ -149,7 +149,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_subscribe_with_events(self):
         """middleware omits events when testing for replied thread"""
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_ALL
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_ALL
         self.user.save()
 
         # set event in thread
@@ -171,7 +171,7 @@ class SubscribeRepliedThreadTests(SubscriptionMiddlewareTestCase):
     @patch_user_acl({"can_omit_flood_protection": True})
     def test_dont_subscribe_replied(self):
         """middleware omits threads user already replied"""
-        self.user.subscribe_to_replied_threads = UserModel.SUBSCRIPTION_ALL
+        self.user.subscribe_to_replied_threads = User.SUBSCRIPTION_ALL
         self.user.save()
 
         response = self.client.post(

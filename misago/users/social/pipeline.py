@@ -30,7 +30,7 @@ from misago.users.validators import (
 from .utils import get_social_auth_backend_name, perpare_username
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwargs):
@@ -68,8 +68,8 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
         return None
 
     try:
-        user = UserModel.objects.get_by_email(email)
-    except UserModel.DoesNotExist:
+        user = User.objects.get_by_email(email)
+    except User.DoesNotExist:
         return None
 
     backend_name = get_social_auth_backend_name(backend.name)
@@ -158,9 +158,9 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
 
     activation_kwargs = {}
     if settings.account_activation == "admin":
-        activation_kwargs = {"requires_activation": UserModel.ACTIVATION_ADMIN}
+        activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
 
-    new_user = UserModel.objects.create_user(
+    new_user = User.objects.create_user(
         username, email, joined_from_ip=request.user_ip, **activation_kwargs
     )
 
@@ -197,12 +197,12 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
         activation_kwargs = {}
         if settings.account_activation == "admin":
-            activation_kwargs = {"requires_activation": UserModel.ACTIVATION_ADMIN}
+            activation_kwargs = {"requires_activation": User.ACTIVATION_ADMIN}
         elif settings.account_activation == "user" and not email_verified:
-            activation_kwargs = {"requires_activation": UserModel.ACTIVATION_USER}
+            activation_kwargs = {"requires_activation": User.ACTIVATION_USER}
 
         try:
-            new_user = UserModel.objects.create_user(
+            new_user = User.objects.create_user(
                 form.cleaned_data["username"],
                 form.cleaned_data["email"],
                 joined_from_ip=request.user_ip,

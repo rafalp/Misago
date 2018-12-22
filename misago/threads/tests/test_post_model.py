@@ -9,12 +9,12 @@ from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class PostModelTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@bob.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@bob.com", "Pass.123")
 
         datetime = timezone.now()
 
@@ -57,7 +57,7 @@ class PostModelTests(TestCase):
         with self.assertRaises(ValueError):
             self.post.merge(self.post)
 
-        other_user = UserModel.objects.create_user("Jeff", "Je@ff.com", "Pass.123")
+        other_user = User.objects.create_user("Jeff", "Je@ff.com", "Pass.123")
 
         other_thread = Thread.objects.create(
             category=self.category,

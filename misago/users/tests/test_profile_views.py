@@ -8,7 +8,7 @@ from misago.users.models import Ban
 from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
@@ -105,7 +105,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         followers = []
         for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(UserModel.objects.create_user(*user_data))
+            followers.append(User.objects.create_user(*user_data))
             self.user.followed_by.add(followers[-1])
 
         response = self.client.get(
@@ -127,7 +127,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         followers = []
         for i in range(10):
             user_data = ("Follower%s" % i, "foll%s@test.com" % i, "Pass.123")
-            followers.append(UserModel.objects.create_user(*user_data))
+            followers.append(User.objects.create_user(*user_data))
             followers[-1].followed_by.add(self.user)
 
         response = self.client.get(

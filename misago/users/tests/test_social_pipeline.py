@@ -27,7 +27,7 @@ from misago.users.social.pipeline import (
 from misago.users.testutils import UserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 def create_request(user_ip="0.0.0.0", data=None):
@@ -78,20 +78,16 @@ class PipelineTestCase(UserTestCase):
             self.assertEqual(new_user.username, form_data["username"])
 
         if activation == "none":
-            self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_NONE)
+            self.assertEqual(new_user.requires_activation, User.ACTIVATION_NONE)
 
         if activation == "user":
             if email_verified:
-                self.assertEqual(
-                    new_user.requires_activation, UserModel.ACTIVATION_NONE
-                )
+                self.assertEqual(new_user.requires_activation, User.ACTIVATION_NONE)
             else:
-                self.assertEqual(
-                    new_user.requires_activation, UserModel.ACTIVATION_USER
-                )
+                self.assertEqual(new_user.requires_activation, User.ACTIVATION_USER)
 
         if activation == "admin":
-            self.assertEqual(new_user.requires_activation, UserModel.ACTIVATION_ADMIN)
+            self.assertEqual(new_user.requires_activation, User.ACTIVATION_ADMIN)
 
         self.assertEqual(new_user.audittrail_set.count(), 1)
 
@@ -136,7 +132,7 @@ class AssociateByEmailTests(PipelineTestCase):
 
     def test_raise_if_user_needs_admin_activation(self):
         """pipeline raises if user needs admin activation"""
-        self.user.requires_activation = UserModel.ACTIVATION_ADMIN
+        self.user.requires_activation = User.ACTIVATION_ADMIN
         self.user.save()
 
         try:
@@ -158,7 +154,7 @@ class AssociateByEmailTests(PipelineTestCase):
 
     def test_return_user_email_inactive(self):
         """pipeline returns user even if they didn't activate their account manually"""
-        self.user.requires_activation = UserModel.ACTIVATION_USER
+        self.user.requires_activation = User.ACTIVATION_USER
         self.user.save()
 
         result = associate_by_email(None, {"email": self.user.email}, GithubOAuth2)
@@ -204,7 +200,7 @@ class CreateUser(PipelineTestCase):
             GithubOAuth2(),
             clean_username="NewUser",
         )
-        new_user = UserModel.objects.get(email="new@example.com")
+        new_user = User.objects.get(email="new@example.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
         self.assertEqual(new_user.username, "NewUser")
         self.assertNewUserIsCorrect(new_user, email_verified=True, activation="none")
@@ -218,7 +214,7 @@ class CreateUser(PipelineTestCase):
             GithubOAuth2(),
             clean_username="NewUser",
         )
-        new_user = UserModel.objects.get(email="new@example.com")
+        new_user = User.objects.get(email="new@example.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
         self.assertEqual(new_user.username, "NewUser")
         self.assertNewUserIsCorrect(new_user, email_verified=True, activation="user")
@@ -232,7 +228,7 @@ class CreateUser(PipelineTestCase):
             GithubOAuth2(),
             clean_username="NewUser",
         )
-        new_user = UserModel.objects.get(email="new@example.com")
+        new_user = User.objects.get(email="new@example.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
         self.assertEqual(new_user.username, "NewUser")
         self.assertNewUserIsCorrect(new_user, email_verified=True, activation="admin")
@@ -329,7 +325,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -352,7 +348,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -375,7 +371,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -398,7 +394,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -421,7 +417,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -444,7 +440,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertNewUserIsCorrect(
@@ -516,7 +512,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertEqual(new_user.agreements, [agreement.id])
@@ -545,7 +541,7 @@ class CreateUserWithFormTests(PipelineTestCase):
             pipeline_index=1,
         )
 
-        new_user = UserModel.objects.get(email="social@auth.com")
+        new_user = User.objects.get(email="social@auth.com")
         self.assertEqual(result, {"user": new_user, "is_new": True})
 
         self.assertEqual(new_user.agreements, [])
@@ -626,7 +622,7 @@ class RequireActivationTests(PipelineTestCase):
     def setUp(self):
         super().setUp()
 
-        self.user.requires_activation = UserModel.ACTIVATION_ADMIN
+        self.user.requires_activation = User.ACTIVATION_ADMIN
         self.user.save()
 
     def test_skip_if_user_not_set(self):
@@ -653,7 +649,7 @@ class RequireActivationTests(PipelineTestCase):
 
     def test_skip_if_user_is_active(self):
         """pipeline step is skipped if user is active"""
-        self.user.requires_activation = UserModel.ACTIVATION_NONE
+        self.user.requires_activation = User.ACTIVATION_NONE
         self.user.save()
 
         self.assertFalse(self.user.requires_activation)

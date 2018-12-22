@@ -9,7 +9,7 @@ from misago.threads import testutils
 from misago.threads.models import Poll, Post, Thread, ThreadParticipant
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ThreadModelTests(TestCase):
@@ -46,7 +46,7 @@ class ThreadModelTests(TestCase):
 
     def test_synchronize(self):
         """synchronize method updates thread data to reflect its contents"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         self.assertEqual(self.thread.replies, 0)
 
@@ -226,7 +226,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_first_post(self):
         """set_first_post sets first post and poster data on thread"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         datetime = timezone.now() + timedelta(5)
 
@@ -251,7 +251,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_last_post(self):
         """set_last_post sets first post and poster data on thread"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         datetime = timezone.now() + timedelta(5)
 
@@ -276,7 +276,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_best_answer(self):
         """set_best_answer sets best answer and setter data on thread"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         best_answer = Post.objects.create(
             category=self.category,
@@ -318,7 +318,7 @@ class ThreadModelTests(TestCase):
 
     def test_set_invalid_best_answer(self):
         """set_best_answer implements some assertions for data integrity"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
 
         other_thread = testutils.post_thread(self.category)
         with self.assertRaises(ValueError):
@@ -398,10 +398,8 @@ class ThreadModelTests(TestCase):
         private thread gets deleted automatically
         when there are no participants left in it
         """
-        user_a = UserModel.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
-        user_b = UserModel.objects.create_user(
-            "Weebl", "weebl@weeblson.com", "Pass.123"
-        )
+        user_a = User.objects.create_user("Bob", "bob@boberson.com", "Pass.123")
+        user_b = User.objects.create_user("Weebl", "weebl@weeblson.com", "Pass.123")
 
         ThreadParticipant.objects.add_participants(self.thread, [user_a, user_b])
         self.assertEqual(self.thread.participants.count(), 2)

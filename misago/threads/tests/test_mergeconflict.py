@@ -9,13 +9,13 @@ from misago.threads import testutils
 from misago.threads.mergeconflict import MergeConflict
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MergeConflictTests(TestCase):
     def setUp(self):
         self.category = Category.objects.get(slug="first-category")
-        self.user = UserModel.objects.create_user("bob", "bob@test.com", "Pass.123")
+        self.user = User.objects.create_user("bob", "bob@test.com", "Pass.123")
 
     def create_plain_thread(self):
         return testutils.post_thread(self.category)

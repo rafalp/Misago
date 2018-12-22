@@ -5,7 +5,7 @@ from misago.acl.test import patch_user_acl
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserEditDetailsApiTests(AuthenticatedUserTestCase):
@@ -17,7 +17,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
         )
 
     def get_profile_fields(self):
-        return UserModel.objects.get(pk=self.user.pk).profile_fields
+        return User.objects.get(pk=self.user.pk).profile_fields
 
     def test_api_has_no_showstoppers(self):
         """api outputs response for freshly created user"""
@@ -31,9 +31,7 @@ class UserEditDetailsApiTests(AuthenticatedUserTestCase):
 
     def test_other_user(self):
         """api handles scenario when its other user looking at profile"""
-        test_user = UserModel.objects.create_user(
-            "BobBoberson", "bob@test.com", "bob123456"
-        )
+        test_user = User.objects.create_user("BobBoberson", "bob@test.com", "bob123456")
 
         api_link = reverse("misago:api:user-edit-details", kwargs={"pk": test_user.pk})
 

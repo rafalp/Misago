@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from misago.core.pgutils import chunk_queryset
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class Command(BaseCommand):
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         keys = {}
 
-        for user in chunk_queryset(UserModel.objects.all()):
+        for user in chunk_queryset(User.objects.all()):
             for key in user.profile_fields.keys():
                 keys.setdefault(key, 0)
                 keys[key] += 1

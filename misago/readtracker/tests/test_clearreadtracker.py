@@ -13,17 +13,13 @@ from misago.readtracker.models import PostRead
 from misago.threads import testutils
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ClearReadTrackerTests(TestCase):
     def setUp(self):
-        self.user_a = UserModel.objects.create_user(
-            "UserA", "testa@user.com", "Pass.123"
-        )
-        self.user_b = UserModel.objects.create_user(
-            "UserB", "testb@user.com", "Pass.123"
-        )
+        self.user_a = User.objects.create_user("UserA", "testa@user.com", "Pass.123")
+        self.user_b = User.objects.create_user("UserB", "testb@user.com", "Pass.123")
 
         self.category = Category.objects.get(slug="first-category")
 

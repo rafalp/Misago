@@ -30,7 +30,7 @@ from misago.users.tokens import (
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 
-UserModel = auth.get_user_model()
+User = auth.get_user_model()
 
 
 def gateway(request):
@@ -180,8 +180,8 @@ def change_forgotten_password(request, pk, token):
 
     try:
         try:
-            user = UserModel.objects.get(pk=pk, is_active=True)
-        except UserModel.DoesNotExist:
+            user = User.objects.get(pk=pk, is_active=True)
+        except User.DoesNotExist:
             raise PasswordChangeFailed(invalid_message)
 
         if request.user.is_authenticated and request.user.id != user.id:

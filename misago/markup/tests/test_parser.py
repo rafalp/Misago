@@ -4,7 +4,7 @@ from django.test import TestCase
 from misago.markup.parser import parse
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MockRequest(object):
@@ -167,7 +167,7 @@ Lorem ipsum.
 
     def test_complex_paragraph(self):
         """parser minifies complex paragraph"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass123")
 
         test_text = (
             """

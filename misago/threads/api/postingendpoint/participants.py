@@ -12,7 +12,7 @@ from misago.threads.permissions import allow_message_user
 from . import PostingEndpoint, PostingMiddleware
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class ParticipantsMiddleware(PostingMiddleware):
@@ -76,7 +76,7 @@ class ParticipantsSerializer(serializers.Serializer):
 
     def get_users(self, usernames):
         users = []
-        for user in UserModel.objects.filter(slug__in=usernames):
+        for user in User.objects.filter(slug__in=usernames):
             try:
                 user_acl = useracl.get_user_acl(
                     user, self.context["request"].cache_versions

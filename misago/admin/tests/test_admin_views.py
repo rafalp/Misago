@@ -6,7 +6,7 @@ from misago.admin.testutils import AdminTestCase
 from misago.admin.views import get_protected_namespace
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class MockRequest(object):
@@ -56,7 +56,7 @@ class AdminLoginViewTests(TestCase):
 
     def test_login_denies_non_staff_non_superuser(self):
         """login rejects user thats non staff and non superuser"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         user.is_staff = False
         user.is_superuser = False
@@ -71,7 +71,7 @@ class AdminLoginViewTests(TestCase):
 
     def test_login_denies_non_staff_superuser(self):
         """login rejects user thats non staff and superuser"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         user.is_staff = False
         user.is_superuser = True
@@ -86,7 +86,7 @@ class AdminLoginViewTests(TestCase):
 
     def test_login_signs_in_staff_non_superuser(self):
         """login passess user thats staff and non superuser"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         user.is_staff = True
         user.is_superuser = False
@@ -101,7 +101,7 @@ class AdminLoginViewTests(TestCase):
 
     def test_login_signs_in_staff_superuser(self):
         """login passess user thats staff and superuser"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         user.is_staff = True
         user.is_superuser = True

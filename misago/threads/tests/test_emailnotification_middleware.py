@@ -13,7 +13,7 @@ from misago.threads.test import patch_category_acl, patch_other_user_category_ac
 from misago.users.testutils import AuthenticatedUserTestCase
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class EmailNotificationTests(AuthenticatedUserTestCase):
@@ -29,9 +29,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
-        self.other_user = UserModel.objects.create_user(
-            "BobBobertson", "bob@boberson.com"
-        )
+        self.other_user = User.objects.create_user("BobBobertson", "bob@boberson.com")
 
     @patch_category_acl({"can_reply_threads": True})
     def test_no_subscriptions(self):

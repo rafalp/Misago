@@ -8,7 +8,7 @@ from misago.core.serializers import MutableFields
 from . import RankSerializer
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 __all__ = ["StatusSerializer", "UserSerializer", "UserCardSerializer"]
 
@@ -41,7 +41,7 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     url = serializers.SerializerMethodField()
 
     class Meta:
-        model = UserModel
+        model = User
         fields = [
             "id",
             "username",

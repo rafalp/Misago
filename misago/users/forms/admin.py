@@ -14,7 +14,7 @@ from misago.users.profilefields import profilefields
 from misago.users.utils import hash_email
 from misago.users.validators import validate_email, validate_username
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class UserBaseForm(forms.ModelForm):
@@ -23,7 +23,7 @@ class UserBaseForm(forms.ModelForm):
     email = forms.EmailField(label=_("E-mail address"))
 
     class Meta:
-        model = UserModel
+        model = User
         fields = ["username", "email", "title"]
 
     def __init__(self, *args, **kwargs):
@@ -67,7 +67,7 @@ class NewUserForm(UserBaseForm):
     )
 
     class Meta:
-        model = UserModel
+        model = User
         fields = ["username", "email", "title"]
 
 
@@ -167,18 +167,18 @@ class EditUserForm(UserBaseForm):
     limits_private_thread_invites_to = forms.TypedChoiceField(
         label=_("Who can add user to private threads"),
         coerce=int,
-        choices=UserModel.LIMIT_INVITES_TO_CHOICES,
+        choices=User.LIMIT_INVITES_TO_CHOICES,
     )
 
     subscribe_to_started_threads = forms.TypedChoiceField(
-        label=_("Started threads"), coerce=int, choices=UserModel.SUBSCRIPTION_CHOICES
+        label=_("Started threads"), coerce=int, choices=User.SUBSCRIPTION_CHOICES
     )
     subscribe_to_replied_threads = forms.TypedChoiceField(
-        label=_("Replid threads"), coerce=int, choices=UserModel.SUBSCRIPTION_CHOICES
+        label=_("Replid threads"), coerce=int, choices=User.SUBSCRIPTION_CHOICES
     )
 
     class Meta:
-        model = UserModel
+        model = User
         fields = [
             "username",
             "email",
@@ -659,7 +659,7 @@ class RequestDataDownloadsForm(forms.Form):
             username_match = Q(slug__in=data["user_identifiers"])
             email_match = Q(email_hash__in=map(hash_email, data["user_identifiers"]))
 
-            data["users"] = list(UserModel.objects.filter(username_match | email_match))
+            data["users"] = list(User.objects.filter(username_match | email_match))
 
             if len(data["users"]) != len(data["user_identifiers"]):
                 raise forms.ValidationError(

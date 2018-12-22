@@ -11,7 +11,7 @@ from .serializers import UserCardSerializer
 HEAD_RESULTS = 8
 TAIL_RESULTS = 8
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class SearchUsers(SearchProvider):
@@ -38,7 +38,7 @@ class SearchUsers(SearchProvider):
 
 
 def search_users(**filters):
-    queryset = UserModel.objects.order_by("slug").select_related(
+    queryset = User.objects.order_by("slug").select_related(
         "rank", "ban_cache", "online_tracker"
     )
 

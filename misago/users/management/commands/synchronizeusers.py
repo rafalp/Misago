@@ -8,14 +8,14 @@ from misago.core.management.progressbar import show_progress
 from misago.core.pgutils import chunk_queryset
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class Command(BaseCommand):
     help = "Synchronizes users"
 
     def handle(self, *args, **options):
-        users_to_sync = UserModel.objects.count()
+        users_to_sync = User.objects.count()
 
         if not users_to_sync:
             self.stdout.write("\n\nNo users were found")
@@ -31,7 +31,7 @@ class Command(BaseCommand):
         show_progress(self, synchronized_count, users_to_sync)
         start_time = time.time()
 
-        for user in chunk_queryset(UserModel.objects.all()):
+        for user in chunk_queryset(User.objects.all()):
             user.threads = user.thread_set.filter(
                 category__in=categories, is_hidden=False, is_unapproved=False
             ).count()

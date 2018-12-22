@@ -6,7 +6,7 @@ from misago.users.models import Ban
 from misago.users.tokens import make_password_change_token
 
 
-UserModel = get_user_model()
+User = get_user_model()
 
 
 class GatewayTests(TestCase):
@@ -29,7 +29,7 @@ class GatewayTests(TestCase):
 
     def test_login(self):
         """api signs user in"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         response = self.client.post(
             "/api/auth/", data={"username": "Bob", "password": "Pass.123"}
@@ -46,7 +46,7 @@ class GatewayTests(TestCase):
 
     def test_login_whitespaces_password(self):
         """api signs user in with password left untouched"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", " Pass.123 ")
+        user = User.objects.create_user("Bob", "bob@test.com", " Pass.123 ")
 
         response = self.client.post(
             "/api/auth/", data={"username": "Bob", "password": "Pass.123"}
@@ -92,7 +92,7 @@ class GatewayTests(TestCase):
 
     def test_login_not_usable_password(self):
         """login api fails to sign user with not-usable password in"""
-        UserModel.objects.create_user("Bob", "bob@test.com")
+        User.objects.create_user("Bob", "bob@test.com")
 
         response = self.client.post(
             "/api/auth/", data={"username": "Bob", "password": "Pass.123"}
@@ -105,7 +105,7 @@ class GatewayTests(TestCase):
 
     def test_login_banned(self):
         """login api fails to sign banned user in"""
-        UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         ban = Ban.objects.create(
             check_type=Ban.USERNAME,
@@ -133,7 +133,7 @@ class GatewayTests(TestCase):
 
     def test_login_banned_staff(self):
         """login api signs banned staff member in"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         user.is_staff = True
         user.save()
@@ -158,7 +158,7 @@ class GatewayTests(TestCase):
 
     def test_login_ban_registration_only(self):
         """login api ignores registration-only bans"""
-        user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         Ban.objects.create(
             check_type=Ban.USERNAME, banned_value="bob", registration_only=True
@@ -178,7 +178,7 @@ class GatewayTests(TestCase):
 
     def test_login_inactive_admin(self):
         """login api fails to sign admin-activated user in"""
-        UserModel.objects.create_user(
+        User.objects.create_user(
             "Bob", "bob@test.com", "Pass.123", requires_activation=1
         )
 
@@ -198,7 +198,7 @@ class GatewayTests(TestCase):
 
     def test_login_inactive_user(self):
         """login api fails to sign user-activated user in"""
-        UserModel.objects.create_user(
+        User.objects.create_user(
             "Bob", "bob@test.com", "Pass.123", requires_activation=2
         )
 
@@ -218,7 +218,7 @@ class GatewayTests(TestCase):
 
     def test_login_disabled_user(self):
         """its impossible to sign in to disabled account"""
-        user = UserModel.objects.create_user(
+        user = User.objects.create_user(
             "Bob", "bob@test.com", "Pass.123", is_active=False
         )
 
@@ -250,7 +250,7 @@ class UserCredentialsTests(TestCase):
 
 class SendActivationApiTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
         self.user.requires_activation = 1
         self.user.save()
 
@@ -368,7 +368,7 @@ class SendActivationApiTests(TestCase):
 
 class SendPasswordFormApiTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         self.link = "/api/auth/send-password-form/"
 
@@ -479,7 +479,7 @@ class SendPasswordFormApiTests(TestCase):
 
 class ChangePasswordApiTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@test.com", "Pass.123")
+        self.user = User.objects.create_user("Bob", "bob@test.com", "Pass.123")
 
         self.link = "/api/auth/change-password/%s/%s/"
 
@@ -491,7 +491,7 @@ class ChangePasswordApiTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        user = UserModel.objects.get(id=self.user.pk)
+        user = User.objects.get(id=self.user.pk)
         self.assertTrue(user.check_password("n3wp4ss!"))
 
     def test_submit_with_whitespaces(self):
@@ -502,7 +502,7 @@ class ChangePasswordApiTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-        user = UserModel.objects.get(id=self.user.pk)
+        user = User.objects.get(id=self.user.pk)
         self.assertTrue(user.check_password(" n3wp4ss! "))
 
     def test_submit_invalid_data(self):

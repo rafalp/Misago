@@ -17,7 +17,7 @@ from misago.users.bans import (
 from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
 
-UserModel = get_user_model()
+User = get_user_model()
 
 cache_versions = get_cache_versions()
 
@@ -126,7 +126,7 @@ class GetBanTests(TestCase):
 
 class UserBansTests(TestCase):
     def setUp(self):
-        self.user = UserModel.objects.create_user("Bob", "bob@boberson.com", "pass123")
+        self.user = User.objects.create_user("Bob", "bob@boberson.com", "pass123")
 
     def test_no_ban(self):
         """user is not caught by ban"""
@@ -243,7 +243,7 @@ class RequestIPBansTests(TestCase):
 class BanUserTests(TestCase):
     def test_ban_user(self):
         """ban_user utility bans user"""
-        user = UserModel.objects.create_user("Bob", "bob@boberson.com", "pass123")
+        user = User.objects.create_user("Bob", "bob@boberson.com", "pass123")
 
         ban = ban_user(user, "User reason", "Staff reason")
         self.assertEqual(ban.user_message, "User reason")
