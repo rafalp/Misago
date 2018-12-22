@@ -39,25 +39,25 @@ class="form-horizontal"
 {% block form-body %}
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
-  <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <fieldset>
+      <legend>{% trans "Basic settings" %}</legend>
 
-    {% form_row form.type label_class field_class %}
-    {% form_row form.title label_class field_class %}
-    {% form_row form.is_active "col-md-offset-3" field_class %}
+      {% form_row form.type label_class field_class %}
+      {% form_row form.title label_class field_class %}
+      {% form_row form.is_active "col-md-offset-3" field_class %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Agreement contents" %}</legend>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Agreement contents" %}</legend>
 
-    <div class="form-group">
-      <p>{% trans "Fill in one of the fields." %}</p>
-    </div>
+      <div class="form-group">
+        <p>{% trans "Fill in one of the fields." %}</p>
+      </div>
 
-    {% form_row form.link label_class field_class %}
-    {% form_row form.text label_class field_class %}
+      {% form_row form.link label_class field_class %}
+      {% form_row form.text label_class field_class %}
 
-  </fieldset>
+    </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

@@ -112,12 +112,14 @@
             <td>{{ db_stats.users }}</td>
           </tr>
           {% if db_stats.inactive_users %}
-          <tr>
-            <td>{% trans "Inactive users" %}</td>
-            <td>
-              <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">{{ db_stats.inactive_users }}</a>
-            </td>
-          </tr>
+            <tr>
+              <td>{% trans "Inactive users" %}</td>
+              <td>
+                <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">
+                  {{ db_stats.inactive_users }}
+                </a>
+              </td>
+            </tr>
           {% endif %}
         </tbody>
       </table>

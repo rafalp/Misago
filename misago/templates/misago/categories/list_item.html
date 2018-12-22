@@ -26,28 +26,28 @@
   {% if category.subcategories and not first %}
     <div class="row subcategories-list">
       {% for subcategory in category.subcategories %}
-      <div class="col-xs-12 col-sm-4 col-md-3">
-        <a class="btn btn-default btn-block btn-sm btn-subcategory {{ subcategory.is_read|iffalse:'btn-subcategory-new' }}" href="{{ subcategory.get_absolute_url }}">
-          <span class="material-icon">
-            {% if category.is_closed %}
-              {% if category.is_read %}
-                lock_outline
+        <div class="col-xs-12 col-sm-4 col-md-3">
+          <a class="btn btn-default btn-block btn-sm btn-subcategory {{ subcategory.is_read|iffalse:'btn-subcategory-new' }}" href="{{ subcategory.get_absolute_url }}">
+            <span class="material-icon">
+              {% if category.is_closed %}
+                {% if category.is_read %}
+                  lock_outline
+                {% else %}
+                  lock
+                {% endif %}
               {% else %}
-                lock
+                {% if category.is_read %}
+                  chat_bubble_outline
+                {% else %}
+                  chat_bubble
+                {% endif %}
               {% endif %}
-            {% else %}
-              {% if category.is_read %}
-                chat_bubble_outline
-              {% else %}
-                chat_bubble
-              {% endif %}
-            {% endif %}
-          </span>
-          <span class="icon-text">
-            {{ subcategory }}
-          </span>
-        </a>
-      </div>
+            </span>
+            <span class="icon-text">
+              {{ subcategory }}
+            </span>
+          </a>
+        </div>
       {% endfor %}
     </div>
   {% endif %}

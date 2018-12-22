@@ -84,30 +84,30 @@
             <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul class="pager">
                 {% if paginator.previous > 1 %}
-                <li class="previous">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" rel="prev" title="{% trans 'Go to previous page' %}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_back
-                    </span>
-                  </a>
-                </li>
+                  <li class="previous">
+                    <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.previous %}" rel="prev" title="{% trans 'Go to previous page' %}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_back
+                      </span>
+                    </a>
+                  </li>
                 {% elif paginator.first %}
-                <li class="previous">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug %}" rel="prev" title="{% trans 'Go to previous page' %}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_back
-                    </span>
-                  </a>
-                </li>
+                  <li class="previous">
+                    <a href="{% url 'misago:users-rank' slug=rank.slug %}" rel="prev" title="{% trans 'Go to previous page' %}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_back
+                      </span>
+                    </a>
+                  </li>
                 {% endif %}
                 {% if paginator.next %}
-                <li class="next">
-                  <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" rel="next" title="{% trans 'Go to next page' %}">
-                    <span aria-hidden="true" class="material-icon">
-                      arrow_forward
-                    </span>
-                  </a>
-                </li>
+                  <li class="next">
+                    <a href="{% url 'misago:users-rank' slug=rank.slug page=paginator.next %}" rel="next" title="{% trans 'Go to next page' %}">
+                      <span aria-hidden="true" class="material-icon">
+                        arrow_forward
+                      </span>
+                    </a>
+                  </li>
                 {% endif %}
               </ul>
             </nav>

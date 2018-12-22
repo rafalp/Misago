@@ -12,21 +12,21 @@
 
       {% if TERMS_OF_SERVICE_URL or PRIVACY_POLICY_URL or settings.forum_footnote %}
         <ul class="list-inline footer-nav">
-        {% if settings.forum_footnote %}
-          <li class="site-footnote">
-            {{ settings.forum_footnote }}
-          </li>
-        {% endif %}
-        {% if TERMS_OF_SERVICE_URL %}
-          <li>
-            <a href="{{ TERMS_OF_SERVICE_URL }}">{% trans "Terms of service" %}</a>
-          </li>
-        {% endif %}
-        {% if PRIVACY_POLICY_URL %}
-          <li>
-            <a href="{{ PRIVACY_POLICY_URL }}">{% trans "Privacy policy" %}</a>
-          </li>
-        {% endif %}
+          {% if settings.forum_footnote %}
+            <li class="site-footnote">
+              {{ settings.forum_footnote }}
+            </li>
+          {% endif %}
+          {% if TERMS_OF_SERVICE_URL %}
+            <li>
+              <a href="{{ TERMS_OF_SERVICE_URL }}">{% trans "Terms of service" %}</a>
+            </li>
+          {% endif %}
+          {% if PRIVACY_POLICY_URL %}
+            <li>
+              <a href="{{ PRIVACY_POLICY_URL }}">{% trans "Privacy policy" %}</a>
+            </li>
+          {% endif %}
         </ul>
       {% endif %}
 

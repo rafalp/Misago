@@ -4,18 +4,18 @@
 
 {% block title %}
 {% if target.pk %}
-{{ target }}
+  {{ target }}
 {% else %}
-{% trans "New warning level" %}
+  {% trans "New warning level" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block page-target %}
 {% if target.pk %}
-{{ target }}
+  {{ target }}
 {% else %}
-{% trans "New warning level" %}
+  {% trans "New warning level" %}
 {% endif %}
 {% endblock page-target %}
 
@@ -23,9 +23,9 @@
 {% block form-header %}
 <h1>
   {% if target.pk %}
-  {{ target }}
+    {{ target }}
   {% else %}
-  {% trans "New warning level" %}
+    {% trans "New warning level" %}
   {% endif %}
 </h1>
 {% endblock %}
@@ -39,20 +39,20 @@ class="form-horizontal"
 {% block form-body %}
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
-  <fieldset>
-    <legend>{% trans "Basic options" %}</legend>
+    <fieldset>
+      <legend>{% trans "Basic options" %}</legend>
 
-    {% form_row form.name label_class field_class %}
-    {% form_row form.length_in_minutes label_class field_class %}
+      {% form_row form.name label_class field_class %}
+      {% form_row form.length_in_minutes label_class field_class %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Restrictions" %}</legend>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Restrictions" %}</legend>
 
-    {% form_row form.restricts_posting_replies label_class field_class %}
-    {% form_row form.restricts_posting_threads label_class field_class %}
+      {% form_row form.restricts_posting_replies label_class field_class %}
+      {% form_row form.restricts_posting_threads label_class field_class %}
 
-  </fieldset>
+    </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

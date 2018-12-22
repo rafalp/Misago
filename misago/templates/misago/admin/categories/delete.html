@@ -1,17 +1,17 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load misago_admin_form i18n %}
+{% load i18n misago_admin_form %}
 
 
 {% block title %}
-{% blocktrans with category=target.name %}
-Delete category: {{ category }}
+{% blocktrans trimmed with category=target.name %}
+  Delete category: {{ category }}
 {% endblocktrans %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
 
 {% block page-target %}
-{% blocktrans with category=target.name %}
-Delete category: {{ category }}
+{% blocktrans trimmed with category=target.name %}
+  Delete category: {{ category }}
 {% endblocktrans %}
 {% endblock page-target %}
 

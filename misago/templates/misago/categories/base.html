@@ -19,7 +19,7 @@
   {% if not THREADS_ON_INDEX and settings.forum_index_meta_description %}
     {{ settings.forum_index_meta_description }}
   {% else %}
-  {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
+    {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
     {% plural %}
       There are {{ categories }} main categories currenty available on the {{ forum_name }}.

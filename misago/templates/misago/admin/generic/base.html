@@ -6,12 +6,12 @@
   <div class="container">
     <h1>
       {% block page-header %}
-      <div class="main">
-        <a href="{{ active_link.link }}">
-          <span class="{{ active_link.icon }}"></span>
-          {{ active_link.name }}
-        </a>
-      </div>
+        <div class="main">
+          <a href="{{ active_link.link }}">
+            <span class="{{ active_link.icon }}"></span>
+            {{ active_link.name }}
+          </a>
+        </div>
       {% endblock page-header %}
     </h1>
     {% block page-actions %}{% endblock %}

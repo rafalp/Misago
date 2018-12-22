@@ -39,23 +39,23 @@ class="form-horizontal"
 {% block form-body %}
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
-  <fieldset>
-    <legend>{% trans "Basic options" %}</legend>
+    <fieldset>
+      <legend>{% trans "Basic options" %}</legend>
 
-    {% form_row form.name label_class field_class %}
-    {% form_row form.extensions label_class field_class %}
-    {% form_row form.mimetypes label_class field_class %}
-    {% form_row form.size_limit label_class field_class %}
+      {% form_row form.name label_class field_class %}
+      {% form_row form.extensions label_class field_class %}
+      {% form_row form.mimetypes label_class field_class %}
+      {% form_row form.size_limit label_class field_class %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Availability" %}</legend>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Availability" %}</legend>
 
-    {% form_row form.status label_class field_class %}
-    {% form_row form.limit_uploads_to label_class field_class %}
-    {% form_row form.limit_downloads_to label_class field_class %}
+      {% form_row form.status label_class field_class %}
+      {% form_row form.limit_uploads_to label_class field_class %}
+      {% form_row form.limit_downloads_to label_class field_class %}
 
-  </fieldset>
+    </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

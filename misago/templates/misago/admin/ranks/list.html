@@ -17,7 +17,7 @@
 <th>{% trans "Title" %}</th>
 <th style="width: 120px;">{% trans "Special" %}</th>
 {% for action in extra_actions %}
-<th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
@@ -36,23 +36,23 @@
   {% if item.title %}
     {{ item.title }}
   {% else %}
-  <i class="text-muted">{% trans "No title set" %}</i>
+    <i class="text-muted">{% trans "No title set" %}</i>
   {% endif %}
 </td>
 <td class="lead text-muted">
   {% if item.is_tab %}
-  <div class="fa fa-list tooltip-top" title="{% trans "Has page on users list." %}"></div>
+    <div class="fa fa-list tooltip-top" title="{% trans "Has page on users list." %}"></div>
   {% endif %}
   {% if item.is_default %}
-  <div class="fa fa-star tooltip-top" title="{% trans "This is default rank assigned to new members." %}"></div>
+    <div class="fa fa-star tooltip-top" title="{% trans "This is default rank assigned to new members." %}"></div>
   {% endif %}
 </td>
 {% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
+  <td class="row-action">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+      <span class="{{ action.icon }}"></span>
+    </a>
+  </td>
 {% endfor %}
 <td class="row-action">
   <a href="{% url 'misago:admin:users:ranks:users' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Users with rank" %}">
@@ -61,38 +61,38 @@
 </td>
 <td class="row-action">
   {% if not item.is_default %}
-  <form action="{% url 'misago:admin:users:ranks:default' pk=item.pk %}" method="post">
-    <button class="btn btn-warning tooltip-top" title="{% trans "Make default" %}">
-      {% csrf_token %}
-      <span class="fa fa-star"></span>
-    </button>
-  </form>
+    <form action="{% url 'misago:admin:users:ranks:default' pk=item.pk %}" method="post">
+      <button class="btn btn-warning tooltip-top" title="{% trans "Make default" %}">
+        {% csrf_token %}
+        <span class="fa fa-star"></span>
+      </button>
+    </form>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td class="row-action">
   {% if not forloop.last %}
-  <form action="{% url 'misago:admin:users:ranks:down' pk=item.pk %}" method="post">
-    <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
-      {% csrf_token %}
-      <span class="fa fa-chevron-down"></span>
-    </button>
-  </form>
+    <form action="{% url 'misago:admin:users:ranks:down' pk=item.pk %}" method="post">
+      <button class="btn btn-default tooltip-top" title="{% trans "Move down" %}">
+        {% csrf_token %}
+        <span class="fa fa-chevron-down"></span>
+      </button>
+    </form>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td class="row-action">
   {% if not forloop.first %}
-  <form action="{% url 'misago:admin:users:ranks:up' pk=item.pk %}" method="post">
-    <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
-      {% csrf_token %}
-      <span class="fa fa-chevron-up"></span>
-    </button>
-  </form>
+    <form action="{% url 'misago:admin:users:ranks:up' pk=item.pk %}" method="post">
+      <button class="btn btn-default tooltip-top" title="{% trans "Move up" %}">
+        {% csrf_token %}
+        <span class="fa fa-chevron-up"></span>
+      </button>
+    </form>
   {% else %}
-  &nbsp;
+    &nbsp;
   {% endif %}
 </td>
 <td class="row-action">

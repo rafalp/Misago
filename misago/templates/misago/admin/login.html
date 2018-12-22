@@ -9,13 +9,13 @@
 <div class="login-form">
 
   {% if target == "misago" %}
-  <div class="form-admin-logo">
-    <img src="{% static 'misago/admin/img/misago.png' %}" alt="Misago">
-  </div>
+    <div class="form-admin-logo">
+      <img src="{% static 'misago/admin/img/misago.png' %}" alt="Misago">
+    </div>
   {% elif target == "django" %}
-  <div class="form-admin-logo">
-    <img src="{% static 'misago/admin/img/django.png' %}" alt="Django">
-  </div>
+    <div class="form-admin-logo">
+      <img src="{% static 'misago/admin/img/django.png' %}" alt="Django">
+    </div>
   {% endif  %}
 
   <div class="form-panel">
@@ -29,27 +29,27 @@
       <div class="form-body no-fieldsets">
 
         {% for error in form.non_field_errors %}
-        <div class="misago-alerts">
-          <p class="alert alert-danger lead">
-            {{ error }}
-            <br>{% trans "Please try again." %}
-          </p>
-        </div>
+          <div class="misago-alerts">
+            <p class="alert alert-danger lead">
+              {{ error }}
+              <br>{% trans "Please try again." %}
+            </p>
+          </div>
         {% endfor %}
         {% for message in messages %}
-        <div class="misago-alerts">
-          {% if 'success' in message.tags %}
-          <p class="alert alert-success lead">
-          {% elif 'warning' in message.tags %}
-          <p class="alert alert-warning lead">
-          {% elif 'error' in message.tags %}
-          <p class="alert alert-danger lead">
-          {% else %}
-          <p class="alert alert-info lead">
-          {% endif %}
-            {{ message }}
-          </p>
-        </div>
+          <div class="misago-alerts">
+            {% if 'success' in message.tags %}
+              <p class="alert alert-success lead">
+            {% elif 'warning' in message.tags %}
+              <p class="alert alert-warning lead">
+            {% elif 'error' in message.tags %}
+              <p class="alert alert-danger lead">
+            {% else %}
+              <p class="alert alert-info lead">
+            {% endif %}
+              {{ message }}
+            </p>
+          </div>
         {% endfor %}
 
         <div class="form-group">

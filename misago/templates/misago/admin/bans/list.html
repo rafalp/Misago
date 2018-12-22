@@ -17,7 +17,7 @@
 <th style="width: 30%;">{% trans "Type" %}</th>
 <th>{% trans "Expires on" %}</th>
 {% for action in extra_actions %}
-<th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
@@ -45,11 +45,11 @@
   {% endif %}
 </td>
 {% for action in extra_actions %}
-<td class="row-action">
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
+  <td class="row-action">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+      <span class="{{ action.icon }}"></span>
+    </a>
+  </td>
 {% endfor %}
 <td class="row-action">
   <a href="{% url 'misago:admin:users:bans:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
@@ -70,9 +70,9 @@
 {% block emptylist %}
 <td colspan="{{ 6|add:extra_actions_len }}">
   {% if active_filters %}
-  <p>{% trans "No bans matching search criteria have been found" %}</p>
+    <p>{% trans "No bans matching search criteria have been found" %}</p>
   {% else %}
-  <p>{% trans "No bans are currently set." %}</p>
+    <p>{% trans "No bans are currently set." %}</p>
   {% endif %}
 </td>
 {% endblock emptylist %}
@@ -83,7 +83,7 @@
 <script type="text/javascript">
   $(function() {
     $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to remove this ban?" %}");
+      var decision = confirm("{% trans 'Are you sure you want to remove this ban?' %}");
       return decision;
     });
   });

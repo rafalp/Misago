@@ -32,17 +32,17 @@
 
 {% block meta-extra %}
 {% if paginator.page > 1 %}
-<link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.page %}" />
+  <link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.page %}" />
 {% else %}
-<link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
+  <link rel="canonical" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
 {% endif %}
 {% if paginator.previous > 1 %}
-<link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}" />
+  <link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.previous %}" />
 {% elif paginator.first %}
-<link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
+  <link rel="prev" href="{% url url_name slug=thread.slug pk=thread.pk %}" />
 {% endif %}
 {% if paginator.next %}
-<link rel="next" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}" />
+  <link rel="next" href="{% url url_name slug=thread.slug pk=thread.pk page=paginator.next %}" />
 {% endif %}
 {% endblock meta-extra %}
 

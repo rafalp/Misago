@@ -1,5 +1,5 @@
 {% extends "misago/admin/generic/form.html" %}
-{% load i18n misago_avatars misago_capture misago_admin_form %}
+{% load i18n misago_admin_form misago_avatars misago_capture %}
 
 
 {% block title %}
@@ -25,48 +25,48 @@ class="form-horizontal"
 {% block form-body %}
 <input type="hidden" name="action" value="ban">
 {% for user in users %}
-<input type="hidden" name="selected_items" value="{{ user.pk }}">
+  <input type="hidden" name="selected_items" value="{{ user.pk }}">
 {% endfor %}
 <table class="table table-condensed form-table">
   {% for user in users %}
-  <tr>
-    <td style="width: 1%;">
-      <a href="{{ user.get_absolute_url }}">
-        <img src="{{ user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
-      </a>
-    </td>
-    <td class="item-name">
-      <a href="{{ user.get_absolute_url }}">{{ user }}</a>
-    </td>
-    <td>
-      {{ user.email }}
-    </td>
-    <td>
-      {% if user.joined_from_ip %}
-        {{ user.joined_from_ip }}
-      {% else %}
-        <i>{% trans "IP not available" %}</i>
-      {% endif %}
-    </td>
-  </tr>
+    <tr>
+      <td style="width: 1%;">
+        <a href="{{ user.get_absolute_url }}">
+          <img src="{{ user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+        </a>
+      </td>
+      <td class="item-name">
+        <a href="{{ user.get_absolute_url }}">{{ user }}</a>
+      </td>
+      <td>
+        {{ user.email }}
+      </td>
+      <td>
+        {% if user.joined_from_ip %}
+          {{ user.joined_from_ip }}
+        {% else %}
+          <i>{% trans "IP not available" %}</i>
+        {% endif %}
+      </td>
+    </tr>
   {% endfor %}
 </table>
 <div class="form-body">
   {% with label_class="col-md-3" field_class="col-md-9" %}
-  <fieldset>
-    <legend>{% trans "Ban settings" %}</legend>
+    <fieldset>
+      <legend>{% trans "Ban settings" %}</legend>
 
-    {% form_row form.ban_type label_class field_class %}
-    {% form_row form.expires_on label_class field_class %}
+      {% form_row form.ban_type label_class field_class %}
+      {% form_row form.expires_on label_class field_class %}
 
-  </fieldset>
-  <fieldset>
-    <legend>{% trans "Messages" %}</legend>
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Messages" %}</legend>
 
-    {% form_row form.user_message label_class field_class %}
-    {% form_row form.staff_message label_class field_class %}
+      {% form_row form.user_message label_class field_class %}
+      {% form_row form.staff_message label_class field_class %}
 
-  </fieldset>
+    </fieldset>
   {% endwith %}
 </div>
 {% endblock form-body %}

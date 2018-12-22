@@ -18,23 +18,19 @@
 
       {% if ban.user_message %}
         <div class="panel-body ban-message ban-user-message">
-
           <h4>{% trans "User-shown ban message" %}</h4>
           <div class="lead">
             {{ ban.user_message|force_escape|urlize|linebreaks }}
           </div>
-
         </div>
       {% endif %}
 
       {% if ban.staff_message %}
         <div class="panel-body ban-message ban-staff-message">
-
           <h4>{% trans "Team-shown ban message" %}</h4>
           <div class="lead">
             {{ ban.staff_message|force_escape|urlize|linebreaks }}
           </div>
-
         </div>
       {% endif %}
 
