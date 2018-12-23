@@ -12,7 +12,6 @@ from misago.threads.threadtypes import trees_map
 
 from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 
-
 CACHE_NAME = "misago_categories_tree"
 
 

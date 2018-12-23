@@ -1,1 +1,0 @@
-BANS_CACHE = "bans"
