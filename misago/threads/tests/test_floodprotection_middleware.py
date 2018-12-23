@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from misago.threads.api.postingendpoint import PostingInterrupt
 from misago.threads.api.postingendpoint.floodprotection import FloodProtectionMiddleware
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 user_acl = {"can_omit_flood_protection": False}
 

@@ -4,10 +4,10 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.subscriptions import make_subscription_aware
 from misago.users.models import AnonymousUser
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class SubscriptionsTests(TestCase):
@@ -19,7 +19,7 @@ class SubscriptionsTests(TestCase):
         self.user = create_test_user("User", "user@example.com")
 
     def post_thread(self, datetime):
-        return testutils.post_thread(category=self.category, started_on=datetime)
+        return test.post_thread(category=self.category, started_on=datetime)
 
     def test_anon_subscription(self):
         """make single thread sub aware for anon"""

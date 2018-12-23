@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ValidatePostTests(AuthenticatedUserTestCase):

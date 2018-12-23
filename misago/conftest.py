@@ -6,7 +6,7 @@ from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.staticsettings import StaticSettings
 from misago.users.constants import BANS_CACHE
 from misago.users.models import AnonymousUser
-from misago.users.testutils import create_test_superuser, create_test_user
+from misago.users.test import create_test_superuser, create_test_user
 
 
 def get_cache_versions():
@@ -30,7 +30,7 @@ def settings():
 
 @pytest.fixture
 def user_password():
-    return "password"
+    return "p4ssw0rd!"
 
 
 @pytest.fixture

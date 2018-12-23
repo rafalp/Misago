@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from misago.users.models import Ban
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 from misago.users.validators import (
     validate_email,
     validate_email_available,

@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from misago.users.bans import ban_ip, ban_user
 from misago.users.models import Ban
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class UserMiddlewareTest(AuthenticatedUserTestCase):

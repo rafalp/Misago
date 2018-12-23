@@ -5,10 +5,10 @@ from django.urls import reverse
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ThreadPostBulkPatchApiTestCase(AuthenticatedUserTestCase):
@@ -16,11 +16,11 @@ class ThreadPostBulkPatchApiTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
         self.posts = [
-            testutils.reply_thread(self.thread, poster=self.user),
-            testutils.reply_thread(self.thread),
-            testutils.reply_thread(self.thread, poster=self.user),
+            test.reply_thread(self.thread, poster=self.user),
+            test.reply_thread(self.thread),
+            test.reply_thread(self.thread, poster=self.user),
         ]
 
         self.ids = [p.id for p in self.posts]
@@ -115,8 +115,8 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
     def test_posts_not_found(self):
         """api fails to find posts"""
         posts = [
-            testutils.reply_thread(self.thread, is_hidden=True),
-            testutils.reply_thread(self.thread, is_unapproved=True),
+            test.reply_thread(self.thread, is_hidden=True),
+            test.reply_thread(self.thread, is_unapproved=True),
         ]
 
         response = self.patch(

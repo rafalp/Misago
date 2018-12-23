@@ -3,10 +3,10 @@ import os
 from django.core.files import File
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.users.datadownloads import request_user_data_download
 from misago.users.models import DataDownload
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")

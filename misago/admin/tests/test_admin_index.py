@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.admin.views.index import check_misago_address
 
 

@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Poll, PollVote, Thread
 from misago.threads.test import patch_category_acl, patch_other_category_acl
 
@@ -64,7 +64,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_exists(self):
         """api validates if other thread exists"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
         other_other_thread = other_thread.get_absolute_url()
         other_thread.delete()
 
@@ -84,7 +84,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_is_invisible(self):
         """api validates if other thread is visible"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -104,7 +104,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_isnt_mergeable(self):
         """api validates if other thread can be merged"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -118,7 +118,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_thread_category_is_closed(self):
         """api validates if thread's category is open"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.category.is_closed = True
         self.category.save()
@@ -136,7 +136,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_thread_is_closed(self):
         """api validates if thread is open"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.thread.is_closed = True
         self.thread.save()
@@ -154,7 +154,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_category_is_closed(self):
         """api validates if other thread's category is open"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.other_category.is_closed = True
         self.other_category.save()
@@ -172,7 +172,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_is_closed(self):
         """api validates if other thread is open"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         other_thread.is_closed = True
         other_thread.save()
@@ -190,7 +190,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_other_thread_isnt_replyable(self):
         """api validates if other thread can be replied, which is condition for merge"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -205,7 +205,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads(self):
         """api merges two threads successfully"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -231,7 +231,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_kept_reads(self):
         """api keeps both threads readtrackers after merge"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         poststracker.save_read(self.user, self.thread.first_post)
         poststracker.save_read(self.user, other_thread.first_post)
@@ -263,7 +263,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_kept_subs(self):
         """api keeps other thread's subscription after merge"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.user.subscription_set.create(
             thread=self.thread,
@@ -298,7 +298,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_moved_subs(self):
         """api keeps other thread's subscription after merge"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.user.subscription_set.create(
             thread=other_thread,
@@ -340,7 +340,7 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
             send_email=False,
         )
 
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.user.subscription_set.create(
             thread=other_thread,
@@ -377,8 +377,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_kept_best_answer(self):
         """api merges two threads successfully, keeping best answer from old thread"""
-        other_thread = testutils.post_thread(self.other_category)
-        best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, best_answer)
         other_thread.save()
 
@@ -410,9 +410,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_moved_best_answer(self):
         """api merges two threads successfully, moving best answer to old thread"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
@@ -444,12 +444,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_merge_conflict_best_answer(self):
         """api errors on merge conflict, returning list of available best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        other_thread = testutils.post_thread(self.other_category)
-        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        other_best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, other_best_answer)
         other_thread.save()
 
@@ -482,12 +482,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_best_answer_invalid_resolution(self):
         """api errors on invalid merge conflict resolution"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        other_thread = testutils.post_thread(self.other_category)
-        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        other_best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, other_best_answer)
         other_thread.save()
 
@@ -515,12 +515,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_unmark_all_best_answers(self):
         """api unmarks all best answers when unmark all choice is selected"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        other_thread = testutils.post_thread(self.other_category)
-        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        other_best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, other_best_answer)
         other_thread.save()
 
@@ -552,12 +552,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_keep_first_best_answer(self):
         """api unmarks other best answer on merge"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        other_thread = testutils.post_thread(self.other_category)
-        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        other_best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, other_best_answer)
         other_thread.save()
 
@@ -594,12 +594,12 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_keep_other_best_answer(self):
         """api unmarks first best answer on merge"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        other_thread = testutils.post_thread(self.other_category)
-        other_best_answer = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(self.other_category)
+        other_best_answer = test.reply_thread(other_thread)
         other_thread.set_best_answer(self.user, other_best_answer)
         other_thread.save()
 
@@ -636,8 +636,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_kept_poll(self):
         """api merges two threads successfully, keeping poll from other thread"""
-        other_thread = testutils.post_thread(self.other_category)
-        poll = testutils.post_poll(other_thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        poll = test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -671,8 +671,8 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_threads_moved_poll(self):
         """api merges two threads successfully, moving poll from old thread"""
-        other_thread = testutils.post_thread(self.other_category)
-        poll = testutils.post_poll(self.thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        poll = test.post_poll(self.thread, self.user)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -706,9 +706,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_polls(self):
         """api errors on merge conflict, returning list of available polls"""
-        other_thread = testutils.post_thread(self.other_category)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        poll = test.post_poll(self.thread, self.user)
+        other_poll = test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url()}
@@ -736,10 +736,10 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_poll_invalid_resolution(self):
         """api errors on invalid merge conflict resolution"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
-        testutils.post_poll(self.thread, self.user)
-        testutils.post_poll(other_thread, self.user)
+        test.post_poll(self.thread, self.user)
+        test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link,
@@ -759,9 +759,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_delete_all_polls(self):
         """api deletes all polls when delete all choice is selected"""
-        other_thread = testutils.post_thread(self.other_category)
-        testutils.post_poll(self.thread, self.user)
-        testutils.post_poll(other_thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        test.post_poll(self.thread, self.user)
+        test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link, {"other_thread": other_thread.get_absolute_url(), "poll": 0}
@@ -791,9 +791,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_keep_first_poll(self):
         """api deletes other poll on merge"""
-        other_thread = testutils.post_thread(self.other_category)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        poll = test.post_poll(self.thread, self.user)
+        other_poll = test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link,
@@ -831,9 +831,9 @@ class ThreadMergeApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_merge_threads": True})
     def test_threads_merge_conflict_keep_other_poll(self):
         """api deletes first poll on merge"""
-        other_thread = testutils.post_thread(self.other_category)
-        poll = testutils.post_poll(self.thread, self.user)
-        other_poll = testutils.post_poll(other_thread, self.user)
+        other_thread = test.post_thread(self.other_category)
+        poll = test.post_poll(self.thread, self.user)
+        other_poll = test.post_poll(other_thread, self.user)
 
         response = self.client.post(
             self.api_link,

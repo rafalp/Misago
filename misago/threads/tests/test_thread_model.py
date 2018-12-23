@@ -4,9 +4,9 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Poll, Post, Thread, ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class ThreadModelTests(TestCase):
@@ -317,7 +317,7 @@ class ThreadModelTests(TestCase):
         """set_best_answer implements some assertions for data integrity"""
         user = create_test_user("User", "user@example.com")
 
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
         with self.assertRaises(ValueError):
             self.thread.set_best_answer(user, other_thread.first_post)
 
@@ -325,11 +325,11 @@ class ThreadModelTests(TestCase):
             self.thread.set_best_answer(user, self.thread.first_post)
 
         with self.assertRaises(ValueError):
-            reply = testutils.reply_thread(self.thread, is_hidden=True)
+            reply = test.reply_thread(self.thread, is_hidden=True)
             self.thread.set_best_answer(user, reply)
 
         with self.assertRaises(ValueError):
-            reply = testutils.reply_thread(self.thread, is_unapproved=True)
+            reply = test.reply_thread(self.thread, is_unapproved=True)
             self.thread.set_best_answer(user, reply)
 
     def test_move(self):
@@ -395,15 +395,15 @@ class ThreadModelTests(TestCase):
         private thread gets deleted automatically
         when there are no participants left in it
         """
-        user_1 = create_test_user("User1", "user1@example.com")
-        user_2 = create_test_user("User2", "user2@example.com")
+        user = create_test_user("User", "user@example.com")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
-        ThreadParticipant.objects.add_participants(self.thread, [user_1, user_2])
+        ThreadParticipant.objects.add_participants(self.thread, [user, other_user])
         self.assertEqual(self.thread.participants.count(), 2)
 
-        user_1.delete()
+        user.delete()
         Thread.objects.get(id=self.thread.id)
 
-        user_2.delete()
+        other_user.delete()
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(id=self.thread.id)

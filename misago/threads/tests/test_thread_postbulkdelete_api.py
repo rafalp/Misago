@@ -4,7 +4,7 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.test import patch_category_acl
 
@@ -16,9 +16,9 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         super().setUp()
 
         self.posts = [
-            testutils.reply_thread(self.thread, poster=self.user),
-            testutils.reply_thread(self.thread),
-            testutils.reply_thread(self.thread, poster=self.user),
+            test.reply_thread(self.thread, poster=self.user),
+            test.reply_thread(self.thread),
+            test.reply_thread(self.thread, poster=self.user),
         ]
 
         self.api_link = reverse(
@@ -123,8 +123,8 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
     @patch_category_acl({"can_hide_posts": 2})
     def test_validate_posts_same_thread(self):
         """api validates that ids are same thread posts"""
-        other_thread = testutils.post_thread(category=self.category)
-        self.posts.append(testutils.reply_thread(other_thread, poster=self.user))
+        other_thread = test.post_thread(category=self.category)
+        self.posts.append(test.reply_thread(other_thread, poster=self.user))
 
         response = self.delete(self.api_link, [p.id for p in self.posts])
         self.assertEqual(response.status_code, 403)

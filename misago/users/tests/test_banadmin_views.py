@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.users.models import Ban
 
 

@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import patch_category_acl
 from misago.threads.serializers import PostLikeSerializer
 
@@ -11,7 +11,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-likes",
@@ -23,7 +23,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         """api errors if user has no permission to see likes"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(
+        self.assertEqual(
             response.json(), {"detail": "You can't see who liked this post."}
         )
 
@@ -32,7 +32,7 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
         """api errors if user has no permission to see likes, but can see likes count"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
-        self.assertEquals(
+        self.assertEqual(
             response.json(), {"detail": "You can't see who liked this post."}
         )
 
@@ -46,8 +46,8 @@ class ThreadPostLikesApiTestCase(ThreadsApiTestCase):
     @patch_category_acl({"can_see_posts_likes": 2})
     def test_likes(self):
         """api returns list of likes"""
-        like = testutils.like_post(self.post, self.user)
-        other_like = testutils.like_post(self.post, self.user)
+        like = test.like_post(self.post, self.user)
+        other_like = test.like_post(self.post, self.user)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)

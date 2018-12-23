@@ -3,7 +3,7 @@ import json
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 from misago.threads.test import patch_category_acl, patch_other_category_acl
 
@@ -17,9 +17,9 @@ class ThreadsBulkPatchApiTestCase(ThreadsApiTestCase):
         self.threads = list(
             reversed(
                 [
-                    testutils.post_thread(category=self.category),
-                    testutils.post_thread(category=self.category),
-                    testutils.post_thread(category=self.category),
+                    test.post_thread(category=self.category),
+                    test.post_thread(category=self.category),
+                    test.post_thread(category=self.category),
                 ]
             )
         )
@@ -114,8 +114,8 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
     def test_threads_not_found(self):
         """api fails to find threads"""
         threads = [
-            testutils.post_thread(category=self.category, is_hidden=True),
-            testutils.post_thread(category=self.category, is_unapproved=True),
+            test.post_thread(category=self.category, is_hidden=True),
+            test.post_thread(category=self.category, is_unapproved=True),
         ]
 
         response = self.patch(

@@ -1,10 +1,10 @@
 from django.urls import reverse
 
 from misago.acl import ACL_CACHE
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.cache.test import assert_invalidates_cache
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 
 
@@ -472,7 +472,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
     def test_delete_category_move_contents(self):
         """category was deleted and its contents were moved"""
         for _ in range(10):
-            testutils.post_thread(self.category_b)
+            test.post_thread(self.category_b)
         self.assertEqual(Thread.objects.count(), 10)
 
         response = self.client.get(
@@ -514,7 +514,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
     def test_delete_category_and_contents(self):
         """category and its contents were deleted"""
         for _ in range(10):
-            testutils.post_thread(self.category_b)
+            test.post_thread(self.category_b)
 
         response = self.client.get(
             reverse(
@@ -549,7 +549,7 @@ class CategoryAdminDeleteViewTests(CategoryAdminTestCase):
     def test_delete_leaf_category_and_contents(self):
         """leaf category was deleted with contents"""
         for _ in range(10):
-            testutils.post_thread(self.category_d)
+            test.post_thread(self.category_d)
         self.assertEqual(Thread.objects.count(), 10)
 
         response = self.client.get(

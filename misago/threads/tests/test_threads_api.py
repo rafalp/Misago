@@ -5,11 +5,11 @@ from django.urls import reverse
 
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 from misago.threads.test import patch_category_acl
 from misago.threads.threadtypes import trees_map
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ThreadsApiTestCase(AuthenticatedUserTestCase):
@@ -21,7 +21,7 @@ class ThreadsApiTestCase(AuthenticatedUserTestCase):
         self.root = Category.objects.get(tree_id=threads_tree_id, level=0)
         self.category = Category.objects.get(slug="first-category")
 
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
         self.api_link = self.thread.get_api_url()
 
     def get_thread_json(self):
@@ -85,7 +85,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
 
     def test_api_validates_posts_visibility(self):
         """api validates posts visiblity"""
-        hidden_post = testutils.reply_thread(
+        hidden_post = test.reply_thread(
             self.thread, is_hidden=True, message="I'am hidden test message!"
         )
 
@@ -103,7 +103,7 @@ class ThreadRetrieveApiTests(ThreadsApiTestCase):
             )  # hidden post's body is visible with permission
 
         # unapproved posts shouldn't show at all
-        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_post = test.reply_thread(self.thread, is_unapproved=True)
 
         with patch_category_acl({"can_approve_content": False}):
             response = self.client.get(self.tested_links[1])
@@ -144,7 +144,7 @@ class ThreadDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.last_thread = testutils.post_thread(category=self.category)
+        self.last_thread = test.post_thread(category=self.category)
         self.api_link = self.last_thread.get_api_url()
 
     def test_delete_thread_no_permission(self):

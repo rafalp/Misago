@@ -15,7 +15,7 @@ from misago.users.bans import (
 )
 from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 cache_versions = get_cache_versions()
 
@@ -44,12 +44,12 @@ class GetBanTests(TestCase):
         self.assertEqual(get_username_ban("admiral").pk, valid_ban.pk)
 
         registration_ban = Ban.objects.create(
-            banned_value="bob*",
+            banned_value="mod*",
             expires_on=timezone.now() + timedelta(days=7),
             registration_only=True,
         )
-        self.assertIsNone(get_username_ban("boberson"))
-        self.assertEqual(get_username_ban("boberson", True).pk, registration_ban.pk)
+        self.assertIsNone(get_username_ban("moderator"))
+        self.assertEqual(get_username_ban("moderator", True).pk, registration_ban.pk)
 
     def test_get_email_ban(self):
         """get_email_ban returns valid ban"""

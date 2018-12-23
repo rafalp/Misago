@@ -2,10 +2,10 @@ from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ReplyThreadTests(AuthenticatedUserTestCase):
@@ -13,7 +13,7 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
 
         self.api_link = reverse(
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}

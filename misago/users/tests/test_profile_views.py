@@ -2,9 +2,9 @@ from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.users.models import Ban
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
@@ -53,14 +53,14 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have posted no messages")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, thread.get_absolute_url())
 
-        post = testutils.reply_thread(thread, poster=self.user)
-        other_post = testutils.reply_thread(thread, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
+        other_post = test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
@@ -75,14 +75,14 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have no started threads.")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, thread.get_absolute_url())
 
-        post = testutils.reply_thread(thread, poster=self.user)
-        other_post = testutils.reply_thread(thread, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
+        other_post = test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
@@ -164,7 +164,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
-        test_user = create_test_user("Bob", "bob@bob.com", "pass.123")
+        test_user = create_test_user("User", "user@example.com")
         link_kwargs = {"slug": test_user.slug, "pk": test_user.pk}
 
         with patch_user_acl({"can_see_ban_details": 0}):

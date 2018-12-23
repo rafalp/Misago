@@ -7,9 +7,9 @@ from django.utils import timezone
 from django.utils.encoding import smart_str
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import patch_category_acl, patch_other_user_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class EmailNotificationTests(AuthenticatedUserTestCase):
@@ -17,7 +17,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(
+        self.thread = test.post_thread(
             category=self.category, started_on=timezone.now() - timedelta(seconds=5)
         )
 
@@ -119,7 +119,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True,
         )
 
-        testutils.reply_thread(self.thread, posted_on=timezone.now())
+        test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.post(
             self.api_link, data={"post": "This is test response!"}

@@ -7,7 +7,7 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.models import ThreadParticipant
 from misago.threads.test import other_user_cant_use_private_threads
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
 

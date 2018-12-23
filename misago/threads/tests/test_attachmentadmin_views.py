@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Attachment, AttachmentType
 
 
@@ -11,7 +11,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.post = testutils.post_thread(category=self.category).first_post
+        self.post = test.post_thread(category=self.category).first_post
 
         self.filetype = AttachmentType.objects.order_by("id").first()
 

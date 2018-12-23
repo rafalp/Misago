@@ -3,10 +3,10 @@ import json
 from django.core import mail
 
 from misago.acl.test import patch_user_acl
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import other_user_cant_use_private_threads
 from misago.threads.models import Thread, ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 from .test_privatethreads import PrivateThreadsTestCase
 
@@ -15,7 +15,7 @@ class PrivateThreadPatchApiTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
         self.other_user = create_test_user("OtherUser", "otheruser@example.com")

@@ -9,10 +9,10 @@ from django.utils.encoding import smart_str
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.threads.models import Post, Thread
-from misago.threads.testutils import post_thread
+from misago.threads.test import post_thread
 from misago.users.activepostersranking import build_active_posters_ranking
 from misago.users.models import Ban, Rank
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
 

@@ -1,4 +1,4 @@
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class CommonMiddlewareRedirectTests(AuthenticatedUserTestCase):

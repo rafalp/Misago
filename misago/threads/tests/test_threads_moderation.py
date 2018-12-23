@@ -1,7 +1,7 @@
 from misago.categories.models import Category
-from misago.threads import moderation, testutils
+from misago.threads import moderation, test
 from misago.threads.models import Thread
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class MockRequest(object):
@@ -16,7 +16,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
         self.request = MockRequest(self.user)
         self.category = Category.objects.all_categories()[:1][0]
-        self.thread = testutils.post_thread(self.category)
+        self.thread = test.post_thread(self.category)
 
     def tearDown(self):
         super().tearDown()
@@ -120,7 +120,7 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
 
     def test_approve_thread(self):
         """approve_thread approves unapproved thread"""
-        self.thread = testutils.post_thread(self.category, is_unapproved=True)
+        self.thread = test.post_thread(self.category, is_unapproved=True)
 
         self.assertTrue(self.thread.is_unapproved)
         self.assertTrue(self.thread.first_post.is_unapproved)

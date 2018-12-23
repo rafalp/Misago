@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import patch_category_acl, patch_other_category_acl
 from misago.threads.models import Thread
 
@@ -983,7 +983,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer(self):
         """api makes it possible to mark best answer"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1020,7 +1020,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         """api validates that user is authenticated before marking best answer"""
         self.logout_user()
 
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1037,7 +1037,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 0})
     def test_mark_best_answer_no_permission(self):
         """api validates permission to mark best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1060,7 +1060,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 1})
     def test_mark_best_answer_not_thread_starter(self):
         """api validates permission to mark best answers in owned thread"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1094,7 +1094,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_close_threads": False})
     def test_mark_best_answer_category_closed_no_permission(self):
         """api validates permission to mark best answers in closed category"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.category.is_closed = True
         self.category.save()
@@ -1121,7 +1121,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_close_threads": True})
     def test_mark_best_answer_category_closed(self):
         """api validates permission to mark best answers in closed category"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.category.is_closed = True
         self.category.save()
@@ -1135,7 +1135,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_close_threads": False})
     def test_mark_best_answer_thread_closed_no_permission(self):
         """api validates permission to mark best answers in closed thread"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.is_closed = True
         self.thread.save()
@@ -1162,7 +1162,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_close_threads": True})
     def test_mark_best_answer_thread_closed(self):
         """api validates permission to mark best answers in closed thread"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.is_closed = True
         self.thread.save()
@@ -1213,7 +1213,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer_post_invisible(self):
         """api validates post visibility to action author"""
-        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_post = test.reply_thread(self.thread, is_unapproved=True)
 
         response = self.patch(
             self.api_link,
@@ -1230,7 +1230,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer_post_other_thread(self):
         """api validates post belongs to same thread"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.patch(
             self.api_link,
@@ -1253,7 +1253,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer_event_id(self):
         """api validates that post is not an event"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
         best_answer.is_event = True
         best_answer.save()
 
@@ -1301,7 +1301,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer_hidden_post(self):
         """api validates that post is not hidden"""
-        best_answer = testutils.reply_thread(self.thread, is_hidden=True)
+        best_answer = test.reply_thread(self.thread, is_hidden=True)
 
         response = self.patch(
             self.api_link,
@@ -1322,7 +1322,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2})
     def test_mark_best_answer_unapproved_post(self):
         """api validates that post is not unapproved"""
-        best_answer = testutils.reply_thread(
+        best_answer = test.reply_thread(
             self.thread, poster=self.user, is_unapproved=True
         )
 
@@ -1345,7 +1345,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_protect_posts": False})
     def test_mark_best_answer_protected_post_no_permission(self):
         """api respects post protection"""
-        best_answer = testutils.reply_thread(self.thread, is_protected=True)
+        best_answer = test.reply_thread(self.thread, is_protected=True)
 
         response = self.patch(
             self.api_link,
@@ -1369,7 +1369,7 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_protect_posts": True})
     def test_mark_best_answer_protected_post(self):
         """api respects post protection"""
-        best_answer = testutils.reply_thread(self.thread, is_protected=True)
+        best_answer = test.reply_thread(self.thread, is_protected=True)
 
         response = self.patch(
             self.api_link,
@@ -1382,14 +1382,14 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.best_answer = testutils.reply_thread(self.thread)
+        self.best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, self.best_answer)
         self.thread.save()
 
     @patch_category_acl({"can_mark_best_answers": 2, "can_change_marked_answers": 2})
     def test_change_best_answer(self):
         """api makes it possible to change best answer"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1443,7 +1443,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 0, "can_change_marked_answers": 2})
     def test_change_best_answer_no_permission_to_mark(self):
         """api validates permission to mark best answers before allowing answer change"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1466,7 +1466,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_change_marked_answers": 0})
     def test_change_best_answer_no_permission(self):
         """api validates permission to change best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1490,7 +1490,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_change_marked_answers": 1})
     def test_change_best_answer_not_starter(self):
         """api validates permission to change best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,
@@ -1530,7 +1530,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     )
     def test_change_best_answer_timelimit_out_of_time(self):
         """api validates permission for starter to change best answers within timelimit"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
         self.thread.starter = self.user
@@ -1564,7 +1564,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     )
     def test_change_best_answer_timelimit(self):
         """api validates permission for starter to change best answers within timelimit"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=1)
         self.thread.starter = self.user
@@ -1585,7 +1585,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     )
     def test_change_best_answer_protected_no_permission(self):
         """api validates permission to change protected best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_is_protected = True
         self.thread.save()
@@ -1618,7 +1618,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     )
     def test_change_best_answer_protected(self):
         """api validates permission to change protected best answers"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_is_protected = True
         self.thread.save()
@@ -1632,7 +1632,7 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 2, "can_change_marked_answers": 2})
     def test_change_best_answer_post_validation(self):
         """api validates new post'"""
-        best_answer = testutils.reply_thread(self.thread, is_hidden=True)
+        best_answer = test.reply_thread(self.thread, is_hidden=True)
 
         response = self.patch(
             self.api_link,
@@ -1648,7 +1648,7 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.best_answer = testutils.reply_thread(self.thread)
+        self.best_answer = test.reply_thread(self.thread)
         self.thread.set_best_answer(self.user, self.best_answer)
         self.thread.save()
 
@@ -1716,7 +1716,7 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
     @patch_category_acl({"can_mark_best_answers": 0, "can_change_marked_answers": 2})
     def test_unmark_best_answer_wrong_post(self):
         """api validates if post given to unmark is best answer"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
             self.api_link,

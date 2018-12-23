@@ -4,9 +4,9 @@ from django.urls import reverse
 from misago.cache.versions import get_cache_versions
 from misago.categories.models import Category
 from misago.conf.dynamicsettings import DynamicSettings
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
 from misago.threads.participants import (
@@ -16,7 +16,7 @@ from misago.threads.participants import (
     remove_participant,
     set_owner,
 )
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class AnonymizeEventsTests(AuthenticatedUserTestCase):
@@ -25,7 +25,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         self.factory = RequestFactory()
 
         category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category)
+        self.thread = test.post_thread(category)
 
     def get_request(self, user=None):
         request = self.factory.get("/customer/details")
@@ -204,8 +204,8 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
     def test_anonymize_user_likes(self):
         """post's last like is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category)
-        post = testutils.reply_thread(thread)
+        thread = test.post_thread(category)
+        post = test.reply_thread(thread)
         post.acl = {"can_like": True}
 
         user = create_test_user("OtherUser", "otheruser@example.com")
@@ -240,10 +240,10 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
     def test_anonymize_user_posts(self):
         """post is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category)
+        thread = test.post_thread(category)
 
         user = create_test_user("OtherUser", "otheruser@example.com")
-        post = testutils.reply_thread(thread, poster=user)
+        post = test.reply_thread(thread, poster=user)
         user.anonymize_data()
 
         anonymized_post = Post.objects.get(pk=post.pk)

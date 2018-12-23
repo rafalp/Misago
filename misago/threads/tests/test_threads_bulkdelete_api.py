@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 from misago.threads.serializers.moderation import THREADS_LIMIT
 from misago.threads.test import patch_category_acl
@@ -20,9 +20,9 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         self.api_link = reverse("misago:api:thread-list")
 
         self.threads = [
-            testutils.post_thread(category=self.category, poster=self.user),
-            testutils.post_thread(category=self.category),
-            testutils.post_thread(category=self.category, poster=self.user),
+            test.post_thread(category=self.category, poster=self.user),
+            test.post_thread(category=self.category),
+            test.post_thread(category=self.category, poster=self.user),
         ]
 
     def delete(self, url, data=None):

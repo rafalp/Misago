@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from misago.acl.models import Role
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.threads.models import AttachmentType
 
 
@@ -203,8 +203,8 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         test_type.attachment_set.create(
             secret="loremipsum",
             filetype=test_type,
-            uploader_name="Bob",
-            uploader_slug="bob",
+            uploader_name="User",
+            uploader_slug="user",
             filename="test.zip",
             file="sad76asd678as687sa.zip",
         )

@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from misago.categories.management.commands import synchronizecategories
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 
 
 class SynchronizeCategoriesTests(TestCase):
@@ -13,9 +13,9 @@ class SynchronizeCategoriesTests(TestCase):
         """command synchronizes categories"""
         category = Category.objects.all_categories()[:1][0]
 
-        threads = [testutils.post_thread(category) for _ in range(10)]
+        threads = [test.post_thread(category) for _ in range(10)]
         for thread in threads:
-            [testutils.reply_thread(thread) for _ in range(5)]
+            [test.reply_thread(thread) for _ in range(5)]
 
         category.threads = 0
         category.posts = 0

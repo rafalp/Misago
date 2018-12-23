@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.users.testutils import SuperUserTestCase
+from misago.users.test import SuperUserTestCase
 
 
 class AdminTestCase(SuperUserTestCase):

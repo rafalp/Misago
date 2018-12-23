@@ -6,10 +6,10 @@ from django.utils import timezone
 
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class EditReplyTests(AuthenticatedUserTestCase):
@@ -17,8 +17,8 @@ class EditReplyTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.thread = test.post_thread(category=self.category)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-detail",

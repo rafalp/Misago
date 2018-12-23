@@ -9,14 +9,14 @@ from misago.categories.models import Category
 from misago.conf import settings
 from misago.readtracker.management.commands import clearreadtracker
 from misago.readtracker.models import PostRead
-from misago.threads import testutils
-from misago.users.testutils import create_test_user
+from misago.threads import test
+from misago.users.test import create_test_user
 
 
 class ClearReadTrackerTests(TestCase):
     def setUp(self):
-        self.user_1 = create_test_user("User1", "user1@example.com")
-        self.user_2 = create_test_user("User2", "user2@example.com")
+        self.user = create_test_user("User", "user@example.com")
+        self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         self.category = Category.objects.get(slug="first-category")
 
@@ -32,10 +32,10 @@ class ClearReadTrackerTests(TestCase):
 
     def test_delete_expired_entries(self):
         """test deletes one expired tracker entry, but spares the other"""
-        thread = testutils.post_thread(self.category)
+        thread = test.post_thread(self.category)
 
         existing = PostRead.objects.create(
-            user=self.user_1,
+            user=self.user,
             category=self.category,
             thread=thread,
             post=thread.first_post,
@@ -43,7 +43,7 @@ class ClearReadTrackerTests(TestCase):
             - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF / 4),
         )
         deleted = PostRead.objects.create(
-            user=self.user_2,
+            user=self.other_user,
             category=self.category,
             thread=thread,
             post=thread.first_post,

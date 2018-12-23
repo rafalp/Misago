@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.admin.views import get_protected_namespace
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class MockRequest(object):

@@ -6,7 +6,7 @@ from django.utils import timezone
 from misago.categories.models import Category
 from misago.threads.checksums import update_post_checksum
 from misago.threads.models import Post, Thread
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class PostModelTests(TestCase):
