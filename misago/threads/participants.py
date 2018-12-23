@@ -6,7 +6,6 @@ from misago.core.mail import build_mail, send_messages
 from .events import record_event
 from .models import ThreadParticipant
 
-
 User = get_user_model()
 
 

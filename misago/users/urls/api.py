@@ -6,7 +6,6 @@ from misago.users.api.ranks import RanksViewSet
 from misago.users.api.usernamechanges import UsernameChangesViewSet
 from misago.users.api.users import UserViewSet
 
-
 urlpatterns = [
     url(r"^auth/$", auth.gateway, name="auth"),
     url(r"^auth/criteria/$", auth.get_criteria, name="auth-criteria"),

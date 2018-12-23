@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.threads.permissions import allow_vote_poll
-from misago.threads.serializers import PollSerializer, NewVoteSerializer
+from misago.threads.serializers import NewVoteSerializer, PollSerializer
 
 
 def poll_vote_create(request, thread, poll):

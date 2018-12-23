@@ -10,7 +10,6 @@ from misago.acl.models import Role
 from misago.admin.forms import YesNoSwitch
 from misago.threads.models import Poll, Thread
 
-
 __all__ = [
     "allow_start_poll",
     "can_start_poll",

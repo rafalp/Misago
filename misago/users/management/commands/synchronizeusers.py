@@ -7,7 +7,6 @@ from misago.categories.models import Category
 from misago.core.management.progressbar import show_progress
 from misago.core.pgutils import chunk_queryset
 
-
 User = get_user_model()
 
 

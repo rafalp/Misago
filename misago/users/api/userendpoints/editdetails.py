@@ -1,7 +1,5 @@
-from rest_framework.response import Response
-
 from django import forms
-
+from rest_framework.response import Response
 
 from misago.users.profilefields import profilefields, serialize_profilefields_data
 

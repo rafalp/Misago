@@ -1,8 +1,8 @@
 from django.urls import reverse
 
 from misago.threads import test
-from misago.threads.test import patch_category_acl
 from misago.threads.serializers import PostLikeSerializer
+from misago.threads.test import patch_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 

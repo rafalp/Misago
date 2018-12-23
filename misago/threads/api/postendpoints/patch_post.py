@@ -1,8 +1,7 @@
-from rest_framework import serializers
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
+from rest_framework import serializers
+from rest_framework.response import Response
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings
@@ -15,9 +14,8 @@ from misago.threads.permissions import (
     allow_hide_post,
     allow_protect_post,
     allow_unhide_post,
+    exclude_invisible_posts,
 )
-from misago.threads.permissions import exclude_invisible_posts
-
 
 PATCH_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 

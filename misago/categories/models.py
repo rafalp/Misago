@@ -1,7 +1,6 @@
+from django.db import models
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
-
-from django.db import models
 
 from misago.acl.cache import clear_acl_cache
 from misago.acl.models import BaseRole

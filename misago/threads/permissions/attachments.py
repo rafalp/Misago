@@ -6,7 +6,6 @@ from misago.acl.models import Role
 from misago.admin.forms import YesNoSwitch
 from misago.threads.models import Attachment
 
-
 # Admin Permissions Forms
 class PermissionsForm(forms.Form):
     legend = _("Attachments")

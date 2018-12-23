@@ -4,7 +4,6 @@ from django.utils.translation import gettext as _
 
 from .exceptions import ModerationError
 
-
 __all__ = [
     "approve_post",
     "protect_post",

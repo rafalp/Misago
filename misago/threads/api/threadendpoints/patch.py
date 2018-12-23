@@ -1,11 +1,10 @@
-from rest_framework import serializers
-from rest_framework.response import Response
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
+from rest_framework import serializers
+from rest_framework.response import Response
 
 from misago.acl import useracl
 from misago.acl.objectacl import add_acl_to_obj
@@ -29,11 +28,11 @@ from misago.threads.permissions import (
     allow_change_best_answer,
     allow_change_owner,
     allow_edit_thread,
-    allow_pin_thread,
     allow_hide_thread,
     allow_mark_as_best_answer,
     allow_mark_best_answer,
     allow_move_thread,
+    allow_pin_thread,
     allow_remove_participant,
     allow_see_post,
     allow_start_thread,

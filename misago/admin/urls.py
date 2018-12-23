@@ -4,7 +4,6 @@ from misago import admin
 
 from .views import auth, index
 
-
 urlpatterns = [
     # "misago:admin:index" link symbolises "root" of Misago admin links space
     # any request with path that falls below this one is assumed to be directed

@@ -4,8 +4,6 @@ from django.urls import reverse
 from misago.cache.versions import get_cache_versions
 from misago.categories.models import Category
 from misago.conf.dynamicsettings import DynamicSettings
-from misago.users.test import AuthenticatedUserTestCase
-
 from misago.threads import test
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
@@ -16,7 +14,7 @@ from misago.threads.participants import (
     remove_participant,
     set_owner,
 )
-from misago.users.test import create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class AnonymizeEventsTests(AuthenticatedUserTestCase):

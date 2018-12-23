@@ -7,7 +7,6 @@ from misago.conf import settings
 
 from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
 
-
 MIN_POSTING_PAUSE = 3
 
 

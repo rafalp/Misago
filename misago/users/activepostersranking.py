@@ -9,7 +9,6 @@ from misago.conf import settings
 
 from .models import ActivityRanking
 
-
 User = get_user_model()
 
 

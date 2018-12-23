@@ -3,11 +3,10 @@ import warnings
 import bleach
 import markdown
 from bs4 import BeautifulSoup
-from htmlmin.minify import html_minify
-from markdown.extensions.fenced_code import FencedCodeExtension
-
 from django.http import Http404
 from django.urls import resolve
+from htmlmin.minify import html_minify
+from markdown.extensions.fenced_code import FencedCodeExtension
 
 from misago.conf import settings
 
@@ -16,7 +15,6 @@ from .md.shortimgs import ShortImagesExtension
 from .md.striketrough import StriketroughExtension
 from .mentions import add_mentions
 from .pipeline import pipeline
-
 
 MISAGO_ATTACHMENT_VIEWS = ("misago:attachment", "misago:attachment-thumbnail")
 

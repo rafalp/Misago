@@ -10,7 +10,6 @@ from misago.users.management.commands import expireuserdatadownloads
 from misago.users.models import DataDownload
 from misago.users.test import AuthenticatedUserTestCase
 
-
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 

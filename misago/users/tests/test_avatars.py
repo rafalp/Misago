@@ -1,11 +1,10 @@
 from pathlib import Path
 from unittest.mock import Mock
 
-from PIL import Image
-
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.crypto import get_random_string
+from PIL import Image
 
 from misago.conf import settings
 from misago.users.avatars import (

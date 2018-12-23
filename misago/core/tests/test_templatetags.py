@@ -4,7 +4,6 @@ from django.test import TestCase, override_settings
 from misago.core.templatetags import misago_batch
 from misago.core.templatetags.misago_absoluteurl import absoluteurl
 
-
 TEST_ADDRESS = "https://testsite.com/"
 
 

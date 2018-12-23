@@ -16,7 +16,6 @@ from misago.users.serializers import (
 )
 from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
 
-
 User = get_user_model()
 
 

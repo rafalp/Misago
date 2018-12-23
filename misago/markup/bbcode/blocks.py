@@ -1,13 +1,11 @@
 import re
 
 import markdown
+from django.utils.crypto import get_random_string
 from markdown.blockprocessors import BlockProcessor, HRProcessor
 from markdown.extensions.fenced_code import FencedBlockPreprocessor
 from markdown.preprocessors import Preprocessor
 from markdown.util import etree
-
-from django.utils.crypto import get_random_string
-
 
 QUOTE_START = get_random_string(32)
 QUOTE_END = get_random_string(32)

@@ -1,11 +1,9 @@
+from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.templatetags.staticfiles import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.templatetags.staticfiles import static
-
 from misago.conf import settings
-
 
 User = get_user_model()
 

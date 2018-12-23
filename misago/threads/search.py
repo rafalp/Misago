@@ -12,7 +12,6 @@ from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
 
-
 HITS_CEILING = settings.MISAGO_POSTS_PER_PAGE * 5
 
 

@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.conftest import get_cache_versions
+from misago.users import BANS_CACHE
 from misago.users.bans import (
     ban_ip,
     ban_user,
@@ -13,7 +14,6 @@ from misago.users.bans import (
     get_user_ban,
     get_username_ban,
 )
-from misago.users import BANS_CACHE
 from misago.users.models import Ban
 from misago.users.test import create_test_user
 

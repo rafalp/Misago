@@ -4,7 +4,6 @@ from django.urls import reverse
 from misago.acl.test import patch_user_acl
 from misago.admin.test import AdminTestCase
 
-
 User = get_user_model()
 
 

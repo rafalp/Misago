@@ -1,9 +1,8 @@
 from django.db import connection
 from django.test import TestCase
 
-from misago.threads.models import Thread
-
 from misago.core.pgutils import PgPartialIndex
+from misago.threads.models import Thread
 
 
 class PgPartialIndexTests(TestCase):

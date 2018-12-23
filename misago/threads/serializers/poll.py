@@ -1,12 +1,10 @@
-from rest_framework import serializers
-
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
+from rest_framework import serializers
 
 from misago.threads.models import Poll
-
 
 __all__ = [
     "PollSerializer",

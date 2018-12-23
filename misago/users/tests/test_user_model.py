@@ -4,7 +4,6 @@ from django.test import TestCase
 
 from misago.conf import settings
 from misago.core.utils import slugify
-
 from misago.users.avatars import dynamic
 from misago.users.models import Avatar, User
 

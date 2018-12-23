@@ -8,8 +8,8 @@ from misago.conftest import get_cache_versions
 from misago.threads import test
 from misago.threads.checksums import update_post_checksum
 from misago.threads.events import record_event
-from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation import hide_post
+from misago.threads.moderation import threads as threads_moderation
 from misago.users.test import AuthenticatedUserTestCase
 
 cache_versions = get_cache_versions()

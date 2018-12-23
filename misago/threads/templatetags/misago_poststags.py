@@ -2,7 +2,6 @@ from django import template
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-
 register = template.Library()
 
 

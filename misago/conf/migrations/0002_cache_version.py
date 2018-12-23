@@ -2,7 +2,6 @@
 from django.db import migrations
 
 from misago.cache.operations import StartCacheVersioning
-
 from misago.conf import SETTINGS_CACHE
 
 

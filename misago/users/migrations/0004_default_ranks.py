@@ -3,7 +3,6 @@ from django.utils.translation import gettext
 
 from misago.core.utils import slugify
 
-
 _ = lambda s: s
 
 

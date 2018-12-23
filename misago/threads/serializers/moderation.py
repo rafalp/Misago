@@ -1,8 +1,8 @@
-from rest_framework import serializers
-
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
-from django.utils.translation import gettext as _, gettext_lazy, ngettext
+from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy, ngettext
+from rest_framework import serializers
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories import THREADS_ROOT_NAME
@@ -26,7 +26,6 @@ from misago.threads.permissions import (
 from misago.threads.threadtypes import trees_map
 from misago.threads.utils import get_thread_id_from_url
 from misago.threads.validators import validate_category, validate_thread_title
-
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL

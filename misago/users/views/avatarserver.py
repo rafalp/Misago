@@ -4,7 +4,6 @@ from django.shortcuts import redirect
 
 from misago.conf import settings
 
-
 User = get_user_model()
 
 

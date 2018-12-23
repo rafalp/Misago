@@ -1,8 +1,7 @@
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
+from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.utils import clean_ids_list
@@ -11,10 +10,9 @@ from misago.threads.permissions import (
     allow_delete_best_answer,
     allow_delete_event,
     allow_delete_post,
+    exclude_invisible_posts,
 )
-from misago.threads.permissions import exclude_invisible_posts
 from misago.threads.serializers import DeletePostsSerializer
-
 
 DELETE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 

@@ -13,7 +13,6 @@ from misago.acl.models import Role
 from misago.admin.forms import YesNoSwitch
 from misago.users.bans import get_user_ban
 
-
 __all__ = [
     "allow_rename_user",
     "can_rename_user",

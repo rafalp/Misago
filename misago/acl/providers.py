@@ -2,7 +2,6 @@ from importlib import import_module
 
 from misago.conf import settings
 
-
 _NOT_INITIALIZED_ERROR = (
     "PermissionProviders instance has to load providers with load() "
     "before get_obj_type_annotators(), get_user_acl_serializers(), "

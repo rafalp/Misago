@@ -7,7 +7,6 @@ from django.utils.crypto import get_random_string
 
 from misago.core.utils import slugify
 
-
 FILENAME_MAX_LEN = 50
 
 

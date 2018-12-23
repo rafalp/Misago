@@ -2,7 +2,6 @@ import re
 
 from django.utils.translation import gettext as _
 
-
 HEADER_RE = re.compile(
     r"""
 <div class="quote-heading">(?P<title>.*?)</div>

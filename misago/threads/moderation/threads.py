@@ -3,7 +3,6 @@ from django.utils import timezone
 
 from misago.threads.events import record_event
 
-
 __all__ = [
     "change_thread_title",
     "pin_thread_globally",

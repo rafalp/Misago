@@ -8,7 +8,6 @@ from django.utils import timezone
 
 from misago.users.management.commands import removeoldips
 
-
 IP_STORE_TIME = 2
 
 

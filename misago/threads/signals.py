@@ -19,7 +19,6 @@ from misago.users.signals import (
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 
-
 delete_post = Signal()
 delete_thread = Signal()
 merge_post = Signal(providing_args=["other_post"])

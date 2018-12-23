@@ -5,7 +5,6 @@ from django.test.client import RequestFactory
 from django.urls import reverse
 
 from misago.acl.useracl import get_user_acl
-from misago.users.models import AnonymousUser
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conftest import get_cache_versions
 from misago.core.testproject.views import (
@@ -13,6 +12,7 @@ from misago.core.testproject.views import (
     mock_custom_404_error_page,
 )
 from misago.core.utils import encode_json_html
+from misago.users.models import AnonymousUser
 
 
 class CSRFErrorViewTests(TestCase):

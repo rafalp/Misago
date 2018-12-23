@@ -7,7 +7,6 @@ from misago.threads import test
 from misago.threads.test import patch_category_acl
 from misago.users.test import AuthenticatedUserTestCase
 
-
 User = get_user_model()
 
 

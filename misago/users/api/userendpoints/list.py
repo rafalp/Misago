@@ -1,13 +1,11 @@
-from rest_framework.response import Response
-
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 
 from misago.core.shortcuts import get_int_or_404
 from misago.users.models import Rank
 from misago.users.serializers import UserCardSerializer
 from misago.users.viewmodels import ActivePosters, RankUsers
-
 
 User = get_user_model()
 

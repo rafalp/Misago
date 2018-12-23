@@ -13,7 +13,6 @@ from misago.users.datadownloads.dataarchive import (
 )
 from misago.users.test import AuthenticatedUserTestCase
 
-
 DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_AVATAR_PATH = os.path.join(TESTFILES_DIR, "avatar.png")

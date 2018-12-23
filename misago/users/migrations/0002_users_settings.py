@@ -2,7 +2,6 @@ from django.db import migrations
 
 from misago.conf.migrationutils import migrate_settings_group
 
-
 _ = lambda s: s
 
 

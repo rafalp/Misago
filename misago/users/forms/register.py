@@ -11,7 +11,6 @@ from misago.users.validators import (
     validate_username,
 )
 
-
 User = get_user_model()
 
 

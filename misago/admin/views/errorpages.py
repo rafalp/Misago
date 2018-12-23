@@ -5,7 +5,6 @@ from misago.core.utils import get_exception_message
 
 from . import get_protected_namespace, protected_admin_view, render
 
-
 # Magic error page used by admin
 @protected_admin_view
 def _error_page(request, code, exception=None, default_message=None):

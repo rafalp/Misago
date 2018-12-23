@@ -1,14 +1,13 @@
 from django import forms
-from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
 from misago.acl.models import Role
 from misago.admin.forms import IsoDateTimeField, YesNoSwitch
 from misago.core.validators import validate_sluggable
-
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.profilefields import profilefields
 from misago.users.utils import hash_email

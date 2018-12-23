@@ -4,7 +4,6 @@ from django.views.generic import TemplateView
 from misago.conf import settings
 from misago.core.views import forum_index
 
-
 app_name = "misago"
 
 # Register Misago Apps

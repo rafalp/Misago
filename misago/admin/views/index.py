@@ -1,9 +1,8 @@
 import requests
-from requests.exceptions import RequestException
-
 from django.contrib.auth import get_user_model
 from django.http import Http404, JsonResponse
 from django.utils.translation import gettext as _
+from requests.exceptions import RequestException
 
 from misago import __version__
 from misago.conf import settings
@@ -11,7 +10,6 @@ from misago.core.cache import cache
 from misago.threads.models import Post, Thread
 
 from . import render
-
 
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
 

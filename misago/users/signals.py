@@ -13,7 +13,6 @@ from misago.core.pgutils import chunk_queryset
 from .models import AuditTrail
 from .profilefields import profilefields
 
-
 User = get_user_model()
 
 anonymize_user_data = Signal()

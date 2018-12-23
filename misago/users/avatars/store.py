@@ -2,10 +2,9 @@ import os
 from hashlib import md5
 from io import BytesIO
 
-from PIL import Image
-
 from django.core.files.base import ContentFile
 from django.utils.crypto import get_random_string
+from PIL import Image
 
 from misago.conf import settings
 

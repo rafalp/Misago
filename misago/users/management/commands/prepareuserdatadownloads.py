@@ -11,7 +11,6 @@ from misago.core.pgutils import chunk_queryset
 from misago.users.datadownloads import prepare_user_data_download
 from misago.users.models import DataDownload
 
-
 logger = logging.getLogger("misago.users.datadownloads")
 
 

@@ -6,7 +6,6 @@ from misago.core.apipatch import ApiPatch
 from misago.threads.moderation import posts as moderation
 from misago.threads.permissions import allow_hide_event, allow_unhide_event
 
-
 event_patch_dispatcher = ApiPatch()
 
 

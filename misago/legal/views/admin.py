@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from misago.admin.views import generic
-
 from misago.legal.forms import AgreementForm, SearchAgreementsForm
 from misago.legal.models import Agreement
 from misago.legal.utils import set_agreement_as_active

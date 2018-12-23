@@ -2,14 +2,13 @@ import os
 from hashlib import md5
 from io import BytesIO
 
-from PIL import Image
-
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
+from PIL import Image
 
 from misago.conf import settings
 from misago.core.utils import slugify

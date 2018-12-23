@@ -1,6 +1,5 @@
-from rest_framework.request import Request
-
 from django.utils import timezone
+from rest_framework.request import Request
 
 from misago.users.models import Online
 

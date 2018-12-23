@@ -1,12 +1,11 @@
-from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
-
 from django.contrib import auth
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.decorators import require_dict_data
@@ -28,7 +27,6 @@ from misago.users.tokens import (
 )
 
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
-
 
 User = auth.get_user_model()
 

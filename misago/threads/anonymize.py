@@ -1,6 +1,5 @@
 from django.urls import reverse
 
-
 ANONYMIZABLE_EVENTS = (
     "added_participant",
     "changed_owner",

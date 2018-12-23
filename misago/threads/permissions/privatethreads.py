@@ -11,7 +11,6 @@ from misago.categories import PRIVATE_THREADS_ROOT_NAME
 from misago.categories.models import Category
 from misago.threads.models import Thread
 
-
 __all__ = [
     "allow_use_private_threads",
     "can_use_private_threads",

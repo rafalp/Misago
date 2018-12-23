@@ -4,7 +4,6 @@ from misago.acl.objectacl import add_acl_to_obj
 from misago.core.viewmodel import ViewModel as BaseViewModel
 from misago.threads.permissions import exclude_invisible_posts
 
-
 __all__ = ["ThreadPost"]
 
 

@@ -12,7 +12,6 @@ from misago.acl.decorators import return_boolean
 from misago.acl.models import Role
 from misago.conf import settings
 
-
 __all__ = [
     "allow_delete_user",
     "can_delete_user",

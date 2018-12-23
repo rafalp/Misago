@@ -14,7 +14,6 @@ from django.utils.encoding import force_str
 
 from misago.cache.versions import get_cache_versions
 from misago.conf.dynamicsettings import DynamicSettings
-
 from misago.users.setupnewuser import setup_new_user
 from misago.users.validators import validate_email, validate_username
 

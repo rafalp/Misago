@@ -1,9 +1,8 @@
 from pathlib import Path
 
-from PIL import Image
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from PIL import Image
 
 from misago.conf import settings
 

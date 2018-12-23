@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from django.utils.translation import gettext_lazy
+from rest_framework import serializers
 
 from misago.markup import common_flavour
 from misago.threads.checksums import update_post_checksum

@@ -7,7 +7,6 @@ from misago.search import SearchProvider
 
 from .serializers import UserCardSerializer
 
-
 HEAD_RESULTS = 8
 TAIL_RESULTS = 8
 

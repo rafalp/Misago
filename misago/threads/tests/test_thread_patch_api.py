@@ -6,8 +6,8 @@ from django.utils import timezone
 from misago.categories.models import Category
 from misago.readtracker import poststracker
 from misago.threads import test
-from misago.threads.test import patch_category_acl, patch_other_category_acl
 from misago.threads.models import Thread
+from misago.threads.test import patch_category_acl, patch_other_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
 

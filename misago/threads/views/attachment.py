@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, redirect
 from misago.conf import settings
 from misago.threads.models import Attachment, AttachmentType
 
-
 ATTACHMENT_404_URL = "".join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
 ATTACHMENT_403_URL = "".join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
 

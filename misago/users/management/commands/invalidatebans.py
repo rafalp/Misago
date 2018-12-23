@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from misago.cache.versions import get_cache_versions
-
 from misago.users import BANS_CACHE
 from misago.users.models import Ban, BanCache
 

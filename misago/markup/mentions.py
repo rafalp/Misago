@@ -1,9 +1,7 @@
 import re
 
 from bs4 import BeautifulSoup
-
 from django.contrib.auth import get_user_model
-
 
 SUPPORTED_TAGS = ("h1", "h2", "h3", "h4", "h5", "h6", "div", "p")
 USERNAME_RE = re.compile(r"@[0-9a-z]+", re.IGNORECASE)

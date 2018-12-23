@@ -1,7 +1,7 @@
 from datetime import timedelta
 
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
 
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category

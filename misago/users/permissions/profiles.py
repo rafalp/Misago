@@ -10,7 +10,6 @@ from misago.admin.forms import YesNoSwitch
 
 from .decorators import authenticated_only
 
-
 __all__ = [
     "allow_browse_users_list",
     "can_browse_users_list",

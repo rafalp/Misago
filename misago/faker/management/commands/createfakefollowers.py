@@ -6,7 +6,6 @@ from django.core.management.base import BaseCommand
 
 from misago.core.management.progressbar import show_progress
 
-
 User = get_user_model()
 
 

@@ -4,7 +4,6 @@ from django.db import migrations
 from misago.conf.migrationutils import migrate_settings_group
 from misago.legal.models import Agreement as MisagoAgreement
 
-
 _ = lambda s: s
 
 

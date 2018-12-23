@@ -2,7 +2,6 @@ from django.db import migrations
 
 from misago.core.utils import slugify
 
-
 _ = lambda s: s
 
 

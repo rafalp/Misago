@@ -1,7 +1,6 @@
-from rest_framework.permissions import SAFE_METHODS, BasePermission
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
+from rest_framework.permissions import SAFE_METHODS, BasePermission
 
 
 class IsAuthenticatedOrReadOnly(BasePermission):

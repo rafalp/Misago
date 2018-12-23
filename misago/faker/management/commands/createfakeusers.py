@@ -1,17 +1,15 @@
 import random
 import time
 
-from faker import Factory
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+from faker import Factory
 
 from misago.core.management.progressbar import show_progress
 from misago.users.avatars import dynamic, gallery
 from misago.users.models import Rank
-
 
 User = get_user_model()
 

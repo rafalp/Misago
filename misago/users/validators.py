@@ -2,7 +2,6 @@ import json
 import re
 
 import requests
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email as validate_email_content
@@ -14,7 +13,6 @@ from django.utils.translation import ngettext
 from misago.conf import settings
 
 from .bans import get_email_ban, get_username_ban
-
 
 USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
 

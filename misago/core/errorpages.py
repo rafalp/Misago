@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from social_core import exceptions as social_exceptions
 
 from misago.admin.views.errorpages import admin_csrf_failure, admin_error_page
-from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
+from misago.core.exceptions import SocialAuthBanned, SocialAuthFailed
 from misago.users.social.utils import get_social_auth_backend_name
 
 from .utils import get_exception_message, is_request_to_misago

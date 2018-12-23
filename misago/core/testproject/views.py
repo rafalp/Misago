@@ -1,9 +1,8 @@
-from rest_framework.decorators import api_view
-
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponse
-from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
+from rest_framework.decorators import api_view
 from social_core.backends.github import GithubOAuth2
+from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
 
 from misago.core import errorpages
 from misago.core.decorators import require_POST

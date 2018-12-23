@@ -3,7 +3,6 @@ from django.core.management.base import BaseCommand
 
 from misago.core.pgutils import chunk_queryset
 
-
 User = get_user_model()
 
 

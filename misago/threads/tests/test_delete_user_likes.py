@@ -1,11 +1,10 @@
 from django.test import RequestFactory
 
 from misago.categories.models import Category
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
-
 from misago.threads import test
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class DeleteUserLikesTests(AuthenticatedUserTestCase):

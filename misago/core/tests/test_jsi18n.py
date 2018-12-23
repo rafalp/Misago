@@ -5,7 +5,6 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import translation
 
-
 MISAGO_DIR = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )

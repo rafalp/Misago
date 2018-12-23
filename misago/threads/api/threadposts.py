@@ -1,10 +1,9 @@
-from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
+from rest_framework import viewsets
+from rest_framework.decorators import detail_route, list_route
+from rest_framework.response import Response
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.core.shortcuts import get_int_or_404
@@ -25,7 +24,7 @@ from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
-from .postendpoints.patch_post import post_patch_endpoint, bulk_patch_endpoint
+from .postendpoints.patch_post import bulk_patch_endpoint, post_patch_endpoint
 from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
 from .postingendpoint import PostingEndpoint

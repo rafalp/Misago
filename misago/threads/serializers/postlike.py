@@ -1,9 +1,7 @@
+from django.urls import reverse
 from rest_framework import serializers
 
-from django.urls import reverse
-
 from misago.threads.models import PostLike
-
 
 __all__ = ["PostLikeSerializer"]
 

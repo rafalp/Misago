@@ -1,6 +1,5 @@
-from unidecode import unidecode
-
 from django.template.defaultfilters import slugify as django_slugify
+from unidecode import unidecode
 
 
 def default(string):

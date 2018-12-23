@@ -9,11 +9,10 @@ from social_django.utils import load_strategy
 from misago.acl import ACL_CACHE
 from misago.acl.useracl import get_user_acl
 from misago.conf.dynamicsettings import DynamicSettings
-from misago.core.exceptions import SocialAuthFailed, SocialAuthBanned
 from misago.conf.test import override_dynamic_settings
 from misago.conftest import get_cache_versions
+from misago.core.exceptions import SocialAuthBanned, SocialAuthFailed
 from misago.legal.models import Agreement
-
 from misago.users.models import AnonymousUser, Ban, BanCache
 from misago.users.social.pipeline import (
     associate_by_email,
@@ -25,7 +24,6 @@ from misago.users.social.pipeline import (
     validate_user_not_banned,
 )
 from misago.users.test import UserTestCase
-
 
 User = get_user_model()
 

@@ -1,12 +1,10 @@
-from rest_framework import serializers
-
 from django.urls import reverse
+from rest_framework import serializers
 
 from misago.core.serializers import MutableFields
 from misago.core.utils import format_plaintext_for_html
 
 from .models import Category
-
 
 __all__ = ["CategorySerializer"]
 

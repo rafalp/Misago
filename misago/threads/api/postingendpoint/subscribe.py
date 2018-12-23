@@ -4,7 +4,6 @@ from misago.threads.models import Subscription
 
 from . import PostingEndpoint, PostingMiddleware
 
-
 User = get_user_model()
 
 

@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from misago.users.models import DataDownload
 
-
 __all__ = ["DataDownloadSerializer"]
 
 

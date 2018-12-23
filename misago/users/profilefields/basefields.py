@@ -4,7 +4,6 @@ from django.utils import html
 
 from misago.core.utils import format_plaintext_for_html
 
-
 __all__ = [
     "ProfileField",
     "TextProfileField",

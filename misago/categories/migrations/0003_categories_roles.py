@@ -1,6 +1,5 @@
 from django.db import migrations
 
-
 _ = lambda s: s
 
 

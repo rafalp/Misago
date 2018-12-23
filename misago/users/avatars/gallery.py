@@ -1,14 +1,12 @@
 import random
 from pathlib import Path
 
-from PIL import Image
-
 from django.core.files.base import ContentFile
+from PIL import Image
 
 from misago.conf import settings
 
 from . import store
-
 
 DEFAULT_GALLERY = "__default__"
 

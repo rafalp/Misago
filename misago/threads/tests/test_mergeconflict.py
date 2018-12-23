@@ -1,9 +1,7 @@
+from django.test import TestCase
 from rest_framework.exceptions import ValidationError
 
-from django.test import TestCase
-
 from misago.categories.models import Category
-
 from misago.threads import test
 from misago.threads.mergeconflict import MergeConflict
 from misago.users.test import create_test_user

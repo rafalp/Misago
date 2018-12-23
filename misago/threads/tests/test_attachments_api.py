@@ -1,8 +1,7 @@
 import os
 
-from PIL import Image
-
 from django.urls import reverse
+from PIL import Image
 
 from misago.acl.models import Role
 from misago.acl.test import patch_user_acl

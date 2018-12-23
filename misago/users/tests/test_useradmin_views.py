@@ -8,7 +8,6 @@ from misago.categories.models import Category
 from misago.legal.models import Agreement
 from misago.legal.utils import save_user_agreement_acceptance
 from misago.threads.test import post_thread, reply_thread
-
 from misago.users.datadownloads import request_user_data_download
 from misago.users.models import Ban, DataDownload, Rank
 from misago.users.test import create_test_user

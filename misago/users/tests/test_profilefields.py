@@ -3,7 +3,6 @@ from django.test import TestCase
 
 from misago.users.profilefields import ProfileFields
 
-
 User = get_user_model()
 
 

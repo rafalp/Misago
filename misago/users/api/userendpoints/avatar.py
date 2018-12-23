@@ -1,10 +1,9 @@
 import json
 
-from rest_framework import status
-from rest_framework.response import Response
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from rest_framework import status
+from rest_framework.response import Response
 
 from misago.conf import settings
 from misago.core.decorators import require_dict_data

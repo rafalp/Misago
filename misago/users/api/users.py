@@ -1,8 +1,3 @@
-from rest_framework import status, viewsets
-from rest_framework.decorators import detail_route
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
-from rest_framework.response import Response
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
@@ -10,6 +5,10 @@ from django.db.models import F
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
+from rest_framework import status, viewsets
+from rest_framework.decorators import detail_route
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+from rest_framework.response import Response
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
@@ -51,7 +50,6 @@ from .userendpoints.editdetails import edit_details_endpoint
 from .userendpoints.list import list_endpoint
 from .userendpoints.signature import signature_endpoint
 from .userendpoints.username import moderate_username_endpoint, username_endpoint
-
 
 User = get_user_model()
 

@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from misago.admin.test import AdminTestCase
 
-
 User = get_user_model()
 
 

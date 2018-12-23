@@ -1,7 +1,6 @@
-from rest_framework import serializers
-
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
+from rest_framework import serializers
 
 from misago.acl.objectacl import add_acl_to_obj
 from misago.conf import settings

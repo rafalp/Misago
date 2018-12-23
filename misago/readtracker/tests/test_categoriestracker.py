@@ -7,7 +7,7 @@ from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.conftest import get_cache_versions
-from misago.readtracker import poststracker, categoriestracker
+from misago.readtracker import categoriestracker, poststracker
 from misago.readtracker.models import PostRead
 from misago.threads import test
 from misago.users.test import create_test_user

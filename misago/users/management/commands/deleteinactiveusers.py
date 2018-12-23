@@ -7,7 +7,6 @@ from django.utils import timezone
 from misago.conf import settings
 from misago.core.pgutils import chunk_queryset
 
-
 User = get_user_model()
 
 

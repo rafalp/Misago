@@ -1,10 +1,8 @@
-from rest_framework import serializers
-
 from django.contrib.auth import get_user_model
 from django.utils.translation import ngettext
+from rest_framework import serializers
 
 from misago.conf import settings
-
 
 User = get_user_model()
 

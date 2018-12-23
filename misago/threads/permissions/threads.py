@@ -3,7 +3,8 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _, ngettext
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from misago.acl import algebra
 from misago.acl.decorators import return_boolean
@@ -13,7 +14,6 @@ from misago.admin.forms import YesNoSwitch
 from misago.categories.models import Category, CategoryRole
 from misago.categories.permissions import get_categories_roles
 from misago.threads.models import Post, Thread
-
 
 __all__ = [
     "allow_see_thread",

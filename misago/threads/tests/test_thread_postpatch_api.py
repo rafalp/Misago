@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads import test
-from misago.threads.models import Thread, Post
+from misago.threads.models import Post, Thread
 from misago.threads.test import patch_category_acl
 from misago.users.test import AuthenticatedUserTestCase
 

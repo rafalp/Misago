@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from misago.threads.models import ThreadParticipant
 
-
 __all__ = ["ThreadParticipantSerializer"]
 
 

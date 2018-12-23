@@ -11,7 +11,6 @@ from misago.users.forms.auth import AdminAuthenticationForm
 
 from . import views
 
-
 admin.autodiscover()
 admin.site.login_form = AdminAuthenticationForm
 

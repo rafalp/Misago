@@ -1,9 +1,8 @@
 import random
 import time
 
-from faker import Factory
-
 from django.core.management.base import BaseCommand
+from faker import Factory
 
 from misago.acl.cache import clear_acl_cache
 from misago.categories.models import Category, RoleCategoryACL

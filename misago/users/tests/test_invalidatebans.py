@@ -6,7 +6,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.cache.versions import get_cache_versions
-
 from misago.users import bans
 from misago.users.management.commands import invalidatebans
 from misago.users.models import Ban, BanCache
