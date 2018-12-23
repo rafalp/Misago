@@ -1,9 +1,9 @@
 from django.utils.translation import gettext as _
 
-from misago.core.mail import mail_user
-from misago.legal.models import Agreement
-from misago.legal.utils import save_user_agreement_acceptance
-from misago.users.tokens import make_activation_token
+from ..core.mail import mail_user
+from ..legal.models import Agreement
+from ..legal.utils import save_user_agreement_acceptance
+from .tokens import make_activation_token
 
 
 def send_welcome_email(request, user):

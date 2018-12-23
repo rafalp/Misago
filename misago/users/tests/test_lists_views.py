@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads.test import post_thread
-from misago.users.activepostersranking import build_active_posters_ranking
-from misago.users.models import Rank
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...threads.test import post_thread
+from ..activepostersranking import build_active_posters_ranking
+from ..models import Rank
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 
 class UsersListTestCase(AuthenticatedUserTestCase):

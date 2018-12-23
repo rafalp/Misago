@@ -2,7 +2,7 @@ from itertools import product
 
 from django.test import TestCase
 
-from misago.threads.paginator import PostsPaginator
+from ..paginator import PostsPaginator
 
 
 class PostsPaginatorTests(TestCase):

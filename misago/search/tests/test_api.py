@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.search.searchproviders import searchproviders
-from misago.users.test import AuthenticatedUserTestCase
+from ...acl.test import patch_user_acl
+from ...users.test import AuthenticatedUserTestCase
+from ..searchproviders import searchproviders
 
 
 class SearchApiTests(AuthenticatedUserTestCase):

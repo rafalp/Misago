@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from misago.legal.context_processors import legal_links
-from misago.legal.models import Agreement
-from misago.users.test import AuthenticatedUserTestCase
+from ...users.test import AuthenticatedUserTestCase
+from ..context_processors import legal_links
+from ..models import Agreement
 
 
 class MockRequest(object):

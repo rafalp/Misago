@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from misago.readtracker.dates import get_cutoff_date
-from misago.readtracker.models import PostRead
+from ...dates import get_cutoff_date
+from ...models import PostRead
 
 
 class Command(BaseCommand):

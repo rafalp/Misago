@@ -1,10 +1,9 @@
 from django.utils.translation import gettext as _
 
-from misago.acl import useracl
-from misago.core.mail import build_mail, send_messages
-from misago.threads.permissions import can_see_post, can_see_thread
-
 from . import PostingEndpoint, PostingMiddleware
+from ....acl import useracl
+from ....core.mail import build_mail, send_messages
+from ...permissions import can_see_post, can_see_thread
 
 
 class EmailNotificationMiddleware(PostingMiddleware):

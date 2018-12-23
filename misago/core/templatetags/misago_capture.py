@@ -9,7 +9,6 @@ Syntax:
 
 from django import template
 
-
 register = template.Library()
 SYNTAX_ERROR = 'capture tag syntax is "capture [trimmed] as [value]"'
 

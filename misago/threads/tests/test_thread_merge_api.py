@@ -1,11 +1,10 @@
 from django.urls import reverse
 
-from misago.categories.models import Category
-from misago.readtracker import poststracker
-from misago.threads import test
-from misago.threads.models import Poll, PollVote, Thread
-from misago.threads.test import patch_category_acl, patch_other_category_acl
-
+from .. import test
+from ...categories.models import Category
+from ...readtracker import poststracker
+from ..models import Poll, PollVote, Thread
+from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
 

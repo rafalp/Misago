@@ -1,9 +1,9 @@
 from django.test import TestCase
 
-from misago.categories import THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.threadtypes import trees_map
+from .. import THREADS_ROOT_NAME
+from ...threads import test
+from ...threads.threadtypes import trees_map
+from ..models import Category
 
 
 class CategoryManagerTests(TestCase):

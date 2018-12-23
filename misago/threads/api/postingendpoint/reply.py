@@ -1,17 +1,11 @@
+from django.utils.translation import gettext_lazy
 from rest_framework import serializers
 
-from django.utils.translation import gettext_lazy
-
-from misago.markup import common_flavour
-from misago.threads.checksums import update_post_checksum
-from misago.threads.validators import (
-    validate_post,
-    validate_post_length,
-    validate_thread_title,
-)
-from misago.users.audittrail import create_audit_trail
-
 from . import PostingEndpoint, PostingMiddleware
+from ....markup import common_flavour
+from ....users.audittrail import create_audit_trail
+from ...checksums import update_post_checksum
+from ...validators import validate_post, validate_post_length, validate_thread_title
 
 
 class ReplyMiddleware(PostingMiddleware):

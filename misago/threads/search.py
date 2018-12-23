@@ -1,17 +1,15 @@
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.utils.translation import gettext_lazy as _
 
-from misago.conf import settings
-from misago.core.shortcuts import paginate, pagination_dict
-from misago.search import SearchProvider
-
+from ..conf import settings
+from ..core.shortcuts import paginate, pagination_dict
+from ..search import SearchProvider
 from .filtersearch import filter_search
 from .models import Post, Thread
 from .permissions import exclude_invisible_threads
 from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
-
 
 HITS_CEILING = settings.MISAGO_POSTS_PER_PAGE * 5
 

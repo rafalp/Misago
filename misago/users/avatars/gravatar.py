@@ -3,10 +3,8 @@ from io import BytesIO
 import requests
 from PIL import Image
 
-from misago.conf import settings
-
 from . import store
-
+from ...conf import settings
 
 GRAVATAR_URL = "http://www.gravatar.com/avatar/%s?s=%s&d=404"
 

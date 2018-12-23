@@ -3,7 +3,7 @@ from unittest.mock import Mock
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from misago.threads.validators import validate_post_length, validate_thread_title
+from ..validators import validate_post_length, validate_thread_title
 
 
 class ValidatePostLengthTests(TestCase):

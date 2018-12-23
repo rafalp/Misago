@@ -1,10 +1,9 @@
 from django.urls import reverse, NoReverseMatch
 from django.shortcuts import render as dj_render
 
-from misago.conf import settings
-
-from misago.admin import site
-from misago.admin.auth import is_admin_session, update_admin_session
+from ...conf import settings
+from .. import site
+from ..auth import is_admin_session, update_admin_session
 from .auth import login
 
 

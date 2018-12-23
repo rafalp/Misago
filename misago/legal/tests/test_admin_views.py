@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from misago.admin.test import AdminTestCase
-from misago.legal.models import Agreement
+from ...admin.test import AdminTestCase
+from ..models import Agreement
 
 
 class AgreementAdminViewsTests(AdminTestCase):

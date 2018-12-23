@@ -1,13 +1,11 @@
 from pathlib import Path
 
-from PIL import Image
-
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
-
-from misago.conf import settings
+from PIL import Image
 
 from . import store
+from ...conf import settings
 
 ALLOWED_EXTENSIONS = (".gif", ".png", ".jpg", ".jpeg")
 ALLOWED_MIME_TYPES = ("image/gif", "image/jpeg", "image/png", "image/mpo")

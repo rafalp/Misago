@@ -1,12 +1,10 @@
 from rest_framework import serializers
 
-from misago.categories.serializers import CategorySerializer
-from misago.core.serializers import MutableFields
-from misago.threads.models import Post
-from misago.users.serializers import UserSerializer
-
+from ...categories.serializers import CategorySerializer
+from ...core.serializers import MutableFields
+from ...users.serializers import UserSerializer
+from ..models import Post
 from .post import PostSerializer
-
 
 __all__ = ["FeedSerializer"]
 

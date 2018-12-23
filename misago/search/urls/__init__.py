@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from misago.search.views import landing, search
+from ..views import landing, search
 
 urlpatterns = [
     url(r"^search/$", landing, name="search"),

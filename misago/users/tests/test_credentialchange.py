@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from misago.users import credentialchange
-from misago.users.test import create_test_user
+from ...users import credentialchange
+from ..test import create_test_user
 
 
 class MockRequest(object):

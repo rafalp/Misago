@@ -2,17 +2,16 @@ import json
 
 from django.urls import reverse
 
-from misago.acl import useracl
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.conftest import get_cache_versions
-from misago.readtracker import poststracker
-from misago.threads import test
-from misago.threads.models import Poll, PollVote, Post, Thread
-from misago.threads.serializers import ThreadsListSerializer
-from misago.threads.serializers.moderation import THREADS_LIMIT
-from misago.threads.test import patch_category_acl, patch_other_category_acl
-
+from .. import test
+from ...acl import useracl
+from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
+from ...conftest import get_cache_versions
+from ...readtracker import poststracker
+from ..models import Poll, PollVote, Post, Thread
+from ..serializers import ThreadsListSerializer
+from ..serializers.moderation import THREADS_LIMIT
+from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
 cache_versions = get_cache_versions()

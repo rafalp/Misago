@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
-from misago.threads import moderation
-
 from . import PostingEndpoint, PostingMiddleware
+from ... import moderation
 
 
 class HideMiddleware(PostingMiddleware):

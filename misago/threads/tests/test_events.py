@@ -3,13 +3,13 @@ from unittest.mock import Mock
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.acl import useracl
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.conftest import get_cache_versions
-from misago.threads.events import record_event
-from misago.threads.models import Thread
-from misago.users.test import create_test_user
+from ...acl import useracl
+from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
+from ...conftest import get_cache_versions
+from ...users.test import create_test_user
+from ..events import record_event
+from ..models import Thread
 
 cache_versions = get_cache_versions()
 

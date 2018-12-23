@@ -1,5 +1,5 @@
-from misago.categories.models import Category
-from misago.users.test import AuthenticatedUserTestCase
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
 
 
 class PrivateThreadsTestCase(AuthenticatedUserTestCase):

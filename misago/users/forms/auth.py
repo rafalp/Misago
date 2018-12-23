@@ -5,8 +5,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
 from django.utils.translation import gettext_lazy as _
 
-from misago.users.bans import get_user_ban
-
+from ..bans import get_user_ban
 
 User = get_user_model()
 

@@ -1,13 +1,12 @@
-from misago.acl.objectacl import add_acl_to_obj
-from misago.conf import settings
-from misago.core.shortcuts import paginate, pagination_dict
-from misago.readtracker.poststracker import make_read_aware
-from misago.threads.paginator import PostsPaginator
-from misago.threads.permissions import exclude_invisible_posts
-from misago.threads.serializers import PostSerializer
-from misago.threads.utils import add_likes_to_posts
-from misago.users.online.utils import make_users_status_aware
-
+from ...acl.objectacl import add_acl_to_obj
+from ...conf import settings
+from ...core.shortcuts import paginate, pagination_dict
+from ...readtracker.poststracker import make_read_aware
+from ...users.online.utils import make_users_status_aware
+from ..paginator import PostsPaginator
+from ..permissions import exclude_invisible_posts
+from ..serializers import PostSerializer
+from ..utils import add_likes_to_posts
 
 __all__ = ["ThreadPosts"]
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.core.momentjs import clean_language_name, get_locale_url
+from ..momentjs import clean_language_name, get_locale_url
 
 
 class MomentJSTests(TestCase):

@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.users.test import AuthenticatedUserTestCase
+from ...users.test import AuthenticatedUserTestCase
 
 
 class ParseMarkupApiTests(AuthenticatedUserTestCase):

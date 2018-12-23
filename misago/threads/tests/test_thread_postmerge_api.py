@@ -2,13 +2,13 @@ import json
 
 from django.urls import reverse
 
-from misago.categories.models import Category
-from misago.readtracker import poststracker
-from misago.threads import test
-from misago.threads.models import Post, Thread
-from misago.threads.serializers.moderation import POSTS_LIMIT
-from misago.threads.test import patch_category_acl
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...categories.models import Category
+from ...readtracker import poststracker
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Post, Thread
+from ..serializers.moderation import POSTS_LIMIT
+from ..test import patch_category_acl
 
 
 class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):

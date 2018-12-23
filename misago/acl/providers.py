@@ -1,7 +1,6 @@
 from importlib import import_module
 
-from misago.conf import settings
-
+from ..conf import settings
 
 _NOT_INITIALIZED_ERROR = (
     "PermissionProviders instance has to load providers with load() "

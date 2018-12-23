@@ -1,9 +1,8 @@
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
+from rest_framework.response import Response
 
-from misago.threads.serializers import MovePostsSerializer
+from ...serializers import MovePostsSerializer
 
 
 def posts_move_endpoint(request, thread, viewmodel):

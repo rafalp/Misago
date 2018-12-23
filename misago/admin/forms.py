@@ -1,7 +1,7 @@
 from django.forms import DateTimeField, RadioSelect, TypedChoiceField, ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from misago.core.utils import parse_iso8601_string
+from ..core.utils import parse_iso8601_string
 
 
 class IsoDateTimeField(DateTimeField):

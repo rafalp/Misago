@@ -1,7 +1,6 @@
 import markdown
 from markdown.inlinepatterns import SimpleTagPattern
 
-
 STRIKETROUGH_RE = r"(~{2})(.+?)\2"
 
 

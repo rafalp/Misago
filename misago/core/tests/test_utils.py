@@ -3,16 +3,16 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.core.utils import (
+from ..utils import (
+    clean_ids_list,
     clean_return_path,
     format_plaintext_for_html,
+    get_exception_message,
+    get_host_from_address,
     is_referer_local,
     is_request_to_misago,
     parse_iso8601_string,
     slugify,
-    get_exception_message,
-    clean_ids_list,
-    get_host_from_address,
 )
 
 

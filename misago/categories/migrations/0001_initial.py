@@ -1,11 +1,10 @@
-import mptt.fields
-
 import django.db.models.deletion
+import mptt.fields
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
 
-from misago.acl.models import permissions_default
+from ...acl.models import permissions_default
 
 
 class Migration(migrations.Migration):

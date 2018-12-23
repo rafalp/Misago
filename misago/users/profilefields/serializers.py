@@ -1,4 +1,4 @@
-from misago.users.permissions import can_edit_profile_details
+from ..permissions import can_edit_profile_details
 
 
 def serialize_profilefields_data(request, profilefields, user):

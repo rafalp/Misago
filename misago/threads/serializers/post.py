@@ -1,11 +1,9 @@
+from django.urls import reverse
 from rest_framework import serializers
 
-from django.urls import reverse
-
-from misago.core.serializers import MutableFields
-from misago.threads.models import Post
-from misago.users.serializers import UserSerializer as BaseUserSerializer
-
+from ...core.serializers import MutableFields
+from ...users.serializers import UserSerializer as BaseUserSerializer
+from ..models import Post
 
 __all__ = ["PostSerializer"]
 

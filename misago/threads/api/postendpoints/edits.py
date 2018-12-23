@@ -1,17 +1,16 @@
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.db.models import F
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.shortcuts import get_int_or_404
-from misago.markup import common_flavour
-from misago.threads.checksums import update_post_checksum
-from misago.threads.serializers import PostEditSerializer, PostSerializer
-from misago.users.online.utils import make_users_status_aware
+from ....acl.objectacl import add_acl_to_obj
+from ....core.shortcuts import get_int_or_404
+from ....markup import common_flavour
+from ....users.online.utils import make_users_status_aware
+from ...checksums import update_post_checksum
+from ...serializers import PostEditSerializer, PostSerializer
 
 
 def get_edit_endpoint(request, post):

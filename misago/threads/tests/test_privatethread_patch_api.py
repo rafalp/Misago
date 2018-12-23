@@ -2,12 +2,11 @@ import json
 
 from django.core import mail
 
-from misago.acl.test import patch_user_acl
-from misago.threads import test
-from misago.threads.test import other_user_cant_use_private_threads
-from misago.threads.models import Thread, ThreadParticipant
-from misago.users.test import create_test_user
-
+from .. import test
+from ...acl.test import patch_user_acl
+from ...users.test import create_test_user
+from ..models import Thread, ThreadParticipant
+from ..test import other_user_cant_use_private_threads
 from .test_privatethreads import PrivateThreadsTestCase
 
 

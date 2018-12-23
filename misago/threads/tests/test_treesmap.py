@@ -1,8 +1,7 @@
 from django.test import TestCase
 
-from misago.categories.models import Category
-from misago.threads.threadtypes.treesmap import TreesMap
-
+from ...categories.models import Category
+from ..threadtypes.treesmap import TreesMap
 
 THREAD_TYPE = "misago.threads.threadtypes.thread.Thread"
 

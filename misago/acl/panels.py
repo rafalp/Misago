@@ -1,5 +1,4 @@
 from debug_toolbar.panels import Panel
-
 from django.utils.translation import gettext_lazy as _
 
 

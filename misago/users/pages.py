@@ -1,5 +1,4 @@
-from misago.core.page import Page
-
+from ..core.page import Page
 
 usercp = Page("usercp")
 users_list = Page("users list")

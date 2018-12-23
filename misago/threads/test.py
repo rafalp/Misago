@@ -3,11 +3,10 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.core.utils import slugify
-from misago.users.test import create_test_user
-
+from ..acl.test import patch_user_acl
+from ..categories.models import Category
+from ..core.utils import slugify
+from ..users.test import create_test_user
 from .checksums import update_post_checksum
 from .models import Poll, Post, Thread
 

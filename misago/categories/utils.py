@@ -1,6 +1,5 @@
-from misago.acl.objectacl import add_acl_to_obj
-from misago.readtracker import categoriestracker
-
+from ..acl.objectacl import add_acl_to_obj
+from ..readtracker import categoriestracker
 from .models import Category
 
 

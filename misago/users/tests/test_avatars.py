@@ -1,23 +1,15 @@
 from pathlib import Path
 from unittest.mock import Mock
 
-from PIL import Image
-
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.crypto import get_random_string
+from PIL import Image
 
-from misago.conf import settings
-from misago.users.avatars import (
-    dynamic,
-    gallery,
-    gravatar,
-    set_default_avatar,
-    store,
-    uploaded,
-)
-from misago.users.models import Avatar, AvatarGallery
-from misago.users.test import create_test_user
+from ...conf import settings
+from ..avatars import dynamic, gallery, gravatar, set_default_avatar, store, uploaded
+from ..models import Avatar, AvatarGallery
+from ..test import create_test_user
 
 
 class AvatarsStoreTests(TestCase):

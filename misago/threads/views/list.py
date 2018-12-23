@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
 
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.viewmodels import (
+from ...core.shortcuts import get_int_or_404
+from ..viewmodels import (
     ForumThreads,
     PrivateThreads,
     PrivateThreadsCategory,

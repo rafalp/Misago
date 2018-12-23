@@ -6,13 +6,13 @@ from django.test import override_settings
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads.models import Post, Thread
-from misago.threads.test import post_thread
-from misago.users.activepostersranking import build_active_posters_ranking
-from misago.users.models import Ban, Rank
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...threads.models import Post, Thread
+from ...threads.test import post_thread
+from ..activepostersranking import build_active_posters_ranking
+from ..models import Ban, Rank
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
 

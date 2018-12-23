@@ -5,8 +5,8 @@ from django.db import IntegrityError, models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.cache.versions import invalidate_cache
-from misago.users import BANS_CACHE
+from .. import BANS_CACHE
+from ...cache.versions import invalidate_cache
 
 
 class BansManager(models.Manager):
@@ -92,7 +92,7 @@ class Ban(models.Model):
         return super().save(*args, **kwargs)
 
     def get_serialized_message(self):
-        from misago.users.serializers import BanMessageSerializer
+        from ..serializers import BanMessageSerializer
 
         return BanMessageSerializer(self).data
 
@@ -138,7 +138,7 @@ class BanCache(models.Model):
             pass  # first come is first serve with ban cache
 
     def get_serialized_message(self):
-        from misago.users.serializers import BanMessageSerializer
+        from ..serializers import BanMessageSerializer
 
         temp_ban = Ban(
             id=1,

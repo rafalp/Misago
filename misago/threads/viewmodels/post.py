@@ -1,9 +1,8 @@
 from django.shortcuts import get_object_or_404
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.viewmodel import ViewModel as BaseViewModel
-from misago.threads.permissions import exclude_invisible_posts
-
+from ...acl.objectacl import add_acl_to_obj
+from ...core.viewmodel import ViewModel as BaseViewModel
+from ..permissions import exclude_invisible_posts
 
 __all__ = ["ThreadPost"]
 

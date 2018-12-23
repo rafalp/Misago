@@ -1,6 +1,5 @@
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-
 from . import PostingEndpoint, PostingMiddleware
+from ....categories import PRIVATE_THREADS_ROOT_NAME
 
 
 class ModerationQueueMiddleware(PostingMiddleware):

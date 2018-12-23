@@ -2,7 +2,6 @@ import markdown
 from markdown.inlinepatterns import LinkPattern
 from markdown.util import etree
 
-
 IMAGES_RE = r"\!(\s?)\((<.*?>|([^\)]*))\)"
 
 

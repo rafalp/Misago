@@ -1,11 +1,10 @@
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
+from rest_framework.response import Response
 
-from misago.threads.models import Thread
-from misago.threads.moderation import threads as moderation
-from misago.threads.serializers import SplitPostsSerializer
+from ...models import Thread
+from ...moderation import threads as moderation
+from ...serializers import SplitPostsSerializer
 
 
 def posts_split_endpoint(request, thread):

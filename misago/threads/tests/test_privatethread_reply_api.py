@@ -1,7 +1,6 @@
-from misago.threads import test
-from misago.threads.models import ThreadParticipant
-from misago.users.test import create_test_user
-
+from .. import test
+from ...users.test import create_test_user
+from ..models import ThreadParticipant
 from .test_privatethreads import PrivateThreadsTestCase
 
 

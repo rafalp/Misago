@@ -3,11 +3,11 @@ from django.core import mail
 from django.urls import reverse
 from django.utils.encoding import smart_str
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads.models import ThreadParticipant
-from misago.threads.test import other_user_cant_use_private_threads
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase, create_test_user
+from ..models import ThreadParticipant
+from ..test import other_user_cant_use_private_threads
 
 User = get_user_model()
 

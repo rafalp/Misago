@@ -1,14 +1,14 @@
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
-from misago.admin.views import generic
-from misago.users.datadownloads import (
+from ....admin.views import generic
+from ...datadownloads import (
     expire_user_data_download,
     request_user_data_download,
     user_has_data_download_request,
 )
-from misago.users.forms.admin import RequestDataDownloadsForm, SearchDataDownloadsForm
-from misago.users.models import DataDownload
+from ...forms.admin import RequestDataDownloadsForm, SearchDataDownloadsForm
+from ...models import DataDownload
 
 
 class DataDownloadAdmin(generic.AdminBaseMixin):

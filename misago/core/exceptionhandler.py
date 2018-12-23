@@ -1,14 +1,12 @@
-from rest_framework.views import exception_handler as rest_exception_handler
-
 from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.urls import reverse
+from rest_framework.views import exception_handler as rest_exception_handler
 from social_core.exceptions import SocialAuthBaseException
 from social_core.utils import social_logger
 
 from . import errorpages
 from .exceptions import AjaxError, Banned, ExplicitFirstPage, OutdatedSlug
-
 
 HANDLED_EXCEPTIONS = (
     AjaxError,

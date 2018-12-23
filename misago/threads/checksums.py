@@ -1,4 +1,4 @@
-from misago.markup import checksums
+from ..markup import checksums
 
 
 def is_post_valid(post):

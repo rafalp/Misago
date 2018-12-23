@@ -1,8 +1,7 @@
 from django.apps import AppConfig
 from django.utils.translation import gettext_lazy as _
 
-from misago.conf import settings
-
+from ..conf import settings
 from .pages import user_profile, usercp, users_list
 
 

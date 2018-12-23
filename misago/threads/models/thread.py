@@ -3,9 +3,9 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.conf import settings
-from misago.core.pgutils import PgPartialIndex
-from misago.core.utils import slugify
+from ...conf import settings
+from ...core.pgutils import PgPartialIndex
+from ...core.utils import slugify
 
 
 class Thread(models.Model):
@@ -122,7 +122,7 @@ class Thread(models.Model):
         return self.title
 
     def delete(self, *args, **kwargs):
-        from misago.threads.signals import delete_thread
+        from ..signals import delete_thread
 
         delete_thread.send(sender=self)
 
@@ -132,12 +132,12 @@ class Thread(models.Model):
         if self.pk == other_thread.pk:
             raise ValueError("thread can't be merged with itself")
 
-        from misago.threads.signals import merge_thread
+        from ..signals import merge_thread
 
         merge_thread.send(sender=self, other_thread=other_thread)
 
     def move(self, new_category):
-        from misago.threads.signals import move_thread
+        from ..signals import move_thread
 
         self.category = new_category
         move_thread.send(sender=self)

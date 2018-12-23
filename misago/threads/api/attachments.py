@@ -1,15 +1,13 @@
-from rest_framework import viewsets
-from rest_framework.response import Response
-
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.template.defaultfilters import filesizeformat
 from django.utils.translation import gettext as _
+from rest_framework import viewsets
+from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.threads.models import Attachment, AttachmentType
-from misago.threads.serializers import AttachmentSerializer
-from misago.users.audittrail import create_audit_trail
-
+from ...acl.objectacl import add_acl_to_obj
+from ...users.audittrail import create_audit_trail
+from ..models import Attachment, AttachmentType
+from ..serializers import AttachmentSerializer
 
 IMAGE_EXTENSIONS = ("jpg", "jpeg", "png", "gif")
 

@@ -1,7 +1,7 @@
 import pytest
 
-from misago.conf import SETTINGS_CACHE
-from misago.conf.dynamicsettings import DynamicSettings
+from .. import SETTINGS_CACHE
+from ..dynamicsettings import DynamicSettings
 
 
 def test_settings_are_loaded_from_database_if_cache_is_not_available(

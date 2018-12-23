@@ -1,14 +1,11 @@
 import random
 from pathlib import Path
 
+from django.core.files.base import ContentFile
 from PIL import Image
 
-from django.core.files.base import ContentFile
-
-from misago.conf import settings
-
 from . import store
-
+from ...conf import settings
 
 DEFAULT_GALLERY = "__default__"
 
@@ -20,7 +17,7 @@ def get_available_galleries(include_default=False):
     Only jpgs, gifs and pngs are supported avatar images.
     Galleries are
     """
-    from misago.users.models import AvatarGallery
+    from ..models import AvatarGallery
 
     galleries = []
     galleries_dicts = {}
@@ -40,13 +37,13 @@ def get_available_galleries(include_default=False):
 
 
 def galleries_exist():
-    from misago.users.models import AvatarGallery
+    from ..models import AvatarGallery
 
     return AvatarGallery.objects.exists()
 
 
 def load_avatar_galleries():
-    from misago.users.models import AvatarGallery
+    from ..models import AvatarGallery
 
     galleries = []
     for directory in Path(settings.MISAGO_AVATAR_GALLERY).iterdir():

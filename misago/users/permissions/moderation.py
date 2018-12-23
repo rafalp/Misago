@@ -7,12 +7,11 @@ from django.template.defaultfilters import date as format_date
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import algebra
-from misago.acl.decorators import return_boolean
-from misago.acl.models import Role
-from misago.admin.forms import YesNoSwitch
-from misago.users.bans import get_user_ban
-
+from ...acl import algebra
+from ...acl.decorators import return_boolean
+from ...acl.models import Role
+from ...admin.forms import YesNoSwitch
+from ..bans import get_user_ban
 
 __all__ = [
     "allow_rename_user",

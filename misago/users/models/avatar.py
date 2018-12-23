@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from misago.users.avatars import store
+from ..avatars import store
 
 
 class Avatar(models.Model):

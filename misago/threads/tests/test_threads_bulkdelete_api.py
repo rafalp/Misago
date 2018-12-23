@@ -2,14 +2,13 @@ import json
 
 from django.urls import reverse
 
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Thread
-from misago.threads.serializers.moderation import THREADS_LIMIT
-from misago.threads.test import patch_category_acl
-from misago.threads.threadtypes import trees_map
-
+from .. import test
+from ...categories import PRIVATE_THREADS_ROOT_NAME
+from ...categories.models import Category
+from ..models import Thread
+from ..serializers.moderation import THREADS_LIMIT
+from ..test import patch_category_acl
+from ..threadtypes import trees_map
 from .test_threads_api import ThreadsApiTestCase
 
 

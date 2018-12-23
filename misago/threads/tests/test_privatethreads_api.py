@@ -1,10 +1,9 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.threads import test
-from misago.threads.models import Thread, ThreadParticipant
-from misago.threads.test import patch_private_threads_acl
-
+from .. import test
+from ...acl.test import patch_user_acl
+from ..models import Thread, ThreadParticipant
+from ..test import patch_private_threads_acl
 from .test_privatethreads import PrivateThreadsTestCase
 
 

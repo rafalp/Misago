@@ -3,10 +3,10 @@ from io import StringIO
 from django.core.management import call_command
 from django.test import TestCase
 
-from misago.acl import ACL_CACHE
-from misago.cache.test import assert_invalidates_cache
-from misago.categories.management.commands import fixcategoriestree
-from misago.categories.models import Category
+from ...acl import ACL_CACHE
+from ...cache.test import assert_invalidates_cache
+from ..management.commands import fixcategoriestree
+from ..models import Category
 
 
 def run_command():

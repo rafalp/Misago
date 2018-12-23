@@ -1,4 +1,4 @@
-from misago.acl import algebra
+from .. import algebra
 
 
 def test_greatest_value_is_returned():

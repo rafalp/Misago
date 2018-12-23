@@ -25,7 +25,6 @@ from .views.admin.users import (
     UsersList,
 )
 
-
 djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
 
 

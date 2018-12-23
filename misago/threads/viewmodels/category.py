@@ -1,13 +1,12 @@
 from django.http import Http404
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.categories.permissions import allow_browse_category, allow_see_category
-from misago.categories.serializers import CategorySerializer
-from misago.core.shortcuts import validate_slug
-from misago.core.viewmodel import ViewModel as BaseViewModel
-from misago.threads.permissions import allow_use_private_threads
-
+from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
+from ...categories.permissions import allow_browse_category, allow_see_category
+from ...categories.serializers import CategorySerializer
+from ...core.shortcuts import validate_slug
+from ...core.viewmodel import ViewModel as BaseViewModel
+from ..permissions import allow_use_private_threads
 
 __all__ = ["ThreadsRootCategory", "ThreadsCategory", "PrivateThreadsCategory"]
 

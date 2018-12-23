@@ -2,15 +2,15 @@ import os
 
 from django.urls import reverse
 
-from misago.acl import useracl
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.conftest import get_cache_versions
-from misago.threads import test
-from misago.threads.models import Attachment
-from misago.threads.serializers import AttachmentSerializer
-from misago.threads.test import patch_category_acl
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl import useracl
+from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
+from ...conftest import get_cache_versions
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Attachment
+from ..serializers import AttachmentSerializer
+from ..test import patch_category_acl
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, "document.pdf")

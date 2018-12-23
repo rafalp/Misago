@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.faker.englishcorpus import EnglishCorpus
+from ..englishcorpus import EnglishCorpus
 
 
 class EnglishCorpusTests(TestCase):

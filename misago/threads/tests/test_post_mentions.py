@@ -1,10 +1,10 @@
 from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
 
-from misago.categories.models import Category
-from misago.markup.mentions import MENTIONS_LIMIT
-from misago.threads import test
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from .. import test
+from ...categories.models import Category
+from ...markup.mentions import MENTIONS_LIMIT
+from ...users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class PostMentionsTests(AuthenticatedUserTestCase):

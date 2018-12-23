@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
-from misago.conf.test import override_dynamic_settings
-from misago.users.setupnewuser import set_default_subscription_options, setup_new_user
+from ...conf.test import override_dynamic_settings
+from ..setupnewuser import set_default_subscription_options, setup_new_user
 
 User = get_user_model()
 

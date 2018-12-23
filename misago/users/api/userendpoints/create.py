@@ -1,22 +1,21 @@
-from rest_framework import status
-from rest_framework.response import Response
-
 from django.contrib.auth import authenticate, get_user_model, login
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import IntegrityError
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
+from rest_framework import status
+from rest_framework.response import Response
 
-from misago.conf import settings
-from misago.legal.models import Agreement
-from misago.users import captcha
-from misago.users.forms.register import RegisterForm
-from misago.users.registration import (
+from ... import captcha
+from ....conf import settings
+from ....legal.models import Agreement
+from ...forms.register import RegisterForm
+from ...registration import (
     get_registration_result_json,
     save_user_agreements,
     send_welcome_email,
 )
-from misago.users.setupnewuser import setup_new_user
+from ...setupnewuser import setup_new_user
 
 User = get_user_model()
 

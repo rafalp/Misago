@@ -5,9 +5,9 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.management.commands import prunecategories
-from misago.categories.models import Category
-from misago.threads import test
+from ...threads import test
+from ..management.commands import prunecategories
+from ..models import Category
 
 
 class PruneCategoriesTests(TestCase):

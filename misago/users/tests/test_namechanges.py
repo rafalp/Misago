@@ -1,8 +1,8 @@
 from datetime import timedelta
 
-from misago.users.namechanges import (
-    get_next_available_namechange,
+from ..namechanges import (
     get_left_namechanges,
+    get_next_available_namechange,
     get_username_options,
 )
 

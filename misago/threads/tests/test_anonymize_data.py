@@ -1,22 +1,20 @@
 from django.test import RequestFactory
 from django.urls import reverse
 
-from misago.cache.versions import get_cache_versions
-from misago.categories.models import Category
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.users.test import AuthenticatedUserTestCase
-
-from misago.threads import test
-from misago.threads.api.postendpoints.patch_post import patch_is_liked
-from misago.threads.models import Post
-from misago.threads.participants import (
+from .. import test
+from ...cache.versions import get_cache_versions
+from ...categories.models import Category
+from ...conf.dynamicsettings import DynamicSettings
+from ...users.test import AuthenticatedUserTestCase, create_test_user
+from ..api.postendpoints.patch_post import patch_is_liked
+from ..models import Post
+from ..participants import (
     add_participant,
     change_owner,
     make_participants_aware,
     remove_participant,
     set_owner,
 )
-from misago.users.test import create_test_user
 
 
 class AnonymizeEventsTests(AuthenticatedUserTestCase):

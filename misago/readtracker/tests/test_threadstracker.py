@@ -3,15 +3,15 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.acl.useracl import get_user_acl
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.conftest import get_cache_versions
-from misago.readtracker import poststracker, threadstracker
-from misago.readtracker.models import PostRead
-from misago.threads import test
-from misago.users.test import create_test_user
+from .. import poststracker, threadstracker
+from ...acl.objectacl import add_acl_to_obj
+from ...acl.useracl import get_user_acl
+from ...categories.models import Category
+from ...conf import settings
+from ...conftest import get_cache_versions
+from ...threads import test
+from ...users.test import create_test_user
+from ..models import PostRead
 
 cache_versions = get_cache_versions()
 

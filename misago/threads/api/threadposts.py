@@ -1,31 +1,24 @@
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
+from django.utils.translation import gettext as _
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from django.core.exceptions import PermissionDenied
-from django.db import transaction
-from django.utils.translation import gettext as _
-
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import Post
-from misago.threads.permissions import allow_edit_post, allow_reply_thread
-from misago.threads.serializers import AttachmentSerializer, PostSerializer
-from misago.threads.viewmodels import (
-    ForumThread,
-    PrivateThread,
-    ThreadPost,
-    ThreadPosts,
-)
-from misago.users.online.utils import make_users_status_aware
-
+from ...acl.objectacl import add_acl_to_obj
+from ...core.shortcuts import get_int_or_404
+from ...users.online.utils import make_users_status_aware
+from ..models import Post
+from ..permissions import allow_edit_post, allow_reply_thread
+from ..serializers import AttachmentSerializer, PostSerializer
+from ..viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
 from .postendpoints.delete import delete_bulk, delete_post
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint
 from .postendpoints.merge import posts_merge_endpoint
 from .postendpoints.move import posts_move_endpoint
 from .postendpoints.patch_event import event_patch_endpoint
-from .postendpoints.patch_post import post_patch_endpoint, bulk_patch_endpoint
+from .postendpoints.patch_post import bulk_patch_endpoint, post_patch_endpoint
 from .postendpoints.read import post_read_endpoint
 from .postendpoints.split import posts_split_endpoint
 from .postingendpoint import PostingEndpoint

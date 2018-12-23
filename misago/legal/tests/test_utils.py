@@ -1,13 +1,13 @@
 from django.test import TestCase
 
-from misago.legal.models import Agreement, UserAgreement
-from misago.legal.utils import (
+from ...users.test import UserTestCase
+from ..models import Agreement, UserAgreement
+from ..utils import (
     get_parsed_agreement_text,
     get_required_user_agreement,
     save_user_agreement_acceptance,
     set_agreement_as_active,
 )
-from misago.users.test import UserTestCase
 
 
 class MockRequest(object):

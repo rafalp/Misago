@@ -2,10 +2,10 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 
-from misago.conf.test import override_dynamic_settings
-from misago.legal.models import Agreement
-from misago.users.models import Ban, Online
-from misago.users.test import UserTestCase
+from ...conf.test import override_dynamic_settings
+from ...legal.models import Agreement
+from ..models import Ban, Online
+from ..test import UserTestCase
 
 User = get_user_model()
 

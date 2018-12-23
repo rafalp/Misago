@@ -5,11 +5,11 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.threads import test
-from misago.threads.management.commands import clearattachments
-from misago.threads.models import Attachment, AttachmentType
+from .. import test
+from ...categories.models import Category
+from ...conf import settings
+from ..management.commands import clearattachments
+from ..models import Attachment, AttachmentType
 
 
 class ClearAttachmentsTests(TestCase):

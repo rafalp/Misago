@@ -6,10 +6,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.test import patch_category_acl, patch_other_user_category_acl
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from .. import test
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase, create_test_user
+from ..test import patch_category_acl, patch_other_user_category_acl
 
 
 class EmailNotificationTests(AuthenticatedUserTestCase):

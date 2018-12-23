@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import migrations
 
-from misago.acl import ACL_CACHE
-from misago.cache.operations import StartCacheVersioning
+from .. import ACL_CACHE
+from ...cache.operations import StartCacheVersioning
 
 
 class Migration(migrations.Migration):

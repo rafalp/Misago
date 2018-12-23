@@ -2,8 +2,7 @@ import warnings
 
 from django.test import TestCase
 
-from misago.core import SUPPORTED_ENGINES, check_db_engine
-
+from .. import SUPPORTED_ENGINES, check_db_engine
 
 INVALID_ENGINES = [
     "django.db.backends.sqlite3",

@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
-from misago.search import api
-
+from .. import api
 
 urlpatterns = [
     url(r"^search/$", api.search, name="search"),

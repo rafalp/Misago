@@ -1,9 +1,7 @@
-from rest_framework import serializers
-
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
-
+from rest_framework import serializers
 
 __all__ = ["NewVoteSerializer", "PollVoteSerializer"]
 

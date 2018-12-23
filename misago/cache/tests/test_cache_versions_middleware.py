@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from misago.cache.middleware import cache_versions_middleware
+from ..middleware import cache_versions_middleware
 
 
 @pytest.fixture

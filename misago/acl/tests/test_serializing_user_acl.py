@@ -1,6 +1,6 @@
 import json
 
-from misago.acl.useracl import get_user_acl, serialize_user_acl
+from ..useracl import get_user_acl, serialize_user_acl
 
 
 def test_user_acl_is_serializeable(cache_versions, user):

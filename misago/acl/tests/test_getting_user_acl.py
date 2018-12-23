@@ -1,4 +1,4 @@
-from misago.acl.useracl import get_user_acl
+from ..useracl import get_user_acl
 
 
 def test_getter_returns_authenticated_user_acl(cache_versions, user):

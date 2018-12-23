@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from misago.acl.cache import clear_acl_cache
-from misago.categories.models import Category
+from ....acl.cache import clear_acl_cache
+from ...models import Category
 
 
 class Command(BaseCommand):

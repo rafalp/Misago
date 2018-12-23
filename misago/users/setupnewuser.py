@@ -1,5 +1,5 @@
-from .avatars import set_default_avatar
 from .audittrail import create_user_audit_trail
+from .avatars import set_default_avatar
 from .models import User
 
 

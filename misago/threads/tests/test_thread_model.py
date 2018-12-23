@@ -3,10 +3,10 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Poll, Post, Thread, ThreadParticipant
-from misago.users.test import create_test_user
+from .. import test
+from ...categories.models import Category
+from ...users.test import create_test_user
+from ..models import Poll, Post, Thread, ThreadParticipant
 
 
 class ThreadModelTests(TestCase):

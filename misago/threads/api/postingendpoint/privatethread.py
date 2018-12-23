@@ -1,8 +1,7 @@
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.models import Category
-
 from . import PostingEndpoint, PostingMiddleware
+from ....acl.objectacl import add_acl_to_obj
+from ....categories import PRIVATE_THREADS_ROOT_NAME
+from ....categories.models import Category
 
 
 class PrivateThreadMiddleware(PostingMiddleware):

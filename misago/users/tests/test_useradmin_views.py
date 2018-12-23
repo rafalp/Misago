@@ -2,16 +2,15 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 
-from misago.acl.models import Role
-from misago.admin.test import AdminTestCase
-from misago.categories.models import Category
-from misago.legal.models import Agreement
-from misago.legal.utils import save_user_agreement_acceptance
-from misago.threads.test import post_thread, reply_thread
-
-from misago.users.datadownloads import request_user_data_download
-from misago.users.models import Ban, DataDownload, Rank
-from misago.users.test import create_test_user
+from ...acl.models import Role
+from ...admin.test import AdminTestCase
+from ...categories.models import Category
+from ...legal.models import Agreement
+from ...legal.utils import save_user_agreement_acceptance
+from ...threads.test import post_thread, reply_thread
+from ..datadownloads import request_user_data_download
+from ..models import Ban, DataDownload, Rank
+from ..test import create_test_user
 
 User = get_user_model()
 

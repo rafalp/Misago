@@ -2,8 +2,8 @@ import json
 
 from django.urls import reverse
 
-from misago.legal.models import Agreement
-from misago.users.test import AuthenticatedUserTestCase
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Agreement
 
 
 class SubmitAgreementTests(AuthenticatedUserTestCase):

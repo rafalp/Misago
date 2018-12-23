@@ -1,11 +1,10 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.apipatch import ApiPatch
-from misago.threads.moderation import posts as moderation
-from misago.threads.permissions import allow_hide_event, allow_unhide_event
-
+from ....acl.objectacl import add_acl_to_obj
+from ....core.apipatch import ApiPatch
+from ...moderation import posts as moderation
+from ...permissions import allow_hide_event, allow_unhide_event
 
 event_patch_dispatcher = ApiPatch()
 

@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-from misago.acl import ACL_CACHE
-from misago.admin.test import AdminTestCase
-from misago.cache.test import assert_invalidates_cache
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Thread
+from ...acl import ACL_CACHE
+from ...admin.test import AdminTestCase
+from ...cache.test import assert_invalidates_cache
+from ...threads import test
+from ...threads.models import Thread
+from ..models import Category
 
 
 class CategoryAdminTestCase(AdminTestCase):

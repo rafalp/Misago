@@ -3,9 +3,9 @@ from io import StringIO
 from django.core.management import call_command
 from django.test import TestCase
 
-from misago.categories.management.commands import synchronizecategories
-from misago.categories.models import Category
-from misago.threads import test
+from ...threads import test
+from ..management.commands import synchronizecategories
+from ..models import Category
 
 
 class SynchronizeCategoriesTests(TestCase):

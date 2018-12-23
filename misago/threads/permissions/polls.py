@@ -4,12 +4,11 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
-from misago.acl import algebra
-from misago.acl.decorators import return_boolean
-from misago.acl.models import Role
-from misago.admin.forms import YesNoSwitch
-from misago.threads.models import Poll, Thread
-
+from ...acl import algebra
+from ...acl.decorators import return_boolean
+from ...acl.models import Role
+from ...admin.forms import YesNoSwitch
+from ..models import Poll, Thread
 
 __all__ = [
     "allow_start_poll",

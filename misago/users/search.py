@@ -3,10 +3,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from misago.search import SearchProvider
-
+from ..search import SearchProvider
 from .serializers import UserCardSerializer
-
 
 HEAD_RESULTS = 8
 TAIL_RESULTS = 8

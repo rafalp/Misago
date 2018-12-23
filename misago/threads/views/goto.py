@@ -6,10 +6,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views import View
 
-from misago.conf import settings
-from misago.readtracker.dates import get_cutoff_date
-from misago.threads.permissions import exclude_invisible_posts
-from misago.threads.viewmodels import ForumThread, PrivateThread
+from ...conf import settings
+from ...readtracker.dates import get_cutoff_date
+from ..permissions import exclude_invisible_posts
+from ..viewmodels import ForumThread, PrivateThread
 
 
 class GotoView(View):

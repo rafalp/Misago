@@ -1,7 +1,7 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.module_loading import import_string
 
-from misago.conf import settings
+from ..conf import settings
 
 
 class SearchProviders(object):

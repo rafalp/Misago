@@ -1,8 +1,9 @@
 from hashlib import md5
 
+from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
+from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
@@ -11,15 +12,14 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl.models import Role
-from misago.conf import settings
-from misago.core.pgutils import PgPartialIndex
-from misago.core.utils import slugify
-from misago.users import avatars
-from misago.users.audittrail import create_user_audit_trail
-from misago.users.signatures import is_user_signature_valid
-from misago.users.utils import hash_email
-
+from .. import avatars
+from ...acl.models import Role
+from ...conf import settings
+from ...core.pgutils import PgPartialIndex
+from ...core.utils import slugify
+from ..audittrail import create_user_audit_trail
+from ..signatures import is_user_signature_valid
+from ..utils import hash_email
 from .online import Online
 from .rank import Rank
 
@@ -251,7 +251,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         return super().delete(*args, **kwargs)
 
     def delete_content(self):
-        from misago.users.signals import delete_user_content
+        from ..signals import delete_user_content
 
         delete_user_content.send(sender=self)
 
@@ -269,7 +269,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.username = settings.MISAGO_ANONYMOUS_USERNAME
         self.slug = slugify(self.username)
 
-        from misago.users.signals import anonymize_user_data
+        from ..signals import anonymize_user_data
 
         anonymize_user_data.send(sender=self)
 
@@ -329,7 +329,7 @@ class User(AbstractBaseUser, PermissionsMixin):
                     changed_by, new_username, old_username
                 )
 
-                from misago.users.signals import username_changed
+                from ..signals import username_changed
 
                 username_changed.send(sender=self)
 

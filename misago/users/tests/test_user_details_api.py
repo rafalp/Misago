@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserDetailsApiTests(AuthenticatedUserTestCase):

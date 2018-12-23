@@ -1,8 +1,7 @@
+from django.utils import timezone
 from rest_framework.request import Request
 
-from django.utils import timezone
-
-from misago.users.models import Online
+from ..models import Online
 
 
 def mute_tracker(request):

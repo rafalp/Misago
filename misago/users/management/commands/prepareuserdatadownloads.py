@@ -3,14 +3,13 @@ import logging
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext
 
-from misago.cache.versions import get_cache_versions
-from misago.conf import settings
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.core.mail import mail_user
-from misago.core.pgutils import chunk_queryset
-from misago.users.datadownloads import prepare_user_data_download
-from misago.users.models import DataDownload
-
+from ....cache.versions import get_cache_versions
+from ....conf import settings
+from ....conf.dynamicsettings import DynamicSettings
+from ....core.mail import mail_user
+from ....core.pgutils import chunk_queryset
+from ...datadownloads import prepare_user_data_download
+from ...models import DataDownload
 
 logger = logging.getLogger("misago.users.datadownloads")
 

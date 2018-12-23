@@ -3,10 +3,9 @@ import time
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from misago.categories.models import Category
-from misago.core.management.progressbar import show_progress
-from misago.core.pgutils import chunk_queryset
-
+from ....categories.models import Category
+from ....core.management.progressbar import show_progress
+from ....core.pgutils import chunk_queryset
 
 User = get_user_model()
 

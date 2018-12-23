@@ -1,8 +1,7 @@
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.threads import test
-
+from .. import test
 from .test_threads_api import ThreadsApiTestCase
 
 

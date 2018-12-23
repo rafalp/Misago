@@ -1,7 +1,7 @@
 from django.urls import reverse
 
-from misago.threads import test
-from misago.threads.tests.test_threads_api import ThreadsApiTestCase
+from ...threads import test
+from ...threads.tests.test_threads_api import ThreadsApiTestCase
 
 
 class UserThreadsApiTests(ThreadsApiTestCase):

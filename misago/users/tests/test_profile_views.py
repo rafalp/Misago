@@ -1,10 +1,10 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads import test
-from misago.users.models import Ban
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...threads import test
+from ..models import Ban
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):

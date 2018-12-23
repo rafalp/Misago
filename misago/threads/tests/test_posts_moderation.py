@@ -1,7 +1,7 @@
-from misago.categories.models import Category
-from misago.threads import moderation, test
-from misago.threads.models import Post, Thread
-from misago.users.test import AuthenticatedUserTestCase
+from .. import moderation, test
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Post, Thread
 
 
 class PostsModerationTests(AuthenticatedUserTestCase):

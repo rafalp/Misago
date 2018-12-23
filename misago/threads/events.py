@@ -1,7 +1,6 @@
 from django.utils import timezone
 
-from misago.readtracker import poststracker
-
+from ..readtracker import poststracker
 from .models import Post
 
 

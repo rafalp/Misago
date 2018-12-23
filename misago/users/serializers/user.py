@@ -1,12 +1,9 @@
-from rest_framework import serializers
-
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
-from misago.core.serializers import MutableFields
+from rest_framework import serializers
 
 from . import RankSerializer
-
+from ...core.serializers import MutableFields
 
 User = get_user_model()
 

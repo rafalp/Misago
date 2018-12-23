@@ -1,6 +1,5 @@
-from misago.threads.models import Thread
-from misago.threads.permissions import exclude_invisible_threads
-
+from ...threads.models import Thread
+from ...threads.permissions import exclude_invisible_threads
 from .threads import UserThreads
 
 

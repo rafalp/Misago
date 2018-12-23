@@ -1,9 +1,7 @@
 from django.conf.urls import url
 
-from misago import admin
-
+from .. import admin
 from .views import auth, index
-
 
 urlpatterns = [
     # "misago:admin:index" link symbolises "root" of Misago admin links space

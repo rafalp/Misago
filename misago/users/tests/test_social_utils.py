@@ -1,7 +1,7 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from misago.users.social.utils import get_enabled_social_auth_sites_list
+from ..social.utils import get_enabled_social_auth_sites_list
 
 
 class SocialUtilsTests(TestCase):

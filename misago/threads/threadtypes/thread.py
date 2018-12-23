@@ -1,9 +1,8 @@
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from misago.categories import THREADS_ROOT_NAME
-
 from . import ThreadType
+from ...categories import THREADS_ROOT_NAME
 
 
 class Thread(ThreadType):

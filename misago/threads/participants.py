@@ -1,11 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
 
-from misago.core.mail import build_mail, send_messages
-
+from ..core.mail import build_mail, send_messages
 from .events import record_event
 from .models import ThreadParticipant
-
 
 User = get_user_model()
 

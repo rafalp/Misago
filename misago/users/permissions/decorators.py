@@ -1,7 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 
-
 __all__ = ["authenticated_only", "anonymous_only"]
 
 

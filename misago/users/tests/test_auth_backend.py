@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from misago.users.authbackends import MisagoBackend
-from misago.users.test import create_test_user
+from ..authbackends import MisagoBackend
+from ..test import create_test_user
 
 backend = MisagoBackend()
 

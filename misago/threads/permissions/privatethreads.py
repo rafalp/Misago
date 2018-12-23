@@ -3,14 +3,13 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import algebra
-from misago.acl.decorators import return_boolean
-from misago.acl.models import Role
-from misago.admin.forms import YesNoSwitch
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.threads.models import Thread
-
+from ...acl import algebra
+from ...acl.decorators import return_boolean
+from ...acl.models import Role
+from ...admin.forms import YesNoSwitch
+from ...categories import PRIVATE_THREADS_ROOT_NAME
+from ...categories.models import Category
+from ..models import Thread
 
 __all__ = [
     "allow_use_private_threads",

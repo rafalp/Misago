@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.markup.finalise import finalise_markup
+from ..finalise import finalise_markup
 
 
 class QuoteTests(TestCase):

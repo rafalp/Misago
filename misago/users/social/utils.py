@@ -2,8 +2,7 @@ from django.urls import reverse
 from social_core.backends.utils import load_backends
 from unidecode import unidecode
 
-from misago.conf import settings
-
+from ...conf import settings
 from .backendsnames import BACKENDS_NAMES
 
 

@@ -3,10 +3,8 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
-
 from . import PostingEndpoint, PostingInterrupt, PostingMiddleware
-
+from ....conf import settings
 
 MIN_POSTING_PAUSE = 3
 

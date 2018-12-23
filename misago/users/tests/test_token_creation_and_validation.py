@@ -1,4 +1,4 @@
-from misago.users import tokens
+from ...users import tokens
 
 
 def test_token_can_be_created_for_user(user):

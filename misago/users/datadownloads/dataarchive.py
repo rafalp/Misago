@@ -5,8 +5,7 @@ from django.core.files import File
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
-from misago.core.utils import slugify
-
+from ...core.utils import slugify
 
 FILENAME_MAX_LEN = 50
 

@@ -2,8 +2,8 @@ from io import StringIO
 
 from django.core.management import call_command
 
-from misago.users.management.commands import populateonlinetracker
-from misago.users.models import Online
+from ..management.commands import populateonlinetracker
+from ..models import Online
 
 
 def test_management_command_creates_online_tracker_for_user_without_one(user):

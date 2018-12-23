@@ -1,10 +1,8 @@
-from rest_framework import serializers
-
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from rest_framework import serializers
 
-from misago.acl.useracl import serialize_user_acl
-
+from ...acl.useracl import serialize_user_acl
 from .user import UserSerializer
 
 User = get_user_model()

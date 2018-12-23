@@ -2,10 +2,10 @@ from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.cache.versions import get_cache_versions
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.core.mail import build_mail, mail_user, mail_users
-from misago.users.test import create_test_user
+from ...cache.versions import get_cache_versions
+from ...conf.dynamicsettings import DynamicSettings
+from ...users.test import create_test_user
+from ..mail import build_mail, mail_user, mail_users
 
 
 class MailTests(TestCase):

@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
 
-from misago.core.utils import format_plaintext_for_html
-from misago.users.models import Rank
-from misago.users.pages import users_list
-from misago.users.permissions import allow_browse_users_list
-from misago.users.viewmodels import ActivePosters, RankUsers
+from ...core.utils import format_plaintext_for_html
+from ..models import Rank
+from ..pages import users_list
+from ..permissions import allow_browse_users_list
+from ..viewmodels import ActivePosters, RankUsers
 
 
 class ListView(View):

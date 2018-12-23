@@ -3,7 +3,6 @@ from django.urls import reverse
 from .models import Agreement
 from .utils import get_parsed_agreement_text, get_required_user_agreement
 
-
 # fixme: rename this context processor to more suitable name
 def legal_links(request):
     agreements = Agreement.objects.get_agreements()

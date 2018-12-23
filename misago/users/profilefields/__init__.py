@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
+from ...conf import settings
 
 from .basefields import *
 from .serializers import serialize_profilefields_data

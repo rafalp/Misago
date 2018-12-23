@@ -1,6 +1,6 @@
 import pytest
 
-from misago.conf.models import Setting, SettingsGroup
+from ..models import Setting, SettingsGroup
 
 
 @pytest.fixture

@@ -1,10 +1,8 @@
+from django.utils.translation import gettext as _
 from rest_framework import serializers
 
-from django.utils.translation import gettext as _
-
-from misago.core.utils import format_plaintext_for_html
-from misago.users.models import Ban
-
+from ...core.utils import format_plaintext_for_html
+from ..models import Ban
 
 __all__ = ["BanMessageSerializer", "BanDetailsSerializer"]
 
