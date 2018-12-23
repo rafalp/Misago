@@ -49,7 +49,7 @@ class ParticipantsTests(TestCase):
         """has_participants returns true if thread has participants"""
         users = [
             create_test_user("User", "user@example.com"),
-            create_test_user("User2", "bob2@example.com"),
+            create_test_user("OtherUser", "otheruser@example.com"),
         ]
 
         self.assertFalse(has_participants(self.thread))
@@ -66,7 +66,7 @@ class ParticipantsTests(TestCase):
         annotations on list of threads
         """
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("User2", "bob2@example.com")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -91,7 +91,7 @@ class ParticipantsTests(TestCase):
         annotations on thread model
         """
         user = create_test_user("User", "user@example.com")
-        other_user = create_test_user("User2", "bob2@example.com")
+        other_user = create_test_user("OtherUser", "otheruser@example.com")
 
         self.assertFalse(hasattr(self.thread, "participants_list"))
         self.assertFalse(hasattr(self.thread, "participant"))
@@ -131,8 +131,8 @@ class ParticipantsTests(TestCase):
         flag on users provided to true
         """
         users = [
-            create_test_user("User1", "bob1@example.com"),
-            create_test_user("User2", "bob2@example.com"),
+            create_test_user("User", "user@example.com"),
+            create_test_user("OtherUser", "otheruser@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users)
@@ -146,8 +146,8 @@ class ParticipantsTests(TestCase):
         flag on participants provided to true
         """
         users = [
-            create_test_user("User1", "bob1@example.com"),
-            create_test_user("User2", "bob2@example.com"),
+            create_test_user("User", "user@example.com"),
+            create_test_user("OtherUser", "otheruser@example.com"),
         ]
 
         participants = [ThreadParticipant(user=u) for u in users]
@@ -162,9 +162,9 @@ class ParticipantsTests(TestCase):
         set_users_unread_private_threads_sync sets sync_unread_private_threads
         flag on users and participants provided to true
         """
-        users = [create_test_user("User1", "bob1@example.com")]
+        users = [create_test_user("User", "user@example.com")]
         participants = [ThreadParticipant(user=u) for u in users]
-        users.append(create_test_user("User2", "bob2@example.com"))
+        users.append(create_test_user("OtherUser", "otheruser@example.com"))
 
         set_users_unread_private_threads_sync(users=users, participants=participants)
         for user in users:
@@ -174,8 +174,8 @@ class ParticipantsTests(TestCase):
     def test_set_users_unread_private_threads_sync_exclude_user(self):
         """exclude_user kwarg works"""
         users = [
-            create_test_user("User1", "bob1@example.com"),
-            create_test_user("User2", "bob2@example.com"),
+            create_test_user("User", "user@example.com"),
+            create_test_user("OtherUser", "otheruser@example.com"),
         ]
 
         set_users_unread_private_threads_sync(users=users, exclude_user=users[0])
@@ -186,7 +186,7 @@ class ParticipantsTests(TestCase):
 
     def test_set_users_unread_private_threads_sync_noop(self):
         """excluding only user is noop"""
-        user = create_test_user("User", "bob1@example.com")
+        user = create_test_user("User", "user@example.com")
 
         with self.assertNumQueries(0):
             set_users_unread_private_threads_sync(users=[user], exclude_user=user)

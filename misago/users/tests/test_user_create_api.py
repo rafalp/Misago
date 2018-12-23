@@ -240,7 +240,7 @@ class UserCreateTests(UserTestCase):
         """api uses django's validate_password to validate registrations"""
         response = self.client.post(
             self.api_link,
-            data={"username": "Bob", "email": "loremipsum@dolor.met", "password": ""},
+            data={"username": "User", "email": "loremipsum@dolor.met", "password": ""},
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), {"password": ["This field is required."]})
@@ -250,7 +250,7 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "username": "Bob",
+                "username": "User",
                 "email": "l.o.r.e.m.i.p.s.u.m@gmail.com",
                 "password": "123",
             },
@@ -415,7 +415,7 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "username": "Bob",
+                "username": "User",
                 "email": "l.o.r.e.m.i.p.s.u.m@gmail.com",
                 "password": "pas123",
             },
@@ -437,27 +437,27 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "username": "Bob",
-                "email": "bob@bob.com",
+                "username": "User",
+                "email": "user@example.com",
                 "password": self.USER_PASSWORD,
             },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"activation": "active", "username": "Bob", "email": "bob@bob.com"},
+            {"activation": "active", "username": "User", "email": "user@example.com"},
         )
 
-        User.objects.get_by_username("Bob")
+        User.objects.get_by_username("User")
 
-        test_user = User.objects.get_by_email("bob@bob.com")
+        test_user = User.objects.get_by_email("user@example.com")
         self.assertEqual(Online.objects.filter(user=test_user).count(), 1)
 
         self.assertTrue(test_user.check_password(self.USER_PASSWORD))
 
         auth_json = self.client.get(reverse("misago:api:auth")).json()
         self.assertTrue(auth_json["is_authenticated"])
-        self.assertEqual(auth_json["username"], "Bob")
+        self.assertEqual(auth_json["username"], "User")
 
         self.assertIn("Welcome", mail.outbox[0].subject)
 
@@ -469,22 +469,22 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "username": "Bob",
-                "email": "bob@bob.com",
+                "username": "User",
+                "email": "user@example.com",
                 "password": self.USER_PASSWORD,
             },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"activation": "user", "username": "Bob", "email": "bob@bob.com"},
+            {"activation": "user", "username": "User", "email": "user@example.com"},
         )
 
         auth_json = self.client.get(reverse("misago:api:auth")).json()
         self.assertFalse(auth_json["is_authenticated"])
 
-        User.objects.get_by_username("Bob")
-        User.objects.get_by_email("bob@bob.com")
+        User.objects.get_by_username("User")
+        User.objects.get_by_email("user@example.com")
 
         self.assertIn("Welcome", mail.outbox[0].subject)
 
@@ -494,22 +494,22 @@ class UserCreateTests(UserTestCase):
         response = self.client.post(
             self.api_link,
             data={
-                "username": "Bob",
-                "email": "bob@bob.com",
+                "username": "User",
+                "email": "user@example.com",
                 "password": self.USER_PASSWORD,
             },
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.json(),
-            {"activation": "admin", "username": "Bob", "email": "bob@bob.com"},
+            {"activation": "admin", "username": "User", "email": "user@example.com"},
         )
 
         auth_json = self.client.get(reverse("misago:api:auth")).json()
         self.assertFalse(auth_json["is_authenticated"])
 
-        User.objects.get_by_username("Bob")
-        User.objects.get_by_email("bob@bob.com")
+        User.objects.get_by_username("User")
+        User.objects.get_by_email("user@example.com")
 
         self.assertIn("Welcome", mail.outbox[0].subject)
 

@@ -164,7 +164,7 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
 
     def test_user_ban_details(self):
         """user ban details page has no showstoppers"""
-        test_user = create_test_user("Bob", "bob@bob.com", "pass.123")
+        test_user = create_test_user("User", "user@example.com")
         link_kwargs = {"slug": test_user.slug, "pk": test_user.pk}
 
         with patch_user_acl({"can_see_ban_details": 0}):

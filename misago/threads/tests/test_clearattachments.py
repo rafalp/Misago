@@ -39,8 +39,8 @@ class ClearAttachmentsTests(TestCase):
                 filetype=filetype,
                 size=1000,
                 uploaded_on=cutoff,
-                uploader_name="bob",
-                uploader_slug="bob",
+                uploader_name="User",
+                uploader_slug="user",
                 filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 
@@ -55,8 +55,8 @@ class ClearAttachmentsTests(TestCase):
                 size=1000,
                 uploaded_on=cutoff,
                 post=post,
-                uploader_name="bob",
-                uploader_slug="bob",
+                uploader_name="User",
+                uploader_slug="user",
                 filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 
@@ -66,8 +66,8 @@ class ClearAttachmentsTests(TestCase):
                 secret=Attachment.generate_new_secret(),
                 filetype=filetype,
                 size=1000,
-                uploader_name="bob",
-                uploader_slug="bob",
+                uploader_name="User",
+                uploader_slug="user",
                 filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
             )
 

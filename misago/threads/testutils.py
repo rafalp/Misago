@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 
 from misago.core.utils import slugify
+from misago.users.testutils import create_test_user
 
 from .checksums import update_post_checksum
 from .models import Poll, Post, Thread
@@ -142,9 +143,9 @@ def post_poll(thread, poster):
 
     # one user voted for Alpha choice
     try:
-        user = User.objects.get(slug="bob")
+        user = User.objects.get(slug="user")
     except User.DoesNotExist:
-        user = User.objects.create_user("bob", "bob@test.com", "Pass.123")
+        user = create_test_user("User", "user@example.com")
 
     poll.pollvote_set.create(
         category=thread.category,

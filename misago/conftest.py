@@ -30,7 +30,7 @@ def settings():
 
 @pytest.fixture
 def user_password():
-    return "password"
+    return "p4ssw0rd!"
 
 
 @pytest.fixture

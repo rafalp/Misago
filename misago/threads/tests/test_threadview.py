@@ -399,7 +399,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
             "filetype": "ZIP",
             "is_image": False,
             "uploaded_on": "2016-10-22T21:17:40.408710Z",
-            "uploader_name": "BobBoberson",
+            "uploader_name": "User",
         }
 
         json.update(data)
@@ -415,7 +415,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                     "url": {
                         "index": "/attachment/loremipsum-123/",
                         "thumb": None,
-                        "uploader": "/user/bobboberson-123/",
+                        "uploader": "/user/user-123/",
                     },
                     "filename": "Archiwum-1.zip",
                 }
@@ -425,7 +425,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                     "url": {
                         "index": "/attachment/loremipsum-223/",
                         "thumb": "/attachment/thumb/loremipsum-223/",
-                        "uploader": "/user/bobboberson-223/",
+                        "uploader": "/user/user-223/",
                     },
                     "is_image": True,
                     "filename": "Archiwum-2.zip",
@@ -436,7 +436,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
                     "url": {
                         "index": "/attachment/loremipsum-323/",
                         "thumb": None,
-                        "uploader": "/user/bobboberson-323/",
+                        "uploader": "/user/user-323/",
                     },
                     "filename": "Archiwum-3.zip",
                 }

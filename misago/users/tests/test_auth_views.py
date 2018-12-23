@@ -63,7 +63,7 @@ class AuthViewsTests(TestCase):
     def test_logout_view(self):
         """logout view logs user out on post"""
         response = self.client.post(
-            "/api/auth/", data={"username": "nope", "password": "nope"}
+            "/api/auth/", data={"username": "nope", "password": "not-checked"}
         )
 
         self.assertContains(

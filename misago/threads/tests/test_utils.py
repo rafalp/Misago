@@ -233,17 +233,17 @@ class GetThreadIdFromUrlTests(TestCase):
             {
                 # old thread url
                 "request": MockRequest("http", "testforum.com"),
-                "url": "https://testforum.com/thread/bobboberson-123/",
+                "url": "https://testforum.com/thread/test-123/",
             },
             {
                 # dashed thread url
                 "request": MockRequest("http", "testforum.com"),
-                "url": "https://testforum.com/t/bobboberson-123/",
+                "url": "https://testforum.com/t/test-thread-123/",
             },
             {
                 # non-thread url
                 "request": MockRequest("http", "testforum.com"),
-                "url": "https://testforum.com/user/bobboberson-123/",
+                "url": "https://testforum.com/user/user-123/",
             },
             {
                 # rubbish url
