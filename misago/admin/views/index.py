@@ -4,12 +4,11 @@ from django.http import Http404, JsonResponse
 from django.utils.translation import gettext as _
 from requests.exceptions import RequestException
 
-from misago import __version__
-from misago.conf import settings
-from misago.core.cache import cache
-from misago.threads.models import Post, Thread
-
 from . import render
+from ... import __version__
+from ...conf import settings
+from ...core.cache import cache
+from ...threads.models import Post, Thread
 
 VERSION_CHECK_CACHE_KEY = "misago_version_check"
 

@@ -5,12 +5,12 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.response import Response
 
-from misago.conf import settings
-from misago.core.decorators import require_dict_data
-from misago.core.utils import format_plaintext_for_html
-from misago.users import avatars
-from misago.users.models import AvatarGallery
-from misago.users.serializers import ModerateAvatarSerializer
+from ... import avatars
+from ....conf import settings
+from ....core.decorators import require_dict_data
+from ....core.utils import format_plaintext_for_html
+from ...models import AvatarGallery
+from ...serializers import ModerateAvatarSerializer
 
 
 @require_dict_data

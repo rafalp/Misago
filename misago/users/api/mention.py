@@ -3,7 +3,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from misago.conf import settings
+from ...conf import settings
 
 User = get_user_model()
 

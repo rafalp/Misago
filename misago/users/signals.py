@@ -7,9 +7,8 @@ from django.dispatch import Signal, receiver
 from django.utils import timezone
 from django.utils.translation import gettext as _
 
-from misago.conf import settings
-from misago.core.pgutils import chunk_queryset
-
+from ..conf import settings
+from ..core.pgutils import chunk_queryset
 from .models import AuditTrail
 from .profilefields import profilefields
 

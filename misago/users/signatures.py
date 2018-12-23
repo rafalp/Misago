@@ -1,4 +1,4 @@
-from misago.markup import checksums, signature_flavour
+from ..markup import checksums, signature_flavour
 
 
 def set_user_signature(request, user, user_acl, signature):

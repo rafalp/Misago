@@ -3,9 +3,8 @@ import os
 from django.utils.module_loading import import_string
 from PIL import Image, ImageColor, ImageDraw, ImageFont
 
-from misago.conf import settings
-
 from . import store
+from ...conf import settings
 
 COLOR_WHEEL = (
     "#d32f2f",

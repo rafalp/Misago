@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-from misago.acl import ACL_CACHE
-from misago.acl.models import Role
-from misago.acl.test import mock_role_form_data
-from misago.admin.test import AdminTestCase
-from misago.cache.test import assert_invalidates_cache
-from misago.categories.models import Category, CategoryRole
+from ...acl import ACL_CACHE
+from ...acl.models import Role
+from ...acl.test import mock_role_form_data
+from ...admin.test import AdminTestCase
+from ...cache.test import assert_invalidates_cache
+from ..models import Category, CategoryRole
 
 
 def create_data(data_dict):

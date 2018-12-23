@@ -2,9 +2,9 @@ import json
 
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.users.test import AuthenticatedUserTestCase
+from ...acl.test import patch_user_acl
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Category
 
 
 class CategoryViewsTests(AuthenticatedUserTestCase):

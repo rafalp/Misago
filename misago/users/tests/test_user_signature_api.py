@@ -1,5 +1,5 @@
-from misago.acl.test import patch_user_acl
-from misago.users.test import AuthenticatedUserTestCase
+from ...acl.test import patch_user_acl
+from ..test import AuthenticatedUserTestCase
 
 
 class UserSignatureTests(AuthenticatedUserTestCase):

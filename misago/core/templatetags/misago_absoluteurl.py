@@ -1,7 +1,7 @@
 from django import template
 from django.urls import NoReverseMatch, reverse
 
-from misago.conf import settings
+from ...conf import settings
 
 register = template.Library()
 

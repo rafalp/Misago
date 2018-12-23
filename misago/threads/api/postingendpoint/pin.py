@@ -1,9 +1,8 @@
 from rest_framework import serializers
 
-from misago.threads import moderation
-from misago.threads.models import Thread
-
 from . import PostingEndpoint, PostingMiddleware
+from ... import moderation
+from ...models import Thread
 
 
 class PinMiddleware(PostingMiddleware):

@@ -1,7 +1,7 @@
-from misago.conf import settings
-from misago.users.activepostersranking import get_active_posters_ranking
-from misago.users.online.utils import make_users_status_aware
-from misago.users.serializers import UserCardSerializer
+from ...conf import settings
+from ..activepostersranking import get_active_posters_ranking
+from ..online.utils import make_users_status_aware
+from ..serializers import UserCardSerializer
 
 
 class ActivePosters(object):

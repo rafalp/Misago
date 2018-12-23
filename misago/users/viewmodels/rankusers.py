@@ -1,7 +1,7 @@
-from misago.conf import settings
-from misago.core.shortcuts import paginate, pagination_dict
-from misago.users.online.utils import make_users_status_aware
-from misago.users.serializers import UserCardSerializer
+from ...conf import settings
+from ...core.shortcuts import paginate, pagination_dict
+from ..online.utils import make_users_status_aware
+from ..serializers import UserCardSerializer
 
 
 class RankUsers(object):

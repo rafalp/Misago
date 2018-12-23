@@ -5,18 +5,17 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import Post, Thread
-from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_use_private_threads
-from misago.threads.viewmodels import (
+from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+from ...core.shortcuts import get_int_or_404
+from ..models import Post, Thread
+from ..moderation import threads as moderation
+from ..permissions import allow_use_private_threads
+from ..viewmodels import (
     ForumThread,
     PrivateThread,
     PrivateThreadsCategory,
     ThreadsRootCategory,
 )
-
 from .postingendpoint import PostingEndpoint
 from .threadendpoints.delete import delete_bulk, delete_thread
 from .threadendpoints.editor import thread_start_editor

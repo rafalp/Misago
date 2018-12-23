@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 
-from misago.threads.models import Subscription
-
 from . import PostingEndpoint, PostingMiddleware
+from ...models import Subscription
 
 User = get_user_model()
 

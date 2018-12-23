@@ -4,7 +4,7 @@ import time
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from misago.core.management.progressbar import show_progress
+from ....core.management.progressbar import show_progress
 
 User = get_user_model()
 

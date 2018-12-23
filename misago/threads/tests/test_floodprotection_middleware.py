@@ -2,9 +2,9 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.threads.api.postingendpoint import PostingInterrupt
-from misago.threads.api.postingendpoint.floodprotection import FloodProtectionMiddleware
-from misago.users.test import AuthenticatedUserTestCase
+from ...users.test import AuthenticatedUserTestCase
+from ..api.postingendpoint import PostingInterrupt
+from ..api.postingendpoint.floodprotection import FloodProtectionMiddleware
 
 user_acl = {"can_omit_flood_protection": False}
 

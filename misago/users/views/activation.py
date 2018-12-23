@@ -3,10 +3,10 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from misago.core.exceptions import Banned
-from misago.users.bans import get_user_ban
-from misago.users.decorators import deny_authenticated, deny_banned_ips
-from misago.users.tokens import is_activation_token_valid
+from ...core.exceptions import Banned
+from ..bans import get_user_ban
+from ..decorators import deny_authenticated, deny_banned_ips
+from ..tokens import is_activation_token_valid
 
 User = get_user_model()
 

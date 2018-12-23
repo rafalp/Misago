@@ -1,4 +1,4 @@
-from misago.conf import settings
+from ...conf import settings
 
 from . import store, gravatar, dynamic, gallery, uploaded
 

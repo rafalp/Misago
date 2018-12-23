@@ -3,11 +3,11 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.subscriptions import make_subscription_aware
-from misago.users.models import AnonymousUser
-from misago.users.test import create_test_user
+from .. import test
+from ...categories.models import Category
+from ...users.models import AnonymousUser
+from ...users.test import create_test_user
+from ..subscriptions import make_subscription_aware
 
 
 class SubscriptionsTests(TestCase):

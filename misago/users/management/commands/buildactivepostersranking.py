@@ -2,7 +2,7 @@ from time import time
 
 from django.core.management.base import BaseCommand
 
-from misago.users.activepostersranking import build_active_posters_ranking
+from ...activepostersranking import build_active_posters_ranking
 
 
 class Command(BaseCommand):

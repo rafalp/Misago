@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
-from misago.admin.views import generic
-from misago.threads.forms import SearchAttachmentsForm
-from misago.threads.models import Attachment, Post
+from ....admin.views import generic
+from ...forms import SearchAttachmentsForm
+from ...models import Attachment, Post
 
 
 class AttachmentAdmin(generic.AdminBaseMixin):

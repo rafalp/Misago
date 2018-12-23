@@ -5,19 +5,13 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import Post
-from misago.threads.permissions import allow_edit_post, allow_reply_thread
-from misago.threads.serializers import AttachmentSerializer, PostSerializer
-from misago.threads.viewmodels import (
-    ForumThread,
-    PrivateThread,
-    ThreadPost,
-    ThreadPosts,
-)
-from misago.users.online.utils import make_users_status_aware
-
+from ...acl.objectacl import add_acl_to_obj
+from ...core.shortcuts import get_int_or_404
+from ...users.online.utils import make_users_status_aware
+from ..models import Post
+from ..permissions import allow_edit_post, allow_reply_thread
+from ..serializers import AttachmentSerializer, PostSerializer
+from ..viewmodels import ForumThread, PrivateThread, ThreadPost, ThreadPosts
 from .postendpoints.delete import delete_bulk, delete_post
 from .postendpoints.edits import get_edit_endpoint, revert_post_endpoint
 from .postendpoints.likes import likes_list_endpoint

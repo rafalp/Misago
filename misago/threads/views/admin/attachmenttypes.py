@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 
-from misago.admin.views import generic
-from misago.threads.forms import AttachmentTypeForm
-from misago.threads.models import AttachmentType
+from ....admin.views import generic
+from ...forms import AttachmentTypeForm
+from ...models import AttachmentType
 
 
 class AttachmentTypeAdmin(generic.AdminBaseMixin):

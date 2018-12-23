@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.core.utils import (
+from ..utils import (
     clean_ids_list,
     clean_return_path,
     format_plaintext_for_html,

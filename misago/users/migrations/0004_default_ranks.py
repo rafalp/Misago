@@ -1,7 +1,7 @@
 from django.db import migrations
 from django.utils.translation import gettext
 
-from misago.core.utils import slugify
+from ...core.utils import slugify
 
 _ = lambda s: s
 

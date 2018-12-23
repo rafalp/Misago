@@ -1,8 +1,7 @@
 from django.db.models import F
 
-from misago.categories import THREADS_ROOT_NAME
-
 from . import PostingEndpoint, PostingMiddleware
+from ....categories import THREADS_ROOT_NAME
 
 
 class UpdateStatsMiddleware(PostingMiddleware):

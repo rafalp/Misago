@@ -1,5 +1,5 @@
-from misago.users.datadownloads import request_user_data_download
-from misago.users.test import AuthenticatedUserTestCase
+from ..datadownloads import request_user_data_download
+from ..test import AuthenticatedUserTestCase
 
 
 class UserDataDownloadsApiTests(AuthenticatedUserTestCase):

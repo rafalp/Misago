@@ -1,7 +1,7 @@
 from django import forms
 from django.test import TestCase
 
-from misago.admin.forms import YesNoSwitch
+from ..forms import YesNoSwitch
 
 
 class YesNoForm(forms.Form):

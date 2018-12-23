@@ -2,11 +2,10 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from rest_framework import serializers
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.conf import settings
-from misago.threads.serializers import AttachmentSerializer
-
 from . import PostingEndpoint, PostingMiddleware
+from ....acl.objectacl import add_acl_to_obj
+from ....conf import settings
+from ...serializers import AttachmentSerializer
 
 
 class AttachmentsMiddleware(PostingMiddleware):

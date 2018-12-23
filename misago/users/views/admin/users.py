@@ -5,29 +5,26 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl.useracl import get_user_acl
-from misago.admin.auth import start_admin_session
-from misago.admin.views import generic
-from misago.categories.models import Category
-from misago.core.mail import mail_users
-from misago.core.pgutils import chunk_queryset
-from misago.threads.models import Thread
-from misago.users.avatars.dynamic import set_avatar as set_dynamic_avatar
-from misago.users.datadownloads import (
-    request_user_data_download,
-    user_has_data_download_request,
-)
-from misago.users.forms.admin import (
+from ....acl.useracl import get_user_acl
+from ....admin.auth import start_admin_session
+from ....admin.views import generic
+from ....categories.models import Category
+from ....core.mail import mail_users
+from ....core.pgutils import chunk_queryset
+from ....threads.models import Thread
+from ...avatars.dynamic import set_avatar as set_dynamic_avatar
+from ...datadownloads import request_user_data_download, user_has_data_download_request
+from ...forms.admin import (
     BanUsersForm,
     EditUserForm,
     EditUserFormFactory,
     NewUserForm,
     create_search_users_form,
 )
-from misago.users.models import Ban
-from misago.users.profilefields import profilefields
-from misago.users.setupnewuser import setup_new_user
-from misago.users.signatures import set_user_signature
+from ...models import Ban
+from ...profilefields import profilefields
+from ...setupnewuser import setup_new_user
+from ...signatures import set_user_signature
 
 User = get_user_model()
 

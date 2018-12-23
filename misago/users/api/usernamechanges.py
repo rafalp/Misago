@@ -6,10 +6,9 @@ from django.utils.translation import gettext as _
 from rest_framework import viewsets
 from rest_framework.response import Response
 
-from misago.core.shortcuts import get_int_or_404, paginate, pagination_dict
-from misago.users.models import UsernameChange
-from misago.users.serializers import UsernameChangeSerializer
-
+from ...core.shortcuts import get_int_or_404, paginate, pagination_dict
+from ..models import UsernameChange
+from ..serializers import UsernameChangeSerializer
 from .rest_permissions import BasePermission
 
 User = get_user_model()

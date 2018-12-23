@@ -1,9 +1,9 @@
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.threads.models import Post, Thread, ThreadParticipant
-from misago.users.test import create_test_user
+from ...categories.models import Category
+from ...users.test import create_test_user
+from ..models import Post, Thread, ThreadParticipant
 
 
 class ThreadParticipantTests(TestCase):

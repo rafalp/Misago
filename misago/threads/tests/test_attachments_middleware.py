@@ -2,19 +2,19 @@ from unittest.mock import Mock
 
 from rest_framework import serializers
 
-from misago.acl import useracl
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.conftest import get_cache_versions
-from misago.threads import test
-from misago.threads.api.postingendpoint import PostingEndpoint
-from misago.threads.api.postingendpoint.attachments import (
+from .. import test
+from ...acl import useracl
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...conf import settings
+from ...conftest import get_cache_versions
+from ...users.test import AuthenticatedUserTestCase
+from ..api.postingendpoint import PostingEndpoint
+from ..api.postingendpoint.attachments import (
     AttachmentsMiddleware,
     validate_attachments_count,
 )
-from misago.threads.models import Attachment, AttachmentType
-from misago.users.test import AuthenticatedUserTestCase
+from ..models import Attachment, AttachmentType
 
 cache_versions = get_cache_versions()
 

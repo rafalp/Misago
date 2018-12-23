@@ -2,7 +2,7 @@ import warnings
 
 from django.test import TestCase
 
-from misago.core.deprecations import RemovedInMisagoWarning, warn
+from ..deprecations import RemovedInMisagoWarning, warn
 
 
 class DeprecationsTests(TestCase):

@@ -1,7 +1,7 @@
 import pytest
 
-from misago.acl.providers import PermissionProviders
-from misago.conf import settings
+from ...conf import settings
+from ..providers import PermissionProviders
 
 
 def test_providers_are_not_loaded_on_container_init():

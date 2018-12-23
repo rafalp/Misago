@@ -7,20 +7,17 @@ from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.conf import settings
-from misago.core.shortcuts import paginate, pagination_dict
-from misago.readtracker import threadstracker
-from misago.readtracker.dates import get_cutoff_date
-from misago.threads.models import Post, Thread
-from misago.threads.participants import make_participants_aware
-from misago.threads.permissions import (
-    exclude_invisible_posts,
-    exclude_invisible_threads,
-)
-from misago.threads.serializers import ThreadsListSerializer
-from misago.threads.subscriptions import make_subscription_aware
-from misago.threads.utils import add_categories_to_items
+from ...acl.objectacl import add_acl_to_obj
+from ...conf import settings
+from ...core.shortcuts import paginate, pagination_dict
+from ...readtracker import threadstracker
+from ...readtracker.dates import get_cutoff_date
+from ..models import Post, Thread
+from ..participants import make_participants_aware
+from ..permissions import exclude_invisible_posts, exclude_invisible_threads
+from ..serializers import ThreadsListSerializer
+from ..subscriptions import make_subscription_aware
+from ..utils import add_categories_to_items
 
 __all__ = ["ForumThreads", "PrivateThreads", "filter_read_threads_queryset"]
 

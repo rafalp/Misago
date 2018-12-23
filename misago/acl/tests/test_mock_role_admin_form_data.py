@@ -1,5 +1,5 @@
-from misago.acl.models import Role
-from misago.acl.test import mock_role_form_data
+from ..models import Role
+from ..test import mock_role_form_data
 
 
 def test_factory_for_change_role_permissions_form_data():

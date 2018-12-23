@@ -5,13 +5,13 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
-from misago.acl.models import Role
-from misago.admin.forms import IsoDateTimeField, YesNoSwitch
-from misago.core.validators import validate_sluggable
-from misago.users.models import Ban, DataDownload, Rank
-from misago.users.profilefields import profilefields
-from misago.users.utils import hash_email
-from misago.users.validators import validate_email, validate_username
+from ...acl.models import Role
+from ...admin.forms import IsoDateTimeField, YesNoSwitch
+from ...core.validators import validate_sluggable
+from ..models import Ban, DataDownload, Rank
+from ..profilefields import profilefields
+from ..utils import hash_email
+from ..validators import validate_email, validate_username
 
 User = get_user_model()
 

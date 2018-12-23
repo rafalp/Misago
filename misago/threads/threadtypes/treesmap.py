@@ -1,6 +1,6 @@
 from django.utils.module_loading import import_string
 
-from misago.conf import settings
+from ...conf import settings
 
 
 class TreesMap(object):
@@ -24,7 +24,7 @@ class TreesMap(object):
         return loaded_types
 
     def load_trees(self, types):
-        from misago.categories.models import Category
+        from ...categories.models import Category
 
         trees = {}
         for category in Category.objects.filter(level=0, special_role__in=types.keys()):

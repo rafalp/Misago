@@ -3,7 +3,7 @@ from unittest.mock import Mock, PropertyMock
 import pytest
 from django.utils.functional import SimpleLazyObject
 
-from misago.conf.middleware import dynamic_settings_middleware
+from ..middleware import dynamic_settings_middleware
 
 
 @pytest.fixture

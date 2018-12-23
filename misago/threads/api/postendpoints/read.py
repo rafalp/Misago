@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
-from misago.readtracker import poststracker, threadstracker
-from misago.readtracker.signals import thread_read
+from ....readtracker import poststracker, threadstracker
+from ....readtracker.signals import thread_read
 
 
 def post_read_endpoint(request, thread, post):

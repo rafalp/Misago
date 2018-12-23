@@ -1,10 +1,10 @@
-from misago.acl.objectacl import add_acl_to_obj
-from misago.conf import settings
-from misago.core.shortcuts import paginate, pagination_dict
-from misago.threads.permissions import exclude_invisible_threads
-from misago.threads.serializers import FeedSerializer
-from misago.threads.utils import add_categories_to_items
-from misago.threads.viewmodels import ThreadsRootCategory
+from ...acl.objectacl import add_acl_to_obj
+from ...conf import settings
+from ...core.shortcuts import paginate, pagination_dict
+from ...threads.permissions import exclude_invisible_threads
+from ...threads.serializers import FeedSerializer
+from ...threads.utils import add_categories_to_items
+from ...threads.viewmodels import ThreadsRootCategory
 
 
 class UserThreads(object):

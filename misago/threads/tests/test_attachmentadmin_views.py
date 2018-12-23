@@ -1,9 +1,9 @@
 from django.urls import reverse
 
-from misago.admin.test import AdminTestCase
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Attachment, AttachmentType
+from .. import test
+from ...admin.test import AdminTestCase
+from ...categories.models import Category
+from ..models import Attachment, AttachmentType
 
 
 class AttachmentAdminViewsTests(AdminTestCase):

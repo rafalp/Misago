@@ -1,4 +1,4 @@
-from misago.conf import settings
+from ..conf import settings
 
 MOMENT_STATIC_PATH = "misago/momentjs/%s.js"
 

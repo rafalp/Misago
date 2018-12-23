@@ -2,9 +2,9 @@ import json
 
 from django.urls import reverse
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
 
 
 class ThreadPollApiTestCase(AuthenticatedUserTestCase):

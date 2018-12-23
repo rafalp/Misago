@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from misago.acl.useracl import get_user_acl
-from misago.users import signatures
+from ...acl.useracl import get_user_acl
+from ...users import signatures
 
 
 @pytest.fixture

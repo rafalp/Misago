@@ -6,22 +6,22 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from misago.acl import useracl
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.categories.permissions import allow_browse_category, allow_see_category
-from misago.categories.serializers import CategorySerializer
-from misago.conf import settings
-from misago.core.apipatch import ApiPatch
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.moderation import threads as moderation
-from misago.threads.participants import (
+from ....acl import useracl
+from ....acl.objectacl import add_acl_to_obj
+from ....categories.models import Category
+from ....categories.permissions import allow_browse_category, allow_see_category
+from ....categories.serializers import CategorySerializer
+from ....conf import settings
+from ....core.apipatch import ApiPatch
+from ....core.shortcuts import get_int_or_404
+from ...moderation import threads as moderation
+from ...participants import (
     add_participant,
     change_owner,
     make_participants_aware,
     remove_participant,
 )
-from misago.threads.permissions import (
+from ...permissions import (
     allow_add_participant,
     allow_add_participants,
     allow_approve_thread,
@@ -39,8 +39,8 @@ from misago.threads.permissions import (
     allow_unhide_thread,
     allow_unmark_best_answer,
 )
-from misago.threads.serializers import ThreadParticipantSerializer
-from misago.threads.validators import validate_thread_title
+from ...serializers import ThreadParticipantSerializer
+from ...validators import validate_thread_title
 
 PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
 

@@ -1,10 +1,10 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import algebra
-from misago.acl.models import Role
-from misago.admin.forms import YesNoSwitch
-from misago.threads.models import Attachment
+from ...acl import algebra
+from ...acl.models import Role
+from ...admin.forms import YesNoSwitch
+from ..models import Attachment
 
 # Admin Permissions Forms
 class PermissionsForm(forms.Form):

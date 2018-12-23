@@ -3,13 +3,13 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.categories import THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Thread
-from misago.threads.test import patch_category_acl
-from misago.threads.threadtypes import trees_map
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...categories import THREADS_ROOT_NAME
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Thread
+from ..test import patch_category_acl
+from ..threadtypes import trees_map
 
 
 class ThreadsApiTestCase(AuthenticatedUserTestCase):

@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from rest_framework import serializers
 
-from misago.threads.models import Poll
+from ..models import Poll
 
 __all__ = [
     "PollSerializer",

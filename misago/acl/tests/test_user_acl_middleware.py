@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from misago.acl.middleware import user_acl_middleware
+from ..middleware import user_acl_middleware
 
 
 def test_middleware_sets_attr_on_request(cache_versions, user):

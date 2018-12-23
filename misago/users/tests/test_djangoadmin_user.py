@@ -3,9 +3,9 @@ from django.test import override_settings
 from django.urls import reverse
 from django.utils import formats
 
-from misago.admin.test import AdminTestCase
-from misago.users.djangoadmin import UserAdminModel
-from misago.users.test import create_test_user
+from ...admin.test import AdminTestCase
+from ..djangoadmin import UserAdminModel
+from ..test import create_test_user
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")

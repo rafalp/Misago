@@ -2,14 +2,13 @@ from django.db import models
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 
-from misago.acl.cache import clear_acl_cache
-from misago.acl.models import BaseRole
-from misago.conf import settings
-from misago.core.cache import cache
-from misago.core.utils import slugify
-from misago.threads.threadtypes import trees_map
-
 from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+from ..acl.cache import clear_acl_cache
+from ..acl.models import BaseRole
+from ..conf import settings
+from ..core.cache import cache
+from ..core.utils import slugify
+from ..threads.threadtypes import trees_map
 
 CACHE_NAME = "misago_categories_tree"
 

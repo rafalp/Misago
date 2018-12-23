@@ -1,22 +1,22 @@
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.core.shortcuts import validate_slug
-from misago.core.viewmodel import ViewModel as BaseViewModel
-from misago.readtracker.threadstracker import make_read_aware
-from misago.threads.models import Poll, Thread
-from misago.threads.participants import make_participants_aware
-from misago.threads.permissions import (
+from ...acl.objectacl import add_acl_to_obj
+from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
+from ...categories.models import Category
+from ...core.shortcuts import validate_slug
+from ...core.viewmodel import ViewModel as BaseViewModel
+from ...readtracker.threadstracker import make_read_aware
+from ..models import Poll, Thread
+from ..participants import make_participants_aware
+from ..permissions import (
     allow_see_private_thread,
     allow_see_thread,
     allow_use_private_threads,
 )
-from misago.threads.serializers import PrivateThreadSerializer, ThreadSerializer
-from misago.threads.subscriptions import make_subscription_aware
-from misago.threads.threadtypes import trees_map
+from ..serializers import PrivateThreadSerializer, ThreadSerializer
+from ..subscriptions import make_subscription_aware
+from ..threadtypes import trees_map
 
 __all__ = ["ForumThread", "PrivateThread"]
 

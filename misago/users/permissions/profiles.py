@@ -3,11 +3,10 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext_lazy as _
 
-from misago.acl import algebra
-from misago.acl.decorators import return_boolean
-from misago.acl.models import Role
-from misago.admin.forms import YesNoSwitch
-
+from ...acl import algebra
+from ...acl.decorators import return_boolean
+from ...acl.models import Role
+from ...admin.forms import YesNoSwitch
 from .decorators import authenticated_only
 
 __all__ = [

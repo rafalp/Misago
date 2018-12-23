@@ -2,9 +2,9 @@ from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
 
-from misago.users.models import Ban
-from misago.users.test import create_test_user
-from misago.users.tokens import make_password_change_token
+from ..models import Ban
+from ..test import create_test_user
+from ..tokens import make_password_change_token
 
 
 class GatewayTests(TestCase):

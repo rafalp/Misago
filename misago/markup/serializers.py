@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from misago.threads.validators import validate_post_length
+from ..threads.validators import validate_post_length
 
 
 class MarkupSerializer(serializers.Serializer):

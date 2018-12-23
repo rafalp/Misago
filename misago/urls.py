@@ -1,8 +1,8 @@
 from django.conf.urls import include, url
 from django.views.generic import TemplateView
 
-from misago.conf import settings
-from misago.core.views import forum_index
+from .conf import settings
+from .core.views import forum_index
 
 app_name = "misago"
 

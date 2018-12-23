@@ -4,12 +4,12 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy, ngettext
 from rest_framework import serializers
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories import THREADS_ROOT_NAME
-from misago.conf import settings
-from misago.threads.mergeconflict import MergeConflict
-from misago.threads.models import Thread
-from misago.threads.permissions import (
+from ...acl.objectacl import add_acl_to_obj
+from ...categories import THREADS_ROOT_NAME
+from ...conf import settings
+from ..mergeconflict import MergeConflict
+from ..models import Thread
+from ..permissions import (
     allow_delete_best_answer,
     allow_delete_event,
     allow_delete_post,
@@ -23,9 +23,9 @@ from misago.threads.permissions import (
     can_start_thread,
     exclude_invisible_posts,
 )
-from misago.threads.threadtypes import trees_map
-from misago.threads.utils import get_thread_id_from_url
-from misago.threads.validators import validate_category, validate_thread_title
+from ..threadtypes import trees_map
+from ..utils import get_thread_id_from_url
+from ..validators import validate_category, validate_thread_title
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL

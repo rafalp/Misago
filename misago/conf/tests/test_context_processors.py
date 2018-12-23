@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from misago.conf.context_processors import conf
+from ..context_processors import conf
 
 
 def test_request_settings_are_included_in_template_context(db, dynamic_settings):

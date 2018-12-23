@@ -1,8 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
 
-from misago.users.models import Rank
-from misago.users.utils import hash_email
+from ..models import Rank
+from ..utils import hash_email
 
 User = get_user_model()
 

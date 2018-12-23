@@ -4,10 +4,10 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from misago.conf import settings
-from misago.core.management.progressbar import show_progress
-from misago.core.pgutils import chunk_queryset
-from misago.threads.models import Attachment
+from ....conf import settings
+from ....core.management.progressbar import show_progress
+from ....core.pgutils import chunk_queryset
+from ...models import Attachment
 
 
 class Command(BaseCommand):

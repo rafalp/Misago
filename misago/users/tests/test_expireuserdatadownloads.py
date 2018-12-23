@@ -5,10 +5,10 @@ from io import StringIO
 from django.core.files import File
 from django.core.management import call_command
 
-from misago.users.datadownloads import request_user_data_download
-from misago.users.management.commands import expireuserdatadownloads
-from misago.users.models import DataDownload
-from misago.users.test import AuthenticatedUserTestCase
+from ..datadownloads import request_user_data_download
+from ..management.commands import expireuserdatadownloads
+from ..models import DataDownload
+from ..test import AuthenticatedUserTestCase
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")

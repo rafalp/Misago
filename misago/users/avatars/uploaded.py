@@ -4,9 +4,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from PIL import Image
 
-from misago.conf import settings
-
 from . import store
+from ...conf import settings
 
 ALLOWED_EXTENSIONS = (".gif", ".png", ".jpg", ".jpeg")
 ALLOWED_MIME_TYPES = ("image/gif", "image/jpeg", "image/png", "image/mpo")

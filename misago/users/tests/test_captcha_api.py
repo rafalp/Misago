@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.conf.test import override_dynamic_settings
+from ...conf.test import override_dynamic_settings
 
 test_qa_question = "Do you like pies?"
 test_qa_help_text = 'Type in "yes".'

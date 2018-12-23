@@ -1,8 +1,7 @@
 from django.urls import reverse
 
-from misago.threads import test
-from misago.threads.test import patch_category_acl
-
+from .. import test
+from ..test import patch_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
 

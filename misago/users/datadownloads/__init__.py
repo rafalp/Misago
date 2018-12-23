@@ -2,9 +2,9 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.conf import settings
-from misago.users.models import DataDownload
-from misago.users.signals import archive_user_data
+from ...conf import settings
+from ..models import DataDownload
+from ..signals import archive_user_data
 
 from .dataarchive import DataArchive
 

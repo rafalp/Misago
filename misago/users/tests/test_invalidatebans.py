@@ -5,11 +5,11 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.cache.versions import get_cache_versions
-from misago.users import bans
-from misago.users.management.commands import invalidatebans
-from misago.users.models import Ban, BanCache
-from misago.users.test import create_test_user
+from ...cache.versions import get_cache_versions
+from ...users import bans
+from ..management.commands import invalidatebans
+from ..models import Ban, BanCache
+from ..test import create_test_user
 
 
 class InvalidateBansTests(TestCase):

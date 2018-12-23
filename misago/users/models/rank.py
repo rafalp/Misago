@@ -1,8 +1,8 @@
 from django.db import models, transaction
 from django.urls import reverse
 
-from misago.acl.cache import clear_acl_cache
-from misago.core.utils import slugify
+from ...acl.cache import clear_acl_cache
+from ...core.utils import slugify
 
 
 class RankManager(models.Manager):

@@ -5,12 +5,12 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.readtracker.management.commands import clearreadtracker
-from misago.readtracker.models import PostRead
-from misago.threads import test
-from misago.users.test import create_test_user
+from ...categories.models import Category
+from ...conf import settings
+from ...threads import test
+from ...users.test import create_test_user
+from ..management.commands import clearreadtracker
+from ..models import PostRead
 
 
 class ClearReadTrackerTests(TestCase):

@@ -1,9 +1,9 @@
 from django.db import transaction
 from rest_framework.response import Response
 
-from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_delete_thread
-from misago.threads.serializers import DeleteThreadsSerializer
+from ...moderation import threads as moderation
+from ...permissions import allow_delete_thread
+from ...serializers import DeleteThreadsSerializer
 
 
 @transaction.atomic

@@ -3,12 +3,12 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.conf import settings
-from misago.core.apipatch import ApiPatch
-from misago.threads.models import PostLike
-from misago.threads.moderation import posts as moderation
-from misago.threads.permissions import (
+from ....acl.objectacl import add_acl_to_obj
+from ....conf import settings
+from ....core.apipatch import ApiPatch
+from ...models import PostLike
+from ...moderation import posts as moderation
+from ...permissions import (
     allow_approve_post,
     allow_hide_best_answer,
     allow_hide_post,

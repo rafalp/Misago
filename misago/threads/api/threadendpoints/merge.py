@@ -3,13 +3,13 @@ from django.utils.translation import gettext as _
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.threads.events import record_event
-from misago.threads.mergeconflict import MergeConflict
-from misago.threads.models import Thread
-from misago.threads.moderation import threads as moderation
-from misago.threads.permissions import allow_merge_thread
-from misago.threads.serializers import (
+from ....acl.objectacl import add_acl_to_obj
+from ...events import record_event
+from ...mergeconflict import MergeConflict
+from ...models import Thread
+from ...moderation import threads as moderation
+from ...permissions import allow_merge_thread
+from ...serializers import (
     MergeThreadSerializer,
     MergeThreadsSerializer,
     ThreadsListSerializer,

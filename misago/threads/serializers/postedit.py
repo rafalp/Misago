@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import serializers
 
-from misago.threads.models import PostEdit
+from ..models import PostEdit
 
 __all__ = ["PostEditSerializer"]
 

@@ -1,8 +1,7 @@
 from collections import OrderedDict
 
-from misago.categories.models import Category
-
 from . import PostingMiddleware
+from ....categories.models import Category
 
 
 class SaveChangesMiddleware(PostingMiddleware):

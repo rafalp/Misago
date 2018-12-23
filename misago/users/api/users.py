@@ -10,19 +10,16 @@ from rest_framework.decorators import detail_route
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.core.rest_permissions import IsAuthenticatedOrReadOnly
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.moderation import hide_post, hide_thread
-from misago.users.bans import get_user_ban
-from misago.users.datadownloads import (
-    request_user_data_download,
-    user_has_data_download_request,
-)
-from misago.users.online.utils import get_user_status
-from misago.users.permissions import (
+from ...acl.objectacl import add_acl_to_obj
+from ...categories.models import Category
+from ...conf import settings
+from ...core.rest_permissions import IsAuthenticatedOrReadOnly
+from ...core.shortcuts import get_int_or_404
+from ...threads.moderation import hide_post, hide_thread
+from ..bans import get_user_ban
+from ..datadownloads import request_user_data_download, user_has_data_download_request
+from ..online.utils import get_user_status
+from ..permissions import (
     allow_browse_users_list,
     allow_delete_user,
     allow_edit_profile_details,
@@ -31,16 +28,15 @@ from misago.users.permissions import (
     allow_rename_user,
     allow_see_ban_details,
 )
-from misago.users.profilefields import profilefields, serialize_profilefields_data
-from misago.users.serializers import (
+from ..profilefields import profilefields, serialize_profilefields_data
+from ..serializers import (
     BanDetailsSerializer,
     DataDownloadSerializer,
     DeleteOwnAccountSerializer,
     ForumOptionsSerializer,
     UserSerializer,
 )
-from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
-
+from ..viewmodels import Followers, Follows, UserPosts, UserThreads
 from .rest_permissions import BasePermission, UnbannedAnonOnly
 from .userendpoints.avatar import avatar_endpoint, moderate_avatar_endpoint
 from .userendpoints.changeemail import change_email_endpoint

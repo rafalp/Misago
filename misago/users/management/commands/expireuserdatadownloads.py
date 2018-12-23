@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from misago.core.pgutils import chunk_queryset
-from misago.users.datadownloads import expire_user_data_download
-from misago.users.models import DataDownload
+from ....core.pgutils import chunk_queryset
+from ...datadownloads import expire_user_data_download
+from ...models import DataDownload
 
 
 class Command(BaseCommand):

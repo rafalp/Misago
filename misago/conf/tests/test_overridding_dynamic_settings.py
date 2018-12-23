@@ -1,7 +1,7 @@
 import pytest
 
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.conf.test import override_dynamic_settings
+from ..dynamicsettings import DynamicSettings
+from ..test import override_dynamic_settings
 
 
 def test_dynamic_setting_can_be_overridden_using_context_manager(dynamic_settings):

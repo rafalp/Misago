@@ -6,12 +6,12 @@ from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
 from django.utils import timezone
 
-from misago.conf import settings
-from misago.core.pgutils import PgPartialIndex
-from misago.core.utils import parse_iso8601_string
-from misago.markup import finalise_markup
-from misago.threads.checksums import is_post_valid, update_post_checksum
-from misago.threads.filtersearch import filter_search
+from ...conf import settings
+from ...core.pgutils import PgPartialIndex
+from ...core.utils import parse_iso8601_string
+from ...markup import finalise_markup
+from ..checksums import is_post_valid, update_post_checksum
+from ..filtersearch import filter_search
 
 
 class Post(models.Model):
@@ -97,7 +97,7 @@ class Post(models.Model):
         return "%s..." % self.original[10:].strip()
 
     def delete(self, *args, **kwargs):
-        from misago.threads.signals import delete_post
+        from ..signals import delete_post
 
         delete_post.send(sender=self)
 
@@ -133,12 +133,12 @@ class Post(models.Model):
         if other_post.is_best_answer:
             self.thread.best_answer_is_protected = other_post.is_protected
 
-        from misago.threads.signals import merge_post
+        from ..signals import merge_post
 
         merge_post.send(sender=self, other_post=other_post)
 
     def move(self, new_thread):
-        from misago.threads.signals import move_post
+        from ..signals import move_post
 
         if self.is_best_answer:
             self.thread.clear_best_answer()

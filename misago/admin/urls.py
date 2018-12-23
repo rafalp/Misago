@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
-from misago import admin
-
+from .. import admin
 from .views import auth, index
 
 urlpatterns = [

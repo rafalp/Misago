@@ -3,11 +3,11 @@ import os
 from django.urls import reverse
 from PIL import Image
 
-from misago.acl.models import Role
-from misago.acl.test import patch_user_acl
-from misago.conf import settings
-from misago.threads.models import Attachment, AttachmentType
-from misago.users.test import AuthenticatedUserTestCase
+from ...acl.models import Role
+from ...acl.test import patch_user_acl
+from ...conf import settings
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Attachment, AttachmentType
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, "document.pdf")

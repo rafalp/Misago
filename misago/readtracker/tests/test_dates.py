@@ -3,8 +3,8 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.conf import settings
-from misago.readtracker.dates import get_cutoff_date, is_date_tracked
+from ...conf import settings
+from ..dates import get_cutoff_date, is_date_tracked
 
 
 class MockUser(object):

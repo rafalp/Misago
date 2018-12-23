@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 
-from misago.conf import settings
-from misago.core.pgutils import chunk_queryset
-from misago.users.permissions import can_delete_own_account
+from ....conf import settings
+from ....core.pgutils import chunk_queryset
+from ...permissions import can_delete_own_account
 
 User = get_user_model()
 

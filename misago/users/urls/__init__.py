@@ -1,8 +1,8 @@
 from django.conf.urls import include, url
 
-from misago.core.views import home_redirect
+from ...core.views import home_redirect
 
-from misago.users.views import (
+from ..views import (
     activation,
     auth,
     avatarserver,

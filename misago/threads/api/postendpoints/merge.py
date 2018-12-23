@@ -2,8 +2,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.threads.serializers import MergePostsSerializer, PostSerializer
+from ....acl.objectacl import add_acl_to_obj
+from ...serializers import MergePostsSerializer, PostSerializer
 
 
 def posts_merge_endpoint(request, thread):

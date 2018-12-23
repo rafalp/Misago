@@ -1,7 +1,6 @@
 from django.utils.deprecation import MiddlewareMixin
 
-from misago.categories.models import Category
-
+from ..categories.models import Category
 from .models import Thread
 from .viewmodels import filter_read_threads_queryset
 

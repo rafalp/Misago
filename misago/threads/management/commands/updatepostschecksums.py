@@ -2,10 +2,10 @@ import time
 
 from django.core.management.base import BaseCommand
 
-from misago.core.management.progressbar import show_progress
-from misago.core.pgutils import chunk_queryset
-from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Post
+from ....core.management.progressbar import show_progress
+from ....core.pgutils import chunk_queryset
+from ...checksums import update_post_checksum
+from ...models import Post
 
 
 class Command(BaseCommand):

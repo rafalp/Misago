@@ -1,9 +1,9 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads import test
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
 
 
 class FloodProtectionTests(AuthenticatedUserTestCase):

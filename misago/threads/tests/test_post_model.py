@@ -3,10 +3,10 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Post, Thread
-from misago.users.test import create_test_user
+from ...categories.models import Category
+from ...users.test import create_test_user
+from ..checksums import update_post_checksum
+from ..models import Post, Thread
 
 
 class PostModelTests(TestCase):

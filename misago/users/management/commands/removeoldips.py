@@ -1,7 +1,7 @@
 from django.core.management import BaseCommand
 
-from misago.conf import settings
-from misago.users.signals import remove_old_ips
+from ....conf import settings
+from ...signals import remove_old_ips
 
 
 class Command(BaseCommand):

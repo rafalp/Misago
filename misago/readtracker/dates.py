@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from misago.conf import settings
+from ..conf import settings
 
 
 def get_cutoff_date(user=None):

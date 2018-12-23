@@ -6,25 +6,24 @@ from rest_framework import viewsets
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.shortcuts import get_int_or_404
-from misago.threads.models import Poll
-from misago.threads.permissions import (
+from ...acl.objectacl import add_acl_to_obj
+from ...core.shortcuts import get_int_or_404
+from ...users.audittrail import create_audit_trail
+from ..models import Poll
+from ..permissions import (
     allow_delete_poll,
     allow_edit_poll,
     allow_see_poll_votes,
     allow_start_poll,
     can_start_poll,
 )
-from misago.threads.serializers import (
+from ..serializers import (
     EditPollSerializer,
     NewPollSerializer,
     PollSerializer,
     PollVoteSerializer,
 )
-from misago.threads.viewmodels import ForumThread
-from misago.users.audittrail import create_audit_trail
-
+from ..viewmodels import ForumThread
 from .pollvotecreateendpoint import poll_vote_create
 
 

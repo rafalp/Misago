@@ -1,11 +1,11 @@
 from django.utils import timezone
 
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.readtracker.poststracker import save_read
-from misago.threads import test
-from misago.threads.test import patch_category_acl
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...categories.models import Category
+from ...conf import settings
+from ...readtracker.poststracker import save_read
+from ...users.test import AuthenticatedUserTestCase
+from ..test import patch_category_acl
 
 GOTO_URL = "%s#post-%s"
 GOTO_PAGE_URL = "%s%s/#post-%s"

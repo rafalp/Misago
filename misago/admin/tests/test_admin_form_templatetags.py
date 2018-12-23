@@ -2,8 +2,8 @@ import pytest
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError
 
-from misago.admin.forms import YesNoSwitch
-from misago.admin.templatetags.misago_admin_form import (
+from ..forms import YesNoSwitch
+from ..templatetags.misago_admin_form import (
     is_multiple_choice_field,
     is_radio_select_field,
     is_select_field,

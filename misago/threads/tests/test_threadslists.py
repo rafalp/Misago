@@ -4,13 +4,13 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.readtracker import poststracker
-from misago.threads import test
-from misago.users.models import AnonymousUser
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...conf import settings
+from ...readtracker import poststracker
+from ...users.models import AnonymousUser
+from ...users.test import AuthenticatedUserTestCase
 
 LISTS_URLS = ("", "my/", "new/", "unread/", "subscribed/")
 

@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from misago.markup.parser import parse
-from misago.users.test import create_test_user
+from ...users.test import create_test_user
+from ..parser import parse
 
 
 class MockRequest(object):

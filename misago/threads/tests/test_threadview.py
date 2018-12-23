@@ -1,16 +1,16 @@
 from unittest.mock import Mock
 
-from misago.acl import useracl
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.conf import settings
-from misago.conftest import get_cache_versions
-from misago.threads import test
-from misago.threads.checksums import update_post_checksum
-from misago.threads.events import record_event
-from misago.threads.moderation import hide_post
-from misago.threads.moderation import threads as threads_moderation
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl import useracl
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...conf import settings
+from ...conftest import get_cache_versions
+from ...users.test import AuthenticatedUserTestCase
+from ..checksums import update_post_checksum
+from ..events import record_event
+from ..moderation import hide_post
+from ..moderation import threads as threads_moderation
 
 cache_versions = get_cache_versions()
 

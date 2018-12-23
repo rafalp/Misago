@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 
-from misago.users.profilefields import ProfileFields
+from ..profilefields import ProfileFields
 
 User = get_user_model()
 

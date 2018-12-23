@@ -8,24 +8,23 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from social_core.pipeline.partial import partial
 
-from misago.core.exceptions import SocialAuthBanned, SocialAuthFailed
-from misago.legal.models import Agreement
-from misago.users.bans import get_request_ip_ban, get_user_ban
-from misago.users.forms.register import SocialAuthRegisterForm
-from misago.users.models import Ban
-from misago.users.registration import (
+from ...core.exceptions import SocialAuthBanned, SocialAuthFailed
+from ...legal.models import Agreement
+from ..bans import get_request_ip_ban, get_user_ban
+from ..forms.register import SocialAuthRegisterForm
+from ..models import Ban
+from ..registration import (
     get_registration_result_json,
     save_user_agreements,
     send_welcome_email,
 )
-from misago.users.setupnewuser import setup_new_user
-from misago.users.validators import (
+from ..setupnewuser import setup_new_user
+from ..validators import (
     ValidationError,
     validate_email,
     validate_new_registration,
     validate_username,
 )
-
 from .utils import get_social_auth_backend_name, perpare_username
 
 User = get_user_model()

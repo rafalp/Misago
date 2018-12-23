@@ -2,8 +2,7 @@ from django.core import mail as djmail
 from django.template.loader import render_to_string
 from django.utils.translation import get_language
 
-from misago.conf import settings
-
+from ..conf import settings
 from .utils import get_host_from_address
 
 

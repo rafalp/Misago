@@ -4,12 +4,12 @@ from django.test.client import BOUNDARY, MULTIPART_CONTENT, encode_multipart
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Post, Thread
-from misago.threads.test import patch_category_acl
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
+from ..models import Post, Thread
+from ..test import patch_category_acl
 
 
 class EditReplyTests(AuthenticatedUserTestCase):

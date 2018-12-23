@@ -1,4 +1,4 @@
-from misago.cache.versions import (
+from ..versions import (
     CACHE_NAME,
     get_cache_versions,
     get_cache_versions_from_cache,

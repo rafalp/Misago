@@ -1,8 +1,8 @@
 from django.template import Context, Template
 from django.test import TestCase, override_settings
 
-from misago.core.templatetags import misago_batch
-from misago.core.templatetags.misago_absoluteurl import absoluteurl
+from ..templatetags.misago_absoluteurl import absoluteurl
+from ..templatetags.misago_batch import batch, batchnonefilled
 
 TEST_ADDRESS = "https://testsite.com/"
 
@@ -76,7 +76,7 @@ class BatchTests(TestCase):
         batch = "loremipsum"
         yields = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m"]]
 
-        for i, test_yield in enumerate(misago_batch.batch(batch, 3)):
+        for i, test_yield in enumerate(batch(batch, 3)):
             self.assertEqual(test_yield, yields[i])
 
     def test_batchnonefilled(self):
@@ -84,7 +84,7 @@ class BatchTests(TestCase):
         batch = "loremipsum"
         yields = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m", None, None]]
 
-        for i, test_yield in enumerate(misago_batch.batchnonefilled(batch, 3)):
+        for i, test_yield in enumerate(batchnonefilled(batch, 3)):
             self.assertEqual(test_yield, yields[i])
 
 

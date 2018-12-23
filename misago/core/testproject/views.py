@@ -4,13 +4,12 @@ from rest_framework.decorators import api_view
 from social_core.backends.github import GithubOAuth2
 from social_core.exceptions import AuthFailed, NotAllowedToDisconnect, WrongBackend
 
-from misago.core import errorpages
-from misago.core.decorators import require_POST
-from misago.core.exceptions import Banned, SocialAuthBanned, SocialAuthFailed
-from misago.core.shortcuts import paginate, paginated_response, validate_slug
-from misago.core.views import home_redirect
-from misago.users.models import Ban
-
+from .. import errorpages
+from ...users.models import Ban
+from ..decorators import require_POST
+from ..exceptions import Banned, SocialAuthBanned, SocialAuthFailed
+from ..shortcuts import paginate, paginated_response, validate_slug
+from ..views import home_redirect
 from .models import Model
 from .serializers import MockSerializer
 

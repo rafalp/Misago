@@ -6,8 +6,8 @@ from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
-from misago.users.management.commands import deleteinactiveusers
-from misago.users.test import create_test_user
+from ..management.commands import deleteinactiveusers
+from ..test import create_test_user
 
 User = get_user_model()
 

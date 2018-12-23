@@ -1,7 +1,7 @@
 from django.core import mail
 from django.urls import reverse
 
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserChangeEmailTests(AuthenticatedUserTestCase):

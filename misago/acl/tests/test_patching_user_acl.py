@@ -1,5 +1,5 @@
-from misago.acl import useracl
-from misago.acl.test import patch_user_acl
+from .. import useracl
+from ..test import patch_user_acl
 
 
 def callable_acl_patch(user, user_acl):

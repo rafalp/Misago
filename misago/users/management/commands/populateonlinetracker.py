@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from misago.core.pgutils import chunk_queryset
-from misago.users.models import Online
+from ....core.pgutils import chunk_queryset
+from ...models import Online
 
 User = get_user_model()
 

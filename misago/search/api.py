@@ -6,8 +6,7 @@ from django.utils.translation import gettext as _
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from misago.core.shortcuts import get_int_or_404
-
+from ..core.shortcuts import get_int_or_404
 from .searchproviders import searchproviders
 
 

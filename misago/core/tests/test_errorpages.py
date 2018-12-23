@@ -4,15 +4,12 @@ from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.acl.useracl import get_user_acl
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.conftest import get_cache_versions
-from misago.core.testproject.views import (
-    mock_custom_403_error_page,
-    mock_custom_404_error_page,
-)
-from misago.core.utils import encode_json_html
-from misago.users.models import AnonymousUser
+from ...acl.useracl import get_user_acl
+from ...conf.dynamicsettings import DynamicSettings
+from ...conftest import get_cache_versions
+from ...users.models import AnonymousUser
+from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
+from ..utils import encode_json_html
 
 
 class CSRFErrorViewTests(TestCase):

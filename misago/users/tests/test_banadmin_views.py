@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 
 from django.urls import reverse
 
-from misago.admin.test import AdminTestCase
-from misago.users.models import Ban
+from ...admin.test import AdminTestCase
+from ..models import Ban
 
 
 class BanAdminViewsTests(AdminTestCase):

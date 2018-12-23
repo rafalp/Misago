@@ -1,6 +1,6 @@
 from django.db import models
 
-from misago.users.avatars import store
+from ..avatars import store
 
 
 class AvatarGallery(models.Model):

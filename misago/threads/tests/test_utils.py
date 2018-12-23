@@ -1,8 +1,8 @@
 from django.test import TestCase
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.utils import add_categories_to_items, get_thread_id_from_url
+from .. import test
+from ...categories.models import Category
+from ..utils import add_categories_to_items, get_thread_id_from_url
 
 
 class AddCategoriesToItemsTests(TestCase):

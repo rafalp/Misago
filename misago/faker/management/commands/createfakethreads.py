@@ -7,11 +7,11 @@ from django.db.transaction import atomic
 from django.utils import timezone
 from faker import Factory
 
-from misago.categories.models import Category
-from misago.core.management.progressbar import show_progress
-from misago.faker.englishcorpus import EnglishCorpus
-from misago.threads.checksums import update_post_checksum
-from misago.threads.models import Post, Thread
+from ....categories.models import Category
+from ....core.management.progressbar import show_progress
+from ....threads.checksums import update_post_checksum
+from ....threads.models import Post, Thread
+from ...englishcorpus import EnglishCorpus
 
 PLACEKITTEN_URL = "https://placekitten.com/g/%s/%s"
 

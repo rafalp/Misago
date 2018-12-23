@@ -3,11 +3,11 @@ from io import StringIO
 from django.core import mail
 from django.core.management import call_command
 
-from misago.conf import settings
-from misago.users.datadownloads import request_user_data_download
-from misago.users.management.commands import prepareuserdatadownloads
-from misago.users.models import DataDownload
-from misago.users.test import AuthenticatedUserTestCase
+from ...conf import settings
+from ..datadownloads import request_user_data_download
+from ..management.commands import prepareuserdatadownloads
+from ..models import DataDownload
+from ..test import AuthenticatedUserTestCase
 
 
 class PrepareUserDataDownloadsTests(AuthenticatedUserTestCase):

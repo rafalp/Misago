@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from misago.legal.models import Agreement
+from ..models import Agreement
 
 
 class PrivacyPolicyTests(TestCase):

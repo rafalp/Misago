@@ -1,8 +1,8 @@
 import json
 
-from misago.acl.test import patch_user_acl
-from misago.conf.test import override_dynamic_settings
-from misago.users.test import AuthenticatedUserTestCase, create_test_user
+from ...acl.test import patch_user_acl
+from ...conf.test import override_dynamic_settings
+from ..test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserUsernameTests(AuthenticatedUserTestCase):

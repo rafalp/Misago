@@ -1,7 +1,7 @@
 from django import forms
 from rest_framework.response import Response
 
-from misago.users.profilefields import profilefields, serialize_profilefields_data
+from ...profilefields import profilefields, serialize_profilefields_data
 
 
 def edit_details_endpoint(request, user):

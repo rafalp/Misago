@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.test import patch_category_acl
-from misago.users.test import AuthenticatedUserTestCase
+from .. import test
+from ...acl.test import patch_user_acl
+from ...categories.models import Category
+from ...users.test import AuthenticatedUserTestCase
+from ..test import patch_category_acl
 
 User = get_user_model()
 

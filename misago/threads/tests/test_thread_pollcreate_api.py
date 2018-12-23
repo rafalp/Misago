@@ -1,10 +1,9 @@
 from django.urls import reverse
 
-from misago.acl.test import patch_user_acl
-from misago.threads.models import Poll, Thread
-from misago.threads.serializers.poll import MAX_POLL_OPTIONS
-from misago.threads.test import patch_category_acl
-
+from ...acl.test import patch_user_acl
+from ..models import Poll, Thread
+from ..serializers.poll import MAX_POLL_OPTIONS
+from ..test import patch_category_acl
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 

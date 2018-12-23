@@ -1,8 +1,8 @@
 from django.dispatch import Signal, receiver
 
-from misago.categories import PRIVATE_THREADS_ROOT_NAME
-from misago.categories.signals import delete_category_content, move_category_content
-from misago.threads.signals import merge_post, merge_thread, move_post, move_thread
+from ..categories import PRIVATE_THREADS_ROOT_NAME
+from ..categories.signals import delete_category_content, move_category_content
+from ..threads.signals import merge_post, merge_thread, move_post, move_thread
 
 thread_read = Signal(providing_args=["thread"])
 

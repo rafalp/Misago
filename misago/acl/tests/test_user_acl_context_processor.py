@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from misago.acl.context_processors import user_acl
+from ..context_processors import user_acl
 
 
 def test_context_processor_adds_request_user_acl_to_context():

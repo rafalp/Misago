@@ -6,7 +6,7 @@ from django.core.management import call_command
 from django.test import override_settings
 from django.utils import timezone
 
-from misago.users.management.commands import removeoldips
+from ..management.commands import removeoldips
 
 IP_STORE_TIME = 2
 

@@ -6,16 +6,15 @@ from django.db.models.signals import pre_delete
 from django.dispatch import Signal, receiver
 from django.utils.translation import gettext as _
 
-from misago.categories.models import Category
-from misago.categories.signals import delete_category_content, move_category_content
-from misago.core.pgutils import chunk_queryset
-from misago.users.signals import (
+from ..categories.models import Category
+from ..categories.signals import delete_category_content, move_category_content
+from ..core.pgutils import chunk_queryset
+from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
     delete_user_content,
     username_changed,
 )
-
 from .anonymize import ANONYMIZABLE_EVENTS, anonymize_event, anonymize_post_last_likes
 from .models import Attachment, Poll, PollVote, Post, PostEdit, PostLike, Thread
 

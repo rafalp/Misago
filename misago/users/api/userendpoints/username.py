@@ -3,8 +3,8 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.response import Response
 
-from misago.users.namechanges import get_username_options
-from misago.users.serializers import ChangeUsernameSerializer
+from ...namechanges import get_username_options
+from ...serializers import ChangeUsernameSerializer
 
 
 def username_endpoint(request):

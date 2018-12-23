@@ -4,9 +4,9 @@ import time
 from django.core.management.base import BaseCommand
 from faker import Factory
 
-from misago.acl.cache import clear_acl_cache
-from misago.categories.models import Category, RoleCategoryACL
-from misago.core.management.progressbar import show_progress
+from ....acl.cache import clear_acl_cache
+from ....categories.models import Category, RoleCategoryACL
+from ....core.management.progressbar import show_progress
 
 
 class Command(BaseCommand):

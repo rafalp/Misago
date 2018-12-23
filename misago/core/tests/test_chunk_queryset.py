@@ -1,7 +1,7 @@
 from django.test import TestCase
 
-from misago.core.models import CacheVersion
-from misago.core.pgutils import chunk_queryset
+from ..models import CacheVersion
+from ..pgutils import chunk_queryset
 
 
 class ChunkQuerysetTest(TestCase):

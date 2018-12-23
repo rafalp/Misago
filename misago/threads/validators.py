@@ -3,12 +3,11 @@ from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from misago.categories import THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.categories.permissions import can_browse_category, can_see_category
-from misago.conf import settings
-from misago.core.validators import validate_sluggable
-
+from ..categories import THREADS_ROOT_NAME
+from ..categories.models import Category
+from ..categories.permissions import can_browse_category, can_see_category
+from ..conf import settings
+from ..core.validators import validate_sluggable
 from .threadtypes import trees_map
 
 

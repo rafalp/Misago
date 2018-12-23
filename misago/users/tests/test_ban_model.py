@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from misago.users.models import Ban
+from ..models import Ban
 
 
 class BansManagerTests(TestCase):

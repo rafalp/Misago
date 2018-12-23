@@ -3,10 +3,9 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.threads import test
-from misago.threads.models import Post, Thread
-from misago.threads.test import patch_category_acl
-
+from .. import test
+from ..models import Post, Thread
+from ..test import patch_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
 

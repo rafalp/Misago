@@ -1,8 +1,8 @@
 import pytest
 
-from misago.cache.models import CacheVersion
-from misago.cache.test import assert_invalidates_cache
-from misago.cache.versions import invalidate_cache
+from ..models import CacheVersion
+from ..test import assert_invalidates_cache
+from ..versions import invalidate_cache
 
 
 def test_assertion_fails_if_specified_cache_is_not_invaldiated(cache_version):

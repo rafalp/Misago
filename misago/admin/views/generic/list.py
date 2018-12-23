@@ -7,8 +7,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from misago.core.exceptions import ExplicitFirstPage
-
+from ....core.exceptions import ExplicitFirstPage
 from .base import AdminView
 
 

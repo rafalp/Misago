@@ -3,8 +3,8 @@ from io import StringIO
 from django.core.management import call_command
 from django.test import TestCase
 
-from misago.users.management.commands import loadavatargallery
-from misago.users.models import AvatarGallery
+from ..management.commands import loadavatargallery
+from ..models import AvatarGallery
 
 
 class LoadAvatarGalleryTests(TestCase):

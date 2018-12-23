@@ -1,7 +1,7 @@
 import pytest
 
-from misago.cache.models import CacheVersion
-from misago.cache.versions import CACHE_NAME, invalidate_all_caches, invalidate_cache
+from ..models import CacheVersion
+from ..versions import CACHE_NAME, invalidate_all_caches, invalidate_cache
 
 
 @pytest.fixture

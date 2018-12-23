@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from django.utils.crypto import get_random_string
 from PIL import Image
 
-from misago.conf import settings
+from ...conf import settings
 
 
 def normalize_image(image):
@@ -28,7 +28,7 @@ def delete_avatar(user, delete_tmp=True, delete_src=True):
 
 
 def store_avatar(user, image):
-    from misago.users.models import Avatar
+    from ..models import Avatar
 
     image = normalize_image(image)
 

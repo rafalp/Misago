@@ -2,11 +2,10 @@ import json
 
 from django.urls import reverse
 
-from misago.categories.models import Category
-from misago.threads import test
-from misago.threads.models import Thread
-from misago.threads.test import patch_category_acl, patch_other_category_acl
-
+from .. import test
+from ...categories.models import Category
+from ..models import Thread
+from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
 

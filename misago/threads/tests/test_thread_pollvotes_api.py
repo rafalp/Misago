@@ -4,10 +4,9 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.acl.test import patch_user_acl
-from misago.threads.models import Poll
-from misago.threads.test import patch_category_acl
-
+from ...acl.test import patch_user_acl
+from ..models import Poll
+from ..test import patch_category_acl
 from .test_thread_poll_api import ThreadPollApiTestCase
 
 User = get_user_model()

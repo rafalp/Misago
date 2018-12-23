@@ -3,9 +3,9 @@ from django.utils.translation import gettext as _
 from rest_framework import status
 from rest_framework.response import Response
 
-from misago.core.utils import format_plaintext_for_html
-from misago.users.serializers import EditSignatureSerializer
-from misago.users.signatures import is_user_signature_valid, set_user_signature
+from ....core.utils import format_plaintext_for_html
+from ...serializers import EditSignatureSerializer
+from ...signatures import is_user_signature_valid, set_user_signature
 
 
 def signature_endpoint(request):

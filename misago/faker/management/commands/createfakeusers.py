@@ -7,9 +7,9 @@ from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from faker import Factory
 
-from misago.core.management.progressbar import show_progress
-from misago.users.avatars import dynamic, gallery
-from misago.users.models import Rank
+from ....core.management.progressbar import show_progress
+from ....users.avatars import dynamic, gallery
+from ....users.models import Rank
 
 User = get_user_model()
 

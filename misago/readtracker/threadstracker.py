@@ -1,6 +1,5 @@
-from misago.threads.models import Post
-from misago.threads.permissions import exclude_invisible_posts
-
+from ..models import Post
+from ..permissions import exclude_invisible_posts
 from .dates import get_cutoff_date
 
 

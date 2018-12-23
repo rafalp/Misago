@@ -5,7 +5,7 @@ from django.conf import settings
 from django.db import migrations
 from django.utils import timezone
 
-from misago.conf import defaults
+from ...conf import defaults
 
 try:
     READS_CUTOFF = settings.MISAGO_READTRACKER_CUTOFF

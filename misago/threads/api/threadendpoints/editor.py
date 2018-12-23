@@ -2,11 +2,11 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import gettext as _
 from rest_framework.response import Response
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.categories import THREADS_ROOT_NAME
-from misago.categories.models import Category
-from misago.threads.permissions import can_start_thread
-from misago.threads.threadtypes import trees_map
+from ....acl.objectacl import add_acl_to_obj
+from ....categories import THREADS_ROOT_NAME
+from ....categories.models import Category
+from ...permissions import can_start_thread
+from ...threadtypes import trees_map
 
 
 def thread_start_editor(request):

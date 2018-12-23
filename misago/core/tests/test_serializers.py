@@ -1,10 +1,10 @@
 from django.test import TestCase
 from rest_framework import serializers
 
-from misago.categories.models import Category
-from misago.core.serializers import MutableFields
-from misago.threads import test
-from misago.threads.models import Thread
+from ...categories.models import Category
+from ...threads import test
+from ...threads.models import Thread
+from ..serializers import MutableFields
 
 
 class Serializer(serializers.ModelSerializer, MutableFields):

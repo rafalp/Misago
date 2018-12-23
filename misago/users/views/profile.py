@@ -3,18 +3,14 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from misago.acl.objectacl import add_acl_to_obj
-from misago.core.shortcuts import paginate, pagination_dict, validate_slug
-from misago.users.bans import get_user_ban
-from misago.users.online.utils import get_user_status
-from misago.users.pages import user_profile
-from misago.users.profilefields import profilefields, serialize_profilefields_data
-from misago.users.serializers import (
-    BanDetailsSerializer,
-    UsernameChangeSerializer,
-    UserSerializer,
-)
-from misago.users.viewmodels import Followers, Follows, UserPosts, UserThreads
+from ...acl.objectacl import add_acl_to_obj
+from ...core.shortcuts import paginate, pagination_dict, validate_slug
+from ..bans import get_user_ban
+from ..online.utils import get_user_status
+from ..pages import user_profile
+from ..profilefields import profilefields, serialize_profilefields_data
+from ..serializers import BanDetailsSerializer, UsernameChangeSerializer, UserSerializer
+from ..viewmodels import Followers, Follows, UserPosts, UserThreads
 
 User = get_user_model()
 

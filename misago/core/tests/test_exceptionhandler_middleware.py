@@ -3,11 +3,11 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.urls import reverse
 
-from misago.acl.useracl import get_user_acl
-from misago.conf.dynamicsettings import DynamicSettings
-from misago.conftest import get_cache_versions
-from misago.core.middleware import ExceptionHandlerMiddleware
-from misago.users.models import AnonymousUser
+from ...acl.useracl import get_user_acl
+from ...conf.dynamicsettings import DynamicSettings
+from ...conftest import get_cache_versions
+from ...users.models import AnonymousUser
+from ..middleware import ExceptionHandlerMiddleware
 
 
 def create_request():

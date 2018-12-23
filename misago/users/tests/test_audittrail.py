@@ -3,10 +3,10 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from misago.users.audittrail import create_audit_trail, create_user_audit_trail
-from misago.users.models import AuditTrail
-from misago.users.signals import remove_old_ips
-from misago.users.test import UserTestCase, create_test_user
+from ..audittrail import create_audit_trail, create_user_audit_trail
+from ..models import AuditTrail
+from ..signals import remove_old_ips
+from ..test import UserTestCase, create_test_user
 
 User = get_user_model()
 

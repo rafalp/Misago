@@ -1,6 +1,6 @@
 from functools import wraps
 
-from misago.conf.dynamicsettings import DynamicSettings
+from .dynamicsettings import DynamicSettings
 
 
 class override_dynamic_settings:

@@ -10,8 +10,8 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from PIL import Image
 
-from misago.conf import settings
-from misago.core.utils import slugify
+from ...conf import settings
+from ...core.utils import slugify
 
 
 def upload_to(instance, filename):

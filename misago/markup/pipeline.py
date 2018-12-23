@@ -2,7 +2,7 @@ from importlib import import_module
 
 from bs4 import BeautifulSoup
 
-from misago.conf import settings
+from ..conf import settings
 
 
 class MarkupPipeline(object):

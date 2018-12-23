@@ -7,25 +7,17 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-from misago.conf import settings
-from misago.core.decorators import require_dict_data
-from misago.core.mail import mail_user
-from misago.users.bans import get_user_ban
-from misago.users.forms.auth import (
-    AuthenticationForm,
-    ResendActivationForm,
-    ResetPasswordForm,
-)
-from misago.users.serializers import (
-    AnonymousUserSerializer,
-    AuthenticatedUserSerializer,
-)
-from misago.users.tokens import (
+from ...conf import settings
+from ...core.decorators import require_dict_data
+from ...core.mail import mail_user
+from ..bans import get_user_ban
+from ..forms.auth import AuthenticationForm, ResendActivationForm, ResetPasswordForm
+from ..serializers import AnonymousUserSerializer, AuthenticatedUserSerializer
+from ..tokens import (
     is_password_change_token_valid,
     make_activation_token,
     make_password_change_token,
 )
-
 from .rest_permissions import UnbannedAnonOnly, UnbannedOnly
 
 User = auth.get_user_model()

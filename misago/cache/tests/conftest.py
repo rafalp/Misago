@@ -1,6 +1,6 @@
 import pytest
 
-from misago.cache.models import CacheVersion
+from ..models import CacheVersion
 
 
 @pytest.fixture

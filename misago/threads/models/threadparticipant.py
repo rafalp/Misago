@@ -1,6 +1,6 @@
 from django.db import models
 
-from misago.conf import settings
+from ...conf import settings
 
 
 class ThreadParticipantManager(models.Manager):

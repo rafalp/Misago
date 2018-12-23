@@ -5,13 +5,13 @@ from django.core.files import File
 from django.test import TestCase
 from django.utils import timezone
 
-from misago.conf import settings
-from misago.users.datadownloads.dataarchive import (
+from ...conf import settings
+from ..datadownloads.dataarchive import (
     FILENAME_MAX_LEN,
     DataArchive,
     trim_long_filename,
 )
-from misago.users.test import AuthenticatedUserTestCase
+from ..test import AuthenticatedUserTestCase
 
 DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")

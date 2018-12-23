@@ -1,6 +1,6 @@
 import pytest
 
-from misago.users.templatetags.misago_avatars import avatar
+from ..templatetags.misago_avatars import avatar
 
 
 @pytest.fixture
