@@ -24,7 +24,7 @@ class ActivationViewsTests(TestCase):
         Ban.objects.create(
             check_type=Ban.USERNAME, banned_value="user", user_message="Nope!"
         )
-        
+
         response = self.client.get(
             reverse(
                 "misago:activate-by-token",

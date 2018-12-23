@@ -421,9 +421,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_posts(self):
         """api merges two posts"""
-        post_a = test.reply_thread(
-            self.thread, poster=self.user, message="Battęry"
-        )
+        post_a = test.reply_thread(self.thread, poster=self.user, message="Battęry")
         post_b = test.reply_thread(self.thread, poster=self.user, message="Hórse")
 
         thread_replies = self.thread.replies
@@ -510,9 +508,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.thread.first_post.poster = self.user
         self.thread.first_post.save()
 
-        post_visible = test.reply_thread(
-            self.thread, poster=self.user, is_hidden=False
-        )
+        post_visible = test.reply_thread(self.thread, poster=self.user, is_hidden=False)
 
         response = self.client.post(
             self.api_link,
@@ -623,9 +619,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_remove_reads(self):
         """two posts merge removes read tracker from post"""
-        post_a = test.reply_thread(
-            self.thread, poster=self.user, message="Battęry"
-        )
+        post_a = test.reply_thread(self.thread, poster=self.user, message="Battęry")
         post_b = test.reply_thread(self.thread, poster=self.user, message="Hórse")
 
         poststracker.save_read(self.user, post_a)

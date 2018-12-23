@@ -583,9 +583,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_user_cant_see_unapproved_thread(self):
         """list hides unapproved thread that belongs to other user"""
-        test_thread = test.post_thread(
-            category=self.category_a, is_unapproved=True
-        )
+        test_thread = test.post_thread(category=self.category_a, is_unapproved=True)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -669,9 +667,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl({"can_approve_content": 1})
     def test_list_user_can_see_unapproved_thread(self):
         """list shows hidden thread that belongs to other user due to permission"""
-        test_thread = test.post_thread(
-            category=self.category_a, is_unapproved=True
-        )
+        test_thread = test.post_thread(category=self.category_a, is_unapproved=True)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -1246,13 +1242,9 @@ class UnapprovedListTests(ThreadsListTestCase):
     )
     def test_list_shows_all_threads_for_approving_user(self):
         """list shows all threads with unapproved posts when user has perm"""
-        visible_thread = test.post_thread(
-            category=self.category_b, is_unapproved=True
-        )
+        visible_thread = test.post_thread(category=self.category_b, is_unapproved=True)
 
-        hidden_thread = test.post_thread(
-            category=self.category_b, is_unapproved=False
-        )
+        hidden_thread = test.post_thread(category=self.category_b, is_unapproved=False)
 
         response = self.client.get("/unapproved/")
         self.assertEqual(response.status_code, 200)
@@ -1277,9 +1269,7 @@ class UnapprovedListTests(ThreadsListTestCase):
             poster=self.user, category=self.category_b, is_unapproved=True
         )
 
-        hidden_thread = test.post_thread(
-            category=self.category_b, is_unapproved=True
-        )
+        hidden_thread = test.post_thread(category=self.category_b, is_unapproved=True)
 
         response = self.client.get("/unapproved/")
         self.assertEqual(response.status_code, 200)
@@ -1320,9 +1310,7 @@ class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
             poster=self.user, category=self.category, is_unapproved=True
         )
 
-        hidden_thread = test.post_thread(
-            category=self.category, is_unapproved=True
-        )
+        hidden_thread = test.post_thread(category=self.category, is_unapproved=True)
 
         with patch_category_see_all_threads_acl():
             response = self.client.get(self.category.get_absolute_url())

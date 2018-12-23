@@ -182,9 +182,7 @@ class EventDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.event = test.reply_thread(
-            self.thread, poster=self.user, is_event=True
-        )
+        self.event = test.reply_thread(self.thread, poster=self.user, is_event=True)
 
         self.api_link = reverse(
             "misago:api:thread-post-detail",

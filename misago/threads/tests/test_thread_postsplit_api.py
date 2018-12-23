@@ -195,9 +195,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         """api rejects events split"""
         response = self.client.post(
             self.api_link,
-            json.dumps(
-                {"posts": [test.reply_thread(self.thread, is_event=True).pk]}
-            ),
+            json.dumps({"posts": [test.reply_thread(self.thread, is_event=True).pk]}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -221,9 +219,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         """api recjects attempt to split urneadable hidden post"""
         response = self.client.post(
             self.api_link,
-            json.dumps(
-                {"posts": [test.reply_thread(self.thread, is_hidden=True).pk]}
-            ),
+            json.dumps({"posts": [test.reply_thread(self.thread, is_hidden=True).pk]}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -273,9 +269,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.api_link,
-            json.dumps(
-                {"posts": [test.reply_thread(other_thread, is_hidden=True).pk]}
-            ),
+            json.dumps({"posts": [test.reply_thread(other_thread, is_hidden=True).pk]}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)

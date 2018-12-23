@@ -82,9 +82,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_hidden_post(self):
         """hidden posts are extempt from search"""
         thread = test.post_thread(self.category)
-        post = test.reply_thread(
-            thread, message="Lorem ipsum dolor.", is_hidden=True
-        )
+        post = test.reply_thread(thread, message="Lorem ipsum dolor.", is_hidden=True)
         self.index_post(post)
 
         response = self.client.get("%s?q=ipsum" % self.api_link)

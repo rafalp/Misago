@@ -300,9 +300,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [
-                        test.reply_thread(self.thread, is_unapproved=True).pk
-                    ],
+                    "posts": [test.reply_thread(self.thread, is_unapproved=True).pk],
                 }
             ),
             content_type="application/json",
@@ -513,10 +511,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         """api moves posts reads together with posts"""
         other_thread = test.post_thread(self.other_category)
 
-        posts = (
-            test.reply_thread(self.thread),
-            test.reply_thread(self.thread),
-        )
+        posts = (test.reply_thread(self.thread), test.reply_thread(self.thread))
 
         self.thread.refresh_from_db()
         self.assertEqual(self.thread.replies, 2)
