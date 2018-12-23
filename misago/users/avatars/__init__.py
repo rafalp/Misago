@@ -1,5 +1,4 @@
 from ...conf import settings
-
 from . import store, gravatar, dynamic, gallery, uploaded
 
 AVATAR_TYPES = ("gravatar", "dynamic", "gallery", "uploaded")

@@ -3,12 +3,12 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from .. import poststracker
 from ...categories.models import Category
 from ...conf import settings
 from ...threads import test
 from ...users.test import create_test_user
 from ..models import PostRead
+from ..poststracker import make_read_aware, save_read
 
 
 class AnonymousUser(object):
@@ -24,16 +24,16 @@ class PostsTrackerTests(TestCase):
 
     def test_falsy_value(self):
         """passing falsy value to readtracker causes no errors"""
-        poststracker.make_read_aware(self.user, None)
-        poststracker.make_read_aware(self.user, False)
-        poststracker.make_read_aware(self.user, [])
+        make_read_aware(self.user, None)
+        make_read_aware(self.user, False)
+        make_read_aware(self.user, [])
 
     def test_anon_post_before_cutoff(self):
         """non-tracked post is marked as read for anonymous users"""
         posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         post = test.reply_thread(self.thread, posted_on=posted_on)
 
-        poststracker.make_read_aware(AnonymousUser(), post)
+        make_read_aware(AnonymousUser(), post)
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
 
@@ -41,7 +41,7 @@ class PostsTrackerTests(TestCase):
         """tracked post is marked as read for anonymous users"""
         post = test.reply_thread(self.thread, posted_on=timezone.now())
 
-        poststracker.make_read_aware(AnonymousUser(), post)
+        make_read_aware(AnonymousUser(), post)
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
 
@@ -50,7 +50,7 @@ class PostsTrackerTests(TestCase):
         posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
         post = test.reply_thread(self.thread, posted_on=posted_on)
 
-        poststracker.make_read_aware(self.user, post)
+        make_read_aware(self.user, post)
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
 
@@ -58,7 +58,7 @@ class PostsTrackerTests(TestCase):
         """tracked post is marked as unread for authenticated users"""
         post = test.reply_thread(self.thread, posted_on=timezone.now())
 
-        poststracker.make_read_aware(self.user, post)
+        make_read_aware(self.user, post)
         self.assertFalse(post.is_read)
         self.assertTrue(post.is_new)
 
@@ -67,7 +67,7 @@ class PostsTrackerTests(TestCase):
         posted_on = timezone.now() - timedelta(days=1)
         post = test.reply_thread(self.thread, posted_on=posted_on)
 
-        poststracker.make_read_aware(self.user, post)
+        make_read_aware(self.user, post)
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)
 
@@ -75,8 +75,8 @@ class PostsTrackerTests(TestCase):
         """tracked post is marked as read for authenticated users with read entry"""
         post = test.reply_thread(self.thread, posted_on=timezone.now())
 
-        poststracker.save_read(self.user, post)
-        poststracker.make_read_aware(self.user, post)
+        save_read(self.user, post)
+        make_read_aware(self.user, post)
 
         self.assertTrue(post.is_read)
         self.assertFalse(post.is_new)

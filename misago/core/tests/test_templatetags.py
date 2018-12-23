@@ -73,19 +73,19 @@ Hello, <b>{{ the_var|safe }}</b>
 class BatchTests(TestCase):
     def test_batch(self):
         """standard batch yields valid results"""
-        batch = "loremipsum"
-        yields = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m"]]
+        value = "loremipsum"
+        result = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m"]]
 
-        for i, test_yield in enumerate(batch(batch, 3)):
-            self.assertEqual(test_yield, yields[i])
+        for i, test_result in enumerate(batch(value, 3)):
+            self.assertEqual(test_result, result[i])
 
     def test_batchnonefilled(self):
         """none-filled batch yields valid results"""
-        batch = "loremipsum"
-        yields = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m", None, None]]
+        value = "loremipsum"
+        result = [["l", "o", "r"], ["e", "m", "i"], ["p", "s", "u"], ["m", None, None]]
 
-        for i, test_yield in enumerate(batchnonefilled(batch, 3)):
-            self.assertEqual(test_yield, yields[i])
+        for i, test_result in enumerate(batchnonefilled(value, 3)):
+            self.assertEqual(test_result, result[i])
 
 
 class MockUser(object):
