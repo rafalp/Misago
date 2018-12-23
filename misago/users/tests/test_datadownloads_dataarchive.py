@@ -11,7 +11,7 @@ from misago.users.datadownloads.dataarchive import (
     DataArchive,
     trim_long_filename,
 )
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 DATA_DOWNLOADS_WORKING_DIR = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR

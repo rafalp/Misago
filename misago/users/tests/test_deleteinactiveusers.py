@@ -7,7 +7,7 @@ from django.test import TestCase, override_settings
 from django.utils import timezone
 
 from misago.users.management.commands import deleteinactiveusers
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 User = get_user_model()
 

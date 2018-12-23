@@ -3,8 +3,8 @@ from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.markup.mentions import MENTIONS_LIMIT
-from misago.threads import testutils
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.threads import test
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class PostMentionsTests(AuthenticatedUserTestCase):
@@ -12,7 +12,7 @@ class PostMentionsTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
 
         self.post_link = reverse(
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}

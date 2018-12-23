@@ -2,7 +2,7 @@ from misago.acl.useracl import get_user_acl
 from misago.categories.models import Category
 from misago.categories.utils import get_categories_tree, get_category_path
 from misago.conftest import get_cache_versions
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 cache_versions = get_cache_versions()
 

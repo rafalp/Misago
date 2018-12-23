@@ -9,7 +9,7 @@ from misago.categories.models import Category
 from misago.conftest import get_cache_versions
 from misago.threads.events import record_event
 from misago.threads.models import Thread
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 cache_versions = get_cache_versions()
 

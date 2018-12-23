@@ -4,7 +4,7 @@ from misago.acl import ACL_CACHE
 from misago.acl.models import Role
 from misago.acl.test import mock_role_form_data
 from misago.cache.test import assert_invalidates_cache
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 
 
 def create_data(data_dict):

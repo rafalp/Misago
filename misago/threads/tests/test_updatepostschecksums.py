@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.management.commands import updatepostschecksums
 from misago.threads.models import Post
 
@@ -24,9 +24,9 @@ class UpdatePostsChecksumsTests(TestCase):
         """command updates posts checksums"""
         category = Category.objects.all_categories()[:1][0]
 
-        threads = [testutils.post_thread(category) for _ in range(5)]
+        threads = [test.post_thread(category) for _ in range(5)]
         for _, thread in enumerate(threads):
-            [testutils.reply_thread(thread) for _ in range(3)]
+            [test.reply_thread(thread) for _ in range(3)]
             thread.save()
 
         Post.objects.update(parsed="Hello world!")

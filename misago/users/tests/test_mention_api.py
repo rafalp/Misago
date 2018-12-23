@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 from misago.conf import settings
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class AuthenticateApiTests(TestCase):

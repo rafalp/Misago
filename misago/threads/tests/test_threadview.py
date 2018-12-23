@@ -5,12 +5,12 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.conftest import get_cache_versions
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.checksums import update_post_checksum
 from misago.threads.events import record_event
 from misago.threads.moderation import threads as threads_moderation
 from misago.threads.moderation import hide_post
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 cache_versions = get_cache_versions()
 
@@ -49,7 +49,7 @@ class ThreadViewTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
 
 
 class ThreadVisibilityTests(ThreadViewTestCase):
@@ -128,14 +128,14 @@ class ThreadVisibilityTests(ThreadViewTestCase):
 class ThreadPostsVisibilityTests(ThreadViewTestCase):
     def test_post_renders(self):
         """post renders"""
-        post = testutils.reply_thread(self.thread, poster=self.user)
+        post = test.reply_thread(self.thread, poster=self.user)
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, post.get_absolute_url())
 
     def test_invalid_post_renders(self):
         """invalid post renders"""
-        post = testutils.reply_thread(self.thread, poster=self.user)
+        post = test.reply_thread(self.thread, poster=self.user)
 
         post.parsed = "fiddled post content"
         post.save()
@@ -147,7 +147,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
 
     def test_hidden_post_visibility(self):
         """hidden post renders correctly"""
-        post = testutils.reply_thread(self.thread, message="Hello, I'm hidden post!")
+        post = test.reply_thread(self.thread, message="Hello, I'm hidden post!")
         hide_post(self.user, post)
 
         response = self.client.get(self.thread.get_absolute_url())
@@ -192,7 +192,7 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
 
     def test_unapproved_post_visibility(self):
         """unapproved post renders for its author and users with perm to approve content"""
-        post = testutils.reply_thread(self.thread, is_unapproved=True)
+        post = test.reply_thread(self.thread, is_unapproved=True)
 
         # post is hdden because we aren't its author nor user with permission to approve
         response = self.client.get(self.thread.get_absolute_url())
@@ -309,7 +309,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
 
         posts = []
         for _ in range(posts_limit - 1):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
             posts.append(post)
 
         # test that all events and posts within limits were rendered
@@ -322,7 +322,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
 
         # add second page to thread with more events
         for _ in range(posts_limit):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
         for _ in range(events_limit):
             request = Mock(user=self.user, user_ip="127.0.0.1")
             event = record_event(request, self.thread, "closed")
@@ -378,7 +378,7 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
     def test_thread_merged_event_renders(self):
         """merged thread event renders"""
         request = Mock(user=self.user, user_ip="127.0.0.1")
-        other_thread = testutils.post_thread(category=self.category)
+        other_thread = test.post_thread(category=self.category)
         threads_moderation.merge_thread(request, self.thread, other_thread)
 
         event = self.thread.post_set.filter(is_event=True)[0]
@@ -460,7 +460,7 @@ class ThreadAttachmentsViewTests(ThreadViewTestCase):
 class ThreadPollViewTests(ThreadViewTestCase):
     def test_poll_voted_display(self):
         """view has no showstoppers when displaying voted poll"""
-        poll = testutils.post_poll(self.thread, self.user)
+        poll = test.post_poll(self.thread, self.user)
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, poll.question)
@@ -469,7 +469,7 @@ class ThreadPollViewTests(ThreadViewTestCase):
 
     def test_poll_unvoted_display(self):
         """view has no showstoppers when displaying poll vote form"""
-        poll = testutils.post_poll(self.thread, self.user)
+        poll = test.post_poll(self.thread, self.user)
         poll.pollvote_set.all().delete()
 
         response = self.client.get(self.thread.get_absolute_url())
@@ -478,7 +478,7 @@ class ThreadPollViewTests(ThreadViewTestCase):
 
     def test_poll_anonymous_view(self):
         """view has no showstoppers when displaying poll to anon user"""
-        poll = testutils.post_poll(self.thread, self.user)
+        poll = test.post_poll(self.thread, self.user)
 
         self.logout_user()
 
@@ -491,7 +491,7 @@ class ThreadPollViewTests(ThreadViewTestCase):
 class ThreadLikedPostsViewTests(ThreadViewTestCase):
     def test_liked_posts_display(self):
         """view has no showstoppers on displaying posts with likes"""
-        testutils.like_post(self.thread.first_post, self.user)
+        test.like_post(self.thread.first_post, self.user)
 
         response = self.client.get(self.thread.get_absolute_url())
         self.assertContains(response, '"is_liked": true')
@@ -500,7 +500,7 @@ class ThreadLikedPostsViewTests(ThreadViewTestCase):
         """
         view has no showstoppers on displaying posts with likes without perm
         """
-        testutils.like_post(self.thread.first_post, self.user)
+        test.like_post(self.thread.first_post, self.user)
 
         with patch_category_acl({"can_see_posts_likes": 0}):
             response = self.client.get(self.thread.get_absolute_url())
@@ -514,14 +514,14 @@ class ThreadAnonViewTests(ThreadViewTestCase):
         """kitchensink thread view has no showstoppers for anons"""
         request = Mock(user=self.user, user_ip="127.0.0.1")
 
-        poll = testutils.post_poll(self.thread, self.user)
+        poll = test.post_poll(self.thread, self.user)
         event = record_event(request, self.thread, "closed")
 
         hidden_event = record_event(request, self.thread, "opened")
         hide_post(self.user, hidden_event)
 
-        unapproved_post = testutils.reply_thread(self.thread, is_unapproved=True)
-        post = testutils.reply_thread(self.thread)
+        unapproved_post = test.reply_thread(self.thread, is_unapproved=True)
+        post = test.reply_thread(self.thread)
 
         self.logout_user()
 

@@ -4,11 +4,11 @@ from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
@@ -16,8 +16,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.thread = test.post_thread(category=self.category)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-merge", kwargs={"thread_pk": self.thread.pk}
@@ -177,7 +177,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_event(self):
         """api recjects events"""
-        event = testutils.reply_thread(self.thread, is_event=True, poster=self.user)
+        event = test.reply_thread(self.thread, is_event=True, poster=self.user)
 
         response = self.client.post(
             self.api_link,
@@ -204,8 +204,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_cross_threads(self):
         """api recjects attempt to merge with post made in other thread"""
-        other_thread = testutils.post_thread(category=self.category)
-        other_post = testutils.reply_thread(other_thread, poster=self.user)
+        other_thread = test.post_thread(category=self.category)
+        other_post = test.reply_thread(other_thread, poster=self.user)
 
         response = self.client.post(
             self.api_link,
@@ -221,7 +221,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_authenticated_with_guest_post(self):
         """api recjects attempt to merge with post made by deleted user"""
-        other_post = testutils.reply_thread(self.thread)
+        other_post = test.reply_thread(self.thread)
 
         response = self.client.post(
             self.api_link,
@@ -237,7 +237,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_guest_with_authenticated_post(self):
         """api recjects attempt to merge with post made by deleted user"""
-        other_post = testutils.reply_thread(self.thread)
+        other_post = test.reply_thread(self.thread)
 
         response = self.client.post(
             self.api_link,
@@ -258,8 +258,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(self.thread, poster="Bob").pk,
-                        testutils.reply_thread(self.thread, poster="Miku").pk,
+                        test.reply_thread(self.thread, poster="Bob").pk,
+                        test.reply_thread(self.thread, poster="Miku").pk,
                     ]
                 }
             ),
@@ -279,10 +279,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_hidden=True
                         ).pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_hidden=False
                         ).pk,
                     ]
@@ -304,10 +304,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_unapproved=True
                         ).pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_unapproved=False
                         ).pk,
                     ]
@@ -328,8 +328,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.thread.save()
 
         posts = [
-            testutils.reply_thread(self.thread, poster=self.user).pk,
-            testutils.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
         ]
 
         response = self.client.post(
@@ -348,8 +348,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.thread.save()
 
         posts = [
-            testutils.reply_thread(self.thread, poster=self.user).pk,
-            testutils.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
         ]
 
         response = self.client.post(
@@ -364,8 +364,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.category.save()
 
         posts = [
-            testutils.reply_thread(self.thread, poster=self.user).pk,
-            testutils.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
         ]
 
         response = self.client.post(
@@ -384,8 +384,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.category.save()
 
         posts = [
-            testutils.reply_thread(self.thread, poster=self.user).pk,
-            testutils.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
+            test.reply_thread(self.thread, poster=self.user).pk,
         ]
 
         response = self.client.post(
@@ -421,10 +421,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_posts(self):
         """api merges two posts"""
-        post_a = testutils.reply_thread(
+        post_a = test.reply_thread(
             self.thread, poster=self.user, message="Battęry"
         )
-        post_b = testutils.reply_thread(self.thread, poster=self.user, message="Hórse")
+        post_b = test.reply_thread(self.thread, poster=self.user, message="Hórse")
 
         thread_replies = self.thread.replies
 
@@ -452,8 +452,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(self.thread, poster="Bob").pk,
-                        testutils.reply_thread(self.thread, poster="Bob").pk,
+                        test.reply_thread(self.thread, poster="Bob").pk,
+                        test.reply_thread(self.thread, poster="Bob").pk,
                     ]
                 }
             ),
@@ -469,10 +469,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_hidden=True
                         ).pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_hidden=True
                         ).pk,
                     ]
@@ -490,10 +490,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_unapproved=True
                         ).pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster=self.user, is_unapproved=True
                         ).pk,
                     ]
@@ -510,7 +510,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.thread.first_post.poster = self.user
         self.thread.first_post.save()
 
-        post_visible = testutils.reply_thread(
+        post_visible = test.reply_thread(
             self.thread, poster=self.user, is_hidden=False
         )
 
@@ -529,10 +529,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "posts": [
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster="Bob", is_protected=True
                         ).pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster="Bob", is_protected=False
                         ).pk,
                     ]
@@ -548,7 +548,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_best_answer(self):
         """api merges best answer with other post"""
-        best_answer = testutils.reply_thread(self.thread, poster="Bob")
+        best_answer = test.reply_thread(self.thread, poster="Bob")
 
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
@@ -559,7 +559,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
                 {
                     "posts": [
                         best_answer.pk,
-                        testutils.reply_thread(self.thread, poster="Bob").pk,
+                        test.reply_thread(self.thread, poster="Bob").pk,
                     ]
                 }
             ),
@@ -573,8 +573,8 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_best_answer_in(self):
         """api merges best answer into other post"""
-        other_post = testutils.reply_thread(self.thread, poster="Bob")
-        best_answer = testutils.reply_thread(self.thread, poster="Bob")
+        other_post = test.reply_thread(self.thread, poster="Bob")
+        best_answer = test.reply_thread(self.thread, poster="Bob")
 
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
@@ -592,7 +592,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_best_answer_in_protected(self):
         """api merges best answer into protected post"""
-        best_answer = testutils.reply_thread(self.thread, poster="Bob")
+        best_answer = test.reply_thread(self.thread, poster="Bob")
 
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
@@ -603,7 +603,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
                 {
                     "posts": [
                         best_answer.pk,
-                        testutils.reply_thread(
+                        test.reply_thread(
                             self.thread, poster="Bob", is_protected=True
                         ).pk,
                     ]
@@ -623,10 +623,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_remove_reads(self):
         """two posts merge removes read tracker from post"""
-        post_a = testutils.reply_thread(
+        post_a = test.reply_thread(
             self.thread, poster=self.user, message="Battęry"
         )
-        post_b = testutils.reply_thread(self.thread, poster=self.user, message="Hórse")
+        post_b = test.reply_thread(self.thread, poster=self.user, message="Hórse")
 
         poststracker.save_read(self.user, post_a)
         poststracker.save_read(self.user, post_b)

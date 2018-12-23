@@ -7,7 +7,7 @@ from misago.conf import settings
 from misago.users.datadownloads import request_user_data_download
 from misago.users.management.commands import prepareuserdatadownloads
 from misago.users.models import DataDownload
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class PrepareUserDataDownloadsTests(AuthenticatedUserTestCase):

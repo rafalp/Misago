@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 
 from misago.users.management.commands import deleteprofilefield
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class DeleteProfileFieldTests(TestCase):

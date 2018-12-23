@@ -4,9 +4,9 @@ from django.test import TestCase
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Poll, Post, Thread, ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class ThreadModelTests(TestCase):
@@ -317,7 +317,7 @@ class ThreadModelTests(TestCase):
         """set_best_answer implements some assertions for data integrity"""
         user = create_test_user("User", "user@example.com")
 
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
         with self.assertRaises(ValueError):
             self.thread.set_best_answer(user, other_thread.first_post)
 
@@ -325,11 +325,11 @@ class ThreadModelTests(TestCase):
             self.thread.set_best_answer(user, self.thread.first_post)
 
         with self.assertRaises(ValueError):
-            reply = testutils.reply_thread(self.thread, is_hidden=True)
+            reply = test.reply_thread(self.thread, is_hidden=True)
             self.thread.set_best_answer(user, reply)
 
         with self.assertRaises(ValueError):
-            reply = testutils.reply_thread(self.thread, is_unapproved=True)
+            reply = test.reply_thread(self.thread, is_unapproved=True)
             self.thread.set_best_answer(user, reply)
 
     def test_move(self):

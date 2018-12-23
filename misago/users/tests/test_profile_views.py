@@ -2,9 +2,9 @@ from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.users.models import Ban
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class UserProfileViewsTests(AuthenticatedUserTestCase):
@@ -53,14 +53,14 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have posted no messages")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, thread.get_absolute_url())
 
-        post = testutils.reply_thread(thread, poster=self.user)
-        other_post = testutils.reply_thread(thread, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
+        other_post = test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
@@ -75,14 +75,14 @@ class UserProfileViewsTests(AuthenticatedUserTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You have no started threads.")
 
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, thread.get_absolute_url())
 
-        post = testutils.reply_thread(thread, poster=self.user)
-        other_post = testutils.reply_thread(thread, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
+        other_post = test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(link)
         self.assertEqual(response.status_code, 200)

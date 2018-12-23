@@ -4,11 +4,11 @@ from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.threads.test import patch_category_acl, patch_other_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
@@ -16,10 +16,10 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
         self.posts = [
-            testutils.reply_thread(self.thread).pk,
-            testutils.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
         ]
 
         self.api_link = reverse(
@@ -180,7 +180,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps(
-                {"posts": [testutils.reply_thread(self.thread, is_unapproved=True).pk]}
+                {"posts": [test.reply_thread(self.thread, is_unapproved=True).pk]}
             ),
             content_type="application/json",
         )
@@ -196,7 +196,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps(
-                {"posts": [testutils.reply_thread(self.thread, is_event=True).pk]}
+                {"posts": [test.reply_thread(self.thread, is_event=True).pk]}
             ),
             content_type="application/json",
         )
@@ -222,7 +222,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps(
-                {"posts": [testutils.reply_thread(self.thread, is_hidden=True).pk]}
+                {"posts": [test.reply_thread(self.thread, is_hidden=True).pk]}
             ),
             content_type="application/json",
         )
@@ -240,7 +240,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.api_link,
-            json.dumps({"posts": [testutils.reply_thread(self.thread).pk]}),
+            json.dumps({"posts": [test.reply_thread(self.thread).pk]}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -257,7 +257,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
 
         response = self.client.post(
             self.api_link,
-            json.dumps({"posts": [testutils.reply_thread(self.thread).pk]}),
+            json.dumps({"posts": [test.reply_thread(self.thread).pk]}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
@@ -269,12 +269,12 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_split_other_thread_posts(self):
         """api recjects attempt to split other thread's post"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
             json.dumps(
-                {"posts": [testutils.reply_thread(other_thread, is_hidden=True).pk]}
+                {"posts": [test.reply_thread(other_thread, is_hidden=True).pk]}
             ),
             content_type="application/json",
         )
@@ -638,7 +638,7 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_split_best_answer(self):
         """api splits best answer to new thread"""
-        best_answer = testutils.reply_thread(self.thread)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.synchronize()

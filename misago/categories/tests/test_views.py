@@ -4,7 +4,7 @@ from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class CategoryViewsTests(AuthenticatedUserTestCase):

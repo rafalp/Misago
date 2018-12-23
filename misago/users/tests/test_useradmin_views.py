@@ -3,15 +3,15 @@ from django.core import mail
 from django.urls import reverse
 
 from misago.acl.models import Role
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 from misago.categories.models import Category
 from misago.legal.models import Agreement
 from misago.legal.utils import save_user_agreement_acceptance
-from misago.threads.testutils import post_thread, reply_thread
+from misago.threads.test import post_thread, reply_thread
 
 from misago.users.datadownloads import request_user_data_download
 from misago.users.models import Ban, DataDownload, Rank
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 User = get_user_model()
 

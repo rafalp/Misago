@@ -3,9 +3,9 @@ from django.utils import timezone
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.readtracker.poststracker import save_read
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 GOTO_URL = "%s#post-%s"
@@ -17,7 +17,7 @@ class GotoViewTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
 
 
 class GotoPostTests(GotoViewTestCase):
@@ -36,7 +36,7 @@ class GotoPostTests(GotoViewTestCase):
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
@@ -50,7 +50,7 @@ class GotoPostTests(GotoViewTestCase):
     def test_goto_first_post_on_next_page(self):
         """first post on next page redirect url is valid"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
@@ -66,7 +66,7 @@ class GotoPostTests(GotoViewTestCase):
         """first post on next page redirect url is valid"""
         posts = []
         for _ in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
             posts.append(post)
 
         post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 3]
@@ -85,7 +85,7 @@ class GotoPostTests(GotoViewTestCase):
         """event redirect url is valid"""
         posts = []
         for _ in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
             posts.append(post)
 
         post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 2]
@@ -123,7 +123,7 @@ class GotoLastTests(GotoViewTestCase):
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            post = testutils.reply_thread(self.thread)
+            post = test.reply_thread(self.thread)
 
         response = self.client.get(self.thread.get_last_post_url())
         self.assertEqual(response.status_code, 302)
@@ -149,9 +149,9 @@ class GotoNewTests(GotoViewTestCase):
         """first unread post redirect url in already read thread is valid"""
         save_read(self.user, self.thread.first_post)
 
-        post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+        post = test.reply_thread(self.thread, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
@@ -164,12 +164,12 @@ class GotoNewTests(GotoViewTestCase):
         save_read(self.user, self.thread.first_post)
 
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            last_post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            last_post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, last_post)
 
-        post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+        post = test.reply_thread(self.thread, posted_on=timezone.now())
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
         self.assertEqual(response.status_code, 302)
@@ -183,7 +183,7 @@ class GotoNewTests(GotoViewTestCase):
         save_read(self.user, self.thread.first_post)
 
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, post)
 
         response = self.client.get(self.thread.get_new_post_url())
@@ -196,7 +196,7 @@ class GotoNewTests(GotoViewTestCase):
     def test_guest_goto_first_new_post_in_thread(self):
         """guest goto new in read thread points to last post"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post = test.reply_thread(self.thread, posted_on=timezone.now())
 
         self.logout_user()
 
@@ -221,14 +221,14 @@ class GotoBestAnswerTests(GotoViewTestCase):
     def test_view_handles_best_answer(self):
         """if thread has best answer, redirect to it"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
-        best_answer = testutils.reply_thread(self.thread, posted_on=timezone.now())
+        best_answer = test.reply_thread(self.thread, posted_on=timezone.now())
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_best_answer_url())
         self.assertEqual(response.status_code, 302)
@@ -264,13 +264,13 @@ class GotoUnapprovedTests(GotoViewTestCase):
     def test_view_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
-        post = testutils.reply_thread(
+        post = test.reply_thread(
             self.thread, is_unapproved=True, posted_on=timezone.now()
         )
         for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_unapproved_post_url())
         self.assertEqual(response.status_code, 302)
@@ -286,7 +286,7 @@ class ThreadGotoPostTests(GotoViewTestCase):
     def test_thread_growing_post_goto(self):
         """growing thread goto views don't fail"""
         for _ in range(60):
-            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post = test.reply_thread(self.thread, posted_on=timezone.now())
 
             # go to post link is valid
             post_url = self.client.get(post.get_absolute_url())["location"]
@@ -301,9 +301,9 @@ class ThreadGotoPostTests(GotoViewTestCase):
     def test_thread_growing_event_goto(self):
         """growing thread goto views don't fail for events"""
         for i in range(60):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
-            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post = test.reply_thread(self.thread, posted_on=timezone.now())
             post.is_event = True
             post.save()
 
@@ -325,7 +325,7 @@ class ThreadGotoPostTests(GotoViewTestCase):
     def test_thread_post_goto(self):
         """thread goto views don't fail"""
         for _ in range(60):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
         for post in self.thread.post_set.order_by("id").iterator():
             # go to post link is valid
@@ -341,9 +341,9 @@ class ThreadGotoPostTests(GotoViewTestCase):
     def test_thread_event_goto(self):
         """thread goto views don't fail for events"""
         for _ in range(60):
-            testutils.reply_thread(self.thread, posted_on=timezone.now())
+            test.reply_thread(self.thread, posted_on=timezone.now())
 
-            post = testutils.reply_thread(self.thread, posted_on=timezone.now())
+            post = test.reply_thread(self.thread, posted_on=timezone.now())
             post.is_event = True
             post.save()
 

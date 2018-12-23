@@ -3,12 +3,12 @@ from datetime import timedelta
 from django.utils import timezone
 
 from misago.categories.models import Category
-from misago.threads.testutils import post_thread
+from misago.threads.test import post_thread
 from misago.users.activepostersranking import (
     build_active_posters_ranking,
     get_active_posters_ranking,
 )
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class TestActivePostersRanking(AuthenticatedUserTestCase):

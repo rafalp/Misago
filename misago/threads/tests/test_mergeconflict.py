@@ -4,9 +4,9 @@ from django.test import TestCase
 
 from misago.categories.models import Category
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.mergeconflict import MergeConflict
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class MergeConflictTests(TestCase):
@@ -15,16 +15,16 @@ class MergeConflictTests(TestCase):
         self.user = create_test_user("User", "user@example.com")
 
     def create_plain_thread(self):
-        return testutils.post_thread(self.category)
+        return test.post_thread(self.category)
 
     def create_poll_thread(self):
-        thread = testutils.post_thread(self.category)
-        testutils.post_poll(thread, self.user)
+        thread = test.post_thread(self.category)
+        test.post_poll(thread, self.user)
         return thread
 
     def create_best_answer_thread(self):
-        thread = testutils.post_thread(self.category)
-        best_answer = testutils.reply_thread(thread)
+        thread = test.post_thread(self.category)
+        best_answer = test.reply_thread(thread)
         thread.set_best_answer(self.user, best_answer)
         thread.synchronize()
         thread.save()

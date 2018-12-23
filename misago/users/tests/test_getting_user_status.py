@@ -1,7 +1,7 @@
 from unittest.mock import Mock
 
 from misago.users.online.utils import get_user_status
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 
 class GetUserStatusTests(AuthenticatedUserTestCase):

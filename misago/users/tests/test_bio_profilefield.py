@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from misago.admin.testutils import AdminTestCase
+from misago.admin.test import AdminTestCase
 
 
 User = get_user_model()

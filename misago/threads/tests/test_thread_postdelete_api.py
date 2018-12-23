@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Post, Thread
 from misago.threads.test import patch_category_acl
 
@@ -14,7 +14,7 @@ class PostDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-detail",
@@ -182,7 +182,7 @@ class EventDeleteApiTests(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.event = testutils.reply_thread(
+        self.event = test.reply_thread(
             self.thread, poster=self.user, is_event=True
         )
 

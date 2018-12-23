@@ -1,6 +1,6 @@
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 from .test_privatethreads import PrivateThreadsTestCase
 
@@ -10,7 +10,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         super().setUp()
 
         self.other_user = create_test_user("OtherUser", "user@example.com")
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
 
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
@@ -42,7 +42,7 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         self.assertEqual(self.user.unread_private_threads, 0)
 
         # reply to thread
-        testutils.reply_thread(self.thread)
+        test.reply_thread(self.thread)
 
         self.user.sync_unread_private_threads = True
         self.user.save()

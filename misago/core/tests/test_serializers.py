@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from misago.categories.models import Category
 from misago.core.serializers import MutableFields
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 
 
@@ -34,7 +34,7 @@ class MutableFieldsSerializerTests(TestCase):
     def test_subset_fields(self):
         """classmethod subset_fields creates new serializer"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category=category)
+        thread = test.post_thread(category=category)
 
         fields = ["id", "title", "replies", "last_poster_name"]
 
@@ -60,7 +60,7 @@ class MutableFieldsSerializerTests(TestCase):
     def test_exclude_fields(self):
         """classmethod exclude_fields creates new serializer"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category=category)
+        thread = test.post_thread(category=category)
 
         kept_fields = ["id", "title", "weight"]
         removed_fields = list(set(Serializer.Meta.fields) - set(kept_fields))
@@ -80,7 +80,7 @@ class MutableFieldsSerializerTests(TestCase):
     def test_extend_fields(self):
         """classmethod extend_fields creates new serializer"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category=category)
+        thread = test.post_thread(category=category)
 
         serializer = Serializer.extend_fields("category")
 

@@ -1,5 +1,5 @@
 from misago.acl.test import patch_user_acl
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import ThreadParticipant
 
 from .test_privatethreads import PrivateThreadsTestCase
@@ -9,7 +9,7 @@ class PrivateThreadViewTests(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
         self.test_link = self.thread.get_absolute_url()
 
     def test_anonymous(self):

@@ -1,6 +1,6 @@
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 from .test_privatethreads import PrivateThreadsTestCase
 
@@ -9,7 +9,7 @@ class PrivateThreadReplyApiTestCase(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_posts_api_url()
 
         self.other_user = create_test_user("OtherUser", "otheruser@example.com")

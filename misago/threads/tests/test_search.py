@@ -1,8 +1,8 @@
 from django.urls import reverse
 
 from misago.categories.models import Category
-from misago.threads import testutils
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.threads import test
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class SearchApiTests(AuthenticatedUserTestCase):
@@ -49,8 +49,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_short_query(self):
         """api handles short search query"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         self.index_post(post)
 
         response = self.client.get("%s?q=ip" % self.api_link)
@@ -65,8 +65,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_wrong_query(self):
         """api handles query miss"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         self.index_post(post)
 
         response = self.client.get("%s?q=elit" % self.api_link)
@@ -81,8 +81,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_hidden_post(self):
         """hidden posts are extempt from search"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(
             thread, message="Lorem ipsum dolor.", is_hidden=True
         )
         self.index_post(post)
@@ -99,8 +99,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_unapproved_post(self):
         """unapproves posts are extempt from search"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(
             thread, message="Lorem ipsum dolor.", is_unapproved=True
         )
         self.index_post(post)
@@ -117,8 +117,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_query(self):
         """api handles search query"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         self.index_post(post)
 
         response = self.client.get("%s?q=ipsum" % self.api_link)
@@ -135,10 +135,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_thread_title_search(self):
         """api searches threads by title"""
-        thread = testutils.post_thread(self.category, title="Atmosphere of mars")
+        thread = test.post_thread(self.category, title="Atmosphere of mars")
         self.index_post(thread.first_post)
 
-        post = testutils.reply_thread(thread, message="Lorem ipsum dolor.")
+        post = test.reply_thread(thread, message="Lorem ipsum dolor.")
         self.index_post(post)
 
         response = self.client.get("%s?q=mars atmosphere" % self.api_link)
@@ -155,8 +155,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_complex_query(self):
         """api handles complex query that uses fulltext search facilities"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(thread, message="Atmosphere of Mars")
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(thread, message="Atmosphere of Mars")
         self.index_post(post)
 
         response = self.client.get("%s?q=Mars atmosphere" % self.api_link)
@@ -173,8 +173,8 @@ class SearchApiTests(AuthenticatedUserTestCase):
 
     def test_filtered_query(self):
         """search filters are used by search system"""
-        thread = testutils.post_thread(self.category)
-        post = testutils.reply_thread(
+        thread = test.post_thread(self.category)
+        post = test.reply_thread(
             thread, message="You just do MMM in 4th minute and its pwnt"
         )
 

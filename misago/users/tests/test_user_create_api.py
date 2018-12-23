@@ -5,7 +5,7 @@ from django.urls import reverse
 from misago.conf.test import override_dynamic_settings
 from misago.legal.models import Agreement
 from misago.users.models import Ban, Online
-from misago.users.testutils import UserTestCase
+from misago.users.test import UserTestCase
 
 User = get_user_model()
 

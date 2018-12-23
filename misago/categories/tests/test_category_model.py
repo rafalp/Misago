@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from misago.categories import THREADS_ROOT_NAME
 from misago.categories.models import Category
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.threadtypes import trees_map
 
 
@@ -53,7 +53,7 @@ class CategoryModelTests(TestCase):
         self.category = Category.objects.all_categories()[:1][0]
 
     def create_thread(self):
-        return testutils.post_thread(self.category)
+        return test.post_thread(self.category)
 
     def assertCategoryIsEmpty(self):
         self.assertIsNone(self.category.last_post_on)

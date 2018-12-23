@@ -15,7 +15,7 @@ from misago.users.bans import (
 )
 from misago.users.constants import BANS_CACHE
 from misago.users.models import Ban
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 cache_versions = get_cache_versions()
 

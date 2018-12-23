@@ -8,7 +8,7 @@ from django.core.management import call_command
 from misago.users.datadownloads import request_user_data_download
 from misago.users.management.commands import expireuserdatadownloads
 from misago.users.models import DataDownload
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")

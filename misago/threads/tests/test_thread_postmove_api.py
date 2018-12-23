@@ -4,11 +4,11 @@ from django.urls import reverse
 
 from misago.categories.models import Category
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread
 from misago.threads.serializers.moderation import POSTS_LIMIT
 from misago.threads.test import patch_category_acl, patch_other_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
@@ -16,7 +16,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
 
         self.api_link = reverse(
             "misago:api:thread-post-move", kwargs={"thread_pk": self.thread.pk}
@@ -123,7 +123,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_other_thread_exists(self):
         """api validates if other thread exists"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"new_thread": other_thread.get_absolute_url()}
@@ -143,7 +143,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_other_thread_is_invisible(self):
         """api validates if other thread is visible"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"new_thread": other_thread.get_absolute_url()}
@@ -163,7 +163,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_other_thread_isnt_replyable(self):
         """api validates if other thread can be replied"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         response = self.client.post(
             self.api_link, {"new_thread": other_thread.get_absolute_url()}
@@ -177,7 +177,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_empty_data(self):
         """api handles empty data"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)
@@ -186,7 +186,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_empty_posts_data_json(self):
         """api handles empty json data"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -202,7 +202,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_empty_posts_data_form(self):
         """api handles empty form data"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link, {"new_thread": other_thread.get_absolute_url()}
@@ -216,7 +216,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_no_posts_ids(self):
         """api rejects no posts ids"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -232,7 +232,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_invalid_posts_data(self):
         """api handles invalid data"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -249,7 +249,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_invalid_posts_ids(self):
         """api handles invalid post id"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -269,7 +269,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_limit(self):
         """api rejects more posts than move limit"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -293,7 +293,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_invisible(self):
         """api validates posts visibility"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -301,7 +301,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
                 {
                     "new_thread": other_thread.get_absolute_url(),
                     "posts": [
-                        testutils.reply_thread(self.thread, is_unapproved=True).pk
+                        test.reply_thread(self.thread, is_unapproved=True).pk
                     ],
                 }
             ),
@@ -315,14 +315,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_other_thread_posts(self):
         """api recjects attempt to move other thread's post"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [testutils.reply_thread(other_thread, is_hidden=True).pk],
+                    "posts": [test.reply_thread(other_thread, is_hidden=True).pk],
                 }
             ),
             content_type="application/json",
@@ -335,14 +335,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_event(self):
         """api rejects events move"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [testutils.reply_thread(self.thread, is_event=True).pk],
+                    "posts": [test.reply_thread(self.thread, is_event=True).pk],
                 }
             ),
             content_type="application/json",
@@ -353,7 +353,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_first_post(self):
         """api rejects first post move"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
@@ -373,14 +373,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_hidden_posts(self):
         """api recjects attempt to move urneadable hidden post"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         response = self.client.post(
             self.api_link,
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [testutils.reply_thread(self.thread, is_hidden=True).pk],
+                    "posts": [test.reply_thread(self.thread, is_hidden=True).pk],
                 }
             ),
             content_type="application/json",
@@ -394,7 +394,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True, "can_close_threads": False})
     def test_move_posts_closed_thread_no_permission(self):
         """api recjects attempt to move posts from closed thread"""
-        other_thread = testutils.post_thread(self.category)
+        other_thread = test.post_thread(self.category)
 
         self.thread.is_closed = True
         self.thread.save()
@@ -404,7 +404,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [testutils.reply_thread(self.thread).pk],
+                    "posts": [test.reply_thread(self.thread).pk],
                 }
             ),
             content_type="application/json",
@@ -419,7 +419,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_posts_closed_category_no_permission(self):
         """api recjects attempt to move posts from closed thread"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         self.category.is_closed = True
         self.category.save()
@@ -429,7 +429,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             json.dumps(
                 {
                     "new_thread": other_thread.get_absolute_url(),
-                    "posts": [testutils.reply_thread(self.thread).pk],
+                    "posts": [test.reply_thread(self.thread).pk],
                 }
             ),
             content_type="application/json",
@@ -444,13 +444,13 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_posts(self):
         """api moves posts to other thread"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         posts = (
-            testutils.reply_thread(self.thread).pk,
-            testutils.reply_thread(self.thread).pk,
-            testutils.reply_thread(self.thread).pk,
-            testutils.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
+            test.reply_thread(self.thread).pk,
         )
 
         self.thread.refresh_from_db()
@@ -475,8 +475,8 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_best_answer(self):
         """api moves best answer to other thread"""
-        other_thread = testutils.post_thread(self.other_category)
-        best_answer = testutils.reply_thread(self.thread)
+        other_thread = test.post_thread(self.other_category)
+        best_answer = test.reply_thread(self.thread)
 
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.synchronize()
@@ -511,11 +511,11 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_move_posts_reads(self):
         """api moves posts reads together with posts"""
-        other_thread = testutils.post_thread(self.other_category)
+        other_thread = test.post_thread(self.other_category)
 
         posts = (
-            testutils.reply_thread(self.thread),
-            testutils.reply_thread(self.thread),
+            test.reply_thread(self.thread),
+            test.reply_thread(self.thread),
         )
 
         self.thread.refresh_from_db()

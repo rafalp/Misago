@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.test import patch_category_acl
 
 from .test_threads_api import ThreadsApiTestCase
@@ -10,7 +10,7 @@ class ThreadPostEditsApiTestCase(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-edits",

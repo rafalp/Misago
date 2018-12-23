@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from misago.legal.context_processors import legal_links
 from misago.legal.models import Agreement
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class MockRequest(object):

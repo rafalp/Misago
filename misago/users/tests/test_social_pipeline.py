@@ -24,7 +24,7 @@ from misago.users.social.pipeline import (
     validate_ip_not_banned,
     validate_user_not_banned,
 )
-from misago.users.testutils import UserTestCase
+from misago.users.test import UserTestCase
 
 
 User = get_user_model()

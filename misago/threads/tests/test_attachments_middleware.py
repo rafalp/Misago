@@ -7,14 +7,14 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.conftest import get_cache_versions
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.api.postingendpoint import PostingEndpoint
 from misago.threads.api.postingendpoint.attachments import (
     AttachmentsMiddleware,
     validate_attachments_count,
 )
 from misago.threads.models import Attachment, AttachmentType
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 cache_versions = get_cache_versions()
 
@@ -30,7 +30,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.get(slug="first-category")
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
         self.post = self.thread.first_post
 
         self.post.update_fields = []
@@ -237,7 +237,7 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
     @patch_attachments_acl()
     def test_steal_attachments(self):
         """middleware validates if attachments are already assigned to other posts"""
-        other_post = testutils.reply_thread(self.thread)
+        other_post = test.reply_thread(self.thread)
 
         attachments = [self.mock_attachment(post=other_post), self.mock_attachment()]
 

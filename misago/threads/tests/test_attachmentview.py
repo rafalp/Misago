@@ -6,9 +6,9 @@ from misago.acl.models import Role
 from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Attachment, AttachmentType
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, "document.pdf")
@@ -29,7 +29,7 @@ class AttachmentViewTestCase(AuthenticatedUserTestCase):
         AttachmentType.objects.all().delete()
 
         self.category = Category.objects.get(slug="first-category")
-        self.post = testutils.post_thread(category=self.category).first_post
+        self.post = test.post_thread(category=self.category).first_post
 
         self.api_link = reverse("misago:api:attachment-list")
 

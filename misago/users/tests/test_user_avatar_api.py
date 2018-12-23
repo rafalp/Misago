@@ -9,7 +9,7 @@ from misago.conf import settings
 from misago.conf.test import override_dynamic_settings
 from misago.users.avatars import gallery, store
 from misago.users.models import AvatarGallery
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_AVATAR_PATH = os.path.join(TESTFILES_DIR, "avatar.png")

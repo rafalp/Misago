@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.conf import settings
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.management.commands import clearattachments
 from misago.threads.models import Attachment, AttachmentType
 
@@ -46,7 +46,7 @@ class ClearAttachmentsTests(TestCase):
 
         # create 5 expired non-orphaned attachments
         category = Category.objects.get(slug="first-category")
-        post = testutils.post_thread(category).first_post
+        post = test.post_thread(category).first_post
 
         for _ in range(5):
             Attachment.objects.create(

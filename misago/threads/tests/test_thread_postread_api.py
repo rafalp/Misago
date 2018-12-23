@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.utils import timezone
 
-from misago.threads import testutils
+from misago.threads import test
 
 from .test_threads_api import ThreadsApiTestCase
 
@@ -10,7 +10,7 @@ class PostReadApiTests(ThreadsApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.post = testutils.reply_thread(
+        self.post = test.reply_thread(
             self.thread, poster=self.user, posted_on=timezone.now()
         )
 

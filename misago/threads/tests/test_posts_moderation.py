@@ -1,7 +1,7 @@
 from misago.categories.models import Category
-from misago.threads import moderation, testutils
+from misago.threads import moderation, test
 from misago.threads.models import Post, Thread
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 class PostsModerationTests(AuthenticatedUserTestCase):
@@ -9,8 +9,8 @@ class PostsModerationTests(AuthenticatedUserTestCase):
         super().setUp()
 
         self.category = Category.objects.all_categories()[:1][0]
-        self.thread = testutils.post_thread(self.category)
-        self.post = testutils.reply_thread(self.thread)
+        self.thread = test.post_thread(self.category)
+        self.post = test.reply_thread(self.thread)
 
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)

@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import ThreadParticipant
 
 from .test_privatethreads import PrivateThreadsTestCase
@@ -34,11 +34,11 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
 
     def test_thread_visibility(self):
         """only participated threads are returned by private threads view"""
-        visible = testutils.post_thread(category=self.category, poster=self.user)
-        reported = testutils.post_thread(category=self.category, poster=self.user)
+        visible = test.post_thread(category=self.category, poster=self.user)
+        reported = test.post_thread(category=self.category, poster=self.user)
 
         # post hidden thread
-        testutils.post_thread(category=self.category, poster=self.user)
+        test.post_thread(category=self.category, poster=self.user)
 
         ThreadParticipant.objects.add_participants(visible, [self.user])
 

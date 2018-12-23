@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from misago.categories.models import Category
 from misago.threads.models import Post, Thread, ThreadParticipant
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class ThreadParticipantTests(TestCase):

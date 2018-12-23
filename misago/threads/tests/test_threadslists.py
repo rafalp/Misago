@@ -8,9 +8,9 @@ from misago.acl.test import patch_user_acl
 from misago.categories.models import Category
 from misago.conf import settings
 from misago.readtracker import poststracker
-from misago.threads import testutils
+from misago.threads import test
 from misago.users.models import AnonymousUser
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 LISTS_URLS = ("", "my/", "new/", "unread/", "subscribed/")
 
@@ -243,7 +243,7 @@ class AllThreadsListTests(ThreadsListTestCase):
         )
         test_category = Category.objects.get(slug="hidden-category")
 
-        testutils.post_thread(category=self.category_b)
+        test.post_thread(category=self.category_b)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -289,11 +289,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         threads list displays globally pinned threads first
         and locally ones inbetween other
         """
-        globally = testutils.post_thread(category=self.first_category, is_global=True)
+        globally = test.post_thread(category=self.first_category, is_global=True)
 
-        locally = testutils.post_thread(category=self.first_category, is_pinned=True)
+        locally = test.post_thread(category=self.first_category, is_pinned=True)
 
-        standard = testutils.post_thread(category=self.first_category)
+        standard = test.post_thread(category=self.first_category)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -346,7 +346,7 @@ class AllThreadsListTests(ThreadsListTestCase):
 
         threads = []
         for _ in range(settings.MISAGO_THREADS_PER_PAGE * 3):
-            threads.append(testutils.post_thread(category=self.first_category))
+            threads.append(test.post_thread(category=self.first_category))
 
         # secondary page renders
         response = self.client.get("/?page=2")
@@ -425,11 +425,11 @@ class CategoryThreadsListTests(ThreadsListTestCase):
         category threads list displays globally pinned threads first
         then locally ones and unpinned last
         """
-        globally = testutils.post_thread(category=self.first_category, is_global=True)
+        globally = test.post_thread(category=self.first_category, is_global=True)
 
-        locally = testutils.post_thread(category=self.first_category, is_pinned=True)
+        locally = test.post_thread(category=self.first_category, is_pinned=True)
 
-        standard = testutils.post_thread(category=self.first_category)
+        standard = test.post_thread(category=self.first_category)
 
         response = self.client.get(self.first_category.get_absolute_url())
         self.assertEqual(response.status_code, 200)
@@ -481,7 +481,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_renders_test_thread(self):
         """list renders test thread with valid top category"""
-        test_thread = testutils.post_thread(category=self.category_c)
+        test_thread = test.post_thread(category=self.category_c)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -539,7 +539,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
         )
 
         test_category = Category.objects.get(slug="hidden-category")
-        test_thread = testutils.post_thread(category=test_category)
+        test_thread = test.post_thread(category=test_category)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -554,7 +554,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
 
         test_category = Category.objects.get(slug="hidden-category")
 
-        testutils.post_thread(category=test_category)
+        test.post_thread(category=test_category)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -565,7 +565,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_user_see_own_unapproved_thread(self):
         """list renders unapproved thread that belongs to viewer"""
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, poster=self.user, is_unapproved=True
         )
 
@@ -583,7 +583,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_user_cant_see_unapproved_thread(self):
         """list hides unapproved thread that belongs to other user"""
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, is_unapproved=True
         )
 
@@ -601,7 +601,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_user_cant_see_hidden_thread(self):
         """list hides hidden thread that belongs to other user"""
-        test_thread = testutils.post_thread(category=self.category_a, is_hidden=True)
+        test_thread = test.post_thread(category=self.category_a, is_hidden=True)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -617,7 +617,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_user_cant_see_own_hidden_thread(self):
         """list hides hidden thread that belongs to viewer"""
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, poster=self.user, is_hidden=True
         )
 
@@ -635,7 +635,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl({"can_hide_threads": 1})
     def test_list_user_can_see_own_hidden_thread(self):
         """list shows hidden thread that belongs to viewer due to permission"""
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, poster=self.user, is_hidden=True
         )
 
@@ -653,7 +653,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl({"can_hide_threads": 1})
     def test_list_user_can_see_hidden_thread(self):
         """list shows hidden thread that belongs to other user due to permission"""
-        test_thread = testutils.post_thread(category=self.category_a, is_hidden=True)
+        test_thread = test.post_thread(category=self.category_a, is_hidden=True)
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
@@ -669,7 +669,7 @@ class ThreadsVisibilityTests(ThreadsListTestCase):
     @patch_categories_acl({"can_approve_content": 1})
     def test_list_user_can_see_unapproved_thread(self):
         """list shows hidden thread that belongs to other user due to permission"""
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, is_unapproved=True
         )
 
@@ -714,9 +714,9 @@ class MyThreadsListTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_renders_test_thread(self):
         """list renders only threads posted by user"""
-        test_thread = testutils.post_thread(category=self.category_a, poster=self.user)
+        test_thread = test.post_thread(category=self.category_a, poster=self.user)
 
-        other_thread = testutils.post_thread(category=self.category_a)
+        other_thread = test.post_thread(category=self.category_a)
 
         response = self.client.get("/my/")
         self.assertEqual(response.status_code, 200)
@@ -775,7 +775,7 @@ class NewThreadsListTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_renders_new_thread(self):
         """list renders new thread"""
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
 
         response = self.client.get("/new/")
         self.assertEqual(response.status_code, 200)
@@ -808,11 +808,11 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, started_on=self.user.joined_on - timedelta(days=2)
         )
 
-        testutils.reply_thread(
+        test.reply_thread(
             test_thread, posted_on=self.user.joined_on + timedelta(days=4)
         )
 
@@ -847,7 +847,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a,
             started_on=timezone.now()
             - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 1),
@@ -882,7 +882,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a,
             started_on=self.user.joined_on - timedelta(minutes=1),
         )
@@ -916,7 +916,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
         poststracker.save_read(self.user, test_thread.first_post)
 
         response = self.client.get("/new/")
@@ -976,9 +976,9 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
         poststracker.save_read(self.user, test_thread.first_post)
-        testutils.reply_thread(test_thread)
+        test.reply_thread(test_thread)
 
         response = self.client.get("/unread/")
         self.assertEqual(response.status_code, 200)
@@ -1011,7 +1011,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
 
         response = self.client.get("/unread/")
         self.assertEqual(response.status_code, 200)
@@ -1042,7 +1042,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=5)
         self.user.save()
 
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
         poststracker.save_read(self.user, test_thread.first_post)
 
         response = self.client.get("/unread/")
@@ -1074,14 +1074,14 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a,
             started_on=timezone.now()
             - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF + 5),
         )
 
         poststracker.save_read(self.user, test_thread.first_post)
-        testutils.reply_thread(
+        test.reply_thread(
             test_thread, posted_on=test_thread.started_on + timedelta(days=1)
         )
 
@@ -1114,13 +1114,13 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         self.user.joined_on = timezone.now() - timedelta(days=10)
         self.user.save()
 
-        test_thread = testutils.post_thread(
+        test_thread = test.post_thread(
             category=self.category_a, started_on=self.user.joined_on - timedelta(days=2)
         )
 
         poststracker.save_read(self.user, test_thread.first_post)
 
-        testutils.reply_thread(
+        test.reply_thread(
             test_thread, posted_on=test_thread.started_on + timedelta(days=1)
         )
 
@@ -1152,7 +1152,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_shows_subscribed_thread(self):
         """list shows subscribed thread"""
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
         self.user.subscription_set.create(
             thread=test_thread,
             category=self.category_a,
@@ -1187,7 +1187,7 @@ class SubscribedThreadsListTests(ThreadsListTestCase):
     @patch_categories_acl()
     def test_list_hides_unsubscribed_thread(self):
         """list shows subscribed thread"""
-        test_thread = testutils.post_thread(category=self.category_a)
+        test_thread = test.post_thread(category=self.category_a)
 
         response = self.client.get("/subscribed/")
         self.assertEqual(response.status_code, 200)
@@ -1246,11 +1246,11 @@ class UnapprovedListTests(ThreadsListTestCase):
     )
     def test_list_shows_all_threads_for_approving_user(self):
         """list shows all threads with unapproved posts when user has perm"""
-        visible_thread = testutils.post_thread(
+        visible_thread = test.post_thread(
             category=self.category_b, is_unapproved=True
         )
 
-        hidden_thread = testutils.post_thread(
+        hidden_thread = test.post_thread(
             category=self.category_b, is_unapproved=False
         )
 
@@ -1273,11 +1273,11 @@ class UnapprovedListTests(ThreadsListTestCase):
     @patch_categories_acl(base_acl={"can_see_unapproved_content_lists": True})
     def test_list_shows_owned_threads_for_unapproving_user(self):
         """list shows owned threads with unapproved posts for user without perm"""
-        visible_thread = testutils.post_thread(
+        visible_thread = test.post_thread(
             poster=self.user, category=self.category_b, is_unapproved=True
         )
 
-        hidden_thread = testutils.post_thread(
+        hidden_thread = test.post_thread(
             category=self.category_b, is_unapproved=True
         )
 
@@ -1316,11 +1316,11 @@ class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
 
     def test_owned_threads_visibility(self):
         """only user-posted threads are visible in category"""
-        visible_thread = testutils.post_thread(
+        visible_thread = test.post_thread(
             poster=self.user, category=self.category, is_unapproved=True
         )
 
-        hidden_thread = testutils.post_thread(
+        hidden_thread = test.post_thread(
             category=self.category, is_unapproved=True
         )
 
@@ -1334,11 +1334,11 @@ class OwnerOnlyThreadsVisibilityTests(AuthenticatedUserTestCase):
         """anons can't see any threads in limited visibility category"""
         self.logout_user()
 
-        user_thread = testutils.post_thread(
+        user_thread = test.post_thread(
             poster=self.user, category=self.category, is_unapproved=True
         )
 
-        guest_thread = testutils.post_thread(category=self.category, is_unapproved=True)
+        guest_thread = test.post_thread(category=self.category, is_unapproved=True)
 
         with patch_category_see_all_threads_acl():
             response = self.client.get(self.category.get_absolute_url())

@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from misago.acl.test import patch_user_acl
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Thread, ThreadParticipant
 from misago.threads.test import patch_private_threads_acl
 
@@ -43,11 +43,11 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
     @patch_user_acl({"can_use_private_threads": True})
     def test_thread_visibility(self):
         """only participated threads are returned by private threads api"""
-        visible = testutils.post_thread(category=self.category, poster=self.user)
-        reported = testutils.post_thread(category=self.category, poster=self.user)
+        visible = test.post_thread(category=self.category, poster=self.user)
+        reported = test.post_thread(category=self.category, poster=self.user)
 
         # hidden thread
-        testutils.post_thread(category=self.category, poster=self.user)
+        test.post_thread(category=self.category, poster=self.user)
 
         ThreadParticipant.objects.add_participants(visible, [self.user])
 
@@ -76,7 +76,7 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
     def test_anonymous(self):
@@ -187,7 +187,7 @@ class PrivateThreadDeleteApiTests(PrivateThreadsTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(self.category, poster=self.user)
+        self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
         ThreadParticipant.objects.add_participants(self.thread, [self.user])

@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from misago.users.models import Ban
-from misago.users.testutils import UserTestCase
+from misago.users.test import UserTestCase
 
 
 class UnbannedOnlyTests(UserTestCase):

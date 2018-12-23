@@ -1,6 +1,6 @@
 from django.urls import reverse
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.tests.test_threads_api import ThreadsApiTestCase
 
 
@@ -30,7 +30,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
     def test_user_post(self):
         """user post doesn't show in feed because its not first post in thread"""
-        testutils.reply_thread(self.thread, poster=self.user)
+        test.reply_thread(self.thread, poster=self.user)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -38,7 +38,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
     def test_user_event(self):
         """events don't show in feeds at all"""
-        testutils.reply_thread(self.thread, poster=self.user, is_event=True)
+        test.reply_thread(self.thread, poster=self.user, is_event=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -46,10 +46,10 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
     def test_user_thread(self):
         """user thread shows in feed"""
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         # this post will not show in feed
-        testutils.reply_thread(thread, poster=self.user)
+        test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -58,7 +58,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
     def test_user_thread_anonymous(self):
         """user thread shows in feed requested by unauthenticated user"""
-        thread = testutils.post_thread(category=self.category, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
 
         self.logout_user()
 
@@ -94,7 +94,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_event(self):
         """events don't show in feeds at all"""
-        testutils.reply_thread(self.thread, poster=self.user, is_event=True)
+        test.reply_thread(self.thread, poster=self.user, is_event=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -102,7 +102,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_hidden_post(self):
         """hidden posts don't show in feeds at all"""
-        testutils.reply_thread(self.thread, poster=self.user, is_hidden=True)
+        test.reply_thread(self.thread, poster=self.user, is_hidden=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -110,7 +110,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_unapproved_post(self):
         """unapproved posts don't show in feeds at all"""
-        testutils.reply_thread(self.thread, poster=self.user, is_unapproved=True)
+        test.reply_thread(self.thread, poster=self.user, is_unapproved=True)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -118,8 +118,8 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_posts(self):
         """user posts show in feed"""
-        post = testutils.reply_thread(self.thread, poster=self.user)
-        other_post = testutils.reply_thread(self.thread, poster=self.user)
+        post = test.reply_thread(self.thread, poster=self.user)
+        other_post = test.reply_thread(self.thread, poster=self.user)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -129,8 +129,8 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_thread(self):
         """user thread shows in feed"""
-        thread = testutils.post_thread(category=self.category, poster=self.user)
-        post = testutils.reply_thread(thread, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -140,8 +140,8 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_post_anonymous(self):
         """user post shows in feed requested by unauthenticated user"""
-        post = testutils.reply_thread(self.thread, poster=self.user)
-        other_post = testutils.reply_thread(self.thread, poster=self.user)
+        post = test.reply_thread(self.thread, poster=self.user)
+        other_post = test.reply_thread(self.thread, poster=self.user)
 
         self.logout_user()
 
@@ -153,8 +153,8 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
     def test_user_thread_anonymous(self):
         """user thread shows in feed requested by unauthenticated user"""
-        thread = testutils.post_thread(category=self.category, poster=self.user)
-        post = testutils.reply_thread(thread, poster=self.user)
+        thread = test.post_thread(category=self.category, poster=self.user)
+        post = test.reply_thread(thread, poster=self.user)
 
         self.logout_user()
 

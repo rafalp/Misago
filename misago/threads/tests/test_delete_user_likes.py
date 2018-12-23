@@ -1,9 +1,9 @@
 from django.test import RequestFactory
 
 from misago.categories.models import Category
-from misago.users.testutils import AuthenticatedUserTestCase, create_test_user
+from misago.users.test import AuthenticatedUserTestCase, create_test_user
 
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.api.postendpoints.patch_post import patch_is_liked
 from misago.threads.models import Post
 
@@ -23,8 +23,8 @@ class DeleteUserLikesTests(AuthenticatedUserTestCase):
     def test_anonymize_user_likes(self):
         """post's last like is anonymized by user.anonymize_data"""
         category = Category.objects.get(slug="first-category")
-        thread = testutils.post_thread(category)
-        post = testutils.reply_thread(thread)
+        thread = test.post_thread(category)
+        post = test.reply_thread(thread)
         post.acl = {"can_like": True}
 
         user = create_test_user("OtherUser", "otheruser@example.com")

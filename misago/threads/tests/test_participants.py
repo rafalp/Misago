@@ -9,7 +9,7 @@ from misago.threads.participants import (
     set_owner,
     set_users_unread_private_threads_sync,
 )
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class ParticipantsTests(TestCase):

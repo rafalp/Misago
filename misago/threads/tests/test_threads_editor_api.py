@@ -6,11 +6,11 @@ from misago.acl import useracl
 from misago.acl.objectacl import add_acl_to_obj
 from misago.categories.models import Category
 from misago.conftest import get_cache_versions
-from misago.threads import testutils
+from misago.threads import test
 from misago.threads.models import Attachment
 from misago.threads.serializers import AttachmentSerializer
 from misago.threads.test import patch_category_acl
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_DOCUMENT_PATH = os.path.join(TESTFILES_DIR, "document.pdf")
@@ -207,7 +207,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(category=self.category)
+        self.thread = test.post_thread(category=self.category)
         self.api_link = reverse(
             "misago:api:thread-post-editor", kwargs={"thread_pk": self.thread.pk}
         )
@@ -297,7 +297,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
         """api validates replied post visibility"""
 
         # unapproved reply can't be replied to
-        unapproved_reply = testutils.reply_thread(self.thread, is_unapproved=True)
+        unapproved_reply = test.reply_thread(self.thread, is_unapproved=True)
 
         with patch_category_acl({"can_reply_threads": True}):
             response = self.client.get(
@@ -306,7 +306,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
             self.assertEqual(response.status_code, 404)
 
         # hidden reply can't be replied to
-        hidden_reply = testutils.reply_thread(self.thread, is_hidden=True)
+        hidden_reply = test.reply_thread(self.thread, is_hidden=True)
 
         with patch_category_acl({"can_reply_threads": True}):
             response = self.client.get("%s?reply=%s" % (self.api_link, hidden_reply.pk))
@@ -317,8 +317,8 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
 
     def test_reply_to_other_thread_post(self):
         """api validates is replied post belongs to same thread"""
-        other_thread = testutils.post_thread(category=self.category)
-        reply_to = testutils.reply_thread(other_thread)
+        other_thread = test.post_thread(category=self.category)
+        reply_to = test.reply_thread(other_thread)
 
         response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 404)
@@ -326,7 +326,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_reply_to_event(self):
         """events can't be replied to"""
-        reply_to = testutils.reply_thread(self.thread, is_event=True)
+        reply_to = test.reply_thread(self.thread, is_event=True)
 
         response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
         self.assertEqual(response.status_code, 403)
@@ -335,7 +335,7 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
     @patch_category_acl({"can_reply_threads": True})
     def test_reply_to(self):
         """api includes replied to post details in response"""
-        reply_to = testutils.reply_thread(self.thread)
+        reply_to = test.reply_thread(self.thread)
 
         response = self.client.get("%s?reply=%s" % (self.api_link, reply_to.pk))
 
@@ -354,8 +354,8 @@ class EditReplyEditorApiTests(EditorApiTestCase):
     def setUp(self):
         super().setUp()
 
-        self.thread = testutils.post_thread(category=self.category)
-        self.post = testutils.reply_thread(self.thread, poster=self.user)
+        self.thread = test.post_thread(category=self.category)
+        self.post = test.reply_thread(self.thread, poster=self.user)
 
         self.api_link = reverse(
             "misago:api:thread-post-editor",

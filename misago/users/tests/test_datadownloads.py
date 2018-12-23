@@ -4,7 +4,7 @@ from django.core.files import File
 
 from misago.categories.models import Category
 from misago.threads.models import Attachment, AttachmentType
-from misago.threads.testutils import post_thread, post_poll
+from misago.threads.test import post_thread, post_poll
 from misago.users.audittrail import create_user_audit_trail
 from misago.users.datadownloads import (
     expire_user_data_download,
@@ -13,7 +13,7 @@ from misago.users.datadownloads import (
     user_has_data_download_request,
 )
 from misago.users.models import DataDownload
-from misago.users.testutils import AuthenticatedUserTestCase
+from misago.users.test import AuthenticatedUserTestCase
 
 
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")

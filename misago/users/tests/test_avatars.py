@@ -17,7 +17,7 @@ from misago.users.avatars import (
     uploaded,
 )
 from misago.users.models import Avatar, AvatarGallery
-from misago.users.testutils import create_test_user
+from misago.users.test import create_test_user
 
 
 class AvatarsStoreTests(TestCase):

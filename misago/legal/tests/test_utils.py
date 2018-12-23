@@ -7,7 +7,7 @@ from misago.legal.utils import (
     save_user_agreement_acceptance,
     set_agreement_as_active,
 )
-from misago.users.testutils import UserTestCase
+from misago.users.test import UserTestCase
 
 
 class MockRequest(object):
