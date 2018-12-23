@@ -9,7 +9,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
-from .constants import BANS_CACHE
+from . import BANS_CACHE
 from .models import Ban, BanCache
 
 CACHE_SESSION_KEY = "misago_ip_check"

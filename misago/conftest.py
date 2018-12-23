@@ -4,7 +4,7 @@ from misago.acl import ACL_CACHE, useracl
 from misago.conf import SETTINGS_CACHE
 from misago.conf.dynamicsettings import DynamicSettings
 from misago.conf.staticsettings import StaticSettings
-from misago.users.constants import BANS_CACHE
+from misago.users import BANS_CACHE
 from misago.users.models import AnonymousUser
 from misago.users.test import create_test_superuser, create_test_user
 

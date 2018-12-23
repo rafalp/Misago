@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from misago.cache.versions import invalidate_cache
-from misago.users.constants import BANS_CACHE
+from misago.users import BANS_CACHE
 
 
 class BansManager(models.Manager):

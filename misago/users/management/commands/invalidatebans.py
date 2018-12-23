@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from misago.cache.versions import get_cache_versions
 
-from misago.users.constants import BANS_CACHE
+from misago.users import BANS_CACHE
 from misago.users.models import Ban, BanCache
 
 
