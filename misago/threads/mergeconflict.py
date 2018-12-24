@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from .models import Poll
 
+
 class MergeConflictHandler:
     def __init__(self, threads):
         self.items = []

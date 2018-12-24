@@ -15,6 +15,7 @@ from ..forms import (
 from ..models import Category, CategoryRole, RoleCategoryACL
 from .categoriesadmin import CategoriesList, CategoryAdmin
 
+
 class CategoryRoleAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:permissions:categories:index"
     model = CategoryRole
