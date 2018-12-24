@@ -60,7 +60,7 @@ def test_accessing_attr_for_undefined_setting_raises_attribute_error(
 ):
     settings = DynamicSettings(cache_versions)
     with pytest.raises(AttributeError):
-        settings.not_existing
+        settings.not_existing  # pylint: disable=pointless-statement
 
 
 def test_accessing_attr_for_lazy_setting_with_value_returns_true(

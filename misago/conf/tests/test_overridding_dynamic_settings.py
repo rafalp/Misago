@@ -1,5 +1,3 @@
-import pytest
-
 from ..dynamicsettings import DynamicSettings
 from ..test import override_dynamic_settings
 

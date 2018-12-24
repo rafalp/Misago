@@ -13,7 +13,7 @@ def render(request, template, context=None):
 
     context["settings_groups"] = SettingsGroup.objects.ordered_alphabetically()
 
-    if not "active_group" in context:
+    if "active_group" not in context:
         context["active_group"] = {"key": None}
 
     return mi_render(request, template, context)

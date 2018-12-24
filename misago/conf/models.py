@@ -14,7 +14,7 @@ class SettingsGroupsManager(models.Manager):
             groups_dict[_(group.name)] = group
 
         ordered_groups = []
-        for key in groups_dict.keys():
+        for key in groups_dict:
             ordered_groups.append(groups_dict[key])
         return ordered_groups
 
@@ -31,7 +31,8 @@ class SettingsManager(models.Manager):
     def change_setting(self, setting, dry_value=None, wet_value=None):
         if dry_value:
             return self.filter(setting=setting).update(dry_value=dry_value)
-        elif wet_value:
+
+        if wet_value:
             try:
                 setting = self.get(setting=setting)
                 setting.value = wet_value

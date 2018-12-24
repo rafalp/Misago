@@ -51,8 +51,8 @@ def basic_kwargs(setting, extra):
 
     if kwargs["required"]:
         if kwargs.get("help_text"):
-            format = {"help_text": kwargs["help_text"]}
-            kwargs["help_text"] = _("Required. %(help_text)s") % format
+            help_text = {"help_text": kwargs["help_text"]}
+            kwargs["help_text"] = _("Required. %(help_text)s") % help_text
         else:
             kwargs["help_text"] = _("This field is required.")
 
@@ -74,8 +74,7 @@ def create_checkbox(setting, kwargs, extra):
 
     if setting.python_type == "int":
         return forms.TypedMultipleChoiceField(coerce="int", **kwargs)
-    else:
-        return forms.MultipleChoiceField(**kwargs)
+    return forms.MultipleChoiceField(**kwargs)
 
 
 def create_choice(setting, kwargs, extra):
@@ -88,16 +87,14 @@ def create_choice(setting, kwargs, extra):
 
     if setting.python_type == "int":
         return forms.TypedChoiceField(coerce="int", **kwargs)
-    else:
-        return forms.ChoiceField(**kwargs)
+    return forms.ChoiceField(**kwargs)
 
 
 def create_text(setting, kwargs, extra):
     kwargs.update(extra)
     if setting.python_type == "int":
         return forms.IntegerField(**kwargs)
-    else:
-        return forms.CharField(**kwargs)
+    return forms.CharField(**kwargs)
 
 
 def create_textarea(setting, kwargs, extra):
