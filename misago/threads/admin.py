@@ -10,7 +10,7 @@ from .views.admin.attachmenttypes import (
 )
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Attachment
         urlpatterns.namespace(r"^attachments/", "attachments", "system")

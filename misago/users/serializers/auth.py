@@ -10,7 +10,7 @@ User = get_user_model()
 __all__ = ["AuthenticatedUserSerializer", "AnonymousUserSerializer"]
 
 
-class AuthFlags(object):
+class AuthFlags:
     def get_is_authenticated(self, obj):
         return bool(obj.is_authenticated)
 

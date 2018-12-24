@@ -1,4 +1,4 @@
-class AdminBaseMixin(object):
+class AdminBaseMixin:
     """
     Admin mixin abstraciton used for configuring admin CRUD views.
 

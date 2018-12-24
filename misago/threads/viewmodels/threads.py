@@ -47,7 +47,7 @@ LIST_DENIED_MESSAGES = {
 }
 
 
-class ViewModel(object):
+class ViewModel:
     def __init__(self, request, category, list_type, page):
         self.allow_see_list(request, category, list_type)
 

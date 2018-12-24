@@ -6,7 +6,7 @@ from ..test import AdminTestCase
 from ..views import get_protected_namespace
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, path):
         self.path = path
 

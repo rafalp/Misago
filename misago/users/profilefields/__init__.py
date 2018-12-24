@@ -15,7 +15,7 @@ from .serializers import serialize_profilefields_data
 logger = logging.getLogger("misago.users.ProfileFields")
 
 
-class ProfileFields(object):
+class ProfileFields:
     def __init__(self, fields_groups):
         self.is_loaded = False
 

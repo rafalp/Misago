@@ -3,8 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from .models import Poll
 
-
-class MergeConflictHandler(object):
+class MergeConflictHandler:
     def __init__(self, threads):
         self.items = []
         self.choices = {0: None}
@@ -80,7 +79,7 @@ class PollMergeHandler(MergeConflictHandler):
         return resolutions
 
 
-class MergeConflict(object):
+class MergeConflict:
     """
     Utility class single point of entry for detecting merge conflicts on different properties
     and validating user resolutions.

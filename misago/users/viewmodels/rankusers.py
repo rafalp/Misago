@@ -4,7 +4,7 @@ from ..online.utils import make_users_status_aware
 from ..serializers import UserCardSerializer
 
 
-class RankUsers(object):
+class RankUsers:
     def __init__(self, request, rank, page=0):
         queryset = rank.user_set.select_related(
             "rank", "ban_cache", "online_tracker"

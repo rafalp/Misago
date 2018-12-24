@@ -123,7 +123,7 @@ class AddCategoriesToItemsTests(TestCase):
         self.assertEqual(thread.category, self.category_d)
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, scheme, host, wsgialias=""):
         self.scheme = scheme
         self.host = host

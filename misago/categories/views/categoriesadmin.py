@@ -52,7 +52,7 @@ class CategoriesList(CategoryAdmin, generic.ListView):
         return context
 
 
-class CategoryFormMixin(object):
+class CategoryFormMixin:
     def create_form_type(self, request, target):
         return CategoryFormFactory(target)
 

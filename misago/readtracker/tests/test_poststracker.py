@@ -11,7 +11,7 @@ from ..models import PostRead
 from ..poststracker import make_read_aware, save_read
 
 
-class AnonymousUser(object):
+class AnonymousUser:
     is_authenticated = False
     is_anonymous = True
 

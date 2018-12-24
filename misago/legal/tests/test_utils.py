@@ -10,7 +10,7 @@ from ..utils import (
 )
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, user=None):
         self.user = user
         self.frontend_context = {}

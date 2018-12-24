@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .views import DeleteRole, EditRole, NewRole, RolesList, RoleUsers
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Permissions section
         urlpatterns.namespace(r"^permissions/", "permissions")

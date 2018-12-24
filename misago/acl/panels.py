@@ -14,8 +14,7 @@ class MisagoACLPanel(Panel):
 
         if misago_user and misago_user.is_authenticated:
             return misago_user.username
-        else:
-            return _("Anonymous user")
+        return _("Anonymous user")
 
     def process_response(self, request, response):
         try:

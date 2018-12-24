@@ -7,14 +7,14 @@ from ...conf import settings
 from ..dates import get_cutoff_date, is_date_tracked
 
 
-class MockUser(object):
+class MockUser:
     is_authenticated = True
 
     def __init__(self):
         self.joined_on = timezone.now()
 
 
-class MockAnonymousUser(object):
+class MockAnonymousUser:
     is_authenticated = False
 
 

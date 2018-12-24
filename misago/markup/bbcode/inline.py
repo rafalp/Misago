@@ -36,7 +36,7 @@ italics = SimpleBBCodePattern("i")
 underline = SimpleBBCodePattern("u")
 
 
-class BBcodePattern(object):
+class BBcodePattern:
     def __init__(self, pattern, markdown_instance=None):
         self.pattern = pattern
         self.compiled_re = re.compile(

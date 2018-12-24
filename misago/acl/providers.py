@@ -14,7 +14,7 @@ _ALREADY_INITIALIZED_ERROR = (
 )
 
 
-class PermissionProviders(object):
+class PermissionProviders:
     """manager for permission providers"""
 
     def __init__(self):

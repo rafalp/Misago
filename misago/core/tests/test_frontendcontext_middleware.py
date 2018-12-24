@@ -3,7 +3,7 @@ from django.test import TestCase
 from ..middleware import FrontendContextMiddleware
 
 
-class MockRequest(object):
+class MockRequest:
     pass
 
 

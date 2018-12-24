@@ -4,7 +4,7 @@ from ...users import credentialchange
 from ..test import create_test_user
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, user):
         self.session = {}
         self.user = user

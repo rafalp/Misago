@@ -88,7 +88,7 @@ class BatchTests(TestCase):
             self.assertEqual(test_result, result[i])
 
 
-class MockUser(object):
+class MockUser:
     id = 12
     pk = 12
     username = "User"

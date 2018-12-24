@@ -10,8 +10,7 @@ from ..core.validators import validate_sluggable
 from ..threads.threadtypes import trees_map
 from .models import Category, CategoryRole
 
-
-class AdminCategoryFieldMixin(object):
+class AdminCategoryFieldMixin:
     def __init__(self, *args, **kwargs):
         self.base_level = kwargs.pop("base_level", 1)
         kwargs["level_indicator"] = kwargs.get("level_indicator", "- - ")

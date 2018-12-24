@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from . import views
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace(r"^settings/", "settings", "system")
 

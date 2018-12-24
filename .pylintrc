@@ -9,6 +9,7 @@ max-line-length=88
 
 disable=
     abstract-method,
+    arguments-differ,
     bad-continuation,
     expression-not-assigned,
     fixme,

@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 
-class Node(object):
+class Node:
     def __init__(self, name=None, icon=None, link=None):
         self.parent = None
         self.name = name
@@ -91,7 +91,7 @@ class Node(object):
         return False
 
 
-class AdminHierarchyBuilder(object):
+class AdminHierarchyBuilder:
     def __init__(self):
         self.nodes_record = []
         self.nodes_dict = {}

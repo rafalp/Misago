@@ -19,7 +19,7 @@ class RolesList(RoleAdmin, generic.ListView):
     ordering = (("name", None),)
 
 
-class RoleFormMixin(object):
+class RoleFormMixin:
     def real_dispatch(self, request, target):
         form = RoleForm(instance=target)
 
@@ -46,9 +46,8 @@ class RoleFormMixin(object):
 
                 if "stay" in request.POST:
                     return redirect(request.path)
-                else:
-                    return redirect(self.root_link)
-            elif form.is_valid() and len(perms_forms) != valid_forms:
+                return redirect(self.root_link)
+            if form.is_valid() and len(perms_forms) != valid_forms:
                 form.add_error(None, _("Form contains errors."))
 
         return self.render(
@@ -65,7 +64,9 @@ class EditRole(RoleFormMixin, RoleAdmin, generic.ModelFormView):
 
 
 class DeleteRole(RoleAdmin, generic.ButtonView):
-    def check_permissions(self, request, target):
+    def check_permissions(
+        self, request, target
+    ):  # pylint: disable=inconsistent-return-statements
         if target.special_role:
             message = _('Role "%(name)s" is special role and can\'t be deleted.')
             return message % {"name": target.name}

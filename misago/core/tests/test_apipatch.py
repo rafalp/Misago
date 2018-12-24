@@ -5,12 +5,12 @@ from django.test import TestCase
 from ..apipatch import ApiPatch, InvalidAction
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, data=None):
         self.data = data
 
 
-class MockObject(object):
+class MockObject:
     def __init__(self, pk):
         self.id = pk
         self.pk = pk

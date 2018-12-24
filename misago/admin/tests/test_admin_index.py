@@ -19,7 +19,7 @@ class AdminIndexViewTests(AdminTestCase):
         self.assertContains(response, "MISAGO_ADDRESS")
 
 
-class RequestMock(object):
+class RequestMock:
     absolute_uri = "https://misago-project.org/somewhere/"
 
     def build_absolute_uri(self, location):

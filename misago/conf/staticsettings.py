@@ -3,7 +3,7 @@ from django.conf import settings
 from . import defaults
 
 
-class StaticSettings(object):
+class StaticSettings:
     def __getattr__(self, name):
         try:
             return getattr(settings, name)

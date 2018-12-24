@@ -10,7 +10,7 @@ class InvalidAction(Exception):
     pass
 
 
-class ApiPatch(object):
+class ApiPatch:
     def __init__(self):
         self._actions = []
 

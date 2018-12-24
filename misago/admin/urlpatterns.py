@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 
 
-class URLPatterns(object):
+class URLPatterns:
     def __init__(self):
         self._namespaces = []
         self._patterns = []

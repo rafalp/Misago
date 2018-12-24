@@ -10,7 +10,7 @@ from .views.admin import (
 )
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Legal Agreements
         urlpatterns.namespace(r"^agreements/", "agreements", "users")

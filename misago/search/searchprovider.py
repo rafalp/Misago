@@ -1,4 +1,4 @@
-class SearchProvider(object):
+class SearchProvider:
     def __init__(self, request):
         self.request = request
 

@@ -15,7 +15,7 @@ from ..models import PostRead
 cache_versions = get_cache_versions()
 
 
-class AnonymousUser(object):
+class AnonymousUser:
     is_authenticated = False
     is_anonymous = True
 

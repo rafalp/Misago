@@ -1,4 +1,4 @@
-class Page(object):
+class Page:
     """
     Misago page utility
 

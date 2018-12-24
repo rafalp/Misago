@@ -4,7 +4,7 @@ from ...users.test import AuthenticatedUserTestCase
 from ..models import Thread
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, user):
         self.user = user
         self.user_ip = "123.14.15.222"

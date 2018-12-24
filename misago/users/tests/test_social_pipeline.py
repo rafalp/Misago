@@ -52,7 +52,7 @@ def create_strategy():
     return load_strategy(request=request)
 
 
-class MockStrategy(object):
+class MockStrategy:
     def __init__(self, user_ip="0.0.0.0"):
         self.cleaned_partial_token = None
         self.request = create_request(user_ip)

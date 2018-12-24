@@ -4,7 +4,7 @@ from django.utils.module_loading import import_string
 from ..conf import settings
 
 
-class SearchProviders(object):
+class SearchProviders:
     def __init__(self, search_providers):
         self._initialized = False
         self._providers = []

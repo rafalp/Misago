@@ -5,7 +5,7 @@ from ..context_processors import legal_links
 from ..models import Agreement
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, user):
         self.user = user
         self.frontend_context = {}

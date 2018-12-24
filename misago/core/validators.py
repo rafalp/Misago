@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .utils import slugify
 
 
-class validate_sluggable(object):
+class validate_sluggable:
     def __init__(self, error_short=None, error_long=None):
         self.error_short = error_short or _(
             "Value has to contain alpha-numerical characters."
