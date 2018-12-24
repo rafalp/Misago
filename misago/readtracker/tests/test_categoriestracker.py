@@ -164,22 +164,9 @@ class CategoriesTrackerTests(TestCase):
         self.assertFalse(self.category.is_read)
         self.assertTrue(self.category.is_new)
 
-    def test_user_first_read_post_unapproved_own_post(self):
-        """tracked thread with read first post and unapproved own post"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
-        poststracker.save_read(self.user, thread.first_post)
-
-        test.reply_thread(
-            thread, posted_on=timezone.now(), poster=self.user, is_unapproved=True
-        )
-
-        categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
-        self.assertFalse(self.category.is_read)
-        self.assertTrue(self.category.is_new)
-
     def test_user_unapproved_thread_unread_post(self):
         """tracked unapproved thread"""
-        thread = test.post_thread(
+        test.post_thread(
             self.category, started_on=timezone.now(), is_unapproved=True
         )
 
@@ -189,7 +176,7 @@ class CategoriesTrackerTests(TestCase):
 
     def test_user_unapproved_own_thread_unread_post(self):
         """tracked unapproved but visible thread"""
-        thread = test.post_thread(
+        test.post_thread(
             self.category,
             poster=self.user,
             started_on=timezone.now(),
@@ -202,7 +189,7 @@ class CategoriesTrackerTests(TestCase):
 
     def test_user_hidden_thread_unread_post(self):
         """tracked hidden thread"""
-        thread = test.post_thread(
+        test.post_thread(
             self.category, started_on=timezone.now(), is_hidden=True
         )
 

@@ -54,7 +54,7 @@ class SearchProvidersTests(TestCase):
 
     def test_get_allowed_providers(self):
         """
-        allowed providers getter returns only providers that didn't raise an exception 
+        allowed providers getter returns only providers that didn't raise an exception
         in allow_search
         """
         searchproviders = SearchProviders([])

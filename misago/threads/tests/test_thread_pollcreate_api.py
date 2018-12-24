@@ -277,7 +277,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertTrue(response_json["is_public"])
 
         self.assertEqual(len(response_json["choices"]), 3)
-        self.assertEqual(len(set([c["hash"] for c in response_json["choices"]])), 3)
+        self.assertEqual(len({c["hash"] for c in response_json["choices"]}), 3)
         self.assertEqual(
             [c["label"] for c in response_json["choices"]], ["Red", "Green", "Blue"]
         )
@@ -300,6 +300,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertTrue(poll.is_public)
 
         self.assertEqual(len(poll.choices), 3)
-        self.assertEqual(len(set([c["hash"] for c in poll.choices])), 3)
+        self.assertEqual(len({c["hash"] for c in poll.choices}), 3)
 
         self.assertEqual(self.user.audittrail_set.count(), 1)

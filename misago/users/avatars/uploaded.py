@@ -27,7 +27,7 @@ def validate_uploaded_file(settings, uploaded_file):
             temporary_file_path = Path(uploaded_file.temporary_file_path())
             if temporary_file_path.exists():
                 temporary_file_path.unlink()
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             pass
         raise e
 
@@ -43,8 +43,7 @@ def validate_extension(uploaded_file):
     for extension in ALLOWED_EXTENSIONS:
         if lowercased_name.endswith(extension):
             return True
-    else:
-        raise ValidationError(_("Uploaded file type is not allowed."))
+    raise ValidationError(_("Uploaded file type is not allowed."))
 
 
 def validate_mime(uploaded_file):

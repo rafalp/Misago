@@ -259,9 +259,11 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         ids = [self.posts[0].id, self.posts[-1].id]
 
         response = self.delete(self.api_link, ids)
-        self.thread = Thread.objects.get(pk=self.thread.pk)
+        self.assertEqual(response.status_code, 200)
 
+        self.thread = Thread.objects.get(pk=self.thread.pk)
         self.assertNotEqual(self.thread.last_post_id, ids[-1])
+
         for post in ids:
             with self.assertRaises(Post.DoesNotExist):
                 self.thread.post_set.get(pk=post)
@@ -273,8 +275,8 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 200)
 
         self.thread = Thread.objects.get(pk=self.thread.pk)
-
         self.assertNotEqual(self.thread.last_post_id, self.posts[-1].pk)
+
         for post in self.posts:
             with self.assertRaises(Post.DoesNotExist):
                 self.thread.post_set.get(pk=post.pk)

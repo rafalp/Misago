@@ -1,3 +1,4 @@
+# pylint: disable=keyword-arg-before-vararg
 import json
 
 from django.contrib.auth import get_user_model

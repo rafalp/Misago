@@ -31,7 +31,7 @@ class GotoView(View):
         return self.get_redirect(thread, target_post, target_page)
 
     def get_thread(self, request, pk, slug):
-        return self.thread(request, pk, slug)
+        return self.thread(request, pk, slug)  # pylint: disable=not-callable
 
     def test_permissions(self, request, thread):
         pass

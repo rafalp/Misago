@@ -1302,7 +1302,9 @@ def has_time_to_edit_post(user_acl, target):
     return True
 
 
-def exclude_invisible_threads(user_acl, categories, queryset):
+def exclude_invisible_threads(
+    user_acl, categories, queryset
+):  # pylint: disable=too-many-branches
     show_all = []
     show_accepted_visible = []
     show_accepted = []
@@ -1409,7 +1411,9 @@ def exclude_invisible_posts(user_acl, categories, queryset):
     return exclude_invisible_posts_in_category(user_acl, categories, queryset)
 
 
-def exclude_invisible_posts_in_categories(user_acl, categories, queryset):
+def exclude_invisible_posts_in_categories(
+    user_acl, categories, queryset
+):  # pylint: disable=too-many-branches
     show_all = []
     show_approved = []
     show_approved_owned = []

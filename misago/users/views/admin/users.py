@@ -130,7 +130,9 @@ class UsersList(UserAdmin, generic.ListView):
 
             messages.success(request, _("Selected users accounts have been activated."))
 
-    def action_ban(self, request, users):
+    def action_ban(
+        self, request, users
+    ):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
         users = users.order_by("slug")
         for user in users:
             if user.is_superuser:

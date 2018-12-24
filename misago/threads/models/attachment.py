@@ -15,6 +15,7 @@ from ...core.utils import slugify
 
 
 def upload_to(instance, filename):
+    # pylint: disable=undefined-loop-variable
     spread_path = md5(str(instance.secret[:16]).encode()).hexdigest()
     secret = Attachment.generate_new_secret()
 

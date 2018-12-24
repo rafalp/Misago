@@ -12,7 +12,7 @@ __all__ = ["ThreadPosts"]
 
 
 class ViewModel:
-    def __init__(self, request, thread, page):
+    def __init__(self, request, thread, page):  # pylint: disable=too-many-locals
         try:
             thread_model = thread.unwrap()
         except AttributeError:

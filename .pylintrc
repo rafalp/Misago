@@ -10,14 +10,17 @@ max-line-length=88
 disable=
     abstract-method,
     arguments-differ,
+    assignment-from-none,
     attribute-defined-outside-init,
     bad-continuation,
+    cyclic-import,
     duplicate-code,
     expression-not-assigned,
     fixme,
     inconsistent-return-statements,
     invalid-name,
     missing-docstring,
+    model-no-explicit-unicode,  # pylint-django
     no-member,
     no-self-use,
     protected-access,

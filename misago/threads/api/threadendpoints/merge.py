@@ -14,7 +14,9 @@ from ...serializers import (
 )
 
 
-def thread_merge_endpoint(request, thread, viewmodel):
+def thread_merge_endpoint(
+    request, thread, viewmodel
+):  # pylint: disable=too-many-branches
     allow_merge_thread(request.user_acl, thread)
 
     serializer = MergeThreadSerializer(

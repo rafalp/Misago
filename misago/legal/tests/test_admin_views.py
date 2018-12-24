@@ -22,7 +22,7 @@ class AgreementAdminViewsTests(AdminTestCase):
 
     def test_mass_delete(self):
         """adminview deletes multiple agreements"""
-        for i in range(10):
+        for _ in range(10):
             response = self.client.post(
                 reverse("misago:admin:users:agreements:new"),
                 data={"type": Agreement.TYPE_TOS, "text": "test agreement!"},

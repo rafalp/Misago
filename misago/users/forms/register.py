@@ -69,7 +69,7 @@ class SocialAuthRegisterForm(BaseRegisterForm):
         self.clean_agreements(cleaned_data)
         self.raise_if_ip_banned()
 
-        validate_new_registration(self.request, cleaned_data, self)
+        validate_new_registration(self.request, cleaned_data, self.add_error)
 
         return cleaned_data
 

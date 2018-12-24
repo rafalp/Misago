@@ -37,7 +37,7 @@ class UserManager(BaseUserManager):
         user.set_email(email)
         user.set_password(password)
 
-        if not "rank" in extra_fields:
+        if "rank" not in extra_fields:
             user.rank = Rank.objects.get_default()
 
         now = timezone.now()

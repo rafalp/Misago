@@ -101,8 +101,6 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
     def test_change_email_user_password_whitespace(self):
         """api supports users with whitespace around their passwords"""
         user_password = " old password "
-        new_password = " N3wP@55w0rd "
-
         new_email = "new@email.com"
 
         self.user.set_password(user_password)

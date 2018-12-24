@@ -322,6 +322,7 @@ thread_patch_dispatcher.add("participants", patch_add_participant)
 
 
 def patch_remove_participant(request, thread, value):
+    # pylint: disable=undefined-loop-variable
     try:
         user_id = int(value)
     except (ValueError, TypeError):
@@ -349,6 +350,7 @@ thread_patch_dispatcher.remove("participants", patch_remove_participant)
 
 
 def patch_replace_owner(request, thread, value):
+    # pylint: disable=undefined-loop-variable
     try:
         user_id = int(value)
     except (ValueError, TypeError):
@@ -406,7 +408,9 @@ def thread_patch_endpoint(request, thread):
     return response
 
 
-def bulk_patch_endpoint(request, viewmodel):
+def bulk_patch_endpoint(
+    request, viewmodel
+):  # pylint: disable=too-many-branches, too-many-locals
     serializer = BulkPatchSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=400)

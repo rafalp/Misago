@@ -33,7 +33,9 @@ class Command(BaseCommand):
             default=5,
         )
 
-    def handle(self, *args, **options):
+    def handle(
+        self, *args, **options
+    ):  # pylint: disable=too-many-branches, too-many-locals
         items_to_create = options["threads"]
 
         categories = list(Category.objects.all_categories())

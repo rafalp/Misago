@@ -18,9 +18,6 @@ class ThreadsModerationTests(AuthenticatedUserTestCase):
         self.category = Category.objects.all_categories()[:1][0]
         self.thread = test.post_thread(self.category)
 
-    def tearDown(self):
-        super().tearDown()
-
     def reload_thread(self):
         self.thread = Thread.objects.get(pk=self.thread.pk)
 

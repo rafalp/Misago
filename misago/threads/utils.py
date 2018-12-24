@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-from django.urls import resolve
+from django.urls import Resolver404, resolve
 
 from .models import PostLike
 
@@ -38,27 +38,25 @@ SUPPORTED_THREAD_ROUTES = {
 }
 
 
-def get_thread_id_from_url(request, url):
-    try:
-        clean_url = str(url).strip()
-        bits = urlparse(clean_url)
-    except:
+def get_thread_id_from_url(request, url):  # pylint: disable=too-many-return-statements
+    clean_url = str(url).strip()
+    url_bits = urlparse(clean_url)
+
+    if url_bits.netloc and url_bits.netloc != request.get_host():
         return None
 
-    if bits.netloc and bits.netloc != request.get_host():
-        return None
-
-    if bits.path.startswith(request.get_host()):
-        clean_path = bits.path.lstrip(request.get_host())
+    if url_bits.path.startswith(request.get_host()):
+        clean_path = url_bits.path.lstrip(request.get_host())
     else:
-        clean_path = bits.path
+        clean_path = url_bits.path
+
+    wsgi_alias = request.path[: len(request.path_info) * -1]
+    if not wsgi_alias or not clean_path.startswith(wsgi_alias):
+        return None
 
     try:
-        wsgi_alias = request.path[: len(request.path_info) * -1]
-        if wsgi_alias and not clean_path.startswith(wsgi_alias):
-            return None
         resolution = resolve(clean_path[len(wsgi_alias) :])
-    except:
+    except Resolver404:
         return None
 
     if not resolution.namespaces:

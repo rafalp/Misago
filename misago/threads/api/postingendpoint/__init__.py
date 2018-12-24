@@ -9,7 +9,7 @@ from ....conf import settings
 
 
 class PostingInterrupt(Exception):
-    def __init__(self, message):
+    def __init__(self, message):  # pylint: disable=super-init-not-called
         if not message:
             raise ValueError("You have to provide PostingInterrupt message.")
         self.message = message

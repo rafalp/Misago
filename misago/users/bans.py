@@ -47,7 +47,7 @@ def get_user_ban(user, cache_versions):
     try:
         ban_cache = user.ban_cache
         if not ban_cache.is_valid(cache_versions):
-            _set_user_ban_cache(user)
+            _set_user_ban_cache(user, cache_versions)
     except BanCache.DoesNotExist:
         user.ban_cache = BanCache(user=user)
         user.ban_cache = _set_user_ban_cache(user, cache_versions)

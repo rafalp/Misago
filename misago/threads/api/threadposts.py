@@ -32,7 +32,7 @@ class ViewSet(viewsets.ViewSet):
     def get_thread(
         self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
     ):
-        return self.thread(
+        return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,

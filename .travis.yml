@@ -24,4 +24,4 @@ jobs:
         - pip install black pylint pylint-django
       script:
         - black --check devproject misago
-        - pylint misago/acl misago/admin misago/cache misago/conf misago/core
+        - pylint misago

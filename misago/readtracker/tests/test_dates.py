@@ -40,7 +40,7 @@ class ReadTrackerDatesTests(TestCase):
         self.assertTrue(returned_cutoff_date > valid_cutoff_date)
         self.assertEqual(returned_cutoff_date, user.joined_on)
 
-    def test_get_cutoff_date_user(self):
+    def test_get_cutoff_date_anonymous_user(self):
         """passing anonymous user to get_cutoff_date has no effect"""
         user = MockAnonymousUser()
 

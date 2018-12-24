@@ -145,7 +145,7 @@ REGISTRATION_VALIDATORS = list(map(import_string, validators_list))
 
 
 def raise_validation_error(*_):
-    raise ValidationError()
+    raise ValidationError("")  # Raised when message content can be discarded
 
 
 def validate_new_registration(request, cleaned_data, add_error=None, validators=None):

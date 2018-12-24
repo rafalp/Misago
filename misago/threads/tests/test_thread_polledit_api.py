@@ -307,7 +307,7 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
         # choices were updated
         self.assertEqual(len(response_json["choices"]), 3)
-        self.assertEqual(len(set([c["hash"] for c in response_json["choices"]])), 3)
+        self.assertEqual(len({c["hash"] for c in response_json["choices"]}), 3)
         self.assertEqual(
             [c["label"] for c in response_json["choices"]], ["Red", "Green", "Blue"]
         )
@@ -491,7 +491,7 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
         # choices were updated
         self.assertEqual(len(response_json["choices"]), 3)
-        self.assertEqual(len(set([c["hash"] for c in response_json["choices"]])), 3)
+        self.assertEqual(len({c["hash"] for c in response_json["choices"]}), 3)
         self.assertEqual(
             [c["label"] for c in response_json["choices"]], ["Red", "Green", "Blue"]
         )

@@ -81,8 +81,8 @@ class DataArchive:
 
     def add_dict(self, name, value, date=None, directory=None):
         text_lines = []
-        for key, value in value.items():
-            text_lines.append("%s: %s" % (key, value))
+        for key, item in value.items():
+            text_lines.append("%s: %s" % (key, item))
         text = "\n".join(text_lines)
         return self.add_text(name, text, date=date, directory=directory)
 

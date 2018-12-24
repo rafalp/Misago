@@ -3,7 +3,9 @@ from ..readtracker import categoriestracker
 from .models import Category
 
 
-def get_categories_tree(user, user_acl, parent=None, join_posters=False):
+def get_categories_tree(
+    user, user_acl, parent=None, join_posters=False
+):  # pylint: disable=too-many-branches
     if not user_acl["visible_categories"]:
         return []
 
