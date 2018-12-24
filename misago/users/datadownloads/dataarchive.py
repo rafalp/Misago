@@ -10,7 +10,7 @@ from ...core.utils import slugify
 FILENAME_MAX_LEN = 50
 
 
-class DataArchive(object):
+class DataArchive:
     def __init__(self, user, working_dir_path):
         self.user = user
         self.working_dir_path = working_dir_path

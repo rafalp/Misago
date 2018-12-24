@@ -6,7 +6,7 @@ from ..online.utils import make_users_status_aware
 from ..serializers import UserCardSerializer
 
 
-class Followers(object):
+class Followers:
     def __init__(self, request, profile, page=0, search=None):
         queryset = self.get_queryset(profile).select_related("rank").order_by("slug")
 

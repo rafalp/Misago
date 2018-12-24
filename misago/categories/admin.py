@@ -19,7 +19,7 @@ from .views.permsadmin import (
 )
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Categories section
         urlpatterns.namespace(r"^categories/", "categories")

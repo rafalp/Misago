@@ -38,5 +38,4 @@ def logout(request):
         auth.close_admin_session(request)
         messages.info(request, _("Your admin session has been closed."))
         return redirect("misago:index")
-    else:
-        return redirect("misago:admin:index")
+    return redirect("misago:admin:index")

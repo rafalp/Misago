@@ -28,7 +28,7 @@ from .views.admin.users import (
 djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Users section
         urlpatterns.namespace(r"^users/", "users")

@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 
-class Node(object):
+class Node:
     def __init__(self, name=None, icon=None, link=None):
         self.parent = None
         self.name = name
@@ -9,15 +9,15 @@ class Node(object):
         self.link = link
         self._children = []
         self._children_dict = {}
+        self._resolved_namespace = None
 
     @property
     def namespace(self):
-        try:
+        if self._resolved_namespace:
             return self._resolved_namespace
-        except AttributeError:
-            bits = self.link.split(":")
-            self._resolved_namespace = ":".join(bits[:-1])
 
+        bits = self.link.split(":")
+        self._resolved_namespace = ":".join(bits[:-1])
         return self._resolved_namespace
 
     def children(self):
@@ -39,13 +39,12 @@ class Node(object):
     def add_node(self, node, after=None, before=None):
         if after:
             return self.add_node_after(node, after)
-        elif before:
+        if before:
             return self.add_node_before(node, before)
-        else:
-            node.parent = self
-            self._children.append(node)
-            self._children_dict[node.link] = node
-            return True
+        node.parent = self
+        self._children.append(node)
+        self._children_dict[node.link] = node
+        return True
 
     def add_node_after(self, node, after):
         success = False
@@ -91,7 +90,7 @@ class Node(object):
         return False
 
 
-class AdminHierarchyBuilder(object):
+class AdminHierarchyBuilder:
     def __init__(self):
         self.nodes_record = []
         self.nodes_dict = {}
@@ -103,7 +102,10 @@ class AdminHierarchyBuilder(object):
         while self.nodes_record:
             iterations += 1
             if iterations > 512:
-                message = "Misago Admin hierarchy is invalid or too complex to resolve. Nodes left: %s"
+                message = (
+                    "Misago Admin hierarchy is invalid or too complex to resolve. "
+                    "Nodes left: %s"
+                )
                 raise ValueError(message % self.nodes_record)
 
             for index, node in enumerate(self.nodes_record):
@@ -143,7 +145,8 @@ class AdminHierarchyBuilder(object):
     ):
         if self.nodes_dict:
             raise RuntimeError(
-                "Misago admin site has already been initialized. You can't add new nodes to it."
+                "Misago admin site has already been initialized. "
+                "You can't add new nodes to it."
             )
 
         if after and before:

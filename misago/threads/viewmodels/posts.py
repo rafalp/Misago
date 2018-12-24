@@ -11,7 +11,7 @@ from ..utils import add_likes_to_posts
 __all__ = ["ThreadPosts"]
 
 
-class ViewModel(object):
+class ViewModel:
     def __init__(self, request, thread, page):
         try:
             thread_model = thread.unwrap()

@@ -10,7 +10,7 @@ from ..bans import get_user_ban
 User = get_user_model()
 
 
-class MisagoAuthMixin(object):
+class MisagoAuthMixin:
     error_messages = {
         "empty_data": _("Fill out both fields."),
         "invalid_login": _("Login or password is incorrect."),

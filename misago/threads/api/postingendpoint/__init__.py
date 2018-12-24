@@ -15,7 +15,7 @@ class PostingInterrupt(Exception):
         self.message = message
 
 
-class PostingEndpoint(object):
+class PostingEndpoint:
     START = 0
     REPLY = 1
     EDIT = 2
@@ -138,7 +138,7 @@ class PostingEndpoint(object):
             )
 
 
-class PostingMiddleware(object):
+class PostingMiddleware:
     """abstract middleware class"""
 
     def __init__(self, **kwargs):

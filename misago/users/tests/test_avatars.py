@@ -181,7 +181,7 @@ class AvatarSetterTests(TestCase):
         self.assertAvatarWasSet()
 
 
-class MockAvatarFile(object):
+class MockAvatarFile:
     def __init__(self, size=None, name=None, mime=None):
         self.size = size
         self.name = name

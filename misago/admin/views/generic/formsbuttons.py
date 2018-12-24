@@ -12,16 +12,16 @@ class TargetedView(AdminView):
         pass
 
     def get_target(self, kwargs):
-        if len(kwargs) == 1:
-            select_for_update = self.get_model().objects
-            if self.is_atomic:
-                select_for_update = select_for_update.select_for_update()
-            # Does not work on Python 3:
-            # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
-            (pk,) = kwargs.values()
-            return select_for_update.get(pk=pk)
-        else:
+        if len(kwargs) != 1:
             return self.get_model()()
+
+        select_for_update = self.get_model().objects
+        if self.is_atomic:
+            select_for_update = select_for_update.select_for_update()
+        # Does not work on Python 3:
+        # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
+        (pk,) = kwargs.values()
+        return select_for_update.get(pk=pk)
 
     def get_target_or_none(self, request, kwargs):
         try:
@@ -33,8 +33,7 @@ class TargetedView(AdminView):
         if self.is_atomic:
             with transaction.atomic():
                 return self.wrapped_dispatch(request, *args, **kwargs)
-        else:
-            return self.wrapped_dispatch(request, *args, **kwargs)
+        return self.wrapped_dispatch(request, *args, **kwargs)
 
     def wrapped_dispatch(self, request, *args, **kwargs):
         target = self.get_target_or_none(request, kwargs)
@@ -42,7 +41,9 @@ class TargetedView(AdminView):
             messages.error(request, self.message_404)
             return redirect(self.root_link)
 
-        error = self.check_permissions(request, target)
+        error = self.check_permissions(  # pylint: disable=assignment-from-no-return
+            request, target
+        )
         if error:
             messages.error(request, error)
             return redirect(self.root_link)
@@ -63,8 +64,7 @@ class FormView(TargetedView):
     def initialize_form(self, form, request):
         if request.method == "POST":
             return form(request.POST, request.FILES)
-        else:
-            return form()
+        return form()
 
     def handle_form(self, form, request):
         raise NotImplementedError(
@@ -80,10 +80,9 @@ class FormView(TargetedView):
 
             if response:
                 return response
-            elif "stay" in request.POST:
+            if "stay" in request.POST:
                 return redirect(request.path)
-            else:
-                return redirect(self.root_link)
+            return redirect(self.root_link)
 
         return self.render(request, {"form": form})
 
@@ -97,8 +96,7 @@ class ModelFormView(FormView):
     def initialize_form(self, form, request, target):
         if request.method == "POST":
             return form(request.POST, request.FILES, instance=target)
-        else:
-            return form(instance=target)
+        return form(instance=target)
 
     def handle_form(self, form, request, target):
         form.instance.save()
@@ -110,14 +108,14 @@ class ModelFormView(FormView):
         form = self.initialize_form(FormType, request, target)
 
         if request.method == "POST" and form.is_valid():
-            response = self.handle_form(form, request, target)
-
+            response = self.handle_form(  # pylint: disable=assignment-from-no-return
+                form, request, target
+            )
             if response:
                 return response
-            elif "stay" in request.POST:
+            if "stay" in request.POST:
                 return redirect(request.path)
-            else:
-                return redirect(self.root_link)
+            return redirect(self.root_link)
 
         return self.render(request, {"form": form, "target": target})
 

@@ -17,7 +17,8 @@ def sum_acls(result_acl, acls=None, roles=None, key=None, **permissions):
     if roles is not None:
         if not key:
             raise ValueError(
-                'You have to provide "key" argument if you are passing roles instead of acls'
+                'You have to provide "key" argument if you '
+                "are passing roles instead of acls"
             )
         acls = _roles_acls(key, roles)
 
@@ -46,10 +47,9 @@ def greater(a, b):
 def greater_or_zero(a, b):
     if a == 0:
         return a
-    elif b == 0:
+    if b == 0:
         return b
-    else:
-        return greater(a, b)
+    return greater(a, b)
 
 
 def lower(a, b):
@@ -59,7 +59,6 @@ def lower(a, b):
 def lower_non_zero(a, b):
     if a == 0:
         return b
-    elif b == 0:
+    if b == 0:
         return a
-    else:
-        return lower(a, b)
+    return lower(a, b)

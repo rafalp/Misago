@@ -1,5 +1,3 @@
-from django.utils.functional import SimpleLazyObject
-
 from . import useracl
 
 

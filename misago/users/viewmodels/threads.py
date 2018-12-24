@@ -7,7 +7,7 @@ from ...threads.utils import add_categories_to_items
 from ...threads.viewmodels import ThreadsRootCategory
 
 
-class UserThreads(object):
+class UserThreads:
     def __init__(self, request, profile, page=0):
         root_category = ThreadsRootCategory(request)
         threads_categories = [root_category.unwrap()] + root_category.subcategories

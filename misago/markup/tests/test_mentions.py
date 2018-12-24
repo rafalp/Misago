@@ -2,7 +2,7 @@ from ...users.test import AuthenticatedUserTestCase
 from ..mentions import add_mentions
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, user):
         self.user = user
 

@@ -3,7 +3,7 @@ from django.test import TestCase
 from ..middleware import RealIPMiddleware
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self, addr, forwarded_for=None):
         self.META = {"REMOTE_ADDR": addr}
 

@@ -13,7 +13,7 @@ __all__ = [
 ]
 
 
-class ProfileField(object):
+class ProfileField:
     """
     Basic profile field
     """

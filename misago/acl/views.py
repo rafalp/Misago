@@ -19,7 +19,7 @@ class RolesList(RoleAdmin, generic.ListView):
     ordering = (("name", None),)
 
 
-class RoleFormMixin(object):
+class RoleFormMixin:
     def real_dispatch(self, request, target):
         form = RoleForm(instance=target)
 
@@ -46,9 +46,8 @@ class RoleFormMixin(object):
 
                 if "stay" in request.POST:
                     return redirect(request.path)
-                else:
-                    return redirect(self.root_link)
-            elif form.is_valid() and len(perms_forms) != valid_forms:
+                return redirect(self.root_link)
+            if form.is_valid() and len(perms_forms) != valid_forms:
                 form.add_error(None, _("Form contains errors."))
 
         return self.render(

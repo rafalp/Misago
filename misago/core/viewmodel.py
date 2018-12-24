@@ -1,4 +1,4 @@
-class ViewModel(object):
+class ViewModel:
     def __getattr__(self, name):
         return getattr(self._model, name)
 

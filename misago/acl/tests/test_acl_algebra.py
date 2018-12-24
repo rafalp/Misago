@@ -5,14 +5,14 @@ def test_greatest_value_is_returned():
     assert algebra.greater(1, 3) == 3
     assert algebra.greater(4, 2) == 4
     assert algebra.greater(2, 2) == 2
-    assert algebra.greater(True, False) == True
+    assert algebra.greater(True, False) is True
 
 
 def test_greatest_or_zero_value_is_returned():
     assert algebra.greater_or_zero(1, 3) == 3
     assert algebra.greater_or_zero(4, 2) == 4
     assert algebra.greater_or_zero(2, 2) == 2
-    assert algebra.greater_or_zero(True, False) == False
+    assert algebra.greater_or_zero(True, False) is False
     assert algebra.greater_or_zero(2, 0) == 0
     assert algebra.greater_or_zero(0, 0) == 0
     assert algebra.greater_or_zero(0, 120) == 0
@@ -22,7 +22,7 @@ def test_lower_value_is_returned():
     assert algebra.lower(1, 3) == 1
     assert algebra.lower(4, 2) == 2
     assert algebra.lower(2, 2) == 2
-    assert algebra.lower(True, False) == False
+    assert algebra.lower(True, False) is False
 
 
 def test_lowest_non_zero_value_is_returned():

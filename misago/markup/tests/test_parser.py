@@ -4,7 +4,7 @@ from ...users.test import create_test_user
 from ..parser import parse
 
 
-class MockRequest(object):
+class MockRequest:
     scheme = "http"
 
     def __init__(self, user=None):
@@ -14,7 +14,7 @@ class MockRequest(object):
         return "test.com"
 
 
-class MockPoster(object):
+class MockPoster:
     username = "LoremIpsum"
     slug = "loremipsum"
 

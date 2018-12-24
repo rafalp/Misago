@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 import pytest
 
 from ...conf import settings
@@ -59,7 +60,7 @@ def test_accessing_providers_dict_before_load_raises_assertion_error():
 
 
 def test_getter_returns_registered_type_annotator():
-    class TestType(object):
+    class TestType:
         pass
 
     def test_annotator():

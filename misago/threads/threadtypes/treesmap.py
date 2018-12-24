@@ -3,7 +3,7 @@ from django.utils.module_loading import import_string
 from ...conf import settings
 
 
-class TreesMap(object):
+class TreesMap:
     """Object that maps trees to strategies"""
 
     def __init__(self, types_modules):

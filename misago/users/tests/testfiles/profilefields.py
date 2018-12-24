@@ -1,8 +1,8 @@
-class NofieldnameField(object):
+class NofieldnameField:
     pass
 
 
-class FieldnameField(object):
+class FieldnameField:
     fieldname = "hello"
 
 

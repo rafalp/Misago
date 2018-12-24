@@ -87,7 +87,7 @@ class ThreadGotoLastView(GotoView):
         return posts_queryset.order_by("id").last()
 
 
-class GetFirstUnreadPostMixin(object):
+class GetFirstUnreadPostMixin:
     def get_first_unread_post(self, user, posts_queryset):
         if user.is_authenticated:
             expired_posts = Q(posted_on__lt=get_cutoff_date(user))

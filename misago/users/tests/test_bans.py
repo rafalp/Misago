@@ -180,7 +180,7 @@ class UserBansTests(TestCase):
         self.assertFalse(self.user.ban_cache.is_banned)
 
 
-class MockRequest(object):
+class MockRequest:
     def __init__(self):
         self.user_ip = "127.0.0.1"
         self.session = {}

@@ -27,7 +27,7 @@ class CategoryRolesList(CategoryRoleAdmin, generic.ListView):
     ordering = (("name", None),)
 
 
-class RoleFormMixin(object):
+class RoleFormMixin:
     def real_dispatch(self, request, target):
         form = CategoryRoleForm(instance=target)
 

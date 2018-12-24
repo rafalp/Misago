@@ -14,10 +14,11 @@ def test_decorator_patches_all_users_acls_in_test(cache_versions, user):
 
 def test_decorator_removes_patches_after_test(cache_versions, user):
     @patch_user_acl({"is_patched": True})
-    def test_function(patch_user_acl):
+    def test_function():
         user_acl = useracl.get_user_acl(user, cache_versions)
         assert user_acl["is_patched"]
 
+    test_function()
     user_acl = useracl.get_user_acl(user, cache_versions)
     assert "is_patched" not in user_acl
 

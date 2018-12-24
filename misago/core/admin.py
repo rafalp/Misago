@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 
 
-class MisagoAdminExtension(object):
+class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace(r"^system/", "system")
 

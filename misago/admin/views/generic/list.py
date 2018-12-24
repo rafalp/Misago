@@ -60,7 +60,9 @@ class ListView(AdminView):
     def get_queryset(self):
         return self.get_model().objects.all()
 
-    def dispatch(self, request, *args, **kwargs):
+    def dispatch(
+        self, request, *args, **kwargs
+    ):  # pylint: disable=too-many-branches, too-many-locals
         mass_actions_list = self.mass_actions or []
         extra_actions_list = self.extra_actions or []
 
@@ -90,8 +92,7 @@ class ListView(AdminView):
                 response = self.handle_mass_action(request, context)
                 if response:
                     return response
-                else:
-                    return redirect(request.path)
+                return redirect(request.path)
             except MassActionError as e:
                 messages.error(request, e.args[0])
 
@@ -214,8 +215,6 @@ class ListView(AdminView):
         for method in ("GET", "session"):
             if methods.get(method):
                 return methods.get(method)
-        else:
-            return {}
 
     def apply_filtering_on_context(self, context, active_filters, search_form):
         context["active_filters"] = active_filters
@@ -248,11 +247,10 @@ class ListView(AdminView):
         return self.clean_ordering(new_ordering)
 
     def clean_ordering(self, new_ordering):
-        for order_by, _ in self.ordering:
+        for order_by, _ in self.ordering:  # pylint: disable=not-an-iterable
             if order_by == new_ordering:
                 return order_by
-        else:
-            return None
+        return None
 
     def get_ordering_methods(self, request):
         return {
@@ -267,7 +265,7 @@ class ListView(AdminView):
                 return methods.get(method)
 
     def set_ordering_in_context(self, context, method):
-        for order_by, name in self.ordering:
+        for order_by, name in self.ordering:  # pylint: disable=not-an-iterable
             order_as_dict = {
                 "type": "desc" if order_by[0] == "-" else "asc",
                 "order_by": order_by,
@@ -306,11 +304,10 @@ class ListView(AdminView):
             return action_callable(request, action_queryset)
 
     def select_mass_action(self, action):
-        for definition in self.mass_actions:
+        for definition in self.mass_actions:  # pylint: disable=not-an-iterable
             if definition["action"] == action:
                 return definition
-        else:
-            raise MassActionError(_("Action is not allowed."))
+        raise MassActionError(_("Action is not allowed."))
 
     # Querystring builder
     def make_querystring(self, context):

@@ -13,7 +13,7 @@ User = get_user_model()
 USER_IP = "13.41.51.41"
 
 
-class MockRequest(object):
+class MockRequest:
     user_ip = USER_IP
 
     def __init__(self, user):

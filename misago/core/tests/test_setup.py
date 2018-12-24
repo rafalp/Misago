@@ -6,7 +6,7 @@ from django.utils.encoding import smart_str
 from .. import setup
 
 
-class MockParser(object):
+class MockParser:
     def error(self, message):
         raise ValueError(message)
 

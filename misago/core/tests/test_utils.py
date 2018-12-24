@@ -118,7 +118,7 @@ return:     %s
             self.assertEqual(output, html, assertion_message)
 
 
-class MockRequest(object):
+class MockRequest:
     scheme = "http"
 
     def __init__(self, method, meta=None, post=None):

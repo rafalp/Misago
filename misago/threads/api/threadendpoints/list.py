@@ -10,7 +10,7 @@ from ...viewmodels import (
 )
 
 
-class ThreadsList(object):
+class ThreadsList:
     threads = None
 
     def __call__(self, request, **kwargs):

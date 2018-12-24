@@ -4,7 +4,7 @@ from django.utils import translation
 from .. import context_processors
 
 
-class MockRequest(object):
+class MockRequest:
     path = "/"
 
     def __init__(self, secure, host):
@@ -18,7 +18,7 @@ class MockRequest(object):
         return self.host
 
 
-class MetaMockRequest(object):
+class MetaMockRequest:
     def __init__(self, meta):
         self.META = meta
 

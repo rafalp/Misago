@@ -32,8 +32,7 @@ class YesNoSwitchBase(TypedChoiceField):
         """normalize bools to binary 1/0 so field works on them too"""
         if value in (True, "True", "true", 1, "1"):
             return 1
-        else:
-            return 0
+        return 0
 
     def clean(self, value):
         return self.prepare_value(value)

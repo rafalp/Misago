@@ -4,7 +4,7 @@ from ..online.utils import make_users_status_aware
 from ..serializers import UserCardSerializer
 
 
-class ActivePosters(object):
+class ActivePosters:
     def __init__(self, request):
         ranking = get_active_posters_ranking()
         make_users_status_aware(request, ranking["users"], fetch_state=True)

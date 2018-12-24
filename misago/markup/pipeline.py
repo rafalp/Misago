@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from ..conf import settings
 
 
-class MarkupPipeline(object):
+class MarkupPipeline:
     """small framework for extending parser"""
 
     def extend_markdown(self, md):

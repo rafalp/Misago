@@ -7,7 +7,7 @@ from ..admin.forms import YesNoSwitch
 __all__ = ["ChangeSettingsForm"]
 
 
-class ValidateChoicesNum(object):
+class ValidateChoicesNum:
     def __init__(self, min_choices=0, max_choices=0):
         self.min_choices = min_choices
         self.max_choices = max_choices
