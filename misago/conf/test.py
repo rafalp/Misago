@@ -16,7 +16,7 @@ class override_dynamic_settings:
     def __call__(self, f):
         @wraps(f)
         def test_function_wrapper(*args, **kwargs):
-            with self as context:
+            with self:
                 return f(*args, **kwargs)
 
         return test_function_wrapper

@@ -4,8 +4,7 @@ from . import hydrators
 def get_setting_value(setting):
     if not setting.dry_value and setting.default_value:
         return hydrators.hydrate_value(setting.python_type, setting.default_value)
-    else:
-        return hydrators.hydrate_value(setting.python_type, setting.dry_value)
+    return hydrators.hydrate_value(setting.python_type, setting.dry_value)
 
 
 def set_setting_value(setting, new_value):

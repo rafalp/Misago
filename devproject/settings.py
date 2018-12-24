@@ -1,3 +1,4 @@
+# pylint: disable=line-too-long
 """
 Django settings for dev project.
 
@@ -339,8 +340,8 @@ MISAGO_SEARCH_CONFIG = "simple"
 
 
 # Allow users to download their personal data
-# Enables users to learn what data about them is being held by the site without having to contact
-# site's administrators.
+# Enables users to learn what data about them is being held by the site without having
+# to contact site's administrators.
 
 MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
 

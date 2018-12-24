@@ -1,3 +1,4 @@
+# pylint: disable=line-too-long
 """
 Default Misago settings. Override these with settings in the module pointed to
 by the DJANGO_SETTINGS_MODULE environment variable.
@@ -5,7 +6,6 @@ by the DJANGO_SETTINGS_MODULE environment variable.
 If you rely on any of those in your code, make sure you use `misago.conf.settings`
 instead of Django's `django.conf.settings`.
 """
-
 
 # Complete HTTP address of your Misago installation
 
@@ -36,8 +36,8 @@ MISAGO_ANONYMOUS_USERNAME = "Ghost"
 
 
 # Allow users to download their personal data
-# Enables users to learn what data about them is being held by the site without having to contact
-# site's administrators.
+# Enables users to learn what data about them is being held by the site without having
+# to contact site's administrators.
 
 MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
 
