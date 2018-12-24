@@ -101,7 +101,8 @@ def validate_filesize(upload, filetype, hard_limit):
 
     if filetype.size_limit and upload.size > filetype.size_limit * 1024:
         message = _(
-            "You can't upload files of this type larger than %(limit)s (your file has %(upload)s)."
+            "You can't upload files of this type larger "
+            "than %(limit)s (your file has %(upload)s)."
         )
         raise ValidationError(
             message

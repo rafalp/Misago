@@ -407,7 +407,8 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             response_json,
             {
                 "weight": [
-                    "You don't have permission to pin threads globally in this category."
+                    "You don't have permission to pin threads "
+                    "globally in this category."
                 ]
             },
         )

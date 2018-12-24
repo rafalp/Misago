@@ -30,7 +30,9 @@ class ThreadAddAclApiTests(ThreadPatchApiTestCase):
         self.assertTrue(response_json["acl"])
 
     def test_add_acl_false(self):
-        """if value is false, api won't add acl to the response, but will set empty key"""
+        """
+        if value is false, api won't add acl to the response, but will set empty key
+        """
         response = self.patch(
             self.api_link, [{"op": "add", "path": "acl", "value": False}]
         )
@@ -1048,7 +1050,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    'You don\'t have permission to mark best answers in the "First category" category.'
+                    "You don't have permission to mark best answers "
+                    'in the "First category" category.'
                 ],
             },
         )
@@ -1071,8 +1074,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to mark best answer in this thread because you didn't "
-                    "start it."
+                    "You don't have permission to mark best answer in this thread "
+                    "because you didn't start it."
                 ],
             },
         )
@@ -1108,8 +1111,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to mark best answer in this thread because its "
-                    'category "First category" is closed.'
+                    "You don't have permission to mark best answer in this thread "
+                    'because its category "First category" is closed.'
                 ],
             },
         )
@@ -1149,8 +1152,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You can't mark best answer in this thread because it's closed and you don't have "
-                    "permission to open it."
+                    "You can't mark best answer in this thread because it's closed and "
+                    "you don't have permission to open it."
                 ],
             },
         )
@@ -1356,8 +1359,8 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to mark this post as best answer because a moderator "
-                    "has protected it."
+                    "You don't have permission to mark this post as best answer "
+                    "because a moderator has protected it."
                 ],
             },
         )
@@ -1441,7 +1444,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
 
     @patch_category_acl({"can_mark_best_answers": 0, "can_change_marked_answers": 2})
     def test_change_best_answer_no_permission_to_mark(self):
-        """api validates permission to mark best answers before allowing answer change"""
+        """
+        api validates permission to mark best answers before allowing answer change
+        """
         best_answer = test.reply_thread(self.thread)
 
         response = self.patch(
@@ -1454,7 +1459,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    'You don\'t have permission to mark best answers in the "First category" category.'
+                    "You don't have permission to mark best answers in the "
+                    '"First category" category.'
                 ],
             },
         )
@@ -1477,8 +1483,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to change this thread's marked answer because it's "
-                    'in the "First category" category.'
+                    "You don't have permission to change this thread's marked answer "
+                    'because it\'s in the "First category" category.'
                 ],
             },
         )
@@ -1501,8 +1507,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to change this thread's marked answer because you are "
-                    "not a thread starter."
+                    "You don't have permission to change this thread's marked answer "
+                    "because you are not a thread starter."
                 ],
             },
         )
@@ -1528,7 +1534,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_change_best_answer_timelimit_out_of_time(self):
-        """api validates permission for starter to change best answers within timelimit"""
+        """
+        api validates permission for starter to change best answers within timelimit
+        """
         best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
@@ -1545,8 +1553,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to change best answer that was marked for more than "
-                    "5 minutes."
+                    "You don't have permission to change best answer that was marked "
+                    "for more than 5 minutes."
                 ],
             },
         )
@@ -1562,7 +1570,9 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_change_best_answer_timelimit(self):
-        """api validates permission for starter to change best answers within timelimit"""
+        """
+        api validates permission for starter to change best answers within timelimit
+        """
         best_answer = test.reply_thread(self.thread)
 
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=1)
@@ -1599,8 +1609,8 @@ class ThreadChangeBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to change this thread's best answer because a "
-                    "moderator has protected it."
+                    "You don't have permission to change this thread's best answer "
+                    "because a moderator has protected it."
                 ],
             },
         )
@@ -1727,7 +1737,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "This post can't be unmarked because it's not currently marked as best answer."
+                    "This post can't be unmarked because it's not currently marked "
+                    "as best answer."
                 ],
             },
         )
@@ -1748,8 +1759,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    'You don\'t have permission to unmark threads answers in the "First category" '
-                    "category."
+                    "You don't have permission to unmark threads answers in "
+                    'the "First category" category.'
                 ],
             },
         )
@@ -1770,8 +1781,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to unmark this best answer because you are not a "
-                    "thread starter."
+                    "You don't have permission to unmark this best answer because "
+                    "you are not a thread starter."
                 ],
             },
         )
@@ -1797,7 +1808,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_unmark_best_answer_timelimit(self):
-        """api validates if starter has permission to unmark best answer within time limit"""
+        """
+        api validates if starter has permission to unmark best answer within time limit
+        """
         self.thread.best_answer_marked_on = timezone.now() - timedelta(minutes=6)
         self.thread.starter = self.user
         self.thread.save()
@@ -1812,8 +1825,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to unmark best answer that was marked for more than "
-                    "5 minutes."
+                    "You don't have permission to unmark best answer that was marked "
+                    "for more than 5 minutes."
                 ],
             },
         )
@@ -1839,7 +1852,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_unmark_best_answer_closed_category_no_permission(self):
-        """api validates if user has permission to unmark best answer in closed category"""
+        """
+        api validates if user has permission to unmark best answer in closed category
+        """
         self.category.is_closed = True
         self.category.save()
 
@@ -1853,8 +1868,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to unmark this best answer because its category "
-                    '"First category" is closed.'
+                    "You don't have permission to unmark this best answer because "
+                    'its category "First category" is closed.'
                 ],
             },
         )
@@ -1870,7 +1885,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_unmark_best_answer_closed_category(self):
-        """api validates if user has permission to unmark best answer in closed category"""
+        """
+        api validates if user has permission to unmark best answer in closed category
+        """
         self.category.is_closed = True
         self.category.save()
 
@@ -1888,7 +1905,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_unmark_best_answer_closed_thread_no_permission(self):
-        """api validates if user has permission to unmark best answer in closed thread"""
+        """
+        api validates if user has permission to unmark best answer in closed thread
+        """
         self.thread.is_closed = True
         self.thread.save()
 
@@ -1902,8 +1921,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You can't unmark this thread's best answer because it's closed and you don't "
-                    "have permission to open it."
+                    "You can't unmark this thread's best answer because it's closed "
+                    "and you don't have permission to open it."
                 ],
             },
         )
@@ -1919,7 +1938,9 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
         }
     )
     def test_unmark_best_answer_closed_thread(self):
-        """api validates if user has permission to unmark best answer in closed thread"""
+        """
+        api validates if user has permission to unmark best answer in closed thread
+        """
         self.thread.is_closed = True
         self.thread.save()
 
@@ -1951,8 +1972,8 @@ class ThreadUnmarkBestAnswerApiTests(ThreadPatchApiTestCase):
             {
                 "id": self.thread.id,
                 "detail": [
-                    "You don't have permission to unmark this thread's best answer because a "
-                    "moderator has protected it."
+                    "You don't have permission to unmark this thread's best answer "
+                    "because a moderator has protected it."
                 ],
             },
         )

@@ -36,7 +36,8 @@ def reset_password_form(request, pk, token):
     try:
         if request.user.is_authenticated and request.user.id != requesting_user.id:
             message = _(
-                "%(user)s, your link has expired. Please request new link and try again."
+                "%(user)s, your link has expired. "
+                "Please request new link and try again."
             )
             raise ResetError(message % {"user": requesting_user.username})
 

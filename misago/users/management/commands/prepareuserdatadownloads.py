@@ -29,6 +29,7 @@ class Command(BaseCommand):
 
         cache_versions = get_cache_versions()
         dynamic_settings = DynamicSettings(cache_versions)
+        expires_in = settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS
 
         downloads_prepared = 0
         queryset = DataDownload.objects.select_related("user")
@@ -45,7 +46,7 @@ class Command(BaseCommand):
                     "misago/emails/data_download",
                     context={
                         "data_download": data_download,
-                        "expires_in": settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS,
+                        "expires_in": expires_in,
                         "settings": dynamic_settings,
                     },
                 )

@@ -168,7 +168,10 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
 
     def test_add_user(self):
-        """adding user to thread add user to thread as participant, sets event and emails him"""
+        """
+        adding user to thread add user to thread as participant,
+        sets event and emails him
+        """
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
         self.patch(

@@ -47,7 +47,8 @@ def thread_start_editor(request):
             }
         )
 
-    # list only categories that allow new threads, or contains subcategory that allows one
+    # list only categories that allow new threads,
+    # or contains subcategory that allows one
     cleaned_categories = []
     for category in reversed(categories):
         if category["id"] in available:
@@ -56,7 +57,8 @@ def thread_start_editor(request):
     if not cleaned_categories:
         raise PermissionDenied(
             _(
-                "No categories that allow new threads are available to you at the moment."
+                "No categories that allow new threads "
+                "are available to you at the moment."
             )
         )
 

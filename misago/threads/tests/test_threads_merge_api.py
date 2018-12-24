@@ -371,7 +371,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             response.json(),
             {
                 "weight": [
-                    "You don't have permission to pin threads globally in this category."
+                    "You don't have permission to pin threads globally "
+                    "in this category."
                 ]
             },
         )

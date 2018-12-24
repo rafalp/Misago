@@ -59,9 +59,10 @@ class MentionsTests(AuthenticatedUserTestCase):
             self.user.username
         )
 
-        after = '<p>Hello <a href="{0}">@{1}</a> and <a href="{0}">@{1}</a>, how is it going?</p>'.format(
-            self.user.get_absolute_url(), self.user.username
-        )
+        after = (
+            # pylint: disable=line-too-long
+            '<p>Hello <a href="{0}">@{1}</a> and <a href="{0}">@{1}</a>, how is it going?</p>'
+        ).format(self.user.get_absolute_url(), self.user.username)
 
         result = {"parsed_text": before, "mentions": []}
 
@@ -75,9 +76,10 @@ class MentionsTests(AuthenticatedUserTestCase):
             self.user.username
         )
 
-        after = '<p>Hello <a href="{0}">@{1}</a></p><p><a href="{0}">@{1}</a>, how is it going?</p>'.format(
-            self.user.get_absolute_url(), self.user.username
-        )
+        after = (
+            # pylint: disable=line-too-long
+            '<p>Hello <a href="{0}">@{1}</a></p><p><a href="{0}">@{1}</a>, how is it going?</p>'
+        ).format(self.user.get_absolute_url(), self.user.username)
 
         result = {"parsed_text": before, "mentions": []}
 

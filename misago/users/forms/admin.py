@@ -215,14 +215,12 @@ class EditUserForm(UserBaseForm):
 
         length_limit = self.settings.signature_length_max
         if len(data) > length_limit:
-            raise forms.ValidationError(
-                ngettext(
-                    "Signature can't be longer than %(limit)s character.",
-                    "Signature can't be longer than %(limit)s characters.",
-                    length_limit,
-                )
-                % {"limit": length_limit}
+            message = ngettext(
+                "Signature can't be longer than %(limit)s character.",
+                "Signature can't be longer than %(limit)s characters.",
+                length_limit,
             )
+            raise forms.ValidationError(message % {"limit": length_limit})
 
         return data
 
@@ -504,9 +502,10 @@ class BanForm(forms.ModelForm):
     registration_only = YesNoSwitch(
         label=_("Restrict this ban to registrations"),
         help_text=_(
-            "Changing this to yes will make this ban check be only performed on registration "
-            "step. This is good if you want to block certain registrations like ones from "
-            "recently comprimised e-mail providers, without harming existing users."
+            "Changing this to yes will make this ban check be only performed on "
+            "registration step. This is good if you want to block certain "
+            "registrations like ones from recently comprimised e-mail providers, "
+            "without harming existing users."
         ),
     )
     banned_value = forms.CharField(
@@ -628,9 +627,10 @@ class RequestDataDownloadsForm(forms.Form):
         label=_("Usernames or emails"),
         help_text=_(
             "Enter every item in new line. Duplicates will be ignored. "
-            "This field is case insensitive. Depending on site configuration and amount of data "
-            "to archive it may take up to few days for requests to complete. E-mail "
-            "will notification will be sent to every user once their download is ready."
+            "This field is case insensitive. Depending on site configuration and "
+            "amount of data to archive it may take up to few days for requests to "
+            "complete. E-mail will notification will be sent to every user once their "
+            "download is ready."
         ),
         widget=forms.Textarea,
     )

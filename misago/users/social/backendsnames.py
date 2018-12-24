@@ -1,6 +1,7 @@
 """
 Python Social Auth doesn't provide information about proper names for OAuth sites,
-so we are using this file for overrides whenever name is different than `provider.name.title`
+so we are using this file to define those for displaying the UI.
+If provider is not defined here, it's name is created with `provider.name.title()`
 """
 
 BACKENDS_NAMES = {

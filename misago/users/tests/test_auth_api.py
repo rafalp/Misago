@@ -581,6 +581,8 @@ class ChangePasswordApiTests(TestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "This password is too short. It must contain at least 7 characters."
+                "detail": (
+                    "This password is too short. It must contain at least 7 characters."
+                )
             },
         )

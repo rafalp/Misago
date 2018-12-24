@@ -90,7 +90,9 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     @patch_user_acl({"can_start_polls": 1})
     def test_other_user_thread_no_permission(self):
-        """api validates that user has permission to start poll in other user's thread"""
+        """
+        api validates that user has permission to start poll in other user's thread
+        """
         self.thread.starter = None
         self.thread.save()
 
@@ -102,7 +104,9 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     @patch_user_acl({"can_start_polls": 2})
     def test_other_user_thread(self):
-        """api validates that user has permission to start poll in other user's thread"""
+        """
+        api validates that user has permission to start poll in other user's thread
+        """
         self.thread.starter = None
         self.thread.save()
 

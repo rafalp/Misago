@@ -112,7 +112,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "to": [
-                    "You can't include yourself on the list of users to invite to new thread."
+                    "You can't include yourself on the list "
+                    "of users to invite to new thread."
                 ]
             },
         )
@@ -149,7 +150,8 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
             response.json(),
             {
                 "to": [
-                    "You can't add more than 3 users to private thread (you've added 50)."
+                    "You can't add more than 3 users to private thread "
+                    "(you've added 50)."
                 ]
             },
         )

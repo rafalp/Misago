@@ -118,8 +118,8 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
 
     def mark_account_for_deletion(self, request):
         """
-        Deleting user account can be costful, so just mark account for deletion, deactivate it
-        and sign user out.
+        Deleting user account can be costful, so just mark account for deletion,
+        deactivate it and sign user out.
         """
         profile = self.context["user"]
         allow_delete_own_account(request.user, profile)

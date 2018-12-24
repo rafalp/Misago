@@ -191,7 +191,9 @@ class ThreadPostsVisibilityTests(ThreadViewTestCase):
             self.assertContains(response, post.parsed)
 
     def test_unapproved_post_visibility(self):
-        """unapproved post renders for its author and users with perm to approve content"""
+        """
+        unapproved post renders for its author and users with perm to approve content
+        """
         post = test.reply_thread(self.thread, is_unapproved=True)
 
         # post is hdden because we aren't its author nor user with permission to approve

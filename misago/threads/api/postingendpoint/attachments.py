@@ -59,7 +59,8 @@ class AttachmentsSerializer(serializers.Serializer):
                     self.removed_attachments.append(attachment)
                 else:
                     message = _(
-                        'You don\'t have permission to remove "%(attachment)s" attachment.'
+                        "You don't have permission to remove "
+                        '"%(attachment)s" attachment.'
                     )
                     raise serializers.ValidationError(
                         message % {"attachment": attachment.filename}
@@ -123,6 +124,7 @@ class AttachmentsSerializer(serializers.Serializer):
 def validate_attachments_count(data):
     total_attachments = len(data)
     if total_attachments > settings.MISAGO_POST_ATTACHMENTS_LIMIT:
+        # pylint: disable=line-too-long
         message = ngettext(
             "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
             "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",

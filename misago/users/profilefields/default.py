@@ -48,8 +48,8 @@ class SkypeIdField(basefields.TextProfileField):
     fieldname = "skype"
     label = _("Skype ID")
     help_text = _(
-        "Entering your Skype ID in this field may invite other users to contact you over "
-        "the Skype instead of via private threads."
+        "Entering your Skype ID in this field may invite other users to "
+        "contact you over the Skype instead of via private threads."
     )
 
 
@@ -59,9 +59,9 @@ class TwitterHandleField(basefields.TextProfileField):
 
     def get_help_text(self, user):
         return _(
-            "If you own Twitter account, here you may enter your Twitter handle for other users "
-            'to find you. Starting your handle with "@" sign is optional. Either "@%(slug)s" or '
-            '"%(slug)s" are valid values.'
+            "If you own Twitter account, here you may enter your Twitter handle for "
+            'other users to find you. Starting your handle with "@" sign is optional. '
+            'Either "@%(slug)s" or "%(slug)s" are valid values.'
         ) % {"slug": user.slug}
 
     def get_value_display_data(self, request, user, value):

@@ -272,7 +272,8 @@ def patch_unmark_best_answer(request, thread, value):
     if not post.is_best_answer:
         raise PermissionDenied(
             _(
-                "This post can't be unmarked because it's not currently marked as best answer."
+                "This post can't be unmarked because "
+                "it's not currently marked as best answer."
             )
         )
 

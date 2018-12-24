@@ -44,7 +44,8 @@ class DeleteAttachmentType(AttachmentTypeAdmin, generic.ButtonView):
     def check_permissions(self, request, target):
         if target.attachment_set.exists():
             message = _(
-                'Attachment type "%(name)s" has associated attachments and can\'t be deleted.'
+                'Attachment type "%(name)s" has '
+                "associated attachments and can't be deleted."
             )
             return message % {"name": target.name}
 

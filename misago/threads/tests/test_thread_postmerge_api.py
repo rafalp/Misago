@@ -414,7 +414,10 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "Post marked as best answer can't be merged with thread's first post."
+                "detail": (
+                    "Post marked as best answer can't be "
+                    "merged with thread's first post."
+                )
             },
         )
 

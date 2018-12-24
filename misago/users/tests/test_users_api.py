@@ -454,7 +454,10 @@ class UserBanTests(AuthenticatedUserTestCase):
 
 
 class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
-    """tests for user request own account delete RPC (POST to /api/users/1/delete-own-account/)"""
+    """
+    tests for user request own account delete RPC
+    (POST to /api/users/1/delete-own-account/)
+    """
 
     def setUp(self):
         super().setUp()
@@ -462,7 +465,9 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
 
     @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
     def test_delete_own_account_feature_disabled(self):
-        """raises 403 error when attempting to delete own account but feature is disabled"""
+        """
+        raises 403 error when attempting to delete own account but feature is disabled
+        """
         response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
 
         self.assertEqual(response.status_code, 403)
@@ -482,7 +487,9 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "You can't delete your account because you are an administrator."
+                "detail": (
+                    "You can't delete your account because you are an administrator."
+                )
             },
         )
 
@@ -500,7 +507,9 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "You can't delete your account because you are an administrator."
+                "detail": (
+                    "You can't delete your account because you are an administrator."
+                )
             },
         )
 
@@ -509,7 +518,9 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertFalse(self.user.is_deleting_account)
 
     def test_delete_own_account_invalid_password(self):
-        """raises 400 error when attempting to delete own account with invalid password"""
+        """
+        raises 400 error when attempting to delete own account with invalid password
+        """
         response = self.client.post(self.api_link, {"password": "hello"})
         self.assertEqual(response.status_code, 400)
         self.assertEqual(

@@ -118,7 +118,8 @@ class PostingEndpoint:
                 obj.pre_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
             raise ValueError(
-                "Posting process can only be interrupted from within interrupt_posting method"
+                "Posting process can only be interrupted "
+                "from within interrupt_posting method"
             )
 
         try:
@@ -134,7 +135,8 @@ class PostingEndpoint:
                 obj.post_save(self._serializers.get(middleware))
         except PostingInterrupt as e:
             raise ValueError(
-                "Posting process can only be interrupted from within interrupt_posting method"
+                "Posting process can only be interrupted "
+                "from within interrupt_posting method"
             )
 
 

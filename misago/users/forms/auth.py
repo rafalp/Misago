@@ -18,8 +18,8 @@ class MisagoAuthMixin:
             "You have to activate your account before you will be able to sign in."
         ),
         "inactive_admin": _(
-            "Your account has to be activated by site administrator before you will be able "
-            "to sign in."
+            "Your account has to be activated by site administrator "
+            "before you will be able to sign in."
         ),
     }
 

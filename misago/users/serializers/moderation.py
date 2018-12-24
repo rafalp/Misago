@@ -32,13 +32,11 @@ class ModerateSignatureSerializer(serializers.ModelSerializer):
     def validate_signature(self, value):
         length_limit = settings.signature_length_max
         if len(value) > length_limit:
-            raise serializers.ValidationError(
-                ngettext(
-                    "Signature can't be longer than %(limit)s character.",
-                    "Signature can't be longer than %(limit)s characters.",
-                    length_limit,
-                )
-                % {"limit": length_limit}
+            message = ngettext(
+                "Signature can't be longer than %(limit)s character.",
+                "Signature can't be longer than %(limit)s characters.",
+                length_limit,
             )
+            raise serializers.ValidationError(message % {"limit": length_limit})
 
         return value

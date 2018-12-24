@@ -81,7 +81,9 @@ class ParseMarkupApiTests(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "Posted message should be at least 5 characters long (it has 3)."
+                "detail": (
+                    "Posted message should be at least 5 characters long (it has 3)."
+                )
             },
         )
 

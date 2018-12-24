@@ -163,7 +163,8 @@ class MergePostsSerializer(serializers.Serializer):
             if posts[0].is_first_post and post.is_best_answer:
                 raise serializers.ValidationError(
                     _(
-                        "Post marked as best answer can't be merged with thread's first post."
+                        "Post marked as best answer can't be merged with "
+                        "thread's first post."
                     )
                 )
 
@@ -311,7 +312,8 @@ class NewThreadSerializer(serializers.Serializer):
             if weight == 2:
                 raise ValidationError(
                     _(
-                        "You don't have permission to pin threads globally in this category."
+                        "You don't have permission to pin threads globally "
+                        "in this category."
                     )
                 )
             else:

@@ -87,8 +87,6 @@ class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
 
 
 class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
-    """category roles view for assinging roles to category, add link to it in categories list"""
-
     templates_dir = "misago/admin/categoryroles"
     template = "categoryroles.html"
 
@@ -148,8 +146,6 @@ CategoriesList.add_item_action(
 
 
 class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
-    """role categories view for assinging categories to role, add link to it in user roles list"""
-
     templates_dir = "misago/admin/categoryroles"
     template = "rolecategories.html"
 

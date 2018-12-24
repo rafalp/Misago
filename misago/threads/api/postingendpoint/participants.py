@@ -49,7 +49,8 @@ class ParticipantsSerializer(serializers.Serializer):
             if clean_name == self.context["user"].slug:
                 raise serializers.ValidationError(
                     _(
-                        "You can't include yourself on the list of users to invite to new thread."
+                        "You can't include yourself on the "
+                        "list of users to invite to new thread."
                     )
                 )
 
@@ -61,6 +62,7 @@ class ParticipantsSerializer(serializers.Serializer):
 
         max_participants = self.context["user_acl"]["max_private_thread_participants"]
         if max_participants and len(clean_usernames) > max_participants:
+            # pylint: disable=line-too-long
             message = ngettext(
                 "You can't add more than %(users)s user to private thread (you've added %(added)s).",
                 "You can't add more than %(users)s users to private thread (you've added %(added)s).",
