@@ -40,15 +40,13 @@ def banned(request, exception):
 def permission_denied(request, exception):
     if request.is_ajax():
         return _ajax_error(403, exception, _("Permission denied."))
-    else:
-        return _error_page(request, 403, exception)
+    return _error_page(request, 403, exception)
 
 
 def page_not_found(request, exception):
     if request.is_ajax():
         return _ajax_error(404, exception, "Not found.")
-    else:
-        return _error_page(request, 404, exception)
+    return _error_page(request, 404, exception)
 
 
 def social_auth_failed(request, exception):
@@ -61,6 +59,7 @@ def social_auth_failed(request, exception):
         backend_name = exception.backend_name
     except AttributeError:
         pass
+
     try:
         exception_backend = exception.backend
         backend_name = get_social_auth_backend_name(exception_backend.name)
@@ -69,7 +68,8 @@ def social_auth_failed(request, exception):
 
     if isinstance(exception, social_exceptions.NotAllowedToDisconnect):
         message = _(
-            "A problem was encountered when disconnecting your account from the remote site."
+            "A problem was encountered when disconnecting your account "
+            "from the remote site."
         )
         help_text = _(
             "You are not allowed to disconnect your account from the other site, "
@@ -108,10 +108,10 @@ def social_auth_failed(request, exception):
 def csrf_failure(request, reason=""):
     if request.is_ajax():
         return _ajax_error(403, _("Request authentication is invalid."))
-    else:
-        response = render(request, "misago/errorpages/csrf_failure.html")
-        response.status_code = 403
-        return response
+
+    response = render(request, "misago/errorpages/csrf_failure.html")
+    response.status_code = 403
+    return response
 
 
 def not_allowed(request):
@@ -123,8 +123,7 @@ def shared_403_exception_handler(f):
     def page_decorator(request, *args, **kwargs):
         if is_request_to_misago(request):
             return permission_denied(request, *args, **kwargs)
-        else:
-            return f(request, *args, **kwargs)
+        return f(request, *args, **kwargs)
 
     return page_decorator
 
@@ -133,7 +132,6 @@ def shared_404_exception_handler(f):
     def page_decorator(request, *args, **kwargs):
         if is_request_to_misago(request):
             return page_not_found(request, *args, **kwargs)
-        else:
-            return f(request, *args, **kwargs)
+        return f(request, *args, **kwargs)
 
     return page_decorator

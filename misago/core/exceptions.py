@@ -1,3 +1,4 @@
+# pylint: disable=super-init-not-called
 from django.core.exceptions import PermissionDenied
 from social_core.exceptions import AuthException
 
@@ -35,10 +36,6 @@ class SocialAuthBanned(AuthException):
 class ExplicitFirstPage(Exception):
     """The url that was used to reach view contained explicit first page"""
 
-    pass
-
 
 class OutdatedSlug(Exception):
     """The url that was used to reach view contained outdated slug"""
-
-    pass

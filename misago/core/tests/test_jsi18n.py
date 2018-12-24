@@ -30,7 +30,7 @@ class JsI18nUrlTests(TestCase):
                     response = self.client.get(reverse("django-i18n"))
                     if response.status_code != 200:
                         failed_languages.append(language)
-            except:
+            except:  # pylint: disable=bare-except
                 failed_languages.append(language)
 
         if failed_languages:

@@ -10,7 +10,9 @@ max-line-length=88
 disable=
     abstract-method,
     arguments-differ,
+    attribute-defined-outside-init,
     bad-continuation,
+    duplicate-code,
     expression-not-assigned,
     fixme,
     inconsistent-return-statements,
@@ -18,6 +20,7 @@ disable=
     missing-docstring,
     no-member,
     no-self-use,
+    protected-access,
     redefined-outer-name,
     too-few-public-methods,
     too-many-ancestors,

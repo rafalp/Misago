@@ -28,13 +28,13 @@ def parse_iso8601_string(value):
     """turns ISO 8601 string into datetime object"""
     value = force_text(value, strings_only=True).rstrip("Z")
 
-    for format in ISO8601_FORMATS:
+    for format_str in ISO8601_FORMATS:
         try:
-            parsed_value = datetime.strptime(value, format)
+            parsed_value = datetime.strptime(value, format_str)
             break
         except ValueError:
             try:
-                parsed_value = datetime.strptime(value[:-6], format)
+                parsed_value = datetime.strptime(value[:-6], format_str)
                 break
             except ValueError:
                 pass
@@ -67,8 +67,7 @@ def clean_return_path(request):
     """return path utility that returns return path from referer or POST"""
     if request.method == "POST" and "return_path" in request.POST:
         return _get_return_path_from_post(request)
-    else:
-        return _get_return_path_from_referer(request)
+    return _get_return_path_from_referer(request)
 
 
 def _get_return_path_from_post(request):

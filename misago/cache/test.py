@@ -4,7 +4,6 @@ from .versions import get_cache_versions_from_db
 class assert_invalidates_cache:
     def __init__(self, cache):
         self.cache = cache
-        self.versions = None
 
     def __enter__(self):
         self.versions = get_cache_versions_from_db()

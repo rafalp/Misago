@@ -83,8 +83,7 @@ def get_exception_handler(exception):
     for exception_type, handler in EXCEPTION_HANDLERS:
         if isinstance(exception, exception_type):
             return handler
-    else:
-        raise ValueError("%s is not Misago exception" % exception.__class__.__name__)
+    raise ValueError("%s is not a Misago exception" % exception.__class__.__name__)
 
 
 def handle_misago_exception(request, exception):
@@ -103,5 +102,4 @@ def handle_api_exception(exception, context):
             except IndexError:
                 pass
         return response
-    else:
-        return None
+    return None
