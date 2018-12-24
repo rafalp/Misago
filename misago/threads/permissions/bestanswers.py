@@ -6,7 +6,6 @@ from django.utils.translation import ngettext
 
 from ...acl import algebra
 from ...acl.decorators import return_boolean
-from ...admin.forms import YesNoSwitch
 from ...categories.models import Category, CategoryRole
 from ...categories.permissions import get_categories_roles
 from ..models import Post, Thread

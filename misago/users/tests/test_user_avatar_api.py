@@ -2,8 +2,6 @@ import json
 import os
 from pathlib import Path
 
-from django.contrib.auth import get_user_model
-
 from ...acl.test import patch_user_acl
 from ...conf import settings
 from ...conf.test import override_dynamic_settings

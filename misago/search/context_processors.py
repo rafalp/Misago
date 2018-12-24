@@ -1,4 +1,3 @@
-from django.core.exceptions import PermissionDenied
 from django.urls import reverse
 
 from .searchproviders import searchproviders

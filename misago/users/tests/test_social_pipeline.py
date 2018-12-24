@@ -6,7 +6,6 @@ from django.test import RequestFactory
 from social_core.backends.github import GithubOAuth2
 from social_django.utils import load_strategy
 
-from ...acl import ACL_CACHE
 from ...acl.useracl import get_user_acl
 from ...conf.dynamicsettings import DynamicSettings
 from ...conf.test import override_dynamic_settings

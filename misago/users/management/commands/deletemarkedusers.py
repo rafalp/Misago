@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from ....conf import settings
 from ....core.pgutils import chunk_queryset
 from ...permissions import can_delete_own_account
 

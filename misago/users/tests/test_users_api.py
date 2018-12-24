@@ -4,7 +4,6 @@ from datetime import timedelta
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
-from django.utils.encoding import smart_str
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category

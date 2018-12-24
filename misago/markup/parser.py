@@ -1,5 +1,3 @@
-import warnings
-
 import bleach
 import markdown
 from bs4 import BeautifulSoup

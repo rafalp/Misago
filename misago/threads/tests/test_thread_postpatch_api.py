@@ -7,7 +7,7 @@ from django.utils import timezone
 from .. import test
 from ...categories.models import Category
 from ...users.test import AuthenticatedUserTestCase
-from ..models import Post, Thread
+from ..models import Post
 from ..test import patch_category_acl
 
 

@@ -1,16 +1,11 @@
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-from django.utils.translation import ngettext
 from rest_framework.response import Response
 
 from ....conf import settings
-from ....core.utils import clean_ids_list
 from ...moderation import posts as moderation
 from ...permissions import (
     allow_delete_best_answer,
     allow_delete_event,
     allow_delete_post,
-    exclude_invisible_posts,
 )
 from ...serializers import DeletePostsSerializer
 

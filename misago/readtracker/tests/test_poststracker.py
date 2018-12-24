@@ -7,7 +7,6 @@ from ...categories.models import Category
 from ...conf import settings
 from ...threads import test
 from ...users.test import create_test_user
-from ..models import PostRead
 from ..poststracker import make_read_aware, save_read
 
 

@@ -11,7 +11,6 @@ from ...conf import settings
 from ...conftest import get_cache_versions
 from ...threads import test
 from ...users.test import create_test_user
-from ..models import PostRead
 
 cache_versions = get_cache_versions()
 

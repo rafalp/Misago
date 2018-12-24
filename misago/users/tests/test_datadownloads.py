@@ -3,7 +3,7 @@ import os
 from django.core.files import File
 
 from ...categories.models import Category
-from ...threads.models import Attachment, AttachmentType
+from ...threads.models import AttachmentType
 from ...threads.test import post_poll, post_thread
 from ..audittrail import create_user_audit_trail
 from ..datadownloads import (

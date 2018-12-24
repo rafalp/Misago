@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
@@ -7,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from ..acl import algebra
 from ..acl.decorators import return_boolean
 from ..admin.forms import YesNoSwitch
-from ..users.models import AnonymousUser
 from .models import Category, CategoryRole, RoleCategoryACL
 
 

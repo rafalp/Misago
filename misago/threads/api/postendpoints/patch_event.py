@@ -1,6 +1,3 @@
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-
 from ....acl.objectacl import add_acl_to_obj
 from ....core.apipatch import ApiPatch
 from ...moderation import posts as moderation

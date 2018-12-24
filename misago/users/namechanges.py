@@ -5,8 +5,6 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from .models import UsernameChange
-
 
 def get_username_options(settings, user, user_acl):
     changes_left = get_left_namechanges(user, user_acl)

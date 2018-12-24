@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from ...conf import settings
 from ..test import create_test_user
 
 

@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...core.shortcuts import get_int_or_404
 from ..models import Post, Thread
-from ..moderation import threads as moderation
 from ..permissions import allow_use_private_threads
 from ..viewmodels import (
     ForumThread,

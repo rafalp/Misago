@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from .models import AnonymousUser, Online
-from .setupnewuser import setup_new_user
 
 User = get_user_model()
 
@@ -59,7 +58,7 @@ class SuperUserTestCase(AuthenticatedUserTestCase):
 
 
 def create_test_user(username, email, password=None, **extra_fields):
-    """Faster counterpart of regular `create_user` followed by `setup_new_user`"""
+    """Faster alternative to regular `create_user` followed by `setup_new_user`"""
     if "avatars" not in extra_fields:
         extra_fields["avatars"] = user_placeholder_avatars
 
@@ -67,7 +66,7 @@ def create_test_user(username, email, password=None, **extra_fields):
 
 
 def create_test_superuser(username, email, password=None, **extra_fields):
-    """Faster counterpart of regular `create_superuser` followed by `setup_new_user`"""
+    """Faster alternative to regular `create_superuser` followed by `setup_new_user`"""
     if "avatars" not in extra_fields:
         extra_fields["avatars"] = user_placeholder_avatars
 
