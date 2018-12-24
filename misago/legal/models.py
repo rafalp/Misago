@@ -1,9 +1,9 @@
+from django.core.cache import cache
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ..conf import settings
-from ..core.cache import cache
 
 CACHE_KEY = "misago_agreements"
 

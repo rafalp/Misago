@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
@@ -6,7 +7,6 @@ from . import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ..acl.cache import clear_acl_cache
 from ..acl.models import BaseRole
 from ..conf import settings
-from ..core.cache import cache
 from ..core.utils import slugify
 from ..threads.threadtypes import trees_map
 
