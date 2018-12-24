@@ -2,11 +2,28 @@
 
 load-plugins=pylint_django
 ignore=migrations
+max-line-length=88
 
 
 [MESSAGES CONTROL]
 
-disable=abstract-method,duplicate-code,invalid-name,missing-docstring,no-else-return,no-self-use,redefined-builtin,super-init-not-called,too-few-public-methods,too-many-ancestors,too-many-lines,too-many-public-methods,too-many-statement,unused-argument
+disable=
+    abstract-method,
+    bad-continuation,
+    expression-not-assigned,
+    fixme,
+    invalid-name,
+    missing-docstring,
+    no-member,
+    no-self-use,
+    too-few-public-methods,
+    too-many-ancestors,
+    too-many-arguments,
+    too-many-instance-attributes,
+    too-many-lines,  # FIXME
+    too-many-public-methods,
+    too-many-statements,  # FIXME
+    unused-argument
 
 
 [REPORTS]
