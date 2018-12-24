@@ -51,7 +51,9 @@ class RoleFormMixin:
                     form.instance.permissions = new_permissions
                     form.instance.save()
 
-                    messages.success(request, self.message_submit % {"name": target.name})
+                    messages.success(
+                        request, self.message_submit % {"name": target.name}
+                    )
 
                     if "stay" in request.POST:
                         return redirect(request.path)

@@ -16,7 +16,7 @@ def get_cutoff_date(user=None):
 def is_date_tracked(date, user):
     if not date:
         return False
-    
+
     cutoff_date = get_cutoff_date()
     if cutoff_date < user.joined_on:
         cutoff_date = user.joined_on

@@ -87,11 +87,7 @@ class ThreadViewSet(ViewSet):
         posting.save()
 
         return Response(
-            {
-                "id": thread.pk,
-                "title": thread.title,
-                "url": thread.get_absolute_url(),
-            }
+            {"id": thread.pk, "title": thread.title, "url": thread.get_absolute_url()}
         )
 
     @detail_route(methods=["post"], url_path="merge")
@@ -144,9 +140,5 @@ class PrivateThreadViewSet(ViewSet):
         posting.save()
 
         return Response(
-            {
-                "id": thread.pk,
-                "title": thread.title,
-                "url": thread.get_absolute_url(),
-            }
+            {"id": thread.pk, "title": thread.title, "url": thread.get_absolute_url()}
         )

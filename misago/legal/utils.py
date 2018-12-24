@@ -46,7 +46,7 @@ def get_parsed_agreement_text(request, agreement):
 
     if cached_content and cached_content.get("checksum") == unparsed_checksum:
         return cached_content["parsed"]
-    
+
     parsed = common_flavour(request, None, unparsed_content)["parsed_text"]
     cached_content = {"checksum": unparsed_checksum, "parsed": parsed}
     cache.set(cache_name, cached_content)

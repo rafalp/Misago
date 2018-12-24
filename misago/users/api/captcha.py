@@ -7,7 +7,7 @@ from rest_framework.response import Response
 def question(request):
     if not request.settings.qa_question:
         raise Http404()
-    
+
     return Response(
         {
             "question": request.settings.qa_question,

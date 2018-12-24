@@ -220,7 +220,7 @@ def moderate_avatar_endpoint(request, profile):
                 "avatar_lock_staff_message": profile.avatar_lock_staff_message,
             }
         )
-    
+
     return Response(
         {
             "is_avatar_locked": int(profile.is_avatar_locked),

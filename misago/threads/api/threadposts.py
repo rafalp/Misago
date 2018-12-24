@@ -201,7 +201,7 @@ class ViewSet(viewsets.ViewSet):
 
         if "reply" not in request.query_params:
             return Response({})
-        
+
         reply_to = self.get_post(
             request, thread, request.query_params["reply"]
         ).unwrap()

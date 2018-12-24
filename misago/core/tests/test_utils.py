@@ -96,11 +96,11 @@ PLAINTEXT_FORMAT_CASES = [
     (
         "http://misago-project.org/login/",
         (
-            '<p>'
+            "<p>"
             '<a href="http://misago-project.org/login/">'
-            'http://misago-project.org/login/'
-            '</a>'
-            '</p>'
+            "http://misago-project.org/login/"
+            "</a>"
+            "</p>"
         ),
     ),
 ]

@@ -1399,7 +1399,7 @@ def exclude_invisible_threads(user_acl, categories, queryset):
 
     if not conditions:
         return Thread.objects.none()
-    
+
     return queryset.filter(conditions)
 
 
