@@ -185,41 +185,36 @@ def test_attr_with_boolean_true_value_is_rendered():
     assert result == "bool"
 
 
-def test_attr_with_string_value_is_not_rendered():
+def test_bool_attr_with_string_value_is_not_rendered():
     result = render_bool_attrs({"name": "hello"})
     assert result == ""
 
 
-def test_attr_with_int_value_is_not_rendered():
+def test_bool_attr_with_int_value_is_not_rendered():
     result = render_bool_attrs({"col": 13})
     assert result == ""
 
 
-def test_attr_with_boolean_false_value_is_not_rendered():
+def test_bool_attr_with_boolean_false_value_is_not_rendered():
     result = render_bool_attrs({"selected": False})
     assert result == ""
 
 
-def test_attr_with_none_value_is_not_rendered():
+def test_bool_attr_with_none_value_is_not_rendered():
     result = render_bool_attrs({"selected": None})
     assert result == ""
 
 
-def test_attr_with_false_int_value_is_not_rendered():
+def test_bool_attr_with_false_int_value_is_not_rendered():
     result = render_bool_attrs({"selected": 0})
     assert result == ""
 
 
-def test_multiple_attrs_with_boolean_true_value_are_rendered():
+def test_multiple_bool_attrs_with_boolean_true_value_are_rendered():
     result = render_bool_attrs({"selected": True, "required": True})
     assert result == "selected required"
 
 
-def test_only_attrs_with_boolean_true_value_are_rendered():
+def test_only_bool_attrs_with_boolean_true_value_are_rendered():
     result = render_bool_attrs({"bool": True, "string": "hello", "int": 123})
     assert result == "bool"
-
-
-def test_empty_attr_dict_is_not_rendered():
-    result = render_bool_attrs({})
-    assert result == ""

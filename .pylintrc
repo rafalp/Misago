@@ -13,10 +13,12 @@ disable=
     bad-continuation,
     expression-not-assigned,
     fixme,
+    inconsistent-return-statements,
     invalid-name,
     missing-docstring,
     no-member,
     no-self-use,
+    redefined-outer-name,
     too-few-public-methods,
     too-many-ancestors,
     too-many-arguments,
@@ -24,6 +26,8 @@ disable=
     too-many-lines,  # FIXME
     too-many-public-methods,
     too-many-statements,  # FIXME
+    ungrouped-imports,
+    unsubscriptable-object,
     unused-argument
 
 

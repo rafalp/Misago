@@ -15,8 +15,7 @@ def get_protected_namespace(request):
                 return namespace
         except NoReverseMatch:
             pass
-    else:
-        return None
+    return None
 
 
 def render(request, template, context=None, error_page=False):
@@ -61,10 +60,8 @@ def protected_admin_view(f):
             if is_admin_session(request):
                 update_admin_session(request)
                 return f(request, *args, **kwargs)
-            else:
-                request.admin_namespace = protected_view
-                return login(request)
-        else:
-            return f(request, *args, **kwargs)
+            request.admin_namespace = protected_view
+            return login(request)
+        return f(request, *args, **kwargs)
 
     return decorator

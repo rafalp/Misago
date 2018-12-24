@@ -7,19 +7,19 @@ from ..auth import is_admin_session, update_admin_session
 # Magic error page used by admin
 @protected_admin_view
 def _error_page(request, code, exception=None, default_message=None):
-    if is_admin_session(request):
-        template_pattern = "misago/admin/errorpages/%s.html" % code
-
-        response = render(
-            request,
-            template_pattern,
-            {"message": get_exception_message(exception, default_message)},
-            error_page=True,
-        )
-        response.status_code = code
-        return response
-    else:
+    if not is_admin_session(request):
         return redirect("misago:admin:index")
+
+    template_pattern = "misago/admin/errorpages/%s.html" % code
+
+    response = render(
+        request,
+        template_pattern,
+        {"message": get_exception_message(exception, default_message)},
+        error_page=True,
+    )
+    response.status_code = code
+    return response
 
 
 def admin_error_page(f):
@@ -27,8 +27,7 @@ def admin_error_page(f):
         if get_protected_namespace(request):
             update_admin_session(request)
             return _error_page(request, *args, **kwargs)
-        else:
-            return f(request, *args, **kwargs)
+        return f(request, *args, **kwargs)
 
     return decorator
 
@@ -53,7 +52,6 @@ def admin_csrf_failure(f):
     def decorator(request, *args, **kwargs):
         if get_protected_namespace(request):
             return _csrf_failure(request, *args, **kwargs)
-        else:
-            return f(request, *args, **kwargs)
+        return f(request, *args, **kwargs)
 
     return decorator

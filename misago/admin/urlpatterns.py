@@ -3,8 +3,10 @@ from django.conf.urls import include, url
 
 class URLPatterns:
     def __init__(self):
+        self.namespace_patterns = None
         self._namespaces = []
         self._patterns = []
+        self._urlpatterns = None
 
     def namespace(self, path, namespace, parent=None):
         self._namespaces.append(
@@ -57,13 +59,13 @@ class URLPatterns:
         return self.build_root_urlpatterns()
 
     def __call__(self):
-        try:
+        if self._urlpatterns:
             return self._urlpatterns
-        except AttributeError:
-            self._urlpatterns = self.build_urlpatterns()
-            self._namespaces = []
-            self._patterns = []
-            return self._urlpatterns
+
+        self._urlpatterns = self.build_urlpatterns()
+        self._namespaces = []
+        self._patterns = []
+        return self._urlpatterns
 
 
 urlpatterns = URLPatterns()

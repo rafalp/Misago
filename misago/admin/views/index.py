@@ -77,7 +77,7 @@ def check_version(request):
                 }
 
             cache.set(VERSION_CHECK_CACHE_KEY, version, 180)
-        except (RequestException, IndexError, KeyError, ValueError) as e:
+        except (RequestException, IndexError, KeyError, ValueError):
             version = {
                 "is_error": True,
                 "message": _("Failed to connect to pypi.org API. Try again later."),
