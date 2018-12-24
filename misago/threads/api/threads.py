@@ -81,18 +81,18 @@ class ThreadViewSet(ViewSet):
             post=post,
         )
 
-        if posting.is_valid():
-            posting.save()
-
-            return Response(
-                {
-                    "id": thread.pk,
-                    "title": thread.title,
-                    "url": thread.get_absolute_url(),
-                }
-            )
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        posting.save()
+
+        return Response(
+            {
+                "id": thread.pk,
+                "title": thread.title,
+                "url": thread.get_absolute_url(),
+            }
+        )
 
     @detail_route(methods=["post"], url_path="merge")
     @transaction.atomic
@@ -138,15 +138,15 @@ class PrivateThreadViewSet(ViewSet):
             post=post,
         )
 
-        if posting.is_valid():
-            posting.save()
-
-            return Response(
-                {
-                    "id": thread.pk,
-                    "title": thread.title,
-                    "url": thread.get_absolute_url(),
-                }
-            )
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        posting.save()
+
+        return Response(
+            {
+                "id": thread.pk,
+                "title": thread.title,
+                "url": thread.get_absolute_url(),
+            }
+        )

@@ -43,8 +43,7 @@ class ForumThreadsList(ThreadsList):
     def get_category(self, request, pk=None):
         if pk:
             return ThreadsCategory(request, pk=pk)
-        else:
-            return ThreadsRootCategory(request)
+        return ThreadsRootCategory(request)
 
 
 class PrivateThreadsList(ThreadsList):

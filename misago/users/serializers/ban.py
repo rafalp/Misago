@@ -10,8 +10,6 @@ __all__ = ["BanMessageSerializer", "BanDetailsSerializer"]
 def serialize_message(message):
     if message:
         return {"plain": message, "html": format_plaintext_for_html(message)}
-    else:
-        return None
 
 
 class BanMessageSerializer(serializers.ModelSerializer):

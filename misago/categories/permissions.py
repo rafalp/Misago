@@ -19,8 +19,6 @@ class PermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, CategoryRole):
         return PermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):
@@ -51,7 +49,7 @@ def build_category_acl(acl, category, categories_roles, key_name):
         if category.parent_id not in acl["visible_categories"]:
             # dont bother with child categories of invisible parents
             return
-        elif not acl["categories"][category.parent_id]["can_browse"]:
+        if not acl["categories"][category.parent_id]["can_browse"]:
             # parent's visible, but its contents aint
             return
 

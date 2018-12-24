@@ -31,5 +31,3 @@ class PostLikeSerializer(serializers.ModelSerializer):
             return reverse(
                 "misago:user", kwargs={"slug": obj["liker_slug"], "pk": obj["liker_id"]}
             )
-        else:
-            return None

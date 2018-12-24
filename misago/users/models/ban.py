@@ -104,15 +104,13 @@ class Ban(models.Model):
     def is_expired(self):
         if self.expires_on:
             return self.expires_on < timezone.now()
-        else:
-            return False
+        return False
 
     def check_value(self, value):
         if "*" in self.banned_value:
             regex = re.escape(self.banned_value).replace("\*", "(.*?)")
             return re.search("^%s$" % regex, value, re.IGNORECASE) is not None
-        else:
-            return self.banned_value.lower() == value.lower()
+        return self.banned_value.lower() == value.lower()
 
     def lift(self):
         self.expires_on = timezone.now()

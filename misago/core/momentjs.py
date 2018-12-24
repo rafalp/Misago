@@ -8,8 +8,6 @@ def get_locale_url(language):
     if clean_language:
         return MOMENT_STATIC_PATH % clean_language
 
-    return None
-
 
 def clean_language_name(language):
     # lowercase language

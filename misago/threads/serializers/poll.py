@@ -52,8 +52,6 @@ class PollSerializer(serializers.ModelSerializer):
             return reverse(
                 "misago:user", kwargs={"slug": obj.poster_slug, "pk": obj.poster_id}
             )
-        else:
-            return None
 
     def get_acl(self, obj):
         try:

@@ -39,7 +39,6 @@ class Poll(models.Model):
     def ends_on(self):
         if self.length:
             return self.posted_on + timedelta(days=self.length)
-        return None
 
     @property
     def is_over(self):

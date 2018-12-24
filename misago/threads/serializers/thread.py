@@ -138,7 +138,6 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
             return reverse(
                 "misago:user", kwargs={"slug": obj.starter_slug, "pk": obj.starter_id}
             )
-        return None
 
     def get_last_poster_url(self, obj):
         if obj.last_poster_id:
@@ -146,7 +145,6 @@ class ThreadSerializer(serializers.ModelSerializer, MutableFields):
                 "misago:user",
                 kwargs={"slug": obj.last_poster_slug, "pk": obj.last_poster_id},
             )
-        return None
 
 
 class PrivateThreadSerializer(ThreadSerializer):
@@ -175,7 +173,6 @@ class ThreadsListSerializer(ThreadSerializer):
                 "real_name": obj.starter.get_real_name(),
                 "avatars": obj.starter.avatars,
             }
-        return None
 
     def get_last_poster(self, obj):
         if obj.last_poster_id:
@@ -185,7 +182,6 @@ class ThreadsListSerializer(ThreadSerializer):
                 "real_name": obj.last_poster.get_real_name(),
                 "avatars": obj.last_poster.avatars,
             }
-        return None
 
 
 ThreadsListSerializer = ThreadsListSerializer.exclude_fields("path", "poll")

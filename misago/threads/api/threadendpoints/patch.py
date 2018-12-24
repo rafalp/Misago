@@ -54,8 +54,7 @@ def patch_acl(request, thread, value):
     if value:
         add_acl_to_obj(request.user_acl, thread)
         return {"acl": thread.acl}
-    else:
-        return {"acl": None}
+    return {"acl": None}
 
 
 thread_patch_dispatcher.add("acl", patch_acl)
@@ -204,7 +203,8 @@ def patch_subscription(request, thread, value):
         )
 
         return {"subscription": False}
-    elif value == "email":
+
+    if value == "email":
         thread.subscription = request.user.subscription_set.create(
             thread=thread,
             category=thread.category,
@@ -213,8 +213,8 @@ def patch_subscription(request, thread, value):
         )
 
         return {"subscription": True}
-    else:
-        return {"subscription": None}
+
+    return {"subscription": None}
 
 
 thread_patch_dispatcher.replace("subscription", patch_subscription)
@@ -337,11 +337,11 @@ def patch_remove_participant(request, thread, value):
 
     if len(thread.participants_list) == 1:
         return {"deleted": True}
-    else:
-        make_participants_aware(request.user, thread)
-        participants = ThreadParticipantSerializer(thread.participants_list, many=True)
 
-        return {"deleted": False, "participants": participants.data}
+    make_participants_aware(request.user, thread)
+    participants = ThreadParticipantSerializer(thread.participants_list, many=True)
+
+    return {"deleted": False, "participants": participants.data}
 
 
 thread_patch_dispatcher.remove("participants", patch_remove_participant)

@@ -208,10 +208,8 @@ class Post(models.Model):
         if self.is_valid:
             if len(self.original) > 150:
                 return str("%s...") % self.original[:150].strip()
-            else:
-                return self.original
-        else:
-            return ""
+            return self.original
+        return ""
 
     @property
     def is_valid(self):

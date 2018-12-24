@@ -29,8 +29,7 @@ class AdminCategoryFieldMixin:
         level = getattr(obj, obj._mptt_meta.level_attr) - self.base_level
         if level > 0:
             return mark_safe(conditional_escape(self.level_indicator) * level)
-        else:
-            return ""
+        return ""
 
 
 class AdminCategoryChoiceField(AdminCategoryFieldMixin, TreeNodeChoiceField):

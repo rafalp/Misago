@@ -94,8 +94,6 @@ class Attachment(models.Model):
                 "misago:attachment-thumbnail",
                 kwargs={"pk": self.pk, "secret": self.secret},
             )
-        else:
-            return None
 
     def set_file(self, upload):
         self.file = File(upload, upload.name)

@@ -54,8 +54,6 @@ class CategoryPermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, CategoryRole):
         return CategoryPermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):
@@ -377,5 +375,5 @@ def has_time_to_change_answer(user_acl, target):
         diff = timezone.now() - target.best_answer_marked_on
         diff_minutes = int(diff.total_seconds() / 60)
         return diff_minutes < change_time
-    else:
-        return True
+
+    return True

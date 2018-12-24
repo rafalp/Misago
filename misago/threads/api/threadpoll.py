@@ -120,8 +120,7 @@ class ViewSet(viewsets.ViewSet):
     def votes(self, request, thread_pk, pk=None):
         if request.method == "POST":
             return self.post_votes(request, thread_pk, pk)
-        else:
-            return self.get_votes(request, thread_pk, pk)
+        return self.get_votes(request, thread_pk, pk)
 
     @transaction.atomic
     def post_votes(self, request, thread_pk, pk=None):

@@ -102,4 +102,3 @@ def handle_api_exception(exception, context):
             except IndexError:
                 pass
         return response
-    return None

@@ -11,16 +11,15 @@ class Thread(ThreadType):
     def get_category_name(self, category):
         if category.level:
             return category.name
-        else:
-            return _("None (will become top level category)")
+        return _("None (will become top level category)")
 
     def get_category_absolute_url(self, category):
         if category.level:
             return reverse(
                 "misago:category", kwargs={"pk": category.pk, "slug": category.slug}
             )
-        else:
-            return reverse("misago:threads")
+        
+        return reverse("misago:threads")
 
     def get_category_last_thread_url(self, category):
         return reverse(
@@ -46,10 +45,10 @@ class Thread(ThreadType):
                 "misago:thread",
                 kwargs={"slug": thread.slug, "pk": thread.pk, "page": page},
             )
-        else:
-            return reverse(
-                "misago:thread", kwargs={"slug": thread.slug, "pk": thread.pk}
-            )
+
+        return reverse(
+            "misago:thread", kwargs={"slug": thread.slug, "pk": thread.pk}
+        )
 
     def get_thread_last_post_url(self, thread):
         return reverse(

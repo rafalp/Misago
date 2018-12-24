@@ -54,5 +54,3 @@ class AttachmentSerializer(serializers.ModelSerializer):
             return reverse(
                 "misago:user", kwargs={"slug": obj.uploader_slug, "pk": obj.uploader_id}
             )
-        else:
-            return None

@@ -28,8 +28,7 @@ def fake_username_ban(fake):
 def fake_email_ban(fake):
     if random.randint(0, 100) < 35:
         return "*@%s" % fake.domain_name()
-    else:
-        return fake.email()
+    return fake.email()
 
 
 def fake_ip_ban(fake):
@@ -69,9 +68,9 @@ def fake_ip_ban(fake):
 def create_fake_test(fake, test_type):
     if test_type == Ban.USERNAME:
         return fake_username_ban(fake)
-    elif test_type == Ban.EMAIL:
+    if test_type == Ban.EMAIL:
         return fake_email_ban(fake)
-    elif test_type == Ban.IP:
+    if test_type == Ban.IP:
         return fake_ip_ban(fake)
 
 

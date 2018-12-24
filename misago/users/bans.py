@@ -54,8 +54,6 @@ def get_user_ban(user, cache_versions):
 
     if user.ban_cache.ban:
         return user.ban_cache
-    else:
-        return None
 
 
 def _set_user_ban_cache(user, cache_versions):
@@ -92,8 +90,7 @@ def get_request_ip_ban(request):
     if session_ban_cache:
         if session_ban_cache["is_banned"]:
             return session_ban_cache
-        else:
-            return False
+        return False
 
     found_ban = get_ip_ban(request.user_ip)
 
@@ -111,10 +108,9 @@ def get_request_ip_ban(request):
         ban_cache.update({"is_banned": True, "message": found_ban.user_message})
         request.session[CACHE_SESSION_KEY] = ban_cache
         return _hydrate_session_cache(request.session[CACHE_SESSION_KEY])
-    else:
-        ban_cache["is_banned"] = False
-        request.session[CACHE_SESSION_KEY] = ban_cache
-        return None
+
+    ban_cache["is_banned"] = False
+    request.session[CACHE_SESSION_KEY] = ban_cache
 
 
 def _get_session_bancache(request):

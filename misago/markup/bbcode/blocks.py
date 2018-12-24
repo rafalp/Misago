@@ -60,8 +60,7 @@ class QuotePreprocessor(Preprocessor):
 
         if title:
             return "\n\n%s%s\n\n%s\n\n%s\n\n" % (QUOTE_START, title, text, QUOTE_END)
-        else:
-            return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
+        return "\n\n%s\n\n%s\n\n%s\n\n" % (QUOTE_START, text, QUOTE_END)
 
 
 class QuoteBlockProcessor(BlockProcessor):

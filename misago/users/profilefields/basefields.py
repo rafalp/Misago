@@ -110,7 +110,6 @@ class ChoiceProfileField(ProfileField):
         for key, name in self.get_choices():
             if key == value:
                 return {"text": str(name)}
-        return None
 
     def search_users(self, criteria):
         """custom search implementation for choice fields"""

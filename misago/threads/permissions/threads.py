@@ -226,10 +226,8 @@ class CategoryPermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != "anonymous":
         return RolePermissionsForm
-    elif isinstance(role, CategoryRole):
+    if isinstance(role, CategoryRole):
         return CategoryPermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):
@@ -1288,8 +1286,8 @@ def has_time_to_edit_thread(user_acl, target):
         diff = timezone.now() - target.started_on
         diff_minutes = int(diff.total_seconds() / 60)
         return diff_minutes < edit_time
-    else:
-        return True
+
+    return True
 
 
 def has_time_to_edit_post(user_acl, target):
@@ -1300,8 +1298,8 @@ def has_time_to_edit_post(user_acl, target):
         diff = timezone.now() - target.posted_on
         diff_minutes = int(diff.total_seconds() / 60)
         return diff_minutes < edit_time
-    else:
-        return True
+
+    return True
 
 
 def exclude_invisible_threads(user_acl, categories, queryset):
@@ -1399,17 +1397,16 @@ def exclude_invisible_threads(user_acl, categories, queryset):
         else:
             conditions = condition
 
-    if conditions:
-        return queryset.filter(conditions)
-    else:
+    if not conditions:
         return Thread.objects.none()
+    
+    return queryset.filter(conditions)
 
 
 def exclude_invisible_posts(user_acl, categories, queryset):
     if hasattr(categories, "__iter__"):
         return exclude_invisible_posts_in_categories(user_acl, categories, queryset)
-    else:
-        return exclude_invisible_posts_in_category(user_acl, categories, queryset)
+    return exclude_invisible_posts_in_category(user_acl, categories, queryset)
 
 
 def exclude_invisible_posts_in_categories(user_acl, categories, queryset):
@@ -1461,10 +1458,10 @@ def exclude_invisible_posts_in_categories(user_acl, categories, queryset):
             category__in=hide_invisible_events, is_event=True, is_hidden=True
         )
 
-    if conditions:
-        return queryset.filter(conditions)
-    else:
+    if not conditions:
         return Post.objects.none()
+
+    return queryset.filter(conditions)
 
 
 def exclude_invisible_posts_in_category(user_acl, category, queryset):

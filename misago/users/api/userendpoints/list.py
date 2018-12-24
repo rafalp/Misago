@@ -36,8 +36,7 @@ def list_endpoint(request):
 
     if list_handler:
         return list_handler(request)
-    else:
-        return rank_users(request)
+    return rank_users(request)
 
 
 ScoredUserSerializer = UserCardSerializer.extend_fields("meta")

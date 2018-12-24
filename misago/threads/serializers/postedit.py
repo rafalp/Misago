@@ -26,5 +26,3 @@ class PostEditSerializer(serializers.ModelSerializer):
             return reverse(
                 "misago:user", kwargs={"slug": obj.editor_slug, "pk": obj.editor_id}
             )
-        else:
-            return None

@@ -154,14 +154,12 @@ class ForumThreads(ViewModel):
             return list(queryset.filter(weight=2)) + list(
                 queryset.filter(weight=1, category__in=threads_categories)
             )
-        else:
-            return queryset.filter(weight=2)
+        return queryset.filter(weight=2)
 
     def get_remaining_threads_queryset(self, queryset, category, threads_categories):
         if category.level:
             return queryset.filter(weight=0, category__in=threads_categories)
-        else:
-            return queryset.filter(weight__lt=2, category__in=threads_categories)
+        return queryset.filter(weight__lt=2, category__in=threads_categories)
 
 
 class PrivateThreads(ViewModel):
@@ -189,25 +187,22 @@ class PrivateThreads(ViewModel):
 
 def get_threads_queryset(request, categories, list_type):
     queryset = exclude_invisible_threads(request.user_acl, categories, Thread.objects)
-
     if list_type == "all":
         return queryset
-    else:
-        return filter_threads_queryset(request, categories, list_type, queryset)
+    return filter_threads_queryset(request, categories, list_type, queryset)
 
 
 def filter_threads_queryset(request, categories, list_type, queryset):
     if list_type == "my":
         return queryset.filter(starter=request.user)
-    elif list_type == "subscribed":
+    if list_type == "subscribed":
         subscribed_threads = request.user.subscription_set.values("thread_id")
         return queryset.filter(id__in=subscribed_threads)
-    elif list_type == "unapproved":
+    if list_type == "unapproved":
         return queryset.filter(has_unapproved_posts=True)
-    elif list_type in ("new", "unread"):
+    if list_type in ("new", "unread"):
         return filter_read_threads_queryset(request, categories, list_type, queryset)
-    else:
-        return queryset
+    return queryset
 
 
 def filter_read_threads_queryset(request, categories, list_type, queryset):

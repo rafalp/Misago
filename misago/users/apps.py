@@ -72,19 +72,15 @@ class MisagoUsersConfig(AppConfig):
                 is_account_owner = profile.pk == request.user.pk
                 has_permission = request.user_acl["can_see_users_name_history"]
                 return is_account_owner or has_permission
-            else:
-                return False
+            return False
 
         def can_see_ban_details(request, profile):
             if request.user.is_authenticated:
                 if request.user_acl["can_see_ban_details"]:
                     from .bans import get_user_ban
-
                     return bool(get_user_ban(profile, request.cache_versions))
-                else:
-                    return False
-            else:
                 return False
+            return False
 
         user_profile.add_section(
             link="misago:user-posts", name=_("Posts"), icon="message", component="posts"

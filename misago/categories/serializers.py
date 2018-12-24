@@ -69,7 +69,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                 "plain": obj.description,
                 "html": format_plaintext_for_html(obj.description),
             }
-        return None
 
     def get_is_read(self, obj):
         try:
@@ -100,7 +99,6 @@ class CategorySerializer(serializers.ModelSerializer, MutableFields):
                     kwargs={"slug": obj.last_poster_slug, "pk": obj.last_poster_id},
                 ),
             }
-        return None
 
     def get_url(self, obj):
         return {

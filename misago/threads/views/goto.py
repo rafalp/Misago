@@ -137,8 +137,7 @@ class ThreadGotoUnapprovedView(GotoView):
         )
         if unapproved_post:
             return unapproved_post
-        else:
-            return posts_queryset.order_by("id").last()
+        return posts_queryset.order_by("id").last()
 
 
 class PrivateThreadGotoPostView(GotoView):

@@ -252,8 +252,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
     def initialize_form(self, form, request, target):
         if request.method == "POST":
             return form(request.POST, request.FILES, instance=target, request=request)
-        else:
-            return form(instance=target, request=request)
+        return form(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         new_user = User.objects.create_user(
@@ -291,8 +290,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
     def initialize_form(self, form, request, target):
         if request.method == "POST":
             return form(request.POST, request.FILES, instance=target, request=request)
-        else:
-            return form(instance=target, request=request)
+        return form(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         target.username = target.old_username

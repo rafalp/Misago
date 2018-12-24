@@ -57,9 +57,9 @@ def parse_string(request, element, mentions_dict):
         if mentions_dict[username]:
             user = mentions_dict[username]
             return '<a href="%s">@%s</a>' % (user.get_absolute_url(), user.username)
-        else:
-            # we've failed to resolve user for username
-            return matchobj.group(0)
+
+        # we've failed to resolve user for username
+        return matchobj.group(0)
 
     replaced_string = USERNAME_RE.sub(replace_mentions, element.string)
     element.replace_with(BeautifulSoup(replaced_string, "html.parser"))

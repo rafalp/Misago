@@ -16,5 +16,3 @@ class AdminAuthMiddleware(MiddlewareMixin):
                     return login(request)
                 return redirect("%s:index" % request.admin_namespace)
             auth.update_admin_session(request)
-
-        return None

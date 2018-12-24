@@ -32,8 +32,7 @@ def avatar_endpoint(request, pk=None):
     avatar_options = get_avatar_options(request, request.user)
     if request.method == "POST":
         return avatar_post(request, avatar_options)
-    else:
-        return Response(avatar_options)
+    return Response(avatar_options)
 
 
 def get_avatar_options(request, user):
@@ -206,26 +205,26 @@ def moderate_avatar_endpoint(request, profile):
     if request.method == "POST":
         is_avatar_locked = profile.is_avatar_locked
         serializer = ModerateAvatarSerializer(profile, data=request.data)
-        if serializer.is_valid():
-            if serializer.validated_data["is_avatar_locked"] and not is_avatar_locked:
-                avatars.dynamic.set_avatar(profile)
-            serializer.save()
-
-            return Response(
-                {
-                    "avatars": profile.avatars,
-                    "is_avatar_locked": int(profile.is_avatar_locked),
-                    "avatar_lock_user_message": profile.avatar_lock_user_message,
-                    "avatar_lock_staff_message": profile.avatar_lock_staff_message,
-                }
-            )
-        else:
+        if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
+
+        if serializer.validated_data["is_avatar_locked"] and not is_avatar_locked:
+            avatars.dynamic.set_avatar(profile)
+        serializer.save()
+
         return Response(
             {
+                "avatars": profile.avatars,
                 "is_avatar_locked": int(profile.is_avatar_locked),
                 "avatar_lock_user_message": profile.avatar_lock_user_message,
                 "avatar_lock_staff_message": profile.avatar_lock_staff_message,
             }
         )
+    
+    return Response(
+        {
+            "is_avatar_locked": int(profile.is_avatar_locked),
+            "avatar_lock_user_message": profile.avatar_lock_user_message,
+            "avatar_lock_staff_message": profile.avatar_lock_staff_message,
+        }
+    )
