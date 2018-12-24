@@ -1,9 +1,9 @@
 from hashlib import md5
 
 from django.conf import settings
+from django.core.cache import cache
 from django.utils.encoding import force_bytes
 
-from ..core.cache import cache
 from ..markup import common_flavour
 from .models import Agreement, UserAgreement
 
