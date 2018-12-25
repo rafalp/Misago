@@ -304,14 +304,8 @@ class EditUser(UserAdmin, generic.ModelFormView):
         if form.cleaned_data.get("new_password"):
             target.set_password(form.cleaned_data["new_password"])
 
-            if target.pk == request.user.pk:
-                authorize_admin(request, target)
-                update_session_auth_hash(request, target)
-
         if form.cleaned_data.get("email"):
             target.set_email(form.cleaned_data["email"])
-            if target.pk == request.user.pk:
-                authorize_admin(request, target)
 
         if form.cleaned_data.get("is_avatar_locked"):
             if not target.old_is_avatar_locked:
@@ -341,6 +335,10 @@ class EditUser(UserAdmin, generic.ModelFormView):
 
         target.update_acl_key()
         target.save()
+
+        if target.pk == request.user.pk:
+            authorize_admin(request)
+            update_session_auth_hash(request, target)
 
         messages.success(request, self.message_submit % {"user": target.username})
 

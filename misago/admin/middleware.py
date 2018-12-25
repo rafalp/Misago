@@ -4,7 +4,7 @@ from django.utils.deprecation import MiddlewareMixin
 from .auth import (
     is_admin_authorized,
     remove_admin_authorization,
-    update_admin_authorization
+    update_admin_authorization,
 )
 from .views import get_protected_namespace
 from .views.auth import login

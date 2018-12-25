@@ -9,9 +9,7 @@ site_logout_link = reverse("misago:logout")
 site_link = reverse("misago:index")
 
 
-def test_admin_can_logout_from_admin_site_but_stay_logged(
-    admin_client, superuser
-):
+def test_admin_can_logout_from_admin_site_but_stay_logged(admin_client, superuser):
     response = admin_client.post(admin_logout_link)
     assert response.wsgi_request.user == superuser
     assert not is_admin_authorized(response.wsgi_request)
