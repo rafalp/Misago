@@ -19,6 +19,7 @@ disable=
     fixme,
     format,  # delegated to black
     inconsistent-return-statements,
+    invalid-characters-in-docstring,
     invalid-name,
     missing-docstring,
     model-no-explicit-unicode,  # pylint-django
@@ -35,7 +36,10 @@ disable=
     too-many-statements,  # FIXME
     ungrouped-imports,
     unsubscriptable-object,
-    unused-argument
+    unused-argument,
+    wrong-import-order,
+    wrong-spelling-in-comment,
+    wrong-spelling-in-docstring
 
 
 [REPORTS]
