@@ -66,7 +66,7 @@ class ErrorPageViewsTests(TestCase):
         self.assertContains(response, "page-error-social", status_code=403)
 
     def test_social_failed_message(self):
-        """misago-specific social auth failed exception error page returns 403 with message"""
+        """misago-specific social auth failed error page returns 403 with message"""
         response = self.client.get(reverse("raise-social-auth-failed-message"))
         self.assertContains(response, "page-error-social", status_code=403)
         self.assertContains(
@@ -74,7 +74,7 @@ class ErrorPageViewsTests(TestCase):
         )
 
     def test_social_auth_banned(self):
-        """misago-specific social auth banned exception error page returns 403 with ban message"""
+        """misago-specific social auth banned error page returns 403 with ban message"""
         response = self.client.get(reverse("raise-social-auth-banned"))
         self.assertContains(response, "page-error-social", status_code=403)
         self.assertContains(response, "Banned in auth!", status_code=403)

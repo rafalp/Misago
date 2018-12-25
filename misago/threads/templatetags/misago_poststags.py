@@ -25,16 +25,14 @@ def likes_label(post):
     if not hidden_likes:
         return _("%(users)s like this.") % {"users": usernames_string}
 
+    label = ngettext(
+        "%(users)s and %(likes)s other user like this.",
+        "%(users)s and %(likes)s other users like this.",
+        hidden_likes,
+    )
     formats = {"users": usernames_string, "likes": hidden_likes}
 
-    return (
-        ngettext(
-            "%(users)s and %(likes)s other user like this.",
-            "%(users)s and %(likes)s other users like this.",
-            hidden_likes,
-        )
-        % formats
-    )
+    return label % formats
 
 
 def humanize_usernames_list(usernames):

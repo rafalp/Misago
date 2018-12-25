@@ -158,7 +158,8 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
                 response.json(),
                 {
                     "detail": (
-                        "You can't upload files larger than 100.0\xa0KB (your file has 253.9\xa0KB)."
+                        "You can't upload files larger than 100.0\xa0KB "
+                        "(your file has 253.9\xa0KB)."
                     )
                 },
             )

@@ -196,8 +196,9 @@ class TwitterProfileFieldTests(AdminTestCase):
                 "fieldname": "twitter",
                 "label": "Twitter handle",
                 "help_text": (
-                    "If you own Twitter account, here you may enter your Twitter handle for other users to find you. "
-                    'Starting your handle with "@" sign is optional. Either "@testsuperuser" or "testsuperuser" are '
+                    "If you own Twitter account, here you may enter your Twitter "
+                    'handle for other users to find you. Starting your handle with "@" '
+                    'sign is optional. Either "@testsuperuser" or "testsuperuser" are '
                     "valid values."
                 ),
                 "input": {"type": "text"},

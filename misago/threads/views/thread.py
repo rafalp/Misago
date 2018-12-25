@@ -22,7 +22,7 @@ class ThreadBase(View):
         return render(request, self.template_name, template_context)
 
     def get_thread(self, request, pk, slug):
-        return self.thread(
+        return self.thread(  # pylint: disable=not-callable
             request,
             pk,
             slug,

@@ -75,7 +75,9 @@ class MergeConflictTests(TestCase):
         self.assertFalse(merge_conflict.is_merge_conflict())
 
     def test_three_best_answers_one_poll_two_plain_conflict(self):
-        """three threads with best answer, thread with poll and two plain threads conflict"""
+        """
+        three threads with best answer, thread with poll and two plain threads conflict
+        """
         best_answers = [self.create_best_answer_thread() for i in range(3)]
         polls = [self.create_poll_thread()]
         threads = (
@@ -133,7 +135,10 @@ class MergeConflictTests(TestCase):
         )
 
     def test_one_best_answer_three_polls_two_plain_conflict(self):
-        """one thread with best answer, three threads with poll and two plain threads conflict"""
+        """
+        one thread with best answer, three threads with poll
+        and two plain threads conflict
+        """
         best_answers = [self.create_best_answer_thread()]
         polls = [self.create_poll_thread() for i in range(3)]
         threads = (

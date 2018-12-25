@@ -31,7 +31,7 @@ class GotoView(View):
         return self.get_redirect(thread, target_post, target_page)
 
     def get_thread(self, request, pk, slug):
-        return self.thread(request, pk, slug)
+        return self.thread(request, pk, slug)  # pylint: disable=not-callable
 
     def test_permissions(self, request, thread):
         pass
@@ -137,8 +137,7 @@ class ThreadGotoUnapprovedView(GotoView):
         )
         if unapproved_post:
             return unapproved_post
-        else:
-            return posts_queryset.order_by("id").last()
+        return posts_queryset.order_by("id").last()
 
 
 class PrivateThreadGotoPostView(GotoView):

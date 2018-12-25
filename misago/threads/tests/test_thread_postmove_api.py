@@ -177,7 +177,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
     @patch_category_acl({"can_move_posts": True})
     def test_empty_data(self):
         """api handles empty data"""
-        other_thread = test.post_thread(self.category)
+        test.post_thread(self.category)
 
         response = self.client.post(self.api_link)
         self.assertEqual(response.status_code, 400)

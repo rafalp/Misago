@@ -22,7 +22,10 @@ class Page:
         while self._unsorted_list:
             iterations += 1
             if iterations > 512:
-                message = "%s page hierarchy is invalid or too complex  to resolve. Sections left: %s"
+                message = (
+                    "%s page hierarchy is invalid or too complex to resolve. "
+                    "Sections left: %s"
+                )
                 raise ValueError(message % self._unsorted_list)
 
             for index, section in enumerate(self._unsorted_list):
@@ -50,9 +53,9 @@ class Page:
                     new_sorted_list.append(inserted_section)
                     self._sorted_list = new_sorted_list
                     return True
-            else:
-                return False
-        elif before:
+            return False
+
+        if before:
             new_sorted_list = []
             for section in self._sorted_list:
                 if section["link"] == before:
@@ -60,13 +63,11 @@ class Page:
                     new_sorted_list.append(section)
                     self._sorted_list = new_sorted_list
                     return True
-                else:
-                    new_sorted_list.append(section)
-            else:
-                return False
-        else:
-            self._sorted_list.append(inserted_section)
-            return True
+                new_sorted_list.append(section)
+            return False
+
+        self._sorted_list.append(inserted_section)
+        return True
 
     def add_section(
         self,

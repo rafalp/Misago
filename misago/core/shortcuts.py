@@ -16,7 +16,7 @@ def paginate(
 
     if page in (1, "1") and not allow_explicit_first_page:
         raise ExplicitFirstPage()
-    elif not page:
+    if not page:
         page = 1
 
     paginator = paginator or Paginator
@@ -85,5 +85,4 @@ def validate_slug(model, slug):
 def get_int_or_404(value):
     if str(value).isdigit():
         return int(value)
-    else:
-        raise Http404()
+    raise Http404()

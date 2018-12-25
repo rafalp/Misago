@@ -130,7 +130,9 @@ class UsersList(UserAdmin, generic.ListView):
 
             messages.success(request, _("Selected users accounts have been activated."))
 
-    def action_ban(self, request, users):
+    def action_ban(
+        self, request, users
+    ):  # pylint: disable=too-many-locals, too-many-nested-blocks, too-many-branches
         users = users.order_by("slug")
         for user in users:
             if user.is_superuser:
@@ -252,8 +254,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
     def initialize_form(self, form, request, target):
         if request.method == "POST":
             return form(request.POST, request.FILES, instance=target, request=request)
-        else:
-            return form(instance=target, request=request)
+        return form(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         new_user = User.objects.create_user(
@@ -291,8 +292,7 @@ class EditUser(UserAdmin, generic.ModelFormView):
     def initialize_form(self, form, request, target):
         if request.method == "POST":
             return form(request.POST, request.FILES, instance=target, request=request)
-        else:
-            return form(instance=target, request=request)
+        return form(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         target.username = target.old_username

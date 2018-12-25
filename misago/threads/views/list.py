@@ -32,10 +32,12 @@ class ThreadsList(View):
         return render(request, self.template_name, template_context)
 
     def get_category(self, request, **kwargs):
-        return self.category(request, **kwargs)
+        return self.category(request, **kwargs)  # pylint: disable=not-callable
 
     def get_threads(self, request, category, list_type, page):
-        return self.threads(request, category, list_type, page)
+        return self.threads(  # pylint: disable=not-callable
+            request, category, list_type, page
+        )
 
     def get_frontend_context(self, request, category, threads):
         context = self.get_default_frontend_context()

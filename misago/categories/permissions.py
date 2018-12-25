@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
@@ -7,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from ..acl import algebra
 from ..acl.decorators import return_boolean
 from ..admin.forms import YesNoSwitch
-from ..users.models import AnonymousUser
 from .models import Category, CategoryRole, RoleCategoryACL
 
 
@@ -21,8 +19,6 @@ class PermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, CategoryRole):
         return PermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):
@@ -53,7 +49,7 @@ def build_category_acl(acl, category, categories_roles, key_name):
         if category.parent_id not in acl["visible_categories"]:
             # dont bother with child categories of invisible parents
             return
-        elif not acl["categories"][category.parent_id]["can_browse"]:
+        if not acl["categories"][category.parent_id]["can_browse"]:
             # parent's visible, but its contents aint
             return
 

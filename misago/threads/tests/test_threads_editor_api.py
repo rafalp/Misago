@@ -49,7 +49,10 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "No categories that allow new threads are available to you at the moment."
+                "detail": (
+                    "No categories that allow new threads are available "
+                    "to you at the moment."
+                )
             },
         )
 
@@ -61,7 +64,10 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "No categories that allow new threads are available to you at the moment."
+                "detail": (
+                    "No categories that allow new threads are available "
+                    "to you at the moment."
+                )
             },
         )
 
@@ -76,7 +82,10 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "No categories that allow new threads are available to you at the moment."
+                "detail": (
+                    "No categories that allow new threads are available "
+                    "to you at the moment."
+                )
             },
         )
 
@@ -258,7 +267,9 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
             self.assertEqual(
                 response.json(),
                 {
-                    "detail": "This category is closed. You can't reply to threads in it."
+                    "detail": (
+                        "This category is closed. You can't reply to threads in it."
+                    )
                 },
             )
 
@@ -511,7 +522,9 @@ class EditReplyEditorApiTests(EditorApiTestCase):
 
     @patch_category_acl({"can_hide_threads": 1, "can_edit_posts": 2})
     def test_edit_first_post_hidden(self):
-        """endpoint returns valid configuration for editor of hidden thread's first post"""
+        """
+        endpoint returns valid configuration for editor of hidden thread's first post
+        """
         self.thread.is_hidden = True
         self.thread.save()
         self.thread.first_post.is_hidden = True

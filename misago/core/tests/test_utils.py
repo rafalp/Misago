@@ -95,7 +95,13 @@ PLAINTEXT_FORMAT_CASES = [
     ("Lorem ipsum.\n\nDolor met.", "<p>Lorem ipsum.</p>\n\n<p>Dolor met.</p>"),
     (
         "http://misago-project.org/login/",
-        '<p><a href="http://misago-project.org/login/">http://misago-project.org/login/</a></p>',
+        (
+            "<p>"
+            '<a href="http://misago-project.org/login/">'
+            "http://misago-project.org/login/"
+            "</a>"
+            "</p>"
+        ),
     ),
 ]
 

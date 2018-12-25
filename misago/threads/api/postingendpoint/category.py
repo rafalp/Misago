@@ -13,7 +13,9 @@ from ...threadtypes import trees_map
 
 
 class CategoryMiddleware(PostingMiddleware):
-    """middleware that validates category id and sets category on thread and post instances"""
+    """
+    middleware that validates category id and sets category on thread and post instances
+    """
 
     def use_this_middleware(self):
         if self.mode == PostingEndpoint.START:
@@ -66,7 +68,8 @@ class CategorySerializer(serializers.Serializer):
         except Category.DoesNotExist:
             raise serializers.ValidationError(
                 _(
-                    "Selected category doesn't exist or you don't have permission to browse it."
+                    "Selected category doesn't exist or "
+                    "you don't have permission to browse it."
                 )
             )
         except PermissionDenied as e:

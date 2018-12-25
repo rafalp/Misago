@@ -1,4 +1,3 @@
-from django.core.paginator import Paginator
 from django.db.models import Index
 
 
@@ -6,10 +5,12 @@ class PgPartialIndex(Index):
     suffix = "part"
     max_name_length = 31
 
-    def __init__(self, fields=[], name=None, where=None):
+    def __init__(self, fields=None, name=None, where=None):
         if not where:
             raise ValueError("partial index requires WHERE clause")
         self.where = where
+
+        fields = fields or []
 
         super().__init__(fields, name)
 
@@ -37,17 +38,17 @@ class PgPartialIndex(Index):
         self.check_name()
 
     def __repr__(self):
-        if self.where is not None:
-            where_items = []
-            for key in sorted(self.where.keys()):
-                where_items.append("=".join([key, repr(self.where[key])]))
-            return "<%(name)s: fields=%(fields)s, where=%(where)s>" % {
-                "name": self.__class__.__name__,
-                "fields": "'%s'" % (", ".join(self.fields)),
-                "where": "'%s'" % (", ".join(where_items)),
-            }
-        else:
+        if self.where is None:
             return super().__repr__()
+
+        where_items = []
+        for key in sorted(self.where.keys()):
+            where_items.append("=".join([key, repr(self.where[key])]))
+        return "<%(name)s: fields=%(fields)s, where=%(where)s>" % {
+            "name": self.__class__.__name__,
+            "fields": "'%s'" % (", ".join(self.fields)),
+            "where": "'%s'" % (", ".join(where_items)),
+        }
 
     def deconstruct(self):
         path, args, kwargs = super().deconstruct()

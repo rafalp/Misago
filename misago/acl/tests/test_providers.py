@@ -1,4 +1,3 @@
-# pylint: disable=protected-access
 import pytest
 
 from ...conf import settings

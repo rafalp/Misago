@@ -250,7 +250,6 @@ class ListView(AdminView):
         for order_by, _ in self.ordering:  # pylint: disable=not-an-iterable
             if order_by == new_ordering:
                 return order_by
-        return None
 
     def get_ordering_methods(self, request):
         return {

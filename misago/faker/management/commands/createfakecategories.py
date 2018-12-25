@@ -29,7 +29,7 @@ class Command(BaseCommand):
             default=0,
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # pylint: disable=too-many-locals
         items_to_create = options["categories"]
         min_level = options["minlevel"]
 

@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from django.core import mail
 from django.test import TestCase
 
@@ -582,6 +581,8 @@ class ChangePasswordApiTests(TestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "This password is too short. It must contain at least 7 characters."
+                "detail": (
+                    "This password is too short. It must contain at least 7 characters."
+                )
             },
         )

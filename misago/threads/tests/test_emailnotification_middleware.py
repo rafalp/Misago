@@ -1,4 +1,3 @@
-from copy import deepcopy
 from datetime import timedelta
 
 from django.core import mail

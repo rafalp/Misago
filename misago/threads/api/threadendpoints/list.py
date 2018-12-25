@@ -31,7 +31,9 @@ class ThreadsList:
         )
 
     def get_threads(self, request, category, list_type, page):
-        return self.threads(request, category, list_type, page)
+        return self.threads(  # pylint: disable=not-callable
+            request, category, list_type, page
+        )
 
     def get_response_json(self, request, category, threads):
         return threads.get_frontend_context()
@@ -43,8 +45,7 @@ class ForumThreadsList(ThreadsList):
     def get_category(self, request, pk=None):
         if pk:
             return ThreadsCategory(request, pk=pk)
-        else:
-            return ThreadsRootCategory(request)
+        return ThreadsRootCategory(request)
 
 
 class PrivateThreadsList(ThreadsList):

@@ -40,8 +40,6 @@ class PermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != "anonymous":
         return PermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):

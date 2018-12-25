@@ -62,8 +62,6 @@ class RolePermissionsForm(forms.Form):
 def change_permissions_form(role):
     if isinstance(role, Role) and role.special_role != "anonymous":
         return RolePermissionsForm
-    else:
-        return None
 
 
 def build_acl(acl, roles, key_name):
@@ -253,7 +251,6 @@ def has_time_to_edit_poll(user_acl, target):
     if edit_time:
         diff = timezone.now() - target.posted_on
         diff_minutes = int(diff.total_seconds() / 60)
-
         return diff_minutes < edit_time
-    else:
-        return True
+
+    return True

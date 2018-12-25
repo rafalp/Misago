@@ -20,7 +20,9 @@ class ForgottenPasswordViewsTests(UserTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_authenticated_request_unusable_password_view_returns_200(self):
-        """request new password view returns 200 for authenticated with unusable password"""
+        """
+        request new password view returns 200 for authenticated with unusable password
+        """
         user = self.get_authenticated_user()
         user.set_password(None)
         user.save()

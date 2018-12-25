@@ -16,10 +16,10 @@ class AgreementForm(forms.ModelForm):
     is_active = forms.BooleanField(
         label=_("Set as active for its type"),
         help_text=_(
-            "If other agreement is already active for this type, it will be unset and replaced "
-            "with this one. "
-            "Misago will ask users who didn't accept this agreement to do so before allowing them "
-            "to continue using the site's features."
+            "If other agreement is already active for this type, it will be unset "
+            "and replaced with this one. "
+            "Misago will ask users who didn't accept this agreement to do so "
+            "before allowing them to continue using the site's features."
         ),
         required=False,
     )

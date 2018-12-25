@@ -140,7 +140,10 @@ class BioProfileFieldTests(AdminTestCase):
                         {
                             "fieldname": "bio",
                             "name": "Bio",
-                            "html": "<p>I am Bob!</p>\n\n<p>This is &lt;b&gt;my&lt;/b&gt; bio!</p>",
+                            "html": (
+                                "<p>I am Bob!</p>\n\n"
+                                "<p>This is &lt;b&gt;my&lt;/b&gt; bio!</p>"
+                            ),
                         }
                     ],
                 },

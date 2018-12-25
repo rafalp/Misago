@@ -82,8 +82,8 @@ class PollMergeHandler(MergeConflictHandler):
 
 class MergeConflict:
     """
-    Utility class single point of entry for detecting merge conflicts on different properties
-    and validating user resolutions.
+    Utility class single point of entry for detecting merge conflicts on different
+    properties and validating user resolutions.
     """
 
     HANDLERS = (BestAnswerMergeHandler, PollMergeHandler)

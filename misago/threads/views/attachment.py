@@ -34,13 +34,11 @@ def serve_file(request, pk, secret, thumbnail):
     if attachment.is_image:
         if thumbnail:
             return attachment.thumbnail.url
-        else:
-            return attachment.image.url
-    else:
-        if thumbnail:
-            raise Http404()
-        else:
-            return attachment.file.url
+        return attachment.image.url
+
+    if thumbnail:
+        raise Http404()
+    return attachment.file.url
 
 
 def allow_file_download(request, attachment):

@@ -1,10 +1,6 @@
 from datetime import timedelta
 
-from ..namechanges import (
-    get_left_namechanges,
-    get_next_available_namechange,
-    get_username_options,
-)
+from ..namechanges import get_left_namechanges, get_next_available_namechange
 
 
 def test_user_without_permission_to_change_name_has_no_changes_left(user):

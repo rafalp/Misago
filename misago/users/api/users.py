@@ -120,8 +120,7 @@ class UserViewSet(viewsets.GenericViewSet):
         if serializer.is_valid():
             serializer.save()
             return Response({"detail": _("Your forum options have been changed.")})
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route(methods=["get", "post"])
     def username(self, request, pk=None):
@@ -210,8 +209,7 @@ class UserViewSet(viewsets.GenericViewSet):
         ban = get_user_ban(profile, request.cache_versions)
         if ban:
             return Response(BanDetailsSerializer(ban).data)
-        else:
-            return Response({})
+        return Response({})
 
     @detail_route(methods=["get", "post"])
     def moderate_avatar(self, request, pk=None):

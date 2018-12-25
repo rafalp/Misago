@@ -26,8 +26,7 @@ User = auth.get_user_model()
 def gateway(request):
     if request.method == "POST":
         return login(request)
-    else:
-        return session_user(request)
+    return session_user(request)
 
 
 @api_view(["POST"])
@@ -43,8 +42,7 @@ def login(request):
     if form.is_valid():
         auth.login(request, form.user_cache)
         return Response(AuthenticatedUserSerializer(form.user_cache).data)
-    else:
-        return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+    return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view()
@@ -72,9 +70,7 @@ def get_criteria(request):
 
     for validator in settings.AUTH_PASSWORD_VALIDATORS:
         validator_dict = {"name": validator["NAME"].split(".")[-1]}
-
         validator_dict.update(validator.get("OPTIONS", {}))
-
         criteria["password"].append(validator_dict)
 
     return Response(criteria)
@@ -90,29 +86,29 @@ def send_activation(request):
     will mail account activation link to requester
     """
     form = ResendActivationForm(request.data)
-    if form.is_valid():
-        requesting_user = form.user_cache
-
-        mail_subject = _("Activate %(user)s account on %(forum_name)s forums") % {
-            "user": requesting_user.username,
-            "forum_name": request.settings.forum_name,
-        }
-
-        mail_user(
-            requesting_user,
-            mail_subject,
-            "misago/emails/activation/by_user",
-            context={
-                "activation_token": make_activation_token(requesting_user),
-                "settings": request.settings,
-            },
-        )
-
-        return Response(
-            {"username": form.user_cache.username, "email": form.user_cache.email}
-        )
-    else:
+    if not form.is_valid():
         return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+    requesting_user = form.user_cache
+
+    mail_subject = _("Activate %(user)s account on %(forum_name)s forums") % {
+        "user": requesting_user.username,
+        "forum_name": request.settings.forum_name,
+    }
+
+    mail_user(
+        requesting_user,
+        mail_subject,
+        "misago/emails/activation/by_user",
+        context={
+            "activation_token": make_activation_token(requesting_user),
+            "settings": request.settings,
+        },
+    )
+
+    return Response(
+        {"username": form.user_cache.username, "email": form.user_cache.email}
+    )
 
 
 @api_view(["POST"])
@@ -125,31 +121,31 @@ def send_password_form(request):
     will mail change password form link to requester
     """
     form = ResetPasswordForm(request.data)
-    if form.is_valid():
-        requesting_user = form.user_cache
-
-        mail_subject = _("Change %(user)s password on %(forum_name)s forums") % {
-            "user": requesting_user.username,
-            "forum_name": request.settings.forum_name,
-        }
-
-        confirmation_token = make_password_change_token(requesting_user)
-
-        mail_user(
-            requesting_user,
-            mail_subject,
-            "misago/emails/change_password_form_link",
-            context={
-                "confirmation_token": confirmation_token,
-                "settings": request.settings,
-            },
-        )
-
-        return Response(
-            {"username": form.user_cache.username, "email": form.user_cache.email}
-        )
-    else:
+    if not form.is_valid():
         return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
+
+    requesting_user = form.user_cache
+
+    mail_subject = _("Change %(user)s password on %(forum_name)s forums") % {
+        "user": requesting_user.username,
+        "forum_name": request.settings.forum_name,
+    }
+
+    confirmation_token = make_password_change_token(requesting_user)
+
+    mail_user(
+        requesting_user,
+        mail_subject,
+        "misago/emails/change_password_form_link",
+        context={
+            "confirmation_token": confirmation_token,
+            "settings": request.settings,
+        },
+    )
+
+    return Response(
+        {"username": form.user_cache.username, "email": form.user_cache.email}
+    )
 
 
 class PasswordChangeFailed(Exception):

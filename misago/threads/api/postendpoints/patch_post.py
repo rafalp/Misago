@@ -27,8 +27,7 @@ def patch_acl(request, post, value):
     if value:
         add_acl_to_obj(request.user_acl, post)
         return {"acl": post.acl}
-    else:
-        return {"acl": None}
+    return {"acl": None}
 
 
 post_patch_dispatcher.add("acl", patch_acl)

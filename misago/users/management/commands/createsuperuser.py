@@ -73,7 +73,9 @@ class Command(BaseCommand):
         self.stdin = options.get("stdin", sys.stdin)  # Used for testing
         return super().execute(*args, **options)
 
-    def handle(self, *args, **options):
+    def handle(
+        self, *args, **options
+    ):  # pylint: disable=too-many-branches, too-many-locals
         username = options.get("username")
         email = options.get("email")
         password = options.get("password")
@@ -121,7 +123,7 @@ class Command(BaseCommand):
                     try:
                         message = force_str("Enter displayed username: ")
                         raw_value = input(message).strip()
-                        validate_username(raw_value)
+                        validate_username(settings, raw_value)
                         username = raw_value
                     except ValidationError as e:
                         self.stderr.write("\n".join(e.messages))

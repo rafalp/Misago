@@ -4,10 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser as DjangoAnonymousUser
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.models import UserManager as BaseUserManager
-from django.contrib.auth.password_validation import validate_password
 from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
-from django.db import IntegrityError, models, transaction
+from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -17,7 +16,6 @@ from ...acl.models import Role
 from ...conf import settings
 from ...core.pgutils import PgPartialIndex
 from ...core.utils import slugify
-from ..audittrail import create_user_audit_trail
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
 from .online import Online
@@ -39,7 +37,7 @@ class UserManager(BaseUserManager):
         user.set_email(email)
         user.set_password(password)
 
-        if not "rank" in extra_fields:
+        if "rank" not in extra_fields:
             user.rank = Rank.objects.get_default()
 
         now = timezone.now()

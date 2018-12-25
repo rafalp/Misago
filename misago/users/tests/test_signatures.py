@@ -2,7 +2,6 @@ from unittest.mock import Mock
 
 import pytest
 
-from ...acl.useracl import get_user_acl
 from ...users import signatures
 
 

@@ -261,7 +261,10 @@ class UserCreateTests(UserTestCase):
             {
                 "email": ["This email is not allowed."],
                 "password": [
-                    "This password is too short. It must contain at least 7 characters.",
+                    (
+                        "This password is too short. "
+                        "It must contain at least 7 characters."
+                    ),
                     "This password is entirely numeric.",
                 ],
             },

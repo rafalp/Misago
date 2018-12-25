@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 
 
 class PostsPaginator(Paginator):
-    """paginator that returns that makes last item on page repeat as first item on next page."""
+    """paginator that makes last item on page repeat as first item on next page."""
 
     def __init__(self, object_list, per_page, orphans=0, allow_empty_first_page=True):
         per_page = int(per_page) - 1

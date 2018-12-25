@@ -29,8 +29,7 @@ class AdminCategoryFieldMixin:
         level = getattr(obj, obj._mptt_meta.level_attr) - self.base_level
         if level > 0:
             return mark_safe(conditional_escape(self.level_indicator) * level)
-        else:
-            return ""
+        return ""
 
 
 class AdminCategoryChoiceField(AdminCategoryFieldMixin, TreeNodeChoiceField):
@@ -56,7 +55,8 @@ class CategoryFormBase(forms.ModelForm):
         label=_("CSS class"),
         required=False,
         help_text=_(
-            "Optional CSS class used to customize this category appearance from templates."
+            "Optional CSS class used to customize this "
+            "category's appearance from templates."
         ),
     )
     is_closed = YesNoSwitch(
@@ -64,13 +64,6 @@ class CategoryFormBase(forms.ModelForm):
         required=False,
         help_text=_(
             "Only members with valid permissions can post in closed categories."
-        ),
-    )
-    css_class = forms.CharField(
-        label=_("CSS class"),
-        required=False,
-        help_text=_(
-            "Optional CSS class used to customize this category appearance from templates."
         ),
     )
     require_threads_approval = YesNoSwitch(
@@ -91,23 +84,24 @@ class CategoryFormBase(forms.ModelForm):
         label=_("Edits"),
         required=False,
         help_text=_(
-            "Will make all edited replies return to unapproved state for moderator to review."
+            "Will make all edited replies return to unapproved state "
+            "for moderator to review."
         ),
     )
     prune_started_after = forms.IntegerField(
         label=_("Thread age"),
         min_value=0,
         help_text=_(
-            "Prune thread if number of days since its creation is greater than specified. "
-            "Enter 0 to disable this pruning criteria."
+            "Prune thread if number of days since its creation is greater than "
+            "specified. Enter 0 to disable this pruning criteria."
         ),
     )
     prune_replied_after = forms.IntegerField(
         label=_("Last reply"),
         min_value=0,
         help_text=_(
-            "Prune thread if number of days since last reply is greater than specified. "
-            "Enter 0 to disable this pruning criteria."
+            "Prune thread if number of days since last reply is greater than "
+            "specified. Enter 0 to disable this pruning criteria."
         ),
     )
 

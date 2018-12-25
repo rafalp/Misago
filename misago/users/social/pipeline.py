@@ -1,3 +1,4 @@
+# pylint: disable=keyword-arg-before-vararg
 import json
 
 from django.contrib.auth import get_user_model
@@ -31,7 +32,9 @@ User = get_user_model()
 
 
 def validate_ip_not_banned(strategy, details, backend, user=None, *args, **kwargs):
-    """Pipeline step that interrupts pipeline if found user is non-staff and IP banned"""
+    """
+    Pipeline step that interrupts pipeline if found user is non-staff and IP banned
+    """
     if not user or user.is_staff:
         return None
 
@@ -85,8 +88,8 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
         raise SocialAuthFailed(
             backend,
             _(
-                "Your account has to be activated by site administrator before you will be able to "
-                "sign in with %(backend)s."
+                "Your account has to be activated by site administrator "
+                "before you will be able to sign in with %(backend)s."
             )
             % {"backend": backend_name},
         )
@@ -169,7 +172,9 @@ def create_user(strategy, details, backend, user=None, *args, **kwargs):
 
 @partial
 def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs):
-    """Alternatively to create_user lets user confirm account creation before authenticating"""
+    """
+    create_user lets user confirm account creation by entering final username or email
+    """
     if user:
         return None
 

@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.utils import timezone
 
 from ...conftest import get_cache_versions
-from ...users import BANS_CACHE
 from ..bans import (
     ban_ip,
     ban_user,

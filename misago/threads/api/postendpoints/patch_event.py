@@ -1,6 +1,3 @@
-from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-
 from ....acl.objectacl import add_acl_to_obj
 from ....core.apipatch import ApiPatch
 from ...moderation import posts as moderation
@@ -14,8 +11,7 @@ def patch_acl(request, event, value):
     if value:
         add_acl_to_obj(request.user_acl, event)
         return {"acl": event.acl}
-    else:
-        return {"acl": None}
+    return {"acl": None}
 
 
 event_patch_dispatcher.add("acl", patch_acl)
@@ -46,4 +42,5 @@ def event_patch_endpoint(request, event):
 
         event.category.synchronize()
         event.category.save()
+
     return response

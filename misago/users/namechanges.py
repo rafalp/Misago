@@ -5,8 +5,6 @@ from datetime import timedelta
 
 from django.utils import timezone
 
-from .models import UsernameChange
-
 
 def get_username_options(settings, user, user_acl):
     changes_left = get_left_namechanges(user, user_acl)
@@ -28,7 +26,7 @@ def get_left_namechanges(user, user_acl):
     valid_changes = get_valid_changes_queryset(user, user_acl)
     used_changes = valid_changes.count()
     if name_changes_allowed <= used_changes:
-        left = 0
+        return 0
     return name_changes_allowed - used_changes
 
 

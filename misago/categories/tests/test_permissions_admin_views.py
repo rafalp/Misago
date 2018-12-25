@@ -128,14 +128,14 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         root = Category.objects.root_category()
         for descendant in root.get_descendants():
             descendant.delete()
-        """
-        Create categories tree for test cases:
 
-        Category A
-          + Category B
-        Category C
-          + Category D
-        """
+        # Create categories tree for test cases:
+        #
+        # Category A
+        #   + Category B
+        # Category C
+        #   + Category D
+
         root = Category.objects.root_category()
         self.client.post(
             reverse("misago:admin:categories:nodes:new"),
@@ -149,9 +149,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         test_category = Category.objects.get(slug="category-a")
 
         self.assertEqual(Category.objects.count(), 3)
-        """
-        Create test roles
-        """
+
+        # Create test roles
         self.client.post(
             reverse("misago:admin:permissions:users:new"),
             data=mock_role_form_data(Role(), {"name": "Test Role A"}),
@@ -175,9 +174,8 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         role_comments = CategoryRole.objects.get(name="Test Comments")
         role_full = CategoryRole.objects.get(name="Test Full")
-        """
-        Test view itself
-        """
+
+        # Test view itself
         # See if form page is rendered
         response = self.client.get(
             reverse(
@@ -246,14 +244,14 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             )
         )
         self.assertEqual(response.status_code, 302)
-        """
-        Create categories tree for test cases:
 
-        Category A
-          + Category B
-        Category C
-          + Category D
-        """
+        # Create categories tree for test cases:
+        #
+        # Category A
+        #   + Category B
+        # Category C
+        #   + Category D
+
         root = Category.objects.root_category()
         self.client.post(
             reverse("misago:admin:categories:nodes:new"),

@@ -52,8 +52,6 @@ class PollSerializer(serializers.ModelSerializer):
             return reverse(
                 "misago:user", kwargs={"slug": obj.poster_slug, "pk": obj.poster_id}
             )
-        else:
-            return None
 
     def get_acl(self, obj):
         try:
@@ -119,6 +117,7 @@ class EditPollSerializer(serializers.ModelSerializer):
             )
 
         if total_choices > MAX_POLL_OPTIONS:
+            # pylint: disable=line-too-long
             message = ngettext(
                 "You can't add more than %(limit_value)s option to a single poll (added %(show_value)s).",
                 "You can't add more than %(limit_value)s options to a single poll (added %(show_value)s).",
@@ -132,7 +131,8 @@ class EditPollSerializer(serializers.ModelSerializer):
         if data["allowed_choices"] > len(data["choices"]):
             raise serializers.ValidationError(
                 _(
-                    "Number of allowed choices can't be greater than number of all choices."
+                    "Number of allowed choices can't be "
+                    "greater than number of all choices."
                 )
             )
         return data

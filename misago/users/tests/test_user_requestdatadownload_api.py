@@ -47,7 +47,9 @@ class UserRequestDataDownload(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "detail": "You can't have more than one data download request at single time."
+                "detail": (
+                    "You can't have more than one data download request at single time."
+                )
             },
         )
 

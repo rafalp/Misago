@@ -13,13 +13,13 @@ class Command(BaseCommand):
         keys = {}
 
         for user in chunk_queryset(User.objects.all()):
-            for key in user.profile_fields.keys():
+            for key in user.profile_fields:
                 keys.setdefault(key, 0)
                 keys[key] += 1
 
         if keys:
-            max_len = max([len(k) for k in keys.keys()])
-            for key in sorted(keys.keys()):
+            max_len = max([len(k) for k in keys])
+            for key in sorted(keys):
                 space = " " * (max_len + 1 - len(key))
                 self.stdout.write("%s:%s%s" % (key, space, keys[key]))
         else:

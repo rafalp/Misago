@@ -41,22 +41,24 @@ class RoleFormMixin:
                     valid_forms += 1
 
             form = CategoryRoleForm(request.POST, instance=target)
-            if form.is_valid() and len(perms_forms) == valid_forms:
-                new_permissions = {}
-                for permissions_form in perms_forms:
-                    cleaned_data = permissions_form.cleaned_data
-                    new_permissions[permissions_form.prefix] = cleaned_data
+            if form.is_valid():
+                if len(perms_forms) == valid_forms:
+                    new_permissions = {}
+                    for permissions_form in perms_forms:
+                        cleaned_data = permissions_form.cleaned_data
+                        new_permissions[permissions_form.prefix] = cleaned_data
 
-                form.instance.permissions = new_permissions
-                form.instance.save()
+                    form.instance.permissions = new_permissions
+                    form.instance.save()
 
-                messages.success(request, self.message_submit % {"name": target.name})
+                    messages.success(
+                        request, self.message_submit % {"name": target.name}
+                    )
 
-                if "stay" in request.POST:
-                    return redirect(request.path)
-                else:
+                    if "stay" in request.POST:
+                        return redirect(request.path)
                     return redirect(self.root_link)
-            elif form.is_valid() and len(perms_forms) != valid_forms:
+
                 form.add_error(None, _("Form contains errors."))
 
         return self.render(
@@ -85,8 +87,6 @@ class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
 
 
 class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
-    """category roles view for assinging roles to category, add link to it in categories list"""
-
     templates_dir = "misago/admin/categoryroles"
     template = "categoryroles.html"
 
@@ -132,8 +132,7 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
                 return redirect(request.path)
-            else:
-                return redirect(self.root_link)
+            return redirect(self.root_link)
 
         return self.render(request, {"forms": forms, "target": target})
 
@@ -147,8 +146,6 @@ CategoriesList.add_item_action(
 
 
 class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
-    """role categories view for assinging categories to role, add link to it in user roles list"""
-
     templates_dir = "misago/admin/categoryroles"
     template = "rolecategories.html"
 
@@ -200,8 +197,7 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
             messages.success(request, message % {"name": target.name})
             if "stay" in request.POST:
                 return redirect(request.path)
-            else:
-                return redirect(self.root_link)
+            return redirect(self.root_link)
 
         return self.render(request, {"forms": forms, "target": target})
 

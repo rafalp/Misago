@@ -107,7 +107,9 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     @patch_attachments_acl()
     def test_get_initial_attachments(self):
-        """get_initial_attachments returns list of attachments already existing on post"""
+        """
+        get_initial_attachments returns list of attachments already existing on post
+        """
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=Mock(data={}),
@@ -132,7 +134,9 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     @patch_attachments_acl()
     def test_get_new_attachments(self):
-        """get_initial_attachments returns list of attachments already existing on post"""
+        """
+        get_initial_attachments returns list of attachments already existing on post
+        """
         user_acl = useracl.get_user_acl(self.user, cache_versions)
         middleware = AttachmentsMiddleware(
             request=Mock(data={}),
@@ -160,7 +164,9 @@ class AttachmentsMiddlewareTests(AuthenticatedUserTestCase):
 
     @patch_attachments_acl({"can_delete_other_users_attachments": False})
     def test_cant_delete_attachment(self):
-        """middleware validates if we have permission to delete other users attachments"""
+        """
+        middleware validates if we have permission to delete other users attachments
+        """
         attachment = self.mock_attachment(user=False, post=self.post)
         self.assertIsNone(attachment.uploader)
 

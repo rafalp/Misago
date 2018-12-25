@@ -90,7 +90,9 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     @patch_user_acl({"can_start_polls": 1})
     def test_other_user_thread_no_permission(self):
-        """api validates that user has permission to start poll in other user's thread"""
+        """
+        api validates that user has permission to start poll in other user's thread
+        """
         self.thread.starter = None
         self.thread.save()
 
@@ -102,7 +104,9 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
 
     @patch_user_acl({"can_start_polls": 2})
     def test_other_user_thread(self):
-        """api validates that user has permission to start poll in other user's thread"""
+        """
+        api validates that user has permission to start poll in other user's thread
+        """
         self.thread.starter = None
         self.thread.save()
 
@@ -273,7 +277,7 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertTrue(response_json["is_public"])
 
         self.assertEqual(len(response_json["choices"]), 3)
-        self.assertEqual(len(set([c["hash"] for c in response_json["choices"]])), 3)
+        self.assertEqual(len({c["hash"] for c in response_json["choices"]}), 3)
         self.assertEqual(
             [c["label"] for c in response_json["choices"]], ["Red", "Green", "Blue"]
         )
@@ -296,6 +300,6 @@ class ThreadPollCreateTests(ThreadPollApiTestCase):
         self.assertTrue(poll.is_public)
 
         self.assertEqual(len(poll.choices), 3)
-        self.assertEqual(len(set([c["hash"] for c in poll.choices])), 3)
+        self.assertEqual(len({c["hash"] for c in poll.choices}), 3)
 
         self.assertEqual(self.user.audittrail_set.count(), 1)

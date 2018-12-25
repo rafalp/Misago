@@ -29,7 +29,9 @@ class SyncUnreadPrivateThreadsTestCase(PrivateThreadsTestCase):
         self.assertEqual(self.user.unread_private_threads, 1)
 
     def test_middleware_counts_unread_thread(self):
-        """middleware counts thread with unread reply, post read flags user for recount"""
+        """
+        middleware counts thread with unread reply, post read flags user for recount
+        """
         self.user.sync_unread_private_threads = True
         self.user.save()
 

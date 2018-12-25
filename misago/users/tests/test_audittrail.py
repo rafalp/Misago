@@ -167,7 +167,7 @@ class RemoveOldAuditTrailsTest(UserTestCase):
     def test_recent_audit_trail_is_kept(self):
         """remove_old_ips keeps recent audit trails"""
         user = self.get_authenticated_user()
-        audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
+        create_user_audit_trail(user, USER_IP, self.obj)
 
         remove_old_ips.send(None)
 

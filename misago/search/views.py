@@ -1,7 +1,6 @@
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from .searchproviders import searchproviders

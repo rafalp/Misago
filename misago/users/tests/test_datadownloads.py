@@ -3,7 +3,7 @@ import os
 from django.core.files import File
 
 from ...categories.models import Category
-from ...threads.models import Attachment, AttachmentType
+from ...threads.models import AttachmentType
 from ...threads.test import post_poll, post_thread
 from ..audittrail import create_user_audit_trail
 from ..datadownloads import (
@@ -176,7 +176,9 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
         self.assert_download_is_valid()
 
     def test_prepare_download_with_username_changed_by_deleted_user(self):
-        """function creates data download for user with username changed by deleted user"""
+        """
+        function creates data download for user with username changed by deleted user
+        """
         self.user.record_name_change(self.user, "aerith", "alice")
         self.user.namechanges.update(changed_by=None)
 
@@ -271,7 +273,10 @@ class RequestUserDataDownloadTests(AuthenticatedUserTestCase):
         self.assertEqual(data_download.status, DataDownload.STATUS_PENDING)
 
     def test_util_creates_data_download_for_user_explicit_requester(self):
-        """request_user_data_download created valid data download for user with other requester"""
+        """
+        request_user_data_download created valid data download
+        for user with other requester
+        """
         requester = self.get_superuser()
         data_download = request_user_data_download(self.user, requester)
 
@@ -283,7 +288,9 @@ class RequestUserDataDownloadTests(AuthenticatedUserTestCase):
 
 class UserHasRequestedDataDownloadTests(AuthenticatedUserTestCase):
     def test_util_returns_false_for_no_download(self):
-        """user_has_data_download_request returns false if user has no requests in progress"""
+        """
+        user_has_data_download_request returns false if user has no requests in progress
+        """
         self.assertFalse(user_has_data_download_request(self.user))
 
     def test_util_returns_false_for_ready_download(self):
@@ -311,7 +318,9 @@ class UserHasRequestedDataDownloadTests(AuthenticatedUserTestCase):
         self.assertTrue(user_has_data_download_request(self.user))
 
     def test_util_returns_true_for_processing_download(self):
-        """user_has_data_download_request returns true if user has processing download"""
+        """
+        user_has_data_download_request returns true if user has processing download
+        """
         data_download = request_user_data_download(self.user)
         data_download.status = DataDownload.STATUS_PROCESSING
         data_download.save()

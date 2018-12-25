@@ -11,8 +11,6 @@ class ExceptionHandlerMiddleware(MiddlewareMixin):
 
         if request_is_to_misago and misago_can_handle_exception:
             return exceptionhandler.handle_misago_exception(request, exception)
-        else:
-            return None
 
 
 class FrontendContextMiddleware(MiddlewareMixin):

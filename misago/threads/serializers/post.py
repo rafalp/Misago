@@ -79,8 +79,6 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
             and (not obj.is_hidden or obj.acl["can_see_hidden"])
         ):
             return obj.content
-        else:
-            return None
 
     def get_attachments(self, obj):
         return obj.attachments_cache
@@ -156,8 +154,6 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
                 "misago:user",
                 kwargs={"pk": obj.last_editor_id, "slug": obj.last_editor_slug},
             )
-        else:
-            return None
 
     def get_hidden_by_url(self, obj):
         if obj.hidden_by_id:
@@ -165,5 +161,3 @@ class PostSerializer(serializers.ModelSerializer, MutableFields):
                 "misago:user",
                 kwargs={"pk": obj.hidden_by_id, "slug": obj.hidden_by_slug},
             )
-        else:
-            return None

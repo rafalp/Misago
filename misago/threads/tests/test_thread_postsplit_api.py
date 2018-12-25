@@ -6,7 +6,7 @@ from .. import test
 from ...categories.models import Category
 from ...readtracker import poststracker
 from ...users.test import AuthenticatedUserTestCase
-from ..models import Post, Thread
+from ..models import Post
 from ..serializers.moderation import POSTS_LIMIT
 from ..test import patch_category_acl, patch_other_category_acl
 
@@ -407,7 +407,8 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             response_json,
             {
                 "weight": [
-                    "You don't have permission to pin threads globally in this category."
+                    "You don't have permission to pin threads "
+                    "globally in this category."
                 ]
             },
         )

@@ -15,7 +15,6 @@ def get_protected_namespace(request):
                 return namespace
         except NoReverseMatch:
             pass
-    return None
 
 
 def render(request, template, context=None, error_page=False):

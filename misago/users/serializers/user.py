@@ -72,22 +72,18 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
         request = self.context["request"]
         if obj == request.user or request.user_acl["can_see_users_emails"]:
             return obj.email
-        else:
-            return None
 
     def get_is_followed(self, obj):
         request = self.context["request"]
         if obj.acl["can_follow"]:
             return request.user.is_following(obj)
-        else:
-            return False
+        return False
 
     def get_is_blocked(self, obj):
         request = self.context["request"]
         if obj.acl["can_block"]:
             return request.user.is_blocking(obj)
-        else:
-            return False
+        return False
 
     def get_meta(self, obj):
         return {"score": obj.score}
@@ -98,8 +94,6 @@ class UserSerializer(serializers.ModelSerializer, MutableFields):
     def get_signature(self, obj):
         if obj.has_valid_signature:
             return obj.signature_parsed
-        else:
-            return None
 
     def get_status(self, obj):
         try:

@@ -898,7 +898,9 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertTrue(updated_user.has_usable_password())
 
     def test_edit_keep_unusable_password(self):
-        """admin edit form handles unusable passwords and lets admin leave them unchanged"""
+        """
+        admin edit form handles unusable passwords and lets admin leave them unchanged
+        """
         test_user = create_test_user("User", "user@example.com")
         self.assertFalse(test_user.has_usable_password())
 

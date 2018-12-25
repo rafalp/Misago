@@ -1,8 +1,6 @@
 import json
-from datetime import timedelta
 
 from django.urls import reverse
-from django.utils import timezone
 
 from .. import test
 from ...categories.models import Category

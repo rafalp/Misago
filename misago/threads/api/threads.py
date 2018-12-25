@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from ...categories import PRIVATE_THREADS_ROOT_NAME, THREADS_ROOT_NAME
 from ...core.shortcuts import get_int_or_404
 from ..models import Post, Thread
-from ..moderation import threads as moderation
 from ..permissions import allow_use_private_threads
 from ..viewmodels import (
     ForumThread,
@@ -30,7 +29,7 @@ class ViewSet(viewsets.ViewSet):
     def get_thread(
         self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
     ):
-        return self.thread(
+        return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,
@@ -82,18 +81,14 @@ class ThreadViewSet(ViewSet):
             post=post,
         )
 
-        if posting.is_valid():
-            posting.save()
-
-            return Response(
-                {
-                    "id": thread.pk,
-                    "title": thread.title,
-                    "url": thread.get_absolute_url(),
-                }
-            )
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        posting.save()
+
+        return Response(
+            {"id": thread.pk, "title": thread.title, "url": thread.get_absolute_url()}
+        )
 
     @detail_route(methods=["post"], url_path="merge")
     @transaction.atomic
@@ -139,15 +134,11 @@ class PrivateThreadViewSet(ViewSet):
             post=post,
         )
 
-        if posting.is_valid():
-            posting.save()
-
-            return Response(
-                {
-                    "id": thread.pk,
-                    "title": thread.title,
-                    "url": thread.get_absolute_url(),
-                }
-            )
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        posting.save()
+
+        return Response(
+            {"id": thread.pk, "title": thread.title, "url": thread.get_absolute_url()}
+        )

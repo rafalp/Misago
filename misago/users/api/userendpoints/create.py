@@ -7,7 +7,6 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from ... import captcha
-from ....conf import settings
 from ....legal.models import Agreement
 from ...forms.register import RegisterForm
 from ...registration import (

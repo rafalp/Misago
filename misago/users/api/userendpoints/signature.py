@@ -41,6 +41,7 @@ def get_signature_options(settings, user):
         options["signature"] = {"plain": user.signature, "html": user.signature_parsed}
 
         if not is_user_signature_valid(user):
+            # pylint: disable=unsupported-assignment-operation
             options["signature"]["html"] = None
 
     return Response(options)

@@ -31,7 +31,9 @@ class ViewSet(viewsets.ViewSet):
     thread = None
 
     def get_thread(self, request, thread_pk):
-        return self.thread(request, get_int_or_404(thread_pk)).unwrap()
+        return self.thread(  # pylint: disable=not-callable
+            request, get_int_or_404(thread_pk)
+        ).unwrap()
 
     def get_poll(self, thread, pk):
         try:
@@ -120,8 +122,7 @@ class ViewSet(viewsets.ViewSet):
     def votes(self, request, thread_pk, pk=None):
         if request.method == "POST":
             return self.post_votes(request, thread_pk, pk)
-        else:
-            return self.get_votes(request, thread_pk, pk)
+        return self.get_votes(request, thread_pk, pk)
 
     @transaction.atomic
     def post_votes(self, request, thread_pk, pk=None):

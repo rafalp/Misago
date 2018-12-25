@@ -16,8 +16,7 @@ def is_user_signature_valid(user):
     if user.signature:
         valid_checksum = make_signature_checksum(user.signature_parsed, user)
         return user.signature_checksum == valid_checksum
-    else:
-        return False
+    return False
 
 
 def make_signature_checksum(parsed_signature, user):

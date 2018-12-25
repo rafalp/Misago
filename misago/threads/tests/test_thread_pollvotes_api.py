@@ -243,7 +243,9 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
         )
 
     def test_revote(self):
-        """api validates if user is trying to change vote in poll that disallows revoting"""
+        """
+        api validates if user is trying to change vote in poll that disallows revoting
+        """
         response = self.post(self.api_link, data=["lorem", "ipsum"])
         self.assertEqual(response.status_code, 403)
         self.assertEqual(

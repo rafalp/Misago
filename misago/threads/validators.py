@@ -45,6 +45,7 @@ def validate_thread_title_length(settings, value):
         raise ValidationError(_("You have to enter an thread title."))
 
     if value_len < settings.thread_title_length_min:
+        # pylint: disable=line-too-long
         message = ngettext(
             "Thread title should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Thread title should be at least %(limit_value)s characters long (it has %(show_value)s).",
@@ -56,6 +57,7 @@ def validate_thread_title_length(settings, value):
         )
 
     if value_len > settings.thread_title_length_max:
+        # pylint: disable=line-too-long
         message = ngettext(
             "Thread title cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Thread title cannot be longer than %(limit_value)s characters (it has %(show_value)s).",
@@ -74,6 +76,7 @@ def validate_post_length(settings, value):
         raise ValidationError(_("You have to enter a message."))
 
     if value_len < settings.post_length_min:
+        # pylint: disable=line-too-long
         message = ngettext(
             "Posted message should be at least %(limit_value)s character long (it has %(show_value)s).",
             "Posted message should be at least %(limit_value)s characters long (it has %(show_value)s).",
@@ -84,6 +87,7 @@ def validate_post_length(settings, value):
         )
 
     if settings.post_length_max and value_len > settings.post_length_max:
+        # pylint: disable=line-too-long
         message = ngettext(
             "Posted message cannot be longer than %(limit_value)s character (it has %(show_value)s).",
             "Posted message cannot be longer than %(limit_value)s characters (it has %(show_value)s).",

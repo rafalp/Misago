@@ -11,9 +11,11 @@ from ...validators import validate_post, validate_post_length, validate_thread_t
 class ReplyMiddleware(PostingMiddleware):
     def get_serializer(self):
         if self.mode == PostingEndpoint.START:
-            return ThreadSerializer(data=self.request.data, context=self.kwargs)
+            serializer = ThreadSerializer
         else:
-            return ReplySerializer(data=self.request.data, context=self.kwargs)
+            serializer = ReplySerializer
+
+        return serializer(data=self.request.data, context=self.kwargs)
 
     def save(self, serializer):
         if self.mode == PostingEndpoint.START:
@@ -93,10 +95,10 @@ class ReplySerializer(serializers.Serializer):
     def parse_post(self, post):
         if self.context["mode"] == PostingEndpoint.START:
             return common_flavour(self.context["request"], self.context["user"], post)
-        else:
-            return common_flavour(
-                self.context["request"], self.context["post"].poster, post
-            )
+
+        return common_flavour(
+            self.context["request"], self.context["post"].poster, post
+        )
 
 
 class ThreadSerializer(ReplySerializer):

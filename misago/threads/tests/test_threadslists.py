@@ -9,7 +9,6 @@ from ...acl.test import patch_user_acl
 from ...categories.models import Category
 from ...conf import settings
 from ...readtracker import poststracker
-from ...users.models import AnonymousUser
 from ...users.test import AuthenticatedUserTestCase
 
 LISTS_URLS = ("", "my/", "new/", "unread/", "subscribed/")

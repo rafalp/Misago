@@ -50,8 +50,7 @@ class ApiPatch:
         patch["detail"] = detail
         if is_errored:
             return Response(patch, status=400)
-        else:
-            return Response(patch)
+        return Response(patch)
 
     def dispatch_bulk(self, request, targets):
         is_errored = False
@@ -79,8 +78,7 @@ class ApiPatch:
 
         if is_errored:
             return Response(result, status=400)
-        else:
-            return Response(result)
+        return Response(result)
 
     def validate_action(self, action):
         if not action.get("op"):

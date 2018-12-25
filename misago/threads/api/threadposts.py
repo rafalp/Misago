@@ -32,7 +32,7 @@ class ViewSet(viewsets.ViewSet):
     def get_thread(
         self, request, pk, path_aware=False, read_aware=False, subscription_aware=False
     ):
-        return self.thread(
+        return self.thread(  # pylint: disable=not-callable
             request,
             get_int_or_404(pk),
             path_aware=path_aware,
@@ -95,21 +95,21 @@ class ViewSet(viewsets.ViewSet):
             request, PostingEndpoint.REPLY, thread=thread, post=post
         )
 
-        if posting.is_valid():
-            user_posts = request.user.posts
-
-            posting.save()
-
-            # setup extra data for serialization
-            post.is_read = False
-            post.is_new = True
-            post.poster.posts = user_posts + 1
-
-            make_users_status_aware(request, [post.poster])
-
-            return Response(PostSerializer(post, context={"user": request.user}).data)
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        user_posts = request.user.posts
+
+        posting.save()
+
+        # setup extra data for serialization
+        post.is_read = False
+        post.is_new = True
+        post.poster.posts = user_posts + 1
+
+        make_users_status_aware(request, [post.poster])
+
+        return Response(PostSerializer(post, context={"user": request.user}).data)
 
     @transaction.atomic
     def update(self, request, thread_pk, pk=None):
@@ -122,21 +122,21 @@ class ViewSet(viewsets.ViewSet):
             request, PostingEndpoint.EDIT, thread=thread, post=post
         )
 
-        if posting.is_valid():
-            post_edits = post.edits
-
-            posting.save()
-
-            post.is_read = True
-            post.is_new = False
-            post.edits = post_edits + 1
-
-            if post.poster:
-                make_users_status_aware(request, [post.poster])
-
-            return Response(PostSerializer(post, context={"user": request.user}).data)
-        else:
+        if not posting.is_valid():
             return Response(posting.errors, status=400)
+
+        post_edits = post.edits
+
+        posting.save()
+
+        post.is_read = True
+        post.is_new = False
+        post.edits = post_edits + 1
+
+        if post.poster:
+            make_users_status_aware(request, [post.poster])
+
+        return Response(PostSerializer(post, context={"user": request.user}).data)
 
     def patch(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk)
@@ -149,8 +149,7 @@ class ViewSet(viewsets.ViewSet):
 
         if post.is_event:
             return event_patch_endpoint(request, post)
-        else:
-            return post_patch_endpoint(request, post)
+        return post_patch_endpoint(request, post)
 
     @transaction.atomic
     def delete(self, request, thread_pk, pk=None):
@@ -165,9 +164,7 @@ class ViewSet(viewsets.ViewSet):
     @detail_route(methods=["post"])
     def read(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk, subscription_aware=True).unwrap()
-
         post = self.get_post(request, thread, pk).unwrap()
-
         return post_read_endpoint(request, thread, post)
 
     @detail_route(methods=["get"], url_path="editor")
@@ -202,25 +199,25 @@ class ViewSet(viewsets.ViewSet):
         thread = self.get_thread(request, thread_pk).unwrap()
         allow_reply_thread(request.user_acl, thread)
 
-        if "reply" in request.query_params:
-            reply_to = self.get_post(
-                request, thread, request.query_params["reply"]
-            ).unwrap()
-
-            if reply_to.is_event:
-                raise PermissionDenied(_("You can't reply to events."))
-            if reply_to.is_hidden and not reply_to.acl["can_see_hidden"]:
-                raise PermissionDenied(_("You can't reply to hidden posts."))
-
-            return Response(
-                {
-                    "id": reply_to.pk,
-                    "post": reply_to.original,
-                    "poster": reply_to.poster_name,
-                }
-            )
-        else:
+        if "reply" not in request.query_params:
             return Response({})
+
+        reply_to = self.get_post(
+            request, thread, request.query_params["reply"]
+        ).unwrap()
+
+        if reply_to.is_event:
+            raise PermissionDenied(_("You can't reply to events."))
+        if reply_to.is_hidden and not reply_to.acl["can_see_hidden"]:
+            raise PermissionDenied(_("You can't reply to hidden posts."))
+
+        return Response(
+            {
+                "id": reply_to.pk,
+                "post": reply_to.original,
+                "poster": reply_to.poster_name,
+            }
+        )
 
     @detail_route(methods=["get", "post"])
     def edits(self, request, thread_pk, pk=None):

@@ -89,6 +89,7 @@ class ProfileFieldsLoadTests(TestCase):
                 {
                     "name": "Other test",
                     "fields": [
+                        # pylint: disable=line-too-long
                         "misago.users.tests.testfiles.profilefields.RepeatedFieldnameField"
                     ],
                 },

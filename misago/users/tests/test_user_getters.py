@@ -25,7 +25,7 @@ def test_getting_user_by_username_supports_diacritics(db):
 
 
 def test_getting_user_by_username_is_not_doing_fuzzy_matching(db):
-    user = User.objects.create_user("User", "test@example.com")
+    User.objects.create_user("User", "test@example.com")
     with pytest.raises(User.DoesNotExist):
         User.objects.get_by_username("usar")
 

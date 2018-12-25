@@ -1,6 +1,4 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from ....acl.objectacl import add_acl_to_obj
@@ -16,7 +14,9 @@ from ...serializers import (
 )
 
 
-def thread_merge_endpoint(request, thread, viewmodel):
+def thread_merge_endpoint(
+    request, thread, viewmodel
+):  # pylint: disable=too-many-branches
     allow_merge_thread(request.user_acl, thread)
 
     serializer = MergeThreadSerializer(
@@ -97,11 +97,10 @@ def threads_merge_endpoint(request):
         if "threads" in serializer.errors:
             errors = {"detail": serializer.errors["threads"][0]}
             return Response(errors, status=403)
-        elif "non_field_errors" in serializer.errors:
+        if "non_field_errors" in serializer.errors:
             errors = {"detail": serializer.errors["non_field_errors"][0]}
             return Response(errors, status=403)
-        else:
-            return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=400)
 
     threads = serializer.validated_data["threads"]
     invalid_threads = []

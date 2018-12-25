@@ -7,7 +7,7 @@ from django.utils import timezone
 from .. import test
 from ...categories.models import Category
 from ...users.test import AuthenticatedUserTestCase
-from ..models import Post, Thread
+from ..models import Post
 from ..test import patch_category_acl
 
 
@@ -42,7 +42,9 @@ class PostAddAclApiTests(ThreadPostPatchApiTestCase):
         self.assertTrue(response_json["acl"])
 
     def test_add_acl_false(self):
-        """if value is false, api won't add acl to the response, but will set empty key"""
+        """
+        if value is false, api won't add acl to the response, but will set empty key
+        """
         response = self.patch(
             self.api_link, [{"op": "add", "path": "acl", "value": False}]
         )
@@ -879,7 +881,9 @@ class EventAddAclApiTests(ThreadEventPatchApiTestCase):
         self.assertTrue(response_json["acl"])
 
     def test_add_acl_false(self):
-        """if value is false, api won't add acl to the response, but will set empty key"""
+        """
+        if value is false, api won't add acl to the response, but will set empty key
+        """
         response = self.patch(
             self.api_link, [{"op": "add", "path": "acl", "value": False}]
         )

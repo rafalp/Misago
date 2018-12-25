@@ -38,10 +38,10 @@ class PrivateThread(ThreadType):
                 "misago:private-thread",
                 kwargs={"slug": thread.slug, "pk": thread.pk, "page": page},
             )
-        else:
-            return reverse(
-                "misago:private-thread", kwargs={"slug": thread.slug, "pk": thread.pk}
-            )
+
+        return reverse(
+            "misago:private-thread", kwargs={"slug": thread.slug, "pk": thread.pk}
+        )
 
     def get_thread_last_post_url(self, thread):
         return reverse(

@@ -8,9 +8,9 @@ class UserAdminModel(ModelAdmin):
     """
     The model should be used for interaction of third party django apps with
     Misago's `User`.
-    
+
     Removes `new` and `delete` actions (use Misago admin for that).
-    
+
     Registration call is placed in :mod:`misago.users.admin`.
     The tests are in :mod:`misago.users.tests.test_djangoadmin_user`.
     """
