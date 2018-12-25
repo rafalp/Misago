@@ -166,9 +166,7 @@ class CategoriesTrackerTests(TestCase):
 
     def test_user_unapproved_thread_unread_post(self):
         """tracked unapproved thread"""
-        test.post_thread(
-            self.category, started_on=timezone.now(), is_unapproved=True
-        )
+        test.post_thread(self.category, started_on=timezone.now(), is_unapproved=True)
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
@@ -189,9 +187,7 @@ class CategoriesTrackerTests(TestCase):
 
     def test_user_hidden_thread_unread_post(self):
         """tracked hidden thread"""
-        test.post_thread(
-            self.category, started_on=timezone.now(), is_hidden=True
-        )
+        test.post_thread(self.category, started_on=timezone.now(), is_hidden=True)
 
         categoriestracker.make_read_aware(self.user, self.user_acl, self.category)
         self.assertTrue(self.category.is_read)
