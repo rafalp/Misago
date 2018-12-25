@@ -31,7 +31,8 @@ class NewVoteSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 _("One or more of poll choices were invalid.")
             )
-        if clean_choices:
+
+        if not clean_choices:
             raise serializers.ValidationError(_("You have to make a choice."))
 
         return clean_choices
