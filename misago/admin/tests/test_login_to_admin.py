@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from ...test import assert_contains
-from ..auth import is_admin_session
+from ..auth import is_admin_authorized
 
 admin_link = reverse("misago:admin:index")
 
@@ -50,7 +50,7 @@ def test_user_with_staff_status_is_logged_to_admin(client, staffuser, user_passw
     response = client.post(
         admin_link, {"username": staffuser.username, "password": user_password}
     )
-    assert is_admin_session(response.wsgi_request)
+    assert is_admin_authorized(response.wsgi_request)
     assert response.wsgi_request.user == staffuser
 
 

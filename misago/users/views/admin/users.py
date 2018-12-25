@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
 from ....acl.useracl import get_user_acl
-from ....admin.auth import start_admin_session
+from ....admin.auth import authorize_admin
 from ....admin.views import generic
 from ....categories.models import Category
 from ....core.mail import mail_users
@@ -305,13 +305,13 @@ class EditUser(UserAdmin, generic.ModelFormView):
             target.set_password(form.cleaned_data["new_password"])
 
             if target.pk == request.user.pk:
-                start_admin_session(request, target)
+                authorize_admin(request, target)
                 update_session_auth_hash(request, target)
 
         if form.cleaned_data.get("email"):
             target.set_email(form.cleaned_data["email"])
             if target.pk == request.user.pk:
-                start_admin_session(request, target)
+                authorize_admin(request, target)
 
         if form.cleaned_data.get("is_avatar_locked"):
             if not target.old_is_avatar_locked:

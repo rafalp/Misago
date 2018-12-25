@@ -35,7 +35,7 @@ def login(request):
 @never_cache
 def logout(request):
     if request.method == "POST":
-        auth.close_admin_session(request)
+        auth.remove_admin_authorization(request)
         messages.info(request, _("Your admin session has been closed."))
         return redirect("misago:index")
     return redirect("misago:admin:index")

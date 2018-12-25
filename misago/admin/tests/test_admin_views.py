@@ -6,31 +6,6 @@ from ..test import AdminTestCase
 from ..views import get_protected_namespace
 
 
-class MockRequest:
-    def __init__(self, path):
-        self.path = path
-
-
-class AdminProtectedNamespaceTests(TestCase):
-    def test_valid_cases(self):
-        """get_protected_namespace returns true for protected links"""
-        TEST_CASES = ("", "somewhere/", "ejksajdlksajldjskajdlksajlkdas")
-
-        links_prefix = reverse("misago:admin:index")
-
-        for case in TEST_CASES:
-            request = MockRequest(links_prefix + case)
-            self.assertEqual(get_protected_namespace(request), "misago:admin")
-
-    def test_invalid_cases(self):
-        """get_protected_namespace returns none for other links"""
-        TEST_CASES = ("/", "/somewhere/", "/ejksajdlksajldjskajdlksajlkdas")
-
-        for case in TEST_CASES:
-            request = MockRequest(case)
-            self.assertEqual(get_protected_namespace(request), None)
-
-
 class AdminViewAccessTests(AdminTestCase):
     def test_admin_denies_non_staff_non_superuser(self):
         """admin middleware rejects user thats non staff and non superuser"""
