@@ -20,6 +20,6 @@ jobs:
       python: 3.6
       install:
         - pip install -U pip setuptools
-        - pip install black
+        - pip install black pylint pylint-django
       script:
-        - black --check devproject misago
+        - black --check devproject misago && pylint misago --jobs=0 --limit-inference-results=50 --persistent=n
