@@ -20,8 +20,6 @@ jobs:
       python: 3.6
       install:
         - pip install -U pip setuptools
-        - python setup.py install
-        - pip install black pylint pylint-django
+        - pip install black
       script:
         - black --check devproject misago
-        - pylint misago
