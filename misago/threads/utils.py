@@ -51,7 +51,7 @@ def get_thread_id_from_url(request, url):  # pylint: disable=too-many-return-sta
         clean_path = url_bits.path
 
     wsgi_alias = request.path[: len(request.path_info) * -1]
-    if not wsgi_alias or not clean_path.startswith(wsgi_alias):
+    if wsgi_alias and not clean_path.startswith(wsgi_alias):
         return None
 
     try:
