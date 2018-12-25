@@ -1,6 +1,7 @@
 import pytest
 
 from .acl import ACL_CACHE, useracl
+from .admin.auth import start_admin_session
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
@@ -79,3 +80,12 @@ def superuser(db, user_password):
 @pytest.fixture
 def superuser_acl(superuser, cache_versions):
     return useracl.get_user_acl(superuser, cache_versions)
+
+
+@pytest.fixture
+def admin_client(mocker, client, superuser):
+    client.force_login(superuser)
+    session = client.session
+    start_admin_session(mocker.Mock(session=session), superuser)
+    session.save()
+    return client
