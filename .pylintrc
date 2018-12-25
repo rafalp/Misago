@@ -17,6 +17,7 @@ disable=
     duplicate-code,
     expression-not-assigned,
     fixme,
+    format,  # delegated to black
     inconsistent-return-statements,
     invalid-name,
     missing-docstring,
