@@ -43,7 +43,7 @@ urlpatterns = [
         name="django-i18n",
     ),
     # Uncomment next line if you plan to use Django admin for 3rd party apps
-    url(r'^django-admin/', admin.site.urls),
+    url(r"^django-admin/", admin.site.urls),
 ]
 
 
