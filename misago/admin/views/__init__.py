@@ -3,7 +3,7 @@ from django.shortcuts import render as dj_render
 
 from ...conf import settings
 from .. import site
-from ..auth import is_admin_session, update_admin_session
+from ..auth import is_admin_authorized, update_admin_authorization
 from .auth import login
 
 
@@ -56,8 +56,8 @@ def protected_admin_view(f):
     def decorator(request, *args, **kwargs):
         protected_view = get_protected_namespace(request)
         if protected_view:
-            if is_admin_session(request):
-                update_admin_session(request)
+            if is_admin_authorized(request):
+                update_admin_authorization(request)
                 return f(request, *args, **kwargs)
             request.admin_namespace = protected_view
             return login(request)

@@ -2,12 +2,12 @@ from django.shortcuts import redirect
 
 from . import get_protected_namespace, protected_admin_view, render
 from ...core.utils import get_exception_message
-from ..auth import is_admin_session, update_admin_session
+from ..auth import is_admin_authorized, update_admin_authorization
 
 # Magic error page used by admin
 @protected_admin_view
 def _error_page(request, code, exception=None, default_message=None):
-    if not is_admin_session(request):
+    if not is_admin_authorized(request):
         return redirect("misago:admin:index")
 
     template_pattern = "misago/admin/errorpages/%s.html" % code
@@ -25,7 +25,7 @@ def _error_page(request, code, exception=None, default_message=None):
 def admin_error_page(f):
     def decorator(request, *args, **kwargs):
         if get_protected_namespace(request):
-            update_admin_session(request)
+            update_admin_authorization(request)
             return _error_page(request, *args, **kwargs)
         return f(request, *args, **kwargs)
 
@@ -34,8 +34,8 @@ def admin_error_page(f):
 
 # Magic CSRF fail page for Admin
 def _csrf_failure(request, reason=""):
-    if is_admin_session(request):
-        update_admin_session(request)
+    if is_admin_authorized(request):
+        update_admin_authorization(request)
         response = render(
             request,
             "misago/admin/errorpages/csrf_failure_authenticated.html",
