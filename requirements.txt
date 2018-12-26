@@ -8,41 +8,38 @@ atomicwrites==1.2.1       # via pytest
 attrs==18.2.0             # via pytest
 beautifulsoup4==4.6.3
 bleach==2.1.4
-certifi==2018.10.15       # via requests
+certifi==2018.11.29       # via requests
 chardet==3.0.4            # via requests
+defusedxml==0.5.0         # via python3-openid, social-auth-core
 django-debug-toolbar==1.8
 django-htmlmin==0.10.0
-django-mptt==0.8.7
-django==1.11.16
+django-js-asset==1.1.0    # via django-mptt
+django-mptt==0.9.1
+django==1.11.17
 djangorestframework==3.6.4
 faker==0.8.18
-funcsigs==1.0.2           # via mock, pytest
 html5lib==0.999999999
-idna==2.7                 # via requests
-ipaddress==1.0.22         # via faker
+idna==2.8                 # via requests
 markdown==2.6.11
-misago-social-auth-app-django==2.1.0
-mock==2.0.0               # via pytest-mock
 more-itertools==4.3.0     # via pytest
 oauthlib==2.1.0           # via requests-oauthlib, social-auth-core
 olefile==0.46             # via pillow
-pathlib2==2.3.3           # via pytest, pytest-django
-pbr==5.1.1                # via mock
 pillow==4.1.1
 pluggy==0.8.0             # via pytest
-psycopg2-binary==2.7.5
+psycopg2-binary==2.7.6.1
 py==1.7.0                 # via pytest
-pyjwt==1.6.4              # via social-auth-core
+pyjwt==1.7.1              # via social-auth-core
 pytest-django==3.4.4
 pytest-mock==1.10.0
 pytest==4.0.2
 python-dateutil==2.7.5    # via faker
+python3-openid==3.1.0     # via social-auth-core
 pytz==2018.7
 requests-oauthlib==1.0.0  # via social-auth-core
-requests==2.20.0
-scandir==1.9.0            # via pathlib2
-six==1.11.0               # via bleach, faker, html5lib, misago-social-auth-app-django, mock, more-itertools, pathlib2, pytest, python-dateutil, social-auth-core
-social-auth-core==1.7.0   # via misago-social-auth-app-django
+requests==2.21.0
+six==1.12.0               # via bleach, faker, html5lib, more-itertools, pytest, python-dateutil, social-auth-app-django, social-auth-core
+social-auth-app-django==3.1.0
+social-auth-core==2.0.0   # via social-auth-app-django
 sqlparse==0.2.4           # via django-debug-toolbar
 text-unidecode==1.2       # via faker
 unidecode==0.4.21
