@@ -13,7 +13,8 @@ chardet==3.0.4            # via requests
 defusedxml==0.5.0         # via python3-openid, social-auth-core
 django-debug-toolbar==1.8
 django-htmlmin==0.10.0
-django-mptt==0.8.7
+django-js-asset==1.1.0    # via django-mptt
+django-mptt==0.9.1
 django==1.11.17
 djangorestframework==3.6.4
 faker==0.8.18

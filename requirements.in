@@ -4,7 +4,7 @@ django<2
 djangorestframework<3.7
 django-debug-toolbar<1.9
 django-htmlmin<0.11
-django-mptt<0.9
+django-mptt
 Faker<0.9
 html5lib==0.999999999
 markdown<2.7
