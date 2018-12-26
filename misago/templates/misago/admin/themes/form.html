@@ -1,0 +1,64 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{% if target.pk %}
+  {{ target }}
+{% else %}
+  {% trans "New theme" %}
+{% endif %} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-target %}
+{% if target.pk %}
+  {{ target }}
+{% else %}
+  {% trans "New theme" %}
+{% endif %}
+{% endblock page-target %}
+
+
+{% block form-header %}
+<h1>
+  {% if target.pk %}
+    {{ target }}
+  {% else %}
+    {% trans "New theme" %}
+  {% endif %}
+</h1>
+{% endblock %}
+
+
+{% block form-extra %}
+class="form-horizontal"
+{% endblock form-extra%}
+
+
+{% block form-body %}
+<div class="form-body">
+  {% with label_class="col-md-3" field_class="col-md-9" %}
+    <fieldset>
+      <legend>{% trans "Settings" %}</legend>
+
+      {% form_row form.parent label_class field_class %}
+      {% form_row form.name label_class field_class %}
+
+    </fieldset>
+    <fieldset>
+      <legend>{% trans "Additional information (optional)" %}</legend>
+
+      {% form_row form.version label_class field_class %}
+      {% form_row form.author label_class field_class %}
+      {% form_row form.url label_class field_class %}
+
+    </fieldset>
+  {% endwith %}
+</div>
+{% endblock form-body %}
+
+
+{% block form-footer-class %}
+col-md-offset-3
+{% endblock form-footer-class %}

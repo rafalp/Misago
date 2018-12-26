@@ -1,0 +1,117 @@
+{% extends "misago/admin/generic/base.html" %}
+{% load i18n %}
+
+
+{% block title %}
+{% trans "Assets" %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
+{% endblock title%}
+
+
+{% block extra-head %}
+<style>
+  .panel-heading .btn-sm {
+    box-shadow: none !important;
+    margin: 0px;
+    margin-top: -23px;
+    margin-left: 14px;
+  }
+</style>
+{% endblock extra-head %}
+
+
+{% block page-header %}
+{{ block.super }}
+<div class="sub">
+  <span class="fa fa-chevron-right"></span>
+  {{ theme }}
+</div>
+{% endblock page-header %}
+
+
+{% block view %}
+<div class="table-panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "CSS files" %}
+    </h3>
+    <button type="button" class="btn btn-default btn-sm pull-right">
+      <span class="fa fa-upload"></span>
+      {% trans "Upload CSS" %}
+    </button>
+    <button type="button" class="btn btn-default btn-sm pull-right">
+      <span class="fa fa-link"></span>
+      {% trans "Link" %}
+    </button>
+    <button type="button" class="btn btn-default btn-sm pull-right">
+      <span class="fa fa-file-text"></span>
+      {% trans "Create" %}
+    </button>
+  </div>
+  <table class="table">
+    <tr>
+      <th>{% trans "Filename" %}</th>
+    </tr>
+    {% for item in theme.css.all %}
+      <tr>
+        <td>{{ item }}</td>
+      </tr>
+    {% empty %}
+      <tr class="message-row">
+        <td>{% trans "This theme has no CSS files." %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div><!-- /.table-panel -->
+
+<div class="table-panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Images" %}
+    </h3>
+    <button type="button" class="btn btn-default btn-sm pull-right">
+      <span class="fa fa-upload"></span>
+      {% trans "Upload images" %}
+    </button>
+  </div>
+  <table class="table">
+    <tr>
+      <th>{% trans "Filename" %}</th>
+    </tr>
+    {% for item in theme.images.all %}
+      <tr>
+        <td>{{ item }}</td>
+      </tr>
+    {% empty %}
+      <tr class="message-row">
+        <td>{% trans "This theme has no images." %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div><!-- /.table-panel -->
+
+<div class="table-panel">
+  <div class="panel-heading">
+    <h3 class="panel-title">
+      {% trans "Fonts" %}
+    </h3>
+    <button type="button" class="btn btn-default btn-sm pull-right">
+      <span class="fa fa-upload"></span>
+      {% trans "Upload fonts" %}
+    </button>
+  </div>
+  <table class="table">
+    <tr>
+      <th>{% trans "Filename" %}</th>
+    </tr>
+    {% for item in theme.fonts.all %}
+      <tr>
+        <td>{{ item }}</td>
+      </tr>
+    {% empty %}
+      <tr class="message-row">
+        <td>{% trans "This theme has no fonts." %}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</div><!-- /.table-panel -->
+{% endblock view %}

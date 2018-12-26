@@ -8,27 +8,6 @@ from .base import AdminView
 class TargetedView(AdminView):
     is_atomic = True
 
-    def check_permissions(self, request, target):
-        pass
-
-    def get_target(self, kwargs):
-        if len(kwargs) != 1:
-            return self.get_model()()
-
-        select_for_update = self.get_model().objects
-        if self.is_atomic:
-            select_for_update = select_for_update.select_for_update()
-        # Does not work on Python 3:
-        # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
-        (pk,) = kwargs.values()
-        return select_for_update.get(pk=pk)
-
-    def get_target_or_none(self, request, kwargs):
-        try:
-            return self.get_target(kwargs)
-        except self.get_model().DoesNotExist:
-            return None
-
     def dispatch(self, request, *args, **kwargs):
         if self.is_atomic:
             with transaction.atomic():
@@ -49,6 +28,27 @@ class TargetedView(AdminView):
             return redirect(self.root_link)
 
         return self.real_dispatch(request, target)
+
+    def get_target_or_none(self, request, kwargs):
+        try:
+            return self.get_target(kwargs)
+        except self.get_model().DoesNotExist:
+            return None
+
+    def get_target(self, kwargs):
+        if len(kwargs) != 1:
+            return self.get_model()()
+
+        select_for_update = self.get_model().objects
+        if self.is_atomic:
+            select_for_update = select_for_update.select_for_update()
+        # Does not work on Python 3:
+        # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
+        (pk,) = kwargs.values()
+        return select_for_update.get(pk=pk)
+
+    def check_permissions(self, request, target):
+        pass
 
     def real_dispatch(self, request, target):
         pass

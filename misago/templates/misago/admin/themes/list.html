@@ -1,0 +1,105 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n %}
+
+
+{% block page-actions %}
+<div class="page-actions">
+  <a href="{% url 'misago:admin:appearance:themes:new' %}" class="btn btn-success">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New theme" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th>{% trans "Theme" %}</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="item-name">
+  {% for i in item.level_range %}
+    &nbsp;&nbsp;&nbsp;&nbsp;
+  {% endfor %}
+  {{ item }}
+  {% if item.version %}
+    <span class="text-muted">
+      {{ item.version }}
+    </span>
+  {% endif %}
+</td>
+<td class="item-name">
+  {% if item.is_active %}
+    <span class="label label-success pull-right" style="margin: 0px;">
+      {% trans "Active" %}
+    </span>
+  {% else %}
+    &nbsp;
+  {% endif %}
+</td>
+<td class="row-action">
+  {% if not item.is_default %}
+    <a href="{% url 'misago:admin:appearance:themes:assets' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Assets (CSS, images and fonts)" %}">
+      <span class="fa fa-pencil-square-o"></span>
+    </a>
+  {% else %}
+    <button class="btn" type="button" disabled>
+      <span class="fa fa-pencil-square-o"></span>
+    </button>
+  {% endif %}
+</td>
+<td class="row-action">
+  {% if not item.is_default %}
+    <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit information" %}">
+      <span class="fa fa-pencil"></span>
+    </a>
+  {% else %}
+    <button class="btn" type="button" disabled>
+      <span class="fa fa-pencil"></span>
+    </button>
+  {% endif %}
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}" class="btn btn-primary tooltip-top" title="{% trans "Create child theme" %}">
+    <span class="fa fa-file-o"></span>
+  </a>
+</td>
+<td class="row-action">
+  <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Copy" %}">
+    <span class="fa fa-copy"></span>
+  </a>
+</td>
+<td class="row-action">
+  {% if not item.is_active %}
+    <form action="{% url 'misago:admin:appearance:themes:activate' pk=item.pk %}" method="post">
+      <button class="btn btn-default tooltip-top" title="{% trans "Activate" %}">
+        {% csrf_token %}
+        <span class="fa fa-check-square"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn" type="button" disabled>
+      <span class="fa fa-check-square"></span>
+    </button>
+  {% endif %}
+</td>
+<td class="row-action">
+  {% if not item.is_active and not item.is_default %}
+    <a href="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" class="btn btn-danger tooltip-top" title="{% trans "Delete" %}">
+      <span class="fa fa-times"></span>
+    </a>
+  {% else %}
+    <button class="btn" type="button" disabled>
+      <span class="fa fa-times"></span>
+    </button>
+  {% endif %}
+</td>
+{% endblock %}
