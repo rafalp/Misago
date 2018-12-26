@@ -152,7 +152,7 @@ class ListView(AdminView):
                     "%s%s" % (reverse(self.root_link), context["querystring"])
                 )
 
-        if refresh_querystring and not request.GET.get("redirected"):
+        if refresh_querystring and "redirected" not in request.GET:
             return redirect("%s%s" % (request.path, context["querystring"]))
 
         return self.render(request, context)
