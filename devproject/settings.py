@@ -180,6 +180,7 @@ INSTALLED_APPS = [
     "misago.cache",
     "misago.core",
     "misago.conf",
+    "misago.theming",
     "misago.markup",
     "misago.legal",
     "misago.categories",
