@@ -3,8 +3,9 @@ from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
-from ...theming.models import Theme
+from ...themes.models import Theme
 from ..forms import YesNoSwitch
+from .assets import create_css, create_image
 
 
 class ThemeChoiceField(TreeNodeChoiceField):
@@ -40,3 +41,38 @@ class ThemeForm(forms.ModelForm):
             lft__gte=self.instance.lft,
             rght__lte=self.instance.rght,
         )
+
+
+class UploadAssetsForm(forms.Form):
+    assets = forms.FileField(
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+
+    def __init__(self, *args, instance=None):
+        self.instance = instance
+        super().__init__(*args)
+
+    def clean(self):
+        cleaned_data = super(UploadAssetsForm, self).clean()
+        return cleaned_data
+
+    def get_uploaded_assets(self):
+        return self.files.getlist('assets')
+
+
+class UploadCssForm(UploadAssetsForm):
+    def save(self):
+        for css in self.get_uploaded_assets():
+            create_css(self.instance, css)
+        return True
+
+
+class UploadImagesForm(UploadAssetsForm):
+    assets = forms.ImageField(
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+
+    def save(self):
+        for image in self.get_uploaded_assets():
+            create_image(self.instance, image)
+        return True

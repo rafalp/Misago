@@ -6,7 +6,7 @@ from ...cache.operations import StartCacheVersioning
 
 
 def create_default_theme(apps, schema_editor):
-    Theme = apps.get_model("misago_theming", "Theme")
+    Theme = apps.get_model("misago_themes", "Theme")
     Theme.objects.create(
         name="default",
         is_default=True,
@@ -20,7 +20,7 @@ def create_default_theme(apps, schema_editor):
 
 class Migration(migrations.Migration):
 
-    dependencies = [("misago_theming", "0001_initial")]
+    dependencies = [("misago_themes", "0001_initial")]
 
     operations = [
         StartCacheVersioning(THEME_CACHE),

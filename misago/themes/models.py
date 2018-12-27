@@ -2,12 +2,21 @@ from django.db import models
 from django.utils.translation import gettext
 from mptt.models import MPTTModel, TreeForeignKey
 
+from .utils import (
+    generate_theme_dirname,
+    upload_css_to,
+    upload_font_to,
+    upload_image_to,
+    upload_image_thumbnail_to,
+)
+
 
 class Theme(MPTTModel):
     parent = TreeForeignKey(
         "self", on_delete=models.PROTECT, null=True, blank=True, related_name="children"
     )
     name = models.CharField(max_length=255)
+    dirname = models.CharField(max_length=8, default=generate_theme_dirname)
     is_default = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
 
@@ -16,7 +25,7 @@ class Theme(MPTTModel):
     url = models.URLField(max_length=255, null=True, blank=True)
 
     class MPTTMeta:
-        order_insertion_by = ["is_default", "name"]
+        order_insertion_by = ["-is_default", "name"]
 
     def __str__(self):
         if self.is_default:
@@ -33,17 +42,22 @@ class Css(models.Model):
 
     name = models.CharField(max_length=255)
     url = models.URLField(max_length=255, null=True, blank=True)
-    file = models.ImageField(max_length=255, null=True, blank=True)
+    file = models.FileField(
+        upload_to=upload_css_to, max_length=255, null=True, blank=True
+    )
+    hash = models.CharField(max_length=12)
     size = models.PositiveIntegerField()
 
     order = models.IntegerField(default=0)
     is_enabled = models.BooleanField(default=True)
-
-    uploaded_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["order"]
+
+    def delete(self, *args, **kwargs):
+        self.file.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -53,15 +67,18 @@ class Font(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="fonts")
 
     name = models.CharField(max_length=255)
-    file = models.FileField(max_length=255)
+    file = models.FileField(upload_to=upload_font_to, max_length=255)
+    hash = models.CharField(max_length=12)
     type = models.CharField(max_length=255)
     size = models.PositiveIntegerField()
-
-    uploaded_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
+
+    def delete(self, *args, **kwargs):
+        self.file.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -71,17 +88,22 @@ class Image(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="images")
 
     name = models.CharField(max_length=255)
-    file = models.ImageField(max_length=255)
+    file = models.ImageField(upload_to=upload_image_to, max_length=255, width_field="width", height_field="height")
+    hash = models.CharField(max_length=12)
     type = models.CharField(max_length=255)
     width = models.PositiveIntegerField()
-    heigh = models.PositiveIntegerField()
+    height = models.PositiveIntegerField()
     size = models.PositiveIntegerField()
-
-    uploaded_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    thumbnail = models.ImageField(upload_to=upload_image_thumbnail_to, max_length=255)
+    modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["name"]
+
+    def delete(self, *args, **kwargs):
+        self.file.delete(save=False)
+        self.thumbnail.delete(save=False)
+        super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.name

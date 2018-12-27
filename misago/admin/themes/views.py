@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.core.exceptions import PermissionDenied
+from django.db.models import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext, gettext_lazy as _
 
-from ...theming.models import Theme
+from ...themes.models import Theme
 from ..views import generic
-from .forms import ThemeForm
+from .forms import ThemeForm, UploadCssForm, UploadImagesForm
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
@@ -60,17 +61,91 @@ class ActivateTheme(ThemeAdmin, generic.ButtonView):
         messages.success(request, message % {"name": target})
 
 
-class ThemeAssets(ThemeAdmin, generic.TargetedView):
-    template = "assets.html"
+def set_theme_as_active(request, theme):
+    Theme.objects.update(is_active=False)
+    Theme.objects.filter(pk=theme.pk).update(is_active=True)
 
+
+class ThemeAssetsAdmin(ThemeAdmin):
     def check_permissions(self, request, theme):
         if theme.is_default:
             return gettext("Default theme assets can't be edited.")
+
+    def redirect_to_theme_assets(self, theme):
+        link = reverse("misago:admin:appearance:themes:assets", kwargs={"pk": theme.pk})
+        return redirect(link)
+
+
+class ThemeAssets(ThemeAssetsAdmin, generic.TargetedView):
+    template = "assets/list.html"
 
     def real_dispatch(self, request, theme):
         return self.render(request, {"theme": theme})
 
 
-def set_theme_as_active(request, theme):
-    Theme.objects.update(is_active=False)
-    Theme.objects.filter(pk=theme.pk).update(is_active=True)
+class ThemeAssetsActionAdmin(ThemeAssetsAdmin):
+    def real_dispatch(self, request, theme):
+        if request.method == "POST":
+            self.action(request, theme)
+
+        return self.redirect_to_theme_assets(theme)
+
+    def action(self, request, theme):
+        raise NotImplementedError(
+            "action method must be implemented in inheriting class"
+        )
+
+
+class UploadThemeCss(ThemeAssetsActionAdmin, generic.TargetedView):
+    def action(self, request, theme):
+        form = UploadCssForm(request.POST, request.FILES, instance=theme)
+        if form.is_valid() and form.save():
+            pass  # display some user feedback
+
+
+class UploadThemeImages(ThemeAssetsActionAdmin, generic.TargetedView):
+    def action(self, request, theme):
+        form = UploadImagesForm(request.POST, request.FILES, instance=theme)
+        if form.is_valid() and form.save():
+            pass  # display some user feedback
+
+
+class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
+    message_submit = None
+    queryset_attr = None
+
+    def action(self, request, theme):
+        items = self.clean_items_list(request)
+        if items:
+            queryset = getattr(theme, self.queryset_attr)
+            for item in items:
+                self.delete_item(queryset, item)
+
+            messages.success(request, self.message_submit)
+
+    def clean_items_list(self, request):
+        try:
+            return {int(i) for i in request.POST.getlist("item")}
+        except (ValueError, TypeError):
+            pass
+
+    def delete_item(self, queryset, item):
+        try:
+            queryset.get(pk=item).delete()
+        except ObjectDoesNotExist:
+            pass
+
+
+class DeleteThemeCss(DeleteThemeAssets):
+    message_submit = _("Selected css files have been deleted.")
+    queryset_attr = "css"
+
+
+class DeleteThemeImages(DeleteThemeAssets):
+    message_submit = _("Selected images have been deleted.")
+    queryset_attr = "images"
+
+
+class DeleteThemeFonts(DeleteThemeAssets):
+    message_submit = _("Selected font files have been deleted.")
+    queryset_attr = "fonts"
