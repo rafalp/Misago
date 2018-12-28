@@ -89,7 +89,7 @@ intro() {
     echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
     echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
-    echo "    ${BOLD}fmtpy${NORMAL}             runs isort + black on python code."
+    echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
     echo
 }
 
@@ -171,11 +171,6 @@ clear() {
 
     devproject_path="$(pwd)/devproject"
 
-    echo "Following files and directories will be deleted:"
-    find $devproject_path/media -mindepth 1 ! -name '.gitignore'
-    find $devproject_path/userdata -mindepth 1 ! -name '.gitignore'
-    echo
-        
     echo "Enter \"y\" to confirm:"
 
     read confirmation
@@ -311,7 +306,7 @@ if [[ $1 ]]; then
         run_psql
     elif [[ $1 = "psql_in_docker" ]]; then
         psql_in_docker
-    elif [[ $1 = "fmtpy" ]]; then
+    elif [[ $1 = "pyfmt" ]]; then
         isort -rc misago
         black devproject misago
     else
