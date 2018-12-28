@@ -2,8 +2,9 @@ from django.db import models
 from django.utils.translation import gettext
 from mptt.models import MPTTModel, TreeForeignKey
 
-from .utils import (
+from .uploadto import (
     generate_theme_dirname,
+    upload_css_source_to,
     upload_css_to,
     upload_font_to,
     upload_image_to,
@@ -42,14 +43,17 @@ class Css(models.Model):
 
     name = models.CharField(max_length=255)
     url = models.URLField(max_length=255, null=True, blank=True)
+    source_file = models.FileField(
+        upload_to=upload_css_source_to, max_length=255, null=True, blank=True
+    )
+    source_hash = models.CharField(max_length=8, null=True, blank=True)
     file = models.FileField(
         upload_to=upload_css_to, max_length=255, null=True, blank=True
     )
-    hash = models.CharField(max_length=12)
-    size = models.PositiveIntegerField()
+    hash = models.CharField(max_length=8, null=True, blank=True)
+    size = models.PositiveIntegerField(default=0)
 
     order = models.IntegerField(default=0)
-    is_enabled = models.BooleanField(default=True)
     modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -89,7 +93,7 @@ class Image(models.Model):
 
     name = models.CharField(max_length=255)
     file = models.ImageField(upload_to=upload_image_to, max_length=255, width_field="width", height_field="height")
-    hash = models.CharField(max_length=12)
+    hash = models.CharField(max_length=8)
     type = models.CharField(max_length=255)
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()

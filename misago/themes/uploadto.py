@@ -5,9 +5,13 @@ def generate_theme_dirname():
     return get_random_string(8)
 
 
+def upload_css_source_to(instance, filename):
+    return "themes/%s/css/%s" % (instance.theme.dirname, filename)
+
+
 def upload_css_to(instance, filename):
     filename = filename.replace(".", ".%s." % instance.hash, 1)
-    return "themes/%s/%s" % (instance.theme.dirname, filename)
+    return "themes/%s/css/%s" % (instance.theme.dirname, filename)
 
 
 def upload_font_to(instance, filename):
@@ -17,8 +21,15 @@ def upload_font_to(instance, filename):
 
 def upload_image_to(instance, filename):
     filename = filename.replace(".", ".%s." % instance.hash, 1)
-    return "themes/%s/img/%s" % (instance.theme.dirname, filename)
+    return "themes/%s/media/%s" % (instance.theme.dirname, filename)
 
 
 def upload_image_thumbnail_to(instance, filename):
-    return "themes/%s/img/%s" % (instance.theme.dirname, filename)
+    return "themes/%s/media/%s" % (instance.theme.dirname, filename)
+
+
+def add_hash_to_filename(hash, filename):
+    if ".%s." % hash in filename:
+        return filename
+    extension_start = filename.rfind(".")
+    return "%s.%s%s" % (filename[:extension_start], hash, filename[extension_start:])
