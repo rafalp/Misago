@@ -6,21 +6,22 @@ def generate_theme_dirname():
 
 
 def upload_css_source_to(instance, filename):
+    add_hash_to_filename(instance.source_hash, filename)
     return "themes/%s/css/%s" % (instance.theme.dirname, filename)
 
 
 def upload_css_to(instance, filename):
-    filename = filename.replace(".", ".%s." % instance.hash, 1)
+    add_hash_to_filename(instance.hash, filename)
     return "themes/%s/css/%s" % (instance.theme.dirname, filename)
 
 
 def upload_font_to(instance, filename):
-    filename = filename.replace(".", ".%s." % instance.hash, 1)
+    add_hash_to_filename(instance.hash, filename)
     return "themes/%s/font/%s" % (instance.theme.dirname, filename)
 
 
 def upload_image_to(instance, filename):
-    filename = filename.replace(".", ".%s." % instance.hash, 1)
+    add_hash_to_filename(instance.hash, filename)
     return "themes/%s/media/%s" % (instance.theme.dirname, filename)
 
 
