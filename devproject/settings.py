@@ -329,6 +329,11 @@ REST_FRAMEWORK = {
 MISAGO_ADDRESS = "http://my-misago-site.com/"
 
 
+# On dev instance, generate only three sizes of avatars instead of default 6 sizes.
+
+MISAGO_AVATARS_SIZES = [400, 200, 100]
+
+
 # PostgreSQL text search configuration to use in searches
 # Defaults to "simple", for list of installed configurations run "\dF" in "psql".
 # Standard configs as of PostgreSQL 9.5 are: dutch, english, finnish, french,
