@@ -2,15 +2,15 @@
 <div class="table-panel">
   <div class="panel-heading">
     <h3 class="panel-title">
-      {% trans "Images" %}
+      {% trans "Media" %}
     </h3>
-    <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#uploadImages">
+    <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#uploadMedia">
       <span class="fa fa-upload"></span>
-      {% trans "Upload images" %}
+      {% trans "Upload media" %}
     </button>
   </div>
-  {% with theme.images.all as images %}
-    <form action="{% url 'misago:admin:appearance:themes:delete-images' pk=theme.pk %}" method="post">
+  {% with theme.media.all as media %}
+    <form action="{% url 'misago:admin:appearance:themes:delete-media' pk=theme.pk %}" method="post">
       {% csrf_token %}
       <table class="table">
         <tr>
@@ -21,15 +21,21 @@
           <th>{% trans "Type" %}</th>
           <th>{% trans "Dimensions" %}</th>
           <th style="width: 1%;">
-            <input type="checkbox" {% if not images %}disabled{% endif %}>
+            <input type="checkbox" {% if not media %}disabled{% endif %}>
           </th>
         </tr>
-        {% for item in images %}
+        {% for item in media %}
           <tr>
             <td style="width: 1%;">
-              <a class="img-preview tooltip-top" href="{{ item.file.url }}" target="blank" title="{% trans 'Preview' %}">
-                <span style="background-image: url({{ item.thumbnail.url }});"></span>
-              </a>
+              {% if item.thumbnail %}
+                <a class="img-preview tooltip-top" href="{{ item.file.url }}" target="blank" title="{% trans 'Preview' %}">
+                  <span style="background-image: url({{ item.thumbnail.url }});"></span>
+                </a>
+              {% else %}
+                <a class="btn btn-default btn-sm tooltip-top" href="{{ item.file.url }}" target="blank" title="{% trans 'Preview' %}">
+                  <span class="fa fa-share-square-o"></span>
+                </a>
+              {% endif %}
             </td>
             <td>
               <strong>{{ item }}</strong>
@@ -39,18 +45,24 @@
             </td>
             <td>{{ item.size|filesizeformat }}</td>
             <td>{{ item.type }}</td>
-            <td>{{ item.width }}&times;{{ item.height }}</td>
+            <td>
+              {% if item.width and item.height %}
+                {{ item.width }}&times;{{ item.height }}
+              {% else %}
+                &nbsp;
+              {% endif %}
+            </td>
             <td style="width: 1%;">
               <input type="checkbox" name="item" value="{{ item.pk }}">
             </td>
           </tr>
         {% empty %}
           <tr class="message-row">
-            <td colspan="8">{% trans "This theme has no images." %}</td>
+            <td colspan="8">{% trans "This theme has no media." %}</td>
           </tr>
         {% endfor %}
       </table>
-      {% if images %}
+      {% if media %}
         <div class="panel-footer text-right">
           <button class="btn btn-danger btn-sm" disabled>
             <span class="fa fa-remove"></span>

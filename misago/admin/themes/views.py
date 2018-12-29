@@ -7,7 +7,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 
 from ...themes.models import Theme
 from ..views import generic
-from .forms import ThemeForm, UploadCssForm, UploadImagesForm
+from .forms import ThemeForm, UploadCssForm, UploadMediaForm
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
@@ -123,9 +123,9 @@ class UploadThemeCss(UploadThemeAssets):
     form = UploadCssForm
 
 
-class UploadThemeImages(UploadThemeAssets):
+class UploadThemeMedia(UploadThemeAssets):
     message_success = _("New media files have been added to the style.")
-    form = UploadImagesForm
+    form = UploadMediaForm
 
 
 class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
@@ -137,7 +137,7 @@ class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
         if items:
             queryset = getattr(theme, self.queryset_attr)
             for item in items:
-                self.delete_item(queryset, item)
+                self.delete_asset(queryset, item)
 
             messages.success(request, self.message_submit)
 
@@ -147,7 +147,7 @@ class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
         except (ValueError, TypeError):
             pass
 
-    def delete_item(self, queryset, item):
+    def delete_asset(self, queryset, item):
         try:
             queryset.get(pk=item).delete()
         except ObjectDoesNotExist:
@@ -155,15 +155,10 @@ class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
 
 class DeleteThemeCss(DeleteThemeAssets):
-    message_submit = _("Selected css files have been deleted.")
+    message_submit = _("Selected CSS files have been deleted.")
     queryset_attr = "css"
 
 
-class DeleteThemeImages(DeleteThemeAssets):
-    message_submit = _("Selected images have been deleted.")
-    queryset_attr = "images"
-
-
-class DeleteThemeFonts(DeleteThemeAssets):
-    message_submit = _("Selected font files have been deleted.")
-    queryset_attr = "fonts"
+class DeleteThemeMedia(DeleteThemeAssets):
+    message_submit = _("Selected media have been deleted.")
+    queryset_attr = "media"

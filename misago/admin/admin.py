@@ -6,14 +6,13 @@ from .themes.views import (
     ActivateTheme,
     DeleteTheme,
     DeleteThemeCss,
-    DeleteThemeFonts,
-    DeleteThemeImages,
+    DeleteThemeMedia,
     EditTheme,
     NewTheme,
     ThemeAssets,
     ThemesList,
     UploadThemeCss,
-    UploadThemeImages,
+    UploadThemeMedia,
 )
 
 
@@ -38,14 +37,9 @@ class MisagoAdminExtension(MiddlewareMixin):
                 name="delete-css",
             ),
             url(
-                r"^assets/(?P<pk>\d+)/delete-fonts/$",
-                DeleteThemeFonts.as_view(),
-                name="delete-fonts",
-            ),
-            url(
-                r"^assets/(?P<pk>\d+)/delete-images/$",
-                DeleteThemeImages.as_view(),
-                name="delete-images",
+                r"^assets/(?P<pk>\d+)/delete-media/$",
+                DeleteThemeMedia.as_view(),
+                name="delete-media",
             ),
             url(
                 r"^assets/(?P<pk>\d+)/upload-css/$",
@@ -53,9 +47,9 @@ class MisagoAdminExtension(MiddlewareMixin):
                 name="upload-css",
             ),
             url(
-                r"^assets/(?P<pk>\d+)/upload-images/$",
-                UploadThemeImages.as_view(),
-                name="upload-images",
+                r"^assets/(?P<pk>\d+)/upload-media/$",
+                UploadThemeMedia.as_view(),
+                name="upload-media",
             ),
         )
 

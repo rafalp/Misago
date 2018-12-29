@@ -15,17 +15,12 @@ def upload_css_to(instance, filename):
     return "themes/%s/css/%s" % (instance.theme.dirname, filename)
 
 
-def upload_font_to(instance, filename):
+def upload_media_to(instance, filename):
     filename = add_hash_to_filename(instance.hash, filename)
     return "themes/%s/media/%s" % (instance.theme.dirname, filename)
 
 
-def upload_image_to(instance, filename):
-    filename = add_hash_to_filename(instance.hash, filename)
-    return "themes/%s/media/%s" % (instance.theme.dirname, filename)
-
-
-def upload_image_thumbnail_to(instance, filename):
+def upload_media_thumbnail_to(instance, filename):
     return "themes/%s/media/%s" % (instance.theme.dirname, filename)
 
 

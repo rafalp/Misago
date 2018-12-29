@@ -6,9 +6,8 @@ from .uploadto import (
     generate_theme_dirname,
     upload_css_source_to,
     upload_css_to,
-    upload_font_to,
-    upload_image_to,
-    upload_image_thumbnail_to,
+    upload_media_to,
+    upload_media_thumbnail_to,
 )
 
 
@@ -72,43 +71,19 @@ class Css(models.Model):
         return self.name
 
 
-class Font(models.Model):
-    theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="fonts")
+class Media(models.Model):
+    theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="media")
 
     name = models.CharField(max_length=255)
-    file = models.FileField(upload_to=upload_font_to, max_length=255)
-    hash = models.CharField(max_length=12)
-    type = models.CharField(max_length=255)
-    size = models.PositiveIntegerField()
-    modified_on = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        ordering = ["name"]
-
-    def delete(self, *args, **kwargs):
-        self.file.delete(save=False)
-        super().delete(*args, **kwargs)
-
-    def __str__(self):
-        return self.name
-
-
-class Image(models.Model):
-    theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="images")
-
-    name = models.CharField(max_length=255)
-    file = models.ImageField(
-        upload_to=upload_image_to,
-        max_length=255,
-        width_field="width",
-        height_field="height",
-    )
+    file = models.ImageField(upload_to=upload_media_to, max_length=255)
     hash = models.CharField(max_length=8)
     type = models.CharField(max_length=255)
-    width = models.PositiveIntegerField()
-    height = models.PositiveIntegerField()
+    width = models.PositiveIntegerField(default=0)
+    height = models.PositiveIntegerField(default=0)
     size = models.PositiveIntegerField()
-    thumbnail = models.ImageField(upload_to=upload_image_thumbnail_to, max_length=255)
+    thumbnail = models.ImageField(
+        upload_to=upload_media_thumbnail_to, max_length=255, null=True, blank=True
+    )
     modified_on = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -116,7 +91,8 @@ class Image(models.Model):
 
     def delete(self, *args, **kwargs):
         self.file.delete(save=False)
-        self.thumbnail.delete(save=False)
+        if self.thumbnail:
+            self.thumbnail.delete(save=False)
         super().delete(*args, **kwargs)
 
     def __str__(self):

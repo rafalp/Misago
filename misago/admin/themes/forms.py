@@ -5,7 +5,8 @@ from mptt.forms import TreeNodeChoiceField
 
 from ...themes.models import Theme
 from ..forms import YesNoSwitch
-from .assets import create_css, create_image
+from .css import create_css
+from .media import create_media
 
 
 class ThemeChoiceField(TreeNodeChoiceField):
@@ -106,8 +107,6 @@ class UploadCssForm(UploadAssetsForm):
         create_css(self.instance, asset)
 
 
-class UploadImagesForm(UploadAssetsForm):
-    assets = forms.ImageField(widget=forms.ClearableFileInput(attrs={"multiple": True}))
-
+class UploadMediaForm(UploadAssetsForm):
     def save_asset(self, asset):
-        create_image(self.instance, asset)
+        create_media(self.instance, asset)
