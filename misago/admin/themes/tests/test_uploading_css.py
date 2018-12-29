@@ -3,6 +3,8 @@ import os
 import pytest
 from django.urls import reverse
 
+from ....test import assert_has_error_message
+
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -22,13 +24,8 @@ def hashed_css_file():
 
 
 @pytest.fixture
-def incorrectly_hashed_css_file():
-    return os.path.join(TESTS_DIR, "css", "test.0046cb3b.css")
-
-
-@pytest.fixture
 def upload(admin_client):
-    def post_upload(theme, asset_files):
+    def post_upload(theme, asset_files=None):
         url = reverse(
             "misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk}
         )
@@ -63,7 +60,13 @@ def test_uploaded_file_is_rejected_if_its_not_css_file(upload, theme, other_file
         assert not theme.css.exists()
 
 
-def test_if_some_of_uploaded_files_are_incorrect_only_correct_files_are_added_to_theme(
+def test_error_message_is_set_if_uploaded_file_is_not_css(upload, theme, other_file):
+    with open(other_file, "rb") as fp:
+        response = upload(theme, fp)
+        assert_has_error_message(response)
+
+
+def test_if_some_of_uploaded_files_are_incorrect_only_css_files_are_added_to_theme(
     upload, theme, css_file, other_file
 ):
     with open(css_file) as fp1:
@@ -72,44 +75,46 @@ def test_if_some_of_uploaded_files_are_incorrect_only_correct_files_are_added_to
             assert theme.css.exists()
             assert theme.css.count() == 1
 
-    css_asset = theme.css.last()
+    css = theme.css.last()
     expected_filename = str(css_file).split("/")[-1]
-    assert css_asset.name == expected_filename
+    assert css.name == expected_filename
 
 
 def test_css_file_is_uploaded_to_theme_directory(upload, theme, css_file):
     with open(css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
-    assert theme.dirname in str(css_asset.source_file)
+    css = theme.css.last()
+    assert theme.dirname in str(css.source_file)
 
 
 def test_css_file_name_is_set_as_asset_name(upload, theme, css_file):
     with open(css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
+    css = theme.css.last()
     expected_filename = str(css_file).split("/")[-1]
-    assert css_asset.name == expected_filename
+    assert css.name == expected_filename
 
 
-def test_hash_is_added_to_uploaded_file_name(upload, theme, css_file, hashed_css_file):
+def test_hash_is_added_to_uploaded_css_file_name(
+    upload, theme, css_file, hashed_css_file
+):
     with open(css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
-    filename = str(css_asset.source_file.path).split("/")[-1]
+    css = theme.css.last()
+    filename = str(css.source_file.path).split("/")[-1]
     expected_filename = str(hashed_css_file).split("/")[-1]
     assert filename == expected_filename
 
 
-def test_hash_is_set_on_asset(upload, theme, css_file, hashed_css_file):
+def test_hash_is_set_on_css_source_asset(upload, theme, css_file):
     with open(css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
-    assert css_asset.source_hash
+    css = theme.css.last()
+    assert css.source_hash
 
 
 def test_css_file_name_is_preserved_if_it_already_contains_correct_hash(
@@ -118,18 +123,38 @@ def test_css_file_name_is_preserved_if_it_already_contains_correct_hash(
     with open(hashed_css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
-    filename = str(css_asset.source_file.path).split("/")[-1]
+    css = theme.css.last()
+    filename = str(css.source_file.path).split("/")[-1]
     expected_filename = str(hashed_css_file).split("/")[-1]
     assert filename == expected_filename
 
 
 def test_new_hash_is_added_to_css_file_name_if_it_contains_incorrect_hash(
-    upload, theme, incorrectly_hashed_css_file
+    upload, theme
 ):
+    incorrectly_hashed_css_file = os.path.join(TESTS_DIR, "css", "test.0046cb3b.css")
     with open(incorrectly_hashed_css_file) as fp:
         upload(theme, fp)
 
-    css_asset = theme.css.last()
-    filename = str(css_asset.source_file.path).split("/")[-1]
-    assert css_asset.source_hash in filename
+    css = theme.css.last()
+    filename = str(css.source_file.path).split("/")[-1]
+    assert css.source_hash in filename
+
+
+def test_error_message_is_set_if_no_css_file_was_uploaded(upload, theme):
+    response = upload(theme)
+    assert_has_error_message(response)
+
+
+def test_error_message_is_set_if_user_attempts_to_upload_css_file_to_default_theme(
+    upload, default_theme
+):
+    response = upload(default_theme)
+    assert_has_error_message(response)
+
+
+def test_error_message_is_set_if_user_attempts_to_upload_css_file_to_nonexisting_theme(
+    upload, nonexisting_theme
+):
+    response = upload(nonexisting_theme)
+    assert_has_error_message(response)

@@ -108,12 +108,12 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
         form = self.form(request.POST, request.FILES, instance=theme)
 
         if not form.is_valid():
-            if form.cleaned_data["assets"]:
+            if form.cleaned_data.get("assets"):
                 messages.info(request, self.message_partial_success)
             for error in form.errors["assets"]:
                 messages.error(request, error)
 
-        if form.cleaned_data["assets"]:
+        if form.cleaned_data.get("assets"):
             form.save()
             messages.success(request, self.message_success)
 
