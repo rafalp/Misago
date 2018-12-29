@@ -98,7 +98,7 @@ class ThemeAssetsActionAdmin(ThemeAssetsAdmin):
 
 class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
     message_partial_success = _(
-        "Some css files could not have been added to the style."
+        "Some css files could not have been added to the theme."
     )
 
     message_submit = None
@@ -119,12 +119,12 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
 
 class UploadThemeCss(UploadThemeAssets):
-    message_success = _("New CSS files have been added to the style.")
+    message_success = _("New CSS files have been added to the theme.")
     form = UploadCssForm
 
 
 class UploadThemeMedia(UploadThemeAssets):
-    message_success = _("New media files have been added to the style.")
+    message_success = _("New media files have been added to the theme.")
     form = UploadMediaForm
 
 
