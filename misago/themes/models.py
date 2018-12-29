@@ -47,10 +47,11 @@ class Css(models.Model):
         upload_to=upload_css_source_to, max_length=255, null=True, blank=True
     )
     source_hash = models.CharField(max_length=8, null=True, blank=True)
-    file = models.FileField(
+    source_contains_urls = models.BooleanField(default=False)
+    rebuild_file = models.FileField(
         upload_to=upload_css_to, max_length=255, null=True, blank=True
     )
-    hash = models.CharField(max_length=8, null=True, blank=True)
+    rebuild_hash = models.CharField(max_length=8, null=True, blank=True)
     size = models.PositiveIntegerField(default=0)
 
     order = models.IntegerField(default=0)
@@ -60,7 +61,11 @@ class Css(models.Model):
         ordering = ["order"]
 
     def delete(self, *args, **kwargs):
-        self.file.delete(save=False)
+        if self.source_file:
+            self.source_file.delete(save=False)
+        if self.rebuild_file:
+            self.rebuild_file.delete(save=False)
+
         super().delete(*args, **kwargs)
 
     def __str__(self):
@@ -92,7 +97,12 @@ class Image(models.Model):
     theme = models.ForeignKey(Theme, on_delete=models.PROTECT, related_name="images")
 
     name = models.CharField(max_length=255)
-    file = models.ImageField(upload_to=upload_image_to, max_length=255, width_field="width", height_field="height")
+    file = models.ImageField(
+        upload_to=upload_image_to,
+        max_length=255,
+        width_field="width",
+        height_field="height",
+    )
     hash = models.CharField(max_length=8)
     type = models.CharField(max_length=255)
     width = models.PositiveIntegerField()

@@ -32,11 +32,31 @@ class MisagoAdminExtension(MiddlewareMixin):
             url(r"^delete/(?P<pk>\d+)/$", DeleteTheme.as_view(), name="delete"),
             url(r"^activate/(?P<pk>\d+)/$", ActivateTheme.as_view(), name="activate"),
             url(r"^assets/(?P<pk>\d+)/$", ThemeAssets.as_view(), name="assets"),
-            url(r"^assets/(?P<pk>\d+)/delete-css/$", DeleteThemeCss.as_view(), name="delete-css"),
-            url(r"^assets/(?P<pk>\d+)/delete-fonts/$", DeleteThemeFonts.as_view(), name="delete-fonts"),
-            url(r"^assets/(?P<pk>\d+)/delete-images/$", DeleteThemeImages.as_view(), name="delete-images"),
-            url(r"^assets/(?P<pk>\d+)/upload-css/$", UploadThemeCss.as_view(), name="upload-css"),
-            url(r"^assets/(?P<pk>\d+)/upload-images/$", UploadThemeImages.as_view(), name="upload-images"),
+            url(
+                r"^assets/(?P<pk>\d+)/delete-css/$",
+                DeleteThemeCss.as_view(),
+                name="delete-css",
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/delete-fonts/$",
+                DeleteThemeFonts.as_view(),
+                name="delete-fonts",
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/delete-images/$",
+                DeleteThemeImages.as_view(),
+                name="delete-images",
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/upload-css/$",
+                UploadThemeCss.as_view(),
+                name="upload-css",
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/upload-images/$",
+                UploadThemeImages.as_view(),
+                name="upload-images",
+            ),
         )
 
     def register_navigation_nodes(self, site):

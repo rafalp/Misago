@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.html import conditional_escape, mark_safe
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
 from ...themes.models import Theme
@@ -44,35 +44,70 @@ class ThemeForm(forms.ModelForm):
 
 
 class UploadAssetsForm(forms.Form):
+    allowed_content_types = []
+    allowed_extensions = []
+
     assets = forms.FileField(
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        widget=forms.ClearableFileInput(attrs={"multiple": True}),
+        error_messages={"required": _("No files have been uploaded.")},
     )
 
     def __init__(self, *args, instance=None):
         self.instance = instance
         super().__init__(*args)
 
-    def clean(self):
-        cleaned_data = super(UploadAssetsForm, self).clean()
-        return cleaned_data
+    def clean_assets(self):
+        assets = []
+        for asset in self.files.getlist("assets"):
+            try:
+                if self.allowed_content_types:
+                    self.validate_asset_content_type(asset)
+                if self.allowed_extensions:
+                    self.validate_asset_extension(asset)
+            except forms.ValidationError as e:
+                self.add_error("assets", e)
+            else:
+                assets.append(asset)
 
-    def get_uploaded_assets(self):
-        return self.files.getlist('assets')
+        return assets
+
+    def validate_asset_content_type(self, asset):
+        if asset.content_type in self.allowed_content_types:
+            return
+
+        message = gettext(
+            'File "%(file)s" content type "%(content_type)s" is not allowed.'
+        )
+        details = {"file": asset.name, "content_type": asset.content_type}
+
+        raise forms.ValidationError(message % details)
+
+    def validate_asset_extension(self, asset):
+        filename = asset.name.lower()
+        for extension in self.allowed_extensions:
+            if filename.endswith(".%s" % extension):
+                return
+
+        message = gettext('File "%(file)s" extension is invalid.')
+        details = {"file": asset.name}
+
+        raise forms.ValidationError(message % details)
+
+    def save(self):
+        for asset in self.cleaned_data["assets"]:
+            self.save_asset(asset)
 
 
 class UploadCssForm(UploadAssetsForm):
-    def save(self):
-        for css in self.get_uploaded_assets():
-            create_css(self.instance, css)
-        return True
+    allowed_content_types = ["text/css"]
+    allowed_extensions = ["css"]
+
+    def save_asset(self, asset):
+        create_css(self.instance, asset)
 
 
 class UploadImagesForm(UploadAssetsForm):
-    assets = forms.ImageField(
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
-    )
+    assets = forms.ImageField(widget=forms.ClearableFileInput(attrs={"multiple": True}))
 
-    def save(self):
-        for image in self.get_uploaded_assets():
-            create_image(self.instance, image)
-        return True
+    def save_asset(self, asset):
+        create_image(self.instance, asset)

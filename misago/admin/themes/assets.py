@@ -23,10 +23,7 @@ def delete_css(theme, css):
 
 def save_css(theme, css):
     theme.css.create(
-        name=css.name,
-        file=css,
-        hash=get_file_hash(css),
-        size=css.size,
+        name=css.name, source_file=css, source_hash=get_file_hash(css), size=css.size
     )
 
 
@@ -62,8 +59,8 @@ def get_image_thumbnail(image):
     img.save(file, format="png")
     img.close()
 
-    filename = image.name.split('.')[0]
-    return ImageFile(file, name='thumb_%s.png' % filename)
+    filename = image.name.split(".")[0]
+    return ImageFile(file, name="thumb_%s.png" % filename)
 
 
 def get_file_hash(file):

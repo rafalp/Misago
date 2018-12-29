@@ -96,18 +96,36 @@ class ThemeAssetsActionAdmin(ThemeAssetsAdmin):
         )
 
 
-class UploadThemeCss(ThemeAssetsActionAdmin, generic.TargetedView):
+class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
+    message_partial_success = _(
+        "Some css files could not have been added to the style."
+    )
+
+    message_submit = None
+    form = None
+
     def action(self, request, theme):
-        form = UploadCssForm(request.POST, request.FILES, instance=theme)
-        if form.is_valid() and form.save():
-            pass  # display some user feedback
+        form = self.form(request.POST, request.FILES, instance=theme)
+
+        if not form.is_valid():
+            if form.cleaned_data["assets"]:
+                messages.info(request, self.message_partial_success)
+            for error in form.errors["assets"]:
+                messages.error(request, error)
+
+        if form.cleaned_data["assets"]:
+            form.save()
+            messages.success(request, self.message_success)
 
 
-class UploadThemeImages(ThemeAssetsActionAdmin, generic.TargetedView):
-    def action(self, request, theme):
-        form = UploadImagesForm(request.POST, request.FILES, instance=theme)
-        if form.is_valid() and form.save():
-            pass  # display some user feedback
+class UploadThemeCss(UploadThemeAssets):
+    message_success = _("New CSS files have been added to the style.")
+    form = UploadCssForm
+
+
+class UploadThemeImages(UploadThemeAssets):
+    message_success = _("New media files have been added to the style.")
+    form = UploadImagesForm
 
 
 class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
