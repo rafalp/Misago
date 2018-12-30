@@ -143,7 +143,7 @@ class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
     def clean_items_list(self, request):
         try:
-            return {int(i) for i in request.POST.getlist("item")}
+            return {int(i) for i in request.POST.getlist("item")[:20]}
         except (ValueError, TypeError):
             pass
 
