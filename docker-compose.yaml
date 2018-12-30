@@ -12,8 +12,6 @@ services:
   redis:
     image: redis:5
     restart: unless-stopped
-    networks:
-      - misago
   misago:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
