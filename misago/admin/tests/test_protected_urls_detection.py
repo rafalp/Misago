@@ -29,11 +29,6 @@ def test_request_to_django_admin_subpath_url_is_protected():
     assert get_protected_namespace(request) == "admin"
 
 
-def test_request_to_django_admin_subpath_url_is_protected():
-    request = Mock(path=django_admin_url + "users/")
-    assert get_protected_namespace(request) == "admin"
-
-
 def test_request_to_site_root_url_is_not_protected():
     request = Mock(path=site_url)
     assert get_protected_namespace(request) is None

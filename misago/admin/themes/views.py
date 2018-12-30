@@ -1,5 +1,4 @@
 from django.contrib import messages
-from django.core.exceptions import PermissionDenied
 from django.db.models import ObjectDoesNotExist
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -105,7 +104,9 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
     form = None
 
     def action(self, request, theme):
-        form = self.form(request.POST, request.FILES, instance=theme)
+        form = self.form(  # pylint: disable=not-callable
+            request.POST, request.FILES, instance=theme
+        )
 
         if not form.is_valid():
             if form.cleaned_data.get("assets"):

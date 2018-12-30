@@ -2,7 +2,6 @@ from time import time
 from unittest.mock import Mock
 
 import pytest
-from django.contrib.messages import get_messages
 from django.test import override_settings
 
 from ..auth import (

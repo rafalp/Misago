@@ -1,10 +1,8 @@
 from django import forms
-from django.utils.html import conditional_escape, mark_safe
 from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
 from ...themes.models import Theme
-from ..forms import YesNoSwitch
 from .css import create_css
 from .media import create_media
 

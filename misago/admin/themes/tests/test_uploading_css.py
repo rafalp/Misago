@@ -29,7 +29,7 @@ def upload(admin_client):
         url = reverse(
             "misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk}
         )
-        if asset_files:
+        if asset_files is not None:
             data = asset_files if isinstance(asset_files, list) else [asset_files]
         else:
             data = None

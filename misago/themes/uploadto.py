@@ -24,7 +24,7 @@ def upload_media_thumbnail_to(instance, filename):
     return "themes/%s/media/%s" % (instance.theme.dirname, filename)
 
 
-def add_hash_to_filename(hash, filename):
+def add_hash_to_filename(hash, filename):  # pylint: disable=redefined-builtin
     if ".%s." % hash in filename:
         return filename
     extension_start = filename.rfind(".")
