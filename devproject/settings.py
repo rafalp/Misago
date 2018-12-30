@@ -169,6 +169,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party apps used by Misago
+    "celery"
     "debug_toolbar",
     "mptt",
     "rest_framework",
