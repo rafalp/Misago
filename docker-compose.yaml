@@ -28,6 +28,7 @@ services:
       - "${MISAGO_DEVSERVER_PORT:-8000}:8000"
     depends_on:
       - postgres
+      - redis
     tty: true
     volumes:
       # Map in the entire project into the container
@@ -53,6 +54,7 @@ services:
       - "${MISAGO_DEVSERVER_PORT:-8000}:8000"
     depends_on:
       - postgres
+      - redis
     tty: true
     volumes:
       # Map in the entire project into the container
