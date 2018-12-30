@@ -4,8 +4,9 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext, gettext_lazy as _
 
-from ...themes.models import Theme
-from ..views import generic
+from ...admin.views import generic
+from ..models import Theme
+from .css import move_css_down, move_css_up
 from .forms import ThemeForm, UploadCssForm, UploadMediaForm
 
 
@@ -163,3 +164,43 @@ class DeleteThemeCss(DeleteThemeAssets):
 class DeleteThemeMedia(DeleteThemeAssets):
     message_submit = _("Selected media have been deleted.")
     queryset_attr = "media"
+
+
+class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
+    def wrapped_dispatch(self, request, pk, css_pk):
+        theme = self.get_target_or_none(request, {"pk": pk})
+        if not theme:
+            messages.error(request, self.message_404)
+            return redirect(self.root_link)
+
+        error = self.check_permissions(  # pylint: disable=assignment-from-no-return
+            request, theme
+        )
+        if error:
+            messages.error(request, error)
+            return redirect(self.root_link)
+
+        try:
+            css = theme.css.select_for_update().get(pk=css_pk)
+        except ObjectDoesNotExist:
+            css_error = gettext("Requested CSS could not be found in the theme.")
+            messages.error(request, css_error)
+            return self.redirect_to_theme_assets(theme)
+
+        return self.real_dispatch(request, theme, css)
+
+
+class MoveThemeCssUp(ThemeCssAdmin):
+    def real_dispatch(self, request, theme, css):
+        if request.method == "POST" and move_css_up(theme, css):
+            messages.success(request, gettext('"%s" was moved up.') % css)
+
+        return self.redirect_to_theme_assets(theme)
+
+
+class MoveThemeCssDown(ThemeCssAdmin):
+    def real_dispatch(self, request, theme, css):
+        if request.method == "POST" and move_css_down(theme, css):
+            messages.success(request, gettext('"%s" was moved down.') % css)
+
+        return self.redirect_to_theme_assets(theme)

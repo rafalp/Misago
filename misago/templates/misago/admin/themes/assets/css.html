@@ -18,7 +18,7 @@
     </button>
   </div>
   {% with theme.css.all as css %}
-    <form action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
+    <form class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
       {% csrf_token %}
       <table class="table">
         <tr>
@@ -27,11 +27,13 @@
           <th>{% trans "Modified" %}</th>
           <th>{% trans "Size" %}</th>
           <th style="width: 1%;">&nbsp;</th>
+          <th style="width: 1%;">&nbsp;</th>
+          <th style="width: 1%;">&nbsp;</th>
           <th style="width: 1%;">
             <input type="checkbox" {% if not css %}disabled{% endif %}>
           </th>
         </tr>
-        {% for item in theme.css.all %}
+        {% for item in css %}
           <tr>
             <td>
               <a class="btn btn-default btn-sm tooltip-top" href="{{ item.file.url }}" target="blank" title="{% trans 'Preview' %}">
@@ -45,6 +47,16 @@
               <abbr class="moment" data-iso="{{ item.modified_on.isoformat }}" data-format="LL"></abbr>
             </td>
             <td>{{ item.size|filesizeformat }}</td>
+            <td style="width: 1%;">
+              <button type="button" class="btn btn-default btn-sm btn-move tooltip-top" data-form="move-down-{{ item.pk }}" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
+                <span class="fa fa-chevron-down"></span>
+              </button>
+            </td>
+            <td style="width: 1%;">
+              <button type="button" class="btn btn-default btn-sm btn-move tooltip-top" data-form="move-up-{{ item.pk }}" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
+                <span class="fa fa-chevron-up"></span>
+              </button>
+            </td>
             <td style="width: 1%;">
               <a href="#" class="btn btn-default btn-sm">
                 <span class="fa fa-pencil"></span>
@@ -70,5 +82,13 @@
         </div>
       {% endif %}
     </form>
+    {% for item in css %}
+      <form action="{% url 'misago:admin:appearance:themes:move-css-up' pk=theme.pk css_pk=item.pk %}" method="post" id="move-up-{{ item.pk }}">
+        {% csrf_token %}
+      </form>
+      <form action="{% url 'misago:admin:appearance:themes:move-css-down' pk=theme.pk css_pk=item.pk %}" method="post" id="move-down-{{ item.pk }}">
+        {% csrf_token %}
+      </form>
+    {% endfor %}
   {% endwith %}
 </div><!-- /.table-panel -->

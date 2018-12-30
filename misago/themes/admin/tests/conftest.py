@@ -3,7 +3,7 @@ import os
 import pytest
 from django.urls import reverse
 
-from ....themes.models import Theme
+from ...models import Theme
 
 
 @pytest.fixture
@@ -39,7 +39,9 @@ def css(admin_client, theme):
 
 @pytest.fixture
 def css_link(admin_client, theme):
-    return theme.css.create(name="CSS link", url="https://somecdn/somefont.css")
+    return theme.css.create(
+        name="CSS link", url="https://test.cdn/somefont.css", order=theme.css.count()
+    )
 
 
 @pytest.fixture

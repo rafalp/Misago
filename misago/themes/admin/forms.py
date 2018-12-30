@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
-from ...themes.models import Theme
+from ..models import Theme
 from .css import create_css
 from .media import create_media
 

@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from django.core.files.uploadedfile import UploadedFile
 from django.urls import reverse
 
 from ....test import assert_has_error_message
@@ -129,6 +130,26 @@ def test_new_hash_is_added_to_media_file_name_if_it_contains_incorrect_hash(
     media = theme.media.last()
     filename = str(media.file.path).split("/")[-1]
     assert media.hash in filename
+
+
+def test_newly_uploaded_media_file_replaces_old_one_if_file_names_are_same(
+    upload, theme, hashable_file
+):
+    with open(hashable_file) as fp:
+        upload(theme, fp)
+    original_media = theme.media.get()
+
+    with open(os.path.join(TESTS_DIR, "css", "test-changed.css")) as fp:
+        size = len(fp.read())
+        fp.seek(0)
+        upload(
+            theme, UploadedFile(fp, name="test.css", content_type="text/css", size=size)
+        )
+    updated_media = theme.media.last()
+
+    assert updated_media.name == original_media.name
+    assert updated_media.hash != original_media.hash
+    assert theme.media.count() == 1
 
 
 def test_image_dimensions_are_set_for_uploaded_image_file(upload, theme, png_file):

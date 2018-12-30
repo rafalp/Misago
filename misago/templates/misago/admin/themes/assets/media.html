@@ -10,7 +10,7 @@
     </button>
   </div>
   {% with theme.media.all as media %}
-    <form action="{% url 'misago:admin:appearance:themes:delete-media' pk=theme.pk %}" method="post">
+    <form  class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-media' pk=theme.pk %}" method="post">
       {% csrf_token %}
       <table class="table">
         <tr>

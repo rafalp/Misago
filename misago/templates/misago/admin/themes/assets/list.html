@@ -78,7 +78,7 @@
 
 <script type="text/javascript">
   $(function() {
-    $(".table-panel form").each(function(_, form) {
+    $(".table-panel form.mass-delete").each(function(_, form) {
       $(form).find("th input:checkbox").change(function(event) {
         $(form).find("td input:checkbox").prop("checked", event.target.checked);
         $(form).find(".panel-footer button").prop("disabled", !event.target.checked);
@@ -98,7 +98,7 @@
       $(form).find(".panel-footer button").prop("disabled", checked === 0);
     });
 
-    $(".table-panel form").submit(function(event) {
+    $(".table-panel form.mass-delete").submit(function(event) {
       var checked = $(event.target).find("td input:checkbox:checked").length;
       if (checked === 0) {
         event.preventDefault();
@@ -110,6 +110,11 @@
         event.preventDefault();
         return false;
       }
+    });
+
+    $(".btn-move").click(function(event) {
+      var form = $(event.target).data("form");
+      $('#' + form).submit();
     });
   });
 </script>

@@ -36,16 +36,16 @@ class TargetedView(AdminView):
             return None
 
     def get_target(self, kwargs):
+        if len(kwargs) > 1:
+            raise ValueError("TargetedView.get_target() received more than one kwarg")
         if len(kwargs) != 1:
             return self.get_model()()
 
-        select_for_update = self.get_model().objects
+        queryset = self.get_model().objects
         if self.is_atomic:
-            select_for_update = select_for_update.select_for_update()
-        # Does not work on Python 3:
-        # return select_for_update.get(pk=kwargs[kwargs.keys()[0]])
+            queryset = queryset.select_for_update()
         (pk,) = kwargs.values()
-        return select_for_update.get(pk=pk)
+        return queryset.get(pk=pk)
 
     def check_permissions(self, request, target):
         pass

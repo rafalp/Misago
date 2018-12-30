@@ -1,6 +1,7 @@
 import os
 
 import pytest
+from django.core.files.uploadedfile import UploadedFile
 from django.urls import reverse
 
 from ....test import assert_has_error_message
@@ -52,6 +53,36 @@ def test_multiple_css_files_can_be_uploaded_at_once(
             upload(theme, [fp1, fp2])
             assert theme.css.exists()
             assert theme.css.count() == 2
+
+
+def test_css_files_uploaded_one_after_another_are_ordered(
+    upload, theme, css_file, hashed_css_file
+):
+    with open(css_file) as fp:
+        upload(theme, fp)
+    first_css = theme.css.last()
+    assert first_css.name == str(css_file).split("/")[-1]
+    assert first_css.order == 0
+
+    with open(hashed_css_file) as fp:
+        upload(theme, fp)
+    last_css = theme.css.last()
+    assert last_css.name == str(hashed_css_file).split("/")[-1]
+    assert last_css.order == 1
+
+
+def test_multiple_css_files_uploaded_at_once_are_ordered(
+    upload, theme, css_file, hashed_css_file
+):
+    with open(css_file) as fp1:
+        with open(hashed_css_file) as fp2:
+            upload(theme, [fp1, fp2])
+
+    assert list(theme.css.values_list("name", flat=True)) == [
+        str(css_file).split("/")[-1],
+        str(hashed_css_file).split("/")[-1],
+    ]
+    assert list(theme.css.values_list("order", flat=True)) == [0, 1]
 
 
 def test_uploaded_file_is_rejected_if_its_not_css_file(upload, theme, other_file):
@@ -139,6 +170,47 @@ def test_new_hash_is_added_to_css_file_name_if_it_contains_incorrect_hash(
     css = theme.css.last()
     filename = str(css.source_file.path).split("/")[-1]
     assert css.source_hash in filename
+
+
+def test_newly_uploaded_css_file_replaces_old_one_if_file_names_are_same(
+    upload, theme, css_file
+):
+    with open(css_file) as fp:
+        upload(theme, fp)
+    original_css = theme.css.get()
+
+    with open(os.path.join(TESTS_DIR, "css", "test-changed.css")) as fp:
+        size = len(fp.read())
+        fp.seek(0)
+        upload(
+            theme, UploadedFile(fp, name="test.css", content_type="text/css", size=size)
+        )
+    updated_css = theme.css.last()
+
+    assert updated_css.name == original_css.name
+    assert updated_css.source_hash != original_css.source_hash
+    assert theme.css.count() == 1
+
+
+def test_newly_uploaded_css_file_reuses_replaced_file_order_if_names_are_same(
+    upload, theme, css_file, hashed_css_file
+):
+    with open(css_file) as fp:
+        upload(theme, fp)
+    original_css = theme.css.last()
+
+    with open(hashed_css_file) as fp:
+        upload(theme, fp)
+
+    with open(os.path.join(TESTS_DIR, "css", "test-changed.css")) as fp:
+        size = len(fp.read())
+        fp.seek(0)
+        upload(
+            theme, UploadedFile(fp, name="test.css", content_type="text/css", size=size)
+        )
+
+    updated_css = theme.css.get(order=original_css.order)
+    assert updated_css.name == original_css.name
 
 
 def test_error_message_is_set_if_no_css_file_was_uploaded(upload, theme):
