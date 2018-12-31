@@ -41,7 +41,7 @@ services:
       - .:/srv/misago:Z
   celery:
     build: .
-    command: celery -A tasks worker --loglevel=info
+    command: celery -A devproject worker --loglevel=info
     environment:
       # Postgres
       - POSTGRES_USER=misago
