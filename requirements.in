@@ -1,6 +1,6 @@
 beautifulsoup4<4.7
 bleach<2.2
-celery
+celery[redis]
 django<2
 djangorestframework<3.7
 django-debug-toolbar<1.9
