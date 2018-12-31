@@ -416,6 +416,7 @@ MISAGO_PROFILE_FIELDS = [
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+CELERY_BROKER_URL = ""
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 
