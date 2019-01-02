@@ -10,6 +10,14 @@ def create_link(theme):
 
 
 @pytest.fixture
+def edit_link(theme, css):
+    return reverse(
+        "misago:admin:appearance:themes:edit-css",
+        kwargs={"pk": theme.pk, "css_pk": css.pk},
+    )
+
+
+@pytest.fixture
 def data():
     return {"name": "test.css", "source": (".page-header { padding: 0}")}
 
@@ -110,3 +118,49 @@ def test_css_creation_fails_if_source_is_not_given(
     data["source"] = ""
     admin_client.post(create_link, data)
     assert not theme.css.exists()
+
+
+def test_css_creation_form_redirects_user_to_edition_after_creation(
+    theme, admin_client, create_link, data
+):
+    data["stay"] = "1"
+    response = admin_client.post(create_link, data)
+    assert response["location"] == reverse(
+        "misago:admin:appearance:themes:edit-css",
+        kwargs={"pk": theme.pk, "css_pk": theme.css.last().pk},
+    )
+
+
+def test_css_edition_form_is_displayed(admin_client, edit_link, css):
+    response = admin_client.get(edit_link)
+    assert response.status_code == 200
+    assert_contains(response, css.name)
+
+
+def test_css_edition_form_contains_source_file_contents(admin_client, edit_link, css):
+    response = admin_client.get(edit_link)
+    assert_contains(response, css.source_file.read().decode("utf-8"))
+
+
+def test_name_can_be_changed(admin_client, edit_link, css, data):
+    data["name"] = "new-name.css"
+    admin_client.post(edit_link, data)
+
+    css.refresh_from_db()
+    assert css.name == data["name"]
+
+
+def test_name_change_also_changes_source_file_name(admin_client, edit_link, css, data):
+    data["name"] = "new-name.css"
+    admin_client.post(edit_link, data)
+
+    css.refresh_from_db()
+    assert "new-name" in str(css.source_file)
+
+
+def test_css_source_can_be_changed(admin_client, edit_link, css, data):
+    data["source"] = ".misago-footer { display: none; }"
+    admin_client.post(edit_link, data)
+
+    css.refresh_from_db()
+    assert css.source_file.read().decode("utf-8") == data["source"]

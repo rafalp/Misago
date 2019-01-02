@@ -256,6 +256,12 @@ class NewThemeCss(ThemeCssFormAdmin):
 class EditThemeCss(NewThemeCss):
     message_submit = _('CSS "%(name)s" has been updated.')
 
+    def get_theme_css_or_none(self, theme, css_pk):
+        try:
+            return theme.css.get(pk=css_pk, url__isnull=True)
+        except ObjectDoesNotExist:
+            return None
+
     def initialize_form(self, form, request, theme, css):
         if request.method == "POST":
             return form(request.POST, instance=css)
