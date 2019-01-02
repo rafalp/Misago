@@ -12,10 +12,10 @@
       <span class="fa fa-link"></span>
       {% trans "Link" %}
     </button>
-    <button type="button" class="btn btn-default btn-sm pull-right">
+    <a href="{% url 'misago:admin:appearance:themes:new-css' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
       <span class="fa fa-file-text"></span>
       {% trans "Create" %}
-    </button>
+    </a>
   </div>
   {% with theme.css.all as css %}
     <form class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
@@ -36,7 +36,7 @@
         {% for item in css %}
           <tr>
             <td>
-              <a class="btn btn-default btn-sm tooltip-top" href="{{ item.file.url }}" target="blank" title="{% trans 'Preview' %}">
+              <a class="btn btn-default btn-sm tooltip-top" href="{{ item.source_file.url }}" target="blank" title="{% trans 'Preview' %}">
                 <span class="fa fa-share-square-o"></span>
               </a>
             </td>
@@ -58,7 +58,7 @@
               </button>
             </td>
             <td style="width: 1%;">
-              <a href="#" class="btn btn-default btn-sm">
+              <a href="{% url 'misago:admin:appearance:themes:edit-css' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
                 <span class="fa fa-pencil"></span>
                 {% trans "Edit" %}
               </a>

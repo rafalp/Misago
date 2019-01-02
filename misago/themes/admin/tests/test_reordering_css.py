@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 
 from ....test import assert_has_error_message
+from ..css import get_next_css_order
 
 FIRST = 0
 MIDDLE = 1
@@ -205,3 +206,8 @@ def test_if_given_nonexisting_theme_id_move_up_action_sets_error_message(
 ):
     response = move_up(nonexisting_theme, css_list[LAST])
     assert_has_error_message(response)
+
+
+def test_next_new_css_order_is_larger_than_largest_existing_css_order(theme):
+    theme.css.create(name="CSS", url="https://test.cdn/font.css", order=4),
+    assert get_next_css_order(theme) == 5

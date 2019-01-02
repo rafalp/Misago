@@ -7,9 +7,11 @@ from .views import (
     DeleteThemeCss,
     DeleteThemeMedia,
     EditTheme,
+    EditThemeCss,
     MoveThemeCssDown,
     MoveThemeCssUp,
     NewTheme,
+    NewThemeCss,
     ThemeAssets,
     ThemesList,
     UploadThemeCss,
@@ -61,6 +63,14 @@ class MisagoAdminExtension:
                 r"^assets/(?P<pk>\d+)/move-css-up/(?P<css_pk>\d+)/$",
                 MoveThemeCssUp.as_view(),
                 name="move-css-up",
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/new-css/$", NewThemeCss.as_view(), name="new-css"
+            ),
+            url(
+                r"^assets/(?P<pk>\d+)/edit-css/(?P<css_pk>\d+)/$",
+                EditThemeCss.as_view(),
+                name="edit-css",
             ),
         )
 

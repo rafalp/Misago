@@ -13,7 +13,7 @@
 
 {% block view %}
 <div class="row">
-  <div class="col-xs-12 col-md-8 col-md-offset-2">
+  <div class="col-xs-12 {% block form-main-col-class %}col-md-8 col-md-offset-2{% endblock form-main-col-class %}">
 
     <div class="form-panel">
       <form role="form" method="post" {% block form-extra %}{% endblock form-extra%}>
@@ -51,7 +51,9 @@
                   <button class="btn btn-success" name="stay" value="1">{% trans "Save and add another" %}</button>
                 {% endif %}
               {% endblock %}
-              <a href="{% url root_link %}" class="btn btn-default">{% trans "Cancel" %}</a>
+              {% block form-footer-cancel %}
+                <a href="{% url root_link %}" class="btn btn-default">{% trans "Cancel" %}</a>
+              {% endblock %}
 
             </div>
           </div>

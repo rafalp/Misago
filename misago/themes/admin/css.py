@@ -36,7 +36,7 @@ def save_css(theme, css, order=None):
 
 
 def get_next_css_order(theme):
-    last_css = theme.css.order_by("-order").last()
+    last_css = theme.css.order_by("order").last()
     if last_css:
         return last_css.order + 1
     return 0

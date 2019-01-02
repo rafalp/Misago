@@ -5,9 +5,9 @@ from django.urls import reverse
 from django.utils.translation import gettext, gettext_lazy as _
 
 from ...admin.views import generic
-from ..models import Theme
+from ..models import Theme, Css
 from .css import move_css_down, move_css_up
-from .forms import ThemeForm, UploadCssForm, UploadMediaForm
+from .forms import CssEditorForm, ThemeForm, UploadCssForm, UploadMediaForm
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
@@ -72,8 +72,7 @@ class ThemeAssetsAdmin(ThemeAdmin):
             return gettext("Default theme assets can't be edited.")
 
     def redirect_to_theme_assets(self, theme):
-        link = reverse("misago:admin:appearance:themes:assets", kwargs={"pk": theme.pk})
-        return redirect(link)
+        return redirect("misago:admin:appearance:themes:assets", pk=theme.pk)
 
 
 class ThemeAssets(ThemeAssetsAdmin, generic.TargetedView):
@@ -167,7 +166,7 @@ class DeleteThemeMedia(DeleteThemeAssets):
 
 
 class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
-    def wrapped_dispatch(self, request, pk, css_pk):
+    def wrapped_dispatch(self, request, pk, css_pk=None):
         theme = self.get_target_or_none(request, {"pk": pk})
         if not theme:
             messages.error(request, self.message_404)
@@ -180,14 +179,22 @@ class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
             messages.error(request, error)
             return redirect(self.root_link)
 
-        try:
-            css = theme.css.select_for_update().get(pk=css_pk)
-        except ObjectDoesNotExist:
+        css = self.get_theme_css_or_none(theme, css_pk)
+        if css_pk and not css:
             css_error = gettext("Requested CSS could not be found in the theme.")
             messages.error(request, css_error)
             return self.redirect_to_theme_assets(theme)
 
         return self.real_dispatch(request, theme, css)
+
+    def get_theme_css_or_none(self, theme, css_pk):
+        if not css_pk:
+            return None
+
+        try:
+            return theme.css.select_for_update().get(pk=css_pk)
+        except ObjectDoesNotExist:
+            return None
 
 
 class MoveThemeCssUp(ThemeCssAdmin):
@@ -204,3 +211,53 @@ class MoveThemeCssDown(ThemeCssAdmin):
             messages.success(request, gettext('"%s" was moved down.') % css)
 
         return self.redirect_to_theme_assets(theme)
+
+
+class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
+    def real_dispatch(self, request, theme, css=None):
+        form = self.initialize_form(self.form, request, theme, css)
+
+        if request.method == "POST" and form.is_valid():
+            response = self.handle_form(  # pylint: disable=assignment-from-no-return
+                form, request, theme, css
+            )
+            if response:
+                return response
+            if "stay" in request.POST:
+                return self.redirect_to_edit_form(theme, form.instance)
+            return self.redirect_to_theme_assets(theme)
+
+        return self.render(request, {"form": form, "theme": theme, "target": css})
+
+    def handle_form(self, form, request, theme, css):
+        form.save()
+        messages.success(request, self.message_submit % {"name": css.name})
+
+    def redirect_to_edit_form(self, theme, css):
+        return redirect(
+            "misago:admin:appearance:themes:edit-css", pk=theme.pk, css_pk=css.pk
+        )
+
+
+class NewThemeCss(ThemeCssFormAdmin):
+    message_submit = _('New CSS "%(name)s" has been saved.')
+    form = CssEditorForm
+    template = "assets/css-editor.html"
+
+    def get_theme_css_or_none(self, theme, _):
+        return Css(theme=theme)
+
+    def initialize_form(self, form, request, theme, css):
+        if request.method == "POST":
+            return form(request.POST, instance=css)
+        return form(instance=css)
+
+
+class EditThemeCss(NewThemeCss):
+    message_submit = _('CSS "%(name)s" has been updated.')
+
+    def initialize_form(self, form, request, theme, css):
+        if request.method == "POST":
+            return form(request.POST, instance=css)
+        initial_data = {"source": css.source_file.read()}
+        return form(instance=css, initial=initial_data)

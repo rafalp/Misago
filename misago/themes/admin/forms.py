@@ -1,10 +1,13 @@
 from django import forms
+from django.core.files.base import ContentFile
 from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
-from ..models import Theme
-from .css import create_css
+from ..models import Theme, Css
+from .css import create_css, get_next_css_order
 from .media import create_media
+from .utils import get_file_hash
+from .validators import validate_css_name
 
 
 class ThemeChoiceField(TreeNodeChoiceField):
@@ -108,3 +111,58 @@ class UploadCssForm(UploadAssetsForm):
 class UploadMediaForm(UploadAssetsForm):
     def save_asset(self, asset):
         create_media(self.instance, asset)
+
+
+class CssForm(forms.ModelForm):
+    name = forms.CharField(
+        label=_("Name"),
+        help_text=_(
+            "Should be an correct filename and include the .css extension. It will be lowercased."
+        ),
+        validators=[validate_css_name],
+    )
+
+    def clean_name(self):
+        data = self.cleaned_data["name"]
+        queryset = self.instance.theme.css.filter(name=data)
+        if self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        if queryset.exists():
+            raise forms.ValidationError(
+                gettext("This name is already in use by other asset.")
+            )
+
+        return data
+
+
+class CssEditorForm(CssForm):
+    source = forms.CharField(widget=forms.Textarea(), required=False)
+
+    class Meta:
+        model = Css
+        fields = ["name"]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not cleaned_data.get("source"):
+            raise forms.ValidationError(gettext("You need to enter CSS for this file."))
+        return cleaned_data
+
+    def save(self):
+        name = self.cleaned_data["name"]
+        source = self.cleaned_data["source"].encode("utf-8")
+        source_file = ContentFile(source, name)
+
+        self.instance.name = name
+
+        if self.instance.source_file:
+            self.instance.source_file.delete(save=False)
+
+        self.instance.source_file = source_file
+        self.instance.source_hash = get_file_hash(source_file)
+        self.instance.size = len(source)
+
+        if not self.instance.pk:
+            self.instance.order = get_next_css_order(self.instance.theme)
+
+        self.instance.save()
