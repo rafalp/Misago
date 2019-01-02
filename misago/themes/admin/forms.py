@@ -166,3 +166,4 @@ class CssEditorForm(CssForm):
             self.instance.order = get_next_css_order(self.instance.theme)
 
         self.instance.save()
+        return self.instance

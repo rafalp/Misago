@@ -267,3 +267,11 @@ class EditThemeCss(NewThemeCss):
             return form(request.POST, instance=css)
         initial_data = {"source": css.source_file.read()}
         return form(instance=css, initial=initial_data)
+
+    def handle_form(self, form, request, theme, css):
+        if form.has_changed():
+            form.save()
+            messages.success(request, self.message_submit % {"name": css.name})
+        else:
+            message = gettext('No changes have been made to "%(css)s".')
+            messages.info(request, self.message_submit % {"name": css.name})
