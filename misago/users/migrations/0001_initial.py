@@ -1,9 +1,10 @@
 import django.db.models.deletion
 import django.utils.timezone
-import misago.users.avatars.store
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import migrations, models
+
+import misago.users.avatars.store
 
 
 class Migration(migrations.Migration):
