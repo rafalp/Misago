@@ -1,11 +1,10 @@
 import django.db.models.deletion
 import django.utils.timezone
+import misago.threads.models.attachment
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.search import SearchVectorField
 from django.db import migrations, models
-
-import misago.threads.models.attachment
 
 
 class Migration(migrations.Migration):

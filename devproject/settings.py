@@ -169,6 +169,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # 3rd party apps used by Misago
+    "celery",
     "debug_toolbar",
     "mptt",
     "rest_framework",
@@ -415,6 +416,14 @@ MISAGO_PROFILE_FIELDS = [
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
+CELERY_BROKER_URL = "redis://redis:6379/0"
+
+# Celery workers may leak the memory, eventually depriving the instance of free
+# resources
+# This setting forces celery to stop worker, clean after it and create new one
+# after worker has processed 10 tasks.
+
+CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 
