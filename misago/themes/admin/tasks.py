@@ -8,7 +8,7 @@ from ..models import Css
 @shared_task
 def update_remote_css_size(pk):
     try:
-        css = Css.objects.get(pk=pk)
+        css = Css.objects.get(pk=pk, url__isnull=False)
         css.size = get_remove_css_size(css.url)
     except Css.DoesNotExist:
         pass
