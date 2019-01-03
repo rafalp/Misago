@@ -200,7 +200,8 @@ class ListView(AdminView):
         return self.clean_filtering_data(form.cleaned_data)
 
     def get_filters_from_session(self, request, search_form):
-        session_filters = request.session.get(self.filters_session_key, {})
+        session_filters = request.session.get(
+            self.filters_session_key, {}) or {}
         form = search_form(session_filters)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
