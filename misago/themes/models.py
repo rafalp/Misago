@@ -4,8 +4,8 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 from .uploadto import (
     generate_theme_dirname,
-    upload_css_source_to,
-    upload_css_to,
+    upload_build_css_to,
+    upload_source_css_to,
     upload_media_to,
     upload_media_thumbnail_to,
 )
@@ -43,14 +43,14 @@ class Css(models.Model):
     name = models.CharField(max_length=255)
     url = models.URLField(max_length=255, null=True, blank=True)
     source_file = models.FileField(
-        upload_to=upload_css_source_to, max_length=255, null=True, blank=True
+        upload_to=upload_source_css_to, max_length=255, null=True, blank=True
     )
     source_hash = models.CharField(max_length=8, null=True, blank=True)
-    source_contains_urls = models.BooleanField(default=False)
-    rebuild_file = models.FileField(
-        upload_to=upload_css_to, max_length=255, null=True, blank=True
+    source_needs_building = models.BooleanField(default=False)
+    build_file = models.FileField(
+        upload_to=upload_build_css_to, max_length=255, null=True, blank=True
     )
-    rebuild_hash = models.CharField(max_length=8, null=True, blank=True)
+    build_hash = models.CharField(max_length=8, null=True, blank=True)
     size = models.PositiveIntegerField(default=0)
 
     order = models.IntegerField(default=0)
@@ -62,8 +62,8 @@ class Css(models.Model):
     def delete(self, *args, **kwargs):
         if self.source_file:
             self.source_file.delete(save=False)
-        if self.rebuild_file:
-            self.rebuild_file.delete(save=False)
+        if self.build_file:
+            self.build_file.delete(save=False)
 
         super().delete(*args, **kwargs)
 

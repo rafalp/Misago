@@ -4,7 +4,7 @@ from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
 from ..models import Theme, Css
-from .css import create_css, get_next_css_order
+from .css import css_needs_rebuilding, create_css, get_next_css_order
 from .media import create_media
 from .utils import get_file_hash
 from .validators import validate_css_name, validate_css_name_is_available
@@ -150,6 +150,7 @@ class CssEditorForm(forms.ModelForm):
 
         self.instance.source_file = source_file
         self.instance.source_hash = get_file_hash(source_file)
+        self.instance.source_needs_building = css_needs_rebuilding(source_file)
         self.instance.size = len(source)
 
         if not self.instance.pk:

@@ -124,6 +124,23 @@ def test_css_creation_fails_if_source_is_not_given(
     assert not theme.css.exists()
 
 
+def test_css_file_without_url_is_created_without_rebuilding_flag(
+    theme, admin_client, create_link, data
+):
+    admin_client.post(create_link, data)
+    css = theme.css.last()
+    assert not css.source_needs_building
+
+
+def test_css_file_with_image_url_is_created_with_rebuilding_flag(
+    theme, admin_client, create_link, data, image
+):
+    data["source"] = "body { background-image: url(/static/%s); }" % image.name
+    admin_client.post(create_link, data)
+    css = theme.css.last()
+    assert css.source_needs_building
+
+
 def test_css_file_is_created_with_correct_order(
     theme, admin_client, create_link, css_link, data
 ):
@@ -243,6 +260,28 @@ def test_file_is_not_updated_if_form_data_has_no_changes(
 
     css.refresh_from_db()
     assert original_mtime == os.path.getmtime(css.source_file.path)
+
+
+def test_adding_image_url_to_edited_file_sets_rebuilding_flag(
+    theme, admin_client, edit_link, css, data, image
+):
+    data["source"] = "body { background-image: url(/static/%s); }" % image.name
+    admin_client.post(edit_link, data)
+    css.refresh_from_db()
+    assert css.source_needs_building
+
+
+def test_removing_url_from_edited_file_removes_rebuilding_flag(
+    theme, admin_client, edit_link, css, data
+):
+    css.source_needs_building = True
+    css.save()
+
+    data["source"] = "body { background-image: none; }"
+    admin_client.post(edit_link, data)
+
+    css.refresh_from_db()
+    assert not css.source_needs_building
 
 
 def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css, data):

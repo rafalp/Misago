@@ -1,3 +1,8 @@
+import json
+import re
+
+from django.core.files.base import ContentFile
+
 from .utils import get_file_hash
 
 
@@ -29,9 +34,81 @@ def save_css(theme, css, order=None):
         name=css.name,
         source_file=css,
         source_hash=get_file_hash(css),
+        source_needs_building=css_needs_rebuilding(css),
         size=css.size,
         order=order,
     )
+
+
+def css_needs_rebuilding(css):
+    css.seek(0)
+    css_source = css.read().decode("utf-8")
+    return "url(" in css_source
+
+
+def rebuild_css(theme, css):
+    css_source = css.source_file.read()
+    build_source = change_css_source(theme, css_source)
+    if css.build_source:
+        css.build_source.delete(save=False)
+
+    build_file_name = css.name
+    if css.source_hash in build_file_name:
+        build_file_name = build_file_name.replace(".%s" % css.source_hash, "")
+    build_file = ContentFile(build_source, build_file_name)
+
+    css.build_file = build_file
+    css.build_hash = get_file_hash(build_file)
+    css.size = len(build_source.encode("utf-8"))
+    css.save()
+
+
+CSS_URL_REGEX = re.compile(r"url\((.+)\)")
+
+
+def change_css_source(theme, css_source):
+    media_map = get_theme_media_map(theme)
+    url_replacer = get_url_replacer(media_map)
+    return CSS_URL_REGEX.sub(url_replacer, css_source).strip()
+
+
+def get_theme_media_map(theme):
+    media_map = {}
+    for media in theme.media.all():
+        escaped_url = json.dumps(media.file.url)
+        media_map[media.name] = escaped_url
+
+        media_filename = str(media.file).split("/")[-1]
+        media_map[media_filename] = escaped_url
+    return media_map
+
+
+def get_url_replacer(media_map):
+    def replacer(matchobj):
+        url = matchobj.group(1).strip("\"'").strip()
+        if is_url_absolute(url):
+            return matchobj.group(0)
+
+        media_name = url.split("/")[-1]
+        if media_name in media_map:
+            return "url(%s)" % media_map[media_name]
+
+        return matchobj.group(0)
+
+    return replacer
+
+
+def is_url_absolute(url):
+    if url.startswith("//") or url.startswith("://"):
+        return True
+
+    if url.lower().startswith("https://"):
+        return True
+
+    if url.lower().startswith("http://"):
+        return True
+
+    return False
 
 
 def get_next_css_order(theme):

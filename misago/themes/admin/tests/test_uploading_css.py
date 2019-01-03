@@ -213,6 +213,25 @@ def test_newly_uploaded_css_file_reuses_replaced_file_order_if_names_are_same(
     assert updated_css.name == original_css.name
 
 
+def test_if_uploaded_css_file_contains_no_image_urls_rebuild_flag_is_not_set(
+    upload, theme, css_file
+):
+    with open(css_file) as fp:
+        upload(theme, fp)
+
+    css = theme.css.last()
+    assert not css.source_needs_building
+
+
+def test_if_uploaded_css_file_contains_image_url_it_has_rebuild_flag_set(upload, theme):
+    css_file = os.path.join(TESTS_DIR, "css", "test.buildable.css")
+    with open(css_file) as fp:
+        upload(theme, fp)
+
+    css = theme.css.last()
+    assert css.source_needs_building
+
+
 def test_error_message_is_set_if_no_css_file_was_uploaded(upload, theme):
     response = upload(theme)
     assert_has_error_message(response)
