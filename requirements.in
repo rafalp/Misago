@@ -17,4 +17,5 @@ pytest-django
 pytest-mock
 pytz
 requests<3
+responses
 unidecode<1

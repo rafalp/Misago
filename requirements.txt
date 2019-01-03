@@ -42,7 +42,8 @@ pytz==2018.7
 redis==3.0.1              # via celery
 requests-oauthlib==1.0.0  # via social-auth-core
 requests==2.21.0
-six==1.12.0               # via bleach, faker, html5lib, more-itertools, pytest, python-dateutil, social-auth-app-django, social-auth-core
+responses==0.10.5
+six==1.12.0               # via bleach, faker, html5lib, more-itertools, pytest, python-dateutil, responses, social-auth-app-django, social-auth-core
 social-auth-app-django==3.1.0
 social-auth-core==2.0.0   # via social-auth-app-django
 sqlparse==0.2.4           # via django-debug-toolbar
