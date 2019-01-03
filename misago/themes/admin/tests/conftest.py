@@ -40,7 +40,7 @@ def css(admin_client, theme):
 @pytest.fixture
 def css_link(admin_client, theme):
     return theme.css.create(
-        name="CSS link", url="https://test.cdn/somefont.css", order=theme.css.count()
+        name="CSS link", url="https://example.com/cdn.css", order=theme.css.count()
     )
 
 

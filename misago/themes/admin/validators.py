@@ -26,3 +26,11 @@ def validate_css_name(filename):
         raise ValidationError(
             _("Name has to contain at least one latin alphabet character or digit.")
         )
+
+
+def validate_css_name_is_available(instance, name):
+    queryset = instance.theme.css.filter(name=name)
+    if instance.pk:
+        queryset = queryset.exclude(pk=instance.pk)
+    if queryset.exists():
+        raise ValidationError(_("This name is already in use by other asset."))

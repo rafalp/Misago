@@ -23,7 +23,7 @@ def edit_link(theme, css):
 
 @pytest.fixture
 def data():
-    return {"name": "test.css", "source": (".page-header { padding: 0}")}
+    return {"name": "test.css", "source": ".page-header { padding: 0}"}
 
 
 def test_css_creation_form_is_displayed(admin_client, create_link):
@@ -124,6 +124,14 @@ def test_css_creation_fails_if_source_is_not_given(
     assert not theme.css.exists()
 
 
+def test_css_file_is_created_with_correct_order(
+    theme, admin_client, create_link, css_link, data
+):
+    admin_client.post(create_link, data)
+    css = theme.css.get(name=data["name"])
+    assert css.order == 1
+
+
 def test_error_message_is_set_if_user_attempts_to_create_css_in_default_theme(
     default_theme, admin_client
 ):
@@ -167,7 +175,7 @@ def test_css_edition_form_contains_source_file_contents(admin_client, edit_link,
     assert_contains(response, css.source_file.read().decode("utf-8"))
 
 
-def test_name_can_be_changed(admin_client, edit_link, css, data):
+def test_css_name_can_be_changed(admin_client, edit_link, css, data):
     data["name"] = "new-name.css"
     admin_client.post(edit_link, data)
 
@@ -175,7 +183,9 @@ def test_name_can_be_changed(admin_client, edit_link, css, data):
     assert css.name == data["name"]
 
 
-def test_name_change_also_changes_source_file_name(admin_client, edit_link, css, data):
+def test_css_name_change_also_changes_source_file_name(
+    admin_client, edit_link, css, data
+):
     data["name"] = "new-name.css"
     admin_client.post(edit_link, data)
 
@@ -235,7 +245,7 @@ def test_file_is_not_updated_if_form_data_has_no_changes(
     assert original_mtime == os.path.getmtime(css.source_file.path)
 
 
-def test_file_order_stays_the_same_after_edit(admin_client, edit_link, css, data):
+def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css, data):
     original_order = css.order
     data["name"] = "changed.css"
     admin_client.post(edit_link, data)
@@ -252,7 +262,7 @@ def test_css_edit_form_redirects_user_to_edition_after_saving(
     assert response["location"] == edit_link
 
 
-def test_error_message_is_set_if_user_attempts_to_edit_css_in_default_theme(
+def test_error_message_is_set_if_user_attempts_to_edit_css_file_in_default_theme(
     default_theme, admin_client
 ):
     edit_link = reverse(
@@ -263,7 +273,7 @@ def test_error_message_is_set_if_user_attempts_to_edit_css_in_default_theme(
     assert_has_error_message(response)
 
 
-def test_error_message_is_set_if_user_attempts_to_edit_css_in_nonexisting_theme(
+def test_error_message_is_set_if_user_attempts_to_edit_css_file_in_nonexisting_theme(
     nonexisting_theme, admin_client
 ):
     edit_link = reverse(
@@ -291,6 +301,17 @@ def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_css(
     edit_link = reverse(
         "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": theme.pk, "css_pk": 1},
+    )
+    response = admin_client.get(edit_link)
+    assert_has_error_message(response)
+
+
+def test_error_message_is_set_if_user_attempts_to_edit_css_link_with_file_form(
+    theme, admin_client, css_link
+):
+    edit_link = reverse(
+        "misago:admin:appearance:themes:edit-css-file",
+        kwargs={"pk": theme.pk, "css_pk": css_link.pk},
     )
     response = admin_client.get(edit_link)
     assert_has_error_message(response)

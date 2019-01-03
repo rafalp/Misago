@@ -7,7 +7,7 @@ from ..models import Theme, Css
 from .css import create_css, get_next_css_order
 from .media import create_media
 from .utils import get_file_hash
-from .validators import validate_css_name
+from .validators import validate_css_name, validate_css_name_is_available
 
 
 class ThemeChoiceField(TreeNodeChoiceField):
@@ -129,14 +129,7 @@ class CssEditorForm(forms.ModelForm):
 
     def clean_name(self):
         data = self.cleaned_data["name"]
-        queryset = self.instance.theme.css.filter(name=data)
-        if self.instance.pk:
-            queryset = queryset.exclude(pk=self.instance.pk)
-        if queryset.exists():
-            raise forms.ValidationError(
-                gettext("This name is already in use by other asset.")
-            )
-
+        validate_css_name_is_available(self.instance, data)
         return data
 
     def clean(self):
@@ -176,6 +169,11 @@ class CssLinkForm(forms.ModelForm):
     class Meta:
         model = Css
         fields = ["name", "url"]
+
+    def clean_name(self):
+        data = self.cleaned_data["name"]
+        validate_css_name_is_available(self.instance, data)
+        return data
 
     def save(self):
         if not self.instance.pk:

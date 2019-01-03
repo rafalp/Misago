@@ -31,6 +31,11 @@ def test_theme_css_can_be_deleted(theme, delete_css, css):
     assert not theme.css.exists()
 
 
+def test_theme_css_link_can_be_deleted(theme, delete_css, css_link):
+    delete_css(theme, [css_link])
+    assert not theme.css.exists()
+
+
 def test_multiple_theme_css_can_be_deleted_at_single_time(
     theme, delete_css, css, css_link
 ):

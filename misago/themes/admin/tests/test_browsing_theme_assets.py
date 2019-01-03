@@ -18,9 +18,14 @@ def test_theme_assets_list_is_displayed(assets_client, theme):
     assert_contains(response, theme.name)
 
 
-def test_css_is_displayed_on_theme_asset_list(assets_client, theme, css):
+def test_css_file_is_displayed_on_theme_asset_list(assets_client, theme, css):
     response = assets_client(theme)
     assert_contains(response, css.name)
+
+
+def test_css_link_is_displayed_on_theme_asset_list(assets_client, theme, css_link):
+    response = assets_client(theme)
+    assert_contains(response, css_link.name)
 
 
 def test_media_is_displayed_on_themes_asset_list(assets_client, theme, media):
@@ -39,10 +44,11 @@ def test_image_thumbnail_is_displayed_on_themes_asset_list(assets_client, theme,
 
 
 def test_other_theme_assets_are_not_displayed(
-    assets_client, other_theme, css, media, image
+    assets_client, other_theme, css, css_link, media, image
 ):
     response = assets_client(other_theme)
     assert_not_contains(response, css.name)
+    assert_not_contains(response, css_link.name)
     assert_not_contains(response, media.name)
     assert_not_contains(response, image.name)
 
