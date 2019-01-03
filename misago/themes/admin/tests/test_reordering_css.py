@@ -84,20 +84,6 @@ def test_middle_css_can_be_moved_up(move_up, theme, css_list):
     assert middle_css.order == FIRST
 
 
-def test_middle_css_can_be_moved_down(move_down, theme, css_list):
-    middle_css = css_list[MIDDLE]
-    move_down(theme, middle_css)
-    middle_css.refresh_from_db()
-    assert middle_css.order == LAST
-
-
-def test_middle_css_can_be_moved_up(move_up, theme, css_list):
-    middle_css = css_list[MIDDLE]
-    move_up(theme, middle_css)
-    middle_css.refresh_from_db()
-    assert middle_css.order == FIRST
-
-
 def test_first_css_changes_order_with_middle_css_when_moved_down(
     move_down, theme, css_list
 ):
@@ -209,5 +195,5 @@ def test_if_given_nonexisting_theme_id_move_up_action_sets_error_message(
 
 
 def test_next_new_css_order_is_larger_than_largest_existing_css_order(theme):
-    theme.css.create(name="CSS", url="https://test.cdn/font.css", order=4),
+    theme.css.create(name="CSS", url="https://test.cdn/font.css", order=4)
     assert get_next_css_order(theme) == 5

@@ -13,6 +13,9 @@ def theme(request):
         if theme.is_default:
             include_defaults = True
         for css in theme.css.all():
-            styles.append(css.file.url)
+            if css.url:
+                styles.append(css.url)
+            else:
+                styles.append(css.source_file.url)
 
     return {"theme": {"include_defaults": include_defaults, "styles": styles}}

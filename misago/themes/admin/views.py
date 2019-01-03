@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.db.models import ObjectDoesNotExist
 from django.shortcuts import redirect
-from django.urls import reverse
 from django.utils.translation import gettext, gettext_lazy as _
 
 from ...admin.views import generic
 from ..models import Theme, Css
 from .css import move_css_down, move_css_up
-from .forms import CssEditorForm, ThemeForm, UploadCssForm, UploadMediaForm
+from .forms import CssEditorForm, CssLinkForm, ThemeForm, UploadCssForm, UploadMediaForm
+from .tasks import update_remote_css_size
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
@@ -196,6 +196,12 @@ class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
         except ObjectDoesNotExist:
             return None
 
+    def real_dispatch(self, request, theme, css):
+        raise NotImplementedError(
+            "Admin views extending the ThemeCssAdmin"
+            "should define real_dispatch(request, theme, css)"
+        )
+
 
 class MoveThemeCssUp(ThemeCssAdmin):
     def real_dispatch(self, request, theme, css):
@@ -229,20 +235,21 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
 
         return self.render(request, {"form": form, "theme": theme, "target": css})
 
+    def initialize_form(self, form, request, theme, css):
+        raise NotImplementedError(
+            "Admin views extending the ThemeCssFormAdmin "
+            "should define the initialize_form(form, request, theme, css)"
+        )
+
     def handle_form(self, form, request, theme, css):
         form.save()
         messages.success(request, self.message_submit % {"name": css.name})
-
-    def redirect_to_edit_form(self, theme, css):
-        return redirect(
-            "misago:admin:appearance:themes:edit-css", pk=theme.pk, css_pk=css.pk
-        )
 
 
 class NewThemeCss(ThemeCssFormAdmin):
     message_submit = _('New CSS "%(name)s" has been saved.')
     form = CssEditorForm
-    template = "assets/css-editor.html"
+    template = "assets/css-editor-form.html"
 
     def get_theme_css_or_none(self, theme, _):
         return Css(theme=theme)
@@ -251,6 +258,11 @@ class NewThemeCss(ThemeCssFormAdmin):
         if request.method == "POST":
             return form(request.POST, instance=css)
         return form(instance=css)
+
+    def redirect_to_edit_form(self, theme, css):
+        return redirect(
+            "misago:admin:appearance:themes:edit-css-file", pk=theme.pk, css_pk=css.pk
+        )
 
 
 class EditThemeCss(NewThemeCss):
@@ -274,4 +286,41 @@ class EditThemeCss(NewThemeCss):
             messages.success(request, self.message_submit % {"name": css.name})
         else:
             message = gettext('No changes have been made to "%(css)s".')
-            messages.info(request, self.message_submit % {"name": css.name})
+            messages.info(request, message % {"name": css.name})
+
+
+class NewThemeCssLink(ThemeCssFormAdmin):
+    message_submit = _('New CSS link "%(name)s" has been saved.')
+    form = CssLinkForm
+    template = "assets/css-link-form.html"
+
+    def get_theme_css_or_none(self, theme, _):
+        return Css(theme=theme)
+
+    def initialize_form(self, form, request, theme, css):
+        if request.method == "POST":
+            return form(request.POST, instance=css)
+        return form(instance=css)
+
+    def handle_form(self, form, *args):
+        super().handle_form(form, *args)
+        if form.has_changed():
+            update_remote_css_size.delay(form.instance.pk)
+
+    def redirect_to_edit_form(self, theme, css):
+        return redirect("misago:admin:appearance:themes:new-css-link", pk=theme.pk)
+
+
+class EditThemeCssLink(NewThemeCssLink):
+    message_submit = _('CSS link "%(name)s" has been updated.')
+
+    def get_theme_css_or_none(self, theme, css_pk):
+        try:
+            return theme.css.get(pk=css_pk, url__isnull=False)
+        except ObjectDoesNotExist:
+            return None
+
+    def redirect_to_edit_form(self, theme, css):
+        return redirect(
+            "misago:admin:appearance:themes:edit-css-link", pk=theme.pk, css_pk=css.pk
+        )

@@ -8,13 +8,15 @@ from ....test import assert_contains, assert_has_error_message
 
 @pytest.fixture
 def create_link(theme):
-    return reverse("misago:admin:appearance:themes:new-css", kwargs={"pk": theme.pk})
+    return reverse(
+        "misago:admin:appearance:themes:new-css-file", kwargs={"pk": theme.pk}
+    )
 
 
 @pytest.fixture
 def edit_link(theme, css):
     return reverse(
-        "misago:admin:appearance:themes:edit-css",
+        "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": theme.pk, "css_pk": css.pk},
     )
 
@@ -107,7 +109,7 @@ def test_css_name_usage_check_passess_if_name_is_used_by_other_theme_css(
     other_theme, admin_client, data, css
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css", kwargs={"pk": other_theme.pk}
+        "misago:admin:appearance:themes:new-css-file", kwargs={"pk": other_theme.pk}
     )
     data["name"] = css.name
     admin_client.post(create_link, data)
@@ -126,7 +128,7 @@ def test_error_message_is_set_if_user_attempts_to_create_css_in_default_theme(
     default_theme, admin_client
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css", kwargs={"pk": default_theme.pk}
+        "misago:admin:appearance:themes:new-css-file", kwargs={"pk": default_theme.pk}
     )
     response = admin_client.get(create_link)
     assert_has_error_message(response)
@@ -136,7 +138,8 @@ def test_error_message_is_set_if_user_attempts_to_create_css_in_nonexisting_them
     nonexisting_theme, admin_client
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css", kwargs={"pk": nonexisting_theme.pk}
+        "misago:admin:appearance:themes:new-css-file",
+        kwargs={"pk": nonexisting_theme.pk},
     )
     response = admin_client.get(create_link)
     assert_has_error_message(response)
@@ -148,7 +151,7 @@ def test_css_creation_form_redirects_user_to_edition_after_creation(
     data["stay"] = "1"
     response = admin_client.post(create_link, data)
     assert response["location"] == reverse(
-        "misago:admin:appearance:themes:edit-css",
+        "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": theme.pk, "css_pk": theme.css.last().pk},
     )
 
@@ -241,26 +244,19 @@ def test_file_order_stays_the_same_after_edit(admin_client, edit_link, css, data
     assert css.order == original_order
 
 
-# check if exists
-# check if belongs to theme
-
-
-def test_css_creation_form_redirects_user_to_edition_after_creation(
-    theme, other_theme, admin_client, css
+def test_css_edit_form_redirects_user_to_edition_after_saving(
+    theme, admin_client, edit_link, css, data
 ):
-    edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css",
-        kwargs={"pk": other_theme.pk, "css_pk": css.pk},
-    )
-
-    response = admin_client.get(edit_link)
+    data["stay"] = "1"
+    response = admin_client.post(edit_link, data)
+    assert response["location"] == edit_link
 
 
 def test_error_message_is_set_if_user_attempts_to_edit_css_in_default_theme(
     default_theme, admin_client
 ):
     edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css",
+        "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": default_theme.pk, "css_pk": 1},
     )
     response = admin_client.get(edit_link)
@@ -271,7 +267,7 @@ def test_error_message_is_set_if_user_attempts_to_edit_css_in_nonexisting_theme(
     nonexisting_theme, admin_client
 ):
     edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css",
+        "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": nonexisting_theme.pk, "css_pk": 1},
     )
     response = admin_client.get(edit_link)
@@ -282,7 +278,7 @@ def test_error_message_is_set_if_user_attempts_to_edit_css_belonging_to_other_th
     other_theme, admin_client, css
 ):
     edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css",
+        "misago:admin:appearance:themes:edit-css-file",
         kwargs={"pk": other_theme.pk, "css_pk": css.pk},
     )
     response = admin_client.get(edit_link)
@@ -293,7 +289,8 @@ def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_css(
     theme, admin_client
 ):
     edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css", kwargs={"pk": theme.pk, "css_pk": 1}
+        "misago:admin:appearance:themes:edit-css-file",
+        kwargs={"pk": theme.pk, "css_pk": 1},
     )
     response = admin_client.get(edit_link)
     assert_has_error_message(response)

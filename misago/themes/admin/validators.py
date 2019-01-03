@@ -3,8 +3,8 @@ import re
 from django.forms import ValidationError
 from django.utils.translation import gettext as _
 
-FILENAME_CONTENT = re.compile("([a-zA-Z0-9]|\.|_|-)+")
-FILENAME_TANGIBILITY = re.compile("[a-zA-Z0-9]")
+FILENAME_CONTENT = re.compile(r"([a-zA-Z0-9]|\.|_|-)+")
+FILENAME_TANGIBILITY = re.compile(r"[a-zA-Z0-9]")
 
 
 def validate_css_name(filename):

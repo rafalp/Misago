@@ -33,7 +33,7 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 def css(admin_client, theme):
     url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "css", "test.css")) as fp:
-        response = admin_client.post(url, {"assets": [fp]})
+        admin_client.post(url, {"assets": [fp]})
     return theme.css.get(name="test.css")
 
 

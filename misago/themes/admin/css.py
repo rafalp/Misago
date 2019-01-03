@@ -1,4 +1,3 @@
-from ..models import Css
 from .utils import get_file_hash
 
 

@@ -6,13 +6,13 @@
     </h3>
     <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#uploadCss">
       <span class="fa fa-upload"></span>
-      {% trans "Upload CSS" %}
+      {% trans "Upload" %}
     </button>
-    <button type="button" class="btn btn-default btn-sm pull-right">
+    <a href="{% url 'misago:admin:appearance:themes:new-css-link' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
       <span class="fa fa-link"></span>
       {% trans "Link" %}
-    </button>
-    <a href="{% url 'misago:admin:appearance:themes:new-css' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
+    </a>
+    <a href="{% url 'misago:admin:appearance:themes:new-css-file' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
       <span class="fa fa-file-text"></span>
       {% trans "Create" %}
     </a>
@@ -36,7 +36,7 @@
         {% for item in css %}
           <tr>
             <td>
-              <a class="btn btn-default btn-sm tooltip-top" href="{{ item.source_file.url }}" target="blank" title="{% trans 'Preview' %}">
+              <a class="btn btn-default btn-sm tooltip-top" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" title="{% trans 'Preview' %}">
                 <span class="fa fa-share-square-o"></span>
               </a>
             </td>
@@ -58,10 +58,17 @@
               </button>
             </td>
             <td style="width: 1%;">
-              <a href="{% url 'misago:admin:appearance:themes:edit-css' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
-                <span class="fa fa-pencil"></span>
-                {% trans "Edit" %}
-              </a>
+              {% if item.url %}
+                <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
+                  <span class="fa fa-pencil"></span>
+                  {% trans "Edit" %}
+                </a>
+              {% else %}
+                <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
+                  <span class="fa fa-pencil"></span>
+                  {% trans "Edit" %}
+                </a>
+              {% endif %}
             </td>
             <td style="width: 1%;">
               <input type="checkbox" name="item" value="{{ item.pk }}">

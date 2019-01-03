@@ -113,7 +113,7 @@ class UploadMediaForm(UploadAssetsForm):
         create_media(self.instance, asset)
 
 
-class CssForm(forms.ModelForm):
+class CssEditorForm(forms.ModelForm):
     name = forms.CharField(
         label=_("Name"),
         help_text=_(
@@ -121,6 +121,11 @@ class CssForm(forms.ModelForm):
         ),
         validators=[validate_css_name],
     )
+    source = forms.CharField(widget=forms.Textarea(), required=False)
+
+    class Meta:
+        model = Css
+        fields = ["name"]
 
     def clean_name(self):
         data = self.cleaned_data["name"]
@@ -133,14 +138,6 @@ class CssForm(forms.ModelForm):
             )
 
         return data
-
-
-class CssEditorForm(CssForm):
-    source = forms.CharField(widget=forms.Textarea(), required=False)
-
-    class Meta:
-        model = Css
-        fields = ["name"]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -166,4 +163,25 @@ class CssEditorForm(CssForm):
             self.instance.order = get_next_css_order(self.instance.theme)
 
         self.instance.save()
+        return self.instance
+
+
+class CssLinkForm(forms.ModelForm):
+    name = forms.CharField(
+        label=_("Link name"),
+        help_text=_('Can be descriptive (e.g. "roboto from fonts.google.com").'),
+    )
+    url = forms.URLField(label=_("Remote CSS URL"))
+
+    class Meta:
+        model = Css
+        fields = ["name", "url"]
+
+    def save(self):
+        if not self.instance.pk:
+            self.instance.order = get_next_css_order(self.instance.theme)
+            self.instance.save()
+        else:
+            self.instance.save(update_fields=["name", "url", "modified_on"])
+
         return self.instance
