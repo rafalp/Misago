@@ -1,5 +1,3 @@
-import os
-
 import pytest
 from django.urls import reverse
 
@@ -271,12 +269,13 @@ def test_hash_stays_same_if_source_is_not_changed(admin_client, edit_link, css, 
 def test_file_is_not_updated_if_form_data_has_no_changes(
     admin_client, edit_link, css, data
 ):
-    original_mtime = os.path.getmtime(css.source_file.path)
+    original_source_file = str(css.source_file)
+    data["name"] = css.name
     data["source"] = css.source_file.read().decode("utf-8")
     admin_client.post(edit_link, data)
 
     css.refresh_from_db()
-    assert original_mtime == os.path.getmtime(css.source_file.path)
+    assert original_source_file == str(css.source_file)
 
 
 def test_adding_image_url_to_edited_file_sets_rebuilding_flag(

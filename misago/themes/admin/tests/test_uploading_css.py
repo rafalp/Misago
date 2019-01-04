@@ -224,7 +224,7 @@ def test_if_uploaded_css_file_contains_no_image_urls_rebuild_flag_is_not_set(
 
 
 def test_if_uploaded_css_file_contains_image_url_it_has_rebuild_flag_set(upload, theme):
-    css_file = os.path.join(TESTS_DIR, "css", "test.buildable.css")
+    css_file = os.path.join(TESTS_DIR, "css", "test.needs-build.css")
     with open(css_file) as fp:
         upload(theme, fp)
 

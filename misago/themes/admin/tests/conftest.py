@@ -45,6 +45,14 @@ def css_link(admin_client, theme):
 
 
 @pytest.fixture
+def css_needing_build(admin_client, theme):
+    url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
+    with open(os.path.join(TESTS_DIR, "css", "test.needs-build.css")) as fp:
+        admin_client.post(url, {"assets": [fp]})
+    return theme.css.get(name="test.needs-build.css")
+
+
+@pytest.fixture
 def media(admin_client, theme):
     url = reverse(
         "misago:admin:appearance:themes:upload-media", kwargs={"pk": theme.pk}

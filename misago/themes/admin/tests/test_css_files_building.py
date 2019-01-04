@@ -1,6 +1,7 @@
 import pytest
 
-from ..css import change_css_source, get_theme_media_map
+from ..css import change_css_source, get_theme_media_map, rebuild_css
+from ..tasks import build_single_theme_css, build_theme_css
 
 
 @pytest.fixture
@@ -15,6 +16,72 @@ def assert_snapshot_match(snapshot, theme):
 @pytest.fixture
 def media_map(theme, image):
     return get_theme_media_map(theme)
+
+
+def test_tasks_builds_single_css_file(theme, image, css_needing_build):
+    build_single_theme_css(css_needing_build.pk)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.build_file
+
+
+def test_tasks_skips_single_css_file_that_doesnt_require_build(theme, css):
+    build_single_theme_css(css.pk)
+    css.refresh_from_db()
+    assert not css.build_file
+
+
+def test_tasks_handles_nonexisting_css_file(db):
+    build_single_theme_css(1)
+
+
+def test_tasks_builds_theme_css_files_that_require_it(theme, image, css_needing_build):
+    build_theme_css(theme.pk)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.build_file
+
+
+def test_tasks_skips_theme_css_files_that_dont_require_build(theme, css):
+    build_theme_css(theme.pk)
+    css.refresh_from_db()
+    assert not css.build_file
+
+
+def test_tasks_handles_nonexisting_theme(nonexisting_theme):
+    build_theme_css(nonexisting_theme.pk)
+
+
+def test_media_map_for_theme_without_any_media_files_returns_empty_dict(theme):
+    assert get_theme_media_map(theme) == {}
+
+
+def test_media_map_for_theme_with_media_files_returns_dict_with_data(
+    theme, image, media
+):
+    assert get_theme_media_map(theme)
+
+
+def test_css_file_is_build(media_map, css_needing_build):
+    rebuild_css(media_map, css_needing_build)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.build_file
+
+
+def test_build_css_file_is_hashed(media_map, css_needing_build):
+    rebuild_css(media_map, css_needing_build)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.build_hash
+
+
+def test_build_css_file_includes_hash_in_filename(media_map, css_needing_build):
+    rebuild_css(media_map, css_needing_build)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.build_hash in str(css_needing_build.build_file)
+
+
+def test_build_css_file_has_size_set(media_map, css_needing_build):
+    rebuild_css(media_map, css_needing_build)
+    css_needing_build.refresh_from_db()
+    assert css_needing_build.size
 
 
 def test_simple_url_to_file_is_replaced_with_valid_url(
