@@ -171,6 +171,15 @@ def test_thumbnail_is_generated_in_theme_directory_for_uploaded_image_file(
     assert theme.dirname in str(media.thumbnail)
 
 
+def test_uploading_media_triggers_css_build(
+    upload, theme, png_file, mock_build_theme_css
+):
+    with open(png_file, "rb") as fp:
+        upload(theme, fp)
+
+    mock_build_theme_css.assert_called_once_with(theme.pk)
+
+
 def test_error_message_is_set_if_no_media_was_uploaded(upload, theme):
     response = upload(theme)
     assert_has_error_message(response)

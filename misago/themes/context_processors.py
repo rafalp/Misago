@@ -15,6 +15,9 @@ def theme(request):
         for css in theme.css.all():
             if css.url:
                 styles.append(css.url)
+            if css.source_needs_building:
+                if css.build_file:
+                    styles.append(css.build_file.url)
             else:
                 styles.append(css.source_file.url)
 

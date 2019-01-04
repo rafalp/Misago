@@ -62,3 +62,28 @@ def image(admin_client, theme):
     with open(os.path.join(TESTS_DIR, "images", "test.png"), "rb") as fp:
         admin_client.post(url, {"assets": [fp]})
     return theme.media.get(name="test.png")
+
+
+@pytest.fixture(autouse=True)
+def mock_build_single_theme_css(mocker):
+    delay = mocker.Mock()
+    mocker.patch(
+        "misago.themes.admin.views.build_single_theme_css", mocker.Mock(delay=delay)
+    )
+    return delay
+
+
+@pytest.fixture(autouse=True)
+def mock_build_theme_css(mocker):
+    delay = mocker.Mock()
+    mocker.patch("misago.themes.admin.views.build_theme_css", mocker.Mock(delay=delay))
+    return delay
+
+
+@pytest.fixture(autouse=True)
+def mock_update_remote_css_size(mocker):
+    delay = mocker.Mock()
+    mocker.patch(
+        "misago.themes.admin.views.update_remote_css_size", mocker.Mock(delay=delay)
+    )
+    return delay

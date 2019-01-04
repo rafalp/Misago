@@ -141,6 +141,23 @@ def test_css_file_with_image_url_is_created_with_rebuilding_flag(
     assert css.source_needs_building
 
 
+def test_creating_css_file_without_image_url_doesnt_trigger_single_css_file_rebuild(
+    theme, admin_client, create_link, data, image, mock_build_single_theme_css
+):
+    admin_client.post(create_link, data)
+    mock_build_single_theme_css.assert_not_called()
+
+
+def test_creating_css_file_with_image_url_triggers_single_css_file_rebuild(
+    theme, admin_client, create_link, data, image, mock_build_single_theme_css
+):
+    data["source"] = "body { background-image: url(/static/%s); }" % image.name
+    admin_client.post(create_link, data)
+    css = theme.css.last()
+
+    mock_build_single_theme_css.assert_called_once_with(css.pk)
+
+
 def test_css_file_is_created_with_correct_order(
     theme, admin_client, create_link, css_link, data
 ):
@@ -282,6 +299,23 @@ def test_removing_url_from_edited_file_removes_rebuilding_flag(
 
     css.refresh_from_db()
     assert not css.source_needs_building
+
+
+def test_adding_image_url_to_edited_file_triggers_single_css_file_rebuild(
+    theme, admin_client, edit_link, css, data, image, mock_build_single_theme_css
+):
+    data["source"] = "body { background-image: url(/static/%s); }" % image.name
+    admin_client.post(edit_link, data)
+
+    mock_build_single_theme_css.assert_called_once_with(css.pk)
+
+
+def test_removing_url_from_edited_file_deosnt_trigger_single_css_file_rebuild(
+    theme, admin_client, edit_link, css, data, mock_build_single_theme_css
+):
+    data["source"] = "body { background-image: none; }"
+    admin_client.post(edit_link, data)
+    mock_build_single_theme_css.assert_not_called()
 
 
 def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css, data):

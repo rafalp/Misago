@@ -24,15 +24,6 @@ def data():
     return {"name": "CSS link", "url": "https://example.com/cdn.css"}
 
 
-@pytest.fixture(autouse=True)
-def mock_task(mocker):
-    delay = mocker.Mock()
-    mocker.patch(
-        "misago.themes.admin.views.update_remote_css_size", mocker.Mock(delay=delay)
-    )
-    return delay
-
-
 def test_css_link_creation_form_is_displayed(admin_client, create_link):
     response = admin_client.get(create_link)
     assert response.status_code == 200
@@ -107,11 +98,11 @@ def test_css_link_is_created_with_correct_order(
 
 
 def test_css_link_creation_queues_task_to_download_remote_css_size(
-    theme, admin_client, create_link, css, data, mock_task
+    theme, admin_client, create_link, css, data, mock_update_remote_css_size
 ):
     admin_client.post(create_link, data)
     css_link = theme.css.last()
-    mock_task.assert_called_once_with(css_link.pk)
+    mock_update_remote_css_size.assert_called_once_with(css_link.pk)
 
 
 def test_error_message_is_set_if_user_attempts_to_create_css_link_in_default_theme(
@@ -168,20 +159,20 @@ def test_css_link_url_can_be_changed(admin_client, edit_link, css_link, data):
 
 
 def test_changing_css_link_url_queues_task_to_download_remote_css_size(
-    admin_client, edit_link, css_link, data, mock_task
+    admin_client, edit_link, css_link, data, mock_update_remote_css_size
 ):
     data["url"] = "https://new.css-link.com/test.css"
     admin_client.post(edit_link, data)
     css_link.refresh_from_db()
-    mock_task.assert_called_once_with(css_link.pk)
+    mock_update_remote_css_size.assert_called_once_with(css_link.pk)
 
 
 def test_not_changing_css_link_url_queues_task_to_download_remote_css_size(
-    admin_client, edit_link, css_link, data, mock_task
+    admin_client, edit_link, css_link, data, mock_update_remote_css_size
 ):
     admin_client.post(edit_link, data)
     css_link.refresh_from_db()
-    mock_task.assert_not_called()
+    mock_update_remote_css_size.assert_not_called()
 
 
 def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css_link, data):

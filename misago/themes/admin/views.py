@@ -7,7 +7,7 @@ from ...admin.views import generic
 from ..models import Theme, Css
 from .css import move_css_down, move_css_up
 from .forms import CssEditorForm, CssLinkForm, ThemeForm, UploadCssForm, UploadMediaForm
-from .tasks import update_remote_css_size
+from .tasks import build_single_theme_css, build_theme_css, update_remote_css_size
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
@@ -116,6 +116,7 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
         if form.cleaned_data.get("assets"):
             form.save()
+            build_theme_css.delay(theme.pk)
             messages.success(request, self.message_success)
 
 
@@ -243,6 +244,8 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, theme, css):
         form.save()
+        if css.source_needs_building:
+            build_single_theme_css.delay(css.pk)
         messages.success(request, self.message_submit % {"name": css.name})
 
 
@@ -283,6 +286,8 @@ class EditThemeCss(NewThemeCss):
     def handle_form(self, form, request, theme, css):
         if form.has_changed():
             form.save()
+            if css.source_needs_building:
+                build_single_theme_css.delay(css.pk)
             messages.success(request, self.message_submit % {"name": css.name})
         else:
             message = gettext('No changes have been made to "%(css)s".')

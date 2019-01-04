@@ -232,6 +232,15 @@ def test_if_uploaded_css_file_contains_image_url_it_has_rebuild_flag_set(upload,
     assert css.source_needs_building
 
 
+def test_uploading_css_file_triggers_css_build(
+    upload, theme, css_file, mock_build_theme_css
+):
+    with open(css_file) as fp:
+        upload(theme, fp)
+
+    mock_build_theme_css.assert_called_once_with(theme.pk)
+
+
 def test_error_message_is_set_if_no_css_file_was_uploaded(upload, theme):
     response = upload(theme)
     assert_has_error_message(response)

@@ -11,7 +11,7 @@ def upload_source_css_to(instance, filename):
 
 
 def upload_build_css_to(instance, filename):
-    filename = add_hash_to_filename(instance.hash, filename)
+    filename = add_hash_to_filename(instance.build_hash, filename)
     return "themes/%s/css/%s" % (instance.theme.dirname, filename)
 
 

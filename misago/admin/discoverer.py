@@ -15,5 +15,7 @@ def discover_misago_admin():
         admin_module = import_module("%s.admin" % app.name)
         if hasattr(admin_module, "MisagoAdminExtension"):
             extension = getattr(admin_module, "MisagoAdminExtension")()
-            extension.register_navigation_nodes(site)
-            extension.register_urlpatterns(urlpatterns)
+            if hasattr(extension, "register_navigation_nodes"):
+                extension.register_navigation_nodes(site)
+            if hasattr(extension, "register_urlpatterns"):
+                extension.register_urlpatterns(urlpatterns)
