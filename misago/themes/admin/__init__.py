@@ -90,13 +90,6 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Home"),
-            icon="fa fa-home",
-            parent="misago:admin",
-            link="misago:admin:index",
-        )
-
-        site.add_node(
             name=_("Appearance"),
             icon="fa fa-paint-brush",
             parent="misago:admin",
