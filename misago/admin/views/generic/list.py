@@ -134,7 +134,7 @@ class ListView(AdminView):
             if request.GET.get("set_filters"):
                 # Force store filters in session
                 session_key = self.filters_session_key
-                request.session[session_key] = context["active_filters"] or {}
+                request.session[session_key] = context["active_filters"]
                 refresh_querystring = True
 
             if context["active_filters"] and not filtering_methods["GET"]:
