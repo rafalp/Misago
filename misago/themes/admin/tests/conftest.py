@@ -30,7 +30,7 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 @pytest.fixture
-def css(admin_client, theme):
+def css(admin_client, theme, mock_build_theme_css):
     url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "css", "test.css")) as fp:
         admin_client.post(url, {"assets": [fp]})
@@ -45,7 +45,7 @@ def css_link(admin_client, theme):
 
 
 @pytest.fixture
-def css_needing_build(admin_client, theme):
+def css_needing_build(admin_client, theme, mock_build_theme_css):
     url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "css", "test.needs-build.css")) as fp:
         admin_client.post(url, {"assets": [fp]})

@@ -2,6 +2,7 @@ import requests
 from celery import shared_task
 from requests.exceptions import RequestException
 
+from ..cache import clear_theme_cache
 from ..models import Theme, Css
 from .css import get_theme_media_map, rebuild_css
 
@@ -39,6 +40,7 @@ def build_single_theme_css(pk):
     else:
         media_map = get_theme_media_map(css.theme)
         rebuild_css(media_map, css)
+        clear_theme_cache()
 
 
 @shared_task
@@ -51,3 +53,4 @@ def build_theme_css(pk):
         media_map = get_theme_media_map(theme)
         for css in theme.css.filter(source_needs_building=True):
             rebuild_css(media_map, css)
+        clear_theme_cache()

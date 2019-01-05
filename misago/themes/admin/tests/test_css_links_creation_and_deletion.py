@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message
+from ... import THEME_CACHE
 
 
 @pytest.fixture
@@ -98,11 +100,18 @@ def test_css_link_is_created_with_correct_order(
 
 
 def test_css_link_creation_queues_task_to_download_remote_css_size(
-    theme, admin_client, create_link, css, data, mock_update_remote_css_size
+    theme, admin_client, create_link, data, mock_update_remote_css_size
 ):
     admin_client.post(create_link, data)
     css_link = theme.css.last()
     mock_update_remote_css_size.assert_called_once_with(css_link.pk)
+
+
+def test_css_link_creation_invalidates_theme_cache(
+    theme, admin_client, create_link, data
+):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(create_link, data)
 
 
 def test_error_message_is_set_if_user_attempts_to_create_css_link_in_default_theme(
@@ -167,12 +176,17 @@ def test_changing_css_link_url_queues_task_to_download_remote_css_size(
     mock_update_remote_css_size.assert_called_once_with(css_link.pk)
 
 
-def test_not_changing_css_link_url_queues_task_to_download_remote_css_size(
+def test_not_changing_css_link_url_doesnt_queue_task_to_download_remote_css_size(
     admin_client, edit_link, css_link, data, mock_update_remote_css_size
 ):
     admin_client.post(edit_link, data)
     css_link.refresh_from_db()
     mock_update_remote_css_size.assert_not_called()
+
+
+def test_changing_css_link_invalidates_theme_cache(admin_client, edit_link, data):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(edit_link, data)
 
 
 def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css_link, data):

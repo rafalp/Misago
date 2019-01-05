@@ -1,5 +1,7 @@
 import pytest
 
+from ....cache.test import assert_invalidates_cache
+from ... import THEME_CACHE
 from ..css import change_css_source, get_theme_media_map, rebuild_css
 from ..tasks import build_single_theme_css, build_theme_css
 
@@ -154,3 +156,15 @@ def test_css_file_with_multiple_different_urls_is_correctly_replaced(
 
     result = change_css_source(media_map, css)
     assert_snapshot_match(result)
+
+
+def test_building_single_theme_css_invalidates_theme_cache(
+    theme, image, css_needing_build
+):
+    with assert_invalidates_cache(THEME_CACHE):
+        build_single_theme_css(css_needing_build.pk)
+
+
+def test_building_theme_css_invalidates_theme_cache(theme):
+    with assert_invalidates_cache(THEME_CACHE):
+        build_theme_css(theme.pk)

@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_has_success_message
+from ... import THEME_CACHE
 
 
 @pytest.fixture
@@ -116,3 +118,8 @@ def test_other_theme_css_is_not_deleted(delete_css, theme, other_theme, css):
 def test_other_theme_media_is_not_deleted(delete_media, theme, other_theme, media):
     delete_media(other_theme, [media])
     assert theme.media.exists()
+
+
+def test_deleting_css_invalidates_theme_cache(theme, delete_css, css):
+    with assert_invalidates_cache(THEME_CACHE):
+        delete_css(theme, [css])

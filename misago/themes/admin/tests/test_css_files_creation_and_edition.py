@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message
+from ... import THEME_CACHE
 
 
 @pytest.fixture
@@ -164,6 +166,11 @@ def test_css_file_is_created_with_correct_order(
     assert css.order == 1
 
 
+def test_creating_css_file_invalidates_theme_cache(admin_client, create_link, data):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(create_link, data)
+
+
 def test_error_message_is_set_if_user_attempts_to_create_css_in_default_theme(
     default_theme, admin_client
 ):
@@ -324,6 +331,11 @@ def test_css_order_stays_the_same_after_edit(admin_client, edit_link, css, data)
 
     css.refresh_from_db()
     assert css.order == original_order
+
+
+def test_editing_css_file_invalidates_theme_cache(admin_client, edit_link, css, data):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(edit_link, data)
 
 
 def test_css_edit_form_redirects_user_to_edition_after_saving(

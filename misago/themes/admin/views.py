@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext, gettext_lazy as _
 
 from ...admin.views import generic
+from ..cache import clear_theme_cache
 from ..models import Theme, Css
 from .css import move_css_down, move_css_up
 from .forms import CssEditorForm, CssLinkForm, ThemeForm, UploadCssForm, UploadMediaForm
@@ -64,6 +65,7 @@ class ActivateTheme(ThemeAdmin, generic.ButtonView):
 def set_theme_as_active(request, theme):
     Theme.objects.update(is_active=False)
     Theme.objects.filter(pk=theme.pk).update(is_active=True)
+    clear_theme_cache()
 
 
 class ThemeAssetsAdmin(ThemeAdmin):
@@ -160,6 +162,10 @@ class DeleteThemeCss(DeleteThemeAssets):
     message_submit = _("Selected CSS files have been deleted.")
     queryset_attr = "css"
 
+    def action(self, request, theme):
+        super().action(request, theme)
+        clear_theme_cache()
+
 
 class DeleteThemeMedia(DeleteThemeAssets):
     message_submit = _("Selected media have been deleted.")
@@ -207,6 +213,7 @@ class ThemeCssAdmin(ThemeAssetsAdmin, generic.TargetedView):
 class MoveThemeCssUp(ThemeCssAdmin):
     def real_dispatch(self, request, theme, css):
         if request.method == "POST" and move_css_up(theme, css):
+            clear_theme_cache()
             messages.success(request, gettext('"%s" was moved up.') % css)
 
         return self.redirect_to_theme_assets(theme)
@@ -215,6 +222,7 @@ class MoveThemeCssUp(ThemeCssAdmin):
 class MoveThemeCssDown(ThemeCssAdmin):
     def real_dispatch(self, request, theme, css):
         if request.method == "POST" and move_css_down(theme, css):
+            clear_theme_cache()
             messages.success(request, gettext('"%s" was moved down.') % css)
 
         return self.redirect_to_theme_assets(theme)
@@ -246,6 +254,8 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
         form.save()
         if css.source_needs_building:
             build_single_theme_css.delay(css.pk)
+        else:
+            clear_theme_cache()
         messages.success(request, self.message_submit % {"name": css.name})
 
 
@@ -288,6 +298,8 @@ class EditThemeCss(NewThemeCss):
             form.save()
             if css.source_needs_building:
                 build_single_theme_css.delay(css.pk)
+            else:
+                clear_theme_cache()
             messages.success(request, self.message_submit % {"name": css.name})
         else:
             message = gettext('No changes have been made to "%(css)s".')
@@ -311,6 +323,7 @@ class NewThemeCssLink(ThemeCssFormAdmin):
         super().handle_form(form, *args)
         if form.has_changed():
             update_remote_css_size.delay(form.instance.pk)
+            clear_theme_cache()
 
     def redirect_to_edit_form(self, theme, css):
         return redirect("misago:admin:appearance:themes:new-css-link", pk=theme.pk)
