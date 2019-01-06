@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from ....test import assert_contains
+from ....test import assert_contains, assert_has_error_message
 from ...models import Theme
 
 
@@ -69,6 +69,15 @@ def test_creating_child_theme_updates_themes_tree(admin_client, create_link, the
 
 def test_theme_creation_fails_if_name_is_not_given(admin_client, create_link):
     admin_client.post(create_link, {"name": ""})
+    assert Theme.objects.count() == 1
+
+
+def test_theme_creation_fails_if_parent_theme_doesnt_exist(
+    admin_client, create_link, nonexisting_theme
+):
+    admin_client.post(
+        create_link, {"name": "New Theme", "parent": nonexisting_theme.pk}
+    )
     assert Theme.objects.count() == 1
 
 
@@ -193,3 +202,23 @@ def test_moving_theme_with_child_under_root_updates_theme_tree_and_creates_new_o
 
     assert default_theme.lft == 1
     assert default_theme.rght == 2
+
+
+def test_theme_edition_fails_if_parent_theme_doesnt_exist(
+    admin_client, edit_link, theme, nonexisting_theme
+):
+    admin_client.post(
+        edit_link, {"name": "Edited theme", "parent": nonexisting_theme.pk}
+    )
+    theme.refresh_from_db()
+    assert theme.name != "Edited theme"
+
+
+def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_theme(
+    admin_client, nonexisting_theme
+):
+    edit_link = reverse(
+        "misago:admin:appearance:themes:edit", kwargs={"pk": nonexisting_theme.pk}
+    )
+    response = admin_client.get(edit_link)
+    assert_has_error_message(response)
