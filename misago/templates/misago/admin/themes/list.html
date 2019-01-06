@@ -20,7 +20,6 @@
 <th>&nbsp;</th>
 <th>&nbsp;</th>
 <th>&nbsp;</th>
-<th>&nbsp;</th>
 {% endblock table-header %}
 
 
@@ -70,11 +69,6 @@
 <td class="row-action">
   <a href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}" class="btn btn-primary tooltip-top" title="{% trans "Create child theme" %}">
     <span class="fa fa-file-o"></span>
-  </a>
-</td>
-<td class="row-action">
-  <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Copy" %}">
-    <span class="fa fa-copy"></span>
   </a>
 </td>
 <td class="row-action">
