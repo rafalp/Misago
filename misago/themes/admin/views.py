@@ -57,6 +57,19 @@ class DeleteTheme(ThemeAdmin, generic.ModelFormView):
     def check_permissions(self, request, target):
         if target.is_default:
             return gettext("Default theme can't be deleted.")
+        if target.is_active:
+            return gettext("Active theme can't be deleted.")
+
+    def real_dispatch(self, request, target):
+        if request.method == "POST" and target.is_leaf_node():
+            return self.delete_theme_without_children(request, target)
+
+        return super().real_dispatch(request, target)
+
+    def delete_theme_without_children(self, request, target):
+        target.delete()
+        messages.success(request, self.message_submit % {"name": target})
+        return redirect(self.root_link)
 
 
 class ActivateTheme(ThemeAdmin, generic.ButtonView):

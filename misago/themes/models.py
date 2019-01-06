@@ -27,6 +27,14 @@ class Theme(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ["-is_default", "name"]
 
+    def delete(self, *args, **kwargs):
+        for css in self.css.all():
+            css.delete()
+        for media in self.media.all():
+            media.delete()
+
+        super().delete(*args, **kwargs)
+
     def __str__(self):
         if self.is_default:
             return gettext("Default Misago Theme")
