@@ -45,6 +45,11 @@ class EditTheme(ThemeAdmin, generic.ModelFormView):
         if target.is_default:
             return gettext("Default theme can't be edited.")
 
+    def handle_form(self, form, request, target):
+        super().handle_form(form, request, target)
+        if "parent" in form.changed_data:
+            clear_theme_cache()
+
 
 class DeleteTheme(ThemeAdmin, generic.ModelFormView):
     message_submit = _('Theme "%(name)s" has been deleted.')
@@ -294,7 +299,7 @@ class EditThemeCss(NewThemeCss):
         return form(instance=css, initial=initial_data)
 
     def handle_form(self, form, request, theme, css):
-        if form.has_changed():
+        if "source" in form.changed_data:
             form.save()
             if css.source_needs_building:
                 build_single_theme_css.delay(css.pk)
@@ -321,7 +326,7 @@ class NewThemeCssLink(ThemeCssFormAdmin):
 
     def handle_form(self, form, *args):
         super().handle_form(form, *args)
-        if form.has_changed():
+        if "url" in form.changed_data:
             update_remote_css_size.delay(form.instance.pk)
             clear_theme_cache()
 

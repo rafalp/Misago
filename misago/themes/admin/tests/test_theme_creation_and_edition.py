@@ -1,7 +1,9 @@
 import pytest
 from django.urls import reverse
 
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message
+from ... import THEME_CACHE
 from ...models import Theme
 
 
@@ -208,10 +210,20 @@ def test_theme_edition_fails_if_parent_theme_doesnt_exist(
     admin_client, edit_link, theme, nonexisting_theme
 ):
     admin_client.post(
-        edit_link, {"name": "Edited theme", "parent": nonexisting_theme.pk}
+        edit_link, {"name": "Edited Theme", "parent": nonexisting_theme.pk}
     )
     theme.refresh_from_db()
-    assert theme.name != "Edited theme"
+    assert theme.name != "Edited Theme"
+
+
+def test_error_message_is_set_if_user_attempts_to_edit_default_theme(
+    admin_client, default_theme
+):
+    edit_link = reverse(
+        "misago:admin:appearance:themes:edit", kwargs={"pk": default_theme.pk}
+    )
+    response = admin_client.get(edit_link)
+    assert_has_error_message(response)
 
 
 def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_theme(
@@ -222,3 +234,10 @@ def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_theme(
     )
     response = admin_client.get(edit_link)
     assert_has_error_message(response)
+
+
+def test_moving_theme_invalidates_themes_cache(
+    admin_client, edit_link, theme, default_theme
+):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(edit_link, {"name": theme.name, "parent": default_theme.pk})
