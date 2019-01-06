@@ -5,13 +5,19 @@ from .admin.auth import authorize_admin
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
+from .themes import THEME_CACHE
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
 
 
 def get_cache_versions():
-    return {ACL_CACHE: "abcdefgh", BANS_CACHE: "abcdefgh", SETTINGS_CACHE: "abcdefgh"}
+    return {
+        ACL_CACHE: "abcdefgh",
+        BANS_CACHE: "abcdefgh",
+        SETTINGS_CACHE: "abcdefgh",
+        THEME_CACHE: "abcdefgh",
+    }
 
 
 @pytest.fixture

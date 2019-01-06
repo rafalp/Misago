@@ -1,24 +1,11 @@
-from .models import Theme
+from .activetheme import get_active_theme
+from .cache import get_theme_cache, set_theme_cache
 
 
 def theme(request):
-    active_theme = Theme.objects.get(is_active=True)
-    themes = active_theme.get_ancestors(include_self=True)
-    themes = themes.prefetch_related("css")
+    active_theme = get_theme_cache(request.cache_versions)
+    if active_theme is None:
+        active_theme = get_active_theme()
+        set_theme_cache(request.cache_versions, active_theme)
 
-    include_defaults = False
-    styles = []
-
-    for theme in themes:
-        if theme.is_default:
-            include_defaults = True
-        for css in theme.css.all():
-            if css.url:
-                styles.append(css.url)
-            if css.source_needs_building:
-                if css.build_file:
-                    styles.append(css.build_file.url)
-            else:
-                styles.append(css.source_file.url)
-
-    return {"theme": {"include_defaults": include_defaults, "styles": styles}}
+    return {"theme": active_theme}
