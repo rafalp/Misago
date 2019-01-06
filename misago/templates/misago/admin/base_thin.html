@@ -25,6 +25,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180.png' %}">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
     <link rel="icon" sizes="16x16 32x32" href="{% static 'favicon.ico' %}">
+    {% block extra-head %}{% endblock extra-head %}
   </head>
   <body>
 

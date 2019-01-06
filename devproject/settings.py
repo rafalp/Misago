@@ -180,6 +180,7 @@ INSTALLED_APPS = [
     "misago.cache",
     "misago.core",
     "misago.conf",
+    "misago.themes",
     "misago.markup",
     "misago.legal",
     "misago.categories",
@@ -268,6 +269,7 @@ TEMPLATES = [
                 "misago.core.context_processors.site_address",
                 "misago.core.context_processors.momentjs_locale",
                 "misago.search.context_processors.search_providers",
+                "misago.themes.context_processors.theme",
                 "misago.users.context_processors.user_links",
                 # Data preloaders
                 "misago.conf.context_processors.preload_settings_json",

@@ -7,16 +7,14 @@ from ..dynamicsettings import DynamicSettings
 def test_settings_are_loaded_from_database_if_cache_is_not_available(
     db, mocker, cache_versions, django_assert_num_queries
 ):
-    mocker.patch("django.core.cache.cache.set")
     mocker.patch("django.core.cache.cache.get", return_value=None)
     with django_assert_num_queries(1):
         DynamicSettings(cache_versions)
 
 
-def test_settings_are_loaded_from_cache_if_it_is_not_none(
+def test_settings_are_loaded_from_cache_if_it_is_set(
     db, mocker, cache_versions, django_assert_num_queries
 ):
-    mocker.patch("django.core.cache.cache.set")
     cache_get = mocker.patch("django.core.cache.cache.get", return_value={})
     with django_assert_num_queries(0):
         DynamicSettings(cache_versions)
