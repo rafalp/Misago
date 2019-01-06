@@ -1,4 +1,7 @@
+from pathlib import Path
+
 import pytest
+from django.core.files.base import ContentFile
 from django.urls import reverse
 
 from ....cache.test import assert_invalidates_cache
@@ -33,6 +36,20 @@ def test_theme_css_can_be_deleted(theme, delete_css, css):
     assert not theme.css.exists()
 
 
+def test_deleting_css_also_deletes_css_source_files(theme, delete_css, css):
+    delete_css(theme, [css])
+    assert not Path(css.source_file.path).exists()
+
+
+def test_deleting_css_also_deletes_css_build_files(theme, delete_css, css):
+    css.build_file = ContentFile("body {}", name="test.css")
+    css.build_hash = "abcdefgh"
+    css.save()
+
+    delete_css(theme, [css])
+    assert not Path(css.build_file.path).exists()
+
+
 def test_theme_css_link_can_be_deleted(theme, delete_css, css_link):
     delete_css(theme, [css_link])
     assert not theme.css.exists()
@@ -50,9 +67,19 @@ def test_theme_media_can_be_deleted(theme, delete_media, media):
     assert not theme.media.exists()
 
 
+def test_deleting_media_also_deletes_files(theme, delete_media, media):
+    delete_media(theme, [media])
+    assert not Path(media.file.path).exists()
+
+
 def test_theme_images_can_be_deleted(theme, delete_media, image):
     delete_media(theme, [image])
     assert not theme.media.exists()
+
+
+def test_deleting_image_also_deletes_files(theme, delete_media, image):
+    delete_media(theme, [image])
+    assert not Path(image.thumbnail.path).exists()
 
 
 def test_multiple_theme_media_can_be_deleted_at_single_time(

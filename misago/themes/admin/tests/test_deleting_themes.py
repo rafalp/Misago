@@ -49,11 +49,24 @@ def test_theme_media_are_deleted_together_with_theme(admin_client, delete_link, 
         media.refresh_from_db()
 
 
+def test_theme_images_are_deleted_together_with_theme(admin_client, delete_link, image):
+    admin_client.post(delete_link)
+    with pytest.raises(Media.DoesNotExist):
+        image.refresh_from_db()
+
+
 def test_theme_media_files_are_deleted_together_with_theme(
     admin_client, delete_link, media
 ):
     admin_client.post(delete_link)
     assert not Path(media.file.path).exists()
+
+
+def test_theme_image_files_are_deleted_together_with_theme(
+    admin_client, delete_link, image
+):
+    admin_client.post(delete_link)
+    assert not Path(image.thumbnail.path).exists()
 
 
 def test_deleting_default_theme_sets_error_message(admin_client, default_theme):
