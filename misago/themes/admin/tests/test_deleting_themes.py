@@ -4,7 +4,9 @@ import pytest
 from django.core.files.base import ContentFile
 from django.urls import reverse
 
+from ....cache.test import assert_invalidates_cache
 from ....test import assert_has_error_message
+from ... import THEME_CACHE
 from ...models import Theme, Css, Media
 
 
@@ -69,6 +71,45 @@ def test_theme_image_files_are_deleted_together_with_theme(
     assert not Path(image.thumbnail.path).exists()
 
 
+def test_theme_is_deleted_with_children(admin_client, delete_link, theme):
+    Theme.objects.create(name="Child Theme", parent=theme)
+    admin_client.post(delete_link)
+    assert Theme.objects.count() == 1
+
+
+def test_theme_children_are_deleted_recursively(admin_client, delete_link, theme):
+    child_theme = Theme.objects.create(name="Child Theme", parent=theme)
+    Theme.objects.create(name="Descendant Theme", parent=child_theme)
+    Theme.objects.create(name="Descendant Theme", parent=child_theme)
+
+    admin_client.post(delete_link)
+    assert Theme.objects.count() == 1
+
+
+def test_children_theme_can_be_deleted(admin_client, delete_link, theme, other_theme):
+    theme.move_to(other_theme)
+    theme.save()
+
+    admin_client.post(delete_link)
+    with pytest.raises(Theme.DoesNotExist):
+        theme.refresh_from_db()
+
+
+def test_deleting_children_theme_doesnt_delete_parent_themes(
+    admin_client, delete_link, theme, other_theme
+):
+    theme.move_to(other_theme)
+    theme.save()
+
+    admin_client.post(delete_link)
+    other_theme.refresh_from_db()
+
+
+def test_deleting_theme_invalidates_themes_cache(admin_client, delete_link):
+    with assert_invalidates_cache(THEME_CACHE):
+        admin_client.post(delete_link)
+
+
 def test_deleting_default_theme_sets_error_message(admin_client, default_theme):
     delete_link = reverse(
         "misago:admin:appearance:themes:delete", kwargs={"pk": default_theme.pk}
@@ -81,7 +122,7 @@ def test_default_theme_is_not_deleted(admin_client, default_theme):
     delete_link = reverse(
         "misago:admin:appearance:themes:delete", kwargs={"pk": default_theme.pk}
     )
-    response = admin_client.post(delete_link)
+    admin_client.post(delete_link)
     default_theme.refresh_from_db()
 
 
@@ -99,6 +140,34 @@ def test_deleting_active_theme_sets_error_message(admin_client, theme):
 def test_active_theme_is_not_deleted(admin_client, theme):
     theme.is_active = True
     theme.save()
+
+    delete_link = reverse(
+        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
+    )
+    admin_client.post(delete_link)
+    theme.refresh_from_db()
+
+
+def test_deleting_theme_containing_active_child_theme_sets_error_message(
+    admin_client, theme, other_theme
+):
+    other_theme.move_to(theme)
+    other_theme.is_active = True
+    other_theme.save()
+
+    delete_link = reverse(
+        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
+    )
+    response = admin_client.post(delete_link)
+    assert_has_error_message(response)
+
+
+def test_theme_containing_active_child_theme_is_not_deleted(
+    admin_client, theme, other_theme
+):
+    other_theme.move_to(theme)
+    other_theme.is_active = True
+    other_theme.save()
 
     delete_link = reverse(
         "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}

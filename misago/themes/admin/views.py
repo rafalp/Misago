@@ -51,7 +51,7 @@ class EditTheme(ThemeAdmin, generic.ModelFormView):
             clear_theme_cache()
 
 
-class DeleteTheme(ThemeAdmin, generic.ModelFormView):
+class DeleteTheme(ThemeAdmin, generic.ButtonView):
     message_submit = _('Theme "%(name)s" has been deleted.')
 
     def check_permissions(self, request, target):
@@ -59,17 +59,19 @@ class DeleteTheme(ThemeAdmin, generic.ModelFormView):
             return gettext("Default theme can't be deleted.")
         if target.is_active:
             return gettext("Active theme can't be deleted.")
+        if target.get_descendants().filter(is_active=True).exists():
+            message = gettext(
+                'Theme "%(name)s" can\'t be deleted '
+                "because one of its child themes is set as active."
+            )
+            return message % {"name": target}
 
-    def real_dispatch(self, request, target):
-        if request.method == "POST" and target.is_leaf_node():
-            return self.delete_theme_without_children(request, target)
+    def button_action(self, request, target):
+        for theme in reversed(target.get_descendants(include_self=True)):
+            theme.delete()
 
-        return super().real_dispatch(request, target)
-
-    def delete_theme_without_children(self, request, target):
-        target.delete()
+        clear_theme_cache()
         messages.success(request, self.message_submit % {"name": target})
-        return redirect(self.root_link)
 
 
 class ActivateTheme(ThemeAdmin, generic.ButtonView):

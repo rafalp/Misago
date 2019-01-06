@@ -16,6 +16,7 @@ class ThemeChoiceField(TreeNodeChoiceField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("queryset", Theme.objects.all())
         kwargs.setdefault("empty_label", _("No parent"))
+        kwargs.setdefault("level_indicator", self.level_indicator)
         super().__init__(*args, **kwargs)
 
 
