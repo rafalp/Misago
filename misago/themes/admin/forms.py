@@ -46,6 +46,28 @@ class ThemeForm(forms.ModelForm):
         )
 
 
+class ImportForm(forms.Form):
+    name = forms.CharField(
+        label=_("Name"),
+        help_text=_("Leave this field empty to use theme name from imported file."),
+        max_length=255,
+        required=False,
+    )
+    upload = forms.FileField(
+        label=_("Theme file"),
+        help_text=_("Theme file should be a zip file."),
+    )
+
+    def clean_upload(self):
+        data = self.cleaned_data["upload"]
+        error_message = gettext("Uploaded file is not a valid Zip file.")
+        if not data.name.lower().endswith(".zip"):
+            raise forms.ValidationError(error_message)
+        if data.content_type not in ("application/zip", "application/octet-stream"):
+            raise forms.ValidationError(error_message)
+        return data
+
+
 class UploadAssetsForm(forms.Form):
     allowed_content_types = []
     allowed_extensions = []

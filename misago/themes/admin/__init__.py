@@ -14,6 +14,8 @@ from .views import (
     NewTheme,
     NewThemeCss,
     NewThemeCssLink,
+    ExportTheme,
+    ImportTheme,
     ThemeAssets,
     ThemesList,
     UploadThemeCss,
@@ -35,6 +37,8 @@ class MisagoAdminExtension:
             url(r"^edit/(?P<pk>\d+)/$", EditTheme.as_view(), name="edit"),
             url(r"^delete/(?P<pk>\d+)/$", DeleteTheme.as_view(), name="delete"),
             url(r"^activate/(?P<pk>\d+)/$", ActivateTheme.as_view(), name="activate"),
+            url(r"^export/(?P<pk>\d+)/$", ExportTheme.as_view(), name="export"),
+            url(r"^import/$", ImportTheme.as_view(), name="import"),
             url(r"^assets/(?P<pk>\d+)/$", ThemeAssets.as_view(), name="assets"),
             url(
                 r"^assets/(?P<pk>\d+)/delete-css/$",
