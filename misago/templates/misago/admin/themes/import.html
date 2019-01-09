@@ -27,6 +27,7 @@ class="form-horizontal" enctype="multipart/form-data"
 <div class="form-body no-fieldsets">
   {% with label_class="col-md-3" field_class="col-md-9" %}
     {% form_row form.name label_class field_class %}
+    {% form_row form.parent label_class field_class %}
     {% form_row form.upload label_class field_class %}
   {% endwith %}
 </div>

@@ -107,8 +107,8 @@ class ImportTheme(ThemeAdmin, generic.FormView):
             form.add_error("upload", str(e))
             return self.render(request, {"form": form})
 
-    def import_theme(self, request, *_, name, upload):
-        theme = import_theme(name, upload)
+    def import_theme(self, request, *_, name, parent, upload):
+        theme = import_theme(name, parent, upload)
         message = gettext('Theme "%(name)s" has been imported.')
         messages.success(request, message % {"name": theme})
 

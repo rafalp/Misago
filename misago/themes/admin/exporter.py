@@ -97,8 +97,7 @@ def copy_asset_file(export_dir, asset_file):
     with open(dst_path, "wb") as fp:
         for chunk in asset_file.chunks():
             fp.write(chunk)
-    dirname = os.path.basename(export_dir)
-    return os.path.join(dirname, filename)
+    return filename
 
 
 def write_theme_manifest(export_dir, manifest):
