@@ -106,5 +106,4 @@ def write_theme_manifest(export_dir, manifest):
 
 def zip_theme_export(tmp_dir, export_dir):
     dir_name = os.path.split(export_dir)[-1]
-    zip_name = shutil.make_archive(dir_name, "zip", tmp_dir)
-    return os.path.join(tmp_dir, zip_name)
+    return shutil.make_archive(export_dir, "zip", tmp_dir, dir_name)
