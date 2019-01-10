@@ -22,8 +22,8 @@ def export_theme(theme):
         export_filename = os.path.split(export_file)[-1]
 
         response = FileResponse(open(export_file, "rb"), content_type="application/zip")
-        response['Content-Length'] = os.path.getsize(export_file)
-        response['Content-Disposition'] = "inline; filename=%s" % export_filename
+        response["Content-Length"] = os.path.getsize(export_file)
+        response["Content-Disposition"] = "inline; filename=%s" % export_filename
 
         return response
 
@@ -58,15 +58,11 @@ def write_theme_css(export_dir, theme):
 
     for css in theme.css.all():
         if css.url:
-            files.append({
-                "name": css.name,
-                "url": css.url,
-            })
+            files.append({"name": css.name, "url": css.url})
         else:
-            files.append({
-                "name": css.name,
-                "path": copy_asset_file(files_dir, css.source_file),
-            })
+            files.append(
+                {"name": css.name, "path": copy_asset_file(files_dir, css.source_file)}
+            )
 
     return files
 
@@ -76,11 +72,13 @@ def write_theme_media(export_dir, theme):
     files = []
 
     for media in theme.media.all():
-        files.append({
-            "name": media.name,
-            "type": media.type,
-            "path": copy_asset_file(files_dir, media.file),
-        })
+        files.append(
+            {
+                "name": media.name,
+                "type": media.type,
+                "path": copy_asset_file(files_dir, media.file),
+            }
+        )
 
     return files
 
@@ -108,5 +106,5 @@ def write_theme_manifest(export_dir, manifest):
 
 def zip_theme_export(tmp_dir, export_dir):
     dir_name = os.path.split(export_dir)[-1]
-    zip_name = shutil.make_archive(dir_name, 'zip', tmp_dir)
+    zip_name = shutil.make_archive(dir_name, "zip", tmp_dir)
     return os.path.join(tmp_dir, zip_name)

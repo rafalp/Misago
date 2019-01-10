@@ -3,13 +3,32 @@ import os
 from tempfile import TemporaryDirectory
 from zipfile import BadZipFile, ZipFile
 
-from django.utils.translation import gettext as _
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils.translation import gettext as _, gettext_lazy
 
 from ..models import Theme
+from .css import create_css
+from .forms import (
+    ThemeCssUrlManifest,
+    ThemeManifest,
+    create_css_file_manifest,
+    create_media_file_manifest,
+)
+from .media import create_media
+from .tasks import build_theme_css, update_remote_css_size
+
+INVALID_MANIFEST_ERROR = gettext_lazy(
+    '"manifest.json" contained by ZIP file is not a valid theme manifest file.'
+)
 
 
 class ThemeImportError(BaseException):
     pass
+
+
+class InvalidThemeManifest(ThemeImportError):
+    def __init__(self):
+        super().__init__(INVALID_MANIFEST_ERROR)
 
 
 def import_theme(name, parent, zipfile):
@@ -17,17 +36,23 @@ def import_theme(name, parent, zipfile):
         extract_zipfile_to_tmp_dir(zipfile, tmp_dir)
         validate_zipfile_contains_single_directory(tmp_dir)
         theme_dir = os.path.join(tmp_dir, os.listdir(tmp_dir)[0])
-        clean_data = clean_theme_contents(theme_dir)
+        cleaned_manifest = clean_theme_contents(theme_dir)
 
-        # TODO: finish import
-        return Theme.objects.create(
-            name=name or clean_data["name"],
-            parent=parent,
-            version=clean_data["version"],
-            author=clean_data["author"],
-            url=clean_data["url"],
-        )
-    
+        theme = create_theme_from_manifest(name, parent, cleaned_manifest)
+
+        try:
+            create_css_from_manifest(theme_dir, theme, cleaned_manifest["css"])
+            create_media_from_manifest(theme_dir, theme, cleaned_manifest["media"])
+        except Exception:
+            theme.delete()
+            raise InvalidThemeManifest()
+        else:
+            for css in theme.css.filter(url__isnull=False):
+                update_remote_css_size.delay(css.pk)
+            build_theme_css.delay(theme.pk)
+
+        return theme
+
 
 def extract_zipfile_to_tmp_dir(zipfile, tmp_dir):
     try:
@@ -47,19 +72,14 @@ def validate_zipfile_contains_single_directory(tmp_dir):
 
 
 def clean_theme_contents(theme_dir):
-    return read_manifest(theme_dir)
+    manifest = read_manifest(theme_dir)
+    return clean_manifest(theme_dir, manifest)
 
 
 def read_manifest(theme_dir):
     try:
         with open(os.path.join(theme_dir, "manifest.json")) as fp:
-            manifest = json.load(fp)
-        if not isinstance(manifest, dict):
-            message = _(
-                '"manifest.json" contained by ZIP file is not a valid '
-                'theme manifest file.'
-            )
-            raise ThemeImportError(message)
+            return json.load(fp)
     except FileNotFoundError:
         raise ThemeImportError(
             _('Uploaded ZIP file didn\'t contain a "manifest.json".')
@@ -70,3 +90,124 @@ def read_manifest(theme_dir):
         )
     else:
         return manifest
+
+
+def clean_manifest(theme_dir, manifest):
+    if not isinstance(manifest, dict):
+        raise InvalidThemeManifest()
+
+    form = ThemeManifest(manifest)
+    if not form.is_valid():
+        raise InvalidThemeManifest()
+
+    cleaned_manifest = form.cleaned_data.copy()
+    cleaned_manifest["css"] = clean_css_list(theme_dir, manifest.get("css"))
+    cleaned_manifest["media"] = clean_media_list(theme_dir, manifest.get("media"))
+
+    return cleaned_manifest
+
+
+def clean_css_list(theme_dir, manifest):
+    if not isinstance(manifest, list):
+        raise InvalidThemeManifest()
+
+    theme_css_dir = os.path.join(theme_dir, "css")
+    if not os.path.isdir(theme_css_dir):
+        raise InvalidThemeManifest()
+
+    cleaned_data = []
+    for item in manifest:
+        cleaned_data.append(clean_css_list_item(theme_css_dir, item))
+    return cleaned_data
+
+
+def clean_css_list_item(theme_css_dir, item):
+    if not isinstance(item, dict):
+        raise InvalidThemeManifest()
+
+    if item.get("url"):
+        return clean_css_url(item)
+    if item.get("path"):
+        return clean_css_file(theme_css_dir, item)
+
+    raise InvalidThemeManifest()
+
+
+def clean_css_url(data):
+    form = ThemeCssUrlManifest(data)
+    if not form.is_valid():
+        raise InvalidThemeManifest()
+    return form.cleaned_data
+
+
+def clean_css_file(theme_css_dir, data):
+    file_manifest = create_css_file_manifest(theme_css_dir)
+
+    if data.get("path"):
+        data["path"] = os.path.join(theme_css_dir, str(data["path"]))
+
+    form = file_manifest(data)
+    if not form.is_valid():
+        raise InvalidThemeManifest()
+    return form.cleaned_data
+
+
+def clean_media_list(theme_dir, manifest):
+    if not isinstance(manifest, list):
+        raise InvalidThemeManifest()
+
+    theme_media_dir = os.path.join(theme_dir, "media")
+    if not os.path.isdir(theme_media_dir):
+        raise InvalidThemeManifest()
+
+    cleaned_data = []
+    for item in manifest:
+        cleaned_data.append(clean_media_list_item(theme_media_dir, item))
+    return cleaned_data
+
+
+def clean_media_list_item(theme_media_dir, data):
+    if not isinstance(data, dict):
+        raise InvalidThemeManifest()
+
+    file_manifest = create_media_file_manifest(theme_media_dir)
+
+    if data.get("path"):
+        data["path"] = os.path.join(theme_media_dir, str(data["path"]))
+
+    form = file_manifest(data)
+    if not form.is_valid():
+        raise InvalidThemeManifest()
+
+    return form.cleaned_data
+
+
+def create_theme_from_manifest(name, parent, cleaned_data):
+    return Theme.objects.create(
+        name=name or cleaned_data["name"],
+        parent=parent,
+        version=cleaned_data["version"],
+        author=cleaned_data["author"],
+        url=cleaned_data["url"],
+    )
+
+
+def create_css_from_manifest(tmp_dir, theme, manifest):
+    for item in manifest:
+        if "url" in item:
+            theme.css.create(**item, order=theme.css.count())
+        else:
+            with open(item["path"], "rb") as fp:
+                file_obj = SimpleUploadedFile(
+                    item["name"], fp.read(), content_type="text/css"
+                )
+                create_css(theme, file_obj)
+
+
+def create_media_from_manifest(tmp_dir, theme, manifest):
+    for item in manifest:
+        with open(item["path"], "rb") as fp:
+            file_obj = SimpleUploadedFile(
+                item["name"], fp.read(), content_type=item["type"]
+            )
+            create_media(theme, file_obj)

@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.core.files.base import ContentFile
 from django.utils.translation import gettext, gettext_lazy as _
@@ -55,8 +57,7 @@ class ImportForm(forms.Form):
     )
     parent = ThemeChoiceField(label=_("Parent"), required=False)
     upload = forms.FileField(
-        label=_("Theme file"),
-        help_text=_("Theme file should be a ZIP file."),
+        label=_("Theme file"), help_text=_("Theme file should be a ZIP file.")
     )
 
     def clean_upload(self):
@@ -67,6 +68,37 @@ class ImportForm(forms.Form):
         if data.content_type not in ("application/zip", "application/octet-stream"):
             raise forms.ValidationError(error_message)
         return data
+
+
+class ThemeManifest(forms.Form):
+    name = forms.CharField(max_length=255)
+    version = forms.CharField(max_length=255, required=False)
+    author = forms.CharField(max_length=255, required=False)
+    url = forms.URLField(max_length=255, required=False)
+
+
+class ThemeCssUrlManifest(forms.Form):
+    name = forms.CharField(max_length=255)
+    url = forms.URLField(max_length=255)
+
+
+def create_css_file_manifest(allowed_path):
+    class ThemeCssFileManifest(forms.Form):
+        name = forms.CharField(max_length=255, validators=[validate_css_name])
+        path = forms.FilePathField(
+            allowed_path, match=re.compile(r"\.css$", re.IGNORECASE)
+        )
+
+    return ThemeCssFileManifest
+
+
+def create_media_file_manifest(allowed_path):
+    class ThemeMediaFileManifest(forms.Form):
+        name = forms.CharField(max_length=255)
+        type = forms.CharField(max_length=255)
+        path = forms.FilePathField(allowed_path)
+
+    return ThemeMediaFileManifest
 
 
 class UploadAssetsForm(forms.Form):

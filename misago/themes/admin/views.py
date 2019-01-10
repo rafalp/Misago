@@ -8,7 +8,14 @@ from ..cache import clear_theme_cache
 from ..models import Theme, Css
 from .css import move_css_down, move_css_up
 from .exporter import export_theme
-from .forms import CssEditorForm, CssLinkForm, ImportForm, ThemeForm, UploadCssForm, UploadMediaForm
+from .forms import (
+    CssEditorForm,
+    CssLinkForm,
+    ImportForm,
+    ThemeForm,
+    UploadCssForm,
+    UploadMediaForm,
+)
 from .importer import ThemeImportError, import_theme
 from .tasks import build_single_theme_css, build_theme_css, update_remote_css_size
 
@@ -274,6 +281,8 @@ class MoveThemeCssDown(ThemeCssAdmin):
 
 
 class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
+    is_atomic = False  # atomic updates cause race condition with celery tasks
+
     def real_dispatch(self, request, theme, css=None):
         form = self.initialize_form(self.form, request, theme, css)
 
@@ -364,10 +373,10 @@ class NewThemeCssLink(ThemeCssFormAdmin):
             return form(request.POST, instance=css)
         return form(instance=css)
 
-    def handle_form(self, form, *args):
-        super().handle_form(form, *args)
+    def handle_form(self, form, request, theme, css):
+        super().handle_form(form, request, theme, css)
         if "url" in form.changed_data:
-            update_remote_css_size.delay(form.instance.pk)
+            update_remote_css_size.delay(css.pk)
             clear_theme_cache()
 
     def redirect_to_edit_form(self, theme, css):
