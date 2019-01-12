@@ -215,6 +215,7 @@ class ListView(AdminView):
         for method in ("GET", "session"):
             if methods.get(method):
                 return methods.get(method)
+        return {}
 
     def apply_filtering_on_context(self, context, active_filters, search_form):
         context["active_filters"] = active_filters

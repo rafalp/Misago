@@ -37,3 +37,13 @@ def test_unicode_is_preserved_in_redirect_querystring(admin_client):
 def test_view_is_not_redirecting_if_flag_is_set_in_querystring(admin_client):
     response = admin_client.get("%s?redirected=1" % list_link)
     assert response.status_code == 200
+
+
+def test_restoring_filters_from_session_handles_filters_entry_being_none(admin_client):
+    """Regression test for https://github.com/rafalp/Misago/pull/1177"""
+    response = admin_client.get("%s?set_filters=1&rank=1" % list_link)
+    assert response.status_code == 302
+    response = admin_client.get("%s?set_filters=0" % list_link)
+    assert response.status_code == 302
+    response = admin_client.get("%s?redirected=1" % list_link)
+    assert response.status_code == 200
