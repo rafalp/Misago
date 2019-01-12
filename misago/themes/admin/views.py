@@ -98,6 +98,10 @@ def set_theme_as_active(request, theme):
 
 
 class ExportTheme(ThemeAdmin, generic.ButtonView):
+    def check_permissions(self, request, target):
+        if target.is_default:
+            return gettext("Default theme can't be exported.")
+
     def button_action(self, request, target):
         return export_theme(target)
 
