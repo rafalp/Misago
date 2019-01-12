@@ -200,7 +200,7 @@ class ListView(AdminView):
         return self.clean_filtering_data(form.cleaned_data)
 
     def get_filters_from_session(self, request, search_form):
-        session_filters = request.session.get(self.filters_session_key) or {}
+        session_filters = request.session.get(self.filters_session_key, {})
         form = search_form(session_filters)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
@@ -215,6 +215,7 @@ class ListView(AdminView):
         for method in ("GET", "session"):
             if methods.get(method):
                 return methods.get(method)
+        return {}
 
     def apply_filtering_on_context(self, context, active_filters, search_form):
         context["active_filters"] = active_filters
