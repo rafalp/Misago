@@ -63,7 +63,7 @@ def extract_zipfile_to_tmp_dir(zipfile, tmp_dir):
 
 def validate_zipfile_contains_single_directory(tmp_dir):
     dir_contents = os.listdir(tmp_dir)
-    if not len(dir_contents):
+    if not dir_contents:
         raise ThemeImportError(_("Uploaded ZIP file is empty."))
     if len(dir_contents) > 1:
         raise ThemeImportError(_("Uploaded ZIP file should contain single directory."))
@@ -88,8 +88,6 @@ def read_manifest(theme_dir):
         raise ThemeImportError(
             _('"manifest.json" contained by ZIP file is not a valid JSON file.')
         )
-    else:
-        return manifest
 
 
 def clean_manifest(theme_dir, manifest):
@@ -186,9 +184,9 @@ def create_theme_from_manifest(name, parent, cleaned_data):
     return Theme.objects.create(
         name=name or cleaned_data["name"],
         parent=parent,
-        version=cleaned_data["version"],
-        author=cleaned_data["author"],
-        url=cleaned_data["url"],
+        version=cleaned_data.get("version") or None,
+        author=cleaned_data.get("author") or None,
+        url=cleaned_data.get("url") or None,
     )
 
 
