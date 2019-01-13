@@ -1,11 +1,10 @@
-// jshint ignore:start
-import React from 'react';
-import AddParticipant from './add-participant';
-import CardsList from './cards-list';
-import * as utils from './utils';
+import React from "react"
+import AddParticipant from "./add-participant"
+import CardsList from "./cards-list"
+import * as utils from "./utils"
 
 export default function(props) {
-  if (!props.participants.length) return null;
+  if (!props.participants.length) return null
 
   return (
     <div className="panel panel-default panel-participants">
@@ -22,7 +21,7 @@ export default function(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function getUserIsOwner(user, participants) {

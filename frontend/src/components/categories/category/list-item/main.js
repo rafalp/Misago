@@ -1,7 +1,6 @@
-// jshint ignore:start
-import React from 'react';
-import Description from './description';
-import Icon from './icon';
+import React from "react"
+import Description from "./description"
+import Icon from "./icon"
 
 export default function({ category }) {
   return (
@@ -12,13 +11,11 @@ export default function({ category }) {
         </div>
         <div className="media-body">
           <h4 className="media-heading">
-            <a href={category.url.index}>
-              {category.name}
-            </a>
+            <a href={category.url.index}>{category.name}</a>
           </h4>
           <Description category={category} />
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,25 +1,25 @@
-import React from 'react'; //jshint ignore:line
-import Editor from 'misago/components/editor'; //jshint ignore:line
-import Form from 'misago/components/form';
-import Container from './utils/container'; //jshint ignore:line
-import Loader from './utils/loader'; //jshint ignore:line
-import Message from './utils/message'; //jshint ignore:line
-import * as attachments from './utils/attachments'; //jshint ignore:line
-import { getPostValidators } from './utils/validators';
-import ajax from 'misago/services/ajax';
-import posting from 'misago/services/posting'; //jshint ignore:line
-import snackbar from 'misago/services/snackbar';
+import React from "react"
+import Editor from "misago/components/editor"
+import Form from "misago/components/form"
+import Container from "./utils/container"
+import Loader from "./utils/loader"
+import Message from "./utils/message"
+import * as attachments from "./utils/attachments"
+import { getPostValidators } from "./utils/validators"
+import ajax from "misago/services/ajax"
+import posting from "misago/services/posting"
+import snackbar from "misago/services/snackbar"
 
 export default class extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isReady: false,
       isLoading: false,
       isErrored: false,
 
-      post: '',
+      post: "",
       attachments: [],
       protect: false,
 
@@ -29,15 +29,14 @@ export default class extends Form {
         post: getPostValidators()
       },
       errors: {}
-    };
+    }
   }
 
   componentDidMount() {
-    ajax.get(this.props.config).then(this.loadSuccess, this.loadError);
+    ajax.get(this.props.config).then(this.loadSuccess, this.loadError)
   }
 
-  /* jshint ignore:start */
-  loadSuccess = (data) => {
+  loadSuccess = data => {
     this.setState({
       isReady: true,
 
@@ -46,59 +45,58 @@ export default class extends Form {
       protect: data.is_protected,
 
       canProtect: data.can_protect
-    });
-  };
+    })
+  }
 
-  loadError = (rejection) => {
+  loadError = rejection => {
     this.setState({
       isErrored: rejection.detail
-    });
-  };
+    })
+  }
 
   onCancel = () => {
-    const cancel = confirm(gettext("Are you sure you want to discard changes?"));
+    const cancel = confirm(gettext("Are you sure you want to discard changes?"))
     if (cancel) {
-      posting.close();
+      posting.close()
     }
-  };
+  }
 
   onProtect = () => {
     this.setState({
       protect: true
-    });
-  };
+    })
+  }
 
   onUnprotect = () => {
     this.setState({
       protect: false
-    });
-  };
+    })
+  }
 
-  onPostChange = (event) => {
-    this.changeValue('post', event.target.value);
-  };
+  onPostChange = event => {
+    this.changeValue("post", event.target.value)
+  }
 
-  onAttachmentsChange = (attachments) => {
+  onAttachmentsChange = attachments => {
     this.setState({
       attachments
-    });
-  };
-  /* jshint ignore:end */
+    })
+  }
 
   clean() {
     if (!this.state.post.trim().length) {
-      snackbar.error(gettext("You have to enter a message."));
-      return false;
+      snackbar.error(gettext("You have to enter a message."))
+      return false
     }
 
-    const errors = this.validate();
+    const errors = this.validate()
 
     if (errors.post) {
-      snackbar.error(errors.post[0]);
-      return false;
+      snackbar.error(errors.post[0])
+      return false
     }
 
-    return true;
+    return true
   }
 
   send() {
@@ -106,17 +104,17 @@ export default class extends Form {
       post: this.state.post,
       attachments: attachments.clean(this.state.attachments),
       protect: this.state.protect
-    });
+    })
   }
 
   handleSuccess(success) {
-    snackbar.success(gettext("Reply has been edited."));
-    window.location = success.url.index;
+    snackbar.success(gettext("Reply has been edited."))
+    window.location = success.url.index
 
     // keep form loading
     this.setState({
-      'isLoading': true
-    });
+      isLoading: true
+    })
   }
 
   handleError(rejection) {
@@ -127,23 +125,21 @@ export default class extends Form {
         rejection.title || [],
         rejection.post || [],
         rejection.attachments || []
-      );
+      )
 
-      snackbar.error(errors[0]);
+      snackbar.error(errors[0])
     } else {
-      snackbar.apiError(rejection);
+      snackbar.apiError(rejection)
     }
   }
 
   render() {
-    /* jshint ignore:start */
     if (this.state.isReady) {
       return (
         <Container className="posting-form">
           <form onSubmit={this.handleSubmit} method="POST">
             <div className="row">
               <div className="col-md-12">
-
                 <Editor
                   attachments={this.state.attachments}
                   canProtect={this.state.canProtect}
@@ -157,21 +153,15 @@ export default class extends Form {
                   submitLabel={gettext("Edit reply")}
                   value={this.state.post}
                 />
-
               </div>
             </div>
           </form>
         </Container>
-      );
+      )
     } else if (this.state.isErrored) {
-      return (
-        <Message message={this.state.isErrored} />
-      );
+      return <Message message={this.state.isErrored} />
     } else {
-      return (
-        <Loader />
-      );
+      return <Loader />
     }
-    /* jshint ignore:end */
   }
 }

@@ -1,6 +1,5 @@
-/* jshint ignore:start */
-import React from 'react';
-import Dropdown from './dropdown';
+import React from "react"
+import Dropdown from "./dropdown"
 
 export default function(props) {
   return (
@@ -12,11 +11,9 @@ export default function(props) {
         data-toggle="dropdown"
         type="button"
       >
-        <span className="material-icon">
-          expand_more
-        </span>
+        <span className="material-icon">expand_more</span>
       </button>
       <Dropdown {...props} />
     </div>
-  );
+  )
 }

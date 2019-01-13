@@ -1,35 +1,34 @@
-// jshint ignore:start
-import React from 'react';
+import React from "react"
 
 export default function(props) {
-  if (!props.showOptions) return null;
+  if (!props.showOptions) return null
 
-  const { columns } = props;
+  const { columns } = props
 
-  let className = 'col-xs-12 xs-margin-top';
+  let className = "col-xs-12 xs-margin-top"
 
   if (columns === 1) {
-    className += ' col-sm-2';
+    className += " col-sm-2"
   } else {
-    className += ' sm-margin-top';
+    className += " sm-margin-top"
   }
 
   if (columns === 3) {
-    className += ' col-md-3';
+    className += " col-md-3"
   } else {
-    className += ' col-md-2';
+    className += " col-md-2"
   }
-  className += ' posting-options';
+  className += " posting-options"
 
-  const columnClassName = 'col-xs-' + (12 / columns);
+  const columnClassName = "col-xs-" + 12 / columns
 
-  let textClassName = 'btn-text'
+  let textClassName = "btn-text"
   if (columns === 3) {
-      textClassName += ' visible-sm-inline-block';
+    textClassName += " visible-sm-inline-block"
   } else if (columns === 2) {
-      textClassName += ' hidden-md hidden-lg';
+    textClassName += " hidden-md hidden-lg"
   } else {
-      textClassName += ' hidden-sm';
+    textClassName += " hidden-sm"
   }
 
   return (
@@ -65,13 +64,13 @@ export default function(props) {
         />
       </div>
     </div>
-  );
+  )
 }
 
 export function CloseOptions(props) {
-  if (!props.show) return null;
+  if (!props.show) return null
 
-  const label = props.close ? gettext('Closed') : gettext('Open');
+  const label = props.close ? gettext("Closed") : gettext("Open")
 
   return (
     <div className={props.className}>
@@ -83,20 +82,18 @@ export function CloseOptions(props) {
         type="button"
       >
         <span className="material-icon">
-          {props.close ? 'lock' : 'lock_outline'}
+          {props.close ? "lock" : "lock_outline"}
         </span>
-        <span className={props.textClassName}>
-          {label}
-        </span>
+        <span className={props.textClassName}>{label}</span>
       </button>
     </div>
-  );
+  )
 }
 
 export function HideOptions(props) {
-  if (!props.show) return null;
+  if (!props.show) return null
 
-  const label = props.hide ? gettext('Hidden') : gettext('Not hidden');
+  const label = props.hide ? gettext("Hidden") : gettext("Not hidden")
 
   return (
     <div className={props.className}>
@@ -108,48 +105,46 @@ export function HideOptions(props) {
         type="button"
       >
         <span className="material-icon">
-          {props.hide ? 'visibility_off' : 'visibility'}
+          {props.hide ? "visibility_off" : "visibility"}
         </span>
-        <span className={props.textClassName}>
-          {label}
-        </span>
+        <span className={props.textClassName}>{label}</span>
       </button>
     </div>
-  );
+  )
 }
 
 export function PinOptions(props) {
-  if (!props.show) return null;
+  if (!props.show) return null
 
-  let icon = null;
-  let onClick = null;
-  let label = null;
+  let icon = null
+  let onClick = null
+  let label = null
 
   switch (props.pin) {
     case 0:
-      icon = 'radio_button_unchecked';
-      onClick = props.onPinLocally;
-      label = gettext("Unpinned");
-      break;
+      icon = "radio_button_unchecked"
+      onClick = props.onPinLocally
+      label = gettext("Unpinned")
+      break
 
     case 1:
-      icon = 'bookmark_outline';
-      onClick = props.onPinGlobally;
-      label = gettext("Pinned locally");
+      icon = "bookmark_outline"
+      onClick = props.onPinGlobally
+      label = gettext("Pinned locally")
 
       if (props.show == 2) {
-        onClick = props.onPinGlobally;
+        onClick = props.onPinGlobally
       } else {
-        onClick = props.onUnpin;
+        onClick = props.onUnpin
       }
 
-      break;
+      break
 
     case 2:
-      icon = 'bookmark';
-      onClick = props.onUnpin;
-      label = gettext("Pinned globally");
-      break;
+      icon = "bookmark"
+      onClick = props.onUnpin
+      label = gettext("Pinned globally")
+      break
   }
 
   return (
@@ -161,13 +156,9 @@ export function PinOptions(props) {
         title={label}
         type="button"
       >
-        <span className="material-icon">
-          {icon}
-        </span>
-        <span className={props.textClassName}>
-          {label}
-        </span>
+        <span className="material-icon">{icon}</span>
+        <span className={props.textClassName}>{label}</span>
       </button>
     </div>
-  );
+  )
 }

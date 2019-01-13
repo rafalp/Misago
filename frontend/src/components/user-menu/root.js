@@ -1,39 +1,27 @@
-import React from 'react';
-import { GuestNav, CompactGuestNav } from './guest-nav'; // jshint ignore:line
-import { UserNav, CompactUserNav} from './user-nav'; // jshint ignore:line
+import React from "react"
+import { GuestNav, CompactGuestNav } from "./guest-nav"
+import { UserNav, CompactUserNav } from "./user-nav"
 
 export class UserMenu extends React.Component {
   render() {
-    /* jshint ignore:start */
     if (this.props.isAuthenticated) {
-      return (
-        <UserNav user={this.props.user} />
-      );
+      return <UserNav user={this.props.user} />
     } else {
-      return (
-        <GuestNav />
-      );
+      return <GuestNav />
     }
-    /* jshint ignore:end */
   }
 }
 
 export class CompactUserMenu extends React.Component {
   render() {
-    /* jshint ignore:start */
     if (this.props.isAuthenticated) {
-      return (
-        <CompactUserNav user={this.props.user} />
-      );
+      return <CompactUserNav user={this.props.user} />
     } else {
-      return (
-        <CompactGuestNav />
-      );
+      return <CompactGuestNav />
     }
-    /* jshint ignore:end */
   }
 }
 
 export function select(state) {
-  return state.auth;
+  return state.auth
 }

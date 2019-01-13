@@ -1,91 +1,91 @@
-// jshint ignore:start
-import React from 'react';
-import Code from './actions/code';
-import Emphasis from './actions/emphasis';
-import Hr from './actions/hr';
-import Image from './actions/image';
-import Link from './actions/link';
-import Striketrough from './actions/striketrough';
-import Strong from './actions/strong';
-import Quote from './actions/quote';
-import AttachmentsEditor from './attachments';
-import Upload from './attachments/upload-button';
-import MarkupPreview from './markup-preview';
-import * as textUtils from './textutils';
-import Button from 'misago/components/button';
-import misago from 'misago';
-import ajax from 'misago/services/ajax';
-import modal from 'misago/services/modal';
-import snackbar from 'misago/services/snackbar';
+import React from "react"
+import Code from "./actions/code"
+import Emphasis from "./actions/emphasis"
+import Hr from "./actions/hr"
+import Image from "./actions/image"
+import Link from "./actions/link"
+import Striketrough from "./actions/striketrough"
+import Strong from "./actions/strong"
+import Quote from "./actions/quote"
+import AttachmentsEditor from "./attachments"
+import Upload from "./attachments/upload-button"
+import MarkupPreview from "./markup-preview"
+import * as textUtils from "./textutils"
+import Button from "misago/components/button"
+import misago from "misago"
+import ajax from "misago/services/ajax"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
 
 export default class extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isPreviewLoading: false
-    };
+    }
   }
 
   componentDidMount() {
-    $('#editor-textarea').atwho({
-      at: '@',
+    $("#editor-textarea").atwho({
+      at: "@",
       displayTpl: '<li><img src="${avatar}" alt="">${username}</li>',
-      insertTpl: '@${username}',
-      searchKey : 'username',
+      insertTpl: "@${username}",
+      searchKey: "username",
       callbacks: {
         remoteFilter: function(query, callback) {
-          $.getJSON(misago.get('MENTION_API'), {q: query}, callback);
+          $.getJSON(misago.get("MENTION_API"), { q: query }, callback)
         }
       }
-    });
+    })
 
-    $('#editor-textarea').on("inserted.atwho", (event, flag, query) => {
-      this.props.onChange(event);
-    });
+    $("#editor-textarea").on("inserted.atwho", (event, flag, query) => {
+      this.props.onChange(event)
+    })
   }
 
   onPreviewClick = () => {
     if (this.state.isPreviewLoading) {
-      return;
+      return
     }
 
     this.setState({
       isPreviewLoading: true
-    });
+    })
 
-    ajax.post(misago.get('PARSE_MARKUP_API'), {post: this.props.value}).then((data) => {
-      modal.show(
-        <MarkupPreview markup={data.parsed} />
-      );
+    ajax.post(misago.get("PARSE_MARKUP_API"), { post: this.props.value }).then(
+      data => {
+        modal.show(<MarkupPreview markup={data.parsed} />)
 
-      this.setState({
-        isPreviewLoading: false
-      });
-    }, (rejection) => {
-      if (rejection.status === 400) {
-        snackbar.error(rejection.detail);
-      } else {
-        snackbar.apiError(rejection);
+        this.setState({
+          isPreviewLoading: false
+        })
+      },
+      rejection => {
+        if (rejection.status === 400) {
+          snackbar.error(rejection.detail)
+        } else {
+          snackbar.apiError(rejection)
+        }
+
+        this.setState({
+          isPreviewLoading: false
+        })
       }
+    )
+  }
 
-      this.setState({
-        isPreviewLoading: false
-      });
-    });
-  };
+  replaceSelection = operation => {
+    operation(textUtils.getSelectionText(), this._replaceSelection)
+  }
 
-  replaceSelection = (operation) => {
-    operation(textUtils.getSelectionText(), this._replaceSelection);
-  };
-
-  _replaceSelection = (newValue) => {
+  _replaceSelection = newValue => {
     this.props.onChange({
       target: {
         value: textUtils.replace(newValue)
       }
-    });
-  };
+    })
+  }
 
   render() {
     return (
@@ -97,7 +97,7 @@ export default class extends React.Component {
           id="editor-textarea"
           onChange={this.props.onChange}
           rows="9"
-        ></textarea>
+        />
         <div className="editor-footer">
           <div className="buttons-list pull-left">
             <Strong
@@ -183,14 +183,14 @@ export default class extends React.Component {
           replaceSelection={this.replaceSelection}
         />
       </div>
-    );
+    )
   }
 }
 
 export function Protect(props) {
-  if (!props.canProtect) return null;
+  if (!props.canProtect) return null
 
-  const label = props.protect ? gettext('Protected') : gettext('Protect');
+  const label = props.protect ? gettext("Protected") : gettext("Protect")
 
   return (
     <button
@@ -201,11 +201,9 @@ export function Protect(props) {
       type="button"
     >
       <span className="material-icon">
-        {props.protect ? 'lock' : 'lock_outline'}
+        {props.protect ? "lock" : "lock_outline"}
       </span>
-      <span className="btn-text hidden-md hidden-lg">
-        {label}
-      </span>
+      <span className="btn-text hidden-md hidden-lg">{label}</span>
     </button>
-  );
+  )
 }

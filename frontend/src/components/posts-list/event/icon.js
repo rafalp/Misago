@@ -1,40 +1,37 @@
-/* jshint ignore:start */
-import React from 'react';
+import React from "react"
 
 const ICON = {
-  changed_title: 'edit',
+  changed_title: "edit",
 
-  pinned_globally: 'bookmark',
-  pinned_locally: 'bookmark_border',
-  unpinned: 'panorama_fish_eye',
+  pinned_globally: "bookmark",
+  pinned_locally: "bookmark_border",
+  unpinned: "panorama_fish_eye",
 
-  moved: 'arrow_forward',
-  merged: 'call_merge',
+  moved: "arrow_forward",
+  merged: "call_merge",
 
-  approved: 'done',
+  approved: "done",
 
-  opened: 'lock_open',
-  closed: 'lock_outline',
+  opened: "lock_open",
+  closed: "lock_outline",
 
-  unhid: 'visibility',
-  hid: 'visibility_off',
+  unhid: "visibility",
+  hid: "visibility_off",
 
-  changed_owner: 'grade',
-  tookover: 'grade',
+  changed_owner: "grade",
+  tookover: "grade",
 
-  added_participant: 'person_add',
+  added_participant: "person_add",
 
-  owner_left: 'person_outline',
-  participant_left: 'person_outline',
-  removed_participant: 'remove_circle_outline',
+  owner_left: "person_outline",
+  participant_left: "person_outline",
+  removed_participant: "remove_circle_outline"
 }
 
 export default function(props) {
   return (
     <div className="post-avatar">
-      <span className="material-icon">
-        {ICON[props.post.event_type]}
-      </span>
+      <span className="material-icon">{ICON[props.post.event_type]}</span>
     </div>
-  );
+  )
 }

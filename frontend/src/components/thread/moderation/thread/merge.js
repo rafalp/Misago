@@ -1,64 +1,63 @@
-import React from 'react'; // jshint ignore:line
-import Form from 'misago/components/form';
-import FormGroup from 'misago/components/form-group'; // jshint ignore:line
-import MergeConflict from 'misago/components/merge-conflict'; // jshint ignore:line
-import * as thread from 'misago/reducers/thread';
-import ajax from 'misago/services/ajax'; // jshint ignore:line
-import modal from 'misago/services/modal'; // jshint ignore:line
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store'; // jshint ignore:line
+import React from "react"
+import Form from "misago/components/form"
+import FormGroup from "misago/components/form-group"
+import MergeConflict from "misago/components/merge-conflict"
+import * as thread from "misago/reducers/thread"
+import ajax from "misago/services/ajax"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
 
 export default class extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: false,
 
-      url: '',
+      url: "",
 
       validators: {
         url: []
       },
       errors: {}
-    };
+    }
   }
 
   clean() {
     if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."));
-      return false;
+      snackbar.error(gettext("You have to enter link to the other thread."))
+      return false
     }
 
-    return true;
+    return true
   }
 
   send() {
     // freeze thread
-    store.dispatch(thread.busy());
+    store.dispatch(thread.busy())
 
     return ajax.post(this.props.thread.api.merge, {
       other_thread: this.state.url
-    });
+    })
   }
 
-  /* jshint ignore:start */
-  handleSuccess = (success) => {
-    this.handleSuccessUnmounted(success);
+  handleSuccess = success => {
+    this.handleSuccessUnmounted(success)
 
     // keep form loading
     this.setState({
-      'isLoading': true
-    });
-  };
+      isLoading: true
+    })
+  }
 
-  handleSuccessUnmounted = (success) => {
-    snackbar.success(gettext("Thread has been merged with other one."));
-    window.location = success.url;
-  };
+  handleSuccessUnmounted = success => {
+    snackbar.success(gettext("Thread has been merged with other one."))
+    window.location = success.url
+  }
 
-  handleError = (rejection) => {
-    store.dispatch(thread.release());
+  handleError = rejection => {
+    store.dispatch(thread.release())
 
     if (rejection.status === 400) {
       if (rejection.best_answers || rejection.polls) {
@@ -66,31 +65,29 @@ export default class extends Form {
           <MergeConflict
             api={this.props.thread.api.merge}
             bestAnswers={rejection.best_answers}
-            data={{other_thread: this.state.url}}
+            data={{ other_thread: this.state.url }}
             polls={rejection.polls}
             onError={this.handleError}
             onSuccess={this.handleSuccessUnmounted}
           />
-        );
+        )
       } else if (rejection.best_answer) {
-        snackbar.error(rejection.best_answer[0]);
+        snackbar.error(rejection.best_answer[0])
       } else if (rejection.poll) {
-        snackbar.error(rejection.poll[0]);
+        snackbar.error(rejection.poll[0])
       } else {
-        snackbar.error(rejection.detail);
+        snackbar.error(rejection.detail)
       }
     } else {
-      snackbar.apiError(rejection);
+      snackbar.apiError(rejection)
     }
-  };
+  }
 
-  onUrlChange = (event) => {
-    this.changeValue('url', event.target.value);
-  };
-  /* jshint ignore:end */
+  onUrlChange = event => {
+    this.changeValue("url", event.target.value)
+  }
 
   render() {
-    /* jshint ignore:start */
     return (
       <div className="modal-dialog" role="document">
         <form onSubmit={this.handleSubmit}>
@@ -100,7 +97,9 @@ export default class extends Form {
               <FormGroup
                 for="id_url"
                 label={gettext("Link to thread you want to merge with")}
-                help_text={gettext("Merge will delete current thread and move its contents to the thread specified here.")}
+                help_text={gettext(
+                  "Merge will delete current thread and move its contents to the thread specified here."
+                )}
               >
                 <input
                   className="form-control"
@@ -120,19 +119,20 @@ export default class extends Form {
               >
                 {gettext("Cancel")}
               </button>
-              <button className="btn btn-primary" loading={this.state.isLoading || this.props.thread.isBusy}>
+              <button
+                className="btn btn-primary"
+                loading={this.state.isLoading || this.props.thread.isBusy}
+              >
                 {gettext("Merge thread")}
               </button>
             </div>
           </div>
         </form>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }
 
-/* jshint ignore:start */
 export function ModalHeader(props) {
   return (
     <div className="modal-header">
@@ -146,6 +146,5 @@ export function ModalHeader(props) {
       </button>
       <h4 className="modal-title">{gettext("Merge thread")}</h4>
     </div>
-  );
+  )
 }
-/* jshint ignore:end */

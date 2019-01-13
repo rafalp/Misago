@@ -1,20 +1,18 @@
-import React from 'react';
-import ThreadPreview from 'misago/components/threads-list/thread/preview'; // jshint ignore:line
+import React from "react"
+import ThreadPreview from "misago/components/threads-list/thread/preview"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
-    return false;
+    return false
   }
 
-  render () {
-    /* jshint ignore:start */
+  render() {
     return (
       <div className="threads-list ui-preview">
         <ul className="list-group">
           <ThreadPreview />
         </ul>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

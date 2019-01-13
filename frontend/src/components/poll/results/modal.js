@@ -1,49 +1,53 @@
-// jshint ignore:start
-import React from 'react';
-import moment from 'moment';
-import Message from 'misago/components/modal-message';
-import Loader from 'misago/components/modal-loader';
-import ajax from 'misago/services/ajax';
+import React from "react"
+import moment from "moment"
+import Message from "misago/components/modal-message"
+import Loader from "misago/components/modal-loader"
+import ajax from "misago/services/ajax"
 
 export default class extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: true,
       error: null,
       data: []
-    };
+    }
   }
 
   componentDidMount() {
-    ajax.get(this.props.poll.api.votes).then((data) => {
-      const hydratedData = data.map((choice) => {
-        return Object.assign({}, choice, {
-          voters: choice.voters.map((voter) => {
-            return Object.assign({}, voter, {
-              voted_on: moment(voter.voted_on)
+    ajax.get(this.props.poll.api.votes).then(
+      data => {
+        const hydratedData = data.map(choice => {
+          return Object.assign({}, choice, {
+            voters: choice.voters.map(voter => {
+              return Object.assign({}, voter, {
+                voted_on: moment(voter.voted_on)
+              })
             })
           })
-        });
-      });
+        })
 
-      this.setState({
-        isLoading: false,
-        data: hydratedData
-      });
-    }, (rejection) => {
-      this.setState({
-        isLoading: false,
-        error: rejection.detail
-      });
-    });
+        this.setState({
+          isLoading: false,
+          data: hydratedData
+        })
+      },
+      rejection => {
+        this.setState({
+          isLoading: false,
+          error: rejection.detail
+        })
+      }
+    )
   }
 
   render() {
     return (
       <div
-        className={'modal-dialog' + (this.state.error ? ' modal-message' : ' modal-sm')}
+        className={
+          "modal-dialog" + (this.state.error ? " modal-message" : " modal-sm")
+        }
         role="document"
       >
         <div className="modal-content">
@@ -64,49 +68,32 @@ export default class extends React.Component {
             error={this.state.error}
             isLoading={this.state.isLoading}
           />
-
         </div>
       </div>
-    );
+    )
   }
 }
 
 export function ModalBody(props) {
   if (props.isLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />
   } else if (props.error) {
-    return (
-      <Message
-        icon='error_outline'
-        message={props.error}
-      />
-    );
+    return <Message icon="error_outline" message={props.error} />
   }
 
-  return (
-    <ChoicesList
-      data={props.data}
-    />
-  );
+  return <ChoicesList data={props.data} />
 }
 
 export function ChoicesList(props) {
   return (
     <div className="modal-body modal-poll-votes">
       <ul className="list-unstyled votes-details">
-        {props.data.map((choice) => {
-          return (
-            <ChoiceDetails
-              key={choice.hash}
-              {...choice}
-            />
-          );
+        {props.data.map(choice => {
+          return <ChoiceDetails key={choice.hash} {...choice} />
         })}
       </ul>
     </div>
-  );
+  )
 }
 
 export function ChoiceDetails(props) {
@@ -115,75 +102,64 @@ export function ChoiceDetails(props) {
       <h4>{props.label}</h4>
       <VotesCount votes={props.votes} />
       <VotesList voters={props.voters} />
-      <hr/>
+      <hr />
     </li>
-  );
+  )
 }
 
 export function VotesCount(props) {
   const message = ngettext(
     "%(votes)s user has voted for this choice.",
     "%(votes)s users have voted for this choice.",
-    props.votes);
+    props.votes
+  )
 
-  const label = interpolate(message, {
-    'votes': props.votes
-  }, true);
+  const label = interpolate(
+    message,
+    {
+      votes: props.votes
+    },
+    true
+  )
 
-  return (
-    <p>{label}</p>
-  );
+  return <p>{label}</p>
 }
 
 export function VotesList(props) {
-  if (!props.voters.length) return null;
+  if (!props.voters.length) return null
 
   return (
     <ul className="list-unstyled">
-      {props.voters.map((user) => {
-        return (
-          <Voter
-            key={user.username}
-            {...user}
-          />
-        );
+      {props.voters.map(user => {
+        return <Voter key={user.username} {...user} />
       })}
     </ul>
-  );
+  )
 }
 
 export function Voter(props) {
   if (props.url) {
     return (
       <li>
-        <a
-          className="item-title"
-          href={props.url}
-        >
+        <a className="item-title" href={props.url}>
           {props.username}
-        </a>
-        {' '}
+        </a>{" "}
         <VoteDate voted_on={props.voted_on} />
       </li>
-    );
+    )
   }
 
   return (
     <li>
-      <strong>{props.username}</strong>
-      {' '}
-      <VoteDate voted_on={props.voted_on} />
+      <strong>{props.username}</strong> <VoteDate voted_on={props.voted_on} />
     </li>
-  );
+  )
 }
 
 export function VoteDate(props) {
   return (
-    <abbr
-      className="text-muted"
-      title={props.voted_on.format('LLL')}
-    >
+    <abbr className="text-muted" title={props.voted_on.format("LLL")}>
       {props.voted_on.fromNow()}
     </abbr>
-  );
+  )
 }

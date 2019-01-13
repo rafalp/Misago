@@ -1,10 +1,9 @@
-/* jshint ignore:start */
-import React from 'react';
-import { Link } from 'react-router';
-import resetScroll from 'misago/utils/reset-scroll';
+import React from "react"
+import { Link } from "react-router"
+import resetScroll from "misago/utils/reset-scroll"
 
 export default function(props) {
-  if (props.pages === 1) return null;
+  if (props.pages === 1) return null
 
   return (
     <div className="row row-toolbar">
@@ -23,7 +22,7 @@ export default function(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function Pager(props) {
@@ -42,7 +41,7 @@ export function Pager(props) {
         <LastPage {...props} />
       </div>
     </div>
-  );
+  )
 }
 
 export function FirstPage(props) {
@@ -56,7 +55,7 @@ export function FirstPage(props) {
       >
         <span className="material-icon">first_page</span>
       </Link>
-    );
+    )
   } else {
     return (
       <span
@@ -65,15 +64,15 @@ export function FirstPage(props) {
       >
         <span className="material-icon">first_page</span>
       </span>
-    );
+    )
   }
 }
 
 export function PreviousPage(props) {
   if (props.isLoaded && props.page > 1) {
-    let previousUrl = '';
+    let previousUrl = ""
     if (props.previous) {
-      previousUrl = props.previous + '/';
+      previousUrl = props.previous + "/"
     }
 
     return (
@@ -85,7 +84,7 @@ export function PreviousPage(props) {
       >
         <span className="material-icon">chevron_left</span>
       </Link>
-    );
+    )
   } else {
     return (
       <span
@@ -94,15 +93,15 @@ export function PreviousPage(props) {
       >
         <span className="material-icon">chevron_left</span>
       </span>
-    );
+    )
   }
 }
 
 export function NextPage(props) {
   if (props.isLoaded && props.more) {
-    let nextUrl = '';
+    let nextUrl = ""
     if (props.next) {
-      nextUrl = props.next + '/';
+      nextUrl = props.next + "/"
     }
 
     return (
@@ -114,7 +113,7 @@ export function NextPage(props) {
       >
         <span className="material-icon">chevron_right</span>
       </Link>
-    );
+    )
   } else {
     return (
       <span
@@ -123,7 +122,7 @@ export function NextPage(props) {
       >
         <span className="material-icon">chevron_right</span>
       </span>
-    );
+    )
   }
 }
 
@@ -133,12 +132,12 @@ export function LastPage(props) {
       <Link
         className="btn btn-default btn-block btn-icon btn-outline"
         onClick={resetScroll}
-        to={props.baseUrl + props.last + '/'}
+        to={props.baseUrl + props.last + "/"}
         title={gettext("Go to last page")}
       >
         <span className="material-icon">last_page</span>
       </Link>
-    );
+    )
   } else {
     return (
       <span
@@ -147,21 +146,22 @@ export function LastPage(props) {
       >
         <span className="material-icon">last_page</span>
       </span>
-    );
+    )
   }
 }
 
 export function More(props) {
-  let message = null;
+  let message = null
   if (props.more) {
     message = ngettext(
       "There is %(more)s more member with this role.",
       "There are %(more)s more members with this role.",
-      props.more);
-    message = interpolate(message, {'more': props.more}, true);
+      props.more
+    )
+    message = interpolate(message, { more: props.more }, true)
   } else {
-    message = gettext("There are no more members with this role.");
+    message = gettext("There are no more members with this role.")
   }
 
-  return <p>{message}</p>;
+  return <p>{message}</p>
 }

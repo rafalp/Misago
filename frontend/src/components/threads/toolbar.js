@@ -1,37 +1,34 @@
-import React from 'react'; // jshint ignore:line
-import CategoryPicker from 'misago/components/threads/category-picker'; // jshint ignore:line
-import ModerationControls from 'misago/components/threads/moderation/controls'; // jshint ignore:line
-import SelectionControls from 'misago/components/threads/moderation/selection'; // jshint ignore:line
+import React from "react"
+import CategoryPicker from "misago/components/threads/category-picker"
+import ModerationControls from "misago/components/threads/moderation/controls"
+import SelectionControls from "misago/components/threads/moderation/selection"
 
 export default class extends React.Component {
   getCategoryPicker() {
-    if (!this.props.subcategories.length) return null;
+    if (!this.props.subcategories.length) return null
 
-    /* jshint ignore:start */
     return (
       <CategoryPicker
         categories={this.props.categoriesMap}
         choices={this.props.subcategories}
         list={this.props.list}
       />
-    );
-    /* jshint ignore:end */
+    )
   }
 
   showModerationOptions() {
-    return this.props.user.id && this.props.moderation.allow;
+    return this.props.user.id && this.props.moderation.allow
   }
 
   getSelectedThreads() {
-    return this.props.threads.filter((thread) => {
-      return this.props.selection.indexOf(thread.id) >= 0;
-    });
+    return this.props.threads.filter(thread => {
+      return this.props.selection.indexOf(thread.id) >= 0
+    })
   }
 
   getModerationButton() {
-    if (!this.showModerationOptions()) return null;
+    if (!this.showModerationOptions()) return null
 
-    /* jshint ignore:start */
     return (
       <div className="col-xs-6 col-sm-3 col-md-2">
         <div className="btn-group btn-group-justified">
@@ -44,9 +41,7 @@ export default class extends React.Component {
               aria-expanded="false"
               disabled={this.props.disabled || !this.props.selection.length}
             >
-              <span className="material-icon">
-                settings
-              </span>
+              <span className="material-icon">settings</span>
               {gettext("Options")}
             </button>
 
@@ -67,14 +62,12 @@ export default class extends React.Component {
           </div>
         </div>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 
   getSelectionButton() {
-    if (!this.showModerationOptions()) return null;
+    if (!this.showModerationOptions()) return null
 
-    /* jshint ignore:start */
     return (
       <div className="col-xs-3 col-sm-2 col-md-1">
         <div className="btn-group btn-group-justified">
@@ -87,9 +80,7 @@ export default class extends React.Component {
               aria-expanded="false"
               disabled={this.props.disabled}
             >
-              <span className="material-icon">
-                select_all
-              </span>
+              <span className="material-icon">select_all</span>
             </button>
 
             <SelectionControls
@@ -99,12 +90,10 @@ export default class extends React.Component {
           </div>
         </div>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 
   render() {
-    /* jshint ignore:start */
     return (
       <div className="row row-toolbar row-toolbar-bottom-margin">
         <div className="col-xs-3 col-sm-3 col-md-2 dropdown">
@@ -114,7 +103,6 @@ export default class extends React.Component {
         {this.getModerationButton()}
         {this.getSelectionButton()}
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

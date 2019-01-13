@@ -1,5 +1,4 @@
-/* jshint ignore:start */
-import React from 'react';
+import React from "react"
 
 export default function({ onEdit, showEditButton }) {
   return (
@@ -7,22 +6,17 @@ export default function({ onEdit, showEditButton }) {
       <nav className="toolbar">
         <div className="row">
           <div className="col-sm-8 col-md-10">
-            <h3 className="md-margin-top-no">
-              {gettext("Details")}
-            </h3>
+            <h3 className="md-margin-top-no">{gettext("Details")}</h3>
           </div>
-          <EditButton
-            onEdit={onEdit}
-            showEditButton={showEditButton}
-          />
+          <EditButton onEdit={onEdit} showEditButton={showEditButton} />
         </div>
       </nav>
     </div>
-  );
+  )
 }
 
 export function EditButton({ onEdit, showEditButton }) {
-  if (!showEditButton) return null;
+  if (!showEditButton) return null
 
   return (
     <div className="col-sm-4 col-md-2">
@@ -34,5 +28,5 @@ export function EditButton({ onEdit, showEditButton }) {
         {gettext("Edit")}
       </button>
     </div>
-  );
+  )
 }

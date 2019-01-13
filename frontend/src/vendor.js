@@ -1,18 +1,18 @@
-var jQuery = require('jquery'); // jshint ignore:line
-var moment = require('moment');
+var jQuery = require("jquery")
+var moment = require("moment")
 
-global.$ = jQuery;
-global.jQuery = jQuery;
-global.moment = moment;
+global.$ = jQuery
+global.jQuery = jQuery
+global.moment = moment
 
-require('bootstrap-transition');
-require('bootstrap-affix');
-require('bootstrap-modal');
-require('bootstrap-dropdown');
-require('at-js');
+require("bootstrap-transition")
+require("bootstrap-affix")
+require("bootstrap-modal")
+require("bootstrap-dropdown")
+require("at-js")
 
-require('cropit');
-require('waypoints');
+require("cropit")
+require("waypoints")
 
-require('jquery-caret');
-require('highlight');
+require("jquery-caret")
+require("highlight")

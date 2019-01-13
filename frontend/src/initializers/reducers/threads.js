@@ -1,13 +1,13 @@
-import misago from 'misago/index';
-import reducer from 'misago/reducers/threads';
-import store from 'misago/services/store';
+import misago from "misago/index"
+import reducer from "misago/reducers/threads"
+import store from "misago/services/store"
 
 export default function initializer() {
-  store.addReducer('threads', reducer, []);
+  store.addReducer("threads", reducer, [])
 }
 
 misago.addInitializer({
-  name: 'reducer:threads',
+  name: "reducer:threads",
   initializer: initializer,
-  before: 'store'
-});
+  before: "store"
+})

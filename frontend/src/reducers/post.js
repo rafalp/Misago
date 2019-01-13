@@ -1,7 +1,7 @@
-import moment from 'moment';
-import { hydrateUser } from './users';
+import moment from "moment"
+import { hydrateUser } from "./users"
 
-export const PATCH_POST = 'PATCH_POST';
+export const PATCH_POST = "PATCH_POST"
 
 export function hydrate(json) {
   return Object.assign({}, json, {
@@ -9,19 +9,21 @@ export function hydrate(json) {
     updated_on: moment(json.updated_on),
     hidden_on: moment(json.hidden_on),
 
-    attachments: json.attachments ? json.attachments.map(hydrateAttachment) : null,
+    attachments: json.attachments
+      ? json.attachments.map(hydrateAttachment)
+      : null,
     poster: json.poster ? hydrateUser(json.poster) : null,
 
     isSelected: false,
     isBusy: false,
     isDeleted: false
-  });
+  })
 }
 
 export function hydrateAttachment(json) {
   return Object.assign({}, json, {
     uploaded_on: moment(json.uploaded_on)
-  });
+  })
 }
 
 export function patch(post, patch) {
@@ -29,18 +31,18 @@ export function patch(post, patch) {
     type: PATCH_POST,
     post,
     patch
-  };
+  }
 }
 
-export default function post(state={}, action=null) {
+export default function post(state = {}, action = null) {
   switch (action.type) {
     case PATCH_POST:
       if (state.id == action.post.id) {
-        return Object.assign({}, state, action.patch);
+        return Object.assign({}, state, action.patch)
       }
-      return state;
+      return state
 
     default:
-      return state;
+      return state
   }
 }
