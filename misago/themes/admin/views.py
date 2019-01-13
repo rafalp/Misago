@@ -7,7 +7,16 @@ from ...admin.views import generic
 from ..cache import clear_theme_cache
 from ..models import Theme, Css
 from .css import move_css_down, move_css_up
-from .forms import CssEditorForm, CssLinkForm, ThemeForm, UploadCssForm, UploadMediaForm
+from .exporter import export_theme
+from .forms import (
+    CssEditorForm,
+    CssLinkForm,
+    ImportForm,
+    ThemeForm,
+    UploadCssForm,
+    UploadMediaForm,
+)
+from .importer import ThemeImportError, import_theme
 from .tasks import build_single_theme_css, build_theme_css, update_remote_css_size
 
 
@@ -86,6 +95,33 @@ def set_theme_as_active(request, theme):
     Theme.objects.update(is_active=False)
     Theme.objects.filter(pk=theme.pk).update(is_active=True)
     clear_theme_cache()
+
+
+class ExportTheme(ThemeAdmin, generic.ButtonView):
+    def check_permissions(self, request, target):
+        if target.is_default:
+            return gettext("Default theme can't be exported.")
+
+    def button_action(self, request, target):
+        return export_theme(target)
+
+
+class ImportTheme(ThemeAdmin, generic.FormView):
+    form = ImportForm
+    template = "import.html"
+
+    def handle_form(self, form, request):
+        try:
+            self.import_theme(request, **form.cleaned_data)
+            return redirect(self.root_link)
+        except ThemeImportError as e:
+            form.add_error("upload", str(e))
+            return self.render(request, {"form": form})
+
+    def import_theme(self, request, *_, name, parent, upload):
+        theme = import_theme(name, parent, upload)
+        message = gettext('Theme "%(name)s" has been imported.')
+        messages.success(request, message % {"name": theme})
 
 
 class ThemeAssetsAdmin(ThemeAdmin):
@@ -249,6 +285,8 @@ class MoveThemeCssDown(ThemeCssAdmin):
 
 
 class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
+    is_atomic = False  # atomic updates cause race condition with celery tasks
+
     def real_dispatch(self, request, theme, css=None):
         form = self.initialize_form(self.form, request, theme, css)
 
@@ -339,10 +377,10 @@ class NewThemeCssLink(ThemeCssFormAdmin):
             return form(request.POST, instance=css)
         return form(instance=css)
 
-    def handle_form(self, form, *args):
-        super().handle_form(form, *args)
+    def handle_form(self, form, request, theme, css):
+        super().handle_form(form, request, theme, css)
         if "url" in form.changed_data:
-            update_remote_css_size.delay(form.instance.pk)
+            update_remote_css_size.delay(css.pk)
             clear_theme_cache()
 
     def redirect_to_edit_form(self, theme, css):

@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.core.files.base import ContentFile
 from django.utils.translation import gettext, gettext_lazy as _
@@ -44,6 +46,59 @@ class ThemeForm(forms.ModelForm):
             lft__gte=self.instance.lft,
             rght__lte=self.instance.rght,
         )
+
+
+class ImportForm(forms.Form):
+    name = forms.CharField(
+        label=_("Name"),
+        help_text=_("Leave this field empty to use theme name from imported file."),
+        max_length=255,
+        required=False,
+    )
+    parent = ThemeChoiceField(label=_("Parent"), required=False)
+    upload = forms.FileField(
+        label=_("Theme file"), help_text=_("Theme file should be a ZIP file.")
+    )
+
+    def clean_upload(self):
+        data = self.cleaned_data["upload"]
+        error_message = gettext("Uploaded file is not a valid ZIP file.")
+        if not data.name.lower().endswith(".zip"):
+            raise forms.ValidationError(error_message)
+        if data.content_type not in ("application/zip", "application/octet-stream"):
+            raise forms.ValidationError(error_message)
+        return data
+
+
+class ThemeManifest(forms.Form):
+    name = forms.CharField(max_length=255)
+    version = forms.CharField(max_length=255, required=False)
+    author = forms.CharField(max_length=255, required=False)
+    url = forms.URLField(max_length=255, required=False)
+
+
+class ThemeCssUrlManifest(forms.Form):
+    name = forms.CharField(max_length=255)
+    url = forms.URLField(max_length=255)
+
+
+def create_css_file_manifest(allowed_path):
+    class ThemeCssFileManifest(forms.Form):
+        name = forms.CharField(max_length=255, validators=[validate_css_name])
+        path = forms.FilePathField(
+            allowed_path, match=re.compile(r"\.css$", re.IGNORECASE)
+        )
+
+    return ThemeCssFileManifest
+
+
+def create_media_file_manifest(allowed_path):
+    class ThemeMediaFileManifest(forms.Form):
+        name = forms.CharField(max_length=255)
+        type = forms.CharField(max_length=255)
+        path = forms.FilePathField(allowed_path)
+
+    return ThemeMediaFileManifest
 
 
 class UploadAssetsForm(forms.Form):
