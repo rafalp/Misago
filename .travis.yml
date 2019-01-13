@@ -13,7 +13,7 @@ jobs:
       before_script:
         - psql -c "create database travis_ci_test;" -U postgres
       script:
-        - strace -q pytest -k test_empty_theme_export_can_be_imported_back>&1 | grep -v ENOENT
+        - strace -q "pytest -k test_empty_theme_export_can_be_imported_back">&1 | grep -v ENOENT
       after_success:
         - coveralls
     - name: "lint"
