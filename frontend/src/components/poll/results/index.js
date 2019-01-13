@@ -1,8 +1,7 @@
-// jshint ignore:start
-import React from 'react';
-import Chart from './chart';
-import Options from './options';
-import PollInfo from '../info';
+import React from "react"
+import Chart from "./chart"
+import Options from "./options"
+import PollInfo from "../info"
 
 export default function(props) {
   return (
@@ -19,5 +18,5 @@ export default function(props) {
         />
       </div>
     </div>
-  );
+  )
 }

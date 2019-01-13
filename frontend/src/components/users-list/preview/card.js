@@ -1,11 +1,10 @@
-// jshint ignore:start
-import React from 'react';
-import Avatar from 'misago/components/avatar';
-import * as random from 'misago/utils/random';
+import React from "react"
+import Avatar from "misago/components/avatar"
+import * as random from "misago/utils/random"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
-    return false;
+    return false
   }
 
   render() {
@@ -16,28 +15,21 @@ export default class extends React.Component {
             <div className="col-xs-3 user-card-left">
               <div className="user-card-small-avatar">
                 <span>
-                  <Avatar
-                    size="50"
-                    size2x="80"
-                  />
+                  <Avatar size="50" size2x="80" />
                 </span>
               </div>
             </div>
             <div className="col-xs-9 col-sm-12 user-card-body">
-
               <div className="user-card-avatar">
                 <span>
-                  <Avatar
-                    size="150"
-                    size2x="200"
-                  />
+                  <Avatar size="150" size2x="200" />
                 </span>
               </div>
 
               <div className="user-card-username">
                 <span
                   className="ui-preview-text"
-                  style={{width: random.int(60, 150) + "px"}}
+                  style={{ width: random.int(60, 150) + "px" }}
                 >
                   &nbsp;
                 </span>
@@ -45,7 +37,7 @@ export default class extends React.Component {
               <div className="user-card-title">
                 <span
                   className="ui-preview-text"
-                  style={{width: random.int(60, 150) + "px"}}
+                  style={{ width: random.int(60, 150) + "px" }}
                 >
                   &nbsp;
                 </span>
@@ -56,7 +48,7 @@ export default class extends React.Component {
                   <li>
                     <span
                       className="ui-preview-text"
-                      style={{width: random.int(30, 70) + "px"}}
+                      style={{ width: random.int(30, 70) + "px" }}
                     >
                       &nbsp;
                     </span>
@@ -64,7 +56,7 @@ export default class extends React.Component {
                   <li>
                     <span
                       className="ui-preview-text"
-                      style={{width: random.int(30, 70) + "px"}}
+                      style={{ width: random.int(30, 70) + "px" }}
                     >
                       &nbsp;
                     </span>
@@ -73,7 +65,7 @@ export default class extends React.Component {
                   <li>
                     <span
                       className="ui-preview-text"
-                      style={{width: random.int(30, 70) + "px"}}
+                      style={{ width: random.int(30, 70) + "px" }}
                     >
                       &nbsp;
                     </span>
@@ -81,18 +73,17 @@ export default class extends React.Component {
                   <li>
                     <span
                       className="ui-preview-text"
-                      style={{width: random.int(30, 70) + "px"}}
+                      style={{ width: random.int(30, 70) + "px" }}
                     >
                       &nbsp;
                     </span>
                   </li>
                 </ul>
               </div>
-
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
 }

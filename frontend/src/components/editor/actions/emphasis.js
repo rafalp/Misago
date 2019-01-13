@@ -1,6 +1,5 @@
-// jshint ignore:start
-import React from 'react';
-import Action from './action';
+import React from "react"
+import Action from "./action"
 
 export default function(props) {
   return (
@@ -9,15 +8,13 @@ export default function(props) {
       title={gettext("Emphase selection")}
       {...props}
     >
-      <span className="material-icon">
-        format_italic
-      </span>
+      <span className="material-icon">format_italic</span>
     </Action>
-  );
+  )
 }
 
 export function makeEmphasis(selection, replace) {
   if (selection.length) {
-    replace('*' + selection + '*');
+    replace("*" + selection + "*")
   }
 }

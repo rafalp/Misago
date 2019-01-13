@@ -1,10 +1,13 @@
-/* jshint ignore:start */
-import React from 'react';
-import Controls from './controls';
-import Select from './select';
-import {StatusIcon, getStatusClassName, getStatusDescription} from 'misago/components/user-status';
-import PostChangelog from 'misago/components/post-changelog';
-import modal from 'misago/services/modal';
+import React from "react"
+import Controls from "./controls"
+import Select from "./select"
+import {
+  StatusIcon,
+  getStatusClassName,
+  getStatusDescription
+} from "misago/components/user-status"
+import PostChangelog from "misago/components/post-changelog"
+import modal from "misago/services/modal"
 
 export default function(props) {
   return (
@@ -19,33 +22,35 @@ export default function(props) {
       <Select {...props} />
       <Controls {...props} />
     </div>
-  );
+  )
 }
 
 export function UnreadLabel(props) {
-  if (props.post.is_read) return null;
+  if (props.post.is_read) return null
 
   return (
-    <span className="label label-unread hidden-xs">
-      {gettext("New post")}
-    </span>
-  );
+    <span className="label label-unread hidden-xs">{gettext("New post")}</span>
+  )
 }
 
 export function UnreadCompact(props) {
-  if (props.post.is_read) return null;
+  if (props.post.is_read) return null
 
   return (
     <span className="label label-unread visible-xs-inline-block">
       {gettext("New")}
     </span>
-  );
+  )
 }
 
 export function PostedOn(props) {
-  const tooltip = interpolate(gettext("posted %(posted_on)s"), {
-    'posted_on': props.post.posted_on.format('LL, LT')
-  }, true);
+  const tooltip = interpolate(
+    gettext("posted %(posted_on)s"),
+    {
+      posted_on: props.post.posted_on.format("LL, LT")
+    },
+    true
+  )
 
   return (
     <a
@@ -55,7 +60,7 @@ export function PostedOn(props) {
     >
       {props.post.posted_on.fromNow()}
     </a>
-  );
+  )
 }
 
 export function PostedOnCompact(props) {
@@ -66,36 +71,39 @@ export function PostedOnCompact(props) {
     >
       {props.post.posted_on.fromNow(true)}
     </a>
-  );
+  )
 }
 
 export class PostEdits extends React.Component {
   onClick = () => {
-    modal.show(
-      <PostChangelog post={this.props.post} />
-    )
-  };
+    modal.show(<PostChangelog post={this.props.post} />)
+  }
 
   render() {
-    const isHidden = this.props.post.is_hidden && !this.props.post.acl.can_see_hidden;
-    const isUnedited = this.props.post.edits === 0;
-    if (isHidden || isUnedited) return null;
+    const isHidden =
+      this.props.post.is_hidden && !this.props.post.acl.can_see_hidden
+    const isUnedited = this.props.post.edits === 0
+    if (isHidden || isUnedited) return null
 
     const tooltip = ngettext(
       "This post was edited %(edits)s time.",
       "This post was edited %(edits)s times.",
       this.props.post.edits
-    );
+    )
 
-    const title = interpolate(tooltip, {
-      'edits': this.props.post.edits
-    }, true);
+    const title = interpolate(
+      tooltip,
+      {
+        edits: this.props.post.edits
+      },
+      true
+    )
 
     const label = ngettext(
       "edited %(edits)s time",
       "edited %(edits)s times",
       this.props.post.edits
-    );
+    )
 
     return (
       <button
@@ -104,9 +112,13 @@ export class PostEdits extends React.Component {
         title={title}
         type="button"
       >
-        {interpolate(label, {
-          'edits': this.props.post.edits
-        }, true)}
+        {interpolate(
+          label,
+          {
+            edits: this.props.post.edits
+          },
+          true
+        )}
       </button>
     )
   }
@@ -114,15 +126,16 @@ export class PostEdits extends React.Component {
 
 export class PostEditsCompacts extends PostEdits {
   render() {
-    const isHidden = this.props.post.is_hidden && !this.props.post.acl.can_see_hidden;
-    const isUnedited = this.props.post.edits === 0;
-    if (isHidden || isUnedited) return null;
+    const isHidden =
+      this.props.post.is_hidden && !this.props.post.acl.can_see_hidden
+    const isUnedited = this.props.post.edits === 0
+    if (isHidden || isUnedited) return null
 
     const label = ngettext(
       "%(edits)s edit",
       "%(edits)s edits",
       this.props.post.edits
-    );
+    )
 
     return (
       <button
@@ -130,21 +143,26 @@ export class PostEditsCompacts extends PostEdits {
         onClick={this.onClick}
         type="button"
       >
-        {interpolate(label, {
-          'edits': this.props.post.edits
-        }, true)}
+        {interpolate(
+          label,
+          {
+            edits: this.props.post.edits
+          },
+          true
+        )}
       </button>
     )
   }
 }
 
 export function ProtectedLabel(props) {
-  const postAuthor = props.post.poster && props.post.poster.id === props.user.id;
-  const hasAcl = props.post.acl.can_protect;
-  const isVisible = props.user.id && props.post.is_protected && (postAuthor || hasAcl);
+  const postAuthor = props.post.poster && props.post.poster.id === props.user.id
+  const hasAcl = props.post.acl.can_protect
+  const isVisible =
+    props.user.id && props.post.is_protected && (postAuthor || hasAcl)
 
   if (!isVisible) {
-    return null;
+    return null
   }
 
   return (
@@ -152,10 +170,8 @@ export function ProtectedLabel(props) {
       className="label label-protected hidden-xs"
       title={gettext("This post is protected and may not be edited.")}
     >
-      <span className="material-icon">
-        lock_outline
-      </span>
+      <span className="material-icon">lock_outline</span>
       {gettext("protected")}
     </span>
-  );
+  )
 }

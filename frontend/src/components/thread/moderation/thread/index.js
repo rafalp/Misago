@@ -1,4 +1,4 @@
-import ModerationControls from './controls';
-import isModerationVisible from './is-visible';
+import ModerationControls from "./controls"
+import isModerationVisible from "./is-visible"
 
-export { ModerationControls, isModerationVisible };
+export { ModerationControls, isModerationVisible }

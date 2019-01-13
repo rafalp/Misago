@@ -1,52 +1,51 @@
-/* jshint ignore:start */
-import React from 'react';
-import Form from './form';
-import FormGroup from 'misago/components/form-group';
-import * as participants from 'misago/reducers/participants';
-import { updateAcl } from 'misago/reducers/thread';
-import ajax from 'misago/services/ajax';
-import modal from 'misago/services/modal';
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store';
+import React from "react"
+import Form from "./form"
+import FormGroup from "misago/components/form-group"
+import * as participants from "misago/reducers/participants"
+import { updateAcl } from "misago/reducers/thread"
+import ajax from "misago/services/ajax"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
 
 export default class extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: false,
 
-      username: ''
-    };
+      username: ""
+    }
   }
 
-  onUsernameChange = (event) => {
-    this.changeValue('username', event.target.value);
-  };
+  onUsernameChange = event => {
+    this.changeValue("username", event.target.value)
+  }
 
   clean() {
     if (!this.state.username.trim().length) {
-      snackbar.error(gettext("You have to enter user name."));
-      return false;
+      snackbar.error(gettext("You have to enter user name."))
+      return false
     }
 
-    return true;
+    return true
   }
 
   send() {
     return ajax.patch(this.props.thread.api.index, [
-      {op: 'add', path: 'participants', value: this.state.username},
-      {op: 'add', path: 'acl', value: 1}
-    ]);
+      { op: "add", path: "participants", value: this.state.username },
+      { op: "add", path: "acl", value: 1 }
+    ])
   }
 
   handleSuccess(data) {
-    store.dispatch(updateAcl(data));
-    store.dispatch(participants.replace(data.participants));
+    store.dispatch(updateAcl(data))
+    store.dispatch(participants.replace(data.participants))
 
-    snackbar.success(gettext("New participant has been added to thread."));
+    snackbar.success(gettext("New participant has been added to thread."))
 
-    modal.hide();
+    modal.hide()
   }
 
   render() {
@@ -86,7 +85,7 @@ export default class extends Form {
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -103,5 +102,5 @@ export function ModalHeader(props) {
       </button>
       <h4 className="modal-title">{gettext("Add participant")}</h4>
     </div>
-  );
+  )
 }

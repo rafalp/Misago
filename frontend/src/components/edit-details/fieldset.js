@@ -1,13 +1,12 @@
-/* jshint ignore:start */
-import React from 'react';
-import FieldInput from './field-input';
-import FormGroup from 'misago/components/form-group';
+import React from "react"
+import FieldInput from "./field-input"
+import FormGroup from "misago/components/form-group"
 
 export default function({ disabled, errors, fields, name, onChange, value }) {
   return (
     <fieldset>
       <legend>{name}</legend>
-      {fields.map((field) => {
+      {fields.map(field => {
         return (
           <FormGroup
             for={"id_" + field.fieldname}
@@ -23,8 +22,8 @@ export default function({ disabled, errors, fields, name, onChange, value }) {
               value={value[field.fieldname]}
             />
           </FormGroup>
-        );
+        )
       })}
     </fieldset>
-  );
+  )
 }

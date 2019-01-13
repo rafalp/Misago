@@ -1,29 +1,26 @@
-// jshint ignore:start
-import React from 'react';
-import misago from 'misago';
+import React from "react"
+import misago from "misago"
 
 export default class extends React.Component {
   onClick = () => {
-    document.getElementById('editor-upload-field').click();
-  };
+    document.getElementById("editor-upload-field").click()
+  }
 
   render() {
-    if (!misago.get('user').acl.max_attachment_size) {
-      return null;
+    if (!misago.get("user").acl.max_attachment_size) {
+      return null
     }
 
     return (
       <button
-        className={'btn btn-icon ' + this.props.className}
+        className={"btn btn-icon " + this.props.className}
         disabled={this.props.disabled}
         onClick={this.onClick}
-        title={gettext('Upload file')}
+        title={gettext("Upload file")}
         type="button"
       >
-        <span className="material-icon">
-          file_upload
-        </span>
+        <span className="material-icon">file_upload</span>
       </button>
-    );
+    )
   }
-};
+}

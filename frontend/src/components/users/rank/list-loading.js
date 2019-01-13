@@ -1,21 +1,16 @@
-import React from 'react';
-import UsersList from 'misago/components/users-list' // jshint ignore:line
+import React from "react"
+import UsersList from "misago/components/users-list"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
-    return false;
+    return false
   }
 
   render() {
-    /* jshint ignore:start */
     return (
       <div>
-        <UsersList
-          cols={4}
-          isReady={false}
-        />
+        <UsersList cols={4} isReady={false} />
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

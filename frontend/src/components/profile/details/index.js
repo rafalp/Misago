@@ -1,61 +1,60 @@
-/* jshint ignore:start */
-import React from 'react';
-import Form from './form';
-import GroupsList from './groups-list';
-import Header from './header';
-import ProfileDetailsData from 'misago/data/profile-details';
-import { load as loadDetails } from 'misago/reducers/profile-details';
-import title from 'misago/services/page-title';
-import snackbar from 'misago/services/snackbar';
+import React from "react"
+import Form from "./form"
+import GroupsList from "./groups-list"
+import Header from "./header"
+import ProfileDetailsData from "misago/data/profile-details"
+import { load as loadDetails } from "misago/reducers/profile-details"
+import title from "misago/services/page-title"
+import snackbar from "misago/services/snackbar"
 
 export default class extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       editing: false
-    };
+    }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Details"),
       parent: this.props.profile.username
-    });
+    })
   }
 
   onCancel = () => {
-    this.setState({ editing: false });
-  };
+    this.setState({ editing: false })
+  }
 
   onEdit = () => {
-    this.setState({ editing: true });
-  };
+    this.setState({ editing: true })
+  }
 
-  onSuccess = (newDetails) => {
-    const { dispatch, isAuthenticated, profile } = this.props;
+  onSuccess = newDetails => {
+    const { dispatch, isAuthenticated, profile } = this.props
 
-    let message = null;
+    let message = null
     if (isAuthenticated) {
-      message = gettext("Your details have been updated.");
+      message = gettext("Your details have been updated.")
     } else {
       message = interpolate(
         gettext("%(username)s's details have been updated."),
         {
-          'username': profile.username,
+          username: profile.username
         },
         true
-      );
+      )
     }
 
-    snackbar.info(message);
-    dispatch(loadDetails(newDetails));
-    this.setState({ editing: false });
-  };
+    snackbar.info(message)
+    dispatch(loadDetails(newDetails))
+    this.setState({ editing: false })
+  }
 
   render() {
-    const { dispatch, isAuthenticated, profile, profileDetails } = this.props;
-    const loading = profileDetails.id !== profile.id;
+    const { dispatch, isAuthenticated, profile, profileDetails } = this.props
+    const loading = profileDetails.id !== profile.id
 
     return (
       <ProfileDetailsData
@@ -84,6 +83,6 @@ export default class extends React.Component {
           />
         </div>
       </ProfileDetailsData>
-    );
+    )
   }
 }

@@ -1,14 +1,10 @@
-/* jshint ignore:start */
-import React from 'react';
-import Category from './category';
+import React from "react"
+import Category from "./category"
 
 export default function({ category, thread }) {
   return (
     <div className="thread-details-top">
-      <NewLabel
-        isRead={thread.is_read}
-        url={thread.url.new_post}
-      />
+      <NewLabel isRead={thread.is_read} url={thread.url.new_post} />
       <PinnedLabel weight={thread.weight} />
       <UnapprovedLabel
         thread={thread.is_unapproved}
@@ -28,79 +24,64 @@ export default function({ category, thread }) {
         url={thread.url.last_poster}
       />
     </div>
-  );
+  )
 }
 
 export function NewLabel({ isRead, url }) {
-  if (isRead) return null;
+  if (isRead) return null
 
   return (
-    <a
-      className="thread-detail-new"
-      href={url}
-    >
-      <span className="material-icon">
-        comment
-      </span>
-      <span className="detail-text">
-        {gettext("New posts")}
-      </span>
+    <a className="thread-detail-new" href={url}>
+      <span className="material-icon">comment</span>
+      <span className="detail-text">{gettext("New posts")}</span>
     </a>
   )
 }
 
 export function PinnedLabel({ weight }) {
-  if (weight === 0) return null;
+  if (weight === 0) return null
 
-  let className = 'thread-detail-pinned-globally'
-  let icon = 'bookmark';
-  let text = gettext("Pinned globally");
+  let className = "thread-detail-pinned-globally"
+  let icon = "bookmark"
+  let text = gettext("Pinned globally")
 
   if (weight === 1) {
-    className = 'thread-detail-pinned-locally'
-    icon = 'bookmark_border';
-    text = gettext("Pinned locally");
+    className = "thread-detail-pinned-locally"
+    icon = "bookmark_border"
+    text = gettext("Pinned locally")
   }
 
   return (
     <span className={className}>
-      <span className="material-icon">
-        {icon}
-      </span>
-      <span className="detail-text">
-        {text}
-      </span>
+      <span className="material-icon">{icon}</span>
+      <span className="detail-text">{text}</span>
     </span>
   )
 }
 
 export function UnapprovedLabel({ posts, thread }) {
-  if (!posts && !thread) return null;
+  if (!posts && !thread) return null
 
-  let className = 'thread-detail-unapproved-posts'
-  let icon = 'remove_circle_outline';
-  let text = gettext("Unapproved posts");
+  let className = "thread-detail-unapproved-posts"
+  let icon = "remove_circle_outline"
+  let text = gettext("Unapproved posts")
 
   if (thread) {
-    className = 'thread-detail-unapproved'
-    icon = 'remove_circle';
-    text = gettext("Unapproved");
+    className = "thread-detail-unapproved"
+    icon = "remove_circle"
+    text = gettext("Unapproved")
   }
 
   return (
     <span className={className}>
-      <span className="material-icon">
-        {icon}
-      </span>
-      <span className="detail-text">
-        {text}
-      </span>
+      <span className="material-icon">{icon}</span>
+      <span className="detail-text">{text}</span>
     </span>
   )
 }
 
 export function BestAnswerLabel({ thread }) {
-  if (!thread.best_answer) return null;
+  if (!thread.best_answer) return null
 
   return (
     <a
@@ -108,9 +89,7 @@ export function BestAnswerLabel({ thread }) {
       href={thread.url.best_answer}
     >
       <span className="material-icon">check_box</span>
-      <span className="detail-text">
-        {gettext("Answered")}
-      </span>
+      <span className="detail-text">{gettext("Answered")}</span>
     </a>
   )
 }
@@ -120,7 +99,7 @@ export function LastReplyLabel({ datetime, url }) {
     <a
       className="visible-xs-inline-block thread-detail-last-reply"
       href={url}
-      title={datetime.format('LLL')}
+      title={datetime.format("LLL")}
     >
       {datetime.fromNow(true)}
     </a>
@@ -128,7 +107,7 @@ export function LastReplyLabel({ datetime, url }) {
 }
 
 export function LastPoster(props) {
-  const { posterName, url } = props;
+  const { posterName, url } = props
 
   if (url) {
     return (
@@ -138,12 +117,12 @@ export function LastPoster(props) {
       >
         {posterName}
       </a>
-    );
+    )
   }
 
   return (
     <span className="visible-xs-inline-block item-title thread-last-poster">
       {posterName}
     </span>
-  );
+  )
 }

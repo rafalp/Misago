@@ -1,6 +1,5 @@
-/* jshint ignore:start */
-import BottomDetails from './bottom';
-import TopDetails from './top';
+import BottomDetails from "./bottom"
+import TopDetails from "./top"
 
-export { BottomDetails };
-export { TopDetails };
+export { BottomDetails }
+export { TopDetails }

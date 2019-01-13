@@ -1,6 +1,5 @@
-// jshint ignore:start
-import React from 'react';
-import MisagoMarkup from 'misago/components/misago-markup';
+import React from "react"
+import MisagoMarkup from "misago/components/misago-markup"
 
 export default function(props) {
   return (
@@ -22,5 +21,5 @@ export default function(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

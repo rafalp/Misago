@@ -1,40 +1,39 @@
-// jshint ignore:start
-import React from 'react';
+import React from "react"
 
 export default class extends React.Component {
   onAdd = () => {
-    let choices = this.props.choices.slice();
+    let choices = this.props.choices.slice()
     choices.push({
       hash: generateRandomHash(),
-      label: ''
-    });
+      label: ""
+    })
 
-    this.props.setChoices(choices);
-  };
+    this.props.setChoices(choices)
+  }
 
   onChange = (hash, label) => {
-    const choices = this.props.choices.map((choice) => {
+    const choices = this.props.choices.map(choice => {
       if (choice.hash === hash) {
-        choice.label = label;
+        choice.label = label
       }
 
       return choice
-    });
-    this.props.setChoices(choices);
-  };
+    })
+    this.props.setChoices(choices)
+  }
 
-  onDelete = (hash) => {
-    const choices = this.props.choices.filter((choice) => {
-      return choice.hash !== hash;
-    });
-    this.props.setChoices(choices);
-  };
+  onDelete = hash => {
+    const choices = this.props.choices.filter(choice => {
+      return choice.hash !== hash
+    })
+    this.props.setChoices(choices)
+  }
 
   render() {
     return (
       <div className="poll-choices-control">
         <ul className="list-group">
-          {this.props.choices.map((choice) => {
+          {this.props.choices.map(choice => {
             return (
               <PollChoice
                 canDelete={this.props.choices.length > 2}
@@ -44,7 +43,7 @@ export default class extends React.Component {
                 onChange={this.onChange}
                 onDelete={this.onDelete}
               />
-            );
+            )
           })}
         </ul>
         <button
@@ -56,22 +55,23 @@ export default class extends React.Component {
           {gettext("Add choice")}
         </button>
       </div>
-
-    );
+    )
   }
 }
 
 export class PollChoice extends React.Component {
-  onChange = (event) => {
-    this.props.onChange(this.props.choice.hash, event.target.value);
-  };
+  onChange = event => {
+    this.props.onChange(this.props.choice.hash, event.target.value)
+  }
 
   onDelete = () => {
-    const deleteItem = confirm(gettext("Are you sure you want to delete this choice?"));
+    const deleteItem = confirm(
+      gettext("Are you sure you want to delete this choice?")
+    )
     if (deleteItem) {
-      this.props.onDelete(this.props.choice.hash);
+      this.props.onDelete(this.props.choice.hash)
     }
-  };
+  }
 
   render() {
     return (
@@ -83,9 +83,7 @@ export class PollChoice extends React.Component {
           title={gettext("Delete this choice")}
           type="button"
         >
-          <span className="material-icon">
-            close
-          </span>
+          <span className="material-icon">close</span>
         </button>
         <input
           disabled={this.props.disabled}
@@ -96,14 +94,17 @@ export class PollChoice extends React.Component {
           value={this.props.choice.label}
         />
       </li>
-    );
+    )
   }
 }
 
 export function generateRandomHash() {
-  let randomHash = '';
+  let randomHash = ""
   while (randomHash.length != 12) {
-    randomHash = Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(1, 12);
+    randomHash = Math.random()
+      .toString(36)
+      .replace(/[^a-zA-Z0-9]+/g, "")
+      .substr(1, 12)
   }
-  return randomHash;
+  return randomHash
 }

@@ -1,84 +1,72 @@
-import React from 'react';
-import { Link } from 'react-router'; // jshint ignore:line
-import Avatar from 'misago/components/avatar'; // jshint ignore:line
-import Status, { StatusIcon, StatusLabel } from 'misago/components/user-status'; // jshint ignore:line
-import misago from 'misago/index'; // jshint ignore:line
-import * as random from 'misago/utils/random'; // jshint ignore:line
+import React from "react"
+import { Link } from "react-router"
+import Avatar from "misago/components/avatar"
+import Status, { StatusIcon, StatusLabel } from "misago/components/user-status"
+import misago from "misago/index"
+import * as random from "misago/utils/random"
 
 export default class extends React.Component {
   getClassName() {
     if (this.props.rank.css_class) {
-      return "list-group-item list-group-rank-" + this.props.rank.css_class;
+      return "list-group-item list-group-rank-" + this.props.rank.css_class
     } else {
-      return "list-group-item";
+      return "list-group-item"
     }
   }
 
   getUserStatus() {
     if (this.props.user.status) {
-      /* jshint ignore:start */
       return (
         <Status user={this.props.user} status={this.props.user.status}>
-          <StatusIcon user={this.props.user}
-                      status={this.props.user.status} />
-          <StatusLabel user={this.props.user}
-                       status={this.props.user.status}
-                       className="status-label hidden-xs hidden-sm" />
+          <StatusIcon user={this.props.user} status={this.props.user.status} />
+          <StatusLabel
+            user={this.props.user}
+            status={this.props.user.status}
+            className="status-label hidden-xs hidden-sm"
+          />
         </Status>
-      );
-      /* jshint ignore:end */
+      )
     }
 
-    /* jshint ignore:start */
     return (
       <span className="user-status">
-        <span className="status-icon ui-preview-text">
-          &nbsp;
-        </span>
-        <span className="status-label ui-preview-text hidden-xs hidden-sm"
-              style={{width: random.int(30, 50) + "px"}}>
+        <span className="status-icon ui-preview-text">&nbsp;</span>
+        <span
+          className="status-label ui-preview-text hidden-xs hidden-sm"
+          style={{ width: random.int(30, 50) + "px" }}
+        >
           &nbsp;
         </span>
       </span>
-    );
-    /* jshint ignore:end */
+    )
   }
 
   getRankName() {
     if (!this.props.rank.is_tab) {
-      /* jshint ignore:start */
       return (
-        <span className="rank-name item-title">
-          {this.props.rank.name}
-        </span>
-      );
-      /* jshint ignore:end */
+        <span className="rank-name item-title">{this.props.rank.name}</span>
+      )
     }
 
-    /* jshint ignore:start */
-    let rankUrl = misago.get('USERS_LIST_URL') + this.props.rank.slug + '/';
+    let rankUrl = misago.get("USERS_LIST_URL") + this.props.rank.slug + "/"
     return (
       <Link to={rankUrl} className="rank-name item-title">
         {this.props.rank.name}
       </Link>
-    );
-    /* jshint ignore:end */
+    )
   }
 
   getUserTitle() {
-    if (!this.props.user.title) return null;
+    if (!this.props.user.title) return null
 
-    /* jshint ignore:start */
     return (
       <span className="user-title hidden-xs hidden-sm">
         {this.props.user.title}
       </span>
-    );
-    /* jshint ignore:end */
+    )
   }
 
   render() {
-    /* jshint ignore:start */
     return (
       <li className={this.getClassName()}>
         <div className="rank-user-avatar">
@@ -126,7 +114,6 @@ export default class extends React.Component {
           <small>{gettext("Total posts")}</small>
         </div>
       </li>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

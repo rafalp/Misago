@@ -1,37 +1,37 @@
-import moment from 'moment';
-import concatUnique from 'misago/utils/concat-unique';
+import moment from "moment"
+import concatUnique from "misago/utils/concat-unique"
 
-export const APPEND_THREADS = 'APPEND_THREADS';
-export const DELETE_THREAD = 'DELETE_THREAD';
-export const FILTER_THREADS = 'FILTER_THREADS';
-export const HYDRATE_THREADS = 'HYDRATE_THREADS';
-export const PATCH_THREAD = 'PATCH_THREAD';
-export const SORT_THREADS = 'SORT_THREADS';
+export const APPEND_THREADS = "APPEND_THREADS"
+export const DELETE_THREAD = "DELETE_THREAD"
+export const FILTER_THREADS = "FILTER_THREADS"
+export const HYDRATE_THREADS = "HYDRATE_THREADS"
+export const PATCH_THREAD = "PATCH_THREAD"
+export const SORT_THREADS = "SORT_THREADS"
 
 export const MODERATION_PERMISSIONS = [
-  'can_announce',
-  'can_approve',
-  'can_close',
-  'can_hide',
-  'can_move',
-  'can_merge',
-  'can_pin',
-  'can_review'
-];
+  "can_announce",
+  "can_approve",
+  "can_close",
+  "can_hide",
+  "can_move",
+  "can_merge",
+  "can_pin",
+  "can_review"
+]
 
 export function append(items, sorting) {
- return {
+  return {
     type: APPEND_THREADS,
     items,
     sorting
-  };
+  }
 }
 
 export function deleteThread(thread) {
   return {
     type: DELETE_THREAD,
     thread
-  };
+  }
 }
 
 export function filterThreads(category, categoriesMap) {
@@ -39,40 +39,40 @@ export function filterThreads(category, categoriesMap) {
     type: FILTER_THREADS,
     category,
     categoriesMap
-  };
+  }
 }
 
 export function hydrate(items) {
   return {
     type: HYDRATE_THREADS,
     items
-  };
+  }
 }
 
-export function patch(thread, patch, sorting=null) {
+export function patch(thread, patch, sorting = null) {
   return {
     type: PATCH_THREAD,
     thread,
     patch,
     sorting
-  };
+  }
 }
 
 export function sort(sorting) {
   return {
     type: SORT_THREADS,
     sorting
-  };
+  }
 }
 
 export function getThreadModerationOptions(thread_acl) {
-  let options = [];
+  let options = []
   MODERATION_PERMISSIONS.forEach(function(perm) {
     if (thread_acl[perm]) {
-      options.push(perm);
+      options.push(perm)
     }
-  });
-  return options;
+  })
+  return options
 }
 
 export function hydrateThread(thread) {
@@ -80,56 +80,59 @@ export function hydrateThread(thread) {
     started_on: moment(thread.started_on),
     last_post_on: moment(thread.last_post_on),
     moderation: getThreadModerationOptions(thread.acl)
-  });
+  })
 }
 
-export default function thread(state=[], action=null) {
+export default function thread(state = [], action = null) {
   switch (action.type) {
     case APPEND_THREADS:
-      const mergedState = concatUnique(action.items.map(hydrateThread), state);
-      return mergedState.sort(action.sorting);
+      const mergedState = concatUnique(action.items.map(hydrateThread), state)
+      return mergedState.sort(action.sorting)
 
     case DELETE_THREAD:
       return state.filter(function(item) {
-        return item.id !== action.thread.id;
-      });
+        return item.id !== action.thread.id
+      })
 
     case FILTER_THREADS:
       return state.filter(function(item) {
-        const itemCategory = action.categoriesMap[item.category];
-        if (itemCategory.lft >= action.category.lft && itemCategory.rght <= action.category.rght) {
+        const itemCategory = action.categoriesMap[item.category]
+        if (
+          itemCategory.lft >= action.category.lft &&
+          itemCategory.rght <= action.category.rght
+        ) {
           // same or sub category
-          return true;
+          return true
         } else if (item.weight == 2) {
           // globally pinned
-          return true;
+          return true
         } else {
           // thread moved outside displayed scope, hide it
-          return false;
+          return false
         }
-      });
+      })
 
     case HYDRATE_THREADS:
-      return action.items.map(hydrateThread);
+      return action.items.map(hydrateThread)
 
     case PATCH_THREAD:
       const patchedState = state.map(function(item) {
         if (item.id === action.thread.id) {
-          return Object.assign({}, item, action.patch);
+          return Object.assign({}, item, action.patch)
         } else {
-          return item;
+          return item
         }
-      });
+      })
 
       if (action.sorting) {
-        return patchedState.sort(action.sorting);
+        return patchedState.sort(action.sorting)
       }
-      return patchedState;
+      return patchedState
 
     case SORT_THREADS:
-      return state.sort(action.sorting);
+      return state.sort(action.sorting)
 
     default:
-      return state;
+      return state
   }
 }
