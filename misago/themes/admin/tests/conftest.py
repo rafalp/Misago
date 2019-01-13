@@ -85,6 +85,9 @@ def mock_build_single_theme_css(mocker):
 def mock_build_theme_css(mocker):
     delay = mocker.Mock()
     mocker.patch("misago.themes.admin.views.build_theme_css", mocker.Mock(delay=delay))
+    mocker.patch(
+        "misago.themes.admin.importer.build_theme_css", mocker.Mock(delay=delay)
+    )
     return delay
 
 
@@ -93,5 +96,8 @@ def mock_update_remote_css_size(mocker):
     delay = mocker.Mock()
     mocker.patch(
         "misago.themes.admin.views.update_remote_css_size", mocker.Mock(delay=delay)
+    )
+    mocker.patch(
+        "misago.themes.admin.importer.update_remote_css_size", mocker.Mock(delay=delay)
     )
     return delay
