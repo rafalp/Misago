@@ -135,6 +135,13 @@ def test_css_link_is_exported_and_imported_back(reimport_theme, theme, css_link)
     assert imported_css.url == css_link.url
 
 
+def test_importing_css_link_triggers_getting_remote_css_size_task(
+    reimport_theme, theme, css_link, mock_update_remote_css_size
+):
+    reimport_theme(theme)
+    mock_update_remote_css_size.assert_called_once()
+
+
 def test_theme_export_containing_css_file_and_link_can_be_imported_back(
     reimport_theme, theme, css, css_link
 ):
@@ -197,3 +204,10 @@ def test_theme_export_containing_different_files_can_be_imported_back(
 
     media_names = list(imported_theme.media.values_list("name", flat=True))
     assert media_names == [image.name, media.name]
+
+
+def test_importing_theme_triggers_css_build(
+    reimport_theme, theme, css_link, mock_build_theme_css
+):
+    imported_theme = reimport_theme(theme)
+    mock_build_theme_css.assert_called_once_with(imported_theme.pk)
