@@ -43,8 +43,7 @@ def import_theme(name, parent, zipfile):
         try:
             create_css_from_manifest(theme_dir, theme, cleaned_manifest["css"])
             create_media_from_manifest(theme_dir, theme, cleaned_manifest["media"])
-        except Exception as e:
-            print(e)
+        except Exception:
             theme.delete()
             raise InvalidThemeManifest()
         else:
