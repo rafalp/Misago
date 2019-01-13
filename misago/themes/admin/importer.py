@@ -3,7 +3,7 @@ import os
 from tempfile import TemporaryDirectory
 from zipfile import BadZipFile, ZipFile
 
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import gettext as _, gettext_lazy
 
 from ..models import Theme
@@ -196,8 +196,11 @@ def create_css_from_manifest(tmp_dir, theme, manifest):
             theme.css.create(**item, order=theme.css.count())
         else:
             with open(item["path"], "rb") as fp:
-                file_obj = SimpleUploadedFile(
-                    item["name"], fp.read(), content_type="text/css"
+                file_obj = UploadedFile(
+                    fp,
+                    name=item["name"],
+                    content_type="text/css",
+                    size=os.path.getsize(item["path"]),
                 )
                 create_css(theme, file_obj)
 
@@ -205,7 +208,10 @@ def create_css_from_manifest(tmp_dir, theme, manifest):
 def create_media_from_manifest(tmp_dir, theme, manifest):
     for item in manifest:
         with open(item["path"], "rb") as fp:
-            file_obj = SimpleUploadedFile(
-                item["name"], fp.read(), content_type=item["type"]
+            file_obj = UploadedFile(
+                fp,
+                name=item["name"],
+                content_type=item["type"],
+                size=os.path.getsize(item["path"]),
             )
             create_media(theme, file_obj)
