@@ -1,14 +1,14 @@
-import misago from 'misago/index';
-import ajax from 'misago/services/ajax';
-import captcha from 'misago/services/captcha';
-import include from 'misago/services/include';
-import snackbar from 'misago/services/snackbar';
+import misago from "misago/index"
+import ajax from "misago/services/ajax"
+import captcha from "misago/services/captcha"
+import include from "misago/services/include"
+import snackbar from "misago/services/snackbar"
 
 export default function initializer(context) {
-  captcha.init(context, ajax, include, snackbar);
+  captcha.init(context, ajax, include, snackbar)
 }
 
 misago.addInitializer({
-  name: 'captcha',
+  name: "captcha",
   initializer: initializer
-});
+})

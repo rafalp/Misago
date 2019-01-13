@@ -1,27 +1,26 @@
-// jshint ignore:start
-import React from 'react';
-import Button from 'misago/components/button';
-import escapeHtml from 'misago/utils/escape-html';
+import React from "react"
+import Button from "misago/components/button"
+import escapeHtml from "misago/utils/escape-html"
 
-const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>';
-const USER_SPAN = '<span class="item-title">%(user)s</span>';
-const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>';
+const DATE_ABBR = '<abbr title="%(absolute)s">%(relative)s</abbr>'
+const USER_SPAN = '<span class="item-title">%(user)s</span>'
+const USER_URL = '<a href="%(url)s" class="item-title">%(user)s</a>'
 
 export default class extends React.Component {
   goLast = () => {
-    this.props.goToEdit();
-  };
+    this.props.goToEdit()
+  }
 
   goForward = () => {
-    this.props.goToEdit(this.props.edit.next);
-  };
+    this.props.goToEdit(this.props.edit.next)
+  }
 
   goBack = () => {
-    this.props.goToEdit(this.props.edit.previous);
-  };
+    this.props.goToEdit(this.props.edit.previous)
+  }
 
   revertEdit = () => {
-    this.props.revertEdit(this.props.edit.id);
+    this.props.revertEdit(this.props.edit.id)
   }
 
   render() {
@@ -63,7 +62,7 @@ export default class extends React.Component {
           />
         </div>
       </div>
-    );
+    )
   }
 }
 
@@ -75,9 +74,7 @@ export function GoBackBtn(props) {
       onClick={props.onClick}
       title={gettext("See previous change")}
     >
-      <span className="material-icon">
-        chevron_left
-      </span>
+      <span className="material-icon">chevron_left</span>
     </Button>
   )
 }
@@ -90,9 +87,7 @@ export function GoForwardBtn(props) {
       onClick={props.onClick}
       title={gettext("See previous change")}
     >
-      <span className="material-icon">
-        chevron_right
-      </span>
+      <span className="material-icon">chevron_right</span>
     </Button>
   )
 }
@@ -105,15 +100,13 @@ export function GoLastBtn(props) {
       onClick={props.onClick}
       title={gettext("See previous change")}
     >
-      <span className="material-icon">
-        last_page
-      </span>
+      <span className="material-icon">last_page</span>
     </Button>
   )
 }
 
 export function RevertBtn(props) {
-  if (!props.canRevert) return null;
+  if (!props.canRevert) return null
 
   return (
     <div className="col-sm-3 hidden-xs">
@@ -130,29 +123,43 @@ export function RevertBtn(props) {
 }
 
 export function Label(props) {
-  let user = null;
+  let user = null
   if (props.edit.url.editor) {
-    user = interpolate(USER_URL, {
-      url: escapeHtml(props.edit.url.editor),
-      user: escapeHtml(props.edit.editor_name)
-    }, true);
+    user = interpolate(
+      USER_URL,
+      {
+        url: escapeHtml(props.edit.url.editor),
+        user: escapeHtml(props.edit.editor_name)
+      },
+      true
+    )
   } else {
-    user = interpolate(USER_SPAN, {
-      user: escapeHtml(props.edit.editor_name)
-    }, true);
+    user = interpolate(
+      USER_SPAN,
+      {
+        user: escapeHtml(props.edit.editor_name)
+      },
+      true
+    )
   }
 
-  const date = interpolate(DATE_ABBR, {
-    absolute: escapeHtml(props.edit.edited_on.format('LLL')),
-    relative: escapeHtml(props.edit.edited_on.fromNow())
-  }, true);
+  const date = interpolate(
+    DATE_ABBR,
+    {
+      absolute: escapeHtml(props.edit.edited_on.format("LLL")),
+      relative: escapeHtml(props.edit.edited_on.fromNow())
+    },
+    true
+  )
 
-  const message = interpolate(escapeHtml(gettext("By %(edited_by)s %(edited_on)s.")), {
-    edited_by: user,
-    edited_on: date
-  }, true);
+  const message = interpolate(
+    escapeHtml(gettext("By %(edited_by)s %(edited_on)s.")),
+    {
+      edited_by: user,
+      edited_on: date
+    },
+    true
+  )
 
-  return (
-    <p dangerouslySetInnerHTML={{__html: message}} />
-  );
+  return <p dangerouslySetInnerHTML={{ __html: message }} />
 }

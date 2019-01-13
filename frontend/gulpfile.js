@@ -6,8 +6,8 @@ var gutil = require('gulp-util');
 var babelify = require('babelify');
 var browserify = require('browserify');
 var buffer = require('vinyl-buffer');
+var eslint = require('gulp-eslint');
 var image = require('gulp-image');
-var jshint = require('gulp-jshint');
 var less = require('gulp-less');
 var minify = require('gulp-minify-css');
 var rename = require('gulp-rename');
@@ -74,8 +74,35 @@ function getSources() {
 
 gulp.task('lintsource', function() {
   return gulp.src('src/**/*.js')
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
+    .pipe(eslint({
+        'parser': 'babel-eslint',
+        'parserOptions': {
+            'ecmaVersion': 7,
+            'sourceType': 'module',
+            'ecmaFeatures': {
+                'jsx': true
+            }
+        },
+        rules: {
+          "semi": ["error", "never"],
+          "no-undef": "error",
+          "strict": 2
+        },
+        globals: [
+          "gettext",
+          "ngettext",
+          "interpolate",
+          "misago",
+          "hljs"
+        ],
+        envs: [
+            "browser",
+            "jquery",
+            "node",
+            "es6"
+        ]
+    }))
+    .pipe(eslint.format());
 });
 
 gulp.task('fastsource', ['lintsource'], function() {
@@ -273,41 +300,4 @@ gulp.task('copypolyfill', function() {
     .pipe(uglify())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(misago + 'js'));
-});
-
-// Test task
-
-var tests = (function() {
-  var flag = process.argv.indexOf('--limit');
-  var value = process.argv[flag + 1];
-
-  var tests = ['src/test-setup.js'];
-  if (flag !== -1 && value) {
-    var pattern = value.trim();
-    glob.sync('tests/**/*.js').map(function(path) {
-      if (path.indexOf(pattern) !== -1) {
-        tests.push(path);
-      }
-    });
-  } else {
-    tests.push('tests/**/*.js');
-  }
-
-  return tests;
-})();
-
-gulp.task('linttests', function() {
-  return gulp.src(tests)
-    .pipe(jshint())
-    .pipe(jshint.reporter('default'));
-});
-
-gulp.task('test', ['linttests', 'lintsource'], function() {
-  var mochify = require('mochify');
-
-  mochify(tests.join(" "), {
-      reporter: 'spec'
-    })
-    .transform(babelify)
-    .bundle();
 });

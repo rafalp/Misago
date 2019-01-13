@@ -1,13 +1,12 @@
-/* jshint ignore:start */
-import React from 'react';
-import Loader from 'misago/components/loader';
+import React from "react"
+import Loader from "misago/components/loader"
 
 export default function({ display }) {
-  if (!display) return null;
+  if (!display) return null
 
   return (
     <div className="panel-body">
       <Loader />
     </div>
-  );
+  )
 }

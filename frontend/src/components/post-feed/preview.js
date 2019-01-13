@@ -1,7 +1,6 @@
-/* jshint ignore:start */
-import React from 'react';
-import Avatar from 'misago/components/avatar';
-import * as random from 'misago/utils/random';
+import React from "react"
+import Avatar from "misago/components/avatar"
+import * as random from "misago/utils/random"
 
 export default function() {
   return (
@@ -13,10 +12,7 @@ export default function() {
               <div className="media">
                 <div className="media-left">
                   <span>
-                    <Avatar
-                      className="poster-avatar"
-                      size={50}
-                    />
+                    <Avatar className="poster-avatar" size={50} />
                   </span>
                 </div>
                 <div className="media-body">
@@ -24,7 +20,7 @@ export default function() {
                     <span className="item-title">
                       <span
                         className="ui-preview-text"
-                        style={{width: random.int(30, 200) + "px"}}
+                        style={{ width: random.int(30, 200) + "px" }}
                       >
                         &nbsp;
                       </span>
@@ -33,7 +29,7 @@ export default function() {
                   <span className="user-title user-title-anonymous">
                     <span
                       className="ui-preview-text"
-                      style={{width: random.int(30, 200) + "px"}}
+                      style={{ width: random.int(30, 200) + "px" }}
                     >
                       &nbsp;
                     </span>
@@ -44,7 +40,7 @@ export default function() {
             <div className="post-heading">
               <span
                 className="ui-preview-text"
-                style={{width: random.int(30, 200) + "px"}}
+                style={{ width: random.int(30, 200) + "px" }}
               >
                 &nbsp;
               </span>
@@ -54,21 +50,21 @@ export default function() {
                 <p>
                   <span
                     className="ui-preview-text"
-                    style={{width: random.int(30, 200) + "px"}}
+                    style={{ width: random.int(30, 200) + "px" }}
                   >
                     &nbsp;
                   </span>
                   &nbsp;
                   <span
                     className="ui-preview-text"
-                    style={{width: random.int(30, 200) + "px"}}
+                    style={{ width: random.int(30, 200) + "px" }}
                   >
                     &nbsp;
                   </span>
                   &nbsp;
                   <span
                     className="ui-preview-text"
-                    style={{width: random.int(30, 200) + "px"}}
+                    style={{ width: random.int(30, 200) + "px" }}
                   >
                     &nbsp;
                   </span>
@@ -79,5 +75,5 @@ export default function() {
         </div>
       </li>
     </ul>
-  );
+  )
 }

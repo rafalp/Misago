@@ -1,9 +1,8 @@
-/* jshint ignore:start */
-import React from 'react';
-import { Pager, More } from './paginator';
-import PostsModeration from './moderation/posts';
-import ReplyButton from './reply-button';
-import SubscriptionSwitch from './subscription';
+import React from "react"
+import { Pager, More } from "./paginator"
+import PostsModeration from "./moderation/posts"
+import ReplyButton from "./reply-button"
+import SubscriptionSwitch from "./subscription"
 
 export default function(props) {
   return (
@@ -28,28 +27,21 @@ export default function(props) {
           <Spacer {...props} />
           <Moderation {...props} />
           <Subscription {...props} />
-          <Reply
-            thread={props.thread}
-            onClick={props.openReplyForm}
-          />
+          <Reply thread={props.thread} onClick={props.openReplyForm} />
         </div>
       </Options>
-    </div>
-  );
-}
-
-export function Options(props) {
-  if (!props.visible) return null;
-
-  return (
-    <div className="col-md-5">
-      {props.children}
     </div>
   )
 }
 
+export function Options(props) {
+  if (!props.visible) return null
+
+  return <div className="col-md-5">{props.children}</div>
+}
+
 export function Moderation(props) {
-  if (!props.user.id) return null;
+  if (!props.user.id) return null
 
   return (
     <div className="col-sm-4 hidden-xs">
@@ -58,11 +50,10 @@ export function Moderation(props) {
   )
 }
 
-
 export function Subscription(props) {
-  let xsClass = "col-xs-6";
+  let xsClass = "col-xs-6"
   if (!props.thread.acl.can_reply) {
-    xsClass = 'col-xs-12';
+    xsClass = "col-xs-12"
   }
 
   return (
@@ -73,11 +64,11 @@ export function Subscription(props) {
         {...props}
       />
     </div>
-  );
+  )
 }
 
 export function Reply(props) {
-  if (!props.thread.acl.can_reply) return null;
+  if (!props.thread.acl.can_reply) return null
 
   return (
     <div className="col-xs-6 col-sm-4">
@@ -86,13 +77,11 @@ export function Reply(props) {
         onClick={props.onClick}
       />
     </div>
-  );
+  )
 }
 
 export function Spacer(props) {
-  if (props.thread.acl.can_reply) return null;
+  if (props.thread.acl.can_reply) return null
 
-  return (
-    <div className="hidden-xs hidden-sm col-sm-4"></div>
-  );
+  return <div className="hidden-xs hidden-sm col-sm-4" />
 }

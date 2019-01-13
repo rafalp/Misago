@@ -1,15 +1,14 @@
-/* jshint ignore:start */
-import React from 'react';
-import Dropdown from './dropdown';
+import React from "react"
+import Dropdown from "./dropdown"
 
 export default function(props) {
   if (!props.user.id || !isVisible(props.thread, props.posts.results)) {
-    return null;
+    return null
   }
 
-  const selection = props.posts.results.filter((post) => {
-    return post.isSelected;
-  });
+  const selection = props.posts.results.filter(post => {
+    return post.isSelected
+  })
 
   return (
     <div className="dropup">
@@ -25,20 +24,20 @@ export default function(props) {
       </button>
       <Dropdown selection={selection} {...props} />
     </div>
-  );
+  )
 }
 
 export function isVisible(thread, posts) {
   if (thread.acl.can_merge_posts && posts.length > 1) {
     // fast test: show moderation menu if we can merge posts
-    return true;
+    return true
   }
 
   // slow test: show moderation if any of posts has moderation options
-  let visible = false;
-  posts.forEach((post) => {
+  let visible = false
+  posts.forEach(post => {
     if (!post.is_event) {
-      const showModeration = (
+      const showModeration =
         (post.acl.can_approve && post.is_unapproved) ||
         post.acl.can_delete ||
         (!post.is_hidden && post.acl.can_hide) ||
@@ -47,12 +46,11 @@ export function isVisible(thread, posts) {
         post.acl.can_protect ||
         (post.is_hidden && post.acl.can_unhide) ||
         post.acl.can_unprotect
-      );
 
       if (showModeration) {
-        visible = true;
+        visible = true
       }
     }
-  });
-  return visible;
+  })
+  return visible
 }

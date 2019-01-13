@@ -1,22 +1,19 @@
-import React from 'react';
-import DiffMessage from 'misago/components/threads-list/list/diff-message'; // jshint ignore:line
+import React from "react"
+import DiffMessage from "misago/components/threads-list/list/diff-message"
 
 export default class extends React.Component {
   getDiffMessage() {
-    if (this.props.diffSize === 0) return null;
+    if (this.props.diffSize === 0) return null
 
-    /* jshint ignore:start */
     return (
       <DiffMessage
         applyDiff={this.props.applyDiff}
         diffSize={this.props.diffSize}
       />
-    );
-    /* jshint ignore:end */
+    )
   }
 
-  render () {
-    /* jshint ignore:start */
+  render() {
     return (
       <div className="threads-list ui-ready">
         <ul className="list-group">
@@ -24,7 +21,6 @@ export default class extends React.Component {
           {this.props.children}
         </ul>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

@@ -1,22 +1,23 @@
-import React from 'react';
-import * as select from 'misago/reducers/selection'; // jshint ignore:line
-import store from 'misago/services/store'; // jshint ignore:line
+import React from "react"
+import * as select from "misago/reducers/selection"
+import store from "misago/services/store"
 
 export default class extends React.Component {
-  /* jshint ignore:start */
   selectAll = () => {
-    store.dispatch(select.all(this.props.threads.map(function(thread) {
-      return thread.id;
-    })));
-  };
+    store.dispatch(
+      select.all(
+        this.props.threads.map(function(thread) {
+          return thread.id
+        })
+      )
+    )
+  }
 
   selectNone = () => {
-    store.dispatch(select.none());
-  };
-  /* jshint ignore:end */
+    store.dispatch(select.none())
+  }
 
   render() {
-    /* jshint ignore:start */
     return (
       <ul className={this.props.className}>
         <li>
@@ -40,7 +41,6 @@ export default class extends React.Component {
           </button>
         </li>
       </ul>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

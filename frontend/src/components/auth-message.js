@@ -1,27 +1,34 @@
-import React from 'react';
+import React from "react"
 
 export default class extends React.Component {
   refresh() {
-    window.location.reload();
+    window.location.reload()
   }
 
   getMessage() {
     if (this.props.signedIn) {
       return interpolate(
-        gettext("You have signed in as %(username)s. Please refresh the page before continuing."),
-        {username: this.props.signedIn.username}, true);
+        gettext(
+          "You have signed in as %(username)s. Please refresh the page before continuing."
+        ),
+        { username: this.props.signedIn.username },
+        true
+      )
     } else if (this.props.signedOut) {
       return interpolate(
-        gettext("%(username)s, you have been signed out. Please refresh the page before continuing."),
-        {username: this.props.user.username}, true);
+        gettext(
+          "%(username)s, you have been signed out. Please refresh the page before continuing."
+        ),
+        { username: this.props.user.username },
+        true
+      )
     }
   }
 
   render() {
-    /* jshint ignore:start */
-    let className = 'auth-message';
+    let className = "auth-message"
     if (this.props.signedIn || this.props.signedOut) {
-      className += ' show';
+      className += " show"
     }
 
     return (
@@ -37,13 +44,12 @@ export default class extends React.Component {
               {gettext("Reload page")}
             </button>
             <span className="hidden-xs hidden-sm">
-              {' ' + gettext("or press F5 key.")}
+              {" " + gettext("or press F5 key.")}
             </span>
           </p>
         </div>
       </div>
-    );
-    /* jshint ignore:end */
+    )
   }
 }
 
@@ -52,5 +58,5 @@ export function select(state) {
     user: state.auth.user,
     signedIn: state.auth.signedIn,
     signedOut: state.auth.signedOut
-  };
+  }
 }

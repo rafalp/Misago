@@ -1,74 +1,74 @@
-import React from 'react';
+import React from "react"
 
 export default class extends React.Component {
   isValidated() {
-    return typeof this.props.validation !== "undefined";
+    return typeof this.props.validation !== "undefined"
   }
 
   getClassName() {
-    let className = 'form-group';
+    let className = "form-group"
     if (this.isValidated()) {
-      className += ' has-feedback';
+      className += " has-feedback"
       if (this.props.validation === null) {
-        className += ' has-success';
+        className += " has-success"
       } else {
-        className += ' has-error';
+        className += " has-error"
       }
     }
-    return className;
+    return className
   }
 
   getFeedback() {
     if (this.props.validation) {
-      /* jshint ignore:start */
-      return <div className="help-block errors">
-        {this.props.validation.map((error, i) => {
-          return <p key={this.props.for + 'FeedbackItem' + i}>{error}</p>;
-        })}
-      </div>;
-      /* jshint ignore:end */
+      return (
+        <div className="help-block errors">
+          {this.props.validation.map((error, i) => {
+            return <p key={this.props.for + "FeedbackItem" + i}>{error}</p>
+          })}
+        </div>
+      )
     } else {
-      return null;
+      return null
     }
   }
 
   getFeedbackDescription() {
     if (this.isValidated()) {
-      /* jshint ignore:start */
-      return <span id={this.props.for + '_status'} className="sr-only">
-        {this.props.validation ? gettext('(error)') : gettext('(success)')}
-      </span>;
-      /* jshint ignore:end */
+      return (
+        <span id={this.props.for + "_status"} className="sr-only">
+          {this.props.validation ? gettext("(error)") : gettext("(success)")}
+        </span>
+      )
     } else {
-      return null;
+      return null
     }
   }
 
   getHelpText() {
     if (this.props.helpText) {
-      /* jshint ignore:start */
-      return <p className="help-block">{this.props.helpText}</p>;
-      /* jshint ignore:end */
+      return <p className="help-block">{this.props.helpText}</p>
     } else {
-      return null;
+      return null
     }
   }
 
   render() {
-    /* jshint ignore:start */
-    return <div className={this.getClassName()}>
-      <label className={'control-label ' + (this.props.labelClass || '')}
-             htmlFor={this.props.for || ''}>
-        {this.props.label + ':'}
-      </label>
-      <div className={this.props.controlClass || ''}>
-        {this.props.children}
-        {this.getFeedbackDescription()}
-        {this.getFeedback()}
-        {this.getHelpText()}
-        {this.props.extra || null}
+    return (
+      <div className={this.getClassName()}>
+        <label
+          className={"control-label " + (this.props.labelClass || "")}
+          htmlFor={this.props.for || ""}
+        >
+          {this.props.label + ":"}
+        </label>
+        <div className={this.props.controlClass || ""}>
+          {this.props.children}
+          {this.getFeedbackDescription()}
+          {this.getFeedback()}
+          {this.getHelpText()}
+          {this.props.extra || null}
+        </div>
       </div>
-    </div>
-    /* jshint ignore:end */
+    )
   }
 }

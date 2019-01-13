@@ -1,24 +1,20 @@
-/* jshint ignore:start */
-import React from 'react';
+import React from "react"
 
 export default function({ html, text, url }) {
   if (html) {
     return (
       <div
         className="form-control-static col-md-9"
-        dangerouslySetInnerHTML={{__html: html}}
+        dangerouslySetInnerHTML={{ __html: html }}
       />
-    );
+    )
   }
 
   return (
     <div className="form-control-static col-md-9">
-      <SafeValue
-        text={text}
-        url={url}
-      />
+      <SafeValue text={text} url={url} />
     </div>
-  );
+  )
 }
 
 export function SafeValue({ text, url }) {
@@ -29,14 +25,12 @@ export function SafeValue({ text, url }) {
           {text || url}
         </a>
       </p>
-    );
+    )
   }
 
   if (text) {
-    return (
-      <p>{text}</p>
-    );
+    return <p>{text}</p>
   }
 
-  return null;
+  return null
 }

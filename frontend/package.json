@@ -27,6 +27,7 @@
   "dependencies": {
     "at.js": "^1.5.3",
     "babel-core": "6.7.x",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-module-alias": "^1.0.0",
     "babel-plugin-transform-class-properties": "^6.3.13",
     "babel-polyfill": "^6.3.14",
@@ -42,7 +43,8 @@
     "del": "^2.1.0",
     "dropzone": "^4.2.0",
     "glob": "^7.0.3",
-    "gulp": "^3.9.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^5.0.0",
     "gulp-image": "^2.7.2",
     "gulp-jshint": "^2.0.0",
     "gulp-less": "^3.0.5",
@@ -70,7 +72,6 @@
     "zxcvbn": "^4.2.0"
   },
   "devDependencies": {
-    "jshint": "^2.8.0",
     "mochify": "^2.14.3"
   }
 }

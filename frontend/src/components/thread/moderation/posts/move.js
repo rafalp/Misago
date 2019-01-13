@@ -1,69 +1,70 @@
-// jshint ignore:start
-import React from 'react';
-import Button from 'misago/components/button';
-import Form from 'misago/components/form';
-import FormGroup from 'misago/components/form-group';
-import * as post from 'misago/reducers/post';
-import ajax from 'misago/services/ajax';
-import modal from 'misago/services/modal';
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store';
+import React from "react"
+import Button from "misago/components/button"
+import Form from "misago/components/form"
+import FormGroup from "misago/components/form-group"
+import * as post from "misago/reducers/post"
+import ajax from "misago/services/ajax"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
 
 export default class extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: false,
 
-      url: '',
+      url: "",
 
       validators: {
         url: []
       },
       errors: {}
-    };
+    }
   }
 
   clean() {
     if (!this.state.url.trim().length) {
-      snackbar.error(gettext("You have to enter link to the other thread."));
-      return false;
+      snackbar.error(gettext("You have to enter link to the other thread."))
+      return false
     }
 
-    return true;
+    return true
   }
 
   send() {
     return ajax.post(this.props.thread.api.posts.move, {
       new_thread: this.state.url,
-      posts: this.props.selection.map((post) => post.id)
-    });
+      posts: this.props.selection.map(post => post.id)
+    })
   }
 
   handleSuccess(success) {
-    this.props.selection.forEach((selection) => {
-      store.dispatch(post.patch(selection, {
-        isDeleted: true
-      }));
-    });
+    this.props.selection.forEach(selection => {
+      store.dispatch(
+        post.patch(selection, {
+          isDeleted: true
+        })
+      )
+    })
 
-    modal.hide();
+    modal.hide()
 
-    snackbar.success(gettext("Selected posts were moved to the other thread."));
+    snackbar.success(gettext("Selected posts were moved to the other thread."))
   }
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      snackbar.error(rejection.detail);
+      snackbar.error(rejection.detail)
     } else {
-      snackbar.apiError(rejection);
+      snackbar.apiError(rejection)
     }
   }
 
-  onUrlChange = (event) => {
-    this.changeValue('url', event.target.value);
-  };
+  onUrlChange = event => {
+    this.changeValue("url", event.target.value)
+  }
 
   render() {
     return (
@@ -94,14 +95,17 @@ export default class extends Form {
               >
                 {gettext("Cancel")}
               </button>
-              <button className="btn btn-primary" loading={this.state.isLoading}>
+              <button
+                className="btn btn-primary"
+                loading={this.state.isLoading}
+              >
                 {gettext("Move posts")}
               </button>
             </div>
           </div>
         </form>
       </div>
-    );
+    )
   }
 }
 
@@ -118,5 +122,5 @@ export function ModalHeader(props) {
       </button>
       <h4 className="modal-title">{gettext("Move posts")}</h4>
     </div>
-  );
+  )
 }

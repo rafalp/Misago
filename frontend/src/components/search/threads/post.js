@@ -1,11 +1,10 @@
-// jshint ignore:start
-import React from 'react';
-import PostFooter from './footer';
-import MisagoMarkup from 'misago/components/misago-markup';
+import React from "react"
+import PostFooter from "./footer"
+import MisagoMarkup from "misago/components/misago-markup"
 
 export default function(props) {
   return (
-    <li id={'post-' + props.post.id} className="post post-infeed">
+    <li id={"post-" + props.post.id} className="post post-infeed">
       <div className="post-border">
         <div className="post-body">
           <div className="panel panel-default panel-post">
@@ -19,7 +18,7 @@ export default function(props) {
         </div>
       </div>
     </li>
-  );
+  )
 }
 
 export function PostBody(props) {
@@ -28,13 +27,17 @@ export function PostBody(props) {
       <div className="panel-body">
         <MisagoMarkup markup={props.content} />
       </div>
-    );
+    )
   }
 
   return (
     <div className="panel-body panel-body-invalid">
-      <p className="lead">{gettext("This post's contents cannot be displayed.")}</p>
-      <p className="text-muted">{gettext("This error is caused by invalid post content manipulation.")}</p>
+      <p className="lead">
+        {gettext("This post's contents cannot be displayed.")}
+      </p>
+      <p className="text-muted">
+        {gettext("This error is caused by invalid post content manipulation.")}
+      </p>
     </div>
-  );
+  )
 }

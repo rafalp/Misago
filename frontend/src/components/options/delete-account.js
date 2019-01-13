@@ -1,60 +1,61 @@
-/* jshint ignore:start */
-import React from 'react';
-import Button from 'misago/components/button';
-import ajax from 'misago/services/ajax';
-import title from 'misago/services/page-title';
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store';
-import misago from 'misago';
+import React from "react"
+import Button from "misago/components/button"
+import ajax from "misago/services/ajax"
+import title from "misago/services/page-title"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
+import misago from "misago"
 
 export default class extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isLoading: false,
-      password: '',
-    };
+      password: ""
+    }
   }
 
   componentDidMount() {
     title.set({
       title: gettext("Delete account"),
       parent: gettext("Change your options")
-    });
+    })
   }
 
-  onPasswordChange = (event) => {
-    this.setState({ password: event.target.value });
+  onPasswordChange = event => {
+    this.setState({ password: event.target.value })
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault()
 
-    const { isLoading, password } = this.state;
-    const { user } = this.props;
+    const { isLoading, password } = this.state
+    const { user } = this.props
 
     if (password.length == 0) {
-      snackbar.error(gettext("Enter your password to confirm account deletion."));
-      return false;
+      snackbar.error(
+        gettext("Enter your password to confirm account deletion.")
+      )
+      return false
     }
 
-    if (isLoading) return false;
-    this.setState({ isLoading: true });
+    if (isLoading) return false
+    this.setState({ isLoading: true })
 
     ajax.post(user.api.delete, { password }).then(
-      (success) => {
-        window.location.href = misago.get('MISAGO_PATH');
+      success => {
+        window.location.href = misago.get("MISAGO_PATH")
       },
-      (rejection) => {
-        this.setState({ isLoading: false });
+      rejection => {
+        this.setState({ isLoading: false })
         if (rejection.password) {
-          snackbar.error(rejection.password[0]);
+          snackbar.error(rejection.password[0])
         } else {
           snackbar.apiError(rejection)
         }
       }
-    );
+    )
   }
 
   render() {
@@ -65,29 +66,49 @@ export default class extends React.Component {
             <h3 className="panel-title">{gettext("Delete account")}</h3>
           </div>
           <div className="panel-body">
-
             <p className="lead">
-              {gettext("You are going to delete your account. This action is nonreversible, and will result in following data being deleted:")}
+              {gettext(
+                "You are going to delete your account. This action is nonreversible, and will result in following data being deleted:"
+              )}
             </p>
 
-            <p>- {gettext("Stored IP addresses associated with content that you have posted will be deleted.")}</p>
-            <p>- {gettext("Your username will become available for other user to rename to or for new user to register their account with.")}</p>
-            <p>- {gettext("Your e-mail will become available for use in new account registration.")}</p>
+            <p>
+              -{" "}
+              {gettext(
+                "Stored IP addresses associated with content that you have posted will be deleted."
+              )}
+            </p>
+            <p>
+              -{" "}
+              {gettext(
+                "Your username will become available for other user to rename to or for new user to register their account with."
+              )}
+            </p>
+            <p>
+              -{" "}
+              {gettext(
+                "Your e-mail will become available for use in new account registration."
+              )}
+            </p>
 
-            <hr/>
+            <hr />
 
-            <p>{gettext("All your posted content will NOT be deleted, but username associated with it will be changed to one shared by all deleted accounts.")}</p>
-
+            <p>
+              {gettext(
+                "All your posted content will NOT be deleted, but username associated with it will be changed to one shared by all deleted accounts."
+              )}
+            </p>
           </div>
           <div className="panel-footer">
-
             <div className="input-group">
-              <input 
+              <input
                 className="form-control"
                 disabled={this.state.isLoading}
                 name="password-confirmation"
                 type="password"
-                placeholder={gettext("Enter your password to confirm account deletion.")}
+                placeholder={gettext(
+                  "Enter your password to confirm account deletion."
+                )}
                 value={this.state.password}
                 onChange={this.onPasswordChange}
               />
@@ -97,10 +118,9 @@ export default class extends React.Component {
                 </Button>
               </span>
             </div>
-
           </div>
         </div>
       </form>
-    );
+    )
   }
 }

@@ -1,168 +1,173 @@
-import React from 'react';
-import { required } from 'misago/utils/validators';
-import snackbar from 'misago/services/snackbar'; // jshint ignore:line
+import React from "react"
+import { required } from "misago/utils/validators"
+import snackbar from "misago/services/snackbar"
 
-let validateRequired = required();
+let validateRequired = required()
 
 export default class extends React.Component {
   validate() {
-    let errors = {};
+    let errors = {}
     if (!this.state.validators) {
-      return errors;
+      return errors
     }
 
     let validators = {
       required: this.state.validators.required || this.state.validators,
       optional: this.state.validators.optional || {}
-    };
+    }
 
-    let validatedFields = [];
+    let validatedFields = []
 
     // add required fields to validation
     for (let name in validators.required) {
-      if (validators.required.hasOwnProperty(name) &&
-          validators.required[name]) {
-        validatedFields.push(name);
+      if (
+        validators.required.hasOwnProperty(name) &&
+        validators.required[name]
+      ) {
+        validatedFields.push(name)
       }
     }
 
     // add optional fields to validation
     for (let name in validators.optional) {
-      if (validators.optional.hasOwnProperty(name) &&
-          validators.optional[name]) {
-        validatedFields.push(name);
+      if (
+        validators.optional.hasOwnProperty(name) &&
+        validators.optional[name]
+      ) {
+        validatedFields.push(name)
       }
     }
 
     // validate fields values
     for (let i in validatedFields) {
-      let name = validatedFields[i];
-      let fieldErrors = this.validateField(name, this.state[name]);
+      let name = validatedFields[i]
+      let fieldErrors = this.validateField(name, this.state[name])
 
       if (fieldErrors === null) {
-        errors[name] = null;
+        errors[name] = null
       } else if (fieldErrors) {
-        errors[name] = fieldErrors;
+        errors[name] = fieldErrors
       }
     }
 
-    return errors;
+    return errors
   }
 
   isValid() {
-    let errors = this.validate();
+    let errors = this.validate()
     for (let field in errors) {
       if (errors.hasOwnProperty(field)) {
         if (errors[field] !== null) {
-          return false;
+          return false
         }
       }
     }
 
-    return true;
+    return true
   }
 
   validateField(name, value) {
-    let errors = [];
+    let errors = []
     if (!this.state.validators) {
-      return errors;
+      return errors
     }
 
     let validators = {
       required: (this.state.validators.required || this.state.validators)[name],
       optional: (this.state.validators.optional || {})[name]
-    };
+    }
 
-    let requiredError = validateRequired(value) || false;
+    let requiredError = validateRequired(value) || false
 
     if (validators.required) {
       if (requiredError) {
-        errors = [requiredError];
+        errors = [requiredError]
       } else {
         for (let i in validators.required) {
-          let validationError = validators.required[i](value);
+          let validationError = validators.required[i](value)
           if (validationError) {
-            errors.push(validationError);
+            errors.push(validationError)
           }
         }
       }
 
-      return errors.length ? errors : null;
+      return errors.length ? errors : null
     } else if (requiredError === false && validators.optional) {
       for (let i in validators.optional) {
-        let validationError = validators.optional[i](value);
+        let validationError = validators.optional[i](value)
         if (validationError) {
-          errors.push(validationError);
+          errors.push(validationError)
         }
       }
 
-      return errors.length ? errors : null;
+      return errors.length ? errors : null
     }
 
-    return false; // false === field wasn't validated
+    return false // false === field wasn't validated
   }
 
-  /* jshint ignore:start */
-  bindInput = (name) => {
-    return (event) => {
-      this.changeValue(name, event.target.value);
+  bindInput = name => {
+    return event => {
+      this.changeValue(name, event.target.value)
     }
-  };
+  }
 
   changeValue = (name, value) => {
     let newState = {
       [name]: value
-    };
+    }
 
-    const formErrors = this.state.errors || {};
-    formErrors[name] = this.validateField(name, newState[name]);
-    newState.errors = formErrors;
+    const formErrors = this.state.errors || {}
+    formErrors[name] = this.validateField(name, newState[name])
+    newState.errors = formErrors
 
-    this.setState(newState);
-  };
+    this.setState(newState)
+  }
 
   clean() {
-    return true;
+    return true
   }
 
   send() {
-    return null;
+    return null
   }
 
   handleSuccess(success) {
-    return;
+    return
   }
 
   handleError(rejection) {
-    snackbar.apiError(rejection);
+    snackbar.apiError(rejection)
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     // we don't reload page on submissions
     if (event) {
       event.preventDefault()
     }
 
     if (this.state.isLoading) {
-      return;
+      return
     }
 
     if (this.clean()) {
-      this.setState({isLoading: true});
-      let promise = this.send();
+      this.setState({ isLoading: true })
+      let promise = this.send()
 
       if (promise) {
-        promise.then((success) => {
-          this.setState({isLoading: false});
-          this.handleSuccess(success);
-        }, (rejection) => {
-          this.setState({isLoading: false});
-          this.handleError(rejection);
-        });
+        promise.then(
+          success => {
+            this.setState({ isLoading: false })
+            this.handleSuccess(success)
+          },
+          rejection => {
+            this.setState({ isLoading: false })
+            this.handleError(rejection)
+          }
+        )
       } else {
-        this.setState({isLoading: false});
+        this.setState({ isLoading: false })
       }
     }
-  };
-  /* jshint ignore:end */
+  }
 }

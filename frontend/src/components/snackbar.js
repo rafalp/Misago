@@ -1,36 +1,34 @@
-import React from 'react';
+import React from "react"
 
-/* jshint ignore:start */
 const TYPES_CLASSES = {
-  'info': 'alert-info',
-  'success': 'alert-success',
-  'warning': 'alert-warning',
-  'error': 'alert-danger'
-};
-/* jshint ignore:end */
+  info: "alert-info",
+  success: "alert-success",
+  warning: "alert-warning",
+  error: "alert-danger"
+}
 
 export class Snackbar extends React.Component {
   getSnackbarClass() {
-    let snackbarClass = 'alerts-snackbar';
+    let snackbarClass = "alerts-snackbar"
     if (this.props.isVisible) {
-      snackbarClass += ' in';
+      snackbarClass += " in"
     } else {
-      snackbarClass += ' out';
+      snackbarClass += " out"
     }
-    return snackbarClass;
+    return snackbarClass
   }
 
   render() {
-    /* jshint ignore:start */
-    return <div className={this.getSnackbarClass()}>
-      <p className={'alert ' + TYPES_CLASSES[this.props.type]}>
-        {this.props.message}
-      </p>
-    </div>;
-    /* jshint ignore:end */
+    return (
+      <div className={this.getSnackbarClass()}>
+        <p className={"alert " + TYPES_CLASSES[this.props.type]}>
+          {this.props.message}
+        </p>
+      </div>
+    )
   }
 }
 
 export function select(state) {
-  return state.snackbar;
+  return state.snackbar
 }

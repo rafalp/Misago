@@ -1,143 +1,145 @@
-import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom'; // jshint ignore:line
-import misago from 'misago/index';
-import Button from 'misago/components/button'; // jshint ignore:line
-import Form from 'misago/components/form';
-import SignInModal from 'misago/components/sign-in.js';
-import ajax from 'misago/services/ajax';
-import auth from 'misago/services/auth'; // jshint ignore:line
-import modal from 'misago/services/modal';
-import snackbar from 'misago/services/snackbar';
-import showBannedPage from 'misago/utils/banned-page';
+import React from "react"
+import ReactDOM from "react-dom"
+import misago from "misago/index"
+import Button from "misago/components/button"
+import Form from "misago/components/form"
+import SignInModal from "misago/components/sign-in.js"
+import ajax from "misago/services/ajax"
+import auth from "misago/services/auth"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
+import showBannedPage from "misago/utils/banned-page"
 
 export class ResetPasswordForm extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
-      'isLoading': false,
+      isLoading: false,
 
-      'password': ''
-    };
+      password: ""
+    }
   }
 
   clean() {
     if (this.state.password.trim().length) {
-      return true;
+      return true
     } else {
-      snackbar.error(gettext("Enter new password."));
-      return false;
+      snackbar.error(gettext("Enter new password."))
+      return false
     }
   }
 
   send() {
-    return ajax.post(misago.get('CHANGE_PASSWORD_API'), {
-      'password': this.state.password
-    });
+    return ajax.post(misago.get("CHANGE_PASSWORD_API"), {
+      password: this.state.password
+    })
   }
 
   handleSuccess(apiResponse) {
-    this.props.callback(apiResponse);
+    this.props.callback(apiResponse)
   }
 
   handleError(rejection) {
     if (rejection.status === 403 && rejection.ban) {
-      showBannedPage(rejection.ban);
+      showBannedPage(rejection.ban)
     } else {
-      snackbar.apiError(rejection);
+      snackbar.apiError(rejection)
     }
   }
 
   render() {
-    /* jshint ignore:start */
-    return <div className="well well-form well-form-reset-password">
-      <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <div className="control-input">
-
-            <input type="password" className="form-control"
-                   placeholder={gettext("Enter new password")}
-                   disabled={this.state.isLoading}
-                   onChange={this.bindInput('password')}
-                   value={this.state.password} />
-
+    return (
+      <div className="well well-form well-form-reset-password">
+        <form onSubmit={this.handleSubmit}>
+          <div className="form-group">
+            <div className="control-input">
+              <input
+                type="password"
+                className="form-control"
+                placeholder={gettext("Enter new password")}
+                disabled={this.state.isLoading}
+                onChange={this.bindInput("password")}
+                value={this.state.password}
+              />
+            </div>
           </div>
-        </div>
 
-        <Button className="btn-primary btn-block"
-                loading={this.state.isLoading}>
-          {gettext("Change password")}
-        </Button>
-
-      </form>
-    </div>;
-    /* jshint ignore:end */
+          <Button
+            className="btn-primary btn-block"
+            loading={this.state.isLoading}
+          >
+            {gettext("Change password")}
+          </Button>
+        </form>
+      </div>
+    )
   }
 }
 
 export class PasswordChangedPage extends React.Component {
   getMessage() {
-    return interpolate(gettext("%(username)s, your password has been changed successfully."), {
-      username: this.props.user.username
-    }, true);
+    return interpolate(
+      gettext("%(username)s, your password has been changed successfully."),
+      {
+        username: this.props.user.username
+      },
+      true
+    )
   }
 
   showSignIn() {
-    modal.show(SignInModal);
+    modal.show(SignInModal)
   }
 
   render() {
-    /* jshint ignore:start */
-    return <div className="page page-message page-message-success page-forgotten-password-changed">
-      <div className="container">
-        <div className="message-panel">
+    return (
+      <div className="page page-message page-message-success page-forgotten-password-changed">
+        <div className="container">
+          <div className="message-panel">
+            <div className="message-icon">
+              <span className="material-icon">check</span>
+            </div>
 
-          <div className="message-icon">
-            <span className="material-icon">
-              check
-            </span>
+            <div className="message-body">
+              <p className="lead">{this.getMessage()}</p>
+              <p>
+                {gettext(
+                  "You will have to sign in using new password before continuing."
+                )}
+              </p>
+              <p>
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={this.showSignIn}
+                >
+                  {gettext("Sign in")}
+                </button>
+              </p>
+            </div>
           </div>
-
-          <div className="message-body">
-            <p className="lead">
-              {this.getMessage()}
-            </p>
-            <p>
-              {gettext("You will have to sign in using new password before continuing.")}
-            </p>
-            <p>
-              <button type="button" className="btn btn-primary" onClick={this.showSignIn}>
-                {gettext("Sign in")}
-              </button>
-            </p>
-          </div>
-
         </div>
       </div>
-    </div>;
-    /* jshint ignore:end */
+    )
   }
 }
 
 export default class extends React.Component {
-  /* jshint ignore:start */
-  complete = (apiResponse) => {
-    auth.softSignOut();
+  complete = apiResponse => {
+    auth.softSignOut()
 
     // nuke "redirect_to" field so we don't end
     // coming back to error page after sign in
-    $('#hidden-login-form input[name="redirect_to"]').remove();
+    $('#hidden-login-form input[name="redirect_to"]').remove()
 
     ReactDOM.render(
       <PasswordChangedPage user={apiResponse} />,
-      document.getElementById('page-mount')
-    );
-  };
-  /* jshint ignore:end */
+      document.getElementById("page-mount")
+    )
+  }
 
   render() {
-    /* jshint ignore:start */
-    return <ResetPasswordForm callback={this.complete} />;
-    /* jshint ignore:end */
+    return <ResetPasswordForm callback={this.complete} />
   }
 }
