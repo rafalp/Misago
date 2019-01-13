@@ -1,34 +1,33 @@
-/* jshint ignore:start */
-import React from 'react';
-import Options from 'misago/components/threads-list/thread/subscription/options';
+import React from "react"
+import Options from "misago/components/threads-list/thread/subscription/options"
 
 export default class extends React.Component {
   getIcon() {
     if (this.props.thread.subscription === true) {
-      return 'star';
+      return "star"
     } else if (this.props.thread.subscription === false) {
-      return 'star_half';
+      return "star_half"
     }
 
-    return 'star_border';
+    return "star_border"
   }
 
   getClassName() {
     if (this.props.thread.subscription === true) {
-      return "btn btn-default btn-icon btn-block btn-subscribe btn-subscribe-full dropdown-toggle";
+      return "btn btn-default btn-icon btn-block btn-subscribe btn-subscribe-full dropdown-toggle"
     } else if (this.props.thread.subscription === false) {
-      return "btn btn-default btn-icon btn-block btn-subscribe btn-subscribe-half dropdown-toggle";
+      return "btn btn-default btn-icon btn-block btn-subscribe btn-subscribe-half dropdown-toggle"
     }
 
-    return "btn btn-default btn-icon btn-block btn-subscribe dropdown-toggle";
+    return "btn btn-default btn-icon btn-block btn-subscribe dropdown-toggle"
   }
 
   render() {
-    const { moderation, subscription } = this.props.thread;
-    const fullwidth = !moderation.length;
+    const { moderation, subscription } = this.props.thread
+    const fullwidth = !moderation.length
 
-    let className = fullwidth ? 'col-xs-12' : 'col-xs-6';
-    className += ' hidden-xs hidden-sm';
+    let className = fullwidth ? "col-xs-12" : "col-xs-6"
+    className += " hidden-xs hidden-sm"
 
     return (
       <div className={className}>
@@ -42,40 +41,30 @@ export default class extends React.Component {
               aria-haspopup="true"
               aria-expanded="false"
             >
-              <span className="material-icon">
-                {this.getIcon()}
-              </span>
-              <Label
-                moderation={moderation}
-                subscription={subscription}
-              />
+              <span className="material-icon">{this.getIcon()}</span>
+              <Label moderation={moderation} subscription={subscription} />
             </button>
 
             <Options
               className="dropdown-menu dropdown-menu-right"
               thread={this.props.thread}
             />
-
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
 export function Label({ moderation, subscription }) {
-  if (moderation.length) return null;
+  if (moderation.length) return null
 
-  let text = gettext("Disabled");
+  let text = gettext("Disabled")
   if (subscription === true) {
-    text = gettext("E-mail");
+    text = gettext("E-mail")
   } else if (subscription === false) {
-    text = gettext("Enabled");
+    text = gettext("Enabled")
   }
 
-  return (
-    <span className="btn-text">
-      {text}
-    </span>
-  );
+  return <span className="btn-text">{text}</span>
 }

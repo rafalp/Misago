@@ -1,16 +1,16 @@
-import { connect } from 'react-redux';
-import Categories, { select } from 'misago/components/categories';
-import misago from 'misago/index';
-import mount from 'misago/utils/mount-component';
+import { connect } from "react-redux"
+import Categories, { select } from "misago/components/categories"
+import misago from "misago/index"
+import mount from "misago/utils/mount-component"
 
 export default function initializer() {
-  if (document.getElementById('categories-mount')) {
-    mount(connect(select)(Categories), 'categories-mount');
+  if (document.getElementById("categories-mount")) {
+    mount(connect(select)(Categories), "categories-mount")
   }
 }
 
 misago.addInitializer({
-  name: 'component:categories',
+  name: "component:categories",
   initializer: initializer,
-  after: 'store'
-});
+  after: "store"
+})

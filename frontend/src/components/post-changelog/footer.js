@@ -1,14 +1,13 @@
-// jshint ignore:start
-import React from 'react';
-import Button from 'misago/components/button';
+import React from "react"
+import Button from "misago/components/button"
 
 export default class extends React.Component {
   onClick = () => {
-    this.props.revertEdit(this.props.edit.id);
+    this.props.revertEdit(this.props.edit.id)
   }
 
   render() {
-    if (!this.props.canRevert) return null;
+    if (!this.props.canRevert) return null
 
     return (
       <div className="modal-footer visible-xs-block">
@@ -22,4 +21,5 @@ export default class extends React.Component {
         </Button>
       </div>
     )
-  }}
+  }
+}

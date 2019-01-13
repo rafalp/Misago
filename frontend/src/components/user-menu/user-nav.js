@@ -1,27 +1,26 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Avatar from 'misago/components/avatar'; // jshint ignore:line
-import ChangeAvatarModal, { select } from 'misago/components/change-avatar/root'; // jshint ignore:line
-import NavbarSearch from 'misago/components/navbar-search'; // jshint ignore:line
-import misago from 'misago'; // jshint ignore:line
-import dropdown from 'misago/services/mobile-navbar-dropdown';
-import modal from 'misago/services/modal';
+import React from "react"
+import { connect } from "react-redux"
+import Avatar from "misago/components/avatar"
+import ChangeAvatarModal, { select } from "misago/components/change-avatar/root"
+import NavbarSearch from "misago/components/navbar-search"
+import misago from "misago"
+import dropdown from "misago/services/mobile-navbar-dropdown"
+import modal from "misago/services/modal"
 
 export class UserMenu extends React.Component {
   logout() {
-    let decision = confirm(gettext("Are you sure you want to sign out?"));
+    let decision = confirm(gettext("Are you sure you want to sign out?"))
     if (decision) {
-      $('#hidden-logout-form').submit();
+      $("#hidden-logout-form").submit()
     }
   }
 
   changeAvatar() {
-    modal.show(connect(select)(ChangeAvatarModal));
+    modal.show(connect(select)(ChangeAvatarModal))
   }
 
   render() {
-    /* jshint ignore:start */
-    const { user } = this.props;
+    const { user } = this.props
 
     return (
       <ul
@@ -32,27 +31,19 @@ export class UserMenu extends React.Component {
           <strong>{user.username}</strong>
           <ul className="list-unstyled list-inline user-stats">
             <li>
-              <span className="material-icon">
-                message
-              </span>
+              <span className="material-icon">message</span>
               {user.posts}
             </li>
             <li>
-              <span className="material-icon">
-                forum
-              </span>
+              <span className="material-icon">forum</span>
               {user.threads}
             </li>
             <li>
-              <span className="material-icon">
-                favorite
-              </span>
+              <span className="material-icon">favorite</span>
               {user.followers}
             </li>
             <li>
-              <span className="material-icon">
-                favorite_outline
-              </span>
+              <span className="material-icon">favorite_outline</span>
               {user.following}
             </li>
           </ul>
@@ -65,7 +56,7 @@ export class UserMenu extends React.Component {
           </a>
         </li>
         <li>
-          <a href={misago.get('USERCP_URL')}>
+          <a href={misago.get("USERCP_URL")}>
             <span className="material-icon">done_all</span>
             {gettext("Change options")}
           </a>
@@ -82,7 +73,7 @@ export class UserMenu extends React.Component {
         </li>
         {!!user.acl.can_use_private_threads && (
           <li>
-            <a href={misago.get('PRIVATE_THREADS_URL')}>
+            <a href={misago.get("PRIVATE_THREADS_URL")}>
               <span className="material-icon">message</span>
               {gettext("Private threads")}
               <PrivateThreadsBadge user={user} />
@@ -100,25 +91,16 @@ export class UserMenu extends React.Component {
           </button>
         </li>
       </ul>
-    );
-    /* jshint ignore:end */
+    )
   }
 }
 
 export function PrivateThreadsBadge({ user }) {
-  if (!user.unread_private_threads) return null;
+  if (!user.unread_private_threads) return null
 
-  /* jshint ignore:start */
-  return (
-    <span className="badge">
-      {user.unread_private_threads}
-    </span>
-  );
-  /* jshint ignore:end */
-
+  return <span className="badge">{user.unread_private_threads}</span>
 }
 
-/* jshint ignore:start */
 export function UserNav({ user }) {
   return (
     <ul className="ul nav navbar-nav nav-user">
@@ -140,59 +122,51 @@ export function UserNav({ user }) {
         <UserMenu user={user} />
       </li>
     </ul>
-  );
+  )
 }
-/* jshint ignore:end */
 
 export function UserPrivateThreadsLink({ user }) {
-  if (!user.acl.can_use_private_threads) return null;
+  if (!user.acl.can_use_private_threads) return null
 
-  let title = null;
+  let title = null
   if (user.unread_private_threads) {
-    title = gettext("You have unread private threads!");
+    title = gettext("You have unread private threads!")
   } else {
-    title = gettext("Private threads");
+    title = gettext("Private threads")
   }
 
-  /* jshint ignore:start */
   return (
     <li>
       <a
         className="navbar-icon"
-        href={misago.get('PRIVATE_THREADS_URL')}
-        title={title}>
-        <span className="material-icon">
-          message
-        </span>
+        href={misago.get("PRIVATE_THREADS_URL")}
+        title={title}
+      >
+        <span className="material-icon">message</span>
         {user.unread_private_threads > 0 && (
-          <span className="badge">
-            {user.unread_private_threads}
-          </span>
+          <span className="badge">{user.unread_private_threads}</span>
         )}
       </a>
     </li>
-  );
-  /* jshint ignore:end */
+  )
 }
 
 export function selectUserMenu(state) {
   return {
     user: state.auth.user
-  };
+  }
 }
 
 export class CompactUserNav extends React.Component {
   showUserMenu() {
-    dropdown.showConnected('user-menu', connect(selectUserMenu)(UserMenu));
+    dropdown.showConnected("user-menu", connect(selectUserMenu)(UserMenu))
   }
 
   render() {
-    /* jshint ignore:start */
     return (
       <button type="button" onClick={this.showUserMenu}>
         <Avatar user={this.props.user} size="50" />
       </button>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

@@ -1,5 +1,4 @@
-// jshint ignore:start
-import React from 'react';
+import React from "react"
 
 export default function({ value, onChange }) {
   return (
@@ -14,5 +13,5 @@ export default function({ value, onChange }) {
       role="combobox"
       type="text"
     />
-  );
+  )
 }

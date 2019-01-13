@@ -1,13 +1,13 @@
 /* global grecaptcha */
-import React from 'react'; // jshint ignore:line
-import FormGroup from 'misago/components/form-group'; // jshint ignore:line
+import React from "react"
+import FormGroup from "misago/components/form-group"
 
 export class BaseCaptcha {
   init(context, ajax, include, snackbar) {
-    this._context = context;
-    this._ajax = ajax;
-    this._include = include;
-    this._snackbar = snackbar;
+    this._context = context
+    this._ajax = ajax
+    this._include = include
+    this._snackbar = snackbar
   }
 }
 
@@ -15,40 +15,41 @@ export class NoCaptcha extends BaseCaptcha {
   load() {
     return new Promise(function(resolve) {
       // immediately resolve as we don't have anything to validate
-      resolve();
-    });
+      resolve()
+    })
   }
 
   validator() {
-    return null;
+    return null
   }
 
   component() {
-    return null;
+    return null
   }
 }
 
 export class QACaptcha extends BaseCaptcha {
   load() {
-    var self = this;
+    var self = this
     return new Promise((resolve, reject) => {
-      self._ajax.get(self._context.get('CAPTCHA_API')).then(
-      function(data) {
-        self.question = data.question;
-        self.helpText = data.help_text;
-        resolve();
-      }, function() {
-        self._snackbar.error(gettext("Failed to load CAPTCHA."));
-        reject();
-      });
-    });
+      self._ajax.get(self._context.get("CAPTCHA_API")).then(
+        function(data) {
+          self.question = data.question
+          self.helpText = data.help_text
+          resolve()
+        },
+        function() {
+          self._snackbar.error(gettext("Failed to load CAPTCHA."))
+          reject()
+        }
+      )
+    })
   }
 
   validator() {
-    return [];
+    return []
   }
 
-  /* jshint ignore:start */
   component(kwargs) {
     return (
       <FormGroup
@@ -64,62 +65,57 @@ export class QACaptcha extends BaseCaptcha {
           className="form-control"
           disabled={kwargs.form.state.isLoading}
           id="id_captcha"
-          onChange={kwargs.form.bindInput('captcha')}
+          onChange={kwargs.form.bindInput("captcha")}
           type="text"
           value={kwargs.form.state.captcha}
         />
       </FormGroup>
-    );
+    )
   }
-  /* jshint ignore:end */
 }
-
 
 export class ReCaptchaComponent extends React.Component {
   componentDidMount() {
-    grecaptcha.render('recaptcha', {
-      'sitekey': this.props.siteKey,
-      'callback': (response) => {
+    grecaptcha.render("recaptcha", {
+      sitekey: this.props.siteKey,
+      callback: response => {
         // fire fakey event to binding
         this.props.binding({
           target: {
             value: response
           }
-        });
+        })
       }
-    });
+    })
   }
 
   render() {
-    /* jshint ignore:start */
-    return <div id="recaptcha" />;
-    /* jshint ignore:end */
+    return <div id="recaptcha" />
   }
 }
 
 export class ReCaptcha extends BaseCaptcha {
   load() {
-    this._include.include('https://www.google.com/recaptcha/api.js', true);
+    this._include.include("https://www.google.com/recaptcha/api.js", true)
 
     return new Promise(function(resolve) {
       var wait = function() {
         if (typeof grecaptcha === "undefined") {
           window.setTimeout(function() {
-            wait();
-          }, 200);
+            wait()
+          }, 200)
         } else {
-          resolve();
+          resolve()
         }
-      };
-      wait();
-    });
+      }
+      wait()
+    })
   }
 
   validator() {
-    return [];
+    return []
   }
 
-  /* jshint ignore:start */
   component(kwargs) {
     return (
       <FormGroup
@@ -128,50 +124,51 @@ export class ReCaptcha extends BaseCaptcha {
         labelClass={kwargs.labelClass || ""}
         controlClass={kwargs.controlClass || ""}
         validation={kwargs.form.state.errors.captcha}
-        helpText={gettext("This test helps us prevent automated spam registrations on our site.")}
+        helpText={gettext(
+          "This test helps us prevent automated spam registrations on our site."
+        )}
       >
         <ReCaptchaComponent
-          binding={kwargs.form.bindInput('captcha')}
-          siteKey={this._context.get('SETTINGS').recaptcha_site_key}
+          binding={kwargs.form.bindInput("captcha")}
+          siteKey={this._context.get("SETTINGS").recaptcha_site_key}
         />
       </FormGroup>
-    );
+    )
   }
-  /* jshint ignore:end */
 }
 
 export class Captcha {
   init(context, ajax, include, snackbar) {
-    switch(context.get('SETTINGS').captcha_type) {
-      case 'no':
-        this._captcha = new NoCaptcha();
-        break;
+    switch (context.get("SETTINGS").captcha_type) {
+      case "no":
+        this._captcha = new NoCaptcha()
+        break
 
-      case 'qa':
-        this._captcha = new QACaptcha();
-        break;
+      case "qa":
+        this._captcha = new QACaptcha()
+        break
 
-      case 're':
-        this._captcha = new ReCaptcha();
-        break;
+      case "re":
+        this._captcha = new ReCaptcha()
+        break
     }
 
-    this._captcha.init(context, ajax, include, snackbar);
+    this._captcha.init(context, ajax, include, snackbar)
   }
 
   // accessors for underlying strategy
 
   load() {
-    return this._captcha.load();
+    return this._captcha.load()
   }
 
   validator() {
-    return this._captcha.validator();
+    return this._captcha.validator()
   }
 
   component(kwargs) {
-    return this._captcha.component(kwargs);
+    return this._captcha.component(kwargs)
   }
 }
 
-export default new Captcha();
+export default new Captcha()

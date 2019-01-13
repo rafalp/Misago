@@ -1,22 +1,21 @@
-import React from 'react';
-import Avatar from 'misago/components/avatar'; // jshint ignore:line
-import * as random from 'misago/utils/random'; // jshint ignore:line
+import React from "react"
+import Avatar from "misago/components/avatar"
+import * as random from "misago/utils/random"
 
 export default class extends React.Component {
   shouldComponentUpdate() {
-    return false;
+    return false
   }
 
   getClassName() {
     if (this.props.hiddenOnMobile) {
-      return 'list-group-item hidden-xs hidden-sm';
+      return "list-group-item hidden-xs hidden-sm"
     } else {
-      return 'list-group-item';
+      return "list-group-item"
     }
   }
 
   render() {
-    /* jshint ignore:start */
     return (
       <li className={this.getClassName()}>
         <div className="rank-user-avatar">
@@ -30,7 +29,7 @@ export default class extends React.Component {
             <span className="item-title">
               <span
                 className="ui-preview-text"
-                style={{width: random.int(30, 80) + "px"}}
+                style={{ width: random.int(30, 80) + "px" }}
               >
                 &nbsp;
               </span>
@@ -39,12 +38,10 @@ export default class extends React.Component {
 
           <div className="user-details">
             <span className="user-status">
-              <span className="status-icon ui-preview-text">
-                &nbsp;
-              </span>
+              <span className="status-icon ui-preview-text">&nbsp;</span>
               <span
                 className="status-label ui-preview-text hidden-xs hidden-sm"
-                style={{width: random.int(30, 50) + "px"}}
+                style={{ width: random.int(30, 50) + "px" }}
               >
                 &nbsp;
               </span>
@@ -52,7 +49,7 @@ export default class extends React.Component {
             <span className="rank-name">
               <span
                 className="ui-preview-text"
-                style={{width: random.int(30, 50) + "px"}}
+                style={{ width: random.int(30, 50) + "px" }}
               >
                 &nbsp;
               </span>
@@ -60,7 +57,7 @@ export default class extends React.Component {
             <span className="user-title hidden-xs hidden-sm">
               <span
                 className="ui-preview-text"
-                style={{width: random.int(30, 50) + "px"}}
+                style={{ width: random.int(30, 50) + "px" }}
               >
                 &nbsp;
               </span>
@@ -71,7 +68,7 @@ export default class extends React.Component {
               <strong>
                 <span
                   className="ui-preview-text"
-                  style={{width: random.int(20, 30) + "px"}}
+                  style={{ width: random.int(20, 30) + "px" }}
                 >
                   &nbsp;
                 </span>
@@ -82,7 +79,7 @@ export default class extends React.Component {
               <strong>
                 <span
                   className="ui-preview-text"
-                  style={{width: random.int(20, 30) + "px"}}
+                  style={{ width: random.int(20, 30) + "px" }}
                 >
                   &nbsp;
                 </span>
@@ -96,7 +93,7 @@ export default class extends React.Component {
           <strong>
             <span
               className="ui-preview-text"
-              style={{width: random.int(20, 30) + "px"}}
+              style={{ width: random.int(20, 30) + "px" }}
             >
               &nbsp;
             </span>
@@ -108,7 +105,7 @@ export default class extends React.Component {
           <strong>
             <span
               className="ui-preview-text"
-              style={{width: random.int(20, 30) + "px"}}
+              style={{ width: random.int(20, 30) + "px" }}
             >
               &nbsp;
             </span>
@@ -120,7 +117,7 @@ export default class extends React.Component {
           <strong>
             <span
               className="ui-preview-text"
-              style={{width: random.int(20, 30) + "px"}}
+              style={{ width: random.int(20, 30) + "px" }}
             >
               &nbsp;
             </span>
@@ -128,7 +125,6 @@ export default class extends React.Component {
           <small>{gettext("Total posts")}</small>
         </div>
       </li>
-    );
-    /* jshint ignore:end */
+    )
   }
 }

@@ -1,26 +1,21 @@
-// jshint ignore:start
-import React from 'react';
+import React from "react"
 
 export default function(props) {
   return (
     <div className="poll-choices-bars">
-      {props.poll.choices.map((choice) => {
+      {props.poll.choices.map(choice => {
         return (
-          <PollChoice
-            choice={choice}
-            key={choice.hash}
-            poll={props.poll}
-          />
-        );
+          <PollChoice choice={choice} key={choice.hash} poll={props.poll} />
+        )
       })}
     </div>
-  );
+  )
 }
 
 export function PollChoice(props) {
-  let proc = 0;
+  let proc = 0
   if (props.choice.votes && props.poll.votes) {
-    proc = Math.ceil(props.choice.votes * 100 / props.poll.votes);
+    proc = Math.ceil((props.choice.votes * 100) / props.poll.votes)
   }
 
   return (
@@ -34,7 +29,7 @@ export function PollChoice(props) {
             aria-valuenow={proc}
             aria-valuemin="0"
             aria-valuemax="100"
-            style={{width: proc + '%'}}
+            style={{ width: proc + "%" }}
           >
             <span className="sr-only">
               {getVotesLabel(props.votes, props.proc)}
@@ -42,15 +37,12 @@ export function PollChoice(props) {
           </div>
         </div>
         <ul className="list-unstyled list-inline poll-chart">
-          <ChoiceVotes
-            proc={proc}
-            votes={props.choice.votes}
-          />
+          <ChoiceVotes proc={proc} votes={props.choice.votes} />
           <UserChoice selected={props.choice.selected} />
         </ul>
       </dd>
     </dl>
-  );
+  )
 }
 
 export function ChoiceVotes(props) {
@@ -58,29 +50,33 @@ export function ChoiceVotes(props) {
     <li className="poll-chart-votes">
       {getVotesLabel(props.votes, props.proc)}
     </li>
-  );
+  )
 }
 
 export function getVotesLabel(votes, proc) {
   const message = ngettext(
     "%(votes)s vote, %(proc)s% of total.",
-    "%(votes)s votes, %(proc)s% of total.", votes);
+    "%(votes)s votes, %(proc)s% of total.",
+    votes
+  )
 
-  return interpolate(message, {
-    'votes': votes,
-    'proc': proc
-  }, true);
+  return interpolate(
+    message,
+    {
+      votes: votes,
+      proc: proc
+    },
+    true
+  )
 }
 
 export function UserChoice(props) {
-  if (!props.selected) return null;
+  if (!props.selected) return null
 
   return (
     <li className="poll-chart-selected">
-      <span className="material-icon">
-        check_box
-      </span>
+      <span className="material-icon">check_box</span>
       {gettext("Your choice.")}
     </li>
-  );
+  )
 }

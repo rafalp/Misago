@@ -1,15 +1,15 @@
 export default function(bytes) {
   if (bytes > 1024 * 1024 * 1024) {
-    return roundSize(bytes / (1024 * 1024 * 1024)) + ' GB';
+    return roundSize(bytes / (1024 * 1024 * 1024)) + " GB"
   } else if (bytes > 1024 * 1024) {
-    return roundSize(bytes / (1024 * 1024)) + ' MB';
+    return roundSize(bytes / (1024 * 1024)) + " MB"
   } else if (bytes > 1024) {
-    return roundSize(bytes / 1024) + ' KB';
+    return roundSize(bytes / 1024) + " KB"
   } else {
-    return roundSize(bytes) + ' B';
+    return roundSize(bytes) + " B"
   }
 }
 
 export function roundSize(value) {
-  return value.toFixed(1);
+  return value.toFixed(1)
 }

@@ -1,18 +1,17 @@
-/* jshint ignore:start */
-import React from 'react';
-import Breadcrumbs from './breadcrumbs';
-import { isModerationVisible, ModerationControls } from '../moderation/thread';
-import Stats from './stats';
-import Form from 'misago/components/form';
-import { getTitleValidators } from 'misago/components/posting/utils/validators';
-import ajax from 'misago/services/ajax';
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store';
-import * as thread from 'misago/reducers/thread';
+import React from "react"
+import Breadcrumbs from "./breadcrumbs"
+import { isModerationVisible, ModerationControls } from "../moderation/thread"
+import Stats from "./stats"
+import Form from "misago/components/form"
+import { getTitleValidators } from "misago/components/posting/utils/validators"
+import ajax from "misago/services/ajax"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
+import * as thread from "misago/reducers/thread"
 
 export default class extends Form {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isEditing: false,
@@ -24,68 +23,68 @@ export default class extends Form {
         title: getTitleValidators()
       },
       errors: {}
-    };
+    }
   }
 
-  onChange = (event) => {
-    this.changeValue('title', event.target.value);
-  };
+  onChange = event => {
+    this.changeValue("title", event.target.value)
+  }
 
   onEdit = () => {
     this.setState({
       isEditing: true
-    });
-  };
+    })
+  }
 
   onCancel = () => {
     this.setState({
       title: this.props.thread.title,
 
       isEditing: false
-    });
-  };
+    })
+  }
 
   clean() {
     if (!this.state.title.trim().length) {
-      snackbar.error(gettext("You have to enter thread title."));
-      return false;
+      snackbar.error(gettext("You have to enter thread title."))
+      return false
     }
 
-    const errors = this.validate();
+    const errors = this.validate()
 
     if (errors.title) {
-      snackbar.error(errors.title[0]);
-      return false;
+      snackbar.error(errors.title[0])
+      return false
     }
 
-    return true;
+    return true
   }
 
   send() {
     return ajax.patch(this.props.thread.api.index, [
-      {op: 'replace', path: 'title', value: this.state.title}
-    ]);
+      { op: "replace", path: "title", value: this.state.title }
+    ])
   }
 
   handleSuccess(data) {
-    store.dispatch(thread.update(data));
+    store.dispatch(thread.update(data))
 
     this.setState({
-      'isEditing': false
-    });
+      isEditing: false
+    })
   }
 
   handleError(rejection) {
     if (rejection.status === 400) {
-      snackbar.error(rejection.detail[0]);
+      snackbar.error(rejection.detail[0])
     } else {
-      snackbar.apiError(rejection);
+      snackbar.apiError(rejection)
     }
   }
 
   render() {
-    const {thread, user} = this.props;
-    const showModeration = !!user.id && isModerationVisible(thread);
+    const { thread, user } = this.props
+    const showModeration = !!user.id && isModerationVisible(thread)
 
     if (this.state.isEditing) {
       return (
@@ -131,19 +130,25 @@ export default class extends Form {
           </div>
           <Stats thread={thread} />
         </div>
-      );
+      )
     } else if (user.id && thread.acl.can_edit) {
       return (
         <div className="page-header">
           <Breadcrumbs path={thread.path} />
           <div className="container">
             <div className="row">
-              <div className={showModeration ? "col-sm-9 col-md-8" : "col-sm-10 col-md-10"}>
-                <h1>
-                  {thread.title}
-                </h1>
+              <div
+                className={
+                  showModeration ? "col-sm-9 col-md-8" : "col-sm-10 col-md-10"
+                }
+              >
+                <h1>{thread.title}</h1>
               </div>
-              <div className={showModeration ? "col-sm-3 col-md-4" : "col-sm-3 col-md-2"}>
+              <div
+                className={
+                  showModeration ? "col-sm-3 col-md-4" : "col-sm-3 col-md-2"
+                }
+              >
                 <div className="row xs-margin-top md-margin-top-no">
                   <div className={showModeration ? "col-xs-6" : "col-xs-12"}>
                     <button
@@ -153,21 +158,17 @@ export default class extends Form {
                       type="button"
                     >
                       <span className="material-icon">edit</span>
-                      <span className="hidden-sm">
-                        {gettext("Edit")}
-                      </span>
+                      <span className="hidden-sm">{gettext("Edit")}</span>
                     </button>
                   </div>
-                  {showModeration && (
-                    <Moderation {...this.props} />
-                  )}
+                  {showModeration && <Moderation {...this.props} />}
                 </div>
               </div>
             </div>
           </div>
           <Stats thread={thread} />
         </div>
-      );
+      )
     } else if (showModeration) {
       return (
         <div className="page-header">
@@ -175,23 +176,18 @@ export default class extends Form {
           <div className="container">
             <div className="row">
               <div className="col-sm-9 col-md-10">
-                <h1>
-                  {thread.title}
-                </h1>
+                <h1>{thread.title}</h1>
               </div>
               <div className="col-sm-3 col-md-2">
                 <div className="row xs-margin-top md-margin-top-no">
-                  <Moderation
-                    isSingle={true}
-                    {...this.props}
-                  />
+                  <Moderation isSingle={true} {...this.props} />
                 </div>
               </div>
             </div>
           </div>
           <Stats thread={thread} />
         </div>
-      );
+      )
     }
 
     return (
@@ -202,7 +198,7 @@ export default class extends Form {
         </div>
         <Stats thread={thread} />
       </div>
-    );
+    )
   }
 }
 
@@ -219,9 +215,7 @@ export function Moderation(props) {
             disabled={props.thread.isBusy}
             type="button"
           >
-            <span className="material-icon">
-              settings
-            </span>
+            <span className="material-icon">settings</span>
             <span className={props.isSingle ? "" : "hidden-sm"}>
               {gettext("Moderation")}
             </span>
@@ -234,5 +228,5 @@ export function Moderation(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

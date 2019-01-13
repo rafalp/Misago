@@ -1,5 +1,4 @@
-// jshint ignore:start
-import React from 'react';
+import React from "react"
 
 export default function(props) {
   return (
@@ -7,10 +6,12 @@ export default function(props) {
       <ul className="list-group">
         <li className="list-group-item empty-message">
           <p className="lead">
-            {gettext("No categories exist or you don't have permission to see them.")}
+            {gettext(
+              "No categories exist or you don't have permission to see them."
+            )}
           </p>
         </li>
       </ul>
     </div>
-  );
+  )
 }

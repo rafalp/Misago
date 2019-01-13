@@ -1,29 +1,22 @@
-import React from 'react'; // jshint ignore:line
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'; // jshint ignore:line
-import store from 'misago/services/store'; // jshint ignore:line
+import React from "react"
+import ReactDOM from "react-dom"
+import { Provider } from "react-redux"
+import store from "misago/services/store"
 
-export default function(Component, rootElementId, connected=true) {
-  let rootElement = document.getElementById(rootElementId);
+export default function(Component, rootElementId, connected = true) {
+  let rootElement = document.getElementById(rootElementId)
 
-  /* jshint ignore:start */
-  let finalComponent = Component.props ? Component : <Component />;
-  /* jshint ignore:end */
+  let finalComponent = Component.props ? Component : <Component />
 
   if (rootElement) {
     if (connected) {
       ReactDOM.render(
-        /* jshint ignore:start */
-        <Provider store={store.getStore()}>
-          {finalComponent}
-        </Provider>,
-        /* jshint ignore:end */
+        <Provider store={store.getStore()}>{finalComponent}</Provider>,
+
         rootElement
-      );
+      )
     } else {
-      /* jshint ignore:start */
-      ReactDOM.render(finalComponent, rootElement);
-      /* jshint ignore:end */
+      ReactDOM.render(finalComponent, rootElement)
     }
   }
 }

@@ -1,35 +1,39 @@
 export class PageTitle {
   init(indexTitle, forumName) {
-    this._indexTitle = indexTitle;
-    this._forumName = forumName;
+    this._indexTitle = indexTitle
+    this._forumName = forumName
   }
 
   set(title) {
     if (!title) {
-      document.title = this._indexTitle || this._forumName;
-      return;
+      document.title = this._indexTitle || this._forumName
+      return
     }
 
-    if (typeof title === 'string') {
-      title = {title: title};
+    if (typeof title === "string") {
+      title = { title: title }
     }
 
-    let finalTitle = title.title;
+    let finalTitle = title.title
 
     if (title.page > 1) {
-      const pageLabel = interpolate(gettext('page: %(page)s'), {
-        page: title.page
-      }, true);
+      const pageLabel = interpolate(
+        gettext("page: %(page)s"),
+        {
+          page: title.page
+        },
+        true
+      )
 
-      finalTitle += ' (' + pageLabel + ')';
+      finalTitle += " (" + pageLabel + ")"
     }
 
     if (title.parent) {
-      finalTitle += ' | ' + title.parent;
+      finalTitle += " | " + title.parent
     }
 
-    document.title = finalTitle + ' | ' + this._forumName;
+    document.title = finalTitle + " | " + this._forumName
   }
 }
 
-export default new PageTitle();
+export default new PageTitle()

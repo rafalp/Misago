@@ -1,26 +1,25 @@
-/* jshint ignore:start */
-import React from 'react';
-import misago from 'misago';
-import escapeHtml from 'misago/utils/escape-html';
+import React from "react"
+import misago from "misago"
+import escapeHtml from "misago/utils/escape-html"
 
 const AGREEMENT_URL = '<a href="%(url)s" target="_blank">%(agreement)s</a>'
 
-const RegisterLegalFootnote = (props) => {
+const RegisterLegalFootnote = props => {
   const {
     errors,
     privacyPolicy,
     termsOfService,
     onPrivacyPolicyChange,
     onTermsOfServiceChange
-  } = props;
-  
-  const termsOfServiceId = misago.get('TERMS_OF_SERVICE_ID');
-  const termsOfServiceUrl = misago.get('TERMS_OF_SERVICE_URL');
+  } = props
 
-  const privacyPolicyId = misago.get('PRIVACY_POLICY_ID');
-  const privacyPolicyUrl = misago.get('PRIVACY_POLICY_URL');
+  const termsOfServiceId = misago.get("TERMS_OF_SERVICE_ID")
+  const termsOfServiceUrl = misago.get("TERMS_OF_SERVICE_URL")
 
-  if (!termsOfServiceId && !privacyPolicyId) return null;
+  const privacyPolicyId = misago.get("PRIVACY_POLICY_ID")
+  const privacyPolicyUrl = misago.get("PRIVACY_POLICY_URL")
+
+  if (!termsOfServiceId && !privacyPolicyId) return null
 
   return (
     <div>
@@ -41,13 +40,13 @@ const RegisterLegalFootnote = (props) => {
         onChange={onPrivacyPolicyChange}
       />
     </div>
-  );
+  )
 }
 
-const LegalAgreement = (props) => {
-  const { agreement, checked, errors, url, value, onChange } = props;
+const LegalAgreement = props => {
+  const { agreement, checked, errors, url, value, onChange } = props
 
-  if (!url) return;
+  if (!url) return null
 
   const agreementHtml = interpolate(
     AGREEMENT_URL,
@@ -55,10 +54,10 @@ const LegalAgreement = (props) => {
     true
   )
   const label = interpolate(
-      gettext("I have read and accept %(agreement)s."),
-      { agreement: agreementHtml },
-      true
-  );
+    gettext("I have read and accept %(agreement)s."),
+    { agreement: agreementHtml },
+    true
+  )
 
   return (
     <div className="checkbox legal-footnote">
@@ -69,17 +68,16 @@ const LegalAgreement = (props) => {
           value={value}
           onChange={onChange}
         />
-        <span
-          dangerouslySetInnerHTML={{ __html: label}}
-        />
+        <span dangerouslySetInnerHTML={{ __html: label }} />
       </label>
-      {errors && errors.map((error, i) => (
-        <div className="help-block errors" key={i}>
-          {error}
-        </div>
-      ))}
+      {errors &&
+        errors.map((error, i) => (
+          <div className="help-block errors" key={i}>
+            {error}
+          </div>
+        ))}
     </div>
-  );
+  )
 }
 
-export default RegisterLegalFootnote;
+export default RegisterLegalFootnote

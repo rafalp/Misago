@@ -1,131 +1,128 @@
-// jshint ignore:start
-import React from 'react';
-import ajax from 'misago/services/ajax';
-import snackbar from 'misago/services/snackbar';
-import misago from 'misago';
-import cleanResults from './clean-results';
-import Dropdown from './dropdown';
+import React from "react"
+import ajax from "misago/services/ajax"
+import snackbar from "misago/services/snackbar"
+import misago from "misago"
+import cleanResults from "./clean-results"
+import Dropdown from "./dropdown"
 
 export default class extends React.Component {
   constructor() {
-    super();
+    super()
 
     this.state = {
       isLoading: false,
       isOpen: false,
-      query: '',
+      query: "",
       results: []
-    };
+    }
 
-    this.intervalId = null;
+    this.intervalId = null
   }
 
   componentDidMount() {
-    document.addEventListener('mousedown', this.onDocumentMouseDown);
-    document.addEventListener('keydown', this.onEscape);
+    document.addEventListener("mousedown", this.onDocumentMouseDown)
+    document.addEventListener("keydown", this.onEscape)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mousedown', this.onDocumentMouseDown);
-    document.removeEventListener('keydown', this.onEscape);
+    document.removeEventListener("mousedown", this.onDocumentMouseDown)
+    document.removeEventListener("keydown", this.onEscape)
   }
 
-  onToggle = (ev) => {
+  onToggle = ev => {
     this.setState((prevState, props) => {
       if (!prevState.isOpen) {
         window.setTimeout(() => {
-          this.container.querySelector('input').focus();
-        }, 100);
+          this.container.querySelector("input").focus()
+        }, 100)
       }
 
-      return { isOpen: !prevState.isOpen };
-    });
-  };
+      return { isOpen: !prevState.isOpen }
+    })
+  }
 
-  onDocumentMouseDown = (ev) => {
-    let closeResults = true;
-    let node = ev.target;
+  onDocumentMouseDown = ev => {
+    let closeResults = true
+    let node = ev.target
 
     while (node !== null && node !== document) {
       if (node === this.container) {
-        closeResults = false;
-        return;
+        closeResults = false
+        return
       }
 
-      node = node.parentNode;
+      node = node.parentNode
     }
 
     if (closeResults) {
-      this.setState({ isOpen: false });
+      this.setState({ isOpen: false })
     }
-  };
+  }
 
-  onEscape = (ev) => {
-    if (ev.key === 'Escape') {
-      this.setState({ isOpen: false });
+  onEscape = ev => {
+    if (ev.key === "Escape") {
+      this.setState({ isOpen: false })
     }
-  };
+  }
 
-  onChange = (ev) => {
-    const query = ev.target.value;
+  onChange = ev => {
+    const query = ev.target.value
 
-    this.setState({ query });
-    this.loadResults(query.trim());
-  };
+    this.setState({ query })
+    this.loadResults(query.trim())
+  }
 
   loadResults(query) {
-    if (!query.length) return;
+    if (!query.length) return
 
-    const delay = 300 + (Math.random() * 300);
+    const delay = 300 + Math.random() * 300
 
     if (this.intervalId) {
-      window.clearTimeout(this.intervalId);
+      window.clearTimeout(this.intervalId)
     }
 
-    this.setState({ isLoading: true });
+    this.setState({ isLoading: true })
 
-    this.intervalId = window.setTimeout(
-      () => {
-        ajax.get(misago.get('SEARCH_API'), {q: query}).then(
-          (data) => {
-            this.setState({
-              intervalId: null,
-              isLoading: false,
-              results: cleanResults(data)
-            });
-          },
-          (rejection) => {
-            snackbar.apiError(rejection);
+    this.intervalId = window.setTimeout(() => {
+      ajax.get(misago.get("SEARCH_API"), { q: query }).then(
+        data => {
+          this.setState({
+            intervalId: null,
+            isLoading: false,
+            results: cleanResults(data)
+          })
+        },
+        rejection => {
+          snackbar.apiError(rejection)
 
-            this.setState({
-              intervalId: null,
-              isLoading: false,
-              results: []
-            });
-          }
-        );
-      },
-      delay
-    );
+          this.setState({
+            intervalId: null,
+            isLoading: false,
+            results: []
+          })
+        }
+      )
+    }, delay)
   }
 
   render() {
-    let className = "navbar-search dropdown";
-    if (this.state.isOpen) className += " open";
+    let className = "navbar-search dropdown"
+    if (this.state.isOpen) className += " open"
 
     return (
-      <div className={className} ref={(container) => this.container = container}>
+      <div
+        className={className}
+        ref={container => (this.container = container)}
+      >
         <a
           aria-haspopup="true"
           aria-expanded="false"
           className="navbar-icon"
           data-toggle="dropdown"
-          href={misago.get('SEARCH_URL')}
+          href={misago.get("SEARCH_URL")}
           onClick={this.onToggle}
         >
-          <i className="material-icon">
-            search
-          </i>
+          <i className="material-icon">search</i>
         </a>
         <Dropdown
           isLoading={this.state.isLoading}
@@ -134,6 +131,6 @@ export default class extends React.Component {
           query={this.state.query}
         />
       </div>
-    );
+    )
   }
 }

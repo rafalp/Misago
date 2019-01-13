@@ -1,17 +1,14 @@
-/* jshint ignore:start */
-import React from 'react';
-import AddParticipantModal from 'misago/components/add-participant';
-import modal from 'misago/services/modal';
+import React from "react"
+import AddParticipantModal from "misago/components/add-participant"
+import modal from "misago/services/modal"
 
 export default class extends React.Component {
   onClick = () => {
-    modal.show(
-      <AddParticipantModal thread={this.props.thread} />
-    );
+    modal.show(<AddParticipantModal thread={this.props.thread} />)
   }
 
   render() {
-    if (!this.props.thread.acl.can_add_participants) return null;
+    if (!this.props.thread.acl.can_add_participants) return null
 
     return (
       <div className="col-xs-12 col-sm-3">
@@ -20,12 +17,10 @@ export default class extends React.Component {
           onClick={this.onClick}
           type="button"
         >
-          <span className="material-icon">
-            person_add
-          </span>
+          <span className="material-icon">person_add</span>
           {gettext("Add participant")}
         </button>
       </div>
-    );
+    )
   }
 }

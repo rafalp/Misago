@@ -1,20 +1,19 @@
-// jshint ignore:start
-import React from 'react';
-import Diff from './diff';
-import Footer from './footer';
-import Toolbar from './toolbar';
-import { hydrateEdit } from './utils';
-import Message from 'misago/components/modal-message';
-import Loader from 'misago/components/modal-loader';
-import * as post from 'misago/reducers/post';
-import ajax from 'misago/services/ajax';
-import modal from 'misago/services/modal';
-import snackbar from 'misago/services/snackbar';
-import store from 'misago/services/store';
+import React from "react"
+import Diff from "./diff"
+import Footer from "./footer"
+import Toolbar from "./toolbar"
+import { hydrateEdit } from "./utils"
+import Message from "misago/components/modal-message"
+import Loader from "misago/components/modal-loader"
+import * as post from "misago/reducers/post"
+import ajax from "misago/services/ajax"
+import modal from "misago/services/modal"
+import snackbar from "misago/services/snackbar"
+import store from "misago/services/store"
 
 export default class extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       isReady: false,
@@ -24,73 +23,81 @@ export default class extends React.Component {
 
       error: null,
       edit: null
-    };
+    }
   }
 
   componentDidMount() {
-    this.goToEdit();
+    this.goToEdit()
   }
 
-  goToEdit = (edit=null) => {
+  goToEdit = (edit = null) => {
     this.setState({
       isBusy: true
-    });
+    })
 
-    let url = this.props.post.api.edits;
+    let url = this.props.post.api.edits
     if (edit !== null) {
-      url += '?edit=' + edit;
+      url += "?edit=" + edit
     }
 
-    ajax.get(url).then((data) => {
-      this.setState({
-        isReady: true,
-        isBusy: false,
-        edit: hydrateEdit(data)
-      });
-    }, (rejection) => {
-      this.setState({
-        isReady: true,
-        isBusy: false,
-        error: rejection.detail
-      });
-    });
-  };
+    ajax.get(url).then(
+      data => {
+        this.setState({
+          isReady: true,
+          isBusy: false,
+          edit: hydrateEdit(data)
+        })
+      },
+      rejection => {
+        this.setState({
+          isReady: true,
+          isBusy: false,
+          error: rejection.detail
+        })
+      }
+    )
+  }
 
-  revertEdit = (edit) => {
-    if (this.state.isBusy) return;
+  revertEdit = edit => {
+    if (this.state.isBusy) return
 
-    const confirmation = confirm(gettext("Are you sure you with to revert this post to the state from before this edit?"));
-    if (!confirmation) return;
+    const confirmation = confirm(
+      gettext(
+        "Are you sure you with to revert this post to the state from before this edit?"
+      )
+    )
+    if (!confirmation) return
 
     this.setState({
       isBusy: true
-    });
+    })
 
-    const url = this.props.post.api.edits + '?edit=' + edit;
-    ajax.post(url).then((data) => {
-      const hydratedPost = post.hydrate(data);
-      store.dispatch(post.patch(data, hydratedPost));
+    const url = this.props.post.api.edits + "?edit=" + edit
+    ajax.post(url).then(
+      data => {
+        const hydratedPost = post.hydrate(data)
+        store.dispatch(post.patch(data, hydratedPost))
 
-      snackbar.success(gettext("Post has been reverted to previous state."));
-      modal.hide();
-    }, (rejection) => {
-      snackbar.apiError(rejection);
+        snackbar.success(gettext("Post has been reverted to previous state."))
+        modal.hide()
+      },
+      rejection => {
+        snackbar.apiError(rejection)
 
-      this.setState({
-        isBusy: false
-      });
-    });
-  };
+        this.setState({
+          isBusy: false
+        })
+      }
+    )
+  }
 
   render() {
     if (this.state.error) {
       return (
         <ModalDialog className="modal-dialog modal-message">
-          <Message
-            message={this.state.error}
-          />
+          <Message message={this.state.error} />
         </ModalDialog>
-      );
+      )
     } else if (this.state.isReady) {
       return (
         <ModalDialog>
@@ -109,23 +116,20 @@ export default class extends React.Component {
             revertEdit={this.revertEdit}
           />
         </ModalDialog>
-      );
+      )
     }
 
     return (
       <ModalDialog>
         <Loader />
       </ModalDialog>
-    );
+    )
   }
 }
 
 export function ModalDialog(props) {
   return (
-    <div
-      className={props.className || "modal-dialog"}
-      role="document"
-    >
+    <div className={props.className || "modal-dialog"} role="document">
       <div className="modal-content">
         <div className="modal-header">
           <button

@@ -1,7 +1,6 @@
-/* jshint ignore:start */
-import React from 'react';
-import Avatar from 'misago/components/avatar';
-import UserUrl from './user-url';
+import React from "react"
+import Avatar from "misago/components/avatar"
+import UserUrl from "./user-url"
 
 export default function({ thread }) {
   return (
@@ -26,23 +25,16 @@ export default function({ thread }) {
         >
           {thread.last_poster_name}
         </UserUrl>
-        <Timestamp
-          datetime={thread.last_post_on}
-          url={thread.url.last_post}
-        />
+        <Timestamp datetime={thread.last_post_on} url={thread.url.last_post} />
       </div>
     </div>
-  );
+  )
 }
 
 export function Timestamp({ datetime, url }) {
   return (
-    <a
-      className="thread-last-reply"
-      href={url}
-      title={datetime.format('LLL')}
-    >
+    <a className="thread-last-reply" href={url} title={datetime.format("LLL")}>
       {datetime.fromNow(true)}
     </a>
-  );
+  )
 }

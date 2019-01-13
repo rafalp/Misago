@@ -1,12 +1,11 @@
-// jshint ignore:start
-import React from 'react';
-import Card from './card';
+import React from "react"
+import Card from "./card"
 
 export default function({ participants, thread, user, userIsOwner }) {
   return (
     <div className="participants-cards">
       <div className="row">
-        {participants.map((participant) => {
+        {participants.map(participant => {
           return (
             <Card
               key={participant.id}
@@ -15,9 +14,9 @@ export default function({ participants, thread, user, userIsOwner }) {
               user={user}
               userIsOwner={userIsOwner}
             />
-          );
+          )
         })}
       </div>
     </div>
-  );
+  )
 }
