@@ -7,7 +7,6 @@
 .panel-post {
   background: @post-bg;
   border: 1px solid @post-border;
-  .shadow-2dp();
 }
 
 
@@ -105,7 +104,7 @@
 
 // Attachments
 .post-attachments {
-  background-color: darken(@panel-bg, 5%);
+  background-color: @gray-lighter;
   border: none;
   border-radius: @border-radius-base;
   margin-bottom: @line-height-computed * 1.5;

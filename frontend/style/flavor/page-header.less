@@ -11,7 +11,6 @@
 
 .page-header-bg {
   background: @page-header-bg;
-  background-image: url('../img/page-header.svg');
   background-size: cover;
   
   @media screen and (min-width: @screen-md-min) {
@@ -31,7 +30,6 @@
   h1 {
     color: @page-header-color;
     font-weight: 400;
-    text-shadow: 0px 1px 1px @page-header-bg;
   }
 }
 
@@ -69,7 +67,6 @@
 // Stats
 .header-stats {
   color: @page-header-text-color;
-  text-shadow: 0px 1px 1px @page-header-bg;
 
   li {
     a, a:link, a:visited {
@@ -80,16 +77,10 @@
       color: @page-header-link-hover-color;
     }
 
-    .user-status.user-banned, 
-    .user-status.user-online, 
     .user-status.user-offline {
       .status-icon {
         color: @page-header-text-color;
       }
-    }
-    
-    .item-title {
-      color: @page-header-link-color !important;
     }
   }
 }
@@ -97,8 +88,6 @@
 
 // Go back
 .page-header .go-back-sm {
-  text-shadow: 0px 1px 1px @page-header-bg;
-  
   &, &:link, &:visited {
     color: @page-header-text-color;
   }
@@ -112,7 +101,6 @@
 // Breadcrumbs
 .page-header .breadcrumb {
   color: @page-header-text-color;
-  text-shadow: 0px 1px 1px @page-header-bg;
   
   a, a:link, a:visited {
     color: @page-header-text-color;
@@ -124,7 +112,6 @@
 
   li:before {
     color: @page-header-text-color;
-    text-shadow: 0px 1px 1px @page-header-bg;
   }
 }
 

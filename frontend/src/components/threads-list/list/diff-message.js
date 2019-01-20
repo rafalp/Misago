@@ -1,8 +1,7 @@
 import React from "react"
 
 export default function(props) {
-  const { diffSize, applyDiff } = props
-
+  const { applyDiff, diffSize } = props
   if (diffSize === 0) return null
 
   return (

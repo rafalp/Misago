@@ -49,7 +49,6 @@ class Command(BaseCommand):
                     random.choice(possible_usernames),
                     fake.email(),
                     "pass123",
-                    set_default_avatar=False,
                     rank=random.choice(ranks),
                 )
 
@@ -57,7 +56,7 @@ class Command(BaseCommand):
                     gallery.set_random_avatar(user)
                 else:
                     dynamic.set_avatar(user)
-                user.save(update_fields=["avatars"])
+                user.save()
             except (ValidationError, IntegrityError):
                 pass
             else:
