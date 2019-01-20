@@ -29,24 +29,24 @@ export class UserMenu extends React.Component {
       >
         <li className="dropdown-header">
           <strong>{user.username}</strong>
-          <ul className="list-unstyled list-inline user-stats">
-            <li>
+          <div className="row user-stats">
+            <div className="col-sm-3">
               <span className="material-icon">message</span>
               {user.posts}
-            </li>
-            <li>
+            </div>
+            <div className="col-sm-3">
               <span className="material-icon">forum</span>
               {user.threads}
-            </li>
-            <li>
+            </div>
+            <div className="col-sm-3">
               <span className="material-icon">favorite</span>
               {user.followers}
-            </li>
-            <li>
+            </div>
+            <div className="col-sm-3">
               <span className="material-icon">favorite_outline</span>
               {user.following}
-            </li>
-          </ul>
+            </div>
+          </div>
         </li>
         <li className="divider" />
         <li>

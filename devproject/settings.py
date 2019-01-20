@@ -270,6 +270,7 @@ TEMPLATES = [
                 "misago.core.context_processors.momentjs_locale",
                 "misago.search.context_processors.search_providers",
                 "misago.themes.context_processors.theme",
+                "misago.legal.context_processors.legal_links",
                 "misago.users.context_processors.user_links",
                 # Data preloaders
                 "misago.conf.context_processors.preload_settings_json",

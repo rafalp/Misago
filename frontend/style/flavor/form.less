@@ -4,11 +4,20 @@
 
 .panel-form {
   border: 1px solid @panel-form-border;
-  .shadow-2dp();
+  box-shadow: none;
 }
 
+.panel-form .panel-heading, .panel-form .panel-footer {
+  border-color: @panel-form-border;
+}
 
 // remove bottom margin from poll panel
 .poll-form .panel {
   margin: 0px;
+}
+
+
+// Override help text color
+.help-block, .help-block .text-small {
+  color: @gray-light;
 }
