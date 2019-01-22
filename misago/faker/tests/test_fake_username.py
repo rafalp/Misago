@@ -1,4 +1,4 @@
-from ..username import get_fake_username
+from ..user import get_fake_username
 
 
 def test_fake_username_can_be_created(fake):
