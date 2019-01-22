@@ -32,13 +32,13 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError("User must have an email address.")
 
+        if not extra_fields.get("rank"):
+            extra_fields["rank"] = Rank.objects.get_default()
+
         user = self.model(**extra_fields)
         user.set_username(username)
         user.set_email(email)
         user.set_password(password)
-
-        if "rank" not in extra_fields:
-            user.rank = Rank.objects.get_default()
 
         now = timezone.now()
         user.last_login = now

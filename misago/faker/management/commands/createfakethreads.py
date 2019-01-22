@@ -72,7 +72,7 @@ class Command(BaseCommand):
                     is_hidden=thread_is_hidden,
                     is_closed=thread_is_closed,
                 )
-                thread.set_title(corpus_short.random_choice())
+                thread.set_title(corpus_short.random_sentence())
                 thread.save()
 
                 original, parsed = self.fake_post_content()
