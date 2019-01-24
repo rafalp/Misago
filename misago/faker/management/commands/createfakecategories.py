@@ -5,8 +5,9 @@ from django.core.management.base import BaseCommand
 from faker import Factory
 
 from ....acl.cache import clear_acl_cache
-from ....categories.models import Category, RoleCategoryACL
+from ....categories.models import Category
 from ....core.management.progressbar import show_progress
+from ...categories import fake_category, fake_closed_category
 
 
 class Command(BaseCommand):
@@ -33,12 +34,16 @@ class Command(BaseCommand):
         items_to_create = options["categories"]
         min_level = options["minlevel"]
 
-        categories = Category.objects.all_categories(True)
-
-        copy_acl_from = list(Category.objects.all_categories())[0]
-
-        categories = categories.filter(level__gte=min_level)
         fake = Factory.create()
+
+        categories = Category.objects.all_categories(include_root=True).filter(
+            level__gte=min_level
+        )
+        acl_source = list(Category.objects.all_categories())[0]
+
+        if not categories.exists():
+            self.stdout.write("No valid parent categories exist.\n")
+            return
 
         message = "Creating %s fake categories...\n"
         self.stdout.write(message % items_to_create)
@@ -48,34 +53,17 @@ class Command(BaseCommand):
         show_progress(self, created_count, items_to_create)
 
         while created_count < items_to_create:
+            categories = (
+                Category.objects.all_categories(include_root=True)
+                .filter(level__gte=min_level)
+                .order_by("?")
+            )
             parent = random.choice(categories)
 
-            new_category = Category()
-            if random.randint(1, 100) > 75:
-                new_category.set_name(fake.catch_phrase().title())
+            if random.randint(0, 100) > 90:
+                fake_closed_category(fake, parent, copy_acl_from=acl_source)
             else:
-                new_category.set_name(fake.street_name())
-
-            if random.randint(1, 100) > 50:
-                if random.randint(1, 100) > 80:
-                    new_category.description = "\r\n".join(fake.paragraphs())
-                else:
-                    new_category.description = fake.paragraph()
-
-            new_category.insert_at(parent, position="last-child", save=True)
-
-            copied_acls = []
-            for acl in copy_acl_from.category_role_set.all():
-                copied_acls.append(
-                    RoleCategoryACL(
-                        role_id=acl.role_id,
-                        category=new_category,
-                        category_role_id=acl.category_role_id,
-                    )
-                )
-
-            if copied_acls:
-                RoleCategoryACL.objects.bulk_create(copied_acls)
+                fake_category(fake, parent, copy_acl_from=acl_source)
 
             created_count += 1
             show_progress(self, created_count, items_to_create, start_time)

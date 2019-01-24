@@ -6,7 +6,12 @@ from faker import Factory
 
 from ....core.management.progressbar import show_progress
 from ....users.models import Rank
-from ... import user
+from ...users import (
+    get_fake_inactive_user,
+    get_fake_admin_activated_user,
+    get_fake_banned_user,
+    get_fake_user,
+)
 
 
 class Command(BaseCommand):
@@ -33,13 +38,13 @@ class Command(BaseCommand):
         while created_count < items_to_create:
             rank = random.choice(ranks)
             if random.randint(0, 100) > 80:
-                user.get_fake_inactive_user(fake, rank)
+                get_fake_inactive_user(fake, rank)
             elif random.randint(0, 100) > 90:
-                user.get_fake_admin_activated_user(fake, rank)
+                get_fake_admin_activated_user(fake, rank)
             elif random.randint(0, 100) > 90:
-                user.get_fake_banned_user(fake, rank)
+                get_fake_banned_user(fake, rank)
             else:
-                user.get_fake_user(fake, rank)
+                get_fake_user(fake, rank)
 
             created_count += 1
             show_progress(self, created_count, items_to_create, start_time)
