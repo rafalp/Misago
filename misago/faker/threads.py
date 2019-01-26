@@ -1,20 +1,48 @@
 from django.utils import timezone
 
-from ...englishcorpus import EnglishCorpus
+from ..threads.models import Thread
+from .englishcorpus import EnglishCorpus
+from .posts import get_fake_hidden_post, get_fake_post, get_fake_unapproved_post
 
-PLACEKITTEN_URL = "https://placekitten.com/g/%s/%s"
-
-corpus = EnglishCorpus()
 corpus_short = EnglishCorpus(max_length=150)
 
 
-def fake_thread(fake, category, starter):
+def get_fake_thread(fake, category, starter):
+    thread = create_fake_thread(fake, category, starter)
+    thread.first_post = get_fake_post(fake, thread, starter)
+    thread.save(update_fields=["first_post"])
+    return thread
+
+
+def get_fake_closed_thread(fake, category, starter):
+    thread = get_fake_thread(fake, category, starter)
+    thread.is_closed = True
+    thread.save(update_fields=["is_closed"])
+    return thread
+
+
+def get_fake_hidden_thread(fake, category, starter, hidden_by=None):
+    thread = create_fake_thread(fake, category, starter)
+    thread.first_post = get_fake_hidden_post(fake, thread, starter, hidden_by)
+    thread.save(update_fields=["first_post"])
+    return thread
+
+
+def get_fake_unapproved_thread(fake, category, starter):
+    thread = create_fake_thread(fake, category, starter)
+    thread.first_post = get_fake_unapproved_post(fake, thread, starter)
+    thread.save(update_fields=["first_post"])
+    return thread
+
+
+def create_fake_thread(fake, category, starter):
+    started_on = timezone.now()
     thread = Thread(
         category=category,
-        started_on=timezone.now(),
+        started_on=started_on,
         starter_name="-",
         starter_slug="-",
-        last_post_on=timezone.now(),
+        last_post_on=started_on,
         last_poster_name="-",
         last_poster_slug="-",
         replies=0,
@@ -22,25 +50,4 @@ def fake_thread(fake, category, starter):
     thread.set_title(corpus_short.random_sentence())
     thread.save()
 
-    return thread
-
-
-def fake_closed_thread(fake, category, starter):
-    thread = fake_thread(fake, category, starter)
-    thread.is_closed = True
-    thread.save(update_fields=["is_closed"])
-    return thread
-
-
-def fake_hidden_thread(fake, category, starter):
-    thread = fake_thread(fake, category, starter)
-    thread.is_hidden = True
-    thread.save(update_fields=["is_hidden"])
-    return thread
-
-
-def fake_unapproved_thread(fake, category, starter):
-    thread = fake_thread(fake, category, starter)
-    thread.is_hidden = True
-    thread.save(update_fields=["is_hidden"])
     return thread

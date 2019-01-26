@@ -90,6 +90,7 @@ intro() {
     echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
+    echo "    ${BOLD}fakedata${NORMAL}          populates database with testing data."
     echo
 }
 
@@ -263,6 +264,13 @@ psql_in_docker() {
     PGPASSWORD=$POSTGRES_PASSWORD psql --username $POSTGRES_USER --host $POSTGRES_HOST $POSTGRES_DB
 }
 
+# Shortcut for creating small dev forum
+create_fake_data() {
+    docker-compose run --rm misago python manage.py createfakecategories 7
+    docker-compose run --rm misago python manage.py createfakecategories 12 1
+    docker-compose run --rm misago python manage.py createfakehistory 600
+}
+
 # Command dispatcher
 if [[ $1 ]]; then
     if [[ $1 = "init" ]]; then
@@ -309,6 +317,8 @@ if [[ $1 ]]; then
     elif [[ $1 = "pyfmt" ]]; then
         isort -rc misago
         black devproject misago
+    elif [[ $1 = "fakedata" ]]; then
+        create_fake_data
     else
         invalid_argument $1
     fi
