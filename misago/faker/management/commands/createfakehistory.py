@@ -10,7 +10,7 @@ from faker import Factory
 from ....categories.models import Category
 from ....core.pgutils import chunk_queryset
 from ....threads.checksums import update_post_checksum
-from ....threads.models import Post, Thread
+from ....threads.models import Thread
 from ....users.models import Rank
 from ...posts import get_fake_hidden_post, get_fake_post, get_fake_unapproved_post
 from ...threads import (
@@ -42,7 +42,7 @@ class Command(BaseCommand):
             default=5,
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # pylint: disable=too-many-locals
         history_length = options["length"]
         fake = Factory.create()
 
@@ -210,9 +210,6 @@ class Command(BaseCommand):
 
         self.write_event(date, "%s followed %s" % (user_a, user_b))
 
-    def get_random_post(self, data):
-        return Post.objects.filter(posted_on__lt=date).order_by("?").first()
-
     def get_random_thread(self, date):
         return (
             Thread.objects.filter(started_on__lt=date)
@@ -263,9 +260,9 @@ class Command(BaseCommand):
         self.stdout.write(message % (Category.objects.count(), total_humanized))
 
 
-def get_random_date_variations(date, min, max):
+def get_random_date_variations(date, min_date, max_date):
     variations = []
-    for _ in range(random.randint(min, max)):
+    for _ in range(random.randint(min_date, max_date)):
         random_offset = timedelta(minutes=random.randint(1, 1200))
         variations.append(date - random_offset)
     return sorted(variations)

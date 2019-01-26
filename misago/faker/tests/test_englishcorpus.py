@@ -1,11 +1,9 @@
-from django.test import TestCase
-
 from ..englishcorpus import EnglishCorpus
 
 
 def test_corpus_has_length():
     corpus = EnglishCorpus()
-    assert len(corpus) > 0
+    assert corpus
 
 
 def test_corpus_can_be_shuffled():
@@ -15,12 +13,12 @@ def test_corpus_can_be_shuffled():
 
 def test_corpus_can_be_limited_to_phrases_shorter_than_specified():
     corpus = EnglishCorpus(max_length=100)
-    assert len(corpus) > 0
+    assert corpus
 
 
 def test_corpus_can_be_limited_to_phrases_longer_than_specified():
     corpus = EnglishCorpus(min_length=100)
-    assert len(corpus) > 0
+    assert corpus
 
 
 def test_corpus_produces_random_sequence():
