@@ -14,6 +14,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         total_users = User.objects.count()
+        if total_users < 2:
+            self.stderr.write(
+                "At least two users must exist in the databse in order for "
+                "fake followers creation to be possible.\n"
+            )
+            return
 
         message = "Adding fake followers to %s users...\n"
         self.stdout.write(message % total_users)
@@ -25,25 +31,21 @@ class Command(BaseCommand):
         show_progress(self, processed_count, total_users)
         for user in User.objects.iterator():
             user.followed_by.clear()
-
-            if random.randint(1, 100) > 10:
-                processed_count += 1
-                show_progress(self, processed_count, total_users)
-                continue  # 10% active users
-
-            users_to_add = random.randint(1, total_users / 5)
-            random_queryset = User.objects.exclude(id=user.id).order_by("?")
-            while users_to_add > 0:
-                new_follower = random_queryset[:1][0]
-                if not new_follower.is_following(user):
-                    user.followed_by.add(new_follower)
-                    users_to_add -= 1
-                    total_followers += 1
+            followers_to_create = random.randint(0, total_users - 1)
+            while followers_to_create:
+                # There's 34% chance we'll skip follower creation
+                if random.randint(0, 100) > 34:
+                    new_follower = (
+                        User.objects.exclude(pk=user.pk).order_by("?")[:1].first()
+                    )
+                    if not user.is_following(new_follower):
+                        user.follows.add(new_follower)
+                followers_to_create -= 1
 
             processed_count += 1
             show_progress(self, processed_count, total_users)
 
-        self.stdout.write("\nSyncing models...")
+        self.stdout.write("\nSynchronizing users...")
         for user in User.objects.iterator():
             user.followers = user.followed_by.count()
             user.following = user.follows.count()

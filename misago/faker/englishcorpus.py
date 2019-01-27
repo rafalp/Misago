@@ -30,7 +30,7 @@ class EnglishCorpus:
     def shuffle(self):
         random.shuffle(self.phrases)
 
-    def random_choice(self):
+    def random_sentence(self):
         self._countdown_to_shuffle()
 
         choice = None

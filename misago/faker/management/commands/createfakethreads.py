@@ -3,22 +3,19 @@ import time
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
-from django.db.transaction import atomic
-from django.utils import timezone
 from faker import Factory
 
 from ....categories.models import Category
 from ....core.management.progressbar import show_progress
-from ....threads.checksums import update_post_checksum
-from ....threads.models import Post, Thread
-from ...englishcorpus import EnglishCorpus
-
-PLACEKITTEN_URL = "https://placekitten.com/g/%s/%s"
+from ....threads.models import Thread
+from ...threads import (
+    get_fake_closed_thread,
+    get_fake_hidden_thread,
+    get_fake_thread,
+    get_fake_unapproved_thread,
+)
 
 User = get_user_model()
-
-corpus = EnglishCorpus()
-corpus_short = EnglishCorpus(max_length=150)
 
 
 class Command(BaseCommand):
@@ -35,12 +32,11 @@ class Command(BaseCommand):
 
     def handle(
         self, *args, **options
-    ):  # pylint: disable=too-many-branches, too-many-locals
+    ):  # pylint: disable=too-many-locals, too-many-branches
         items_to_create = options["threads"]
+        fake = Factory.create()
 
         categories = list(Category.objects.all_categories())
-
-        fake = Factory.create()
 
         message = "Creating %s fake threads...\n"
         self.stdout.write(message % items_to_create)
@@ -50,117 +46,47 @@ class Command(BaseCommand):
         show_progress(self, created_threads, items_to_create)
 
         while created_threads < items_to_create:
-            with atomic():
-                datetime = timezone.now()
-                category = random.choice(categories)
-                user = User.objects.order_by("?")[:1][0]
+            category = random.choice(categories)
 
-                thread_is_unapproved = random.randint(0, 100) > 90
-                thread_is_hidden = random.randint(0, 100) > 90
-                thread_is_closed = random.randint(0, 100) > 90
+            # 10% chance thread poster is anonymous
+            if random.randint(0, 100) > 90:
+                starter = None
+            else:
+                starter = User.objects.order_by("?")[:1].last()
 
-                thread = Thread(
-                    category=category,
-                    started_on=datetime,
-                    starter_name="-",
-                    starter_slug="-",
-                    last_post_on=datetime,
-                    last_poster_name="-",
-                    last_poster_slug="-",
-                    replies=0,
-                    is_unapproved=thread_is_unapproved,
-                    is_hidden=thread_is_hidden,
-                    is_closed=thread_is_closed,
-                )
-                thread.set_title(corpus_short.random_choice())
-                thread.save()
+            # There's 10% chance thread is closed
+            if random.randint(0, 100) > 90:
+                thread = get_fake_closed_thread(fake, category, starter)
 
-                original, parsed = self.fake_post_content()
-
-                post = Post.objects.create(
-                    category=category,
-                    thread=thread,
-                    poster=user,
-                    poster_name=user.username,
-                    original=original,
-                    parsed=parsed,
-                    posted_on=datetime,
-                    updated_on=datetime,
-                )
-                update_post_checksum(post)
-                post.save(update_fields=["checksum"])
-
-                thread.set_first_post(post)
-                thread.set_last_post(post)
-                thread.save()
-
-                user.threads += 1
-                user.posts += 1
-                user.save()
-
-                thread_type = random.randint(0, 100)
-                if thread_type > 98:
-                    thread_replies = random.randint(200, 2500)
-                elif thread_type > 50:
-                    thread_replies = random.randint(5, 30)
+            # There's further 5% chance thread is hidden
+            elif random.randint(0, 100) > 95:
+                if random.randint(0, 100) > 90:
+                    hidden_by = None
                 else:
-                    thread_replies = random.randint(0, 10)
+                    hidden_by = User.objects.order_by("?")[:1].last()
 
-                for _ in range(thread_replies):
-                    datetime = timezone.now()
-                    user = User.objects.order_by("?")[:1][0]
+                thread = get_fake_hidden_thread(fake, category, starter, hidden_by)
 
-                    original, parsed = self.fake_post_content()
+            # And further 5% chance thread is unapproved
+            elif random.randint(0, 100) > 95:
+                thread = get_fake_unapproved_thread(fake, category, starter)
 
-                    is_unapproved = random.randint(0, 100) > 97
+            # Default, standard thread
+            else:
+                thread = get_fake_thread(fake, category, starter)
 
-                    post = Post.objects.create(
-                        category=category,
-                        thread=thread,
-                        poster=user,
-                        poster_name=user.username,
-                        original=original,
-                        parsed=parsed,
-                        is_unapproved=is_unapproved,
-                        posted_on=datetime,
-                        updated_on=datetime,
-                    )
+            thread.synchronize()
+            thread.save()
 
-                    if not is_unapproved:
-                        is_hidden = random.randint(0, 100) > 97
-                    else:
-                        is_hidden = False
-
-                    if is_hidden:
-                        post.is_hidden = True
-
-                        if random.randint(0, 100) < 80:
-                            user = User.objects.order_by("?")[:1][0]
-                            post.hidden_by = user
-                            post.hidden_by_name = user.username
-                            post.hidden_by_slug = user.username
-                        else:
-                            post.hidden_by_name = fake.first_name()
-                            post.hidden_by_slug = post.hidden_by_name.lower()
-
-                    update_post_checksum(post)
-                    post.save()
-
-                    user.posts += 1
-                    user.save()
-
-                thread.synchronize()
-                thread.save()
-
-                created_threads += 1
-                show_progress(self, created_threads, items_to_create, start_time)
+            created_threads += 1
+            show_progress(self, created_threads, items_to_create, start_time)
 
         pinned_threads = random.randint(0, int(created_threads * 0.025)) or 1
         self.stdout.write("\nPinning %s threads..." % pinned_threads)
 
         for _ in range(0, pinned_threads):
             thread = Thread.objects.order_by("?")[:1][0]
-            if random.randint(0, 100) > 75:
+            if random.randint(0, 100) > 90:
                 thread.weight = 2
             else:
                 thread.weight = 1
@@ -174,31 +100,3 @@ class Command(BaseCommand):
         total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
         message = "\nSuccessfully created %s fake threads in %s"
         self.stdout.write(message % (created_threads, total_humanized))
-
-    def fake_post_content(self):
-        raw = []
-        parsed = []
-
-        if random.randint(0, 100) > 80:
-            paragraphs_to_make = random.randint(1, 20)
-        else:
-            paragraphs_to_make = random.randint(1, 5)
-
-        for _ in range(paragraphs_to_make):
-            if random.randint(0, 100) > 95:
-                cat_width = random.randint(1, 16) * random.choice([100, 90, 80])
-                cat_height = random.randint(1, 12) * random.choice([100, 90, 80])
-
-                cat_url = PLACEKITTEN_URL % (cat_width, cat_height)
-
-                raw.append("!(%s)" % cat_url)
-                parsed.append('<p><img src="%s" alt=""/></p>' % cat_url)
-            else:
-                if random.randint(0, 100) > 95:
-                    sentences_to_make = random.randint(1, 20)
-                else:
-                    sentences_to_make = random.randint(1, 7)
-                raw.append(" ".join(corpus.random_sentences(sentences_to_make)))
-                parsed.append("<p>%s</p>" % raw[-1])
-
-        return "\n\n".join(raw), "\n".join(parsed)

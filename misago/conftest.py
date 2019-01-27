@@ -2,6 +2,7 @@ import pytest
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
+from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
@@ -95,3 +96,13 @@ def admin_client(mocker, client, superuser):
     authorize_admin(mocker.Mock(session=session, user=superuser))
     session.save()
     return client
+
+
+@pytest.fixture
+def root_category(db):
+    return Category.objects.root_category()
+
+
+@pytest.fixture
+def default_category(db):
+    return Category.objects.get(slug="first-category")

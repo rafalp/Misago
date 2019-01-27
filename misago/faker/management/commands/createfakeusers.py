@@ -1,17 +1,17 @@
 import random
 import time
 
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 from faker import Factory
 
 from ....core.management.progressbar import show_progress
-from ....users.avatars import dynamic, gallery
 from ....users.models import Rank
-
-User = get_user_model()
+from ...users import (
+    get_fake_inactive_user,
+    get_fake_admin_activated_user,
+    get_fake_banned_user,
+    get_fake_user,
+)
 
 
 class Command(BaseCommand):
@@ -26,8 +26,7 @@ class Command(BaseCommand):
         items_to_create = options["users"]
 
         fake = Factory.create()
-
-        ranks = [r for r in Rank.objects.all()]
+        ranks = list(Rank.objects.all())
 
         message = "Creating %s fake user accounts...\n"
         self.stdout.write(message % items_to_create)
@@ -37,31 +36,18 @@ class Command(BaseCommand):
         show_progress(self, created_count, items_to_create)
 
         while created_count < items_to_create:
-            try:
-                possible_usernames = [
-                    fake.first_name(),
-                    fake.last_name(),
-                    fake.name().replace(" ", ""),
-                    fake.user_name(),
-                ]
-
-                user = User.objects.create_user(
-                    random.choice(possible_usernames),
-                    fake.email(),
-                    "pass123",
-                    rank=random.choice(ranks),
-                )
-
-                if random.randint(0, 100) < 80:
-                    gallery.set_random_avatar(user)
-                else:
-                    dynamic.set_avatar(user)
-                user.save()
-            except (ValidationError, IntegrityError):
-                pass
+            rank = random.choice(ranks)
+            if random.randint(0, 100) > 80:
+                get_fake_inactive_user(fake, rank)
+            elif random.randint(0, 100) > 90:
+                get_fake_admin_activated_user(fake, rank)
+            elif random.randint(0, 100) > 90:
+                get_fake_banned_user(fake, rank)
             else:
-                created_count += 1
-                show_progress(self, created_count, items_to_create, start_time)
+                get_fake_user(fake, rank)
+
+            created_count += 1
+            show_progress(self, created_count, items_to_create, start_time)
 
         total_time = time.time() - start_time
         total_humanized = time.strftime("%H:%M:%S", time.gmtime(total_time))
