@@ -1,3 +1,4 @@
+from datetime import timedelta
 from io import StringIO
 
 import pytest
@@ -6,7 +7,7 @@ from django.core.management import call_command
 from django.utils import timezone
 
 from ...categories.models import Category
-from ...threads.models import Thread
+from ...threads.models import Post, Thread
 from ...users.models import Rank
 from ..management.commands import createfakehistory
 from ..threads import get_fake_thread
@@ -115,3 +116,39 @@ def test_random_thread_pick_returns_random_thread(fake, command, default_categor
     valid_choices = [get_fake_thread(fake, default_category) for _ in range(5)]
     thread = command.get_random_thread(timezone.now())
     assert thread in valid_choices
+
+
+def test_management_command_creates_fake_post(fake, command, default_category):
+    thread = get_fake_thread(fake, default_category)
+    command.create_fake_post(fake, timezone.now())
+    assert thread.post_set.count() == 2
+
+
+def test_fake_post_creation_date_is_overridden_by_command(
+    fake, command, date, default_category
+):
+    thread = get_fake_thread(fake, default_category)
+    thread.started_on -= timedelta(days=1)
+    thread.save()
+
+    command.create_fake_post(fake, date)
+    post = thread.post_set.last()
+    assert post.posted_on == date
+
+
+def test_fake_post_is_not_created_if_no_threads_exist(fake, command, date):
+    command.create_fake_post(fake, date)
+    assert not Post.objects.exists()
+
+
+def test_management_command_synchronizes_threads(fake, command, date, default_category):
+    command.create_fake_thread(fake, date, [default_category])
+    command.synchronize_threads()
+
+
+def test_management_command_synchronizes_categories(
+    fake, command, date, default_category
+):
+    command.create_fake_thread(fake, date, [default_category])
+    command.synchronize_threads()
+    command.synchronize_categories()
