@@ -41,9 +41,17 @@ class Command(BaseCommand):
             type=int,
             default=5,
         )
+        parser.add_argument(
+            "max_actions",
+            help="number of items generate for a single day",
+            nargs="?",
+            type=int,
+            default=50,
+        )
 
     def handle(self, *args, **options):  # pylint: disable=too-many-locals
         history_length = options["length"]
+        max_actions = options["max_actions"]
         fake = Factory.create()
 
         categories = list(Category.objects.all_categories())
@@ -59,7 +67,7 @@ class Command(BaseCommand):
         start_timestamp = timezone.now()
         for days_ago in reversed(range(history_length)):
             date = start_timestamp - timedelta(days=days_ago)
-            for date_variation in get_random_date_variations(date, 0, 50):
+            for date_variation in get_random_date_variations(date, 0, max_actions):
                 action = random.randint(0, 100)
                 if action >= 80:
                     self.create_fake_user(fake, date_variation, ranks)
@@ -86,10 +94,6 @@ class Command(BaseCommand):
             user.audittrail_set.all().delete()
 
     def create_fake_user(self, fake, date, ranks):
-        # There's 40% chance user has registered on this day
-        if random.randint(1, 100) > 25:
-            return
-
         # Pick random rank for next user
         rank = random.choice(ranks)
 
@@ -249,7 +253,7 @@ class Command(BaseCommand):
         self.stdout.write("\nSynchronizing categories...")
         start_time = time.time()
 
-        for category in Category.objects.all():
+        for category in Category.objects.all_categories():
             category.synchronize()
             category.save()
 
