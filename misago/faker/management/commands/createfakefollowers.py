@@ -43,7 +43,7 @@ class Command(BaseCommand):
             processed_count += 1
             show_progress(self, processed_count, total_users)
 
-        self.stdout.write("\nSyncing models...")
+        self.stdout.write("\nSynchronizing users...")
         for user in User.objects.iterator():
             user.followers = user.followed_by.count()
             user.following = user.follows.count()

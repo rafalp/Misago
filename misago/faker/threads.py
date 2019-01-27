@@ -8,7 +8,7 @@ corpus_short = EnglishCorpus(max_length=150)
 
 
 def get_fake_thread(fake, category, starter=None):
-    thread = create_fake_thread(fake, category)
+    thread = _create_base_thread(fake, category)
     thread.first_post = get_fake_post(fake, thread, starter)
     thread.save(update_fields=["first_post"])
     return thread
@@ -22,7 +22,7 @@ def get_fake_closed_thread(fake, category, starter=None):
 
 
 def get_fake_hidden_thread(fake, category, starter=None, hidden_by=None):
-    thread = create_fake_thread(fake, category)
+    thread = _create_base_thread(fake, category)
     thread.first_post = get_fake_hidden_post(fake, thread, starter, hidden_by)
     thread.is_hidden = True
     thread.save(update_fields=["first_post", "is_hidden"])
@@ -30,14 +30,14 @@ def get_fake_hidden_thread(fake, category, starter=None, hidden_by=None):
 
 
 def get_fake_unapproved_thread(fake, category, starter=None):
-    thread = create_fake_thread(fake, category)
+    thread = _create_base_thread(fake, category)
     thread.first_post = get_fake_unapproved_post(fake, thread, starter)
     thread.is_unapproved = True
     thread.save(update_fields=["first_post", "is_unapproved"])
     return thread
 
 
-def create_fake_thread(fake, category):
+def _create_base_thread(fake, category):
     started_on = timezone.now()
     thread = Thread(
         category=category,
