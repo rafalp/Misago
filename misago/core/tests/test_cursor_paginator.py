@@ -10,9 +10,7 @@ def mock_objects(mocker):
 
 @pytest.fixture
 def mock_queryset(mocker, mock_objects):
-    return mocker.Mock(
-        filter=mocker.Mock(return_value=mock_objects)
-    )
+    return mocker.Mock(filter=mocker.Mock(return_value=mock_objects))
 
 
 def test_paginator_returns_first_page(mock_objects):
