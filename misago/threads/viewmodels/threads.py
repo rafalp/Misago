@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
+from ...core.cursorpaginator import CursorPaginator
 from ...core.shortcuts import paginate, pagination_dict
 from ...readtracker import threadstracker
 from ...readtracker.dates import get_cutoff_date
@@ -59,15 +60,14 @@ class ViewModel:
             base_queryset, category_model, threads_categories
         )
 
-        list_page = paginate(
+        paginator = CursorPaginator(
             threads_queryset,
-            page,
-            settings.MISAGO_THREADS_PER_PAGE,
-            settings.MISAGO_THREADS_TAIL,
+            "-last_post_id",
+            settings.MISAGO_THREADS_PER_PAGE
         )
-        paginator = pagination_dict(list_page)
+        list_page = paginator.get(0)
 
-        if list_page.number > 1:
+        if list_page.start:
             threads = list(list_page.object_list)
         else:
             pinned_threads = list(
@@ -136,7 +136,7 @@ class ViewModel:
             }
         }
 
-        context["THREADS"].update(self.paginator)
+        #context["THREADS"].update(self.paginator)
         return context
 
     def get_template_context(self):
