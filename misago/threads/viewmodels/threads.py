@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
 from ...core.cursorpaginator import CursorPaginator
-from ...core.shortcuts import paginate, pagination_dict
 from ...readtracker import threadstracker
 from ...readtracker.dates import get_cutoff_date
 from ..models import Post, Thread
@@ -46,7 +45,7 @@ LIST_DENIED_MESSAGES = {
 
 
 class ViewModel:
-    def __init__(self, request, category, list_type, page):
+    def __init__(self, request, category, list_type, start=0):
         self.allow_see_list(request, category, list_type)
 
         category_model = category.unwrap()
@@ -65,7 +64,7 @@ class ViewModel:
             "-last_post_id",
             settings.MISAGO_THREADS_PER_PAGE
         )
-        list_page = paginator.get(0)
+        list_page = paginator.get_page(start)
 
         if list_page.start:
             threads = list(list_page.object_list)
@@ -95,7 +94,7 @@ class ViewModel:
         self.category = category
         self.threads = threads
         self.list_type = list_type
-        self.paginator = paginator
+        self.list_page = list_page
 
     def allow_see_list(self, request, category, list_type):
         if list_type not in LISTS_NAMES:
@@ -129,22 +128,20 @@ class ViewModel:
         pass  # hook for custom thread types to add features to extend threads
 
     def get_frontend_context(self):
-        context = {
+        return {
             "THREADS": {
                 "results": ThreadsListSerializer(self.threads, many=True).data,
                 "subcategories": [c.pk for c in self.category.children],
+                "next": self.list_page.next,
             }
         }
-
-        #context["THREADS"].update(self.paginator)
-        return context
 
     def get_template_context(self):
         return {
             "list_name": self.get_list_name(self.list_type),
             "list_type": self.list_type,
+            "list_page": self.list_page,
             "threads": self.threads,
-            "paginator": self.paginator,
         }
 
 

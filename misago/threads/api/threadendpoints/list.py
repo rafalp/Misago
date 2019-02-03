@@ -14,14 +14,10 @@ class ThreadsList:
     threads = None
 
     def __call__(self, request, **kwargs):
-        page = get_int_or_404(request.query_params.get("page", 0))
-        if page == 1:
-            page = 0  # api allows explicit first page
-
+        start = get_int_or_404(request.query_params.get("start", 0))
         list_type = request.query_params.get("list", "all")
-
         category = self.get_category(request, pk=request.query_params.get("category"))
-        threads = self.get_threads(request, category, list_type, page)
+        threads = self.get_threads(request, category, list_type, start)
 
         return Response(self.get_response_json(request, category, threads)["THREADS"])
 
@@ -30,9 +26,9 @@ class ThreadsList:
             "Threads list has to implement get_category(request, pk=None)"
         )
 
-    def get_threads(self, request, category, list_type, page):
+    def get_threads(self, request, category, list_type, start):
         return self.threads(  # pylint: disable=not-callable
-            request, category, list_type, page
+            request, category, list_type, start
         )
 
     def get_response_json(self, request, category, threads):

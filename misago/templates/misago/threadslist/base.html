@@ -4,13 +4,8 @@
 
 {% block meta-extra %}
 <link rel="canonical" href="{{ REQUEST_PATH }}" />
-{% if paginator.previous > 1 %}
-<link rel="prev" href="{{ REQUEST_PATH }}?page={{ paginator.previous }}" />
-{% elif paginator.first %}
-<link rel="prev" href="{{ REQUEST_PATH }}" />
-{% endif %}
-{% if paginator.next %}
-<link rel="next" href="{{ REQUEST_PATH }}?page={{ paginator.next }}" />
+{% if list_page.next %}
+<link rel="next" href="{{ REQUEST_PATH }}?start={{ list_page.next }}" />
 {% endif %}
 {% endblock meta-extra %}
 
@@ -81,35 +76,16 @@
         </div>
 
         <noscript>
-          {% if paginator.pages > 1 %}
+          {% if list_page.next %}
             <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul class="pager">
-                {% if paginator.previous > 1 %}
-                  <li class="previous">
-                    <a href="{{ REQUEST_PATH }}?page={{ paginator.previous }}" rel="prev" title="{% trans 'Previous page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_back
-                      </span>
-                    </a>
-                  </li>
-                {% elif paginator.first %}
-                  <li class="previous">
-                    <a href="{{ REQUEST_PATH }}" rel="prev" title="{% trans 'Previous page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_back
-                      </span>
-                    </a>
-                  </li>
-                {% endif %}
-                {% if paginator.next %}
-                  <li class="next">
-                    <a href="{{ REQUEST_PATH }}?page={{ paginator.next }}" rel="next" title="{% trans 'Next page' %}">
-                      <span aria-hidden="true" class="material-icon">
-                        arrow_forward
-                      </span>
-                    </a>
-                  </li>
-                {% endif %}
+                <li class="next">
+                  <a href="{{ REQUEST_PATH }}?page={{ list_page.next }}" rel="next" title="{% trans 'Next page' %}">
+                    <span aria-hidden="true" class="material-icon">
+                      arrow_forward
+                    </span>
+                  </a>
+                </li>
               </ul>
             </nav>
           {% endif %}
