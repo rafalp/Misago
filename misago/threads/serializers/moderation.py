@@ -28,7 +28,7 @@ from ..utils import get_thread_id_from_url
 from ..validators import validate_category, validate_thread_title
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
+THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE
 
 
 __all__ = [
