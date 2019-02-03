@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import gettext as _
@@ -6,7 +7,7 @@ from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
-from ...core.cursorpaginator import CursorPaginator
+from ...core.cursorpaginator import get_queryset_slice
 from ...readtracker import threadstracker
 from ...readtracker.dates import get_cutoff_date
 from ..models import Post, Thread
@@ -59,22 +60,25 @@ class ViewModel:
             base_queryset, category_model, threads_categories
         )
 
-        paginator = CursorPaginator(
-            threads_queryset,
-            "-last_post_id",
-            settings.MISAGO_THREADS_PER_PAGE
-        )
-        list_page = paginator.get_page(start)
+        try:
+            list_page = get_page(
+                threads_queryset,
+                "-last_post_id",
+                settings.MISAGO_THREADS_PER_PAGE,
+                start,
+            )
+        except (EmptyPage, InvalidPage):
+            raise Http404()
 
-        if list_page.start:
-            threads = list(list_page.object_list)
-        else:
+        if list_page.first:
             pinned_threads = list(
                 self.get_pinned_threads(
                     base_queryset, category_model, threads_categories
                 )
             )
             threads = list(pinned_threads) + list(list_page.object_list)
+        else:
+            threads = list(list_page.object_list)
 
         add_categories_to_items(category_model, category.categories, threads)
         add_acl_to_obj(request.user_acl, threads)
