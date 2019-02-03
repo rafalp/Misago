@@ -105,7 +105,7 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                "ids": ["Ensure this field has no more than 40 elements."],
+                "ids": ["Ensure this field has no more than 25 elements."],
                 "ops": ["Ensure this field has no more than 10 elements."],
             },
         )
