@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
-from ...core.cursorpaginator import get_queryset_slice
+from ...core.cursorpagination import get_page
 from ...readtracker import threadstracker
 from ...readtracker.dates import get_cutoff_date
 from ..models import Post, Thread

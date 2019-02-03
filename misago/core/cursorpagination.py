@@ -12,7 +12,8 @@ def get_page(queryset, order_by, per_page, start=0):
     next_cursor = None
     if len(object_list) > per_page:
         next_slice_first_item = object_list.pop(-1)
-        next_cursor = getattr(next_slice_first_item, order_by)
+        attr_name = order_by.lstrip("-")
+        next_cursor = getattr(next_slice_first_item, attr_name)
 
     return CursorPage(start, object_list, next_cursor)
 

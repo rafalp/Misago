@@ -1,6 +1,6 @@
 import pytest
 
-from ..cursorpaginator import CursorPage, EmptyPage, InvalidPage, get_page
+from ..cursorpagination import CursorPage, EmptyPage, InvalidPage, get_page
 
 
 @pytest.fixture
