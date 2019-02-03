@@ -355,11 +355,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertContainsThread(response, threads[-2])
 
         # slice contains expected threads
-        for visible_thread in threads[settings.MISAGO_THREADS_PER_PAGE - 1: -1]:
+        for visible_thread in threads[settings.MISAGO_THREADS_PER_PAGE - 1 : -1]:
             self.assertContainsThread(response, visible_thread)
 
         # threads after slice are hidden
-        for invisible_thread in threads[:settings.MISAGO_THREADS_PER_PAGE - 1]:
+        for invisible_thread in threads[: settings.MISAGO_THREADS_PER_PAGE - 1]:
             self.assertNotContainsThread(response, invisible_thread)
 
         # nonexisting start gives 404
