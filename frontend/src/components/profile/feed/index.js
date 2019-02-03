@@ -22,13 +22,13 @@ export function Threads(props) {
     const message = ngettext(
       "You have started %(threads)s thread.",
       "You have started %(threads)s threads.",
-      props.posts.count
+      props.profile.threads
     )
 
     header = interpolate(
       message,
       {
-        threads: props.posts.count
+        threads: props.profile.threads
       },
       true
     )
@@ -36,14 +36,14 @@ export function Threads(props) {
     const message = ngettext(
       "%(username)s has started %(threads)s thread.",
       "%(username)s has started %(threads)s threads.",
-      props.posts.count
+      props.profile.threads
     )
 
     header = interpolate(
       message,
       {
         username: props.profile.username,
-        threads: props.posts.count
+        threads: props.profile.threads
       },
       true
     )
@@ -81,13 +81,13 @@ export function Posts(props) {
     const message = ngettext(
       "You have posted %(posts)s message.",
       "You have posted %(posts)s messages.",
-      props.posts.count
+      props.profile.posts
     )
 
     header = interpolate(
       message,
       {
-        posts: props.posts.count
+        posts: props.profile.posts
       },
       true
     )
@@ -95,14 +95,14 @@ export function Posts(props) {
     const message = ngettext(
       "%(username)s has posted %(posts)s message.",
       "%(username)s has posted %(posts)s messages.",
-      props.posts.count
+      props.profile.posts
     )
 
     header = interpolate(
       message,
       {
         username: props.profile.username,
-        posts: props.posts.count
+        posts: props.profile.posts
       },
       true
     )

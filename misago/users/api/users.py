@@ -325,25 +325,15 @@ class UserViewSet(viewsets.GenericViewSet):
     @detail_route(methods=["get"])
     def threads(self, request, pk=None):
         profile = self.get_user(request, pk)
-
-        page = get_int_or_404(request.query_params.get("page", 0))
-        if page == 1:
-            page = 0  # api allows explicit first page
-
-        feed = UserThreads(request, profile, page)
-
+        start = get_int_or_404(request.query_params.get("start", 0))
+        feed = UserThreads(request, profile, start)
         return Response(feed.get_frontend_context())
 
     @detail_route(methods=["get"])
     def posts(self, request, pk=None):
         profile = self.get_user(request, pk)
-
-        page = get_int_or_404(request.query_params.get("page", 0))
-        if page == 1:
-            page = 0  # api allows explicit first page
-
-        feed = UserPosts(request, profile, page)
-
+        start = get_int_or_404(request.query_params.get("start", 0))
+        feed = UserPosts(request, profile, start)
         return Response(feed.get_frontend_context())
 
 
