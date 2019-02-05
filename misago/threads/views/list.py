@@ -20,10 +20,10 @@ class ThreadsList(View):
     template_name = None
 
     def get(self, request, list_type=None, **kwargs):
-        page = get_int_or_404(request.GET.get("page", 0))
+        start = get_int_or_404(request.GET.get("start", 0))
 
         category = self.get_category(request, **kwargs)
-        threads = self.get_threads(request, category, list_type, page)
+        threads = self.get_threads(request, category, list_type, start)
 
         frontend_context = self.get_frontend_context(request, category, threads)
         request.frontend_context.update(frontend_context)
@@ -34,9 +34,9 @@ class ThreadsList(View):
     def get_category(self, request, **kwargs):
         return self.category(request, **kwargs)  # pylint: disable=not-callable
 
-    def get_threads(self, request, category, list_type, page):
+    def get_threads(self, request, category, list_type, start):
         return self.threads(  # pylint: disable=not-callable
-            request, category, list_type, page
+            request, category, list_type, start
         )
 
     def get_frontend_context(self, request, category, threads):

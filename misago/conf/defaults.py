@@ -230,7 +230,6 @@ MISAGO_BLANK_AVATAR = "blank-avatar.png"
 # Threads lists pagination settings
 
 MISAGO_THREADS_PER_PAGE = 25
-MISAGO_THREADS_TAIL = 15
 
 
 # Posts lists pagination settings

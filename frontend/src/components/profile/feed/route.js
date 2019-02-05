@@ -16,14 +16,14 @@ export default class extends React.Component {
     }
   }
 
-  loadItems(page = 1) {
+  loadItems(start = 0) {
     ajax
       .get(this.props.api, {
-        page: page || 1
+        start: start || 0
       })
       .then(
         data => {
-          if (page === 1) {
+          if (start === 0) {
             store.dispatch(posts.load(data))
           } else {
             store.dispatch(posts.append(data))
@@ -48,7 +48,7 @@ export default class extends React.Component {
       isLoading: true
     })
 
-    this.loadItems(this.props.posts.page + 1)
+    this.loadItems(this.props.posts.next)
   }
 
   componentDidMount() {
@@ -77,7 +77,7 @@ export default class extends React.Component {
 }
 
 export function Feed(props) {
-  if (!props.posts.count) {
+  if (!props.posts.results.length) {
     return <p className="lead">{props.emptyMessage}</p>
   }
 
@@ -91,14 +91,14 @@ export function Feed(props) {
       <LoadMoreButton
         isLoading={props.isLoading}
         loadMore={props.loadMore}
-        more={props.posts.more}
+        next={props.posts.next}
       />
     </div>
   )
 }
 
 export function LoadMoreButton(props) {
-  if (!props.more) return null
+  if (!props.next) return null
 
   return (
     <div className="pager-more">
@@ -107,13 +107,7 @@ export function LoadMoreButton(props) {
         loading={props.isLoading}
         onClick={props.loadMore}
       >
-        {interpolate(
-          gettext("Show more (%(more)s)"),
-          {
-            more: props.more
-          },
-          true
-        )}
+        {gettext("Show older activity")}
       </Button>
     </div>
   )

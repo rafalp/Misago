@@ -42,7 +42,7 @@ from ...permissions import (
 from ...serializers import ThreadParticipantSerializer
 from ...validators import validate_thread_title
 
-PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE + settings.MISAGO_THREADS_TAIL
+PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE
 
 User = get_user_model()
 

@@ -1,5 +1,9 @@
+from django.core.paginator import EmptyPage, InvalidPage
+from django.http import Http404
+
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
+from ...core.cursorpagination import get_page
 from ...core.shortcuts import paginate, pagination_dict
 from ...threads.permissions import exclude_invisible_threads
 from ...threads.serializers import FeedSerializer
@@ -8,7 +12,7 @@ from ...threads.viewmodels import ThreadsRootCategory
 
 
 class UserThreads:
-    def __init__(self, request, profile, page=0):
+    def __init__(self, request, profile, start=0):
         root_category = ThreadsRootCategory(request)
         threads_categories = [root_category.unwrap()] + root_category.subcategories
 
@@ -22,13 +26,12 @@ class UserThreads:
             .order_by("-id")
         )
 
-        list_page = paginate(
-            posts_queryset,
-            page,
-            settings.MISAGO_POSTS_PER_PAGE,
-            settings.MISAGO_POSTS_TAIL,
-        )
-        paginator = pagination_dict(list_page)
+        try:
+            list_page = get_page(
+                posts_queryset, "-id", settings.MISAGO_POSTS_PER_PAGE, start
+            )
+        except (EmptyPage, InvalidPage):
+            raise Http404()
 
         posts = list(list_page.object_list)
         threads = []
@@ -46,7 +49,7 @@ class UserThreads:
         self._user = request.user
 
         self.posts = posts
-        self.paginator = paginator
+        self.list_page = list_page
 
     def get_threads_queryset(self, request, threads_categories, profile):
         return exclude_invisible_threads(
@@ -59,18 +62,15 @@ class UserThreads:
         )
 
     def get_frontend_context(self):
-        context = {
+        return {
             "results": UserFeedSerializer(
                 self.posts, many=True, context={"user": self._user}
-            ).data
+            ).data,
+            "next": self.list_page.next,
         }
 
-        context.update(self.paginator)
-
-        return context
-
     def get_template_context(self):
-        return {"posts": self.posts, "paginator": self.paginator}
+        return {"posts": self.posts, "next": self.list_page.next}
 
 
 UserFeedSerializer = FeedSerializer.exclude_fields("poster")

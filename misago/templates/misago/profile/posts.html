@@ -16,13 +16,13 @@
       <nav class="toolbar">
         <h3 class="toolbar-left">
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count posts=paginator.count %}
+            {% blocktrans trimmed count posts=profile.posts %}
               You have posted {{ posts }} message.
             {% plural %}
               You have posted {{ posts }} messages.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count posts=paginator.count with username=profile %}
+            {% blocktrans trimmed count posts=profile.posts with username=profile %}
               {{ username }} has posted {{ posts }} message.
             {% plural %}
               {{ username }} has posted {{ posts }} messages.

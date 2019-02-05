@@ -44,12 +44,8 @@ export default class extends WithDropdown {
 
       dropdown: false,
       subcategories: [],
-
-      count: 0,
-      more: 0,
-
-      page: 1,
-      pages: 1
+      
+      next: 0,
     }
 
     let category = this.getCategory()
@@ -72,14 +68,8 @@ export default class extends WithDropdown {
   initWithPreloadedData(category, data) {
     this.state = Object.assign(this.state, {
       moderation: getModerationActions(data.results),
-
       subcategories: data.subcategories,
-
-      count: data.count,
-      more: data.more,
-
-      page: data.page,
-      pages: data.pages
+      next: data.next
     })
 
     this.startPolling(category)
@@ -89,14 +79,14 @@ export default class extends WithDropdown {
     this.loadThreads(category)
   }
 
-  loadThreads(category, page = 1) {
+  loadThreads(category, next = 0) {
     ajax
       .get(
         this.props.options.api,
         {
           category: category,
           list: this.props.route.list.type,
-          page: page || 1
+          start: next || 0
         },
         "threads"
       )
@@ -107,7 +97,7 @@ export default class extends WithDropdown {
             return
           }
 
-          if (page === 1) {
+          if (next === 0) {
             store.dispatch(hydrate(data.results))
           } else {
             store.dispatch(append(data.results, this.getSorting()))
@@ -121,11 +111,7 @@ export default class extends WithDropdown {
 
             subcategories: data.subcategories,
 
-            count: data.count,
-            more: data.more,
-
-            page: data.page,
-            pages: data.pages
+            next: data.next,
           })
 
           this.startPolling(category)
@@ -207,7 +193,7 @@ export default class extends WithDropdown {
       isBusy: true
     })
 
-    this.loadThreads(this.getCategory(), this.state.page + 1)
+    this.loadThreads(this.getCategory(), this.state.next)
   }
 
   pollResponse = data => {
@@ -255,21 +241,19 @@ export default class extends WithDropdown {
   }
 
   getMoreButton() {
-    if (this.state.more) {
-      return (
-        <div className="pager-more">
-          <Button
-            className="btn btn-default btn-outline"
-            loading={this.state.isBusy || this.state.busyThreads.length}
-            onClick={this.loadMore}
-          >
-            {gettext("Show more")}
-          </Button>
-        </div>
-      )
-    } else {
-      return null
-    }
+    if (!this.state.next) return null
+
+    return (
+      <div className="pager-more">
+        <Button
+          className="btn btn-default btn-outline"
+          loading={this.state.isBusy || this.state.busyThreads.length}
+          onClick={this.loadMore}
+        >
+          {gettext("Show more")}
+        </Button>
+      </div>
+    )
   }
 
   getClassName() {

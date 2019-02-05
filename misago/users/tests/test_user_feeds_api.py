@@ -26,7 +26,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
         """api has no showstopers on empty response"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_post(self):
         """user post doesn't show in feed because its not first post in thread"""
@@ -34,7 +34,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_event(self):
         """events don't show in feeds at all"""
@@ -42,7 +42,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_thread(self):
         """user thread shows in feed"""
@@ -53,7 +53,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(len(response.json()["results"]), 1)
         self.assertEqual(response.json()["results"][0]["id"], thread.first_post_id)
 
     def test_user_thread_anonymous(self):
@@ -64,7 +64,7 @@ class UserThreadsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 1)
+        self.assertEqual(len(response.json()["results"]), 1)
         self.assertEqual(response.json()["results"][0]["id"], thread.first_post_id)
 
 
@@ -90,7 +90,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
         """api has no showstopers on empty response"""
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_event(self):
         """events don't show in feeds at all"""
@@ -98,7 +98,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_hidden_post(self):
         """hidden posts don't show in feeds at all"""
@@ -106,7 +106,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_unapproved_post(self):
         """unapproved posts don't show in feeds at all"""
@@ -114,7 +114,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 0)
+        self.assertEqual(len(response.json()["results"]), 0)
 
     def test_user_posts(self):
         """user posts show in feed"""
@@ -123,7 +123,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(len(response.json()["results"]), 2)
         self.assertEqual(response.json()["results"][0]["id"], other_post.pk)
         self.assertEqual(response.json()["results"][1]["id"], post.pk)
 
@@ -134,7 +134,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(len(response.json()["results"]), 2)
         self.assertEqual(response.json()["results"][0]["id"], post.pk)
         self.assertEqual(response.json()["results"][1]["id"], thread.first_post_id)
 
@@ -147,7 +147,7 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(len(response.json()["results"]), 2)
         self.assertEqual(response.json()["results"][0]["id"], other_post.pk)
         self.assertEqual(response.json()["results"][1]["id"], post.pk)
 
@@ -160,6 +160,6 @@ class UserPostsApiTests(ThreadsApiTestCase):
 
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["count"], 2)
+        self.assertEqual(len(response.json()["results"]), 2)
         self.assertEqual(response.json()["results"][0]["id"], post.pk)
         self.assertEqual(response.json()["results"][1]["id"], thread.first_post_id)

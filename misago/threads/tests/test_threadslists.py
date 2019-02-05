@@ -136,13 +136,6 @@ class ApiTests(ThreadsListTestCase):
         response = self.client.get("%s?category=%s" % (self.api_link, self.root.pk))
         self.assertEqual(response.status_code, 200)
 
-    def test_explicit_first_page(self):
-        """its possible to access threads endpoint with explicit first page"""
-        response = self.client.get(
-            "%s?category=%s&page=1" % (self.api_link, self.root.pk)
-        )
-        self.assertEqual(response.status_code, 200)
-
     def test_invalid_list_type(self):
         """api returns 404 for invalid list type"""
         response = self.client.get(
@@ -343,38 +336,34 @@ class AllThreadsListTests(ThreadsListTestCase):
         """threads list is paginated for users with js disabled"""
         threads_per_page = settings.MISAGO_THREADS_PER_PAGE
 
+        # post and discard thread to move last_post_id count by one
+        test.post_thread(category=self.first_category).delete()
+
+        # create test threads
         threads = []
-        for _ in range(settings.MISAGO_THREADS_PER_PAGE * 3):
+        for _ in range(settings.MISAGO_THREADS_PER_PAGE * 2):
             threads.append(test.post_thread(category=self.first_category))
 
-        # secondary page renders
-        response = self.client.get("/?page=2")
+        # threads starting with given one are on the list
+        response = self.client.get("/?start=%s" % threads[-2].last_post_id)
         self.assertEqual(response.status_code, 200)
 
-        for thread in threads[:threads_per_page]:
-            self.assertNotContainsThread(response, thread)
-        for thread in threads[threads_per_page : threads_per_page * 2]:
-            self.assertContainsThread(response, thread)
-        for thread in threads[threads_per_page * 2 :]:
-            self.assertNotContainsThread(response, thread)
+        # first thread is skipped by cursor pagination
+        self.assertNotContainsThread(response, threads[-1])
 
-        self.assertNotContains(response, "/?page=1")
-        self.assertContains(response, "/?page=3")
+        # starting thread is present
+        self.assertContainsThread(response, threads[-2])
 
-        # third page renders
-        response = self.client.get("/?page=3")
-        self.assertEqual(response.status_code, 200)
+        # slice contains expected threads
+        for visible_thread in threads[settings.MISAGO_THREADS_PER_PAGE - 1 : -1]:
+            self.assertContainsThread(response, visible_thread)
 
-        for thread in threads[threads_per_page:]:
-            self.assertNotContainsThread(response, thread)
-        for thread in threads[:threads_per_page]:
-            self.assertContainsThread(response, thread)
+        # threads after slice are hidden
+        for invisible_thread in threads[: settings.MISAGO_THREADS_PER_PAGE - 1]:
+            self.assertNotContainsThread(response, invisible_thread)
 
-        self.assertContains(response, "/?page=2")
-        self.assertNotContains(response, "/?page=4")
-
-        # excessive page gives 404
-        response = self.client.get("/?page=4")
+        # nonexisting start gives 404
+        response = self.client.get("/?start=%s" % (threads[0].last_post_id - 1))
         self.assertEqual(response.status_code, 404)
 
 

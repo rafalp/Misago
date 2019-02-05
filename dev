@@ -91,6 +91,7 @@ intro() {
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."
     echo "    ${BOLD}pyfmt${NORMAL}             runs isort + black on python code."
     echo "    ${BOLD}fakedata${NORMAL}          populates database with testing data."
+    echo "    ${BOLD}fakebigdata${NORMAL}       populates database with LARGE amount of testing data."
     echo
 }
 
@@ -271,6 +272,13 @@ create_fake_data() {
     docker-compose run --rm misago python manage.py createfakehistory 600
 }
 
+# Shortcut for creating big dev forum
+create_fake_bigdata() {
+    docker-compose run --rm misago python manage.py createfakecategories 48
+    docker-compose run --rm misago python manage.py createfakecategories 24 1
+    docker-compose run --rm misago python manage.py createfakehistory 2190 120
+}
+
 # Command dispatcher
 if [[ $1 ]]; then
     if [[ $1 = "init" ]]; then
@@ -319,6 +327,8 @@ if [[ $1 ]]; then
         black devproject misago
     elif [[ $1 = "fakedata" ]]; then
         create_fake_data
+    elif [[ $1 = "fakebigdata" ]]; then
+        create_fake_bigdata
     else
         invalid_argument $1
     fi

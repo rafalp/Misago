@@ -1,4 +1,5 @@
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import EmptyPage, InvalidPage
 from django.db.models import Q
 from django.http import Http404
 from django.utils.translation import gettext as _
@@ -6,7 +7,7 @@ from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
-from ...core.shortcuts import paginate, pagination_dict
+from ...core.cursorpagination import get_page
 from ...readtracker import threadstracker
 from ...readtracker.dates import get_cutoff_date
 from ..models import Post, Thread
@@ -45,7 +46,7 @@ LIST_DENIED_MESSAGES = {
 
 
 class ViewModel:
-    def __init__(self, request, category, list_type, page):
+    def __init__(self, request, category, list_type, start=0):
         self.allow_see_list(request, category, list_type)
 
         category_model = category.unwrap()
@@ -59,23 +60,25 @@ class ViewModel:
             base_queryset, category_model, threads_categories
         )
 
-        list_page = paginate(
-            threads_queryset,
-            page,
-            settings.MISAGO_THREADS_PER_PAGE,
-            settings.MISAGO_THREADS_TAIL,
-        )
-        paginator = pagination_dict(list_page)
+        try:
+            list_page = get_page(
+                threads_queryset,
+                "-last_post_id",
+                settings.MISAGO_THREADS_PER_PAGE,
+                start,
+            )
+        except (EmptyPage, InvalidPage):
+            raise Http404()
 
-        if list_page.number > 1:
-            threads = list(list_page.object_list)
-        else:
+        if list_page.first:
             pinned_threads = list(
                 self.get_pinned_threads(
                     base_queryset, category_model, threads_categories
                 )
             )
             threads = list(pinned_threads) + list(list_page.object_list)
+        else:
+            threads = list(list_page.object_list)
 
         add_categories_to_items(category_model, category.categories, threads)
         add_acl_to_obj(request.user_acl, threads)
@@ -95,7 +98,7 @@ class ViewModel:
         self.category = category
         self.threads = threads
         self.list_type = list_type
-        self.paginator = paginator
+        self.list_page = list_page
 
     def allow_see_list(self, request, category, list_type):
         if list_type not in LISTS_NAMES:
@@ -129,22 +132,20 @@ class ViewModel:
         pass  # hook for custom thread types to add features to extend threads
 
     def get_frontend_context(self):
-        context = {
+        return {
             "THREADS": {
                 "results": ThreadsListSerializer(self.threads, many=True).data,
                 "subcategories": [c.pk for c in self.category.children],
+                "next": self.list_page.next,
             }
         }
-
-        context["THREADS"].update(self.paginator)
-        return context
 
     def get_template_context(self):
         return {
             "list_name": self.get_list_name(self.list_type),
             "list_type": self.list_type,
+            "list_page": self.list_page,
             "threads": self.threads,
-            "paginator": self.paginator,
         }
 
 

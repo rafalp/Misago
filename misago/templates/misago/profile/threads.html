@@ -16,13 +16,13 @@
       <nav class="toolbar">
         <h3 class="toolbar-left">
           {% if is_authenticated_user %}
-            {% blocktrans trimmed count threads=paginator.count %}
+            {% blocktrans trimmed count threads=profile.threads %}
               You have started {{ threads }} thread.
             {% plural %}
               You have started {{ threads }} threads.
             {% endblocktrans %}
           {% else %}
-            {% blocktrans trimmed count threads=paginator.count with username=profile %}
+            {% blocktrans trimmed count threads=profile.threads with username=profile %}
               {{ username }} has started {{ threads }} thread.
             {% plural %}
               {{ username }} has started {{ threads }} threads.
