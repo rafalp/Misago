@@ -49,7 +49,11 @@ def _create_base_thread(fake, category):
         last_poster_slug="-",
         replies=0,
     )
-    thread.set_title(corpus_short.random_sentence())
+
+    # Sometimes thread ends with slug being set to empty string
+    while not thread.slug:
+        thread.set_title(corpus_short.random_sentence())
+
     thread.save()
 
     return thread
