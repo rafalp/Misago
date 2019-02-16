@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
-from ..admin.forms import YesNoSwitch
+from ...admin.forms import YesNoSwitch
 
 __all__ = ["ChangeSettingsForm"]
 

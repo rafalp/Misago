@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
 
-from ..admin.views import render as mi_render
-from .cache import clear_settings_cache
+from ...admin.views import render as mi_render
+from ..cache import clear_settings_cache
+from ..models import SettingsGroup
 from .forms import ChangeSettingsForm
-from .models import SettingsGroup
 
 
 def render(request, template, context=None):
