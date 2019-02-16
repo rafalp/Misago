@@ -6,7 +6,35 @@
 {% include "misago/admin/navbar.html" %}
 {% include "misago/admin/messages.html" %}
 
-{% block content %}{% endblock %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-3 col-lg-2">
+      <ul class="nav nav-pills nav-stacked">
+        {% for node in sections %}
+          <li{% if node.is_active %} class="active"{% endif %}>
+            <a href="{{ node.link }}">
+              <span class="{{ node.icon }}"></span>
+              {{ node.name }}
+            </a>
+          </li>
+          {% if node.is_active and actions %}
+            {% for node in actions %}
+              <li{% if node.is_active %} class="active"{% endif %}>
+                <a href="{{ node.link }}">
+                  <span class="{{ node.icon }}"></span>
+                  {{ node.name }}
+                </a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-sm-9 col-lg-10">
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+</div>
 
 <footer class="admin-footer">
   <div class="misago-branding text-center">
