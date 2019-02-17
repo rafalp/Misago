@@ -1,0 +1,52 @@
+{
+  "name": "misago-admin",
+  "version": "0.1.0",
+  "description": "Admin panel UI kit",
+  "main": "./misago/admin/src/index.js",
+  "scripts": {
+    "watch": "NODE_ENV=development webpack -d -w",
+    "build": "NODE_ENV=production webpack -p",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafalp/misago.git"
+  },
+  "author": "Rafał Pitoń",
+  "license": "SEE LICENSE IN LICENSE.rst",
+  "bugs": {
+    "url": "https://github.com/rafalp/misago/issues"
+  },
+  "homepage": "https://github.com/rafalp/misago#readme",
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.7"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.4.7",
+    "css-loader": "^2.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "postcss-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
+    "stylelint": "^9.10.1",
+    "stylelint-config-twbs-bootstrap": "^0.3.0",
+    "stylelint-webpack-plugin": "^0.10.5",
+    "webpack": "^4.29.4",
+    "webpack-cli": "^3.2.3"
+  },
+  "browserslist": [
+    ">= 1%",
+    "last 1 major version",
+    "not dead",
+    "Chrome >= 45",
+    "Firefox >= 38",
+    "Edge >= 12",
+    "Explorer >= 10",
+    "iOS >= 9",
+    "Safari >= 9",
+    "Android >= 4.4",
+    "Opera >= 30"
+  ]
+}

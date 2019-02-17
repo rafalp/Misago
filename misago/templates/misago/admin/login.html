@@ -2,7 +2,9 @@
 {% load i18n static %}
 
 
-{% block title %}{% trans "Log in" %} | {% if target == "django" %}{% trans "Django Admin" %}{% else %}{% trans "Misago Admin" %}{% endif %}{% endblock %}
+{% block title %}
+  {% trans "Log in" %} | {% if target == "django" %}{% trans "Django Administration" %}{% else %}{% trans "Misago Administration" %}{% endif %}
+{% endblock %}
 
 
 {% block body %}
