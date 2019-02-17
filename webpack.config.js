@@ -1,7 +1,7 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const StyleLintPlugin = require('stylelint-webpack-plugin')
 const path = require("path")
-
+const StyleLintPlugin = require('stylelint-webpack-plugin')
+const { ProvidePlugin } = require("webpack")
 
 module.exports = {
   cache: false,
