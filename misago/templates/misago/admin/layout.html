@@ -1,0 +1,61 @@
+{% extends "misago/admin/base.html" %}
+{% load static %}
+
+
+{% block body %}
+<body>
+  {% include "misago/admin/navbar.html" %}
+  {% include "misago/admin/messages.html" %}
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col col-side-nav">
+        <ul class="nav nav-pills nav-stacked">
+          {% for node in sections %}
+            <li{% if node.is_active %} class="active"{% endif %}>
+              <a href="{{ node.link }}">
+                <span class="{{ node.icon }}"></span>
+                {{ node.name }}
+              </a>
+            </li>
+            {% if node.is_active and actions %}
+              {% for node in actions %}
+                <li{% if node.is_active %} class="active"{% endif %}>
+                  <a href="{{ node.link }}">
+                    <span class="{{ node.icon }}"></span>
+                    {{ node.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <footer class="admin-footer">
+    <div class="misago-branding text-center">
+      <a href="http://misago-project.org">
+        <span class="subscript">powered by</span>
+        <img src="{% static 'misago/admin/img/misago.png' %}" height="46px" alt="Misago" style="position: relative; top: 1px;" />
+      </a>
+    </div>
+  </footer>
+
+  {# We include JavaScript at the end of page body so it renders faster #}
+  <script type="text/javascript" src="{% static 'misago/admin-new/index.js' %}"></script>
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/moment.min.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap-datetimepicker.min.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/misago-datetimepicker.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/misago-timestamps.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/misago-tooltips.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/misago-tables.js' %}"></script>#}
+  {#<script type="text/javascript" src="{% static 'misago/admin/js/misago-yesnoswitch.js' %}"></script>#}
+  {% block javascripts %}{% endblock javascripts %}
+</body>
+{% endblock body %}

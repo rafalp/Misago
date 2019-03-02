@@ -1,22 +1,37 @@
 {% load i18n static misago_avatars %}
-<div class="navbars-container">
-  <div class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="{% url 'misago:index' %}">
-        <img src="{% static 'misago/admin/img/mred.png' %}" alt="">
-        <span>Misago</span>
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <a class="navbar-brand" href="{% url 'misago:admin:index' %}">
+    <img src="{% static 'misago/admin/img/mred.png' %}" alt="">
+    <span>Misago</span>
+  </a>
+  <span class="badge badge-light mr-auto">
+    {{ MISAGO_VERSION }}
+  </span>
+  <a href="{% url 'misago:index' %}" class="btn btn-light btn-sm mr-3">
+    {% trans "Go to site" %}
+  </a>
+  <div class="dropdown">
+    <button type="button" class="btn btn-user dropdown-toggle" id="openAdminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img src="{{ user|avatar:30 }}" alt="{% trans 'Your avatar' %}">
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="openAdminDropdown">
+      <h6 class="dropdown-header">{{ user }}</h6>
+      <a class="dropdown-item" href="{% url 'misago:admin:users:accounts:edit' pk=user.pk %}">
+        {% trans "Edit your account" %}
       </a>
-      <div class="user-nav pull-right">
-        <p class="navbar-text">
-          <a href="{% url 'misago:admin:users:accounts:edit' pk=user.pk %}" class="tooltip-bottom" title="{% trans "Edit your account" %}">
-            <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
-            {{ user }}
-          </a>
-          <a href="#" class="logout" data-toggle="modal" data-target="#logout-modal">
-            <span class="fa fa-power-off"></span>
-          </a>
-        </p>
-      </div>
+      <div class="dropdown-divider"></div>
+      <form action="{% url 'misago:admin:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">
+          {% trans "Close admin session" %}
+        </button>
+      </form>
+      <form action="{% url 'misago:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">
+          {% trans "Log out completely" %}
+        </button>
+      </form>
     </div>
   </div>
-</div>
+</nav>

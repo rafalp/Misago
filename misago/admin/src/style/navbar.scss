@@ -1,0 +1,23 @@
+// Size Misago logo in navbar
+.navbar-brand {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 2rem;
+    margin-right: $spacer / 2;
+    border-radius: $border-radius;
+  }
+}
+
+// Vertically center user btn contents
+.navbar .btn-user {
+  @extend .btn-light;
+  @extend .p-0;
+
+  overflow: hidden;
+
+  img {
+    height: 2rem;
+  }
+}

@@ -1,0 +1,13 @@
+// Layout styles
+
+// Make document container height 100%
+html,
+body {
+  height: 100%;
+}
+
+
+// Lock side nav width
+.col-side-nav {
+  max-width: $side-nav-width;
+}
