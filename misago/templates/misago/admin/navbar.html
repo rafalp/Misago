@@ -7,8 +7,17 @@
   <span class="badge badge-light mr-auto">
     {{ MISAGO_VERSION }}
   </span>
+  <a href="https://github.com/rafalp/misago" target="_blank" class="btn btn-light btn-sm mr-3">
+    <span class="fab fa-github"></span>
+    {% trans "GitHub" %}
+  </a>
+  <a href="https://misago-project.org" target="_blank" class="btn btn-light btn-sm mr-3">
+    <span class="far fa-question-circle"></span>
+    {% trans "Support forum" %}
+  </a>
   <a href="{% url 'misago:index' %}" class="btn btn-light btn-sm mr-3">
-    {% trans "Go to site" %}
+    <span class="far fa-window-maximize"></span>
+    {% trans "Site index" %}
   </a>
   <div class="dropdown">
     <button type="button" class="btn btn-user dropdown-toggle" id="openAdminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

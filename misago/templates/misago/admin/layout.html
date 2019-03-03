@@ -7,29 +7,10 @@
   {% include "misago/admin/navbar.html" %}
   {% include "misago/admin/messages.html" %}
 
-  <div class="container-fluid">
+  <div class="container-fluid my-3">
     <div class="row">
-      <div class="col col-side-nav">
-        <ul class="nav nav-pills nav-stacked">
-          {% for node in sections %}
-            <li{% if node.is_active %} class="active"{% endif %}>
-              <a href="{{ node.link }}">
-                <span class="{{ node.icon }}"></span>
-                {{ node.name }}
-              </a>
-            </li>
-            {% if node.is_active and actions %}
-              {% for node in actions %}
-                <li{% if node.is_active %} class="active"{% endif %}>
-                  <a href="{{ node.link }}">
-                    <span class="{{ node.icon }}"></span>
-                    {{ node.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            {% endif %}
-          {% endfor %}
-        </ul>
+      <div class="col col-nav-side">
+        {% include "misago/admin/sidenav.html" %}
       </div>
       <div class="col">
         {% block content %}{% endblock %}
