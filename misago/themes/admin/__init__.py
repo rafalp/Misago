@@ -94,17 +94,8 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Appearance"),
+            name=_("Themes"),
             icon="fa fa-paint-brush",
             parent="misago:admin",
-            namespace="misago:admin:appearance",
-            link="misago:admin:appearance:themes:index",
-        )
-
-        site.add_node(
-            name=_("Themes"),
-            icon="fa fa-tint",
-            parent="misago:admin:appearance",
-            namespace="misago:admin:appearance:themes",
             link="misago:admin:appearance:themes:index",
         )

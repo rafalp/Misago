@@ -64,22 +64,14 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Categories"),
-            icon="fa fa-comments",
+            icon="fa fa-list",
             parent="misago:admin",
             before="misago:admin:permissions:users:index",
-            namespace="misago:admin:categories",
             link="misago:admin:categories:nodes:index",
         )
-        site.add_node(
-            name=_("Categories hierarchy"),
-            icon="fa fa-sitemap",
-            parent="misago:admin:categories",
-            namespace="misago:admin:categories:nodes",
-            link="misago:admin:categories:nodes:index",
-        )
+
         site.add_node(
             name=_("Category roles"),
-            icon="fa fa-comments-o",
             parent="misago:admin:permissions",
             after="misago:admin:permissions:users:index",
             namespace="misago:admin:permissions:categories",

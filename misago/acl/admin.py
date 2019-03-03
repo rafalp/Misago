@@ -29,9 +29,9 @@ class MisagoAdminExtension:
             namespace="misago:admin:permissions",
             link="misago:admin:permissions:users:index",
         )
+
         site.add_node(
             name=_("User roles"),
-            icon="fa fa-th-large",
             parent="misago:admin:permissions",
             namespace="misago:admin:permissions:users",
             link="misago:admin:permissions:users:index",

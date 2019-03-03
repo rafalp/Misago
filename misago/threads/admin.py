@@ -36,14 +36,13 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Attachments"),
-            icon="fa fa-cubes",
             parent="misago:admin:system",
             after="misago:admin:system:settings:index",
             link="misago:admin:system:attachments:index",
         )
+
         site.add_node(
             name=_("Attachment types"),
-            icon="fa fa-cube",
             parent="misago:admin:system",
             after="misago:admin:system:attachments:index",
             link="misago:admin:system:attachment-types:index",

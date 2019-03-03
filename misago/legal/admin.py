@@ -31,7 +31,6 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Agreements"),
-            icon="fa fa-check-square-o",
             parent="misago:admin:users",
             after="misago:admin:users:data-downloads:index",
             namespace="misago:admin:users:agreements",
