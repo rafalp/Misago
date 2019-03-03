@@ -1,37 +1,45 @@
 {% load i18n%}
 
-<ul class="pager pull-left">
-  <li class="page">
-    {% blocktrans trimmed with page=page.number pages=paginator.num_pages %}
-      Page {{ page }} of {{ pages }}
-    {% endblocktrans %}
-  </li>
+<div class="col-auto">
   {% if page.has_previous %}
-    <li>
-      <a href="{% url root_link %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to first page" %}">
-        {% trans "First" %}
-      </a>
-    </li>
-    {% if page.number > 2 %}
-      <li>
-        <a href="{% url root_link page=page.previous_page_number %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to previous page" %}">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-        </a>
-      </li>
-    {% endif %}
+    <a href="{% url root_link %}{{ querystring }}" class="btn btn-light tooltip-top" title="{% trans 'Go to first page' %}">
+      {% trans "First" %}
+    </a>
+  {% else %}
+    <button class="btn btn-light" disabled>
+      {% trans "First" %}
+    </button>
+  {% endif %}
+  {% if page.number > 1 %}
+    <a href="{% url root_link page=page.previous_page_number %}{{ querystring }}" class="btn btn-light tooltip-top" title="{% trans 'Go to previous page' %}">
+      <span class="fa fa-chevron-left"></span>
+    </a>
+  {% else %}
+    <button class="btn btn-light" disabled>
+      <span class="fa fa-chevron-left"></span>
+    </button>
+  {% endif %}
+  {% if page.next_page_number < paginator.num_pages %}
+    <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="btn btn-light tooltip-top" title="{% trans 'Go to next page' %}">
+      <span class="fa fa-chevron-right"></span>
+    </a>
+  {% else %}
+    <button class="btn btn-light" disabled>
+      <span class="fa fa-chevron-right"></span>
+    </button>
   {% endif %}
   {% if page.has_next %}
-    {% if page.next_page_number < paginator.num_pages %}
-      <li>
-        <a href="{% url root_link page=page.next_page_number %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to next page" %}">
-          <span class="glyphicon glyphicon-chevron-right"></span>
-        </a>
-      </li>
-    {% endif %}
-    <li>
-      <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="tooltip-top" title="{% trans "Go to last page" %}">
-        {% trans "Last" %}
-      </a>
-    </li>
+    <a href="{% url root_link page=paginator.num_pages %}{{ querystring }}" class="btn btn-light tooltip-top" title="{% trans 'Go to last page' %}">
+      {% trans "Last" %}
+    </a>
+  {% else %}
+    <button class="btn btn-light" disabled>
+      {% trans "Last" %}
+    </button>
   {% endif %}
-</ul>
+</div>
+<div class="col-auto pl-0">
+  {% blocktrans trimmed with page=page.number pages=paginator.num_pages %}
+    Page {{ page }} of {{ pages }}
+  {% endblocktrans %}
+</div>

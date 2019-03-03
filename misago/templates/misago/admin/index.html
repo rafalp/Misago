@@ -6,125 +6,120 @@
 
 
 {% block content %}
-<div class="page-header">
-  <div class="container-fluid">
-    <h1>
-      <span class="fa fa-home"></span>
-      {% trans "Administration Home" %}
-    </h1>
+<div class="page-header row align-items-center">
+  <div class="col">
+    <h1>{% trans "Administration Home" %}</h1>
   </div>
 </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-8">
+<div class="row">
+  <div class="col-md-8">
 
-      <h2>{% trans "System checks" %}</h2>
+    <h2>{% trans "System checks" %}</h2>
 
-      {% if address_check.is_correct %}
-        <div class="alert alert-success" role="alert">
-          <p>{% trans "MISAGO_ADDRESS setting appears to be correct." %}</p>
-        </div>
-      {% elif address_check.set_address %}
-        <div class="alert alert-warning" role="alert">
-          <p class="lead">{% trans "The settings.py value for MISAGO_ADDRESS appears to be incorrect." %}</p>
-          <p>
-            {% capture trimmed as set_address %}
-              <code>{{ address_check.set_address }}</code>
-            {% endcapture %}
-            {% capture trimmed as correct_address %}
-              <code>{{ address_check.correct_address }}</code>
-            {% endcapture %}
-            {% blocktrans trimmed with configured_address=set_address|safe correct_address=correct_address|safe %}
-              Your MISAGO_ADDRESS is set to {{ configured_address }} while correct value appears to be {{ correct_address }}.
-            {% endblocktrans %}
-          </p>
-          <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
-        </div>
-      {% else %}
-        <div class="alert alert-danger" role="alert">
-          <p class="lead">{% trans "The settings.py is missing MISAGO_ADDRESS value." %}</p>
-          <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
-        </div>
-      {% endif %}
+    {% if address_check.is_correct %}
+      <div class="alert alert-success" role="alert">
+        <p>{% trans "MISAGO_ADDRESS setting appears to be correct." %}</p>
+      </div>
+    {% elif address_check.set_address %}
+      <div class="alert alert-warning" role="alert">
+        <p class="lead">{% trans "The settings.py value for MISAGO_ADDRESS appears to be incorrect." %}</p>
+        <p>
+          {% capture trimmed as set_address %}
+            <code>{{ address_check.set_address }}</code>
+          {% endcapture %}
+          {% capture trimmed as correct_address %}
+            <code>{{ address_check.correct_address }}</code>
+          {% endcapture %}
+          {% blocktrans trimmed with configured_address=set_address|safe correct_address=correct_address|safe %}
+            Your MISAGO_ADDRESS is set to {{ configured_address }} while correct value appears to be {{ correct_address }}.
+          {% endblocktrans %}
+        </p>
+        <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
+      </div>
+    {% else %}
+      <div class="alert alert-danger" role="alert">
+        <p class="lead">{% trans "The settings.py is missing MISAGO_ADDRESS value." %}</p>
+        <p>{% trans "Misago uses this setting to build correct links in e-mails sent to site users." %}</p>
+      </div>
+    {% endif %}
 
-    </div>
-    <div class="col-md-4">
+  </div>
+  <div class="col-md-4">
 
-      <table class="table version-check">
-        <thead>
+    <table class="table version-check">
+      <thead>
+        <tr>
+          <th colspan="2">
+            <h4>
+              {% trans "Misago version" %}
+            </h4>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-center">
+            {% if version_check %}
+              <p class="lead text-{% if version_check.is_error %}danger{% else %}success{% endif %}">
+                {% if version_check.is_error %}
+                  <span class="fa fa-times fa-lg fa-fw"></span>
+                {% else %}
+                  <span class="fa fa-check fa-lg fa-fw"></span>
+                {% endif %}
+                {{ version_check.message }}
+              </p>
+            {% else %}
+              <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-default">
+                  <span class="fa fa-question-circle fa-fw"></span>
+                  <span class="name">{% trans "Check version" %}</span>
+                </button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2">
+            <h4>
+              <span class="fa fa-database"></span>
+              {% trans "DB Contents" %}
+            </h4>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{% trans "Threads" %}</td>
+          <td>{{ db_stats.threads }}</td>
+        </tr>
+        <tr>
+          <td>{% trans "Posts" %}</td>
+          <td>{{ db_stats.posts }}</td>
+        </tr>
+        <tr>
+          <td>{% trans "Users" %}</td>
+          <td>{{ db_stats.users }}</td>
+        </tr>
+        {% if db_stats.inactive_users %}
           <tr>
-            <th colspan="2">
-              <h4>
-                {% trans "Misago version" %}
-              </h4>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="text-center">
-              {% if version_check %}
-                <p class="lead text-{% if version_check.is_error %}danger{% else %}success{% endif %}">
-                  {% if version_check.is_error %}
-                    <span class="fa fa-times fa-lg fa-fw"></span>
-                  {% else %}
-                    <span class="fa fa-check fa-lg fa-fw"></span>
-                  {% endif %}
-                  {{ version_check.message }}
-                </p>
-              {% else %}
-                <form method="POST">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-default">
-                    <span class="fa fa-question-circle fa-fw"></span>
-                    <span class="name">{% trans "Check version" %}</span>
-                  </button>
-                </form>
-              {% endif %}
+            <td>{% trans "Inactive users" %}</td>
+            <td>
+              <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">
+                {{ db_stats.inactive_users }}
+              </a>
             </td>
           </tr>
-        </tbody>
-      </table>
+        {% endif %}
+      </tbody>
+    </table>
 
-      <table class="table">
-        <thead>
-          <tr>
-            <th colspan="2">
-              <h4>
-                <span class="fa fa-database"></span>
-                {% trans "DB Contents" %}
-              </h4>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{% trans "Threads" %}</td>
-            <td>{{ db_stats.threads }}</td>
-          </tr>
-          <tr>
-            <td>{% trans "Posts" %}</td>
-            <td>{{ db_stats.posts }}</td>
-          </tr>
-          <tr>
-            <td>{% trans "Users" %}</td>
-            <td>{{ db_stats.users }}</td>
-          </tr>
-          {% if db_stats.inactive_users %}
-            <tr>
-              <td>{% trans "Inactive users" %}</td>
-              <td>
-                <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">
-                  {{ db_stats.inactive_users }}
-                </a>
-              </td>
-            </tr>
-          {% endif %}
-        </tbody>
-      </table>
-
-    </div>
   </div>
 </div>
 {% endblock content %}

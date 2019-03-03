@@ -40,7 +40,9 @@
 @import "~bootstrap/scss/utilities";
 
 // Theme components
-@import "layout";
+@import "document";
+@import "login-form";
 @import "navbar";
 @import "side-nav";
-@import "login-form";
+@import "page-header";
+@import "admin-table";

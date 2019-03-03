@@ -7,7 +7,7 @@
   {% include "misago/admin/navbar.html" %}
   {% include "misago/admin/messages.html" %}
 
-  <div class="container-fluid my-3">
+  <div class="container-fluid my-3 pb-3">
     <div class="row">
       <div class="col col-nav-side">
         {% include "misago/admin/sidenav.html" %}
@@ -17,15 +17,6 @@
       </div>
     </div>
   </div>
-
-  <footer class="admin-footer">
-    <div class="misago-branding text-center">
-      <a href="http://misago-project.org">
-        <span class="subscript">powered by</span>
-        <img src="{% static 'misago/admin/img/misago.png' %}" height="46px" alt="Misago" style="position: relative; top: 1px;" />
-      </a>
-    </div>
-  </footer>
 
   {# We include JavaScript at the end of page body so it renders faster #}
   <script type="text/javascript" src="{% static 'misago/admin-new/index.js' %}"></script>

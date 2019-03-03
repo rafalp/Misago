@@ -1,0 +1,26 @@
+// Admin table
+//
+// Used to present actionable list of items in tabular form
+
+// Remove margins from table
+.card-admin-table table {
+  @extend .m-0;
+}
+
+// Vertically align and compact table cells
+.card-admin-table th,
+.card-admin-table td {
+  @extend .py-1;
+
+  vertical-align: middle;
+}
+
+// Make card-body paddings same as in table
+.card-admin-table .card-body {
+  padding: $table-cell-padding;
+}
+
+// Add upper border to card-body proceeded by table
+.card-admin-table table + .card-body {
+  border-top: $table-border-width solid $table-border-color;
+}

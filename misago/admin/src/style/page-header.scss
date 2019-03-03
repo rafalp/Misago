@@ -1,0 +1,24 @@
+// Page header
+//
+// Contains page title (h1) and top actions
+
+.page-header {
+  @extend .mb-3;
+
+  h1 {
+    @extend .m-0;
+
+    font-size: $font-size-base * 2;
+
+    a {
+      color: $body-color;
+    }
+  }
+}
+
+.page-action {
+  .fa,
+  .fab {
+    @extend .mr-1;
+  }
+}

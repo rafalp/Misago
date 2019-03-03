@@ -3,8 +3,8 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-  <a href="{% url 'misago:admin:users:accounts:new' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:users:accounts:new' %}" class="btn btn-primary">
     <span class="fa fa-plus-circle"></span>
     {% trans "New user" %}
   </a>
