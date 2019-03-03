@@ -1,9 +1,10 @@
 // Variables
 //
-// Variables should follow the `$component-state-property-size` formula for
-// consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
+// Misago admin overrides
 
 // Color system
+//
+// Use atlaskit color palette and swap blue with purple for primary color
 
 $white:    #fff !default;
 $gray-100: #f4f5f7 !default;
@@ -17,7 +18,14 @@ $gray-800: #505f79 !default;
 $gray-900: #172b4d !default;
 $black:    #091e42 !default;
 
-$primary:  #6554c0 !default;
+$blue:    #0052cc !default;
+$purple:  #6554c0 !default;
+$red:     #ff5630 !default;
+$orange:  #ffab00 !default;
+$green:   #36b37e !default;
+$cyan:    #00b8d9 !default;
+
+$primary:  $purple !default;
 
 $component-active-color:      $white !default;
 $component-active-bg:         $black !default;
@@ -25,14 +33,15 @@ $component-active-bg:         $black !default;
 
 // Body
 //
-// Settings for the `<body>` element.
+// Make background gray and body color squid-ink so blocks stand out more
 
-$body-bg: $gray-100 !default;
+$body-bg:                   $gray-100 !default;
+$body-color:                $gray-900 !default;
 
 
 // Links
 //
-// Style anchor elements.
+// Make link use text color - we heavily customize link colors in app
 
 $link-color:                              $gray-700 !default;
 $link-hover-color:                        $gray-900 !default;
@@ -48,6 +57,15 @@ $nav-side-link-active-color:            $black !default;
 
 // Options
 //
-// Quickly modify global styling by enabling or disabling optional features.
+// Yield caret control to Misago styles
 
 $enable-caret:  false !default;
+
+
+// Alerts
+//
+// Remove border from alerts making them flatter, bump text contrast
+
+$alert-border-width:                0 !default;
+
+$alert-color-level:                 8 !default;
