@@ -10,7 +10,7 @@ Faker<1.1
 html5lib<1.1
 markdown<2.7
 social-auth-app-django
-pillow<5.5
+pillow<5
 psycopg2-binary<2.8
 pytest
 pytest-django

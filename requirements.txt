@@ -16,7 +16,7 @@ chardet==3.0.4            # via requests
 defusedxml==0.5.0         # via python3-openid, social-auth-core
 django-debug-toolbar==1.11
 django-htmlmin==0.10.0
-django-js-asset==1.2.1    # via django-mptt
+django-js-asset==1.2.2    # via django-mptt
 django-mptt==0.9.1
 django==1.11.20
 djangorestframework==3.6.4
@@ -27,26 +27,27 @@ kombu==4.3.0              # via celery
 markdown==2.6.11
 more-itertools==6.0.0     # via pytest
 oauthlib==3.0.1           # via requests-oauthlib, social-auth-core
-pillow==5.4.1
-pluggy==0.8.1             # via pytest
+olefile==0.46             # via pillow
+pillow==4.3.0
+pluggy==0.9.0             # via pytest
 psycopg2-binary==2.7.7
-py==1.7.0                 # via pytest
+py==1.8.0                 # via pytest
 pyjwt==1.7.1              # via social-auth-core
-pytest-django==3.4.7
+pytest-django==3.4.8
 pytest-mock==1.10.1
-pytest==4.2.1
+pytest==4.3.0
 python-dateutil==2.8.0    # via faker
 python3-openid==3.1.0     # via social-auth-core
 pytz==2018.9
-redis==3.1.0              # via celery
+redis==3.2.0              # via celery
 requests-oauthlib==1.2.0  # via social-auth-core
 requests==2.21.0
 responses==0.10.5
 six==1.12.0               # via bleach, faker, html5lib, pytest, python-dateutil, responses, snapshottest, social-auth-app-django, social-auth-core
 snapshottest==0.5.0
 social-auth-app-django==3.1.0
-social-auth-core==3.0.0   # via social-auth-app-django
-soupsieve==1.7.3          # via beautifulsoup4
+social-auth-core==3.1.0   # via social-auth-app-django
+soupsieve==1.8            # via beautifulsoup4
 sqlparse==0.2.4           # via django-debug-toolbar
 termcolor==1.1.0          # via snapshottest
 text-unidecode==1.2       # via faker
