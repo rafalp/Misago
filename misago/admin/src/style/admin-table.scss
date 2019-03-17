@@ -15,6 +15,17 @@
   vertical-align: middle;
 }
 
+// Customize table head row to have different background
+// and be more compact overall
+.card-admin-table th {
+  @extend .border-bottom-0;
+
+  font-size: $font-size-sm;
+
+  color: $table-head-color;
+  background-color: $table-head-bg;
+}
+
 // Make card-body paddings same as in table
 .card-admin-table .card-body {
   padding: $table-cell-padding;
@@ -23,4 +34,49 @@
 // Add upper border to card-body proceeded by table
 .card-admin-table table + .card-body {
   border-top: $table-border-width solid $table-border-color;
+}
+
+// Add border-radius to images in table
+.card-admin-table img {
+  @extend .rounded-lg;
+}
+
+// Util for making item link stand out
+.card-admin-table .item-name {
+  color: $body-color;
+}
+
+.card-admin-table h5 {
+  @extend .font-weight-bold;
+  @extend .m-0;
+
+  font-size: $font-size-sm;
+  line-height: $line-height-sm;
+
+  a {
+    color: $body-color;
+  }
+}
+
+// Badges column
+.card-admin-table .badges-list {
+  @extend .text-right;
+  @extend .text-nowrap;
+  @extend .pl-0;
+
+  width: 0%;
+}
+
+// Remove underline from timestamp abbr
+.card-admin-table [data-timestamp] {
+  text-decoration: none;
+}
+
+// Center and space verticallt the blankslate message
+.card-admin-table .blankslate td {
+  @extend .text-center;
+
+  p {
+    @extend .my-3;
+  }
 }

@@ -26,6 +26,7 @@ $green:   #36b37e !default;
 $cyan:    #00b8d9 !default;
 
 $primary:  $purple !default;
+$light:    $gray-200 !default;
 
 $component-active-color:      $white !default;
 $component-active-bg:         $black !default;
@@ -69,3 +70,11 @@ $enable-caret:  false !default;
 $alert-border-width:                0 !default;
 
 $alert-color-level:                 8 !default;
+
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-head-bg:               $gray-100 !default;
+$table-head-color:            $gray-700 !default;

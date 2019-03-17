@@ -16,89 +16,14 @@
         {% if paginator %}
           {% include "misago/admin/generic/paginator.html" %}
         {% endif%}
-
-        {% if order_by or search_form %}
-          <div class="col">
-            {% if order_by %}
-              <div class="btn-group pull-left">
-                <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown">
-                  {% trans "Sort:" %} <span class="fa fa-sort-numeric-{{ order.type }}"></span> <strong>{{ order.name }}</strong>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                  <li class="dropdown-title">
-                    {% trans "Change sorting to:" %}
-                  </li>
-                  {% for order in order_by %}
-                    <li>
-                      <form method="get">
-                        <input type="hidden" name="sort" value="{{ order.order_by }}">
-                        <input type="hidden" name="direction" value="{{ order.type }}">
-                        {% for name, value in query_filters.items %}
-                          <input type="hidden" name="{{ name }}" value="{{ value }}">
-                        {% endfor %}
-                        <button type="submit">
-                          <span class="fa fa-sort-numeric-{{ order.type }}"></span>
-                          {{ order.name }}
-                        </button>
-                      </form>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            {% endif %}
-
-            {% if search_form %}
-              <button class="btn btn-{% if active_filters %}success{% else %}light{% endif %} pull-left" data-toggle="modal" data-target="#filter-modal">
-                {% if active_filters %}
-                  <span class="fa fa-check"></span>
-                  {% trans "Change search" %}
-                {% else %}
-                  <span class="fa fa-search"></span>
-                  {% trans "Search list" %}
-                {% endif %}
-              </button>
-
-              {% if active_filters %}
-                <form method="get" class="pull-left">
-                  <input type="hidden" name="clear_filters" value="1">
-                  {% for name, value in query_order.items %}
-                    <input type="hidden" name="{{ name }}" value="{{ value }}">
-                  {% endfor %}
-                  <button type="submit" class="btn btn-light">
-                    <span class="fa fa-times"></span>
-                    {% trans "Remove search" %}
-                  </button>
-                </form>
-              {% endif %}
-            {% endif %}
-          </div>
+        {% if order_by %}
+          {% include "misago/admin/generic/order_by.html" %}
         {% endif %}
-
+        {% if search_form %}
+          {% include "misago/admin/generic/search_form.html" %}
+        {% endif %}
         {% if mass_actions %}
-          <div class="col-auto">
-            <div class="btn-group pull-right">
-              <form id="mass-action" action="{{ querystring }}" method="post">
-                <button type="button" class="btn btn-light dropdown-toggle mass-controller" data-toggle="dropdown">
-                  <span class="fa fa-gears"></span>
-                  {% trans "With selected" %}
-                </button>
-                {% csrf_token %}
-                <ul class="dropdown-menu" role="menu">
-                  {% for action in mass_actions %}
-                    <li>
-                      <button type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
-                        <span class="{{ action.icon }}"></span>
-                        {{ action.name }}
-                      </button>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </form>
-            </div><!-- /.btn-group -->
-            <button type="button" class="btn btn-light pull-right master-checkbox">
-              <span class="fa fa-check"></span>
-            </button>
-          </div>
+          {% include "misago/admin/generic/mass_actions.html" %}
         {% endif %}
 
       </div>
@@ -106,31 +31,32 @@
   {% endif %}
 
   <table class="table">
-    <tr>
-      {% block table-header %}{% endblock table-header %}
-      {% if mass_actions %}
-        <th class="width: 1%;">&nbsp;</th>
-      {% endif %}
-    </tr>
-
-    {% block table-items %}
-      {% for item in items %}
-        <tr>
-          {% block table-row %}{% endblock table-row %}
-          {% if mass_actions %}
-            <td class="row-select">
-              <label>
-                <input type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
-              </label>
-            </td>
-          {% endif %}
-        </tr>
-      {% empty %}
-        <tr class="message-row">
-          {% block emptylist %}{% endblock emptylist %}
-        </tr>
-      {% endfor %}
-    {% endblock table-items %}
+    <thead>
+      <tr>
+        {% block table-header %}{% endblock table-header %}
+        {% if mass_actions %}
+          <th class="width: 1%;">&nbsp;</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% block table-items %}
+        {% for item in items %}
+          <tr>
+            {% block table-row %}{% endblock table-row %}
+            {% if mass_actions %}
+              <td class="row-select">
+                <input id="mass-checkbox-{{ item.pk }}" type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+              </td>
+            {% endif %}
+          </tr>
+        {% empty %}
+          <tr class="blankslate">
+            {% block emptylist %}{% endblock emptylist %}
+          </tr>
+        {% endfor %}
+      {% endblock table-items %}
+    </tbody>
   </table>
 
   {% if paginator %}
@@ -148,13 +74,13 @@
 {{ block.super }}
 {% if search_form %}
   <div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="filter-modal-label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="filter-modal-label">
-            {% block modal-title %}{% endblock modal-title %}
-          </h4>
+          <h5 class="modal-title" id="exampleModalLabel">{% block modal-title %}{% endblock modal-title %}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <form method="GET">
           <input type="hidden" name="set_filters" value="1">
@@ -174,7 +100,6 @@
               </button>
             {% endblock modal-footer %}
           </div>
-
         </form>
       </div>
     </div>

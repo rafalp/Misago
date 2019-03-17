@@ -19,12 +19,18 @@
   },
   "homepage": "https://github.com/rafalp/misago#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
     "bootstrap": "^4.3.1",
     "jquery": "^3.3.1",
+    "moment": "^2.24.0",
     "popper.js": "^1.14.7"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
     "autoprefixer": "^9.4.7",
+    "babel-loader": "^8.0.5",
     "css-loader": "^2.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
@@ -48,5 +54,24 @@
     "Safari >= 9",
     "Android >= 4.4",
     "Opera >= 30"
-  ]
+  ],
+  "babel": {
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "edge": "17",
+            "firefox": "60",
+            "chrome": "67",
+            "safari": "11.1"
+          },
+          "useBuiltIns": "usage"
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-transform-arrow-functions"
+    ]
+  }
 }

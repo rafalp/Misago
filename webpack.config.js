@@ -11,24 +11,31 @@ module.exports = {
     filename: "index.js"
   },
   module: {
-    rules: [{
-      test: /\.(sa|sc|c)ss$/,
-      use: [
-        MiniCssExtractPlugin.loader,
-        "css-loader",
-        {
-          loader: "postcss-loader",
-          options: {
-            plugins: function() {
-              return [
-                require("autoprefixer")
-              ]
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        loader: 'babel-loader'
+      },
+      {
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              plugins: function() {
+                return [
+                  require("autoprefixer")
+                ]
+              }
             }
-          }
-        },
-        "sass-loader"
-      ]
-    }]
+          },
+          "sass-loader"
+        ]
+      }
+    ]
   },
   plugins: [
     new StyleLintPlugin({

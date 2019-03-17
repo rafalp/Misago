@@ -267,7 +267,7 @@ class ListView(AdminView):
     def set_ordering_in_context(self, context, method):
         for order_by, name in self.ordering:  # pylint: disable=not-an-iterable
             order_as_dict = {
-                "type": "desc" if order_by[0] == "-" else "asc",
+                "type": "up" if order_by[0] == "-" else "down",
                 "order_by": order_by,
                 "name": name,
             }

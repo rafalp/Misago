@@ -16,12 +16,9 @@
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "User" %}</th>
 <th style="width: 1%;">&nbsp;</th>
-<th style="width: 1%;">&nbsp;</th>
-<th style="width: 200px;">{% trans "E-mail" %}</th>
-<th style="width: 128px;">{% trans "IP Address" %}</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
-<th style="width: 200px;">{% trans "Joined" %}</th>
-<th style="width: 128px;">{% trans "Posts" %}</th>
+<th style="width: 190px;">{% trans "Registration" %}</th>
+<th style="width: 90px;">{% trans "Posts" %}</th>
 {% for action in extra_actions %}
   <th style="width: 1%;">&nbsp;</th>
 {% endfor %}
@@ -30,80 +27,83 @@
 
 
 {% block table-row %}
-<td>
+<td class="pr-0">
   <a href="{{ item.get_absolute_url }}">
-    <img src="{{ item|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <img src="{{ item|avatar:40 }}" alt="{% trans 'Avatar' %}" width="40" height="40">
   </a>
 </td>
-<td class="item-name {% if item.requires_activation %}text-muted{% endif %}">
-  {% if item.is_deleting_account %}
-    <a href="{{ item.get_absolute_url }}" title="{% trans "Is deleting their account" %}">
-      <del>{{ item }}</del>
-    </a>
-  {% elif not item.is_active %}
-    <a href="{{ item.get_absolute_url }}" title="{% trans "Is disabled by administrator" %}">
-      <del>{{ item }}</del>
-    </a>
-  {% else %}
-    <a href="{{ item.get_absolute_url }}">
+<td class="pr-0">
+  <h5 class="item-name">
+    <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}">
       {{ item }}
     </a>
-  {% endif %}
+  </h5>
+  <a class="small" href="mailto:{{ item.email }}">{{ item.email }}</a>
 </td>
-<td class="lead text-muted">
-  {% if item.requires_activation_by_admin %}
-    <span class="fa fa-eye tooltip-top" title="{% trans "Requires activation by administrator" %}"></span>
-  {% elif item.requires_activation_by_user %}
-    <span class="fa fa-ticket tooltip-top" title="{% trans "Has to activate account" %}"></span>
-  {% else %}
-    &nbsp;
-  {% endif %}
-</td>
-<td class="lead text-muted">
+<td class="badges-list">
   {% if item.is_superuser %}
-    <span class="fa fa-star tooltip-top" title="{% trans "Super administrator" %}"></span>
+    <span class="badge badge-danger">
+      {% trans "Super Admin" %}
+    </span>
   {% elif item.is_staff %}
-    <span class="fa fa-star-half-o tooltip-top" title="{% trans "Administrator" %}"></span>
-  {% else %}
-    &nbsp;
+    <span class="badge badge-danger">
+      {% trans "Admin" %}
+    </span>
+  {% endif %}
+  {% if item.requires_activation_by_admin %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Requires activation by administrator' %}">
+      {% trans "Inactive" %}
+    </span>
+  {% elif item.requires_activation_by_user %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate account' %}">
+      {% trans "Inactive" %}
+    </span>
+  {% endif %}
+  {% if item.is_deleting_account %}
+    <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Account scheduled for deletion' %}">
+      {% trans "Deleted" %}
+    </span>
+  {% elif not item.is_active %}
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Account disabled' %}">
+      {% trans "Disabled" %}
+    </span>
   {% endif %}
 </td>
-<td>
-  <a href="mailto:{{ item.email }}">{{ item.email }}</a>
-</td>
-<td>
-  {% if item.joined_from_ip %}
-    {{ item.joined_from_ip }}
-  {% else %}
-    <i>{% trans "IP removed" %}</i>
-  {% endif %}
-</td>
-<td>
+<td class="small">
   {{ item.rank }}
 </td>
-<td>
-  <abbr class="moment" data-iso="{{ item.joined_on.isoformat }}" data-format="LL"></abbr>
+<td class="small">
+  <abbr data-timestamp="{{ item.joined_on.isoformat }}" data-format="LL">
+    {{ item.joined_on }}
+  </abbr>
+  <div>
+    {% if item.joined_from_ip %}
+      {{ item.joined_from_ip }}
+    {% else %}
+      <i class="text-muted">{% trans "IP removed" %}</i>
+    {% endif %}
+  </div>
 </td>
-<td>
+<td class="small">
   {{ item.posts }}
 </td>
 {% for action in extra_actions %}
   <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}light{% endif %} tooltip-top" title="{{ action.name }}">
       <span class="{{ action.icon }}"></span>
     </a>
   </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit user" %}">
-    <span class="fa fa-pencil"></span>
+  <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-light btn-sm tooltip-top" title="{% trans "Edit user" %}">
+    {% trans "Edit" %}
   </a>
 </td>
 {% endblock table-row %}
 
 
 {% block emptylist %}
-<td colspan="{{ 11|add:extra_actions_len }}">
+<td colspan="{{ 10|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}
