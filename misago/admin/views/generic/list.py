@@ -227,9 +227,12 @@ class ListView(AdminView):
             )
 
     # Order list items
-    @property
-    def ordering_session_key(self):
-        return "misago_admin_%s_order_by" % self.root_link
+    def get_ordering_methods(self, request):
+        return {
+            "GET": self.get_ordering_from_GET(request),
+            "session": self.get_ordering_from_session(request),
+            "default": self.clean_ordering(self.ordering[0][0]),
+        }
 
     def get_ordering_from_GET(self, request):
         sort = request.GET.get("sort")
@@ -240,34 +243,33 @@ class ListView(AdminView):
             new_ordering = sort
         else:
             new_ordering = "?nope"
-
         return self.clean_ordering(new_ordering)
+
+    @property
+    def ordering_session_key(self):
+        return "misago_admin_%s_order_by" % self.root_link
 
     def get_ordering_from_session(self, request):
         new_ordering = request.session.get(self.ordering_session_key)
         return self.clean_ordering(new_ordering)
+
+    def get_ordering_method_to_use(self, methods):
+        print("get_ordering_method_to_use")
+        print("=" * len("get_ordering_method_to_use"))
+        for method in ("GET", "session", "default"):
+            print(method, methods.get(method))
+            if methods.get(method):
+                return methods.get(method)
 
     def clean_ordering(self, new_ordering):
         for order_by, _ in self.ordering:  # pylint: disable=not-an-iterable
             if order_by == new_ordering:
                 return order_by
 
-    def get_ordering_methods(self, request):
-        return {
-            "GET": self.get_ordering_from_GET(request),
-            "session": self.get_ordering_from_session(request),
-            "default": self.clean_ordering(self.ordering[0][0]),
-        }
-
-    def get_ordering_method_to_use(self, methods):
-        for method in ("GET", "session", "default"):
-            if methods.get(method):
-                return methods.get(method)
-
     def set_ordering_in_context(self, context, method):
         for order_by, name in self.ordering:  # pylint: disable=not-an-iterable
             order_as_dict = {
-                "type": "up" if order_by[0] == "-" else "down",
+                "type": "desc" if order_by[0] == "-" else "asc",
                 "order_by": order_by,
                 "name": name,
             }
