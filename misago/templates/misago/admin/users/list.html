@@ -42,11 +42,11 @@
 </td>
 <td class="badges-list">
   {% if item.is_superuser %}
-    <span class="badge badge-danger">
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel and manage other administrators' %}">
       {% trans "Super Admin" %}
     </span>
   {% elif item.is_staff %}
-    <span class="badge badge-danger">
+    <span class="badge badge-danger" data-tooltip="top" title="{% trans 'Can use admin control panel' %}">
       {% trans "Admin" %}
     </span>
   {% endif %}
@@ -55,7 +55,7 @@
       {% trans "Inactive" %}
     </span>
   {% elif item.requires_activation_by_user %}
-    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate account' %}">
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Has to activate their account' %}">
       {% trans "Inactive" %}
     </span>
   {% endif %}
@@ -89,13 +89,13 @@
 </td>
 {% for action in extra_actions %}
   <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}light{% endif %} tooltip-top" title="{{ action.name }}">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}light{% endif %}" data-tooltip="top" title="{{ action.name }}">
       <span class="{{ action.icon }}"></span>
     </a>
   </td>
 {% endfor %}
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-light btn-sm tooltip-top" title="{% trans "Edit user" %}">
+  <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Edit user' %}">
     {% trans "Edit" %}
   </a>
 </td>

@@ -63,14 +63,14 @@
 </td>
 {% for action in extra_actions %}
   <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
+    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %}" data-tooltip="top" title="{{ action.name }}">
       <span class="{{ action.icon }}"></span>
     </a>
   </td>
 {% endfor %}
 <td class="row-action">
   {% if item.file %}
-    <a href="{{ item.file.url }}" class="btn btn-primary tooltip-top" title="{% trans "Download data" %}">
+    <a href="{{ item.file.url }}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Download data' %}">
       <span class="fa fa-download"></span>
     </a>
   {% endif %}

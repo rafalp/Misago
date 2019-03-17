@@ -30,7 +30,7 @@
 </td>
 <td class="lead text-muted">
   {% if item.is_active %}
-    <span class="fa fa-check-square tooltip-top" title="{% blocktrans trimmed with type=item.get_type_display.lower %}Active {{ type }}{% endblocktrans %}"></span>
+    <span class="fa fa-check-square" data-tooltip="top" title="{% blocktrans trimmed with type=item.get_type_display.lower %}Active {{ type }}.{% endblocktrans %}"></span>
   {% else %}
     &nbsp;
   {% endif %}
@@ -75,7 +75,7 @@
 <td class="row-action">
   {% if not item.is_active %}
     <form action="{% url 'misago:admin:users:agreements:set-as-active' pk=item.pk %}" method="post" class="set-as-active-prompt">
-      <button class="btn btn-primary tooltip-top" title="{% trans "Set as active" %}">
+      <button class="btn btn-primary" data-tooltip="top" title="{% trans 'Set as active' %}">
         {% csrf_token %}
         <span class="fa fa-check-square"></span>
       </button>
@@ -85,13 +85,13 @@
   {% endif %}
 </td>
 <td class="row-action">
-  <a href="{% url 'misago:admin:users:agreements:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans "Edit" %}">
+  <a href="{% url 'misago:admin:users:agreements:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit' %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
 <td class="row-action">
   <form action="{% url 'misago:admin:users:agreements:delete' pk=item.pk %}" method="post" class="delete-prompt">
-    <button class="btn btn-danger tooltip-top" title="{% trans "Remove" %}">
+    <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Remove' %}">
       {% csrf_token %}
       <span class="fa fa-times"></span>
     </button>

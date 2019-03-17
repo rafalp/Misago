@@ -51,7 +51,7 @@
 </td>
 <td class="row-action">
   {% if not item.is_default %}
-    <a href="{% url 'misago:admin:appearance:themes:assets' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans 'Assets (CSS, images and fonts)' %}">
+    <a href="{% url 'misago:admin:appearance:themes:assets' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Assets (CSS, images and fonts)' %}">
       <span class="fa fa-pencil-square-o"></span>
     </a>
   {% else %}
@@ -62,7 +62,7 @@
 </td>
 <td class="row-action">
   {% if not item.is_default %}
-    <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary tooltip-top" title="{% trans 'Edit information' %}">
+    <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit information' %}">
       <span class="fa fa-pencil"></span>
     </a>
   {% else %}
@@ -72,14 +72,14 @@
   {% endif %}
 </td>
 <td class="row-action">
-  <a href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}" class="btn btn-primary tooltip-top" title="{% trans 'Create child theme' %}">
+  <a href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Create child theme' %}">
     <span class="fa fa-file-o"></span>
   </a>
 </td>
 <td class="row-action">
   {% if not item.is_active %}
     <form action="{% url 'misago:admin:appearance:themes:activate' pk=item.pk %}" method="post">
-      <button class="btn btn-default tooltip-top" title="{% trans 'Activate' %}">
+      <button class="btn btn-default" data-tooltip="top" title="{% trans 'Activate' %}">
         {% csrf_token %}
         <span class="fa fa-check-square"></span>
       </button>
@@ -94,7 +94,7 @@
   {% if not item.is_default %}
     <form action="{% url 'misago:admin:appearance:themes:export' pk=item.pk %}" method="POST">
       {% csrf_token %}
-      <button class="btn btn-primary tooltip-top" title="{% trans 'Export' %}">
+      <button class="btn btn-primary" data-tooltip="top" title="{% trans 'Export' %}">
         <span class="fa fa-download"></span>
       </button>
     </form>
@@ -108,7 +108,7 @@
   {% if not item.is_active and not item.is_default %}
     <form action="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" method="POST" class="delete-prompt">
       {% csrf_token %}
-      <button class="btn btn-danger tooltip-top" title="{% trans 'Delete' %}">
+      <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
         <span class="fa fa-times"></span>
       </button>
     </form>

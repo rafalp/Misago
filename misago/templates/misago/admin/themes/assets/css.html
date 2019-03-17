@@ -36,7 +36,7 @@
         {% for item in css %}
           <tr>
             <td>
-              <a class="btn btn-default btn-sm tooltip-top" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" title="{% trans 'Preview' %}">
+              <a class="btn btn-default btn-sm" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" data-tooltip="top" title="{% trans 'Preview' %}">
                 <span class="fa fa-share-square-o"></span>
               </a>
             </td>
@@ -48,12 +48,12 @@
             </td>
             <td>{{ item.size|filesizeformat }}</td>
             <td style="width: 1%;">
-              <button type="button" class="btn btn-default btn-sm btn-move tooltip-top" data-form="move-down-{{ item.pk }}" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
+              <button type="button" class="btn btn-default btn-sm btn-move" data-form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
                 <span class="fa fa-chevron-down"></span>
               </button>
             </td>
             <td style="width: 1%;">
-              <button type="button" class="btn btn-default btn-sm btn-move tooltip-top" data-form="move-up-{{ item.pk }}" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
+              <button type="button" class="btn btn-default btn-sm btn-move" data-form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
                 <span class="fa fa-chevron-up"></span>
               </button>
             </td>
