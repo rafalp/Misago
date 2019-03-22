@@ -3,8 +3,8 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-  <a href="{% url 'misago:admin:users:agreements:new' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:users:agreements:new' %}" class="btn btn-primary">
     <span class="fa fa-plus-circle"></span>
     {% trans "New agreement" %}
   </a>
@@ -40,7 +40,9 @@
 </td>
 <td>
   {% capture trimmed as created_on %}
-    <abbr class="moment" data-iso="{{ item.created_on.isoformat }}" data-format="LL"></abbr>
+    <abbr data-timestamp="{{ item.created_on.isoformat }}" data-format="LL">
+      {{ item.created_on }}
+    </abbr>
   {% endcapture %}
   {% capture trimmed as created_by %}
     {% if item.created_by %}
@@ -56,7 +58,9 @@
 <td>
   {% if item.last_modified_on %}
     {% capture trimmed as last_modified_on %}
-      <abbr class="moment" data-iso="{{ item.last_modified_on.isoformat }}" data-format="LL"></abbr>
+      <abbr data-timestamp="{{ item.last_modified_on.isoformat }}" data-format="LL">
+        {{ item.last_modified_on }}
+      </abbr>
     {% endcapture %}
     {% capture trimmed as last_modified_by %}
       {% if item.last_modified_by %}

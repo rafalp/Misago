@@ -36,7 +36,9 @@
     {% endif %}
   {% endcapture %}
   {% capture trimmed as uploaded_on %}
-    <abbr class="moment" data-iso="{{ item.uploaded_on.isoformat }}" data-format="LL"></abbr>
+    <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
+      {{ item.uploaded_on }}
+    </abbr>
   {% endcapture %}
   <small class="text-muted">
     {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}

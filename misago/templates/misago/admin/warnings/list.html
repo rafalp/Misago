@@ -3,10 +3,10 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-  <a href="{% url 'misago:admin:users:warnings:new' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:users:warnings:new' %}" class="btn btn-primary">
     <span class="fa fa-plus-circle"></span>
-    {% trans "New level" %}
+    {% trans "New warning level" %}
   </a>
 </div>
 {% endblock %}
@@ -33,7 +33,9 @@
 </td>
 <td>
   {% if item.length %}
-    <abbr class="moment-length" data-minutes="{{ item.length }}"></abbr>
+    <abbr data-time-period="{{ item.length }}">
+      {{ item.length }}
+    </abbr>
   {% else %}
     {% trans "Permanent" %}
   {% endif %}

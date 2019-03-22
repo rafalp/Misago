@@ -41,7 +41,9 @@
               <strong>{{ item }}</strong>
             </td>
             <td>
-              <abbr class="moment" data-iso="{{ item.modified_on.isoformat }}" data-format="LL"></abbr>
+              <abbr data-timestamp="{{ item.modified_on.isoformat }}" data-format="LL">
+                {{ item.modified_on }}
+              </abbr>
             </td>
             <td>{{ item.size|filesizeformat }}</td>
             <td>{{ item.type }}</td>

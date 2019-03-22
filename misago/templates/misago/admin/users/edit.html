@@ -230,7 +230,9 @@ class="form-horizontal"
                 </a>
               </td>
               <td>
-                <abbr class="moment" data-iso="{{ agreement.accepted_on.isoformat }}" data-format="LL"></abbr>
+                <abbr data-timestamp="{{ item.accepted_on.isoformat }}" data-format="LL">
+                  {{ item.accepted_on }}
+                </abbr>
               </td>
             </tr>
           {% empty %}

@@ -254,10 +254,7 @@ class ListView(AdminView):
         return self.clean_ordering(new_ordering)
 
     def get_ordering_method_to_use(self, methods):
-        print("get_ordering_method_to_use")
-        print("=" * len("get_ordering_method_to_use"))
         for method in ("GET", "session", "default"):
-            print(method, methods.get(method))
             if methods.get(method):
                 return methods.get(method)
 

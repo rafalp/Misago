@@ -3,12 +3,14 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-    <a href="{% url 'misago:admin:appearance:themes:import' %}" class="btn btn-success">
-      <span class="fa fa-upload"></span>
-      {% trans "Import theme" %}
-    </a>
-  <a href="{% url 'misago:admin:appearance:themes:new' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:appearance:themes:import' %}" class="btn btn-primary">
+    <span class="fa fa-upload"></span>
+    {% trans "Import theme" %}
+  </a>
+</div>
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:appearance:themes:new' %}" class="btn btn-primary">
     <span class="fa fa-plus-circle"></span>
     {% trans "Create theme" %}
   </a>

@@ -7,14 +7,13 @@ const RECENT_CUTOFF = 6 * 3600 // 6 hours
 const initTimestamps = () => {
   moment.locale(getInterfaceLanguage())
 
-  const now = moment()
   const elements = document.querySelectorAll("[data-timestamp]")
 
   elements.forEach(setupTooltip)
-  updateUITexts(elements, now)
+  updateUITexts(elements)
 
   window.setInterval(
-    () => { updateUITexts(elements, now) }, UI_UPDATE_INTERVAL
+    () => { updateUITexts(elements) }, UI_UPDATE_INTERVAL
   )
 }
 
@@ -29,7 +28,8 @@ const setupTooltip = (element) => {
   $(element).tooltip()
 }
 
-const updateUITexts = (elements, now) => {
+const updateUITexts = (elements) => {
+  const now = moment()
   elements.forEach((element) => {
     updateUIText(element, now)
   })

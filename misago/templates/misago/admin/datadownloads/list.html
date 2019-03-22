@@ -3,10 +3,10 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-  <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-primary">
     <span class="fa fa-plus-circle"></span>
-    {% trans "Request new downloads" %}
+    {% trans "New downloads" %}
   </a>
 </div>
 {% endblock %}
@@ -41,7 +41,9 @@
   {{ item.get_status_display }}
 </td>
 <td>
-  <abbr class="moment" data-iso="{{ item.requested_on.isoformat }}" data-format="LL"></abbr>
+  <abbr data-timestamp="{{ item.requested_on.isoformat }}" data-format="LL">
+    {{ item.requested_on }}
+  </abbr>
 </td>
 <td>
   {% if item.requester %}
