@@ -9,6 +9,24 @@
 {% endblock title%}
 
 
+{% block page-actions %}
+{% if target.pk %}
+  <div class="col-auto page-action">
+    <a href="{% url 'misago:admin:categories:nodes:edit' pk=target.pk %}" class="btn btn-primary">
+      <span class="fa fa-edit"></span>
+      {% trans "Edit category" %}
+    </a>
+  </div>
+  <div class="col-auto page-action">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary">
+      <span class="fas fa-external-link-alt"></span>
+      {% trans "View on site" %}
+    </a>
+  </div>
+{% endif %}
+{% endblock %}
+
+
 {% block page-header %}
 {{ block.super }}
 <div class="sub">
@@ -17,7 +35,8 @@
     {{ category }}: Permissions
   {% endblocktrans %}
 </div>
-{% endblock page-header %}
+{% endif %}
+{% endblock %}
 
 
 {% block view %}
@@ -26,7 +45,7 @@
   <div class="table-panel">
     <table class="table">
       <tr>
-        <th>{% trans "Category" %}</ht>
+        <th>{% trans "Role" %}</ht>
         <th class="col-md-6">{% trans "Permissions" %}</ht>
       </tr>
       {% for form in forms %}

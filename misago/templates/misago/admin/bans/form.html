@@ -11,15 +11,6 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% if target.pk %}
-{% trans target.banned_value %}
-{% else %}
-{% trans "New ban" %}
-{% endif %}
-{% endblock page-target %}
-
-
 {% block form-header %}
 <h1>
   {% if target.pk %}

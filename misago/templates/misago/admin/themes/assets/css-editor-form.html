@@ -26,13 +26,6 @@
 {% endblock extra-head %}
 
 
-{% block page-target %}
-<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}">
-  {{ theme }}
-</a>
-{% endblock page-target %}
-
-
 {% block form-header %}
 <h1>
   {% if target.pk %}

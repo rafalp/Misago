@@ -11,15 +11,6 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% if target.pk %}
-  {{ target }}
-{% else %}
-  {% trans "New theme" %}
-{% endif %}
-{% endblock page-target %}
-
-
 {% block form-header %}
 <h1>
   {% if target.pk %}

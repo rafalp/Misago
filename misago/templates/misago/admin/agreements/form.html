@@ -11,23 +11,24 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% if target.pk %}
-{% trans target.get_final_title %}
-{% else %}
-{% trans "New agreement" %}
+{% block page-actions %}
+{% if target.get_absolute_url %}
+  <div class="col-auto page-action">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary">
+      <span class="fas fa-external-link-alt"></span>
+      {% trans "View on site" %}
+    </a>
+  </div>
 {% endif %}
-{% endblock page-target %}
+{% endblock %}
 
 
 {% block form-header %}
-<h1>
-  {% if target.pk %}
+{% if target.pk %}
   {% trans target.get_final_title %}
-  {% else %}
+{% else %}
   {% trans "New agreement" %}
-  {% endif %}
-</h1>
+{% endif %}
 {% endblock %}
 
 

@@ -11,23 +11,12 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% if target.pk %}
-{{ target }}
-{% else %}
-{% trans "New type" %}
-{% endif %}
-{% endblock page-target %}
-
-
 {% block form-header %}
-<h1>
-  {% if target.pk %}
+{% if target.pk %}
   {{ target }}
-  {% else %}
+{% else %}
   {% trans "New type" %}
-  {% endif %}
-</h1>
+{% endif %}
 {% endblock %}
 
 

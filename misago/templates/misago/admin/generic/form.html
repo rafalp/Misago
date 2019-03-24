@@ -2,24 +2,18 @@
 {% load i18n %}
 
 
-{% block page-header %}
-{{ block.super }}
-<span class="fa fa-chevron-right"></span>
-{% block page-target %}{% endblock page-target %}
-{% endblock page-header %}
-
-
 {% block view %}
 <div class="row">
   <div class="col-xs-12 {% block form-main-col-class %}col-md-8 col-md-offset-2{% endblock form-main-col-class %}">
 
-    <div class="form-panel">
+    <div class="card card-form">
       <form role="form" method="post" {% block form-extra %}{% endblock form-extra %}>
         {% csrf_token %}
 
-        <div class="form-header">
+        <h5 class="card-header">
           {% block form-header %}{% endblock %}
-        </div>
+        </h5>
+        <div class="card-body">
 
         {% if form.is_bound and not form.is_valid %}
           <div class="form-errors-block">
@@ -36,7 +30,8 @@
 
         {% block form-body %}{% endblock %}
 
-        <div class="form-footer">
+        </div>
+        <div class="card-footer">
           <div class="row">
             <div class="{% block form-footer-class %}col-xs-12{% endblock form-footer-class %}">
 
@@ -59,7 +54,6 @@
 
       </form>
     </div><!-- /.form-panel -->
-
   </div>
 </div>
 {% endblock view %}

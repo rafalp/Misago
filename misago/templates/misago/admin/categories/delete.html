@@ -9,13 +9,6 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% blocktrans trimmed with category=target.name %}
-  Delete category: {{ category }}
-{% endblocktrans %}
-{% endblock page-target %}
-
-
 {% block form-header %}
 <h1>
   {% blocktrans with category=target.name %}

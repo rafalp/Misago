@@ -11,13 +11,22 @@
 {% endblock title %}
 
 
-{% block page-target %}
+{% block page-actions %}
 {% if target.pk %}
-  {{ target }}
-{% else %}
-  {% trans "New category" %}
+  <div class="col-auto page-action">
+    <a href="{% url 'misago:admin:categories:nodes:permissions' pk=target.pk %}" class="btn btn-primary">
+      <span class="fa fa-adjust"></span>
+      {% trans "Edit permissions" %}
+    </a>
+  </div>
+  <div class="col-auto page-action">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary">
+      <span class="fas fa-external-link-alt"></span>
+      {% trans "View on site" %}
+    </a>
+  </div>
 {% endif %}
-{% endblock page-target %}
+{% endblock %}
 
 
 {% block form-header %}
