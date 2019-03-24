@@ -5,7 +5,6 @@
 {% block body %}
 <body>
   {% include "misago/admin/navbar.html" %}
-  {% include "misago/admin/messages.html" %}
 
   <div class="container-fluid my-3 pb-3">
     <div class="row">
@@ -13,6 +12,7 @@
         {% include "misago/admin/sidenav.html" %}
       </div>
       <div class="col">
+        {% include "misago/admin/messages.html" %}
         {% block content %}{% endblock %}
       </div>
     </div>
