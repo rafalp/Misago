@@ -72,7 +72,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
         # Search requested own account delete
         user_c.is_deleting_account = True
@@ -82,13 +82,13 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
         response = self.client.get("%s&disabled=1" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
     def test_mass_activation(self):
         """users list activates multiple users"""
