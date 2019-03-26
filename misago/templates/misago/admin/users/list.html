@@ -109,47 +109,42 @@
 {% endblock emptylist %}
 
 
-{% block modal-title %}
-{% trans "Search users" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.username %}
+    {% form_row filter_form.username %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.email %}
+    {% form_row filter_form.email %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.rank %}
+    {% form_row filter_form.rank %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.role %}
+    {% form_row filter_form.role %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.profilefields %}
+    {% form_row filter_form.profilefields %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.inactive %}
+    {% form_row filter_form.inactive %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.disabled %}
+    {% form_row filter_form.disabled %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.is_deleting_account %}
+    {% form_row filter_form.is_deleting_account %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.is_staff %}
+    {% form_row filter_form.is_staff %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}

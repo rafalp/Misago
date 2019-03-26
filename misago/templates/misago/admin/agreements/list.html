@@ -133,20 +133,15 @@
 {% endblock %}
 
 
-{% block modal-title %}
-{% trans "Search bans" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.type %}
+    {% form_row filter_form.type %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.content %}
+    {% form_row filter_form.content %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}

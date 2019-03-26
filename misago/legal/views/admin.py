@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...admin.views import generic
-from ..forms import AgreementForm, SearchAgreementsForm
+from ..forms import AgreementForm, FilterAgreementsForm
 from ..models import Agreement
 from ..utils import set_agreement_as_active
 
@@ -27,7 +27,7 @@ class AgreementAdmin(generic.AdminBaseMixin):
 class AgreementsList(AgreementAdmin, generic.ListView):
     items_per_page = 30
     ordering = [("-id", _("From newest")), ("id", _("From oldest"))]
-    search_form = SearchAgreementsForm
+    filter_form = FilterAgreementsForm
     selection_label = _("With agreements: 0")
     empty_selection_label = _("Select agreements")
     mass_actions = (

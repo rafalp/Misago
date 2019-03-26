@@ -33,8 +33,8 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
-    def test_list_search(self):
-        """users list is searchable"""
+    def test_list_filtering(self):
+        """users list can be filtered"""
         response = self.client.get(reverse("misago:admin:users:accounts:index"))
         self.assertEqual(response.status_code, 302)
 
@@ -46,25 +46,25 @@ class UserAdminViewsTests(AdminTestCase):
         user_b = create_test_user("Tyrion", "t321@test.com")
         user_c = create_test_user("Karen", "t432@test.com")
 
-        # Search both
+        # Partial search for "tyr" returns both "tyrael" and "tyrion"
         response = self.client.get("%s&username=tyr" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
-        # Search tyrion
+        # Search for "tyrion" returns it only
         response = self.client.get("%s&username=tyrion" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
-        # Search tyrael
+        # Search for "tyrael" returns it only
         response = self.client.get("%s&email=t123@test.com" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
 
-        # Search disabled
+        # Search for disabled user
         user_c.is_active = False
         user_c.save()
 
@@ -74,7 +74,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertNotContains(response, user_b.username)
         self.assertContains(response, user_c.username)
 
-        # Search requested own account delete
+        # Search for requested own account delete
         user_c.is_deleting_account = True
         user_c.save()
 

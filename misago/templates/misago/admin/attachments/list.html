@@ -77,33 +77,28 @@
 {% endblock emptylist %}
 
 
-{% block modal-title %}
-{% trans "Search attachments" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.uploader %}
+    {% form_row filter_form.uploader %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.filename %}
+    {% form_row filter_form.filename %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.filetype %}
+    {% form_row filter_form.filetype %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.is_orphan %}
+    {% form_row filter_form.is_orphan %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}
 
 
 {% block javascripts %}

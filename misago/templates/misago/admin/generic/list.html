@@ -4,12 +4,12 @@
 
 {% block title %}
 {{ active_link.name }} | {{ block.super }}
-{% endblock title%}
+{% endblock title %}
 
 
 {% block view %}
 <div class="card card-admin-table shadow-sm">
-  {% if paginator or order_by or search_form or mass_actions %}
+  {% if paginator or order_by or filter_form or mass_actions %}
     <div class="card-body">
       <div class="row align-items-center">
 
@@ -19,8 +19,8 @@
         {% if order_by %}
           {% include "misago/admin/generic/order_by.html" %}
         {% endif %}
-        {% if search_form %}
-          {% include "misago/admin/generic/search_form.html" %}
+        {% if filter_form %}
+          {% include "misago/admin/generic/filter_form.html" %}
         {% endif %}
         {% if mass_actions %}
           {% include "misago/admin/generic/mass_actions.html" %}
@@ -72,12 +72,16 @@
 
 {% block content %}
 {{ block.super }}
-{% if search_form %}
+{% if filter_form %}
   <div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="filter-modal-label" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{% block modal-title %}{% endblock modal-title %}</h5>
+          <h5 class="modal-title" id="exampleModalLabel">
+            {% block filters-modal-title %}
+              {% trans "Filters" %}
+            {% endblock filters-modal-title %}
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -88,17 +92,17 @@
             <input type="hidden" name="{{ name }}" value="{{ value }}">
           {% endfor %}
           <div class="modal-body">
-            {% block modal-body %}{% endblock modal-body %}
+            {% block filters-modal-body %}{% endblock filters-modal-body %}
           </div>
           <div class="modal-footer">
-            {% block modal-footer %}
-              <button type="button" class="btn btn-default" data-dismiss="modal">
+            {% block filters-modal-footer %}
+              <button type="button" class="btn btn-light" data-dismiss="modal">
                 {% trans "Close" %}
               </button>
               <button type="submit" class="btn btn-primary">
-                {% trans "Save changes" %}
+                {% trans "Done" %}
               </button>
-            {% endblock modal-footer %}
+            {% endblock filters-modal-footer %}
           </div>
         </form>
       </div>

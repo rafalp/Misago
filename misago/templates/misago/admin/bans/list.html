@@ -93,27 +93,22 @@
 {% endblock %}
 
 
-{% block modal-title %}
-{% trans "Search bans" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.check_type %}
+    {% form_row filter_form.check_type %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.value %}
+    {% form_row filter_form.value %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-6">
-    {% form_row search_form.registration_only %}
+    {% form_row filter_form.registration_only %}
   </div>
   <div class="col-md-6">
-    {% form_row search_form.state %}
+    {% form_row filter_form.state %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}
 

@@ -10,7 +10,7 @@ def get_searchable_filetypes():
     return choices
 
 
-class SearchAttachmentsForm(forms.Form):
+class FilterAttachmentsForm(forms.Form):
     uploader = forms.CharField(label=_("Uploader name contains"), required=False)
     filename = forms.CharField(label=_("Filename contains"), required=False)
     filetype = forms.TypedChoiceField(

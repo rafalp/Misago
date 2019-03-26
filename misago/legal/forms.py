@@ -57,14 +57,13 @@ class AgreementForm(forms.ModelForm):
         return agreement
 
 
-class SearchAgreementsForm(forms.Form):
+class FilterAgreementsForm(forms.Form):
     type = forms.MultipleChoiceField(
         label=_("Type"), required=False, choices=Agreement.TYPE_CHOICES
     )
     content = forms.CharField(label=_("Content"), required=False)
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get("type") is not None:
             queryset = queryset.filter(type__in=criteria["type"])
 

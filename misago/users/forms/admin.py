@@ -307,7 +307,7 @@ def EditUserFormFactory(
     return FormType
 
 
-class BaseSearchUsersForm(forms.Form):
+class BaseFilterUsersForm(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
     profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
@@ -351,7 +351,7 @@ class BaseSearchUsersForm(forms.Form):
         return queryset
 
 
-def create_search_users_form():
+def create_filter_users_form():
     """
     Factory that uses cache for ranks and roles,
     and makes those ranks and roles typed choice fields that play nice
@@ -374,7 +374,7 @@ def create_search_users_form():
         ),
     }
 
-    return type("SearchUsersForm", (BaseSearchUsersForm,), extra_fields)
+    return type("FilterUsersForm", (BaseFilterUsersForm,), extra_fields)
 
 
 class RankForm(forms.ModelForm):
@@ -568,7 +568,7 @@ class BanForm(forms.ModelForm):
         return data
 
 
-class SearchBansForm(forms.Form):
+class FilterBansForm(forms.Form):
     check_type = forms.ChoiceField(
         label=_("Type"),
         required=False,
@@ -591,8 +591,7 @@ class SearchBansForm(forms.Form):
         choices=[("", _("Any")), ("used", _("Active")), ("unused", _("Expired"))],
     )
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get("check_type") == "names":
             queryset = queryset.filter(check_type=0)
 
@@ -668,15 +667,14 @@ class RequestDataDownloadsForm(forms.Form):
         return data
 
 
-class SearchDataDownloadsForm(forms.Form):
+class FilterDataDownloadsForm(forms.Form):
     status = forms.ChoiceField(
         label=_("Status"), required=False, choices=DataDownload.STATUS_CHOICES
     )
     user = forms.CharField(label=_("User"), required=False)
     requested_by = forms.CharField(label=_("Requested by"), required=False)
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get("status") is not None:
             queryset = queryset.filter(status=criteria["status"])
 

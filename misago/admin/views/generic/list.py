@@ -74,7 +74,7 @@ class ListView(AdminView):
             "page": None,
             "order_by": [],
             "order": None,
-            "search_form": None,
+            "filter_form": None,
             "active_filters": {},
             "querystring": "",
             "query_order": {},
@@ -114,15 +114,15 @@ class ListView(AdminView):
                 # So address ball contains copy-friendly link
                 refresh_querystring = True
 
-        search_form = self.get_search_form(request)
-        if search_form:
-            filtering_methods = self.get_filtering_methods(request, search_form)
+        filter_form = self.get_filter_form(request)
+        if filter_form:
+            filtering_methods = self.get_filtering_methods(request, filter_form)
             active_filters = self.get_filtering_method_to_use(filtering_methods)
             if request.GET.get("clear_filters"):
                 # Clear filters from querystring
                 request.session.pop(self.filters_session_key, None)
                 active_filters = {}
-            self.apply_filtering_on_context(context, active_filters, search_form)
+            self.apply_filtering_on_context(context, active_filters, filter_form)
 
             if (
                 filtering_methods["GET"]
@@ -174,19 +174,19 @@ class ListView(AdminView):
         context["items"] = context["page"].object_list
 
     # Filter list items
-    search_form = None
+    filter_form = None
 
-    def get_search_form(self, request):
-        return self.search_form
+    def get_filter_form(self, request):
+        return self.filter_form
 
     @property
     def filters_session_key(self):
         return "misago_admin_%s_filters" % self.root_link
 
-    def get_filtering_methods(self, request, search_form):
+    def get_filtering_methods(self, request, filter_form):
         methods = {
-            "GET": self.get_filters_from_GET(request, search_form),
-            "session": self.get_filters_from_session(request, search_form),
+            "GET": self.get_filters_from_GET(request, filter_form),
+            "session": self.get_filters_from_session(request, filter_form),
         }
 
         if request.GET.get("set_filters"):
@@ -194,14 +194,14 @@ class ListView(AdminView):
 
         return methods
 
-    def get_filters_from_GET(self, request, search_form):
-        form = search_form(request.GET)
+    def get_filters_from_GET(self, request, filter_form):
+        form = filter_form(request.GET)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
 
-    def get_filters_from_session(self, request, search_form):
+    def get_filters_from_session(self, request, filter_form):
         session_filters = request.session.get(self.filters_session_key, {})
-        form = search_form(session_filters)
+        form = filter_form(session_filters)
         form.is_valid()
         return self.clean_filtering_data(form.cleaned_data)
 
@@ -217,12 +217,12 @@ class ListView(AdminView):
                 return methods.get(method)
         return {}
 
-    def apply_filtering_on_context(self, context, active_filters, search_form):
+    def apply_filtering_on_context(self, context, active_filters, filter_form):
         context["active_filters"] = active_filters
-        context["search_form"] = search_form(initial=context["active_filters"])
+        context["filter_form"] = filter_form(initial=context["active_filters"])
 
         if context["active_filters"]:
-            context["items"] = context["search_form"].filter_queryset(
+            context["items"] = context["filter_form"].filter_queryset(
                 active_filters, context["items"]
             )
 

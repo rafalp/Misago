@@ -91,25 +91,20 @@
 {% endblock emptylist %}
 
 
-{% block modal-title %}
-{% trans "Search data downloads" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.status %}
+    {% form_row filter_form.status %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.user %}
+    {% form_row filter_form.user %}
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    {% form_row search_form.requested_by %}
+    {% form_row filter_form.requested_by %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}
