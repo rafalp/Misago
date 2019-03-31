@@ -61,7 +61,7 @@ class FilterAgreementsForm(forms.Form):
     type = forms.ChoiceField(
         label=_("Type"),
         required=False,
-        choices=[("", _("All types")),] + Agreement.TYPE_CHOICES,
+        choices=[("", _("All types"))] + Agreement.TYPE_CHOICES,
     )
     content = forms.CharField(label=_("Content"), required=False)
 
