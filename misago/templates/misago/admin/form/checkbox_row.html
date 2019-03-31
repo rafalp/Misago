@@ -1,0 +1,17 @@
+{% load misago_admin_form %}
+<div class="form-group{% if field.errors %} has-error{% endif %}">
+  <div class="custom-control custom-checkbox">
+    <input type="checkbox" class="custom-control-input{% if field_class %} {{ field_class }}{% endif %}" id="{{ field.id_for_label }}" name="{{ field.html_name }}" value="1"{% if field.required %} required{% endif %}{% if field.value %} checked{% endif %}>
+    <label class="custom-control-label{% if label_class %} {{ label_class }}{% endif %}" for="{{ field.id_for_label }}">
+      {{ field.label }}
+    </label>
+    {% for error in field.errors %}
+      <div class="text-danger">
+        <strong>{{ error }}</strong>
+      </div>
+    {% endfor %}
+    {% if field.help_text %}
+      <div class="help-block">{{ field.help_text }}</div>
+    {% endif %}
+  </div>
+</div>

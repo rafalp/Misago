@@ -95,18 +95,22 @@
 
 {% block filters-modal-body %}
 <div class="row">
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.check_type %}
   </div>
-  <div class="col-md-6">
+</div>
+<div class="row">
+  <div class="col">
     {% form_row filter_form.value %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.registration_only %}
   </div>
-  <div class="col-md-6">
+</div>
+<div class="row">
+  <div class="col">
     {% form_row filter_form.state %}
   </div>
 </div>

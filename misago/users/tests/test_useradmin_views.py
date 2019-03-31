@@ -68,7 +68,7 @@ class UserAdminViewsTests(AdminTestCase):
         user_c.is_active = False
         user_c.save()
 
-        response = self.client.get("%s&disabled=1" % link_base)
+        response = self.client.get("%s&is_disabled=1" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
@@ -84,7 +84,7 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertNotContains(response, user_b.username)
         self.assertContains(response, user_c.username)
 
-        response = self.client.get("%s&disabled=1" % link_base)
+        response = self.client.get("%s&is_disabled=1" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)

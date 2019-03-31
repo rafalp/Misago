@@ -9,6 +9,11 @@ def form_row(field, label_class=None, field_class=None):
     return {"field": field, "label_class": label_class, "field_class": field_class}
 
 
+@register.inclusion_tag("misago/admin/form/checkbox_row.html")
+def form_checkbox_row(field, label_class=None, field_class=None):
+    return {"field": field, "label_class": label_class, "field_class": field_class}
+
+
 @register.inclusion_tag("misago/admin/form/input.html")
 def form_input(field):
     attrs = field.field.widget.attrs

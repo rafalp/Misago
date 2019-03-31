@@ -103,7 +103,7 @@
 
 
 {% block emptylist %}
-<td colspan="{{ 10|add:extra_actions_len }}">
+<td colspan="{{ 7|add:extra_actions_len }}">
   <p>{% trans "No users matching search criteria have been found." %}</p>
 </td>
 {% endblock emptylist %}
@@ -111,40 +111,40 @@
 
 {% block filters-modal-body %}
 <div class="row">
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.username %}
   </div>
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.email %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.rank %}
   </div>
-  <div class="col-md-6">
+  <div class="col">
     {% form_row filter_form.role %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col">
     {% form_row filter_form.profilefields %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
-    {% form_row filter_form.inactive %}
+  <div class="col">
+    {% form_checkbox_row filter_form.is_inactive %}
   </div>
-  <div class="col-md-6">
-    {% form_row filter_form.disabled %}
+  <div class="col">
+    {% form_checkbox_row filter_form.is_disabled %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-6">
-    {% form_row filter_form.is_deleting_account %}
+  <div class="col">
+    {% form_checkbox_row filter_form.is_deleting_account %}
   </div>
-  <div class="col-md-6">
-    {% form_row filter_form.is_staff %}
+  <div class="col">
+    {% form_checkbox_row filter_form.is_staff %}
   </div>
 </div>
 {% endblock filters-modal-body %}

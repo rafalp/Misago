@@ -311,10 +311,10 @@ class BaseFilterUsersForm(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
     profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
-    inactive = YesNoSwitch(label=_("Inactive only"))
-    disabled = YesNoSwitch(label=_("Disabled only"))
-    is_staff = YesNoSwitch(label=_("Admins only"))
-    is_deleting_account = YesNoSwitch(label=_("Deleting their accounts"))
+    is_inactive = forms.BooleanField(label=_("Requires activation"))
+    is_disabled = forms.BooleanField(label=_("Account disabled"))
+    is_staff = forms.BooleanField(label=_("Administrator"))
+    is_deleting_account = forms.BooleanField(label=_("Deletes their account"))
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get("username"):
@@ -331,10 +331,10 @@ class BaseFilterUsersForm(forms.Form):
         if criteria.get("role"):
             queryset = queryset.filter(roles__id=criteria.get("role"))
 
-        if criteria.get("inactive"):
+        if criteria.get("is_inactive"):
             queryset = queryset.filter(requires_activation__gt=0)
 
-        if criteria.get("disabled"):
+        if criteria.get("is_disabled"):
             queryset = queryset.filter(is_active=False)
 
         if criteria.get("is_staff"):
