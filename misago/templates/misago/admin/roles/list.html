@@ -55,11 +55,11 @@
 {% endblock %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="{{ 4|add:extra_actions_len }}">
-  <p>{% trans "No user roles are currently defined." %}</p>
+  <p>{% trans "No user roles are set." %}</p>
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block javascripts %}

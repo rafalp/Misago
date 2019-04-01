@@ -111,11 +111,11 @@
 {% endblock %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="{{ 8|add:extra_actions_len }}">
-  <p>{% trans "No ranks are currently defined." %}</p>
+  <p>{% trans "No user ranks are set." %}</p>
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block javascripts %}

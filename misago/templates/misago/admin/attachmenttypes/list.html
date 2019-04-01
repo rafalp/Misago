@@ -66,11 +66,11 @@
 {% endblock %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="{{ 6|add:extra_actions_len }}">
-  <p>{% trans "No attachment types are currently defined." %}</p>
+  <p>{% trans "No attachment types are set." %}</p>
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block javascripts %}

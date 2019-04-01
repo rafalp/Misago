@@ -80,15 +80,15 @@
 {% endblock table-row %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="{{ 7|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No data downloads matching search criteria have been found." %}</p>
+    <p>{% trans "No data downloads matching criteria exist." %}</p>
   {% else %}
-    <p>{% trans "No data downloads exist at the moment." %}</p>
+    <p>{% trans "No data downloads exist." %}</p>
   {% endif %}
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block filters-modal-body %}

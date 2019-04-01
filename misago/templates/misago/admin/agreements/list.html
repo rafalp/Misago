@@ -104,15 +104,15 @@
 {% endblock %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="9">
   {% if active_filters %}
-    <p>{% trans "No agreements matching search criteria have been found" %}</p>
+    <p>{% trans "No agreements matching criteria exist." %}</p>
   {% else %}
-    <p>{% trans "No agreements are currently set." %}</p>
+    <p>{% trans "No agreements are set." %}</p>
   {% endif %}
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block javascripts %}

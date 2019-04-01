@@ -66,15 +66,15 @@
 {% endblock table-row %}
 
 
-{% block emptylist %}
+{% block blankslate %}
 <td colspan="{{ 4|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No attachments matching search criteria exist." %}</p>
+    <p>{% trans "No attachments matching criteria exist." %}</p>
   {% else %}
-    <p>{% trans "No attachments currently exist." %}</p>
+    <p>{% trans "No attachments exist." %}</p>
   {% endif %}
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
 {% block filters-modal-body %}
