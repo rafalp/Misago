@@ -2,6 +2,13 @@
 //
 // Used to present actionable list of items in tabular form
 
+// Add fancy shadow to card
+.card-admin-table {
+  @extend .shadow-sm;
+
+  overflow: hidden;
+}
+
 // Remove margins from table
 .card-admin-table table {
   @extend .m-0;
@@ -24,6 +31,11 @@
 
   color: $table-head-color;
   background-color: $table-head-bg;
+}
+
+// Remove top border from table head if there's no card header
+.card-admin-table > :first-child th {
+  @extend .border-top-0;
 }
 
 // Make card-body paddings same as in table
