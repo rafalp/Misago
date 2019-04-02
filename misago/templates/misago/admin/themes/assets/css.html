@@ -1,21 +1,31 @@
 {% load i18n %}
-<div class="table-panel">
-  <div class="panel-heading">
-    <h3 class="panel-title">
-      {% trans "CSS files" %}
-    </h3>
-    <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#uploadCss">
-      <span class="fa fa-upload"></span>
-      {% trans "Upload" %}
-    </button>
-    <a href="{% url 'misago:admin:appearance:themes:new-css-link' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
-      <span class="fa fa-link"></span>
-      {% trans "Link" %}
-    </a>
-    <a href="{% url 'misago:admin:appearance:themes:new-css-file' pk=theme.pk %}" class="btn btn-default btn-sm pull-right">
-      <span class="fa fa-file-text"></span>
-      {% trans "Create" %}
-    </a>
+<div class="card card-admin-table mb-3">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-title">
+          {% trans "CSS files" %}
+        </h4>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#uploadCss">
+          <span class="fa fa-upload"></span>
+          {% trans "Upload" %}
+        </button>
+      </div>
+      <div class="col-auto">
+        <a href="{% url 'misago:admin:appearance:themes:new-css-link' pk=theme.pk %}" class="btn btn-light btn-sm">
+          <span class="fa fa-link"></span>
+          {% trans "Link" %}
+        </a>
+      </div>
+      <div class="col-auto">
+        <a href="{% url 'misago:admin:appearance:themes:new-css-file' pk=theme.pk %}" class="btn btn-light btn-sm">
+          <span class="fa fa-file-text"></span>
+          {% trans "Create" %}
+        </a>
+      </div>
+    </div>
   </div>
   {% with theme.css.all as css %}
     <form class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
@@ -36,7 +46,7 @@
         {% for item in css %}
           <tr>
             <td>
-              <a class="btn btn-default btn-sm" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" data-tooltip="top" title="{% trans 'Preview' %}">
+              <a class="btn btn-light btn-sm" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" data-tooltip="top" title="{% trans 'Preview' %}">
                 <span class="fa fa-share-square-o"></span>
               </a>
             </td>
@@ -50,23 +60,23 @@
             </td>
             <td>{{ item.size|filesizeformat }}</td>
             <td style="width: 1%;">
-              <button type="button" class="btn btn-default btn-sm btn-move" data-form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
+              <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
                 <span class="fa fa-chevron-down"></span>
               </button>
             </td>
             <td style="width: 1%;">
-              <button type="button" class="btn btn-default btn-sm btn-move" data-form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
+              <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
                 <span class="fa fa-chevron-up"></span>
               </button>
             </td>
             <td style="width: 1%;">
               {% if item.url %}
-                <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
+                <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
                   <span class="fa fa-pencil"></span>
                   {% trans "Edit" %}
                 </a>
               {% else %}
-                <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-default btn-sm">
+                <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
                   <span class="fa fa-pencil"></span>
                   {% trans "Edit" %}
                 </a>
@@ -77,7 +87,7 @@
             </td>
           </tr>
         {% empty %}
-          <tr class="message-row">
+          <tr class="blankslate">
             <td colspan="8">{% trans "This theme has no CSS files." %}</td>
           </tr>
         {% endfor %}

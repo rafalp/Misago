@@ -69,9 +69,9 @@
 {% block blankslate %}
 <td colspan="{{ 4|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No attachments matching criteria exist." %}</p>
+    {% trans "No attachments matching criteria exist." %}
   {% else %}
-    <p>{% trans "No attachments exist." %}</p>
+    {% trans "No attachments exist." %}
   {% endif %}
 </td>
 {% endblock blankslate %}

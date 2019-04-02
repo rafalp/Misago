@@ -107,9 +107,9 @@
 {% block blankslate %}
 <td colspan="9">
   {% if active_filters %}
-    <p>{% trans "No agreements matching criteria exist." %}</p>
+    {% trans "No agreements matching criteria exist." %}
   {% else %}
-    <p>{% trans "No agreements are set." %}</p>
+    {% trans "No agreements are set." %}
   {% endif %}
 </td>
 {% endblock blankslate %}

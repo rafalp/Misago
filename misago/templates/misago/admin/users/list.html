@@ -104,7 +104,7 @@
 
 {% block blankslate %}
 <td colspan="{{ 7|add:extra_actions_len }}">
-  <p>{% trans "No users matching criteria exist." %}</p>
+  {% trans "No users matching criteria exist." %}
 </td>
 {% endblock blankslate %}
 

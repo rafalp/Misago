@@ -1,13 +1,19 @@
 {% load i18n %}
-<div class="table-panel">
-  <div class="panel-heading">
-    <h3 class="panel-title">
-      {% trans "Media" %}
-    </h3>
-    <button type="button" class="btn btn-default btn-sm pull-right" data-toggle="modal" data-target="#uploadMedia">
-      <span class="fa fa-upload"></span>
-      {% trans "Upload" %}
-    </button>
+<div class="card card-admin-table">
+  <div class="card-body">
+    <div class="row align-items-center">
+      <div class="col">
+        <h4 class="card-title">
+          {% trans "Media" %}
+        </h4>
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#uploadMedia">
+          <span class="fa fa-upload"></span>
+          {% trans "Upload" %}
+        </button>
+      </div>
+    </div>
   </div>
   {% with theme.media.all as media %}
     <form  class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-media' pk=theme.pk %}" method="post">
@@ -59,7 +65,7 @@
             </td>
           </tr>
         {% empty %}
-          <tr class="message-row">
+          <tr class="blankslate">
             <td colspan="8">{% trans "This theme has no media." %}</td>
           </tr>
         {% endfor %}

@@ -83,9 +83,9 @@
 {% block blankslate %}
 <td colspan="{{ 7|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No data downloads matching criteria exist." %}</p>
+    {% trans "No data downloads matching criteria exist." %}
   {% else %}
-    <p>{% trans "No data downloads exist." %}</p>
+    {% trans "No data downloads exist." %}
   {% endif %}
 </td>
 {% endblock blankslate %}

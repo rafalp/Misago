@@ -9,6 +9,13 @@
   overflow: hidden;
 }
 
+// Remove margin from card title
+.card-admin-table .card-title {
+  @extend .m-0;
+
+  font-size: $font-size-lg;
+}
+
 // Remove margins from table
 .card-admin-table table {
   @extend .m-0;
@@ -87,8 +94,5 @@
 // Center and space verticallt the blankslate message
 .card-admin-table .blankslate td {
   @extend .text-center;
-
-  p {
-    @extend .my-3;
-  }
+  @extend .py-3;
 }

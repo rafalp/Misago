@@ -72,9 +72,9 @@
 {% block blankslate %}
 <td colspan="{{ 6|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No bans matching criteria exist." %}</p>
+    {% trans "No bans matching criteria exist." %}
   {% else %}
-    <p>{% trans "No bans are set." %}</p>
+    {% trans "No bans are set." %}
   {% endif %}
 </td>
 {% endblock blankslate %}
