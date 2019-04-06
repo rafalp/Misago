@@ -9,7 +9,7 @@
   overflow: hidden;
 }
 
-// Remove margin from card title
+// Override card title sizing so it works with h4
 .card-admin-table .card-title {
   @extend .m-0;
 
