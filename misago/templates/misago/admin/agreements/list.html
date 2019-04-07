@@ -13,7 +13,8 @@
 
 
 {% block table-header %}
-<th>{% trans "Title" %}</th>
+<th style="width: 1%;">&nbsp;</th>
+<th>{% trans "Agreement" %}</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 180px;">{% trans "Type" %}</th>
 <th style="width: 250px;">{% trans "Created" %}</th>
@@ -25,24 +26,31 @@
 
 
 {% block table-row %}
-<td class="item-name">
-  {{ item.get_final_title }}
-</td>
-<td class="lead text-muted">
+<td class="pr-0">
   {% if item.is_active %}
-    <span class="fa fa-check-square" data-tooltip="top" title="{% blocktrans trimmed with type=item.get_type_display.lower %}Active {{ type }}.{% endblocktrans %}"></span>
-  {% else %}
-    &nbsp;
+    <a href="{{ item.get_absolute_url }}" class="btn btn-light btn-sm">
+      <span class="fas fa-external-link-alt"></span>
+    </a>
   {% endif %}
 </td>
-<td>
+<td class="pr-0 small">
+  <a href="{% url 'misago:admin:users:agreements:edit' pk=item.pk %}" class="item-name">
+    {{ item.get_final_title }}
+  </a>
+</td>
+<td class="badges-list">
+  {% if item.is_active %}
+    <span class="badge badge-success">
+      {% trans "Active" %}
+    </span>
+  {% endif %}
+</td>
+<td class="small">
   {{ item.get_type_display }}
 </td>
-<td>
+<td class="small">
   {% capture trimmed as created_on %}
-    <abbr data-timestamp="{{ item.created_on.isoformat }}" data-format="LL">
-      {{ item.created_on }}
-    </abbr>
+    <abbr data-timestamp="{{ item.created_on.isoformat }}" data-format="LL"></abbr>
   {% endcapture %}
   {% capture trimmed as created_by %}
     {% if item.created_by %}
@@ -55,7 +63,7 @@
     {{ created_on }} by {{ created_by }}
   {% endblocktrans %}
 </td>
-<td>
+<td class="small">
   {% if item.last_modified_on %}
     {% capture trimmed as last_modified_on %}
       <abbr data-timestamp="{{ item.last_modified_on.isoformat }}" data-format="LL">
@@ -76,7 +84,7 @@
     <em>{% trans "never" %}</em>
   {% endif %}
 </td>
-<td class="row-action">
+<td>
   {% if not item.is_active %}
     <form action="{% url 'misago:admin:users:agreements:set-as-active' pk=item.pk %}" method="post" class="set-as-active-prompt">
       <button class="btn btn-primary" data-tooltip="top" title="{% trans 'Set as active' %}">
@@ -88,16 +96,16 @@
     &nbsp;
   {% endif %}
 </td>
-<td class="row-action">
-  <a href="{% url 'misago:admin:users:agreements:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit' %}">
-    <span class="fa fa-pencil"></span>
+<td>
+  <a href="{% url 'misago:admin:users:agreements:edit' pk=item.pk %}" class="btn btn-light btn-sm">
+    {% trans "Edit" %}
   </a>
 </td>
-<td class="row-action">
+<td>
   <form action="{% url 'misago:admin:users:agreements:delete' pk=item.pk %}" method="post" class="delete-prompt">
-    <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Remove' %}">
-      {% csrf_token %}
-      <span class="fa fa-times"></span>
+    {% csrf_token %}
+    <button class="btn btn-light btn-sm">
+      {% trans "Remove" %}
     </button>
   </form>
 </td>
@@ -105,7 +113,7 @@
 
 
 {% block blankslate %}
-<td colspan="9">
+<td colspan="10">
   {% if active_filters %}
     {% trans "No agreements matching criteria exist." %}
   {% else %}

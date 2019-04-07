@@ -5,8 +5,6 @@
 // Add fancy shadow to card
 .card-admin-table {
   @extend .shadow-sm;
-
-  overflow: hidden;
 }
 
 // Override card title sizing so it works with h4
@@ -62,6 +60,8 @@
 
 // Util for making item link stand out
 .card-admin-table .item-name {
+  @extend .font-weight-bold;
+
   color: $body-color;
 }
 

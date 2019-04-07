@@ -124,7 +124,7 @@
         var controller = new DeletionController($user, delete_user);
       } else {
         var $form = $('.user').first().parents('form');
-        var $btn = $form.find('.btn-default');
+        var $btn = $form.find('.btn-light');
 
         $btn.text("{% trans 'Return to list of users' %}");
         $btn.attr('class', 'btn btn-success');

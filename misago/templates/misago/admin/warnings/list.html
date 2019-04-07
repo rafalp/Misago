@@ -76,17 +76,11 @@
     </div>
   {% endif %}
 </td>
-{% for action in extra_actions %}
-  <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %}" data-tooltip="top" title="{{ action.name }}">
-      <span class="{{ action.icon }}"></span>
-    </a>
-  </td>
-{% endfor %}
-<td class="row-action">
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
   {% if not forloop.last %}
     <form action="{% url 'misago:admin:users:warnings:down' pk=item.pk %}" method="post">
-      <button class="btn btn-default" data-tooltip="top" title="{% trans 'Move down' %}">
+      <button class="btn btn-light" data-tooltip="top" title="{% trans 'Move down' %}">
         {% csrf_token %}
         <span class="fa fa-chevron-down"></span>
       </button>
@@ -95,10 +89,10 @@
     &nbsp;
   {% endif %}
 </td>
-<td class="row-action">
+<td>
   {% if not forloop.first %}
     <form action="{% url 'misago:admin:users:warnings:up' pk=item.pk %}" method="post">
-      <button class="btn btn-default" data-tooltip="top" title="{% trans 'Move up' %}">
+      <button class="btn btn-light" data-tooltip="top" title="{% trans 'Move up' %}">
         {% csrf_token %}
         <span class="fa fa-chevron-up"></span>
       </button>
@@ -107,12 +101,12 @@
     &nbsp;
   {% endif %}
 </td>
-<td class="row-action">
+<td>
   <a href="{% url 'misago:admin:users:warnings:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit' %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
-<td class="row-action">
+<td>
   <form action="{% url 'misago:admin:users:warnings:delete' pk=item.pk %}" method="post" class="delete-prompt">
     <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
       {% csrf_token %}

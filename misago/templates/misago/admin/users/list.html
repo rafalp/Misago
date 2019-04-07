@@ -33,12 +33,14 @@
   </a>
 </td>
 <td class="pr-0">
-  <h5 class="item-name">
-    <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}">
+  <div class="small">
+    <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="item-name">
       {{ item }}
     </a>
-  </h5>
-  <a class="small" href="mailto:{{ item.email }}">{{ item.email }}</a>
+  </div>
+  <div class="small">
+    <a href="mailto:{{ item.email }}">{{ item.email }}</a>
+  </div>
 </td>
 <td class="badges-list">
   {% if item.is_superuser %}
@@ -87,14 +89,8 @@
 <td class="small">
   {{ item.posts }}
 </td>
-{% for action in extra_actions %}
-  <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}light{% endif %}" data-tooltip="top" title="{{ action.name }}">
-      <span class="{{ action.icon }}"></span>
-    </a>
-  </td>
-{% endfor %}
-<td class="row-action">
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
   <a href="{% url 'misago:admin:users:accounts:edit' pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Edit user' %}">
     {% trans "Edit" %}
   </a>

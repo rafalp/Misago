@@ -23,12 +23,12 @@
 <td class="item-name">
   {{ item }}
 </td>
-<td class="row-action">
+<td>
   <a href="{% url 'misago:admin:permissions:categories:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit' %}">
     <span class="fa fa-pencil"></span>
   </a>
 </td>
-<td class="row-action">
+<td>
   <form action="{% url 'misago:admin:permissions:categories:delete' pk=item.pk %}" method="post" class="delete-prompt">
     <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
       {% csrf_token %}

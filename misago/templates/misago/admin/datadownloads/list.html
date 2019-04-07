@@ -27,61 +27,59 @@
 
 
 {% block table-row %}
-<td>
+<td class="pr-0">
   <a href="{{ item.user.get_absolute_url }}">
-    <img src="{{ item.user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
   </a>
 </td>
-<td class="item-name">
-  <a href="{{ item.user.get_absolute_url }}">
+<td class="small">
+  <a href="{{ item.user.get_absolute_url }}" class="item-name">
     {{ item.user }}
   </a>
 </td>
-<td>
+<td class="small">
   {{ item.get_status_display }}
 </td>
-<td>
+<td class="small">
   <abbr data-timestamp="{{ item.requested_on.isoformat }}" data-format="LL">
     {{ item.requested_on }}
   </abbr>
 </td>
-<td>
+<td class="pr-0">
   {% if item.requester %}
-    <a href="{{ item.requester.get_absolute_url }}">
-      <img src="{{ item.requester|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <a href="{{ item.requester.get_absolute_url.user }}">
+      <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
     </a>
   {% else %}
-    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans 'Avatar' %}" width="24" height="24">
   {% endif %}
 </td>
-<td class="item-name">
+<td class="small">
   {% if item.requester %}
-    <a href="{{ item.requester.get_absolute_url }}">
+    <a href="{{ item.requester.get_absolute_url }}" class="item-name">
       {{ item.requester }}
     </a>
   {% else %}
-    {{ item.requester_name }}
+    <span class="item-name">{{ item.requester_name }}</span>
   {% endif %}
 </td>
-{% for action in extra_actions %}
-  <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %}" data-tooltip="top" title="{{ action.name }}">
-      <span class="{{ action.icon }}"></span>
-    </a>
-  </td>
-{% endfor %}
-<td class="row-action">
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
   {% if item.file %}
-    <a href="{{ item.file.url }}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Download data' %}">
-      <span class="fa fa-download"></span>
+    <a href="{{ item.file.url }}" class="btn btn-light btn-sm">
+      {% trans "Download" %}
     </a>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      {% trans "Download" %}
+    </button>
   {% endif %}
 </td>
 {% endblock table-row %}
 
 
 {% block blankslate %}
-<td colspan="{{ 7|add:extra_actions_len }}">
+<td colspan="{{ 8|add:extra_actions_len }}">
   {% if active_filters %}
     {% trans "No data downloads matching criteria exist." %}
   {% else %}
