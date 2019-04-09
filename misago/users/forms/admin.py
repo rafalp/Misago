@@ -418,7 +418,7 @@ class RankForm(forms.ModelForm):
             "Optional css class added to content belonging to this rank owner."
         ),
     )
-    is_tab = forms.BooleanField(
+    is_tab = YesNoSwitch(
         label=_("Give rank dedicated tab on users list"),
         required=False,
         help_text=_(
