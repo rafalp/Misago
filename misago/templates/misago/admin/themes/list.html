@@ -20,105 +20,83 @@
 
 {% block table-header %}
 <th>{% trans "Theme" %}</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
-<th>&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1%;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
-<td class="item-name">
-  {% for i in item.level_range %}
-    &nbsp;&nbsp;&nbsp;&nbsp;
-  {% endfor %}
-  {{ item }}
-  {% if item.version %}
-    <span class="text-muted">
-      {{ item.version }}
+<td class="pr-0">
+  {% if item.is_default %}
+    <span class="item-name small">
+      {{ item }}
     </span>
+  {% else %}
+    {% for i in item.level_range %}
+      &nbsp;&nbsp;&nbsp;&nbsp;
+    {% endfor %}
+    <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="item-name small">
+      {{ item }}
+    </a>
+    {% if item.version %}
+      <span class="text-muted  small">
+        {{ item.version }}
+      </span>
+    {% endif %}
   {% endif %}
 </td>
-<td class="item-name">
+<td class="badges-list">
   {% if item.is_active %}
-    <span class="label label-success pull-right" style="margin: 0px;">
+    <span class="badge badge-success">
       {% trans "Active" %}
     </span>
-  {% else %}
-    &nbsp;
   {% endif %}
 </td>
 <td>
-  {% if not item.is_default %}
-    <a href="{% url 'misago:admin:appearance:themes:assets' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Assets (CSS, images and fonts)' %}">
-      <span class="fa fa-pencil-square-o"></span>
-    </a>
-  {% else %}
-    <button class="btn" type="button" disabled>
-      <span class="fa fa-pencil-square-o"></span>
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-ellipsis-h"></i>
     </button>
-  {% endif %}
-</td>
-<td>
-  {% if not item.is_default %}
-    <a href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit information' %}">
-      <span class="fa fa-pencil"></span>
-    </a>
-  {% else %}
-    <button class="btn" type="button" disabled>
-      <span class="fa fa-pencil"></span>
-    </button>
-  {% endif %}
-</td>
-<td>
-  <a href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Create child theme' %}">
-    <span class="fa fa-file-o"></span>
-  </a>
-</td>
-<td>
-  {% if not item.is_active %}
-    <form action="{% url 'misago:admin:appearance:themes:activate' pk=item.pk %}" method="post">
-      <button class="btn btn-light" data-tooltip="top" title="{% trans 'Activate' %}">
-        {% csrf_token %}
-        <span class="fa fa-check-square"></span>
-      </button>
-    </form>
-  {% else %}
-    <button class="btn" type="button" disabled>
-      <span class="fa fa-check-square"></span>
-    </button>
-  {% endif %}
-</td>
-<td>
-  {% if not item.is_default %}
-    <form action="{% url 'misago:admin:appearance:themes:export' pk=item.pk %}" method="POST">
-      {% csrf_token %}
-      <button class="btn btn-primary" data-tooltip="top" title="{% trans 'Export' %}">
-        <span class="fa fa-download"></span>
-      </button>
-    </form>
-  {% else %}
-    <button class="btn" type="button" disabled>
-      <span class="fa fa-download"></span>
-    </button>
-  {% endif %}
-</td>
-<td>
-  {% if not item.is_active and not item.is_default %}
-    <form action="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" method="POST" class="delete-prompt">
-      {% csrf_token %}
-      <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
-        <span class="fa fa-times"></span>
-      </button>
-    </form>
-  {% else %}
-    <button class="btn" type="button" disabled>
-      <span class="fa fa-times"></span>
-    </button>
-  {% endif %}
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
+      {% if not item.is_default %}
+        <a class="dropdown-item" href="{% url 'misago:admin:appearance:themes:assets' pk=item.pk %}">
+          {% trans "Edit assets" %}
+        </a>
+      {% endif %}
+      {% if not item.is_default %}
+        <a class="dropdown-item" href="{% url 'misago:admin:appearance:themes:edit' pk=item.pk %}">
+          {% trans "Edit information" %}
+        </a>
+      {% endif %}
+      <a class="dropdown-item" href="{% url 'misago:admin:appearance:themes:new' %}?parent={{ item.pk }}">
+        {% trans "Create child theme" %}
+      </a>
+      {% if not item.is_active %}
+        <form action="{% url 'misago:admin:appearance:themes:activate' pk=item.pk %}" method="post">
+          {% csrf_token %}
+          <button class="dropdown-item">
+            {% trans "Set as active" %}
+          </button>
+        </form>
+      {% endif %}
+      {% if not item.is_default %}
+        <form action="{% url 'misago:admin:appearance:themes:export' pk=item.pk %}" method="POST">
+          {% csrf_token %}
+          <button class="dropdown-item">
+            {% trans "Export theme" %}
+          </button>
+        </form>
+      {% endif %}
+      {% if not item.is_active and not item.is_default %}
+        <form action="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" method="POST" class="delete-prompt">
+          {% csrf_token %}
+          <button class="dropdown-item">
+            {% trans "Delete theme" %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
 </td>
 {% endblock %}
 

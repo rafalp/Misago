@@ -102,23 +102,23 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
       <a class="dropdown-item" href="{% url 'misago:admin:users:ranks:users' pk=item.pk %}">
-        {% trans "See users with this rank" %}
+        {% trans "List users" %}
       </a>
       {% if not item.is_default %}
         <form action="{% url 'misago:admin:users:ranks:default' pk=item.pk %}" method="post">
           {% csrf_token %}
           <button class="dropdown-item">
-            {% trans "Set as default for new users" %}
+            {% trans "Set as default" %}
           </button>
         </form>
       {% endif %}
       <a class="dropdown-item" href="{% url 'misago:admin:users:ranks:edit' pk=item.pk %}">
-        {% trans "Edit" %}
+        {% trans "Edit rank" %}
       </a>
       <form action="{% url 'misago:admin:users:ranks:delete' pk=item.pk %}" method="post" class="delete-prompt">
         {% csrf_token %}
         <button class="dropdown-item">
-          {% trans "Delete" %}
+          {% trans "Delete rank" %}
         </button>
       </form>
     </div>

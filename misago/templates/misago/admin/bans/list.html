@@ -55,12 +55,12 @@
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
       <a class="dropdown-item" href="{% url 'misago:admin:users:bans:edit' pk=item.pk %}">
-        {% trans "Edit" %}
+        {% trans "Edit ban" %}
       </a>
       <form action="{% url 'misago:admin:users:bans:delete' pk=item.pk %}" method="post" class="delete-prompt">
         {% csrf_token %}
         <button class="dropdown-item">
-          {% trans "Remove" %}
+          {% trans "Remove ban" %}
         </button>
       </form>
     </div>
