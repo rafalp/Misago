@@ -15,6 +15,8 @@
 {% block table-header %}
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "Category" %}</th>
+<th style="width: 120px;">{% trans "Threads" %}</th>
+<th style="width: 120px;">{% trans "Posts" %}</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
@@ -34,6 +36,12 @@
   <a href="{% url 'misago:admin:categories:nodes:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
   </a>
+</td>
+<td class="small">
+  {{ item.threads }}
+</td>
+<td class="small">
+  {{ item.posts }}
 </td>
 <td>
   {% if not item.last %}
@@ -83,7 +91,7 @@
 
 
 {% block blankslate %}
-<td colspan="{{ 5 }}">
+<td colspan="7">
   {% trans "No categories are set." %}
 </td>
 {% endblock blankslate %}
