@@ -56,14 +56,14 @@
   {% if item.title %}
     {{ item.title }}
   {% else %}
-    <i class="text-muted">{% trans "No title set" %}</i>
+    <i class="text-muted">{% trans "Not set" %}</i>
   {% endif %}
 </td>
 <td class="small">
   {% if item.css_class %}
     <pre class="m-0">{{ item.css_class }}</pre>
   {% else %}
-    <i class="text-muted">{% trans "CSS class set" %}</i>
+    <i class="text-muted">{% trans "Not set" %}</i>
   {% endif %}
 </td>
 {% include "misago/admin/generic/list_extra_actions.html" %}

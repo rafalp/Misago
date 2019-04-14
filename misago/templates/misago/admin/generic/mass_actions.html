@@ -1,11 +1,11 @@
 {% load i18n %}
 <div class="col-auto ml-auto">
   <form id="mass-action" action="{{ querystring }}" method="post">
+    {% csrf_token %}
     <div class="dropdown">
       <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown">
         <span class="fas fa-check-square"></span> <span>{{ empty_selection_label }}</span>
       </button>
-      {% csrf_token %}
       <div class="dropdown-menu dropdown-menu-right">
         <h6 class="dropdown-header">{% trans "With selected:" %}</h6>
         {% for action in mass_actions %}

@@ -15,8 +15,9 @@
 {% block table-header %}
 <th style="width: 1%;">&nbsp;</th>
 <th>{% trans "Category" %}</th>
-<th style="width: 120px;">{% trans "Threads" %}</th>
-<th style="width: 120px;">{% trans "Posts" %}</th>
+<th>{% trans "CSS class" %}</th>
+<th>{% trans "Threads" %}</th>
+<th>{% trans "Posts" %}</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
 <th style="width: 1%;">&nbsp;</th>
@@ -38,6 +39,13 @@
   </a>
 </td>
 <td class="small">
+  {% if item.css_class %}
+    <pre class="m-0">{{ item.css_class }}</pre>
+  {% else %}
+    <i class="text-muted">{% trans "Not set" %}</i>
+  {% endif %}
+</td>
+<td class="small">
   {{ item.threads }}
 </td>
 <td class="small">
@@ -52,7 +60,9 @@
       </button>
     </form>
   {% else %}
-    &nbsp;
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-down"></span>
+    </button>
   {% endif %}
 </td>
 <td>
@@ -64,7 +74,9 @@
       </button>
     </form>
   {% else %}
-    &nbsp;
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-up"></span>
+    </button>
   {% endif %}
 </td>
 <td>
