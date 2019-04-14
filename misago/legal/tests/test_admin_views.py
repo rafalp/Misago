@@ -292,3 +292,30 @@ class AgreementAdminViewsTests(AdminTestCase):
 
         active_count = Agreement.objects.filter(is_active=True).count()
         self.assertEqual(active_count, 2)
+
+    def test_disable_agreement(self):
+        """agreement can be disabled"""
+        self.client.post(
+            reverse("misago:admin:users:agreements:new"),
+            data={
+                "type": Agreement.TYPE_TOS,
+                "title": "Test Rules",
+                "text": "Lorem ipsum dolor met sit amet elit",
+                "link": "https://example.com/rules/",
+            },
+        )
+
+        test_agreement = Agreement.objects.get(type=Agreement.TYPE_TOS)
+        test_agreement.is_active = True
+        test_agreement.save()
+
+        response = self.client.post(
+            reverse(
+                "misago:admin:users:agreements:disable",
+                kwargs={"pk": test_agreement.pk},
+            )
+        )
+        self.assertEqual(response.status_code, 302)
+
+        test_agreement.refresh_from_db()
+        self.assertFalse(test_agreement.is_active)

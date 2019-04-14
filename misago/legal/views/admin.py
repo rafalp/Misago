@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from ...admin.views import generic
 from ..forms import AgreementForm, FilterAgreementsForm
 from ..models import Agreement
-from ..utils import set_agreement_as_active
+from ..utils import disable_agreement, set_agreement_as_active
 
 
 class AgreementAdmin(generic.AdminBaseMixin):
@@ -88,3 +88,13 @@ class SetAgreementAsActive(AgreementAdmin, generic.ButtonView):
             "type": target.get_type_display(),
         }
         messages.success(request, message % targets_names)
+
+
+class DisableAgreement(AgreementAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        disable_agreement(target, commit=True)
+
+        message = _('Agreement "%(title)s" has been disabled.') % {
+            "title": target.get_final_title()
+        }
+        messages.success(request, message)

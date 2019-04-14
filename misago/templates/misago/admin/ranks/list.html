@@ -115,7 +115,7 @@
       <a class="dropdown-item" href="{% url 'misago:admin:users:ranks:edit' pk=item.pk %}">
         {% trans "Edit rank" %}
       </a>
-      <form action="{% url 'misago:admin:users:ranks:delete' pk=item.pk %}" method="post" class="delete-prompt">
+      <form action="{% url 'misago:admin:users:ranks:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Delete rank" %}
@@ -136,11 +136,9 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to delete this rank?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this rank?' %}"
+  )
 </script>
 {% endblock %}

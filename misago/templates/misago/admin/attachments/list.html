@@ -57,8 +57,8 @@
 </td>
 <td>
   <form action="{% url 'misago:admin:system:attachments:delete' pk=item.pk %}" method="post" class="delete-prompt">
+    {% csrf_token %}
     <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
-      {% csrf_token %}
       <span class="fa fa-times"></span>
     </button>
   </form>
