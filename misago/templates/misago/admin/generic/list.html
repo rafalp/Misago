@@ -35,7 +35,7 @@
       <tr>
         {% block table-header %}{% endblock table-header %}
         {% if mass_actions %}
-          <th class="width: 1%;">&nbsp;</th>
+          <th>&nbsp;</th>
         {% endif %}
       </tr>
     </thead>
@@ -46,7 +46,9 @@
             {% block table-row %}{% endblock table-row %}
             {% if mass_actions %}
               <td class="row-select">
-                <input id="mass-checkbox-{{ item.pk }}" type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+                <label>
+                  <input id="mass-checkbox-{{ item.pk }}" type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+                </label>
               </td>
             {% endif %}
           </tr>
@@ -77,7 +79,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">
+          <h5 class="modal-title" id="filter-modal-label">
             {% block filters-modal-title %}
               {% trans "Filters" %}
             {% endblock filters-modal-title %}
@@ -115,9 +117,7 @@
 {% block javascripts %}
 {% if mass_actions %}
   <script type="text/javascript">
-    $(function() {
-      tableMassActions("{{ empty_selection_label }}", "{{ selection_label }}");
-    });
+    window.misago.initMassActions("{{ empty_selection_label }}", "{{ selection_label }}")
   </script>
 {% endif %}
 {% endblock javascripts %}

@@ -48,7 +48,7 @@
 <td class="pr-0">
   {% if item.requester %}
     <a href="{{ item.requester.get_absolute_url.user }}">
-      <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+      <img src="{{ item.requester|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
     </a>
   {% else %}
     <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans 'Avatar' %}" width="24" height="24">

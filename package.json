@@ -6,6 +6,7 @@
   "scripts": {
     "watch": "NODE_ENV=development webpack -d -w",
     "build": "NODE_ENV=production webpack -p",
+    "prettier": "prettier --write misago/admin/src/**/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/preset-env": "^7.3.4",
     "autoprefixer": "^9.4.7",
     "babel-loader": "^8.0.5",
@@ -35,6 +37,7 @@
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
     "postcss-loader": "^3.0.0",
+    "prettier": "1.17.0",
     "sass-loader": "^7.1.0",
     "stylelint": "^9.10.1",
     "stylelint-config-twbs-bootstrap": "^0.3.0",
@@ -71,7 +74,11 @@
       ]
     ],
     "plugins": [
-      "@babel/plugin-transform-arrow-functions"
+      "@babel/plugin-transform-arrow-functions",
+      "@babel/plugin-proposal-export-default-from"
     ]
+  },
+  "prettier": {
+    "semi": false
   }
 }

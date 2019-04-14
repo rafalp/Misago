@@ -3,13 +3,13 @@
   <form id="mass-action" action="{{ querystring }}" method="post">
     <div class="dropdown">
       <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-toggle="dropdown">
-        <span class="fas fa-check-square"></span>
+        <span class="fas fa-check-square"></span> <span>{{ empty_selection_label }}</span>
       </button>
       {% csrf_token %}
       <div class="dropdown-menu dropdown-menu-right">
+        <h6 class="dropdown-header">{% trans "With selected:" %}</h6>
         {% for action in mass_actions %}
           <button class="dropdown-item" type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
-            <span class="{{ action.icon }}"></span>
             {{ action.name }}
           </button>
         {% endfor %}

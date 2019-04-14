@@ -13,16 +13,16 @@
 
 
 {% block table-header %}
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 <th>{% trans "User" %}</th>
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 <th style="width: 150px;">{% trans "Rank" %}</th>
-<th style="width: 190px;">{% trans "Registration" %}</th>
-<th style="width: 90px;">{% trans "Posts" %}</th>
+<th style="width: 200px;">{% trans "Registration" %}</th>
+<th style="width: 150px;">{% trans "Posts" %}</th>
 {% for action in extra_actions %}
-  <th style="width: 1%;">&nbsp;</th>
+  <th>&nbsp;</th>
 {% endfor %}
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 

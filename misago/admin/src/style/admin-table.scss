@@ -27,10 +27,11 @@
   vertical-align: middle;
 }
 
-// Customize table head row to have different background
-// and be more compact overall
+// Customize table head row to have configurable background,
+// don't wrap and be more compact
 .card-admin-table th {
   @extend .border-bottom-0;
+  @extend .text-nowrap;
 
   font-size: $font-size-sm;
 
@@ -84,6 +85,19 @@
   @extend .pl-0;
 
   width: 0%;
+}
+
+// Keep checkbox column as small as possible
+.card-admin-table .row-select {
+  width: 1px;
+}
+
+// Make checkbox easier to click
+.card-admin-table .row-select label {
+  @extend .text-center;
+  @extend .w-100;
+  @extend .m-0;
+  @extend .p-2;
 }
 
 // Remove underline from timestamp abbr
