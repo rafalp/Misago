@@ -59,6 +59,19 @@
   @extend .rounded-lg;
 }
 
+// Support images buttons
+.card-admin-table .btn-thumbnail {
+  @extend .btn-light;
+  @extend .btn-block;
+
+  width: $font-size-base * 2;
+  height: $font-size-base * 2;
+  padding: 0;
+
+  background-color: transparent;
+  background-size: cover;
+}
+
 // Util for making item link stand out
 .card-admin-table .item-name {
   @extend .font-weight-bold;

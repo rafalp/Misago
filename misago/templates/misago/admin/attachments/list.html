@@ -12,43 +12,49 @@
 
 {% block table-row %}
 {% if item.is_image %}
-  <td class="item-thumbnail">
+  <td class="pr-0">
     {% if item.thumbnail %}
-      <a href="{{ item.get_absolute_url }}?shva=1" style='background-image: url("{{  item.get_thumbnail_url }}?shva=1");' target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.get_thumbnail_url }}?shva=1")' target="_blank">
+      </a>
     {% else %}
-      <a href="{{ item.get_absolute_url }}?shva=1" style='background-image: url("{{  item.get_absolute_url }}?shva=1");' target="_blank"></a>
+      <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-thumbnail" style='background-image: url("{{  item.get_absolute_url }}?shva=1")' target="_blank">
+      </a>
     {% endif %}
   </td>
 {% else %}
-  <td class="item-name text-center">
-    <a href="{{ item.get_absolute_url }}?shva=1" target="_blank">
-      <span class="fa fa-file"></span>
+  <td class="pr-0 text-center">
+    <a href="{{ item.get_absolute_url }}?shva=1" class="btn btn-light btn-block btn-sm" target="_blank">
+      <span class="far fa-file"></span>
     </a>
   </td>
 {% endif %}
-<td class="item-name">
-  {{ item }}
-  {% capture trimmed as uploader %}
-    {% if item.uploader %}
-      <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
-    {% else %}
-      <span class="item-title">{{ item.uploader_name }}</span>
-    {% endif %}
-  {% endcapture %}
-  {% capture trimmed as uploaded_on %}
-    <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
-      {{ item.uploaded_on }}
-    </abbr>
-  {% endcapture %}
-  <small class="text-muted">
-    {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}
-      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
-    {% endblocktrans %}
-  </small>
-</td>
-<td>
+  <td>
+    <div class="small">
+      <a href="{{ item.get_absolute_url }}?shva=1" class="item-name" target="_blank">
+        {{ item }}
+      </a>
+    </div>
+    <div class="small text-muted">
+      {% capture trimmed as uploader %}
+        {% if item.uploader %}
+          <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
+        {% else %}
+          <span class="item-title">{{ item.uploader_name }}</span>
+        {% endif %}
+      {% endcapture %}
+      {% capture trimmed as uploaded_on %}
+        <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
+          {{ item.uploaded_on }}
+        </abbr>
+      {% endcapture %}
+      {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}
+        {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
+      {% endblocktrans %}
+    </div>
+  </td>
+<td class="small">
   {% if item.post %}
-    <a href="{{ item.post.get_absolute_url }}" class="item-title">
+    <a href="{{ item.post.get_absolute_url }}" class="item-name">
       {{ item.post.thread }}
     </a>
   {% else %}
@@ -56,10 +62,10 @@
   {% endif %}
 </td>
 <td>
-  <form action="{% url 'misago:admin:system:attachments:delete' pk=item.pk %}" method="post" class="delete-prompt">
+  <form action="{% url 'misago:admin:system:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
     {% csrf_token %}
-    <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
-      <span class="fa fa-times"></span>
+    <button class="btn btn-light btn-sm">
+      {% trans "Delete" %}
     </button>
   </form>
 </td>
@@ -67,7 +73,7 @@
 
 
 {% block blankslate %}
-<td colspan="{{ 4|add:extra_actions_len }}">
+<td colspan="{{ 5|add:extra_actions_len }}">
   {% if active_filters %}
     {% trans "No attachments matching criteria exist." %}
   {% else %}
@@ -104,11 +110,9 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to delete this attachment?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this attachment?' %}"
+  )
 </script>
 {% endblock %}
