@@ -32,14 +32,14 @@
       {% csrf_token %}
       <table class="table">
         <tr>
-          <th style="width: 1%;">&nbsp;</th>
+          <th style="width: 1px;">&nbsp;</th>
           <th>{% trans "Name" %}</th>
           <th>{% trans "Modified" %}</th>
           <th>{% trans "Size" %}</th>
-          <th style="width: 1%;">&nbsp;</th>
-          <th style="width: 1%;">&nbsp;</th>
-          <th style="width: 1%;">&nbsp;</th>
-          <th style="width: 1%;">
+          <th style="width: 1px;">&nbsp;</th>
+          <th style="width: 1px;">&nbsp;</th>
+          <th style="width: 1px;">&nbsp;</th>
+          <th style="width: 1px;">
             <input type="checkbox" {% if not css %}disabled{% endif %}>
           </th>
         </tr>
@@ -59,17 +59,17 @@
               </abbr>
             </td>
             <td>{{ item.size|filesizeformat }}</td>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
                 <span class="fa fa-chevron-down"></span>
               </button>
             </td>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
                 <span class="fa fa-chevron-up"></span>
               </button>
             </td>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               {% if item.url %}
                 <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
                   <span class="fa fa-pencil"></span>
@@ -82,7 +82,7 @@
                 </a>
               {% endif %}
             </td>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               <input type="checkbox" name="item" value="{{ item.pk }}">
             </td>
           </tr>

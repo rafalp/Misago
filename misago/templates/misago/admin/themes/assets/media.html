@@ -20,19 +20,19 @@
       {% csrf_token %}
       <table class="table">
         <tr>
-          <th style="width: 1%;">&nbsp;</th>
+          <th style="width: 1px;">&nbsp;</th>
           <th>{% trans "Name" %}</th>
           <th>{% trans "Modified" %}</th>
           <th>{% trans "Size" %}</th>
           <th>{% trans "Type" %}</th>
           <th>{% trans "Dimensions" %}</th>
-          <th style="width: 1%;">
+          <th style="width: 1px;">
             <input type="checkbox" {% if not media %}disabled{% endif %}>
           </th>
         </tr>
         {% for item in media %}
           <tr>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               {% if item.thumbnail %}
                 <a class="img-preview" href="{{ item.file.url }}" target="blank" data-tooltip="top" title="{% trans 'Preview' %}">
                   <span style="background-image: url({{ item.thumbnail.url }});"></span>
@@ -60,7 +60,7 @@
                 &nbsp;
               {% endif %}
             </td>
-            <td style="width: 1%;">
+            <td style="width: 1px;">
               <input type="checkbox" name="item" value="{{ item.pk }}">
             </td>
           </tr>

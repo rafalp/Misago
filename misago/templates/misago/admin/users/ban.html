@@ -25,7 +25,7 @@ class="form-horizontal"
 <table class="table table-condensed form-table">
   {% for user in users %}
     <tr>
-      <td style="width: 1%;">
+      <td style="width: 1px;">
         <a href="{{ user.get_absolute_url }}">
           <img src="{{ user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
         </a>
