@@ -38,7 +38,7 @@
     {{ item.get_check_type_display }}
   {% endif %}
 </td>
-<td class="small{% if item.is_expired %} text-muted{% endif %}">
+<td class="small{% if item.is_expired or not item.expires_on %} text-muted{% endif %}">
   {% if item.expires_on %}
     <abbr data-timestamp="{{ item.expires_on.isoformat }}" data-format="lll">
       {{ item.expires_on }}
