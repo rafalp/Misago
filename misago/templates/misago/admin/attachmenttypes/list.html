@@ -30,11 +30,11 @@
 </td>
 <td class="badges-list">
   {% if item.is_locked %}
-    <span class="badge badge-warning">
-      {% trans "Only downloading" %}
+    <span class="badge badge-warning" data-tooltip="top" title="{% trans 'Uploading new files of this type is disabled' %}">
+      {% trans "Limited" %}
     </span>
   {% elif not item.is_enabled %}
-    <span class="badge badge-dark">
+    <span class="badge badge-dark" data-tooltip="top" title="{% trans 'Uploading and downloading files of this type is disabled' %}">
       {% trans "Disabled" %}
     </span>
   {% endif %}
