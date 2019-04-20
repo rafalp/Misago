@@ -13,30 +13,37 @@
 
 
 {% block table-header %}
-<th style="width: 30%;">{% trans "Ban" %}</th>
-<th style="width: 30%;">{% trans "Type" %}</th>
-<th>{% trans "Expires on" %}</th>
+<th>{% trans "Ban" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 200px;">{% trans "Type" %}</th>
+<th style="width: 250px;">{% trans "Expires on" %}</th>
 {% for action in extra_actions %}
-  <th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1px;">&nbsp;</th>
 {% endfor %}
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
-<td>
+<td class="pr-0">
   <a href="{% url 'misago:admin:users:bans:edit' pk=item.pk %}" class="item-name small">
     {{ item.banned_value }}
   </a>
 </td>
-<td class="small">
+<td class="badges-list">
   {% if item.registration_only %}
-    {% blocktrans trimmed with check_type=item.get_check_type_display %}
-      {{ check_type }}, registration only
-    {% endblocktrans %}
-  {% else %}
-    {{ item.get_check_type_display }}
+    <span class="badge badge-warning">
+      {% trans "Registration only" %}
+    </span>
   {% endif %}
+  {% if item.is_expired %}
+    <span class="badge badge-dark">
+      {% trans "Expired" %}
+    </span>
+  {% endif %}
+</td>
+<td class="small">
+  {{ item.get_check_type_display }}
 </td>
 <td class="small{% if item.is_expired or not item.expires_on %} text-muted{% endif %}">
   {% if item.expires_on %}
