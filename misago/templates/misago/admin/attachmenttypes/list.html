@@ -13,61 +13,76 @@
 
 
 {% block table-header %}
-<th style="width: 20%;">{% trans "Type" %}</th>
+<th>{% trans "Type" %}</th>
+<th style="width: 1px;">&nbsp;</th>
 <th style="width: 20%;">{% trans "Extensions" %}</th>
 <th style="width: 20%;">{% trans "Mimetypes" %}</th>
 <th style="width: 20%;">{% trans "Files" %}</th>
-<th style="width: 1%;">&nbsp;</th>
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
-<td class="item-name">
-  {{ item }}
-  {% if not item.is_enabled %}
-    <small class="text-muted">{{ item.get_status_display }}</small>
+<td class="small pr-0">
+  <a href="{% url 'misago:admin:system:attachment-types:edit' pk=item.pk %}" class="item-name">
+    {{ item }}
+  </a>
+</td>
+<td class="badges-list">
+  {% if item.is_locked %}
+    <span class="badge badge-warning">
+      {% trans "Only downloading" %}
+    </span>
+  {% elif not item.is_enabled %}
+    <span class="badge badge-dark">
+      {% trans "Disabled" %}
+    </span>
   {% endif %}
 </td>
-<td>
-  <ul class="list-unstyled list-inline">
+<td class="small">
+  <ul class="list-unstyled m-0">
     {% for extension in item.extensions_list %}
       <li>{{ extension }}</li>
     {% endfor %}
   </ul>
 </td>
-<td>
+<td class="small">
   {% if item.mimetypes %}
-    <ul class="list-unstyled">
+    <ul class="list-unstyled m-0">
       {% for mimetype in item.mimetypes_list %}
         <li>{{ mimetype }}</li>
       {% endfor %}
     </ul>
   {% else %}
-    <em>{% trans "None" %}</em>
+    <em class="text-muted">{% trans "Not set" %}</em>
   {% endif %}
 </td>
-<td>
+<td class="small">
   {{ item.num_files }}
 </td>
 <td>
-  <a href="{% url 'misago:admin:system:attachment-types:edit' pk=item.pk %}" class="btn btn-primary" data-tooltip="top" title="{% trans 'Edit' %}">
-    <span class="fa fa-pencil"></span>
-  </a>
-</td>
-<td>
-  <form action="{% url 'misago:admin:system:attachment-types:delete' pk=item.pk %}" method="post" class="delete-prompt">
-    <button class="btn btn-danger" data-tooltip="top"title="{% trans 'Delete' %}">
-      {% csrf_token %}
-      <span class="fa fa-times"></span>
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-ellipsis-h"></i>
     </button>
-  </form>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
+      <a class="dropdown-item" href="{% url 'misago:admin:system:attachment-types:edit' pk=item.pk %}">
+        {% trans "Edit type" %}
+      </a>
+      <form action="{% url 'misago:admin:system:attachment-types:delete' pk=item.pk %}" method="post" class="delete-prompt">
+        {% csrf_token %}
+        <button class="dropdown-item">
+          {% trans "Delete type" %}
+        </button>
+      </form>
+    </div>
+  </div>
 </td>
 {% endblock %}
 
 
 {% block blankslate %}
-<td colspan="{{ 6|add:extra_actions_len }}">
+<td colspan="{{ 6 }}">
   {% trans "No attachment types are set." %}
 </td>
 {% endblock blankslate %}
@@ -75,11 +90,9 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to delete this attachment type?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to delete this attachment type?' %}"
+  )
 </script>
 {% endblock %}
