@@ -80,7 +80,7 @@
         </form>
       {% endif %}
       {% if not item.is_default %}
-        <form action="{% url 'misago:admin:appearance:themes:export' pk=item.pk %}" method="POST">
+        <form action="{% url 'misago:admin:appearance:themes:export' pk=item.pk %}" method="post">
           {% csrf_token %}
           <button class="dropdown-item">
             {% trans "Export theme" %}
@@ -88,7 +88,7 @@
         </form>
       {% endif %}
       {% if not item.is_active and not item.is_default %}
-        <form action="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" method="POST" class="delete-prompt">
+        <form action="{% url 'misago:admin:appearance:themes:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
           {% csrf_token %}
           <button class="dropdown-item">
             {% trans "Delete theme" %}
@@ -104,11 +104,9 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans 'Are you sure you want to delete this theme? Deleting theme will also delete its child themes.' %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-set-as-active-confirmation]",
+    "{% trans 'Are you sure you want to delete this theme? Deleting theme will also delete its child themes.' %}"
+  )
 </script>
 {% endblock %}

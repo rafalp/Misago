@@ -64,7 +64,7 @@
       <a class="dropdown-item" href="{% url 'misago:admin:users:bans:edit' pk=item.pk %}">
         {% trans "Edit ban" %}
       </a>
-      <form action="{% url 'misago:admin:users:bans:delete' pk=item.pk %}" method="post" class="delete-prompt">
+      <form action="{% url 'misago:admin:users:bans:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Remove ban" %}
@@ -90,12 +90,10 @@
 {% block javascripts %}
 {{ block.super }}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans 'Are you sure you want to remove this ban?' %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-set-as-active-confirmation]",
+    "{% trans 'Are you sure you want to remove this ban?' %}"
+  )
 </script>
 {% endblock %}
 

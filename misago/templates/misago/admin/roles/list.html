@@ -41,7 +41,7 @@
       <a class="dropdown-item" href="{% url 'misago:admin:permissions:users:edit' pk=item.pk %}">
         {% trans "Edit role" %}
       </a>
-      <form action="{% url 'misago:admin:permissions:users:delete' pk=item.pk %}" method="post" class="delete-prompt">
+      <form action="{% url 'misago:admin:permissions:users:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Delete role" %}
@@ -62,11 +62,9 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to delete this role?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-set-as-active-confirmation]",
+    "{% trans 'Are you sure you want to delete this role?' %}"
+  )
 </script>
 {% endblock %}

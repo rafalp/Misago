@@ -107,7 +107,7 @@
   </a>
 </td>
 <td>
-  <form action="{% url 'misago:admin:users:warnings:delete' pk=item.pk %}" method="post" class="delete-prompt">
+  <form action="{% url 'misago:admin:users:warnings:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
     <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
       {% csrf_token %}
       <span class="fa fa-times"></span>
@@ -126,11 +126,9 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('.delete-prompt').submit(function() {
-      var decision = confirm("{% trans "Are you sure you want to delete this warning level?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-set-as-active-confirmation]",
+    "{% trans 'Are you sure you want to delete this warning level?' %}"
+  )
 </script>
 {% endblock %}

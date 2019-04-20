@@ -9,7 +9,7 @@
 
 {% block body %}
 <body class="login-form">
-  <form class="login-form-container" method="POST" role="form">
+  <form class="login-form-container" method="post" role="form">
     {% csrf_token %}
     <div class="login-form-logo">
       {% if target == "misago" %}
