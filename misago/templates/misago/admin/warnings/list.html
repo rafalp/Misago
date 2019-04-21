@@ -80,8 +80,8 @@
 <td>
   {% if not forloop.last %}
     <form action="{% url 'misago:admin:users:warnings:down' pk=item.pk %}" method="post">
+      {% csrf_token %}
       <button class="btn btn-light" data-tooltip="top" title="{% trans 'Move down' %}">
-        {% csrf_token %}
         <span class="fa fa-chevron-down"></span>
       </button>
     </form>
@@ -92,8 +92,8 @@
 <td>
   {% if not forloop.first %}
     <form action="{% url 'misago:admin:users:warnings:up' pk=item.pk %}" method="post">
+      {% csrf_token %}
       <button class="btn btn-light" data-tooltip="top" title="{% trans 'Move up' %}">
-        {% csrf_token %}
         <span class="fa fa-chevron-up"></span>
       </button>
     </form>
@@ -108,8 +108,8 @@
 </td>
 <td>
   <form action="{% url 'misago:admin:users:warnings:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+    {% csrf_token %}
     <button class="btn btn-danger" data-tooltip="top" title="{% trans 'Delete' %}">
-      {% csrf_token %}
       <span class="fa fa-times"></span>
     </button>
   </form>

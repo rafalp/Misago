@@ -6,10 +6,9 @@ const initMassActions = (emptySelectionLabel, selectionLabel) => {
 
   const updateDropdownState = () => {
     const checked = document.querySelectorAll(".row-select input:checked")
-      .length
-    dropdownToggle.disabled = checked === 0
-    if (checked) {
-      dropdownLabel.textContent = selectionLabel.replace("0", checked)
+    dropdownToggle.disabled = checked.length === 0
+    if (checked.length) {
+      dropdownLabel.textContent = selectionLabel.replace("0", checked.length)
     } else {
       dropdownLabel.textContent = emptySelectionLabel
     }

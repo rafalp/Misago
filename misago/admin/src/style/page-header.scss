@@ -6,12 +6,26 @@
   @extend .mb-3;
 
   h1 {
+    @extend .d-flex;
+    @extend .align-items-center;
     @extend .m-0;
 
     font-size: $font-size-base * 2;
 
     a {
       color: $body-color;
+    }
+
+    .sub {
+      @extend .border-left;
+      @extend .text-muted;
+      @extend .ml-3;
+      @extend .pl-3;
+      @extend .py-1;
+
+      font-size: $font-size-lg;
+
+      vertical-align: middle;
     }
   }
 }

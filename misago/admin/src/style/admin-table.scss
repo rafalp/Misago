@@ -44,6 +44,12 @@
   @extend .border-top-0;
 }
 
+// Make table checkboxes height constant
+.card-admin-table .row-select input,
+.card-admin-table th input {
+  font-size: $font-size-lg;
+}
+
 // Make card-body paddings same as in table
 .card-admin-table .card-body {
   padding: $table-cell-padding;

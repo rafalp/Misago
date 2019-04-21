@@ -3,8 +3,10 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">{% trans "Upload media" %}</h4>
+        <h5 class="modal-title">{% trans "Upload media" %}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <form action="{% url 'misago:admin:appearance:themes:upload-media' pk=theme.pk %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -12,12 +14,12 @@
           <div class="form-group">
             <label for="uploadMediaInput">{% trans "Select media files to upload" %}:</label>
             <input type="file" class="form-control" id="uploadMediaInput" name="assets" multiple>
-            <p class="help-block">
+            <small class="form-text text-muted">
               {% trans "Media files are primarily image and font files that can be linked to from the CSS, but files of any type can be uploaded using this option." %}
-            </p>
-            <p class="help-block">
-              {% trans 'Theme\'s CSS that use the "url()" to point to media files will be updated automatically.' %}
-            </p>
+            </small>
+            <small class="form-text text-muted">
+              {% trans 'Theme CSS that use the "url()" to point to media files will be updated automatically.' %}
+            </small>
           </div>
         </div>
         <div class="modal-footer">

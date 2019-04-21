@@ -6,6 +6,7 @@ import "bootstrap/js/dist/modal"
 import "./style/index.scss"
 import initConfirmation from "./confirmation"
 import initMassActions from "./massActions"
+import initMassDelete from "./massDelete"
 import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
 
@@ -14,5 +15,6 @@ initTimestamps()
 
 window.misago = {
   initConfirmation,
-  initMassActions
+  initMassActions,
+  initMassDelete,
 }

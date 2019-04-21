@@ -9,98 +9,96 @@
       </div>
       <div class="col-auto">
         <button type="button" class="btn btn-light btn-sm" data-toggle="modal" data-target="#uploadCss">
-          <span class="fa fa-upload"></span>
           {% trans "Upload" %}
         </button>
       </div>
       <div class="col-auto">
         <a href="{% url 'misago:admin:appearance:themes:new-css-link' pk=theme.pk %}" class="btn btn-light btn-sm">
-          <span class="fa fa-link"></span>
           {% trans "Link" %}
         </a>
       </div>
       <div class="col-auto">
         <a href="{% url 'misago:admin:appearance:themes:new-css-file' pk=theme.pk %}" class="btn btn-light btn-sm">
-          <span class="fa fa-file-text"></span>
           {% trans "Create" %}
         </a>
       </div>
     </div>
   </div>
   {% with theme.css.all as css %}
-    <form class="mass-delete" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
-      {% csrf_token %}
-      <table class="table">
+    <table class="table">
+      <tr>
+        <th style="width: 1px;">&nbsp;</th>
+        <th style="width: 250px;">{% trans "Name" %}</th>
+        <th style="width: 250px;">{% trans "Modified" %}</th>
+        <th>{% trans "Size" %}</th>
+        <th style="width: 1px;">&nbsp;</th>
+        <th style="width: 1px;">&nbsp;</th>
+        <th style="width: 1px;">&nbsp;</th>
+        <th style="width: 1px;">
+          <input type="checkbox" {% if not css %}disabled{% endif %}>
+        </th>
+      </tr>
+      {% for item in css %}
         <tr>
-          <th style="width: 1px;">&nbsp;</th>
-          <th>{% trans "Name" %}</th>
-          <th>{% trans "Modified" %}</th>
-          <th>{% trans "Size" %}</th>
-          <th style="width: 1px;">&nbsp;</th>
-          <th style="width: 1px;">&nbsp;</th>
-          <th style="width: 1px;">&nbsp;</th>
-          <th style="width: 1px;">
-            <input type="checkbox" {% if not css %}disabled{% endif %}>
-          </th>
-        </tr>
-        {% for item in css %}
-          <tr>
-            <td>
-              <a class="btn btn-light btn-sm" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank" data-tooltip="top" title="{% trans 'Preview' %}">
-                <span class="fa fa-share-square-o"></span>
+          <td class="pr-0">
+            <a class="btn btn-light btn-sm" href="{% if item.url %}{{ item.url }}{% else %}{{ item.source_file.url }}{% endif %}" target="blank">
+              <span class="far fa-file"></span>
+            </a>
+          </td>
+          <td class="small">
+            <a href="{{ item.file.url }}" class="item-name" target="_blank">
+              {{ item }}
+            </a>
+          </td>
+          <td class="small">
+            <abbr data-timestamp="{{ item.modified_on.isoformat }}" data-format="LL">
+              {{ item.modified_on }}
+            </abbr>
+          </td>
+          <td class="small">
+            {{ item.size|filesizeformat }}
+          </td>
+          <td>
+            <button class="btn btn-light btn-sm btn-move" form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
+              <span class="fa fa-chevron-down"></span>
+            </button>
+          </td>
+          <td>
+            <button class="btn btn-light btn-sm btn-move" form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
+              <span class="fa fa-chevron-up"></span>
+            </button>
+          </td>
+          <td>
+            {% if item.url %}
+              <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
+                {% trans "Edit" %}
               </a>
-            </td>
-            <td>
-              <strong>{{ item }}</strong>
-            </td>
-            <td>
-              <abbr data-timestamp="{{ item.modified_on.isoformat }}" data-format="LL">
-                {{ item.modified_on }}
-              </abbr>
-            </td>
-            <td>{{ item.size|filesizeformat }}</td>
-            <td style="width: 1px;">
-              <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-down-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move down' %}" {% if forloop.last %}disabled{% endif %}>
-                <span class="fa fa-chevron-down"></span>
-              </button>
-            </td>
-            <td style="width: 1px;">
-              <button type="button" class="btn btn-light btn-sm btn-move" data-form="move-up-{{ item.pk }}" data-tooltip="top" title="{% trans 'Move up' %}" {% if forloop.first %}disabled{% endif %}>
-                <span class="fa fa-chevron-up"></span>
-              </button>
-            </td>
-            <td style="width: 1px;">
-              {% if item.url %}
-                <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
-                  <span class="fa fa-pencil"></span>
-                  {% trans "Edit" %}
-                </a>
-              {% else %}
-                <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
-                  <span class="fa fa-pencil"></span>
-                  {% trans "Edit" %}
-                </a>
-              {% endif %}
-            </td>
-            <td style="width: 1px;">
-              <input type="checkbox" name="item" value="{{ item.pk }}">
-            </td>
-          </tr>
-        {% empty %}
-          <tr class="blankslate">
-            <td colspan="8">{% trans "This theme has no CSS files." %}</td>
-          </tr>
-        {% endfor %}
-      </table>
-      {% if css %}
-        <div class="panel-footer text-right">
-          <button class="btn btn-danger btn-sm" disabled>
-            <span class="fa fa-remove"></span>
+            {% else %}
+              <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
+                {% trans "Edit" %}
+              </a>
+            {% endif %}
+          </td>
+          <td class="row-select">
+            <input type="checkbox" form="delete-css" name="item" value="{{ item.pk }}">
+          </td>
+        </tr>
+      {% empty %}
+        <tr class="blankslate">
+          <td colspan="8">{% trans "This theme has no CSS files." %}</td>
+        </tr>
+      {% endfor %}
+    </table>
+    {% if css %}
+      <div class="card-body text-right">
+        <form id="delete-css" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-light btn-sm" disabled>
             {% trans "Delete selected" %}
           </button>
-        </div>
-      {% endif %}
-    </form>
+        </form>
+      </div>
+    {% endif %}
     {% for item in css %}
       <form action="{% url 'misago:admin:appearance:themes:move-css-up' pk=theme.pk css_pk=item.pk %}" method="post" id="move-up-{{ item.pk }}">
         {% csrf_token %}
