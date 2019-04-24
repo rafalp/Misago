@@ -1,0 +1,30 @@
+// Admin form
+//
+// Used to contain forms
+
+// Add fancy shadow to card
+.card-admin-form {
+  @extend .shadow-sm;
+}
+
+// Downscale the form card header text
+.card-admin-form .card-header h5 {
+  font-size: $font-size-lg;
+}
+
+// Visually separate fieldsets from each other
+.card-admin-form .fieldset-border {
+  margin: 0 ($card-spacer-x * -1);
+
+  @extend .border-top;
+  @extend .card-body;
+}
+
+.card-admin-form .fieldset-border:last-child {
+  @extend .pb-0;
+}
+
+// Add extra bottom margin to tables inside forms
+.card-admin-form .card-admin-table {
+  @extend .mb-3;
+}

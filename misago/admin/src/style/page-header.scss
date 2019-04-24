@@ -16,7 +16,7 @@
       color: $body-color;
     }
 
-    .sub {
+    small {
       @extend .border-left;
       @extend .text-muted;
       @extend .ml-3;

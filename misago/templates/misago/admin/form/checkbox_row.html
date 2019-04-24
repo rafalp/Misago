@@ -6,12 +6,10 @@
       {{ field.label }}
     </label>
     {% for error in field.errors %}
-      <div class="text-danger">
-        <strong>{{ error }}</strong>
-      </div>
+      <small class="form-text text-danger font-weight-bold">{{ error }}</small>
     {% endfor %}
     {% if field.help_text %}
-      <div class="help-block">{{ field.help_text }}</div>
+      <small class="form-text text-muted">{{ field.help_text }}</small>
     {% endif %}
   </div>
 </div>

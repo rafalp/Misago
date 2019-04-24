@@ -41,8 +41,10 @@
 
 // Theme components
 @import "document";
+@import "controls";
 @import "login-form";
 @import "navbar";
 @import "side-nav";
 @import "page-header";
 @import "admin-table";
+@import "admin-form";

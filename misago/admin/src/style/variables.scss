@@ -78,3 +78,17 @@ $alert-color-level:                 8 !default;
 
 $table-head-bg:               transparent !default;
 $table-head-color:            $gray-700 !default;
+
+
+// Cards
+//
+// Reset card header and footer background to transparent
+
+$card-cap-bg:                 transparent !default;
+
+
+// Buttons + Forms
+//
+// Fix colors after overriding
+
+$input-btn-focus-color:       rgba($blue, .15) !default;

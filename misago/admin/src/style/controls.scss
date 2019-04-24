@@ -1,0 +1,13 @@
+// Controls and inputs overrides
+
+// Align radio and checkbox lists items vertically
+.control-checkboxselect .checkbox,
+.control-radioselect .radio {
+  @extend .d-block;
+  clear: both;
+}
+
+// Include extra horizontal space between yes/no options
+.control-yesno-switch .radio + .radio {
+  @extend .ml-3;
+}

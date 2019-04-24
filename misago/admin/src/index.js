@@ -9,9 +9,11 @@ import initMassActions from "./massActions"
 import initMassDelete from "./massDelete"
 import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
+import initValidation from "./validation"
 
 initTooltips()
 initTimestamps()
+initValidation()
 
 window.misago = {
   initConfirmation,
