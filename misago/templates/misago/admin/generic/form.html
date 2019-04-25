@@ -32,7 +32,7 @@
         </div>
         <div class="card-footer text-right">
           {% block form-footer-cancel %}
-            <a href="{% url root_link %}" class="btn btn-light btn-sm">
+            <a href="{% url root_link %}" class="btn btn-light btn-sm" data-cancel-confirmation="true">
               {% trans "Cancel" %}
             </a>
           {% endblock %}

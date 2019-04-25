@@ -11,11 +11,9 @@
 
 {% block page-header %}
 {{ block.super }}
-{% if target.pk %}
-  <small>
-    {{ target }}
-  </small>
-{% endif %}
+<small>
+  {{ target }}
+</small>
 {% endblock page-header %}
 
 
