@@ -24,20 +24,20 @@
         <h1 class="card-title login-form-title">{% trans "Administration" %}</h1>
 
         {% for error in form.non_field_errors %}
-          <p class="alert alert-danger" role="alert">
+          <p class="alert alert-danger text-center" role="alert">
             {{ error }}
             <br>{% trans "Please try again." %}
           </p>
         {% endfor %}
         {% for message in messages %}
           {% if 'success' in message.tags %}
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-success text-center" role="alert">
           {% elif 'warning' in message.tags %}
-            <div class="alert alert-warning" role="alert">
+            <div class="alert alert-warning text-center" role="alert">
           {% elif 'error' in message.tags %}
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger text-center" role="alert">
           {% else %}
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info text-center" role="alert">
           {% endif %}
               {{ message }}
             </div>

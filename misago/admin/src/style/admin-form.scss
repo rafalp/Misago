@@ -15,13 +15,14 @@
 // Visually separate fieldsets from each other
 .card-admin-form .form-fieldset {
   margin: 0 ($card-spacer-x * -1);
-
-  @extend .border-top;
   @extend .card-body;
 }
 
+.card-admin-form .form-fieldset + .form-fieldset {
+  @extend .border-top;
+}
+
 .card-admin-form .form-fieldset:first-child {
-  @extend .border-0;
   @extend .pt-0;
 }
 

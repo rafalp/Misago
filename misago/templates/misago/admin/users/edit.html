@@ -105,7 +105,7 @@
     </ul>
   </div>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset border-top">
   <fieldset>
     <legend>{% trans "Basic account settings" %}</legend>
 
@@ -124,7 +124,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Administrator status" %}</legend>
 
@@ -136,38 +136,38 @@
         {% trans "Only superusers can change other users administrator status." %}
       </div>
       <div id="div_id_is_staff" class="form-group">
-        <label for="id_is_staff_0" class="control-label">
+        <label class="control-label">
           {{ form.IS_STAFF_LABEL }}:
         </label>
         <div class="controls control-yesno-switch">
           <label class="radio">
-            <input class="yesno-switch" id="id_is_staff_0" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
+            <input class="yesno-switch" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
             {% trans "Yes" %}
           </label>
           <label class="radio">
-            <input class="yesno-switch" id="id_is_staff_1" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
+            <input class="yesno-switch" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
             {% trans "No" %}
           </label>
         </div>
-        <small class="form-text text-muted" id="hint_id_is_staff">
+        <small class="form-text text-muted">
           {{ form.IS_STAFF_HELP_TEXT }}
         </small>
       </div>
       <div id="div_id_is_superuser" class="form-group">
-        <label for="id_is_superuser_0" class="control-label">
+        <label class="control-label">
           {{ form.IS_SUPERUSER_LABEL }}:
         </label>
         <div class="controls control-yesno-switch">
           <label class="radio">
-            <input class="yesno-switch" id="id_is_superuser_0" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
+            <input class="yesno-switch" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
             {% trans "Yes" %}
           </label>
           <label class="radio">
-            <input class="yesno-switch" id="id_is_superuser_1" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
+            <input class="yesno-switch" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
             {% trans "No" %}
           </label>
         </div>
-        <small class="form-text text-muted" id="hint_id_is_superuser">
+        <small class="form-text text-muted">
           {{ form.IS_SUPERUSER_HELP_TEXT }}
         </small>
       </div>
@@ -175,12 +175,12 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
     
     {% if not target.has_usable_password %}
-      <div class="alert alert-info" role="alert">
+      <div class="alert alert-info alert-has-unusable-password" role="alert">
         {% trans "This user has not set account password and uses other service to authenticate." %}
       </div>
     {% endif %}
@@ -190,7 +190,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Avatar" %}</legend>
 
@@ -200,7 +200,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Signature" %}</legend>
 
@@ -212,7 +212,7 @@
   </fieldset>
 </div>
 {% for group in form.get_profile_fields_groups %}
-  <div class="fieldset-border">
+  <div class="form-fieldset">
     <fieldset>
       <legend>{% trans group.name %}</legend>
 
@@ -223,7 +223,7 @@
     </fieldset>
   </div>
 {% endfor %}
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Forum options" %}</legend>
 
@@ -232,7 +232,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Automatic subscription preferences" %}</legend>
 
@@ -241,7 +241,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Account status" %}</legend>
 
@@ -256,31 +256,31 @@
         {% form_row form.is_active_staff_message %}
       {% else %}
         <div id="div_id_is_active" class="form-group">
-          <label for="id_is_active_0" class="control-label">
+          <label class="control-label">
             {{ form.IS_ACTIVE_LABEL }}:
           </label>
           <div class="controls control-yesno-switch">
             <label class="radio">
-              <input class="yesno-switch" id="id_is_active_0" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
+              <input class="yesno-switch" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
               {% trans "Yes" %}
             </label>
             <label class="radio">
-              <input class="yesno-switch" id="id_is_active_1" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
+              <input class="yesno-switch" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
               {% trans "No" %}
             </label>
           </div>
-          <small class="form-text text-muted" id="hint_id_is_active">
+          <small class="form-text text-muted">
             {{ form.IS_ACTIVE_HELP_TEXT }}
           </small>
         </div>
         <div id="div_id_is_superuser" class="form-group">
-          <label for="id_is_superuser_0" class="control-label">
+          <label class="control-label">
             {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
           </label>
-          <textarea class="form-control" id="id_is_superuser_0" rows="4" disabled>
+          <textarea class="form-control" rows="4">
             {{ target.is_active_staff_message|default:"" }}
           </textarea>
-          <small class="form-text text-muted" id="hint_id_is_superuser">
+          <small class="form-text text-muted">
             {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
           </small>
         </div>
@@ -289,7 +289,7 @@
 
   </fieldset>
 </div>
-<div class="fieldset-border">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Agreements" %}</legend>
     <div class="card card-admin-table">

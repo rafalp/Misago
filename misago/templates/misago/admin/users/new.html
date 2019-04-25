@@ -13,24 +13,26 @@
 
 
 {% block form-body %}
-<fieldset>
-  <legend>{% trans "Basic account settings" %}</legend>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic account settings" %}</legend>
 
-  {% form_row form.username %}
+    {% form_row form.username %}
 
-  {% if 'rank' in form.fields %}
-    {% form_row form.rank %}
-  {% endif %}
+    {% if 'rank' in form.fields %}
+      {% form_row form.rank %}
+    {% endif %}
 
-  {% form_row form.title %}
-  {% form_row form.roles %}
+    {% form_row form.title %}
+    {% form_row form.roles %}
 
-  {% if 'staff_level' in form.fields %}
-    {% form_row form.staff_level %}
-  {% endif %}
+    {% if 'staff_level' in form.fields %}
+      {% form_row form.staff_level %}
+    {% endif %}
 
-</fieldset>
-<div class="fieldset-border">
+  </fieldset>
+</div>
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
 

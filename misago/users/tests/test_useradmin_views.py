@@ -869,7 +869,7 @@ class UserAdminViewsTests(AdminTestCase):
         )
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'id="div_id_has_usable_password"')
+        self.assertContains(response, "alert-has-unusable-password")
 
         response = self.client.post(
             test_link,
@@ -909,7 +909,7 @@ class UserAdminViewsTests(AdminTestCase):
         )
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'id="div_id_has_usable_password"')
+        self.assertContains(response, "alert-has-unusable-password")
 
         response = self.client.post(
             test_link,
