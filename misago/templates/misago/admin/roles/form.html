@@ -11,35 +11,33 @@
 {% endblock title %}
 
 
-{% block form-header %}
-<h1>
-  {% if target.pk %}
+{% block page-header %}
+{{ block.super }}
+{% if target.pk %}
+  <small>
     {{ target }}
-  {% else %}
-    {% trans "New role" %}
-  {% endif %}
-</h1>
+  </small>
+{% endif %}
+{% endblock page-header %}
+
+
+{% block form-header %}
+{% if target.pk %}
+  {% trans "Edit role" %}
+{% else %}
+  {% trans "New role" %}
+{% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
-
-
 {% block form-body %}
-<div class="form-body">
+<div class="form-fieldset">
   <fieldset>
     <legend>{% trans "Basic settings" %}</legend>
-    {% form_row form.name "col-md-3" "col-md-9" %}
+    {% form_row form.name %}
   </fieldset>
-  {% for form in perms_forms %}
-    {% include "misago/admin/permissions_table.html" %}
-  {% endfor %}
 </div>
+{% for form in perms_forms %}
+  {% include "misago/admin/permissions_table.html" %}
+{% endfor %}
 {% endblock form-body %}
-
-
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}
