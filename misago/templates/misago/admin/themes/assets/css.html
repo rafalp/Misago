@@ -46,9 +46,15 @@
             </a>
           </td>
           <td class="small">
-            <a href="{{ item.file.url }}" class="item-name" target="_blank">
-              {{ item }}
-            </a>
+            {% if item.url %}
+              <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="item-name">
+                {{ item }}
+              </a>
+            {% else %}
+              <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="item-name">
+                {{ item }}
+              </a>
+            {% endif %}
           </td>
           <td class="small">
             <abbr data-timestamp="{{ item.modified_on.isoformat }}" data-format="LL">

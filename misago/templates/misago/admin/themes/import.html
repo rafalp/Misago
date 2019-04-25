@@ -8,32 +8,17 @@
 
 
 {% block form-header %}
-<h1>
-  {% trans "Import theme" %}
-</h1>
+{% trans "Import theme" %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal" enctype="multipart/form-data"
-{% endblock form-extra %}
-
 {% block form-body %}
-<div class="form-body no-fieldsets">
-  {% with label_class="col-md-3" field_class="col-md-9" %}
-    {% form_row form.name label_class field_class %}
-    {% form_row form.parent label_class field_class %}
-    {% form_row form.upload label_class field_class %}
-  {% endwith %}
-</div>
+{% form_row form.name %}
+{% form_row form.parent %}
+{% form_row form.upload %}
 {% endblock form-body %}
 
 
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}
-
-
 {% block form-footer %}
-<button class="btn btn-primary">{% trans "Import" %}</button>
+<button class="btn btn-primary btn-sm">{% trans "Import" %}</button>
 {% endblock %}
