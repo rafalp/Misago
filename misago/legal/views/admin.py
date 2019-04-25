@@ -57,6 +57,7 @@ class NewAgreement(AgreementAdmin, generic.ModelFormView):
 
         form.instance.set_created_by(request.user)
         form.instance.save()
+        Agreement.objects.invalidate_cache()
 
 
 class EditAgreement(AgreementAdmin, generic.ModelFormView):
@@ -68,6 +69,7 @@ class EditAgreement(AgreementAdmin, generic.ModelFormView):
         form.instance.last_modified_on = timezone.now()
         form.instance.set_last_modified_by(request.user)
         form.instance.save()
+        Agreement.objects.invalidate_cache()
 
 
 class DeleteAgreement(AgreementAdmin, generic.ButtonView):

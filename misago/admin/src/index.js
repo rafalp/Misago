@@ -18,5 +18,5 @@ initValidation()
 window.misago = {
   initConfirmation,
   initMassActions,
-  initMassDelete,
+  initMassDelete
 }

@@ -2,8 +2,9 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
+from ..admin.forms import YesNoSwitch
 from .models import Agreement
-from .utils import set_agreement_as_active
+from .utils import disable_agreement, set_agreement_as_active
 
 
 class AgreementForm(forms.ModelForm):
@@ -13,15 +14,14 @@ class AgreementForm(forms.ModelForm):
         help_text=_("Optional, leave empty for agreement to be named after its type."),
         required=False,
     )
-    is_active = forms.BooleanField(
-        label=_("Set as active for its type"),
+    is_active = YesNoSwitch(
+        label=_("Active for its type"),
         help_text=_(
             "If other agreement is already active for this type, it will be unset "
             "and replaced with this one. "
             "Misago will ask users who didn't accept this agreement to do so "
-            "before allowing them to continue using the site's features."
+            "before allowing them to continue using the site."
         ),
-        required=False,
     )
     link = forms.URLField(
         label=_("Link"),
@@ -53,6 +53,8 @@ class AgreementForm(forms.ModelForm):
         agreement = super().save()
         if agreement.is_active:
             set_agreement_as_active(agreement)
+        else:
+            disable_agreement(agreement)
         Agreement.objects.invalidate_cache()
         return agreement
 

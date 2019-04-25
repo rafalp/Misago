@@ -11,10 +11,20 @@
 {% endblock title %}
 
 
+{% block page-header %}
+{{ block.super }}
+{% if target.pk %}
+  <small>
+    {{ target.get_final_title }}
+  </small>
+{% endif %}
+{% endblock page-header %}
+
+
 {% block page-actions %}
 {% if target.get_absolute_url %}
   <div class="col-auto page-action">
-    <a href="{{ target.get_absolute_url }}" class="btn btn-primary">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
       {% trans "View on site" %}
     </a>
@@ -25,45 +35,35 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans target.get_final_title %}
+  {% trans "Edit agreement" %}
 {% else %}
   {% trans "New agreement" %}
 {% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
-
-
 {% block form-body %}
-<div class="form-body">
-  {% with label_class="col-md-3" field_class="col-md-9" %}
-    <fieldset>
-      <legend>{% trans "Basic settings" %}</legend>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic settings" %}</legend>
 
-      {% form_row form.type label_class field_class %}
-      {% form_row form.title label_class field_class %}
-      {% form_row form.is_active "col-md-offset-3" field_class %}
+    {% form_row form.type %}
+    {% form_row form.title %}
+    {% form_row form.is_active %}
 
-    </fieldset>
-    <fieldset>
-      <legend>{% trans "Agreement contents" %}</legend>
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Agreement contents" %}</legend>
 
-      <div class="form-group">
-        <p>{% trans "Fill in one of the fields." %}</p>
-      </div>
+    <div class="alert alert-info" role="alert">
+      {% trans "Fill in one of the fields." %}
+    </div>
 
-      {% form_row form.link label_class field_class %}
-      {% form_row form.text label_class field_class %}
+    {% form_row form.link %}
+    {% form_row form.text %}
 
-    </fieldset>
-  {% endwith %}
+  </fieldset>
 </div>
 {% endblock form-body %}
-
-
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}

@@ -12,13 +12,13 @@
 {% block page-actions %}
 {% if target.pk %}
   <div class="col-auto page-action">
-    <a href="{% url 'misago:admin:categories:nodes:edit' pk=target.pk %}" class="btn btn-primary">
+    <a href="{% url 'misago:admin:categories:nodes:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
       <span class="fa fa-edit"></span>
       {% trans "Edit category" %}
     </a>
   </div>
   <div class="col-auto page-action">
-    <a href="{{ target.get_absolute_url }}" class="btn btn-primary">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
       <span class="fas fa-external-link-alt"></span>
       {% trans "View on site" %}
     </a>

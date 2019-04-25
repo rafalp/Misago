@@ -15,6 +15,18 @@
 {% endblock page-header %}
 
 
+{% block page-actions %}
+{% if target.pk %}
+  <div class="col-auto page-action">
+    <a href="{{ target.get_absolute_url }}" class="btn btn-primary btn-sm">
+      <span class="fas fa-external-link-alt"></span>
+      {% trans "View on site" %}
+    </a>
+  </div>
+{% endif %}
+{% endblock %}
+
+
 {% block form-header %}
 {% trans "Edit user" %}
 {% endblock form-header %}
@@ -120,44 +132,45 @@
       {% form_row form.is_staff %}
       {% form_row form.is_superuser %}
     {% else %}
+      <div class="alert alert-info" role="alert">
+        {% trans "Only superusers can change other users administrator status." %}
+      </div>
       <div id="div_id_is_staff" class="form-group">
-        <label for="id_is_staff_0" class="control-label {{ label_class }}">
+        <label for="id_is_staff_0" class="control-label">
           {{ form.IS_STAFF_LABEL }}:
         </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            {% if target.is_staff %}
-              <strong class="text-primary">{% trans "Yes" %}</strong>
-            {% else %}
-              <strong class="text-muted">{% trans "No" %}</strong>
-            {% endif %}
-          </p>
-          <small class="form-text text-muted" id="hint_id_is_staff">
-            {{ form.IS_STAFF_HELP_TEXT }}
-          </small>
+        <div class="controls control-yesno-switch">
+          <label class="radio">
+            <input class="yesno-switch" id="id_is_staff_0" type="radio" disabled{% if target.is_staff %} checked=""{% endif %}>
+            {% trans "Yes" %}
+          </label>
+          <label class="radio">
+            <input class="yesno-switch" id="id_is_staff_1" type="radio" disabled{% if not target.is_staff %} checked=""{% endif %}>
+            {% trans "No" %}
+          </label>
         </div>
+        <small class="form-text text-muted" id="hint_id_is_staff">
+          {{ form.IS_STAFF_HELP_TEXT }}
+        </small>
       </div>
       <div id="div_id_is_superuser" class="form-group">
-        <label for="id_is_superuser_0" class="control-label {{ label_class }}">
+        <label for="id_is_superuser_0" class="control-label">
           {{ form.IS_SUPERUSER_LABEL }}:
         </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            {% if target.is_superuser %}
-              <strong class="text-primary">{% trans "Yes" %}</strong>
-            {% else %}
-              <strong class="text-muted">{% trans "No" %}</strong>
-            {% endif %}
-          </p>
-          <small class="form-text text-muted" id="hint_id_is_superuser">
-            {{ form.IS_SUPERUSER_HELP_TEXT }}
-          </small>
+        <div class="controls control-yesno-switch">
+          <label class="radio">
+            <input class="yesno-switch" id="id_is_superuser_0" type="radio" disabled{% if target.is_superuser %} checked=""{% endif %}>
+            {% trans "Yes" %}
+          </label>
+          <label class="radio">
+            <input class="yesno-switch" id="id_is_superuser_1" type="radio" disabled{% if not target.is_superuser %} checked=""{% endif %}>
+            {% trans "No" %}
+          </label>
         </div>
+        <small class="form-text text-muted" id="hint_id_is_superuser">
+          {{ form.IS_SUPERUSER_HELP_TEXT }}
+        </small>
       </div>
-      <p class="text-center">
-        <strong>{% trans "Note" %}:</strong>
-        {% trans "Only superusers can change other users administrator status." %}
-      </p>
     {% endif %}
 
   </fieldset>
@@ -165,19 +178,15 @@
 <div class="fieldset-border">
   <fieldset>
     <legend>{% trans "Sign-in credentials" %}</legend>
+    
+    {% if not target.has_usable_password %}
+      <div class="alert alert-info" role="alert">
+        {% trans "This user has not set account password and uses other service to authenticate." %}
+      </div>
+    {% endif %}
 
     {% form_row form.email %}
     {% form_row form.new_password %}
-
-    {% if not target.has_usable_password %}
-      <div id="div_id_has_usable_password" class="form-group">
-        <div class="{{ field_class }} col-md-offset-3">
-          <p class="form-control-static">
-            {% trans "This user has not set account password and uses other service to authenticate." %}
-          </p>
-        </div>
-      </div>
-    {% endif %}
 
   </fieldset>
 </div>
@@ -237,20 +246,9 @@
     <legend>{% trans "Account status" %}</legend>
 
     {% if target.is_deleting_account %}
-      <div id="div_id_is_deleting_account" class="form-group">
-        <label for="id_is_ais_deleting_account_0" class="control-label {{ label_class }}">
-          {{ form.IS_ACTIVE_LABEL }}:
-        </label>
-        <div class="{{ field_class }}">
-          <p class="form-control-static">
-            <strong class="text-danger">
-              {% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}
-            </strong>
-          </p>
-          <small class="form-text text-muted" id="div_id_is_deleting_account">
-            {% trans "No additional action is required. This account will be deleted automatically." %}
-          </small>
-        </div>
+      <div class="alert alert-danger" role="alert">
+        <p>{% trans "This user is deleting their account. It has been deactivated for the duration of the process." %}</p>
+        <p class="m-0">{% trans "No additional action is required. This account will be deleted automatically." %}</p>
       </div>
     {% else %}
       {% if 'is_active' in form.fields %}
@@ -258,38 +256,33 @@
         {% form_row form.is_active_staff_message %}
       {% else %}
         <div id="div_id_is_active" class="form-group">
-          <label for="id_is_active_0" class="control-label {{ label_class }}">
+          <label for="id_is_active_0" class="control-label">
             {{ form.IS_ACTIVE_LABEL }}:
           </label>
-          <div class="{{ field_class }}">
-            <p class="form-control-static">
-              {% if target.is_active %}
-                <strong class="text-success">{% trans "Yes" %}</strong>
-              {% else %}
-                <strong class="text-danger">{% trans "No" %}</strong>
-              {% endif %}
-            </p>
-            <small class="form-text text-muted" id="hint_id_is_active">
-              {{ form.IS_ACTIVE_HELP_TEXT }}
-            </small>
+          <div class="controls control-yesno-switch">
+            <label class="radio">
+              <input class="yesno-switch" id="id_is_active_0" type="radio" disabled{% if target.is_active %} checked=""{% endif %}>
+              {% trans "Yes" %}
+            </label>
+            <label class="radio">
+              <input class="yesno-switch" id="id_is_active_1" type="radio" disabled{% if not target.is_active %} checked=""{% endif %}>
+              {% trans "No" %}
+            </label>
           </div>
+          <small class="form-text text-muted" id="hint_id_is_active">
+            {{ form.IS_ACTIVE_HELP_TEXT }}
+          </small>
         </div>
         <div id="div_id_is_superuser" class="form-group">
-          <label for="id_is_superuser_0" class="control-label {{ label_class }}">
+          <label for="id_is_superuser_0" class="control-label">
             {{ form.IS_ACTIVE_STAFF_MESSAGE_LABEL }}:
           </label>
-          <div class="{{ field_class }}">
-            <div class="form-control-static">
-              {% if target.is_active_staff_message %}
-                {{ target.is_active_staff_message|force_escape|urlize|linebreaks }}
-              {% else %}
-                <em>{% trans "No staff message is available." %}</em>
-              {% endif %}
-            </div>
-            <small class="form-text text-muted" id="hint_id_is_superuser">
-              {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
-            </small>
-          </div>
+          <textarea class="form-control" id="id_is_superuser_0" rows="4" disabled>
+            {{ target.is_active_staff_message|default:"" }}
+          </textarea>
+          <small class="form-text text-muted" id="hint_id_is_superuser">
+            {{ form.IS_ACTIVE_STAFF_MESSAGE_HELP_TEXT }}
+          </small>
         </div>
       {% endif %}
     {% endif %}
@@ -326,7 +319,7 @@
               </td>
             </tr>
           {% empty %}
-            <tr>
+            <tr class="blankslate">
               <td colspan="3">
                 {% trans "This user didn't accept any agreements." %}
               </td>
