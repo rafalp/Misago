@@ -1,4 +1,4 @@
-{% extends "misago/admin/generic/list.html" %}
+{% extends "misago/admin/generic/form.html" %}
 {% load i18n misago_admin_form %}
 
 
@@ -11,62 +11,49 @@
 
 {% block page-header %}
 {{ block.super }}
-<div class="sub">
-  <span class="fa fa-chevron-right"></span>
-  {% blocktrans trimmed with role=target %}
-    {{ role }}: Category permissions
-  {% endblocktrans %}
-</div>
+<small>
+  {{ target }}
+</small>
 {% endblock page-header %}
 
 
-{% block view %}
-<form method="post" role="form">
-  {% csrf_token %}
-  <div class="table-panel">
-    <table class="table">
-      <tr>
-        <th>{% trans "Category" %}</ht>
-        <th class="col-md-6">{% trans "Permissions" %}</ht>
-      </tr>
+{% block page-actions %}
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:permissions:users:edit' pk=target.pk %}" class="btn btn-primary btn-sm">
+    <span class="fa fa-edit"></span>
+    {% trans "Edit role" %}
+  </a>
+</div>
+{% endblock %}
 
-      {% for form in forms %}
-        <tr>
-          <td class="item-name">
-            {% for i in form.category.level_range %}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-            {% endfor %}
-            {{ form.category }}
-          </td>
-          <td>
-            {% form_input form.role %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-    <div class="table-footer">
-      <div class="row">
-        <div class="col-md-offset-6">
 
-          <button class="btn btn-primary">{% trans "Save changes" %}</button>
-          <button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
-          <a href="{% url root_link %}" class="btn btn-light btn-cancel">{% trans "Cancel" %}</a>
+{% block form-header %}
+{% trans "Change permissions" %}
+{% endblock form-header %}
 
-        </div>
+
+{% block form-body %}
+  {% for form in forms %}
+    <div class="form-group row">
+      <label for="{{ form.category_role.id_for_label }}" class="col-sm-4 col-form-label">
+        {% for i in form.category.level_range %}
+          &nbsp;&nbsp;&nbsp;&nbsp;
+        {% endfor %}
+        {{ form.category }}:
+      </label>
+      <div class="col-sm-8">
+        {% form_input form.role %}
       </div>
     </div>
-  </div><!-- /.table-panel -->
-</form>
-{% endblock view %}
+  {% endfor %}
+{% endblock form-body %}
 
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('.btn-cancel').click(function() {
-      var decision = confirm("{% trans "Are you sure you want to abandon changes?" %}");
-      return decision;
-    });
-  });
+  window.misago.initConfirmation(
+    "[data-cancel-confirmation]",
+    "{% trans 'Are you sure you want to abandon changes?' %}"
+  )
 </script>
 {% endblock %}
