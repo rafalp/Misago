@@ -8,13 +8,8 @@
 
 
 {% block form-header %}
-<h1>{% trans "Ban selected users:" %}</h1>
+{% trans "Ban selected users" %}
 {% endblock %}
-
-
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
 
 
 {% block form-body %}
@@ -22,59 +17,70 @@ class="form-horizontal"
 {% for user in users %}
   <input type="hidden" name="selected_items" value="{{ user.pk }}">
 {% endfor %}
-<table class="table table-condensed form-table">
-  {% for user in users %}
-    <tr>
-      <td style="width: 1px;">
-        <a href="{{ user.get_absolute_url }}">
-          <img src="{{ user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
-        </a>
-      </td>
-      <td class="item-name">
-        <a href="{{ user.get_absolute_url }}">{{ user }}</a>
-      </td>
-      <td>
-        {{ user.email }}
-      </td>
-      <td>
-        {% if user.joined_from_ip %}
-          {{ user.joined_from_ip }}
-        {% else %}
-          <i>{% trans "IP not available" %}</i>
-        {% endif %}
-      </td>
-    </tr>
-  {% endfor %}
-</table>
-<div class="form-body">
-  {% with label_class="col-md-3" field_class="col-md-9" %}
-    <fieldset>
-      <legend>{% trans "Ban settings" %}</legend>
+<div class="form-fieldset pt-0">
+  <fieldset>
+    <legend>{% trans "Users" %}</legend>
+    <div class="card card-admin-table">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 1px;">&nbsp;</th>
+            <th>{% trans "User" %}</th>
+            <th style="width: 50%;">{% trans "E-mail" %}</th>
+            <th style="width: 200px;">{% trans "IP address" %}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td class="pr-0">
+              <a href="{{ user.get_absolute_url }}">
+                <img src="{{ user|avatar:24 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
+              </a>
+            </td>
+            <td class="small">
+              <a href="{{ user.get_absolute_url }}" class="item-name">{{ user }}</a>
+            </td>
+            <td class="small">
+              <a href="mailto:{{ user.email }}">{{ user.email }}</a>
+            </td>
+            <td class="small">
+              {% if user.joined_from_ip %}
+                {{ user.joined_from_ip }}
+              {% else %}
+                <i class="text-muted">{% trans "IP removed" %}</i>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Ban settings" %}</legend>
 
-      {% form_row form.ban_type label_class field_class %}
-      {% form_row form.expires_on label_class field_class %}
+    {% form_row form.ban_type %}
+    {% form_row form.expires_on %}
 
-    </fieldset>
-    <fieldset>
-      <legend>{% trans "Messages" %}</legend>
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Messages" %}</legend>
 
-      {% form_row form.user_message label_class field_class %}
-      {% form_row form.staff_message label_class field_class %}
+    {% form_row form.user_message %}
+    {% form_row form.staff_message %}
 
-    </fieldset>
-  {% endwith %}
+  </fieldset>
 </div>
 {% endblock form-body %}
 
 
 {% block form-footer %}
-<button class="btn btn-primary" name="finalize">{% trans "Set bans" %}</button>
+<button class="btn btn-primary btn-sm" name="finalize">{% trans "Ban users" %}</button>
 {% endblock %}
-
-
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}
 
 
 {% block javascripts %}
