@@ -11,45 +11,45 @@
 {% endblock title %}
 
 
+{% block page-header %}
+{{ block.super }}
+{% if target.pk %}
+  <small>
+    {{ target }}
+  </small>
+{% endif %}
+{% endblock page-header %}
+
+
 {% block form-header %}
 {% if target.pk %}
-  {{ target }}
+  {% trans "Edit attachment type" %}
 {% else %}
-  {% trans "New type" %}
+  {% trans "New attachment type" %}
 {% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
-
-
 {% block form-body %}
-<div class="form-body">
-  {% with label_class="col-md-3" field_class="col-md-9" %}
-    <fieldset>
-      <legend>{% trans "Basic options" %}</legend>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic options" %}</legend>
 
-      {% form_row form.name label_class field_class %}
-      {% form_row form.extensions label_class field_class %}
-      {% form_row form.mimetypes label_class field_class %}
-      {% form_row form.size_limit label_class field_class %}
+    {% form_row form.name %}
+    {% form_row form.extensions %}
+    {% form_row form.mimetypes %}
+    {% form_row form.size_limit %}
 
-    </fieldset>
-    <fieldset>
-      <legend>{% trans "Availability" %}</legend>
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Availability" %}</legend>
 
-      {% form_row form.status label_class field_class %}
-      {% form_row form.limit_uploads_to label_class field_class %}
-      {% form_row form.limit_downloads_to label_class field_class %}
+    {% form_row form.status %}
+    {% form_row form.limit_uploads_to %}
+    {% form_row form.limit_downloads_to %}
 
-    </fieldset>
-  {% endwith %}
+  </fieldset>
 </div>
 {% endblock form-body %}
-
-
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}
