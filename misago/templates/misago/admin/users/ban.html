@@ -85,11 +85,10 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function() {
-    $('#id_valid_until').datetimepicker({
-      language: $('html').attr('lang'),
-      pickTime: false
-    });
-  });
+  window.misago.initDatepicker({
+    elementId: "id_expires_on",
+    never: "{% trans 'Never' %}",
+    setDate: "{% trans 'Set date' %}"
+  })
 </script>
 {% endblock %}

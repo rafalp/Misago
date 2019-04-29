@@ -5,8 +5,6 @@ const UI_UPDATE_INTERVAL = 20 * 1000 // 20 seconds
 const RECENT_CUTOFF = 6 * 3600 // 6 hours
 
 const initTimestamps = () => {
-  moment.locale(getInterfaceLanguage())
-
   const elements = document.querySelectorAll("[data-timestamp]")
 
   elements.forEach(setupTooltip)
@@ -15,11 +13,6 @@ const initTimestamps = () => {
   window.setInterval(() => {
     updateUITexts(elements)
   }, UI_UPDATE_INTERVAL)
-}
-
-const getInterfaceLanguage = () => {
-  const html = document.querySelector("html")
-  return html.lang
 }
 
 const setupTooltip = element => {

@@ -469,11 +469,7 @@ class BanUsersForm(forms.Form):
             "max_length": _("Message can't be longer than 1000 characters.")
         },
     )
-    expires_on = IsoDateTimeField(
-        label=_("Expires on"),
-        required=False,
-        help_text=_("Leave this field empty for set bans to never expire."),
-    )
+    expires_on = IsoDateTimeField(label=_("Expiration date"), required=False)
 
     def __init__(self, *args, **kwargs):
         users = kwargs.pop("users")
@@ -540,11 +536,7 @@ class BanForm(forms.ModelForm):
             "max_length": _("Message can't be longer than 1000 characters.")
         },
     )
-    expires_on = IsoDateTimeField(
-        label=_("Expires on"),
-        required=False,
-        help_text=_("Leave this field empty for this ban to never expire."),
-    )
+    expires_on = IsoDateTimeField(label=_("Expiration date"), required=False)
 
     class Meta:
         model = Ban

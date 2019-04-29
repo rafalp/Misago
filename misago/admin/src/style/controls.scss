@@ -11,3 +11,41 @@
 .control-yesno-switch .radio + .radio {
   @extend .ml-3;
 }
+
+// Date/time picker controls
+.control-month-picker {
+  @extend .border;
+  @extend .rounded;
+  @extend .p-1;
+
+  width: (50px * 7);
+}
+
+.control-time-picker {
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .border;
+  @extend .rounded;
+  @extend .p-1;
+
+  width: 280px;
+  height: 100%;
+
+  .row {
+    height: 100%;
+  }
+
+  font-size: $font-size-base * 4;
+
+  input {
+    @extend .border-0;
+    font-size: $font-size-base * 4;
+  }
+
+  span {
+    @extend .text-muted;
+
+    position: relative;
+    bottom: $font-size-base / 4;
+  }
+}
