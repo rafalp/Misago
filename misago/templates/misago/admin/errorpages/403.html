@@ -6,22 +6,18 @@
 
 
 {% block content %}
-<div class="container">
-
-  <div class="error-message">
-
-    <div class="error-icon">
-      <span class="fa fa-ban"></span>
+<div class="container-fluid">
+  <div class="card card-admin-error">
+    <h5 class="card-header">
+      {% trans "Requested page is not available" %}
+    </h5>
+    <div class="card-body">
+      {% if message %}
+        <p class="mb-0">{{ message }}</p>
+      {% else %}
+        <p class="mb-0">{% trans "You don't have permission to access this page." %}</p>
+      {% endif %}
     </div>
-
-    <h1>{% trans "Requested page is not available." %}</h1>
-    {% if message %}
-      <p>{{ message }}</p>
-    {% else %}
-      <p>{% trans "You don't have permission to access this page." %}</p>
-    {% endif %}
-
   </div>
-
 </div>
 {% endblock content %}

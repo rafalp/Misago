@@ -118,7 +118,10 @@ class SelectMonth extends React.Component {
 
   render() {
     const { value, onChange } = this.props
-    const startOfMonth = value.clone().startOf("month").isoWeekday()
+    const startOfMonth = value
+      .clone()
+      .startOf("month")
+      .isoWeekday()
 
     const calendar = value.clone()
     calendar.date(1)
