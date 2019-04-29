@@ -18,8 +18,8 @@ django-debug-toolbar==1.11
 django-htmlmin==0.10.0
 django-js-asset==1.2.2    # via django-mptt
 django-mptt==0.9.1
-django==1.11.20
-djangorestframework==3.6.4
+django==2.1.1
+djangorestframework==3.8.2
 faker==1.0.2
 html5lib==1.0.1
 idna==2.8                 # via requests

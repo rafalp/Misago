@@ -15,8 +15,8 @@ class PgPartialIndexTests(TestCase):
                 where={"has_events": True},
             ).create_sql(Thread, editor)
 
-            self.assertIn('CREATE INDEX "test_partial" ON "misago_threads_thread"', sql)
-            self.assertIn('ON "misago_threads_thread" ("has_events", "is_hidden")', sql)
+            self.assertIn('CREATE INDEX "test_partial" ON "misago_threads_thread"', repr(sql))
+            self.assertIn('ON "misago_threads_thread" ("has_events", "is_hidden")', repr(sql))
 
     def test_where_clauses(self):
         """where clauses generate correctly"""

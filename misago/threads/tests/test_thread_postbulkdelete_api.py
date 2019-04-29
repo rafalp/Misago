@@ -44,7 +44,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         response = self.client.delete(self.api_link, content_type="application/json")
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"detail": 'Expected a list of items but got type "dict".'}
+            response.json(), {"detail": ['Expected a list of items but got type "dict".']}
         )
 
     def test_delete_no_ids(self):
@@ -53,7 +53,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "You have to specify at least one post to delete."},
+            {"detail": ["You have to specify at least one post to delete."]},
         )
 
     def test_delete_empty_ids(self):
@@ -62,7 +62,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "You have to specify at least one post to delete."},
+            {"detail": ["You have to specify at least one post to delete."]},
         )
 
     @patch_category_acl({"can_hide_posts": 2})
@@ -71,7 +71,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         response = self.delete(self.api_link, True)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
-            response.json(), {"detail": 'Expected a list of items but got type "bool".'}
+            response.json(), {"detail": ['Expected a list of items but got type "bool".']}
         )
 
         response = self.delete(self.api_link, "abbss")
@@ -93,7 +93,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "No more than 24 posts can be deleted at single time."},
+            {"detail": ["No more than 24 posts can be deleted at single time."]},
         )
 
     @patch_category_acl({"can_hide_posts": 2})

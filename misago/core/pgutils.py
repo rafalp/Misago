@@ -12,7 +12,7 @@ class PgPartialIndex(Index):
 
         fields = fields or []
 
-        super().__init__(fields, name)
+        super().__init__(fields=fields, name=name)
 
     def set_name_with_model(self, model):
         table_name = model._meta.db_table

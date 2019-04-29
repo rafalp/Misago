@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from rest_framework import status, viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
@@ -104,14 +104,14 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response(profile_json)
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True)
     def avatar(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users avatars."))
 
         return avatar_endpoint(request)
 
-    @detail_route(methods=["post"])
+    @action(methods=["post"], detail=True, url_name="forum-options", url_path="forum-options")
     def forum_options(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users options."))
@@ -122,28 +122,28 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response({"detail": _("Your forum options have been changed.")})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True)
     def username(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users names."))
 
         return username_endpoint(request)
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True)
     def signature(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users signatures."))
 
         return signature_endpoint(request)
 
-    @detail_route(methods=["post"])
+    @action(methods=["post"], detail=True, url_path="change-password", url_name="change-password")
     def change_password(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users passwords."))
 
         return change_password_endpoint(request)
 
-    @detail_route(methods=["post"])
+    @action(methods=["post"], detail=True, url_path="change-email", url_name="change-email")
     def change_email(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
@@ -152,19 +152,21 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return change_email_endpoint(request)
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True)
     def details(self, request, pk=None):
         profile = self.get_user(request, pk)
         data = serialize_profilefields_data(request, profilefields, profile)
         return Response(data)
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True, url_path="edit-details", url_name="edit-details")
     def edit_details(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_edit_profile_details(request.user_acl, profile)
         return edit_details_endpoint(request, profile)
 
-    @detail_route(methods=["post"])
+    @action(
+        methods=["post"], detail=True, url_path="delete-own-account", url_name="delete-own-account"
+    )
     def delete_own_account(self, request, pk=None):
         serializer = DeleteOwnAccountSerializer(
             data=request.data, context={"user": request.user}
@@ -173,7 +175,7 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer.mark_account_for_deletion(request)
         return Response({})
 
-    @detail_route(methods=["post"])
+    @action(methods=["post"], detail=True)
     def follow(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_follow_user(request.user_acl, profile)
@@ -201,7 +203,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
             return Response({"is_followed": followed, "followers": profile_followers})
 
-    @detail_route()
+    @action(detail=True)
     def ban(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_see_ban_details(request.user_acl, profile)
@@ -211,21 +213,24 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(BanDetailsSerializer(ban).data)
         return Response({})
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True, url_path="moderate-avatar",
+            url_name="moderate-avatar")
     def moderate_avatar(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_moderate_avatar(request.user_acl, profile)
 
         return moderate_avatar_endpoint(request, profile)
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True, url_path="moderate-username",
+            url_name="moderate-username")
     def moderate_username(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_rename_user(request.user_acl, profile)
 
         return moderate_username_endpoint(request, profile)
 
-    @detail_route(methods=["post"])
+    @action(methods=["post"], detail=True, url_path="request-data-download",
+            url_name="request-data-download")
     def request_data_download(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
@@ -244,7 +249,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response({"detail": "ok"})
 
-    @detail_route(methods=["get", "post"])
+    @action(methods=["get", "post"], detail=True)
     def delete(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_delete_user(request.user_acl, profile)
@@ -283,7 +288,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response({})
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True, url_path="data-downloads", url_name="data-downloads")
     def data_downloads(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
@@ -294,7 +299,7 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = DataDownloadSerializer(queryset, many=True)
         return Response(serializer.data)
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True)
     def followers(self, request, pk=None):
         profile = self.get_user(request, pk)
 
@@ -308,7 +313,7 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response(users.get_frontend_context())
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True)
     def follows(self, request, pk=None):
         profile = self.get_user(request, pk)
 
@@ -322,14 +327,14 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response(users.get_frontend_context())
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True)
     def threads(self, request, pk=None):
         profile = self.get_user(request, pk)
         start = get_int_or_404(request.query_params.get("start", 0))
         feed = UserThreads(request, profile, start)
         return Response(feed.get_frontend_context())
 
-    @detail_route(methods=["get"])
+    @action(methods=["get"], detail=True)
     def posts(self, request, pk=None):
         profile = self.get_user(request, pk)
         start = get_int_or_404(request.query_params.get("start", 0))

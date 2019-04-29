@@ -39,7 +39,7 @@ class UserCreateTests(UserTestCase):
     def test_invalid_data(self):
         """invalid request data errors with code 400"""
         response = self.client.post(
-            self.api_link, "false", content_type="application/json"
+            self.api_link, {}, content_type="application/json"
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
@@ -265,6 +265,7 @@ class UserCreateTests(UserTestCase):
                         "This password is too short. "
                         "It must contain at least 7 characters."
                     ),
+                    'This password is too common.',
                     "This password is entirely numeric.",
                 ],
             },

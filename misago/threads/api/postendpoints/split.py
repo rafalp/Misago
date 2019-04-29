@@ -22,7 +22,7 @@ def posts_split_endpoint(request, thread):
 
     if not serializer.is_valid():
         if "posts" in serializer.errors:
-            errors = {"detail": serializer.errors["posts"][0]}
+            errors = {"detail": serializer.errors["posts"]}
         else:
             errors = serializer.errors
 

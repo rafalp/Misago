@@ -386,7 +386,7 @@ class UserAdminViewsTests(AdminTestCase):
                 "rank": str(default_rank.pk),
                 "roles": str(authenticated_role.pk),
                 "email": "edited@example.com",
-                "new_password": "pass123",
+                "new_password": "ogasiM200_",
                 "staff_level": "0",
             },
         )
@@ -395,7 +395,7 @@ class UserAdminViewsTests(AdminTestCase):
         User.objects.get_by_username("NewUsername")
         test_user = User.objects.get_by_email("edited@example.com")
 
-        self.assertTrue(test_user.check_password("pass123"))
+        self.assertTrue(test_user.check_password("ogasiM200_"))
 
     def test_new_view_password_with_whitespaces(self):
         """new user view creates account with whitespaces password"""
@@ -412,7 +412,7 @@ class UserAdminViewsTests(AdminTestCase):
                 "rank": str(default_rank.pk),
                 "roles": str(authenticated_role.pk),
                 "email": "edited@example.com",
-                "new_password": " pass123 ",
+                "new_password": " ogasiM200_ ",
                 "staff_level": "0",
             },
         )
@@ -421,7 +421,7 @@ class UserAdminViewsTests(AdminTestCase):
         User.objects.get_by_username("NewUsername")
         test_user = User.objects.get_by_email("edited@example.com")
 
-        self.assertTrue(test_user.check_password(" pass123 "))
+        self.assertTrue(test_user.check_password(" ogasiM200_ "))
 
     def test_edit_view(self):
         """edit user view changes account"""
@@ -878,7 +878,7 @@ class UserAdminViewsTests(AdminTestCase):
                 "rank": str(test_user.rank_id),
                 "roles": str(test_user.roles.all()[0].pk),
                 "email": "edited@example.com",
-                "new_password": "pass123",
+                "new_password": "newpass123_",
                 "is_staff": "1",
                 "is_superuser": "0",
                 "signature": "Hello world!",

@@ -24,7 +24,7 @@ def delete_bulk(request, viewmodel):
             errors = serializer.errors["threads"]
             if "details" in errors:
                 return Response(hydrate_error_details(errors["details"]), status=400)
-            return Response({"detail": errors[0]}, status=403)
+            return Response({"detail": errors}, status=403)
 
         errors = list(serializer.errors)[0][0]
         return Response({"detail": errors}, status=400)
