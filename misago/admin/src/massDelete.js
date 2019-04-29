@@ -13,7 +13,7 @@ const initTableMassDelete = (table, confirmation) => {
 
   const updateState = () => {
     const checked = table.querySelectorAll("td input:checked")
-    toggle.checked = checkbox.length == checked.length
+    toggle.checked = checkbox.length === checked.length
     submit.disabled = checked.length === 0
   }
 

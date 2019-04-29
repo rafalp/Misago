@@ -12,20 +12,13 @@ const initDatepicker = ({ elementId, never, setDate }) => {
   const name = element.name
   const value = element.value.length ? moment(element.value) : null
   if (value) value.local()
-  const required = element.required
 
   const container = document.createElement("div")
   element.parentNode.insertBefore(container, element)
   element.remove()
 
   ReactDOM.render(
-    <DatePicker
-      name={name}
-      never={never}
-      value={value}
-      required={required}
-      setDate={setDate}
-    />,
+    <DatePicker name={name} never={never} value={value} setDate={setDate} />,
     container
   )
 }
@@ -55,8 +48,8 @@ class DatePicker extends React.Component {
   }
 
   render() {
-    const { name, never, required, setDate } = this.props
-    const { defaultValue, value } = this.state
+    const { name, never, setDate } = this.props
+    const { value } = this.state
 
     return (
       <div onBlur={this.handleBlur} onFocus={this.handleFocus}>
@@ -125,10 +118,9 @@ class SelectMonth extends React.Component {
 
   render() {
     const { value, onChange } = this.props
+    const startOfMonth = value.startOf("month").isoWeekday()
 
     const calendar = value.clone()
-    const startOfMonth = calendar.startOf("month").isoWeekday()
-
     calendar.date(1)
     calendar.hour(value.hour())
     calendar.minute(value.minute())
@@ -136,70 +128,87 @@ class SelectMonth extends React.Component {
 
     return (
       <div className="control-month-picker">
-        <div className="row align-items-center">
-          <div className="col-auto text-center">
-            <button
-              className="btn btn-block py-1 px-3"
-              type="button"
-              onClick={this.decreaseMonth}
-            >
-              <span className="fas fa-chevron-left" />
-            </button>
-          </div>
-          <div className="col text-center font-weight-bold">
-            {value.format("MMMM YYYY")}
-          </div>
-          <div className="col-auto text-center">
-            <button
-              className="btn btn-block py-1 px-3"
-              type="button"
-              onClick={this.increaseMonth}
-            >
-              <span className="fas fa-chevron-right" />
-            </button>
-          </div>
-        </div>
-        <div className="row align-items-center m-0">
-          {moment.weekdaysMin(false).map((label, i) => (
-            <div
-              className={
-                "col text-center px-1 " +
-                (i === 0 ? "text-danger" : "text-muted")
-              }
-              key={label}
-            >
-              {label}
-            </div>
-          ))}
-        </div>
+        <CalendarHeader
+          decreaseMonth={this.decreaseMonth}
+          increaseMonth={this.increaseMonth}
+          value={value}
+        />
+        <WeekdaysNames />
         {weeks.map(w => (
           <div className="row align-items-center m-0" key={w}>
-            {days.map(d => {
-              calendar.add(1, "day")
-              const day = calendar.clone()
-              const active = day.format("D M Y") === value.format("D M Y")
-
-              return (
-                <div className={"col text-center px-1"} key={d}>
-                  <button
-                    className={
-                      "btn btn-sm btn-block px-0" +
-                      (active ? " btn-primary" : "")
-                    }
-                    type="button"
-                    onClick={() => onChange(day)}
-                    disabled={day.month() !== value.month()}
-                  >
-                    {day.format("D")}
-                  </button>
-                </div>
-              )
-            })}
+            {days.map(d => (
+              <Weekday
+                calendar={calendar}
+                key={d}
+                value={value}
+                onSelect={onChange}
+              />
+            ))}
           </div>
         ))}
       </div>
     )
   }
+}
+
+const CalendarHeader = ({ decreaseMonth, increaseMonth, value }) => (
+  <div className="row align-items-center">
+    <div className="col-auto text-center">
+      <button
+        className="btn btn-block py-1 px-3"
+        type="button"
+        onClick={decreaseMonth}
+      >
+        <span className="fas fa-chevron-left" />
+      </button>
+    </div>
+    <div className="col text-center font-weight-bold">
+      {value.format("MMMM YYYY")}
+    </div>
+    <div className="col-auto text-center">
+      <button
+        className="btn btn-block py-1 px-3"
+        type="button"
+        onClick={increaseMonth}
+      >
+        <span className="fas fa-chevron-right" />
+      </button>
+    </div>
+  </div>
+)
+
+const WeekdaysNames = () => (
+  <div className="row align-items-center m-0">
+    {moment.weekdaysMin(false).map((name, i) => (
+      <div
+        className={
+          "col text-center px-1 " + (i === 0 ? "text-danger" : "text-muted")
+        }
+        key={name}
+      >
+        {name}
+      </div>
+    ))}
+  </div>
+)
+
+const Weekday = ({ calendar, value, onSelect }) => {
+  calendar.add(1, "day")
+  const day = calendar.clone()
+  const active = day.format("D M Y") === value.format("D M Y")
+
+  return (
+    <div className={"col text-center px-1"}>
+      <button
+        className={"btn btn-sm btn-block px-0" + (active ? " btn-primary" : "")}
+        type="button"
+        onClick={() => onSelect(day)}
+        disabled={day.month() !== value.month()}
+      >
+        {day.format("D")}
+      </button>
+    </div>
+  )
 }
 
 class SelectTime extends React.Component {
@@ -208,14 +217,8 @@ class SelectTime extends React.Component {
     if (!time.match(/^[0-2][0-9]?[0-9]?$/)) return
 
     this.setState((_, props) => {
+      const hour = cleanTimeValue(time, 2)
       const value = props.value.clone()
-      let hour = time
-      if (hour.length === 3) {
-        hour = hour.substring(1, 3)
-        if (parseInt(hour[0]) > 2) {
-          hour = "2" + hour[1]
-        }
-      }
       value.hour(hour)
       props.onChange(value)
     })
@@ -226,14 +229,8 @@ class SelectTime extends React.Component {
     if (!time.match(/^[0-5][0-9]?[0-9]?$/)) return
 
     this.setState((_, props) => {
+      const minute = cleanTimeValue(time, 5)
       const value = props.value.clone()
-      let minute = time
-      if (minute.length === 3) {
-        minute = minute.substring(1, 3)
-        if (parseInt(minute[0]) > 5) {
-          minute = "5" + minute[1]
-        }
-      }
       value.minute(minute)
       props.onChange(value)
     })
@@ -244,11 +241,9 @@ class SelectTime extends React.Component {
       <div className="control-time-picker">
         <div className="row align-items-center m-0">
           <div className="col px-0">
-            <input
-              className="form-control text-center"
-              placeholder="00"
-              type="text"
-              value={this.props.value.format("HH")}
+            <TimeInput
+              format="HH"
+              value={this.props.value}
               onChange={this.handleHourChange}
             />
           </div>
@@ -256,11 +251,9 @@ class SelectTime extends React.Component {
             <span>:</span>
           </div>
           <div className="col px-0">
-            <input
-              className="form-control text-center"
-              placeholder="00"
-              type="text"
-              value={this.props.value.format("mm")}
+            <TimeInput
+              format="mm"
+              value={this.props.value}
               onChange={this.handleMinuteChange}
             />
           </div>
@@ -269,5 +262,26 @@ class SelectTime extends React.Component {
     )
   }
 }
+
+const cleanTimeValue = (time, maxFirstDigit) => {
+  let value = time
+  if (value.length === 3) {
+    value = value.substring(1, 3)
+    if (parseInt(value[0]) > maxFirstDigit) {
+      value = maxFirstDigit + "" + value[1]
+    }
+  }
+  return value
+}
+
+const TimeInput = ({ format, value, onChange }) => (
+  <input
+    className="form-control text-center"
+    placeholder="00"
+    type="text"
+    value={value.format(format)}
+    onChange={onChange}
+  />
+)
 
 export default initDatepicker
