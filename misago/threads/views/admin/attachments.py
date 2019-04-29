@@ -3,7 +3,7 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.views import generic
-from ...forms import SearchAttachmentsForm
+from ...forms import FilterAttachmentsForm
 from ...models import Attachment, Post
 
 
@@ -41,9 +41,7 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
             "is_atomic": False,
         }
     ]
-
-    def get_search_form(self, request):
-        return SearchAttachmentsForm
+    filter_form = FilterAttachmentsForm
 
     def action_delete(self, request, attachments):
         deleted_attachments = []

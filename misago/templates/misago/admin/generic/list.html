@@ -4,107 +4,42 @@
 
 {% block title %}
 {{ active_link.name }} | {{ block.super }}
-{% endblock title%}
+{% endblock title %}
 
 
 {% block view %}
-{% if paginator or order_by or search_form or mass_actions %}
-  <div class="table-actions">
+<div class="card card-admin-table">
+  {% if paginator or order_by or filter_form or mass_actions %}
+    <div class="card-body">
+      <div class="row align-items-center">
 
-    {% if paginator %}
-      {% include "misago/admin/generic/paginator.html" %}
-    {% endif%}
-
-    {% if order_by %}
-      <div class="btn-group pull-left">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-          {% trans "Sort:" %} <span class="fa fa-sort-numeric-{{ order.type }}"></span> <strong>{{ order.name }}</strong>
-        </button>
-        <ul class="dropdown-menu" role="menu">
-          <li class="dropdown-title">
-            {% trans "Change sorting to:" %}
-          </li>
-          {% for order in order_by %}
-            <li>
-              <form method="get">
-                <input type="hidden" name="sort" value="{{ order.order_by }}">
-                <input type="hidden" name="direction" value="{{ order.type }}">
-                {% for name, value in query_filters.items %}
-                  <input type="hidden" name="{{ name }}" value="{{ value }}">
-                {% endfor %}
-                <button type="submit">
-                  <span class="fa fa-sort-numeric-{{ order.type }}"></span>
-                  {{ order.name }}
-                </button>
-              </form>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
-
-    {% if search_form %}
-      <button class="btn btn-{% if active_filters %}success{% else %}default{% endif %} pull-left" data-toggle="modal" data-target="#filter-modal">
-        {% if active_filters %}
-          <span class="fa fa-check"></span>
-          {% trans "Change search" %}
-        {% else %}
-          <span class="fa fa-search"></span>
-          {% trans "Search list" %}
+        {% if paginator %}
+          {% include "misago/admin/generic/paginator.html" %}
+        {% endif%}
+        {% if order_by %}
+          {% include "misago/admin/generic/order_by.html" %}
         {% endif %}
-      </button>
+        {% if filter_form %}
+          {% include "misago/admin/generic/filter_form.html" %}
+        {% endif %}
+        {% if mass_actions %}
+          {% include "misago/admin/generic/mass_actions.html" %}
+        {% endif %}
 
-      {% if active_filters %}
-        <form method="get" class="pull-left">
-          <input type="hidden" name="clear_filters" value="1">
-          {% for name, value in query_order.items %}
-            <input type="hidden" name="{{ name }}" value="{{ value }}">
-          {% endfor %}
-          <button type="submit" class="btn btn-default">
-            <span class="fa fa-times"></span>
-            {% trans "Remove search" %}
-          </button>
-        </form>
-      {% endif %}
-    {% endif %}
-
-    {% if mass_actions %}
-      <button type="button" class="btn btn-default pull-right master-checkbox">
-        <span class="fa fa-check"></span>
-      </button>
-      <div class="btn-group pull-right">
-        <form id="mass-action" action="{{ querystring }}" method="post">
-          <button type="button" class="btn btn-default dropdown-toggle mass-controller" data-toggle="dropdown">
-            <span class="fa fa-gears"></span>
-            {% trans "With selected" %}
-          </button>
-          {% csrf_token %}
-          <ul class="dropdown-menu" role="menu">
-            {% for action in mass_actions %}
-              <li>
-                <button type="submit" name="action" value="{{ action.action }}" {% if action.confirmation %}data-confirmation="{{ action.confirmation }}"{% endif %}>
-                  <span class="{{ action.icon }}"></span>
-                  {{ action.name }}
-                </button>
-              </li>
-            {% endfor %}
-          </ul>
-        </form>
       </div>
-    {% endif %}
+    </div><!-- /.card-body -->
+  {% endif %}
 
-  </div><!-- /.table-actions -->
-{% endif %}
-
-  <div class="table-panel">
-    <table class="table">
+  <table class="table">
+    <thead>
       <tr>
         {% block table-header %}{% endblock table-header %}
         {% if mass_actions %}
-          <th class="width: 1%;">&nbsp;</th>
+          <th>&nbsp;</th>
         {% endif %}
       </tr>
-
+    </thead>
+    <tbody>
       {% block table-items %}
         {% for item in items %}
           <tr>
@@ -112,39 +47,46 @@
             {% if mass_actions %}
               <td class="row-select">
                 <label>
-                  <input type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
+                  <input id="mass-checkbox-{{ item.pk }}" type="checkbox" form="mass-action" name="selected_items" value="{{ item.pk }}" {% if item.pk in selected_items %} checked{% endif %}>
                 </label>
               </td>
             {% endif %}
           </tr>
         {% empty %}
-          <tr class="message-row">
-            {% block emptylist %}{% endblock emptylist %}
+          <tr class="blankslate">
+            {% block blankslate %}{% endblock blankslate %}
           </tr>
         {% endfor %}
       {% endblock table-items %}
-    </table>
-  </div><!-- /.table-panel -->
+    </tbody>
+  </table>
 
   {% if paginator %}
-    <div class="table-actions">
-      {% include "misago/admin/generic/paginator.html" %}
-    </div><!-- /.table-actions -->
+    <div class="card-body">
+      <div class="row align-items-center">
+        {% include "misago/admin/generic/paginator.html" %}
+      </div>
+    </div>
   {% endif %}
+</div><!-- /.card -->
 {% endblock view %}
 
 
 {% block content %}
 {{ block.super }}
-{% if search_form %}
+{% if filter_form %}
   <div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="filter-modal-label" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="filter-modal-label">
-            {% block modal-title %}{% endblock modal-title %}
-          </h4>
+          <h5 class="modal-title" id="filter-modal-label">
+            {% block filters-modal-title %}
+              {% trans "Filters" %}
+            {% endblock filters-modal-title %}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="{% trans 'Close' %}">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <form method="GET">
           <input type="hidden" name="set_filters" value="1">
@@ -152,19 +94,18 @@
             <input type="hidden" name="{{ name }}" value="{{ value }}">
           {% endfor %}
           <div class="modal-body">
-            {% block modal-body %}{% endblock modal-body %}
+            {% block filters-modal-body %}{% endblock filters-modal-body %}
           </div>
           <div class="modal-footer">
-            {% block modal-footer %}
-              <button type="button" class="btn btn-default" data-dismiss="modal">
+            {% block filters-modal-footer %}
+              <button type="button" class="btn btn-light" data-dismiss="modal">
                 {% trans "Close" %}
               </button>
               <button type="submit" class="btn btn-primary">
-                {% trans "Save changes" %}
+                {% trans "Done" %}
               </button>
-            {% endblock modal-footer %}
+            {% endblock filters-modal-footer %}
           </div>
-
         </form>
       </div>
     </div>
@@ -176,9 +117,7 @@
 {% block javascripts %}
 {% if mass_actions %}
   <script type="text/javascript">
-    $(function() {
-      tableMassActions("{{ empty_selection_label }}", "{{ selection_label }}");
-    });
+    window.misago.initMassActions("{{ empty_selection_label }}", "{{ selection_label }}")
   </script>
 {% endif %}
 {% endblock javascripts %}

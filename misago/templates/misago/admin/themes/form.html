@@ -11,54 +11,55 @@
 {% endblock title %}
 
 
-{% block page-target %}
+{% block page-header %}
+{{ block.super }}
 {% if target.pk %}
-  {{ target }}
-{% else %}
-  {% trans "New theme" %}
-{% endif %}
-{% endblock page-target %}
-
-
-{% block form-header %}
-<h1>
-  {% if target.pk %}
+  <small>
     {{ target }}
-  {% else %}
-    {% trans "New theme" %}
-  {% endif %}
-</h1>
+  </small>
+{% endif %}
+{% endblock page-header %}
+
+
+{% block page-actions %}
+{% if target.pk %}
+  <div class="col-auto page-action">
+    <a href="{% url 'misago:admin:appearance:themes:assets' pk=target.pk %}" class="btn btn-primary btn-sm">
+      <span class="far fa-file-alt"></span>
+      {% trans "Edit assets" %}
+    </a>
+  </div>
+{% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
+{% block form-header %}
+{% if target.pk %}
+  {% trans "Edit theme" %}
+{% else %}
+  {% trans "New theme" %}
+{% endif %}
+{% endblock %}
 
 
 {% block form-body %}
-<div class="form-body">
-  {% with label_class="col-md-3" field_class="col-md-9" %}
-    <fieldset>
-      <legend>{% trans "Settings" %}</legend>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Settings" %}</legend>
 
-      {% form_row form.parent label_class field_class %}
-      {% form_row form.name label_class field_class %}
+    {% form_row form.parent %}
+    {% form_row form.name %}
 
-    </fieldset>
-    <fieldset>
-      <legend>{% trans "Additional information (optional)" %}</legend>
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Additional information (optional)" %}</legend>
 
-      {% form_row form.version label_class field_class %}
-      {% form_row form.author label_class field_class %}
-      {% form_row form.url label_class field_class %}
+    {% form_row form.version %}
+    {% form_row form.author %}
+    {% form_row form.url %}
 
-    </fieldset>
-  {% endwith %}
+  </fieldset>
 </div>
 {% endblock form-body %}
-
-
-{% block form-footer-class %}
-col-md-offset-3
-{% endblock form-footer-class %}

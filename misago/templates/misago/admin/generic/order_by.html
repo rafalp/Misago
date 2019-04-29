@@ -1,0 +1,26 @@
+{% load i18n %}
+<div class="col-auto">
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+      {% trans "Sort:" %}
+      <strong>{{ order.name }}</strong>
+    </button>
+    <div class="dropdown-menu">
+      <h6 class="dropdown-header">
+        {% trans "Change sorting to:" %}
+      </h6>
+      {% for ordering in order_by %}
+        <form method="get">
+          <input type="hidden" name="sort" value="{{ ordering.order_by }}">
+          <input type="hidden" name="direction" value="{{ ordering.type }}">
+          {% for name, value in query_filters.items %}
+            <input type="hidden" name="{{ name }}" value="{{ value }}">
+          {% endfor %}
+          <button class="dropdown-item" type="submit">
+            {{ ordering.name }}
+          </button>
+        </form>
+      {% endfor %}
+    </div>
+  </div>
+</div>

@@ -13,49 +13,41 @@
 
 {% block extra-head %}
 <style>
-  .form-panel .form-body.no-fieldsets {
-    padding-bottom: 0;
-  }
-
   #css-editor {
-    height: calc(100vh - 450px);
-    min-height: 200px;
-    border-top: 1px solid #ddd;
+    height: calc(100vh - 410px);
+    min-height: 220px;
   }
 </style>
 {% endblock extra-head %}
 
 
-{% block page-target %}
-<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}">
+{% block page-header %}
+{{ block.super }}
+<small>
   {{ theme }}
-</a>
-{% endblock page-target %}
+</small>
+{% if target.pk %}
+  <small>
+    {{ target }}
+  </small>
+{% endif %}
+{% endblock page-header %}
 
 
 {% block form-header %}
-<h1>
-  {% if target.pk %}
-    {{ target }}
-  {% else %}
-    {% trans "New CSS" %}
-  {% endif %}
-</h1>
+{% if target.pk %}
+  {% trans "Edit CSS" %}
+{% else %}
+  {% trans "New CSS" %}
+{% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
-
-
 {% block form-body %}
-<div class="form-body no-fieldsets">
-  {% form_row form.name %}
+{% form_row form.name %}
 
-  <input type="hidden" id="{{ form.source.id_for_label }}" name="{{ form.source.html_name }}" value="{{ form.source.value|default:'' }}">
-  <div id="css-editor">{{ form.source.value|default:"" }}</div>
-</div>
+<input type="hidden" id="{{ form.source.id_for_label }}" name="{{ form.source.html_name }}" value="{{ form.source.value|default:'' }}">
+<div id="css-editor">{{ form.source.value|default:"" }}</div>
 {% endblock form-body %}
 
 
@@ -63,22 +55,24 @@ class="form-horizontal"
 
 
 {% block form-footer %}
+<button class="btn btn-primary btn-sm" name="stay" value="1">{% trans "Save and keep editing" %}</button>
 {% if target and target.pk %}
-  <button class="btn btn-primary">{% trans "Save changes" %}</button>
+  <button class="btn btn-primary btn-sm">{% trans "Save changes" %}</button>
 {% else %}
-  <button class="btn btn-primary">{% trans "Save" %}</button>
+  <button class="btn btn-primary btn-sm">{% trans "Save" %}</button>
 {% endif %}
-<button class="btn btn-success" name="stay" value="1">{% trans "Save and keep editing" %}</button>
 {% endblock %}
 
 
 {% block form-footer-cancel %}
-<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}" class="btn btn-default">{% trans "Cancel" %}</a>
+<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}" class="btn btn-light btn-sm">
+  {% trans "Cancel" %}
+</a>
 {% endblock %}
 
 
 {% block javascripts %}
-<script src="{% static 'misago/admin/ace-editor/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+<script src="{% static 'misago/admin-new/ace-editor/ace.js' %}" type="text/javascript" charset="utf-8"></script>
 <script>
   var editor = ace.edit("css-editor");
   editor.setTheme("ace/theme/textmate");

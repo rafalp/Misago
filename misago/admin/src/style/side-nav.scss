@@ -1,0 +1,38 @@
+// Side navigation
+
+.col-nav-side {
+  max-width: $nav-side-width;
+}
+
+.nav-side {
+  @extend .flex-column;
+
+  .media-icon {
+    width: $nav-side-icon-width;
+    text-align: center;
+  }
+
+  .media-body {
+    @extend .pl-1;
+  }
+
+  .nav-link {
+    @extend .media;
+  }
+
+  .nav-link.active {
+    color: $nav-side-link-active-color;
+
+    .media-icon {
+      color: $primary;
+    }
+  }
+
+  .nav-section.active {
+    font-weight: $font-weight-bold;
+  }
+
+  .nav-action .media-body {
+    margin-left: $nav-side-icon-width;
+  }
+}

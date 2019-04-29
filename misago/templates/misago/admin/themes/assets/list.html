@@ -4,60 +4,25 @@
 
 {% block title %}
 {% trans "Assets" %} | {{ theme }} | {{ active_link.name }} | {{ block.super }}
-{% endblock title%}
-
-
-{% block extra-head %}
-<style>
-  .table-panel .btn {
-    box-shadow: none !important;
-  }
-
-  .panel-heading {
-    border-bottom: 1px solid #ddd;
-  }
-
-    .panel-heading .btn-sm {
-      margin: 0px;
-      margin-top: -23px;
-      margin-left: 14px;
-    }
-
-  .img-preview {
-    display: block;
-    margin: 0px auto;
-    background: #fff;
-    border: 1px solid #ccc;
-    padding: 1px;
-    width: 28px;
-    height: 28px;
-  }
-
-    .img-preview span {
-      display: block;
-      background-size: cover;
-      width: 100%;
-      height: 100%;
-    }
-
-  .modal-footer {
-    margin: 0px;
-  }
-
-  .form-group, .help-block {
-    margin-bottom: 0px;
-  }
-</style>
-{% endblock extra-head %}
+{% endblock title %}
 
 
 {% block page-header %}
 {{ block.super }}
-<div class="sub">
-  <span class="fa fa-chevron-right"></span>
+<small>
   {{ theme }}
-</div>
+</small>
 {% endblock page-header %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:appearance:themes:edit' pk=theme.pk %}" class="btn btn-primary btn-sm">
+    <span class="fa fa-edit"></span>
+    {% trans "Edit theme" %}
+  </a>
+</div>
+{% endblock %}
 
 
 {% block view %}
@@ -75,47 +40,7 @@
 
 {% block javascripts %}
 {{ block.super }}
-
 <script type="text/javascript">
-  $(function() {
-    $(".table-panel form.mass-delete").each(function(_, form) {
-      $(form).find("th input:checkbox").change(function(event) {
-        $(form).find("td input:checkbox").prop("checked", event.target.checked);
-        $(form).find(".panel-footer button").prop("disabled", !event.target.checked);
-      });
-
-      $(form).find("td input:checkbox").change(function(event) {
-        var total = $(form).find("td input:checkbox").length;
-        var checked = $(form).find("td input:checkbox:checked").length;
-        $(form).find("th input:checkbox").prop("checked", total === checked);
-        $(form).find(".panel-footer button").prop("disabled", checked === 0);
-      });
-
-      // sync state in case page was rendered from browser cache
-      var total = $(form).find("td input:checkbox").length;
-      var checked = $(form).find("td input:checkbox:checked").length;
-      $(form).find("th input:checkbox").prop("checked", total && total === checked);
-      $(form).find(".panel-footer button").prop("disabled", checked === 0);
-    });
-
-    $(".table-panel form.mass-delete").submit(function(event) {
-      var checked = $(event.target).find("td input:checkbox:checked").length;
-      if (checked === 0) {
-        event.preventDefault();
-        return false;
-      }
-
-      var confirmation = confirm("{% trans 'Are you sure you want to delete selected items?' %}");
-      if (!confirmation) {
-        event.preventDefault();
-        return false;
-      }
-    });
-
-    $(".btn-move").click(function(event) {
-      var form = $(event.target).data("form");
-      $('#' + form).submit();
-    });
-  });
+  window.misago.initMassDelete("{% trans 'Are you sure you want to delete selected items?' %}")
 </script>
 {% endblock javascripts %}

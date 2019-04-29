@@ -4,8 +4,8 @@ from ...test import assert_has_message
 from ..auth import is_admin_authorized
 
 admin_logout_link = reverse("misago:admin:logout")
+admin_link = reverse("misago:admin:index")
 site_logout_link = reverse("misago:logout")
-site_link = reverse("misago:index")
 
 
 def test_admin_can_logout_from_admin_site_but_stay_logged(admin_client, superuser):
@@ -14,10 +14,10 @@ def test_admin_can_logout_from_admin_site_but_stay_logged(admin_client, superuse
     assert not is_admin_authorized(response.wsgi_request)
 
 
-def test_admin_is_redirected_to_site_on_logout(admin_client, superuser):
+def test_admin_is_redirected_to_login_form_on_logout(admin_client, superuser):
     response = admin_client.post(admin_logout_link)
     assert response.status_code == 302
-    assert response["location"] == site_link
+    assert response["location"] == admin_link
 
 
 def test_admin_is_displayed_message_after_logout(admin_client, superuser):

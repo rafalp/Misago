@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.views import generic
-from ...forms.admin import BanForm, SearchBansForm
+from ...forms.admin import BanForm, FilterBansForm
 from ...models import Ban
 
 
@@ -26,7 +26,7 @@ class BansList(BanAdmin, generic.ListView):
         ("banned_value", _("A to z")),
         ("-banned_value", _("Z to a")),
     ]
-    search_form = SearchBansForm
+    filter_form = FilterBansForm
     selection_label = _("With bans: 0")
     empty_selection_label = _("Select bans")
     mass_actions = (

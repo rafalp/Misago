@@ -1,32 +1,9 @@
 {% load i18n misago_admin_form %}
-<fieldset>
-  <legend>{{ form.legend }}</legend>
-
-  <table class="table table-striped table-permissions">
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{{ form.legend }}</legend>
     {% for field in form %}
-      <tr{% if field.errors %} class="text-danger"{% endif %}>
-        <td class="col-md-8">
-          <label>{{ field.label }}:</label>
-          {% for error in field.errors %}
-            <p class="small"><strong>{{ error }}</strong></p>
-          {% endfor %}
-          {% if field.help_text %}
-            <p class="text-muted small">{{ field.help_text }}</p>
-          {% endif %}
-        </td>
-        <td>
-          <div class="form-group{% if field.errors %} has-error{% endif %}">
-            {% if field|is_radio_select_field %}
-              <div class="controls control-radioselect">
-                {% form_input field %}
-              </div>
-            {% else %}
-              {% form_input field %}
-            {% endif %}
-          </div>
-        </td>
-      </tr>
+      {% form_row field %}
     {% endfor %}
-  </table>
-
-</fieldset>
+  </fieldset>
+</div>

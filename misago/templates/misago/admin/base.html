@@ -1,33 +1,26 @@
-{% extends "misago/admin/base_thin.html" %}
-{% load static %}
-
-
-{% block body %}
-{% include "misago/admin/navbar.html" %}
-{% include "misago/admin/messages.html" %}
-
-{% block content %}{% endblock %}
-
-<footer class="admin-footer">
-  <div class="misago-branding text-center">
-    <a href="http://misago-project.org">
-      <span class="subscript">powered by</span>
-      <img src="{% static 'misago/admin/img/misago.png' %}" height="46px" alt="Misago" style="position: relative; top: 1px;" />
-    </a>
-  </div>
-</footer>
-
-{% include "misago/admin/logout.html" %}
-
-{# We include JavaScript at the end of page body so it renders faster #}
-<script type="text/javascript" src="{% static 'misago/admin/js/jquery.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/moment.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/bootstrap-datetimepicker.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/misago-datetimepicker.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/misago-timestamps.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/misago-tooltips.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/misago-tables.js' %}"></script>
-<script type="text/javascript" src="{% static 'misago/admin/js/misago-yesnoswitch.js' %}"></script>
-{% block javascripts %}{% endblock javascripts %}
-{% endblock body %}
+{% load i18n static %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% spaceless %}{% block title %}{% trans "Misago Administration" %}{% endblock %}{% endspaceless %}</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="{% static 'misago/admin-new/index.css' %}" rel="stylesheet">
+    <link rel="apple-touch-icon" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="apple-touch-icon" sizes="57x57" href="{% static 'apple-touch-icon-57.png' %}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{% static 'apple-touch-icon-72.png' %}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{% static 'apple-touch-icon-76.png' %}">
+    <link rel="apple-touch-icon" sizes="80x80" href="{% static 'apple-touch-icon-80.png' %}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{% static 'apple-touch-icon-114.png' %}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{% static 'apple-touch-icon-120.png' %}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'apple-touch-icon-144.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'apple-touch-icon-152.png' %}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{% static 'apple-touch-icon-167.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon-180.png' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <link rel="icon" sizes="16x16 32x32" href="{% static 'favicon.ico' %}">
+    {% block extra-head %}{% endblock extra-head %}
+  </head>
+  {% block body %}{% endblock %}
+</html>

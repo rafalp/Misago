@@ -307,14 +307,14 @@ def EditUserFormFactory(
     return FormType
 
 
-class BaseSearchUsersForm(forms.Form):
+class BaseFilterUsersForm(forms.Form):
     username = forms.CharField(label=_("Username starts with"), required=False)
     email = forms.CharField(label=_("E-mail starts with"), required=False)
     profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
-    inactive = YesNoSwitch(label=_("Inactive only"))
-    disabled = YesNoSwitch(label=_("Disabled only"))
-    is_staff = YesNoSwitch(label=_("Admins only"))
-    is_deleting_account = YesNoSwitch(label=_("Deleting their accounts"))
+    is_inactive = forms.BooleanField(label=_("Requires activation"))
+    is_disabled = forms.BooleanField(label=_("Account disabled"))
+    is_staff = forms.BooleanField(label=_("Administrator"))
+    is_deleting_account = forms.BooleanField(label=_("Deletes their account"))
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get("username"):
@@ -331,10 +331,10 @@ class BaseSearchUsersForm(forms.Form):
         if criteria.get("role"):
             queryset = queryset.filter(roles__id=criteria.get("role"))
 
-        if criteria.get("inactive"):
+        if criteria.get("is_inactive"):
             queryset = queryset.filter(requires_activation__gt=0)
 
-        if criteria.get("disabled"):
+        if criteria.get("is_disabled"):
             queryset = queryset.filter(is_active=False)
 
         if criteria.get("is_staff"):
@@ -351,7 +351,7 @@ class BaseSearchUsersForm(forms.Form):
         return queryset
 
 
-def create_search_users_form():
+def create_filter_users_form():
     """
     Factory that uses cache for ranks and roles,
     and makes those ranks and roles typed choice fields that play nice
@@ -374,7 +374,7 @@ def create_search_users_form():
         ),
     }
 
-    return type("SearchUsersForm", (BaseSearchUsersForm,), extra_fields)
+    return type("FilterUsersForm", (BaseFilterUsersForm,), extra_fields)
 
 
 class RankForm(forms.ModelForm):
@@ -469,11 +469,7 @@ class BanUsersForm(forms.Form):
             "max_length": _("Message can't be longer than 1000 characters.")
         },
     )
-    expires_on = IsoDateTimeField(
-        label=_("Expires on"),
-        required=False,
-        help_text=_("Leave this field empty for set bans to never expire."),
-    )
+    expires_on = IsoDateTimeField(label=_("Expiration date"), required=False)
 
     def __init__(self, *args, **kwargs):
         users = kwargs.pop("users")
@@ -540,11 +536,7 @@ class BanForm(forms.ModelForm):
             "max_length": _("Message can't be longer than 1000 characters.")
         },
     )
-    expires_on = IsoDateTimeField(
-        label=_("Expires on"),
-        required=False,
-        help_text=_("Leave this field empty for this ban to never expire."),
-    )
+    expires_on = IsoDateTimeField(label=_("Expiration date"), required=False)
 
     class Meta:
         model = Ban
@@ -568,7 +560,7 @@ class BanForm(forms.ModelForm):
         return data
 
 
-class SearchBansForm(forms.Form):
+class FilterBansForm(forms.Form):
     check_type = forms.ChoiceField(
         label=_("Type"),
         required=False,
@@ -591,8 +583,7 @@ class SearchBansForm(forms.Form):
         choices=[("", _("Any")), ("used", _("Active")), ("unused", _("Expired"))],
     )
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get("check_type") == "names":
             queryset = queryset.filter(check_type=0)
 
@@ -668,15 +659,14 @@ class RequestDataDownloadsForm(forms.Form):
         return data
 
 
-class SearchDataDownloadsForm(forms.Form):
+class FilterDataDownloadsForm(forms.Form):
     status = forms.ChoiceField(
         label=_("Status"), required=False, choices=DataDownload.STATUS_CHOICES
     )
     user = forms.CharField(label=_("User"), required=False)
     requested_by = forms.CharField(label=_("Requested by"), required=False)
 
-    def filter_queryset(self, search_criteria, queryset):
-        criteria = search_criteria
+    def filter_queryset(self, criteria, queryset):
         if criteria.get("status") is not None:
             queryset = queryset.filter(status=criteria["status"])
 

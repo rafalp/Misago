@@ -35,6 +35,10 @@ class AttachmentType(models.Model):
         return self.status == AttachmentType.ENABLED
 
     @property
+    def is_locked(self):
+        return self.status == AttachmentType.LOCKED
+
+    @property
     def extensions_list(self):
         if self.extensions:
             return self.extensions.split(",")
