@@ -7,7 +7,7 @@ module.exports = {
   cache: false,
   entry: "./misago/admin/src/index.js",
   output: {
-    path: path.resolve(__dirname, "misago", "static", "misago", "admin-new"),
+    path: path.resolve(__dirname, "misago", "static", "misago", "admin"),
     filename: "index.js"
   },
   module: {
