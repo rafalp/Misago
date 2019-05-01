@@ -1,7 +1,7 @@
 from django.test import override_settings
 from django.urls import reverse
 
-from ...admin.test import AdminTestCase
+from ....admin.test import AdminTestCase
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")

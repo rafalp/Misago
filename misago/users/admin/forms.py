@@ -8,6 +8,7 @@ from django.utils.translation import ngettext
 from ...acl.models import Role
 from ...admin.forms import IsoDateTimeField, YesNoSwitch
 from ...core.validators import validate_sluggable
+from ...search.filter_queryset import filter_queryset
 from ..models import Ban, DataDownload, Rank
 from ..profilefields import profilefields
 from ..utils import hash_email
@@ -308,8 +309,8 @@ def EditUserFormFactory(
 
 
 class BaseFilterUsersForm(forms.Form):
-    username = forms.CharField(label=_("Username starts with"), required=False)
-    email = forms.CharField(label=_("E-mail starts with"), required=False)
+    username = forms.CharField(label=_("Username"), required=False)
+    email = forms.CharField(label=_("E-mail"), required=False)
     profilefields = forms.CharField(label=_("Profile fields contain"), required=False)
     is_inactive = forms.BooleanField(label=_("Requires activation"))
     is_disabled = forms.BooleanField(label=_("Account disabled"))
@@ -318,12 +319,14 @@ class BaseFilterUsersForm(forms.Form):
 
     def filter_queryset(self, criteria, queryset):
         if criteria.get("username"):
-            queryset = queryset.filter(
-                slug__startswith=criteria.get("username").lower()
+            queryset = filter_queryset(
+                queryset, "slug", criteria.get("username").lower()
             )
 
         if criteria.get("email"):
-            queryset = queryset.filter(email__istartswith=criteria.get("email"))
+            queryset = filter_queryset(
+                queryset, "email", criteria.get("email"), case_sensitive=False
+            )
 
         if criteria.get("rank"):
             queryset = queryset.filter(rank_id=criteria.get("rank"))

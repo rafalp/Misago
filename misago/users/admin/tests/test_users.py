@@ -1,181 +1,34 @@
+import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 from django.urls import reverse
 
-from ...acl.models import Role
-from ...admin.test import AdminTestCase
-from ...categories.models import Category
-from ...legal.models import Agreement
-from ...legal.utils import save_user_agreement_acceptance
-from ...threads.test import post_thread, reply_thread
-from ..datadownloads import request_user_data_download
-from ..models import Ban, DataDownload, Rank
-from ..test import create_test_user
+from ....acl.models import Role
+from ....admin.test import AdminTestCase
+from ....categories.models import Category
+from ....legal.models import Agreement
+from ....legal.utils import save_user_agreement_acceptance
+from ....test import assert_contains
+from ....threads.test import post_thread, reply_thread
+from ...datadownloads import request_user_data_download
+from ...models import Ban, DataDownload, Rank
+from ...test import create_test_user
 
 User = get_user_model()
 
 
-class UserAdminViewsTests(AdminTestCase):
+def test_link_is_registered_in_admin_nav(admin_client):
+    response = admin_client.get(reverse("misago:admin:index"))
+    assert_contains(response, reverse("misago:admin:users:accounts:index"))
+
+
+def test_list_renders_with_item(admin_client, users_admin_link, superuser):
+    response = admin_client.get(users_admin_link)
+    assert_contains(response, superuser.username)
+
+
+class UserAdminTests(AdminTestCase):
     AJAX_HEADER = {"HTTP_X_REQUESTED_WITH": "XMLHttpRequest"}
-
-    def test_link_registered(self):
-        """admin index view contains users link"""
-        response = self.client.get(reverse("misago:admin:index"))
-
-        self.assertContains(response, reverse("misago:admin:users:accounts:index"))
-
-    def test_list_view(self):
-        """users list view returns 200"""
-        response = self.client.get(reverse("misago:admin:users:accounts:index"))
-        self.assertEqual(response.status_code, 302)
-
-        response = self.client.get(response["location"])
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.user.username)
-
-    def test_list_filtering(self):
-        """users list can be filtered"""
-        response = self.client.get(reverse("misago:admin:users:accounts:index"))
-        self.assertEqual(response.status_code, 302)
-
-        link_base = response["location"]
-        response = self.client.get(link_base)
-        self.assertEqual(response.status_code, 200)
-
-        user_a = create_test_user("Tyrael", "t123@test.com")
-        user_b = create_test_user("Tyrion", "t321@test.com")
-        user_c = create_test_user("Karen", "t432@test.com")
-
-        # Partial search for "tyr" returns both "tyrael" and "tyrion"
-        response = self.client.get("%s&username=tyr" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, user_a.username)
-        self.assertContains(response, user_b.username)
-
-        # Search for "tyrion" returns it only
-        response = self.client.get("%s&username=tyrion" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, user_a.username)
-        self.assertContains(response, user_b.username)
-
-        # Search for "tyrael" returns it only
-        response = self.client.get("%s&email=t123@test.com" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, user_a.username)
-        self.assertNotContains(response, user_b.username)
-
-        # Search for disabled user
-        user_c.is_active = False
-        user_c.save()
-
-        response = self.client.get("%s&is_disabled=1" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, user_a.username)
-        self.assertNotContains(response, user_b.username)
-        self.assertContains(response, user_c.username)
-
-        # Search for requested own account delete
-        user_c.is_deleting_account = True
-        user_c.save()
-
-        response = self.client.get("%s&is_deleting_account=1" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, user_a.username)
-        self.assertNotContains(response, user_b.username)
-        self.assertContains(response, user_c.username)
-
-        response = self.client.get("%s&is_disabled=1" % link_base)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, user_a.username)
-        self.assertNotContains(response, user_b.username)
-        self.assertContains(response, user_c.username)
-
-    def test_mass_activation(self):
-        """users list activates multiple users"""
-        user_pks = []
-        for i in range(10):
-            test_user = create_test_user(
-                "User%s" % i, "user%s@example.com" % i, requires_activation=1
-            )
-            user_pks.append(test_user.pk)
-
-        response = self.client.post(
-            reverse("misago:admin:users:accounts:index"),
-            data={"action": "activate", "selected_items": user_pks},
-        )
-        self.assertEqual(response.status_code, 302)
-
-        inactive_qs = User.objects.filter(id__in=user_pks, requires_activation=1)
-        self.assertEqual(inactive_qs.count(), 0)
-        self.assertIn("has been activated", mail.outbox[0].subject)
-
-    def test_mass_ban(self):
-        """users list bans multiple users"""
-        user_pks = []
-        for i in range(10):
-            test_user = create_test_user(
-                "User%s" % i, "user%s@example.com" % i, requires_activation=1
-            )
-            user_pks.append(test_user.pk)
-
-        response = self.client.post(
-            reverse("misago:admin:users:accounts:index"),
-            data={"action": "ban", "selected_items": user_pks},
-        )
-        self.assertNotContains(response, 'value="ip"')
-        self.assertNotContains(response, 'value="ip_first"')
-        self.assertNotContains(response, 'value="ip_two"')
-
-        response = self.client.post(
-            reverse("misago:admin:users:accounts:index"),
-            data={
-                "action": "ban",
-                "selected_items": user_pks,
-                "ban_type": ["usernames", "emails", "domains"],
-                "finalize": "",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Ban.objects.count(), 21)
-
-    def test_mass_ban_with_ips(self):
-        """users list bans multiple users that also have ips"""
-        user_pks = []
-        for i in range(10):
-            test_user = create_test_user(
-                "User%s" % i,
-                "user%s@example.com" % i,
-                joined_from_ip="73.95.67.27",
-                requires_activation=1,
-            )
-            user_pks.append(test_user.pk)
-
-        response = self.client.post(
-            reverse("misago:admin:users:accounts:index"),
-            data={"action": "ban", "selected_items": user_pks},
-        )
-        self.assertContains(response, 'value="ip"')
-        self.assertContains(response, 'value="ip_first"')
-        self.assertContains(response, 'value="ip_two"')
-
-        response = self.client.post(
-            reverse("misago:admin:users:accounts:index"),
-            data={
-                "action": "ban",
-                "selected_items": user_pks,
-                "ban_type": [
-                    "usernames",
-                    "emails",
-                    "domains",
-                    "ip",
-                    "ip_first",
-                    "ip_two",
-                ],
-                "finalize": "",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(Ban.objects.count(), 24)
 
     def test_mass_request_data_download(self):
         """users list requests data download for multiple users"""

@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from .djangoadmin import UserAdminModel
-from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
-from .views.admin.datadownloads import DataDownloadsList, RequestDataDownloads
-from .views.admin.ranks import (
+from .views.bans import BansList, DeleteBan, EditBan, NewBan
+from .views.datadownloads import DataDownloadsList, RequestDataDownloads
+from .views.ranks import (
     DefaultRank,
     DeleteRank,
     EditRank,
@@ -16,7 +16,7 @@ from .views.admin.ranks import (
     RanksList,
     RankUsers,
 )
-from .views.admin.users import (
+from .views.users import (
     DeleteAccountStep,
     DeletePostsStep,
     DeleteThreadsStep,
