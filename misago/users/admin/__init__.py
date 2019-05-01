@@ -17,9 +17,6 @@ from .views.ranks import (
     RankUsers,
 )
 from .views.users import (
-    DeleteAccountStep,
-    DeletePostsStep,
-    DeleteThreadsStep,
     EditUser,
     NewUser,
     UsersList,
@@ -41,21 +38,6 @@ class MisagoAdminExtension:
             url(r"^(?P<page>\d+)/$", UsersList.as_view(), name="index"),
             url(r"^new/$", NewUser.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditUser.as_view(), name="edit"),
-            url(
-                r"^delete-threads/(?P<pk>\d+)/$",
-                DeleteThreadsStep.as_view(),
-                name="delete-threads",
-            ),
-            url(
-                r"^delete-posts/(?P<pk>\d+)/$",
-                DeletePostsStep.as_view(),
-                name="delete-posts",
-            ),
-            url(
-                r"^delete-account/(?P<pk>\d+)/$",
-                DeleteAccountStep.as_view(),
-                name="delete-account",
-            ),
         )
 
         # Ranks

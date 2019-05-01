@@ -8,7 +8,8 @@ from ...datadownloads import request_user_data_download
 from ...models import DataDownload
 from ...test import create_test_user
 
-TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
+APP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TESTFILES_DIR = os.path.join(APP_DIR, "tests", "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 
 

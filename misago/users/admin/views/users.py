@@ -25,6 +25,7 @@ from ..forms import (
     NewUserForm,
     create_filter_users_form,
 )
+from ..tasks import delete_user_with_content
 
 User = get_user_model()
 
@@ -242,10 +243,10 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(message)
 
         for user in users:
-            # todo:
-            # mark as deleted
-            # fire the cron task
-            pass
+            user.is_active = False
+            user.save()
+
+            delete_user_with_content.delay(user.pk)
 
         messages.success(
             request,
