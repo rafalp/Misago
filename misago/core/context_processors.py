@@ -1,6 +1,11 @@
 from django.utils.translation import get_language
 
+from .. import __version__
 from .momentjs import get_locale_url
+
+
+def misago_version(request):
+    return {"MISAGO_VERSION": __version__}
 
 
 def site_address(request):

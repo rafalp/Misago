@@ -1,0 +1,37 @@
+// Admin error pages
+
+// Add fancy shadow and red outline to card
+.card-admin-error {
+  @extend .border-danger;
+  @extend .shadow-sm;
+}
+
+// Make card header border also danger
+.card-admin-error .card-header {
+  @extend .border-danger;
+}
+
+// Errored login form
+.login-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-error-container {
+  width: 100%;
+  padding: $grid-gutter-width;
+}
+
+.login-error-card {
+  @extend .border-danger;
+  @extend .shadow-sm;
+
+  max-width: 540px;
+  margin: 0 auto;
+}
+
+.login-error-title {
+  font-size: $font-size-lg;
+  text-align: center;
+}

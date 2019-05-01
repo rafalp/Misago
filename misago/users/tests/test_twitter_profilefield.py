@@ -105,17 +105,13 @@ class TwitterProfileFieldTests(AdminTestCase):
         test_link = reverse("misago:admin:users:accounts:index")
 
         response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
-        self.assertContains(
-            response, "No users matching search criteria have been found."
-        )
+        self.assertContains(response, "No users matching criteria exist.")
 
         self.user.profile_fields["twitter"] = "lorem_ipsum"
         self.user.save()
 
         response = self.client.get("%s?redirected=1&profilefields=ipsum" % test_link)
-        self.assertNotContains(
-            response, "No users matching search criteria have been found."
-        )
+        self.assertNotContains(response, "No users matching criteria exist.")
 
     def test_field_display(self):
         """field displays on user profile when filled in"""

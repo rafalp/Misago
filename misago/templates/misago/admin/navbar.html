@@ -1,45 +1,46 @@
-{% load i18n misago_avatars %}
-<div class="navbars-container">
-  <div class="navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'misago:index' %}"></a>
-      <ul class="nav navbar-nav">
-        {% for node in sections %}
-          <li{% if node.is_active %} class="active"{% endif %}>
-            <a href="{{ node.link }}">
-              <span class="{{ node.icon }}"></span>
-              {{ node.name }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-      <div class="user-nav pull-right">
-        <p class="navbar-text">
-          <a href="{% url 'misago:admin:users:accounts:edit' pk=user.pk %}" class="tooltip-bottom" title="{% trans "Edit your account" %}">
-            <img src="{{ user|avatar:30 }}" alt="{% trans "Your avatar" %}">
-            {{ user }}
-          </a>
-          <a href="#" class="logout" data-toggle="modal" data-target="#logout-modal">
-            <span class="fa fa-power-off"></span>
-          </a>
-        </p>
-      </div>
+{% load i18n static misago_avatars %}
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <a class="navbar-brand" href="{% url 'misago:admin:index' %}">
+    <img src="{% static 'misago/admin/img/mred.png' %}" alt="">
+    <span>Misago</span>
+  </a>
+  <span class="badge badge-light mr-auto">
+    {{ MISAGO_VERSION }}
+  </span>
+  <a href="https://github.com/rafalp/misago" target="_blank" class="btn btn-light btn-sm mr-3">
+    <span class="fab fa-github"></span>
+    {% trans "GitHub" %}
+  </a>
+  <a href="https://misago-project.org" target="_blank" class="btn btn-light btn-sm mr-3">
+    <span class="far fa-question-circle"></span>
+    {% trans "Support forum" %}
+  </a>
+  <a href="{% url 'misago:index' %}" class="btn btn-light btn-sm mr-3">
+    <span class="far fa-window-maximize"></span>
+    {% trans "Site index" %}
+  </a>
+  <div class="dropdown">
+    <button type="button" class="btn btn-user dropdown-toggle" id="openAdminDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img src="{{ user|avatar:30 }}" alt="{% trans 'Your avatar' %}">
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="openAdminDropdown">
+      <h6 class="dropdown-header">{{ user }}</h6>
+      <a class="dropdown-item" href="{% url 'misago:admin:users:accounts:edit' pk=user.pk %}">
+        {% trans "Edit your account" %}
+      </a>
+      <div class="dropdown-divider"></div>
+      <form action="{% url 'misago:admin:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">
+          {% trans "Close admin session" %}
+        </button>
+      </form>
+      <form action="{% url 'misago:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">
+          {% trans "Log out completely" %}
+        </button>
+      </form>
     </div>
   </div>
-  {% if actions %}
-    <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-      <div class="container">
-        <ul class="nav navbar-nav">
-          {% for node in actions %}
-            <li{% if node.is_active %} class="active"{% endif %}>
-              <a href="{{ node.link }}">
-                <span class="{{ node.icon }}"></span>
-                {{ node.name }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  {% endif %}
-</div>
+</nav>

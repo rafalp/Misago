@@ -266,6 +266,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "misago.acl.context_processors.user_acl",
                 "misago.conf.context_processors.conf",
+                "misago.core.context_processors.misago_version",
                 "misago.core.context_processors.site_address",
                 "misago.core.context_processors.momentjs_locale",
                 "misago.search.context_processors.search_providers",

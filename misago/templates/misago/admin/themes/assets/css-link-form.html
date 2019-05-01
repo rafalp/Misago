@@ -11,37 +11,36 @@
 {% endblock title %}
 
 
-{% block page-target %}
-<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}">
+{% block page-header %}
+{{ block.super }}
+<small>
   {{ theme }}
-</a>
-{% endblock page-target %}
+</small>
+{% if target.pk %}
+  <small>
+    {{ target }}
+  </small>
+{% endif %}
+{% endblock page-header %}
 
 
 {% block form-header %}
-<h1>
-  {% if target.pk %}
-    {{ target }}
-  {% else %}
-    {% trans "New CSS link" %}
-  {% endif %}
-</h1>
+{% if target.pk %}
+  {% trans "Edit CSS link" %}
+{% else %}
+  {% trans "New CSS link" %}
+{% endif %}
 {% endblock %}
 
 
-{% block form-extra %}
-class="form-horizontal"
-{% endblock form-extra %}
-
-
 {% block form-body %}
-<div class="form-body no-fieldsets">
-  {% form_row form.name %}
-  {% form_row form.url %}
-</div>
+{% form_row form.name %}
+{% form_row form.url %}
 {% endblock form-body %}
 
 
 {% block form-footer-cancel %}
-<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}" class="btn btn-default">{% trans "Cancel" %}</a>
+<a href="{% url 'misago:admin:appearance:themes:assets' pk=theme.pk %}" class="btn btn-light btn-sm">
+  {% trans "Cancel" %}
+</a>
 {% endblock %}

@@ -33,8 +33,8 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
 
-    def test_list_search(self):
-        """users list is searchable"""
+    def test_list_filtering(self):
+        """users list can be filtered"""
         response = self.client.get(reverse("misago:admin:users:accounts:index"))
         self.assertEqual(response.status_code, 302)
 
@@ -46,35 +46,35 @@ class UserAdminViewsTests(AdminTestCase):
         user_b = create_test_user("Tyrion", "t321@test.com")
         user_c = create_test_user("Karen", "t432@test.com")
 
-        # Search both
+        # Partial search for "tyr" returns both "tyrael" and "tyrion"
         response = self.client.get("%s&username=tyr" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
-        # Search tyrion
+        # Search for "tyrion" returns it only
         response = self.client.get("%s&username=tyrion" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertContains(response, user_b.username)
 
-        # Search tyrael
+        # Search for "tyrael" returns it only
         response = self.client.get("%s&email=t123@test.com" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
 
-        # Search disabled
+        # Search for disabled user
         user_c.is_active = False
         user_c.save()
 
-        response = self.client.get("%s&disabled=1" % link_base)
+        response = self.client.get("%s&is_disabled=1" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
-        # Search requested own account delete
+        # Search for requested own account delete
         user_c.is_deleting_account = True
         user_c.save()
 
@@ -82,13 +82,13 @@ class UserAdminViewsTests(AdminTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
-        response = self.client.get("%s&disabled=1" % link_base)
+        response = self.client.get("%s&is_disabled=1" % link_base)
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, user_a.username)
         self.assertNotContains(response, user_b.username)
-        self.assertContains(response, "<del>%s</del>" % user_c.username)
+        self.assertContains(response, user_c.username)
 
     def test_mass_activation(self):
         """users list activates multiple users"""
@@ -869,7 +869,7 @@ class UserAdminViewsTests(AdminTestCase):
         )
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'id="div_id_has_usable_password"')
+        self.assertContains(response, "alert-has-unusable-password")
 
         response = self.client.post(
             test_link,
@@ -909,7 +909,7 @@ class UserAdminViewsTests(AdminTestCase):
         )
 
         response = self.client.get(test_link)
-        self.assertContains(response, 'id="div_id_has_usable_password"')
+        self.assertContains(response, "alert-has-unusable-password")
 
         response = self.client.post(
             test_link,

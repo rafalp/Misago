@@ -3,111 +3,106 @@
 
 
 {% block page-actions %}
-<div class="page-actions">
-  <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-success">
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:users:data-downloads:request' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
-    {% trans "Request new downloads" %}
+    {% trans "New downloads" %}
   </a>
 </div>
 {% endblock %}
 
 
 {% block table-header %}
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 <th>{% trans "User" %}</th>
 <th>{% trans "Status" %}</th>
 <th>{% trans "Requested on" %}</th>
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 <th>{% trans "Requested by" %}</th>
 {% for action in extra_actions %}
-  <th style="width: 1%;">&nbsp;</th>
+  <th style="width: 1px;">&nbsp;</th>
 {% endfor %}
-<th style="width: 1%;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
 
 {% block table-row %}
-<td>
+<td class="pr-0">
   <a href="{{ item.user.get_absolute_url }}">
-    <img src="{{ item.user|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <img src="{{ item.user|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
   </a>
 </td>
-<td class="item-name">
-  <a href="{{ item.user.get_absolute_url }}">
+<td class="small">
+  <a href="{{ item.user.get_absolute_url }}" class="item-name">
     {{ item.user }}
   </a>
 </td>
-<td>
+<td class="small">
   {{ item.get_status_display }}
 </td>
-<td>
-  <abbr class="moment" data-iso="{{ item.requested_on.isoformat }}" data-format="LL"></abbr>
+<td class="small">
+  <abbr data-timestamp="{{ item.requested_on.isoformat }}" data-format="LL">
+    {{ item.requested_on }}
+  </abbr>
 </td>
-<td>
+<td class="pr-0">
   {% if item.requester %}
-    <a href="{{ item.requester.get_absolute_url }}">
-      <img src="{{ item.requester|avatar:24 }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <a href="{{ item.requester.get_absolute_url.user }}">
+      <img src="{{ item.requester|avatar:40 }}" alt="{% trans 'Avatar' %}" width="24" height="24">
     </a>
   {% else %}
-    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans "Avatar" %}" width="24" height="24">
+    <img src="{{ BLANK_AVATAR_URL }}" alt="{% trans 'Avatar' %}" width="24" height="24">
   {% endif %}
 </td>
-<td class="item-name">
+<td class="small">
   {% if item.requester %}
-    <a href="{{ item.requester.get_absolute_url }}">
+    <a href="{{ item.requester.get_absolute_url }}" class="item-name">
       {{ item.requester }}
     </a>
   {% else %}
-    {{ item.requester_name }}
+    <span class="item-name">{{ item.requester_name }}</span>
   {% endif %}
 </td>
-{% for action in extra_actions %}
-  <td class="row-action">
-    <a href="{% url action.link pk=item.pk %}" class="btn btn-{% if action.style %}{{ action.style }}{% else %}default{% endif %} tooltip-top" title="{{ action.name }}">
-      <span class="{{ action.icon }}"></span>
-    </a>
-  </td>
-{% endfor %}
-<td class="row-action">
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
   {% if item.file %}
-    <a href="{{ item.file.url }}" class="btn btn-primary tooltip-top" title="{% trans "Download data" %}">
-      <span class="fa fa-download"></span>
+    <a href="{{ item.file.url }}" class="btn btn-light btn-sm">
+      {% trans "Download" %}
     </a>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      {% trans "Download" %}
+    </button>
   {% endif %}
 </td>
 {% endblock table-row %}
 
 
-{% block emptylist %}
-<td colspan="{{ 7|add:extra_actions_len }}">
+{% block blankslate %}
+<td colspan="{{ 8|add:extra_actions_len }}">
   {% if active_filters %}
-    <p>{% trans "No data downloads matching search criteria have been found." %}</p>
+    {% trans "No data downloads matching criteria exist." %}
   {% else %}
-    <p>{% trans "No data downloads exist at the moment." %}</p>
+    {% trans "No data downloads exist." %}
   {% endif %}
 </td>
-{% endblock emptylist %}
+{% endblock blankslate %}
 
 
-{% block modal-title %}
-{% trans "Search data downloads" %}
-{% endblock modal-title %}
-
-
-{% block modal-body %}
+{% block filters-modal-body %}
 <div class="row">
-  <div class="col-md-12">
-    {% form_row search_form.status %}
+  <div class="col">
+    {% form_row filter_form.status %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12">
-    {% form_row search_form.user %}
+  <div class="col">
+    {% form_row filter_form.user %}
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12">
-    {% form_row search_form.requested_by %}
+  <div class="col">
+    {% form_row filter_form.requested_by %}
   </div>
 </div>
-{% endblock modal-body %}
+{% endblock filters-modal-body %}
