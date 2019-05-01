@@ -7,7 +7,7 @@ from ...datadownloads import (
     request_user_data_download,
     user_has_data_download_request,
 )
-from ...forms.admin import RequestDataDownloadsForm, SearchDataDownloadsForm
+from ...forms.admin import RequestDataDownloadsForm, FilterDataDownloadsForm
 from ...models import DataDownload
 
 
@@ -40,13 +40,11 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
             ),
         },
     ]
+    filter_form = FilterDataDownloadsForm
 
     def get_queryset(self):
         qs = super().get_queryset()
         return qs.select_related("user", "requester")
-
-    def get_search_form(self, request):
-        return SearchDataDownloadsForm
 
     def action_expire(self, request, data_downloads):
         for data_download in data_downloads:

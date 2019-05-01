@@ -138,10 +138,9 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
 
 
 CategoriesList.add_item_action(
-    name=_("Category permissions"),
-    icon="fa fa-adjust",
+    name=_("Change permissions"),
     link="misago:admin:categories:nodes:permissions",
-    style="success",
+    icon="",
 )
 
 

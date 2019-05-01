@@ -103,8 +103,7 @@ class MisagoAdminExtension:
         )
 
         site.add_node(
-            name=_("User Accounts"),
-            icon="fa fa-users",
+            name=_("Users"),
             parent="misago:admin:users",
             namespace="misago:admin:users:accounts",
             link="misago:admin:users:accounts:index",
@@ -112,16 +111,13 @@ class MisagoAdminExtension:
 
         site.add_node(
             name=_("Ranks"),
-            icon="fa fa-graduation-cap",
             parent="misago:admin:users",
-            after="misago:admin:users:accounts:index",
             namespace="misago:admin:users:ranks",
             link="misago:admin:users:ranks:index",
         )
 
         site.add_node(
             name=_("Bans"),
-            icon="fa fa-lock",
             parent="misago:admin:users",
             after="misago:admin:users:ranks:index",
             namespace="misago:admin:users:bans",
@@ -130,7 +126,6 @@ class MisagoAdminExtension:
 
         site.add_node(
             name=_("Data downloads"),
-            icon="fa fa-download",
             parent="misago:admin:users",
             after="misago:admin:users:bans:index",
             namespace="misago:admin:users:data-downloads",

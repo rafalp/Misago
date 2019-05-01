@@ -8,6 +8,7 @@ from ..templatetags.misago_admin_form import (
     is_radio_select_field,
     is_select_field,
     is_textarea_field,
+    is_yesno_switch_field,
     render_attrs,
     render_bool_attrs,
 )
@@ -123,6 +124,14 @@ def test_for_field_with_textarea_widget_filter_returns_true(form):
 
 def test_for_field_without_textarea_widget_filter_returns_false(form):
     assert not is_textarea_field(form["text_field"])
+
+
+def test_for_yes_no_field_filter_returns_true(form):
+    assert is_yesno_switch_field(form["yesno_field"])
+
+
+def test_for_non_yes_no_field_filter_returns_false(form):
+    assert not is_yesno_switch_field(form["text_field"])
 
 
 def test_specified_class_name_is_rendered():

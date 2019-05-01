@@ -7,11 +7,6 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% trans "Delete users with content" %}
-{% endblock page-target %}
-
-
 {% block form-header %}
 <h1>{% trans "Deleting users..." %}</h1>
 {% endblock %}
@@ -129,7 +124,7 @@
         var controller = new DeletionController($user, delete_user);
       } else {
         var $form = $('.user').first().parents('form');
-        var $btn = $form.find('.btn-default');
+        var $btn = $form.find('.btn-light');
 
         $btn.text("{% trans 'Return to list of users' %}");
         $btn.attr('class', 'btn btn-success');

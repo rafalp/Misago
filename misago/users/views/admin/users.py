@@ -19,7 +19,7 @@ from ...forms.admin import (
     EditUserForm,
     EditUserFormFactory,
     NewUserForm,
-    create_search_users_form,
+    create_filter_users_form,
 )
 from ...models import Ban
 from ...profilefields import profilefields
@@ -101,8 +101,8 @@ class UsersList(UserAdmin, generic.ListView):
         qs = super().get_queryset()
         return qs.select_related("rank")
 
-    def get_search_form(self, request):
-        return create_search_users_form()
+    def get_filter_form(self, request):
+        return create_filter_users_form()
 
     def action_activate(self, request, users):
         inactive_users = []

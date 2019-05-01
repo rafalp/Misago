@@ -1,5 +1,6 @@
 from django.core.cache import cache
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -69,6 +70,18 @@ class Agreement(models.Model):
     last_modified_by_name = models.CharField(max_length=255, null=True, blank=True)
 
     objects = AgreementManager()
+
+    def get_absolute_url(self):
+        if not self.is_active:
+            return None
+
+        if self.link:
+            return self.link
+
+        if self.type == self.TYPE_TOS:
+            return reverse("misago:terms-of-service")
+
+        return reverse("misago:privacy-policy")
 
     def get_final_title(self):
         return self.title or self.get_type_display()

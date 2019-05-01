@@ -1,0 +1,94 @@
+// Variables
+//
+// Misago admin overrides
+
+// Color system
+//
+// Use atlaskit color palette and swap blue with purple for primary color
+
+$white:    #fff !default;
+$gray-100: #f4f5f7 !default;
+$gray-200: #ebecf0 !default;
+$gray-300: #dfe1e6 !default;
+$gray-400: #c1c7d0 !default;
+$gray-500: #b3bac5 !default;
+$gray-600: #a5adba !default;
+$gray-700: #6b778c !default;
+$gray-800: #505f79 !default;
+$gray-900: #172b4d !default;
+$black:    #091e42 !default;
+
+$blue:    #0052cc !default;
+$purple:  #6554c0 !default;
+$red:     #ff5630 !default;
+$orange:  #ffab00 !default;
+$green:   #36b37e !default;
+$cyan:    #00b8d9 !default;
+
+$primary:  $purple !default;
+$light:    $gray-200 !default;
+
+$component-active-color:      $white !default;
+$component-active-bg:         $black !default;
+
+
+// Body
+//
+// Make background gray and body color squid-ink so blocks stand out more
+
+$body-bg:                   $gray-100 !default;
+$body-color:                $gray-900 !default;
+
+
+// Links
+//
+// Make link use text color - we heavily customize link colors in app
+
+$link-color:                              $gray-700 !default;
+$link-hover-color:                        $gray-900 !default;
+
+
+// Sidenavs
+
+$nav-side-width:                        240px !default;
+$nav-side-icon-width:                   30px !default;
+
+$nav-side-link-active-color:            $black !default;
+
+
+// Options
+//
+// Yield caret control to Misago styles
+
+$enable-caret:  false !default;
+
+
+// Alerts
+//
+// Remove border from alerts making them flatter, bump text contrast
+
+$alert-border-width:                0 !default;
+
+$alert-color-level:                 8 !default;
+
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-head-bg:               transparent !default;
+$table-head-color:            $gray-700 !default;
+
+
+// Cards
+//
+// Reset card header and footer background to transparent
+
+$card-cap-bg:                 transparent !default;
+
+
+// Buttons + Forms
+//
+// Fix colors after overriding
+
+$input-btn-focus-color:       rgba($blue, .15) !default;

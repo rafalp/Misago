@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .views.admin import (
     AgreementsList,
     DeleteAgreement,
+    DisableAgreement,
     EditAgreement,
     NewAgreement,
     SetAgreementAsActive,
@@ -26,12 +27,12 @@ class MisagoAdminExtension:
                 SetAgreementAsActive.as_view(),
                 name="set-as-active",
             ),
+            url(r"^disable/(?P<pk>\d+)/$", DisableAgreement.as_view(), name="disable"),
         )
 
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Agreements"),
-            icon="fa fa-check-square-o",
             parent="misago:admin:users",
             after="misago:admin:users:data-downloads:index",
             namespace="misago:admin:users:agreements",

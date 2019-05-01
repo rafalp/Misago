@@ -1,0 +1,22 @@
+{% load i18n %}
+<nav class="nav nav-side">
+  {% for node in sections %}
+    <a class="nav-link nav-section{% if node.is_active %} active{% endif %}" href="{{ node.link }}">
+      <div class="media-icon">
+        <span class="{{ node.icon }}"></span>
+      </div>
+      <div class="media-body">
+        {{ node.name }}
+      </div>
+    </a>
+    {% if node.is_active and actions %}
+      {% for subnode in actions %}
+        <a class="nav-link nav-action{% if subnode.is_active %} active{% endif %}" href="{{ subnode.link }}">
+          <div class="media-body">
+            {{ subnode.name }}
+          </div>
+        </a>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+</nav>

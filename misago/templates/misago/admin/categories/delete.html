@@ -9,37 +9,32 @@
 {% endblock title %}
 
 
-{% block page-target %}
-{% blocktrans trimmed with category=target.name %}
-  Delete category: {{ category }}
-{% endblocktrans %}
-{% endblock page-target %}
+{% block page-header %}
+{{ block.super }}
+<small>
+  {{ target }}
+</small>
+{% endblock page-header %}
 
 
 {% block form-header %}
-<h1>
-  {% blocktrans with category=target.name %}
-    Delete category: {{ category }}
-  {% endblocktrans %}
-</h1>
+{% trans "Delete category" %}
 {% endblock %}
 
 
 {% block form-body %}
-<div class="form-body">
-  <fieldset>
-    <legend>{% trans "Category contents" %}</legend>
+<fieldset>
+  <legend>{% trans "Category contents" %}</legend>
 
-    {% if not form.instance.is_leaf_node %}
-      {% form_row form.move_children_to %}
-    {% endif %}
-    {% form_row form.move_threads_to %}
+  {% if not form.instance.is_leaf_node %}
+    {% form_row form.move_children_to %}
+  {% endif %}
+  {% form_row form.move_threads_to %}
 
-  </fieldset>
-</div>
+</fieldset>
 {% endblock form-body %}
 
 
 {% block form-footer %}
-<button class="btn btn-danger">{% trans "Delete category" %}</button>
+<button class="btn btn-danger btn-sm">{% trans "Delete category" %}</button>
 {% endblock %}

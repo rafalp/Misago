@@ -1,0 +1,34 @@
+// Login page
+
+.login-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form-container {
+  width: 100%;
+  padding: $grid-gutter-width;
+}
+
+.login-form-logo {
+  margin-bottom: $paragraph-margin-bottom * 2;
+  text-align: center;
+
+  img {
+    max-width: 200px;
+    max-height: 64px;
+  }
+}
+
+.login-form-card {
+  @extend .shadow-sm;
+
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.login-form-title {
+  font-size: $font-size-lg;
+  text-align: center;
+}

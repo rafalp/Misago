@@ -1,11 +1,18 @@
 from django import forms, template
 from django.utils.html import format_html_join
 
+from ..forms import YesNoSwitchBase
+
 register = template.Library()
 
 
 @register.inclusion_tag("misago/admin/form/row.html")
 def form_row(field, label_class=None, field_class=None):
+    return {"field": field, "label_class": label_class, "field_class": field_class}
+
+
+@register.inclusion_tag("misago/admin/form/checkbox_row.html")
+def form_checkbox_row(field, label_class=None, field_class=None):
     return {"field": field, "label_class": label_class, "field_class": field_class}
 
 
@@ -36,6 +43,11 @@ def render_bool_attrs(widget):
         if value is True:
             attrs_html.append(attr)
     return " ".join(attrs_html)
+
+
+@register.filter
+def is_yesno_switch_field(field):
+    return isinstance(field.field, YesNoSwitchBase)
 
 
 @register.filter

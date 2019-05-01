@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...admin.views import generic
-from ..forms import AgreementForm, SearchAgreementsForm
+from ..forms import AgreementForm, FilterAgreementsForm
 from ..models import Agreement
-from ..utils import set_agreement_as_active
+from ..utils import disable_agreement, set_agreement_as_active
 
 
 class AgreementAdmin(generic.AdminBaseMixin):
@@ -27,7 +27,7 @@ class AgreementAdmin(generic.AdminBaseMixin):
 class AgreementsList(AgreementAdmin, generic.ListView):
     items_per_page = 30
     ordering = [("-id", _("From newest")), ("id", _("From oldest"))]
-    search_form = SearchAgreementsForm
+    filter_form = FilterAgreementsForm
     selection_label = _("With agreements: 0")
     empty_selection_label = _("Select agreements")
     mass_actions = (
@@ -57,6 +57,7 @@ class NewAgreement(AgreementAdmin, generic.ModelFormView):
 
         form.instance.set_created_by(request.user)
         form.instance.save()
+        Agreement.objects.invalidate_cache()
 
 
 class EditAgreement(AgreementAdmin, generic.ModelFormView):
@@ -68,6 +69,7 @@ class EditAgreement(AgreementAdmin, generic.ModelFormView):
         form.instance.last_modified_on = timezone.now()
         form.instance.set_last_modified_by(request.user)
         form.instance.save()
+        Agreement.objects.invalidate_cache()
 
 
 class DeleteAgreement(AgreementAdmin, generic.ButtonView):
@@ -88,3 +90,13 @@ class SetAgreementAsActive(AgreementAdmin, generic.ButtonView):
             "type": target.get_type_display(),
         }
         messages.success(request, message % targets_names)
+
+
+class DisableAgreement(AgreementAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        disable_agreement(target, commit=True)
+
+        message = _('Agreement "%(title)s" has been disabled.') % {
+            "title": target.get_final_title()
+        }
+        messages.success(request, message)

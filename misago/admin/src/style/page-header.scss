@@ -1,0 +1,38 @@
+// Page header
+//
+// Contains page title (h1) and top actions
+
+.page-header {
+  @extend .mb-3;
+
+  h1 {
+    @extend .d-flex;
+    @extend .align-items-center;
+    @extend .m-0;
+
+    font-size: $font-size-lg;
+
+    a {
+      color: $body-color;
+    }
+
+    small {
+      @extend .border-left;
+      @extend .text-muted;
+      @extend .ml-3;
+      @extend .pl-3;
+      @extend .py-1;
+
+      font-size: $font-size-lg;
+
+      vertical-align: middle;
+    }
+  }
+}
+
+.page-action {
+  .fa,
+  .fab {
+    @extend .mr-1;
+  }
+}
