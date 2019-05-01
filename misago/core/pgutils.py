@@ -1,4 +1,7 @@
+import hashlib
+
 from django.db.models import Index
+from django.utils.encoding import force_bytes
 
 
 class PgPartialIndex(Index):
@@ -36,6 +39,18 @@ class PgPartialIndex(Index):
             "longer than 3 characters?"
         )
         self.check_name()
+
+    @staticmethod
+    def _hash_generator(*args):
+        """
+        Method Index._hash_generator is removed in django 2.2
+        This method is copy from old django 2.1
+        """
+        h = hashlib.md5()
+        for arg in args:
+            h.update(force_bytes(arg))
+
+        return h.hexdigest()[:6]
 
     def __repr__(self):
         if self.where is None:

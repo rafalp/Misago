@@ -31,6 +31,8 @@ class AttachmentsSerializer(serializers.Serializer):
     attachments = serializers.ListField(
         child=serializers.IntegerField(), required=False
     )
+    # Important fix. Without this I can not run
+    update_attachments = False
 
     def validate_attachments(self, ids):
         self.update_attachments = False
