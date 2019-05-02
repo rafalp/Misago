@@ -1,18 +1,12 @@
 import pytest
 from django.contrib.auth import get_user_model
-from django.core import mail
 from django.urls import reverse
 
 from ....acl.models import Role
-from ....admin.test import AdminTestCase
-from ....categories.models import Category
 from ....legal.models import Agreement
 from ....legal.utils import save_user_agreement_acceptance
 from ....test import assert_contains
-from ....threads.test import post_thread, reply_thread
-from ...datadownloads import request_user_data_download
-from ...models import Ban, DataDownload, Rank
-from ...test import create_test_user
+from ...models import Rank
 from ...utils import hash_email
 
 User = get_user_model()
@@ -160,7 +154,7 @@ def test_edit_form_changes_user_username(admin_client, user):
     form_data = get_default_edit_form_data(user)
     form_data["username"] = "NewUsername"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -174,7 +168,7 @@ def test_editing_user_username_creates_entry_in_username_history(admin_client, u
     form_data = get_default_edit_form_data(user)
     form_data["username"] = "NewUsername"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -182,11 +176,24 @@ def test_editing_user_username_creates_entry_in_username_history(admin_client, u
     assert user.namechanges.exists()
 
 
+def test_not_editing_user_username_doesnt_create_entry_in_username_history(
+    admin_client, user
+):
+    form_data = get_default_edit_form_data(user)
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    assert not user.namechanges.exists()
+
+
 def test_edit_form_changes_user_email(admin_client, user):
     form_data = get_default_edit_form_data(user)
     form_data["email"] = "edited@example.com"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -196,12 +203,113 @@ def test_edit_form_changes_user_email(admin_client, user):
     assert user.email_hash == hash_email("edited@example.com")
 
 
+def test_edit_form_doesnt_remove_current_user_password_if_new_password_is_omitted(
+    admin_client, user, user_password
+):
+    form_data = get_default_edit_form_data(user)
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert user.check_password(user_password)
+
+
+def test_edit_form_displays_message_for_user_with_unusable_password(
+    admin_client, user, user_password
+):
+    user.set_password(None)
+    user.save()
+
+    response = admin_client.get(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+    )
+
+    assert_contains(response, "alert-has-unusable-password")
+
+
+def test_edit_form_doesnt_set_password_for_user_with_unusable_password_if_none_is_given(
+    admin_client, user, user_password
+):
+    user.set_password(None)
+    user.save()
+
+    form_data = get_default_edit_form_data(user)
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert not user.has_usable_password()
+
+
+def test_edit_form_sets_password_for_user_with_unusable_password(
+    admin_client, user, user_password
+):
+    user.set_password(None)
+    user.save()
+
+    form_data = get_default_edit_form_data(user)
+    form_data["new_password"] = user_password
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert user.check_password(user_password)
+
+
+def test_edit_form_changes_user_password(admin_client, user):
+    form_data = get_default_edit_form_data(user)
+    form_data["new_password"] = "newpassword123"
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert user.check_password("newpassword123")
+
+
+def test_edit_form_preserves_whitespace_in_new_user_password(admin_client, user):
+    form_data = get_default_edit_form_data(user)
+    form_data["new_password"] = "  newpassword123  "
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert user.check_password("  newpassword123  ")
+
+
+def test_admin_editing_their_own_password_is_not_logged_out(admin_client, superuser):
+    form_data = get_default_edit_form_data(superuser)
+    form_data["new_password"] = "newpassword123"
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
+        data=form_data,
+    )
+
+    user = admin_client.get("/api/auth/")
+    assert user.json()["id"] == superuser.id
+
+
 def test_staff_user_cannot_degrade_superuser_to_staff_user(staff_client, superuser):
     form_data = get_default_edit_form_data(superuser)
     form_data["is_staff"] = "1"
     form_data.pop("is_superuser")
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
         data=form_data,
     )
@@ -216,7 +324,7 @@ def test_staff_user_cannot_degrade_superuser_to_regular_user(staff_client, super
     form_data.pop("is_staff")
     form_data.pop("is_superuser")
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
         data=form_data,
     )
@@ -233,7 +341,7 @@ def test_staff_user_cannot_promote_other_staff_user_to_superuser(
     form_data["is_staff"] = "1"
     form_data["is_superuser"] = "1"
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_staffuser.pk}),
         data=form_data,
     )
@@ -247,7 +355,7 @@ def test_staff_user_cannot_promote_regular_user_to_staff(staff_client, user):
     form_data = get_default_edit_form_data(user)
     form_data["is_staff"] = "1"
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -260,7 +368,7 @@ def test_staff_user_cannot_promote_regular_user_to_superuser(staff_client, user)
     form_data = get_default_edit_form_data(user)
     form_data["is_superuser"] = "1"
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -273,7 +381,7 @@ def test_staff_user_cannot_promote_themselves_to_superuser(staff_client, staffus
     form_data = get_default_edit_form_data(staffuser)
     form_data["is_superuser"] = "1"
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
         data=form_data,
     )
@@ -286,7 +394,7 @@ def test_staff_user_cannot_degrade_themselves_to_regular_user(staff_client, staf
     form_data = get_default_edit_form_data(staffuser)
     form_data.pop("is_staff")
 
-    response = staff_client.post(
+    staff_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
         data=form_data,
     )
@@ -299,7 +407,7 @@ def test_superuser_cannot_degrade_themselves_to_staff_user(admin_client, superus
     form_data = get_default_edit_form_data(superuser)
     form_data.pop("is_superuser")
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
         data=form_data,
     )
@@ -313,7 +421,7 @@ def test_superuser_cannot_degrade_themselves_to_regular_user(admin_client, super
     form_data.pop("is_staff")
     form_data.pop("is_superuser")
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
         data=form_data,
     )
@@ -329,7 +437,7 @@ def test_superuser_can_degrade_other_superuser_to_staff_user(
     form_data = get_default_edit_form_data(other_superuser)
     form_data.pop("is_superuser")
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
@@ -346,7 +454,7 @@ def test_superuser_can_degrade_other_superuser_to_regular_user(
     form_data.pop("is_staff")
     form_data.pop("is_superuser")
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
@@ -360,7 +468,7 @@ def test_superuser_can_promote_to_staff_user_to_superuser(admin_client, staffuse
     form_data = get_default_edit_form_data(staffuser)
     form_data["is_superuser"] = "1"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
         data=form_data,
     )
@@ -374,7 +482,7 @@ def test_superuser_can_promote_to_regular_user_to_staff_user(admin_client, user)
     form_data = get_default_edit_form_data(user)
     form_data["is_staff"] = "1"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -389,7 +497,7 @@ def test_superuser_can_promote_to_regular_user_to_superuser(admin_client, user):
     form_data["is_staff"] = "1"
     form_data["is_superuser"] = "1"
 
-    response = admin_client.post(
+    admin_client.post(
         reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
         data=form_data,
     )
@@ -399,390 +507,208 @@ def test_superuser_can_promote_to_regular_user_to_superuser(admin_client, user):
     assert user.is_superuser
 
 
-class UserAdminTests(AdminTestCase):
-    def test_edit_view(self):
-        """edit user view changes account"""
-        test_user = create_test_user("User", "user@example.com")
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+def test_superuser_can_disable_other_superuser_account(admin_client, other_superuser):
+    form_data = get_default_edit_form_data(other_superuser)
+    form_data["is_active"] = "0"
+    form_data["is_active_staff_message"] = "Test message"
 
-        response = self.client.get(test_link)
-        self.assertEqual(response.status_code, 200)
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        data=form_data,
+    )
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "new_password": "newpass123",
-                "staff_level": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+    other_superuser.refresh_from_db()
+    assert not other_superuser.is_active
+    assert other_superuser.is_active_staff_message == "Test message"
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.check_password("newpass123"))
-        self.assertEqual(updated_user.username, "NewUsername")
-        self.assertEqual(updated_user.slug, "newusername")
 
-        User.objects.get_by_username("NewUsername")
-        User.objects.get_by_email("edited@example.com")
+def test_superuser_can_reactivate_other_superuser_account(
+    admin_client, other_superuser
+):
+    other_superuser.is_active = False
+    other_superuser.save()
 
-    def test_edit_dont_change_username(self):
-        """
-        If username wasn't changed, don't touch user's username, slug or history
+    form_data = get_default_edit_form_data(other_superuser)
+    form_data["is_active"] = "1"
 
-        This is regression test for issue #640
-        """
-        test_user = create_test_user("User", "user@example.com")
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        data=form_data,
+    )
 
-        response = self.client.get(test_link)
-        self.assertEqual(response.status_code, 200)
+    other_superuser.refresh_from_db()
+    assert other_superuser.is_active
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "User",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertEqual(updated_user.username, "User")
-        self.assertEqual(updated_user.slug, "user")
-        self.assertEqual(updated_user.namechanges.count(), 0)
+def test_superuser_can_disable_staff_user_account(admin_client, staffuser):
+    form_data = get_default_edit_form_data(staffuser)
+    form_data["is_active"] = "0"
+    form_data["is_active_staff_message"] = "Test message"
 
-    def test_edit_change_password_whitespaces(self):
-        """edit user view changes account password to include whitespaces"""
-        test_user = create_test_user("User", "user@example.com")
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
+        data=form_data,
+    )
 
-        response = self.client.get(test_link)
-        self.assertEqual(response.status_code, 200)
+    staffuser.refresh_from_db()
+    assert not staffuser.is_active
+    assert staffuser.is_active_staff_message == "Test message"
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "new_password": " newpass123 ",
-                "staff_level": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.check_password(" newpass123 "))
-        self.assertEqual(updated_user.username, "NewUsername")
-        self.assertEqual(updated_user.slug, "newusername")
+def test_superuser_can_reactivate_staff_user_account(admin_client, staffuser):
+    staffuser.is_active = False
+    staffuser.save()
 
-        User.objects.get_by_username("NewUsername")
-        User.objects.get_by_email("edited@example.com")
+    form_data = get_default_edit_form_data(staffuser)
+    form_data["is_active"] = "1"
 
-    def test_edit_disable_user(self):
-        """edit user view allows admin to disable non admin"""
-        self.user.is_superuser = False
-        self.user.save()
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
+        data=form_data,
+    )
 
-        test_user = create_test_user("User", "user@example.com")
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    staffuser.refresh_from_db()
+    assert staffuser.is_active
 
-        response = self.client.get(test_link)
-        self.assertContains(response, 'id="id_is_active_1"')
-        self.assertContains(response, 'id="id_is_active_staff_message"')
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "is_staff": "0",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "0",
-                "is_active_staff_message": "Disabled in test!",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+def test_superuser_can_disable_regular_user_account(admin_client, user):
+    form_data = get_default_edit_form_data(user)
+    form_data["is_active"] = "0"
+    form_data["is_active_staff_message"] = "Test message"
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertFalse(updated_user.is_active)
-        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
 
-    def test_edit_superuser_disable_admin(self):
-        """edit user view allows admin to disable non admin"""
-        self.user.is_superuser = True
-        self.user.save()
+    user.refresh_from_db()
+    assert not user.is_active
+    assert user.is_active_staff_message == "Test message"
 
-        test_user = create_test_user("User", "user@example.com")
 
-        test_user.is_staff = True
-        test_user.save()
+def test_superuser_can_reactivate_regular_user_account(admin_client, user):
+    user.is_active = False
+    user.save()
 
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    form_data = get_default_edit_form_data(user)
+    form_data["is_active"] = "1"
 
-        response = self.client.get(test_link)
-        self.assertContains(response, 'id="id_is_active_1"')
-        self.assertContains(response, 'id="id_is_active_staff_message"')
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "is_staff": "1",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "0",
-                "is_active_staff_message": "Disabled in test!",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+    user.refresh_from_db()
+    assert user.is_active
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertFalse(updated_user.is_active)
-        self.assertEqual(updated_user.is_active_staff_message, "Disabled in test!")
 
-    def test_edit_admin_cant_disable_admin(self):
-        """edit user view disallows admin to disable admin"""
-        self.user.is_superuser = False
-        self.user.save()
+def test_staff_user_can_disable_regular_user_account(staff_client, user):
+    form_data = get_default_edit_form_data(user)
+    form_data["is_active"] = "0"
 
-        test_user = create_test_user("User", "user@example.com")
+    staff_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
 
-        test_user.is_staff = True
-        test_user.save()
+    user.refresh_from_db()
+    assert not user.is_active
 
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
 
-        response = self.client.get(test_link)
-        self.assertNotContains(response, 'id="id_is_active_1"')
-        self.assertNotContains(response, 'id="id_is_active_staff_message"')
+def test_staff_user_can_reactivate_regular_user_account(staff_client, user):
+    user.is_active = False
+    user.save()
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "is_staff": "1",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "0",
-                "is_active_staff_message": "Disabled in test!",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+    form_data = get_default_edit_form_data(user)
+    form_data["is_active"] = "1"
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.is_active)
-        self.assertFalse(updated_user.is_active_staff_message)
+    staff_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
 
-    def test_edit_is_deleting_account_cant_reactivate(self):
-        """users deleting own accounts can't be reactivated"""
-        test_user = create_test_user("User", "user@example.com")
-        test_user.mark_for_delete()
+    user.refresh_from_db()
+    assert user.is_active
 
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
 
-        response = self.client.get(test_link)
-        self.assertNotContains(response, 'id="id_is_active_1"')
-        self.assertNotContains(response, 'id="id_is_active_staff_message"')
+def test_superuser_cant_disable_their_own_account(admin_client, superuser):
+    form_data = get_default_edit_form_data(superuser)
+    form_data["is_active"] = "0"
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "is_staff": "1",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "1",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
+        data=form_data,
+    )
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertFalse(updated_user.is_active)
-        self.assertTrue(updated_user.is_deleting_account)
+    superuser.refresh_from_db()
+    assert superuser.is_active
 
-    def test_edit_unusable_password(self):
-        """admin edit form handles unusable passwords and lets setting new password"""
-        test_user = create_test_user("User", "user@example.com")
-        self.assertFalse(test_user.has_usable_password())
 
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+def test_staff_user_cant_disable_their_own_account(staff_client, staffuser):
+    form_data = get_default_edit_form_data(staffuser)
+    form_data["is_active"] = "0"
 
-        response = self.client.get(test_link)
-        self.assertContains(response, "alert-has-unusable-password")
+    staff_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
+        data=form_data,
+    )
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "new_password": "pass123",
-                "is_staff": "1",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "1",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
+    staffuser.refresh_from_db()
+    assert staffuser.is_active
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertTrue(updated_user.has_usable_password())
 
-    def test_edit_keep_unusable_password(self):
-        """
-        admin edit form handles unusable passwords and lets admin leave them unchanged
-        """
-        test_user = create_test_user("User", "user@example.com")
-        self.assertFalse(test_user.has_usable_password())
+def test_staff_user_cant_disable_superuser_account(staff_client, superuser):
+    form_data = get_default_edit_form_data(superuser)
+    form_data["is_active"] = "0"
 
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    staff_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
+        data=form_data,
+    )
 
-        response = self.client.get(test_link)
-        self.assertContains(response, "alert-has-unusable-password")
+    superuser.refresh_from_db()
+    assert superuser.is_active
 
-        response = self.client.post(
-            test_link,
-            data={
-                "username": "NewUsername",
-                "rank": str(test_user.rank_id),
-                "roles": str(test_user.roles.all()[0].pk),
-                "email": "edited@example.com",
-                "is_staff": "1",
-                "is_superuser": "0",
-                "signature": "Hello world!",
-                "is_signature_locked": "1",
-                "is_hiding_presence": "0",
-                "limits_private_thread_invites_to": "0",
-                "signature_lock_staff_message": "Staff message",
-                "signature_lock_user_message": "User message",
-                "subscribe_to_started_threads": "2",
-                "subscribe_to_replied_threads": "2",
-                "is_active": "1",
-            },
-        )
-        self.assertEqual(response.status_code, 302)
 
-        updated_user = User.objects.get(pk=test_user.pk)
-        self.assertFalse(updated_user.has_usable_password())
+def test_staff_user_cant_disable_other_staff_user_account(staff_client, other_staffuser):
+    form_data = get_default_edit_form_data(other_staffuser)
+    form_data["is_active"] = "0"
 
-    def test_edit_agreements_list(self):
-        """edit view displays list of user's agreements"""
-        test_user = create_test_user("User", "user@example.com")
-        test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": test_user.pk}
-        )
+    staff_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_staffuser.pk}),
+        data=form_data,
+    )
 
-        agreement = Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            title="Test agreement!",
-            text="Lorem ipsum!",
-            is_active=True,
-        )
+    other_staffuser.refresh_from_db()
+    assert other_staffuser.is_active
 
-        response = self.client.get(test_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, agreement.title)
 
-        save_user_agreement_acceptance(test_user, agreement, commit=True)
+def test_user_deleting_their_account_cant_be_reactivated(admin_client, user):
+    user.mark_for_delete()
 
-        response = self.client.get(test_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, agreement.title)
+    form_data = get_default_edit_form_data(user)
+    form_data["is_active"] = "1"
+
+    admin_client.post(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        data=form_data,
+    )
+
+    user.refresh_from_db()
+    assert not user.is_active
+
+
+def test_user_agreements_are_displayed_on_edit_form(admin_client, user):
+    agreement = Agreement.objects.create(
+        type=Agreement.TYPE_TOS,
+        title="Test agreement!",
+        text="Lorem ipsum!",
+        is_active=True,
+    )
+
+    save_user_agreement_acceptance(user, agreement, commit=True)
+
+    response = admin_client.get(
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+    )
+    assert_contains(response, agreement.title)
