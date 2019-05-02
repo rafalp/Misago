@@ -224,7 +224,7 @@ def test_edit_form_displays_message_for_user_with_unusable_password(
     user.save()
 
     response = admin_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
     )
 
     assert_contains(response, "alert-has-unusable-password")
@@ -670,7 +670,9 @@ def test_staff_user_cant_disable_superuser_account(staff_client, superuser):
     assert superuser.is_active
 
 
-def test_staff_user_cant_disable_other_staff_user_account(staff_client, other_staffuser):
+def test_staff_user_cant_disable_other_staff_user_account(
+    staff_client, other_staffuser
+):
     form_data = get_default_edit_form_data(other_staffuser)
     form_data["is_active"] = "0"
 
@@ -709,6 +711,6 @@ def test_user_agreements_are_displayed_on_edit_form(admin_client, user):
     save_user_agreement_acceptance(user, agreement, commit=True)
 
     response = admin_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
+        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
     )
     assert_contains(response, agreement.title)
