@@ -106,6 +106,20 @@
 
 
 {% block filters-modal-body %}
+<div class="alert alert-info" role="alert">
+  <p>
+    {% trans 'You can include wildcard ("*") in username and email search:' %}
+  </p>
+  <p>
+    {% trans '"admin*" will find both "admin" and "administrator".' %}
+  </p>
+  <p>
+    {% trans '"*chan" will match both "chan" and "marichan".' %}
+  </p>
+  <p class="mb-0">
+    {% trans '"*son*" will match "son", "song", "firstson" and "firstsong".' %}
+  </p>
+</div>
 <div class="row">
   <div class="col">
     {% form_row filter_form.username %}

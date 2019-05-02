@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from .djangoadmin import UserAdminModel
-from .views.admin.bans import BansList, DeleteBan, EditBan, NewBan
-from .views.admin.datadownloads import DataDownloadsList, RequestDataDownloads
-from .views.admin.ranks import (
+from .views.bans import BansList, DeleteBan, EditBan, NewBan
+from .views.datadownloads import DataDownloadsList, RequestDataDownloads
+from .views.ranks import (
     DefaultRank,
     DeleteRank,
     EditRank,
@@ -16,14 +16,7 @@ from .views.admin.ranks import (
     RanksList,
     RankUsers,
 )
-from .views.admin.users import (
-    DeleteAccountStep,
-    DeletePostsStep,
-    DeleteThreadsStep,
-    EditUser,
-    NewUser,
-    UsersList,
-)
+from .views.users import EditUser, NewUser, UsersList
 
 djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
 
@@ -41,21 +34,6 @@ class MisagoAdminExtension:
             url(r"^(?P<page>\d+)/$", UsersList.as_view(), name="index"),
             url(r"^new/$", NewUser.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditUser.as_view(), name="edit"),
-            url(
-                r"^delete-threads/(?P<pk>\d+)/$",
-                DeleteThreadsStep.as_view(),
-                name="delete-threads",
-            ),
-            url(
-                r"^delete-posts/(?P<pk>\d+)/$",
-                DeletePostsStep.as_view(),
-                name="delete-posts",
-            ),
-            url(
-                r"^delete-account/(?P<pk>\d+)/$",
-                DeleteAccountStep.as_view(),
-                name="delete-account",
-            ),
         )
 
         # Ranks

@@ -1,13 +1,13 @@
 from django.urls import reverse
 
-from ...acl import ACL_CACHE
-from ...acl.models import Role
-from ...admin.test import AdminTestCase
-from ...cache.test import assert_invalidates_cache
-from ..models import Rank
+from ....acl import ACL_CACHE
+from ....acl.models import Role
+from ....admin.test import AdminTestCase
+from ....cache.test import assert_invalidates_cache
+from ...models import Rank
 
 
-class RankAdminViewsTests(AdminTestCase):
+class RankAdminTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains ranks link"""
         response = self.client.get(reverse("misago:admin:users:accounts:index"))

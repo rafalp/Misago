@@ -3,16 +3,17 @@ import os
 from django.core.files import File
 from django.urls import reverse
 
-from ...admin.test import AdminTestCase
-from ..datadownloads import request_user_data_download
-from ..models import DataDownload
-from ..test import create_test_user
+from ....admin.test import AdminTestCase
+from ...datadownloads import request_user_data_download
+from ...models import DataDownload
+from ...test import create_test_user
 
-TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
+APP_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TESTFILES_DIR = os.path.join(APP_DIR, "tests", "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 
 
-class DataDownloadAdminViewsTests(AdminTestCase):
+class DataDownloadAdminTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains data downloads link"""
         response = self.client.get(reverse("misago:admin:users:accounts:index"))

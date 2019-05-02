@@ -14,17 +14,18 @@ from ....core.pgutils import chunk_queryset
 from ....threads.models import Thread
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
-from ...forms.admin import (
+from ...models import Ban
+from ...profilefields import profilefields
+from ...setupnewuser import setup_new_user
+from ...signatures import set_user_signature
+from ..forms import (
     BanUsersForm,
     EditUserForm,
     EditUserFormFactory,
     NewUserForm,
     create_filter_users_form,
 )
-from ...models import Ban
-from ...profilefields import profilefields
-from ...setupnewuser import setup_new_user
-from ...signatures import set_user_signature
+from ..tasks import delete_user_with_content
 
 User = get_user_model()
 
@@ -62,8 +63,8 @@ class UsersList(UserAdmin, generic.ListView):
         ("id", _("From oldest")),
         ("slug", _("A to z")),
         ("-slug", _("Z to a")),
-        ("posts", _("Biggest posters")),
-        ("-posts", _("Smallest posters")),
+        ("-posts", _("Biggest posters")),
+        ("posts", _("Smallest posters")),
     ]
     selection_label = _("With users: 0")
     empty_selection_label = _("Select users")
@@ -87,7 +88,7 @@ class UsersList(UserAdmin, generic.ListView):
         },
         {
             "action": "delete_all",
-            "name": _("Delete all"),
+            "name": _("Delete with content"),
             "icon": "fa fa-eraser",
             "confirmation": _(
                 "Are you sure you want to delete selected users? "
@@ -241,8 +242,18 @@ class UsersList(UserAdmin, generic.ListView):
                 }
                 raise generic.MassActionError(message)
 
-        return self.render(
-            request, template="misago/admin/users/delete.html", context={"users": users}
+        for user in users:
+            user.is_active = False
+            user.save()
+
+            delete_user_with_content.delay(user.pk)
+
+        messages.success(
+            request,
+            _(
+                "Selected users have disabled and been queued for deletion "
+                "together with their content."
+            ),
         )
 
 
@@ -265,9 +276,6 @@ class NewUser(UserAdmin, generic.ModelFormView):
             rank=form.cleaned_data.get("rank"),
             joined_from_ip=request.user_ip,
         )
-
-        if form.cleaned_data.get("staff_level"):
-            new_user.staff_level = form.cleaned_data["staff_level"]
 
         if form.cleaned_data.get("roles"):
             new_user.roles.add(*form.cleaned_data["roles"])

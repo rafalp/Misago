@@ -43,12 +43,12 @@ def assert_filenames_are_same(src, dst):
     assert source_filename == imported_filename
 
 
-def test_import_theme_form_is_displayed(db, admin_client):
+def test_import_theme_form_is_displayed(admin_client):
     response = admin_client.get(import_link)
     assert_contains(response, "Import theme")
 
 
-def test_theme_import_fails_if_export_was_not_uploaded(db, admin_client):
+def test_theme_import_fails_if_export_was_not_uploaded(admin_client):
     admin_client.post(import_link, {"upload": None})
     assert Theme.objects.count() == 1
 

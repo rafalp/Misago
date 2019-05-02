@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.views import generic
-from ...forms.admin import BanForm, FilterBansForm
 from ...models import Ban
+from ..forms import BanForm, FilterBansForm
 
 
 class BanAdmin(generic.AdminBaseMixin):
