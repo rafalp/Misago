@@ -80,6 +80,17 @@ def staffuser_acl(staffuser, cache_versions):
 
 
 @pytest.fixture
+def other_staffuser(db, user_password):
+    user = create_test_superuser(
+        "OtherStaffuser", "otherstaffuser@example.com", user_password
+    )
+
+    user.is_superuser = False
+    user.save()
+    return user
+
+
+@pytest.fixture
 def superuser(db, user_password):
     return create_test_superuser("Superuser", "superuser@example.com", user_password)
 
@@ -90,10 +101,26 @@ def superuser_acl(superuser, cache_versions):
 
 
 @pytest.fixture
+def other_superuser(db, user_password):
+    return create_test_superuser(
+        "OtherSuperuser", "othersuperuser@example.com", user_password
+    )
+
+
+@pytest.fixture
 def admin_client(mocker, client, superuser):
     client.force_login(superuser)
     session = client.session
     authorize_admin(mocker.Mock(session=session, user=superuser))
+    session.save()
+    return client
+
+
+@pytest.fixture
+def staff_client(mocker, client, staffuser):
+    client.force_login(staffuser)
+    session = client.session
+    authorize_admin(mocker.Mock(session=session, user=staffuser))
     session.save()
     return client
 

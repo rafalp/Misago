@@ -16,11 +16,7 @@ from .views.ranks import (
     RanksList,
     RankUsers,
 )
-from .views.users import (
-    EditUser,
-    NewUser,
-    UsersList,
-)
+from .views.users import EditUser, NewUser, UsersList
 
 djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
 

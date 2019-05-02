@@ -100,3 +100,8 @@ def remove_old_registrations_ips(sender, **kwargs):
 def remove_old_audit_trails(sender, **kwargs):
     removal_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
     AuditTrail.objects.filter(created_on__lte=removal_cutoff).delete()
+
+
+@receiver(delete_user_content)
+def remove_data_downloads(sender, **kwargs):
+    pass

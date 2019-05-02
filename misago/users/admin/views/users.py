@@ -250,7 +250,10 @@ class UsersList(UserAdmin, generic.ListView):
 
         messages.success(
             request,
-            _("Selected users accounts and content have been queued for deletion."),
+            _(
+                "Selected users have disabled and been queued for deletion "
+                "together with their content."
+            ),
         )
 
 
@@ -273,9 +276,6 @@ class NewUser(UserAdmin, generic.ModelFormView):
             rank=form.cleaned_data.get("rank"),
             joined_from_ip=request.user_ip,
         )
-
-        if form.cleaned_data.get("staff_level"):
-            new_user.staff_level = form.cleaned_data["staff_level"]
 
         if form.cleaned_data.get("roles"):
             new_user.roles.add(*form.cleaned_data["roles"])

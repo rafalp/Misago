@@ -173,9 +173,7 @@ def test_mass_action_is_not_requesting_data_downloads_for_users_with_existing_re
     assert not DataDownload.objects.exclude(id__in=downloads_ids).exists()
 
 
-def test_multiple_users_can_be_deleted_with_mass_action(
-    admin_client, users_admin_link
-):
+def test_multiple_users_can_be_deleted_with_mass_action(admin_client, users_admin_link):
     users = create_multiple_users()
     response = admin_client.post(
         users_admin_link,
@@ -231,7 +229,7 @@ def mock_delete_user_with_content(mocker):
     delay = mocker.Mock()
     mocker.patch(
         "misago.users.admin.views.users.delete_user_with_content",
-        mocker.Mock(delay=delay)
+        mocker.Mock(delay=delay),
     )
     return delay
 
@@ -240,8 +238,7 @@ def test_multiple_users_can_be_deleted_together_with_content_by_mass_action(
     admin_client, users_admin_link, users_ids, mock_delete_user_with_content
 ):
     response = admin_client.post(
-        users_admin_link,
-        data={"action": "delete_all", "selected_items": users_ids},
+        users_admin_link, data={"action": "delete_all", "selected_items": users_ids}
     )
 
     calls = [call(u) for u in users_ids]
