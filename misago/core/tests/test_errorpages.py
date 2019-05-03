@@ -13,11 +13,21 @@ from ..utils import encode_json_html
 
 
 class CSRFErrorViewTests(TestCase):
-    def test_csrf_failure(self):
+    def test_csrf_failure_is_handled(self):
         """csrf_failure error page has no show-stoppers"""
         csrf_client = Client(enforce_csrf_checks=True)
         response = csrf_client.post(reverse("misago:index"), data={"eric": "fish"})
         self.assertContains(response, "Request blocked", status_code=403)
+
+    def test_ajax_csrf_failure_is_handled(self):
+        """csrf_failure error ajax response has no show-stoppers"""
+        csrf_client = Client(enforce_csrf_checks=True)
+        response = csrf_client.post(
+            reverse("misago:api:auth"),
+            data={"eric": "fish"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertContains(response, "CSRF cookie", status_code=403)
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
