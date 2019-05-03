@@ -1,81 +1,99 @@
 from pathlib import Path
 
-from django.test import TestCase
+import pytest
 
 from ...conf import settings
 from ...core.utils import slugify
 from ..avatars import dynamic
-from ..models import Avatar, User
+from ..datadownloads import request_user_data_download
+from ..models import Avatar, DataDownload, User
+from ..utils import hash_email
 
 
-class UserTests(TestCase):
-    def test_anonymize_data(self):
-        """anonymize_data sets username and slug to one defined in settings"""
-        user = User.objects.create_user("User", "user@example.com")
+def test_username_and_slug_is_removed_by_anonymization(user):
+    user.anonymize_data()
+    assert user.username == settings.MISAGO_ANONYMOUS_USERNAME
+    assert user.slug == slugify(settings.MISAGO_ANONYMOUS_USERNAME)
 
-        user.anonymize_data()
-        self.assertEqual(user.username, settings.MISAGO_ANONYMOUS_USERNAME)
-        self.assertEqual(user.slug, slugify(settings.MISAGO_ANONYMOUS_USERNAME))
 
-    def test_user_avatar_files_are_deleted_together_with_user(self):
-        """account deletion for user also deletes their avatar file"""
-        user = User.objects.create_user("User", "user@example.com")
-        dynamic.set_avatar(user)
-        user.save()
+def test_user_avatar_files_are_deleted_during_user_deletion(user):
+    dynamic.set_avatar(user)
+    user.save()
 
-        user_avatars = []
-        for avatar in user.avatar_set.all():
-            avatar_path = Path(avatar.image.path)
-            self.assertTrue(avatar_path.exists())
-            self.assertTrue(avatar_path.is_file())
-            user_avatars.append(avatar)
-        self.assertNotEqual(user_avatars, [])
+    user_avatars = []
+    for avatar in user.avatar_set.all():
+        avatar_path = Path(avatar.image.path)
+        assert avatar_path.exists()
+        assert avatar_path.is_file()
+        user_avatars.append(avatar)
+    assert user_avatars
 
-        user.delete()
+    user.delete()
 
-        for removed_avatar in user_avatars:
-            avatar_path = Path(removed_avatar.image.path)
-            self.assertFalse(avatar_path.exists())
-            self.assertFalse(avatar_path.is_file())
+    for removed_avatar in user_avatars:
+        avatar_path = Path(removed_avatar.image.path)
+        assert not avatar_path.exists()
+        assert not avatar_path.is_file()
 
-            with self.assertRaises(Avatar.DoesNotExist):
-                Avatar.objects.get(pk=removed_avatar.pk)
+        with pytest.raises(Avatar.DoesNotExist):
+            Avatar.objects.get(pk=removed_avatar.pk)
 
-    def test_set_username(self):
-        """set_username sets username and slug on model"""
-        user = User()
 
-        user.set_username("Username")
-        self.assertEqual(user.username, "Username")
-        self.assertEqual(user.slug, "username")
+def test_username_setter_also_sets_slug():
+    user = User()
+    user.set_username("TestUser")
+    assert user.username == "TestUser"
+    assert user.slug == "testuser"
 
-        self.assertEqual(user.get_username(), "Username")
-        self.assertEqual(user.get_full_name(), "Username")
-        self.assertEqual(user.get_short_name(), "Username")
 
-    def test_set_email(self):
-        """set_email sets email and hash on model"""
-        user = User()
+def test_django_username_getters_return_username(user):
+    assert user.get_username() == user.username
+    assert user.get_full_name() == user.username
+    assert user.get_short_name() == user.username
 
-        user.set_email("us3R@EXample.com")
-        self.assertEqual(user.email, "us3R@example.com")
-        self.assertTrue(user.email_hash)
 
-    def test_mark_for_delete(self):
-        """mark_for_delete deactivates user and sets is_deleting_account flag"""
-        user = User.objects.create_user("User", "user@example.com")
-        user.mark_for_delete()
-        self.assertFalse(user.is_active)
-        self.assertTrue(user.is_deleting_account)
+def test_email_setter_normalizes_email():
+    user = User()
+    user.set_email("us3R@EXample.com")
+    assert user.email == "us3R@example.com"
 
-        user_from_db = User.objects.get(pk=user.pk)
-        self.assertFalse(user_from_db.is_active)
-        self.assertTrue(user_from_db.is_deleting_account)
 
-    def test_get_real_name(self):
-        """get_real_name returns user-set real name or none"""
-        user = User.objects.create_user("User", "user@example.com")
-        self.assertIsNone(user.get_real_name())
+def test_email_setter_also_sets_email_hash():
+    user = User()
+    user.set_email("us3R@example.com")
+    assert user.email_hash == hash_email("us3R@example.com")
 
-        user.profile_fields["real_name"] = "User Usererson"
-        self.assertEqual(user.get_real_name(), "User Usererson")
+
+def test_real_name_getter_returns_name_entered_in_profile_field(user):
+    user.profile_fields["real_name"] = "John Doe"
+    assert user.get_real_name() == "John Doe"
+
+
+def test_real_name_getter_returns_none_if_profile_field_has_no_value(user):
+    assert user.get_real_name() is None
+
+
+def test_marking_user_for_deletion_deactivates_their_account_in_db(user):
+    user.mark_for_delete()
+    assert not user.is_active
+    assert user.is_deleting_account
+
+    user.refresh_from_db()
+    assert not user.is_active
+    assert user.is_deleting_account
+
+
+def test_user_data_downloads_are_removed_by_anonymization(user):
+    data_download = request_user_data_download(user)
+    user.anonymize_data()
+
+    with pytest.raises(DataDownload.DoesNotExist):
+        data_download.refresh_from_db()
+
+
+def test_deleting_user_also_deletes_their_data_downloads(user):
+    data_download = request_user_data_download(user)
+    user.delete()
+
+    with pytest.raises(DataDownload.DoesNotExist):
+        data_download.refresh_from_db()
