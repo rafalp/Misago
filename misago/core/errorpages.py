@@ -117,9 +117,7 @@ def csrf_failure(request, reason=""):
             status=403,
         )
 
-    response = render(request, "misago/errorpages/csrf_failure.html")
-    response.status_code = 403
-    return response
+    return render(request, "misago/errorpages/csrf_failure.html", status=403)
 
 
 def not_allowed(request):
