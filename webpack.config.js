@@ -10,6 +10,11 @@ module.exports = {
     path: path.resolve(__dirname, "misago", "static", "misago", "admin"),
     filename: "index.js"
   },
+  resolve: {
+    alias: {
+      moment$: path.resolve(__dirname, "node_modules", "moment", "min", "moment.min.js")
+    }
+  },
   module: {
     rules: [
       {
