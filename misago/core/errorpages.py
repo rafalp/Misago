@@ -107,7 +107,15 @@ def social_auth_failed(request, exception):
 @admin_csrf_failure
 def csrf_failure(request, reason=""):
     if request.is_ajax():
-        return _ajax_error(403, _("Request authentication is invalid."))
+        return JsonResponse(
+            {
+                "detail": _(
+                    "Your request was rejected because your browser didn't "
+                    "send the CSRF cookie, or the cookie sent was invalid."
+                )
+            },
+            status=403
+        )
 
     response = render(request, "misago/errorpages/csrf_failure.html")
     response.status_code = 403
