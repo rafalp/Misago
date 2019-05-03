@@ -20,6 +20,12 @@
 
   {# We include JavaScript at the end of page body so it renders faster #}
   <script type="text/javascript" src="{% static 'misago/admin/index.js' %}"></script>
+  {% if ADMIN_MOMENTJS_LOCALE_URL %}
+    <script type="text/javascript" src="{% static ADMIN_MOMENTJS_LOCALE_URL %}"></script>
+  {% endif %}
+  <script type="text/javascript">
+    window.misago.init()
+  </script>
   {% block javascripts %}{% endblock javascripts %}
 </body>
 {% endblock body %}

@@ -9,7 +9,7 @@ from django.utils.translation import gettext as _
 
 from ..conf import settings
 from ..core.pgutils import chunk_queryset
-from .models import AuditTrail
+from .models import AuditTrail, DataDownload
 from .profilefields import profilefields
 
 User = get_user_model()
@@ -59,8 +59,7 @@ def archive_user_avatar(sender, archive=None, **kwargs):
 
 @receiver(archive_user_data)
 def archive_user_audit_trail(sender, archive=None, **kwargs):
-    queryset = sender.audittrail_set.order_by("id")
-    for audit_trail in chunk_queryset(queryset):
+    for audit_trail in chunk_queryset(sender.audittrail_set):
         item_name = audit_trail.created_on.strftime("%H%M%S-audit-trail")
         archive.add_text(item_name, audit_trail.ip_address, date=audit_trail.created_on)
 
@@ -100,3 +99,9 @@ def remove_old_registrations_ips(sender, **kwargs):
 def remove_old_audit_trails(sender, **kwargs):
     removal_cutoff = timezone.now() - timedelta(days=settings.MISAGO_IP_STORE_TIME)
     AuditTrail.objects.filter(created_on__lte=removal_cutoff).delete()
+
+
+@receiver(anonymize_user_data)
+def delete_data_downloads(sender, **kwargs):
+    for data_download in chunk_queryset(sender.datadownload_set):
+        data_download.delete()
