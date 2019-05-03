@@ -114,7 +114,7 @@ def csrf_failure(request, reason=""):
                     "send the CSRF cookie, or the cookie sent was invalid."
                 )
             },
-            status=403
+            status=403,
         )
 
     response = render(request, "misago/errorpages/csrf_failure.html")

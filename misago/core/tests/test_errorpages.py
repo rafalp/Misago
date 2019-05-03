@@ -25,7 +25,7 @@ class CSRFErrorViewTests(TestCase):
         response = csrf_client.post(
             reverse("misago:api:auth"),
             data={"eric": "fish"},
-            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
         )
         self.assertContains(response, "CSRF cookie", status_code=403)
 
