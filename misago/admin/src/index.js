@@ -13,15 +13,19 @@ import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
 import initValidation from "./validation"
 
-moment.locale(document.querySelector("html").lang)
-
-initTooltips()
-initTimestamps()
-initValidation()
-
+window.moment = moment
 window.misago = {
   initConfirmation,
   initDatepicker,
   initMassActions,
-  initMassDelete
+  initMassDelete,
+
+  init: () => {
+    const locale = document.querySelector("html").lang
+    moment.locale(locale.replace("_", "-").toLowerCase())
+
+    initTooltips()
+    initTimestamps()
+    initValidation()
+  }
 }
