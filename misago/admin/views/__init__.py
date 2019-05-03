@@ -1,9 +1,12 @@
 from django.urls import reverse, NoReverseMatch
+from django.utils.translation import get_language
 from django.shortcuts import render as dj_render
 
 from ...conf import settings
+from ...core.momentjs import get_locale_url
 from .. import site
 from ..auth import is_admin_authorized, update_admin_authorization
+from ..momentjs import MISAGO_ADMIN_MOMENT_LOCALES
 from .auth import login
 
 
@@ -48,7 +51,17 @@ def render(request, template, context=None, error_page=False):
                 context["active_link"] = item
                 break
 
+    context["ADMIN_MOMENTJS_LOCALE_URL"] = get_admin_moment_locale_url()
+
     return dj_render(request, template, context)
+
+
+def get_admin_moment_locale_url():
+    return get_locale_url(
+        get_language(),
+        static_path_template="misago/admin/momentjs/%s.js",
+        locales=MISAGO_ADMIN_MOMENT_LOCALES,
+    )
 
 
 # Decorator for views
