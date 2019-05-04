@@ -157,9 +157,9 @@ class AdminSite:
                 "name": name,
                 "icon": icon,
                 "parent": join_namespace(parent),
-                "namespace": join_namespace(parent, namespace),
                 "after": join_namespace(parent, after) if after else None,
                 "before": join_namespace(parent, before) if before else None,
+                "namespace": join_namespace(parent, namespace),
                 "link": join_namespace(parent, namespace, link),
             }
         )
