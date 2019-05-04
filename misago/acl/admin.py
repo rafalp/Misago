@@ -10,9 +10,8 @@ class MisagoAdminExtension:
         urlpatterns.namespace(r"^permissions/", "permissions")
 
         # Roles
-        urlpatterns.namespace(r"^users/", "users", "permissions")
         urlpatterns.patterns(
-            "permissions:users",
+            "permissions",
             url(r"^$", RolesList.as_view(), name="index"),
             url(r"^new/$", NewRole.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditRole.as_view(), name="edit"),
@@ -24,15 +23,6 @@ class MisagoAdminExtension:
         site.add_node(
             name=_("Permissions"),
             icon="fa fa-adjust",
-            parent="misago:admin",
-            after="misago:admin:users:accounts:index",
-            namespace="misago:admin:permissions",
-            link="misago:admin:permissions:users:index",
-        )
-
-        site.add_node(
-            name=_("User roles"),
-            parent="misago:admin:permissions",
-            namespace="misago:admin:permissions:users",
-            link="misago:admin:permissions:users:index",
+            after="categories:index",
+            namespace="permissions",
         )

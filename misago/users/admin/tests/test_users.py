@@ -14,7 +14,7 @@ User = get_user_model()
 
 def test_link_is_registered_in_admin_nav(admin_client):
     response = admin_client.get(reverse("misago:admin:index"))
-    assert_contains(response, reverse("misago:admin:users:accounts:index"))
+    assert_contains(response, reverse("misago:admin:users:index"))
 
 
 def test_list_renders_with_item(admin_client, users_admin_link, superuser):
@@ -23,7 +23,7 @@ def test_list_renders_with_item(admin_client, users_admin_link, superuser):
 
 
 def test_new_user_form_renders(admin_client):
-    response = admin_client.get(reverse("misago:admin:users:accounts:new"))
+    response = admin_client.get(reverse("misago:admin:users:new"))
     assert response.status_code == 200
 
 
@@ -32,7 +32,7 @@ def test_new_user_can_be_created(admin_client):
     authenticated_role = Role.objects.get(special_role="authenticated")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:new"),
+        reverse("misago:admin:users:new"),
         data={
             "username": "User",
             "rank": str(default_rank.pk),
@@ -57,7 +57,7 @@ def test_new_user_can_be_created_with_whitespace_around_password(admin_client):
     authenticated_role = Role.objects.get(special_role="authenticated")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:new"),
+        reverse("misago:admin:users:new"),
         data={
             "username": "User",
             "rank": str(default_rank.pk),
@@ -79,7 +79,7 @@ def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
     guest_role = Role.objects.get(special_role="anonymous")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:new"),
+        reverse("misago:admin:users:new"),
         data={
             "username": "User",
             "rank": str(default_rank.pk),
@@ -96,28 +96,28 @@ def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
 
 def test_edit_user_form_renders(admin_client, user):
     response = admin_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk})
     )
     assert response.status_code == 200
 
 
 def test_edit_user_form_renders_for_staff_user(staff_client, user):
     response = staff_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk})
     )
     assert response.status_code == 200
 
 
 def test_edit_staff_form_renders_for_staff_user(staff_client, other_staffuser):
     response = staff_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_staffuser.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": other_staffuser.pk})
     )
     assert response.status_code == 200
 
 
 def test_edit_superuser_form_renders_for_staff_user(staff_client, superuser):
     response = staff_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk})
     )
     assert response.status_code == 200
 
@@ -155,8 +155,7 @@ def test_edit_form_changes_user_username(admin_client, user):
     form_data["username"] = "NewUsername"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -169,8 +168,7 @@ def test_editing_user_username_creates_entry_in_username_history(admin_client, u
     form_data["username"] = "NewUsername"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     assert user.namechanges.exists()
@@ -182,8 +180,7 @@ def test_not_editing_user_username_doesnt_create_entry_in_username_history(
     form_data = get_default_edit_form_data(user)
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     assert not user.namechanges.exists()
@@ -194,8 +191,7 @@ def test_edit_form_changes_user_email(admin_client, user):
     form_data["email"] = "edited@example.com"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -209,8 +205,7 @@ def test_edit_form_doesnt_remove_current_user_password_if_new_password_is_omitte
     form_data = get_default_edit_form_data(user)
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -224,7 +219,7 @@ def test_edit_form_displays_message_for_user_with_unusable_password(
     user.save()
 
     response = admin_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk})
     )
 
     assert_contains(response, "alert-has-unusable-password")
@@ -239,8 +234,7 @@ def test_edit_form_doesnt_set_password_for_user_with_unusable_password_if_none_i
     form_data = get_default_edit_form_data(user)
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -257,8 +251,7 @@ def test_edit_form_sets_password_for_user_with_unusable_password(
     form_data["new_password"] = user_password
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -270,8 +263,7 @@ def test_edit_form_changes_user_password(admin_client, user):
     form_data["new_password"] = "newpassword123"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -283,8 +275,7 @@ def test_edit_form_preserves_whitespace_in_new_user_password(admin_client, user)
     form_data["new_password"] = "  newpassword123  "
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -296,8 +287,7 @@ def test_admin_editing_their_own_password_is_not_logged_out(admin_client, superu
     form_data["new_password"] = "newpassword123"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     user = admin_client.get("/api/auth/")
@@ -310,8 +300,7 @@ def test_staff_user_cannot_degrade_superuser_to_staff_user(staff_client, superus
     form_data.pop("is_superuser")
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -325,8 +314,7 @@ def test_staff_user_cannot_degrade_superuser_to_regular_user(staff_client, super
     form_data.pop("is_superuser")
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -342,7 +330,7 @@ def test_staff_user_cannot_promote_other_staff_user_to_superuser(
     form_data["is_superuser"] = "1"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_staffuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_staffuser.pk}),
         data=form_data,
     )
 
@@ -356,8 +344,7 @@ def test_staff_user_cannot_promote_regular_user_to_staff(staff_client, user):
     form_data["is_staff"] = "1"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -369,8 +356,7 @@ def test_staff_user_cannot_promote_regular_user_to_superuser(staff_client, user)
     form_data["is_superuser"] = "1"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -382,8 +368,7 @@ def test_staff_user_cannot_promote_themselves_to_superuser(staff_client, staffus
     form_data["is_superuser"] = "1"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -395,8 +380,7 @@ def test_staff_user_cannot_degrade_themselves_to_regular_user(staff_client, staf
     form_data.pop("is_staff")
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -408,8 +392,7 @@ def test_superuser_cannot_degrade_themselves_to_staff_user(admin_client, superus
     form_data.pop("is_superuser")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -422,8 +405,7 @@ def test_superuser_cannot_degrade_themselves_to_regular_user(admin_client, super
     form_data.pop("is_superuser")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -438,7 +420,7 @@ def test_superuser_can_degrade_other_superuser_to_staff_user(
     form_data.pop("is_superuser")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
 
@@ -455,7 +437,7 @@ def test_superuser_can_degrade_other_superuser_to_regular_user(
     form_data.pop("is_superuser")
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
 
@@ -469,8 +451,7 @@ def test_superuser_can_promote_to_staff_user_to_superuser(admin_client, staffuse
     form_data["is_superuser"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -483,8 +464,7 @@ def test_superuser_can_promote_to_regular_user_to_staff_user(admin_client, user)
     form_data["is_staff"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -498,8 +478,7 @@ def test_superuser_can_promote_to_regular_user_to_superuser(admin_client, user):
     form_data["is_superuser"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -513,7 +492,7 @@ def test_superuser_can_disable_other_superuser_account(admin_client, other_super
     form_data["is_active_staff_message"] = "Test message"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
 
@@ -532,7 +511,7 @@ def test_superuser_can_reactivate_other_superuser_account(
     form_data["is_active"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_superuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_superuser.pk}),
         data=form_data,
     )
 
@@ -546,8 +525,7 @@ def test_superuser_can_disable_staff_user_account(admin_client, staffuser):
     form_data["is_active_staff_message"] = "Test message"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -563,8 +541,7 @@ def test_superuser_can_reactivate_staff_user_account(admin_client, staffuser):
     form_data["is_active"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -577,8 +554,7 @@ def test_superuser_can_disable_regular_user_account(admin_client, user):
     form_data["is_active_staff_message"] = "Test message"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -594,8 +570,7 @@ def test_superuser_can_reactivate_regular_user_account(admin_client, user):
     form_data["is_active"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -607,8 +582,7 @@ def test_staff_user_can_disable_regular_user_account(staff_client, user):
     form_data["is_active"] = "0"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -623,8 +597,7 @@ def test_staff_user_can_reactivate_regular_user_account(staff_client, user):
     form_data["is_active"] = "1"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -636,8 +609,7 @@ def test_superuser_cant_disable_their_own_account(admin_client, superuser):
     form_data["is_active"] = "0"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -649,8 +621,7 @@ def test_staff_user_cant_disable_their_own_account(staff_client, staffuser):
     form_data["is_active"] = "0"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": staffuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": staffuser.pk}), data=form_data
     )
 
     staffuser.refresh_from_db()
@@ -662,8 +633,7 @@ def test_staff_user_cant_disable_superuser_account(staff_client, superuser):
     form_data["is_active"] = "0"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": superuser.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": superuser.pk}), data=form_data
     )
 
     superuser.refresh_from_db()
@@ -677,7 +647,7 @@ def test_staff_user_cant_disable_other_staff_user_account(
     form_data["is_active"] = "0"
 
     staff_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": other_staffuser.pk}),
+        reverse("misago:admin:users:edit", kwargs={"pk": other_staffuser.pk}),
         data=form_data,
     )
 
@@ -692,8 +662,7 @@ def test_user_deleting_their_account_cant_be_reactivated(admin_client, user):
     form_data["is_active"] = "1"
 
     admin_client.post(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk}),
-        data=form_data,
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk}), data=form_data
     )
 
     user.refresh_from_db()
@@ -711,6 +680,6 @@ def test_user_agreements_are_displayed_on_edit_form(admin_client, user):
     save_user_agreement_acceptance(user, agreement, commit=True)
 
     response = admin_client.get(
-        reverse("misago:admin:users:accounts:edit", kwargs={"pk": user.pk})
+        reverse("misago:admin:users:edit", kwargs={"pk": user.pk})
     )
     assert_contains(response, agreement.title)

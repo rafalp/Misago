@@ -12,9 +12,7 @@ from ... import THEME_CACHE
 @pytest.fixture
 def delete_css(admin_client):
     def delete_assets(theme, assets):
-        url = reverse(
-            "misago:admin:appearance:themes:delete-css", kwargs={"pk": theme.pk}
-        )
+        url = reverse("misago:admin:themes:delete-css", kwargs={"pk": theme.pk})
         return admin_client.post(url, {"item": [i.pk for i in assets]})
 
     return delete_assets
@@ -23,9 +21,7 @@ def delete_css(admin_client):
 @pytest.fixture
 def delete_media(admin_client):
     def delete_assets(theme, assets):
-        url = reverse(
-            "misago:admin:appearance:themes:delete-media", kwargs={"pk": theme.pk}
-        )
+        url = reverse("misago:admin:themes:delete-media", kwargs={"pk": theme.pk})
         return admin_client.post(url, {"item": [i.pk for i in assets]})
 
     return delete_assets

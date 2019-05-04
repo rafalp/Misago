@@ -55,7 +55,7 @@ class UserBaseForm(forms.ModelForm):
             if role.special_role == "authenticated":
                 break
         else:
-            message = _('All registered members must have "Member" role.')
+            message = _('All registered members must have a "Member" role.')
             raise forms.ValidationError(message)
 
         return data
@@ -248,7 +248,7 @@ def UserFormFactory(FormType, instance):
     extra_fields["roles"] = forms.ModelMultipleChoiceField(
         label=_("Roles"),
         help_text=_(
-            'Individual roles of this user. All users must have "member" role.'
+            'Individual roles of this user. All users must have a "Member" role.'
         ),
         queryset=roles,
         initial=instance.roles.all() if instance.pk else None,

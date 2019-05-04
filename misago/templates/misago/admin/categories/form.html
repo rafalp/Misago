@@ -24,7 +24,7 @@
 {% block page-actions %}
 {% if target.pk %}
   <div class="col-auto page-action">
-    <a href="{% url 'misago:admin:categories:nodes:permissions' pk=target.pk %}" class="btn btn-primary btn-sm">
+    <a href="{% url 'misago:admin:categories:permissions' pk=target.pk %}" class="btn btn-primary btn-sm">
       <span class="fa fa-adjust"></span>
       {% trans "Edit permissions" %}
     </a>

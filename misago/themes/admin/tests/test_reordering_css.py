@@ -24,8 +24,7 @@ def css_list(theme):
 def move_up(admin_client):
     def move_up_client(theme, css):
         url = reverse(
-            "misago:admin:appearance:themes:move-css-up",
-            kwargs={"pk": theme.pk, "css_pk": css.pk},
+            "misago:admin:themes:move-css-up", kwargs={"pk": theme.pk, "css_pk": css.pk}
         )
         return admin_client.post(url)
 
@@ -36,7 +35,7 @@ def move_up(admin_client):
 def move_down(admin_client):
     def move_down_client(theme, css):
         url = reverse(
-            "misago:admin:appearance:themes:move-css-down",
+            "misago:admin:themes:move-css-down",
             kwargs={"pk": theme.pk, "css_pk": css.pk},
         )
         return admin_client.post(url)

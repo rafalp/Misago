@@ -14,9 +14,9 @@ from .views.admin import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Legal Agreements
-        urlpatterns.namespace(r"^agreements/", "agreements", "users")
+        urlpatterns.namespace(r"^agreements/", "agreements", "settings")
         urlpatterns.patterns(
-            "users:agreements",
+            "settings:agreements",
             url(r"^$", AgreementsList.as_view(), name="index"),
             url(r"^(?P<page>\d+)/$", AgreementsList.as_view(), name="index"),
             url(r"^new/$", NewAgreement.as_view(), name="new"),
@@ -32,9 +32,5 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Agreements"),
-            parent="misago:admin:users",
-            after="misago:admin:users:data-downloads:index",
-            namespace="misago:admin:users:agreements",
-            link="misago:admin:users:agreements:index",
+            name=_("Legal agreements"), parent="settings", namespace="agreements"
         )

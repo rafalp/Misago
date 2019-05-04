@@ -4,7 +4,7 @@
 
 {% block page-actions %}
 <div class="col-auto page-action">
-  <a href="{% url 'misago:admin:system:attachment-types:new' %}" class="btn btn-primary btn-sm">
+  <a href="{% url 'misago:admin:settings:attachment-types:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
     {% trans "New type" %}
   </a>
@@ -24,7 +24,7 @@
 
 {% block table-row %}
 <td class="small pr-0">
-  <a href="{% url 'misago:admin:system:attachment-types:edit' pk=item.pk %}" class="item-name">
+  <a href="{% url 'misago:admin:settings:attachment-types:edit' pk=item.pk %}" class="item-name">
     {{ item }}
   </a>
 </td>
@@ -66,10 +66,10 @@
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
-      <a class="dropdown-item" href="{% url 'misago:admin:system:attachment-types:edit' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:settings:attachment-types:edit' pk=item.pk %}">
         {% trans "Edit type" %}
       </a>
-      <form action="{% url 'misago:admin:system:attachment-types:delete' pk=item.pk %}" method="post" class="delete-prompt">
+      <form action="{% url 'misago:admin:settings:attachment-types:delete' pk=item.pk %}" method="post" class="delete-prompt">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Delete type" %}

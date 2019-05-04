@@ -25,9 +25,8 @@ class MisagoAdminExtension:
         urlpatterns.namespace(r"^categories/", "categories")
 
         # Nodes
-        urlpatterns.namespace(r"^nodes/", "nodes", "categories")
         urlpatterns.patterns(
-            "categories:nodes",
+            "categories",
             url(r"^$", CategoriesList.as_view(), name="index"),
             url(r"^new/$", NewCategory.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditCategory.as_view(), name="edit"),
@@ -53,7 +52,7 @@ class MisagoAdminExtension:
 
         # Change Role Category Permissions
         urlpatterns.patterns(
-            "permissions:users",
+            "permissions",
             url(
                 r"^categories/(?P<pk>\d+)/$",
                 RoleCategoriesACL.as_view(),
@@ -64,16 +63,11 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Categories"),
-            icon="fa fa-list",
-            parent="misago:admin",
-            before="misago:admin:permissions:users:index",
-            link="misago:admin:categories:nodes:index",
+            icon="fas fa-sitemap",
+            after="ranks:index",
+            namespace="categories",
         )
 
         site.add_node(
-            name=_("Category roles"),
-            parent="misago:admin:permissions",
-            after="misago:admin:permissions:users:index",
-            namespace="misago:admin:permissions:categories",
-            link="misago:admin:permissions:categories:index",
+            name=_("Category permissions"), parent="permissions", namespace="categories"
         )

@@ -73,7 +73,7 @@
     </table>
     {% if media %}
       <div class="card-body text-right">
-        <form id="delete-media" action="{% url 'misago:admin:appearance:themes:delete-media' pk=theme.pk %}" method="post">
+        <form id="delete-media" action="{% url 'misago:admin:themes:delete-media' pk=theme.pk %}" method="post">
           {% csrf_token %}
           <button class="btn btn-light btn-sm" disabled>
             {% trans "Delete selected" %}

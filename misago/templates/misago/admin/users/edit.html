@@ -305,7 +305,7 @@
           {% for agreement in target.useragreement_set.select_related.iterator %}
             <tr>
               <td class="small">
-                <a href="{% url 'misago:admin:users:agreements:edit' pk=agreement.agreement_id %}" class="item-name">
+                <a href="{% url 'misago:admin:settings:agreements:edit' pk=agreement.agreement_id %}" class="item-name">
                   {{ agreement.agreement.get_final_title }}
                 </a>
               </td>

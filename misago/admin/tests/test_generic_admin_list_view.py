@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 from django.urls import reverse
 
-list_link = reverse("misago:admin:users:accounts:index")
+list_link = reverse("misago:admin:users:index")
 
 
 def test_view_redirects_if_redirected_flag_is_not_present_in_querystring(admin_client):

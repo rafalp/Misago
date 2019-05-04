@@ -8,7 +8,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{% url 'misago:admin:appearance:themes:upload-css' pk=theme.pk %}" method="post" enctype="multipart/form-data">
+      <form action="{% url 'misago:admin:themes:upload-css' pk=theme.pk %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="modal-body">
           <div class="form-group">

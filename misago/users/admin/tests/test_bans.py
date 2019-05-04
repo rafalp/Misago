@@ -23,7 +23,7 @@ def ban(db):
 
 
 def test_link_is_registered_in_admin_nav(admin_client):
-    response = admin_client.get(reverse("misago:admin:users:accounts:index"))
+    response = admin_client.get(reverse("misago:admin:users:index"))
     response = admin_client.get(response["location"])
     assert_contains(response, reverse("misago:admin:users:bans:index"))
 

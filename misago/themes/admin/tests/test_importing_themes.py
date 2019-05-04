@@ -6,7 +6,7 @@ from django.urls import reverse
 from ....test import assert_contains
 from ...models import Theme
 
-import_link = reverse("misago:admin:appearance:themes:import")
+import_link = reverse("misago:admin:themes:import")
 
 
 class MockThemeExport:
@@ -23,9 +23,7 @@ class MockThemeExport:
 @pytest.fixture
 def reimport_theme(admin_client):
     def export_import_theme(theme, extra_data=None):
-        export_link = reverse(
-            "misago:admin:appearance:themes:export", kwargs={"pk": theme.pk}
-        )
+        export_link = reverse("misago:admin:themes:export", kwargs={"pk": theme.pk})
         theme_export = MockThemeExport(admin_client.post(export_link))
 
         data = extra_data or {}
