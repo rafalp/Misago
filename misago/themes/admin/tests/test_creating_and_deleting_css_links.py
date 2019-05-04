@@ -8,15 +8,13 @@ from ... import THEME_CACHE
 
 @pytest.fixture
 def create_link(theme):
-    return reverse(
-        "misago:admin:appearance:themes:new-css-link", kwargs={"pk": theme.pk}
-    )
+    return reverse("misago:admin:themes:new-css-link", kwargs={"pk": theme.pk})
 
 
 @pytest.fixture
 def edit_link(theme, css_link):
     return reverse(
-        "misago:admin:appearance:themes:edit-css-link",
+        "misago:admin:themes:edit-css-link",
         kwargs={"pk": theme.pk, "css_pk": css_link.pk},
     )
 
@@ -68,7 +66,7 @@ def test_css_link_name_usage_check_passess_if_name_is_used_by_other_theme_css(
     other_theme, admin_client, data, css
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css-link", kwargs={"pk": other_theme.pk}
+        "misago:admin:themes:new-css-link", kwargs={"pk": other_theme.pk}
     )
     data["name"] = css.name
     admin_client.post(create_link, data)
@@ -118,7 +116,7 @@ def test_error_message_is_set_if_user_attempts_to_create_css_link_in_default_the
     default_theme, admin_client
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css-link", kwargs={"pk": default_theme.pk}
+        "misago:admin:themes:new-css-link", kwargs={"pk": default_theme.pk}
     )
     response = admin_client.get(create_link)
     assert_has_error_message(response)
@@ -128,8 +126,7 @@ def test_error_message_is_set_if_user_attempts_to_create_css_link_in_nonexisting
     nonexisting_theme, admin_client
 ):
     create_link = reverse(
-        "misago:admin:appearance:themes:new-css-link",
-        kwargs={"pk": nonexisting_theme.pk},
+        "misago:admin:themes:new-css-link", kwargs={"pk": nonexisting_theme.pk}
     )
     response = admin_client.get(create_link)
     assert_has_error_message(response)
@@ -141,7 +138,7 @@ def test_css_link_creation_form_redirects_user_to_new_creation_form_after_creati
     data["stay"] = "1"
     response = admin_client.post(create_link, data)
     assert response["location"] == reverse(
-        "misago:admin:appearance:themes:new-css-link", kwargs={"pk": theme.pk}
+        "misago:admin:themes:new-css-link", kwargs={"pk": theme.pk}
     )
 
 
@@ -202,8 +199,7 @@ def test_error_message_is_set_if_user_attempts_to_edit_css_file_with_link_form(
     theme, admin_client, css
 ):
     edit_link = reverse(
-        "misago:admin:appearance:themes:edit-css-link",
-        kwargs={"pk": theme.pk, "css_pk": css.pk},
+        "misago:admin:themes:edit-css-link", kwargs={"pk": theme.pk, "css_pk": css.pk}
     )
     response = admin_client.get(edit_link)
     assert_has_error_message(response)

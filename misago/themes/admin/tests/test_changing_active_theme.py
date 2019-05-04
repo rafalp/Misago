@@ -9,7 +9,7 @@ from ...models import Theme
 
 @pytest.fixture
 def activate_link(theme):
-    return reverse("misago:admin:appearance:themes:activate", kwargs={"pk": theme.pk})
+    return reverse("misago:admin:themes:activate", kwargs={"pk": theme.pk})
 
 
 def test_active_theme_can_changed(admin_client, activate_link, theme):
@@ -20,7 +20,7 @@ def test_active_theme_can_changed(admin_client, activate_link, theme):
 
 def test_default_theme_can_be_set_as_active_theme(admin_client, default_theme):
     activate_link = reverse(
-        "misago:admin:appearance:themes:activate", kwargs={"pk": default_theme.pk}
+        "misago:admin:themes:activate", kwargs={"pk": default_theme.pk}
     )
     admin_client.post(activate_link)
     default_theme.refresh_from_db()
@@ -39,7 +39,7 @@ def test_changing_active_theme_to_nonexisting_theme_sets_error_message(
     admin_client, nonexisting_theme
 ):
     activate_link = reverse(
-        "misago:admin:appearance:themes:activate", kwargs={"pk": nonexisting_theme.pk}
+        "misago:admin:themes:activate", kwargs={"pk": nonexisting_theme.pk}
     )
     response = admin_client.post(activate_link)
     assert_has_error_message(response)

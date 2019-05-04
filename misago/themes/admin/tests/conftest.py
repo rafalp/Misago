@@ -31,7 +31,7 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 @pytest.fixture
 def css(admin_client, theme, mock_build_theme_css):
-    url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
+    url = reverse("misago:admin:themes:upload-css", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "css", "test.css")) as fp:
         admin_client.post(url, {"assets": [fp]})
     return theme.css.get(name="test.css")
@@ -46,7 +46,7 @@ def css_link(admin_client, theme):
 
 @pytest.fixture
 def css_needing_build(admin_client, theme, mock_build_theme_css):
-    url = reverse("misago:admin:appearance:themes:upload-css", kwargs={"pk": theme.pk})
+    url = reverse("misago:admin:themes:upload-css", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "css", "test.needs-build.css")) as fp:
         admin_client.post(url, {"assets": [fp]})
     return theme.css.get(name="test.needs-build.css")
@@ -54,9 +54,7 @@ def css_needing_build(admin_client, theme, mock_build_theme_css):
 
 @pytest.fixture
 def media(admin_client, theme):
-    url = reverse(
-        "misago:admin:appearance:themes:upload-media", kwargs={"pk": theme.pk}
-    )
+    url = reverse("misago:admin:themes:upload-media", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "images", "test.svg")) as fp:
         admin_client.post(url, {"assets": [fp]})
     return theme.media.get(name="test.svg")
@@ -64,9 +62,7 @@ def media(admin_client, theme):
 
 @pytest.fixture
 def image(admin_client, theme):
-    url = reverse(
-        "misago:admin:appearance:themes:upload-media", kwargs={"pk": theme.pk}
-    )
+    url = reverse("misago:admin:themes:upload-media", kwargs={"pk": theme.pk})
     with open(os.path.join(TESTS_DIR, "images", "test.png"), "rb") as fp:
         admin_client.post(url, {"assets": [fp]})
     return theme.media.get(name="test.png")

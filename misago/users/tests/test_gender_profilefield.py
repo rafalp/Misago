@@ -10,9 +10,7 @@ class GenderProfileFieldTests(AdminTestCase):
     def setUp(self):
         super().setUp()
 
-        self.test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": self.user.pk}
-        )
+        self.test_link = reverse("misago:admin:users:edit", kwargs={"pk": self.user.pk})
 
     def test_field_displays_in_admin(self):
         """field displays in admin"""
@@ -104,7 +102,7 @@ class GenderProfileFieldTests(AdminTestCase):
 
     def test_admin_search_field(self):
         """admin users search searches this field"""
-        test_link = reverse("misago:admin:users:accounts:index")
+        test_link = reverse("misago:admin:users:index")
 
         response = self.client.get("%s?redirected=1&profilefields=female" % test_link)
         self.assertContains(response, "No users matching criteria exist.")

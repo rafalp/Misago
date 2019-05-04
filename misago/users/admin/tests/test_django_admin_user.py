@@ -17,7 +17,7 @@ class TestDjangoAdminUserForm(AdminTestCase):
             "admin:misago_users_user_change", args=[self.test_user.pk]
         )
         self.edit_test_user_in_misago_url = reverse(
-            "misago:admin:users:accounts:edit", args=[self.test_user.pk]
+            "misago:admin:users:edit", args=[self.test_user.pk]
         )
 
     def test_user_edit_view_content(self):

@@ -24,7 +24,7 @@
 {% block page-actions %}
 {% if target.pk %}
   <div class="col-auto page-action">
-    <a href="{% url 'misago:admin:appearance:themes:assets' pk=target.pk %}" class="btn btn-primary btn-sm">
+    <a href="{% url 'misago:admin:themes:assets' pk=target.pk %}" class="btn btn-primary btn-sm">
       <span class="far fa-file-alt"></span>
       {% trans "Edit assets" %}
     </a>

@@ -9,12 +9,12 @@ from ...models import Theme
 
 @pytest.fixture
 def create_link():
-    return reverse("misago:admin:appearance:themes:new")
+    return reverse("misago:admin:themes:new")
 
 
 @pytest.fixture
 def edit_link(theme):
-    return reverse("misago:admin:appearance:themes:edit", kwargs={"pk": theme.pk})
+    return reverse("misago:admin:themes:edit", kwargs={"pk": theme.pk})
 
 
 def test_theme_creation_form_is_displayed(admin_client, create_link):
@@ -136,9 +136,7 @@ def test_moving_child_theme_under_other_theme_updates_both_themes_trees(
     admin_client, theme, default_theme
 ):
     child_theme = Theme.objects.create(name="Child Theme", parent=theme)
-    edit_link = reverse(
-        "misago:admin:appearance:themes:edit", kwargs={"pk": child_theme.pk}
-    )
+    edit_link = reverse("misago:admin:themes:edit", kwargs={"pk": child_theme.pk})
 
     admin_client.post(edit_link, {"name": child_theme.name, "parent": default_theme.pk})
 
@@ -219,9 +217,7 @@ def test_theme_edition_fails_if_parent_theme_doesnt_exist(
 def test_error_message_is_set_if_user_attempts_to_edit_default_theme(
     admin_client, default_theme
 ):
-    edit_link = reverse(
-        "misago:admin:appearance:themes:edit", kwargs={"pk": default_theme.pk}
-    )
+    edit_link = reverse("misago:admin:themes:edit", kwargs={"pk": default_theme.pk})
     response = admin_client.get(edit_link)
     assert_has_error_message(response)
 
@@ -229,9 +225,7 @@ def test_error_message_is_set_if_user_attempts_to_edit_default_theme(
 def test_error_message_is_set_if_user_attempts_to_edit_nonexisting_theme(
     admin_client, nonexisting_theme
 ):
-    edit_link = reverse(
-        "misago:admin:appearance:themes:edit", kwargs={"pk": nonexisting_theme.pk}
-    )
+    edit_link = reverse("misago:admin:themes:edit", kwargs={"pk": nonexisting_theme.pk})
     response = admin_client.get(edit_link)
     assert_has_error_message(response)
 

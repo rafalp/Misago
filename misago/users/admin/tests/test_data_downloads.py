@@ -16,7 +16,7 @@ TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 class DataDownloadAdminTests(AdminTestCase):
     def test_link_registered(self):
         """admin nav contains data downloads link"""
-        response = self.client.get(reverse("misago:admin:users:accounts:index"))
+        response = self.client.get(reverse("misago:admin:users:index"))
 
         response = self.client.get(response["location"])
         self.assertContains(

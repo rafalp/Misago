@@ -4,7 +4,7 @@
 
 {% block page-actions %}
 <div class="col-auto page-action">
-  <a href="{% url 'misago:admin:permissions:users:new' %}" class="btn btn-primary btn-sm">
+  <a href="{% url 'misago:admin:permissions:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
     {% trans "New role" %}
   </a>
@@ -20,7 +20,7 @@
 
 {% block table-row %}
 <td>
-  <a href="{% url 'misago:admin:permissions:users:edit' pk=item.pk %}" class="item-name small">
+  <a href="{% url 'misago:admin:permissions:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
   </a>
 </td>
@@ -35,13 +35,13 @@
           {{ action.name }}
         </a>
       {% endfor %}
-      <a class="dropdown-item" href="{% url 'misago:admin:permissions:users:users' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:permissions:users' pk=item.pk %}">
         {% trans "Users with role" %}
       </a>
-      <a class="dropdown-item" href="{% url 'misago:admin:permissions:users:edit' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:permissions:edit' pk=item.pk %}">
         {% trans "Edit role" %}
       </a>
-      <form action="{% url 'misago:admin:permissions:users:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+      <form action="{% url 'misago:admin:permissions:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Delete role" %}

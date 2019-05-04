@@ -2,7 +2,7 @@ from importlib import import_module
 
 from django.apps import apps
 
-from .hierarchy import site
+from .site import site
 from .urlpatterns import urlpatterns
 
 

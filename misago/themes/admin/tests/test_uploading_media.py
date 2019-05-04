@@ -32,9 +32,7 @@ def hashed_file():
 @pytest.fixture
 def upload(admin_client):
     def post_upload(theme, asset_files=None):
-        url = reverse(
-            "misago:admin:appearance:themes:upload-media", kwargs={"pk": theme.pk}
-        )
+        url = reverse("misago:admin:themes:upload-media", kwargs={"pk": theme.pk})
         if asset_files is not None:
             data = asset_files if isinstance(asset_files, list) else [asset_files]
         else:

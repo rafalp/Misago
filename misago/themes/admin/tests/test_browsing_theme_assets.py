@@ -7,7 +7,7 @@ from ....test import assert_contains, assert_not_contains, assert_has_error_mess
 @pytest.fixture
 def assets_client(admin_client):
     def get_theme_assets(theme):
-        url = reverse("misago:admin:appearance:themes:assets", kwargs={"pk": theme.pk})
+        url = reverse("misago:admin:themes:assets", kwargs={"pk": theme.pk})
         return admin_client.get(url)
 
     return get_theme_assets

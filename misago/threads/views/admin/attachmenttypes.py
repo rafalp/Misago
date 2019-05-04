@@ -8,7 +8,7 @@ from ...models import AttachmentType
 
 
 class AttachmentTypeAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:system:attachment-types:index"
+    root_link = "misago:admin:settings:attachment-types:index"
     model = AttachmentType
     form = AttachmentTypeForm
     templates_dir = "misago/admin/attachmenttypes"

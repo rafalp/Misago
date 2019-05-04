@@ -12,7 +12,7 @@ from ...models import Theme, Css, Media
 
 @pytest.fixture
 def delete_link(theme):
-    return reverse("misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk})
+    return reverse("misago:admin:themes:delete", kwargs={"pk": theme.pk})
 
 
 def test_theme_without_children_can_be_deleted(admin_client, delete_link, theme):
@@ -111,17 +111,13 @@ def test_deleting_theme_invalidates_themes_cache(admin_client, delete_link):
 
 
 def test_deleting_default_theme_sets_error_message(admin_client, default_theme):
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": default_theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": default_theme.pk})
     response = admin_client.post(delete_link)
     assert_has_error_message(response)
 
 
 def test_default_theme_is_not_deleted(admin_client, default_theme):
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": default_theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": default_theme.pk})
     admin_client.post(delete_link)
     default_theme.refresh_from_db()
 
@@ -130,9 +126,7 @@ def test_deleting_active_theme_sets_error_message(admin_client, theme):
     theme.is_active = True
     theme.save()
 
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": theme.pk})
     response = admin_client.post(delete_link)
     assert_has_error_message(response)
 
@@ -141,9 +135,7 @@ def test_active_theme_is_not_deleted(admin_client, theme):
     theme.is_active = True
     theme.save()
 
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": theme.pk})
     admin_client.post(delete_link)
     theme.refresh_from_db()
 
@@ -155,9 +147,7 @@ def test_deleting_theme_containing_active_child_theme_sets_error_message(
     other_theme.is_active = True
     other_theme.save()
 
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": theme.pk})
     response = admin_client.post(delete_link)
     assert_has_error_message(response)
 
@@ -169,8 +159,6 @@ def test_theme_containing_active_child_theme_is_not_deleted(
     other_theme.is_active = True
     other_theme.save()
 
-    delete_link = reverse(
-        "misago:admin:appearance:themes:delete", kwargs={"pk": theme.pk}
-    )
+    delete_link = reverse("misago:admin:themes:delete", kwargs={"pk": theme.pk})
     admin_client.post(delete_link)
     theme.refresh_from_db()
