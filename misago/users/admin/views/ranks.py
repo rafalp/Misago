@@ -9,7 +9,7 @@ from ..forms import RankForm
 
 
 class RankAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:users:ranks:index"
+    root_link = "misago:admin:ranks:index"
     model = Rank
     form = RankForm
     templates_dir = "misago/admin/ranks"
@@ -91,7 +91,7 @@ class MoveUpRank(RankAdmin, generic.ButtonView):
 
 class RankUsers(RankAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
-        redirect_url = reverse("misago:admin:users:accounts:index")
+        redirect_url = reverse("misago:admin:users:index")
         return redirect("%s?rank=%s" % (redirect_url, target.pk))
 
 

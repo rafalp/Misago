@@ -8,11 +8,11 @@ from ..models import AttachmentType
 class AttachmentTypeAdminViewsTests(AdminTestCase):
     def setUp(self):
         super().setUp()
-        self.admin_link = reverse("misago:admin:system:attachment-types:index")
+        self.admin_link = reverse("misago:admin:settings:attachment-types:index")
 
     def test_link_registered(self):
         """admin nav contains attachment types link"""
-        response = self.client.get(reverse("misago:admin:system:settings:index"))
+        response = self.client.get(reverse("misago:admin:settings:index"))
         self.assertContains(response, self.admin_link)
 
     def test_list_view(self):
@@ -29,7 +29,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
     def test_new_view(self):
         """new attachment type view has no showstoppers"""
-        form_link = reverse("misago:admin:system:attachment-types:new")
+        form_link = reverse("misago:admin:settings:attachment-types:new")
 
         response = self.client.get(form_link)
         self.assertEqual(response.status_code, 200)
@@ -59,7 +59,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
     def test_edit_view(self):
         """edit attachment type view has no showstoppers"""
         self.client.post(
-            reverse("misago:admin:system:attachment-types:new"),
+            reverse("misago:admin:settings:attachment-types:new"),
             data={
                 "name": "Test type",
                 "extensions": ".test",
@@ -72,7 +72,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, "Test type")
 
         form_link = reverse(
-            "misago:admin:system:attachment-types:edit", kwargs={"pk": test_type.pk}
+            "misago:admin:settings:attachment-types:edit", kwargs={"pk": test_type.pk}
         )
 
         response = self.client.get(form_link)
@@ -143,7 +143,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
 
         for raw, final in TEST_CASES:
             response = self.client.post(
-                reverse("misago:admin:system:attachment-types:new"),
+                reverse("misago:admin:settings:attachment-types:new"),
                 data={
                     "name": "Test type",
                     "extensions": raw,
@@ -159,7 +159,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
     def test_delete_view(self):
         """delete attachment type view has no showstoppers"""
         self.client.post(
-            reverse("misago:admin:system:attachment-types:new"),
+            reverse("misago:admin:settings:attachment-types:new"),
             data={
                 "name": "Test type",
                 "extensions": ".test",
@@ -172,7 +172,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         self.assertEqual(test_type.name, "Test type")
 
         action_link = reverse(
-            "misago:admin:system:attachment-types:delete", kwargs={"pk": test_type.pk}
+            "misago:admin:settings:attachment-types:delete", kwargs={"pk": test_type.pk}
         )
 
         response = self.client.post(action_link)
@@ -188,7 +188,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
     def test_cant_delete_type_with_attachments_view(self):
         """delete attachment type is not allowed if it has attachments associated"""
         self.client.post(
-            reverse("misago:admin:system:attachment-types:new"),
+            reverse("misago:admin:settings:attachment-types:new"),
             data={
                 "name": "Test type",
                 "extensions": ".test",
@@ -210,7 +210,7 @@ class AttachmentTypeAdminViewsTests(AdminTestCase):
         )
 
         action_link = reverse(
-            "misago:admin:system:attachment-types:delete", kwargs={"pk": test_type.pk}
+            "misago:admin:settings:attachment-types:delete", kwargs={"pk": test_type.pk}
         )
 
         response = self.client.post(action_link)

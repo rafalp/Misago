@@ -138,7 +138,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         root = Category.objects.root_category()
         self.client.post(
-            reverse("misago:admin:categories:nodes:new"),
+            reverse("misago:admin:categories:new"),
             data={
                 "name": "Category A",
                 "new_parent": root.pk,
@@ -152,11 +152,11 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         # Create test roles
         self.client.post(
-            reverse("misago:admin:permissions:users:new"),
+            reverse("misago:admin:permissions:new"),
             data=mock_role_form_data(Role(), {"name": "Test Role A"}),
         )
         self.client.post(
-            reverse("misago:admin:permissions:users:new"),
+            reverse("misago:admin:permissions:new"),
             data=mock_role_form_data(Role(), {"name": "Test Role B"}),
         )
 
@@ -179,8 +179,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # See if form page is rendered
         response = self.client.get(
             reverse(
-                "misago:admin:categories:nodes:permissions",
-                kwargs={"pk": test_category.pk},
+                "misago:admin:categories:permissions", kwargs={"pk": test_category.pk}
             )
         )
         self.assertContains(response, test_category.name)
@@ -192,8 +191,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         # Assign roles to categories
         response = self.client.post(
             reverse(
-                "misago:admin:categories:nodes:permissions",
-                kwargs={"pk": test_category.pk},
+                "misago:admin:categories:permissions", kwargs={"pk": test_category.pk}
             ),
             data={
                 ("%s-category_role" % test_role_a.pk): role_full.pk,
@@ -215,7 +213,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         with assert_invalidates_cache(ACL_CACHE):
             self.client.post(
                 reverse(
-                    "misago:admin:categories:nodes:permissions",
+                    "misago:admin:categories:permissions",
                     kwargs={"pk": test_category.pk},
                 ),
                 data={
@@ -227,7 +225,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
     def test_change_role_categories_permissions_view(self):
         """change role categories perms view works"""
         self.client.post(
-            reverse("misago:admin:permissions:users:new"),
+            reverse("misago:admin:permissions:new"),
             data=mock_role_form_data(Role(), {"name": "Test CategoryRole"}),
         )
 
@@ -239,9 +237,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         self.assertEqual(Category.objects.count(), 2)
         response = self.client.get(
-            reverse(
-                "misago:admin:permissions:users:categories", kwargs={"pk": test_role.pk}
-            )
+            reverse("misago:admin:permissions:categories", kwargs={"pk": test_role.pk})
         )
         self.assertEqual(response.status_code, 302)
 
@@ -254,7 +250,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         root = Category.objects.root_category()
         self.client.post(
-            reverse("misago:admin:categories:nodes:new"),
+            reverse("misago:admin:categories:new"),
             data={
                 "name": "Category A",
                 "new_parent": root.pk,
@@ -263,7 +259,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
             },
         )
         self.client.post(
-            reverse("misago:admin:categories:nodes:new"),
+            reverse("misago:admin:categories:new"),
             data={
                 "name": "Category C",
                 "new_parent": root.pk,
@@ -276,7 +272,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         category_c = Category.objects.get(slug="category-c")
 
         self.client.post(
-            reverse("misago:admin:categories:nodes:new"),
+            reverse("misago:admin:categories:new"),
             data={
                 "name": "Category B",
                 "new_parent": category_a.pk,
@@ -287,7 +283,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         category_b = Category.objects.get(slug="category-b")
 
         self.client.post(
-            reverse("misago:admin:categories:nodes:new"),
+            reverse("misago:admin:categories:new"),
             data={
                 "name": "Category D",
                 "new_parent": category_c.pk,
@@ -301,9 +297,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         # See if form page is rendered
         response = self.client.get(
-            reverse(
-                "misago:admin:permissions:users:categories", kwargs={"pk": test_role.pk}
-            )
+            reverse("misago:admin:permissions:categories", kwargs={"pk": test_role.pk})
         )
         self.assertContains(response, category_a.name)
         self.assertContains(response, category_b.name)
@@ -325,18 +319,14 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
 
         # See if form contains those roles
         response = self.client.get(
-            reverse(
-                "misago:admin:permissions:users:categories", kwargs={"pk": test_role.pk}
-            )
+            reverse("misago:admin:permissions:categories", kwargs={"pk": test_role.pk})
         )
         self.assertContains(response, role_comments.name)
         self.assertContains(response, role_full.name)
 
         # Assign roles to categories
         response = self.client.post(
-            reverse(
-                "misago:admin:permissions:users:categories", kwargs={"pk": test_role.pk}
-            ),
+            reverse("misago:admin:permissions:categories", kwargs={"pk": test_role.pk}),
             data={
                 ("%s-role" % category_a.pk): role_comments.pk,
                 ("%s-role" % category_b.pk): role_comments.pk,
@@ -365,8 +355,7 @@ class CategoryRoleAdminViewsTests(AdminTestCase):
         with assert_invalidates_cache(ACL_CACHE):
             self.client.post(
                 reverse(
-                    "misago:admin:permissions:users:categories",
-                    kwargs={"pk": test_role.pk},
+                    "misago:admin:permissions:categories", kwargs={"pk": test_role.pk}
                 ),
                 data={
                     ("%s-role" % category_a.pk): role_comments.pk,

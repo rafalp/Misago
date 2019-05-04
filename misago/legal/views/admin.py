@@ -9,7 +9,7 @@ from ..utils import disable_agreement, set_agreement_as_active
 
 
 class AgreementAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:users:agreements:index"
+    root_link = "misago:admin:settings:agreements:index"
     model = Agreement
     form = AgreementForm
     templates_dir = "misago/admin/agreements"

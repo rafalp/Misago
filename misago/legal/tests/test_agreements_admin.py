@@ -8,7 +8,7 @@ from ..models import Agreement
 
 @pytest.fixture
 def list_url(admin_client):
-    response = admin_client.get(reverse("misago:admin:users:agreements:index"))
+    response = admin_client.get(reverse("misago:admin:settings:agreements:index"))
     return response["location"]
 
 
@@ -43,7 +43,7 @@ def other_agreement(superuser):
 
 def test_nav_contains_agreements_link(admin_client, list_url):
     response = admin_client.get(list_url)
-    assert_contains(response, reverse("misago:admin:users:agreements:index"))
+    assert_contains(response, reverse("misago:admin:settings:agreements:index"))
 
 
 def test_empty_list_renders(admin_client, list_url):
@@ -76,13 +76,13 @@ def test_agreements_can_be_mass_deleted(admin_client, list_url, superuser):
 
 
 def test_creation_form_renders(admin_client):
-    response = admin_client.get(reverse("misago:admin:users:agreements:new"))
+    response = admin_client.get(reverse("misago:admin:settings:agreements:new"))
     assert response.status_code == 200
 
 
 def test_form_creates_new_agreement(admin_client):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:new"),
+        reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
             "title": "Test TOS",
@@ -100,7 +100,7 @@ def test_form_creates_new_agreement(admin_client):
 
 def test_form_sets_new_agreement_creator(admin_client, superuser):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:new"),
+        reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
             "title": "Test TOS",
@@ -117,7 +117,7 @@ def test_form_sets_new_agreement_creator(admin_client, superuser):
 def test_form_creates_active_agreement(mocker, admin_client):
     set_agreement_as_active = mocker.patch("misago.legal.forms.set_agreement_as_active")
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:new"),
+        reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
             "is_active": "1",
@@ -136,7 +136,7 @@ def test_newly_created_active_agreement_replaces_current_one(
     admin_client, active_agreement
 ):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:new"),
+        reverse("misago:admin:settings:agreements:new"),
         {
             "type": Agreement.TYPE_TOS,
             "is_active": "1",
@@ -155,14 +155,14 @@ def test_newly_created_active_agreement_replaces_current_one(
 
 def test_edit_form_renders(admin_client, agreement):
     response = admin_client.get(
-        reverse("misago:admin:users:agreements:edit", kwargs={"pk": agreement.pk})
+        reverse("misago:admin:settings:agreements:edit", kwargs={"pk": agreement.pk})
     )
     assert_contains(response, agreement.title)
 
 
 def test_edit_form_updates_agreement(admin_client, agreement):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:edit", kwargs={"pk": agreement.pk}),
+        reverse("misago:admin:settings:agreements:edit", kwargs={"pk": agreement.pk}),
         data={
             "type": Agreement.TYPE_TOS,
             "title": "Test Edited",
@@ -181,7 +181,7 @@ def test_edit_form_updates_agreement(admin_client, agreement):
 
 def test_edit_form_updates_agreement_modified_entry(admin_client, agreement, superuser):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:edit", kwargs={"pk": agreement.pk}),
+        reverse("misago:admin:settings:agreements:edit", kwargs={"pk": agreement.pk}),
         data={
             "type": Agreement.TYPE_TOS,
             "title": "Test Edited",
@@ -202,7 +202,7 @@ def test_edit_form_changes_active_agreement(
 ):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:edit", kwargs={"pk": other_agreement.pk}
+            "misago:admin:settings:agreements:edit", kwargs={"pk": other_agreement.pk}
         ),
         data={
             "type": Agreement.TYPE_TOS,
@@ -224,7 +224,7 @@ def test_edit_form_changes_active_agreement(
 def test_edit_form_disables_active_agreement(admin_client, active_agreement):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:edit", kwargs={"pk": active_agreement.pk}
+            "misago:admin:settings:agreements:edit", kwargs={"pk": active_agreement.pk}
         ),
         data={
             "type": Agreement.TYPE_TOS,
@@ -242,7 +242,7 @@ def test_edit_form_disables_active_agreement(admin_client, active_agreement):
 
 def test_agreement_can_be_deleted(admin_client, agreement):
     response = admin_client.post(
-        reverse("misago:admin:users:agreements:delete", kwargs={"pk": agreement.pk})
+        reverse("misago:admin:settings:agreements:delete", kwargs={"pk": agreement.pk})
     )
     assert response.status_code == 302
 
@@ -253,7 +253,8 @@ def test_agreement_can_be_deleted(admin_client, agreement):
 def test_active_agreement_can_be_deleted(admin_client, active_agreement):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:delete", kwargs={"pk": active_agreement.pk}
+            "misago:admin:settings:agreements:delete",
+            kwargs={"pk": active_agreement.pk},
         )
     )
     assert response.status_code == 302
@@ -265,7 +266,8 @@ def test_active_agreement_can_be_deleted(admin_client, active_agreement):
 def test_agreement_can_be_set_as_active(admin_client, agreement):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:set-as-active", kwargs={"pk": agreement.pk}
+            "misago:admin:settings:agreements:set-as-active",
+            kwargs={"pk": agreement.pk},
         )
     )
     assert response.status_code == 302
@@ -279,7 +281,7 @@ def test_active_agreement_can_be_changed(
 ):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:set-as-active",
+            "misago:admin:settings:agreements:set-as-active",
             kwargs={"pk": other_agreement.pk},
         )
     )
@@ -295,7 +297,8 @@ def test_active_agreement_can_be_changed(
 def test_active_agreement_can_be_disabled(admin_client, active_agreement):
     response = admin_client.post(
         reverse(
-            "misago:admin:users:agreements:disable", kwargs={"pk": active_agreement.pk}
+            "misago:admin:settings:agreements:disable",
+            kwargs={"pk": active_agreement.pk},
         )
     )
     assert response.status_code == 302

@@ -4,7 +4,7 @@
 
 {% block page-actions %}
 <div class="col-auto page-action">
-  <a href="{% url 'misago:admin:categories:nodes:new' %}" class="btn btn-primary btn-sm">
+  <a href="{% url 'misago:admin:categories:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
     {% trans "New category" %}
   </a>
@@ -34,7 +34,7 @@
   {% for i in item.level_range %}
     &nbsp;&nbsp;&nbsp;&nbsp;
   {% endfor %}
-  <a href="{% url 'misago:admin:categories:nodes:edit' pk=item.pk %}" class="item-name small">
+  <a href="{% url 'misago:admin:categories:edit' pk=item.pk %}" class="item-name small">
     {{ item }}
   </a>
 </td>
@@ -53,7 +53,7 @@
 </td>
 <td>
   {% if not item.last %}
-    <form action="{% url 'misago:admin:categories:nodes:down' pk=item.pk %}" method="post">
+    <form action="{% url 'misago:admin:categories:down' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' %}">
         <span class="fa fa-chevron-down"></span>
@@ -67,7 +67,7 @@
 </td>
 <td>
   {% if not item.first %}
-    <form action="{% url 'misago:admin:categories:nodes:up' pk=item.pk %}" method="post">
+    <form action="{% url 'misago:admin:categories:up' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' %}">
         <span class="fa fa-chevron-up"></span>
@@ -90,10 +90,10 @@
           {{ action.name }}
         </a>
       {% endfor %}
-      <a class="dropdown-item" href="{% url 'misago:admin:categories:nodes:edit' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:categories:edit' pk=item.pk %}">
         {% trans "Edit category" %}
       </a>
-      <a class="dropdown-item" href="{% url 'misago:admin:categories:nodes:delete' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:categories:delete' pk=item.pk %}">
         {% trans "Delete category" %}
       </a>
     </div>

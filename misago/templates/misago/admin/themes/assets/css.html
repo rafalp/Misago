@@ -13,12 +13,12 @@
         </button>
       </div>
       <div class="col-auto">
-        <a href="{% url 'misago:admin:appearance:themes:new-css-link' pk=theme.pk %}" class="btn btn-light btn-sm">
+        <a href="{% url 'misago:admin:themes:new-css-link' pk=theme.pk %}" class="btn btn-light btn-sm">
           {% trans "Link" %}
         </a>
       </div>
       <div class="col-auto">
-        <a href="{% url 'misago:admin:appearance:themes:new-css-file' pk=theme.pk %}" class="btn btn-light btn-sm">
+        <a href="{% url 'misago:admin:themes:new-css-file' pk=theme.pk %}" class="btn btn-light btn-sm">
           {% trans "Create" %}
         </a>
       </div>
@@ -47,11 +47,11 @@
           </td>
           <td class="small">
             {% if item.url %}
-              <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="item-name">
+              <a href="{% url 'misago:admin:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="item-name">
                 {{ item }}
               </a>
             {% else %}
-              <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="item-name">
+              <a href="{% url 'misago:admin:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="item-name">
                 {{ item }}
               </a>
             {% endif %}
@@ -76,11 +76,11 @@
           </td>
           <td>
             {% if item.url %}
-              <a href="{% url 'misago:admin:appearance:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
+              <a href="{% url 'misago:admin:themes:edit-css-link' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
                 {% trans "Edit" %}
               </a>
             {% else %}
-              <a href="{% url 'misago:admin:appearance:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
+              <a href="{% url 'misago:admin:themes:edit-css-file' pk=theme.pk css_pk=item.pk %}" class="btn btn-light btn-sm">
                 {% trans "Edit" %}
               </a>
             {% endif %}
@@ -97,7 +97,7 @@
     </table>
     {% if css %}
       <div class="card-body text-right">
-        <form id="delete-css" action="{% url 'misago:admin:appearance:themes:delete-css' pk=theme.pk %}" method="post">
+        <form id="delete-css" action="{% url 'misago:admin:themes:delete-css' pk=theme.pk %}" method="post">
           {% csrf_token %}
           <button class="btn btn-light btn-sm" disabled>
             {% trans "Delete selected" %}
@@ -106,10 +106,10 @@
       </div>
     {% endif %}
     {% for item in css %}
-      <form action="{% url 'misago:admin:appearance:themes:move-css-up' pk=theme.pk css_pk=item.pk %}" method="post" id="move-up-{{ item.pk }}">
+      <form action="{% url 'misago:admin:themes:move-css-up' pk=theme.pk css_pk=item.pk %}" method="post" id="move-up-{{ item.pk }}">
         {% csrf_token %}
       </form>
-      <form action="{% url 'misago:admin:appearance:themes:move-css-down' pk=theme.pk css_pk=item.pk %}" method="post" id="move-down-{{ item.pk }}">
+      <form action="{% url 'misago:admin:themes:move-css-down' pk=theme.pk css_pk=item.pk %}" method="post" id="move-down-{{ item.pk }}">
         {% csrf_token %}
       </form>
     {% endfor %}

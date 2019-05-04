@@ -31,7 +31,7 @@ User = get_user_model()
 
 
 class UserAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:users:accounts:index"
+    root_link = "misago:admin:users:index"
     templates_dir = "misago/admin/users"
     model = User
 
@@ -284,7 +284,7 @@ class NewUser(UserAdmin, generic.ModelFormView):
         setup_new_user(request.settings, new_user)
 
         messages.success(request, self.message_submit % {"user": target.username})
-        return redirect("misago:admin:users:accounts:edit", pk=new_user.pk)
+        return redirect("misago:admin:users:edit", pk=new_user.pk)
 
 
 class EditUser(UserAdmin, generic.ModelFormView):

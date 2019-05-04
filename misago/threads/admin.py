@@ -13,18 +13,18 @@ from .views.admin.attachmenttypes import (
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         # Attachment
-        urlpatterns.namespace(r"^attachments/", "attachments", "system")
+        urlpatterns.namespace(r"^attachments/", "attachments")
         urlpatterns.patterns(
-            "system:attachments",
+            "attachments",
             url(r"^$", AttachmentsList.as_view(), name="index"),
             url(r"^(?P<page>\d+)/$", AttachmentsList.as_view(), name="index"),
             url(r"^delete/(?P<pk>\d+)/$", DeleteAttachment.as_view(), name="delete"),
         )
 
         # AttachmentType
-        urlpatterns.namespace(r"^attachment-types/", "attachment-types", "system")
+        urlpatterns.namespace(r"^attachment-types/", "attachment-types", "settings")
         urlpatterns.patterns(
-            "system:attachment-types",
+            "settings:attachment-types",
             url(r"^$", AttachmentTypesList.as_view(), name="index"),
             url(r"^new/$", NewAttachmentType.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditAttachmentType.as_view(), name="edit"),
@@ -36,14 +36,11 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Attachments"),
-            parent="misago:admin:system",
-            after="misago:admin:system:settings:index",
-            link="misago:admin:system:attachments:index",
+            icon="fas fa-paperclip",
+            after="permissions:index",
+            namespace="attachments",
         )
 
         site.add_node(
-            name=_("Attachment types"),
-            parent="misago:admin:system",
-            after="misago:admin:system:attachments:index",
-            link="misago:admin:system:attachment-types:index",
+            name=_("Attachment types"), parent="settings", namespace="attachment-types"
         )

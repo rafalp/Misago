@@ -9,7 +9,7 @@ from .models import Role
 
 
 class RoleAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:permissions:users:index"
+    root_link = "misago:admin:permissions:index"
     model = Role
     templates_dir = "misago/admin/roles"
     message_404 = _("Requested role does not exist.")
@@ -77,5 +77,5 @@ class DeleteRole(RoleAdmin, generic.ButtonView):
 
 class RoleUsers(RoleAdmin, generic.TargetedView):
     def real_dispatch(self, request, target):
-        redirect_url = reverse("misago:admin:users:accounts:index")
+        redirect_url = reverse("misago:admin:users:index")
         return redirect("%s?role=%s" % (redirect_url, target.pk))

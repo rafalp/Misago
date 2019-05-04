@@ -21,7 +21,7 @@ from .tasks import build_single_theme_css, build_theme_css, update_remote_css_si
 
 
 class ThemeAdmin(generic.AdminBaseMixin):
-    root_link = "misago:admin:appearance:themes:index"
+    root_link = "misago:admin:themes:index"
     model = Theme
     form = ThemeForm
     templates_dir = "misago/admin/themes"
@@ -130,7 +130,7 @@ class ThemeAssetsAdmin(ThemeAdmin):
             return gettext("Default theme assets can't be edited.")
 
     def redirect_to_theme_assets(self, theme):
-        return redirect("misago:admin:appearance:themes:assets", pk=theme.pk)
+        return redirect("misago:admin:themes:assets", pk=theme.pk)
 
 
 class ThemeAssets(ThemeAssetsAdmin, generic.TargetedView):
@@ -331,9 +331,7 @@ class NewThemeCss(ThemeCssFormAdmin):
         return form(instance=css)
 
     def redirect_to_edit_form(self, theme, css):
-        return redirect(
-            "misago:admin:appearance:themes:edit-css-file", pk=theme.pk, css_pk=css.pk
-        )
+        return redirect("misago:admin:themes:edit-css-file", pk=theme.pk, css_pk=css.pk)
 
 
 class EditThemeCss(NewThemeCss):
@@ -384,7 +382,7 @@ class NewThemeCssLink(ThemeCssFormAdmin):
             clear_theme_cache()
 
     def redirect_to_edit_form(self, theme, css):
-        return redirect("misago:admin:appearance:themes:new-css-link", pk=theme.pk)
+        return redirect("misago:admin:themes:new-css-link", pk=theme.pk)
 
 
 class EditThemeCssLink(NewThemeCssLink):
@@ -397,6 +395,4 @@ class EditThemeCssLink(NewThemeCssLink):
             return None
 
     def redirect_to_edit_form(self, theme, css):
-        return redirect(
-            "misago:admin:appearance:themes:edit-css-link", pk=theme.pk, css_pk=css.pk
-        )
+        return redirect("misago:admin:themes:edit-css-link", pk=theme.pk, css_pk=css.pk)

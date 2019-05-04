@@ -90,7 +90,7 @@ class Node:
         return False
 
 
-class AdminHierarchyBuilder:
+class AdminSite:
     def __init__(self):
         self.nodes_record = []
         self.nodes_dict = {}
@@ -137,11 +137,11 @@ class AdminHierarchyBuilder:
         self,
         name=None,
         icon=None,
-        parent="misago:admin",
+        parent=None,
         after=None,
         before=None,
         namespace=None,
-        link=None,
+        link="index",
     ):
         if self.nodes_dict:
             raise RuntimeError(
@@ -156,11 +156,11 @@ class AdminHierarchyBuilder:
             {
                 "name": name,
                 "icon": icon,
-                "parent": parent,
-                "namespace": namespace,
-                "after": after,
-                "before": before,
-                "link": link,
+                "parent": join_namespace(parent),
+                "namespace": join_namespace(parent, namespace),
+                "after": join_namespace(parent, after) if after else None,
+                "before": join_namespace(parent, before) if before else None,
+                "link": join_namespace(parent, namespace, link),
             }
         )
 
@@ -201,4 +201,10 @@ class AdminHierarchyBuilder:
         return branches
 
 
-site = AdminHierarchyBuilder()
+def join_namespace(*args):
+    parts = list(filter(None, args))
+    parts.insert(0, "misago:admin")
+    return ":".join(parts)
+
+
+site = AdminSite()

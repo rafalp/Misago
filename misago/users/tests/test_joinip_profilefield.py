@@ -11,9 +11,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
     def setUp(self):
         super().setUp()
 
-        self.test_link = reverse(
-            "misago:admin:users:accounts:edit", kwargs={"pk": self.user.pk}
-        )
+        self.test_link = reverse("misago:admin:users:edit", kwargs={"pk": self.user.pk})
 
     def test_field_hidden_in_admin(self):
         """readonly field doesn't display in the admin"""
@@ -50,7 +48,7 @@ class JoinIpProfileFieldTests(AdminTestCase):
 
     def test_admin_search_field(self):
         """admin users search searches this field"""
-        test_link = reverse("misago:admin:users:accounts:index")
+        test_link = reverse("misago:admin:users:index")
 
         response = self.client.get(
             "%s?redirected=1&profilefields=127.0.0.1" % test_link

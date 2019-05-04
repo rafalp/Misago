@@ -15,7 +15,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
 
         self.filetype = AttachmentType.objects.order_by("id").first()
 
-        self.admin_link = reverse("misago:admin:system:attachments:index")
+        self.admin_link = reverse("misago:admin:attachments:index")
 
     def mock_attachment(self, post=None, file=None, image=None, thumbnail=None):
         return Attachment.objects.create(
@@ -34,7 +34,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
 
     def test_link_registered(self):
         """admin nav contains attachments link"""
-        response = self.client.get(reverse("misago:admin:system:settings:index"))
+        response = self.client.get(reverse("misago:admin:settings:index"))
         self.assertContains(response, self.admin_link)
 
     def test_list_view(self):
@@ -57,7 +57,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
 
         for attachment in attachments:
             delete_link = reverse(
-                "misago:admin:system:attachments:delete", kwargs={"pk": attachment.pk}
+                "misago:admin:attachments:delete", kwargs={"pk": attachment.pk}
             )
             self.assertContains(response, attachment.filename)
             self.assertContains(response, delete_link)
@@ -106,7 +106,7 @@ class AttachmentAdminViewsTests(AdminTestCase):
         self.post.save()
 
         action_link = reverse(
-            "misago:admin:system:attachments:delete", kwargs={"pk": attachment.pk}
+            "misago:admin:attachments:delete", kwargs={"pk": attachment.pk}
         )
 
         response = self.client.post(action_link)
