@@ -28,7 +28,7 @@ def group(request, key):
         active_group = SettingsGroup.objects.get(key=key)
     except SettingsGroup.DoesNotExist:
         messages.error(request, _("Settings group could not be found."))
-        return redirect("misago:admin:system:settings:index")
+        return redirect("misago:admin:settings:index")
 
     fieldsets = ChangeSettingsForm(group=active_group)
     if request.method == "POST":
@@ -48,7 +48,7 @@ def group(request, key):
             clear_settings_cache()
 
             messages.success(request, _("Changes in settings have been saved!"))
-            return redirect("misago:admin:system:settings:group", key=key)
+            return redirect("misago:admin:settings:group", key=key)
 
     use_single_form_template = len(fieldsets) == 1 and not fieldsets[0]["legend"]
 

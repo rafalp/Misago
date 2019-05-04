@@ -29,9 +29,9 @@ class MisagoAdminExtension:
         urlpatterns.namespace(r"^appearance/", "appearance")
 
         # Themes
-        urlpatterns.namespace(r"^themes/", "themes", "appearance")
+        urlpatterns.namespace(r"^themes/", "themes")
         urlpatterns.patterns(
-            "appearance:themes",
+            "themes",
             url(r"^$", ThemesList.as_view(), name="index"),
             url(r"^new/$", NewTheme.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditTheme.as_view(), name="edit"),
@@ -96,6 +96,6 @@ class MisagoAdminExtension:
         site.add_node(
             name=_("Themes"),
             icon="fa fa-paint-brush",
-            parent="misago:admin",
-            link="misago:admin:appearance:themes:index",
+            after="attachments:index",
+            namespace="themes",
         )

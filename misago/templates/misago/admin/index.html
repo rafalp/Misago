@@ -111,7 +111,7 @@
           <tr>
             <td>{% trans "Inactive users" %}</td>
             <td>
-              <a href="{% url "misago:admin:users:accounts:index" %}?inactive=1">
+              <a href="{% url "misago:admin:users:index" %}?inactive=1">
                 {{ db_stats.inactive_users }}
               </a>
             </td>

@@ -9,16 +9,16 @@ class AdminSettingsViewsTests(AdminTestCase):
         """admin index view contains settings link"""
         response = self.client.get(reverse("misago:admin:index"))
 
-        self.assertContains(response, reverse("misago:admin:system:settings:index"))
+        self.assertContains(response, reverse("misago:admin:settings:index"))
 
     def test_groups_list_view(self):
         """settings group view returns 200 and contains all settings groups"""
-        response = self.client.get(reverse("misago:admin:system:settings:index"))
+        response = self.client.get(reverse("misago:admin:settings:index"))
 
         self.assertEqual(response.status_code, 200)
         for group in SettingsGroup.objects.all():
             group_link = reverse(
-                "misago:admin:system:settings:group", kwargs={"key": group.key}
+                "misago:admin:settings:group", kwargs={"key": group.key}
             )
             self.assertContains(response, group.name)
             self.assertContains(response, group_link)
@@ -26,19 +26,17 @@ class AdminSettingsViewsTests(AdminTestCase):
     def test_invalid_group_handling(self):
         """invalid group results in redirect to settings list"""
         group_link = reverse(
-            "misago:admin:system:settings:group", kwargs={"key": "invalid-group"}
+            "misago:admin:settings:group", kwargs={"key": "invalid-group"}
         )
         response = self.client.get(group_link)
         self.assertEqual(response.status_code, 302)
-        self.assertTrue(
-            reverse("misago:admin:system:settings:index") in response["location"]
-        )
+        self.assertTrue(reverse("misago:admin:settings:index") in response["location"])
 
     def test_groups_views(self):
         """each settings group view returns 200 and contains all settings in group"""
         for group in SettingsGroup.objects.all():
             group_link = reverse(
-                "misago:admin:system:settings:group", kwargs={"key": group.key}
+                "misago:admin:settings:group", kwargs={"key": group.key}
             )
             response = self.client.get(group_link)
 

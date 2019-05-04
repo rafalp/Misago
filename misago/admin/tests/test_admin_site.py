@@ -1,4 +1,4 @@
-from ..hierarchy import Node
+from ..site import Node
 
 
 def test_node_is_added_at_end_of_parent_children():

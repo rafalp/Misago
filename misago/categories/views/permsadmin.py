@@ -138,9 +138,7 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
 
 
 CategoriesList.add_item_action(
-    name=_("Change permissions"),
-    link="misago:admin:categories:nodes:permissions",
-    icon="",
+    name=_("Change permissions"), link="misago:admin:categories:permissions", icon=""
 )
 
 
@@ -204,6 +202,6 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 RolesList.add_item_action(
     name=_("Categories permissions"),
     icon="fa fa-comments-o",
-    link="misago:admin:permissions:users:categories",
+    link="misago:admin:permissions:categories",
     style="success",
 )

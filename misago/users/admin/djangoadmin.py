@@ -66,8 +66,7 @@ class UserAdminModel(ModelAdmin):
         return format_html(
             '<a href="{link}" class="{cls}" target="blank">{text}</a>',
             link=reverse(
-                viewname="misago:admin:users:accounts:edit",
-                kwargs={"pk": user_instance.pk},
+                viewname="misago:admin:users:edit", kwargs={"pk": user_instance.pk}
             ),
             cls="changelink",
             text=_("Edit"),

@@ -31,12 +31,7 @@ def render(request, template, context=None, error_page=False):
     except IndexError:
         actions = []
 
-    try:
-        pages = navigation[2]
-    except IndexError:
-        pages = []
-
-    context.update({"sections": sections, "actions": actions, "pages": pages})
+    context.update({"sections": sections, "actions": actions})
 
     if error_page:
         # admittedly haxy solution for displaying navs on error pages
@@ -46,10 +41,11 @@ def render(request, template, context=None, error_page=False):
             item["is_active"] = False
     else:
         context["active_link"] = None
-        for item in navigation[-1]:
-            if item["is_active"]:
-                context["active_link"] = item
-                break
+        for nav in navigation:
+            for item in nav:
+                if item["is_active"]:
+                    context["active_link"] = item
+                    break
 
     context["ADMIN_MOMENTJS_LOCALE_URL"] = get_admin_moment_locale_url()
 

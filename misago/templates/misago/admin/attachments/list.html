@@ -60,7 +60,7 @@
   {% endif %}
 </td>
 <td>
-  <form action="{% url 'misago:admin:system:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+  <form action="{% url 'misago:admin:attachments:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
     {% csrf_token %}
     <button class="btn btn-light btn-sm">
       {% trans "Delete" %}
