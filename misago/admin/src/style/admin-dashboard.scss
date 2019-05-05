@@ -57,3 +57,24 @@
     background: $red;
   }
 }
+
+// Give some sizes to analytics summary
+.card-admin-analytics-summary {
+  @extend .text-center;
+  @extend .py-3;
+
+  width: 200px;
+
+  div {
+    font-size: $font-size-base * 3;
+  }
+
+  small {
+    font-size: $font-size-base;
+  }
+}
+
+// Add negative top margin to chart to compensate for extra padding
+.card-admin-analytics-chart {
+  margin-top: -10px;
+}

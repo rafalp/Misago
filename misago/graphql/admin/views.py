@@ -1,27 +1,14 @@
 import json
 
-from ariadne import QueryType, graphql_sync, make_executable_schema
+from ariadne import (
+    QueryType, graphql_sync, load_schema_from_path, make_executable_schema
+)
 from django.conf import settings
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-
-type_defs = """
-    type Query {
-        hello: String!
-    }
-"""
-
-query = QueryType()
-
-
-@query.field("hello")
-def resolve_hello(*_):
-    return "Hello Misago Admin!"
-
-
-schema = make_executable_schema(type_defs, query)
+from .schema import schema
 
 
 @csrf_exempt

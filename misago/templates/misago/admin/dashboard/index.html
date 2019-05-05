@@ -12,12 +12,11 @@
   </div>
 </div>
 
+{% include "misago/admin/dashboard/checks.html" %}
+
+<div id="admin-analytics"></div>
+
 <div class="row">
-  <div class="col-md-8">
-
-    {% include "misago/admin/dashboard/checks.html" %}
-
-  </div>
   <div class="col-md-4">
 
     <table class="table version-check">
@@ -65,30 +64,19 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(function () {
-    var $version_check = $('.version-check');
-    var $outcome = $version_check.find('td');
+  window.misago.initAnalytics({
+    elementId: "admin-analytics",
+    uri: "{% url 'misago:admin:graphql:index' %}",
 
-    $version_check.find('form').submit(function() {
-      var $form = $(this);
-      var $button = $(this).find("button");
-      $button.attr("disabled", "disabled");
-      $button.find('.fa').attr("class", "fa fa-refresh fa-fw fa-spin");
-      $button.find('.name').text("{% trans "Checking..." %}");
-
-      $.post("{% url 'misago:admin:check-version' %}", $form.serialize(), function(data) {
-        if (data.is_error) {
-          var $message = $('<p class="lead text-danger"><span class="fa fa-times fa-lg fa-fw"></span></p>');
-        } else {
-          var $message = $('<p class="lead text-success"><span class="fa fa-check fa-lg fa-fw"></span></p>');
-        }
-        $message.append(" " + data.message);
-        $form.fadeOut();
-        $outcome.html($message);
-      });
-
-      return false;
-    });
-  });
+    title: "{% trans 'Analytics' %}",
+    labels: {
+      users: "{% trans 'User registrations' %}",
+      threads: "{% trans 'Threads started' %}",
+      posts: "{% trans 'Posts' %}",
+      attachments: "{% trans 'Attachments uploaded' %}",
+      dataDownloads: "{% trans 'Data download requests' %}"
+    },
+    errorMessage: "{% trans 'Site analytics are currently unavailable due to an error.' %}"
+  })
 </script>
 {% endblock javascripts %}
