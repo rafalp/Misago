@@ -1,7 +1,10 @@
 import json
 
 from ariadne import (
-    QueryType, graphql_sync, load_schema_from_path, make_executable_schema
+    QueryType,
+    graphql_sync,
+    load_schema_from_path,
+    make_executable_schema,
 )
 from django.conf import settings
 from django.http import HttpResponseBadRequest, JsonResponse

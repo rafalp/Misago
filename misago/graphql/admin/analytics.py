@@ -15,6 +15,7 @@ User = get_user_model()
 
 analytics = QueryType()
 
+
 @analytics.field("analytics")
 def resolve_analytics(_, info, *, span):
     span = clean_span(span)
@@ -76,6 +77,6 @@ class Analytics:
 
         values = list(data.values())
         return {
-            "current": list(reversed(values[:self.span])),
-            "previous": list(reversed(values[self.span:])),
+            "current": list(reversed(values[: self.span])),
+            "previous": list(reversed(values[self.span :])),
         }
