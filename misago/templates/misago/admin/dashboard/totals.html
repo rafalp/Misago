@@ -1,0 +1,44 @@
+{% load i18n %}
+<div class="card card-admin-table">
+  <div class="card-body">
+    <h4 class="card-title">
+      {% trans "Database" %}
+    </h4>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% trans "Item" %}</th>
+        <th>{% trans "Number" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{% trans "Threads" %}</td>
+        <td>{{ totals.threads }}</td>
+      </tr>
+      <tr>
+        <td>{% trans "Posts" %}</td>
+        <td>{{ totals.posts }}</td>
+      </tr>
+      <tr>
+        <td>{% trans "Attachments" %}</td>
+        <td>{{ totals.attachments }}</td>
+      </tr>
+      <tr>
+        <td>{% trans "Users" %}</td>
+        <td>{{ totals.users }}</td>
+      </tr>
+      {% if totals.inactive_users %}
+        <tr>
+          <td>{% trans "Inactive users" %}</td>
+          <td>
+            <a href="{% url "misago:admin:users:index" %}?inactive=1">
+              {{ totals.inactive_users }}
+            </a>
+          </td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>

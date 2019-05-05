@@ -1,0 +1,59 @@
+// Styles for dashboard items
+
+.card-admin-info {
+  @extend .shadow-sm;
+  @extend .mb-3;
+}
+
+// Override card title sizing so it works with h4
+.card-admin-info .card-title {
+  @extend .m-0;
+
+  font-size: $font-size-lg;
+}
+
+// Make card-body paddings same as in table
+.card-admin-info .card-body {
+  padding: $table-cell-padding;
+}
+
+// Make text sizes in admin checks smaller
+.media-admin-check {
+  font-size: $font-size-sm;
+
+  h5 {
+    @extend .mt-0;
+
+    font-size: $font-size-base;
+  }
+}
+
+// Make icon larger in admin check
+.media-check-icon {
+  @extend .d-flex;
+  @extend .align-items-center;
+  @extend .justify-content-center;
+  @extend .rounded;
+  @extend .mr-3;
+
+  width: $font-size-base * 1.5;
+  height: $font-size-base * 1.5;
+
+  font-size: $font-size-base;
+  line-height: $font-size-base;
+
+  color: $white;
+  background: $black;
+
+  &.media-check-icon-success {
+    background: $green;
+  }
+
+  &.media-check-icon-warning {
+    background: $orange;
+  }
+
+  &.media-check-icon-danger {
+    background: $red;
+  }
+}
