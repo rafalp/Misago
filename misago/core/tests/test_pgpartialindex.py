@@ -67,10 +67,13 @@ class PgPartialIndexTests(TestCase):
             sql = PgPartialIndex(
                 fields=["has_events"],
                 name="test_partial",
-                where={"has_events__gte": 42, "is_hidden": True},
+                where={"has_events": True, "is_hidden": True},
             ).create_sql(Thread, editor)
-            self.assertTrue(
-                sql.endswith('WHERE "has_events" >= 42 AND "is_hidden" = true')
+            self.assertEqual(
+                'CREATE INDEX "test_partial" ON "misago_threads_thread" ("has_events") WHERE '
+                '("misago_threads_thread"."has_events" = true AND '
+                '"misago_threads_thread"."is_hidden" = true)',
+                str(sql),
             )
 
     def test_set_name_with_model(self):

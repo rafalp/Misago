@@ -1,6 +1,6 @@
 import hashlib
 
-from django.db.models import Index
+from django.db.models import Index, Q
 from django.utils.encoding import force_bytes
 
 
@@ -13,9 +13,17 @@ class PgPartialIndex(Index):
             raise ValueError("partial index requires WHERE clause")
         self.where = where
 
+        if isinstance(where, dict):
+            condition = Q(**where)
+        else:
+            condition = where
+
+        if not name:
+            name = '_'.join(where.keys())[:30]
+
         fields = fields or []
 
-        super().__init__(fields=fields, name=name)
+        super().__init__(fields=fields, name=name, condition=condition)
 
     def set_name_with_model(self, model):
         table_name = model._meta.db_table
@@ -52,22 +60,11 @@ class PgPartialIndex(Index):
 
         return h.hexdigest()[:6]
 
-    def __repr__(self):
-        if self.where is None:
-            return super().__repr__()
-
-        where_items = []
-        for key in sorted(self.where.keys()):
-            where_items.append("=".join([key, repr(self.where[key])]))
-        return "<%(name)s: fields=%(fields)s, where=%(where)s>" % {
-            "name": self.__class__.__name__,
-            "fields": "'%s'" % (", ".join(self.fields)),
-            "where": "'%s'" % (", ".join(where_items)),
-        }
-
     def deconstruct(self):
         path, args, kwargs = super().deconstruct()
-        kwargs["where"] = self.where
+        # TODO: check this patch
+        kwargs["where"] = self.condition
+        del kwargs['condition']
         return path, args, kwargs
 
     def get_sql_create_template_values(self, model, schema_editor, using):
