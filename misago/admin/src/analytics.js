@@ -206,7 +206,7 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
     },
     yaxis: {
       tickAmount: 2,
-      max: m => m,
+      max: m => m || 1,
       show: false
     }
   }

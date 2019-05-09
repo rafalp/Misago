@@ -8,37 +8,29 @@
   <table class="table">
     <thead>
       <tr>
-        <th>{% trans "Item" %}</th>
-        <th>{% trans "Number" %}</th>
+        <th>{% trans "Threads" %}</th>
+        <th>{% trans "Posts" %}</th>
+        <th>{% trans "Attachments" %}</th>
+        <th>{% trans "Users" %}</th>
+        <th>{% trans "Inactive users" %}</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td>{% trans "Threads" %}</td>
         <td>{{ totals.threads }}</td>
-      </tr>
-      <tr>
-        <td>{% trans "Posts" %}</td>
         <td>{{ totals.posts }}</td>
-      </tr>
-      <tr>
-        <td>{% trans "Attachments" %}</td>
         <td>{{ totals.attachments }}</td>
-      </tr>
-      <tr>
-        <td>{% trans "Users" %}</td>
         <td>{{ totals.users }}</td>
-      </tr>
-      {% if totals.inactive_users %}
-        <tr>
-          <td>{% trans "Inactive users" %}</td>
-          <td>
+        <td>
+          {% if totals.inactive_users %}
             <a href="{% url "misago:admin:users:index" %}?inactive=1">
               {{ totals.inactive_users }}
             </a>
-          </td>
-        </tr>
-      {% endif %}
+          {% else %}
+            0
+          {% endif %}
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

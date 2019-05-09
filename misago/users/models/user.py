@@ -40,7 +40,7 @@ class UserManager(BaseUserManager):
         user.set_email(email)
         user.set_password(password)
 
-        now = timezone.now()
+        now = extra_fields.get("joined_on", timezone.now())
         user.last_login = now
         user.joined_on = now
 

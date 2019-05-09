@@ -30,8 +30,8 @@ def resolve_analytics(_, info, *, span):
 def clean_span(span):
     if span > 360:
         return 360
-    if span < 14:
-        return 14
+    if span < 30:
+        return 30
     return span
 
 
