@@ -25,41 +25,12 @@ class PgPartialIndexTests(TestCase):
                 fields=["has_events"], name="test_partial", where={"has_events": True}
             ).create_sql(Thread, editor)
 
-            self.assertTrue(sql.endswith('WHERE "has_events" = true'))
+            self.assertTrue(str(sql).endswith('WHERE "misago_threads_thread"."has_events" = true'))
 
             sql = PgPartialIndex(
                 fields=["has_events"], name="test_partial", where={"has_events": False}
             ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" = false'))
-
-            sql = PgPartialIndex(
-                fields=["has_events"], name="test_partial", where={"has_events": 42}
-            ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" = 42'))
-
-            sql = PgPartialIndex(
-                fields=["has_events"], name="test_partial", where={"has_events__lt": 42}
-            ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" < 42'))
-
-            sql = PgPartialIndex(
-                fields=["has_events"], name="test_partial", where={"has_events__gt": 42}
-            ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" > 42'))
-
-            sql = PgPartialIndex(
-                fields=["has_events"],
-                name="test_partial",
-                where={"has_events__lte": 42},
-            ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" <= 42'))
-
-            sql = PgPartialIndex(
-                fields=["has_events"],
-                name="test_partial",
-                where={"has_events__gte": 42},
-            ).create_sql(Thread, editor)
-            self.assertTrue(sql.endswith('WHERE "has_events" >= 42'))
+            self.assertTrue(str(sql).endswith('WHERE "misago_threads_thread"."has_events" = false'))
 
     def test_multiple_where_clauses(self):
         """where clause with multiple conditions generates correctly"""
@@ -102,14 +73,14 @@ class PgPartialIndexTests(TestCase):
         index = PgPartialIndex(fields=["has_events"], where={"has_events": True})
         self.assertEqual(
             repr(index),
-            "<PgPartialIndex: fields='has_events', where='has_events=True'>",
+            "<PgPartialIndex: fields='has_events', condition=(AND: ('has_events', True))>",
         )
 
         index = PgPartialIndex(
             fields=["has_events", "is_hidden"], where={"has_events": True}
         )
         self.assertIn("fields='has_events, is_hidden',", repr(index))
-        self.assertIn(", where='has_events=True'", repr(index))
+        self.assertIn(", condition=(AND: ('has_events', True))>", repr(index))
 
         index = PgPartialIndex(
             fields=["has_events", "is_hidden", "is_closed"],
@@ -117,5 +88,6 @@ class PgPartialIndexTests(TestCase):
         )
         self.assertIn("fields='has_events, is_hidden, is_closed',", repr(index))
         self.assertIn(
-            ", where='has_events=True, is_closed=False, replies__gte=5'", repr(index)
+            ", condition=(AND: ('has_events', True), ('is_closed', False), ('replies__gte', 5))>",
+            repr(index),
         )

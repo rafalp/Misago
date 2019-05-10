@@ -22,7 +22,13 @@ def posts_split_endpoint(request, thread):
 
     if not serializer.is_valid():
         if "posts" in serializer.errors:
-            errors = {"detail": serializer.errors["posts"][0]}
+            # Fix for KeyError - errors[0]
+            errors = serializer.errors["posts"]
+            try:
+                errors = {"detail": errors[0]}
+            except KeyError:
+                if isinstance(errors, dict):
+                    errors = {"detail": list(errors.values())[0][0]}
         else:
             errors = serializer.errors
 
