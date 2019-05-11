@@ -187,6 +187,7 @@ INSTALLED_APPS = [
     "misago.threads",
     "misago.readtracker",
     "misago.search",
+    "misago.graphql",
     "misago.faker",
 ]
 

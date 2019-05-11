@@ -41,7 +41,7 @@ class DataDownload(models.Model):
         on_delete=models.SET_NULL,
     )
     requester_name = models.CharField(max_length=255)
-    requested_on = models.DateTimeField(default=timezone.now)
+    requested_on = models.DateTimeField(default=timezone.now, db_index=True)
     expires_on = models.DateTimeField(default=timezone.now)
     file = models.FileField(
         upload_to=get_data_upload_to, max_length=255, null=True, blank=True
