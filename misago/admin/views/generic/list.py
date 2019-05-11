@@ -49,11 +49,11 @@ class ListView(AdminView):
         )
 
     @classmethod
-    def add_item_action(cls, name, link, style=None):
+    def add_item_action(cls, name, link):
         if not cls.extra_actions:
             cls.extra_actions = []
 
-        cls.extra_actions.append({"name": name, "link": link, "style": style})
+        cls.extra_actions.append({"name": name, "link": link})
 
     def get_queryset(self):
         return self.get_model().objects.all()
