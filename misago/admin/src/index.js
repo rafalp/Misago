@@ -13,6 +13,7 @@ import initMassDelete from "./massDelete"
 import initTimestamps from "./timestamps"
 import initTooltips from "./tooltips"
 import initValidation from "./validation"
+import initVersionCheck from "./versionCheck"
 
 window.moment = moment
 window.misago = {
@@ -21,6 +22,7 @@ window.misago = {
   initDatepicker,
   initMassActions,
   initMassDelete,
+  initVersionCheck,
 
   init: () => {
     const locale = document.querySelector("html").lang

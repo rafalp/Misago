@@ -1,5 +1,12 @@
+enum Status {
+    ERROR
+    WARNING
+    SUCCESS
+}
+
 type Query {
     analytics(span: Int!): Analytics!
+    version: Version!
 }
 
 type Analytics {
@@ -13,4 +20,10 @@ type Analytics {
 type AnalyticsData {
     current: [Int!]!
     previous: [Int!]!
+}
+
+type Version {
+    status: Status!
+    message: String!
+    description: String
 }

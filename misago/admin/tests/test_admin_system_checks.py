@@ -17,7 +17,6 @@ from ..views.index import (
     check_https,
     check_inactive_users,
     check_misago_address,
-    check_release_status,
 )
 
 User = get_user_model()
@@ -179,7 +178,7 @@ def test_debug_check_fails_if_debug_is_enabled():
 @override_settings(DEBUG=True)
 def test_warning_about_enabled_debug_is_displayed_on_checks_list(admin_client):
     response = admin_client.get(admin_link)
-    assert_contains(response, "Site is running in DEBUG mode")
+    assert_contains(response, "site is running in DEBUG mode")
 
 
 def test_https_check_passes_if_site_is_accessed_over_https():
@@ -196,37 +195,31 @@ def test_warning_about_accessing_site_without_https_is_displayed_on_checks_list(
     admin_client
 ):
     response = admin_client.get(admin_link)
-    assert_contains(response, "Site is not running over HTTPS")
+    assert_contains(response, "site is not running over HTTPS")
 
 
-def test_release_check_passess_if_misago_version_is_released(mocker):
-    mocker.patch("misago.admin.views.index.__released__", True)
-    assert check_release_status() == {"is_ok": True}
+def test_inactive_users_check_passess_if_there_are_no_inactive_users(db):
+    assert check_inactive_users() == {"is_ok": True, "count": 0}
 
 
-def test_release_check_fails_if_misago_version_is_not_released(mocker):
-    mocker.patch("misago.admin.views.index.__released__", False)
-    assert check_release_status() == {"is_ok": False}
+def test_inactive_users_check_passess_if_there_are_less_than_eleven_inactive_users(db):
+    for i in range(10):
+        create_test_user(
+            "User%s" % i,
+            "user%s@example.com" % i,
+            requires_activation=User.ACTIVATION_USER,
+        )
+    assert check_inactive_users() == {"is_ok": True, "count": 10}
 
 
-def test_warning_about_running_unreleased_version_is_displayed_on_checks_list(
-    mocker, admin_client
-):
-    mocker.patch("misago.admin.views.index.__released__", False)
-    response = admin_client.get(admin_link)
-    assert_contains(response, "Site is running using unreleased version")
-
-
-def test_inactive_users_check_passess_if_there_are_no_inactive_users():
-    assert check_inactive_users(0) == {"is_ok": True, "count": 0}
-
-
-def test_inactive_users_check_passess_if_there_are_less_than_ten_inactive_users():
-    assert check_inactive_users(10) == {"is_ok": True, "count": 10}
-
-
-def test_inactive_users_check_fails_if_there_are_more_than_ten_inactive_users():
-    assert check_inactive_users(11) == {"is_ok": False, "count": 11}
+def test_inactive_users_check_fails_if_there_are_more_than_ten_inactive_users(db):
+    for i in range(11):
+        create_test_user(
+            "User%s" % i,
+            "user%s@example.com" % i,
+            requires_activation=User.ACTIVATION_USER,
+        )
+    assert check_inactive_users() == {"is_ok": False, "count": 11}
 
 
 def test_warning_about_inactive_users_is_displayed_on_checks_list(admin_client):

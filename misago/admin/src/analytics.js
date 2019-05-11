@@ -73,9 +73,11 @@ class Analytics extends React.Component {
           </div>
         </div>
         <Query query={getAnalytics} variables={{ span }}>
-          {({ loading, error, data: { analytics } }) => {
+          {({ loading, error, data }) => {
             if (loading) return <Spinner />
             if (error) return <Error message={errorMessage} />
+
+            const { analytics } = data
 
             return (
               <>

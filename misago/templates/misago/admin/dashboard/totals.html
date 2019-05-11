@@ -1,36 +1,51 @@
 {% load i18n %}
-<div class="card card-admin-table">
-  <div class="card-body">
-    <h4 class="card-title">
-      {% trans "Database" %}
-    </h4>
-  </div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>{% trans "Threads" %}</th>
-        <th>{% trans "Posts" %}</th>
-        <th>{% trans "Attachments" %}</th>
-        <th>{% trans "Users" %}</th>
-        <th>{% trans "Inactive users" %}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>{{ totals.threads }}</td>
-        <td>{{ totals.posts }}</td>
-        <td>{{ totals.attachments }}</td>
-        <td>{{ totals.users }}</td>
-        <td>
-          {% if totals.inactive_users %}
-            <a href="{% url "misago:admin:users:index" %}?inactive=1">
-              {{ totals.inactive_users }}
-            </a>
-          {% else %}
-            0
-          {% endif %}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<div class="row">
+  <div class="col">
+    <div class="card card-admin-info">
+      <div class="card-body">
+        <h4 class="card-title">
+          {% trans "Threads" %}
+        </h4>
+      </div>
+      <div class="card-body border-top card-admin-stat">
+        {{ totals.threads }}
+      </div>
+    </div>
+  </div><!-- /.col -->
+  <div class="col">
+    <div class="card card-admin-info">
+      <div class="card-body">
+        <h4 class="card-title">
+          {% trans "Posts" %}
+        </h4>
+      </div>
+      <div class="card-body border-top card-admin-stat">
+        {{ totals.posts }}
+      </div>
+    </div>
+  </div><!-- /.col -->
+  <div class="col">
+    <div class="card card-admin-info">
+      <div class="card-body">
+        <h4 class="card-title">
+          {% trans "Attachments" %}
+        </h4>
+      </div>
+      <div class="card-body border-top card-admin-stat">
+        {{ totals.attachments }}
+      </div>
+    </div>
+  </div><!-- /.col -->
+  <div class="col">
+    <div class="card card-admin-info">
+      <div class="card-body">
+        <h4 class="card-title">
+          {% trans "Users" %}
+        </h4>
+      </div>
+      <div class="card-body border-top card-admin-stat">
+        {{ totals.users }}
+      </div>
+    </div>
+  </div><!-- /.col -->
 </div>

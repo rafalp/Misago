@@ -14,5 +14,5 @@ class GraphQLTestClient:
             self.url, json.dumps(data), content_type="application/json"
         )
         json_data = response.json()
-        assert not response.get("errors")
+        assert not json_data.get("errors"), json_data.get("errors")
         return json_data["data"]

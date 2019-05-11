@@ -8,7 +8,7 @@ from django.utils import timezone
 from ...threads.models import Attachment, Post, Thread
 from ...users.models import DataDownload
 
-CACHE_KEY = "MISAGO_ADMIN_ANALYTICS"
+CACHE_KEY = "misago_admin_analytics"
 CACHE_LENGTH = 3600 * 4  # 4 hours
 
 User = get_user_model()

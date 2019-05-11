@@ -15,54 +15,24 @@
 {% include "misago/admin/dashboard/checks.html" %}
 {% include "misago/admin/dashboard/analytics.html" %}
 {% include "misago/admin/dashboard/totals.html" %}
-
-<div class="row">
-  <div class="col-md-4">
-
-    <table class="table version-check">
-      <thead>
-        <tr>
-          <th colspan="2">
-            <h4>
-              {% trans "Misago version" %}
-            </h4>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="text-center">
-            {% if version_check %}
-              <p class="lead text-{% if version_check.is_error %}danger{% else %}success{% endif %}">
-                {% if version_check.is_error %}
-                  <span class="fa fa-times fa-lg fa-fw"></span>
-                {% else %}
-                  <span class="fa fa-check fa-lg fa-fw"></span>
-                {% endif %}
-                {{ version_check.message }}
-              </p>
-            {% else %}
-              <form method="POST">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-light">
-                  <span class="fa fa-question-circle fa-fw"></span>
-                  <span class="name">{% trans "Check version" %}</span>
-                </button>
-              </form>
-            {% endif %}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-
-  </div>
-</div>
 {% endblock content %}
 
 
 {% block javascripts %}
 <script type="text/javascript">
+  window.misago.initVersionCheck({
+    elementId: "admin-version-check",
+    uri: "{% url 'misago:admin:graphql:index' %}",
+
+    errorMessage: {
+      message: "{% trans 'Version check is currently unavailable due to an error.' %}",
+      description: "{% trans 'Misago admin API did not answer or answered with an error.' %}"
+    },
+    loadingMessage: {
+      message: "{% trans 'Checking Misago version used by the site...' %}",
+      description: "{% trans 'Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.' %}"
+    }
+  })
   window.misago.initAnalytics({
     elementId: "admin-analytics",
     uri: "{% url 'misago:admin:graphql:index' %}",
