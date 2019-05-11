@@ -201,7 +201,6 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
 
 RolesList.add_item_action(
     name=_("Categories permissions"),
-    icon="fa fa-comments-o",
     link="misago:admin:permissions:categories",
     style="success",
 )

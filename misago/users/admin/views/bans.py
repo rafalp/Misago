@@ -29,14 +29,13 @@ class BansList(BanAdmin, generic.ListView):
     filter_form = FilterBansForm
     selection_label = _("With bans: 0")
     empty_selection_label = _("Select bans")
-    mass_actions = (
+    mass_actions = [
         {
             "action": "delete",
-            "icon": "fa fa-times",
             "name": _("Remove bans"),
             "confirmation": _("Are you sure you want to remove those bans?"),
-        },
-    )
+        }
+    ]
 
     def action_delete(self, request, items):
         items.delete()

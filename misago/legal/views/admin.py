@@ -30,14 +30,13 @@ class AgreementsList(AgreementAdmin, generic.ListView):
     filter_form = FilterAgreementsForm
     selection_label = _("With agreements: 0")
     empty_selection_label = _("Select agreements")
-    mass_actions = (
+    mass_actions = [
         {
             "action": "delete",
-            "icon": "fa fa-times",
             "name": _("Delete agreements"),
             "confirmation": _("Are you sure you want to delete those agreements?"),
-        },
-    )
+        }
+    ]
 
     def get_queryset(self):
         qs = super().get_queryset()

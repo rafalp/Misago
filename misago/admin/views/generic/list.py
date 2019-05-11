@@ -40,22 +40,20 @@ class ListView(AdminView):
     empty_selection_label = _("Select items")
 
     @classmethod
-    def add_mass_action(cls, action, name, icon, confirmation=None):
+    def add_mass_action(cls, action, name, confirmation=None):
         if not cls.mass_actions:
             cls.mass_actions = []
 
         cls.extra_actions.append(
-            {"action": action, "name": name, "icon": icon, "confirmation": confirmation}
+            {"action": action, "name": name, "confirmation": confirmation}
         )
 
     @classmethod
-    def add_item_action(cls, name, icon, link, style=None):
+    def add_item_action(cls, name, link, style=None):
         if not cls.extra_actions:
             cls.extra_actions = []
 
-        cls.extra_actions.append(
-            {"name": name, "icon": icon, "link": link, "style": style}
-        )
+        cls.extra_actions.append({"name": name, "link": link, "style": style})
 
     def get_queryset(self):
         return self.get_model().objects.all()
