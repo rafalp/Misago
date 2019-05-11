@@ -4,6 +4,18 @@
     <div class="card card-admin-info">
       <div class="card-body">
         <h4 class="card-title">
+          {% trans "Users" %}
+        </h4>
+      </div>
+      <div class="card-body border-top card-admin-stat">
+        {{ totals.users }}
+      </div>
+    </div>
+  </div><!-- /.col -->
+  <div class="col">
+    <div class="card card-admin-info">
+      <div class="card-body">
+        <h4 class="card-title">
           {% trans "Threads" %}
         </h4>
       </div>
@@ -33,18 +45,6 @@
       </div>
       <div class="card-body border-top card-admin-stat">
         {{ totals.attachments }}
-      </div>
-    </div>
-  </div><!-- /.col -->
-  <div class="col">
-    <div class="card card-admin-info">
-      <div class="card-body">
-        <h4 class="card-title">
-          {% trans "Users" %}
-        </h4>
-      </div>
-      <div class="card-body border-top card-admin-stat">
-        {{ totals.users }}
       </div>
     </div>
   </div><!-- /.col -->
