@@ -3,8 +3,8 @@ from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.views import generic
-from ...forms import AttachmentTypeForm
 from ...models import AttachmentType
+from ..forms import AttachmentTypeForm
 
 
 class AttachmentTypeAdmin(generic.AdminBaseMixin):

@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from ...acl.models import Role
-from ...admin.test import AdminTestCase
-from ..models import AttachmentType
+from ....acl.models import Role
+from ....admin.test import AdminTestCase
+from ...models import AttachmentType
 
 
 class AttachmentTypeAdminViewsTests(AdminTestCase):

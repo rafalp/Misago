@@ -1,8 +1,8 @@
 from django.conf.urls import url
 from django.utils.translation import gettext_lazy as _
 
-from .views.admin.attachments import AttachmentsList, DeleteAttachment
-from .views.admin.attachmenttypes import (
+from .views.attachments import AttachmentsList, DeleteAttachment
+from .views.attachmenttypes import (
     AttachmentTypesList,
     DeleteAttachmentType,
     EditAttachmentType,

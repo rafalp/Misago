@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext as _
 
-from .models import AttachmentType
+from ..models import AttachmentType
 
 
 def get_searchable_filetypes():

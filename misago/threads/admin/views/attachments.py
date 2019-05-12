@@ -3,8 +3,8 @@ from django.db import transaction
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.views import generic
-from ...forms import FilterAttachmentsForm
 from ...models import Attachment, Post
+from ..forms import FilterAttachmentsForm
 
 
 class AttachmentAdmin(generic.AdminBaseMixin):
