@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.utils.translation import gettext_lazy as _
 
-from .views.admin import (
+from .views import (
     AgreementsList,
     DeleteAgreement,
     DisableAgreement,

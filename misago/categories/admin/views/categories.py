@@ -2,12 +2,12 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
-from .. import THREADS_ROOT_NAME
-from ...acl.cache import clear_acl_cache
-from ...admin.views import generic
-from ...threads.threadtypes import trees_map
+from ... import THREADS_ROOT_NAME
+from ....acl.cache import clear_acl_cache
+from ....admin.views import generic
+from ....threads.threadtypes import trees_map
+from ...models import Category, RoleCategoryACL
 from ..forms import CategoryFormFactory, DeleteFormFactory
-from ..models import Category, RoleCategoryACL
 
 
 class CategoryAdmin(generic.AdminBaseMixin):

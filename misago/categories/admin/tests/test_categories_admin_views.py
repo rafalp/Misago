@@ -1,11 +1,11 @@
 from django.urls import reverse
 
-from ...acl import ACL_CACHE
-from ...admin.test import AdminTestCase
-from ...cache.test import assert_invalidates_cache
-from ...threads import test
-from ...threads.models import Thread
-from ..models import Category
+from ....acl import ACL_CACHE
+from ....admin.test import AdminTestCase
+from ....cache.test import assert_invalidates_cache
+from ....threads import test
+from ....threads.models import Thread
+from ...models import Category
 
 
 class CategoryAdminTestCase(AdminTestCase):

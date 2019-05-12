@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse
 
-from ..serializers import CategoryWithPosterSerializer as CategorySerializer
-from ..utils import get_categories_tree
+from .serializers import CategoryWithPosterSerializer as CategorySerializer
+from .utils import get_categories_tree
 
 
 def categories(request):

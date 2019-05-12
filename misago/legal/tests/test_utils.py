@@ -6,7 +6,6 @@ from ..utils import (
     get_parsed_agreement_text,
     get_required_user_agreement,
     save_user_agreement_acceptance,
-    set_agreement_as_active,
 )
 
 
@@ -134,56 +133,3 @@ class SaveUserAgreementAcceptance(UserTestCase):
 
         UserAgreement.objects.get(user=user, agreement=agreement)
         self.assertEqual(UserAgreement.objects.count(), 1)
-
-
-class SetAgreementAsActiveTests(TestCase):
-    def test_inactive_agreement(self):
-        agreement = Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY, link="https://somewhre.com", text="Lorem ipsum"
-        )
-
-        set_agreement_as_active(agreement)
-        self.assertTrue(agreement.is_active)
-
-        agreement.refresh_from_db()
-        self.assertFalse(agreement.is_active)
-
-    def test_inactive_agreement_commit(self):
-        agreement = Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY, link="https://somewhre.com", text="Lorem ipsum"
-        )
-
-        set_agreement_as_active(agreement, commit=True)
-        self.assertTrue(agreement.is_active)
-
-        agreement.refresh_from_db()
-        self.assertTrue(agreement.is_active)
-
-    def test_change_active_agreement(self):
-        old_agreement = Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY,
-            link="https://somewhre.com",
-            text="Lorem ipsum",
-            is_active=True,
-        )
-
-        new_agreement = Agreement.objects.create(
-            type=Agreement.TYPE_PRIVACY, link="https://somewhre.com", text="Lorem ipsum"
-        )
-
-        other_type_agreement = Agreement.objects.create(
-            type=Agreement.TYPE_TOS,
-            link="https://somewhre.com",
-            text="Lorem ipsum",
-            is_active=True,
-        )
-
-        set_agreement_as_active(new_agreement, commit=True)
-
-        old_agreement.refresh_from_db()
-        new_agreement.refresh_from_db()
-        other_type_agreement.refresh_from_db()
-
-        self.assertFalse(old_agreement.is_active)
-        self.assertTrue(new_agreement.is_active)
-        self.assertTrue(other_type_agreement.is_active)

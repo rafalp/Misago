@@ -1,9 +1,9 @@
 import pytest
 from django.urls import reverse
 
-from ...admin.test import AdminTestCase
-from ...test import assert_contains
-from ..models import Agreement
+from ....admin.test import AdminTestCase
+from ....test import assert_contains
+from ...models import Agreement
 
 
 @pytest.fixture
@@ -115,7 +115,9 @@ def test_form_sets_new_agreement_creator(admin_client, superuser):
 
 
 def test_form_creates_active_agreement(mocker, admin_client):
-    set_agreement_as_active = mocker.patch("misago.legal.forms.set_agreement_as_active")
+    set_agreement_as_active = mocker.patch(
+        "misago.legal.admin.forms.set_agreement_as_active"
+    )
     response = admin_client.post(
         reverse("misago:admin:settings:agreements:new"),
         {

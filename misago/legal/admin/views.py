@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...admin.views import generic
-from ..forms import AgreementForm, FilterAgreementsForm
 from ..models import Agreement
-from ..utils import disable_agreement, set_agreement_as_active
+from .forms import AgreementForm, FilterAgreementsForm
+from .utils import disable_agreement, set_agreement_as_active
 
 
 class AgreementAdmin(generic.AdminBaseMixin):

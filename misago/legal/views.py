@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 
-from ..models import Agreement
-from ..utils import get_parsed_agreement_text
+from .models import Agreement
+from .utils import get_parsed_agreement_text
 
 
 def legal_view(request, agreement_type):

@@ -2,8 +2,8 @@ from django import forms
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from ..admin.forms import YesNoSwitch
-from .models import Agreement
+from ...admin.forms import YesNoSwitch
+from ..models import Agreement
 from .utils import disable_agreement, set_agreement_as_active
 
 

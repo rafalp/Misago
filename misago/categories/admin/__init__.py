@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.utils.translation import gettext_lazy as _
 
-from .views.categoriesadmin import (
+from .views.categories import (
     CategoriesList,
     DeleteCategory,
     EditCategory,
@@ -9,7 +9,7 @@ from .views.categoriesadmin import (
     MoveUpCategory,
     NewCategory,
 )
-from .views.permsadmin import (
+from .views.perms import (
     CategoryPermissions,
     CategoryRolesList,
     DeleteCategoryRole,
