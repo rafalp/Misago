@@ -7,51 +7,27 @@
 
 {% block content %}
 <div class="page-header">
-  <div class="container">
-    <h1>
-      {% block header %}
-        <span class="fa fa-sliders"></span>
-        {% trans "Settings" %}
-      {% endblock %}
-    </h1>
-  </div>
+  <h1>
+    <a href="{{ active_section.link }}">
+      {{ active_section.name }}
+    </a>
+  </h1>
 </div>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-
-      <ul class="nav nav-side">
-        {% for group in settings_groups %}
-          <li {% if group.key == active_group.key %}class="active"{% endif %}>
-            <a href="{% url 'misago:admin:settings:group' key=group.key %}">
-              {% trans group.name %}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-
-    </div><!-- /.col-md-3 -->
-    <div class="col-md-9">
-
-      {% block action %}
-        <div class="list-panel">
-          <div class="list-group">
-
-            {% for group in settings_groups %}
-              <a href="{% url 'misago:admin:settings:group' key=group.key %}" class="list-group-item">
-                <h4 class="list-group-item-heading">{% trans group.name %}</h4>
-                {% if group.description %}
-                  <p class="list-group-item-text">{% trans group.description %}</p>
-                {% endif %}
-              </a>
-            {% endfor %}
-
-          </div><!-- /.list-group -->
+<div class="card card-admin-settings-grid">
+  <div class="card-body">
+    <div class="row">
+      {% for subnode in actions %}
+        <div class="col-12 col-lg-6 col-xl-4 p-0">
+          <a href="{{ subnode.link }}" class="card-admin-settings-card">
+            <h5 class="list-group-item-heading">{{ subnode.name }}</h5>
+            {% if subnode.description %}
+              <small>{{ subnode.description }}</small>
+            {% endif %}
+          </a>
         </div>
-      {% endblock action %}
-
-    </div><!-- /.col-md-9 -->
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endblock content %}

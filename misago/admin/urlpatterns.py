@@ -16,6 +16,10 @@ class URLPatterns:
     def patterns(self, namespace, *new_patterns):
         self._patterns.append({"namespace": namespace, "urlpatterns": new_patterns})
 
+    def single_pattern(self, path, namespace, parent, view):
+        self.namespace(path, namespace, parent)
+        self.patterns(":".join((parent, namespace)), url(r"^$", view, name="index"))
+
     def get_child_patterns(self, parent):
         prefix = "%s:" % parent if parent else ""
 
