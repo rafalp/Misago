@@ -3,7 +3,7 @@ from django.conf.urls import url
 from ...conf import settings
 from ...core.views import home_redirect
 
-from ..views.categorieslist import categories
+from ..views import categories
 
 if settings.MISAGO_THREADS_ON_INDEX:
     URL_PATH = r"^categories/$"
