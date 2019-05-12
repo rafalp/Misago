@@ -1,14 +1,14 @@
 from django.conf.urls import url
 from django.utils.translation import gettext_lazy as _
 
-from . import views
+from .views import index
 
 
 class MisagoAdminExtension:
     def register_urlpatterns(self, urlpatterns):
         urlpatterns.namespace(r"^settings/", "settings")
 
-        urlpatterns.patterns("settings", url(r"^$", views.index, name="index"))
+        urlpatterns.patterns("settings", url(r"^$", index, name="index"))
 
     def register_navigation_nodes(self, site):
         site.add_node(
