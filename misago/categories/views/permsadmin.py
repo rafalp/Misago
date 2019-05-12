@@ -2,10 +2,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
+from ...acl.admin.forms import get_permissions_forms
+from ...acl.admin.views import RoleAdmin, RolesList
 from ...acl.cache import clear_acl_cache
-from ...acl.forms import get_permissions_forms
 from ...acl.models import Role
-from ...acl.views import RoleAdmin, RolesList
 from ...admin.views import generic
 from ..forms import (
     CategoryRoleForm,

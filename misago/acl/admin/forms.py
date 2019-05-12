@@ -1,8 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from .models import Role
-from .providers import providers
+from ..models import Role
+from ..providers import providers
 
 
 class RoleForm(forms.ModelForm):

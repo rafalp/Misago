@@ -3,9 +3,9 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from ..admin.views import generic
+from ...admin.views import generic
+from ..models import Role
 from .forms import RoleForm, get_permissions_forms
-from .models import Role
 
 
 class RoleAdmin(generic.AdminBaseMixin):

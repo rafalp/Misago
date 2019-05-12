@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from ...acl import ACL_CACHE
 from ...acl.models import Role
-from ...acl.test import mock_role_form_data
+from ...acl.admin.test import mock_role_form_data
 from ...admin.test import AdminTestCase
 from ...cache.test import assert_invalidates_cache
 from ..models import Category, CategoryRole
