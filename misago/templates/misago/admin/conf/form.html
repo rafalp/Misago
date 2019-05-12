@@ -9,7 +9,7 @@
 
 {% block view %}
 <div class="card card-admin-form">
-  <form role="form" method="post">
+  <form role="form" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <h5 class="card-header">

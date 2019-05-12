@@ -1,6 +1,40 @@
 {% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
 
 
 {% block form-body %}
-HELLO!
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Site details" %}</legend>
+
+    {% form_row form.forum_name %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Forum index" %}</legend>
+
+    {% form_row form.forum_index_title %}
+    {% form_row form.forum_index_meta_description %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Branding" %}</legend>
+
+    {% form_row form.forum_branding_display %}
+    {% form_row form.forum_branding_text %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Forum e-mails" %}</legend>
+
+    {% form_row form.email_footer %}
+
+  </fieldset>
+</div>
 {% endblock form-body %}
