@@ -26,7 +26,6 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
         {
             "action": "expire",
             "name": _("Expire downloads"),
-            "icon": "fa fa-ban",
             "confirmation": _(
                 "Are you sure you want to set selected data downloads as expired?"
             ),
@@ -34,7 +33,6 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
         {
             "action": "delete",
             "name": _("Delete downloads"),
-            "icon": "fa fa-times-circle",
             "confirmation": _(
                 "Are you sure you want to delete selected data downloads?"
             ),

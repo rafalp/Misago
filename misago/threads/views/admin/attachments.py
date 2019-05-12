@@ -36,7 +36,6 @@ class AttachmentsList(AttachmentAdmin, generic.ListView):
         {
             "action": "delete",
             "name": _("Delete attachments"),
-            "icon": "fa fa-times-circle",
             "confirmation": _("Are you sure you want to delete selected attachments?"),
             "is_atomic": False,
         }
