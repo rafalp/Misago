@@ -12,6 +12,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "forum_index_meta_description",
         "forum_branding_display",
         "forum_branding_text",
+        "forum_footnote",
         "email_footer",
     ]
 
@@ -35,6 +36,12 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         label=_("Branding text"),
         help_text=_("Optional text displayed besides brand image in navbar."),
         max_length=255,
+        required=False,
+    )
+    forum_footnote = forms.CharField(
+        label=_("Forum footnote"),
+        help_text=_("Short message displayed in forum footer."),
+        max_length=300,
         required=False,
     )
     email_footer = forms.CharField(
