@@ -52,7 +52,7 @@ class Command(BaseCommand):
             if random.randint(0, 100) > 90:
                 starter = None
             else:
-                starter = User.objects.order_by("?")[:1].last()
+                starter = User.objects.order_by("?").last()
 
             # There's 10% chance thread is closed
             if random.randint(0, 100) > 90:
@@ -63,7 +63,7 @@ class Command(BaseCommand):
                 if random.randint(0, 100) > 90:
                     hidden_by = None
                 else:
-                    hidden_by = User.objects.order_by("?")[:1].last()
+                    hidden_by = User.objects.order_by("?").last()
 
                 thread = get_fake_hidden_thread(fake, category, starter, hidden_by)
 
