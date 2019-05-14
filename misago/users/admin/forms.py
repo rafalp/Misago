@@ -815,3 +815,43 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         max_length=250,
         required=False,
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("captcha_type") == "re":
+            if not cleaned_data.get("recaptcha_site_key"):
+                self.add_error(
+                    "recaptcha_site_key",
+                    _(
+                        "You need to enter site key if "
+                        "selected CAPTCHA type is reCaptcha."
+                    ),
+                )
+
+            if not cleaned_data.get("recaptcha_secret_key"):
+                self.add_error(
+                    "recaptcha_secret_key",
+                    _(
+                        "You need to enter secret key if "
+                        "selected CAPTCHA type is reCaptcha."
+                    ),
+                )
+
+        if cleaned_data.get("captcha_type") == "qa":
+            if not cleaned_data.get("qa_question"):
+                self.add_error(
+                    "qa_question",
+                    _("You need to set question if selected CAPTCHA type is Q&A."),
+                )
+
+            if not cleaned_data.get("qa_answers"):
+                self.add_error(
+                    "qa_answers",
+                    _(
+                        "You need to set question answers if "
+                        "selected CAPTCHA type is Q&A."
+                    ),
+                )
+
+        return cleaned_data
