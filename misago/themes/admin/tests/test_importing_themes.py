@@ -47,7 +47,7 @@ def test_import_theme_form_is_displayed(admin_client):
 
 
 def test_theme_import_fails_if_export_was_not_uploaded(admin_client):
-    admin_client.post(import_link, {"upload": None})
+    admin_client.post(import_link, {"upload": ''})
     assert Theme.objects.count() == 1
 
 

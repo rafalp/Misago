@@ -2,8 +2,8 @@ ariadne>0.2
 beautifulsoup4<4.8
 bleach<3.2
 celery[redis]
-django<2
-djangorestframework<3.7
+django<2.3
+djangorestframework<3.10
 django-debug-toolbar<1.12
 django-htmlmin<0.11
 django-mptt

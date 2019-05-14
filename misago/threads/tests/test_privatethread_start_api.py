@@ -52,7 +52,7 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
         self.assertEqual(
             response.json(),
             {
-                "to": ["You have to enter user names."],
+                "to": ["This field is required."],
                 "title": ["You have to enter thread title."],
                 "post": ["You have to enter a message."],
             },

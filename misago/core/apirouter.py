@@ -17,13 +17,14 @@ class MisagoApiRouter(DefaultRouter):
             mapping={"get": "list", "post": "create"},
             name="{basename}-list",
             initkwargs={"suffix": "List"},
+            detail=False,
         ),
         # Dynamically generated list routes.
         # Generated using @list_route decorator
         # on methods of the viewset.
         DynamicListRoute(
-            url=r"^{prefix}/{methodnamehyphen}{trailing_slash}$",
-            name="{basename}-{methodnamehyphen}",
+            url=r"^{prefix}/{url_path}{trailing_slash}$",
+            name="{basename}-{url_name}",
             initkwargs={},
         ),
         # Detail route.
@@ -37,12 +38,13 @@ class MisagoApiRouter(DefaultRouter):
             },
             name="{basename}-detail",
             initkwargs={"suffix": "Instance"},
+            detail=True,
         ),
         # Dynamically generated detail routes.
         # Generated using @detail_route decorator on methods of the viewset.
         DynamicDetailRoute(
-            url=r"^{prefix}/{lookup}/{methodnamehyphen}{trailing_slash}$",
-            name="{basename}-{methodnamehyphen}",
+            url=r"^{prefix}/{lookup}/{url_path}{trailing_slash}$",
+            name="{basename}-{url_name}",
             initkwargs={},
         ),
     ]

@@ -31,7 +31,7 @@ def upload(admin_client):
         if asset_files is not None:
             data = asset_files if isinstance(asset_files, list) else [asset_files]
         else:
-            data = None
+            data = ''
         return admin_client.post(url, {"assets": data})
 
     return post_upload
