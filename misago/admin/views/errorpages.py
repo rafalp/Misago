@@ -1,4 +1,4 @@
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render as dj_render
 
 from . import get_protected_namespace, protected_admin_view, render
 from ...core.utils import get_exception_message
@@ -42,7 +42,7 @@ def _csrf_failure(request, reason=""):
             error_page=True,
         )
     else:
-        response = render(request, "misago/admin/errorpages/csrf_failure.html")
+        response = dj_render(request, "misago/admin/errorpages/csrf_failure.html")
 
     response.status_code = 403
     return response

@@ -1,0 +1,51 @@
+{% extends "misago/admin/layout.html" %}
+{% load i18n misago_capture %}
+
+
+{% block title %}{% trans "Dashboard" %} | {{ block.super }}{% endblock %}
+
+
+{% block content %}
+<div class="page-header row align-items-center">
+  <div class="col">
+    <h1>{% trans "Dashboard" %}</h1>
+  </div>
+</div>
+
+{% include "misago/admin/dashboard/checks.html" %}
+{% include "misago/admin/dashboard/analytics.html" %}
+{% include "misago/admin/dashboard/totals.html" %}
+{% endblock content %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initVersionCheck({
+    elementId: "admin-version-check",
+    uri: "{% url 'misago:admin:graphql:index' %}",
+
+    errorMessage: {
+      message: "{% trans 'Version check is currently unavailable due to an error.' %}",
+      description: "{% trans 'Misago admin API did not answer or answered with an error.' %}"
+    },
+    loadingMessage: {
+      message: "{% trans 'Checking Misago version used by the site...' %}",
+      description: "{% trans 'Version check feature relies on the API operated by the Python Package Index (pypi.org) API to retrieve latest Misago release version.' %}"
+    }
+  })
+  window.misago.initAnalytics({
+    elementId: "admin-analytics",
+    uri: "{% url 'misago:admin:graphql:index' %}",
+
+    title: "{% trans 'Analytics' %}",
+    labels: {
+      users: "{% trans 'User registrations' %}",
+      threads: "{% trans 'Threads started' %}",
+      posts: "{% trans 'Posts' %}",
+      attachments: "{% trans 'Attachments uploaded' %}",
+      dataDownloads: "{% trans 'Data download requests' %}"
+    },
+    errorMessage: "{% trans 'Site analytics are currently unavailable due to an error.' %}"
+  })
+</script>
+{% endblock javascripts %}

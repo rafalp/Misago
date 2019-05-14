@@ -53,14 +53,14 @@ def test_mass_deleting_bans_invalidates_bans_cache(admin_client, admin_link, ban
         )
 
 
-def test_ban_can_be_deleted(admin_client, admin_link, ban):
+def test_ban_can_be_deleted(admin_client, ban):
     admin_client.post(reverse("misago:admin:users:bans:delete", kwargs={"pk": ban.pk}))
 
     with pytest.raises(Ban.DoesNotExist):
         ban.refresh_from_db()
 
 
-def test_deleting_ban_invalidates_bans_cache(admin_client, admin_link, ban):
+def test_deleting_ban_invalidates_bans_cache(admin_client, ban):
     with assert_invalidates_cache(BANS_CACHE):
         admin_client.post(
             reverse("misago:admin:users:bans:delete", kwargs={"pk": ban.pk})

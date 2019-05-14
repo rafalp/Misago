@@ -40,7 +40,7 @@ class UserManager(BaseUserManager):
         user.set_email(email)
         user.set_password(password)
 
-        now = timezone.now()
+        now = extra_fields.get("joined_on", timezone.now())
         user.last_login = now
         user.joined_on = now
 
@@ -132,7 +132,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, db_index=True)
     email_hash = models.CharField(max_length=32, unique=True)
 
-    joined_on = models.DateTimeField(_("joined on"), default=timezone.now)
+    joined_on = models.DateTimeField(
+        _("joined on"), default=timezone.now, db_index=True
+    )
     joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
     is_hiding_presence = models.BooleanField(default=False)
 

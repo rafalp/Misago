@@ -2,7 +2,6 @@ import React from "react"
 import ReactDOM from "react-dom"
 import moment from "moment"
 
-// 2019-03-22T22:17:12+00:00
 const initDatepicker = ({ elementId, never, setDate }) => {
   const element = document.getElementById(elementId)
   if (!element) console.error("Element with id " + element + "doesn't exist!")

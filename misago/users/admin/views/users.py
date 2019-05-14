@@ -69,27 +69,17 @@ class UsersList(UserAdmin, generic.ListView):
     selection_label = _("With users: 0")
     empty_selection_label = _("Select users")
     mass_actions = [
-        {
-            "action": "activate",
-            "name": _("Activate accounts"),
-            "icon": "fa fa-check-square-o",
-        },
+        {"action": "activate", "name": _("Activate accounts")},
         {"action": "ban", "name": _("Ban users"), "icon": "fa fa-lock"},
-        {
-            "action": "request_data_download",
-            "name": _("Request data download"),
-            "icon": "fa fa-download",
-        },
+        {"action": "request_data_download", "name": _("Request data download")},
         {
             "action": "delete_accounts",
             "name": _("Delete accounts"),
-            "icon": "fa fa-times-circle",
             "confirmation": _("Are you sure you want to delete selected users?"),
         },
         {
             "action": "delete_all",
             "name": _("Delete with content"),
-            "icon": "fa fa-eraser",
             "confirmation": _(
                 "Are you sure you want to delete selected users? "
                 "This will also delete all content associated with their accounts."
