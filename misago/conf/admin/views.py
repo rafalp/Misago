@@ -31,17 +31,19 @@ class ChangeSettingsView(AdminView):
                 return redirect(request.path_info)
         return self.render(request, {"form": form})
 
-    def get_settings(self, settings):
-        settings_dict = {}
-        for setting in Setting.objects.filter(setting__in=settings):
-            settings_dict[setting.setting] = setting
-        if len(settings_dict) != len(settings):
-            not_found_settings = list(set(settings_dict.keys()) - set(settings))
+    def get_settings(self, form_settings):
+        settings = {}
+        for setting in Setting.objects.filter(setting__in=form_settings):
+            settings[setting.setting] = setting
+
+        if len(settings) != len(form_settings):
+            not_found_settings = list(set(settings.keys()) - set(form_settings))
             raise ValueError(
                 "Some of settings defined in form could not be found: "
                 ", ".join(not_found_settings)
             )
-        return settings_dict
-    
+
+        return settings
+
     def get_initial_form_data(self, settings):
         return {key: setting.value for key, setting in settings.items()}

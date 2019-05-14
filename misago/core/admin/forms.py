@@ -29,8 +29,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         required=False,
     )
     forum_branding_display = YesNoSwitch(
-        label=_("Display branding"),
-        help_text=_("Switch branding in forum's navbar."),
+        label=_("Display branding"), help_text=_("Switch branding in forum's navbar.")
     )
     forum_branding_text = forms.CharField(
         label=_("Branding text"),
@@ -40,8 +39,9 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
     )
     email_footer = forms.CharField(
         label=_("E-mails footer"),
-        help_text=_("Optional short message included at the end of e-mails sent by forum."),
+        help_text=_(
+            "Optional short message included at the end of e-mails sent by forum."
+        ),
         max_length=255,
         required=False,
     )
-

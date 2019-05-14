@@ -13,9 +13,7 @@ class MisagoAdminExtension:
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("General"),
-            description=_(
-                "Change forum details like name, description or footer."
-            ),
+            description=_("Change forum details like name, description or footer."),
             parent="settings",
             namespace="general",
         )
