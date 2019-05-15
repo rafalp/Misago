@@ -54,7 +54,7 @@ class UserChangePasswordTests(AuthenticatedUserTestCase):
     def test_short_new_pasword(self):
         """api errors correctly for short new password"""
         response = self.client.post(
-            self.link, data={"new_password": "a2M_", "password": self.USER_PASSWORD}
+            self.link, data={"new_password": "n", "password": self.USER_PASSWORD}
         )
 
         self.assertEqual(response.status_code, 400)
