@@ -10,7 +10,6 @@ from ...models import Rank
 from ...utils import hash_email
 
 User = get_user_model()
-PASSWORD = 'Lor3mIpsum'
 
 
 def test_link_is_registered_in_admin_nav(admin_client):
@@ -39,7 +38,7 @@ def test_new_user_can_be_created(admin_client):
             "rank": str(default_rank.pk),
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
-            "new_password": PASSWORD,
+            "new_password": "pass123",
             "staff_level": "0",
         },
     )
@@ -48,7 +47,7 @@ def test_new_user_can_be_created(admin_client):
     assert user.username == "User"
     assert user.rank == default_rank
     assert authenticated_role in user.roles.all()
-    assert user.check_password(PASSWORD)
+    assert user.check_password("pass123")
     assert not user.is_staff
     assert not user.is_superuser
 
@@ -64,13 +63,13 @@ def test_new_user_can_be_created_with_whitespace_around_password(admin_client):
             "rank": str(default_rank.pk),
             "roles": str(authenticated_role.pk),
             "email": "user@example.com",
-            "new_password": "  Lor3mIpsum  ",
+            "new_password": "  pass123  ",
             "staff_level": "0",
         },
     )
 
     user = User.objects.get_by_email("user@example.com")
-    assert user.check_password("  Lor3mIpsum  ")
+    assert user.check_password("  pass123  ")
 
 
 def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(

@@ -265,7 +265,6 @@ class UserCreateTests(UserTestCase):
                         "This password is too short. "
                         "It must contain at least 7 characters."
                     ),
-                    'This password is too common.',
                     "This password is entirely numeric.",
                 ],
             },
