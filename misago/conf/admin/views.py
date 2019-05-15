@@ -8,6 +8,7 @@ from ..models import Setting
 from .forms import (
     ChangeCaptchaSettingsForm,
     ChangeGeneralSettingsForm,
+    ChangeThreadsSettingsForm,
     ChangeUsersSettingsForm,
 )
 
@@ -62,6 +63,11 @@ class ChangeCaptchaSettingsView(ChangeSettingsView):
 class ChangeGeneralSettingsView(ChangeSettingsView):
     form = ChangeGeneralSettingsForm
     template_name = "misago/admin/conf/general_settings.html"
+
+
+class ChangeThreadsSettingsView(ChangeSettingsView):
+    form = ChangeThreadsSettingsForm
+    template_name = "misago/admin/conf/threads_settings.html"
 
 
 class ChangeUsersSettingsView(ChangeSettingsView):

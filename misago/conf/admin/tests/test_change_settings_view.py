@@ -85,6 +85,11 @@ def test_general_settings_form_renders(admin_client):
     assert response.status_code == 200
 
 
+def test_threads_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:threads:index"))
+    assert response.status_code == 200
+
+
 def test_users_settings_form_renders(admin_client):
     response = admin_client.get(reverse("misago:admin:settings:users:index"))
     assert response.status_code == 200

@@ -5,6 +5,7 @@ from .views import index
 from .views import (
     ChangeCaptchaSettingsView,
     ChangeGeneralSettingsView,
+    ChangeThreadsSettingsView,
     ChangeUsersSettingsView,
 )
 
@@ -20,6 +21,9 @@ class MisagoAdminExtension:
         )
         urlpatterns.single_pattern(
             r"^general/", "general", "settings", ChangeGeneralSettingsView.as_view()
+        )
+        urlpatterns.single_pattern(
+            r"^threads/", "threads", "settings", ChangeThreadsSettingsView.as_view()
         )
         urlpatterns.single_pattern(
             r"^users/", "users", "settings", ChangeUsersSettingsView.as_view()
@@ -39,7 +43,6 @@ class MisagoAdminExtension:
             parent="settings",
             namespace="general",
         )
-
         site.add_node(
             name=_("Users"),
             description=_(
@@ -57,4 +60,11 @@ class MisagoAdminExtension:
             parent="settings",
             namespace="captcha",
             after="users:index",
+        )
+        site.add_node(
+            name=_("Threads"),
+            description=_("Those settings control threads and posts."),
+            parent="settings",
+            namespace="threads",
+            after="captcha:index",
         )
