@@ -1,5 +1,6 @@
 import pytest
 from django import forms
+from django.urls import reverse
 
 from ....cache.test import assert_invalidates_cache
 from ... import SETTINGS_CACHE
@@ -72,3 +73,18 @@ def test_view_invalidates_settings_cache_on_correct_post_request(rf, setting):
     with assert_invalidates_cache(SETTINGS_CACHE):
         view = View.as_view()
         view(rf.post("/", {setting.setting: "New Value"}))
+
+
+def test_captcha_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:captcha:index"))
+    assert response.status_code == 200
+
+
+def test_general_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:general:index"))
+    assert response.status_code == 200
+
+
+def test_users_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:users:index"))
+    assert response.status_code == 200

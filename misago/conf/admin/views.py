@@ -5,6 +5,11 @@ from django.utils.translation import gettext as _
 from ...admin.views import render
 from ...admin.views.generic import AdminView
 from ..models import Setting
+from .forms import (
+    ChangeCaptchaSettingsForm,
+    ChangeGeneralSettingsForm,
+    ChangeUsersSettingsForm,
+)
 
 
 def index(request):
@@ -47,3 +52,18 @@ class ChangeSettingsView(AdminView):
 
     def get_initial_form_data(self, settings):
         return {key: setting.value for key, setting in settings.items()}
+
+
+class ChangeCaptchaSettingsView(ChangeSettingsView):
+    form = ChangeCaptchaSettingsForm
+    template_name = "misago/admin/conf/captcha_settings.html"
+
+
+class ChangeGeneralSettingsView(ChangeSettingsView):
+    form = ChangeGeneralSettingsForm
+    template_name = "misago/admin/conf/general_settings.html"
+
+
+class ChangeUsersSettingsView(ChangeSettingsView):
+    form = ChangeUsersSettingsForm
+    template_name = "misago/admin/conf/users_settings.html"

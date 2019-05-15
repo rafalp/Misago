@@ -16,7 +16,6 @@ from .views.ranks import (
     RanksList,
     RankUsers,
 )
-from .views.settings import ChangeCaptchaSettingsView, ChangeUsersSettingsView
 from .views.users import EditUser, NewUser, UsersList
 
 djadmin.site.register(model_or_iterable=get_user_model(), admin_class=UserAdminModel)
@@ -70,14 +69,6 @@ class MisagoAdminExtension:
             url(r"^delete/(?P<pk>\d+)/$", DeleteRank.as_view(), name="delete"),
         )
 
-        # Settings
-        urlpatterns.single_pattern(
-            r"^users/", "users", "settings", ChangeUsersSettingsView.as_view()
-        )
-        urlpatterns.single_pattern(
-            r"^captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
-        )
-
     def register_navigation_nodes(self, site):
         site.add_node(
             name=_("Users"), icon="fa fa-users", after="index", namespace="users"
@@ -97,23 +88,4 @@ class MisagoAdminExtension:
             icon="fas fa-shield-alt",
             after="users:index",
             namespace="ranks",
-        )
-
-        site.add_node(
-            name=_("Users"),
-            description=_(
-                "Customize user accounts default behaviour and features availability."
-            ),
-            parent="settings",
-            namespace="users",
-            after="general:index",
-        )
-        site.add_node(
-            name=_("Captcha"),
-            description=_(
-                "Setup protection against automatic registrations on the site."
-            ),
-            parent="settings",
-            namespace="captcha",
-            after="users:index",
         )
