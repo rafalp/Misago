@@ -27,5 +27,5 @@ urlpatterns = [
 router = MisagoApiRouter()
 router.register(r"ranks", RanksViewSet)
 router.register(r"users", UserViewSet)
-router.register(r"username-changes", UsernameChangesViewSet, base_name="usernamechange")
+router.register(r"username-changes", UsernameChangesViewSet, basename="usernamechange")
 urlpatterns += router.urls

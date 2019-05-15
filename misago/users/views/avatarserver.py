@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.shortcuts import redirect
+from django.templatetags.static import static
 
 from ...conf import settings
 
