@@ -20,7 +20,7 @@ django-htmlmin==0.10.0
 django-js-asset==1.2.2    # via django-mptt
 django-mptt==0.10.0
 django==2.2.1
-djangorestframework==3.9.3
+djangorestframework==3.9.4
 faker==1.0.5
 graphql-core-next==1.0.3  # via ariadne
 html5lib==1.0.1
