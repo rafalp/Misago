@@ -69,4 +69,3 @@ if os.environ.get("TRAVIS"):
     }
 
     TEST_NAME = "travis_ci_test"
-
