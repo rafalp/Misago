@@ -1,10 +1,21 @@
 // Controls and inputs overrides
 
 // Align radio and checkbox lists items vertically
-.control-checkboxselect .checkbox,
-.control-radioselect .radio {
-  @extend .d-block;
-  clear: both;
+.control-checkboxselect .form-check,
+.control-radioselect .form-check {
+  padding: 0;
+}
+
+// Decrease size of option labels
+.control-checkboxselect .form-check-label,
+.control-radioselect .form-check-label {
+  font-size: $font-size-sm;
+}
+
+// Include extra vertical space between list items
+.control-checkboxselect .form-check + .form-check,
+.control-radioselect .form-check + .form-check {
+  @extend .mt-1;
 }
 
 // Include extra horizontal space between yes/no options

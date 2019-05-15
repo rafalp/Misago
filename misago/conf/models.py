@@ -42,18 +42,25 @@ class SettingsManager(models.Manager):
 
 
 class Setting(models.Model):
+    # DELETE
     group = models.ForeignKey(SettingsGroup, on_delete=models.CASCADE)
     setting = models.CharField(max_length=255, unique=True)
+    # DELETE
     name = models.CharField(max_length=255)
+    # DELETE
     description = models.TextField(null=True, blank=True)
+    # DELETE
     legend = models.CharField(max_length=255, null=True, blank=True)
+    # DELETE
     order = models.IntegerField(default=0, db_index=True)
     dry_value = models.TextField(null=True, blank=True)
     default_value = models.TextField(null=True, blank=True)
     python_type = models.CharField(max_length=255, default="string")
     is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
+    # DELETE
     form_field = models.CharField(max_length=255, default="text")
+    # DELETE
     field_extra = JSONField()
 
     objects = SettingsManager()
