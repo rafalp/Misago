@@ -1,0 +1,44 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Basic settings" %}</legend>
+
+    {% form_row form.account_activation %}
+    {% form_row form.username_length_min %}
+    {% form_row form.username_length_max %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Avatars" %}</legend>
+
+    {% form_row form.allow_custom_avatars %}
+    {% form_row form.avatar_upload_limit %}
+    {% form_row form.default_avatar %}
+    {% form_row form.default_gravatar_fallback %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Signatures" %}</legend>
+
+    {% form_row form.signature_length_max %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Default subscription preferences" %}</legend>
+
+    {% form_row form.subscribe_start %}
+    {% form_row form.subscribe_reply %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

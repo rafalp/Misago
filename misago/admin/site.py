@@ -2,9 +2,10 @@ from django.urls import reverse
 
 
 class Node:
-    def __init__(self, name=None, icon=None, link=None):
+    def __init__(self, *, name=None, description=None, icon=None, link=None):
         self.parent = None
         self.name = name
+        self.description = description
         self.icon = icon
         self.link = link
         self._children = []
@@ -29,6 +30,7 @@ class Node:
             childrens.append(
                 {
                     "name": children.name,
+                    "description": children.description,
                     "icon": children.icon,
                     "link": reverse(children.link),
                     "namespace": children.namespace,
@@ -111,7 +113,10 @@ class AdminSite:
             for index, node in enumerate(self.nodes_record):
                 if node["parent"] in nodes_dict:
                     node_obj = Node(
-                        name=node["name"], icon=node["icon"], link=node["link"]
+                        name=node["name"],
+                        description=node["description"],
+                        icon=node["icon"],
+                        link=node["link"],
                     )
 
                     parent = nodes_dict[node["parent"]]
@@ -135,7 +140,9 @@ class AdminSite:
 
     def add_node(
         self,
+        *,
         name=None,
+        description=None,
         icon=None,
         parent=None,
         after=None,
@@ -155,6 +162,7 @@ class AdminSite:
         self.nodes_record.append(
             {
                 "name": name,
+                "description": description,
                 "icon": icon,
                 "parent": join_namespace(parent),
                 "after": join_namespace(parent, after) if after else None,
