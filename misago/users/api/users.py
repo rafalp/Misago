@@ -111,7 +111,12 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return avatar_endpoint(request)
 
-    @action(methods=["post"], detail=True, url_name="forum-options", url_path="forum-options")
+    @action(
+        methods=["post"],
+        detail=True,
+        url_name="forum-options",
+        url_path="forum-options",
+    )
     def forum_options(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users options."))
@@ -136,14 +141,21 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return signature_endpoint(request)
 
-    @action(methods=["post"], detail=True, url_path="change-password", url_name="change-password")
+    @action(
+        methods=["post"],
+        detail=True,
+        url_path="change-password",
+        url_name="change-password",
+    )
     def change_password(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users passwords."))
 
         return change_password_endpoint(request)
 
-    @action(methods=["post"], detail=True, url_path="change-email", url_name="change-email")
+    @action(
+        methods=["post"], detail=True, url_path="change-email", url_name="change-email"
+    )
     def change_email(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
@@ -158,14 +170,22 @@ class UserViewSet(viewsets.GenericViewSet):
         data = serialize_profilefields_data(request, profilefields, profile)
         return Response(data)
 
-    @action(methods=["get", "post"], detail=True, url_path="edit-details", url_name="edit-details")
+    @action(
+        methods=["get", "post"],
+        detail=True,
+        url_path="edit-details",
+        url_name="edit-details",
+    )
     def edit_details(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_edit_profile_details(request.user_acl, profile)
         return edit_details_endpoint(request, profile)
 
     @action(
-        methods=["post"], detail=True, url_path="delete-own-account", url_name="delete-own-account"
+        methods=["post"],
+        detail=True,
+        url_path="delete-own-account",
+        url_name="delete-own-account",
     )
     def delete_own_account(self, request, pk=None):
         serializer = DeleteOwnAccountSerializer(
@@ -213,24 +233,36 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response(BanDetailsSerializer(ban).data)
         return Response({})
 
-    @action(methods=["get", "post"], detail=True, url_path="moderate-avatar",
-            url_name="moderate-avatar")
+    @action(
+        methods=["get", "post"],
+        detail=True,
+        url_path="moderate-avatar",
+        url_name="moderate-avatar",
+    )
     def moderate_avatar(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_moderate_avatar(request.user_acl, profile)
 
         return moderate_avatar_endpoint(request, profile)
 
-    @action(methods=["get", "post"], detail=True, url_path="moderate-username",
-            url_name="moderate-username")
+    @action(
+        methods=["get", "post"],
+        detail=True,
+        url_path="moderate-username",
+        url_name="moderate-username",
+    )
     def moderate_username(self, request, pk=None):
         profile = self.get_user(request, pk)
         allow_rename_user(request.user_acl, profile)
 
         return moderate_username_endpoint(request, profile)
 
-    @action(methods=["post"], detail=True, url_path="request-data-download",
-            url_name="request-data-download")
+    @action(
+        methods=["post"],
+        detail=True,
+        url_path="request-data-download",
+        url_name="request-data-download",
+    )
     def request_data_download(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(
@@ -288,7 +320,12 @@ class UserViewSet(viewsets.GenericViewSet):
 
         return Response({})
 
-    @action(methods=["get"], detail=True, url_path="data-downloads", url_name="data-downloads")
+    @action(
+        methods=["get"],
+        detail=True,
+        url_path="data-downloads",
+        url_name="data-downloads",
+    )
     def data_downloads(self, request, pk=None):
         get_int_or_404(pk)
         allow_self_only(

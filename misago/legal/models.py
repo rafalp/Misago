@@ -97,7 +97,9 @@ class Agreement(models.Model):
 
 class UserAgreement(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    agreement = models.ForeignKey(Agreement, related_name="accepted_by", on_delete=models.CASCADE)
+    agreement = models.ForeignKey(
+        Agreement, related_name="accepted_by", on_delete=models.CASCADE
+    )
     accepted_on = models.DateTimeField(default=timezone.now)
 
     class Meta:

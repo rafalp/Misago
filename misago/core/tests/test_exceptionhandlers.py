@@ -64,7 +64,10 @@ class HandleAPIExceptionTests(TestCase):
         """permission denied exception is correctly handled"""
         response = exceptionhandler.handle_api_exception(PermissionDenied(), None)
         self.assertEqual(response.status_code, 403)
-        self.assertEqual(response.data["detail"], "You do not have permission to perform this action.")
+        self.assertEqual(
+            response.data["detail"],
+            "You do not have permission to perform this action.",
+        )
 
     def test_permission_message_denied(self):
         """permission denied with message is correctly handled"""

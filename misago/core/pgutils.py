@@ -19,7 +19,7 @@ class PgPartialIndex(Index):
             condition = where
 
         if not name:
-            name = '_'.join(where.keys())[:30]
+            name = "_".join(where.keys())[:30]
 
         fields = fields or []
 
@@ -64,7 +64,7 @@ class PgPartialIndex(Index):
         path, args, kwargs = super().deconstruct()
         # TODO: check this patch
         kwargs["where"] = self.condition
-        del kwargs['condition']
+        del kwargs["condition"]
         return path, args, kwargs
 
     def get_sql_create_template_values(self, model, schema_editor, using):

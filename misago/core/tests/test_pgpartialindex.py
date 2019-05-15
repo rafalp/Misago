@@ -15,8 +15,12 @@ class PgPartialIndexTests(TestCase):
                 where={"has_events": True},
             ).create_sql(Thread, editor)
 
-            self.assertIn('CREATE INDEX "test_partial" ON "misago_threads_thread"', repr(sql))
-            self.assertIn('ON "misago_threads_thread" ("has_events", "is_hidden")', repr(sql))
+            self.assertIn(
+                'CREATE INDEX "test_partial" ON "misago_threads_thread"', repr(sql)
+            )
+            self.assertIn(
+                'ON "misago_threads_thread" ("has_events", "is_hidden")', repr(sql)
+            )
 
     def test_where_clauses(self):
         """where clauses generate correctly"""
@@ -25,12 +29,16 @@ class PgPartialIndexTests(TestCase):
                 fields=["has_events"], name="test_partial", where={"has_events": True}
             ).create_sql(Thread, editor)
 
-            self.assertTrue(str(sql).endswith('WHERE "misago_threads_thread"."has_events" = true'))
+            self.assertTrue(
+                str(sql).endswith('WHERE "misago_threads_thread"."has_events" = true')
+            )
 
             sql = PgPartialIndex(
                 fields=["has_events"], name="test_partial", where={"has_events": False}
             ).create_sql(Thread, editor)
-            self.assertTrue(str(sql).endswith('WHERE "misago_threads_thread"."has_events" = false'))
+            self.assertTrue(
+                str(sql).endswith('WHERE "misago_threads_thread"."has_events" = false')
+            )
 
     def test_multiple_where_clauses(self):
         """where clause with multiple conditions generates correctly"""

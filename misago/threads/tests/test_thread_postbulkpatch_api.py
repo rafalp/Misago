@@ -79,12 +79,8 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
         self.assertEqual(
             response.json(),
             {
-                "ids": {
-                    "0": ["A valid integer is required."],
-                },
-                "ops": {
-                    "0": ['Expected a dictionary of items but got type "int".'],
-                },
+                "ids": {"0": ["A valid integer is required."]},
+                "ops": {"0": ['Expected a dictionary of items but got type "int".']},
             },
         )
 
@@ -95,10 +91,8 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"ids": {
-                "0": ["Ensure this value is greater than or equal to 1."],
-            },
-        })
+            {"ids": {"0": ["Ensure this value is greater than or equal to 1."]}},
+        )
 
     def test_too_large_input(self):
         """api rejects too large input"""
