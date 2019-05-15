@@ -1,6 +1,7 @@
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 from rest_framework import serializers
+from rest_framework.fields import empty
 
 from . import PostingEndpoint, PostingMiddleware
 from ....acl.objectacl import add_acl_to_obj
@@ -31,13 +32,14 @@ class AttachmentsSerializer(serializers.Serializer):
     attachments = serializers.ListField(
         child=serializers.IntegerField(), required=False
     )
-    update_attachments = False
 
-    def validate_attachments(self, ids):
+    def __init__(self, instance=None, data=empty, **kwargs):
         self.update_attachments = False
         self.removed_attachments = []
         self.final_attachments = []
+        super().__init__(instance=instance, data=data, **kwargs)
 
+    def validate_attachments(self, ids):
         ids = list(set(ids))
 
         validate_attachments_count(ids)
