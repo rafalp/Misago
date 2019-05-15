@@ -40,6 +40,12 @@ def render(request, template, context=None, error_page=False):
         for item in sections:
             item["is_active"] = False
     else:
+        context["active_section"] = None
+        for item in sections:
+            if item["is_active"]:
+                context["active_section"] = item
+                break
+
         context["active_link"] = None
         for nav in navigation:
             for item in nav:

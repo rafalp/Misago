@@ -26,30 +26,30 @@
     </a>
   </td>
 {% endif %}
-  <td>
-    <div class="small">
-      <a href="{{ item.get_absolute_url }}?shva=1" class="item-name" target="_blank">
-        {{ item }}
-      </a>
-    </div>
-    <div class="small text-muted">
-      {% capture trimmed as uploader %}
-        {% if item.uploader %}
-          <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
-        {% else %}
-          <span class="item-title">{{ item.uploader_name }}</span>
-        {% endif %}
-      {% endcapture %}
-      {% capture trimmed as uploaded_on %}
-        <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
-          {{ item.uploaded_on }}
-        </abbr>
-      {% endcapture %}
-      {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}
-        {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
-      {% endblocktrans %}
-    </div>
-  </td>
+<td>
+  <div class="small">
+    <a href="{{ item.get_absolute_url }}?shva=1" class="item-name" target="_blank">
+      {{ item }}
+    </a>
+  </div>
+  <div class="small text-muted">
+    {% capture trimmed as uploader %}
+      {% if item.uploader %}
+        <a href="{{ item.uploader.get_absolute_url }}" class="item-title">{{ item.uploader }}</a>
+      {% else %}
+        <span class="item-title">{{ item.uploader_name }}</span>
+      {% endif %}
+    {% endcapture %}
+    {% capture trimmed as uploaded_on %}
+      <abbr data-timestamp="{{ item.uploaded_on.isoformat }}" data-format="LL">
+        {{ item.uploaded_on }}
+      </abbr>
+    {% endcapture %}
+    {% blocktrans trimmed with filetype=item.filetype size=item.size|filesizeformat uploader=uploader|safe uploaded_on=uploaded_on|safe %}
+      {{ filetype }}, {{ size }}, uploaded by {{ uploader }} {{ uploaded_on }}.
+    {% endblocktrans %}
+  </div>
+</td>
 <td class="small">
   {% if item.post %}
     <a href="{{ item.post.get_absolute_url }}" class="item-name">
