@@ -33,11 +33,11 @@ class AttachmentsSerializer(serializers.Serializer):
         child=serializers.IntegerField(), required=False
     )
 
-    def __init__(self, instance=None, data=empty, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.update_attachments = False
         self.removed_attachments = []
         self.final_attachments = []
-        super().__init__(instance=instance, data=data, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def validate_attachments(self, ids):
         ids = list(set(ids))
