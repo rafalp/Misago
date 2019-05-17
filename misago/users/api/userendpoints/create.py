@@ -24,8 +24,12 @@ def create_endpoint(request):
     if request.settings.account_activation == "closed":
         raise PermissionDenied(_("New users registrations are currently closed."))
 
+    request_data = request.data
+    if not isinstance(request_data, dict):
+        request_data = {}
+
     form = RegisterForm(
-        request.data, request=request, agreements=Agreement.objects.get_agreements()
+        request_data, request=request, agreements=Agreement.objects.get_agreements()
     )
 
     try:
