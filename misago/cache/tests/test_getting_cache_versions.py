@@ -17,7 +17,7 @@ def test_cache_getter_returns_cache_versions_from_cache(mocker):
     cache_get.assert_called_once_with(CACHE_NAME)
 
 
-def test_getter_reads_from_cache(mocker, django_assert_num_queries):
+def test_getter_reads_from_cache(db, mocker, django_assert_num_queries):
     cache_get = mocker.patch("django.core.cache.cache.get", return_value=True)
     with django_assert_num_queries(0):
         assert get_cache_versions() is True

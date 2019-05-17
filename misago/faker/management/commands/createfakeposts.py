@@ -40,7 +40,7 @@ class Command(BaseCommand):
             if random.randint(0, 100) > 90:
                 poster = None
             else:
-                poster = User.objects.order_by("?")[:1].last()
+                poster = User.objects.order_by("?").last()
 
             # There's 5% chance post is unapproved
             if random.randint(0, 100) > 90:
@@ -51,7 +51,7 @@ class Command(BaseCommand):
                 if random.randint(0, 100) > 90:
                     hidden_by = None
                 else:
-                    hidden_by = User.objects.order_by("?")[:1].last()
+                    hidden_by = User.objects.order_by("?").last()
 
                 get_fake_hidden_post(fake, thread, poster, hidden_by)
 

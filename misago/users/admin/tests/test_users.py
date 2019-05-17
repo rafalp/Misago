@@ -131,7 +131,7 @@ def get_default_edit_form_data(user):
         "roles": str(user.roles.all()[0].id),
         "email": user.email,
         "new_password": "",
-        "signature": user.signature,
+        "signature": user.signature or "",
         "is_signature_locked": str(user.is_signature_locked),
         "is_hiding_presence": str(user.is_hiding_presence),
         "limits_private_thread_invites_to": str(user.limits_private_thread_invites_to),

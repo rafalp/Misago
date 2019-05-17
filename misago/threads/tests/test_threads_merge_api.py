@@ -66,7 +66,8 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         )
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
-            response.json(), {"detail": "One or more thread ids received were invalid."}
+            response.json(),
+            {"detail": ["One or more thread ids received were invalid."]},
         )
 
     def test_merge_single_thread(self):
