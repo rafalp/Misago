@@ -2,7 +2,7 @@ from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.utils.translation import gettext as _
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
@@ -65,19 +65,19 @@ class ViewSet(viewsets.ViewSet):
 
         return Response(data)
 
-    @list_route(methods=["post"])
+    @action(detail=False, methods=["post"])
     @transaction.atomic
     def merge(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
         return posts_merge_endpoint(request, thread)
 
-    @list_route(methods=["post"])
+    @action(detail=False, methods=["post"])
     @transaction.atomic
     def move(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
         return posts_move_endpoint(request, thread, self.thread)
 
-    @list_route(methods=["post"])
+    @action(detail=False, methods=["post"])
     @transaction.atomic
     def split(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
@@ -161,13 +161,13 @@ class ViewSet(viewsets.ViewSet):
 
         return delete_bulk(request, thread.unwrap())
 
-    @detail_route(methods=["post"])
+    @action(detail=True, methods=["post"])
     def read(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk, subscription_aware=True).unwrap()
         post = self.get_post(request, thread, pk).unwrap()
         return post_read_endpoint(request, thread, post)
 
-    @detail_route(methods=["get"], url_path="editor")
+    @action(detail=True, methods=["get"], url_name="editor")
     def post_editor(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
@@ -194,7 +194,7 @@ class ViewSet(viewsets.ViewSet):
             }
         )
 
-    @list_route(methods=["get"], url_path="editor")
+    @action(detail=False, methods=["get"], url_name="editor")
     def reply_editor(self, request, thread_pk):
         thread = self.get_thread(request, thread_pk).unwrap()
         allow_reply_thread(request.user_acl, thread)
@@ -219,7 +219,7 @@ class ViewSet(viewsets.ViewSet):
             }
         )
 
-    @detail_route(methods=["get", "post"])
+    @action(detail=True, methods=["get", "post"])
     def edits(self, request, thread_pk, pk=None):
         if request.method == "GET":
             thread = self.get_thread(request, thread_pk)
@@ -236,7 +236,7 @@ class ViewSet(viewsets.ViewSet):
 
                 return revert_post_endpoint(request, post)
 
-    @detail_route(methods=["get"])
+    @action(detail=True, methods=["get"])
     def likes(self, request, thread_pk, pk=None):
         thread = self.get_thread(request, thread_pk)
         post = self.get_post(request, thread, pk).unwrap()
