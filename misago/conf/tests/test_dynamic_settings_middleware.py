@@ -11,13 +11,13 @@ def get_response():
     return Mock()
 
 
-class Request:
+class PlainRequest:
     pass
 
 
 @pytest.fixture
 def plain_request():
-    return Request()
+    return PlainRequest()
 
 
 def test_middleware_sets_attr_on_request(db, get_response, plain_request):
