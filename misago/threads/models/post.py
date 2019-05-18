@@ -79,21 +79,21 @@ class Post(models.Model):
 
     class Meta:
         indexes = [
-            # models.Index(
-            #     name="misago_thre_has_ope_479906_part",
-            #     fields=["has_open_reports"],
-            #     condition=Q(has_open_reports=True),
-            # ),
-            # models.Index(
-            #     name="misago_thre_is_hidd_85db69_part",
-            #     fields=["is_hidden"],
-            #     condition=Q(is_hidden=False),
-            # ),
-            # models.Index(
-            #     name="misago_thre_is_even_42bda7_part",
-            #     fields=["is_event", "event_type"],
-            #     condition=Q(is_event=True),
-            # ),
+            models.Index(
+                name="misago_post_has_open_repo_part",
+                fields=["has_open_reports"],
+                condition=Q(has_open_reports=True),
+            ),
+            models.Index(
+                name="misago_post_is_hidden_part",
+                fields=["is_hidden"],
+                condition=Q(is_hidden=False),
+            ),
+            models.Index(
+                name="misago_post_is_event_part",
+                fields=["is_event", "event_type"],
+                condition=Q(is_event=True),
+            ),
             GinIndex(fields=["search_vector"])
         ]
 

@@ -223,21 +223,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         indexes = [
-            # models.Index(
-            #     name="misago_user_is_staf_bf68aa_part",
-            #     fields=["is_staff"],
-            #     condition=Q(is_staff=True),
-            # ),
-            # models.Index(
-            #     name="misago_user_require_05204a_part",
-            #     fields=["requires_activation"],
-            #     condition=Q(requires_activation__gt=0),
-            # ),
-            # models.Index(
-            #     name="misago_user_is_dele_2798b0_part",
-            #     fields=["is_deleting_account"],
-            #     condition=Q(is_deleting_account=True),
-            # ),
+            models.Index(
+                name="misago_user_is_staff_part",
+                fields=["is_staff"],
+                condition=Q(is_staff=True),
+            ),
+            models.Index(
+                name="misago_user_requires_acti_part",
+                fields=["requires_activation"],
+                condition=Q(requires_activation__gt=0),
+            ),
+            models.Index(
+                name="misago_user_is_deleting_a_part",
+                fields=["is_deleting_account"],
+                condition=Q(is_deleting_account=True),
+            ),
         ]
 
     def clean(self):
