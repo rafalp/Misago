@@ -7,6 +7,7 @@ from django.contrib.auth.models import UserManager as BaseUserManager
 from django.contrib.postgres.fields import ArrayField, HStoreField, JSONField
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +15,6 @@ from django.utils.translation import gettext_lazy as _
 from .. import avatars
 from ...acl.models import Role
 from ...conf import settings
-from ...core.pgutils import PgPartialIndex
 from ...core.utils import slugify
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
@@ -223,13 +223,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         indexes = [
-            PgPartialIndex(fields=["is_staff"], where={"is_staff": True}),
-            PgPartialIndex(
-                fields=["requires_activation"], where={"requires_activation__gt": 0}
-            ),
-            PgPartialIndex(
-                fields=["is_deleting_account"], where={"is_deleting_account": True}
-            ),
+            # models.Index(
+            #     name="misago_user_is_staf_bf68aa_part",
+            #     fields=["is_staff"],
+            #     condition=Q(is_staff=True),
+            # ),
+            # models.Index(
+            #     name="misago_user_require_05204a_part",
+            #     fields=["requires_activation"],
+            #     condition=Q(requires_activation__gt=0),
+            # ),
+            # models.Index(
+            #     name="misago_user_is_dele_2798b0_part",
+            #     fields=["is_deleting_account"],
+            #     condition=Q(is_deleting_account=True),
+            # ),
         ]
 
     def clean(self):

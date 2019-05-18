@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...conf import settings
-from ...core.pgutils import PgPartialIndex
 from ...core.utils import slugify
 
 
@@ -99,17 +99,41 @@ class Thread(models.Model):
 
     class Meta:
         indexes = [
-            PgPartialIndex(fields=["weight"], where={"weight": 2}),
-            PgPartialIndex(fields=["weight"], where={"weight": 1}),
-            PgPartialIndex(fields=["weight"], where={"weight": 0}),
-            PgPartialIndex(fields=["weight"], where={"weight__lt": 2}),
-            PgPartialIndex(
-                fields=["has_reported_posts"], where={"has_reported_posts": True}
-            ),
-            PgPartialIndex(
-                fields=["has_unapproved_posts"], where={"has_unapproved_posts": True}
-            ),
-            PgPartialIndex(fields=["is_hidden"], where={"is_hidden": False}),
+            # models.Index(
+            #     name="misago_thre_weight_955884_part",
+            #     fields=["weight"],
+            #     condition=Q(weight=2),
+            # ),
+            # models.Index(
+            #     name="misago_thre_weight_9e8f9c_part",
+            #     fields=["weight"],
+            #     condition=Q(weight=1),
+            # ),
+            # models.Index(
+            #     name="misago_thre_weight_c7ef29_part",
+            #     fields=["weight"],
+            #     condition=Q(weight=0),
+            # ),
+            # models.Index(
+            #     name="misago_thre_weight__4af9ee_part",
+            #     fields=["weight"],
+            #     condition=Q(weight__lt=2),
+            # ),
+            # models.Index(
+            #     name="misago_thre_has_rep_84acfa_part",
+            #     fields=["has_reported_posts"],
+            #     condition=Q(has_reported_posts=True),
+            # ),
+            # models.Index(
+            #     name="misago_thre_has_una_b0dbf5_part",
+            #     fields=["has_unapproved_posts"],
+            #     condition=Q(has_unapproved_posts=True),
+            # ),
+            # models.Index(
+            #     name="misago_thre_is_hidd_d2b96c_part",
+            #     fields=["is_hidden"],
+            #     condition=Q(is_hidden=False),
+            # ),
         ]
 
         index_together = [

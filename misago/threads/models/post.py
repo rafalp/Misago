@@ -4,10 +4,10 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVector, SearchVectorField
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 
 from ...conf import settings
-from ...core.pgutils import PgPartialIndex
 from ...core.utils import parse_iso8601_string
 from ...markup import finalise_markup
 from ..checksums import is_post_valid, update_post_checksum
@@ -79,12 +79,22 @@ class Post(models.Model):
 
     class Meta:
         indexes = [
-            PgPartialIndex(
-                fields=["has_open_reports"], where={"has_open_reports": True}
-            ),
-            PgPartialIndex(fields=["is_hidden"], where={"is_hidden": False}),
-            PgPartialIndex(fields=["is_event", "event_type"], where={"is_event": True}),
-            GinIndex(fields=["search_vector"]),
+            # models.Index(
+            #     name="misago_thre_has_ope_479906_part",
+            #     fields=["has_open_reports"],
+            #     condition=Q(has_open_reports=True),
+            # ),
+            # models.Index(
+            #     name="misago_thre_is_hidd_85db69_part",
+            #     fields=["is_hidden"],
+            #     condition=Q(is_hidden=False),
+            # ),
+            # models.Index(
+            #     name="misago_thre_is_even_42bda7_part",
+            #     fields=["is_event", "event_type"],
+            #     condition=Q(is_event=True),
+            # ),
+            GinIndex(fields=["search_vector"])
         ]
 
         index_together = [
