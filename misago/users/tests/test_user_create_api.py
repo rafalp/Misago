@@ -38,7 +38,9 @@ class UserCreateTests(UserTestCase):
 
     def test_invalid_data(self):
         """invalid request data errors with code 400"""
-        response = self.client.post(self.api_link, {}, content_type="application/json")
+        response = self.client.post(
+            self.api_link, "false", content_type="application/json"
+        )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
