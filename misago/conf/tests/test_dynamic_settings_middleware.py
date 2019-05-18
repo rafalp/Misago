@@ -40,7 +40,7 @@ def test_middleware_calls_get_response(db, get_response, plain_request):
     get_response.assert_called_once()
 
 
-def test_middleware_is_not_reading(
+def test_middleware_is_not_reading_from_db(
     db, get_response, plain_request, django_assert_num_queries
 ):
     with django_assert_num_queries(0):
@@ -48,7 +48,7 @@ def test_middleware_is_not_reading(
         middleware(plain_request)
 
 
-def test_middleware_is_not_reading_cache(db, mocker, get_response, plain_request):
+def test_middleware_is_not_reading_from_cache(db, mocker, get_response, plain_request):
     cache_get = mocker.patch("django.core.cache.cache.get")
     middleware = dynamic_settings_middleware(get_response)
     middleware(plain_request)
