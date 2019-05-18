@@ -5,21 +5,31 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0019_remove_custom_partial_indexes'),
-    ]
+    dependencies = [("misago_users", "0019_remove_custom_partial_indexes")]
 
     operations = [
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(condition=models.Q(is_staff=True), fields=['is_staff'], name='misago_user_is_staff_part'),
+            model_name="user",
+            index=models.Index(
+                condition=models.Q(is_staff=True),
+                fields=["is_staff"],
+                name="misago_user_is_staff_part",
+            ),
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(condition=models.Q(requires_activation__gt=0), fields=['requires_activation'], name='misago_user_requires_acti_part'),
+            model_name="user",
+            index=models.Index(
+                condition=models.Q(requires_activation__gt=0),
+                fields=["requires_activation"],
+                name="misago_user_requires_acti_part",
+            ),
         ),
         migrations.AddIndex(
-            model_name='user',
-            index=models.Index(condition=models.Q(is_deleting_account=True), fields=['is_deleting_account'], name='misago_user_is_deleting_a_part'),
+            model_name="user",
+            index=models.Index(
+                condition=models.Q(is_deleting_account=True),
+                fields=["is_deleting_account"],
+                name="misago_user_is_deleting_a_part",
+            ),
         ),
     ]

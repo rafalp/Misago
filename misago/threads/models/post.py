@@ -94,7 +94,7 @@ class Post(models.Model):
                 fields=["is_event", "event_type"],
                 condition=Q(is_event=True),
             ),
-            GinIndex(fields=["search_vector"])
+            GinIndex(fields=["search_vector"]),
         ]
 
         index_together = [

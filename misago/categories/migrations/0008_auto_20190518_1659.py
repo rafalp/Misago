@@ -5,24 +5,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_categories', '0007_best_answers_roles'),
-    ]
+    dependencies = [("misago_categories", "0007_best_answers_roles")]
 
     operations = [
         migrations.AlterField(
-            model_name='category',
-            name='level',
+            model_name="category",
+            name="level",
             field=models.PositiveIntegerField(editable=False),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='lft',
+            model_name="category",
+            name="lft",
             field=models.PositiveIntegerField(editable=False),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='rght',
+            model_name="category",
+            name="rght",
             field=models.PositiveIntegerField(editable=False),
         ),
     ]

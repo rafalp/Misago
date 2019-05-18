@@ -5,24 +5,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_themes', '0002_create_default_theme_and_cache_version'),
-    ]
+    dependencies = [("misago_themes", "0002_create_default_theme_and_cache_version")]
 
     operations = [
         migrations.AlterField(
-            model_name='theme',
-            name='level',
+            model_name="theme",
+            name="level",
             field=models.PositiveIntegerField(editable=False),
         ),
         migrations.AlterField(
-            model_name='theme',
-            name='lft',
+            model_name="theme",
+            name="lft",
             field=models.PositiveIntegerField(editable=False),
         ),
         migrations.AlterField(
-            model_name='theme',
-            name='rght',
+            model_name="theme",
+            name="rght",
             field=models.PositiveIntegerField(editable=False),
         ),
     ]
