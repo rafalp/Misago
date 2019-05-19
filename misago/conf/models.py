@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from . import utils
+from .hydrators import dehydrate_value, hydrate_value
 
 
 class SettingsManager(models.Manager):
@@ -29,8 +29,12 @@ class Setting(models.Model):
 
     @property
     def value(self):
-        return utils.get_setting_value(self)
+        return hydrate_value(self.python_type, self.dry_value)
 
     @value.setter
     def value(self, new_value):
-        return utils.set_setting_value(self, new_value)
+        if new_value is not None:
+            self.dry_value = dehydrate_value(self.python_type, new_value)
+        else:
+            self.dry_value = None
+        return new_value

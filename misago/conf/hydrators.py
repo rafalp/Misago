@@ -4,7 +4,7 @@ def hydrate_string(dry_value):
 
 
 def dehydrate_string(wet_value):
-    return wet_value
+    return str(wet_value)
 
 
 def hydrate_bool(dry_value):
@@ -16,19 +16,21 @@ def dehydrate_bool(wet_value):
 
 
 def hydrate_int(dry_value):
-    return int(dry_value)
+    return int(dry_value or 0)
 
 
 def dehydrate_int(wet_value):
-    return str(wet_value)
+    return str(wet_value or 0)
 
 
 def hydrate_list(dry_value):
-    return [x for x in dry_value.split(",") if x]
+    if dry_value:
+        return [x for x in dry_value.split(",") if x]
+    return []
 
 
 def dehydrate_list(wet_value):
-    return ",".join(wet_value)
+    return ",".join(wet_value) if wet_value else ""
 
 
 VALUE_HYDRATORS = {
