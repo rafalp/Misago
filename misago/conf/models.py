@@ -1,30 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from . import utils
-
-
-class SettingsGroupsManager(models.Manager):
-    def ordered_alphabetically(self):
-        from django.utils.translation import gettext as _
-
-        groups_dict = {}
-
-        for group in self.all():
-            groups_dict[_(group.name)] = group
-
-        ordered_groups = []
-        for key in groups_dict:
-            ordered_groups.append(groups_dict[key])
-        return ordered_groups
-
-
-class SettingsGroup(models.Model):
-    key = models.CharField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-
-    objects = SettingsGroupsManager()
+from .hydrators import dehydrate_value, hydrate_value
 
 
 class SettingsManager(models.Manager):
@@ -42,37 +19,22 @@ class SettingsManager(models.Manager):
 
 
 class Setting(models.Model):
-    # DELETE
-    group = models.ForeignKey(SettingsGroup, on_delete=models.CASCADE)
     setting = models.CharField(max_length=255, unique=True)
-    # DELETE
-    name = models.CharField(max_length=255)
-    # DELETE
-    description = models.TextField(null=True, blank=True)
-    # DELETE
-    legend = models.CharField(max_length=255, null=True, blank=True)
-    # DELETE
-    order = models.IntegerField(default=0, db_index=True)
     dry_value = models.TextField(null=True, blank=True)
-    default_value = models.TextField(null=True, blank=True)
     python_type = models.CharField(max_length=255, default="string")
     is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
-    # DELETE
-    form_field = models.CharField(max_length=255, default="text")
-    # DELETE
-    field_extra = JSONField()
 
     objects = SettingsManager()
 
     @property
     def value(self):
-        return utils.get_setting_value(self)
+        return hydrate_value(self.python_type, self.dry_value)
 
     @value.setter
     def value(self, new_value):
-        return utils.set_setting_value(self, new_value)
-
-    @property
-    def has_custom_value(self):
-        return utils.has_custom_value(self)
+        if new_value is not None:
+            self.dry_value = dehydrate_value(self.python_type, new_value)
+        else:
+            self.dry_value = None
+        return new_value

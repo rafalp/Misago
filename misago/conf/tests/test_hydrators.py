@@ -1,112 +1,81 @@
-from django.test import TestCase
+import pytest
 
 from ..hydrators import dehydrate_value, hydrate_value
-from ..models import Setting
 
 
-class HydratorsTests(TestCase):
-    def test_hydrate_dehydrate_string(self):
-        """string value is correctly hydrated and dehydrated"""
-        wet_value = "Ni!"
-        dry_value = dehydrate_value("string", wet_value)
-        self.assertEqual(hydrate_value("string", dry_value), wet_value)
-
-    def test_hydrate_dehydrate_bool(self):
-        """bool values are correctly hydrated and dehydrated"""
-        wet_value = True
-        dry_value = dehydrate_value("bool", wet_value)
-        self.assertEqual(hydrate_value("bool", dry_value), wet_value)
-
-        wet_value = False
-        dry_value = dehydrate_value("bool", wet_value)
-        self.assertEqual(hydrate_value("bool", dry_value), wet_value)
-
-    def test_hydrate_dehydrate_int(self):
-        """int value is correctly hydrated and dehydrated"""
-        wet_value = 9001
-        dry_value = dehydrate_value("int", wet_value)
-        self.assertEqual(hydrate_value("int", dry_value), wet_value)
-
-    def test_hydrate_dehydrate_list(self):
-        """list is correctly hydrated and dehydrated"""
-        wet_value = ["foxtrot", "uniform", "hotel"]
-        dry_value = dehydrate_value("list", wet_value)
-        self.assertEqual(hydrate_value("list", dry_value), wet_value)
-
-    def test_hydrate_dehydrate_empty_list(self):
-        """empty list is correctly hydrated and dehydrated"""
-        wet_value = []
-        dry_value = dehydrate_value("list", wet_value)
-        self.assertEqual(hydrate_value("list", dry_value), wet_value)
-
-    def test_value_error(self):
-        """unsupported type raises ValueError"""
-        with self.assertRaises(ValueError):
-            hydrate_value("eric", None)
-
-        with self.assertRaises(ValueError):
-            dehydrate_value("eric", None)
+def test_string_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("string", dehydrate_value("string", "test")) == "test"
 
 
-class HydratorsModelTests(TestCase):
-    def test_hydrate_dehydrate_string(self):
-        """string value is correctly hydrated and dehydrated in model"""
-        setting = Setting(python_type="string")
+def test_int_value_is_dehydrated_to_string():
+    assert dehydrate_value("string", 123) == "123"
 
-        wet_value = "Lorem Ipsum"
-        dry_value = dehydrate_value(setting.python_type, wet_value)
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
+def test_bool_false_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("bool", dehydrate_value("bool", False)) is False
 
-    def test_hydrate_dehydrate_bool(self):
-        """bool values are correctly hydrated and dehydrated in model"""
-        setting = Setting(python_type="bool")
 
-        wet_value = True
-        dry_value = dehydrate_value(setting.python_type, wet_value)
+def test_bool_true_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("bool", dehydrate_value("bool", True)) is True
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
 
-        wet_value = False
-        dry_value = dehydrate_value(setting.python_type, wet_value)
+def test_bool_none_value_can_be_dehydrated_and_hydrated_back_to_false():
+    assert hydrate_value("bool", dehydrate_value("bool", None)) is False
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
 
-    def test_hydrate_dehydrate_int(self):
-        """int value is correctly hydrated and dehydrated in model"""
-        setting = Setting(python_type="int")
+def test_int_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("int", dehydrate_value("int", 123)) == 123
 
-        wet_value = 9001
-        dry_value = dehydrate_value(setting.python_type, wet_value)
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
+def test_empty_int_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("int", dehydrate_value("int", 0)) == 0
 
-    def test_hydrate_dehydrate_list(self):
-        """list is correctly hydrated and dehydrated in model"""
-        setting = Setting(python_type="list")
 
-        wet_value = ["Lorem", "Ipsum", "Dolor", "Met"]
-        dry_value = dehydrate_value(setting.python_type, wet_value)
+def test_none_int_value_is_dehydrated_to_zero_string():
+    assert dehydrate_value("int", None) == "0"
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
 
-    def test_hydrate_dehydrate_empty_list(self):
-        """empty list is correctly hydrated and dehydrated in model"""
-        setting = Setting(python_type="list")
+def test_none_int_value_is_hydrated_to_zero():
+    assert hydrate_value("int", None) == 0
 
-        wet_value = []
-        dry_value = dehydrate_value(setting.python_type, wet_value)
 
-        setting.value = wet_value
-        self.assertEqual(setting.value, wet_value)
-        self.assertEqual(setting.dry_value, dry_value)
+def test_empty_int_value_is_hydrated_to_zero():
+    assert hydrate_value("int", "") == 0
+
+
+def test_list_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("list", dehydrate_value("list", ["a", "b"])) == ["a", "b"]
+
+
+def test_single_item_list_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("list", dehydrate_value("list", ["a"])) == ["a"]
+
+
+def test_empty_list_value_can_be_dehydrated_and_hydrated_back():
+    assert hydrate_value("list", dehydrate_value("list", [])) == []
+
+
+def test_none_list_value_can_be_dehydrated_and_hydrated_to_empty_list():
+    assert hydrate_value("list", dehydrate_value("list", None)) == []
+
+
+def test_empty_list_value_is_hydrated_to_empty_list():
+    assert hydrate_value("list", "") == []
+
+
+def test_none_list_value_is_hydrated_to_empty_list():
+    assert hydrate_value("list", None) == []
+
+
+def test_none_list_value_is_dehydrated_to_empty_string():
+    assert dehydrate_value("list", None) == ""
+
+
+def test_value_error_is_raised_on_unsupported_type_dehydration():
+    with pytest.raises(ValueError):
+        dehydrate_value("unsupported", None)
+
+
+def test_value_error_is_raised_on_unsupported_type_hydration():
+    with pytest.raises(ValueError):
+        hydrate_value("unsupported", None)
