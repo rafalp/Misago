@@ -10,7 +10,7 @@ from ..forms import AttachmentTypeForm
 class AttachmentTypeAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:settings:attachment-types:index"
     model = AttachmentType
-    form = AttachmentTypeForm
+    form_class = AttachmentTypeForm
     templates_dir = "misago/admin/attachmenttypes"
     message_404 = _("Requested attachment type could not be found.")
 

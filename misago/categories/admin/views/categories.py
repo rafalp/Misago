@@ -53,7 +53,7 @@ class CategoriesList(CategoryAdmin, generic.ListView):
 
 
 class CategoryFormMixin:
-    def create_form_type(self, request, target):
+    def get_form_class(self, request, target):
         return CategoryFormFactory(target)
 
     def handle_form(self, form, request, target):
@@ -102,9 +102,9 @@ class EditCategory(CategoryFormMixin, CategoryAdmin, generic.ModelFormView):
 
 class DeleteCategory(CategoryAdmin, generic.ModelFormView):
     message_submit = _('Category "%(name)s" has been deleted.')
-    template = "delete.html"
+    template_name = "delete.html"
 
-    def create_form_type(self, request, target):
+    def get_form_class(self, request, target):
         return DeleteFormFactory(target)
 
     def handle_form(self, form, request, target):

@@ -20,17 +20,17 @@ def index(request):
 class ChangeSettingsView(AdminView):
     root_link = None  # Unused by change config views
     template_name = None
-    form = None
+    form_class = None
 
-    def final_template(self):
+    def get_template_name(self):
         return self.template_name
 
     def dispatch(self, request, *args, **kwargs):
-        settings = self.get_settings(self.form.settings)
+        settings = self.get_settings(self.form_class.settings)
         initial = self.get_initial_form_data(settings)
-        form = self.form(initial=initial)
+        form = self.form_class(initial=initial)
         if request.method == "POST":
-            form = self.form(request.POST, request.FILES, initial=initial)
+            form = self.form_class(request.POST, request.FILES, initial=initial)
             if form.is_valid():
                 form.save(settings)
                 messages.success(request, _("Changes in settings have been saved!"))
@@ -56,20 +56,20 @@ class ChangeSettingsView(AdminView):
 
 
 class ChangeCaptchaSettingsView(ChangeSettingsView):
-    form = ChangeCaptchaSettingsForm
+    form_class = ChangeCaptchaSettingsForm
     template_name = "misago/admin/conf/captcha_settings.html"
 
 
 class ChangeGeneralSettingsView(ChangeSettingsView):
-    form = ChangeGeneralSettingsForm
+    form_class = ChangeGeneralSettingsForm
     template_name = "misago/admin/conf/general_settings.html"
 
 
 class ChangeThreadsSettingsView(ChangeSettingsView):
-    form = ChangeThreadsSettingsForm
+    form_class = ChangeThreadsSettingsForm
     template_name = "misago/admin/conf/threads_settings.html"
 
 
 class ChangeUsersSettingsView(ChangeSettingsView):
-    form = ChangeUsersSettingsForm
+    form_class = ChangeUsersSettingsForm
     template_name = "misago/admin/conf/users_settings.html"

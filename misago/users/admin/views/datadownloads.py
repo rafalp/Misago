@@ -60,7 +60,7 @@ class DataDownloadsList(DataDownloadAdmin, generic.ListView):
 
 
 class RequestDataDownloads(DataDownloadAdmin, generic.FormView):
-    form = RequestDataDownloadsForm
+    form_class = RequestDataDownloadsForm
 
     def handle_form(self, form, request):
         for user in form.cleaned_data["users"]:

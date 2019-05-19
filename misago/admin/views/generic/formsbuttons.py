@@ -55,16 +55,16 @@ class TargetedView(AdminView):
 
 
 class FormView(TargetedView):
-    form = None
-    template = "form.html"
+    form_class = None
+    template_name = "form.html"
 
-    def create_form_type(self, request):
-        return self.form
+    def get_form_class(self, request):
+        return self.form_class
 
-    def initialize_form(self, form, request):
+    def get_form(self, form_class, request):
         if request.method == "POST":
-            return form(request.POST, request.FILES)
-        return form()
+            return form_class(request.POST, request.FILES)
+        return form_class()
 
     def handle_form(self, form, request):
         raise NotImplementedError(
@@ -72,8 +72,8 @@ class FormView(TargetedView):
         )
 
     def real_dispatch(self, request, target):
-        FormType = self.create_form_type(request)
-        form = self.initialize_form(FormType, request)
+        FormType = self.get_form_class(request)
+        form = self.get_form(FormType, request)
 
         if request.method == "POST" and form.is_valid():
             response = self.handle_form(form, request)
@@ -90,13 +90,13 @@ class FormView(TargetedView):
 class ModelFormView(FormView):
     message_submit = None
 
-    def create_form_type(self, request, target):
-        return self.form
+    def get_form_class(self, request, target):
+        return self.form_class
 
-    def initialize_form(self, form, request, target):
+    def get_form(self, form_class, request, target):
         if request.method == "POST":
-            return form(request.POST, request.FILES, instance=target)
-        return form(instance=target)
+            return form_class(request.POST, request.FILES, instance=target)
+        return form_class(instance=target)
 
     def handle_form(self, form, request, target):
         form.instance.save()
@@ -104,8 +104,8 @@ class ModelFormView(FormView):
             messages.success(request, self.message_submit % {"name": target.name})
 
     def real_dispatch(self, request, target):
-        FormType = self.create_form_type(request, target)
-        form = self.initialize_form(FormType, request, target)
+        form_class = self.get_form_class(request, target)
+        form = self.get_form(form_class, request, target)
 
         if request.method == "POST" and form.is_valid():
             response = self.handle_form(  # pylint: disable=assignment-from-no-return

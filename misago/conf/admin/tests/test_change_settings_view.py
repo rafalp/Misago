@@ -20,7 +20,7 @@ class Form(ChangeSettingsForm):
 
 
 class View(ChangeSettingsView):
-    form = Form
+    form_class = Form
 
     def render(self, request, context):
         return True
