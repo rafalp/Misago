@@ -11,6 +11,30 @@ def form_row(field, label_class=None, field_class=None):
     return {"field": field, "label_class": label_class, "field_class": field_class}
 
 
+@register.inclusion_tag("misago/admin/form/image_row.html")
+def form_image_row(
+    field,
+    label_class=None,
+    field_class=None,
+    image_class=None,
+    delete_field=None,
+    size=None,
+    dimensions=None,
+):
+    if dimensions:
+        dimensions = {"width": dimensions[0], "height": dimensions[1]}
+
+    return {
+        "field": field,
+        "size": size,
+        "dimensions": dimensions,
+        "delete_field": delete_field,
+        "label_class": label_class,
+        "field_class": field_class,
+        "image_class": image_class,
+    }
+
+
 @register.inclusion_tag("misago/admin/form/checkbox_row.html")
 def form_checkbox_row(field, label_class=None, field_class=None):
     return {"field": field, "label_class": label_class, "field_class": field_class}

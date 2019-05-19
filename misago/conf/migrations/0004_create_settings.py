@@ -18,12 +18,8 @@ default_settings = [
     {"setting": "default_avatar", "dry_value": "gravatar"},
     {"setting": "default_gravatar_fallback", "dry_value": "dynamic"},
     {"setting": "email_footer"},
-    {
-        "setting": "forum_branding_display",
-        "dry_value": True,
-        "python_type": "bool",
-        "is_public": True,
-    },
+    {"setting": "forum_branding_icon", "python_type": "image", "is_public": True},
+    {"setting": "forum_branding_logo", "python_type": "image", "is_public": True},
     {"setting": "forum_branding_text", "dry_value": "Misago", "is_public": True},
     {"setting": "forum_footnote", "is_public": True},
     {"setting": "forum_index_meta_description"},
@@ -75,8 +71,12 @@ def create_settings(apps, _):
     # This migration builds list of existing settings, and then
     # creates settings not already in the database
     Setting = apps.get_model("misago_conf", "Setting")
-    existing_settings = list(Setting.objects.values_list("setting", flat=True))
 
+    # Delete deprecated settings
+    Setting.objects.filter(setting__in=["forum_branding_display"]).delete()
+
+    # Update existing settings and add new ones
+    existing_settings = list(Setting.objects.values_list("setting", flat=True))
     for setting in default_settings:
         if setting["setting"] in existing_settings:
             continue  # skip already existing setting (migration on existing forum)

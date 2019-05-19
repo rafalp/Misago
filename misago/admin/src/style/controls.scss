@@ -60,3 +60,36 @@
     bottom: $font-size-base / 4;
   }
 }
+
+// Image upload/preview
+.control-image-preview {
+  @extend .d-inline-block;
+  @extend .border;
+  @extend .p-3;
+  @extend .mb-2;
+  @extend .rounded;
+  @extend .text-center;
+
+  background-color: $white;
+
+  &.control-image-metadata {
+    @extend .pb-0;
+  }
+}
+
+.control-image-preview img {
+  max-width: 300px;
+  max-height: 200px;
+}
+
+.control-image-preview div {
+  @extend .mt-1;
+  @extend .py-2;
+  @extend .text-muted;
+
+  font-size: $font-size-sm;
+
+  span + span {
+    @extend .ml-2;
+  }
+}
