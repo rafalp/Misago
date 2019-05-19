@@ -6,7 +6,9 @@ from django.db.models import F
 
 def set_default_dry_value(apps, _):
     Setting = apps.get_model("misago_conf", "Setting")
-    Setting.objects.filter(dry_value__isnull=True, default_value__isnull=False).update(dry_value=F("default_value"))
+    Setting.objects.filter(dry_value__isnull=True, default_value__isnull=False).update(
+        dry_value=F("default_value")
+    )
 
 
 class Migration(migrations.Migration):
