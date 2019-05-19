@@ -11,7 +11,7 @@ from .utils import disable_agreement, set_agreement_as_active
 class AgreementAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:settings:agreements:index"
     model = Agreement
-    form = AgreementForm
+    form_class = AgreementForm
     templates_dir = "misago/admin/agreements"
     message_404 = _("Requested agreement does not exist.")
 

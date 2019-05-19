@@ -9,7 +9,7 @@ from ..forms import BanForm, FilterBansForm
 class BanAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:users:bans:index"
     model = Ban
-    form = BanForm
+    form_class = BanForm
     templates_dir = "misago/admin/bans"
     message_404 = _("Requested ban does not exist.")
 

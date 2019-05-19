@@ -88,7 +88,7 @@ class DeleteCategoryRole(CategoryRoleAdmin, generic.ButtonView):
 
 class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
     templates_dir = "misago/admin/categoryroles"
-    template = "categoryroles.html"
+    template_name = "categoryroles.html"
 
     def real_dispatch(self, request, target):
         category_roles = CategoryRole.objects.order_by("name")
@@ -144,7 +144,7 @@ CategoriesList.add_item_action(
 
 class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
     templates_dir = "misago/admin/categoryroles"
-    template = "rolecategories.html"
+    template_name = "rolecategories.html"
 
     def real_dispatch(self, request, target):
         categories = Category.objects.all_categories()
