@@ -33,15 +33,3 @@ class SettingModelTests(TestCase):
         setting_model.value = None
         self.assertEqual(setting_model.value, 9001)
         self.assertEqual(setting_model.dry_value, None)
-
-    def test_field_extra(self):
-        """field extra is set correctly"""
-        setting_model = Setting()
-
-        test_extra = {}
-        setting_model.field_extra = test_extra
-        self.assertEqual(setting_model.field_extra, test_extra)
-
-        test_extra = {"min_lenght": 5, "max_length": 12}
-        setting_model.field_extra = test_extra
-        self.assertEqual(setting_model.field_extra, test_extra)

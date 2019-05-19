@@ -21,7 +21,6 @@ class SettingsManager(models.Manager):
 class Setting(models.Model):
     setting = models.CharField(max_length=255, unique=True)
     dry_value = models.TextField(null=True, blank=True)
-    default_value = models.TextField(null=True, blank=True)
     python_type = models.CharField(max_length=255, default="string")
     is_public = models.BooleanField(default=False)
     is_lazy = models.BooleanField(default=False)
@@ -35,7 +34,3 @@ class Setting(models.Model):
     @value.setter
     def value(self, new_value):
         return utils.set_setting_value(self, new_value)
-
-    @property
-    def has_custom_value(self):
-        return utils.has_custom_value(self)

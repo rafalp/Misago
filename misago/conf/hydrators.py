@@ -1,6 +1,4 @@
-# fixme: rename this moduleto serialize
-
-
+# fixme: rename this module to serialize
 def hydrate_string(dry_value):
     return str(dry_value) if dry_value else ""
 
