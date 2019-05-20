@@ -30,6 +30,19 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 # Use MD5 password hashing to speed up test suite
 PASSWORD_HASHERS = ("django.contrib.auth.hashers.MD5PasswordHasher",)
 
+# Simplify password validation to ease writing test assertions
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "OPTIONS": {"user_attributes": ["username", "email"]},
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {"min_length": 7},
+    },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
 # Default misago address to test address
 MISAGO_ADDRESS = "http://testserver/"
 

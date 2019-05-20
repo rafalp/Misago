@@ -36,7 +36,13 @@ def delete_bulk(request, thread):
             errors = serializer.errors["posts"]
         else:
             errors = list(serializer.errors.values())[0]
-        return Response({"detail": errors[0]}, status=400)
+        # Fix for KeyError - errors[0]
+        try:
+            errors = errors[0]
+        except KeyError:
+            if errors and isinstance(errors, dict):
+                errors = list(errors.values())[0][0]
+        return Response({"detail": errors}, status=400)
 
     for post in serializer.validated_data["posts"]:
         post.delete()

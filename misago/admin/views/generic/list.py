@@ -28,7 +28,7 @@ class ListView(AdminView):
                typles should follow this format: (name, order_by)
     """
 
-    template = "list.html"
+    template_name = "list.html"
 
     items_per_page = 0
     ordering = None

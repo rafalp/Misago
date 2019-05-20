@@ -3,7 +3,7 @@ from django.db import transaction
 from django.http import Http404
 from django.utils.translation import gettext as _
 from rest_framework import viewsets
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
@@ -118,7 +118,7 @@ class ViewSet(viewsets.ViewSet):
 
         return Response({"can_start_poll": can_start_poll(request.user_acl, thread)})
 
-    @detail_route(methods=["get", "post"])
+    @action(detail=True, methods=["get", "post"])
     def votes(self, request, thread_pk, pk=None):
         if request.method == "POST":
             return self.post_votes(request, thread_pk, pk)

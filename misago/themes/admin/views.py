@@ -23,7 +23,7 @@ from .tasks import build_single_theme_css, build_theme_css, update_remote_css_si
 class ThemeAdmin(generic.AdminBaseMixin):
     root_link = "misago:admin:themes:index"
     model = Theme
-    form = ThemeForm
+    form_class = ThemeForm
     templates_dir = "misago/admin/themes"
     message_404 = _("Requested theme does not exist.")
 
@@ -35,16 +35,16 @@ class ThemesList(ThemeAdmin, generic.ListView):
 class NewTheme(ThemeAdmin, generic.ModelFormView):
     message_submit = _('New theme "%(name)s" has been saved.')
 
-    def initialize_form(self, form, request, _):
+    def get_form(self, form_class, request, _):
         if request.method == "POST":
-            return form(request.POST, request.FILES)
+            return form_class(request.POST, request.FILES)
 
         try:
             initial = {"parent": int(request.GET.get("parent"))}
         except (TypeError, ValueError):
             initial = {}
 
-        return form(initial=initial)
+        return form_class(initial=initial)
 
 
 class EditTheme(ThemeAdmin, generic.ModelFormView):
@@ -107,8 +107,8 @@ class ExportTheme(ThemeAdmin, generic.ButtonView):
 
 
 class ImportTheme(ThemeAdmin, generic.FormView):
-    form = ImportForm
-    template = "import.html"
+    form_class = ImportForm
+    template_name = "import.html"
 
     def handle_form(self, form, request):
         try:
@@ -134,7 +134,7 @@ class ThemeAssetsAdmin(ThemeAdmin):
 
 
 class ThemeAssets(ThemeAssetsAdmin, generic.TargetedView):
-    template = "assets/list.html"
+    template_name = "assets/list.html"
 
     def real_dispatch(self, request, theme):
         return self.render(request, {"theme": theme})
@@ -159,10 +159,10 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
     )
 
     message_submit = None
-    form = None
+    form_class = None
 
     def action(self, request, theme):
-        form = self.form(  # pylint: disable=not-callable
+        form = self.form_class(  # pylint: disable=not-callable
             request.POST, request.FILES, instance=theme
         )
 
@@ -180,12 +180,12 @@ class UploadThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
 
 class UploadThemeCss(UploadThemeAssets):
     message_success = _("New CSS files have been added to the theme.")
-    form = UploadCssForm
+    form_class = UploadCssForm
 
 
 class UploadThemeMedia(UploadThemeAssets):
     message_success = _("New media files have been added to the theme.")
-    form = UploadMediaForm
+    form_class = UploadMediaForm
 
 
 class DeleteThemeAssets(ThemeAssetsActionAdmin, generic.TargetedView):
@@ -288,7 +288,7 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
     is_atomic = False  # atomic updates cause race condition with celery tasks
 
     def real_dispatch(self, request, theme, css=None):
-        form = self.initialize_form(self.form, request, theme, css)
+        form = self.get_form(self.form_class, request, theme, css)
 
         if request.method == "POST" and form.is_valid():
             response = self.handle_form(  # pylint: disable=assignment-from-no-return
@@ -302,10 +302,10 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
 
         return self.render(request, {"form": form, "theme": theme, "target": css})
 
-    def initialize_form(self, form, request, theme, css):
+    def get_form(self, form_class, request, theme, css):
         raise NotImplementedError(
             "Admin views extending the ThemeCssFormAdmin "
-            "should define the initialize_form(form, request, theme, css)"
+            "should define the get_form(form_class, request, theme, css)"
         )
 
     def handle_form(self, form, request, theme, css):
@@ -319,16 +319,16 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
 
 class NewThemeCss(ThemeCssFormAdmin):
     message_submit = _('New CSS "%(name)s" has been saved.')
-    form = CssEditorForm
-    template = "assets/css-editor-form.html"
+    form_class = CssEditorForm
+    template_name = "assets/css-editor-form.html"
 
     def get_theme_css_or_none(self, theme, _):
         return Css(theme=theme)
 
-    def initialize_form(self, form, request, theme, css):
+    def get_form(self, form_class, request, theme, css):
         if request.method == "POST":
-            return form(request.POST, instance=css)
-        return form(instance=css)
+            return form_class(request.POST, instance=css)
+        return form_class(instance=css)
 
     def redirect_to_edit_form(self, theme, css):
         return redirect("misago:admin:themes:edit-css-file", pk=theme.pk, css_pk=css.pk)
@@ -343,11 +343,11 @@ class EditThemeCss(NewThemeCss):
         except ObjectDoesNotExist:
             return None
 
-    def initialize_form(self, form, request, theme, css):
+    def get_form(self, form_class, request, theme, css):
         if request.method == "POST":
-            return form(request.POST, instance=css)
+            return form_class(request.POST, instance=css)
         initial_data = {"source": css.source_file.read()}
-        return form(instance=css, initial=initial_data)
+        return form_class(instance=css, initial=initial_data)
 
     def handle_form(self, form, request, theme, css):
         if "source" in form.changed_data:
@@ -364,16 +364,16 @@ class EditThemeCss(NewThemeCss):
 
 class NewThemeCssLink(ThemeCssFormAdmin):
     message_submit = _('New CSS link "%(name)s" has been saved.')
-    form = CssLinkForm
-    template = "assets/css-link-form.html"
+    form_class = CssLinkForm
+    template_name = "assets/css-link-form.html"
 
     def get_theme_css_or_none(self, theme, _):
         return Css(theme=theme)
 
-    def initialize_form(self, form, request, theme, css):
+    def get_form(self, form_class, request, theme, css):
         if request.method == "POST":
-            return form(request.POST, instance=css)
-        return form(instance=css)
+            return form_class(request.POST, instance=css)
+        return form_class(instance=css)
 
     def handle_form(self, form, request, theme, css):
         super().handle_form(form, request, theme, css)

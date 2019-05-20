@@ -391,7 +391,7 @@ class SplitPostsSerializer(NewThreadSerializer):
             try:
                 allow_split_post(user_acl, post)
             except PermissionDenied as e:
-                raise ValidationError(e)
+                raise ValidationError(str(e))
 
             posts.append(post)
 

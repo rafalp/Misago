@@ -1,10 +1,10 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...conf import settings
-from ...core.pgutils import PgPartialIndex
 from ...core.utils import slugify
 
 
@@ -99,17 +99,41 @@ class Thread(models.Model):
 
     class Meta:
         indexes = [
-            PgPartialIndex(fields=["weight"], where={"weight": 2}),
-            PgPartialIndex(fields=["weight"], where={"weight": 1}),
-            PgPartialIndex(fields=["weight"], where={"weight": 0}),
-            PgPartialIndex(fields=["weight"], where={"weight__lt": 2}),
-            PgPartialIndex(
-                fields=["has_reported_posts"], where={"has_reported_posts": True}
+            models.Index(
+                name="misago_thread_pinned_glob_part",
+                fields=["weight"],
+                condition=Q(weight=2),
             ),
-            PgPartialIndex(
-                fields=["has_unapproved_posts"], where={"has_unapproved_posts": True}
+            models.Index(
+                name="misago_thread_pinned_loca_part",
+                fields=["weight"],
+                condition=Q(weight=1),
             ),
-            PgPartialIndex(fields=["is_hidden"], where={"is_hidden": False}),
+            models.Index(
+                name="misago_thread_not_pinned_part",
+                fields=["weight"],
+                condition=Q(weight=0),
+            ),
+            models.Index(
+                name="misago_thread_not_global_part",
+                fields=["weight"],
+                condition=Q(weight__lt=2),
+            ),
+            models.Index(
+                name="misago_thread_has_reporte_part",
+                fields=["has_reported_posts"],
+                condition=Q(has_reported_posts=True),
+            ),
+            models.Index(
+                name="misago_thread_has_unappro_part",
+                fields=["has_unapproved_posts"],
+                condition=Q(has_unapproved_posts=True),
+            ),
+            models.Index(
+                name="misago_thread_is_visible_part",
+                fields=["is_hidden"],
+                condition=Q(is_hidden=False),
+            ),
         ]
 
         index_together = [

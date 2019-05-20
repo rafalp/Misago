@@ -35,7 +35,7 @@ class UserAdmin(generic.AdminBaseMixin):
     templates_dir = "misago/admin/users"
     model = User
 
-    def create_form_type(self, request, target):
+    def get_form_class(self, request, target):
         add_is_active_fields = False
         add_admin_fields = False
 
@@ -49,7 +49,7 @@ class UserAdmin(generic.AdminBaseMixin):
             add_admin_fields = request.user.pk != target.pk
 
         return EditUserFormFactory(
-            self.form,
+            self.form_class,
             target,
             add_is_active_fields=add_is_active_fields,
             add_admin_fields=add_admin_fields,
@@ -194,8 +194,8 @@ class UsersList(UserAdmin, generic.ListView):
 
         return self.render(
             request,
-            template="misago/admin/users/ban.html",
-            context={"users": users, "form": form},
+            {"users": users, "form": form},
+            template_name="misago/admin/users/ban.html",
         )
 
     def action_request_data_download(self, request, users):
@@ -248,14 +248,16 @@ class UsersList(UserAdmin, generic.ListView):
 
 
 class NewUser(UserAdmin, generic.ModelFormView):
-    form = NewUserForm
-    template = "new.html"
+    form_class = NewUserForm
+    template_name = "new.html"
     message_submit = _('New user "%(user)s" has been registered.')
 
-    def initialize_form(self, form, request, target):
+    def get_form(self, form_class, request, target):
         if request.method == "POST":
-            return form(request.POST, request.FILES, instance=target, request=request)
-        return form(instance=target, request=request)
+            return form_class(
+                request.POST, request.FILES, instance=target, request=request
+            )
+        return form_class(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         new_user = User.objects.create_user(
@@ -278,8 +280,8 @@ class NewUser(UserAdmin, generic.ModelFormView):
 
 
 class EditUser(UserAdmin, generic.ModelFormView):
-    form = EditUserForm
-    template = "edit.html"
+    form_class = EditUserForm
+    template_name = "edit.html"
     message_submit = _('User "%(user)s" has been edited.')
 
     def real_dispatch(self, request, target):
@@ -287,10 +289,12 @@ class EditUser(UserAdmin, generic.ModelFormView):
         target.old_is_avatar_locked = target.is_avatar_locked
         return super().real_dispatch(request, target)
 
-    def initialize_form(self, form, request, target):
+    def get_form(self, form_class, request, target):
         if request.method == "POST":
-            return form(request.POST, request.FILES, instance=target, request=request)
-        return form(instance=target, request=request)
+            return form_class(
+                request.POST, request.FILES, instance=target, request=request
+            )
+        return form_class(instance=target, request=request)
 
     def handle_form(self, form, request, target):
         target.username = target.old_username
@@ -339,87 +343,3 @@ class EditUser(UserAdmin, generic.ModelFormView):
             update_session_auth_hash(request, target)
 
         messages.success(request, self.message_submit % {"user": target.username})
-
-
-class DeletionStep(UserAdmin, generic.ButtonView):
-    is_atomic = False
-
-    def check_permissions(self, request, target):
-        if not request.is_ajax():
-            return _("This action can't be accessed directly.")
-
-        if target == request.user:
-            return _("You can't delete yourself.")
-
-        if target.is_staff or target.is_superuser:
-            return _("%(user)s is admin and can't be deleted.") % {
-                "user": target.username
-            }
-
-    def execute_step(self, user):
-        raise NotImplementedError(
-            "execute_step method should return dict with "
-            "number of deleted_count and is_completed keys"
-        )
-
-    def button_action(self, request, target):
-        return JsonResponse(self.execute_step(target))
-
-
-class DeleteThreadsStep(DeletionStep):
-    def execute_step(self, user):
-        recount_categories = set()
-
-        deleted_threads = 0
-        is_completed = False
-
-        for thread in user.thread_set.order_by("-id")[:50]:
-            recount_categories.add(thread.category_id)
-            with transaction.atomic():
-                thread.delete()
-                deleted_threads += 1
-
-        if recount_categories:
-            for category in Category.objects.filter(id__in=recount_categories):
-                category.synchronize()
-                category.save()
-        else:
-            is_completed = True
-
-        return {"deleted_count": deleted_threads, "is_completed": is_completed}
-
-
-class DeletePostsStep(DeletionStep):
-    def execute_step(self, user):
-        recount_categories = set()
-        recount_threads = set()
-
-        deleted_posts = 0
-        is_completed = False
-
-        for post in user.post_set.order_by("-id")[:50]:
-            recount_categories.add(post.category_id)
-            recount_threads.add(post.thread_id)
-            with transaction.atomic():
-                post.delete()
-                deleted_posts += 1
-
-        if recount_categories:
-            changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
-            for thread in chunk_queryset(changed_threads_qs, 50):
-                thread.synchronize()
-                thread.save()
-
-            for category in Category.objects.filter(id__in=recount_categories):
-                category.synchronize()
-                category.save()
-        else:
-            is_completed = True
-
-        return {"deleted_count": deleted_posts, "is_completed": is_completed}
-
-
-class DeleteAccountStep(DeletionStep):
-    def execute_step(self, user):
-        user.delete(delete_content=True)
-        return {"is_completed": True}
