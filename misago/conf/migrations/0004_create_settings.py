@@ -18,13 +18,13 @@ default_settings = [
     {"setting": "default_avatar", "dry_value": "gravatar"},
     {"setting": "default_gravatar_fallback", "dry_value": "dynamic"},
     {"setting": "email_footer"},
-    {"setting": "forum_branding_icon", "python_type": "image", "is_public": True},
-    {"setting": "forum_branding_logo", "python_type": "image", "is_public": True},
-    {"setting": "forum_branding_text", "dry_value": "Misago", "is_public": True},
     {"setting": "forum_footnote", "is_public": True},
     {"setting": "forum_index_meta_description"},
     {"setting": "forum_index_title", "is_public": True},
     {"setting": "forum_name", "dry_value": "Misago", "is_public": True},
+    {"setting": "logo", "python_type": "image", "is_public": True},
+    {"setting": "logo_small", "python_type": "image", "is_public": True},
+    {"setting": "logo_text", "dry_value": "Misago", "is_public": True},
     {
         "setting": "post_length_max",
         "python_type": "int",
@@ -66,14 +66,13 @@ default_settings = [
     {"setting": "username_length_max", "python_type": "int", "dry_value": 14},
 ]
 
+removed_settings = ["forum_branding_display", "forum_branding_text"]
+
 
 def create_settings(apps, _):
     # This migration builds list of existing settings, and then
     # creates settings not already in the database
     Setting = apps.get_model("misago_conf", "Setting")
-
-    # Delete deprecated settings
-    Setting.objects.filter(setting__in=["forum_branding_display"]).delete()
 
     # Update existing settings and add new ones
     existing_settings = list(Setting.objects.values_list("setting", flat=True))
@@ -86,6 +85,9 @@ def create_settings(apps, _):
             data["dry_value"] = dehydrate_value(data["python_type"], data["dry_value"])
 
         Setting.objects.create(**setting)
+
+    # Delete deprecated settings
+    Setting.objects.filter(setting__in=removed_settings).delete()
 
 
 class Migration(migrations.Migration):

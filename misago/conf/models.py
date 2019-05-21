@@ -1,6 +1,9 @@
+from pathlib import Path
+
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+from ..core.utils import get_file_hash
 from .hydrators import dehydrate_value, hydrate_value
 
 
@@ -51,12 +54,22 @@ class Setting(models.Model):
 
     @value.setter
     def value(self, new_value):
-        if self.python_type == "image":
-            self.image = new_value
-            self.image_size = new_value.size
-
         if new_value is not None:
-            self.dry_value = dehydrate_value(self.python_type, new_value)
+            if self.python_type == "image":
+                rename_image_file(new_value, self.setting)
+                self.image = new_value
+                self.image_size = new_value.size
+            else:
+                self.dry_value = dehydrate_value(self.python_type, new_value)
         else:
             self.dry_value = None
         return new_value
+
+
+def rename_image_file(file_obj, prefix):
+    name_parts = [
+        prefix.replace("_", "-"),
+        get_file_hash(file_obj),
+        Path(file_obj.name).suffix.strip(".").lower(),
+    ]
+    file_obj.name = ".".join(name_parts)

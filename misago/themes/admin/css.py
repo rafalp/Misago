@@ -3,7 +3,7 @@ import re
 
 from django.core.files.base import ContentFile
 
-from .utils import get_file_hash
+from ...core.utils import get_file_hash
 
 
 def create_css(theme, css):

@@ -21,18 +21,22 @@ def form_image_row(
     size=None,
     dimensions=None,
 ):
-    if dimensions:
-        dimensions = {"width": dimensions[0], "height": dimensions[1]}
-
     return {
         "field": field,
+        "field_image": field.initial,
         "size": size,
-        "dimensions": dimensions,
+        "dimensions": get_field_image_dimensions(dimensions),
         "delete_field": delete_field,
         "label_class": label_class,
         "field_class": field_class,
         "image_class": image_class,
     }
+
+
+def get_field_image_dimensions(dimensions):
+    if dimensions:
+        return {"width": dimensions[0], "height": dimensions[1]}
+    return None
 
 
 @register.inclusion_tag("misago/admin/form/checkbox_row.html")

@@ -127,9 +127,9 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "forum_name",
         "forum_index_title",
         "forum_index_meta_description",
-        "forum_branding_icon",
-        "forum_branding_logo",
-        "forum_branding_text",
+        "logo",
+        "logo_small",
+        "logo_text",
         "forum_footnote",
         "email_footer",
     ]
@@ -147,27 +147,28 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         max_length=255,
         required=False,
     )
-    forum_branding_icon = forms.ImageField(
-        label=_("Icon image"),
-        help_text=_("Image that will be displayed in forum navbar on small displays."),
+    logo = forms.ImageField(
+        label=_("Logo"),
+        help_text=_("Image that will displayed in forum navbar."),
         required=False,
     )
-    forum_branding_icon_delete = forms.BooleanField(
-        label=_("Delete current icon image"), required=False
-    )
-    forum_branding_logo = forms.ImageField(
-        label=_("Logo image"),
-        help_text=_("Image that will displayed in forum navbar on large displays."),
+    logo_delete = forms.BooleanField(label=_("Delete current logo"), required=False)
+    logo_small = forms.ImageField(
+        label=_("Small logo"),
+        help_text=_(
+            "Image that will be displayed in compact forum navbar. "
+            "When set, it will replace icon pointing to forum index."
+        ),
         required=False,
     )
-    forum_branding_logo_delete = forms.BooleanField(
-        label=_("Delete current logo image"), required=False
+    logo_small_delete = forms.BooleanField(
+        label=_("Delete current small logo"), required=False
     )
-    forum_branding_text = forms.CharField(
+    logo_text = forms.CharField(
         label=_("Text"),
         help_text=_(
-            "Text displayed on large displays. If logo image was uploaded, text will "
-            "be displayed right next to it."
+            "Text displayed in forum navbar. If logo image was uploaded, text will "
+            "be displayed right next to it. Never displayed by the compact navbar."
         ),
         max_length=255,
         required=False,
