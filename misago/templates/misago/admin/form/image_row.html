@@ -1,0 +1,35 @@
+{% load i18n misago_admin_form %}
+{% if field_image %}
+  <div class="form-group">
+    <label for="{{ field.id_for_label }}" class="control-label{% if label_class %} {{ label_class }}{% endif %}">
+      {{ field.label }}:
+    </label>
+    <div class="{% if field_class %}{{ field_class }}{% endif %}">
+      <div class="{{ image_class|default:'control-image-preview' }}{% if size or dimensions %} control-image-metadata{% endif %}">
+        <img src="{{ field_image.url }}" alt="" />
+        {% if size or dimensions %}
+          <div>
+            {% if size %}
+              <span>{{ size|filesizeformat }}</span>
+            {% endif %}
+            {% if dimensions %}
+              <span>{{ dimensions.width }}&times;{{ dimensions.height }}</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      {% form_input field %}
+      {% for error in field.errors %}
+        <small class="form-text text-danger font-weight-bold">{{ error }}</small>
+      {% endfor %}
+      {% if field.help_text %}
+        <small class="form-text text-muted">{{ field.help_text }}</small>
+      {% endif %}
+    </div>
+  </div>
+  {% if delete_field %}
+    {% form_checkbox_row delete_field %}
+  {% endif %}
+{% else %}
+  {% form_row field label_class field_class %}
+{% endif %}

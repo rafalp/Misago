@@ -22,10 +22,19 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Branding" %}</legend>
+    <legend>{% trans "Logo" %}</legend>
 
-    {% form_row form.forum_branding_display %}
-    {% form_row form.forum_branding_text %}
+    {% form_row form.logo_text %}
+    {% with form.logo_delete as delete_field %}
+      {% with form_settings.logo as setting %}
+        {% form_image_row form.logo delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
+      {% endwith %}
+    {% endwith %}
+    {% with form.logo_small_delete as delete_field %}
+      {% with form_settings.logo_small as setting %}
+        {% form_image_row form.logo_small delete_field=delete_field size=setting.image_size dimensions=setting.image_dimensions %}
+      {% endwith %}
+    {% endwith %}
 
   </fieldset>
 </div>

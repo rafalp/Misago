@@ -56,6 +56,12 @@ def get_settings_from_db():
                 "is_lazy": setting.is_lazy,
                 "is_public": setting.is_public,
             }
+        elif setting.python_type == "image":
+            settings[setting.setting] = {
+                "value": setting.value.url if setting.value else None,
+                "is_lazy": setting.is_lazy,
+                "is_public": setting.is_public,
+            }
         else:
             settings[setting.setting] = {
                 "value": setting.value,
