@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from ..hydrators import dehydrate_value, hydrate_value
@@ -69,6 +71,16 @@ def test_none_list_value_is_hydrated_to_empty_list():
 
 def test_none_list_value_is_dehydrated_to_empty_string():
     assert dehydrate_value("list", None) == ""
+
+
+def test_image_value_hydration_is_noop():
+    image = Mock()
+    assert hydrate_value("image", image) is image
+
+
+def test_image_value_dehydration_is_noop():
+    image = Mock()
+    assert dehydrate_value("image", image) is image
 
 
 def test_value_error_is_raised_on_unsupported_type_dehydration():

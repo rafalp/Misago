@@ -5,10 +5,10 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext, gettext_lazy as _
 from mptt.forms import TreeNodeChoiceField
 
+from ...core.utils import get_file_hash
 from ..models import Theme, Css
 from .css import css_needs_rebuilding, create_css, get_next_css_order
 from .media import create_media
-from .utils import get_file_hash
 from .validators import validate_css_name, validate_css_name_is_available
 
 

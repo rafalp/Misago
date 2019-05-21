@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timedelta
 
 from django.conf import settings
@@ -170,3 +171,15 @@ def get_host_from_address(address):
         address = address.split(":")[0] or address
 
     return address
+
+
+HASH_LENGTH = 8
+
+
+def get_file_hash(file_obj):
+    if not file_obj.size:
+        return "0" * HASH_LENGTH
+    file_hash = hashlib.md5()
+    for chunk in file_obj.chunks():
+        file_hash.update(chunk)
+    return file_hash.hexdigest()[:HASH_LENGTH]

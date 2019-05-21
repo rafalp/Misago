@@ -35,7 +35,7 @@ class ChangeSettingsView(AdminView):
                 form.save(settings)
                 messages.success(request, _("Changes in settings have been saved!"))
                 return redirect(request.path_info)
-        return self.render(request, {"form": form})
+        return self.render(request, {"form": form, "form_settings": settings})
 
     def get_settings(self, form_settings):
         settings = {}
@@ -43,10 +43,12 @@ class ChangeSettingsView(AdminView):
             settings[setting.setting] = setting
 
         if len(settings) != len(form_settings):
-            not_found_settings = list(set(settings.keys()) - set(form_settings))
+            not_found_settings = list(
+                set(settings.keys()).symmetric_difference(set(form_settings))
+            )
             raise ValueError(
-                "Some of settings defined in form could not be found: "
-                ", ".join(not_found_settings)
+                "Some of settings defined in form could not be found: %s"
+                % (", ".join(not_found_settings))
             )
 
         return settings

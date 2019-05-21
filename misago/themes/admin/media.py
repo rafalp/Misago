@@ -3,7 +3,7 @@ import io
 from PIL import Image
 from django.core.files.images import ImageFile
 
-from .utils import get_file_hash
+from ...core.utils import get_file_hash
 
 IMAGE_TYPES = ("image/gif", "image/png", "image/jpeg", "image/bmp", "image/webp")
 THUMBNAIL_SIZE = (32, 32)

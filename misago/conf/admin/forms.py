@@ -16,7 +16,23 @@ class ChangeSettingsForm(forms.Form):
         for setting in self.settings:
             setting_obj = settings[setting]
             new_value = self.cleaned_data.get(setting)
-            self.save_setting(setting_obj, new_value)
+            if setting_obj.python_type == "image":
+                if new_value and new_value != self.initial.get(setting):
+                    self.save_image(setting_obj, new_value)
+                elif self.cleaned_data.get("%s_delete" % setting):
+                    self.delete_image(setting_obj)
+            else:
+                self.save_setting(setting_obj, new_value)
+
+    def delete_image(self, setting):
+        if setting.image:
+            setting.image.delete()
+
+    def save_image(self, setting, value):
+        if setting.image:
+            setting.image.delete(save=False)
+        setting.value = value
+        setting.save()
 
     def save_setting(self, setting, value):
         setting.value = value
@@ -111,8 +127,9 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "forum_name",
         "forum_index_title",
         "forum_index_meta_description",
-        "forum_branding_display",
-        "forum_branding_text",
+        "logo",
+        "logo_small",
+        "logo_text",
         "forum_footnote",
         "email_footer",
     ]
@@ -130,12 +147,29 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         max_length=255,
         required=False,
     )
-    forum_branding_display = YesNoSwitch(
-        label=_("Display branding"), help_text=_("Switch branding in forum's navbar.")
+    logo = forms.ImageField(
+        label=_("Logo"),
+        help_text=_("Image that will displayed in forum navbar."),
+        required=False,
     )
-    forum_branding_text = forms.CharField(
-        label=_("Branding text"),
-        help_text=_("Optional text displayed besides brand image in navbar."),
+    logo_delete = forms.BooleanField(label=_("Delete current logo"), required=False)
+    logo_small = forms.ImageField(
+        label=_("Small logo"),
+        help_text=_(
+            "Image that will be displayed in compact forum navbar. "
+            "When set, it will replace icon pointing to forum index."
+        ),
+        required=False,
+    )
+    logo_small_delete = forms.BooleanField(
+        label=_("Delete current small logo"), required=False
+    )
+    logo_text = forms.CharField(
+        label=_("Text"),
+        help_text=_(
+            "Text displayed in forum navbar. If logo image was uploaded, text will "
+            "be displayed right next to it. Never displayed by the compact navbar."
+        ),
         max_length=255,
         required=False,
     )

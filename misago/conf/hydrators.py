@@ -33,11 +33,16 @@ def dehydrate_list(wet_value):
     return ",".join(wet_value) if wet_value else ""
 
 
+def noop(value):
+    return value
+
+
 VALUE_HYDRATORS = {
     "string": (hydrate_string, dehydrate_string),
     "bool": (hydrate_bool, dehydrate_bool),
     "int": (hydrate_int, dehydrate_int),
     "list": (hydrate_list, dehydrate_list),
+    "image": (noop, noop),
 }
 
 

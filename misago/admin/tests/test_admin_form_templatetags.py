@@ -1,9 +1,12 @@
+from unittest.mock import Mock
+
 import pytest
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError
 
 from ..forms import YesNoSwitch
 from ..templatetags.misago_admin_form import (
+    get_field_image_dimensions,
     is_multiple_choice_field,
     is_radio_select_field,
     is_select_field,
@@ -33,6 +36,7 @@ class Form(forms.Form):
         label="Rank", choices=(("r", "Red"), ("g", "Green"), ("b", "Blue"))
     )
     yesno_field = YesNoSwitch(label="Switch")
+    image_field = forms.ImageField(label="Image!", help_text="I am a help text.")
 
 
 @pytest.fixture
@@ -40,9 +44,9 @@ def form():
     return Form()
 
 
-def render(template_str):
+def render(template_str, form=None):
     base_template = "{%% load misago_admin_form %%} %s"
-    context = Context({"form": Form()})
+    context = Context({"form": form or Form()})
     template = Template(base_template % template_str)
     return template.render(context).strip()
 
@@ -64,16 +68,11 @@ def test_row_with_field_input_and_field_css_class_is_rendered():
     assert "col-md-9" in html
 
 
-def test_row_with_field_input_and_label_andfield_css_classes_is_rendered():
+def test_row_with_field_input_and_label_and_field_css_classes_is_rendered():
     html = render('{% form_row form.text_field "col-md-3" "col-md-9" %}')
     assert "id_text_field" in html
     assert "col-md-3" in html
     assert "col-md-9" in html
-
-
-def test_tag_without_field_raises_exception():
-    with pytest.raises(TemplateSyntaxError):
-        render("{% form_row %}")
 
 
 def test_field_label_is_rendered():
@@ -84,6 +83,100 @@ def test_field_label_is_rendered():
 def test_field_help_text_is_rendered():
     html = render("{% form_row form.text_field %}")
     assert "I am a help text." in html
+
+
+def test_tag_without_field_raises_exception():
+    with pytest.raises(TemplateSyntaxError):
+        render("{% form_row %}")
+
+
+def test_image_row_with_field_input_is_rendered():
+    html = render("{% form_image_row form.image_field %}")
+    assert "id_image_field" in html
+
+
+def test_image_row_with_field_input_and_label_css_class_is_rendered():
+    html = render('{% form_image_row form.image_field label_class="col-md-3" %}')
+    assert "id_image_field" in html
+    assert "col-md-3" in html
+
+
+def test_image_row_with_field_input_and_field_css_class_is_rendered():
+    html = render('{% form_image_row form.image_field field_class="col-md-9" %}')
+    assert "id_image_field" in html
+    assert "col-md-9" in html
+
+
+def test_image_row_with_field_input_and_label_and_field_css_classes_is_rendered():
+    html = render('{% form_image_row form.image_field "col-md-3" "col-md-9" %}')
+    assert "id_image_field" in html
+    assert "col-md-3" in html
+    assert "col-md-9" in html
+
+
+def test_image_field_label_is_rendered():
+    html = render("{% form_image_row form.image_field %}")
+    assert "Image!" in html
+
+
+def test_image_field_help_text_is_rendered():
+    html = render("{% form_image_row form.image_field %}")
+    assert "I am a help text." in html
+
+
+class TestImage:
+    url = "test-image.png"
+
+
+def render_image(template_str):
+    base_template = "{%% load misago_admin_form %%} %s"
+    context = Context({"form": Form(initial={"image_field": TestImage()})})
+    template = Template(base_template % template_str)
+    return template.render(context).strip()
+
+
+def test_image_row_with_value_renders_label():
+    html = render_image("{% form_image_row form.image_field %}")
+    assert "Image!" in html
+
+
+def test_image_row_with_value_renders_help_text():
+    html = render_image("{% form_image_row form.image_field %}")
+    assert "I am a help text." in html
+
+
+def test_image_row_with_value_renders_image_preview():
+    html = render_image("{% form_image_row form.image_field %}")
+    assert ('src="%s"' % TestImage.url) in html
+
+
+def test_image_row_with_value_renders_input():
+    html = render_image("{% form_image_row form.image_field %}")
+    assert "id_image_field" in html
+
+
+def test_image_row_with_value_renders_input_and_label_css_class():
+    html = render_image('{% form_image_row form.image_field label_class="col-md-3" %}')
+    assert "id_image_field" in html
+    assert "col-md-3" in html
+
+
+def test_image_row_with_value_renders_input_and_field_css_class():
+    html = render_image('{% form_image_row form.image_field field_class="col-md-9" %}')
+    assert "id_image_field" in html
+    assert "col-md-9" in html
+
+
+def test_image_row_with_value_renders_input_and_label_and_field_css_classes():
+    html = render_image('{% form_image_row form.image_field "col-md-3" "col-md-9" %}')
+    assert "id_image_field" in html
+    assert "col-md-3" in html
+    assert "col-md-9" in html
+
+
+def test_image_tag_without_field_raises_exception():
+    with pytest.raises(TemplateSyntaxError):
+        render("{% form_image_row %}")
 
 
 def test_for_field_with_radio_select_widget_filter_returns_true(form):
@@ -227,3 +320,11 @@ def test_multiple_bool_attrs_with_boolean_true_value_are_rendered():
 def test_only_bool_attrs_with_boolean_true_value_are_rendered():
     result = render_bool_attrs({"bool": True, "string": "hello", "int": 123})
     assert result == "bool"
+
+
+def test_util_turns_dimensions_tuple_into_dict():
+    assert get_field_image_dimensions((20, 40)) == {"width": 20, "height": 40}
+
+
+def test_util_returs_none_if_dimensions_are_empty():
+    assert get_field_image_dimensions(None) is None
