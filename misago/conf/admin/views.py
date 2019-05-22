@@ -33,7 +33,7 @@ class ChangeSettingsView(AdminView):
             form = self.form_class(request.POST, request.FILES, initial=initial)
             if form.is_valid():
                 form.save(settings)
-                messages.success(request, _("Changes in settings have been saved!"))
+                messages.success(request, _("Settings have been saved."))
                 return redirect(request.path_info)
         return self.render(request, {"form": form, "form_settings": settings})
 
