@@ -38,8 +38,8 @@ export function getTitle(route) {
   if (route.category.level) {
     return route.category.name
   } else if (misago.get("THREADS_ON_INDEX")) {
-    if (misago.get("SETTINGS").forum_index_title) {
-      return misago.get("SETTINGS").forum_index_title
+    if (misago.get("SETTINGS").index_header) {
+      return misago.get("SETTINGS").index_header
     } else {
       return misago.get("SETTINGS").forum_name
     }

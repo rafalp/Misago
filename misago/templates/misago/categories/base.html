@@ -6,18 +6,14 @@
   {% if THREADS_ON_INDEX %}
     {% trans "Categories" %} | {{ block.super }}
   {% else %}
-    {% if settings.forum_index_title %}
-      {{ settings.forum_index_title }}
-    {% else %}
-      {{ settings.forum_name }}
-    {% endif %}
+    {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
 {% endblock title %}
 
 
 {% block meta-description %}
-  {% if not THREADS_ON_INDEX and settings.forum_index_meta_description %}
-    {{ settings.forum_index_meta_description }}
+  {% if not THREADS_ON_INDEX and settings.index_meta_description %}
+    {{ settings.index_meta_description }}
   {% else %}
     {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.
@@ -32,18 +28,14 @@
   {% if THREADS_ON_INDEX %}
     {% trans "Categories" %}
   {% else %}
-    {% if settings.forum_index_title %}
-      {{ settings.forum_index_title }}
-    {% else %}
-      {{ settings.forum_name }}
-    {% endif %}
+    {{ settings.index_title|default:settings.forum_name }}
   {% endif %}
 {% endblock og-title %}
 
 
 {% block og-description %}
-  {% if not THREADS_ON_INDEX and settings.forum_index_meta_description %}
-    {{ settings.forum_index_meta_description }}
+  {% if not THREADS_ON_INDEX and settings.index_meta_description %}
+    {{ settings.index_meta_description }}
   {% else %}
     {% blocktrans trimmed count categories=categories|length with forum_name=settings.forum_name %}
       There is {{ categories }} main category currenty available on the {{ forum_name }}.

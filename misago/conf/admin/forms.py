@@ -125,8 +125,9 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
 class ChangeGeneralSettingsForm(ChangeSettingsForm):
     settings = [
         "forum_name",
-        "forum_index_title",
-        "forum_index_meta_description",
+        "index_header",
+        "index_title",
+        "index_meta_description",
         "logo",
         "logo_small",
         "logo_text",
@@ -135,18 +136,24 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
     ]
 
     forum_name = forms.CharField(label=_("Forum name"), min_length=2, max_length=255)
-    forum_index_title = forms.CharField(
-        label=_("Title"),
-        help_text=_("You may set a custom title on forum index by typing it here."),
+
+    index_header = forms.CharField(
+        label=_("Header text"),
+        help_text=_("This text will replace forum name in page header."),
         max_length=255,
         required=False,
     )
-    forum_index_meta_description = forms.CharField(
+    index_title = forms.CharField(label=_("Page title"), max_length=255, required=False)
+    index_meta_description = forms.CharField(
         label=_("Meta Description"),
-        help_text=_("Short description of your forum for internet crawlers."),
+        help_text=_(
+            "Short description of your forum that search and social sites may "
+            "display next to link to your forum's index."
+        ),
         max_length=255,
         required=False,
     )
+
     logo = forms.ImageField(
         label=_("Logo"),
         help_text=_("Image that will displayed in forum navbar."),
@@ -173,6 +180,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         max_length=255,
         required=False,
     )
+
     forum_footnote = forms.CharField(
         label=_("Forum footnote"),
         help_text=_("Short message displayed in forum footer."),
