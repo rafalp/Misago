@@ -1,4 +1,4 @@
-ariadne>0.2
+ariadne>0.3
 beautifulsoup4<4.8
 bleach<3.2
 celery[redis]
