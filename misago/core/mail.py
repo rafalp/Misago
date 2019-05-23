@@ -10,8 +10,8 @@ def build_mail(recipient, subject, template, sender=None, context=None):
     context = context.copy() if context else {}
     context.update(
         {
-            "SITE_ADDRESS": settings.MISAGO_ADDRESS,
-            "SITE_HOST": get_host_from_address(settings.MISAGO_ADDRESS),
+            "SITE_ADDRESS": settings.forum_address,
+            "SITE_HOST": get_host_from_address(settings.forum_address),
             "LANGUAGE_CODE": get_language()[:2],
             "LOGIN_URL": settings.LOGIN_URL,
             "user": recipient,

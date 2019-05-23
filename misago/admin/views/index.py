@@ -1,11 +1,11 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
 from django.utils import timezone
 
 from . import render
-from ...conf import settings
 from ...threads.models import Post, Thread, Attachment
 from ...users.models import DataDownload
 
@@ -17,7 +17,7 @@ User = get_user_model()
 def admin_index(request):
     totals = count_db_items()
     checks = {
-        "address": check_misago_address(request),
+        "address": check_forum_address(request),
         "cache": check_cache(),
         "data_downloads": check_data_downloads(),
         "debug": check_debug_status(),
@@ -45,8 +45,8 @@ def check_https(request):
     return {"is_ok": request.is_secure()}
 
 
-def check_misago_address(request):
-    set_address = settings.MISAGO_ADDRESS
+def check_forum_address(request):
+    set_address = request.settings.forum_address
     correct_address = request.build_absolute_uri("/")
 
     return {

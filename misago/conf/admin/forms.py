@@ -8,6 +8,10 @@ from ..cache import clear_settings_cache
 class ChangeSettingsForm(forms.Form):
     settings = []
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
     def save(self, settings):
         self.save_settings(settings)
         self.clear_cache()
@@ -125,6 +129,7 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
 class ChangeGeneralSettingsForm(ChangeSettingsForm):
     settings = [
         "forum_name",
+        "forum_address",
         "index_header",
         "index_title",
         "index_meta_description",
@@ -136,6 +141,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
     ]
 
     forum_name = forms.CharField(label=_("Forum name"), min_length=2, max_length=255)
+    forum_address = forms.URLField(label=_("Forum address"), max_length=255)
 
     index_header = forms.CharField(
         label=_("Header text"),
@@ -195,6 +201,15 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         max_length=255,
         required=False,
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        address = self.request.build_absolute_uri("/")
+        self["forum_address"].help_text = _(
+            "Misago uses this setting to build links in e-mails sent to site "
+            'users. Address under which site is running appears to be "%(address)s".'
+        ) % {"address": address}
 
 
 class ChangeThreadsSettingsForm(ChangeSettingsForm):

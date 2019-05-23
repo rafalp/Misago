@@ -1,17 +1,16 @@
 from django import template
 from django.urls import NoReverseMatch, reverse
 
-from ...conf import settings
-
 register = template.Library()
 
 
-@register.simple_tag
-def absoluteurl(url_or_name, *args, **kwargs):
-    if not settings.MISAGO_ADDRESS:
+@register.simple_tag(takes_context=True)
+def absoluteurl(context, url_or_name, *args, **kwargs):
+    address = context["settings"].forum_address
+    if not address:
         return None
 
-    absolute_url_prefix = settings.MISAGO_ADDRESS.rstrip("/")
+    absolute_url_prefix = address.rstrip("/")
 
     try:
         url_or_name = reverse(url_or_name, args=args, kwargs=kwargs)
