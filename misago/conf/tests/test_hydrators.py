@@ -13,6 +13,10 @@ def test_int_value_is_dehydrated_to_string():
     assert dehydrate_value("string", 123) == "123"
 
 
+def test_empty_string_value_is_hydrated_to_empty_string():
+    assert hydrate_value("string", None) == ""
+
+
 def test_bool_false_value_can_be_dehydrated_and_hydrated_back():
     assert hydrate_value("bool", dehydrate_value("bool", False)) is False
 

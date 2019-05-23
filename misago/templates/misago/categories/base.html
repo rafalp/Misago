@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n misago_shorthands %}
+{% load i18n misago_absoluteurl misago_shorthands %}
 
 
 {% block title %}
@@ -46,7 +46,7 @@
 {% endblock og-description %}
 
 
-{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+{% block og-url %}{% absoluteurl REQUEST_PATH %}{% endblock %}
 
 
 {% block content %}

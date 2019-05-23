@@ -211,6 +211,9 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
             'users. Address under which site is running appears to be "%(address)s".'
         ) % {"address": address}
 
+    def clean_forum_address(self):
+        return self.cleaned_data["forum_address"].lower()
+
 
 class ChangeThreadsSettingsForm(ChangeSettingsForm):
     settings = [

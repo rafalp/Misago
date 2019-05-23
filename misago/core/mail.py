@@ -8,10 +8,14 @@ from .utils import get_host_from_address
 
 def build_mail(recipient, subject, template, sender=None, context=None):
     context = context.copy() if context else {}
+    if not context.get("settings"):
+        raise ValueError("settings key is missing from context")
+
+    forum_address = context["settings"].forum_address
+
     context.update(
         {
-            "SITE_ADDRESS": settings.forum_address,
-            "SITE_HOST": get_host_from_address(settings.forum_address),
+            "SITE_HOST": get_host_from_address(forum_address),
             "LANGUAGE_CODE": get_language()[:2],
             "LOGIN_URL": settings.LOGIN_URL,
             "user": recipient,
@@ -19,9 +23,6 @@ def build_mail(recipient, subject, template, sender=None, context=None):
             "subject": subject,
         }
     )
-
-    if not context.get("settings"):
-        raise ValueError("settings key is missing from context")
 
     message_plain = render_to_string("%s.txt" % template, context)
     message_html = render_to_string("%s.html" % template, context)
