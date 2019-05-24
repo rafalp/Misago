@@ -1,6 +1,7 @@
 from datetime import timedelta
 from unittest.mock import Mock
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
@@ -112,43 +113,50 @@ def test_warning_about_unprocessed_data_downloads_is_displayed_on_checks_list(
 class RequestMock:
     absolute_uri = "https://misago-project.org/somewhere/"
 
+    def __init__(self, settings):
+        self.settings = settings
+
     def build_absolute_uri(self, location):
         assert location == "/"
         return self.absolute_uri
 
 
-request = RequestMock()
+@pytest.fixture
+def request_mock(dynamic_settings):
+    return RequestMock(dynamic_settings)
+
+
 incorrect_address = "http://somewhere.com"
-correct_address = request.absolute_uri
+correct_address = RequestMock.absolute_uri
 
 
 @override_dynamic_settings(forum_address=None)
-def test_forum_address_check_handles_setting_not_configured():
-    result = check_forum_address(request)
+def test_forum_address_check_handles_setting_not_configured(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": False,
         "set_address": None,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
 @override_dynamic_settings(forum_address=incorrect_address)
-def test_forum_address_check_detects_invalid_address_configuration():
-    result = check_forum_address(request)
+def test_forum_address_check_detects_invalid_address_configuration(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": False,
         "set_address": incorrect_address,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
 @override_dynamic_settings(forum_address=correct_address)
-def test_forum_address_check_detects_valid_address_configuration():
-    result = check_forum_address(request)
+def test_forum_address_check_detects_valid_address_configuration(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": True,
         "set_address": correct_address,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
