@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block title %}
@@ -26,7 +26,7 @@
 
 
 {% block og-url %}
-{{ SITE_ADDRESS }}{{ thread.get_absolute_url }}
+{% absoluteurl thread.get_absolute_url %}
 {% endblock og-url %}
 
 

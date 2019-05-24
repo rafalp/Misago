@@ -1,6 +1,7 @@
 from django.core import mail
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ..test import AuthenticatedUserTestCase, create_test_user
 
 
@@ -76,10 +77,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         """api allows users to change their e-mail addresses"""
         new_email = "new@email.com"
 
-        response = self.client.post(
-            self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
+            )
+            self.assertEqual(response.status_code, 200)
 
         self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -108,10 +110,11 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
         self.login_user(self.user)
 
-        response = self.client.post(
-            self.link, data={"new_email": new_email, "password": user_password}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                self.link, data={"new_email": new_email, "password": user_password}
+            )
+            self.assertEqual(response.status_code, 200)
 
         self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:

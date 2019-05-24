@@ -5,6 +5,7 @@ from django.utils.encoding import smart_str
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...users.test import AuthenticatedUserTestCase, create_test_user
 from ..models import ThreadParticipant
 from ..test import other_user_cant_use_private_threads
@@ -309,15 +310,16 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
     def test_can_start_thread(self):
         """endpoint creates new thread"""
-        response = self.client.post(
-            self.api_link,
-            data={
-                "to": [self.other_user.username],
-                "title": "Hello, I am test thread!",
-                "post": "Lorem ipsum dolor met!",
-            },
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                self.api_link,
+                data={
+                    "to": [self.other_user.username],
+                    "title": "Hello, I am test thread!",
+                    "post": "Lorem ipsum dolor met!",
+                },
+            )
+            self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
 

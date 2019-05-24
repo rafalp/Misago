@@ -1,5 +1,5 @@
 {% extends "misago/userslists/base.html" %}
-{% load i18n misago_pagetitle misago_shorthands misago_stringutils %}
+{% load i18n misago_absoluteurl misago_pagetitle misago_shorthands misago_stringutils %}
 
 
 {% block title %}{% pagetitle rank.name page=paginator.page %} | {{ block.super }}{% endblock %}
@@ -47,7 +47,7 @@
 {% endblock og-description %}
 
 
-{% block og-url %}{{ SITE_ADDRESS }}{{ rank.get_absolute_url }}{% endblock %}
+{% block og-url %}{% absoluteurl rank.get_absolute_url %}{% endblock %}
 
 
 {% block content %}

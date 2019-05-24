@@ -269,7 +269,7 @@ TEMPLATES = [
                 "misago.acl.context_processors.user_acl",
                 "misago.conf.context_processors.conf",
                 "misago.core.context_processors.misago_version",
-                "misago.core.context_processors.site_address",
+                "misago.core.context_processors.request_path",
                 "misago.core.context_processors.momentjs_locale",
                 "misago.search.context_processors.search_providers",
                 "misago.themes.context_processors.theme",
@@ -341,14 +341,6 @@ CELERY_WORKER_MAX_TASKS_PER_CHILD = 10
 
 # Misago specific settings
 # https://misago.readthedocs.io/en/latest/developers/settings.html
-
-# Complete HTTP address to your Misago site homepage. Misago relies on this address to create
-# links in e-mails that are sent to site users.
-# On Misago admin panel home page you will find a message telling you if you have entered the
-# correct value, or what value is correct in case you've didn't.
-
-MISAGO_ADDRESS = "http://my-misago-site.com/"
-
 
 # On dev instance, generate only three sizes of avatars instead of default 6 sizes.
 

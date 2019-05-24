@@ -43,9 +43,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# Default misago address to test address
-MISAGO_ADDRESS = "http://testserver/"
-
 # Use english search config
 MISAGO_SEARCH_CONFIG = "english"
 
