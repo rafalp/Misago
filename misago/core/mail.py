@@ -15,9 +15,9 @@ def build_mail(recipient, subject, template, sender=None, context=None):
 
     context.update(
         {
-            "SITE_HOST": get_host_from_address(forum_address),
             "LANGUAGE_CODE": get_language()[:2],
             "LOGIN_URL": settings.LOGIN_URL,
+            "forum_host": get_host_from_address(forum_address),
             "user": recipient,
             "sender": sender,
             "subject": subject,
