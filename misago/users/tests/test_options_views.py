@@ -1,6 +1,7 @@
 from django.core import mail
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ..test import AuthenticatedUserTestCase
 
 
@@ -23,10 +24,12 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
         super().setUp()
         link = "/api/users/%s/change-email/" % self.user.pk
 
-        response = self.client.post(
-            link, data={"new_email": "n3w@email.com", "password": self.USER_PASSWORD}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                link,
+                data={"new_email": "n3w@email.com", "password": self.USER_PASSWORD},
+            )
+            self.assertEqual(response.status_code, 200)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
             if line.startswith("http://"):
@@ -58,10 +61,12 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
         super().setUp()
         link = "/api/users/%s/change-password/" % self.user.pk
 
-        response = self.client.post(
-            link, data={"new_password": "n3wp4ssword", "password": self.USER_PASSWORD}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                link,
+                data={"new_password": "n3wp4ssword", "password": self.USER_PASSWORD},
+            )
+            self.assertEqual(response.status_code, 200)
 
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
             if line.startswith("http://"):

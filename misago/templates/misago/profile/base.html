@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block title %}{{ profile.username }} | {{ block.super }}{% endblock %}
@@ -30,7 +30,7 @@
 {% endblock og-description %}
 
 
-{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+{% block og-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block content %}

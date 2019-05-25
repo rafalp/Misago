@@ -1,11 +1,13 @@
 from datetime import timedelta
 from unittest.mock import Mock
 
+import pytest
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
 
+from ...conf.test import override_dynamic_settings
 from ...test import assert_contains
 from ...users.datadownloads import request_user_data_download
 from ...users.models import DataDownload
@@ -14,9 +16,9 @@ from ..views.index import (
     check_cache,
     check_data_downloads,
     check_debug_status,
+    check_forum_address,
     check_https,
     check_inactive_users,
-    check_misago_address,
 )
 
 User = get_user_model()
@@ -111,58 +113,65 @@ def test_warning_about_unprocessed_data_downloads_is_displayed_on_checks_list(
 class RequestMock:
     absolute_uri = "https://misago-project.org/somewhere/"
 
+    def __init__(self, settings):
+        self.settings = settings
+
     def build_absolute_uri(self, location):
         assert location == "/"
         return self.absolute_uri
 
 
-request = RequestMock()
+@pytest.fixture
+def request_mock(dynamic_settings):
+    return RequestMock(dynamic_settings)
+
+
 incorrect_address = "http://somewhere.com"
-correct_address = request.absolute_uri
+correct_address = RequestMock.absolute_uri
 
 
-@override_settings(MISAGO_ADDRESS=None)
-def test_misago_address_check_handles_setting_not_configured():
-    result = check_misago_address(request)
+@override_dynamic_settings(forum_address=None)
+def test_forum_address_check_handles_setting_not_configured(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": False,
         "set_address": None,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
-@override_settings(MISAGO_ADDRESS=incorrect_address)
-def test_misago_address_check_detects_invalid_address_configuration():
-    result = check_misago_address(request)
+@override_dynamic_settings(forum_address=incorrect_address)
+def test_forum_address_check_detects_invalid_address_configuration(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": False,
         "set_address": incorrect_address,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
-@override_settings(MISAGO_ADDRESS=correct_address)
-def test_misago_address_check_detects_valid_address_configuration():
-    result = check_misago_address(request)
+@override_dynamic_settings(forum_address=correct_address)
+def test_forum_address_check_detects_valid_address_configuration(request_mock):
+    result = check_forum_address(request_mock)
     assert result == {
         "is_ok": True,
         "set_address": correct_address,
-        "correct_address": request.absolute_uri,
+        "correct_address": request_mock.absolute_uri,
     }
 
 
-@override_settings(MISAGO_ADDRESS=None)
-def test_warning_about_unset_misago_address_is_displayed_on_checks_list(admin_client):
+@override_dynamic_settings(forum_address=None)
+def test_warning_about_unset_forum_address_is_displayed_on_checks_list(admin_client):
     response = admin_client.get(admin_link)
-    assert_contains(response, "MISAGO_ADDRESS")
+    assert_contains(response, "address")
 
 
-@override_settings(MISAGO_ADDRESS=incorrect_address)
-def test_warning_about_incorrect_misago_address_is_displayed_on_checks_list(
+@override_dynamic_settings(forum_address=incorrect_address)
+def test_warning_about_incorrect_forum_address_is_displayed_on_checks_list(
     admin_client
 ):
     response = admin_client.get(admin_link)
-    assert_contains(response, "MISAGO_ADDRESS")
+    assert_contains(response, "address")
 
 
 @override_settings(DEBUG=False)

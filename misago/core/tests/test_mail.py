@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from ...cache.versions import get_cache_versions
 from ...conf.dynamicsettings import DynamicSettings
+from ...conf.test import override_dynamic_settings
 from ...users.test import create_test_user
 from ..mail import build_mail, mail_user, mail_users
 
@@ -28,12 +29,13 @@ class MailTests(TestCase):
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
 
-        mail_user(
-            user,
-            "Misago Test Mail",
-            "misago/emails/base",
-            context={"settings": settings},
-        )
+        with override_dynamic_settings(forum_address="http://test.com"):
+            mail_user(
+                user,
+                "Misago Test Mail",
+                "misago/emails/base",
+                context={"settings": settings},
+            )
 
         self.assertEqual(mail.outbox[0].subject, "Misago Test Mail")
 

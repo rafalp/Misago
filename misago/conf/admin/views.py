@@ -28,9 +28,11 @@ class ChangeSettingsView(AdminView):
     def dispatch(self, request, *args, **kwargs):
         settings = self.get_settings(self.form_class.settings)
         initial = self.get_initial_form_data(settings)
-        form = self.form_class(initial=initial)
+        form = self.form_class(request=request, initial=initial)
         if request.method == "POST":
-            form = self.form_class(request.POST, request.FILES, initial=initial)
+            form = self.form_class(
+                request.POST, request.FILES, request=request, initial=initial
+            )
             if form.is_valid():
                 form.save(settings)
                 messages.success(request, _("Settings have been saved."))

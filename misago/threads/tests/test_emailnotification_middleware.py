@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.encoding import smart_str
 
+from ...conf.test import override_dynamic_settings
 from .. import test
 from ...categories.models import Category
 from ...users.test import AuthenticatedUserTestCase, create_test_user
@@ -137,10 +138,11 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True,
         )
 
-        response = self.client.post(
-            self.api_link, data={"post": "This is test response!"}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                self.api_link, data={"post": "This is test response!"}
+            )
+            self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
         last_email = mail.outbox[-1]
@@ -167,10 +169,11 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True,
         )
 
-        response = self.client.post(
-            self.api_link, data={"post": "This is test response!"}
-        )
-        self.assertEqual(response.status_code, 200)
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            response = self.client.post(
+                self.api_link, data={"post": "This is test response!"}
+            )
+            self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
         last_email = mail.outbox[-1]

@@ -25,7 +25,7 @@ def test_image_setting_can_be_set(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": image},
+            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
         )
 
     setting.refresh_from_db()
@@ -36,7 +36,7 @@ def test_setting_image_also_sets_its_dimensions(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": image},
+            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
         )
 
     setting.refresh_from_db()
@@ -48,7 +48,7 @@ def test_setting_image_filename_is_prefixed_with_setting_name(admin_client, sett
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": image},
+            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
         )
 
     setting.refresh_from_db()
@@ -59,7 +59,7 @@ def test_setting_image_filename_is_hashed(admin_client, setting):
     with open(IMAGE, "rb") as image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": image},
+            {"forum_name": "Misago", "forum_address": "http://test.com", "logo": image},
         )
 
     setting.refresh_from_db()
@@ -70,7 +70,11 @@ def test_image_setting_rejects_non_image_file(admin_client, setting):
     with open(OTHER_FILE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     setting.refresh_from_db()
@@ -82,7 +86,11 @@ def setting_with_value(admin_client, setting):
     with open(IMAGE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     setting.refresh_from_db()
@@ -98,7 +106,11 @@ def test_invalid_file_is_not_set_as_value(admin_client, setting):
     with open(OTHER_FILE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     setting.refresh_from_db()
@@ -111,7 +123,11 @@ def test_uploading_invalid_file_doesnt_remove_already_set_image(
     with open(OTHER_FILE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     setting_with_value.refresh_from_db()
@@ -124,7 +140,11 @@ def test_set_image_is_still_rendered_when_invalid_file_was_uploaded(
     with open(OTHER_FILE, "rb") as not_image:
         response = admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     assert_contains(response, setting_with_value.image.url)
@@ -136,7 +156,11 @@ def test_uploading_new_image_replaces_already_set_image(
     with open(OTHER_IMAGE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     setting_with_value.refresh_from_db()
@@ -147,7 +171,11 @@ def test_uploading_new_image_deletes_image_file(admin_client, setting_with_value
     with open(OTHER_IMAGE, "rb") as not_image:
         admin_client.post(
             reverse("misago:admin:settings:general:index"),
-            {"forum_name": "Misago", "logo": not_image},
+            {
+                "forum_name": "Misago",
+                "forum_address": "http://test.com",
+                "logo": not_image,
+            },
         )
 
     assert not os.path.exists(setting_with_value.image.path)
@@ -157,7 +185,8 @@ def test_omitting_setting_value_doesnt_remove_already_set_image(
     admin_client, setting_with_value
 ):
     admin_client.post(
-        reverse("misago:admin:settings:general:index"), {"forum_name": "Misago"}
+        reverse("misago:admin:settings:general:index"),
+        {"forum_name": "Misago", "forum_address": "http://test.com"},
     )
 
     setting_with_value.refresh_from_db()
@@ -167,7 +196,7 @@ def test_omitting_setting_value_doesnt_remove_already_set_image(
 def test_set_image_can_be_deleted_by_extra_option(admin_client, setting_with_value):
     admin_client.post(
         reverse("misago:admin:settings:general:index"),
-        {"forum_name": "Misago", "logo_delete": 1},
+        {"forum_name": "Misago", "forum_address": "http://test.com", "logo_delete": 1},
     )
 
     setting_with_value.refresh_from_db()
@@ -179,7 +208,7 @@ def test_using_image_deletion_option_deletes_image_file(
 ):
     admin_client.post(
         reverse("misago:admin:settings:general:index"),
-        {"forum_name": "Misago", "logo_delete": 1},
+        {"forum_name": "Misago", "forum_address": "http://test.com", "logo_delete": 1},
     )
 
     assert not os.path.exists(setting_with_value.image.path)

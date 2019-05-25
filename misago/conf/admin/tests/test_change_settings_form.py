@@ -12,7 +12,7 @@ class Form(ChangeSettingsForm):
 
 
 def test_form_updates_setting_on_save(setting):
-    form = Form({"forum_name": "New Value"})
+    form = Form({"forum_name": "New Value"}, request=None)
     assert form.is_valid()
     form.save({"forum_name": setting})
 
@@ -22,6 +22,6 @@ def test_form_updates_setting_on_save(setting):
 
 def test_form_invalidates_settings_cache_on_save(setting):
     with assert_invalidates_cache(SETTINGS_CACHE):
-        form = Form({"forum_name": "New Value"})
+        form = Form({"forum_name": "New Value"}, request=None)
         assert form.is_valid()
         form.save({"forum_name": setting})
