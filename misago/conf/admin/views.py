@@ -6,6 +6,7 @@ from ...admin.views import render
 from ...admin.views.generic import AdminView
 from ..models import Setting
 from .forms import (
+    ChangeAnalyticsSettingsForm,
     ChangeCaptchaSettingsForm,
     ChangeGeneralSettingsForm,
     ChangeThreadsSettingsForm,
@@ -57,6 +58,11 @@ class ChangeSettingsView(AdminView):
 
     def get_initial_form_data(self, settings):
         return {key: setting.value for key, setting in settings.items()}
+
+
+class ChangeAnalyticsSettingsView(ChangeSettingsView):
+    form_class = ChangeAnalyticsSettingsForm
+    template_name = "misago/admin/conf/analytics_settings.html"
 
 
 class ChangeCaptchaSettingsView(ChangeSettingsView):
