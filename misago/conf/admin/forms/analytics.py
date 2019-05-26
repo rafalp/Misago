@@ -45,13 +45,13 @@ class ChangeAnalyticsSettingsForm(ChangeSettingsForm):
             return None
 
         if upload.content_type != "text/html":
-            raise forms.ValidationError(_("Uploaded file type is not HTML."))
+            raise forms.ValidationError(_("Submitted file type is not HTML."))
 
         file_content = upload.read().decode("utf-8")
         content_match = GOOGLE_SITE_VERIFICATION.match(file_content)
         if not content_match:
             raise forms.ValidationError(
-                _("Uploaded file did not contain a verification code.")
+                _("Submitted file doesn't contain a verification code.")
             )
 
         return content_match.group(1)

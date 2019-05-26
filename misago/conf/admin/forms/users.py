@@ -119,12 +119,12 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             return None
 
         if upload.image.width != upload.image.height:
-            raise forms.ValidationError(_("Uploaded image was not a square."))
+            raise forms.ValidationError(_("Submitted image is not a square."))
 
         min_size = max(settings.MISAGO_AVATARS_SIZES)
         if upload.image.width < min_size:
             raise forms.ValidationError(
-                _("Uploaded image's edge should be at least %(size)s pixels long.")
+                _("Submitted image's edge should be at least %(size)s pixels long.")
                 % {"size": min_size}
             )
 
