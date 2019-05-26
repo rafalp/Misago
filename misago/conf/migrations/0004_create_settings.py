@@ -45,6 +45,13 @@ default_settings = [
         "dry_value": 5,
         "is_public": True,
     },
+    {"setting": "og_image", "python_type": "image"},
+    {
+        "setting": "og_image_avatar_on_profile",
+        "python_type": "bool",
+        "dry_value": False,
+    },
+    {"setting": "og_image_avatar_on_thread", "python_type": "bool", "dry_value": False},
     {"setting": "qa_answers"},
     {"setting": "qa_help_text"},
     {"setting": "qa_question"},

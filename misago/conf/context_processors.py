@@ -21,6 +21,20 @@ def conf(request):
     }
 
 
+def og_image(request):
+    og_image = request.settings.get("og_image")
+    if not og_image["value"]:
+        return {"og_image": None}
+
+    return {
+        "og_image": {
+            "url": og_image["value"],
+            "width": og_image["width"],
+            "height": og_image["height"],
+        }
+    }
+
+
 def preload_settings_json(request):
     preloaded_settings = request.settings.get_public_settings()
 
