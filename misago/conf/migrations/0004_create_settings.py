@@ -25,6 +25,8 @@ default_settings = [
     },
     {"setting": "forum_footnote", "is_public": True},
     {"setting": "forum_name", "dry_value": "Misago", "is_public": True},
+    {"setting": "google_tracking_id"},
+    {"setting": "google_site_verification"},
     {"setting": "index_header", "is_public": True},
     {"setting": "index_meta_description", "is_public": True},
     {"setting": "index_title", "is_public": True},

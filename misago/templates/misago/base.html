@@ -22,6 +22,9 @@
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
   </head>
   <body {% if misago_agreement %}class="agreement-overlay-visible"{% endif %}>
+    {% if settings.google_tracking_id %}
+      {% include "misago/analytics.html" %}
+    {% endif %}
 
     <div id="auth-message-mount"></div>
     <div id="snackbar-mount"></div>

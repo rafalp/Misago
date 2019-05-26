@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .views import index
 from .views import (
+    ChangeAnalyticsSettingsView,
     ChangeCaptchaSettingsView,
     ChangeGeneralSettingsView,
     ChangeThreadsSettingsView,
@@ -16,6 +17,12 @@ class MisagoAdminExtension:
 
         urlpatterns.patterns("settings", url(r"^$", index, name="index"))
 
+        urlpatterns.single_pattern(
+            r"^analytics/",
+            "analytics",
+            "settings",
+            ChangeAnalyticsSettingsView.as_view(),
+        )
         urlpatterns.single_pattern(
             r"^captcha/", "captcha", "settings", ChangeCaptchaSettingsView.as_view()
         )
@@ -62,9 +69,16 @@ class MisagoAdminExtension:
             after="users:index",
         )
         site.add_node(
+            name=_("Analytics"),
+            description=_("Enable Google Analytics or setup Google Site Verification."),
+            parent="settings",
+            namespace="analytics",
+            after="captcha:index",
+        )
+        site.add_node(
             name=_("Threads"),
             description=_("Those settings control threads and posts."),
             parent="settings",
             namespace="threads",
-            after="captcha:index",
+            after="analytics:index",
         )

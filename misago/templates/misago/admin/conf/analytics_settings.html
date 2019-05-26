@@ -1,0 +1,18 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Google Analytics and Search Console" %}</legend>
+
+    {% form_row form.google_tracking_id %}
+    {% if form.google_site_verification.value %}
+      {% form_row form.google_site_verification %}
+    {% endif %}
+    {% form_row form.google_site_verification_file %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
