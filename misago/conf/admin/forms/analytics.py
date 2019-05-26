@@ -22,9 +22,9 @@ class ChangeAnalyticsSettingsForm(ChangeSettingsForm):
         required=False,
     )
     google_site_verification = forms.CharField(
-        label=_("Site verification code"),
+        label=_("Site verification token"),
         help_text=_(
-            "This code is extracted from uploaded site verification file. "
+            "This token was extracted from uploaded site verification file. "
             "To change it, upload new verification file."
         ),
         required=False,

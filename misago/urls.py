@@ -8,6 +8,7 @@ app_name = "misago"
 
 # Register Misago Apps
 urlpatterns = [
+    url(r"^", include("misago.analytics.urls")),
     url(r"^", include("misago.legal.urls")),
     url(r"^", include("misago.users.urls")),
     url(r"^", include("misago.categories.urls")),
