@@ -14,6 +14,7 @@ default_settings = [
         "dry_value": 1536,
         "is_public": True,
     },
+    {"setting": "blank_avatar", "python_type": "image"},
     {"setting": "captcha_type", "dry_value": "no", "is_public": True},
     {"setting": "default_avatar", "dry_value": "gravatar"},
     {"setting": "default_gravatar_fallback", "dry_value": "dynamic"},

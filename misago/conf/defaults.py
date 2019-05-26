@@ -219,7 +219,7 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 
 # Path to blank avatar image used for guests and removed users.
 
-MISAGO_BLANK_AVATAR = "blank-avatar.png"
+MISAGO_BLANK_AVATAR = "misago/img/blank-avatar.png"
 
 
 # Threads lists pagination settings

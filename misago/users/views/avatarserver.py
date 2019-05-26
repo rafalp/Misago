@@ -4,6 +4,8 @@ from django.templatetags.static import static
 
 from ...conf import settings
 
+BLANK_AVATAR_URL = static(settings.MISAGO_BLANK_AVATAR)
+
 User = get_user_model()
 
 
@@ -23,4 +25,4 @@ def user_avatar(request, pk, size):
 
 
 def blank_avatar(request):
-    return redirect(static(settings.MISAGO_BLANK_AVATAR))
+    return redirect(request.settings.blank_avatar or BLANK_AVATAR_URL)

@@ -47,7 +47,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         help_text=_("Image that will displayed in forum navbar."),
         required=False,
     )
-    logo_delete = forms.BooleanField(label=_("Delete current logo"), required=False)
+    logo_delete = forms.BooleanField(label=_("Delete logo image"), required=False)
     logo_small = forms.ImageField(
         label=_("Small logo"),
         help_text=_(
@@ -57,7 +57,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         required=False,
     )
     logo_small_delete = forms.BooleanField(
-        label=_("Delete current small logo"), required=False
+        label=_("Delete small logo image"), required=False
     )
     logo_text = forms.CharField(
         label=_("Text"),
@@ -78,9 +78,7 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         ),
         required=False,
     )
-    og_image_delete = forms.BooleanField(
-        label=_("Delete current image"), required=False
-    )
+    og_image_delete = forms.BooleanField(label=_("Delete image"), required=False)
     og_image_avatar_on_profile = YesNoSwitch(
         label=_("Replace image with avatar on user profiles")
     )
