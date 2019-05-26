@@ -15,6 +15,9 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         "logo",
         "logo_small",
         "logo_text",
+        "og_image",
+        "og_image_avatar_on_profile",
+        "og_image_avatar_on_thread",
         "forum_footnote",
         "email_footer",
     ]
@@ -64,6 +67,25 @@ class ChangeGeneralSettingsForm(ChangeSettingsForm):
         ),
         max_length=255,
         required=False,
+    )
+
+    og_image = forms.ImageField(
+        label=_("Image"),
+        help_text=_(
+            "Custom image that will appear next to links to your forum posted on "
+            "social sites. Facebook recommends that this image should be "
+            "1200 pixels wide and 630 pixels tall."
+        ),
+        required=False,
+    )
+    og_image_delete = forms.BooleanField(
+        label=_("Delete current image"), required=False
+    )
+    og_image_avatar_on_profile = YesNoSwitch(
+        label=_("Replace image with avatar on user profiles")
+    )
+    og_image_avatar_on_thread = YesNoSwitch(
+        label=_("Replace image with avatar on threads")
     )
 
     forum_footnote = forms.CharField(
