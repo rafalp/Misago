@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
+from ... import settings
 from .base import ChangeSettingsForm
 
 
@@ -12,6 +13,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "avatar_upload_limit",
         "default_avatar",
         "default_gravatar_fallback",
+        "blank_avatar",
         "signature_length_max",
         "subscribe_reply",
         "subscribe_start",
@@ -35,6 +37,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
     username_length_max = forms.IntegerField(
         label=_("Maximum allowed username length"), min_value=2, max_value=20
     )
+
     allow_custom_avatars = YesNoSwitch(
         label=_("Allow custom avatar uploads"),
         help_text=_(
@@ -68,9 +71,23 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+    blank_avatar = forms.ImageField(
+        label=_("Blank avatar"),
+        help_text=_(
+            "Blank avatar is displayed in the interface when user's avatar is not "
+            "available: when user was deleted or is guest. Uploaded image should be "
+            "a square"
+        ),
+        required=False,
+    )
+    blank_avatar_delete = forms.BooleanField(
+        label=_("Delete custom blank avatar"), required=False
+    )
+
     signature_length_max = forms.IntegerField(
         label=_("Maximum allowed signature length"), min_value=10, max_value=5000
     )
+
     subscribe_start = forms.ChoiceField(
         label=_("Started threads"),
         choices=[
@@ -95,3 +112,20 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+
+    def clean_blank_avatar(self):
+        upload = self.cleaned_data.get("blank_avatar")
+        if not upload or upload == self.initial.get("blank_avatar"):
+            return None
+
+        if upload.image.width != upload.image.height:
+            raise forms.ValidationError(_("Uploaded image was not a square."))
+
+        min_size = max(settings.MISAGO_AVATARS_SIZES)
+        if upload.image.width < min_size:
+            raise forms.ValidationError(
+                _("Uploaded image's edge should be at least %(size)s pixels long.")
+                % {"size": min_size}
+            )
+
+        return upload
