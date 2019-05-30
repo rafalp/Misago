@@ -6,12 +6,16 @@ from .base import ChangeSettingsForm
 
 class ChangeThreadsSettingsForm(ChangeSettingsForm):
     settings = [
+        "post_attachments_limit",
         "post_length_max",
         "post_length_min",
         "thread_title_length_max",
         "thread_title_length_min",
     ]
 
+    post_attachments_limit = forms.IntegerField(
+        label=_("Maximum number of attachments per post"), min_value=1, max_value=2500
+    )
     post_length_max = forms.IntegerField(
         label=_("Maximum allowed post length"), min_value=0
     )

@@ -127,12 +127,6 @@ MISAGO_SEARCH_EXTENSIONS = [
 ]
 
 
-# Misago-admin specific date formats
-
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH = "j M"
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = "M 'y"
-
-
 # Additional registration validators
 # https://misago.readthedocs.io/en/latest/developers/validating_registrations.html
 

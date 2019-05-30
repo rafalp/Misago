@@ -34,6 +34,7 @@ default_settings = [
     {"setting": "logo", "python_type": "image", "is_public": True},
     {"setting": "logo_small", "python_type": "image", "is_public": True},
     {"setting": "logo_text", "dry_value": "Misago", "is_public": True},
+    {"setting": "post_attachments_limit", "python_type": "int", "dry_value": 16},
     {
         "setting": "post_length_max",
         "python_type": "int",

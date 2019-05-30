@@ -5,19 +5,15 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Threads" %}</legend>
+    <legend>{% trans "Posting" %}</legend>
 
     {% form_row form.thread_title_length_min %}
     {% form_row form.thread_title_length_max %}
     
-  </fieldset>
-</div>
-<div class="form-fieldset">
-  <fieldset>
-    <legend>{% trans "Posts" %}</legend>
-
     {% form_row form.post_length_min %}
     {% form_row form.post_length_max %}
+
+    {% form_row form.post_attachments_limit %}
 
   </fieldset>
 </div>
