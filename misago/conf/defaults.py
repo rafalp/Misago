@@ -241,10 +241,9 @@ MISAGO_ATTACHMENT_ORPHANED_EXPIRE = 24 * 60
 
 
 # Names of files served when user requests file that doesn't exist or is unavailable
-# Those files will be sought within STATIC_ROOT directory
 
-MISAGO_404_IMAGE = "misago/img/error-404.png"
-MISAGO_403_IMAGE = "misago/img/error-403.png"
+MISAGO_ATTACHMENT_403_IMAGE = "misago/img/attachment-403.png"
+MISAGO_ATTACHMENT_404_IMAGE = "misago/img/attachment-404.png"
 
 
 # Controls max age in days of items that Misago has to process to make rankings

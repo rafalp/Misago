@@ -1,3 +1,4 @@
+from django.templatetags.static import static
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
@@ -5,18 +6,18 @@ from django.shortcuts import get_object_or_404, redirect
 from ...conf import settings
 from ..models import Attachment, AttachmentType
 
-ATTACHMENT_404_URL = "".join((settings.STATIC_URL, settings.MISAGO_404_IMAGE))
-ATTACHMENT_403_URL = "".join((settings.STATIC_URL, settings.MISAGO_403_IMAGE))
+DEFAULT_403_URL = static(settings.MISAGO_ATTACHMENT_403_IMAGE)
+DEFAULT_404_URL = static(settings.MISAGO_ATTACHMENT_404_IMAGE)
 
 
 def attachment_server(request, pk, secret, thumbnail=False):
     try:
         url = serve_file(request, pk, secret, thumbnail)
         return redirect(url)
-    except Http404:
-        return redirect(ATTACHMENT_404_URL)
     except PermissionDenied:
-        return redirect(ATTACHMENT_403_URL)
+        return redirect(request.settings.attachment_403_image or DEFAULT_403_URL)
+    except Http404:
+        return redirect(request.settings.attachment_404_image or DEFAULT_404_URL)
 
 
 def serve_file(request, pk, secret, thumbnail):
@@ -24,7 +25,7 @@ def serve_file(request, pk, secret, thumbnail):
     attachment = get_object_or_404(queryset, pk=pk, secret=secret)
 
     if not attachment.post_id and request.GET.get("shva") != "1":
-        # if attachment is orphaned, don't run acl test unless explictly told so
+        # if attachment is orphaned, don't run acl test unless explicitly told so
         # this saves user suprise of deleted attachment still showing in posts/quotes
         raise Http404()
 
@@ -32,7 +33,7 @@ def serve_file(request, pk, secret, thumbnail):
         allow_file_download(request, attachment)
 
     if attachment.is_image:
-        if thumbnail:
+        if thumbnail and attachment.thumbnail:
             return attachment.thumbnail.url
         return attachment.image.url
 

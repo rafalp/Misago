@@ -108,6 +108,14 @@ def other_superuser(db, user_password):
 
 
 @pytest.fixture
+def user_client(mocker, client, user):
+    client.force_login(user)
+    session = client.session
+    session.save()
+    return client
+
+
+@pytest.fixture
 def admin_client(mocker, client, superuser):
     client.force_login(superuser)
     session = client.session

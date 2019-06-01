@@ -6,6 +6,8 @@ from .base import ChangeSettingsForm
 
 class ChangeThreadsSettingsForm(ChangeSettingsForm):
     settings = [
+        "attachment_403_image",
+        "attachment_404_image",
         "daily_post_limit",
         "hourly_post_limit",
         "post_attachments_limit",
@@ -47,4 +49,27 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
     )
     thread_title_length_min = forms.IntegerField(
         label=_("Minimum required thread title length"), min_value=2, max_value=255
+    )
+
+    attachment_403_image = forms.ImageField(
+        label=_("Permission denied"),
+        help_text=_(
+            "Attachments proxy will display this image in place of default one "
+            "when user tries to access attachment they have no permission to see."
+        ),
+        required=False,
+    )
+    attachment_403_image_delete = forms.BooleanField(
+        label=_("Delete custom permission denied image"), required=False
+    )
+    attachment_404_image = forms.ImageField(
+        label=_("Not found"),
+        help_text=_(
+            "Attachments proxy will display this image in place of default one "
+            "when user tries to access attachment that doesn't exist."
+        ),
+        required=False,
+    )
+    attachment_404_image_delete = forms.BooleanField(
+        label=_("Delete custom not found image"), required=False
     )

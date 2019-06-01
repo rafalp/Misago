@@ -14,6 +14,8 @@ default_settings = [
         "dry_value": 1536,
         "is_public": True,
     },
+    {"setting": "attachment_403_image", "python_type": "image"},
+    {"setting": "attachment_404_image", "python_type": "image"},
     {"setting": "blank_avatar", "python_type": "image"},
     {"setting": "captcha_type", "dry_value": "no", "is_public": True},
     {"setting": "default_avatar", "dry_value": "gravatar"},

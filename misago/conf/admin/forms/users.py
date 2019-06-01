@@ -76,7 +76,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         help_text=_(
             "Blank avatar is displayed in the interface when user's avatar is not "
             "available: when user was deleted or is guest. Uploaded image should be "
-            "a square"
+            "a square."
         ),
         required=False,
     )
