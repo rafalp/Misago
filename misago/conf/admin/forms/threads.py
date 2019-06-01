@@ -6,6 +6,8 @@ from .base import ChangeSettingsForm
 
 class ChangeThreadsSettingsForm(ChangeSettingsForm):
     settings = [
+        "daily_post_limit",
+        "hourly_post_limit",
         "post_attachments_limit",
         "post_length_max",
         "post_length_min",
@@ -13,8 +15,26 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         "thread_title_length_min",
     ]
 
+    daily_post_limit = forms.IntegerField(
+        label=_("Daily post limit per user"),
+        help_text=_(
+            "Daily limit of posts that may be posted by single user. "
+            "Fail-safe for situations when forum is flooded by spam bots. "
+            "Change to 0 to remove the limit."
+        ),
+        min_value=0,
+    )
+    hourly_post_limit = forms.IntegerField(
+        label=_("Hourly post limit per user"),
+        help_text=_(
+            "Hourly limit of posts that may be posted by single user. "
+            "Fail-safe for situations when forum is flooded by spam bots. "
+            "Change to 0 to remove the limit."
+        ),
+        min_value=0,
+    )
     post_attachments_limit = forms.IntegerField(
-        label=_("Maximum number of attachments per post"), min_value=1, max_value=2500
+        label=_("Maximum number of attachments per post"), min_value=1
     )
     post_length_max = forms.IntegerField(
         label=_("Maximum allowed post length"), min_value=0

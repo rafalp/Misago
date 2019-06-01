@@ -16,6 +16,8 @@
   @extend .p-2;
   @extend .rounded;
 
+  line-height: $line-height-sm;
+
   color: $body-color;
 
   &:hover,
@@ -28,7 +30,8 @@
 
 // Reset settings group name size
 .card-admin-settings-card h5 {
-  @extend .m-0;
+  @extend .mb-1;
 
   font-size: $font-size-base;
+  line-height: $line-height-sm;
 }
