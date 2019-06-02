@@ -234,11 +234,6 @@ MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT = (500, 500)
 
 MISAGO_ATTACHMENT_SECRET_LENGTH = 64
 
-# How old (in minutes) should attachments unassociated with any be before they'll
-# automatically deleted by "clearattachments" task
-
-MISAGO_ATTACHMENT_ORPHANED_EXPIRE = 24 * 60
-
 
 # Names of files served when user requests file that doesn't exist or is unavailable
 

@@ -20,6 +20,7 @@ default_settings = [
     {"setting": "captcha_type", "dry_value": "no", "is_public": True},
     {"setting": "default_avatar", "dry_value": "gravatar"},
     {"setting": "default_gravatar_fallback", "dry_value": "dynamic"},
+    {"setting": "unused_attachments_lifetime", "python_type": "int", "dry_value": 24},
     {"setting": "email_footer"},
     {
         "setting": "forum_address",

@@ -15,6 +15,7 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         "post_length_min",
         "thread_title_length_max",
         "thread_title_length_min",
+        "unused_attachments_lifetime",
     ]
 
     daily_post_limit = forms.IntegerField(
@@ -49,6 +50,14 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
     )
     thread_title_length_min = forms.IntegerField(
         label=_("Minimum required thread title length"), min_value=2, max_value=255
+    )
+    unused_attachments_lifetime = forms.IntegerField(
+        label=_("Unused attachments lifetime"),
+        help_text=_(
+            "Period of time (in hours) after which user-uploaded files that weren't "
+            "attached to any post are deleted from disk."
+        ),
+        min_value=1,
     )
 
     attachment_403_image = forms.ImageField(

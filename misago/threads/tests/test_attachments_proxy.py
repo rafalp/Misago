@@ -10,11 +10,6 @@ from ..test import post_thread
 
 
 @pytest.fixture
-def post(default_category):
-    return post_thread(category=default_category).first_post
-
-
-@pytest.fixture
 def attachment_type(db):
     return AttachmentType.objects.order_by("id").first()
 
