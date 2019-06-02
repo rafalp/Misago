@@ -48,6 +48,11 @@ def anonymous_user():
 
 
 @pytest.fixture
+def anonymous_user_acl(anonymous_user, cache_versions):
+    return useracl.get_user_acl(anonymous_user, cache_versions)
+
+
+@pytest.fixture
 def user(db, user_password):
     return create_test_user("User", "user@example.com", user_password)
 
@@ -150,5 +155,45 @@ def thread(default_category):
 
 
 @pytest.fixture
+def hidden_thread(default_category):
+    return post_thread(default_category, is_hidden=True)
+
+
+@pytest.fixture
+def unapproved_thread(default_category):
+    return post_thread(default_category, is_unapproved=True)
+
+
+@pytest.fixture
 def post(thread):
     return thread.first_post
+
+
+@pytest.fixture
+def user_thread(default_category, user):
+    return post_thread(default_category, poster=user)
+
+
+@pytest.fixture
+def user_hidden_thread(default_category, user):
+    return post_thread(default_category, poster=user, is_hidden=True)
+
+
+@pytest.fixture
+def user_unapproved_thread(default_category, user):
+    return post_thread(default_category, poster=user, is_unapproved=True)
+
+
+@pytest.fixture
+def other_user_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user)
+
+
+@pytest.fixture
+def other_user_hidden_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user, is_hidden=True)
+
+
+@pytest.fixture
+def other_user_unapproved_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user, is_unapproved=True)

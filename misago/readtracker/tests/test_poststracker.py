@@ -88,6 +88,7 @@ def test_tracked_post_is_marked_as_read_and_not_new_for_anonymous_user(
     assert not post.is_new
 
 
+@override_dynamic_settings(readtracker_cutoff=3)
 def test_not_tracked_post_is_marked_as_read_and_not_new_for_anonymous_user(
     anonymous_request_mock, post
 ):
