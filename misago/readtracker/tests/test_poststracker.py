@@ -1,81 +1,99 @@
 from datetime import timedelta
+from unittest.mock import Mock
 
-from django.test import TestCase
+import pytest
 from django.utils import timezone
 
-from ...categories.models import Category
-from ...conf import settings
-from ...threads import test
-from ...users.test import create_test_user
+from ...conf.test import override_dynamic_settings
 from ..poststracker import make_read_aware, save_read
 
 
-class AnonymousUser:
-    is_authenticated = False
-    is_anonymous = True
+@pytest.fixture
+def request_mock(dynamic_settings, user):
+    return Mock(settings=dynamic_settings, user=user)
 
 
-class PostsTrackerTests(TestCase):
-    def setUp(self):
-        self.user = create_test_user("User", "user@example.com")
-        self.category = Category.objects.get(slug="first-category")
-        self.thread = test.post_thread(self.category)
+def test_falsy_value_can_be_made_read_aware(request_mock):
+    make_read_aware(request_mock, None)
+    make_read_aware(request_mock, False)
 
-    def test_falsy_value(self):
-        """passing falsy value to readtracker causes no errors"""
-        make_read_aware(self.user, None)
-        make_read_aware(self.user, False)
-        make_read_aware(self.user, [])
 
-    def test_anon_post_before_cutoff(self):
-        """non-tracked post is marked as read for anonymous users"""
-        posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
-        post = test.reply_thread(self.thread, posted_on=posted_on)
+def test_empty_list_can_be_made_read_aware(request_mock):
+    make_read_aware(request_mock, [])
 
-        make_read_aware(AnonymousUser(), post)
-        self.assertTrue(post.is_read)
-        self.assertFalse(post.is_new)
 
-    def test_anon_post_after_cutoff(self):
-        """tracked post is marked as read for anonymous users"""
-        post = test.reply_thread(self.thread, posted_on=timezone.now())
+@pytest.fixture
+def read_post(user, post):
+    save_read(user, post)
+    return post
 
-        make_read_aware(AnonymousUser(), post)
-        self.assertTrue(post.is_read)
-        self.assertFalse(post.is_new)
 
-    def test_user_post_before_cutoff(self):
-        """untracked post is marked as read for authenticated users"""
-        posted_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
-        post = test.reply_thread(self.thread, posted_on=posted_on)
+def test_tracked_post_is_marked_as_not_read_and_new(request_mock, post):
+    make_read_aware(request_mock, post)
+    assert not post.is_read
+    assert post.is_new
 
-        make_read_aware(self.user, post)
-        self.assertTrue(post.is_read)
-        self.assertFalse(post.is_new)
 
-    def test_user_unread_post(self):
-        """tracked post is marked as unread for authenticated users"""
-        post = test.reply_thread(self.thread, posted_on=timezone.now())
+@override_dynamic_settings(readtracker_cutoff=3)
+def test_not_tracked_post_is_marked_as_read_and_not_new(request_mock, post):
+    post.posted_on = timezone.now() - timedelta(days=4)
+    post.save()
 
-        make_read_aware(self.user, post)
-        self.assertFalse(post.is_read)
-        self.assertTrue(post.is_new)
+    make_read_aware(request_mock, post)
+    assert post.is_read
+    assert not post.is_new
 
-    def test_user_created_after_post(self):
-        """tracked post older than user is marked as read"""
-        posted_on = timezone.now() - timedelta(days=1)
-        post = test.reply_thread(self.thread, posted_on=posted_on)
 
-        make_read_aware(self.user, post)
-        self.assertTrue(post.is_read)
-        self.assertFalse(post.is_new)
+def test_tracked_read_post_is_marked_as_read_and_not_new(request_mock, read_post):
+    make_read_aware(request_mock, read_post)
+    assert read_post.is_read
+    assert not read_post.is_new
 
-    def test_user_read_post(self):
-        """tracked post is marked as read for authenticated users with read entry"""
-        post = test.reply_thread(self.thread, posted_on=timezone.now())
 
-        save_read(self.user, post)
-        make_read_aware(self.user, post)
+@override_dynamic_settings(readtracker_cutoff=3)
+def test_not_tracked_read_post_is_marked_as_read_and_not_new(request_mock, read_post):
+    read_post.posted_on = timezone.now() - timedelta(days=4)
+    read_post.save()
 
-        self.assertTrue(post.is_read)
-        self.assertFalse(post.is_new)
+    make_read_aware(request_mock, read_post)
+    assert read_post.is_read
+    assert not read_post.is_new
+
+
+def test_iterable_of_posts_can_be_made_read_aware(request_mock, post):
+    make_read_aware(request_mock, [post])
+    assert not post.is_read
+    assert post.is_new
+
+
+def test_tracked_post_read_by_other_user_is_marked_as_not_read_and_new(
+    request_mock, other_user, post
+):
+    save_read(other_user, post)
+    make_read_aware(request_mock, post)
+    assert not post.is_read
+    assert post.is_new
+
+
+@pytest.fixture
+def anonymous_request_mock(dynamic_settings, anonymous_user):
+    return Mock(settings=dynamic_settings, user=anonymous_user)
+
+
+def test_tracked_post_is_marked_as_read_and_not_new_for_anonymous_user(
+    anonymous_request_mock, post
+):
+    make_read_aware(anonymous_request_mock, post)
+    assert post.is_read
+    assert not post.is_new
+
+
+def test_not_tracked_post_is_marked_as_read_and_not_new_for_anonymous_user(
+    anonymous_request_mock, post
+):
+    post.posted_on = timezone.now() - timedelta(days=4)
+    post.save()
+
+    make_read_aware(anonymous_request_mock, post)
+    assert post.is_read
+    assert not post.is_new

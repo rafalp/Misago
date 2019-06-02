@@ -1,7 +1,7 @@
-from .dates import get_cutoff_date
+from .cutoffdate import get_cutoff_date
 
 
-def make_read_aware(user, posts):
+def make_read_aware(request, posts):
     if not posts:
         return
 
@@ -10,10 +10,10 @@ def make_read_aware(user, posts):
 
     make_read(posts)
 
-    if user.is_anonymous:
+    if request.user.is_anonymous:
         return
 
-    cutoff_date = get_cutoff_date(user)
+    cutoff_date = get_cutoff_date(request.settings, request.user)
     unresolved_posts = {}
 
     for post in posts:
@@ -23,7 +23,7 @@ def make_read_aware(user, posts):
             unresolved_posts[post.pk] = post
 
     if unresolved_posts:
-        queryset = user.postread_set.filter(post__in=unresolved_posts)
+        queryset = request.user.postread_set.filter(post__in=unresolved_posts)
         for post_id in queryset.values_list("post_id", flat=True):
             unresolved_posts[post_id].is_read = True
             unresolved_posts[post_id].is_new = False

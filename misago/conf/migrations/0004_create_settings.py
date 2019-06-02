@@ -52,6 +52,7 @@ default_settings = [
         "dry_value": 5,
         "is_public": True,
     },
+    {"setting": "readtracker_cutoff", "python_type": "int", "dry_value": 40},
     {"setting": "og_image", "python_type": "image"},
     {
         "setting": "og_image_avatar_on_profile",

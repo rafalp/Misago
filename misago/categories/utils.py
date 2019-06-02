@@ -4,9 +4,9 @@ from .models import Category
 
 
 def get_categories_tree(
-    user, user_acl, parent=None, join_posters=False
+    request, parent=None, join_posters=False
 ):  # pylint: disable=too-many-branches
-    if not user_acl["visible_categories"]:
+    if not request.user_acl["visible_categories"]:
         return []
 
     if parent:
@@ -14,7 +14,7 @@ def get_categories_tree(
     else:
         queryset = Category.objects.all_categories()
 
-    queryset_with_acl = queryset.filter(id__in=user_acl["visible_categories"])
+    queryset_with_acl = queryset.filter(id__in=request.user_acl["visible_categories"])
     if join_posters:
         queryset_with_acl = queryset_with_acl.select_related("last_poster")
 
@@ -33,8 +33,8 @@ def get_categories_tree(
         if category.parent_id and category.level > parent_level:
             categories_dict[category.parent_id].subcategories.append(category)
 
-    add_acl_to_obj(user_acl, categories_list)
-    categoriestracker.make_read_aware(user, user_acl, categories_list)
+    add_acl_to_obj(request.user_acl, categories_list)
+    categoriestracker.make_read_aware(request, categories_list)
 
     for category in reversed(visible_categories):
         if category.acl["can_browse"]:

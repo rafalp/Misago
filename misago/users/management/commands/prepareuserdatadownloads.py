@@ -3,9 +3,8 @@ import logging
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext
 
-from ....cache.versions import get_cache_versions
 from ....conf import settings
-from ....conf.dynamicsettings import DynamicSettings
+from ....conf.shortcuts import get_dynamic_settings
 from ....core.mail import mail_user
 from ....core.pgutils import chunk_queryset
 from ...datadownloads import prepare_user_data_download
@@ -27,8 +26,7 @@ class Command(BaseCommand):
             )
             return
 
-        cache_versions = get_cache_versions()
-        dynamic_settings = DynamicSettings(cache_versions)
+        dynamic_settings = get_dynamic_settings()
         expires_in = settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS
 
         downloads_prepared = 0

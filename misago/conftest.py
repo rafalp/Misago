@@ -7,6 +7,7 @@ from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .themes import THEME_CACHE
+from .threads.test import post_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
@@ -141,3 +142,13 @@ def root_category(db):
 @pytest.fixture
 def default_category(db):
     return Category.objects.get(slug="first-category")
+
+
+@pytest.fixture
+def thread(default_category):
+    return post_thread(default_category)
+
+
+@pytest.fixture
+def post(thread):
+    return thread.first_post

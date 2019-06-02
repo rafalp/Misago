@@ -4,8 +4,7 @@ from datetime import timedelta
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
-from ....cache.versions import get_cache_versions
-from ....conf.dynamicsettings import DynamicSettings
+from ....conf.shortcuts import get_dynamic_settings
 from ....core.management.progressbar import show_progress
 from ....core.pgutils import chunk_queryset
 from ...models import Attachment
@@ -15,8 +14,7 @@ class Command(BaseCommand):
     help = "Deletes attachments unassociated with any posts"
 
     def handle(self, *args, **options):
-        cache_versions = get_cache_versions()
-        settings = DynamicSettings(cache_versions)
+        settings = get_dynamic_settings()
 
         cutoff = timezone.now() - timedelta(hours=settings.unused_attachments_lifetime)
         queryset = Attachment.objects.filter(post__isnull=True, uploaded_on__lt=cutoff)

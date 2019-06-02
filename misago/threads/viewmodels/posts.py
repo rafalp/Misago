@@ -61,7 +61,7 @@ class ViewModel:
 
         # make posts and events ACL and reads aware
         add_acl_to_obj(request.user_acl, posts)
-        make_read_aware(request.user, posts)
+        make_read_aware(request, posts)
 
         self._user = request.user
 

@@ -13,6 +13,7 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         "post_attachments_limit",
         "post_length_max",
         "post_length_min",
+        "readtracker_cutoff",
         "thread_title_length_max",
         "thread_title_length_min",
         "unused_attachments_lifetime",
@@ -56,6 +57,17 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         help_text=_(
             "Period of time (in hours) after which user-uploaded files that weren't "
             "attached to any post are deleted from disk."
+        ),
+        min_value=1,
+    )
+
+    readtracker_cutoff = forms.IntegerField(
+        label=_("Read-tracker cutoff"),
+        help_text=_(
+            "Controls amount of data used by read-tracking system. All content older "
+            "than number of days specified in this setting is considered old and read, "
+            "even if the opposite is true for the user. Active forums can try lowering "
+            "this value while less active ones may wish to increase it instead. "
         ),
         min_value=1,
     )

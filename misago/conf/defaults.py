@@ -260,14 +260,6 @@ MISAGO_RANKING_SIZE = 50
 MISAGO_IP_STORE_TIME = None
 
 
-# Controls amount of data used by readtracking system
-# Items older than number of days specified below are considered read
-# Depending on amount of new content being posted on your forum you may want
-# To decrease or increase this number to fine-tune readtracker performance
-
-MISAGO_READTRACKER_CUTOFF = 40
-
-
 # Available Moment.js locales
 
 MISAGO_MOMENT_JS_LOCALES = [

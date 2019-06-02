@@ -12,8 +12,7 @@ from django.core.management.base import BaseCommand
 from django.db import DEFAULT_DB_ALIAS, IntegrityError
 from django.utils.encoding import force_str
 
-from ....cache.versions import get_cache_versions
-from ....conf.dynamicsettings import DynamicSettings
+from ....conf.shortcuts import get_dynamic_settings
 from ...setupnewuser import setup_new_user
 from ...validators import validate_email, validate_username
 
@@ -82,8 +81,7 @@ class Command(BaseCommand):
         interactive = options.get("interactive")
         verbosity = int(options.get("verbosity", 1))
 
-        cache_versions = get_cache_versions()
-        settings = DynamicSettings(cache_versions)
+        settings = get_dynamic_settings()
 
         # Validate initial inputs
         if username is not None:
