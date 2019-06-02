@@ -46,4 +46,13 @@
 
   </fieldset>
 </div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Users lists" %}</legend>
+
+    {% form_row form.users_per_page %}
+    {% form_row form.users_per_page_tail %}
+
+  </fieldset>
+</div>
 {% endblock form-body %}

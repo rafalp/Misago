@@ -85,6 +85,8 @@ default_settings = [
     },
     {"setting": "username_length_min", "python_type": "int", "dry_value": 3},
     {"setting": "username_length_max", "python_type": "int", "dry_value": 14},
+    {"setting": "users_per_page", "python_type": "int", "dry_value": 12},
+    {"setting": "users_per_page_tail", "python_type": "int", "dry_value": 4},
 ]
 
 removed_settings = ["forum_branding_display", "forum_branding_text"]

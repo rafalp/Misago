@@ -19,6 +19,8 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "subscribe_start",
         "username_length_max",
         "username_length_min",
+        "users_per_page",
+        "users_per_page_tail",
     ]
 
     account_activation = forms.ChoiceField(
@@ -113,6 +115,19 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         widget=forms.RadioSelect(),
     )
 
+    users_per_page = forms.IntegerField(
+        label=_("Number of users displayed on a single page"), min_value=4
+    )
+    users_per_page_tail = forms.IntegerField(
+        label=_("Maximum orphans"),
+        help_text=_(
+            "If number of users to be displayed on the last page is less or equal to "
+            "number specified in this setting, those users will instead be displayed "
+            "on previous page, reducing the total number of pages on the list."
+        ),
+        min_value=0,
+    )
+
     def clean_blank_avatar(self):
         upload = self.cleaned_data.get("blank_avatar")
         if not upload or upload == self.initial.get("blank_avatar"):
@@ -129,3 +144,12 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             )
 
         return upload
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get("users_per_page_tail") > cleaned_data.get("users_per_page"):
+            self.add_error(
+                "users_per_page_tail",
+                _("This value must be lower than number of users per page."),
+            )
+        return cleaned_data

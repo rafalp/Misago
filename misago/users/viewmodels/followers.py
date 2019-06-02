@@ -1,6 +1,5 @@
 from django.http import Http404
 
-from ...conf import settings
 from ...core.shortcuts import paginate, pagination_dict
 from ..online.utils import make_users_status_aware
 from ..serializers import UserCardSerializer
@@ -20,7 +19,12 @@ class Followers:
             else:
                 raise Http404()
 
-        list_page = paginate(queryset, page, settings.MISAGO_USERS_PER_PAGE, 4)
+        list_page = paginate(
+            queryset,
+            page,
+            request.settings.users_per_page,
+            request.settings.users_per_page_tail,
+        )
         make_users_status_aware(request, list_page.object_list)
 
         self.users = list_page.object_list

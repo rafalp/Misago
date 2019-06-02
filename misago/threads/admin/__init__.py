@@ -42,5 +42,8 @@ class MisagoAdminExtension:
         )
 
         site.add_node(
-            name=_("Attachment types"), parent="settings", namespace="attachment-types"
+            name=_("Attachment types"),
+            description=_("Specify what files may be uploaded on the forum."),
+            parent="settings",
+            namespace="attachment-types",
         )

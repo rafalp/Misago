@@ -265,11 +265,6 @@ MISAGO_RANKING_SIZE = 50
 MISAGO_IP_STORE_TIME = None
 
 
-# Controls number of users displayed on single page
-
-MISAGO_USERS_PER_PAGE = 12
-
-
 # Controls amount of data used by readtracking system
 # Items older than number of days specified below are considered read
 # Depending on amount of new content being posted on your forum you may want
