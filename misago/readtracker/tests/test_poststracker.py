@@ -1,16 +1,10 @@
 from datetime import timedelta
-from unittest.mock import Mock
 
 import pytest
 from django.utils import timezone
 
 from ...conf.test import override_dynamic_settings
 from ..poststracker import make_read_aware, save_read
-
-
-@pytest.fixture
-def request_mock(dynamic_settings, user):
-    return Mock(settings=dynamic_settings, user=user)
 
 
 def test_falsy_value_can_be_made_read_aware(request_mock):
@@ -73,11 +67,6 @@ def test_tracked_post_read_by_other_user_is_marked_as_not_read_and_new(
     make_read_aware(request_mock, post)
     assert not post.is_read
     assert post.is_new
-
-
-@pytest.fixture
-def anonymous_request_mock(dynamic_settings, anonymous_user):
-    return Mock(settings=dynamic_settings, user=anonymous_user)
 
 
 def test_tracked_post_is_marked_as_read_and_not_new_for_anonymous_user(

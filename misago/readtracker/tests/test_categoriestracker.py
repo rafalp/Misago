@@ -1,5 +1,4 @@
 from datetime import timedelta
-from unittest.mock import Mock
 
 import pytest
 from django.utils import timezone
@@ -21,11 +20,6 @@ def remove_tracking(thread):
 def read_thread(user, thread):
     save_read(user, thread.first_post)
     return thread
-
-
-@pytest.fixture
-def request_mock(dynamic_settings, user, user_acl):
-    return Mock(settings=dynamic_settings, user=user, user_acl=user_acl)
 
 
 def test_falsy_value_can_be_made_read_aware(request_mock):
@@ -133,13 +127,6 @@ def test_category_with_invisible_post_in_read_thread_is_marked_as_read(
     make_read_aware(request_mock, default_category)
     assert default_category.is_read
     assert not default_category.is_new
-
-
-@pytest.fixture
-def anonymous_request_mock(dynamic_settings, anonymous_user, anonymous_user_acl):
-    return Mock(
-        settings=dynamic_settings, user=anonymous_user, user_acl=anonymous_user_acl
-    )
 
 
 def test_empty_category_is_marked_as_read_for_anonymous_user(
