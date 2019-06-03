@@ -129,7 +129,7 @@ def test_category_with_invisible_post_in_read_thread_is_marked_as_read(
     assert not default_category.is_new
 
 
-def test_category_with_new_event_in_read_thread_marked_as_unread(
+def test_category_with_new_event_in_read_thread_is_marked_as_unread(
     request_mock, read_thread, default_category
 ):
     reply_thread(read_thread, is_event=True)
@@ -145,6 +145,16 @@ def test_category_with_hidden_event_in_read_thread_is_marked_as_read(
     make_read_aware(request_mock, default_category)
     assert default_category.is_read
     assert not default_category.is_new
+
+
+def test_category_with_hidden_event_visible_to_user_in_read_thread_is_marked_as_unread(
+    request_mock, read_thread, default_category
+):
+    request_mock.user_acl["categories"][default_category.id]["can_hide_events"] = 1
+    reply_thread(read_thread, is_hidden=True, is_event=True)
+    make_read_aware(request_mock, default_category)
+    assert not default_category.is_read
+    assert default_category.is_new
 
 
 def test_empty_category_is_marked_as_read_for_anonymous_user(

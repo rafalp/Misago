@@ -82,18 +82,28 @@ def test_non_tracked_thread_is_marked_as_read(request_mock, thread, user):
     assert not thread.is_new
 
 
-def test_read_thread_with_new_event_marked_as_unread(request_mock, read_thread):
+def test_read_thread_with_new_event_is_marked_as_unread(request_mock, read_thread):
     reply_thread(read_thread, is_event=True)
     make_read_aware(request_mock, read_thread)
     assert not read_thread.is_read
     assert read_thread.is_new
 
 
-def test_read_thread_with_hidden_event_marked_as_read(request_mock, read_thread):
+def test_read_thread_with_hidden_event_is_marked_as_read(request_mock, read_thread):
     reply_thread(read_thread, is_hidden=True, is_event=True)
     make_read_aware(request_mock, read_thread)
     assert read_thread.is_read
     assert not read_thread.is_new
+
+
+def test_read_thread_with_hidden_event_visible_to_user_is_marked_as_unread(
+    request_mock, read_thread, default_category
+):
+    request_mock.user_acl["categories"][default_category.id]["can_hide_events"] = 1
+    reply_thread(read_thread, is_hidden=True, is_event=True)
+    make_read_aware(request_mock, read_thread)
+    assert not read_thread.is_read
+    assert read_thread.is_new
 
 
 def test_tracked_thread_is_marked_as_read_for_anonymous_user(
