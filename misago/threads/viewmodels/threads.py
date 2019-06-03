@@ -9,7 +9,7 @@ from ...acl.objectacl import add_acl_to_obj
 from ...conf import settings
 from ...core.cursorpagination import get_page
 from ...readtracker import threadstracker
-from ...readtracker.dates import get_cutoff_date
+from ...readtracker.cutoffdate import get_cutoff_date
 from ..models import Post, Thread
 from ..participants import make_participants_aware
 from ..permissions import exclude_invisible_posts, exclude_invisible_threads

@@ -32,7 +32,10 @@ def submit_image(admin_client, image=""):
         "blank_avatar": image,
         "subscribe_start": "no",
         "subscribe_reply": "no",
+        "users_per_page": 12,
+        "users_per_page_tail": 4,
     }
+
     return admin_client.post(admin_link, data)
 
 

@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 
 from ...conf import settings
-from ...readtracker.dates import get_cutoff_date
+from ...readtracker.cutoffdate import get_cutoff_date
 from ..permissions import exclude_invisible_posts
 from ..viewmodels import ForumThread, PrivateThread
 
