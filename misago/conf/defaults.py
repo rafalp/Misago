@@ -203,11 +203,6 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 MISAGO_BLANK_AVATAR = "misago/img/blank-avatar.png"
 
 
-# Threads lists pagination settings
-
-MISAGO_THREADS_PER_PAGE = 25
-
-
 # Posts lists pagination settings
 
 MISAGO_POSTS_PER_PAGE = 18

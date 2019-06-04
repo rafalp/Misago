@@ -6,7 +6,6 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
-from ...conf import settings
 from ...core.cursorpagination import get_page
 from ...readtracker import threadstracker
 from ...readtracker.cutoffdate import get_cutoff_date
@@ -64,7 +63,7 @@ class ViewModel:
             list_page = get_page(
                 threads_queryset,
                 "-last_post_id",
-                settings.MISAGO_THREADS_PER_PAGE,
+                request.settings.threads_per_page,
                 start,
             )
         except (EmptyPage, InvalidPage):

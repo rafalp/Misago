@@ -6,11 +6,11 @@ from .. import test
 from ...acl import useracl
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...readtracker import poststracker
 from ..models import Poll, PollVote, Post, Thread
 from ..serializers import ThreadsListSerializer
-from ..serializers.moderation import THREADS_LIMIT
 from ..test import patch_category_acl, patch_other_category_acl
 from .test_threads_api import ThreadsApiTestCase
 
@@ -222,22 +222,20 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
     def test_merge_too_many_threads(self):
         """api rejects too many threads to merge"""
         threads = []
-        for _ in range(THREADS_LIMIT + 1):
+        for _ in range(5):
             threads.append(test.post_thread(category=self.category).pk)
 
-        response = self.client.post(
-            self.api_link,
-            json.dumps({"threads": threads}),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(),
-            {
-                "detail": "No more than %s threads can be merged at single time."
-                % THREADS_LIMIT
-            },
-        )
+        with override_dynamic_settings(threads_per_page=4):
+            response = self.client.post(
+                self.api_link,
+                json.dumps({"threads": threads}),
+                content_type="application/json",
+            )
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(
+                response.json(),
+                {"detail": "No more than %s threads can be merged at single time." % 4},
+            )
 
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_no_final_thread(self):

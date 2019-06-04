@@ -333,16 +333,17 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertTrue(positions["l"] > positions["g"])
         self.assertTrue(positions["l"] > positions["s"])
 
+    @override_dynamic_settings(threads_per_page=5)
     def test_noscript_pagination(self):
         """threads list is paginated for users with js disabled"""
-        threads_per_page = settings.MISAGO_THREADS_PER_PAGE
+        threads_per_page = 5
 
         # post and discard thread to move last_post_id count by one
         test.post_thread(category=self.first_category).delete()
 
         # create test threads
         threads = []
-        for _ in range(settings.MISAGO_THREADS_PER_PAGE * 2):
+        for _ in range(threads_per_page * 2):
             threads.append(test.post_thread(category=self.first_category))
 
         # threads starting with given one are on the list
@@ -356,11 +357,11 @@ class AllThreadsListTests(ThreadsListTestCase):
         self.assertContainsThread(response, threads[-2])
 
         # slice contains expected threads
-        for visible_thread in threads[settings.MISAGO_THREADS_PER_PAGE - 1 : -1]:
+        for visible_thread in threads[threads_per_page - 1 : -1]:
             self.assertContainsThread(response, visible_thread)
 
         # threads after slice are hidden
-        for invisible_thread in threads[: settings.MISAGO_THREADS_PER_PAGE - 1]:
+        for invisible_thread in threads[: threads_per_page - 1]:
             self.assertNotContainsThread(response, invisible_thread)
 
         # nonexisting start gives 404
@@ -826,6 +827,7 @@ class NewThreadsListTests(ThreadsListTestCase):
         self.assertEqual(len(response_json["results"]), 1)
         self.assertEqual(response_json["results"][0]["id"], test_thread.pk)
 
+    @override_dynamic_settings(readtracker_cutoff=3)
     @patch_categories_acl()
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread started before global cutoff"""
@@ -836,29 +838,28 @@ class NewThreadsListTests(ThreadsListTestCase):
             category=self.category_a, started_on=timezone.now() - timedelta(days=5)
         )
 
-        with override_dynamic_settings(readtracker_cutoff=3):
-            response = self.client.get("/new/")
-            self.assertEqual(response.status_code, 200)
-            self.assertNotContainsThread(response, test_thread)
+        response = self.client.get("/new/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContainsThread(response, test_thread)
 
-            response = self.client.get(self.category_a.get_absolute_url() + "new/")
-            self.assertEqual(response.status_code, 200)
-            self.assertNotContainsThread(response, test_thread)
+        response = self.client.get(self.category_a.get_absolute_url() + "new/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContainsThread(response, test_thread)
 
-            # test api
-            response = self.client.get("%s?list=new" % self.api_link)
-            self.assertEqual(response.status_code, 200)
+        # test api
+        response = self.client.get("%s?list=new" % self.api_link)
+        self.assertEqual(response.status_code, 200)
 
-            response_json = response.json()
-            self.assertEqual(len(response_json["results"]), 0)
+        response_json = response.json()
+        self.assertEqual(len(response_json["results"]), 0)
 
-            response = self.client.get(
-                "%s?list=new&category=%s" % (self.api_link, self.category_a.pk)
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.get(
+            "%s?list=new&category=%s" % (self.api_link, self.category_a.pk)
+        )
+        self.assertEqual(response.status_code, 200)
 
-            response_json = response.json()
-            self.assertEqual(len(response_json["results"]), 0)
+        response_json = response.json()
+        self.assertEqual(len(response_json["results"]), 0)
 
     @patch_categories_acl()
     def test_list_hides_user_cutoff_thread(self):
@@ -1052,6 +1053,7 @@ class UnreadThreadsListTests(ThreadsListTestCase):
         response_json = response.json()
         self.assertEqual(len(response_json["results"]), 0)
 
+    @override_dynamic_settings(readtracker_cutoff=3)
     @patch_categories_acl()
     def test_list_hides_global_cutoff_thread(self):
         """list hides thread replied before global cutoff"""
@@ -1067,29 +1069,28 @@ class UnreadThreadsListTests(ThreadsListTestCase):
             test_thread, posted_on=test_thread.started_on + timedelta(days=1)
         )
 
-        with override_dynamic_settings(readtracker_cutoff=3):
-            response = self.client.get("/unread/")
-            self.assertEqual(response.status_code, 200)
-            self.assertNotContainsThread(response, test_thread)
+        response = self.client.get("/unread/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContainsThread(response, test_thread)
 
-            response = self.client.get(self.category_a.get_absolute_url() + "unread/")
-            self.assertEqual(response.status_code, 200)
-            self.assertNotContainsThread(response, test_thread)
+        response = self.client.get(self.category_a.get_absolute_url() + "unread/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContainsThread(response, test_thread)
 
-            # test api
-            response = self.client.get("%s?list=unread" % self.api_link)
-            self.assertEqual(response.status_code, 200)
+        # test api
+        response = self.client.get("%s?list=unread" % self.api_link)
+        self.assertEqual(response.status_code, 200)
 
-            response_json = response.json()
-            self.assertEqual(len(response_json["results"]), 0)
+        response_json = response.json()
+        self.assertEqual(len(response_json["results"]), 0)
 
-            response = self.client.get(
-                "%s?list=unread&category=%s" % (self.api_link, self.category_a.pk)
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.get(
+            "%s?list=unread&category=%s" % (self.api_link, self.category_a.pk)
+        )
+        self.assertEqual(response.status_code, 200)
 
-            response_json = response.json()
-            self.assertEqual(len(response_json["results"]), 0)
+        response_json = response.json()
+        self.assertEqual(len(response_json["results"]), 0)
 
     @patch_categories_acl()
     def test_list_hides_user_cutoff_thread(self):

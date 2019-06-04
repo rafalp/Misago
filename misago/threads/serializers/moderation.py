@@ -28,7 +28,6 @@ from ..utils import get_thread_id_from_url
 from ..validators import validate_category, validate_thread_title
 
 POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE
 
 
 __all__ = [
@@ -421,13 +420,14 @@ class DeleteThreadsSerializer(serializers.Serializer):
     )
 
     def validate_threads(self, data):
-        if len(data) > THREADS_LIMIT:
+        limit = self.context["settings"].threads_per_page
+        if len(data) > limit:
             message = ngettext(
                 "No more than %(limit)s thread can be deleted at single time.",
                 "No more than %(limit)s threads can be deleted at single time.",
-                THREADS_LIMIT,
+                limit,
             )
-            raise ValidationError(message % {"limit": THREADS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         request = self.context["request"]
         viewmodel = self.context["viewmodel"]
@@ -543,13 +543,14 @@ class MergeThreadsSerializer(NewThreadSerializer):
     )
 
     def validate_threads(self, data):
-        if len(data) > THREADS_LIMIT:
+        limit = self.context["settings"].threads_per_page
+        if len(data) > limit:
             message = ngettext(
                 "No more than %(limit)s thread can be merged at single time.",
                 "No more than %(limit)s threads can be merged at single time.",
-                POSTS_LIMIT,
+                limit,
             )
-            raise ValidationError(message % {"limit": THREADS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 

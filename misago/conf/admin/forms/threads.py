@@ -72,6 +72,10 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         min_value=1,
     )
 
+    threads_per_page = forms.IntegerField(
+        label=_("Number of threads displayed on a single page"), min_value=10
+    )
+
     attachment_403_image = forms.ImageField(
         label=_("Permission denied"),
         help_text=_(

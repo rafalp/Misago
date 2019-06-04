@@ -42,8 +42,6 @@ from ...permissions import (
 from ...serializers import ThreadParticipantSerializer
 from ...validators import validate_thread_title
 
-PATCH_LIMIT = settings.MISAGO_THREADS_PER_PAGE
-
 User = get_user_model()
 
 thread_patch_dispatcher = ApiPatch()
@@ -411,7 +409,9 @@ def thread_patch_endpoint(request, thread):
 def bulk_patch_endpoint(
     request, viewmodel
 ):  # pylint: disable=too-many-branches, too-many-locals
-    serializer = BulkPatchSerializer(data=request.data)
+    serializer = BulkPatchSerializer(
+        data=request.data, context={"settings": request.settings}
+    )
     if not serializer.is_valid():
         return Response(serializer.errors, status=400)
 
@@ -483,10 +483,19 @@ def clean_threads_for_patch(request, viewmodel, threads_ids):
 
 class BulkPatchSerializer(serializers.Serializer):
     ids = serializers.ListField(
-        child=serializers.IntegerField(min_value=1),
-        max_length=PATCH_LIMIT,
-        min_length=1,
+        child=serializers.IntegerField(min_value=1), min_length=1
     )
     ops = serializers.ListField(
         child=serializers.DictField(), min_length=1, max_length=10
     )
+
+    def validate_ids(self, data):
+        limit = self.context["settings"].threads_per_page
+        if len(data) > limit:
+            message = ngettext(
+                "No more than %(limit)s thread can be updates at single time.",
+                "No more than %(limit)s threads can be updates at single time.",
+                limit,
+            )
+            raise ValidationError(message % {"limit": limit})
+        return data
