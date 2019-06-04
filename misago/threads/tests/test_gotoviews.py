@@ -2,13 +2,16 @@ from django.utils import timezone
 
 from .. import test
 from ...categories.models import Category
-from ...conf import settings
+from ...conf.test import override_dynamic_settings
 from ...readtracker.poststracker import save_read
 from ...users.test import AuthenticatedUserTestCase
 from ..test import patch_category_acl
 
 GOTO_URL = "%s#post-%s"
 GOTO_PAGE_URL = "%s%s/#post-%s"
+
+POSTS_PER_PAGE = 7
+POSTS_PER_PAGE_TAIL = 3
 
 
 class GotoViewTestCase(AuthenticatedUserTestCase):
@@ -32,9 +35,12 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(response["location"])
         self.assertContains(response, self.thread.first_post.get_absolute_url())
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
@@ -46,9 +52,12 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_post_on_next_page(self):
         """first post on next page redirect url is valid"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
@@ -61,14 +70,17 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_post_on_page_three_out_of_five(self):
         """first post on next page redirect url is valid"""
         posts = []
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
+        for _ in range(POSTS_PER_PAGE * 4 - 1):
             post = test.reply_thread(self.thread)
             posts.append(post)
 
-        post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 3]
+        post = posts[POSTS_PER_PAGE * 2 - 3]
 
         response = self.client.get(post.get_absolute_url())
         self.assertEqual(response.status_code, 302)
@@ -80,14 +92,17 @@ class GotoPostTests(GotoViewTestCase):
         response = self.client.get(response["location"])
         self.assertContains(response, post.get_absolute_url())
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_event_on_page_three_out_of_five(self):
         """event redirect url is valid"""
         posts = []
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE * 4 - 1):
+        for _ in range(POSTS_PER_PAGE * 4 - 1):
             post = test.reply_thread(self.thread)
             posts.append(post)
 
-        post = posts[settings.MISAGO_POSTS_PER_PAGE * 2 - 2]
+        post = posts[POSTS_PER_PAGE * 2 - 2]
 
         self.thread.has_events = True
         self.thread.save()
@@ -119,9 +134,12 @@ class GotoLastTests(GotoViewTestCase):
         response = self.client.get(response["location"])
         self.assertContains(response, self.thread.last_post.get_absolute_url())
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(self.thread.get_last_post_url())
@@ -144,12 +162,15 @@ class GotoNewTests(GotoViewTestCase):
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_new_post(self):
         """first unread post redirect url in already read thread is valid"""
         save_read(self.user, self.thread.first_post)
 
         post = test.reply_thread(self.thread, posted_on=timezone.now())
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
@@ -158,16 +179,19 @@ class GotoNewTests(GotoViewTestCase):
             response["location"], GOTO_URL % (self.thread.get_absolute_url(), post.pk)
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_new_post_on_next_page(self):
         """first unread post redirect url in already read multipage thread is valid"""
         save_read(self.user, self.thread.first_post)
 
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             last_post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, last_post)
 
         post = test.reply_thread(self.thread, posted_on=timezone.now())
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
@@ -177,11 +201,14 @@ class GotoNewTests(GotoViewTestCase):
             GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_goto_first_new_post_in_read_thread(self):
         """goto new in read thread points to last post"""
         save_read(self.user, self.thread.first_post)
 
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, post)
 
@@ -192,9 +219,12 @@ class GotoNewTests(GotoViewTestCase):
             GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_guest_goto_first_new_post_in_thread(self):
         """guest goto new in read thread points to last post"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             post = test.reply_thread(self.thread, posted_on=timezone.now())
 
         self.logout_user()
@@ -217,16 +247,19 @@ class GotoBestAnswerTests(GotoViewTestCase):
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     def test_view_handles_best_answer(self):
         """if thread has best answer, redirect to it"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         best_answer = test.reply_thread(self.thread, posted_on=timezone.now())
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_best_answer_url())
@@ -259,16 +292,19 @@ class GotoUnapprovedTests(GotoViewTestCase):
             GOTO_URL % (self.thread.get_absolute_url(), self.thread.first_post_id),
         )
 
+    @override_dynamic_settings(
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+    )
     @patch_category_acl({"can_approve_content": True})
     def test_view_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         post = test.reply_thread(
             self.thread, is_unapproved=True, posted_on=timezone.now()
         )
-        for _ in range(settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_unapproved_post_url())

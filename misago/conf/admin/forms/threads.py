@@ -17,6 +17,10 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         "thread_title_length_max",
         "thread_title_length_min",
         "unused_attachments_lifetime",
+        "threads_per_page",
+        "posts_per_page",
+        "posts_per_page_tail",
+        "events_per_page",
     ]
 
     daily_post_limit = forms.IntegerField(
@@ -76,6 +80,22 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
         label=_("Number of threads displayed on a single page"), min_value=10
     )
 
+    posts_per_page = forms.IntegerField(
+        label=_("Number of posts displayed on a single page"), min_value=5
+    )
+    posts_per_page_tail = forms.IntegerField(
+        label=_("Maximum orphans"),
+        help_text=_(
+            "If number of posts to be displayed on the last page is less or equal to "
+            "number specified in this setting, those posts will instead be displayed "
+            "on previous page, reducing the total number of pages in thread."
+        ),
+        min_value=0,
+    )
+    events_per_page = forms.IntegerField(
+        label=_("Maximum number of events displayed on a single page"), min_value=5
+    )
+
     attachment_403_image = forms.ImageField(
         label=_("Permission denied"),
         help_text=_(
@@ -98,3 +118,12 @@ class ChangeThreadsSettingsForm(ChangeSettingsForm):
     attachment_404_image_delete = forms.BooleanField(
         label=_("Delete custom not found image"), required=False
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get("posts_per_page_tail") > cleaned_data.get("posts_per_page"):
+            self.add_error(
+                "posts_per_page_tail",
+                _("This value must be lower than number of posts per page."),
+            )
+        return cleaned_data

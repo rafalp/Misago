@@ -234,7 +234,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(),
-            {"detail": "No more than 4 threads can be merged at single time."},
+            {"detail": "No more than 4 threads can be merged at a single time."},
         )
 
     @patch_category_acl({"can_merge_threads": True})

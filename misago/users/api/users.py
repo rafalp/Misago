@@ -274,7 +274,9 @@ class UserViewSet(viewsets.GenericViewSet):
 
         if user_has_data_download_request(request.user):
             raise PermissionDenied(
-                _("You can't have more than one data download request at single time.")
+                _(
+                    "You can't have more than one data download request at a single time."
+                )
             )
 
         request_user_data_download(request.user)

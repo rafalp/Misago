@@ -1,5 +1,4 @@
 from ...acl.objectacl import add_acl_to_obj
-from ...conf import settings
 from ...core.shortcuts import paginate, pagination_dict
 from ...readtracker.poststracker import make_read_aware
 from ...users.online.utils import make_users_status_aware
@@ -20,8 +19,8 @@ class ViewModel:
 
         posts_queryset = self.get_posts_queryset(request, thread_model)
 
-        posts_limit = settings.MISAGO_POSTS_PER_PAGE
-        posts_orphans = settings.MISAGO_POSTS_TAIL
+        posts_limit = request.settings.posts_per_page
+        posts_orphans = request.settings.posts_per_page_tail
         list_page = paginate(
             posts_queryset, page, posts_limit, posts_orphans, paginator=PostsPaginator
         )
@@ -51,7 +50,7 @@ class ViewModel:
             if list_page.has_next():
                 last_post = posts[-1]
 
-            events_limit = settings.MISAGO_EVENTS_PER_PAGE
+            events_limit = request.settings.events_per_page
             posts += self.get_events_queryset(
                 request, thread_model, events_limit, first_post, last_post
             )

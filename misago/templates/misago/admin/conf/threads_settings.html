@@ -31,6 +31,16 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% trans "Thread pages" %}</legend>
+    
+    {% form_row form.posts_per_page %}
+    {% form_row form.posts_per_page_tail %}
+    {% form_row form.events_per_page %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% trans "Read-tracker" %}</legend>
     
     {% form_row form.readtracker_cutoff %}

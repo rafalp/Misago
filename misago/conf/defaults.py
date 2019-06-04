@@ -203,18 +203,6 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 MISAGO_BLANK_AVATAR = "misago/img/blank-avatar.png"
 
 
-# Posts lists pagination settings
-
-MISAGO_POSTS_PER_PAGE = 18
-MISAGO_POSTS_TAIL = 6
-
-
-# Number of events displayed on single thread page
-# If there's more events than specified, oldest events will be trimmed
-
-MISAGO_EVENTS_PER_PAGE = 20
-
-
 # Number of attachments possible to assign to single post
 
 MISAGO_POST_ATTACHMENTS_LIMIT = 16

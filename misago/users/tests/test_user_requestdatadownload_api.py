@@ -48,7 +48,7 @@ class UserRequestDataDownload(AuthenticatedUserTestCase):
             response.json(),
             {
                 "detail": (
-                    "You can't have more than one data download request at single time."
+                    "You can't have more than one data download request at a single time."
                 )
             },
         )

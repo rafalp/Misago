@@ -2,7 +2,6 @@ from django.core.paginator import EmptyPage, InvalidPage
 from django.http import Http404
 
 from ...acl.objectacl import add_acl_to_obj
-from ...conf import settings
 from ...core.cursorpagination import get_page
 from ...core.shortcuts import paginate, pagination_dict
 from ...threads.permissions import exclude_invisible_threads
@@ -28,7 +27,7 @@ class UserThreads:
 
         try:
             list_page = get_page(
-                posts_queryset, "-id", settings.MISAGO_POSTS_PER_PAGE, start
+                posts_queryset, "-id", request.settings.posts_per_page, start
             )
         except (EmptyPage, InvalidPage):
             raise Http404()

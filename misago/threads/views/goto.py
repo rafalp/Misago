@@ -55,8 +55,8 @@ class GotoView(View):
 
         post_position = previous_posts.count()
 
-        per_page = settings.MISAGO_POSTS_PER_PAGE - 1
-        orphans = settings.MISAGO_POSTS_TAIL
+        per_page = self.request.settings.posts_per_page - 1
+        orphans = self.request.settings.posts_per_page_tail
         if orphans:
             orphans += 1
 

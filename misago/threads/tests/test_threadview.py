@@ -4,7 +4,7 @@ from .. import test
 from ...acl import useracl
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
-from ...conf import settings
+from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...users.test import AuthenticatedUserTestCase
 from ..checksums import update_post_checksum
@@ -280,12 +280,11 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
                 response = self.client.get(self.thread.get_absolute_url())
                 self.assertNotContains(response, event.get_absolute_url())
 
+    @override_dynamic_settings(events_per_page=4)
     def test_events_limit(self):
         """forum will trim oldest events if theres more than allowed by config"""
-        events_limit = settings.MISAGO_EVENTS_PER_PAGE
         events = []
-
-        for _ in range(events_limit + 5):
+        for _ in range(5):
             request = Mock(user=self.user, user_ip="127.0.0.1")
             event = record_event(request, self.thread, "closed")
             events.append(event)
@@ -293,15 +292,15 @@ class ThreadEventVisibilityTests(ThreadViewTestCase):
         # test that only events within limits were rendered
         response = self.client.get(self.thread.get_absolute_url())
 
-        for event in events[5:]:
+        for event in events[4:]:
             self.assertContains(response, event.get_absolute_url())
-        for event in events[:5]:
-            self.assertNotContains(response, event.get_absolute_url())
+        self.assertNotContains(response, events[0].get_absolute_url())
 
+    @override_dynamic_settings(posts_per_page=10, events_per_page=4)
     def test_events_dont_take_space(self):
         """events dont take space away from posts"""
-        posts_limit = settings.MISAGO_POSTS_PER_PAGE
-        events_limit = settings.MISAGO_EVENTS_PER_PAGE
+        posts_limit = 10
+        events_limit = 4
         events = []
 
         for _ in range(events_limit + 5):

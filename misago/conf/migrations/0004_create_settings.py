@@ -53,7 +53,10 @@ default_settings = [
         "is_public": True,
     },
     {"setting": "readtracker_cutoff", "python_type": "int", "dry_value": 40},
-    {"setting": "threads_per_page", "python_type": "int", "dry_value": 12},
+    {"setting": "threads_per_page", "python_type": "int", "dry_value": 26},
+    {"setting": "posts_per_page", "python_type": "int", "dry_value": 18},
+    {"setting": "posts_per_page_tail", "python_type": "int", "dry_value": 6},
+    {"setting": "events_per_page", "python_type": "int", "dry_value": 20},
     {"setting": "og_image", "python_type": "image"},
     {
         "setting": "og_image_avatar_on_profile",

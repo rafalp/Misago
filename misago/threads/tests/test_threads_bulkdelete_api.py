@@ -77,9 +77,7 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(),
-            {
-                "detail": "No more than 4 threads can be deleted at single time."
-            },
+            {"detail": "No more than 4 threads can be deleted at a single time."},
         )
 
     @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})

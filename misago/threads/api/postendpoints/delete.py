@@ -1,6 +1,5 @@
 from rest_framework.response import Response
 
-from ....conf import settings
 from ...moderation import posts as moderation
 from ...permissions import (
     allow_delete_best_answer,
@@ -8,8 +7,6 @@ from ...permissions import (
     allow_delete_post,
 )
 from ...serializers import DeletePostsSerializer
-
-DELETE_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 
 def delete_post(request, thread, post):
@@ -28,7 +25,11 @@ def delete_post(request, thread, post):
 def delete_bulk(request, thread):
     serializer = DeletePostsSerializer(
         data={"posts": request.data},
-        context={"thread": thread, "user_acl": request.user_acl},
+        context={
+            "settings": request.settings,
+            "thread": thread,
+            "user_acl": request.user_acl,
+        },
     )
 
     if not serializer.is_valid():
