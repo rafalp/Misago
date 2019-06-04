@@ -22,6 +22,7 @@ class MailTests(TestCase):
                 user, "Misago Test Mail", "misago/emails/base", context={"settings": {}}
             )
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     def test_mail_user(self):
         """mail_user sets message in backend"""
         user = create_test_user("User", "user@example.com")
@@ -29,13 +30,12 @@ class MailTests(TestCase):
         cache_versions = get_cache_versions()
         settings = DynamicSettings(cache_versions)
 
-        with override_dynamic_settings(forum_address="http://test.com"):
-            mail_user(
-                user,
-                "Misago Test Mail",
-                "misago/emails/base",
-                context={"settings": settings},
-            )
+        mail_user(
+            user,
+            "Misago Test Mail",
+            "misago/emails/base",
+            context={"settings": settings},
+        )
 
         self.assertEqual(mail.outbox[0].subject, "Misago Test Mail")
 

@@ -218,6 +218,7 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
             ],
         )
 
+    @override_dynamic_settings(threads_per_page=4)
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_too_many_threads(self):
         """api rejects too many threads to merge"""
@@ -225,17 +226,16 @@ class ThreadsMergeApiTests(ThreadsApiTestCase):
         for _ in range(5):
             threads.append(test.post_thread(category=self.category).pk)
 
-        with override_dynamic_settings(threads_per_page=4):
-            response = self.client.post(
-                self.api_link,
-                json.dumps({"threads": threads}),
-                content_type="application/json",
-            )
-            self.assertEqual(response.status_code, 403)
-            self.assertEqual(
-                response.json(),
-                {"detail": "No more than %s threads can be merged at single time." % 4},
-            )
+        response = self.client.post(
+            self.api_link,
+            json.dumps({"threads": threads}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json(),
+            {"detail": "No more than 4 threads can be merged at single time."},
+        )
 
     @patch_category_acl({"can_merge_threads": True})
     def test_merge_no_final_thread(self):

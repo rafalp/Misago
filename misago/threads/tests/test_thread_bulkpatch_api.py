@@ -95,22 +95,22 @@ class BulkPatchSerializerTests(ThreadsBulkPatchApiTestCase):
             {"ids": {"0": ["Ensure this value is greater than or equal to 1."]}},
         )
 
+    @override_dynamic_settings(threads_per_page=5)
     def test_too_large_input(self):
         """api rejects too large input"""
-        with override_dynamic_settings(threads_per_page=5):
-            response = self.patch(
-                self.api_link,
-                {"ids": [i + 1 for i in range(6)], "ops": [{} for i in range(200)]},
-            )
+        response = self.patch(
+            self.api_link,
+            {"ids": [i + 1 for i in range(6)], "ops": [{} for i in range(200)]},
+        )
 
-            self.assertEqual(response.status_code, 400)
-            self.assertEqual(
-                response.json(),
-                {
-                    "ids": ["No more than 5 threads can be updates at single time."],
-                    "ops": ["Ensure this field has no more than 10 elements."],
-                },
-            )
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json(),
+            {
+                "ids": ["No more than 5 threads can be updated at a single time."],
+                "ops": ["Ensure this field has no more than 10 elements."],
+            },
+        )
 
     def test_threads_not_found(self):
         """api fails to find threads"""

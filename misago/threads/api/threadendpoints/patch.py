@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -493,8 +493,8 @@ class BulkPatchSerializer(serializers.Serializer):
         limit = self.context["settings"].threads_per_page
         if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s thread can be updates at single time.",
-                "No more than %(limit)s threads can be updates at single time.",
+                "No more than %(limit)s thread can be updated at a single time.",
+                "No more than %(limit)s threads can be updated at a single time.",
                 limit,
             )
             raise ValidationError(message % {"limit": limit})

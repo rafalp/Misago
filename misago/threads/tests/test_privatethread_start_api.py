@@ -308,18 +308,18 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
                 {"title": ["Thread title should contain alpha-numeric characters."]},
             )
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     def test_can_start_thread(self):
         """endpoint creates new thread"""
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            response = self.client.post(
-                self.api_link,
-                data={
-                    "to": [self.other_user.username],
-                    "title": "Hello, I am test thread!",
-                    "post": "Lorem ipsum dolor met!",
-                },
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            self.api_link,
+            data={
+                "to": [self.other_user.username],
+                "title": "Hello, I am test thread!",
+                "post": "Lorem ipsum dolor met!",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
 
         thread = self.user.thread_set.all()[:1][0]
 

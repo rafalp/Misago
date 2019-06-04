@@ -73,15 +73,15 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             response.json(), {"new_email": ["This e-mail address is not available."]}
         )
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""
         new_email = "new@email.com"
 
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            response = self.client.post(
-                self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            self.link, data={"new_email": new_email, "password": self.USER_PASSWORD}
+        )
+        self.assertEqual(response.status_code, 200)
 
         self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
@@ -100,6 +100,7 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         self.reload_user()
         self.assertEqual(self.user.email, new_email)
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     def test_change_email_user_password_whitespace(self):
         """api supports users with whitespace around their passwords"""
         user_password = " old password "
@@ -110,11 +111,10 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
 
         self.login_user(self.user)
 
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            response = self.client.post(
-                self.link, data={"new_email": new_email, "password": user_password}
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            self.link, data={"new_email": new_email, "password": user_password}
+        )
+        self.assertEqual(response.status_code, 200)
 
         self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
         for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
