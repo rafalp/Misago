@@ -41,7 +41,7 @@ __all__ = [
 
 
 def get_posts_limit(settings):
-    return settings.posts_per_page + settings.posts_per_page_tail
+    return settings.posts_per_page + settings.posts_per_page_orphans
 
 
 class DeletePostsSerializer(serializers.Serializer):

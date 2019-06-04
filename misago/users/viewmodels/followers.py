@@ -23,7 +23,7 @@ class Followers:
             queryset,
             page,
             request.settings.users_per_page,
-            request.settings.users_per_page_tail,
+            request.settings.users_per_page_orphans,
         )
         make_users_status_aware(request, list_page.object_list)
 

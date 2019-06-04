@@ -55,7 +55,7 @@ default_settings = [
     {"setting": "readtracker_cutoff", "python_type": "int", "dry_value": 40},
     {"setting": "threads_per_page", "python_type": "int", "dry_value": 26},
     {"setting": "posts_per_page", "python_type": "int", "dry_value": 18},
-    {"setting": "posts_per_page_tail", "python_type": "int", "dry_value": 6},
+    {"setting": "posts_per_page_orphans", "python_type": "int", "dry_value": 6},
     {"setting": "events_per_page", "python_type": "int", "dry_value": 20},
     {"setting": "og_image", "python_type": "image"},
     {
@@ -92,7 +92,7 @@ default_settings = [
     {"setting": "username_length_min", "python_type": "int", "dry_value": 3},
     {"setting": "username_length_max", "python_type": "int", "dry_value": 14},
     {"setting": "users_per_page", "python_type": "int", "dry_value": 12},
-    {"setting": "users_per_page_tail", "python_type": "int", "dry_value": 4},
+    {"setting": "users_per_page_orphans", "python_type": "int", "dry_value": 4},
 ]
 
 removed_settings = ["forum_branding_display", "forum_branding_text"]

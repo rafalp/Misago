@@ -11,7 +11,7 @@ GOTO_URL = "%s#post-%s"
 GOTO_PAGE_URL = "%s%s/#post-%s"
 
 POSTS_PER_PAGE = 7
-POSTS_PER_PAGE_TAIL = 3
+POSTS_PER_PAGE_ORPHANS = 3
 
 
 class GotoViewTestCase(AuthenticatedUserTestCase):
@@ -36,11 +36,11 @@ class GotoPostTests(GotoViewTestCase):
         self.assertContains(response, self.thread.first_post.get_absolute_url())
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
@@ -53,11 +53,11 @@ class GotoPostTests(GotoViewTestCase):
         self.assertContains(response, post.get_absolute_url())
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_post_on_next_page(self):
         """first post on next page redirect url is valid"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(post.get_absolute_url())
@@ -71,7 +71,7 @@ class GotoPostTests(GotoViewTestCase):
         self.assertContains(response, post.get_absolute_url())
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_post_on_page_three_out_of_five(self):
         """first post on next page redirect url is valid"""
@@ -93,7 +93,7 @@ class GotoPostTests(GotoViewTestCase):
         self.assertContains(response, post.get_absolute_url())
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_event_on_page_three_out_of_five(self):
         """event redirect url is valid"""
@@ -135,11 +135,11 @@ class GotoLastTests(GotoViewTestCase):
         self.assertContains(response, self.thread.last_post.get_absolute_url())
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_last_post_on_page(self):
         """last post on page redirect url is valid"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             post = test.reply_thread(self.thread)
 
         response = self.client.get(self.thread.get_last_post_url())
@@ -163,14 +163,14 @@ class GotoNewTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_new_post(self):
         """first unread post redirect url in already read thread is valid"""
         save_read(self.user, self.thread.first_post)
 
         post = test.reply_thread(self.thread, posted_on=timezone.now())
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
@@ -180,18 +180,18 @@ class GotoNewTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_new_post_on_next_page(self):
         """first unread post redirect url in already read multipage thread is valid"""
         save_read(self.user, self.thread.first_post)
 
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             last_post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, last_post)
 
         post = test.reply_thread(self.thread, posted_on=timezone.now())
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_new_post_url())
@@ -202,13 +202,13 @@ class GotoNewTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_goto_first_new_post_in_read_thread(self):
         """goto new in read thread points to last post"""
         save_read(self.user, self.thread.first_post)
 
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             post = test.reply_thread(self.thread, posted_on=timezone.now())
             save_read(self.user, post)
 
@@ -220,11 +220,11 @@ class GotoNewTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_guest_goto_first_new_post_in_thread(self):
         """guest goto new in read thread points to last post"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             post = test.reply_thread(self.thread, posted_on=timezone.now())
 
         self.logout_user()
@@ -248,18 +248,18 @@ class GotoBestAnswerTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     def test_view_handles_best_answer(self):
         """if thread has best answer, redirect to it"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         best_answer = test.reply_thread(self.thread, posted_on=timezone.now())
         self.thread.set_best_answer(self.user, best_answer)
         self.thread.save()
 
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_best_answer_url())
@@ -293,18 +293,18 @@ class GotoUnapprovedTests(GotoViewTestCase):
         )
 
     @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_tail=POSTS_PER_PAGE_TAIL
+        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
     )
     @patch_category_acl({"can_approve_content": True})
     def test_view_handles_unapproved_posts(self):
         """if thread has unapproved posts, redirect to first of them"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         post = test.reply_thread(
             self.thread, is_unapproved=True, posted_on=timezone.now()
         )
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_TAIL - 1):
+        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS - 1):
             test.reply_thread(self.thread, posted_on=timezone.now())
 
         response = self.client.get(self.thread.get_unapproved_post_url())

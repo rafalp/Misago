@@ -266,7 +266,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             response.json(), {"detail": "One or more post ids received were invalid."}
         )
 
-    @override_dynamic_settings(posts_per_page=5, posts_per_page_tail=3)
+    @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=3)
     @patch_category_acl({"can_move_posts": True})
     def test_move_limit(self):
         """api rejects more posts than move limit"""

@@ -56,7 +56,7 @@ class GotoView(View):
         post_position = previous_posts.count()
 
         per_page = self.request.settings.posts_per_page - 1
-        orphans = self.request.settings.posts_per_page_tail
+        orphans = self.request.settings.posts_per_page_orphans
         if orphans:
             orphans += 1
 

@@ -95,7 +95,7 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
             {"ids": {"0": ["Ensure this value is greater than or equal to 1."]}},
         )
 
-    @override_dynamic_settings(posts_per_page=4, posts_per_page_tail=3)
+    @override_dynamic_settings(posts_per_page=4, posts_per_page_orphans=3)
     def test_too_large_input(self):
         """api rejects too large input"""
         response = self.patch(

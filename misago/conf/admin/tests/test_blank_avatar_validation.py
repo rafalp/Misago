@@ -33,7 +33,7 @@ def submit_image(admin_client, image=""):
         "subscribe_start": "no",
         "subscribe_reply": "no",
         "users_per_page": 12,
-        "users_per_page_tail": 4,
+        "users_per_page_orphans": 4,
     }
 
     return admin_client.post(admin_link, data)

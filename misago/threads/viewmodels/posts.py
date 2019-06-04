@@ -20,7 +20,7 @@ class ViewModel:
         posts_queryset = self.get_posts_queryset(request, thread_model)
 
         posts_limit = request.settings.posts_per_page
-        posts_orphans = request.settings.posts_per_page_tail
+        posts_orphans = request.settings.posts_per_page_orphans
         list_page = paginate(
             posts_queryset, page, posts_limit, posts_orphans, paginator=PostsPaginator
         )

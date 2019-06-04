@@ -157,7 +157,7 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             {"detail": "You have to select at least two posts to merge."},
         )
 
-    @override_dynamic_settings(posts_per_page=5, posts_per_page_tail=3)
+    @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=3)
     @patch_category_acl({"can_merge_posts": True})
     def test_merge_limit(self):
         """api rejects more posts than merge limit"""

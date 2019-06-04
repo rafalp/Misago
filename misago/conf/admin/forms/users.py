@@ -20,7 +20,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "username_length_max",
         "username_length_min",
         "users_per_page",
-        "users_per_page_tail",
+        "users_per_page_orphans",
     ]
 
     account_activation = forms.ChoiceField(
@@ -118,7 +118,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
     users_per_page = forms.IntegerField(
         label=_("Number of users displayed on a single page"), min_value=4
     )
-    users_per_page_tail = forms.IntegerField(
+    users_per_page_orphans = forms.IntegerField(
         label=_("Maximum orphans"),
         help_text=_(
             "If number of users to be displayed on the last page is less or equal to "
@@ -147,9 +147,11 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data.get("users_per_page_tail") > cleaned_data.get("users_per_page"):
+        if cleaned_data.get("users_per_page_orphans") > cleaned_data.get(
+            "users_per_page"
+        ):
             self.add_error(
-                "users_per_page_tail",
+                "users_per_page_orphans",
                 _("This value must be lower than number of users per page."),
             )
         return cleaned_data

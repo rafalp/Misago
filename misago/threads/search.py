@@ -33,7 +33,7 @@ class SearchThreads(SearchProvider):
             results,
             page,
             self.request.settings.posts_per_page,
-            self.request.settings.posts_per_page_tail,
+            self.request.settings.posts_per_page_orphans,
             allow_explicit_first_page=True,
         )
         paginator = pagination_dict(list_page)

@@ -192,7 +192,7 @@ class BulkPatchSerializer(serializers.Serializer):
 
     def validate_ids(self, data):
         settings = self.context["settings"]
-        limit = settings.posts_per_page + settings.posts_per_page_tail
+        limit = settings.posts_per_page + settings.posts_per_page_orphans
         if len(data) > limit:
             message = ngettext(
                 "No more than %(limit)s post can be updated at a single time.",
