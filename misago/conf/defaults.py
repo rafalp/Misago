@@ -213,19 +213,6 @@ MISAGO_ATTACHMENT_403_IMAGE = "misago/img/attachment-403.png"
 MISAGO_ATTACHMENT_404_IMAGE = "misago/img/attachment-404.png"
 
 
-# Controls max age in days of items that Misago has to process to make rankings
-# Used for active posters and most liked users lists
-# If your forum runs out of memory when trying to generate users rankings list
-# or you want those to be more dynamic, give this setting lower value
-# You don't have to be overzelous with this as user rankings are cached for 24h
-
-MISAGO_RANKING_LENGTH = 30
-
-# Controls max number of items displayed on ranked lists
-
-MISAGO_RANKING_SIZE = 50
-
-
 # Specifies the number of days that IP addresses are stored in the database before removing.
 # Change this setting to None to never remove old IP addresses.
 

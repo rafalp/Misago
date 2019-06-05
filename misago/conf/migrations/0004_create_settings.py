@@ -95,6 +95,8 @@ default_settings = [
     {"setting": "stop_forum_spam_confidence", "python_type": "int", "dry_value": 80},
     {"setting": "users_per_page", "python_type": "int", "dry_value": 12},
     {"setting": "users_per_page_orphans", "python_type": "int", "dry_value": 4},
+    {"setting": "top_posters_ranking_length", "python_type": "int", "dry_value": 30},
+    {"setting": "top_posters_ranking_size", "python_type": "int", "dry_value": 50},
 ]
 
 removed_settings = ["forum_branding_display", "forum_branding_text"]

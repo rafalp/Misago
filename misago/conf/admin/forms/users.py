@@ -21,6 +21,8 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "username_length_min",
         "users_per_page",
         "users_per_page_orphans",
+        "top_posters_ranking_length",
+        "top_posters_ranking_size",
     ]
 
     account_activation = forms.ChoiceField(
@@ -126,6 +128,14 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             "on previous page, reducing the total number of pages on the list."
         ),
         min_value=0,
+    )
+
+    top_posters_ranking_length = forms.IntegerField(
+        label=_("Maximum age in days of posts that should count to the ranking"),
+        min_value=1,
+    )
+    top_posters_ranking_size = forms.IntegerField(
+        label=_("Maximum number of ranked users"), min_value=2
     )
 
     def clean_blank_avatar(self):

@@ -55,4 +55,13 @@
 
   </fieldset>
 </div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Top posters ranking" %}</legend>
+
+    {% form_row form.top_posters_ranking_size %}
+    {% form_row form.top_posters_ranking_length %}
+
+  </fieldset>
+</div>
 {% endblock form-body %}
