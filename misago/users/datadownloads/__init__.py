@@ -41,7 +41,7 @@ def prepare_user_data_download(download, logger=None):
             return True
         except Exception as e:  # pylint: disable=broad-except
             if logger:
-                logger.exception(e)
+                logger.exception(e, exc_info=e)
             return False
 
 

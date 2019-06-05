@@ -141,12 +141,6 @@ MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
 MISAGO_PROFILE_FIELDS = []
 
 
-# Stop Forum Spam settings
-
-MISAGO_USE_STOP_FORUM_SPAM = True
-MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
-
-
 # Social Auth Backends Names Overrides
 # This seeting may be used to customise auth backends names displayed in the UI
 
@@ -201,11 +195,6 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 # Path to blank avatar image used for guests and removed users.
 
 MISAGO_BLANK_AVATAR = "misago/img/blank-avatar.png"
-
-
-# Number of attachments possible to assign to single post
-
-MISAGO_POST_ATTACHMENTS_LIMIT = 16
 
 
 # Max allowed size of image before Misago will generate thumbnail for it

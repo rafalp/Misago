@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 
 import requests
@@ -9,11 +10,14 @@ from django.utils.encoding import force_str
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
+from requests.exceptions import RequestException
 
 from ..conf import settings
 from .bans import get_email_ban, get_username_ban
 
 USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
+
+logger = logging.getLogger("misago.users.validators")
 
 User = get_user_model()
 
@@ -107,26 +111,29 @@ SFS_API_URL = (
 
 
 def validate_with_sfs(request, cleaned_data, add_error):
-    if settings.MISAGO_USE_STOP_FORUM_SPAM and cleaned_data.get("email"):
-        _real_validate_with_sfs(request.user_ip, cleaned_data["email"])
+    if request.settings.stop_forum_spam and cleaned_data.get("email"):
+        try:
+            _real_validate_with_sfs(
+                request.user_ip,
+                cleaned_data["email"],
+                request.settings.stop_forum_spam_confidence,
+            )
+        except RequestException as error:
+            logger.exception(error, exc_info=error)
 
 
-def _real_validate_with_sfs(ip, email):
-    try:
-        r = requests.get(SFS_API_URL % {"email": email, "ip": ip}, timeout=5)
+def _real_validate_with_sfs(ip, email, confidence):
+    r = requests.get(SFS_API_URL % {"email": email, "ip": ip}, timeout=5)
+    r.raise_for_status()
 
-        r.raise_for_status()
+    api_response = json.loads(force_str(r.content))
+    ip_score = api_response.get("ip", {}).get("confidence", 0)
+    email_score = api_response.get("email", {}).get("confidence", 0)
 
-        api_response = json.loads(force_str(r.content))
-        ip_score = api_response.get("ip", {}).get("confidence", 0)
-        email_score = api_response.get("email", {}).get("confidence", 0)
+    api_score = max((ip_score, email_score))
 
-        api_score = max((ip_score, email_score))
-
-        if api_score > settings.MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE:
-            raise ValidationError(_("Data entered was found in spammers database."))
-    except requests.exceptions.RequestException:
-        pass  # todo: log those somewhere
+    if api_score > confidence:
+        raise ValidationError(_("Data entered was found in spammers database."))
 
 
 def validate_gmail_email(request, cleaned_data, add_error):

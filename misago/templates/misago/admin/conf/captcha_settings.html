@@ -30,4 +30,13 @@
 
   </fieldset>
 </div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Stop Forum Spam" %}</legend>
+
+    {% form_row form.stop_forum_spam %}
+    {% form_row form.stop_forum_spam_confidence %}
+
+  </fieldset>
+</div>
 {% endblock form-body %}
