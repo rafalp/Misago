@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
+from ....conf.shortcuts import get_dynamic_settings
 from ....core.pgutils import chunk_queryset
 from ...permissions import can_delete_own_account
 
@@ -15,11 +16,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         users_deleted = 0
+        settings = get_dynamic_settings()
 
         queryset = User.objects.filter(is_deleting_account=True)
 
         for user in chunk_queryset(queryset):
-            if can_delete_own_account(user, user):
+            if can_delete_own_account(settings, user, user):
                 user.delete()
                 users_deleted += 1
 

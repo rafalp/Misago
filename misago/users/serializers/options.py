@@ -122,7 +122,7 @@ class DeleteOwnAccountSerializer(serializers.Serializer):
         deactivate it and sign user out.
         """
         profile = self.context["user"]
-        allow_delete_own_account(request.user, profile)
+        allow_delete_own_account(request.settings, request.user, profile)
 
         logout(request)
         clear_tracking(request)

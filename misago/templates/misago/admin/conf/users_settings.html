@@ -39,10 +39,11 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Data downloads" %}</legend>
+    <legend>{% trans "GDPR compliance" %}</legend>
 
     {% form_row form.allow_data_downloads %}
     {% form_row form.data_downloads_expiration %}
+    {% form_row form.allow_delete_own_account %}
 
   </fieldset>
 </div>

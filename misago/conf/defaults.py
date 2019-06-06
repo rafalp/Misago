@@ -44,14 +44,6 @@ MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 0
 
 
-# Allow users to delete their accounts
-# Lets users delete their own account on the site without having to contact site administrators.
-# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
-# data about user left behind after user is deleted.
-
-MISAGO_ENABLE_DELETE_OWN_ACCOUNT = False
-
-
 # Custom markup extensions
 
 MISAGO_MARKUP_EXTENSIONS = []

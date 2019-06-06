@@ -10,7 +10,6 @@ from django.utils.translation import ngettext
 from ...acl import algebra
 from ...acl.decorators import return_boolean
 from ...acl.models import Role
-from ...conf import settings
 
 __all__ = [
     "allow_delete_user",
@@ -100,11 +99,11 @@ def allow_delete_user(user_acl, target):
 can_delete_user = return_boolean(allow_delete_user)
 
 
-def allow_delete_own_account(user, target):
-    if not settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT and not user.is_deleting_account:
-        raise PermissionDenied(_("You can't delete your account."))
+def allow_delete_own_account(settings, user, target):
     if user.id != target.id:
         raise PermissionDenied(_("You can't delete other users accounts."))
+    if not settings.allow_delete_own_account and not user.is_deleting_account:
+        raise PermissionDenied(_("You can't delete your account."))
     if user.is_staff or user.is_superuser:
         raise PermissionDenied(
             _("You can't delete your account because you are an administrator.")

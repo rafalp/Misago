@@ -25,6 +25,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "top_posters_ranking_size",
         "allow_data_downloads",
         "data_downloads_expiration",
+        "allow_delete_own_account",
     ]
 
     account_activation = forms.ChoiceField(
@@ -148,6 +149,10 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             "will be marked as expired."
         ),
         min_value=1,
+    )
+
+    allow_delete_own_account = YesNoSwitch(
+        label=_("Allow users to delete their own accounts")
     )
 
     def clean_blank_avatar(self):

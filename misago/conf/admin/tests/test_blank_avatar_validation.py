@@ -38,6 +38,7 @@ def submit_image(admin_client, image=""):
         "top_posters_ranking_size": 10,
         "allow_data_downloads": "no",
         "data_downloads_expiration": 48,
+        "allow_delete_own_account": "no",
     }
 
     return admin_client.post(admin_link, data)

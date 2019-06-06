@@ -2,11 +2,11 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.test import override_settings
 from django.urls import reverse
 
 from ...acl.test import patch_user_acl
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...threads.models import Post, Thread
 from ...threads.test import post_thread
 from ..activepostersranking import build_active_posters_ranking
@@ -463,7 +463,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         super().setUp()
         self.api_link = "/api/users/%s/delete-own-account/" % self.user.pk
 
-    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
+    @override_dynamic_settings(allow_delete_own_account=False)
     def test_delete_own_account_feature_disabled(self):
         """
         raises 403 error when attempting to delete own account but feature is disabled
@@ -477,6 +477,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account_is_staff(self):
         """raises 403 error when attempting to delete own account as admin"""
         self.user.is_staff = True
@@ -497,6 +498,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account_is_superuser(self):
         """raises 403 error when attempting to delete own account as superadmin"""
         self.user.is_superuser = True
@@ -517,6 +519,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account_invalid_password(self):
         """
         raises 400 error when attempting to delete own account with invalid password
@@ -531,6 +534,7 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account(self):
         """deactivates account and marks it for deletion"""
         response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})

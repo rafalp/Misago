@@ -55,13 +55,16 @@ class MisagoUsersConfig(AppConfig):
             visible_if=can_download_own_data,
         )
 
-        if settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
-            usercp.add_section(
-                link="misago:usercp-delete-account",
-                name=_("Delete account"),
-                component="delete-account",
-                icon="cancel",
-            )
+        def can_delete_own_account(request):
+            return request.settings.allow_delete_own_account
+        
+        usercp.add_section(
+            link="misago:usercp-delete-account",
+            name=_("Delete account"),
+            component="delete-account",
+            icon="cancel",
+            visible_if=can_delete_own_account,
+        )
 
     def register_default_users_list_pages(self):
         users_list.add_section(
