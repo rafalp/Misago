@@ -36,6 +36,8 @@ def submit_image(admin_client, image=""):
         "users_per_page_orphans": 4,
         "top_posters_ranking_length": 10,
         "top_posters_ranking_size": 10,
+        "allow_data_downloads": "no",
+        "data_downloads_expiration": 48,
     }
 
     return admin_client.post(admin_link, data)

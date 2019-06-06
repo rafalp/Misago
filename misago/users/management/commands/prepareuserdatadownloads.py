@@ -27,13 +27,13 @@ class Command(BaseCommand):
             return
 
         dynamic_settings = get_dynamic_settings()
-        expires_in = settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS
+        expires_in = dynamic_settings.data_downloads_expiration
 
         downloads_prepared = 0
         queryset = DataDownload.objects.select_related("user")
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
         for data_download in chunk_queryset(queryset):
-            if prepare_user_data_download(data_download, logger):
+            if prepare_user_data_download(data_download, expires_in, logger):
                 user = data_download.user
                 subject = gettext("%(user)s, your data download is ready") % {
                     "user": user

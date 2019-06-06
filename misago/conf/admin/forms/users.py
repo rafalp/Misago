@@ -23,6 +23,8 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "users_per_page_orphans",
         "top_posters_ranking_length",
         "top_posters_ranking_size",
+        "allow_data_downloads",
+        "data_downloads_expiration",
     ]
 
     account_activation = forms.ChoiceField(
@@ -136,6 +138,18 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
     )
     top_posters_ranking_size = forms.IntegerField(
         label=_("Maximum number of ranked users"), min_value=2
+    )
+
+    allow_data_downloads = YesNoSwitch(
+        label=_("Allow users to download their data"),
+    )
+    data_downloads_expiration = forms.IntegerField(
+        label=_("Data downloads expiration time (in hours)"),
+        help_text=_(
+            "Data downloads older than specified will have their files deleted and "
+            "will be marked as expired."
+        ),
+        min_value=1,
     )
 
     def clean_blank_avatar(self):
