@@ -13,7 +13,7 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         "qa_question",
         "qa_help_text",
         "qa_answers",
-        "stop_forum_spam",
+        "enable_stop_forum_spam",
         "stop_forum_spam_confidence",
     ]
 
@@ -48,7 +48,7 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         required=False,
     )
 
-    stop_forum_spam = YesNoSwitch(
+    enable_stop_forum_spam = YesNoSwitch(
         label=_("Validate new registrations against SFS database"),
         help_text=_(
             "Turning this option on will result in Misago validating new user's e-mail "

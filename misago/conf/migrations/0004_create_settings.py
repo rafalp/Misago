@@ -91,7 +91,7 @@ default_settings = [
     },
     {"setting": "username_length_min", "python_type": "int", "dry_value": 3},
     {"setting": "username_length_max", "python_type": "int", "dry_value": 14},
-    {"setting": "stop_forum_spam", "python_type": "bool", "dry_value": False},
+    {"setting": "enable_stop_forum_spam", "python_type": "bool", "dry_value": False},
     {"setting": "stop_forum_spam_confidence", "python_type": "int", "dry_value": 80},
     {"setting": "users_per_page", "python_type": "int", "dry_value": 12},
     {"setting": "users_per_page_orphans", "python_type": "int", "dry_value": 4},

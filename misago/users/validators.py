@@ -111,7 +111,7 @@ SFS_API_URL = (
 
 
 def validate_with_sfs(request, cleaned_data, add_error):
-    if request.settings.stop_forum_spam and cleaned_data.get("email"):
+    if request.settings.enable_stop_forum_spam and cleaned_data.get("email"):
         try:
             _real_validate_with_sfs(
                 request.user_ip,
