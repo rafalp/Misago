@@ -36,14 +36,6 @@ MISAGO_ANONYMOUS_USERNAME = "Ghost"
 MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
 
 
-# Automatically delete new user accounts that weren't activated in specified time
-# If you rely on admin review of new registrations, make this period long, disable
-# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
-# keep it short to give users a chance to retry on their own after few days pass.s
-
-MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 0
-
-
 # Custom markup extensions
 
 MISAGO_MARKUP_EXTENSIONS = []

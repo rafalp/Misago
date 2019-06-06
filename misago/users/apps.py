@@ -57,7 +57,7 @@ class MisagoUsersConfig(AppConfig):
 
         def can_delete_own_account(request):
             return request.settings.allow_delete_own_account
-        
+
         usercp.add_section(
             link="misago:usercp-delete-account",
             name=_("Delete account"),

@@ -39,6 +39,7 @@ def submit_image(admin_client, image=""):
         "allow_data_downloads": "no",
         "data_downloads_expiration": 48,
         "allow_delete_own_account": "no",
+        "new_inactive_accounts_delete": 0,
     }
 
     return admin_client.post(admin_link, data)

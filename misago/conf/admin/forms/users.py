@@ -26,6 +26,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "allow_data_downloads",
         "data_downloads_expiration",
         "allow_delete_own_account",
+        "new_inactive_accounts_delete",
     ]
 
     account_activation = forms.ChoiceField(
@@ -38,6 +39,15 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+    new_inactive_accounts_delete = forms.IntegerField(
+        label=_(
+            "Delete new inactive accounts if they weren't activated "
+            "within this number of days"
+        ),
+        help_text=_("Enter 0 to never delete inactive new accounts."),
+        min_value=0,
+    )
+
     username_length_min = forms.IntegerField(
         label=_("Minimum allowed username length"), min_value=2, max_value=20
     )
@@ -143,7 +153,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
 
     allow_data_downloads = YesNoSwitch(label=_("Allow users to download their data"))
     data_downloads_expiration = forms.IntegerField(
-        label=_("Data downloads expiration time (in hours)"),
+        label=_("Maximum age in hours of data downloads before they expire"),
         help_text=_(
             "Data downloads older than specified will have their files deleted and "
             "will be marked as expired."

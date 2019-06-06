@@ -100,6 +100,7 @@ default_settings = [
     {"setting": "allow_delete_own_account", "python_type": "bool", "dry_value": False},
     {"setting": "top_posters_ranking_length", "python_type": "int", "dry_value": 30},
     {"setting": "top_posters_ranking_size", "python_type": "int", "dry_value": 50},
+    {"setting": "new_inactive_accounts_delete", "python_type": "int", "dry_value": 0},
 ]
 
 removed_settings = ["forum_branding_display", "forum_branding_text"]

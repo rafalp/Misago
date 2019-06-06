@@ -5,9 +5,17 @@
 {% block form-body %}
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Basic settings" %}</legend>
+    <legend>{% trans "New accounts" %}</legend>
 
     {% form_row form.account_activation %}
+    {% form_row form.new_inactive_accounts_delete %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Usernames" %}</legend>
+
     {% form_row form.username_length_min %}
     {% form_row form.username_length_max %}
 
@@ -39,10 +47,17 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "GDPR compliance" %}</legend>
+    <legend>{% trans "Data downloads" %}</legend>
 
     {% form_row form.allow_data_downloads %}
     {% form_row form.data_downloads_expiration %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Own account deletion" %}</legend>
+
     {% form_row form.allow_delete_own_account %}
 
   </fieldset>
