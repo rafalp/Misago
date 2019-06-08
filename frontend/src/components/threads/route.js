@@ -170,8 +170,8 @@ export default class extends WithDropdown {
     } else if (this.props.options.title) {
       title.set(this.props.options.title)
     } else {
-      if (misago.get("SETTINGS").forum_index_title) {
-        document.title = misago.get("SETTINGS").forum_index_title
+      if (misago.get("SETTINGS").index_title) {
+        document.title = misago.get("SETTINGS").index_title
       } else {
         document.title = misago.get("SETTINGS").forum_name
       }

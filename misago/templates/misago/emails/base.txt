@@ -8,4 +8,4 @@
 
 ------------------------------------------------
 {% if settings.email_footer %}{{ settings.email_footer }}{% endif %}
-Sent from {{ SITE_ADDRESS }}
+Sent from {{ settings.forum_address }}

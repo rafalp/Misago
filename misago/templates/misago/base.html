@@ -1,4 +1,4 @@
-{% load i18n static misago_json %}
+{% load i18n static misago_absoluteurl misago_json %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE_SHORT }}">
   <head>
@@ -14,14 +14,28 @@
         <meta property="og:title" content="{% spaceless %}{% block og-title %}{% endblock og-title %}{% endspaceless %}" />
         <meta property="og:description" content="{% spaceless %}{% block og-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock og-description %}{% endspaceless %}" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ SITE_ADDRESS }}{% endblock og-url %}{% endspaceless %}" />
-        <meta property="og:image" content="{% spaceless %}{% block og-image %}{% static 'og-image.jpg' %}{% endblock og-image %}{% endspaceless %}" />
+        <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ settings.forum_address }}{% endblock og-url %}{% endspaceless %}" />
+        {% block og-image %}
+          {% if og_image %}
+            <meta property="og:image" content="{% absoluteurl og_image.url %}" />
+            <meta property="og:image:width" content="{{ og_image.width }}" />
+            <meta property="og:image:height" content="{{ og_image.height }}" />
+          {% else %}
+            {% static "misago/img/og-image.jpg" as og_image_url %}
+            <meta property="og:image" content="{% absoluteurl og_image_url %}" />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          {% endif %}
+        {% endblock og-image %}
       {% endblock og-tags %}
     {% endspaceless %}
     {% include "misago/head.html" %}
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ SITE_ADDRESS }}"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
   </head>
   <body {% if misago_agreement %}class="agreement-overlay-visible"{% endif %}>
+    {% if settings.google_tracking_id %}
+      {% include "misago/analytics.html" %}
+    {% endif %}
 
     <div id="auth-message-mount"></div>
     <div id="snackbar-mount"></div>

@@ -6,6 +6,7 @@ from ...admin.views import render
 from ...admin.views.generic import AdminView
 from ..models import Setting
 from .forms import (
+    ChangeAnalyticsSettingsForm,
     ChangeCaptchaSettingsForm,
     ChangeGeneralSettingsForm,
     ChangeThreadsSettingsForm,
@@ -28,12 +29,14 @@ class ChangeSettingsView(AdminView):
     def dispatch(self, request, *args, **kwargs):
         settings = self.get_settings(self.form_class.settings)
         initial = self.get_initial_form_data(settings)
-        form = self.form_class(initial=initial)
+        form = self.form_class(request=request, initial=initial)
         if request.method == "POST":
-            form = self.form_class(request.POST, request.FILES, initial=initial)
+            form = self.form_class(
+                request.POST, request.FILES, request=request, initial=initial
+            )
             if form.is_valid():
                 form.save(settings)
-                messages.success(request, _("Changes in settings have been saved!"))
+                messages.success(request, _("Settings have been saved."))
                 return redirect(request.path_info)
         return self.render(request, {"form": form, "form_settings": settings})
 
@@ -55,6 +58,11 @@ class ChangeSettingsView(AdminView):
 
     def get_initial_form_data(self, settings):
         return {key: setting.value for key, setting in settings.items()}
+
+
+class ChangeAnalyticsSettingsView(ChangeSettingsView):
+    form_class = ChangeAnalyticsSettingsForm
+    template_name = "misago/admin/conf/analytics_settings.html"
 
 
 class ChangeCaptchaSettingsView(ChangeSettingsView):

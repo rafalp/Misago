@@ -1,5 +1,5 @@
 {% extends "misago/base.html" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block title %}
@@ -26,8 +26,21 @@
 
 
 {% block og-url %}
-{{ SITE_ADDRESS }}{{ thread.get_absolute_url }}
+{% absoluteurl thread.get_absolute_url %}
 {% endblock og-url %}
+
+
+{% block og-image %}
+{% if settings.og_image_avatar_on_thread and thread.starter %}
+  {% with thread.starter.avatars|first as og_image %}
+    <meta property="og:image" content="{% absoluteurl og_image.url %}" />
+    <meta property="og:image:width" content="{{ og_image.size }}" />
+    <meta property="og:image:height" content="{{ og_image.size }}" />
+  {% endwith %}
+{% else %}
+  {{ block.super }}
+{% endif %}
+{% endblock og-image %}
 
 
 {% block meta-extra %}

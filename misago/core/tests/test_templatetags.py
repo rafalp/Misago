@@ -1,37 +1,7 @@
 from django.template import Context, Template
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
-from ..templatetags.misago_absoluteurl import absoluteurl
 from ..templatetags.misago_batch import batch, batchnonefilled
-
-TEST_ADDRESS = "https://testsite.com/"
-
-
-class AbsoluteUrlTests(TestCase):
-    @override_settings(MISAGO_ADDRESS=None)
-    def test_address_is_none(self):
-        """template tag returns null if address setting is not filled"""
-        result = absoluteurl("misago:index")
-        self.assertIsNone(result)
-
-    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
-    def test_prefix_url(self):
-        """template tag prefixes already reversed url"""
-        result = absoluteurl("/")
-        self.assertEqual(result, TEST_ADDRESS)
-
-    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
-    def test_prefix_url_name(self):
-        """template tag reverses url name and prefixes it"""
-        result = absoluteurl("misago:index")
-        self.assertEqual(result, TEST_ADDRESS)
-
-    @override_settings(MISAGO_ADDRESS=TEST_ADDRESS)
-    def test_dont_change_absolute_url(self):
-        """template tag doesn't change already absolute urls"""
-        absolute_url = "https://github.com/rafalp/Misago/issues/1067"
-        result = absoluteurl(absolute_url)
-        self.assertEqual(result, absolute_url)
 
 
 class CaptureTests(TestCase):

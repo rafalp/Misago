@@ -3,15 +3,11 @@
 
 
 {% block title %}
-{% if settings.forum_index_title %}
-  {{ settings.forum_index_title }}
-{% else %}
-  {{ settings.forum_name }}
-{% endif %}
+{{ settings.index_title|default:settings.forum_name }}
 {% endblock title %}
 
 
-{% block meta-description %}{{ settings.forum_index_meta_description }}{% endblock meta-description %}
+{% block meta-description %}{{ settings.index_meta_description:default:"" }}{% endblock meta-description %}
 
 
 {% block content %}

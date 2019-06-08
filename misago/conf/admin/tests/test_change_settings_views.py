@@ -75,6 +75,11 @@ def test_view_invalidates_settings_cache_on_correct_post_request(rf, setting):
         view(rf.post("/", {setting.setting: "New Value"}))
 
 
+def test_analytics_settings_form_renders(admin_client):
+    response = admin_client.get(reverse("misago:admin:settings:analytics:index"))
+    assert response.status_code == 200
+
+
 def test_captcha_settings_form_renders(admin_client):
     response = admin_client.get(reverse("misago:admin:settings:captcha:index"))
     assert response.status_code == 200

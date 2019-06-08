@@ -129,3 +129,14 @@ def test_public_settings_getter_excludes_private_settings_from_dict(
     settings = DynamicSettings(cache_versions)
     public_settings = settings.get_public_settings()
     assert "private_setting" not in public_settings
+
+
+def test_getter_returns_setting_dict(cache_versions, public_setting):
+    settings = DynamicSettings(cache_versions)
+    assert settings.get(public_setting.setting) == {
+        "value": public_setting.value,
+        "is_lazy": public_setting.is_lazy,
+        "is_public": public_setting.is_public,
+        "width": public_setting.image_width,
+        "height": public_setting.image_height,
+    }

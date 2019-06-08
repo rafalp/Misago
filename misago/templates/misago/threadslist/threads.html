@@ -1,15 +1,13 @@
 {% extends "misago/threadslist/base.html" %}
-{% load i18n %}
+{% load i18n misago_absoluteurl %}
 
 
 {% block title %}
   {% if THREADS_ON_INDEX and paginator.page == 1 %}
     {% if list_name %}
       {{ list_name }} | {{ block.super }}
-    {% elif settings.forum_index_title %}
-      {{ settings.forum_index_title }}
     {% else %}
-      {{ settings.forum_name }}
+      {{ settings.index_title|default:settings.forum_name }}
     {% endif %}
   {% else %}
     {% if list_name %}
@@ -24,26 +22,22 @@
 
 
 {% block meta-description %}
-  {% if THREADS_ON_INDEX and settings.forum_index_meta_description %}
-    {{ settings.forum_index_meta_description }}
+  {% if THREADS_ON_INDEX and settings.index_meta_description %}
+    {{ settings.index_meta_description }}
   {% endif %}
 {% endblock meta-description %}
 
 
 {% block og-title %}
   {% if THREADS_ON_INDEX %}
-    {% if settings.forum_index_title %}
-      {{ settings.forum_index_title }}
-    {% else %}
-      {{ settings.forum_name }}
-    {% endif %}
+    {{ settings.index_title|default:settings.forum_name }}
   {% else %}
     {% trans "Threads" %}
   {% endif %}
 {% endblock og-title %}
 
 
-{% block og-url %}{{ SITE_ADDRESS }}{{ REQUEST_PATH }}{% endblock %}
+{% block og-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block page-header %}
@@ -54,11 +48,7 @@
         <div class="row">
           <div class="col-xs-12">
             {% if THREADS_ON_INDEX %}
-              {% if settings.forum_index_title %}
-                <h1>{{ settings.forum_index_title }}</h1>
-              {% else %}
-                <h1>{{ settings.forum_name }}</h1>
-              {% endif %}
+              <h1>{{ settings.index_title|default:settings.forum_name }}</h1>
             {% else %}
               <h1>{% trans "Threads" %}</h1>
             {% endif %}

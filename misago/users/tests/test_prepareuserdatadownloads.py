@@ -3,7 +3,7 @@ from io import StringIO
 from django.core import mail
 from django.core.management import call_command
 
-from ...conf import settings
+from ...conf.test import override_dynamic_settings
 from ..datadownloads import request_user_data_download
 from ..management.commands import prepareuserdatadownloads
 from ..models import DataDownload
@@ -17,9 +17,10 @@ class PrepareUserDataDownloadsTests(AuthenticatedUserTestCase):
         self.assertEqual(data_download.status, DataDownload.STATUS_PENDING)
 
         out = StringIO()
-        call_command(prepareuserdatadownloads.Command(), stdout=out)
-        command_output = out.getvalue().splitlines()[0].strip()
+        with override_dynamic_settings(forum_address="http://test.com/"):
+            call_command(prepareuserdatadownloads.Command(), stdout=out)
 
+        command_output = out.getvalue().splitlines()[0].strip()
         self.assertEqual(command_output, "Data downloads prepared: 1")
 
         updated_data_download = DataDownload.objects.get(pk=data_download.pk)
@@ -32,9 +33,7 @@ class PrepareUserDataDownloadsTests(AuthenticatedUserTestCase):
             mail.outbox[0].subject, "TestUser, your data download is ready"
         )
 
-        absolute_url = "".join(
-            [settings.MISAGO_ADDRESS.rstrip("/"), updated_data_download.file.url]
-        )
+        absolute_url = "".join(["http://test.com", updated_data_download.file.url])
         self.assertIn(absolute_url, mail.outbox[0].body)
 
     def test_skip_ready_data_download(self):

@@ -11,6 +11,9 @@ class DynamicSettings:
             self._settings = get_settings_from_db()
             set_settings_cache(cache_versions, self._settings)
 
+    def get(self, setting):
+        return self._settings.get(setting)
+
     def get_public_settings(self):
         public_settings = {}
         for name, setting in self._settings.items():
@@ -50,22 +53,25 @@ class DynamicSettings:
 def get_settings_from_db():
     settings = {}
     for setting in Setting.objects.iterator():
+        settings[setting.setting] = {
+            "value": None,
+            "is_lazy": setting.is_lazy,
+            "is_public": setting.is_public,
+            "width": None,
+            "height": None,
+        }
+
         if setting.is_lazy:
-            settings[setting.setting] = {
-                "value": True if setting.value else None,
-                "is_lazy": setting.is_lazy,
-                "is_public": setting.is_public,
-            }
+            settings[setting.setting]["value"] = True if setting.value else None
         elif setting.python_type == "image":
-            settings[setting.setting] = {
-                "value": setting.value.url if setting.value else None,
-                "is_lazy": setting.is_lazy,
-                "is_public": setting.is_public,
-            }
+            settings[setting.setting].update(
+                {
+                    "value": setting.value.url if setting.value else None,
+                    "width": setting.image_width,
+                    "height": setting.image_height,
+                }
+            )
         else:
-            settings[setting.setting] = {
-                "value": setting.value,
-                "is_lazy": setting.is_lazy,
-                "is_public": setting.is_public,
-            }
+            settings[setting.setting]["value"] = setting.value
+
     return settings

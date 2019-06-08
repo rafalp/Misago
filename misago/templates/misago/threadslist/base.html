@@ -3,9 +3,9 @@
 
 
 {% block meta-extra %}
-<link rel="canonical" href="{{ REQUEST_PATH }}" />
+<link rel="canonical" href="{{ request_path }}" />
 {% if list_page.next %}
-<link rel="next" href="{{ REQUEST_PATH }}?start={{ list_page.next }}" />
+<link rel="next" href="{{ request_path }}?start={{ list_page.next }}" />
 {% endif %}
 {% endblock meta-extra %}
 
@@ -80,7 +80,7 @@
             <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
               <ul class="pager">
                 <li class="next">
-                  <a href="{{ REQUEST_PATH }}?page={{ list_page.next }}" rel="next" title="{% trans 'Next page' %}">
+                  <a href="{{ request_path }}?page={{ list_page.next }}" rel="next" title="{% trans 'Next page' %}">
                     <span aria-hidden="true" class="material-icon">
                       arrow_forward
                     </span>
