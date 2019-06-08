@@ -186,12 +186,6 @@ MISAGO_ATTACHMENT_403_IMAGE = "misago/img/attachment-403.png"
 MISAGO_ATTACHMENT_404_IMAGE = "misago/img/attachment-404.png"
 
 
-# Specifies the number of days that IP addresses are stored in the database before removing.
-# Change this setting to None to never remove old IP addresses.
-
-MISAGO_IP_STORE_TIME = None
-
-
 # Available Moment.js locales
 
 MISAGO_MOMENT_JS_LOCALES = [

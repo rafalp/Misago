@@ -64,6 +64,14 @@
 </div>
 <div class="form-fieldset">
   <fieldset>
+    <legend>{% trans "IP addresses" %}</legend>
+
+    {% form_row form.ip_storage_time %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
     <legend>{% trans "Default subscription preferences" %}</legend>
 
     {% form_row form.subscribe_start %}

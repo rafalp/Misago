@@ -27,6 +27,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "data_downloads_expiration",
         "allow_delete_own_account",
         "new_inactive_accounts_delete",
+        "ip_storage_time",
     ]
 
     account_activation = forms.ChoiceField(
@@ -163,6 +164,16 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
 
     allow_delete_own_account = YesNoSwitch(
         label=_("Allow users to delete their own accounts")
+    )
+
+    ip_storage_time = forms.IntegerField(
+        label=_("IP storage time"),
+        help_text=_(
+            "Number of days for which users IP addresses are stored in forum database. "
+            "Enter zero to store registered IP addresses forever. Deleting user "
+            "account always deletes the IP addresses associated with it."
+        ),
+        min_value=0,
     )
 
     def clean_blank_avatar(self):
