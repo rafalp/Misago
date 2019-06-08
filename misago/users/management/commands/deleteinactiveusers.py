@@ -32,7 +32,7 @@ class Command(BaseCommand):
         )
 
         for user in chunk_queryset(queryset):
-            user.delete()
+            user.delete(anonymous_username=settings.anonymous_username)
             users_deleted += 1
 
         self.stdout.write("Deleted inactive user accounts: %s" % users_deleted)

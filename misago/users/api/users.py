@@ -317,7 +317,7 @@ class UserViewSet(viewsets.GenericViewSet):
                         category.synchronize()
                         category.save()
 
-                profile.delete()
+                profile.delete(anonymous_username=request.settings.anonymous_username)
 
         return Response({})
 

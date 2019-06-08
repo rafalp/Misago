@@ -25,11 +25,6 @@ MISAGO_ACL_EXTENSIONS = [
 ]
 
 
-# Anonymous name used to replace deleted user's name in places that are keeping it
-
-MISAGO_ANONYMOUS_USERNAME = "Ghost"
-
-
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 

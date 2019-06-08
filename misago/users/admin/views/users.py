@@ -218,7 +218,7 @@ class UsersList(UserAdmin, generic.ListView):
                 raise generic.MassActionError(message)
 
         for user in users:
-            user.delete()
+            user.delete(anonymous_username=request.settings.anonymous_username)
 
         messages.success(request, _("Selected users have been deleted."))
 

@@ -25,6 +25,7 @@ def submit_image(admin_client, image=""):
         "account_activation": "user",
         "username_length_min": 10,
         "username_length_max": 10,
+        "anonymous_username": "Deleted",
         "avatar_upload_limit": 2000,
         "default_avatar": "gravatar",
         "default_gravatar_fallback": "dynamic",

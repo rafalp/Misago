@@ -252,7 +252,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         if kwargs.pop("delete_content", False):
             self.delete_content()
 
-        self.anonymize_data()
+        username = kwargs.pop("anonymous_username", None)
+        if username:
+            self.anonymize_data(username)
+        else:
+            raise ValueError("user.delete() requires 'anonymous_username' argument")
 
         avatars.delete_avatar(self)
 
@@ -268,13 +272,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         self.is_deleting_account = True
         self.save(update_fields=["is_active", "is_deleting_account"])
 
-    def anonymize_data(self):
+    def anonymize_data(self, anonymous_username):
         """Replaces username with anonymized one, then send anonymization signal.
 
         Items associated with this user then anonymize their user-specific data
         like username or IP addresses.
         """
-        self.username = settings.MISAGO_ANONYMOUS_USERNAME
+        self.username = anonymous_username
         self.slug = slugify(self.username)
 
         from ..signals import anonymize_user_data

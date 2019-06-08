@@ -56,14 +56,14 @@ def test_audit_trail_is_created_with_generic_relation_to_target(
 
 def test_audit_trail_is_deleted_together_with_user(request_mock, user, other_user):
     audit_trail = create_audit_trail(request_mock, other_user)
-    user.delete()
+    user.delete(anonymous_username="Deleted")
     with pytest.raises(AuditTrail.DoesNotExist):
         audit_trail.refresh_from_db()
 
 
 def test_audit_trail_is_kept_after_its_target_is_deleted(request_mock, other_user):
     audit_trail = create_audit_trail(request_mock, other_user)
-    other_user.delete()
+    other_user.delete(anonymous_username="Deleted")
     audit_trail.refresh_from_db()
 
 

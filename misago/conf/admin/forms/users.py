@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
+from ....users.validators import validate_username_content
 from ... import settings
 from .base import ChangeSettingsForm
 
@@ -19,6 +20,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "subscribe_start",
         "username_length_max",
         "username_length_min",
+        "anonymous_username",
         "users_per_page",
         "users_per_page_orphans",
         "top_posters_ranking_length",
@@ -174,6 +176,17 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             "account always deletes the IP addresses associated with it."
         ),
         min_value=0,
+    )
+
+    anonymous_username = forms.CharField(
+        label=_("Anonymous username"),
+        help_text=_(
+            "This username is displayed instead of delete user's actual name "
+            "next to their content."
+        ),
+        min_length=1,
+        max_length=15,
+        validators=[validate_username_content],
     )
 
     def clean_blank_avatar(self):

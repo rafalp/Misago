@@ -58,7 +58,7 @@ def test_command_displays_message_if_old_ip_removal_is_enabled(db):
 
 
 @override_dynamic_settings(ip_storage_time=None)
-def test_command_displays_message_if_old_ip_removal_is_disabled():
+def test_command_displays_message_if_old_ip_removal_is_disabled(db):
     stdout = StringIO()
     call_command(removeoldips.Command(), stdout=stdout)
 

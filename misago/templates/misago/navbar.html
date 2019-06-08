@@ -2,13 +2,13 @@
 <nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
 
   <div class="container navbar-full navbar-desktop-nav">
-    {% if settings.forum_branding_text or settings.forum_branding_logo %}
+    {% if settings.logo_text or settings.logo %}
       <a href="{% url 'misago:index' %}" class="navbar-brand">
-        {% if settings.forum_branding_logo %}
-          <img src="{{ settings.forum_branding_logo }}" alt="">
+        {% if settings.logo %}
+          <img src="{{ settings.logo }}" alt="">
         {% endif %}
-        {% if settings.forum_branding_text %}
-          <span>{{ settings.forum_branding_text}}</span>
+        {% if settings.logo_text %}
+          <span>{{ settings.logo_text}}</span>
         {% endif %}
       </a>
     {% endif %}
@@ -48,10 +48,10 @@
   </div><!-- /full navbar -->
 
   <ul class="nav navbar-nav navbar-compact-nav" itemscope itemtype="http://schema.org/SiteNavigationElement">
-    {% if settings.forum_branding_icon %}
+    {% if settings.logo_small %}
       <li>
         <a href="{% url 'misago:index' %}" class="brand-link">
-          <img src="{{ forum_branding_icon }}" alt="">
+          <img src="{{ settings.logo_small }}" alt="">
         </a>
       </li>
       {% if THREADS_ON_INDEX %}
