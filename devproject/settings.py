@@ -359,44 +359,16 @@ MISAGO_AVATARS_SIZES = [400, 200, 100]
 MISAGO_SEARCH_CONFIG = "simple"
 
 
-# Allow users to download their personal data
-# Enables users to learn what data about them is being held by the site without having
-# to contact site's administrators.
-
-MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
-
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 
 MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, "userdata")
 
 
-# Allow users to delete their accounts
-# Lets users delete their own account on the site without having to contact site administrators.
-# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
-# data about user left behind after user is deleted.
-
-MISAGO_ENABLE_DELETE_OWN_ACCOUNT = True
-
-
-# Automatically delete new user accounts that weren't activated in specified time
-# If you rely on admin review of new registrations, make this period long, disable
-# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
-# keep it short to give users a chance to retry on their own after few days pass.
-
-MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 2
-
-
 # Path to directory containing avatar galleries
 # Those galleries can be loaded by running loadavatargallery command
 
 MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, "avatargallery")
-
-
-# Specifies the number of days that IP addresses are stored in the database before removing.
-# Change this setting to None to never remove old IP addresses.
-
-MISAGO_IP_STORE_TIME = 50
 
 
 # Profile fields
