@@ -158,29 +158,16 @@ class CreateUserAuditTrailTests(UserTestCase):
         User.objects.get(id=self.obj.id)
 
 
-class RemoveOldAuditTrailsTest(UserTestCase):
-    def setUp(self):
-        super().setUp()
+def test_recent_audit_trail_is_not_deleted(user, other_user):
+        create_user_audit_trail(user, USER_IP, other_user)
+        remove_old_ips.send(None, ip_storage_time=1)
+        assert user.audittrail_set.exists()
+    
 
-        self.obj = create_test_user("OtherUser", "user@example.com")
-
-    def test_recent_audit_trail_is_kept(self):
-        """remove_old_ips keeps recent audit trails"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-
-        remove_old_ips.send(None)
-
-        self.assertEqual(user.audittrail_set.count(), 1)
-
-    def test_old_audit_trail_is_removed(self):
-        """remove_old_ips removes old audit trails"""
-        user = self.get_authenticated_user()
-        audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
-
-        audit_trail.created_on = timezone.now() - timedelta(days=50)
+def test_old_audit_trail_is_deleted(user, other_user):
+        audit_trail = create_user_audit_trail(user, USER_IP, other_user)
+        audit_trail.created_on = timezone.now() - timedelta(days=6)
         audit_trail.save()
 
-        remove_old_ips.send(None)
-
-        self.assertEqual(user.audittrail_set.count(), 0)
+        remove_old_ips.send(None, ip_storage_time=5)
+        assert not user.audittrail_set.exists()
