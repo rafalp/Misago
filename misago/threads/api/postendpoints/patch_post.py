@@ -1,5 +1,5 @@
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from rest_framework import serializers
 from rest_framework.response import Response
 
@@ -16,8 +16,6 @@ from ...permissions import (
     allow_unhide_post,
     exclude_invisible_posts,
 )
-
-PATCH_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
 
 post_patch_dispatcher = ApiPatch()
 
@@ -140,7 +138,9 @@ def post_patch_endpoint(request, post):
 
 
 def bulk_patch_endpoint(request, thread):
-    serializer = BulkPatchSerializer(data=request.data)
+    serializer = BulkPatchSerializer(
+        data=request.data, context={"settings": request.settings}
+    )
     if not serializer.is_valid():
         return Response(serializer.errors, status=400)
 
@@ -184,10 +184,20 @@ def clean_posts_for_patch(request, thread, posts_ids):
 
 class BulkPatchSerializer(serializers.Serializer):
     ids = serializers.ListField(
-        child=serializers.IntegerField(min_value=1),
-        max_length=PATCH_LIMIT,
-        min_length=1,
+        child=serializers.IntegerField(min_value=1), min_length=1
     )
     ops = serializers.ListField(
         child=serializers.DictField(), min_length=1, max_length=10
     )
+
+    def validate_ids(self, data):
+        settings = self.context["settings"]
+        limit = settings.posts_per_page + settings.posts_per_page_orphans
+        if len(data) > limit:
+            message = ngettext(
+                "No more than %(limit)s post can be updated at a single time.",
+                "No more than %(limit)s posts can be updated at a single time.",
+                limit,
+            )
+            raise serializers.ValidationError(message % {"limit": limit})
+        return data

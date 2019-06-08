@@ -50,7 +50,7 @@ class ViewModel(BaseViewModel):
         add_acl_to_obj(request.user_acl, model)
 
         if read_aware:
-            make_read_aware(request.user, request.user_acl, model)
+            make_read_aware(request, model)
         if subscription_aware:
             make_subscription_aware(request.user, model)
 

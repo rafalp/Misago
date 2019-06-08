@@ -32,5 +32,8 @@ class MisagoAdminExtension:
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Legal agreements"), parent="settings", namespace="agreements"
+            name=_("Legal agreements"),
+            description=_("Set terms of service and privacy policy contents."),
+            parent="settings",
+            namespace="agreements",
         )

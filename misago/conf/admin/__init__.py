@@ -53,7 +53,7 @@ class MisagoAdminExtension:
         site.add_node(
             name=_("Users"),
             description=_(
-                "Customize user accounts default behaviour and features availability."
+                "Customize user accounts default behavior and features availability."
             ),
             parent="settings",
             namespace="users",
@@ -77,7 +77,7 @@ class MisagoAdminExtension:
         )
         site.add_node(
             name=_("Threads"),
-            description=_("Those settings control threads and posts."),
+            description=_("Threads, posts, polls and attachments options."),
             parent="settings",
             namespace="threads",
             after="analytics:index",

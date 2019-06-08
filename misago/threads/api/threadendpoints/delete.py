@@ -16,7 +16,11 @@ def delete_thread(request, thread):
 def delete_bulk(request, viewmodel):
     serializer = DeleteThreadsSerializer(
         data={"threads": request.data},
-        context={"request": request, "viewmodel": viewmodel},
+        context={
+            "request": request,
+            "settings": request.settings,
+            "viewmodel": viewmodel,
+        },
     )
 
     if not serializer.is_valid():

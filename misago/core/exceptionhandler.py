@@ -64,7 +64,7 @@ def handle_permission_denied_exception(request, exception):
 
 
 def handle_social_auth_exception(request, exception):
-    social_logger.error(exception)
+    social_logger.error(exception, exc_info=exception)
     return errorpages.social_auth_failed(request, exception)
 
 

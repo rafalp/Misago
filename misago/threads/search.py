@@ -11,8 +11,6 @@ from .serializers import FeedSerializer
 from .utils import add_categories_to_items
 from .viewmodels import ThreadsRootCategory
 
-HITS_CEILING = settings.MISAGO_POSTS_PER_PAGE * 5
-
 
 class SearchThreads(SearchProvider):
     name = _("Threads")
@@ -34,8 +32,8 @@ class SearchThreads(SearchProvider):
         list_page = paginate(
             results,
             page,
-            settings.MISAGO_POSTS_PER_PAGE,
-            settings.MISAGO_POSTS_TAIL,
+            self.request.settings.posts_per_page,
+            self.request.settings.posts_per_page_orphans,
             allow_explicit_first_page=True,
         )
         paginator = pagination_dict(list_page)
@@ -66,6 +64,8 @@ class SearchThreads(SearchProvider):
 
 
 def search_threads(request, query, visible_threads):
+    max_hits = request.settings.posts_per_page * 5
+
     search_query = SearchQuery(
         filter_search(query), config=settings.MISAGO_SEARCH_CONFIG
     )
@@ -81,8 +81,8 @@ def search_threads(request, query, visible_threads):
         search_vector=search_query,
     )
 
-    if queryset[: HITS_CEILING + 1].count() > HITS_CEILING:
-        queryset = queryset.order_by("-id")[:HITS_CEILING]
+    if queryset[: max_hits + 1].count() > max_hits:
+        queryset = queryset.order_by("-id")[:max_hits]
 
     return (
         Post.objects.filter(id__in=queryset.values("id"))

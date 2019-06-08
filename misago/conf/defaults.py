@@ -25,42 +25,10 @@ MISAGO_ACL_EXTENSIONS = [
 ]
 
 
-# Anonymous name used to replace deleted user's name in places that are keeping it
-
-MISAGO_ANONYMOUS_USERNAME = "Ghost"
-
-
-# Allow users to download their personal data
-# Enables users to learn what data about them is being held by the site without having
-# to contact site's administrators.
-
-MISAGO_ENABLE_DOWNLOAD_OWN_DATA = True
-
-# Number of hours for which user data should be available for download.
-# When data download is marked as expired, data archive associated with it is deleted.
-
-MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS = 48
-
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 
 MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = None
-
-
-# Automatically delete new user accounts that weren't activated in specified time
-# If you rely on admin review of new registrations, make this period long, disable
-# the "deleteinactiveusers" management command, or change this value to zero. Otherwise
-# keep it short to give users a chance to retry on their own after few days pass.s
-
-MISAGO_DELETE_NEW_INACTIVE_USERS_OLDER_THAN_DAYS = 0
-
-
-# Allow users to delete their accounts
-# Lets users delete their own account on the site without having to contact site administrators.
-# This mechanism doesn't delete user posts, polls or attachments, but attempts to anonymize any
-# data about user left behind after user is deleted.
-
-MISAGO_ENABLE_DELETE_OWN_ACCOUNT = False
 
 
 # Custom markup extensions
@@ -127,12 +95,6 @@ MISAGO_SEARCH_EXTENSIONS = [
 ]
 
 
-# Misago-admin specific date formats
-
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH = "j M"
-MISAGO_COMPACT_DATE_FORMAT_DAY_MONTH_YEAR = "M 'y"
-
-
 # Additional registration validators
 # https://misago.readthedocs.io/en/latest/developers/validating_registrations.html
 
@@ -145,12 +107,6 @@ MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
 # Custom profile fields
 
 MISAGO_PROFILE_FIELDS = []
-
-
-# Stop Forum Spam settings
-
-MISAGO_USE_STOP_FORUM_SPAM = True
-MISAGO_STOP_FORUM_SPAM_MIN_CONFIDENCE = 80
 
 
 # Social Auth Backends Names Overrides
@@ -186,19 +142,6 @@ MISAGO_ADMIN_SESSION_EXPIRATION = 60
 MISAGO_THREADS_ON_INDEX = True
 
 
-# Max age of notifications in days
-# Notifications older than this are deleted. On very active forums its better to keep this smaller.
-
-MISAGO_NOTIFICATIONS_MAX_AGE = 40
-
-
-# Fail-safe limits in case forum is raided by spambot
-# No user may exceed those limits, however you may disable them by changing them to 0.
-
-MISAGO_DIALY_POST_LIMIT = 600
-MISAGO_HOURLY_POST_LIMIT = 100
-
-
 # Function used for generating individual avatar for user
 
 MISAGO_DYNAMIC_AVATAR_DRAWER = "misago.users.avatars.dynamic.draw_default"
@@ -222,28 +165,6 @@ MISAGO_AVATARS_SIZES = [400, 200, 150, 100, 64, 50, 30]
 MISAGO_BLANK_AVATAR = "misago/img/blank-avatar.png"
 
 
-# Threads lists pagination settings
-
-MISAGO_THREADS_PER_PAGE = 25
-
-
-# Posts lists pagination settings
-
-MISAGO_POSTS_PER_PAGE = 18
-MISAGO_POSTS_TAIL = 6
-
-
-# Number of events displayed on single thread page
-# If there's more events than specified, oldest events will be trimmed
-
-MISAGO_EVENTS_PER_PAGE = 20
-
-
-# Number of attachments possible to assign to single post
-
-MISAGO_POST_ATTACHMENTS_LIMIT = 16
-
-
 # Max allowed size of image before Misago will generate thumbnail for it
 
 MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT = (500, 500)
@@ -253,49 +174,11 @@ MISAGO_ATTACHMENT_IMAGE_SIZE_LIMIT = (500, 500)
 
 MISAGO_ATTACHMENT_SECRET_LENGTH = 64
 
-# How old (in minutes) should attachments unassociated with any be before they'll
-# automatically deleted by "clearattachments" task
-
-MISAGO_ATTACHMENT_ORPHANED_EXPIRE = 24 * 60
-
 
 # Names of files served when user requests file that doesn't exist or is unavailable
-# Those files will be sought within STATIC_ROOT directory
 
-MISAGO_404_IMAGE = "misago/img/error-404.png"
-MISAGO_403_IMAGE = "misago/img/error-403.png"
-
-
-# Controls max age in days of items that Misago has to process to make rankings
-# Used for active posters and most liked users lists
-# If your forum runs out of memory when trying to generate users rankings list
-# or you want those to be more dynamic, give this setting lower value
-# You don't have to be overzelous with this as user rankings are cached for 24h
-
-MISAGO_RANKING_LENGTH = 30
-
-# Controls max number of items displayed on ranked lists
-
-MISAGO_RANKING_SIZE = 50
-
-
-# Specifies the number of days that IP addresses are stored in the database before removing.
-# Change this setting to None to never remove old IP addresses.
-
-MISAGO_IP_STORE_TIME = None
-
-
-# Controls number of users displayed on single page
-
-MISAGO_USERS_PER_PAGE = 12
-
-
-# Controls amount of data used by readtracking system
-# Items older than number of days specified below are considered read
-# Depending on amount of new content being posted on your forum you may want
-# To decrease or increase this number to fine-tune readtracker performance
-
-MISAGO_READTRACKER_CUTOFF = 40
+MISAGO_ATTACHMENT_403_IMAGE = "misago/img/attachment-403.png"
+MISAGO_ATTACHMENT_404_IMAGE = "misago/img/attachment-404.png"
 
 
 # Available Moment.js locales

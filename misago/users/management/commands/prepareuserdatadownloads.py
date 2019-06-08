@@ -3,9 +3,8 @@ import logging
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext
 
-from ....cache.versions import get_cache_versions
 from ....conf import settings
-from ....conf.dynamicsettings import DynamicSettings
+from ....conf.shortcuts import get_dynamic_settings
 from ....core.mail import mail_user
 from ....core.pgutils import chunk_queryset
 from ...datadownloads import prepare_user_data_download
@@ -27,15 +26,14 @@ class Command(BaseCommand):
             )
             return
 
-        cache_versions = get_cache_versions()
-        dynamic_settings = DynamicSettings(cache_versions)
-        expires_in = settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS
+        dynamic_settings = get_dynamic_settings()
+        expires_in = dynamic_settings.data_downloads_expiration
 
         downloads_prepared = 0
         queryset = DataDownload.objects.select_related("user")
         queryset = queryset.filter(status=DataDownload.STATUS_PENDING)
         for data_download in chunk_queryset(queryset):
-            if prepare_user_data_download(data_download, logger):
+            if prepare_user_data_download(data_download, expires_in, logger):
                 user = data_download.user
                 subject = gettext("%(user)s, your data download is ready") % {
                     "user": user

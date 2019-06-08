@@ -45,7 +45,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         change_owner(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="changed_owner")
         self.assertEqual(
@@ -68,7 +68,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         add_participant(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="added_participant")
         self.assertEqual(
@@ -94,7 +94,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="owner_left")
         self.assertEqual(
@@ -120,7 +120,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="removed_owner")
         self.assertEqual(
@@ -146,7 +146,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="participant_left")
         self.assertEqual(
@@ -172,7 +172,7 @@ class AnonymizeEventsTests(AuthenticatedUserTestCase):
         make_participants_aware(self.user, self.thread)
         remove_participant(request, self.thread, user)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         event = Post.objects.get(event_type="removed_participant")
         self.assertEqual(
@@ -211,7 +211,7 @@ class AnonymizeLikesTests(AuthenticatedUserTestCase):
         patch_is_liked(self.get_request(self.user), post, 1)
         patch_is_liked(self.get_request(user), post, 1)
 
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         last_likes = Post.objects.get(pk=post.pk).last_likes
         self.assertEqual(
@@ -242,7 +242,7 @@ class AnonymizePostsTests(AuthenticatedUserTestCase):
 
         user = create_test_user("OtherUser", "otheruser@example.com")
         post = test.reply_thread(thread, poster=user)
-        user.anonymize_data()
+        user.anonymize_data(anonymous_username="Deleted")
 
         anonymized_post = Post.objects.get(pk=post.pk)
         self.assertTrue(anonymized_post.is_valid)

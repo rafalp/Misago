@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from .. import test
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...users.test import AuthenticatedUserTestCase
 from ..models import Post, Thread
 from ..test import patch_category_acl
@@ -94,18 +95,19 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
             {"ids": {"0": ["Ensure this value is greater than or equal to 1."]}},
         )
 
+    @override_dynamic_settings(posts_per_page=4, posts_per_page_orphans=3)
     def test_too_large_input(self):
         """api rejects too large input"""
         response = self.patch(
             self.api_link,
-            {"ids": [i + 1 for i in range(200)], "ops": [{} for i in range(200)]},
+            {"ids": [i + 1 for i in range(8)], "ops": [{} for i in range(200)]},
         )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
             {
-                "ids": ["Ensure this field has no more than 24 elements."],
+                "ids": ["No more than 7 posts can be updated at a single time."],
                 "ops": ["Ensure this field has no more than 10 elements."],
             },
         )

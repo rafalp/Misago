@@ -1,49 +1,205 @@
 from datetime import timedelta
 
+import pytest
 from django.utils import timezone
 
-from ...users.test import AuthenticatedUserTestCase
-from ..api.postingendpoint import PostingInterrupt
+from ...conf.test import override_dynamic_settings
+from ..api.postingendpoint import PostingEndpoint, PostingInterrupt
 from ..api.postingendpoint.floodprotection import FloodProtectionMiddleware
+from ..test import post_thread
 
-user_acl = {"can_omit_flood_protection": False}
+default_acl = {"can_omit_flood_protection": False}
+can_omit_flood_acl = {"can_omit_flood_protection": True}
 
 
-class FloodProtectionMiddlewareTests(AuthenticatedUserTestCase):
-    def test_flood_protection_middleware_on_no_posts(self):
-        """middleware sets last_posted_on on user"""
-        self.user.update_fields = []
-        self.assertIsNone(self.user.last_posted_on)
+def test_middleware_lets_users_first_post_through(dynamic_settings, user):
+    user.update_fields = []
+    middleware = FloodProtectionMiddleware(
+        settings=dynamic_settings, user=user, user_acl=default_acl
+    )
+    middleware.interrupt_posting(None)
 
-        middleware = FloodProtectionMiddleware(user=self.user, user_acl=user_acl)
+
+def test_middleware_updates_users_last_post_datetime(dynamic_settings, user):
+    user.update_fields = []
+    middleware = FloodProtectionMiddleware(
+        settings=dynamic_settings, user=user, user_acl=default_acl
+    )
+    middleware.interrupt_posting(None)
+    assert user.last_posted_on
+    assert "last_posted_on" in user.update_fields
+
+
+def test_middleware_interrupts_posting_because_previous_post_was_posted_too_recently(
+    dynamic_settings, user
+):
+    user.last_posted_on = timezone.now()
+    user.update_fields = []
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    assert middleware.use_this_middleware()
+
+    with pytest.raises(PostingInterrupt):
         middleware.interrupt_posting(None)
 
-        self.assertIsNotNone(self.user.last_posted_on)
 
-    def test_flood_protection_middleware_old_posts(self):
-        """middleware is not interrupting if previous post is old"""
-        self.user.update_fields = []
+def test_middleware_lets_users_next_post_through_if_previous_post_is_not_recent(
+    dynamic_settings, user
+):
+    user.last_posted_on = timezone.now() - timedelta(seconds=10)
+    user.update_fields = []
 
-        original_last_posted_on = timezone.now() - timedelta(days=1)
-        self.user.last_posted_on = original_last_posted_on
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    assert middleware.use_this_middleware()
+    middleware.interrupt_posting(None)
 
-        middleware = FloodProtectionMiddleware(user=self.user, user_acl=user_acl)
+
+def test_middleware_is_not_used_if_user_has_permission_to_omit_flood_protection(
+    dynamic_settings, user
+):
+    user.last_posted_on = timezone.now()
+    user.update_fields = []
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=can_omit_flood_acl,
+    )
+    assert not middleware.use_this_middleware()
+
+
+def test_middleware_is_not_used_if_user_edits_post(dynamic_settings, user):
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.EDIT,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=can_omit_flood_acl,
+    )
+    assert not middleware.use_this_middleware()
+
+
+@override_dynamic_settings(hourly_post_limit=3)
+def test_middleware_interrupts_posting_if_hourly_limit_was_met(
+    default_category, dynamic_settings, user
+):
+    user.update_fields = []
+
+    for _ in range(3):
+        post_thread(default_category, poster=user)
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    assert middleware.use_this_middleware()
+
+    with pytest.raises(PostingInterrupt):
         middleware.interrupt_posting(None)
 
-        self.assertTrue(self.user.last_posted_on > original_last_posted_on)
 
-    def test_flood_protection_middleware_on_flood(self):
-        """middleware is interrupting flood"""
-        self.user.last_posted_on = timezone.now()
+@override_dynamic_settings(hourly_post_limit=0)
+def test_old_posts_dont_count_to_hourly_limit(default_category, dynamic_settings, user):
+    user.update_fields = []
 
-        with self.assertRaises(PostingInterrupt):
-            middleware = FloodProtectionMiddleware(user=self.user, user_acl=user_acl)
-            middleware.interrupt_posting(None)
-
-    def test_flood_permission(self):
-        """middleware is respects permission to flood for team members"""
-        can_omit_flood_protection_user_acl = {"can_omit_flood_protection": True}
-        middleware = FloodProtectionMiddleware(
-            user=self.user, user_acl=can_omit_flood_protection_user_acl
+    for _ in range(3):
+        post_thread(
+            default_category,
+            poster=user,
+            started_on=timezone.now() - timedelta(hours=1),
         )
-        self.assertFalse(middleware.use_this_middleware())
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    middleware.interrupt_posting(None)
+
+
+@override_dynamic_settings(hourly_post_limit=0)
+def test_middleware_lets_post_through_if_hourly_limit_was_disabled(
+    default_category, dynamic_settings, user
+):
+    user.update_fields = []
+
+    for _ in range(3):
+        post_thread(default_category, poster=user)
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    middleware.interrupt_posting(None)
+
+
+@override_dynamic_settings(daily_post_limit=3)
+def test_middleware_interrupts_posting_if_daily_limit_was_met(
+    default_category, dynamic_settings, user
+):
+    user.update_fields = []
+
+    for _ in range(3):
+        post_thread(default_category, poster=user)
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    assert middleware.use_this_middleware()
+
+    with pytest.raises(PostingInterrupt):
+        middleware.interrupt_posting(None)
+
+
+@override_dynamic_settings(daily_post_limit=0)
+def test_old_posts_dont_count_to_daily_limit(default_category, dynamic_settings, user):
+    user.update_fields = []
+
+    for _ in range(3):
+        post_thread(
+            default_category, poster=user, started_on=timezone.now() - timedelta(days=1)
+        )
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    middleware.interrupt_posting(None)
+
+
+@override_dynamic_settings(daily_post_limit=0)
+def test_middleware_lets_post_through_if_daily_limit_was_disabled(
+    default_category, dynamic_settings, user
+):
+    user.update_fields = []
+
+    for _ in range(3):
+        post_thread(default_category, poster=user)
+
+    middleware = FloodProtectionMiddleware(
+        mode=PostingEndpoint.START,
+        settings=dynamic_settings,
+        user=user,
+        user_acl=default_acl,
+    )
+    middleware.interrupt_posting(None)

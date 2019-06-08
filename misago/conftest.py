@@ -7,6 +7,7 @@ from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .themes import THEME_CACHE
+from .threads.test import post_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
@@ -44,6 +45,11 @@ def user_password():
 @pytest.fixture
 def anonymous_user():
     return AnonymousUser()
+
+
+@pytest.fixture
+def anonymous_user_acl(anonymous_user, cache_versions):
+    return useracl.get_user_acl(anonymous_user, cache_versions)
 
 
 @pytest.fixture
@@ -108,6 +114,14 @@ def other_superuser(db, user_password):
 
 
 @pytest.fixture
+def user_client(mocker, client, user):
+    client.force_login(user)
+    session = client.session
+    session.save()
+    return client
+
+
+@pytest.fixture
 def admin_client(mocker, client, superuser):
     client.force_login(superuser)
     session = client.session
@@ -133,3 +147,53 @@ def root_category(db):
 @pytest.fixture
 def default_category(db):
     return Category.objects.get(slug="first-category")
+
+
+@pytest.fixture
+def thread(default_category):
+    return post_thread(default_category)
+
+
+@pytest.fixture
+def hidden_thread(default_category):
+    return post_thread(default_category, is_hidden=True)
+
+
+@pytest.fixture
+def unapproved_thread(default_category):
+    return post_thread(default_category, is_unapproved=True)
+
+
+@pytest.fixture
+def post(thread):
+    return thread.first_post
+
+
+@pytest.fixture
+def user_thread(default_category, user):
+    return post_thread(default_category, poster=user)
+
+
+@pytest.fixture
+def user_hidden_thread(default_category, user):
+    return post_thread(default_category, poster=user, is_hidden=True)
+
+
+@pytest.fixture
+def user_unapproved_thread(default_category, user):
+    return post_thread(default_category, poster=user, is_unapproved=True)
+
+
+@pytest.fixture
+def other_user_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user)
+
+
+@pytest.fixture
+def other_user_hidden_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user, is_hidden=True)
+
+
+@pytest.fixture
+def other_user_unapproved_thread(default_category, other_user):
+    return post_thread(default_category, poster=other_user, is_unapproved=True)

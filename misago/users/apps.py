@@ -44,21 +44,27 @@ class MisagoUsersConfig(AppConfig):
             icon="vpn_key",
         )
 
-        if settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
-            usercp.add_section(
-                link="misago:usercp-download-data",
-                name=_("Download data"),
-                component="download-data",
-                icon="save_alt",
-            )
+        def can_download_own_data(request):
+            return request.settings.allow_data_downloads
 
-        if settings.MISAGO_ENABLE_DELETE_OWN_ACCOUNT:
-            usercp.add_section(
-                link="misago:usercp-delete-account",
-                name=_("Delete account"),
-                component="delete-account",
-                icon="cancel",
-            )
+        usercp.add_section(
+            link="misago:usercp-download-data",
+            name=_("Download data"),
+            component="download-data",
+            icon="save_alt",
+            visible_if=can_download_own_data,
+        )
+
+        def can_delete_own_account(request):
+            return request.settings.allow_delete_own_account
+
+        usercp.add_section(
+            link="misago:usercp-delete-account",
+            name=_("Delete account"),
+            component="delete-account",
+            icon="cancel",
+            visible_if=can_delete_own_account,
+        )
 
     def register_default_users_list_pages(self):
         users_list.add_section(

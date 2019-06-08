@@ -401,9 +401,9 @@ class ThreadModelTests(TestCase):
         ThreadParticipant.objects.add_participants(self.thread, [user, other_user])
         self.assertEqual(self.thread.participants.count(), 2)
 
-        user.delete()
+        user.delete(anonymous_username="Deleted")
         Thread.objects.get(id=self.thread.id)
 
-        other_user.delete()
+        other_user.delete(anonymous_username="Deleted")
         with self.assertRaises(Thread.DoesNotExist):
             Thread.objects.get(id=self.thread.id)

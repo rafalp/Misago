@@ -1,186 +1,120 @@
 from datetime import timedelta
 
-from django.contrib.auth import get_user_model
+import pytest
 from django.utils import timezone
 
 from ..audittrail import create_audit_trail, create_user_audit_trail
 from ..models import AuditTrail
 from ..signals import remove_old_ips
-from ..test import UserTestCase, create_test_user
-
-User = get_user_model()
 
 USER_IP = "13.41.51.41"
 
 
-class MockRequest:
+class RequestMock:
     user_ip = USER_IP
 
     def __init__(self, user):
         self.user = user
 
 
-class CreateAuditTrailTests(UserTestCase):
-    def setUp(self):
-        super().setUp()
-
-        self.obj = create_test_user("OtherUser", "user@example.com")
-
-    def test_create_audit_require_model(self):
-        """create_audit_trail requires model instance"""
-        anonymous_user = self.get_anonymous_user()
-        request = MockRequest(anonymous_user)
-        with self.assertRaises(ValueError):
-            create_audit_trail(request, anonymous_user)
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_create_audit_trail_anonymous_user(self):
-        """create_audit_trail doesn't record anonymous users"""
-        user = self.get_anonymous_user()
-        request = MockRequest(user)
-        create_audit_trail(request, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_create_audit_trail(self):
-        """create_audit_trail creates new db record"""
-        user = self.get_authenticated_user()
-        request = MockRequest(user)
-        create_audit_trail(request, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        self.assertEqual(audit_trail.user, user)
-        self.assertEqual(audit_trail.ip_address, request.user_ip)
-        self.assertEqual(audit_trail.content_object, self.obj)
-
-    def test_delete_user_remove_audit_trail(self):
-        """audit trail is deleted together with user it belongs to"""
-        user = self.get_authenticated_user()
-        request = MockRequest(user)
-        create_audit_trail(request, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        user.delete()
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_delete_obj_keep_audit_trail(self):
-        """audit trail is kept after with obj it points at is deleted"""
-        user = self.get_authenticated_user()
-        request = MockRequest(user)
-        create_audit_trail(request, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        self.obj.delete()
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        self.assertEqual(audit_trail.user, user)
-        self.assertEqual(audit_trail.ip_address, request.user_ip)
-        self.assertIsNone(audit_trail.content_object)
-
-    def test_delete_audit_trail(self):
-        """audit trail deletion leaves other data untouched"""
-        user = self.get_authenticated_user()
-        request = MockRequest(user)
-        create_audit_trail(request, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        audit_trail.delete()
-
-        User.objects.get(id=user.id)
-        User.objects.get(id=self.obj.id)
+@pytest.fixture
+def request_mock(user):
+    return RequestMock(user)
 
 
-class CreateUserAuditTrailTests(UserTestCase):
-    def setUp(self):
-        super().setUp()
-
-        self.obj = create_test_user("OtherUser", "user@example.com")
-
-    def test_create_user_audit_require_model(self):
-        """create_user_audit_trail requires model instance"""
-        anonymous_user = self.get_anonymous_user()
-        with self.assertRaises(ValueError):
-            create_user_audit_trail(anonymous_user, USER_IP, anonymous_user)
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_create_user_audit_trail_anonymous_user(self):
-        """create_user_audit_trail doesn't record anonymous users"""
-        user = self.get_anonymous_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_create_user_audit_trail(self):
-        """create_user_audit_trail creates new db record"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        self.assertEqual(audit_trail.user, user)
-        self.assertEqual(audit_trail.ip_address, USER_IP)
-        self.assertEqual(audit_trail.content_object, self.obj)
-
-    def test_delete_user_remove_audit_trail(self):
-        """audit trail is deleted together with user it belongs to"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        user.delete()
-        self.assertEqual(AuditTrail.objects.count(), 0)
-
-    def test_delete_obj_keep_audit_trail(self):
-        """audit trail is kept after with obj it points at is deleted"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        self.obj.delete()
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        self.assertEqual(audit_trail.user, user)
-        self.assertEqual(audit_trail.ip_address, USER_IP)
-        self.assertIsNone(audit_trail.content_object)
-
-    def test_delete_audit_trail(self):
-        """audit trail deletion leaves other data untouched"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
-        self.assertEqual(AuditTrail.objects.count(), 1)
-
-        audit_trail = user.audittrail_set.all()[0]
-        audit_trail.delete()
-
-        User.objects.get(id=user.id)
-        User.objects.get(id=self.obj.id)
+def test_audit_trail_creation_raises_value_error_if_target_is_not_model_instance(
+    request_mock, anonymous_user
+):
+    with pytest.raises(ValueError):
+        create_audit_trail(request_mock, anonymous_user)
 
 
-class RemoveOldAuditTrailsTest(UserTestCase):
-    def setUp(self):
-        super().setUp()
+def test_audit_trail_is_not_created_for_anonymous_users(anonymous_user, user):
+    request_mock = RequestMock(anonymous_user)
+    create_audit_trail(request_mock, user)
+    assert not AuditTrail.objects.exists()
 
-        self.obj = create_test_user("OtherUser", "user@example.com")
 
-    def test_recent_audit_trail_is_kept(self):
-        """remove_old_ips keeps recent audit trails"""
-        user = self.get_authenticated_user()
-        create_user_audit_trail(user, USER_IP, self.obj)
+def test_audit_trail_is_created(request_mock, other_user):
+    assert create_audit_trail(request_mock, other_user)
+    assert AuditTrail.objects.exists()
 
-        remove_old_ips.send(None)
 
-        self.assertEqual(user.audittrail_set.count(), 1)
+def test_audit_trail_is_created_with_request_data(request_mock, user, other_user):
+    audit_trail = create_audit_trail(request_mock, other_user)
 
-    def test_old_audit_trail_is_removed(self):
-        """remove_old_ips removes old audit trails"""
-        user = self.get_authenticated_user()
-        audit_trail = create_user_audit_trail(user, USER_IP, self.obj)
+    assert audit_trail.user == user
+    assert audit_trail.ip_address == USER_IP
 
-        audit_trail.created_on = timezone.now() - timedelta(days=50)
-        audit_trail.save()
 
-        remove_old_ips.send(None)
+def test_audit_trail_is_created_with_generic_relation_to_target(
+    request_mock, user, other_user
+):
+    audit_trail = create_audit_trail(request_mock, other_user)
+    assert audit_trail.content_object == other_user
 
-        self.assertEqual(user.audittrail_set.count(), 0)
+
+def test_audit_trail_is_deleted_together_with_user(request_mock, user, other_user):
+    audit_trail = create_audit_trail(request_mock, other_user)
+    user.delete(anonymous_username="Deleted")
+    with pytest.raises(AuditTrail.DoesNotExist):
+        audit_trail.refresh_from_db()
+
+
+def test_audit_trail_is_kept_after_its_target_is_deleted(request_mock, other_user):
+    audit_trail = create_audit_trail(request_mock, other_user)
+    other_user.delete(anonymous_username="Deleted")
+    audit_trail.refresh_from_db()
+
+
+def test_deleting_audit_trail_leaves_user(request_mock, user, other_user):
+    audit_trail = create_audit_trail(request_mock, other_user)
+    audit_trail.delete()
+    user.refresh_from_db()
+
+
+def test_deleting_audit_trail_leaves_target(request_mock, user, other_user):
+    audit_trail = create_audit_trail(request_mock, other_user)
+    audit_trail.delete()
+    other_user.refresh_from_db()
+
+
+def test_audit_trail_can_be_created_without_request(user, other_user):
+    assert create_user_audit_trail(user, USER_IP, other_user)
+    assert AuditTrail.objects.exists()
+
+
+def test_audit_trail_creation_without_request_raises_value_error_if_target_is_not_model(
+    user, anonymous_user
+):
+    with pytest.raises(ValueError):
+        create_user_audit_trail(user, USER_IP, anonymous_user)
+
+
+def test_audit_trail_without_request_is_created_with_explicit_data(user, other_user):
+    audit_trail = create_user_audit_trail(user, USER_IP, other_user)
+
+    assert audit_trail.user == user
+    assert audit_trail.ip_address == USER_IP
+
+
+def test_audit_trail_without_request_is_created_with_generic_relation_to_target(
+    user, other_user
+):
+    audit_trail = create_user_audit_trail(user, USER_IP, other_user)
+    assert audit_trail.content_object == other_user
+
+
+def test_recent_audit_trail_is_not_deleted_on_signal(user, other_user):
+    create_user_audit_trail(user, USER_IP, other_user)
+    remove_old_ips.send(None, ip_storage_time=1)
+    assert user.audittrail_set.exists()
+
+
+def test_old_audit_trail_is_deleted_on_signal(user, other_user):
+    audit_trail = create_user_audit_trail(user, USER_IP, other_user)
+    audit_trail.created_on = timezone.now() - timedelta(days=6)
+    audit_trail.save()
+
+    remove_old_ips.send(None, ip_storage_time=5)
+    assert not user.audittrail_set.exists()

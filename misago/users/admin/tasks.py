@@ -1,6 +1,8 @@
 from celery import shared_task
 from django.contrib.auth import get_user_model
 
+from ...conf.shortcuts import get_dynamic_settings
+
 User = get_user_model()
 
 
@@ -11,4 +13,5 @@ def delete_user_with_content(pk):
     except User.DoesNotExist:
         pass
     else:
-        user.delete(delete_content=True)
+        settings = get_dynamic_settings()
+        user.delete(anonymous_username=settings.anonymous_username, delete_content=True)

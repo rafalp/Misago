@@ -638,7 +638,7 @@ class RequestDataDownloadsForm(forms.Form):
         if len(user_identifiers) > 20:
             raise forms.ValidationError(
                 _(
-                    "You may not enter more than 20 items at single time "
+                    "You may not enter more than 20 items at a single time "
                     "(You have entered %(show_value)s)."
                 )
                 % {"show_value": len(user_identifiers)}

@@ -1,5 +1,4 @@
-from django.test.utils import override_settings
-
+from ...conf.test import override_dynamic_settings
 from ..datadownloads import request_user_data_download
 from ..test import AuthenticatedUserTestCase
 
@@ -31,7 +30,7 @@ class UserRequestDataDownload(AuthenticatedUserTestCase):
             {"detail": "You can't request data downloads for other users."},
         )
 
-    @override_settings(MISAGO_ENABLE_DOWNLOAD_OWN_DATA=False)
+    @override_dynamic_settings(allow_data_downloads=False)
     def test_request_download_disabled(self):
         """request to api fails if own data downloads are disabled"""
         response = self.client.post(self.link)
@@ -48,7 +47,7 @@ class UserRequestDataDownload(AuthenticatedUserTestCase):
             response.json(),
             {
                 "detail": (
-                    "You can't have more than one data download request at single time."
+                    "You can't have more than one data download request at a single time."
                 )
             },
         )

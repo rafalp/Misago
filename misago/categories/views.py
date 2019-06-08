@@ -6,9 +6,7 @@ from .utils import get_categories_tree
 
 
 def categories(request):
-    categories_tree = get_categories_tree(
-        request.user, request.user_acl, join_posters=True
-    )
+    categories_tree = get_categories_tree(request, join_posters=True)
 
     request.frontend_context.update(
         {

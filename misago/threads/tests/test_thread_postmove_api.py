@@ -4,10 +4,10 @@ from django.urls import reverse
 
 from .. import test
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...readtracker import poststracker
 from ...users.test import AuthenticatedUserTestCase
 from ..models import Thread
-from ..serializers.moderation import POSTS_LIMIT
 from ..test import patch_category_acl, patch_other_category_acl
 
 
@@ -266,6 +266,7 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
             response.json(), {"detail": "One or more post ids received were invalid."}
         )
 
+    @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=3)
     @patch_category_acl({"can_move_posts": True})
     def test_move_limit(self):
         """api rejects more posts than move limit"""
@@ -274,20 +275,14 @@ class ThreadPostMoveApiTestCase(AuthenticatedUserTestCase):
         response = self.client.post(
             self.api_link,
             json.dumps(
-                {
-                    "new_thread": other_thread.get_absolute_url(),
-                    "posts": list(range(POSTS_LIMIT + 1)),
-                }
+                {"new_thread": other_thread.get_absolute_url(), "posts": list(range(9))}
             ),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {
-                "detail": "No more than %s posts can be moved at single time."
-                % POSTS_LIMIT
-            },
+            {"detail": "No more than 8 posts can be moved at a single time."},
         )
 
     @patch_category_acl({"can_move_posts": True})
