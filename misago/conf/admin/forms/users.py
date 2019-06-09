@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
+from ....core.validators import validate_image_square
 from ....users.validators import validate_username_content
 from ... import settings
 from .base import ChangeSettingsForm
@@ -194,13 +195,11 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         if not upload or upload == self.initial.get("blank_avatar"):
             return None
 
-        if upload.image.width != upload.image.height:
-            raise forms.ValidationError(_("Submitted image is not a square."))
-
+        validate_image_square(upload.image)
         min_size = max(settings.MISAGO_AVATARS_SIZES)
         if upload.image.width < min_size:
             raise forms.ValidationError(
-                _("Submitted image's edge should be at least %(size)s pixels long.")
+                _("Uploaded image's edge should be at least %(size)s pixels long.")
                 % {"size": min_size}
             )
 

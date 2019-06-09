@@ -19,11 +19,11 @@
 
       {% if form.is_bound and not form.is_valid %}
         {% for error in form.non_field_errors %}
-          <div class="alert alert-danger text-center" role="alert">
+          <div class="alert alert-danger" role="alert">
             {{ error }}
           </div>
         {% empty %}
-          <div class="alert alert-danger text-center" role="alert">
+          <div class="alert alert-danger" role="alert">
             {% trans "Form was completed with errors." %}
           </div>
         {% endfor %}

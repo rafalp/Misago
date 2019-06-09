@@ -9,5 +9,6 @@ class Icon(models.Model):
     image = models.ImageField(
         upload_to="icon", height_field="height", width_field="width"
     )
-    width = models.PositiveIntegerField(null=True, blank=True)
-    height = models.PositiveIntegerField(null=True, blank=True)
+    size = models.PositiveIntegerField(default=0)
+    width = models.PositiveIntegerField(default=0)
+    height = models.PositiveIntegerField(default=0)

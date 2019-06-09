@@ -19,3 +19,8 @@ class validate_sluggable:
 
         if len(slug) > 255:
             raise ValidationError(self.error_long)
+
+
+def validate_image_square(image):
+    if image.width != image.height:
+        raise ValidationError(_("Uploaded image is not a square."))
