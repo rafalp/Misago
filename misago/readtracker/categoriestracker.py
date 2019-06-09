@@ -1,9 +1,9 @@
 from ..threads.models import Post, Thread
 from ..threads.permissions import exclude_invisible_posts, exclude_invisible_threads
-from .dates import get_cutoff_date
+from .cutoffdate import get_cutoff_date
 
 
-def make_read_aware(user, user_acl, categories):
+def make_read_aware(request, categories):
     if not categories:
         return
 
@@ -12,24 +12,24 @@ def make_read_aware(user, user_acl, categories):
 
     make_read(categories)
 
-    if user.is_anonymous:
+    if request.user.is_anonymous:
         return
 
     threads = Thread.objects.filter(category__in=categories)
-    threads = exclude_invisible_threads(user_acl, categories, threads)
+    threads = exclude_invisible_threads(request.user_acl, categories, threads)
 
     queryset = (
         Post.objects.filter(
             category__in=categories,
             thread__in=threads,
-            posted_on__gt=get_cutoff_date(user),
+            posted_on__gt=get_cutoff_date(request.settings, request.user),
         )
         .values_list("category", flat=True)
         .distinct()
     )
 
-    queryset = queryset.exclude(id__in=user.postread_set.values("post"))
-    queryset = exclude_invisible_posts(user_acl, categories, queryset)
+    queryset = queryset.exclude(id__in=request.user.postread_set.values("post"))
+    queryset = exclude_invisible_posts(request.user_acl, categories, queryset)
 
     unread_categories = list(queryset)
 

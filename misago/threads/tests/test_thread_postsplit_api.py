@@ -4,10 +4,10 @@ from django.urls import reverse
 
 from .. import test
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ...readtracker import poststracker
 from ...users.test import AuthenticatedUserTestCase
 from ..models import Post
-from ..serializers.moderation import POSTS_LIMIT
 from ..test import patch_category_acl, patch_other_category_acl
 
 
@@ -157,21 +157,19 @@ class ThreadPostSplitApiTestCase(AuthenticatedUserTestCase):
             response.json(), {"detail": "One or more post ids received were invalid."}
         )
 
+    @override_dynamic_settings(posts_per_page=5, posts_per_page_orphans=3)
     @patch_category_acl({"can_move_posts": True})
     def test_split_limit(self):
         """api rejects more posts than split limit"""
         response = self.client.post(
             self.api_link,
-            json.dumps({"posts": list(range(POSTS_LIMIT + 1))}),
+            json.dumps({"posts": list(range(9))}),
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {
-                "detail": "No more than %s posts can be split at single time."
-                % POSTS_LIMIT
-            },
+            {"detail": "No more than 8 posts can be split at a single time."},
         )
 
     @patch_category_acl({"can_move_posts": True})

@@ -7,7 +7,5 @@ from .utils import get_categories_tree
 
 class CategoryViewSet(viewsets.ViewSet):
     def list(self, request):
-        categories_tree = get_categories_tree(
-            request.user, request.user_acl, join_posters=True
-        )
+        categories_tree = get_categories_tree(request, join_posters=True)
         return Response(CategorySerializer(categories_tree, many=True).data)

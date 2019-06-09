@@ -10,10 +10,10 @@ from ..models import Avatar, DataDownload, User
 from ..utils import hash_email
 
 
-def test_username_and_slug_is_removed_by_anonymization(user):
-    user.anonymize_data()
-    assert user.username == settings.MISAGO_ANONYMOUS_USERNAME
-    assert user.slug == slugify(settings.MISAGO_ANONYMOUS_USERNAME)
+def test_username_and_slug_is_anonymized(user):
+    user.anonymize_data(anonymous_username="Deleted")
+    assert user.username == "Deleted"
+    assert user.slug == slugify("Deleted")
 
 
 def test_user_avatar_files_are_deleted_during_user_deletion(user):
@@ -28,7 +28,7 @@ def test_user_avatar_files_are_deleted_during_user_deletion(user):
         user_avatars.append(avatar)
     assert user_avatars
 
-    user.delete()
+    user.delete(anonymous_username="Deleted")
 
     for removed_avatar in user_avatars:
         avatar_path = Path(removed_avatar.image.path)
@@ -85,7 +85,7 @@ def test_marking_user_for_deletion_deactivates_their_account_in_db(user):
 
 def test_user_data_downloads_are_removed_by_anonymization(user):
     data_download = request_user_data_download(user)
-    user.anonymize_data()
+    user.anonymize_data(anonymous_username="Deleted")
 
     with pytest.raises(DataDownload.DoesNotExist):
         data_download.refresh_from_db()
@@ -93,7 +93,7 @@ def test_user_data_downloads_are_removed_by_anonymization(user):
 
 def test_deleting_user_also_deletes_their_data_downloads(user):
     data_download = request_user_data_download(user)
-    user.delete()
+    user.delete(anonymous_username="Deleted")
 
     with pytest.raises(DataDownload.DoesNotExist):
         data_download.refresh_from_db()

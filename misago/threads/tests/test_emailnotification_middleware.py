@@ -128,6 +128,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
 
         self.assertEqual(len(mail.outbox), 0)
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     @patch_category_acl({"can_reply_threads": True})
     def test_other_notified(self):
         """email is sent to subscriber"""
@@ -138,11 +139,10 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True,
         )
 
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            response = self.client.post(
-                self.api_link, data={"post": "This is test response!"}
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            self.api_link, data={"post": "This is test response!"}
+        )
+        self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
         last_email = mail.outbox[-1]
@@ -159,6 +159,7 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
         last_post = self.thread.post_set.order_by("id").last()
         self.assertIn(last_post.get_absolute_url(), message)
 
+    @override_dynamic_settings(forum_address="http://test.com/")
     @patch_category_acl({"can_reply_threads": True})
     def test_other_notified_after_reading(self):
         """email is sent to subscriber that had sub updated by read api"""
@@ -169,11 +170,10 @@ class EmailNotificationTests(AuthenticatedUserTestCase):
             send_email=True,
         )
 
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            response = self.client.post(
-                self.api_link, data={"post": "This is test response!"}
-            )
-            self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            self.api_link, data={"post": "This is test response!"}
+        )
+        self.assertEqual(response.status_code, 200)
 
         self.assertEqual(len(mail.outbox), 1)
         last_email = mail.outbox[-1]

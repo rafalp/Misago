@@ -5,7 +5,7 @@ from django.db.models import Count
 from django.utils import timezone
 
 from ..categories.models import Category
-from ..conf import settings
+from ..conf.shortcuts import get_dynamic_settings
 from .models import ActivityRanking
 
 User = get_user_model()
@@ -23,7 +23,8 @@ def get_active_posters_ranking():
 
 
 def build_active_posters_ranking():
-    tracked_period = settings.MISAGO_RANKING_LENGTH
+    settings = get_dynamic_settings()
+    tracked_period = settings.top_posters_ranking_length
     tracked_since = timezone.now() - timedelta(days=tracked_period)
 
     ActivityRanking.objects.all().delete()
@@ -41,9 +42,10 @@ def build_active_posters_ranking():
         .annotate(score=Count("post"))
         .filter(score__gt=0)
         .order_by("-score")
-    )[: settings.MISAGO_RANKING_SIZE]
+    )[: settings.top_posters_ranking_size]
 
     new_ranking = []
     for ranking in queryset.iterator():
         new_ranking.append(ActivityRanking(user=ranking, score=ranking.score))
     ActivityRanking.objects.bulk_create(new_ranking)
+    return new_ranking

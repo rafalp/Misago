@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views import View
 
 from ...conf import settings
-from ...readtracker.dates import get_cutoff_date
+from ...readtracker.cutoffdate import get_cutoff_date
 from ..permissions import exclude_invisible_posts
 from ..viewmodels import ForumThread, PrivateThread
 
@@ -55,8 +55,8 @@ class GotoView(View):
 
         post_position = previous_posts.count()
 
-        per_page = settings.MISAGO_POSTS_PER_PAGE - 1
-        orphans = settings.MISAGO_POSTS_TAIL
+        per_page = self.request.settings.posts_per_page - 1
+        orphans = self.request.settings.posts_per_page_orphans
         if orphans:
             orphans += 1
 
@@ -90,7 +90,8 @@ class ThreadGotoLastView(GotoView):
 class GetFirstUnreadPostMixin:
     def get_first_unread_post(self, user, posts_queryset):
         if user.is_authenticated:
-            expired_posts = Q(posted_on__lt=get_cutoff_date(user))
+            cutoff_date = get_cutoff_date(self.request.settings, user)
+            expired_posts = Q(posted_on__lt=cutoff_date)
             read_posts = Q(id__in=user.postread_set.values("post"))
 
             first_unread = (

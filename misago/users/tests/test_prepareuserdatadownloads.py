@@ -11,14 +11,14 @@ from ..test import AuthenticatedUserTestCase
 
 
 class PrepareUserDataDownloadsTests(AuthenticatedUserTestCase):
+    @override_dynamic_settings(forum_address="http://test.com/")
     def test_process_pending_data_download(self):
         """management command processes pending data download"""
         data_download = request_user_data_download(self.user)
         self.assertEqual(data_download.status, DataDownload.STATUS_PENDING)
 
         out = StringIO()
-        with override_dynamic_settings(forum_address="http://test.com/"):
-            call_command(prepareuserdatadownloads.Command(), stdout=out)
+        call_command(prepareuserdatadownloads.Command(), stdout=out)
 
         command_output = out.getvalue().splitlines()[0].strip()
         self.assertEqual(command_output, "Data downloads prepared: 1")

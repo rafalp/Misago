@@ -12,7 +12,6 @@ from rest_framework.response import Response
 
 from ...acl.objectacl import add_acl_to_obj
 from ...categories.models import Category
-from ...conf import settings
 from ...core.rest_permissions import IsAuthenticatedOrReadOnly
 from ...core.shortcuts import get_int_or_404
 from ...threads.moderation import hide_post, hide_thread
@@ -269,12 +268,14 @@ class UserViewSet(viewsets.GenericViewSet):
             request.user, pk, _("You can't request data downloads for other users.")
         )
 
-        if not settings.MISAGO_ENABLE_DOWNLOAD_OWN_DATA:
+        if not request.settings.allow_data_downloads:
             raise PermissionDenied(_("You can't download your data."))
 
         if user_has_data_download_request(request.user):
             raise PermissionDenied(
-                _("You can't have more than one data download request at single time.")
+                _(
+                    "You can't have more than one data download request at a single time."
+                )
             )
 
         request_user_data_download(request.user)
@@ -316,7 +317,7 @@ class UserViewSet(viewsets.GenericViewSet):
                         category.synchronize()
                         category.save()
 
-                profile.delete()
+                profile.delete(anonymous_username=request.settings.anonymous_username)
 
         return Response({})
 

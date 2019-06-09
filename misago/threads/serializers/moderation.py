@@ -27,9 +27,6 @@ from ..threadtypes import trees_map
 from ..utils import get_thread_id_from_url
 from ..validators import validate_category, validate_thread_title
 
-POSTS_LIMIT = settings.MISAGO_POSTS_PER_PAGE + settings.MISAGO_POSTS_TAIL
-THREADS_LIMIT = settings.MISAGO_THREADS_PER_PAGE
-
 
 __all__ = [
     "DeletePostsSerializer",
@@ -41,6 +38,10 @@ __all__ = [
     "NewThreadSerializer",
     "SplitPostsSerializer",
 ]
+
+
+def get_posts_limit(settings):
+    return settings.posts_per_page + settings.posts_per_page_orphans
 
 
 class DeletePostsSerializer(serializers.Serializer):
@@ -63,13 +64,14 @@ class DeletePostsSerializer(serializers.Serializer):
     )
 
     def validate_posts(self, data):
-        if len(data) > POSTS_LIMIT:
+        limit = get_posts_limit(self.context["settings"])
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s post can be deleted at single time.",
-                "No more than %(limit)s posts can be deleted at single time.",
-                POSTS_LIMIT,
+                "No more than %(limit)s post can be deleted at a single time.",
+                "No more than %(limit)s posts can be deleted at a single time.",
+                limit,
             )
-            raise ValidationError(message % {"limit": POSTS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         user_acl = self.context["user_acl"]
         thread = self.context["thread"]
@@ -116,17 +118,18 @@ class MergePostsSerializer(serializers.Serializer):
     )
 
     def validate_posts(self, data):
+        limit = get_posts_limit(self.context["settings"])
         data = list(set(data))
 
         if len(data) < 2:
             raise serializers.ValidationError(self.error_empty_or_required)
-        if len(data) > POSTS_LIMIT:
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s post can be merged at single time.",
-                "No more than %(limit)s posts can be merged at single time.",
-                POSTS_LIMIT,
+                "No more than %(limit)s post can be merged at a single time.",
+                "No more than %(limit)s posts can be merged at a single time.",
+                limit,
             )
-            raise serializers.ValidationError(message % {"limit": POSTS_LIMIT})
+            raise serializers.ValidationError(message % {"limit": limit})
 
         user_acl = self.context["user_acl"]
         thread = self.context["thread"]
@@ -240,14 +243,15 @@ class MovePostsSerializer(serializers.Serializer):
         return new_thread
 
     def validate_posts(self, data):
+        limit = get_posts_limit(self.context["settings"])
         data = list(set(data))
-        if len(data) > POSTS_LIMIT:
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s post can be moved at single time.",
-                "No more than %(limit)s posts can be moved at single time.",
-                POSTS_LIMIT,
+                "No more than %(limit)s post can be moved at a single time.",
+                "No more than %(limit)s posts can be moved at a single time.",
+                limit,
             )
-            raise serializers.ValidationError(message % {"limit": POSTS_LIMIT})
+            raise serializers.ValidationError(message % {"limit": limit})
 
         request = self.context["request"]
         thread = self.context["thread"]
@@ -367,13 +371,14 @@ class SplitPostsSerializer(NewThreadSerializer):
     )
 
     def validate_posts(self, data):
-        if len(data) > POSTS_LIMIT:
+        limit = get_posts_limit(self.context["settings"])
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s post can be split at single time.",
-                "No more than %(limit)s posts can be split at single time.",
-                POSTS_LIMIT,
+                "No more than %(limit)s post can be split at a single time.",
+                "No more than %(limit)s posts can be split at a single time.",
+                limit,
             )
-            raise ValidationError(message % {"limit": POSTS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         thread = self.context["thread"]
         user_acl = self.context["user_acl"]
@@ -421,13 +426,14 @@ class DeleteThreadsSerializer(serializers.Serializer):
     )
 
     def validate_threads(self, data):
-        if len(data) > THREADS_LIMIT:
+        limit = self.context["settings"].threads_per_page
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s thread can be deleted at single time.",
-                "No more than %(limit)s threads can be deleted at single time.",
-                THREADS_LIMIT,
+                "No more than %(limit)s thread can be deleted at a single time.",
+                "No more than %(limit)s threads can be deleted at a single time.",
+                limit,
             )
-            raise ValidationError(message % {"limit": THREADS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         request = self.context["request"]
         viewmodel = self.context["viewmodel"]
@@ -543,13 +549,14 @@ class MergeThreadsSerializer(NewThreadSerializer):
     )
 
     def validate_threads(self, data):
-        if len(data) > THREADS_LIMIT:
+        limit = self.context["settings"].threads_per_page
+        if len(data) > limit:
             message = ngettext(
-                "No more than %(limit)s thread can be merged at single time.",
-                "No more than %(limit)s threads can be merged at single time.",
-                POSTS_LIMIT,
+                "No more than %(limit)s thread can be merged at a single time.",
+                "No more than %(limit)s threads can be merged at a single time.",
+                limit,
             )
-            raise ValidationError(message % {"limit": THREADS_LIMIT})
+            raise ValidationError(message % {"limit": limit})
 
         threads_tree_id = trees_map.get_tree_id_for_root(THREADS_ROOT_NAME)
 

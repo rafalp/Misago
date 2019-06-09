@@ -5,7 +5,6 @@ from rest_framework.fields import empty
 
 from . import PostingEndpoint, PostingMiddleware
 from ....acl.objectacl import add_acl_to_obj
-from ....conf import settings
 from ...serializers import AttachmentSerializer
 
 
@@ -21,6 +20,7 @@ class AttachmentsMiddleware(PostingMiddleware):
                 "user": self.user,
                 "user_acl": self.user_acl,
                 "post": self.post,
+                "settings": self.settings,
             },
         )
 
@@ -42,12 +42,10 @@ class AttachmentsSerializer(serializers.Serializer):
     def validate_attachments(self, ids):
         ids = list(set(ids))
 
-        validate_attachments_count(ids)
+        validate_attachments_count(ids, self.context["settings"])
 
-        attachments = self.get_initial_attachments(
-            self.context["mode"], self.context["user_acl"], self.context["post"]
-        )
-        new_attachments = self.get_new_attachments(self.context["user"], ids)
+        attachments = self.get_initial_attachments()
+        new_attachments = self.get_new_attachments(ids)
 
         if not attachments and not new_attachments:
             return []  # no attachments
@@ -74,20 +72,22 @@ class AttachmentsSerializer(serializers.Serializer):
             self.final_attachments += new_attachments
             self.final_attachments.sort(key=lambda a: a.pk, reverse=True)
 
-    def get_initial_attachments(self, mode, user_acl, post):
+    def get_initial_attachments(self):
         attachments = []
-        if mode == PostingEndpoint.EDIT:
-            queryset = post.attachment_set.select_related("filetype")
+        if self.context["mode"] == PostingEndpoint.EDIT:
+            queryset = self.context["post"].attachment_set.select_related("filetype")
             attachments = list(queryset)
-            add_acl_to_obj(user_acl, attachments)
+            add_acl_to_obj(self.context["user_acl"], attachments)
         return attachments
 
-    def get_new_attachments(self, user, ids):
+    def get_new_attachments(self, ids):
         if not ids:
             return []
 
-        queryset = user.attachment_set.select_related("filetype").filter(
-            post__isnull=True, id__in=ids
+        queryset = (
+            self.context["user"]
+            .attachment_set.select_related("filetype")
+            .filter(post__isnull=True, id__in=ids)
         )
 
         return list(queryset)
@@ -124,19 +124,19 @@ class AttachmentsSerializer(serializers.Serializer):
         post.update_fields.append("attachments_cache")
 
 
-def validate_attachments_count(data):
+def validate_attachments_count(data, settings):
     total_attachments = len(data)
-    if total_attachments > settings.MISAGO_POST_ATTACHMENTS_LIMIT:
+    if total_attachments > settings.post_attachments_limit:
         # pylint: disable=line-too-long
         message = ngettext(
             "You can't attach more than %(limit_value)s file to single post (added %(show_value)s).",
             "You can't attach more than %(limit_value)s flies to single post (added %(show_value)s).",
-            settings.MISAGO_POST_ATTACHMENTS_LIMIT,
+            settings.post_attachments_limit,
         )
         raise serializers.ValidationError(
             message
             % {
-                "limit_value": settings.MISAGO_POST_ATTACHMENTS_LIMIT,
+                "limit_value": settings.post_attachments_limit,
                 "show_value": total_attachments,
             }
         )

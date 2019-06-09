@@ -2,8 +2,9 @@ from io import StringIO
 
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
+from ...conf.test import override_dynamic_settings
 from ..management.commands import deletemarkedusers
 from ..test import create_test_user
 
@@ -26,7 +27,7 @@ class DeleteMarkedUsersTests(TestCase):
         with self.assertRaises(User.DoesNotExist):
             self.user.refresh_from_db()
 
-    @override_settings(MISAGO_ENABLE_DELETE_OWN_ACCOUNT=False)
+    @override_dynamic_settings(allow_delete_own_account=False)
     def test_delete_disabled(self):
         """deletion respects user decision even if configuration has changed"""
         out = StringIO()

@@ -1,82 +1,67 @@
 from datetime import timedelta
 from io import StringIO
 
-from django.core.management import call_command
-from django.test import TestCase
+import pytest
+from django.core import management
 from django.utils import timezone
 
-from .. import test
-from ...categories.models import Category
-from ...conf import settings
+from ...conf.test import override_dynamic_settings
 from ..management.commands import clearattachments
 from ..models import Attachment, AttachmentType
 
 
-class ClearAttachmentsTests(TestCase):
-    def test_no_attachments_sync(self):
-        """command works when there are no attachments"""
-        command = clearattachments.Command()
+@pytest.fixture
+def attachment_type(db):
+    return AttachmentType.objects.order_by("id").last()
 
-        out = StringIO()
-        call_command(command, stdout=out)
-        command_output = out.getvalue().strip()
 
-        self.assertEqual(command_output, "No attachments were found")
+def create_attachment(attachment_type, uploaded_on, post=None):
+    return Attachment.objects.create(
+        secret=Attachment.generate_new_secret(),
+        post=post,
+        filetype=attachment_type,
+        size=1000,
+        uploaded_on=uploaded_on,
+        uploader_name="User",
+        uploader_slug="user",
+        filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
+    )
 
-    def test_attachments_sync(self):
-        """command synchronizes attachments"""
-        filetype = AttachmentType.objects.order_by("id").last()
 
-        # create 5 expired orphaned attachments
-        cutoff = timezone.now() - timedelta(
-            minutes=settings.MISAGO_ATTACHMENT_ORPHANED_EXPIRE
-        )
-        cutoff -= timedelta(minutes=5)
+def call_command():
+    command = clearattachments.Command()
 
-        for _ in range(5):
-            Attachment.objects.create(
-                secret=Attachment.generate_new_secret(),
-                filetype=filetype,
-                size=1000,
-                uploaded_on=cutoff,
-                uploader_name="User",
-                uploader_slug="user",
-                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
-            )
+    out = StringIO()
+    management.call_command(command, stdout=out)
+    return out.getvalue().strip().splitlines()[-1].strip()
 
-        # create 5 expired non-orphaned attachments
-        category = Category.objects.get(slug="first-category")
-        post = test.post_thread(category).first_post
 
-        for _ in range(5):
-            Attachment.objects.create(
-                secret=Attachment.generate_new_secret(),
-                filetype=filetype,
-                size=1000,
-                uploaded_on=cutoff,
-                post=post,
-                uploader_name="User",
-                uploader_slug="user",
-                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
-            )
+def test_command_works_if_there_are_no_attachments(db):
+    command_output = call_command()
+    assert command_output == "No unused attachments were cleared"
 
-        # create 5 fresh orphaned attachments
-        for _ in range(5):
-            Attachment.objects.create(
-                secret=Attachment.generate_new_secret(),
-                filetype=filetype,
-                size=1000,
-                uploader_name="User",
-                uploader_slug="user",
-                filename="testfile_%s.zip" % (Attachment.objects.count() + 1),
-            )
 
-        command = clearattachments.Command()
+@override_dynamic_settings(unused_attachments_lifetime=2)
+def test_recent_attachment_is_not_cleared(attachment_type):
+    attachment = create_attachment(attachment_type, timezone.now())
+    command_output = call_command()
+    assert command_output == "No unused attachments were cleared"
 
-        out = StringIO()
-        call_command(command, stdout=out)
 
-        command_output = out.getvalue().splitlines()[-1].strip()
-        self.assertEqual(command_output, "Cleared 5 attachments")
+@override_dynamic_settings(unused_attachments_lifetime=2)
+def test_old_used_attachment_is_not_cleared(attachment_type, post):
+    uploaded_on = timezone.now() - timedelta(hours=3)
+    attachment = create_attachment(attachment_type, uploaded_on, post)
+    command_output = call_command()
+    assert command_output == "No unused attachments were cleared"
 
-        self.assertEqual(Attachment.objects.count(), 10)
+
+@override_dynamic_settings(unused_attachments_lifetime=2)
+def test_old_unused_attachment_is_cleared(attachment_type):
+    uploaded_on = timezone.now() - timedelta(hours=3)
+    attachment = create_attachment(attachment_type, uploaded_on)
+    command_output = call_command()
+    assert command_output == "Cleared 1 attachments"
+
+    with pytest.raises(Attachment.DoesNotExist):
+        attachment.refresh_from_db()

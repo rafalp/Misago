@@ -6,10 +6,9 @@ from django.utils.translation import gettext as _
 from django.utils.translation import gettext_lazy
 
 from ...acl.objectacl import add_acl_to_obj
-from ...conf import settings
 from ...core.cursorpagination import get_page
 from ...readtracker import threadstracker
-from ...readtracker.dates import get_cutoff_date
+from ...readtracker.cutoffdate import get_cutoff_date
 from ..models import Post, Thread
 from ..participants import make_participants_aware
 from ..permissions import exclude_invisible_posts, exclude_invisible_threads
@@ -64,7 +63,7 @@ class ViewModel:
             list_page = get_page(
                 threads_queryset,
                 "-last_post_id",
-                settings.MISAGO_THREADS_PER_PAGE,
+                request.settings.threads_per_page,
                 start,
             )
         except (EmptyPage, InvalidPage):
@@ -90,7 +89,7 @@ class ViewModel:
                 thread.is_read = False
                 thread.is_new = True
         else:
-            threadstracker.make_read_aware(request.user, request.user_acl, threads)
+            threadstracker.make_read_aware(request, threads)
 
         self.filter_threads(request, threads)
 
@@ -208,16 +207,14 @@ def filter_threads_queryset(request, categories, list_type, queryset):
 
 def filter_read_threads_queryset(request, categories, list_type, queryset):
     # grab cutoffs for categories
-    user = request.user
-
-    cutoff_date = get_cutoff_date(user)
+    cutoff_date = get_cutoff_date(request.settings, request.user)
 
     visible_posts = Post.objects.filter(posted_on__gt=cutoff_date)
     visible_posts = exclude_invisible_posts(request.user_acl, categories, visible_posts)
 
     queryset = queryset.filter(id__in=visible_posts.distinct().values("thread"))
 
-    read_posts = visible_posts.filter(id__in=user.postread_set.values("post"))
+    read_posts = visible_posts.filter(id__in=request.user.postread_set.values("post"))
 
     if list_type == "new":
         # new threads have no entry in reads table
@@ -225,7 +222,9 @@ def filter_read_threads_queryset(request, categories, list_type, queryset):
 
     if list_type == "unread":
         # unread threads were read in past but have new posts
-        unread_posts = visible_posts.exclude(id__in=user.postread_set.values("post"))
+        unread_posts = visible_posts.exclude(
+            id__in=request.user.postread_set.values("post")
+        )
         queryset = queryset.filter(id__in=read_posts.distinct().values("thread"))
         queryset = queryset.filter(id__in=unread_posts.distinct().values("thread"))
         return queryset

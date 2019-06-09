@@ -5,8 +5,8 @@ from django.urls import reverse
 from .. import test
 from ...categories import PRIVATE_THREADS_ROOT_NAME
 from ...categories.models import Category
+from ...conf.test import override_dynamic_settings
 from ..models import Thread
-from ..serializers.moderation import THREADS_LIMIT
 from ..test import patch_category_acl
 from ..threadtypes import trees_map
 from .test_threads_api import ThreadsApiTestCase
@@ -69,17 +69,15 @@ class ThreadsBulkDeleteApiTests(ThreadsApiTestCase):
             response.json(), {"detail": "One or more thread ids received were invalid."}
         )
 
+    @override_dynamic_settings(threads_per_page=4)
     @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})
     def test_validate_ids_length(self):
         """api validates that ids are list of ints"""
-        response = self.delete(self.api_link, list(range(THREADS_LIMIT + 1)))
+        response = self.delete(self.api_link, list(range(5)))
         self.assertEqual(response.status_code, 403)
         self.assertEqual(
             response.json(),
-            {
-                "detail": "No more than %s threads can be deleted at single time."
-                % THREADS_LIMIT
-            },
+            {"detail": "No more than 4 threads can be deleted at a single time."},
         )
 
     @patch_category_acl({"can_hide_threads": 2, "can_hide_own_threads": 2})

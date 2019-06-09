@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from ....admin.forms import YesNoSwitch
 from .base import ChangeSettingsForm
 
 
@@ -12,6 +13,8 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         "qa_question",
         "qa_help_text",
         "qa_answers",
+        "enable_stop_forum_spam",
+        "stop_forum_spam_confidence",
     ]
 
     captcha_type = forms.ChoiceField(
@@ -23,12 +26,14 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+
     recaptcha_site_key = forms.CharField(
         label=_("Site key"), max_length=100, required=False
     )
     recaptcha_secret_key = forms.CharField(
         label=_("Secret key"), max_length=100, required=False
     )
+
     qa_question = forms.CharField(
         label=_("Test question"), max_length=100, required=False
     )
@@ -41,6 +46,26 @@ class ChangeCaptchaSettingsForm(ChangeSettingsForm):
         widget=forms.Textarea({"rows": 4}),
         max_length=250,
         required=False,
+    )
+
+    enable_stop_forum_spam = YesNoSwitch(
+        label=_("Validate new registrations against SFS database"),
+        help_text=_(
+            "Turning this option on will result in Misago validating new user's e-mail "
+            "and IP address against SFS database."
+        ),
+    )
+    stop_forum_spam_confidence = forms.IntegerField(
+        label=_("Minimum SFS confidence required"),
+        help_text=_(
+            "SFS compares user e-mail and IP address with database of known spammers "
+            "and assigns the confidence score in range of 0 to 100 that user is a "
+            "spammer themselves. If this score is equal or higher than specified, "
+            "Misago will block user from registering and ban their IP address "
+            "for 24 hours."
+        ),
+        min_value=0,
+        max_value=100,
     )
 
     def clean(self):

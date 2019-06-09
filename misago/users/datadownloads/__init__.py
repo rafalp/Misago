@@ -25,23 +25,21 @@ def request_user_data_download(user, requester=None):
     )
 
 
-def prepare_user_data_download(download, logger=None):
+def prepare_user_data_download(download, expires_in, logger=None):
     working_dir = settings.MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR
     user = download.user
     with DataArchive(user, working_dir) as archive:
         try:
             archive_user_data.send(user, archive=archive)
             download.status = DataDownload.STATUS_READY
-            download.expires_on = timezone.now() + timedelta(
-                hours=settings.MISAGO_USER_DATA_DOWNLOADS_EXPIRE_IN_HOURS
-            )
+            download.expires_on = timezone.now() + timedelta(hours=expires_in)
             download.file = archive.get_file()
             download.save()
             # todo: send an e-mail with download link
             return True
         except Exception as e:  # pylint: disable=broad-except
             if logger:
-                logger.exception(e)
+                logger.exception(e, exc_info=e)
             return False
 
 

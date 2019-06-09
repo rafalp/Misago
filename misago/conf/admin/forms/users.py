@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ....admin.forms import YesNoSwitch
+from ....users.validators import validate_username_content
 from ... import settings
 from .base import ChangeSettingsForm
 
@@ -19,6 +20,16 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         "subscribe_start",
         "username_length_max",
         "username_length_min",
+        "anonymous_username",
+        "users_per_page",
+        "users_per_page_orphans",
+        "top_posters_ranking_length",
+        "top_posters_ranking_size",
+        "allow_data_downloads",
+        "data_downloads_expiration",
+        "allow_delete_own_account",
+        "new_inactive_accounts_delete",
+        "ip_storage_time",
     ]
 
     account_activation = forms.ChoiceField(
@@ -31,6 +42,15 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         ],
         widget=forms.RadioSelect(),
     )
+    new_inactive_accounts_delete = forms.IntegerField(
+        label=_(
+            "Delete new inactive accounts if they weren't activated "
+            "within this number of days"
+        ),
+        help_text=_("Enter 0 to never delete inactive new accounts."),
+        min_value=0,
+    )
+
     username_length_min = forms.IntegerField(
         label=_("Minimum allowed username length"), min_value=2, max_value=20
     )
@@ -76,7 +96,7 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         help_text=_(
             "Blank avatar is displayed in the interface when user's avatar is not "
             "available: when user was deleted or is guest. Uploaded image should be "
-            "a square"
+            "a square."
         ),
         required=False,
     )
@@ -113,6 +133,62 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
         widget=forms.RadioSelect(),
     )
 
+    users_per_page = forms.IntegerField(
+        label=_("Number of users displayed on a single page"), min_value=4
+    )
+    users_per_page_orphans = forms.IntegerField(
+        label=_("Maximum orphans"),
+        help_text=_(
+            "If number of users to be displayed on the last page is less or equal to "
+            "number specified in this setting, those users will instead be displayed "
+            "on previous page, reducing the total number of pages on the list."
+        ),
+        min_value=0,
+    )
+
+    top_posters_ranking_length = forms.IntegerField(
+        label=_("Maximum age in days of posts that should count to the ranking"),
+        min_value=1,
+    )
+    top_posters_ranking_size = forms.IntegerField(
+        label=_("Maximum number of ranked users"), min_value=2
+    )
+
+    allow_data_downloads = YesNoSwitch(label=_("Allow users to download their data"))
+    data_downloads_expiration = forms.IntegerField(
+        label=_("Maximum age in hours of data downloads before they expire"),
+        help_text=_(
+            "Data downloads older than specified will have their files deleted and "
+            "will be marked as expired."
+        ),
+        min_value=1,
+    )
+
+    allow_delete_own_account = YesNoSwitch(
+        label=_("Allow users to delete their own accounts")
+    )
+
+    ip_storage_time = forms.IntegerField(
+        label=_("IP storage time"),
+        help_text=_(
+            "Number of days for which users IP addresses are stored in forum database. "
+            "Enter zero to store registered IP addresses forever. Deleting user "
+            "account always deletes the IP addresses associated with it."
+        ),
+        min_value=0,
+    )
+
+    anonymous_username = forms.CharField(
+        label=_("Anonymous username"),
+        help_text=_(
+            "This username is displayed instead of delete user's actual name "
+            "next to their content."
+        ),
+        min_length=1,
+        max_length=15,
+        validators=[validate_username_content],
+    )
+
     def clean_blank_avatar(self):
         upload = self.cleaned_data.get("blank_avatar")
         if not upload or upload == self.initial.get("blank_avatar"):
@@ -129,3 +205,14 @@ class ChangeUsersSettingsForm(ChangeSettingsForm):
             )
 
         return upload
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data.get("users_per_page_orphans") > cleaned_data.get(
+            "users_per_page"
+        ):
+            self.add_error(
+                "users_per_page_orphans",
+                _("This value must be lower than number of users per page."),
+            )
+        return cleaned_data

@@ -1,168 +1,124 @@
 from datetime import timedelta
 
-from django.test import TestCase
 from django.utils import timezone
 
-from .. import poststracker, threadstracker
-from ...acl.objectacl import add_acl_to_obj
-from ...acl.useracl import get_user_acl
-from ...categories.models import Category
-from ...conf import settings
-from ...conftest import get_cache_versions
-from ...threads import test
-from ...users.test import create_test_user
-
-cache_versions = get_cache_versions()
+from ...conf.test import override_dynamic_settings
+from ...threads.test import reply_thread
+from ..threadstracker import make_read_aware
 
 
-class AnonymousUser:
-    is_authenticated = False
-    is_anonymous = True
+def remove_tracking(thread):
+    thread.started_on = timezone.now() - timedelta(days=4)
+    thread.save()
+    thread.first_post.posted_on = thread.started_on
+    thread.first_post.save()
 
 
-class ThreadsTrackerTests(TestCase):
-    def setUp(self):
-        self.user = create_test_user("User", "user@example.com")
-        self.user_acl = get_user_acl(self.user, cache_versions)
-        self.category = Category.objects.get(slug="first-category")
+def test_falsy_value_can_be_made_read_aware(request_mock):
+    make_read_aware(request_mock, None)
+    make_read_aware(request_mock, False)
 
-        add_acl_to_obj(self.user_acl, self.category)
 
-    def test_falsy_value(self):
-        """passing falsy value to readtracker causes no errors"""
-        threadstracker.make_read_aware(self.user, self.user_acl, None)
-        threadstracker.make_read_aware(self.user, self.user_acl, False)
-        threadstracker.make_read_aware(self.user, self.user_acl, [])
+def test_empty_list_can_be_made_read_aware(request_mock):
+    make_read_aware(request_mock, [])
 
-    def test_anon_thread_before_cutoff(self):
-        """non-tracked thread is marked as read for anonymous users"""
-        started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
-        thread = test.post_thread(self.category, started_on=started_on)
 
-        threadstracker.make_read_aware(AnonymousUser(), None, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
+def test_read_thread_is_marked_as_read(request_mock, read_thread):
+    make_read_aware(request_mock, read_thread)
+    assert read_thread.is_read
+    assert not read_thread.is_new
 
-    def test_anon_thread_after_cutoff(self):
-        """tracked thread is marked as read for anonymous users"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
 
-        threadstracker.make_read_aware(AnonymousUser(), None, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
+def test_read_thread_with_hidden_post_marked_as_unread(request_mock, read_thread):
+    reply_thread(read_thread, is_hidden=True)
+    make_read_aware(request_mock, read_thread)
+    assert not read_thread.is_read
+    assert read_thread.is_new
 
-    def test_user_thread_before_cutoff(self):
-        """non-tracked thread is marked as read for authenticated users"""
-        started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
-        thread = test.post_thread(self.category, started_on=started_on)
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
+def test_read_thread_with_invisible_post_marked_as_read(request_mock, read_thread):
+    reply_thread(read_thread, is_unapproved=True)
+    make_read_aware(request_mock, read_thread)
+    assert read_thread.is_read
+    assert not read_thread.is_new
 
-    def test_user_unread_thread(self):
-        """tracked thread is marked as unread for authenticated users"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertFalse(thread.is_read)
-        self.assertTrue(thread.is_new)
+def test_read_thread_with_unread_post_marked_as_unread(request_mock, read_thread):
+    reply_thread(read_thread)
+    make_read_aware(request_mock, read_thread)
+    assert not read_thread.is_read
+    assert read_thread.is_new
 
-    def test_user_created_after_thread(self):
-        """tracked thread older than user is marked as read"""
-        started_on = timezone.now() - timedelta(days=1)
-        thread = test.post_thread(self.category, started_on=started_on)
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
+def test_untracked_thread_with_tracked_post_is_marked_as_unread(request_mock, thread):
+    remove_tracking(thread)
+    reply_thread(thread)
+    make_read_aware(request_mock, thread)
+    assert not thread.is_read
+    assert thread.is_new
 
-    def test_user_read_post(self):
-        """tracked thread with read post marked as read"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
 
-        poststracker.save_read(self.user, thread.first_post)
+def test_tracked_thread_is_marked_as_unread(request_mock, thread):
+    make_read_aware(request_mock, thread)
+    assert not thread.is_read
+    assert thread.is_new
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
 
-    def test_user_first_unread_last_read_post(self):
-        """tracked thread with unread first and last read post marked as unread"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
+def test_thread_with_post_older_than_user_is_marked_as_read(request_mock, thread, user):
+    remove_tracking(thread)
+    make_read_aware(request_mock, thread)
+    assert thread.is_read
+    assert not thread.is_new
 
-        post = test.reply_thread(thread, posted_on=timezone.now())
-        poststracker.save_read(self.user, post)
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertFalse(thread.is_read)
-        self.assertTrue(thread.is_new)
+@override_dynamic_settings(readtracker_cutoff=3)
+def test_non_tracked_thread_is_marked_as_read(request_mock, thread, user):
+    user.joined_on = timezone.now() - timedelta(days=10)
+    user.save()
 
-    def test_user_first_read_post_unread_event(self):
-        """tracked thread with read first post and unread event"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
-        poststracker.save_read(self.user, thread.first_post)
+    remove_tracking(thread)
+    make_read_aware(request_mock, thread)
+    assert thread.is_read
+    assert not thread.is_new
 
-        test.reply_thread(thread, posted_on=timezone.now(), is_event=True)
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertFalse(thread.is_read)
-        self.assertTrue(thread.is_new)
+def test_read_thread_with_new_event_is_marked_as_unread(request_mock, read_thread):
+    reply_thread(read_thread, is_event=True)
+    make_read_aware(request_mock, read_thread)
+    assert not read_thread.is_read
+    assert read_thread.is_new
 
-    def test_user_hidden_event(self):
-        """tracked thread with unread first post and hidden event"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
 
-        test.reply_thread(
-            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
-        )
+def test_read_thread_with_hidden_event_is_marked_as_read(request_mock, read_thread):
+    reply_thread(read_thread, is_hidden=True, is_event=True)
+    make_read_aware(request_mock, read_thread)
+    assert read_thread.is_read
+    assert not read_thread.is_new
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertFalse(thread.is_read)
-        self.assertTrue(thread.is_new)
 
-    def test_user_first_read_post_hidden_event(self):
-        """tracked thread with read first post and hidden event"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
-        poststracker.save_read(self.user, thread.first_post)
+def test_read_thread_with_hidden_event_visible_to_user_is_marked_as_unread(
+    request_mock, read_thread, default_category
+):
+    request_mock.user_acl["categories"][default_category.id]["can_hide_events"] = 1
+    reply_thread(read_thread, is_hidden=True, is_event=True)
+    make_read_aware(request_mock, read_thread)
+    assert not read_thread.is_read
+    assert read_thread.is_new
 
-        test.reply_thread(
-            thread, posted_on=timezone.now(), is_event=True, is_hidden=True
-        )
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
+def test_tracked_thread_is_marked_as_read_for_anonymous_user(
+    anonymous_request_mock, thread
+):
+    make_read_aware(anonymous_request_mock, thread)
+    assert thread.is_read
+    assert not thread.is_new
 
-    def test_user_thread_before_cutoff_unread_post(self):
-        """non-tracked thread is marked as unread for anonymous users"""
-        started_on = timezone.now() - timedelta(days=settings.MISAGO_READTRACKER_CUTOFF)
-        thread = test.post_thread(self.category, started_on=started_on)
 
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
-
-    def test_user_first_read_post_unapproved_post(self):
-        """tracked thread with read first post and unapproved post"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
-        poststracker.save_read(self.user, thread.first_post)
-
-        test.reply_thread(thread, posted_on=timezone.now(), is_unapproved=True)
-
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertTrue(thread.is_read)
-        self.assertFalse(thread.is_new)
-
-    def test_user_first_read_post_unapproved_own_post(self):
-        """tracked thread with read first post and unapproved own post"""
-        thread = test.post_thread(self.category, started_on=timezone.now())
-        poststracker.save_read(self.user, thread.first_post)
-
-        test.reply_thread(
-            thread, posted_on=timezone.now(), poster=self.user, is_unapproved=True
-        )
-
-        threadstracker.make_read_aware(self.user, self.user_acl, thread)
-        self.assertFalse(thread.is_read)
-        self.assertTrue(thread.is_new)
+@override_dynamic_settings(readtracker_cutoff=3)
+def test_non_tracked_thread_is_marked_as_read_for_anonymous_user(
+    anonymous_request_mock, thread
+):
+    remove_tracking(thread)
+    make_read_aware(anonymous_request_mock, thread)
+    assert thread.is_read
+    assert not thread.is_new

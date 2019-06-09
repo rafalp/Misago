@@ -11,7 +11,12 @@ def posts_merge_endpoint(request, thread):
         raise PermissionDenied(_("You can't merge posts in this thread."))
 
     serializer = MergePostsSerializer(
-        data=request.data, context={"thread": thread, "user_acl": request.user_acl}
+        data=request.data,
+        context={
+            "settings": request.settings,
+            "thread": thread,
+            "user_acl": request.user_acl,
+        },
     )
 
     if not serializer.is_valid():

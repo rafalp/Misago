@@ -1,6 +1,8 @@
 import os
+from datetime import timedelta
 
 from django.core.files import File
+from django.utils import timezone
 
 from ...categories.models import Category
 from ...threads.models import AttachmentType
@@ -15,6 +17,7 @@ from ..datadownloads import (
 from ..models import DataDownload
 from ..test import AuthenticatedUserTestCase
 
+EXPIRATION = 4
 TESTFILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "testfiles")
 TEST_FILE_PATH = os.path.join(TESTFILES_DIR, "avatar.png")
 
@@ -65,7 +68,7 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
         self.download = request_user_data_download(self.user)
 
     def assert_download_is_valid(self):
-        result = prepare_user_data_download(self.download)
+        result = prepare_user_data_download(self.download, EXPIRATION)
         self.assertTrue(result)
 
         self.download.refresh_from_db()
@@ -74,6 +77,13 @@ class PrepareUserDataDownload(AuthenticatedUserTestCase):
     def test_prepare_basic_download(self):
         """function creates data download for basic user account"""
         self.assert_download_is_valid()
+
+    def test_data_download_is_prepared_with_expiration_date(self):
+        """function creates data download with specified expiration date"""
+        expires_on = timezone.now() + timedelta(hours=EXPIRATION)
+        prepare_user_data_download(self.download, EXPIRATION)
+        self.download.refresh_from_db
+        self.assertGreater(self.download.expires_on, expires_on)
 
     def test_prepare_download_with_profle_fields(self):
         """function creates data download for user with profile fields"""

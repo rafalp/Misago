@@ -93,7 +93,7 @@ class PostBulkDeleteApiTests(ThreadsApiTestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             response.json(),
-            {"detail": "No more than 24 posts can be deleted at single time."},
+            {"detail": "No more than 24 posts can be deleted at a single time."},
         )
 
     @patch_category_acl({"can_hide_posts": 2})

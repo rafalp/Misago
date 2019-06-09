@@ -11,7 +11,12 @@ def posts_move_endpoint(request, thread, viewmodel):
 
     serializer = MovePostsSerializer(
         data=request.data,
-        context={"request": request, "thread": thread, "viewmodel": viewmodel},
+        context={
+            "request": request,
+            "settings": request.settings,
+            "thread": thread,
+            "viewmodel": viewmodel,
+        },
     )
 
     if not serializer.is_valid():

@@ -69,7 +69,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
                 self.assertEqual(len(results), 1)
                 self.assertEqual(results[0]["id"], self.user.id)
 
-    def test_tail_match(self):
+    def test_orphans_match(self):
         """api handles last three chars match query"""
         response = self.client.get("%s?q=%s" % (self.api_link, self.user.username[-3:]))
         self.assertEqual(response.status_code, 200)
