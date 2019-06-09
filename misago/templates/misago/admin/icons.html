@@ -1,0 +1,22 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Favicon" %}</legend>
+
+    {% form_row form.favicon %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Apple Touch Icon" %}</legend>
+
+    {% form_row form.apple_touch_icon %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
