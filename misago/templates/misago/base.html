@@ -36,15 +36,23 @@
       {% endfor %}
       {% if icons.apple_touch_icon %}
         <link rel="apple-touch-icon" sizes="180x180" href="{{ icons.apple_touch_icon }}" />
+      {% else %}
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'misago/apple-touch-icon.png' %}" />
       {% endif %}
       {% if icons.favicon_32 %}
         <link rel="icon" type="image/png" sizes="32x32" href="{{ icons.favicon_32 }}" />
+      {% else %}
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'misago/favicon-32.png' %}" />
       {% endif %}
       {% if icons.favicon_16 %}
         <link rel="icon" type="image/png" sizes="16x16" href="{{ icons.favicon_16 }}" />
+      {% else %}
+        <link rel="icon" type="image/png" sizes="16x16" href="{% static 'misago/favicon-16.png' %}" />
       {% endif %}
       {% if icons.favicon %}
         <link rel="shortcut icon" href="{{ icons.favicon }}" />
+      {% else %}
+        <link rel="shortcut icon" href="{% static 'misago/favicon.ico' %}" />
       {% endif %}
     {% endspaceless %}
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"WebSite","url":"{{ settings.forum_address }}"}</script>
