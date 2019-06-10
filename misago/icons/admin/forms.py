@@ -67,10 +67,10 @@ class IconsForm(forms.Form):
             self.delete_icons([Icon.TYPE_APPLE_TOUCH_ICON])
 
     def save_favicon(self, image):
-        self.delete_icons(Icon.TYPE_FAVICON)
+        self.delete_icons(Icon.FAVICON_TYPES)
         save_favicon(image)
-        save_icon(image, (32, 32), "favicon_32")
-        save_icon(image, (16, 16), "favicon_16")
+        save_icon(image, (32, 32), Icon.TYPE_FAVICON_32)
+        save_icon(image, (16, 16), Icon.TYPE_FAVICON_16)
 
     def save_apple_touch_icon(self, image):
         self.delete_icons([Icon.TYPE_APPLE_TOUCH_ICON])
@@ -92,7 +92,7 @@ def save_favicon(image):
     icon_file = ContentFile(buffer.read())
     icon_file.name = "%s.%s.ico" % ("favicon", get_file_hash(icon_file))
 
-    Icon.objects.create(type="favicon", image=icon_file, size=icon_file.size)
+    Icon.objects.create(type=Icon.TYPE_FAVICON, image=icon_file, size=icon_file.size)
 
 
 def save_icon(image, size, icon_type):
