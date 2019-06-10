@@ -1,38 +1,43 @@
+import pytest
 from django.core.exceptions import ValidationError
-from django.test import TestCase
 
-from ..validators import validate_sluggable
+from ..validators import validate_image_square, validate_sluggable
 
 
-class ValidateSluggableTests(TestCase):
-    def test_error_messages_set(self):
-        """custom error messages are set and used"""
-        error_short = "I'm short custom error!"
-        error_long = "I'm long custom error!"
+def test_sluggable_validator_raises_error_if_result_slug_will_be_empty():
+    validator = validate_sluggable()
+    with pytest.raises(ValidationError):
+        validator("!#@! !@#@")
 
-        validator = validate_sluggable(error_short, error_long)
 
-        self.assertEqual(validator.error_short, error_short)
-        self.assertEqual(validator.error_long, error_long)
+def test_sluggable_validator_raises_custom_error_if_result_slug_will_be_empty():
+    error_message = "I'm short custom error!"
+    validator = validate_sluggable(error_short=error_message)
+    with pytest.raises(ValidationError) as e:
+        validator("!#@! !@#@")
+    assert error_message in str(e.value)
 
-    def test_faulty_input_validation(self):
-        """invalid values raise errors"""
-        validator = validate_sluggable()
 
-        with self.assertRaises(ValidationError):
-            validator("!#@! !@#@")
-        with self.assertRaises(ValidationError):
-            validator(
-                "!#@! !@#@ 1234567890 1234567890 1234567890 1234567890"
-                "1234567890 1234567890 1234567890 1234567890 1234567890"
-                "1234567890 1234567890 1234567890 1234567890 1234567890"
-                "1234567890 1234567890 1234567890 1234567890 1234567890"
-                "1234567890 1234567890 1234567890 1234567890 1234567890"
-            )
+def test_sluggable_validator_raises_error_if_result_slug_will_be_too_long():
+    validator = validate_sluggable()
+    with pytest.raises(ValidationError):
+        validator("a" * 256)
 
-    def test_valid_input_validation(self):
-        """valid values don't raise errors"""
-        validator = validate_sluggable()
 
-        validator("User")
-        validator("Lorem ipsum123!")
+def test_sluggable_validator_raises_custom_error_if_result_slug_will_be_too_long():
+    error_message = "I'm long custom error!"
+    validator = validate_sluggable(error_long=error_message)
+    with pytest.raises(ValidationError) as e:
+        validator("a" * 256)
+    assert error_message in str(e.value)
+
+
+def test_square_square_validator_validates_square_image(mocker):
+    image = mocker.Mock(width=100, height=100)
+    validate_image_square(image)
+
+
+def test_square_square_validator_raises_error_if_image_is_not_square(mocker):
+    image = mocker.Mock(width=100, height=200)
+    with pytest.raises(ValidationError):
+        validate_image_square(image)
