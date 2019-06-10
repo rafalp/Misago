@@ -78,7 +78,6 @@ class IconsForm(forms.Form):
 
     def delete_icons(self, icon_types):
         for icon in Icon.objects.filter(type__in=icon_types):
-            print("ICON")
             icon.delete()
 
 
