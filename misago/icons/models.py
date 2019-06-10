@@ -17,3 +17,8 @@ class Icon(models.Model):
     size = models.PositiveIntegerField(default=0)
     width = models.PositiveIntegerField(default=0)
     height = models.PositiveIntegerField(default=0)
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete(save=False)
+        return super().delete(*args, **kwargs)

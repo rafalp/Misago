@@ -59,7 +59,7 @@ class IconsForm(forms.Form):
         if self.cleaned_data.get("favicon"):
             self.save_favicon(self.cleaned_data["favicon"])
         elif self.cleaned_data.get("favicon_delete"):
-            self.delete_icons(Icon.TYPE_FAVICON)
+            self.delete_icons(Icon.FAVICON_TYPES)
 
         if self.cleaned_data.get("apple_touch_icon"):
             self.save_apple_touch_icon(self.cleaned_data["apple_touch_icon"])
@@ -78,7 +78,7 @@ class IconsForm(forms.Form):
 
     def delete_icons(self, icon_types):
         for icon in Icon.objects.filter(type__in=icon_types):
-            icon.image.delete(save=False)
+            print("ICON")
             icon.delete()
 
 
