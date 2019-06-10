@@ -17,7 +17,9 @@ def icons_admin(request):
             messages.success(request, _("Icons have been updated."))
             return redirect("misago:admin:settings:icons:index")
 
-    return render(request, "misago/admin/icons.html", {"form": form, "icons": get_icons()})
+    return render(
+        request, "misago/admin/icons.html", {"form": form, "icons": get_icons()}
+    )
 
 
 def get_icons():

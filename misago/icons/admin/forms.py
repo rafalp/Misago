@@ -11,6 +11,7 @@ from ...core.validators import validate_image_square
 from ..models import Icon
 
 FAVICON_MIN_SIZE = 48
+FAVICON_SIZES = ((16, 16), (32, 32), (48, 48))
 APPLE_TOUCH_MIN_SIZE = 180
 VALID_MIME = ("image/gif", "image/jpeg", "image/png")
 
@@ -21,9 +22,7 @@ class IconsForm(forms.Form):
         help_text=_("Uploaded image should be a square that is 48px wide and tall."),
         required=False,
     )
-    favicon_delete = forms.BooleanField(
-        label=_("Delete custom icon"), required=False
-    )
+    favicon_delete = forms.BooleanField(label=_("Delete custom icon"), required=False)
 
     apple_touch_icon = forms.ImageField(
         label=_("Upload image"),
@@ -87,7 +86,7 @@ def save_favicon(image):
     icon = Image.open(image)
 
     buffer = BytesIO()
-    icon.save(buffer, "ICO", sizes=((16, 16), (32, 32), (48, 48)))
+    icon.save(buffer, "ICO", sizes=FAVICON_SIZES)
     buffer.seek(0)
 
     icon_file = ContentFile(buffer.read())
@@ -106,14 +105,11 @@ def save_icon(image, size, icon_type):
 
     icon_file = ContentFile(buffer.read())
     icon_file.name = "%s.%s.png" % (
-        icon_type.replace("_", "-"), get_file_hash(icon_file)
+        icon_type.replace("_", "-"),
+        get_file_hash(icon_file),
     )
 
-    Icon.objects.create(
-        type=icon_type,
-        image=icon_file,
-        size=icon_file.size,
-    )
+    Icon.objects.create(type=icon_type, image=icon_file, size=icon_file.size)
 
 
 def validate_image_dimensions(image, size):
