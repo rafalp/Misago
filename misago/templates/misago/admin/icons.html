@@ -1,0 +1,93 @@
+{% extends "misago/admin/conf/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Favicon" %}</legend>
+
+    <p>
+      {% trans "Favicon is small icon that internet browsers display next to your site in its interface." %}
+    </p>
+
+    {% if icons.favicon or icons.favicon_16 or icons.favicon_32 %}
+      <div class="row justify-content-left align-items-end mt-1 mb-3">
+        {% if icons.favicon %}
+          <div class="col-auto">
+            <div class="control-image-preview control-image-metadata">
+              <div class="p-0 m-0 d-flex align-items-center justify-content-center" style="height: 48px; width: 128px;">
+                <img src="{{ icons.favicon.image.url }}" alt="" />
+              </div>
+              <div>
+                <span>{{ icons.favicon.size|filesizeformat }}</span>
+                <span>{{ icons.favicon.width }}&times;{{ icons.favicon.height }}</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% if icons.favicon_32 %}
+          <div class="col-auto">
+            <div class="control-image-preview control-image-metadata">
+              <div class="p-0 m-0 d-flex align-items-center justify-content-center" style="height: 48px; width: 128px;">
+                <img src="{{ icons.favicon_32.image.url }}" alt="" />
+              </div>
+              <div>
+                <span>{{ icons.favicon_32.size|filesizeformat }}</span>
+                <span>{{ icons.favicon_32.width }}&times;{{ icons.favicon_32.height }}</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% if icons.favicon_16 %}
+          <div class="col-auto">
+            <div class="control-image-preview control-image-metadata">
+              <div class="p-0 m-0 d-flex align-items-center justify-content-center" style="height: 48px; width: 128px;">
+                <img src="{{ icons.favicon_16.image.url }}" alt="" />
+              </div>
+              <div>
+                <span>{{ icons.favicon_16.size|filesizeformat }}</span>
+                <span>{{ icons.favicon_16.width }}&times;{{ icons.favicon_16.height }}</span>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  
+    {% form_row form.favicon %}
+
+    {% if icons.favicon or icons.favicon_16 or icons.favicon_32 %}
+      {% form_checkbox_row form.favicon_delete %}
+    {% endif %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Apple Touch Icon" %}</legend>
+
+    <p>
+      {% trans "Apple devices and Safari web browser will use this image to represent the site in its interfaces." %}
+    </p>
+
+    {% if icons.apple_touch_icon %}
+      <div class="control-image-preview control-image-metadata mt-1 mb-3">
+        <img src="{{ icons.apple_touch_icon.image.url }}" alt="" />
+        <div>
+          <span>{{ icons.apple_touch_icon.size|filesizeformat }}</span>
+          <span>
+            {{ icons.apple_touch_icon.width }}&times;{{ icons.apple_touch_icon.height }}
+          </span>
+        </div>
+      </div>
+    {% endif %}
+
+    {% form_row form.apple_touch_icon %}
+    {% if icons.apple_touch_icon %}
+      {% form_checkbox_row form.apple_touch_icon_delete %}
+    {% endif %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
