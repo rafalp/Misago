@@ -1,6 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 from misago.conf import settings
+from misago.conf.shortcuts import get_dynamic_settings
+from misago.users.setupnewuser import setup_new_user
+
 from simple_sso.sso_client.client import Client
 
 User = get_user_model()
@@ -16,10 +19,13 @@ class ClientMisago(Client):
             user = User.objects.create_user(
                 user_data["username"],
                 user_data["email"],
-                make_password(None),
+                make_password(make_password('ItDoesMatter')),
             )
 
             user.update_acl_key()
+
+            user_settings = get_dynamic_settings()
+            setup_new_user(user_settings, user)
 
         return user
 
