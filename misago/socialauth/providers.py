@@ -1,0 +1,37 @@
+class Providers:
+    def __init__(self):
+        self._dict = {}
+        self._list = []
+
+    def dict(self):
+        return self._dict
+
+    def list(self):
+        return self._list
+
+    def has(self, provider):
+        return provider in self._dict
+
+    def add(self, *, provider, name, admin_form, admin_template):
+        data = {
+            "provider": provider,
+            "name": name,
+            "form": admin_form,
+            "template": admin_template,
+        }
+
+        self._dict[provider] = data
+        self._list.append(data)
+        self._list = sorted(self._list, key=lambda k: k["name"])
+
+    def get_name(self, provider):
+        return self._dict.get(provider)["name"]
+
+    def get_form_class(self, provider):
+        return self._dict.get(provider)["form"]
+
+    def get_template_name(self, provider):
+        return self._dict.get(provider)["template"]
+
+
+providers = Providers()

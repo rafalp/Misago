@@ -117,7 +117,11 @@ class ModelFormView(FormView):
                 return redirect(request.path)
             return redirect(self.root_link)
 
-        return self.render(request, {"form": form, "target": target})
+        template_name = self.get_template_name(request, target)
+        return self.render(request, {"form": form, "target": target}, template_name)
+
+    def get_template_name(self, request, target):
+        return self.template_name
 
 
 class ButtonView(TargetedView):

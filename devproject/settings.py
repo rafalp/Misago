@@ -190,6 +190,7 @@ INSTALLED_APPS = [
     "misago.threads",
     "misago.readtracker",
     "misago.search",
+    "misago.socialauth",
     "misago.graphql",
     "misago.faker",
 ]

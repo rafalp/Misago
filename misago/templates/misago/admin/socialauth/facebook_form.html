@@ -1,0 +1,33 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{{ target }} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-header %}
+{{ block.super }} <small>{{ target }}</small>
+{% endblock page-header %}
+
+
+{% block form-header %}
+{% if target.order %}
+  {% trans "Edit social login" %}
+{% else %}
+  {% trans "Setup social login" %}
+{% endif %}
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Display and position" %}</legend>
+
+    {% form_row form.button_text %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}

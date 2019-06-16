@@ -53,9 +53,11 @@
             {% endif %}
           </tr>
         {% empty %}
-          <tr class="blankslate">
-            {% block blankslate %}{% endblock blankslate %}
-          </tr>
+          {% block table-row-blankslate %}
+            <tr class="blankslate">
+              {% block blankslate %}{% endblock blankslate %}
+            </tr>
+          {% endblock table-row-blankslate %}
         {% endfor %}
       {% endblock table-items %}
     </tbody>
