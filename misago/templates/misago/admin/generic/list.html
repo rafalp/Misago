@@ -9,6 +9,7 @@
 
 {% block view %}
 <div class="card card-admin-table">
+  {% block card-header %}{% endblock card-header %}
   {% if paginator or order_by or filter_form or mass_actions %}
     <div class="card-body">
       <div class="row align-items-center">

@@ -9,15 +9,16 @@ class Providers:
     def list(self):
         return self._list
 
-    def has(self, provider):
+    def is_registered(self, provider):
         return provider in self._dict
 
-    def add(self, *, provider, name, admin_form, admin_template):
+    def add(self, *, provider, name, settings=None, admin_form, admin_template):
         data = {
             "provider": provider,
             "name": name,
-            "form": admin_form,
-            "template": admin_template,
+            "settings": settings or {},
+            "admin_form": admin_form,
+            "admin_template": admin_template,
         }
 
         self._dict[provider] = data
@@ -27,11 +28,14 @@ class Providers:
     def get_name(self, provider):
         return self._dict.get(provider)["name"]
 
-    def get_form_class(self, provider):
-        return self._dict.get(provider)["form"]
+    def get_settings(self, provider):
+        return self._dict.get(provider)["settings"]
 
-    def get_template_name(self, provider):
-        return self._dict.get(provider)["template"]
+    def get_admin_form_class(self, provider):
+        return self._dict.get(provider)["admin_form"]
+
+    def get_admin_template_name(self, provider):
+        return self._dict.get(provider)["admin_template"]
 
 
 providers = Providers()

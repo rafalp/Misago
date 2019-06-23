@@ -10,20 +10,31 @@ class MisagoSocialAuthConfig(AppConfig):
 
     def ready(self):
         # Register default providers
-        from .admin.forms import FacebookForm
+        from .admin.forms import FacebookForm, GitHubForm, GoogleForm, TwitterForm
 
         providers.add(
             provider="facebook",
             name="Facebook",
+            settings={"scope": ["email"]},
             admin_form=FacebookForm,
             admin_template="misago/admin/socialauth/facebook_form.html",
         )
         providers.add(
-            provider="twitter", name="Twitter", admin_form=None, admin_template=""
+            provider="github",
+            name="GitHub",
+            settings={"scope": ["read:user", "user:email"]},
+            admin_form=GitHubForm,
+            admin_template="misago/admin/socialauth/github_form.html",
         )
         providers.add(
-            provider="github", name="GitHub", admin_form=None, admin_template=""
+            provider="google",
+            name="Google",
+            admin_form=GoogleForm,
+            admin_template="misago/admin/socialauth/google_form.html",
         )
         providers.add(
-            provider="google", name="Google", admin_form=None, admin_template=""
+            provider="twitter",
+            name="Twitter",
+            admin_form=TwitterForm,
+            admin_template="misago/admin/socialauth/twitter_form.html",
         )

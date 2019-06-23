@@ -18,13 +18,16 @@ class Migration(migrations.Migration):
                     "provider",
                     models.CharField(max_length=30, primary_key=True, serialize=False),
                 ),
-                ("button_text", models.CharField(max_length=255)),
+                (
+                    "button_text",
+                    models.CharField(blank=True, max_length=266, null=True),
+                ),
                 ("button_color", models.CharField(blank=True, max_length=6, null=True)),
                 (
                     "settings",
                     django.contrib.postgres.fields.jsonb.JSONField(default=dict),
                 ),
-                ("is_active", models.BooleanField(default=True)),
+                ("is_active", models.BooleanField(default=False)),
                 ("order", models.IntegerField(default=0)),
             ],
             options={"ordering": ["order"]},
