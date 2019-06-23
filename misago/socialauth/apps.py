@@ -17,24 +17,24 @@ class MisagoSocialAuthConfig(AppConfig):
             name="Facebook",
             settings={"scope": ["email"]},
             admin_form=FacebookForm,
-            admin_template="misago/admin/socialauth/facebook_form.html",
+            admin_template="misago/admin/socialauth/form.html",
         )
         providers.add(
             provider="github",
             name="GitHub",
             settings={"scope": ["read:user", "user:email"]},
             admin_form=GitHubForm,
-            admin_template="misago/admin/socialauth/github_form.html",
+            admin_template="misago/admin/socialauth/form.html",
         )
         providers.add(
             provider="google",
             name="Google",
             admin_form=GoogleForm,
-            admin_template="misago/admin/socialauth/google_form.html",
+            admin_template="misago/admin/socialauth/form.html",
         )
         providers.add(
             provider="twitter",
             name="Twitter",
             admin_form=TwitterForm,
-            admin_template="misago/admin/socialauth/twitter_form.html",
+            admin_template="misago/admin/socialauth/form.html",
         )

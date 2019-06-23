@@ -27,7 +27,10 @@
     <legend>{% trans "General" %}</legend>
 
     {% form_row form.is_active %}
-    {% block form-settings %}{% endblock form-settings %}
+    {% block form-settings %}
+    {% form_row form.key %}
+    {% form_row form.secret %}
+    {% endblock form-settings %}
 
   </fieldset>
 </div>
