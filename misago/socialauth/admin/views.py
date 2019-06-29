@@ -14,11 +14,17 @@ class SocialAuthProviderAdmin(generic.AdminBaseMixin):
     templates_dir = "misago/admin/socialauth"
     message_404 = _("Requested social login provider does not exist.")
 
+    def get_target(self, kwargs):
+        queryset = SocialAuthProvider.objects.filter(is_active=True)
+        if self.is_atomic:
+            queryset = queryset.select_for_update()
+        return queryset.get(pk=kwargs["pk"])
+
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+
 
 class SocialAuthProvidersList(SocialAuthProviderAdmin, generic.ListView):
-    def get_queryset(self):
-        return list(super().get_queryset().filter(is_active=True))
-
     def process_context(self, request, context):
         active_providers = [i.pk for i in context["items"]]
         context["inactive_providers"] = []
