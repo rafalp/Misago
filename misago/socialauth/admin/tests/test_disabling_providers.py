@@ -36,4 +36,13 @@ def test_provider_that_wasnt_setup_yet_cant_be_disabled(admin_client):
     admin_link = reverse(
         "misago:admin:settings:socialauth:disable", kwargs={"pk": "github"}
     )
-    admin_client.post(admin_link)
+    response = admin_client.post(admin_link)
+    assert response.status_code == 302
+
+
+def test_undefined_provider_cant_be_disabled(admin_client):
+    admin_link = reverse(
+        "misago:admin:settings:socialauth:disable", kwargs={"pk": "undefined"}
+    )
+    response = admin_client.post(admin_link)
+    assert response.status_code == 302

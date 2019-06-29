@@ -1,7 +1,7 @@
 from django import forms, template
 from django.utils.html import format_html_join
 
-from ..forms import YesNoSwitchBase
+from ..forms import ColorFieldBase, YesNoSwitchBase
 
 register = template.Library()
 
@@ -71,6 +71,11 @@ def render_bool_attrs(widget):
         if value is True:
             attrs_html.append(attr)
     return " ".join(attrs_html)
+
+
+@register.filter
+def is_color_field(field):
+    return isinstance(field.field, ColorFieldBase)
 
 
 @register.filter
