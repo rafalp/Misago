@@ -12,10 +12,13 @@ class Providers:
     def is_registered(self, provider):
         return provider in self._dict
 
-    def add(self, *, provider, name, settings=None, admin_form, admin_template):
+    def add(
+        self, *, provider, name, auth_backend, settings=None, admin_form, admin_template
+    ):
         data = {
             "provider": provider,
             "name": name,
+            "auth_backend": auth_backend,
             "settings": settings or {},
             "admin_form": admin_form,
             "admin_template": admin_template,
@@ -27,6 +30,9 @@ class Providers:
 
     def get_name(self, provider):
         return self._dict.get(provider)["name"]
+
+    def get_auth_backend(self, provider):
+        return self._dict.get(provider)["auth_backend"]
 
     def get_settings(self, provider):
         return self._dict.get(provider)["settings"]

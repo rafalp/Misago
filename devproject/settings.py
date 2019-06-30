@@ -216,6 +216,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "misago.cache.middleware.cache_versions_middleware",
     "misago.conf.middleware.dynamic_settings_middleware",
+    "misago.socialauth.middleware.socialauth_providers_middleware",
     "misago.users.middleware.UserMiddleware",
     "misago.acl.middleware.user_acl_middleware",
     "misago.core.middleware.ExceptionHandlerMiddleware",
