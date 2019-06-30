@@ -1,14 +1,14 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from ....admin.forms import YesNoSwitch
+from ....admin.forms import ColorField, YesNoSwitch
 from ...models import SocialAuthProvider
 from ..ordering import get_next_free_order
 
 
 class ProviderForm(forms.ModelForm):
     button_text = forms.CharField(label=_("Button text"), required=False)
-    button_color = forms.CharField(label=_("Button color"), required=False)
+    button_color = ColorField(label=_("Button color"), required=False)
     is_active = YesNoSwitch(label=_("Enable this provider"))
 
     class Meta:
@@ -30,3 +30,16 @@ class ProviderForm(forms.ModelForm):
             self.instance.order = get_next_free_order()
 
         self.instance.save()
+
+
+class OAuthProviderForm(ProviderForm):
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data.get("is_active"):
+            if not cleaned_data.get("key"):
+                self.add_error("key", _("This field is required."))
+            if not cleaned_data.get("secret"):
+                self.add_error("secret", _("This field is required."))
+
+        return cleaned_data

@@ -44,3 +44,12 @@
   </fieldset>
 </div>
 {% endblock form-body %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initColorpicker({
+    elementId: "id_button_color"
+  })
+</script>
+{% endblock %}

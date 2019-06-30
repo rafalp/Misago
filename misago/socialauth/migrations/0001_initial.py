@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                     "button_text",
                     models.CharField(blank=True, max_length=266, null=True),
                 ),
-                ("button_color", models.CharField(blank=True, max_length=6, null=True)),
+                ("button_color", models.CharField(blank=True, max_length=7, null=True)),
                 (
                     "settings",
                     django.contrib.postgres.fields.jsonb.JSONField(default=dict),

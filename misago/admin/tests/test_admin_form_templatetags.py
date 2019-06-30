@@ -4,10 +4,9 @@ import pytest
 from django import forms
 from django.template import Context, Template, TemplateSyntaxError
 
-from ..forms import ColorField, YesNoSwitch
+from ..forms import YesNoSwitch
 from ..templatetags.misago_admin_form import (
     get_field_image_dimensions,
-    is_color_field,
     is_multiple_choice_field,
     is_radio_select_field,
     is_select_field,
@@ -38,7 +37,6 @@ class Form(forms.Form):
     )
     yesno_field = YesNoSwitch(label="Switch")
     image_field = forms.ImageField(label="Image!", help_text="I am a help text.")
-    color_field = ColorField(label="Color")
 
 
 @pytest.fixture
@@ -219,14 +217,6 @@ def test_for_field_with_textarea_widget_filter_returns_true(form):
 
 def test_for_field_without_textarea_widget_filter_returns_false(form):
     assert not is_textarea_field(form["text_field"])
-
-
-def test_for_color_field_filter_returns_true(form):
-    assert is_color_field(form["color_field"])
-
-
-def test_for_non_color_field_filter_returns_false(form):
-    assert not is_color_field(form["text_field"])
 
 
 def test_for_yes_no_field_filter_returns_true(form):

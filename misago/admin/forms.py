@@ -36,18 +36,14 @@ class IsoDateTimeField(DateTimeField):
             raise ValidationError(self.error_messages["invalid"], code="invalid")
 
 
-class ColorFieldBase(CharField):
-    pass
-
-
 def ColorField(**kwargs):
-    return ColorFieldBase(
+    return CharField(
         validators=[
             RegexValidator(
-                r"^#[0-9a-f]{3}([0-9a-f]{3})?$",
+                r"^#[0-9a-f]{6}$",
                 flags=re.IGNORECASE,
                 message=_(
-                    "Value must 7-character string specifying an RGB color "
+                    "Value must be a 7-character string specifying an RGB color "
                     "in a hexadecimal format."
                 ),
             )

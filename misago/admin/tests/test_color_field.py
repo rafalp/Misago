@@ -13,13 +13,13 @@ def test_input_returns_str_with_color_hex():
     assert form.cleaned_data["test_field"] == "#e9e9e9"
 
 
-def test_input_returns_str_with_short_color_hex():
+def test_input_rejects_short_color():
     form = ColorForm({"test_field": "#eee"})
     form.full_clean()
-    assert form.cleaned_data["test_field"] == "#eee"
+    assert "test_field" not in form.cleaned_data
 
 
-def test_input_validates_color():
+def test_input_rejects_invalid_color():
     form = ColorForm({"test_field": "#ggg"})
     form.full_clean()
     assert "test_field" not in form.cleaned_data
