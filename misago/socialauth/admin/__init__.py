@@ -17,15 +17,21 @@ class MisagoAdminExtension:
         urlpatterns.patterns(
             "settings:socialauth",
             url(r"^$", SocialAuthProvidersList.as_view(), name="index"),
-            url(r"^edit/(?P<pk>\w+)/$", EditSocialAuthProvider.as_view(), name="edit"),
             url(
-                r"^down/(?P<pk>\w+)/$",
+                r"^edit/(?P<pk>(\w|-)+)/$",
+                EditSocialAuthProvider.as_view(),
+                name="edit",
+            ),
+            url(
+                r"^down/(?P<pk>(\w|-)+)/$",
                 MoveDownSocialAuthProvider.as_view(),
                 name="down",
             ),
-            url(r"^up/(?P<pk>\w+)/$", MoveUpSocialAuthProvider.as_view(), name="up"),
             url(
-                r"^disable/(?P<pk>\w+)/$",
+                r"^up/(?P<pk>(\w|-)+)/$", MoveUpSocialAuthProvider.as_view(), name="up"
+            ),
+            url(
+                r"^disable/(?P<pk>(\w|-)+)/$",
                 DisableSocialAuthProvider.as_view(),
                 name="disable",
             ),

@@ -4,7 +4,7 @@ from django.utils.translation import gettext as _
 from social_core import exceptions as social_exceptions
 
 from ..admin.views.errorpages import admin_csrf_failure, admin_error_page
-from ..users.social.utils import get_social_auth_backend_name
+from ..socialauth.providers import providers
 from .exceptions import SocialAuthBanned, SocialAuthFailed
 from .utils import get_exception_message, is_request_to_misago
 
@@ -62,7 +62,7 @@ def social_auth_failed(request, exception):
 
     try:
         exception_backend = exception.backend
-        backend_name = get_social_auth_backend_name(exception_backend.name)
+        backend_name = providers.get_name(exception_backend.name)
     except AttributeError:
         pass
 

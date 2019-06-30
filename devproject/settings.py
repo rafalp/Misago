@@ -231,25 +231,26 @@ SOCIAL_AUTH_PIPELINE = (
     "social_core.pipeline.social_auth.social_details",
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.social_user",
-    # Uncomment next line to let your users to associate their old forum account with social one.
-    # 'misago.users.social.pipeline.associate_by_email',
+    # If enabled in admin panel, lets your users to associate their old forum account
+    # with social one, if both have same e-mail address.
+    "misago.socialauth.pipeline.associate_by_email",
     # Those steps make sure banned users may not join your site or use banned name or email.
-    "misago.users.social.pipeline.validate_ip_not_banned",
-    "misago.users.social.pipeline.validate_user_not_banned",
+    "misago.socialauth.pipeline.validate_ip_not_banned",
+    "misago.socialauth.pipeline.validate_user_not_banned",
     # Reads user data received from social site and tries to create valid and available username
-    # Required if you want automatic account creation to work. Otherwhise optional.
-    "misago.users.social.pipeline.get_username",
+    # Required if you want automatic account creation to work. Otherwise optional.
+    "misago.socialauth.pipeline.get_username",
     # Uncomment next line to enable automatic account creation if data from social site is valid
     # and get_username found valid name for new user account:
-    # 'misago.users.social.pipeline.create_user',
+    # 'misago.socialauth.pipeline.create_user',
     # This step asks user to complete simple, pre filled registration form containing username,
     # email, legal note if you remove it without adding custom one, users will have no fallback
     # for joining your site using their social account.
-    "misago.users.social.pipeline.create_user_with_form",
+    "misago.socialauth.pipeline.create_user_with_form",
     # Steps finalizing social authentication flow - don't delete those!
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
-    "misago.users.social.pipeline.require_activation",
+    "misago.socialauth.pipeline.require_activation",
 )
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
@@ -286,6 +287,7 @@ TEMPLATES = [
                 "misago.markup.context_processors.preload_api_url",
                 "misago.threads.context_processors.preload_threads_urls",
                 "misago.users.context_processors.preload_user_json",
+                "misago.socialauth.context_processors.preload_socialauth_json",
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context
                 "misago.core.context_processors.frontend_context",
