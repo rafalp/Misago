@@ -121,7 +121,7 @@ class ModelFormView(FormView):
         return self.render(request, {"form": form, "target": target}, template_name)
 
     def get_template_name(self, request, target):
-        return self.template_name
+        return "%s/%s" % (self.templates_dir, self.template_name)
 
 
 class ButtonView(TargetedView):
