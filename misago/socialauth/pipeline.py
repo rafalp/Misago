@@ -65,7 +65,9 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     """If user with e-mail from provider exists in database and is active,
     this step authenticates them.
     """
-    if user:
+    enable_step = strategy.setting("ASSOCIATE_BY_EMAIL", default=False, backend=backend)
+
+    if user or not enable_step:
         return None
 
     email = details.get("email")
