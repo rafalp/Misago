@@ -231,7 +231,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         "step": "register",
         "email": details.get("email"),
         "username": kwargs.get("clean_username"),
-        "url": reverse("social:complete", kwargs={"backend": backend.name}),
+        "url": reverse("misago:social-complete", kwargs={"backend": backend.name}),
     }
 
     return render(request, "misago/socialauth.html", {"backend_name": backend_name})
@@ -264,7 +264,7 @@ def require_activation(
 
     request.frontend_context["SOCIAL_AUTH"] = response_data
     request.frontend_context["SOCIAL_AUTH"].update(
-        {"url": reverse("social:complete", kwargs={"backend": backend.name})}
+        {"url": reverse("misago:social-complete", kwargs={"backend": backend.name})}
     )
 
     return render(request, "misago/socialauth.html", {"backend_name": backend_name})
