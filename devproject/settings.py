@@ -227,6 +227,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "devproject.urls"
 
+SOCIAL_AUTH_STRATEGY = "misago.socialauth.strategy.MisagoStrategy"
+
 SOCIAL_AUTH_PIPELINE = (
     # Steps required by social pipeline to work - don't delete those!
     "social_core.pipeline.social_auth.social_details",

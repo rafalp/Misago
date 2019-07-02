@@ -14,6 +14,7 @@ urlpatterns = [
     url(r"^", include("misago.categories.urls")),
     url(r"^", include("misago.threads.urls")),
     url(r"^", include("misago.search.urls")),
+    url(r"^", include("misago.socialauth.urls")),
     # default robots.txt
     url(
         r"^robots.txt$",

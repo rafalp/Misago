@@ -18,7 +18,9 @@ def list_enabled_social_auth_providers(socialauth):
                 "name": provider["name"],
                 "button_text": provider["button_text"],
                 "button_color": provider["button_color"],
-                "url": reverse("social:begin", kwargs={"backend": provider["pk"]}),
+                "url": reverse(
+                    "misago:social-begin", kwargs={"backend": provider["pk"]}
+                ),
             }
         )
     return providers
