@@ -19,12 +19,22 @@ def test_google_form_can_be_accessed(admin_client):
 
 def test_google_login_can_be_setup(admin_client):
     admin_client.post(
-        admin_link, {"is_active": "1", "key": "test-key", "secret": "test-secret"}
+        admin_link,
+        {
+            "is_active": "1",
+            "associate_by_email": "1",
+            "key": "test-key",
+            "secret": "test-secret",
+        },
     )
 
     provider = SocialAuthProvider.objects.get(provider="google")
     assert provider.is_active
-    assert provider.settings == {"key": "test-key", "secret": "test-secret"}
+    assert provider.settings == {
+        "associate_by_email": 1,
+        "key": "test-key",
+        "secret": "test-secret",
+    }
 
 
 def test_google_login_can_be_disabled(admin_client, provider):

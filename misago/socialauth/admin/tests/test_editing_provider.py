@@ -55,7 +55,11 @@ def test_form_updates_provider_settings(admin_client, provider):
     )
 
     provider.refresh_from_db()
-    assert provider.settings == {"key": "test-key", "secret": "test-secret"}
+    assert provider.settings == {
+        "associate_by_email": 0,
+        "key": "test-key",
+        "secret": "test-secret",
+    }
 
 
 def test_form_updates_provider_button_text(admin_client, provider):
