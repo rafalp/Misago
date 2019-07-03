@@ -6,6 +6,7 @@ from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
+from .socialauth import SOCIALAUTH_CACHE
 from .themes import THEME_CACHE
 from .threads.test import post_thread
 from .users import BANS_CACHE
@@ -18,6 +19,7 @@ def get_cache_versions():
         ACL_CACHE: "abcdefgh",
         BANS_CACHE: "abcdefgh",
         SETTINGS_CACHE: "abcdefgh",
+        SOCIALAUTH_CACHE: "abcdefgh",
         THEME_CACHE: "abcdefgh",
     }
 

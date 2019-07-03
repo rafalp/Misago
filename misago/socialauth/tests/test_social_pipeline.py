@@ -1,4 +1,5 @@
 import json
+from unittest.mock import Mock
 
 from django.contrib.auth import get_user_model
 from django.core import mail
@@ -12,8 +13,9 @@ from ...conf.test import override_dynamic_settings
 from ...conftest import get_cache_versions
 from ...core.exceptions import SocialAuthBanned, SocialAuthFailed
 from ...legal.models import Agreement
-from ..models import AnonymousUser, Ban, BanCache
-from ..social.pipeline import (
+from ...users.models import AnonymousUser, Ban, BanCache
+from ...users.test import UserTestCase
+from ..pipeline import (
     associate_by_email,
     create_user,
     create_user_with_form,
@@ -22,7 +24,6 @@ from ..social.pipeline import (
     validate_ip_not_banned,
     validate_user_not_banned,
 )
-from ..test import UserTestCase
 
 User = get_user_model()
 
@@ -38,6 +39,7 @@ def create_request(user_ip="0.0.0.0", data=None):
     request.include_frontend_context = True
     request.cache_versions = get_cache_versions()
     request.frontend_context = {}
+    request.socialauth = {}
     request.session = {}
     request.settings = DynamicSettings(request.cache_versions)
     request.user = AnonymousUser()
@@ -97,26 +99,27 @@ class PipelineTestCase(UserTestCase):
 class AssociateByEmailTests(PipelineTestCase):
     def test_skip_if_user_is_already_set(self):
         """pipeline step is skipped if user was found by previous step"""
-        result = associate_by_email(None, {}, GithubOAuth2, self.user)
+        result = associate_by_email(Mock(), {}, GithubOAuth2, self.user)
         self.assertIsNone(result)
 
     def test_skip_if_no_email_passed(self):
         """pipeline step is skipped if no email was passed"""
-        result = associate_by_email(None, {}, GithubOAuth2)
+        result = associate_by_email(Mock(), {}, GithubOAuth2)
         self.assertIsNone(result)
 
     def test_skip_if_user_with_email_not_found(self):
         """pipeline step is skipped if no email was passed"""
-        result = associate_by_email(None, {"email": "not@found.com"}, GithubOAuth2)
+        result = associate_by_email(Mock(), {"email": "not@found.com"}, GithubOAuth2)
         self.assertIsNone(result)
 
     def test_raise_if_user_is_inactive(self):
         """pipeline raises if user was inactive"""
+        strategy = Mock(setting=Mock(return_value=True))
         self.user.is_active = False
         self.user.save()
 
         try:
-            associate_by_email(None, {"email": self.user.email}, GithubOAuth2)
+            associate_by_email(strategy, {"email": self.user.email}, GithubOAuth2)
             self.fail("associate_by_email should raise SocialAuthFailed")
         except SocialAuthFailed as e:
             self.assertEqual(
@@ -129,11 +132,12 @@ class AssociateByEmailTests(PipelineTestCase):
 
     def test_raise_if_user_needs_admin_activation(self):
         """pipeline raises if user needs admin activation"""
+        strategy = Mock(setting=Mock(return_value=True))
         self.user.requires_activation = User.ACTIVATION_ADMIN
         self.user.save()
 
         try:
-            associate_by_email(None, {"email": self.user.email}, GithubOAuth2)
+            associate_by_email(strategy, {"email": self.user.email}, GithubOAuth2)
             self.fail("associate_by_email should raise SocialAuthFailed")
         except SocialAuthFailed as e:
             self.assertEqual(
@@ -144,17 +148,27 @@ class AssociateByEmailTests(PipelineTestCase):
                 ),
             )
 
+    def test_no_user_is_returned_if_pipeline_is_disabled(self):
+        strategy = Mock(setting=Mock(return_value=False))
+        result = associate_by_email(strategy, {"email": self.user.email}, GithubOAuth2)
+        self.assertIsNone(result)
+        strategy.setting.assert_called_once_with(
+            "ASSOCIATE_BY_EMAIL", default=False, backend=GithubOAuth2
+        )
+
     def test_return_user(self):
         """pipeline returns user if email was found"""
-        result = associate_by_email(None, {"email": self.user.email}, GithubOAuth2)
+        strategy = Mock(setting=Mock(return_value=True))
+        result = associate_by_email(strategy, {"email": self.user.email}, GithubOAuth2)
         self.assertEqual(result, {"user": self.user, "is_new": False})
 
     def test_return_user_email_inactive(self):
         """pipeline returns user even if they didn't activate their account manually"""
+        strategy = Mock(setting=Mock(return_value=True))
         self.user.requires_activation = User.ACTIVATION_USER
         self.user.save()
 
-        result = associate_by_email(None, {"email": self.user.email}, GithubOAuth2)
+        result = associate_by_email(strategy, {"email": self.user.email}, GithubOAuth2)
         self.assertEqual(result, {"user": self.user, "is_new": False})
 
 
@@ -664,7 +678,7 @@ class RequireActivationTests(PipelineTestCase):
         )
         self.assertEqual(result, {})
 
-    def test_pipeline_returns_html_responseon_get(self):
+    def test_pipeline_returns_html_response_on_get(self):
         """pipeline step renders http response for GET request and inactive user"""
         request = create_request()
         strategy = load_strategy(request=request)

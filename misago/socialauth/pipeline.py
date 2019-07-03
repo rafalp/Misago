@@ -8,25 +8,26 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from social_core.pipeline.partial import partial
+from unidecode import unidecode
 
-from ...core.exceptions import SocialAuthBanned, SocialAuthFailed
-from ...legal.models import Agreement
-from ..bans import get_request_ip_ban, get_user_ban
-from ..forms.register import SocialAuthRegisterForm
-from ..models import Ban
-from ..registration import (
+from ..core.exceptions import SocialAuthBanned, SocialAuthFailed
+from ..legal.models import Agreement
+from ..users.bans import get_request_ip_ban, get_user_ban
+from ..users.forms.register import SocialAuthRegisterForm
+from ..users.models import Ban
+from ..users.registration import (
     get_registration_result_json,
     save_user_agreements,
     send_welcome_email,
 )
-from ..setupnewuser import setup_new_user
-from ..validators import (
+from ..users.setupnewuser import setup_new_user
+from ..users.validators import (
     ValidationError,
     validate_email,
     validate_new_registration,
     validate_username,
 )
-from .utils import get_social_auth_backend_name, perpare_username
+from .providers import providers
 
 User = get_user_model()
 
@@ -56,11 +57,17 @@ def validate_user_not_banned(strategy, details, backend, user=None, *args, **kwa
         raise SocialAuthBanned(backend, user_ban)
 
 
+def perpare_username(username):
+    return "".join(filter(str.isalnum, unidecode(username)))
+
+
 def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     """If user with e-mail from provider exists in database and is active,
     this step authenticates them.
     """
-    if user:
+    enable_step = strategy.setting("ASSOCIATE_BY_EMAIL", default=False, backend=backend)
+
+    if user or not enable_step:
         return None
 
     email = details.get("email")
@@ -72,7 +79,7 @@ def associate_by_email(strategy, details, backend, user=None, *args, **kwargs):
     except User.DoesNotExist:
         return None
 
-    backend_name = get_social_auth_backend_name(backend.name)
+    backend_name = providers.get_name(backend.name)
 
     if not user.is_active:
         raise SocialAuthFailed(
@@ -180,7 +187,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
     request = strategy.request
     settings = request.settings
-    backend_name = get_social_auth_backend_name(backend.name)
+    backend_name = providers.get_name(backend.name)
 
     if request.method == "POST":
         try:
@@ -226,7 +233,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
         "step": "register",
         "email": details.get("email"),
         "username": kwargs.get("clean_username"),
-        "url": reverse("social:complete", kwargs={"backend": backend.name}),
+        "url": reverse("misago:social-complete", kwargs={"backend": backend.name}),
     }
 
     return render(request, "misago/socialauth.html", {"backend_name": backend_name})
@@ -248,7 +255,7 @@ def require_activation(
         return None
 
     request = strategy.request
-    backend_name = get_social_auth_backend_name(backend.name)
+    backend_name = providers.get_name(backend.name)
 
     response_data = get_registration_result_json(user)
     response_data.update({"step": "done", "backend_name": backend_name})
@@ -259,7 +266,7 @@ def require_activation(
 
     request.frontend_context["SOCIAL_AUTH"] = response_data
     request.frontend_context["SOCIAL_AUTH"].update(
-        {"url": reverse("social:complete", kwargs={"backend": backend.name})}
+        {"url": reverse("misago:social-complete", kwargs={"backend": backend.name})}
     )
 
     return render(request, "misago/socialauth.html", {"backend_name": backend_name})

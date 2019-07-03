@@ -3,7 +3,6 @@ from django.urls import reverse
 from django.utils.translation import get_language
 
 from . import settings
-from ..users.social.utils import get_enabled_social_auth_sites_list
 
 BLANK_AVATAR_URL = static(settings.MISAGO_BLANK_AVATAR)
 
@@ -44,7 +43,6 @@ def preload_settings_json(request):
             "LOGIN_REDIRECT_URL": reverse(settings.LOGIN_REDIRECT_URL),
             "LOGIN_URL": reverse(settings.LOGIN_URL),
             "LOGOUT_URL": reverse(settings.LOGOUT_URL),
-            "SOCIAL_AUTH": get_enabled_social_auth_sites_list(),
         }
     )
 
