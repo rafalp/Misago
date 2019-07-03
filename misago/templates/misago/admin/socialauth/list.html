@@ -10,6 +10,7 @@
 </div>
 {% endblock card-header %}
 
+
 {% block table-header %}
 <th>{% trans "Provider" %}</th>
 <th style="width: 1px;">&nbsp;</th>
@@ -71,6 +72,13 @@
   </div>
 </td>
 {% endblock %}
+
+
+{% block blankslate %}
+<td colspan="4">
+  {% trans "No social login methods are enabled." %}
+</td>
+{% endblock blankslate %}
 
 
 {% block javascripts %}
