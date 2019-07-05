@@ -13,6 +13,7 @@
 
 
 {% block og-title %}{{ profile.username }}{% endblock %}
+{% block twitter-title %}{{ profile.username }}{% endblock %}
 
 
 {% block og-description %}
@@ -30,12 +31,29 @@
 {% endblock og-description %}
 
 
+{% block twitter-description %}
+  {% blocktrans trimmed with title=profile.get_any_title joined_on=profile.joined_on|date %}
+    {{ title }}, joined on {{ joined_on }}.
+  {% endblocktrans %} {% blocktrans trimmed count posts=profile.posts %}
+    Wrote {{ posts }} post.
+  {% plural %}
+    Wrote {{ posts }} posts.
+  {% endblocktrans %} {% blocktrans trimmed count threads=profile.threads %}
+    Started {{ threads }} thread.
+  {% plural %}
+    Started {{ threads }} threads.
+  {% endblocktrans %}
+{% endblock twitter-description %}
+
+
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
+{% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block og-image %}
 {% if settings.og_image_avatar_on_profile %}
   {% with profile.avatars|first as og_image %}
+    <meta property="twitter:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image:width" content="{{ og_image.size }}" />
     <meta property="og:image:height" content="{{ og_image.size }}" />
