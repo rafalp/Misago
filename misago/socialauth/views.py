@@ -1,4 +1,4 @@
-from django.contrib.auth import login, REDIRECT_FIELD_NAME
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import Http404
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
@@ -23,7 +23,7 @@ def social_auth_view(f):
         backend_class = provider["auth_backend"]
         request.backend = backend_class(
             request.strategy,
-            reverse("misago:social-begin", kwargs={"backend": backend}),
+            reverse("misago:social-complete", kwargs={"backend": backend}),
         )
 
         return f(request, backend, *args, **kwargs)
