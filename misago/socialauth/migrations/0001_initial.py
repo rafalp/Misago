@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "button_text",
-                    models.CharField(blank=True, max_length=266, null=True),
+                    models.CharField(blank=True, max_length=255, null=True),
                 ),
                 ("button_color", models.CharField(blank=True, max_length=7, null=True)),
                 (
