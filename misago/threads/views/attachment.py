@@ -6,18 +6,21 @@ from django.shortcuts import get_object_or_404, redirect
 from ...conf import settings
 from ..models import Attachment, AttachmentType
 
-DEFAULT_403_URL = static(settings.MISAGO_ATTACHMENT_403_IMAGE)
-DEFAULT_404_URL = static(settings.MISAGO_ATTACHMENT_404_IMAGE)
-
 
 def attachment_server(request, pk, secret, thumbnail=False):
     try:
         url = serve_file(request, pk, secret, thumbnail)
         return redirect(url)
     except PermissionDenied:
-        return redirect(request.settings.attachment_403_image or DEFAULT_403_URL)
+        error_image = request.settings.attachment_403_image
+        if not error_image:
+            error_image = static(settings.MISAGO_ATTACHMENT_403_IMAGE)
+        return redirect(error_image)
     except Http404:
-        return redirect(request.settings.attachment_404_image or DEFAULT_404_URL)
+        error_image = request.settings.attachment_404_image
+        if not error_image:
+            error_image = static(settings.MISAGO_ATTACHMENT_404_IMAGE)
+        return redirect(error_image)
 
 
 def serve_file(request, pk, secret, thumbnail):

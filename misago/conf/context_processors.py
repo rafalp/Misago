@@ -4,12 +4,12 @@ from django.utils.translation import get_language
 
 from . import settings
 
-BLANK_AVATAR_URL = static(settings.MISAGO_BLANK_AVATAR)
-
 
 def conf(request):
     return {
-        "BLANK_AVATAR_URL": request.settings.blank_avatar or BLANK_AVATAR_URL,
+        "BLANK_AVATAR_URL": (
+            request.settings.blank_avatar or static(settings.MISAGO_BLANK_AVATAR)
+        ),
         "DEBUG": settings.DEBUG,
         "LANGUAGE_CODE_SHORT": get_language()[:2],
         "LOGIN_REDIRECT_URL": settings.LOGIN_REDIRECT_URL,
@@ -48,7 +48,9 @@ def preload_settings_json(request):
 
     request.frontend_context.update(
         {
-            "BLANK_AVATAR_URL": request.settings.blank_avatar or BLANK_AVATAR_URL,
+            "BLANK_AVATAR_URL": (
+                request.settings.blank_avatar or static(settings.MISAGO_BLANK_AVATAR)
+            ),
             "CSRF_COOKIE_NAME": settings.CSRF_COOKIE_NAME,
             "ENABLE_DELETE_OWN_ACCOUNT": request.settings.allow_delete_own_account,
             "ENABLE_DOWNLOAD_OWN_DATA": request.settings.allow_data_downloads,
