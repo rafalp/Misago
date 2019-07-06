@@ -3,20 +3,29 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Amandine G <amandyfriendly@msn.com>, 2017
+# Olivier Cortès <olive@deep-ocean.net>, 2018
+# Palimpseste, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 15:33+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Amandine G <amandyfriendly@msn.com>, 2017\n"
+"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"PO-Revision-Date: 2017-01-16 00:04+0000\n"
+"Last-Translator: Palimpseste, 2018\n"
 "Language-Team: French (https://www.transifex.com/misago/teams/65369/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: static/misago/admin/index.js:16
+msgid "defineLocaleOverride"
+msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
@@ -1633,8 +1642,8 @@ msgid "Posts"
 msgstr "Publications"
 
 #: static/misago/js/misago.js:12
-msgid "Show more (%(more)s)"
-msgstr "Montrer davantage (%(more)s)"
+msgid "Show older activity"
+msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Following"
@@ -1679,6 +1688,10 @@ msgstr "Personne ne vous suit."
 #: static/misago/js/misago.js:12
 msgid "%(username)s has no followers."
 msgstr "Personne ne suit %(username)s."
+
+#: static/misago/js/misago.js:12
+msgid "Show more (%(more)s)"
+msgstr "Montrer davantage (%(more)s)"
 
 #: static/misago/js/misago.js:12
 msgid "Search users..."
@@ -2650,10 +2663,10 @@ msgid "Total posts"
 msgstr "Nombre total de messages"
 
 #: static/misago/js/misago.js:22
-msgid "%(posters)s most active poster from last %(days)s days."
-msgid_plural "%(posters)s most active posters from last %(days)s days."
-msgstr[0] "%(posters)s a été l'utilisateur le plus actif depuis%(days)sjours"
-msgstr[1] "%(posters)s utilisateurs les plus actifs depuis%(days)s jours."
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
 
 #: static/misago/js/misago.js:22
 msgid "Users"

@@ -3,20 +3,33 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# alff0x1f <alff3one@gmail.com>, 2017
+# Amy Woodehy <amywoodehy@gmail.com>, 2017
+# Eduard Yamaltdinov <eyamal@galaxydata.ru>, 2017
+# Alexander Smolensky <pavlgeorg@gmail.com>, 2017
+# Roman Patsev <rpatsev@gmail.com>, 2018
+# musindmitriy <dmitry.musin@phystech.edu>, 2018
+# Katrin Kutepova <blackkatelv@gmail.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 15:33+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Roman Patsev <rpatsev@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"PO-Revision-Date: 2017-01-16 00:04+0000\n"
+"Last-Translator: Katrin Kutepova <blackkatelv@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: static/misago/admin/index.js:16
+msgid "defineLocaleOverride"
+msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
@@ -1673,8 +1686,8 @@ msgid "Posts"
 msgstr "Сообщений"
 
 #: static/misago/js/misago.js:12
-msgid "Show more (%(more)s)"
-msgstr "Показать ещё (%(more)s)"
+msgid "Show older activity"
+msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Following"
@@ -1723,6 +1736,10 @@ msgstr "У вас нет подписчиков."
 #: static/misago/js/misago.js:12
 msgid "%(username)s has no followers."
 msgstr "У %(username)sнет подписчиков"
+
+#: static/misago/js/misago.js:12
+msgid "Show more (%(more)s)"
+msgstr "Показать ещё (%(more)s)"
 
 #: static/misago/js/misago.js:12
 msgid "Search users..."
@@ -2673,8 +2690,8 @@ msgid "Total posts"
 msgstr "Всего сообщений"
 
 #: static/misago/js/misago.js:22
-msgid "%(posters)s most active poster from last %(days)s days."
-msgid_plural "%(posters)s most active posters from last %(days)s days."
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 msgstr[2] ""
