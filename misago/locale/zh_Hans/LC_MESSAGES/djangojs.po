@@ -3,20 +3,31 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# ZZLL <zhuolun1996@gmail.com>, 2017
+# Paradox506 <Renyi_14@whu.edu.cn>, 2017
+# Mayne <dreama9ain@gmail.com>, 2017
+# cxgreat2014 <fwy1998@gmail.com>, 2018
+# 沐子白 <yiveco@qq.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-08-19 15:33+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: cxgreat2014 <fwy1998@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"PO-Revision-Date: 2017-01-16 00:04+0000\n"
+"Last-Translator: 沐子白 <yiveco@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: static/misago/admin/index.js:16
+msgid "defineLocaleOverride"
+msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
@@ -48,7 +59,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "I have read and accept %(agreement)s."
-msgstr ""
+msgstr "我已阅读完毕并接受%(agreement)s。"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -413,7 +424,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:4
 msgid "Are you sure you want to delete all polls?"
-msgstr ""
+msgstr "您确定要删除所有调查吗？"
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:19
 #: static/misago/js/misago.js:20
@@ -1547,8 +1558,8 @@ msgid "Posts"
 msgstr "发帖"
 
 #: static/misago/js/misago.js:12
-msgid "Show more (%(more)s)"
-msgstr "展示更多 （%(more）s）"
+msgid "Show older activity"
+msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Following"
@@ -1588,6 +1599,10 @@ msgstr "您没有关注者。"
 #: static/misago/js/misago.js:12
 msgid "%(username)s has no followers."
 msgstr "%(username)s 没有关注者。"
+
+#: static/misago/js/misago.js:12
+msgid "Show more (%(more)s)"
+msgstr "展示更多 （%(more）s）"
 
 #: static/misago/js/misago.js:12
 msgid "Search users..."
@@ -2507,9 +2522,9 @@ msgid "Total posts"
 msgstr "帖子总数"
 
 #: static/misago/js/misago.js:22
-msgid "%(posters)s most active poster from last %(days)s days."
-msgid_plural "%(posters)s most active posters from last %(days)s days."
-msgstr[0] "%最近%(days)s天最活跃的发布者%(poster)s"
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
+msgstr[0] ""
 
 #: static/misago/js/misago.js:22
 msgid "Users"

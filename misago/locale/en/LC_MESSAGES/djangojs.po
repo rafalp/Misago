@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-15 23:22+0000\n"
+"POT-Creation-Date: 2019-07-06 13:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: static/misago/admin/index.js:16
+msgid "defineLocaleOverride"
+msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
@@ -1569,7 +1573,7 @@ msgid "Posts"
 msgstr ""
 
 #: static/misago/js/misago.js:12
-msgid "Show more (%(more)s)"
+msgid "Show older activity"
 msgstr ""
 
 #: static/misago/js/misago.js:12
@@ -1612,6 +1616,10 @@ msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "%(username)s has no followers."
+msgstr ""
+
+#: static/misago/js/misago.js:12
+msgid "Show more (%(more)s)"
 msgstr ""
 
 #: static/misago/js/misago.js:12
@@ -2540,8 +2548,8 @@ msgid "Total posts"
 msgstr ""
 
 #: static/misago/js/misago.js:22
-msgid "%(posters)s most active poster from last %(days)s days."
-msgid_plural "%(posters)s most active posters from last %(days)s days."
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
