@@ -259,6 +259,9 @@ export default class extends WithDropdown {
   getClassName() {
     let className = "page page-threads"
     className += " page-threads-" + this.props.route.list.type
+    if (isIndex(this.props)) {
+      className += " page-threads-index"
+    }
     if (this.props.route.category.css_class) {
       className += " page-threads-" + this.props.route.category.css_class
     }
@@ -321,4 +324,11 @@ export default class extends WithDropdown {
       </div>
     )
   }
+}
+
+function isIndex(props) {
+  if (props.route.category.level || !misago.get("THREADS_ON_INDEX")) return false
+  if (props.options.title) return false
+
+  return true
 }

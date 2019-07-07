@@ -73,7 +73,7 @@
 
 
 {% block content %}
-<div class="page page-categories {{ categories|iffalse:'page-message' }}">
+<div class="page page-categories{{ categories|iffalse:' page-message' }}">
   {% include "misago/categories/header.html" %}
   <div class="container">
     {% include "misago/categories/body.html" %}
