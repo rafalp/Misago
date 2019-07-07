@@ -37,7 +37,17 @@
 {% endblock og-title %}
 
 
+{% block twitter-title %}
+  {% if THREADS_ON_INDEX %}
+    {{ settings.index_title|default:settings.forum_name }}
+  {% else %}
+    {% trans "Threads" %}
+  {% endif %}
+{% endblock twitter-title %}
+
+
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
+{% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block page-header %}
