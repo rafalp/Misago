@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"POT-Creation-Date: 2019-07-07 17:33+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: bedirhan doğan yılmaz <bedirhandoganyilmaz@gmail.com>, 2018\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
@@ -172,6 +172,7 @@ msgstr "İşlem yapılmasına izin verilmiyor."
 
 #: categories/admin/__init__.py:65 templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:29
+#: templates/misago/categories/base.html:38
 #: templates/misago/categories/header.html:8 templates/misago/navbar.html:25
 #: templates/misago/navbar.html:31
 msgid "Categories"
@@ -221,12 +222,14 @@ msgstr "Sadece geçerli izni olan üyeler kapalı kategorilerde ileti yapabilir.
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
 #: templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
-#: templates/misago/threadslist/category.html:67
+#: templates/misago/profile/threads.html:9
+#: templates/misago/threadslist/category.html:74
 #: templates/misago/threadslist/threads.html:14
 #: templates/misago/threadslist/threads.html:16
 #: templates/misago/threadslist/threads.html:18
 #: templates/misago/threadslist/threads.html:35
-#: templates/misago/threadslist/threads.html:53
+#: templates/misago/threadslist/threads.html:44
+#: templates/misago/threadslist/threads.html:63
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
 #: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:98
 msgid "Threads"
@@ -1345,8 +1348,8 @@ msgstr "Alıntı ileti:"
 msgid "You don't have permission to search site."
 msgstr "Sitede arama iznin yok"
 
-#: search/permissions.py:10 templates/misago/search.html:21
-#: templates/misago/search.html:32
+#: search/permissions.py:10 templates/misago/search.html:23
+#: templates/misago/search.html:34
 msgid "Search"
 msgstr "Ara"
 
@@ -1887,7 +1890,7 @@ msgstr "bölüm"
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: users/apps.py:94
+#: templates/misago/profile/posts.html:9 users/apps.py:94
 msgid "Posts"
 msgstr "iletiler"
 
@@ -2227,7 +2230,7 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:38
 #: templates/misago/admin/users/edit.html:195
 #: templates/misago/admin/users/list.html:32
-#: templates/misago/userslists/active_posters.html:66
+#: templates/misago/userslists/active_posters.html:83
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -2255,15 +2258,18 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/403.html:18
 #: templates/misago/errorpages/403.html:12
-#: templates/misago/errorpages/403.html:24
-#: templates/misago/errorpages/403.html:44
+#: templates/misago/errorpages/403.html:25
+#: templates/misago/errorpages/403.html:34
+#: templates/misago/errorpages/403.html:54
 msgid "You don't have permission to access this page."
 msgstr "Bu sayfaya giriş izinin yok."
 
 #: templates/misago/admin/errorpages/404.html:5
 #: templates/misago/errorpages/403.html:17
+#: templates/misago/errorpages/403.html:18
 #: templates/misago/errorpages/404.html:5
 #: templates/misago/errorpages/404.html:13
+#: templates/misago/errorpages/404.html:14
 msgid "Page not found"
 msgstr "Sayfa bulunamadı"
 
@@ -2273,7 +2279,8 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/404.html:16
 #: templates/misago/errorpages/404.html:9
-#: templates/misago/errorpages/404.html:17
+#: templates/misago/errorpages/404.html:18
+#: templates/misago/errorpages/404.html:23
 msgid ""
 "The link you clicked was incorrect or the page has been moved or deleted."
 msgstr "Tıkladığın link yanlış ve ya sayfa taşınmış ya da silinmiştir."
@@ -2387,14 +2394,14 @@ msgstr "Ilk"
 #: templates/misago/admin/generic/paginator.html:13
 #: templates/misago/thread/paginator.html:13
 #: templates/misago/thread/paginator.html:19
-#: templates/misago/userslists/rank.html:88
-#: templates/misago/userslists/rank.html:96
+#: templates/misago/userslists/rank.html:99
+#: templates/misago/userslists/rank.html:107
 msgid "Go to previous page"
 msgstr "Önceki sayfaya git"
 
 #: templates/misago/admin/generic/paginator.html:22
 #: templates/misago/thread/paginator.html:27
-#: templates/misago/userslists/rank.html:105
+#: templates/misago/userslists/rank.html:116
 msgid "Go to next page"
 msgstr "Bir sonraki sayfaya git"
 
@@ -2516,8 +2523,8 @@ msgstr "Görüntülenme ve görünürlük"
 
 #: templates/misago/admin/ranks/list.html:17
 #: templates/misago/admin/users/list.html:19
-#: templates/misago/userslists/active_posters.html:95
-#: templates/misago/userslists/active_posters.html:106
+#: templates/misago/userslists/active_posters.html:112
+#: templates/misago/userslists/active_posters.html:123
 #: users/admin/forms.py:238
 msgid "Rank"
 msgstr "Rütbe"
@@ -2658,7 +2665,7 @@ msgstr ""
 #: templates/misago/admin/users/list.html:95
 #: templates/misago/admin/warnings/list.html:105
 #: templates/misago/poll/results.html:69
-#: templates/misago/profile/details.html:24
+#: templates/misago/profile/details.html:25
 #: templates/misago/thread/posts/post/footer.html:31
 #: users/admin/djangoadmin.py:72
 msgid "Edit"
@@ -3037,7 +3044,8 @@ msgid "Log out"
 msgstr "Çıkış"
 
 #: templates/misago/categories/base.html:18
-#: templates/misago/categories/base.html:40
+#: templates/misago/categories/base.html:49
+#: templates/misago/categories/base.html:62
 #, python-format
 msgid ""
 "There is %(categories)s main category currenty available on the "
@@ -3313,31 +3321,33 @@ msgid ""
 "the thread \"%(thread)s\" that you are subscribed to."
 msgstr ""
 
-#: templates/misago/errorpages/403.html:40
+#: templates/misago/errorpages/403.html:50
 msgid "This page is not available."
 msgstr "Bu sayfa kullanılamaz."
 
-#: templates/misago/errorpages/404.html:32
+#: templates/misago/errorpages/404.html:38
 msgid "Requested page could not be found."
 msgstr "İstenilen sayfa bulunamıyor."
 
-#: templates/misago/errorpages/404.html:33
+#: templates/misago/errorpages/404.html:39
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
 msgstr "İzlediğiniz bağlantı yanlıştı veya sayfa taşındı veya silindi."
 
 #: templates/misago/errorpages/405.html:5
 #: templates/misago/errorpages/405.html:13
+#: templates/misago/errorpages/405.html:14
 msgid "Wrong way"
 msgstr "Yanlış yol"
 
 #: templates/misago/errorpages/405.html:9
-#: templates/misago/errorpages/405.html:17
-#: templates/misago/errorpages/405.html:33
+#: templates/misago/errorpages/405.html:18
+#: templates/misago/errorpages/405.html:23
+#: templates/misago/errorpages/405.html:39
 msgid "This page should be reached via form submission or pressing button."
 msgstr "Bu sayfaya form gönderimi veya düğmesine basarak ulaşılmalıdır."
 
-#: templates/misago/errorpages/405.html:32
+#: templates/misago/errorpages/405.html:38
 msgid "Page reached in wrong way."
 msgstr "Sayfa yanlış yoldan ulaştı."
 
@@ -3392,11 +3402,12 @@ msgid "Check your browser configuration and try again."
 msgstr "Tarayıcı ayarlarını kontrol et ve tekrar dene."
 
 #: templates/misago/errorpages/social.html:5
-#: templates/misago/errorpages/social.html:13
+#: templates/misago/errorpages/social.html:11
+#: templates/misago/errorpages/social.html:12
 msgid "Problem with sign in"
 msgstr ""
 
-#: templates/misago/errorpages/social.html:40
+#: templates/misago/errorpages/social.html:38
 msgid ""
 "Please try again or use another method to sign in if the problem persists."
 msgstr ""
@@ -3583,28 +3594,29 @@ msgstr "Sonuçlara bak"
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
-#: templates/misago/profile/ban_details.html:15 users/apps.py:129
+#: templates/misago/profile/ban_details.html:9
+#: templates/misago/profile/ban_details.html:16 users/apps.py:129
 msgid "Ban details"
 msgstr "Yasaklamak ayrıntıları"
 
-#: templates/misago/profile/ban_details.html:21
+#: templates/misago/profile/ban_details.html:22
 msgid "User-shown ban message"
 msgstr "Kullanıcı tarafından gösterilen Yasaklamak ileti"
 
-#: templates/misago/profile/ban_details.html:30
+#: templates/misago/profile/ban_details.html:31
 msgid "Team-shown ban message"
 msgstr "Takım tarafından gösterilen Yasaklamak ileti"
 
-#: templates/misago/profile/ban_details.html:38
+#: templates/misago/profile/ban_details.html:39
 msgid "Ban expiration"
 msgstr "Son kullanma Yasaklamak"
 
-#: templates/misago/profile/ban_details.html:42
+#: templates/misago/profile/ban_details.html:43
 #, python-format
 msgid "%(username)s's ban expires on %(expires_on)s."
 msgstr "%(username)s Yasaklamak sona eriyor%(expires_on)s"
 
-#: templates/misago/profile/ban_details.html:46
+#: templates/misago/profile/ban_details.html:47
 #, python-format
 msgid "%(username)s's ban is permanent."
 msgstr "%(username)s Yasaklamak kalıcıdır."
@@ -3631,15 +3643,16 @@ msgstr[1] "%(threads)s dizilerini başlattı."
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
-#: templates/misago/profile/details.html:18 users/apps.py:116
+#: templates/misago/profile/details.html:9
+#: templates/misago/profile/details.html:19 users/apps.py:116
 msgid "Details"
 msgstr "ayrıntılar"
 
-#: templates/misago/profile/details.html:74
+#: templates/misago/profile/details.html:75
 msgid "You are not sharing any details with others."
 msgstr "Başkalarıyla herhangi bir ayrıntı paylaşmıyorsunuz."
 
-#: templates/misago/profile/details.html:76
+#: templates/misago/profile/details.html:77
 #, python-format
 msgid "%(username)s is not sharing any details with others."
 msgstr "%(username)sbaşkalarıyla herhangi bir ayrıntı paylaşmıyor."
@@ -3659,57 +3672,59 @@ msgid "This error is caused by invalid post content manipulation."
 msgstr "Bu hata, geçersiz ileti içeriği manipülasyonundan kaynaklanmaktadır."
 
 #: templates/misago/profile/followers.html:5
-#: templates/misago/profile/followers.html:8 users/apps.py:104
+#: templates/misago/profile/followers.html:8
+#: templates/misago/profile/followers.html:9 users/apps.py:104
 msgid "Followers"
 msgstr "Takipçiler"
 
-#: templates/misago/profile/followers.html:17
+#: templates/misago/profile/followers.html:18
 #, python-format
 msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] "%(users)skullanıcısının takipçileri var."
 msgstr[1] "%(users)skullanıcısının takipçileri var."
 
-#: templates/misago/profile/followers.html:23
+#: templates/misago/profile/followers.html:24
 #, python-format
 msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] "%(username)svar %(users)skullanıcısının takipçileri var."
 msgstr[1] "%(username)svar %(users)skullanıcısının takipçileri var."
 
-#: templates/misago/profile/followers.html:48
+#: templates/misago/profile/followers.html:49
 msgid "You have no followers."
 msgstr "Takipçileriniz yok."
 
-#: templates/misago/profile/followers.html:50
+#: templates/misago/profile/followers.html:51
 #, python-format
 msgid "%(username)s has no followers."
 msgstr "%(username)sTakipçisi yok."
 
 #: templates/misago/profile/follows.html:5
-#: templates/misago/profile/follows.html:8 users/apps.py:110
+#: templates/misago/profile/follows.html:8
+#: templates/misago/profile/follows.html:9 users/apps.py:110
 msgid "Follows"
 msgstr "Şöyledir"
 
-#: templates/misago/profile/follows.html:17
+#: templates/misago/profile/follows.html:18
 #, python-format
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] "%(users)skullanıcısını takip ediyorsunuz."
 msgstr[1] "%(users)skullanıcısını takip ediyorsunuz."
 
-#: templates/misago/profile/follows.html:23
+#: templates/misago/profile/follows.html:24
 #, python-format
 msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] "%(username)skullanıcısını %(users)s takip ediyor."
 msgstr[1] "%(username)skullanıcısını %(users)s takip ediyor."
 
-#: templates/misago/profile/follows.html:48
+#: templates/misago/profile/follows.html:49
 msgid "You are not following any users."
 msgstr "Hiçbir kullanıcıyı takip etmiyorsun."
 
-#: templates/misago/profile/follows.html:50
+#: templates/misago/profile/follows.html:51
 #, python-format
 msgid "%(username)s is not following any users."
 msgstr "%(username)sherhangi bir kullanıcıyı takip etmiyor."
@@ -3727,76 +3742,77 @@ msgstr "Bu kullanıcının hesabı yönetici tarafından devre dışı bırakıl
 msgid "Member since %(joined_on)s"
 msgstr "Şu Tarihten Beri Üye %(joined_on)s"
 
-#: templates/misago/profile/posts.html:19
+#: templates/misago/profile/posts.html:20
 #, python-format
 msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
 msgstr[0] "%(posts)s iletiler gönderdiniz."
 msgstr[1] "%(posts)s iletiler gönderdiniz."
 
-#: templates/misago/profile/posts.html:25
+#: templates/misago/profile/posts.html:26
 #, python-format
 msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s iletiler olarak %(posts)sgönderdi."
 msgstr[1] "%(username)s iletiler olarak %(posts)sgönderdi."
 
-#: templates/misago/profile/posts.html:39
+#: templates/misago/profile/posts.html:40
 msgid "You have posted no messages"
 msgstr "Mesaj gönderdin mi"
 
-#: templates/misago/profile/posts.html:41
+#: templates/misago/profile/posts.html:42
 #, python-format
 msgid "%(username)s posted no messages."
 msgstr "%(username)smesaj gönderdi."
 
-#: templates/misago/profile/threads.html:19
+#: templates/misago/profile/threads.html:20
 #, python-format
 msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
 msgstr[0] "%(threads)slerin ipliklerini başlattınız."
 msgstr[1] "%(threads)slerin ipliklerini başlattınız."
 
-#: templates/misago/profile/threads.html:25
+#: templates/misago/profile/threads.html:26
 #, python-format
 msgid "%(username)s has started %(threads)s thread."
 msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] "%(username)sipliklerini başlattı.%(threads)s"
 msgstr[1] "%(username)sipliklerini başlattı.%(threads)s"
 
-#: templates/misago/profile/threads.html:39
+#: templates/misago/profile/threads.html:40
 msgid "You have no started threads."
 msgstr "Başında bir konu yok."
 
-#: templates/misago/profile/threads.html:41
+#: templates/misago/profile/threads.html:42
 #, python-format
 msgid "%(username)s started no threads."
 msgstr "%(username)sKonu başlatılmamış."
 
 #: templates/misago/profile/username_history.html:5
-#: templates/misago/profile/username_history.html:8 users/apps.py:122
+#: templates/misago/profile/username_history.html:8
+#: templates/misago/profile/username_history.html:9 users/apps.py:122
 msgid "Username history"
 msgstr "Kullanıcı adı geçmişi"
 
-#: templates/misago/profile/username_history.html:17
+#: templates/misago/profile/username_history.html:18
 #, python-format
 msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] "Kullanıcı adınız %(changes)s kez değiştirildi."
 msgstr[1] "Kullanıcı adınız %(changes)s kez değiştirildi."
 
-#: templates/misago/profile/username_history.html:23
+#: templates/misago/profile/username_history.html:24
 #, python-format
 msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] "%(username)skullanıcısının adı %(changes)s kez değiştirildi."
 msgstr[1] "%(username)skullanıcısının adı %(changes)s kez değiştirildi."
 
-#: templates/misago/profile/username_history.html:78
+#: templates/misago/profile/username_history.html:79
 msgid "Your username was never changed."
 msgstr "Kullanıcı adınız hiçbir zaman değiştirilmedi."
 
-#: templates/misago/profile/username_history.html:80
+#: templates/misago/profile/username_history.html:81
 #, python-format
 msgid "%(username)s's username was never changed."
 msgstr "%(username)skullanıcının adı hiç değişmedi."
@@ -3816,10 +3832,11 @@ msgid "Please review the updated %(agreement)s available %(link)s."
 msgstr ""
 
 #: templates/misago/search.html:5 templates/misago/search.html:8
+#: templates/misago/search.html:9
 msgid "Search site"
 msgstr "Arama sitesi"
 
-#: templates/misago/search.html:45
+#: templates/misago/search.html:47
 msgid "Loading search..."
 msgstr "Aramay yükleniyor ..."
 
@@ -4153,7 +4170,8 @@ msgid "Poll"
 msgstr "Anket"
 
 #: templates/misago/userslists/active_posters.html:5
-#: templates/misago/userslists/active_posters.html:23 users/apps.py:73
+#: templates/misago/userslists/active_posters.html:23
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:73
 msgid "Top posters"
 msgstr ""
 
@@ -4165,38 +4183,41 @@ msgstr[0] "son%(days)s günlerden en aktif posterleri %(posters)s"
 msgstr[1] "son%(days)s günlerden en aktif posterleri %(posters)s"
 
 #: templates/misago/userslists/active_posters.html:16
-#: templates/misago/userslists/active_posters.html:34
-#: templates/misago/userslists/active_posters.html:128
+#: templates/misago/userslists/active_posters.html:35
+#: templates/misago/userslists/active_posters.html:50
+#: templates/misago/userslists/active_posters.html:145
 #, python-format
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "Hiçbir kullanıcı son %(days)s gün içinde yeni mesaj gönderdi."
 
-#: templates/misago/userslists/active_posters.html:28
-#: templates/misago/userslists/active_posters.html:52
+#: templates/misago/userslists/active_posters.html:29
+#: templates/misago/userslists/active_posters.html:44
+#: templates/misago/userslists/active_posters.html:69
 #, python-format
 msgid "%(posters)s top poster from last %(days)s days."
 msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:99
-#: templates/misago/userslists/active_posters.html:111
+#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:128
 msgid "Ranked posts"
 msgstr "Sıralama iletiler"
 
-#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:133
 msgid "Total posts"
 msgstr "Toplam iletiler"
 
 #: templates/misago/userslists/rank.html:9
-#: templates/misago/userslists/rank.html:42
+#: templates/misago/userslists/rank.html:41
+#: templates/misago/userslists/rank.html:52
 #, python-format
 msgid "%(users)s user have this rank."
 msgid_plural "%(users)s users have this rank."
 msgstr[0] "%(users)sKullanıcıların bu sıralaması var."
 msgstr[1] "%(users)sKullanıcıların bu sıralaması var."
 
-#: templates/misago/userslists/rank.html:119
+#: templates/misago/userslists/rank.html:130
 msgid "There are no users with this rank at the moment."
 msgstr "Şu anda bu rütbe sahibi kullanıcı yok."
 
@@ -7136,7 +7157,7 @@ msgstr "Seçilen kullanıcılar silindi."
 
 #: users/admin/views/users.py:244
 msgid ""
-"Selected users have disabled and been queued for deletion together with "
+"Selected users have been disabled and queued for deletion together with "
 "their content."
 msgstr ""
 

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"POT-Creation-Date: 2019-07-07 17:33+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -170,6 +170,7 @@ msgstr "La acción no está permitida"
 
 #: categories/admin/__init__.py:65 templates/misago/categories/base.html:7
 #: templates/misago/categories/base.html:29
+#: templates/misago/categories/base.html:38
 #: templates/misago/categories/header.html:8 templates/misago/navbar.html:25
 #: templates/misago/navbar.html:31
 msgid "Categories"
@@ -221,12 +222,14 @@ msgstr ""
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
 #: templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
-#: templates/misago/threadslist/category.html:67
+#: templates/misago/profile/threads.html:9
+#: templates/misago/threadslist/category.html:74
 #: templates/misago/threadslist/threads.html:14
 #: templates/misago/threadslist/threads.html:16
 #: templates/misago/threadslist/threads.html:18
 #: templates/misago/threadslist/threads.html:35
-#: templates/misago/threadslist/threads.html:53
+#: templates/misago/threadslist/threads.html:44
+#: templates/misago/threadslist/threads.html:63
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
 #: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:98
 msgid "Threads"
@@ -1352,8 +1355,8 @@ msgstr "Mensaje citado:"
 msgid "You don't have permission to search site."
 msgstr "No tienes permiso para buscar en el sitio."
 
-#: search/permissions.py:10 templates/misago/search.html:21
-#: templates/misago/search.html:32
+#: search/permissions.py:10 templates/misago/search.html:23
+#: templates/misago/search.html:34
 msgid "Search"
 msgstr "Buscar"
 
@@ -1894,7 +1897,7 @@ msgstr "Categoría"
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: users/apps.py:94
+#: templates/misago/profile/posts.html:9 users/apps.py:94
 msgid "Posts"
 msgstr "Mensajes"
 
@@ -2234,7 +2237,7 @@ msgstr ""
 #: templates/misago/admin/users/edit.html:38
 #: templates/misago/admin/users/edit.html:195
 #: templates/misago/admin/users/list.html:32
-#: templates/misago/userslists/active_posters.html:66
+#: templates/misago/userslists/active_posters.html:83
 msgid "Avatar"
 msgstr "Avatar"
 
@@ -2262,15 +2265,18 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/403.html:18
 #: templates/misago/errorpages/403.html:12
-#: templates/misago/errorpages/403.html:24
-#: templates/misago/errorpages/403.html:44
+#: templates/misago/errorpages/403.html:25
+#: templates/misago/errorpages/403.html:34
+#: templates/misago/errorpages/403.html:54
 msgid "You don't have permission to access this page."
 msgstr "No tienes permisos para acceder a esta página."
 
 #: templates/misago/admin/errorpages/404.html:5
 #: templates/misago/errorpages/403.html:17
+#: templates/misago/errorpages/403.html:18
 #: templates/misago/errorpages/404.html:5
 #: templates/misago/errorpages/404.html:13
+#: templates/misago/errorpages/404.html:14
 msgid "Page not found"
 msgstr "Página no encontrada"
 
@@ -2280,7 +2286,8 @@ msgstr ""
 
 #: templates/misago/admin/errorpages/404.html:16
 #: templates/misago/errorpages/404.html:9
-#: templates/misago/errorpages/404.html:17
+#: templates/misago/errorpages/404.html:18
+#: templates/misago/errorpages/404.html:23
 msgid ""
 "The link you clicked was incorrect or the page has been moved or deleted."
 msgstr ""
@@ -2396,14 +2403,14 @@ msgstr "Primer"
 #: templates/misago/admin/generic/paginator.html:13
 #: templates/misago/thread/paginator.html:13
 #: templates/misago/thread/paginator.html:19
-#: templates/misago/userslists/rank.html:88
-#: templates/misago/userslists/rank.html:96
+#: templates/misago/userslists/rank.html:99
+#: templates/misago/userslists/rank.html:107
 msgid "Go to previous page"
 msgstr "Ir a la página anterior"
 
 #: templates/misago/admin/generic/paginator.html:22
 #: templates/misago/thread/paginator.html:27
-#: templates/misago/userslists/rank.html:105
+#: templates/misago/userslists/rank.html:116
 msgid "Go to next page"
 msgstr "Ir a la página siguiente"
 
@@ -2525,8 +2532,8 @@ msgstr "Pantalla y visibilidad"
 
 #: templates/misago/admin/ranks/list.html:17
 #: templates/misago/admin/users/list.html:19
-#: templates/misago/userslists/active_posters.html:95
-#: templates/misago/userslists/active_posters.html:106
+#: templates/misago/userslists/active_posters.html:112
+#: templates/misago/userslists/active_posters.html:123
 #: users/admin/forms.py:238
 msgid "Rank"
 msgstr "Rango"
@@ -2667,7 +2674,7 @@ msgstr ""
 #: templates/misago/admin/users/list.html:95
 #: templates/misago/admin/warnings/list.html:105
 #: templates/misago/poll/results.html:69
-#: templates/misago/profile/details.html:24
+#: templates/misago/profile/details.html:25
 #: templates/misago/thread/posts/post/footer.html:31
 #: users/admin/djangoadmin.py:72
 msgid "Edit"
@@ -3047,7 +3054,8 @@ msgid "Log out"
 msgstr "Cerrar sesión"
 
 #: templates/misago/categories/base.html:18
-#: templates/misago/categories/base.html:40
+#: templates/misago/categories/base.html:49
+#: templates/misago/categories/base.html:62
 #, python-format
 msgid ""
 "There is %(categories)s main category currenty available on the "
@@ -3320,33 +3328,35 @@ msgid ""
 "the thread \"%(thread)s\" that you are subscribed to."
 msgstr ""
 
-#: templates/misago/errorpages/403.html:40
+#: templates/misago/errorpages/403.html:50
 msgid "This page is not available."
 msgstr "Esta página no está disponible."
 
-#: templates/misago/errorpages/404.html:32
+#: templates/misago/errorpages/404.html:38
 msgid "Requested page could not be found."
 msgstr "La página solicitada no se pudo encontrar."
 
-#: templates/misago/errorpages/404.html:33
+#: templates/misago/errorpages/404.html:39
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
 msgstr "El enlace que siguió fue incorrecto o la página se movió o eliminó."
 
 #: templates/misago/errorpages/405.html:5
 #: templates/misago/errorpages/405.html:13
+#: templates/misago/errorpages/405.html:14
 msgid "Wrong way"
 msgstr "Sentido contrario"
 
 #: templates/misago/errorpages/405.html:9
-#: templates/misago/errorpages/405.html:17
-#: templates/misago/errorpages/405.html:33
+#: templates/misago/errorpages/405.html:18
+#: templates/misago/errorpages/405.html:23
+#: templates/misago/errorpages/405.html:39
 msgid "This page should be reached via form submission or pressing button."
 msgstr ""
 "Esta página debe llegar a través del envío de formularios o presionando el "
 "botón."
 
-#: templates/misago/errorpages/405.html:32
+#: templates/misago/errorpages/405.html:38
 msgid "Page reached in wrong way."
 msgstr "Página alcanzada de manera incorrecta."
 
@@ -3401,11 +3411,12 @@ msgid "Check your browser configuration and try again."
 msgstr "Verifique la configuración de su navegador y vuelva a intentarlo."
 
 #: templates/misago/errorpages/social.html:5
-#: templates/misago/errorpages/social.html:13
+#: templates/misago/errorpages/social.html:11
+#: templates/misago/errorpages/social.html:12
 msgid "Problem with sign in"
 msgstr ""
 
-#: templates/misago/errorpages/social.html:40
+#: templates/misago/errorpages/social.html:38
 msgid ""
 "Please try again or use another method to sign in if the problem persists."
 msgstr ""
@@ -3591,28 +3602,29 @@ msgstr "Ver resultados"
 
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
-#: templates/misago/profile/ban_details.html:15 users/apps.py:129
+#: templates/misago/profile/ban_details.html:9
+#: templates/misago/profile/ban_details.html:16 users/apps.py:129
 msgid "Ban details"
 msgstr "Detalles del baneo"
 
-#: templates/misago/profile/ban_details.html:21
+#: templates/misago/profile/ban_details.html:22
 msgid "User-shown ban message"
 msgstr "Mensaje de baneo que el usuario verá"
 
-#: templates/misago/profile/ban_details.html:30
+#: templates/misago/profile/ban_details.html:31
 msgid "Team-shown ban message"
 msgstr "Mensaje de baneo que verá el staff"
 
-#: templates/misago/profile/ban_details.html:38
+#: templates/misago/profile/ban_details.html:39
 msgid "Ban expiration"
 msgstr "Expiración del baneo"
 
-#: templates/misago/profile/ban_details.html:42
+#: templates/misago/profile/ban_details.html:43
 #, python-format
 msgid "%(username)s's ban expires on %(expires_on)s."
 msgstr "La prohibición de %(username)s vence en %(expires_on)s."
 
-#: templates/misago/profile/ban_details.html:46
+#: templates/misago/profile/ban_details.html:47
 #, python-format
 msgid "%(username)s's ban is permanent."
 msgstr "El baneo de %(username)s es permanente."
@@ -3639,15 +3651,16 @@ msgstr[1] "Empezó %(threads)s hilos."
 
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
-#: templates/misago/profile/details.html:18 users/apps.py:116
+#: templates/misago/profile/details.html:9
+#: templates/misago/profile/details.html:19 users/apps.py:116
 msgid "Details"
 msgstr "Detalles"
 
-#: templates/misago/profile/details.html:74
+#: templates/misago/profile/details.html:75
 msgid "You are not sharing any details with others."
 msgstr "No compartes detalles con otros."
 
-#: templates/misago/profile/details.html:76
+#: templates/misago/profile/details.html:77
 #, python-format
 msgid "%(username)s is not sharing any details with others."
 msgstr "%(username)s no comparte detalles con otros."
@@ -3669,57 +3682,59 @@ msgstr ""
 "mensaje."
 
 #: templates/misago/profile/followers.html:5
-#: templates/misago/profile/followers.html:8 users/apps.py:104
+#: templates/misago/profile/followers.html:8
+#: templates/misago/profile/followers.html:9 users/apps.py:104
 msgid "Followers"
 msgstr "Seguidores"
 
-#: templates/misago/profile/followers.html:17
+#: templates/misago/profile/followers.html:18
 #, python-format
 msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
 msgstr[0] "Tienes %(users)s seguidor."
 msgstr[1] "Tienes %(users)s seguidores."
 
-#: templates/misago/profile/followers.html:23
+#: templates/misago/profile/followers.html:24
 #, python-format
 msgid "%(username)s has %(users)s follower."
 msgid_plural "%(username)s has %(users)s followers."
 msgstr[0] "%(username)s tiene %(users)s seguidor."
 msgstr[1] "%(username)s tiene %(users)s seguidores."
 
-#: templates/misago/profile/followers.html:48
+#: templates/misago/profile/followers.html:49
 msgid "You have no followers."
 msgstr "No tienes seguidores nuevos."
 
-#: templates/misago/profile/followers.html:50
+#: templates/misago/profile/followers.html:51
 #, python-format
 msgid "%(username)s has no followers."
 msgstr "%(username)s no tiene seguidores."
 
 #: templates/misago/profile/follows.html:5
-#: templates/misago/profile/follows.html:8 users/apps.py:110
+#: templates/misago/profile/follows.html:8
+#: templates/misago/profile/follows.html:9 users/apps.py:110
 msgid "Follows"
 msgstr "Seguidos"
 
-#: templates/misago/profile/follows.html:17
+#: templates/misago/profile/follows.html:18
 #, python-format
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
 msgstr[0] "Estás siguiendo a %(users)s usuario."
 msgstr[1] "Estás siguiendo a %(users)s usuarios."
 
-#: templates/misago/profile/follows.html:23
+#: templates/misago/profile/follows.html:24
 #, python-format
 msgid "%(username)s is following %(users)s user."
 msgid_plural "%(username)s is following %(users)s users."
 msgstr[0] "%(username)s está siguiendo a %(users)s usuario."
 msgstr[1] "%(username)s está siguiendo a %(users)s usuarios."
 
-#: templates/misago/profile/follows.html:48
+#: templates/misago/profile/follows.html:49
 msgid "You are not following any users."
 msgstr "No sigues a nadie."
 
-#: templates/misago/profile/follows.html:50
+#: templates/misago/profile/follows.html:51
 #, python-format
 msgid "%(username)s is not following any users."
 msgstr "%(username)s no está siguiendo a nadie."
@@ -3737,76 +3752,77 @@ msgstr "La cuenta de este usuario ha sido deshabilitada por un administrador."
 msgid "Member since %(joined_on)s"
 msgstr "Miembro desde %(joined_on)s"
 
-#: templates/misago/profile/posts.html:19
+#: templates/misago/profile/posts.html:20
 #, python-format
 msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
 msgstr[0] "Has publicado %(posts)s mensaje."
 msgstr[1] "Has publicado %(posts)s mensajes"
 
-#: templates/misago/profile/posts.html:25
+#: templates/misago/profile/posts.html:26
 #, python-format
 msgid "%(username)s has posted %(posts)s message."
 msgid_plural "%(username)s has posted %(posts)s messages."
 msgstr[0] "%(username)s ha publicado %(posts)s mensaje."
 msgstr[1] "%(username)s ha publicado %(posts)s mensajes."
 
-#: templates/misago/profile/posts.html:39
+#: templates/misago/profile/posts.html:40
 msgid "You have posted no messages"
 msgstr "No has enviado mensajes"
 
-#: templates/misago/profile/posts.html:41
+#: templates/misago/profile/posts.html:42
 #, python-format
 msgid "%(username)s posted no messages."
 msgstr "%(username)s no ha publicado mensajes."
 
-#: templates/misago/profile/threads.html:19
+#: templates/misago/profile/threads.html:20
 #, python-format
 msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
 msgstr[0] "Has iniciado %(threads)s hilo."
 msgstr[1] "Has iniciado %(threads)s hilos."
 
-#: templates/misago/profile/threads.html:25
+#: templates/misago/profile/threads.html:26
 #, python-format
 msgid "%(username)s has started %(threads)s thread."
 msgid_plural "%(username)s has started %(threads)s threads."
 msgstr[0] "%(username)s ha iniciado %(threads)s hilo."
 msgstr[1] "%(username)s ha iniciado %(threads)s hilos."
 
-#: templates/misago/profile/threads.html:39
+#: templates/misago/profile/threads.html:40
 msgid "You have no started threads."
 msgstr "No has iniciado ningún hilo."
 
-#: templates/misago/profile/threads.html:41
+#: templates/misago/profile/threads.html:42
 #, python-format
 msgid "%(username)s started no threads."
 msgstr "%(username)s no ha iniciado ningún hilo."
 
 #: templates/misago/profile/username_history.html:5
-#: templates/misago/profile/username_history.html:8 users/apps.py:122
+#: templates/misago/profile/username_history.html:8
+#: templates/misago/profile/username_history.html:9 users/apps.py:122
 msgid "Username history"
 msgstr "Historial de nombres de usuario"
 
-#: templates/misago/profile/username_history.html:17
+#: templates/misago/profile/username_history.html:18
 #, python-format
 msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
 msgstr[0] "Tu nombre de usuario ha sido cambiado %(changes)s vez."
 msgstr[1] "Tu nombre de usuario ha sido cambiado %(changes)s veces."
 
-#: templates/misago/profile/username_history.html:23
+#: templates/misago/profile/username_history.html:24
 #, python-format
 msgid "%(username)s's username was changed %(changes)s time."
 msgid_plural "%(username)s's username was changed %(changes)s times."
 msgstr[0] "El nombre de %(username)s ha sido cambiado %(changes)s vez."
 msgstr[1] "El nombre de %(username)s ha sido cambiado %(changes)s veces."
 
-#: templates/misago/profile/username_history.html:78
+#: templates/misago/profile/username_history.html:79
 msgid "Your username was never changed."
 msgstr "Tu nombre de usuario nunca fue cambiado."
 
-#: templates/misago/profile/username_history.html:80
+#: templates/misago/profile/username_history.html:81
 #, python-format
 msgid "%(username)s's username was never changed."
 msgstr "%(username)s no ha cambiado nunca su nombre de usuario."
@@ -3826,10 +3842,11 @@ msgid "Please review the updated %(agreement)s available %(link)s."
 msgstr ""
 
 #: templates/misago/search.html:5 templates/misago/search.html:8
+#: templates/misago/search.html:9
 msgid "Search site"
 msgstr "Buscar sitio"
 
-#: templates/misago/search.html:45
+#: templates/misago/search.html:47
 msgid "Loading search..."
 msgstr "Cargando búsqueda ..."
 
@@ -4161,7 +4178,8 @@ msgid "Poll"
 msgstr "Encuesta"
 
 #: templates/misago/userslists/active_posters.html:5
-#: templates/misago/userslists/active_posters.html:23 users/apps.py:73
+#: templates/misago/userslists/active_posters.html:23
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:73
 msgid "Top posters"
 msgstr ""
 
@@ -4173,38 +4191,41 @@ msgstr[0] "%(posters)s es el forero más activo del último %(days)s día."
 msgstr[1] "%(posters)s es el forero más activo de los últimos %(days)s días."
 
 #: templates/misago/userslists/active_posters.html:16
-#: templates/misago/userslists/active_posters.html:34
-#: templates/misago/userslists/active_posters.html:128
+#: templates/misago/userslists/active_posters.html:35
+#: templates/misago/userslists/active_posters.html:50
+#: templates/misago/userslists/active_posters.html:145
 #, python-format
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "Los usuarios no han escrito en los últimos %(days)s days."
 
-#: templates/misago/userslists/active_posters.html:28
-#: templates/misago/userslists/active_posters.html:52
+#: templates/misago/userslists/active_posters.html:29
+#: templates/misago/userslists/active_posters.html:44
+#: templates/misago/userslists/active_posters.html:69
 #, python-format
 msgid "%(posters)s top poster from last %(days)s days."
 msgid_plural "%(posters)s top posters from last %(days)s days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: templates/misago/userslists/active_posters.html:99
-#: templates/misago/userslists/active_posters.html:111
+#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:128
 msgid "Ranked posts"
 msgstr "Mensajes de rango"
 
-#: templates/misago/userslists/active_posters.html:116
+#: templates/misago/userslists/active_posters.html:133
 msgid "Total posts"
 msgstr "Mensajes totales"
 
 #: templates/misago/userslists/rank.html:9
-#: templates/misago/userslists/rank.html:42
+#: templates/misago/userslists/rank.html:41
+#: templates/misago/userslists/rank.html:52
 #, python-format
 msgid "%(users)s user have this rank."
 msgid_plural "%(users)s users have this rank."
 msgstr[0] "El usuario %(users)s tiene este rango."
 msgstr[1] "El usuario %(users)s tiene este rango."
 
-#: templates/misago/userslists/rank.html:119
+#: templates/misago/userslists/rank.html:130
 msgid "There are no users with this rank at the moment."
 msgstr "No hay usuarios con este rango actulamente."
 
@@ -7171,7 +7192,7 @@ msgstr "Los usuarios seleccionados han sido eliminados."
 
 #: users/admin/views/users.py:244
 msgid ""
-"Selected users have disabled and been queued for deletion together with "
+"Selected users have been disabled and queued for deletion together with "
 "their content."
 msgstr ""
 
