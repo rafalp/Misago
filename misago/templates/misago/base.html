@@ -18,7 +18,7 @@
         <meta name="twitter:description" content="{% spaceless %}{% block twitter-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock twitter-description %}{% endspaceless %}" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ settings.forum_address }}{% endblock og-url %}{% endspaceless %}" />
-        <meta name="name:url" content="{% spaceless %}{% block twitter-url %}{{ settings.forum_address }}{% endblock twitter-url %}{% endspaceless %}" />
+        <meta name="twitter:url" content="{% spaceless %}{% block twitter-url %}{{ settings.forum_address }}{% endblock twitter-url %}{% endspaceless %}" />
         {% block og-image %}
           {% if og_image %}
             <meta name="twitter:image" content="{% absoluteurl og_image.url %}" />
