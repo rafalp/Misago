@@ -1,4 +1,4 @@
-from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth import REDIRECT_FIELD_NAME, login
 from django.http import Http404
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
@@ -43,10 +43,15 @@ def auth(request, backend):
 def complete(request, backend, *args, **kwargs):
     return do_complete(
         request.backend,
-        _do_login,
+        do_login,
         user=request.user,
         redirect_name=REDIRECT_FIELD_NAME,
         request=request,
         *args,
         **kwargs
     )
+
+
+def do_login(backend, user, social_user):
+    user.backend = "misago.users.authbackends.MisagoBackend"
+    login(backend.strategy.request, user)

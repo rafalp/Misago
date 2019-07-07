@@ -228,7 +228,7 @@ def create_user_with_form(strategy, details, backend, user=None, *args, **kwargs
 
         return {"user": new_user, "is_new": True}
 
-    request.frontend_context["SOCIAL_AUTH"] = {
+    request.frontend_context["SOCIAL_AUTH_FORM"] = {
         "backend_name": backend_name,
         "step": "register",
         "email": details.get("email"),
@@ -264,8 +264,8 @@ def require_activation(
         # we are carrying on from requestration request
         return JsonResponse(response_data)
 
-    request.frontend_context["SOCIAL_AUTH"] = response_data
-    request.frontend_context["SOCIAL_AUTH"].update(
+    request.frontend_context["SOCIAL_AUTH_FORM"] = response_data
+    request.frontend_context["SOCIAL_AUTH_FORM"].update(
         {"url": reverse("misago:social-complete", kwargs={"backend": backend.name})}
     )
 
