@@ -58,7 +58,7 @@
         <div class="row">
           <div class="col-xs-12">
             {% if THREADS_ON_INDEX %}
-              <h1>{{ settings.index_title|default:settings.forum_name }}</h1>
+              <h1>{{ settings.index_header|default:settings.forum_name }}</h1>
             {% else %}
               <h1>{% trans "Threads" %}</h1>
             {% endif %}
