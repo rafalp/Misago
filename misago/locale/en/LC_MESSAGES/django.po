@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-07 17:33+0000\n"
+"POT-Creation-Date: 2019-07-12 20:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,7 +222,7 @@ msgstr ""
 #: templates/misago/threadslist/threads.html:18
 #: templates/misago/threadslist/threads.html:35
 #: templates/misago/threadslist/threads.html:44
-#: templates/misago/threadslist/threads.html:63
+#: templates/misago/threadslist/threads.html:68
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
 #: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:98
 msgid "Threads"

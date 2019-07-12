@@ -8,7 +8,6 @@
 # Paradox506 <Renyi_14@whu.edu.cn>, 2017
 # Tian Pengfei <itsneo1990@outlook.com>, 2017
 # Mayne <dreama9ain@gmail.com>, 2017
-# Neo Chang <me@neoto.xin>, 2017
 # cxgreat2014 <fwy1998@gmail.com>, 2018
 # 沐子白 <yiveco@qq.com>, 2018
 # 蚂蚁先生 <pzf_karl@hotmail.com>, 2019
@@ -18,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-07 17:33+0000\n"
+"POT-Creation-Date: 2019-07-12 20:20+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -167,7 +166,7 @@ msgstr "选择项目"
 
 #: admin/views/generic/list.py:288 admin/views/generic/list.py:293
 msgid "You have to select one or more items."
-msgstr "您必须选择一个或者多个项目。"
+msgstr "你必须选择一个或者多个项目。"
 
 #: admin/views/generic/list.py:307
 msgid "Action is not allowed."
@@ -232,7 +231,7 @@ msgstr "只有拥有特定权限的成员可以在已经关闭的版块中发帖
 #: templates/misago/threadslist/threads.html:18
 #: templates/misago/threadslist/threads.html:35
 #: templates/misago/threadslist/threads.html:44
-#: templates/misago/threadslist/threads.html:63
+#: templates/misago/threadslist/threads.html:68
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
 #: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:98
 msgid "Threads"
@@ -258,7 +257,7 @@ msgstr "编辑"
 msgid ""
 "Will make all edited replies return to unapproved state for moderator to "
 "review."
-msgstr "将把所有编辑过的回帖设置为未批准状态，以供版主审批。"
+msgstr "将把所有编辑过的回帖设置为未审批状态，以供版主审核。"
 
 #: categories/admin/forms.py:92
 msgid "Thread age"
@@ -322,13 +321,13 @@ msgstr "直接删除，而不归档话题"
 
 #: categories/admin/forms.py:194
 msgid "You are trying to move this category threads to itself."
-msgstr "您正在试图把这个版块的帖子移动到它自己。"
+msgstr "你正在试图把这个版块的帖子移动到它自己。"
 
 #: categories/admin/forms.py:200
 msgid ""
 "You are trying to move this category threads to a child category that will "
 "be deleted together with this category."
-msgstr "您正在试图把这个版块的帖子移动到子版块，这样父版块被删除的时候会被一起删除。"
+msgstr "你正在试图把这个版块的帖子移动到子版块，这样父版块被删除的时候会被一起删除。"
 
 #: categories/admin/forms.py:213
 msgid "Move category threads to"
@@ -452,7 +451,7 @@ msgstr "可以看到版块内容"
 #: categories/permissions.py:119
 #, python-format
 msgid "You don't have permission to browse \"%(category)s\" contents."
-msgstr "您无法浏览 “%(category)s” 中内容。"
+msgstr "你无法浏览 “%(category)s” 中内容。"
 
 #: conf/admin/__init__.py:41 templates/misago/admin/conf/index.html:5
 #: templates/misago/admin/themes/form.html:48
@@ -508,7 +507,7 @@ msgstr "追踪 ID"
 msgid ""
 "Setting the Tracking ID will result in gtag.js file being included in your "
 "site's HTML markup, enabling Google Analytics integration."
-msgstr "设置追踪 ID，将在您网站的 HTML 标记中包含 gtag. js 文件，从而实现 Google 分析集成。"
+msgstr "设置追踪 ID，将在你网站的 HTML 标记中包含 gtag. js 文件，从而实现 Google 分析集成。"
 
 #: conf/admin/forms/analytics.py:25
 msgid "Site verification token"
@@ -1055,18 +1054,18 @@ msgstr "没有权限。"
 msgid ""
 "A problem was encountered when disconnecting your account from the remote "
 "site."
-msgstr "断开您的帐户与远程站点的连接时遇到问题。"
+msgstr "断开你的帐户与远程站点的连接时遇到问题。"
 
 #: core/errorpages.py:75
 msgid ""
 "You are not allowed to disconnect your account from the other site, because "
 "currently it's the only way to sign in to your account."
-msgstr "您无法断开此快捷登录，因为目前这是登录到您的帐户的唯一方式。"
+msgstr "你无法断开此快捷登录，因为目前这是登录到你的帐户的唯一方式。"
 
 #: core/errorpages.py:80
 #, python-format
 msgid "A problem was encountered when signing you in using %(backend)s."
-msgstr "使用 %(backend)s 登录到您账户的时候遇到问题。"
+msgstr "使用 %(backend)s 登录到你账户的时候遇到问题。"
 
 #: core/errorpages.py:84
 msgid "The sign in process has been canceled by user."
@@ -1084,7 +1083,7 @@ msgstr "登录进程遇到了意外的问题。"
 msgid ""
 "Your request was rejected because your browser didn't send the CSRF cookie, "
 "or the cookie sent was invalid."
-msgstr "您的请求被拒绝，因为您的浏览器没有发送 CSRF cookie 信息，或者发送的 cookie 信息无效。"
+msgstr "你的请求被拒绝，因为你的浏览器没有发送 CSRF cookie 信息，或者发送的 cookie 信息无效。"
 
 #: core/rest_permissions.py:9
 msgid "This action is not available to guests."
@@ -1230,11 +1229,11 @@ msgstr "链接"
 
 #: legal/admin/forms.py:29
 msgid "If your agreement is located on other page, enter here a link to it."
-msgstr "如果您的协议在其他页面上，请在此输入该页面的链接。"
+msgstr "如果你的协议在其他页面上，请在此输入该页面的链接。"
 
 #: legal/admin/forms.py:35
 msgid "You can use Markdown syntax for rich text elements."
-msgstr "您可以使用 Markdown 编辑内容。"
+msgstr "你可以使用 Markdown 编辑内容。"
 
 #: legal/admin/forms.py:48
 msgid "Please fill in agreement link or text."
@@ -1278,7 +1277,7 @@ msgstr "删除协议"
 
 #: legal/admin/views.py:37
 msgid "Are you sure you want to delete those agreements?"
-msgstr "您确定要删除这些协议吗？"
+msgstr "你确定要删除这些协议吗？"
 
 #: legal/admin/views.py:48
 msgid "Selected agreements have been deleted."
@@ -1311,11 +1310,11 @@ msgstr "已禁用协议 \"%(title)s\" 。"
 
 #: legal/api.py:17
 msgid "You have already accepted this agreement."
-msgstr "您已经接受了这个协议。"
+msgstr "你已经接受了这个协议。"
 
 #: legal/api.py:26
 msgid "You need to submit a valid choice."
-msgstr "您需要提交有效的选择。"
+msgstr "你需要提交有效的选择。"
 
 #: legal/models.py:42 templates/misago/footer.html:22
 msgid "Terms of service"
@@ -1336,7 +1335,7 @@ msgstr "引用消息："
 
 #: search/api.py:17 search/views.py:12 search/views.py:21
 msgid "You don't have permission to search site."
-msgstr "您没有搜索全站的权限。"
+msgstr "你没有搜索全站的权限。"
 
 #: search/permissions.py:10 templates/misago/search.html:23
 #: templates/misago/search.html:34
@@ -1437,14 +1436,14 @@ msgstr "使用 %(provider)s 登录已移动到 %(other)s 之前。"
 msgid ""
 "The e-mail address associated with your %(backend)s account is not available"
 " for use on this site."
-msgstr "关联到您 %(backend)s 账号的电子邮件无法在本站注册。"
+msgstr "关联到你 %(backend)s 账号的电子邮件无法在本站注册。"
 
 #: socialauth/pipeline.py:98
 #, python-format
 msgid ""
 "Your account has to be activated by site administrator before you will be "
 "able to sign in with %(backend)s."
-msgstr "您的账户必须通过网站管理员激活，才可以使用 %(backend)s 快捷登录。"
+msgstr "你的账户必须通过网站管理员激活，才可以使用 %(backend)s 快捷登录。"
 
 #: socialauth/pipeline.py:223 users/api/userendpoints/create.py:60
 msgid "Please try resubmitting the form."
@@ -1485,7 +1484,7 @@ msgstr "账号已激活"
 msgid ""
 "You can now sign in to finish setting up your account and to participate in "
 "or start new discussions."
-msgstr "您可以登录以完成账号设置，参加或者发起新的讨论。"
+msgstr "你可以登录以完成账号设置，参加或者发起新的讨论。"
 
 #: templates/misago/activation/error.html:5
 msgid "Activation error"
@@ -1511,14 +1510,14 @@ msgid ""
 "Depending on time of registration, you will be able activate your account by"
 " clicking special activation link. This link will be valid only for your "
 "browser, for seven days or until your account is activated."
-msgstr "您可以点击我们发出的激活链接来激活您的账号。这个链接仅对您的浏览器有效，有效时间为七天。"
+msgstr "你可以点击我们发出的激活链接来激活你的账号。这个链接仅对你的浏览器有效，有效时间为七天。"
 
 #: templates/misago/activation/request.html:31
 #: templates/misago/forgottenpassword/request.html:42
 msgid ""
 "To receive this link, enter your account's e-mail addres in form and press "
 "the \"Send link\" button."
-msgstr "为了得到这个链接，输入您的电子邮箱地址并按下 “发送链接” 按钮。"
+msgstr "为了得到这个链接，输入你的电子邮箱地址并按下 “发送链接” 按钮。"
 
 #: templates/misago/activation/request.html:49
 msgid "To request new activation link please enable JavaScript."
@@ -1530,7 +1529,7 @@ msgstr "激活失败"
 
 #: templates/misago/activation/stopped.html:20
 msgid "Your account can't be activated at this time."
-msgstr "您的账号本次不能被激活。"
+msgstr "你的账号本次不能被激活。"
 
 #: templates/misago/admin/agreements/form.html:9
 #: templates/misago/admin/agreements/form.html:40
@@ -1627,15 +1626,15 @@ msgstr "尚未设置协议。"
 
 #: templates/misago/admin/agreements/list.html:137
 msgid "Are you sure you want to set this agreement as active for its type?"
-msgstr "您确定将此协议设为该类型的启用协议？"
+msgstr "你确定将此协议设为该类型的启用协议？"
 
 #: templates/misago/admin/agreements/list.html:141
 msgid "Are you sure you want to disable this agreement?"
-msgstr "您确定要禁用此协议？"
+msgstr "你确定要禁用此协议？"
 
 #: templates/misago/admin/agreements/list.html:145
 msgid "Are you sure you want to remove this agreement?"
-msgstr "您确定要删除此协议？"
+msgstr "你确定要删除此协议？"
 
 #: templates/misago/admin/attachments/list.html:7
 msgid "Attachment"
@@ -1670,7 +1669,7 @@ msgstr "无附件。"
 
 #: templates/misago/admin/attachments/list.html:113
 msgid "Are you sure you want to delete this attachment?"
-msgstr "您确定要删除这个附件吗？"
+msgstr "你确定要删除这个附件吗？"
 
 #: templates/misago/admin/attachmenttypes/form.html:9
 #: templates/misago/admin/attachmenttypes/list.html:9
@@ -1746,7 +1745,7 @@ msgstr "未设置附件类型。"
 
 #: templates/misago/admin/attachmenttypes/list.html:95
 msgid "Are you sure you want to delete this attachment type?"
-msgstr "您确定要删除这种附件类型吗？"
+msgstr "你确定要删除这种附件类型吗？"
 
 #: templates/misago/admin/bans/form.html:9
 #: templates/misago/admin/bans/form.html:28
@@ -2093,7 +2092,7 @@ msgstr "设置的论坛链接似乎不正确。"
 msgid ""
 "Your forum address is set to %(configured_address)s while correct value "
 "appears to be %(correct_address)s."
-msgstr "您的论坛地址设置为 %(configured_address)s，而正确的值应该是 %(correct_address)s。"
+msgstr "你的论坛地址设置为 %(configured_address)s，而正确的值应该是 %(correct_address)s。"
 
 #: templates/misago/admin/dashboard/checks.html:82
 msgid "Links in e-mails sentby Misagoill be broken."
@@ -2243,7 +2242,7 @@ msgstr "请求页面不存在"
 #: templates/misago/errorpages/403.html:34
 #: templates/misago/errorpages/403.html:54
 msgid "You don't have permission to access this page."
-msgstr "您没有访问这个页面的权限。"
+msgstr "你没有访问这个页面的权限。"
 
 #: templates/misago/admin/errorpages/404.html:5
 #: templates/misago/errorpages/403.html:17
@@ -2264,7 +2263,7 @@ msgstr "请求的页面未找到"
 #: templates/misago/errorpages/404.html:23
 msgid ""
 "The link you clicked was incorrect or the page has been moved or deleted."
-msgstr "您点击的链接所指向的页面已经被删除。"
+msgstr "你点击的链接所指向的页面已经被删除。"
 
 #: templates/misago/admin/errorpages/csrf_failure.html:5
 #: templates/misago/admin/errorpages/csrf_failure.html:14
@@ -2277,7 +2276,7 @@ msgstr "拒绝提交表单"
 msgid ""
 "Your form submission was rejected because your browser didn't send the CSRF "
 "cookie, or the cookie sent was invalid."
-msgstr "您的表单提交被拒绝，因为您的浏览器没有发送 CSRF cookie，或者发送的 cookie 无效。"
+msgstr "你的表单提交被拒绝，因为你的浏览器没有发送 CSRF cookie，或者发送的 cookie 无效。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:6
 msgid "This is usually a result of one of following problems:"
@@ -2285,7 +2284,7 @@ msgstr "这种情况通常是由以下几种问题之一产生的："
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:9
 msgid "Your browser is configured to don't accept or send any cookies."
-msgstr "您的浏览器配置为不接收或发送任何 cookie。"
+msgstr "你的浏览器配置为不接收或发送任何 cookie。"
 
 #: templates/misago/admin/errorpages/csrf_failure_message.html:12
 msgid ""
@@ -2303,7 +2302,7 @@ msgstr "该站点配置为使用 HTTPS，但此表单是通过 HTTP 发送的。
 msgid ""
 "If you are an owner of this site, please check if the HTTPS certificate used"
 " by the site is valid and accepted by the browser."
-msgstr "如果您是本网站的所有者，请检查该网站使用的 HTTPS 证书是否有效并被浏览器接受。"
+msgstr "如果你是本网站的所有者，请检查该网站使用的 HTTPS 证书是否有效并被浏览器接受。"
 
 #: templates/misago/admin/generic/filter_form.html:7
 msgid "Filter"
@@ -2469,11 +2468,11 @@ msgstr "网站主页"
 
 #: templates/misago/admin/navbar.html:24
 msgid "Your avatar"
-msgstr "您的头像"
+msgstr "你的头像"
 
 #: templates/misago/admin/navbar.html:29
 msgid "Edit your account"
-msgstr "编辑您的账号"
+msgstr "编辑你的账号"
 
 #: templates/misago/admin/navbar.html:35
 msgid "Close admin session"
@@ -2544,7 +2543,7 @@ msgstr "未设置用户等级。"
 
 #: templates/misago/admin/ranks/list.html:141
 msgid "Are you sure you want to delete this rank?"
-msgstr "您确定要删除此级别吗？"
+msgstr "你确定要删除此级别吗？"
 
 #: templates/misago/admin/roles/list.html:39
 msgid "Users with role"
@@ -2672,7 +2671,7 @@ msgstr "编辑主题"
 
 #: templates/misago/admin/themes/assets/list.html:44
 msgid "Are you sure you want to delete selected items?"
-msgstr "您确定要删除选定的项目吗？"
+msgstr "你确定要删除选定的项目吗？"
 
 #: templates/misago/admin/themes/assets/media.html:7
 msgid "Media"
@@ -2766,7 +2765,7 @@ msgstr "删除主题"
 msgid ""
 "Are you sure you want to delete this theme? Deleting theme will also delete "
 "its child themes."
-msgstr "您确定要删除选定的主题吗？删除该主题将同时子主题。"
+msgstr "你确定要删除选定的主题吗？删除该主题将同时子主题。"
 
 #: templates/misago/admin/users/ban.html:6
 #: templates/misago/admin/users/ban.html:82 users/admin/views/users.py:73
@@ -2946,7 +2945,7 @@ msgstr "未找到符合搜索要求的用户。"
 
 #: templates/misago/admin/users/list.html:111
 msgid "You can include wildcard (\"*\") in username and email search:"
-msgstr "您可以在用户名和电子邮件搜索中包含通配符 (\"*\"):"
+msgstr "你可以在用户名和电子邮件搜索中包含通配符 (\"*\"):"
 
 #: templates/misago/admin/users/list.html:114
 msgid "\"admin*\" will find both \"admin\" and \"administrator\"."
@@ -3015,7 +3014,7 @@ msgstr "未设置警告级别。"
 
 #: templates/misago/admin/warnings/list.html:131
 msgid "Are you sure you want to delete this warning level?"
-msgstr "您确定要删除此警告级别吗？"
+msgstr "你确定要删除此警告级别吗？"
 
 #: templates/misago/auth.html:10
 msgid "Log out"
@@ -3035,7 +3034,7 @@ msgstr[0] "现在，%(forum_name)s中有%(categories)s个主版块。"
 
 #: templates/misago/categories/body.html:15
 msgid "No categories exist or you don't have permission to see them."
-msgstr "版块不存在或您没有权限查看它们。"
+msgstr "版块不存在或你没有权限查看它们。"
 
 #: templates/misago/categories/icon.html:4
 msgid "This category has no new posts. (closed)"
@@ -3059,17 +3058,17 @@ msgstr "该版块为空，此版块目前尚未发表话题。"
 
 #: templates/misago/categories/last_thread.html:68
 msgid "This category is private. You can see only your own threads within it."
-msgstr "这个板块已开启隐蔽模式。您仅可以看到您自己的话题。"
+msgstr "这个板块已开启隐蔽模式。你仅可以看到你自己的话题。"
 
 #: templates/misago/categories/last_thread.html:82
 msgid "This category is protected. You can't browse it's contents."
-msgstr "此版块是受保护的。您无法浏览其内容。"
+msgstr "此版块是受保护的。你无法浏览其内容。"
 
 #: templates/misago/emails/activation/by_admin.html:6
 #: templates/misago/emails/activation/by_admin.txt:6
 #, python-format
 msgid "%(user)s, your account has been activated by forum administrator."
-msgstr "%(user)s,您的账号已经被管理员激活。"
+msgstr "%(user)s,你的账号已经被管理员激活。"
 
 #: templates/misago/emails/activation/by_admin.html:12
 #: templates/misago/emails/register/complete.html:18
@@ -3080,11 +3079,11 @@ msgstr "这个链接"
 #: templates/misago/emails/activation/by_admin.html:14
 #, python-format
 msgid "You can now sign in to it using %(login_form)s."
-msgstr "您现在可以用 %(login_form)s 登录。"
+msgstr "你现在可以用 %(login_form)s 登录。"
 
 #: templates/misago/emails/activation/by_admin.txt:10
 msgid "You can now sign in to it using the form below:"
-msgstr "您现在可以使用以下表单登录："
+msgstr "你现在可以使用以下表单登录："
 
 #: templates/misago/emails/activation/by_user.html:6
 #: templates/misago/emails/activation/by_user.txt:6
@@ -3103,7 +3102,7 @@ msgstr "激活我的账号！"
 msgid ""
 "%(user)s, you are receiving this message because you have changed your "
 "e-mail address."
-msgstr "%(user)s，您收到这个消息，因为您已经改变了您账号绑定的电子邮箱地址。"
+msgstr "%(user)s，你收到这个消息，因为你已经改变了你账号绑定的电子邮箱地址。"
 
 #: templates/misago/emails/change_email.html:11
 #: templates/misago/emails/change_email.txt:10
@@ -3118,7 +3117,7 @@ msgstr "要确认此更改，请单击以下链接："
 msgid ""
 "%(user)s, you are receiving this message because you have changed your "
 "password."
-msgstr "%(user)s，您收到这个消息，因为您已经更改了您的账号密码。"
+msgstr "%(user)s，你收到这个消息，因为你已经更改了你的账号密码。"
 
 #: templates/misago/emails/change_password_form_link.html:6
 #: templates/misago/emails/change_password_form_link.txt:6
@@ -3126,12 +3125,12 @@ msgstr "%(user)s，您收到这个消息，因为您已经更改了您的账号�
 msgid ""
 "%(user)s, you are receiving this message because you want to change "
 "forgotten password for your forum account."
-msgstr "%(user)s，您收到这个消息，是因为您已更改了密码。"
+msgstr "%(user)s，你收到这个消息，是因为你已更改了密码。"
 
 #: templates/misago/emails/change_password_form_link.html:11
 #: templates/misago/emails/change_password_form_link.txt:10
 msgid "To change your account password click the link below:"
-msgstr "要更改您的账号密码，请单击下面的链接："
+msgstr "要更改你的账号密码，请单击下面的链接："
 
 #: templates/misago/emails/change_password_form_link.html:16
 #: templates/misago/forgottenpassword/form.html:7
@@ -3147,7 +3146,7 @@ msgstr "设置新密码"
 msgid ""
 "%(user)s, you are receiving this message because your data is ready for "
 "download."
-msgstr "您好，%(user)s。系统已经准备好了您的数据，现在就可以下载了。"
+msgstr "你好，%(user)s。系统已经准备好了你的数据，现在就可以下载了。"
 
 #: templates/misago/emails/data_download.html:11 users/apps.py:52
 msgid "Download data"
@@ -3173,7 +3172,7 @@ msgstr "请点击以下链接下载数据："
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has invited you "
 "to participate in private thread %(thread)s."
-msgstr "%(user)s，您收到这个消息是因为 %(sender)s 邀请您参与隐蔽话题 %(thread)s。"
+msgstr "%(user)s，你收到这个消息是因为 %(sender)s 邀请你参与隐蔽话题 %(thread)s。"
 
 #: templates/misago/emails/privatethread/added.html:14
 #: templates/misago/emails/privatethread/added.txt:10
@@ -3185,14 +3184,14 @@ msgstr "请点击以下链接参与讨论："
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has invited you "
 "to participate in private thread \"%(thread)s\"."
-msgstr "%(user)s，您收到这个消息是因为 %(sender)s 邀请您参与隐蔽话题 “%(thread)s”。"
+msgstr "%(user)s，你收到这个消息是因为 %(sender)s 邀请你参与隐蔽话题 “%(thread)s”。"
 
 #: templates/misago/emails/register/complete.html:6
 #: templates/misago/emails/register/complete.txt:6
 #: templates/misago/emails/register/inactive.txt:6
 #, python-format
 msgid "%(user)s, thank you for joining us!"
-msgstr "%(user)s，感谢您加入我们！"
+msgstr "%(user)s，感谢你加入我们！"
 
 #: templates/misago/emails/register/complete.html:12
 #: templates/misago/emails/register/complete.txt:10
@@ -3200,62 +3199,62 @@ msgid ""
 "You may now join discussion on our forums. Why not spend a minute or two to "
 "have a look around and share your opinions and knowledge with rest of "
 "community?"
-msgstr "您现在可以加入我们论坛的讨论。为什么不花一两分钟来逛逛，和社区其他人分享您的意见和知识？"
+msgstr "你现在可以加入我们论坛的讨论。为什么不花一两分钟来逛逛，和社区其他人分享你的意见和知识？"
 
 #: templates/misago/emails/register/complete.html:20
 #, python-format
 msgid "You can always sign in to your account using %(login_form)s."
-msgstr "您总可以使用 %(login_form)s 来登录您的论坛账号。"
+msgstr "你总可以使用 %(login_form)s 来登录你的论坛账号。"
 
 #: templates/misago/emails/register/complete.txt:14
 msgid "You can always sign in to your account using the form below:"
-msgstr "您可以随时使用以下表单登录您的账号："
+msgstr "你可以随时使用以下表单登录你的账号："
 
 #: templates/misago/emails/register/inactive.html:7
 #: templates/misago/emails/register/inactive.txt:10
 msgid ""
 "Before you will be able to join discussion on our forums, one of our "
 "administrators will have to activate your account."
-msgstr "在您可以加入我们论坛的讨论之前，我们的管理员之一必须激活您的账号。"
+msgstr "在你可以加入我们论坛的讨论之前，我们的管理员之一必须激活你的账号。"
 
 #: templates/misago/emails/register/inactive.html:12
 #: templates/misago/emails/register/inactive.txt:15
 msgid ""
 "This may take a while, but you will receive e-mail with notification once it"
 " happens."
-msgstr "这可能需要一段时间，但一旦发生，您将收到电子邮件通知。"
+msgstr "这可能需要一段时间，但一旦发生，你将收到电子邮件通知。"
 
 #: templates/misago/emails/register/inactive.html:17
 #: templates/misago/emails/register/inactive.txt:20
 msgid "Thank you for your patience and see you soon!"
-msgstr "感谢您的耐心等待，待会见！"
+msgstr "感谢你的耐心等待，待会见！"
 
 #: templates/misago/emails/register/inactive.html:22
 #: templates/misago/emails/register/inactive.txt:25
 msgid ""
 "Before you will be able to join discussion on our forums, you have to "
 "activate your account. To do so, simply click the link below:"
-msgstr "在您能够加入我们论坛的讨论之前，您必须激活您的账号。为此，只需点击下面的链接："
+msgstr "在你能够加入我们论坛的讨论之前，你必须激活你的账号。为此，只需点击下面的链接："
 
 #: templates/misago/emails/register/inactive.html:33
 #, python-format
 msgid ""
 "Once your account is activated, you can always sign in to it using "
 "%(login_form)s."
-msgstr "一旦您的账号被激活，您总可以用%(login_form)s登录。"
+msgstr "一旦你的账号被激活，你总可以用%(login_form)s登录。"
 
 #: templates/misago/emails/register/inactive.txt:30
 msgid ""
 "Once your account is activated, you can always sign in to it using the form "
 "below:"
-msgstr "您的账号被激活后，您可以通过以下链接登录："
+msgstr "你的账号被激活后，你可以通过以下链接登录："
 
 #: templates/misago/emails/thread/reply.html:9
 #, python-format
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has replied to "
 "the thread %(thread)s that you are subscribed to."
-msgstr "%(user)s，%(sender)s 回复了您订阅的话题 %(thread)s 。"
+msgstr "%(user)s，%(sender)s 回复了你订阅的话题 %(thread)s 。"
 
 #: templates/misago/emails/thread/reply.html:14
 #: templates/misago/emails/thread/reply.txt:10
@@ -3271,7 +3270,7 @@ msgstr "去回帖"
 msgid ""
 "%(user)s, you are receiving this message because %(sender)s has replied to "
 "the thread \"%(thread)s\" that you are subscribed to."
-msgstr "%(user)s，%(sender)s 回复了您订阅的话题 “%(thread)s”。"
+msgstr "%(user)s，%(sender)s 回复了你订阅的话题 “%(thread)s”。"
 
 #: templates/misago/errorpages/403.html:50
 msgid "This page is not available."
@@ -3284,7 +3283,7 @@ msgstr "请求的页面未找到。"
 #: templates/misago/errorpages/404.html:39
 msgid ""
 "The link you followed was incorrect or the page has been moved or deleted."
-msgstr "您的链接不正确或页面已被移动或删除。"
+msgstr "你的链接不正确或页面已被移动或删除。"
 
 #: templates/misago/errorpages/405.html:5
 #: templates/misago/errorpages/405.html:13
@@ -3314,11 +3313,11 @@ msgstr "此封禁是永久的。"
 
 #: templates/misago/errorpages/banned.html:5
 msgid "You are banned"
-msgstr "您被封禁了"
+msgstr "你被封禁了"
 
 #: templates/misago/errorpages/banned.html:9
 msgid "You are banned from accessing this page."
-msgstr "您被禁止访问此页面。"
+msgstr "你被禁止访问此页面。"
 
 #: templates/misago/errorpages/csrf_failure.html:5
 #: templates/misago/errorpages/csrf_failure_authenticated.html:5
@@ -3329,7 +3328,7 @@ msgstr "请求被拦截"
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies. Check your browser configuration and try again."
-msgstr "这通常是由您的浏览器不接受或使用过时的 Cookie 引起的。检查您的浏览器配置，然后重试。"
+msgstr "这通常是由你的浏览器不接受或使用过时的 Cookie 引起的。检查你的浏览器配置，然后重试。"
 
 #: templates/misago/errorpages/csrf_failure.html:24
 #: templates/misago/errorpages/csrf_failure_authenticated.html:19
@@ -3341,12 +3340,12 @@ msgstr "可疑的请求已被拦截。"
 msgid ""
 "This is usually caused by your browser not accepting or using outdated "
 "cookies."
-msgstr "这通常是因为您的浏览器不接受 cookies 或者已过期。"
+msgstr "这通常是因为你的浏览器不接受 cookies 或者已过期。"
 
 #: templates/misago/errorpages/csrf_failure.html:26
 #: templates/misago/errorpages/csrf_failure_authenticated.html:21
 msgid "Check your browser configuration and try again."
-msgstr "检查您的浏览器配置，然后重试。"
+msgstr "检查你的浏览器配置，然后重试。"
 
 #: templates/misago/errorpages/social.html:5
 #: templates/misago/errorpages/social.html:11
@@ -3394,28 +3393,28 @@ msgstr "要重设密码，请启用 JavaScript。"
 msgid ""
 "Your user account has no password set for it because it was created with "
 "other service."
-msgstr "您的账户未设置密码，因为您使用快捷登录创建的账号。"
+msgstr "你的账户未设置密码，因为你使用快捷登录创建的账号。"
 
 #: templates/misago/forgottenpassword/request.html:36
 msgid ""
 "To set password for your account, you can use special secure form that will "
 "be available by special link valid only for your browser, for seven days or "
 "until your password is set."
-msgstr "要为您的帐户设置密码，您可以使用特殊的安全表单，该表单将通过仅对您的浏览器有效的特殊链接提供，链接有效期7天，请尽快设置。"
+msgstr "要为你的帐户设置密码，你可以使用特殊的安全表单，该表单将通过仅对你的浏览器有效的特殊链接提供，链接有效期7天，请尽快设置。"
 
 #: templates/misago/forgottenpassword/request.html:38
 msgid ""
 "Because user passwords are processed in an irreversible way before being "
 "saved to database, it is not possible for us to simply send you your "
 "password."
-msgstr "我们使用加密存储的方式保护您的密码， 所以我们无法把旧密码发送给您。"
+msgstr "我们使用加密存储的方式保护你的密码， 所以我们无法把旧密码发送给你。"
 
 #: templates/misago/forgottenpassword/request.html:39
 msgid ""
 "Instead, you can change your password using special secure form that will be"
 " available by special link valid only for your browser, for seven days or "
 "until your password is changed."
-msgstr "您可以在通过安全的密码重置链接来修改密码，链接有效期为7天。"
+msgstr "你可以在通过安全的密码重置链接来修改密码，链接有效期为7天。"
 
 #: templates/misago/forgottenpassword/request.html:60
 msgid "To request new password reset link please enable JavaScript."
@@ -3428,7 +3427,7 @@ msgstr "更改登录凭据"
 
 #: templates/misago/options/credentials_changed.html:20
 msgid "From now you will need to use new credentials when signing in."
-msgstr "从现在开始，您将需要在登录时使用新的凭据。"
+msgstr "从现在开始，你将需要在登录时使用新的凭据。"
 
 #: templates/misago/options/credentials_error.html:19
 msgid "Change confirmation link is invalid."
@@ -3442,7 +3441,7 @@ msgstr "确认链接属于其他用户，已被使用或已过期。"
 
 #: templates/misago/options/noscript.html:5
 msgid "Change your options"
-msgstr "更改您的选项"
+msgstr "更改你的选项"
 
 #: templates/misago/options/noscript.html:20
 #: templates/misago/socialauth.html:22
@@ -3451,7 +3450,7 @@ msgstr "启用 JavaScript"
 
 #: templates/misago/options/noscript.html:21
 msgid "You need to enable JavaScript in your browser to change your options."
-msgstr "您需要在浏览器中启用 JavaScript 才能更改您的选项。"
+msgstr "你需要在浏览器中启用 JavaScript 才能更改你的选项。"
 
 #: templates/misago/participants.html:30
 msgid "Add participant"
@@ -3491,7 +3490,7 @@ msgstr[0] "%(votes)s票，占总票数的%(proc)s%%。"
 
 #: templates/misago/poll/results.html:41
 msgid "Your choice."
-msgstr "您的选择。"
+msgstr "你的选择。"
 
 #: templates/misago/poll/results.html:55
 msgid "Vote"
@@ -3509,7 +3508,7 @@ msgstr[0] "你可以选择 %(choices)s 个选项。"
 
 #: templates/misago/poll/voting.html:32
 msgid "You can change your vote later."
-msgstr "之后您可以更改您的投票。"
+msgstr "之后你可以更改你的投票。"
 
 #: templates/misago/poll/voting.html:36
 msgid "Votes are final."
@@ -3517,7 +3516,7 @@ msgstr "投票不可更改。"
 
 #: templates/misago/poll/voting.html:46
 msgid "Save your vote"
-msgstr "保存您的投票"
+msgstr "保存你的投票"
 
 #: templates/misago/poll/voting.html:51
 msgid "See results"
@@ -3579,7 +3578,7 @@ msgstr "详情"
 
 #: templates/misago/profile/details.html:75
 msgid "You are not sharing any details with others."
-msgstr "您没有与其他用户分享任何详情。"
+msgstr "你没有与其他用户分享任何详情。"
 
 #: templates/misago/profile/details.html:77
 #, python-format
@@ -3610,7 +3609,7 @@ msgstr "关注者"
 #, python-format
 msgid "You have %(users)s follower."
 msgid_plural "You have %(users)s followers."
-msgstr[0] "您有 %(users)s 个关注者。"
+msgstr[0] "你有 %(users)s 个关注者。"
 
 #: templates/misago/profile/followers.html:24
 #, python-format
@@ -3620,7 +3619,7 @@ msgstr[0] "%(username)s 有 %(users)s 个关注者。"
 
 #: templates/misago/profile/followers.html:49
 msgid "You have no followers."
-msgstr "您没有关注者。"
+msgstr "你没有关注者。"
 
 #: templates/misago/profile/followers.html:51
 #, python-format
@@ -3637,7 +3636,7 @@ msgstr "关注"
 #, python-format
 msgid "You are following %(users)s user."
 msgid_plural "You are following %(users)s users."
-msgstr[0] "您关注了 %(users)s 个用户。"
+msgstr[0] "你关注了 %(users)s 个用户。"
 
 #: templates/misago/profile/follows.html:24
 #, python-format
@@ -3647,7 +3646,7 @@ msgstr[0] "%(username)s 关注了 %(users)s 个用户。"
 
 #: templates/misago/profile/follows.html:49
 msgid "You are not following any users."
-msgstr "您没有关注任何用户。"
+msgstr "你没有关注任何用户。"
 
 #: templates/misago/profile/follows.html:51
 #, python-format
@@ -3671,7 +3670,7 @@ msgstr "%(joined_on)s 后加入的论坛成员"
 #, python-format
 msgid "You have posted %(posts)s message."
 msgid_plural "You have posted %(posts)s messages."
-msgstr[0] "您已经发布了 %(posts)s 个帖子。"
+msgstr[0] "你已经发布了 %(posts)s 个帖子。"
 
 #: templates/misago/profile/posts.html:26
 #, python-format
@@ -3681,7 +3680,7 @@ msgstr[0] "%(username)s 已经发布了 %(posts)s 个帖子。"
 
 #: templates/misago/profile/posts.html:40
 msgid "You have posted no messages"
-msgstr "您没有发表任何帖子"
+msgstr "你没有发表任何帖子"
 
 #: templates/misago/profile/posts.html:42
 #, python-format
@@ -3692,7 +3691,7 @@ msgstr "%(username)s 没有发布任何帖子。"
 #, python-format
 msgid "You have started %(threads)s thread."
 msgid_plural "You have started %(threads)s threads."
-msgstr[0] "您已经发起 %(threads)s 个话题。"
+msgstr[0] "你已经发起 %(threads)s 个话题。"
 
 #: templates/misago/profile/threads.html:26
 #, python-format
@@ -3702,7 +3701,7 @@ msgstr[0] "%(username)s 已发起了 %(threads)s 个话题。"
 
 #: templates/misago/profile/threads.html:40
 msgid "You have no started threads."
-msgstr "您没有发起任何话题。"
+msgstr "你没有发起任何话题。"
 
 #: templates/misago/profile/threads.html:42
 #, python-format
@@ -3719,7 +3718,7 @@ msgstr "用户名历史记录"
 #, python-format
 msgid "Your username was changed %(changes)s time."
 msgid_plural "Your username was changed %(changes)s times."
-msgstr[0] "您的用户名已经改变 %(changes)s 次。"
+msgstr[0] "你的用户名已经改变 %(changes)s 次。"
 
 #: templates/misago/profile/username_history.html:24
 #, python-format
@@ -3729,7 +3728,7 @@ msgstr[0] "%(username)s 的用户名已经改变 %(changes)s 次。"
 
 #: templates/misago/profile/username_history.html:79
 msgid "Your username was never changed."
-msgstr "您的用户名从未更改。"
+msgstr "你的用户名从未更改。"
 
 #: templates/misago/profile/username_history.html:81
 #, python-format
@@ -3769,7 +3768,7 @@ msgstr "使用 %(backend)s 登录"
 msgid ""
 "You need to enable JavaScript in your browser to complete the sign in with "
 "%(backend)s."
-msgstr "您需要启用浏览器的 JavaScript 支持，才能使用 %(backend)s 登录。"
+msgstr "你需要启用浏览器的 JavaScript 支持，才能使用 %(backend)s 登录。"
 
 #: templates/misago/thread/paginator.html:41
 #, python-format
@@ -3873,12 +3872,12 @@ msgstr "%(filetype)s，%(size)s，%(uploader)s 上传于 %(uploaded_on)s。"
 
 #: templates/misago/thread/posts/post/body-hidden.html:4
 msgid "This post is hidden. You cannot not see its contents."
-msgstr "这个帖子是隐藏的。您看不到它的内容。"
+msgstr "这个帖子是隐藏的。你看不到它的内容。"
 
 #: templates/misago/thread/posts/post/flags.html:7
 #, python-format
 msgid "Marked as best answer by you %(marked_on)s."
-msgstr "您已在 %(marked_on)s 将此贴设为最佳答案。"
+msgstr "你已在 %(marked_on)s 将此贴设为最佳答案。"
 
 #: templates/misago/thread/posts/post/flags.html:13
 #, python-format
@@ -3893,7 +3892,7 @@ msgstr "这个帖子是隐藏的。只有拥有相应权限的用户才能看到
 msgid ""
 "This post is unapproved. Only users with permission to approve posts and its"
 " author may see its contents."
-msgstr "此帖子未通过批准。只有拥有审批帖子权限的用户及帖子作者才能看到其内容。"
+msgstr "此帖子未审批。只有拥有审批帖子权限的用户及作者才能看到此内容。"
 
 #: templates/misago/thread/posts/post/flags.html:35
 msgid "This post is protected. Only moderators may change it."
@@ -3945,12 +3944,12 @@ msgstr "版块内置顶"
 #: templates/misago/threadslist/tabs.html:33
 #: templates/misago/threadslist/thread.html:40
 msgid "Unapproved"
-msgstr "未批准"
+msgstr "未审批"
 
 #: templates/misago/thread/stats.html:39
 #: templates/misago/threadslist/thread.html:49
 msgid "Unapproved posts"
-msgstr "未批准帖子"
+msgstr "未审批的帖子"
 
 #: templates/misago/thread/stats.html:49
 #: templates/misago/threadslist/thread.html:119
@@ -4003,7 +4002,7 @@ msgstr "去往第一个帖子"
 
 #: templates/misago/thread/toolbar-top.html:13
 msgid "Go to first unapproved post"
-msgstr "前往第一条未批准的回帖"
+msgstr "前往第一条未审批的帖子"
 
 #: templates/misago/thread/toolbar-top.html:19
 msgid "Go to last post"
@@ -4028,7 +4027,7 @@ msgstr "目前此论坛中还没有任何话题！"
 #: templates/misago/threadslist/base.html:64
 #: templates/misago/threadslist/private_threads.html:67
 msgid "Why not start one yourself?"
-msgstr "您为什么不发一条呢？"
+msgstr "你为什么不发一条呢？"
 
 #: templates/misago/threadslist/base.html:68
 #: templates/misago/threadslist/private_threads.html:70
@@ -4047,7 +4046,7 @@ msgstr "隐蔽话题只有那些创建和被邀请的人可以浏览和参与。
 
 #: templates/misago/threadslist/private_threads.html:64
 msgid "You aren't participating in any private threads."
-msgstr "您没有参与任何隐蔽话题。"
+msgstr "你没有参与任何隐蔽话题。"
 
 #: templates/misago/threadslist/tabs.html:7 threads/admin/forms.py:27
 msgid "All"
@@ -4456,7 +4455,7 @@ msgstr "此类型的最大允许上传的文件大小，以KB为单位。该限�
 
 #: threads/admin/forms.py:75
 msgid "Controls this attachment type availability on your site."
-msgstr "在您的网站上控制此类型的附件的可用性（权限）。"
+msgstr "在你的网站上控制此类型的附件的可用性（权限）。"
 
 #: threads/admin/forms.py:77
 msgid ""
@@ -4465,7 +4464,7 @@ msgid ""
 "to allow all users with permission to upload attachments to be able to "
 "upload attachments of this type."
 msgstr ""
-"如果您希望仅限特定身份的用户上传此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有上传附件权限的用户上传该类型的附件。"
+"如果你希望仅限特定身份的用户上传此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有上传附件权限的用户上传该类型的附件。"
 
 #: threads/admin/forms.py:83
 msgid ""
@@ -4474,7 +4473,7 @@ msgid ""
 "to allow all users with permission to download attachments to be able to "
 "download attachments of this type."
 msgstr ""
-"如果您希望仅限特定身份的用户下载此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有下载附件权限的用户下载该类型的附件。"
+"如果你希望仅限特定身份的用户下载此类型的文件，请在此列表中选中这些身份。若不选择任何身份，则允许所有拥有下载附件权限的用户下载该类型的附件。"
 
 #: threads/admin/views/attachments.py:14
 msgid "Requested attachment could not be found."
@@ -4512,7 +4511,7 @@ msgstr "删除附件"
 
 #: threads/admin/views/attachments.py:39
 msgid "Are you sure you want to delete selected attachments?"
-msgstr "您确定要删除选定的附件吗？"
+msgstr "你确定要删除选定的附件吗？"
 
 #: threads/admin/views/attachments.py:62
 msgid "Selected attachments have been deleted."
@@ -4551,7 +4550,7 @@ msgstr "已删除附件类型 “%(name)s”。"
 
 #: threads/api/attachments.py:18
 msgid "You don't have permission to upload new files."
-msgstr "您没有上传新文件的权限。"
+msgstr "你没有上传新文件的权限。"
 
 #: threads/api/attachments.py:28
 msgid "No file has been uploaded."
@@ -4563,20 +4562,20 @@ msgstr "上传的图片已损坏或无效。"
 
 #: threads/api/attachments.py:86
 msgid "You can't upload files of this type."
-msgstr "您无法上传此类型的文件。"
+msgstr "你无法上传此类型的文件。"
 
 #: threads/api/attachments.py:92
 #, python-format
 msgid ""
 "You can't upload files larger than %(limit)s (your file has %(upload)s)."
-msgstr "您不能上传大于 %(limit)s 的文件（您的文件有 %(upload)s）。"
+msgstr "你不能上传大于 %(limit)s 的文件（你的文件有 %(upload)s）。"
 
 #: threads/api/attachments.py:104
 #, python-format
 msgid ""
 "You can't upload files of this type larger than %(limit)s (your file has "
 "%(upload)s)."
-msgstr "您不能上传大于 %(limit)s 的此类型的文件（您的文件有 %(upload)s）。"
+msgstr "你不能上传大于 %(limit)s 的此类型的文件（你的文件有 %(upload)s）。"
 
 #: threads/api/postendpoints/edits.py:87
 msgid "Edits record is unavailable for this post."
@@ -4584,15 +4583,15 @@ msgstr "此帖子无法编辑记录。"
 
 #: threads/api/postendpoints/merge.py:11
 msgid "You can't merge posts in this thread."
-msgstr "您不能在此话题中合并帖子。"
+msgstr "你不能在此话题中合并帖子。"
 
 #: threads/api/postendpoints/move.py:10
 msgid "You can't move posts in this thread."
-msgstr "您不能在此话题中移动帖子。"
+msgstr "你不能在此话题中移动帖子。"
 
 #: threads/api/postendpoints/patch_post.py:36
 msgid "You can't like posts in this category."
-msgstr "您不能赞这个版块的帖子。"
+msgstr "你不能赞这个版块的帖子。"
 
 #: threads/api/postendpoints/patch_post.py:99
 #: threads/api/threadendpoints/patch.py:147
@@ -4611,12 +4610,12 @@ msgstr[0] "一次最多可以更新 %(limit)s 个帖子。"
 
 #: threads/api/postendpoints/split.py:12
 msgid "You can't split posts from this thread."
-msgstr "您不能从这个话题中拆分帖子。"
+msgstr "你不能从这个话题中拆分帖子。"
 
 #: threads/api/postingendpoint/attachments.py:63
 #, python-format
 msgid "You don't have permission to remove \"%(attachment)s\" attachment."
-msgstr "您不能删除 “%(attachment)s” 附件。"
+msgstr "你不能删除 “%(attachment)s” 附件。"
 
 #: threads/api/postingendpoint/attachments.py:132
 #, python-format
@@ -4630,7 +4629,7 @@ msgstr[0] "每个帖子最多可添加 %(limit_value)s 个附件(现有 %(show_v
 
 #: threads/api/postingendpoint/category.py:45
 msgid "You have to select category to post thread in."
-msgstr "您必须选择版块来发帖。"
+msgstr "你必须选择版块来发帖。"
 
 #: threads/api/postingendpoint/category.py:46
 #: threads/api/postingendpoint/category.py:65
@@ -4640,38 +4639,38 @@ msgstr "选定的版块无效。"
 #: threads/api/postingendpoint/category.py:71
 msgid ""
 "Selected category doesn't exist or you don't have permission to browse it."
-msgstr "选定的版块不存在或您没有浏览权限。"
+msgstr "选定的版块不存在或你没有浏览权限。"
 
 #: threads/api/postingendpoint/emailnotification.py:43
 #, python-format
 msgid "%(user)s has replied to your thread \"%(thread)s\""
-msgstr "%(user)s 回复了您的话题 “%(thread)s”"
+msgstr "%(user)s 回复了你的话题 “%(thread)s”"
 
 #: threads/api/postingendpoint/emailnotification.py:46
 #, python-format
 msgid "%(user)s has replied to thread \"%(thread)s\" that you are watching"
-msgstr "%(user)s 已经回复了您关注的话题 “%(thread)s”"
+msgstr "%(user)s 已经回复了你关注的话题 “%(thread)s”"
 
 #: threads/api/postingendpoint/floodprotection.py:25
 msgid "You can't post message so quickly after previous one."
-msgstr "您不能如此频繁的发帖。"
+msgstr "你不能如此频繁的发帖。"
 
 #: threads/api/postingendpoint/floodprotection.py:35
 msgid "Your account has exceed an hourly post limit."
-msgstr "在过去的一小时内您发布的帖子数量已达每小时限制量。"
+msgstr "在过去的一小时内你发布的帖子数量已达每小时限制量。"
 
 #: threads/api/postingendpoint/floodprotection.py:41
 msgid "Your account has exceed a daily post limit."
-msgstr "您今日发布的帖子数量已达每日限制数。"
+msgstr "你今日发布的帖子数量已达每日限制数。"
 
 #: threads/api/postingendpoint/participants.py:52
 msgid ""
 "You can't include yourself on the list of users to invite to new thread."
-msgstr "您在新话题中邀请自己。"
+msgstr "你在新话题中邀请自己。"
 
 #: threads/api/postingendpoint/participants.py:61
 msgid "You have to enter user names."
-msgstr "您必须输入用户名。"
+msgstr "你必须输入用户名。"
 
 #: threads/api/postingendpoint/participants.py:67
 #, python-format
@@ -4681,7 +4680,7 @@ msgid ""
 msgid_plural ""
 "You can't add more than %(users)s users to private thread (you've added "
 "%(added)s)."
-msgstr[0] "您不能添加超过 %(users)s 名用户到隐蔽话题（已添加 %(added)s 名用户）"
+msgstr[0] "你不能添加超过 %(users)s 名用户到隐蔽话题（已添加 %(added)s 名用户）"
 
 #: threads/api/postingendpoint/participants.py:93
 #, python-format
@@ -4690,20 +4689,20 @@ msgstr "无法找到一个或多个用户：%(usernames)s"
 
 #: threads/api/postingendpoint/reply.py:81 threads/validators.py:76
 msgid "You have to enter a message."
-msgstr "您必须输入消息。"
+msgstr "你必须输入消息。"
 
 #: threads/api/postingendpoint/reply.py:106
 msgid "You have to enter thread title."
-msgstr "您必须输入话题名称。"
+msgstr "你必须输入话题名称。"
 
 #: threads/api/threadendpoints/editor.py:14
 msgid "You need to be signed in to start threads."
-msgstr "您需要登录才能发起话题。"
+msgstr "你需要登录才能发起话题。"
 
 #: threads/api/threadendpoints/editor.py:60
 msgid ""
 "No categories that allow new threads are available to you at the moment."
-msgstr "目前没有允许新话题的版块可供您使用。"
+msgstr "目前没有允许新话题的版块可供你使用。"
 
 #: threads/api/threadendpoints/patch.py:65
 msgid "Not a valid string."
@@ -4711,23 +4710,23 @@ msgstr "不是有效的字符串。"
 
 #: threads/api/threadendpoints/patch.py:86
 msgid "You can't change globally pinned threads weights in this category."
-msgstr "您不能编辑该类别全局置顶帖的权重。"
+msgstr "你不能编辑该类别全局置顶帖的权重。"
 
 #: threads/api/threadendpoints/patch.py:94
 msgid "You can't pin threads globally in this category."
-msgstr "您无法全局置顶该类别的帖子。"
+msgstr "你无法全局置顶该类别的帖子。"
 
 #: threads/api/threadendpoints/patch.py:122
 msgid "You can't move thread to the category it's already in."
-msgstr "您不能将话题移动到它现在所在的版块中。"
+msgstr "你不能将话题移动到它现在所在的版块中。"
 
 #: threads/api/threadendpoints/patch.py:170
 msgid "You don't have permission to close this thread."
-msgstr "您没有关闭此话题的权限。"
+msgstr "你没有关闭此话题的权限。"
 
 #: threads/api/threadendpoints/patch.py:172
 msgid "You don't have permission to open this thread."
-msgstr "您没有权限打开此话题。"
+msgstr "你没有权限打开此话题。"
 
 #: threads/api/threadendpoints/patch.py:225
 #: threads/api/threadendpoints/patch.py:264
@@ -4748,7 +4747,7 @@ msgstr "这篇文章不能被取消标记，因为它目前没有被标记为最
 
 #: threads/api/threadendpoints/patch.py:301
 msgid "You have to enter new participant's username."
-msgstr "您必须输入新参与者的用户名。"
+msgstr "你必须输入新参与者的用户名。"
 
 #: threads/api/threadendpoints/patch.py:304
 msgid "No user with such name exists."
@@ -4783,19 +4782,19 @@ msgstr "此话题已发起投票。"
 
 #: threads/api/threadposts.py:210
 msgid "You can't reply to events."
-msgstr "您不能回复事件。"
+msgstr "你不能回复事件。"
 
 #: threads/api/threadposts.py:212
 msgid "You can't reply to hidden posts."
-msgstr "您不能回复隐藏的帖子。"
+msgstr "你不能回复隐藏的帖子。"
 
 #: threads/api/threadposts.py:245
 msgid "You can't see who liked this post."
-msgstr "您看不到谁赞过这篇文章。"
+msgstr "你看不到谁赞过这篇文章。"
 
 #: threads/api/threads.py:120
 msgid "You can't start private threads."
-msgstr "您不能发起隐蔽话题。"
+msgstr "你不能发起隐蔽话题。"
 
 #: threads/mergeconflict.py:56
 msgid "Unmark all best answers"
@@ -4837,20 +4836,20 @@ msgstr "全局置顶话题"
 
 #: threads/moderation/posts.py:53
 msgid "You can't make original post visible without revealing thread."
-msgstr "您不能使原始的帖子可见，而不显示话题。"
+msgstr "你不能使原始的帖子可见，而不显示话题。"
 
 #: threads/moderation/posts.py:66
 msgid "You can't hide original post without hiding thread."
-msgstr "您不能隐藏原始帖子而不隐藏话题。"
+msgstr "你不能隐藏原始帖子而不隐藏话题。"
 
 #: threads/moderation/posts.py:92
 msgid "You can't delete original post without deleting thread."
-msgstr "您不能删除原始帖子而不删除话题。"
+msgstr "你不能删除原始帖子而不删除话题。"
 
 #: threads/participants.py:142
 #, python-format
 msgid "%(user)s has invited you to participate in private thread \"%(thread)s\""
-msgstr "%(user)s 邀请您参与隐蔽话题 “%(thread)s”"
+msgstr "%(user)s 邀请你参与隐蔽话题 “%(thread)s”"
 
 #: threads/permissions/attachments.py:14
 msgid "Max attached file size (in kb)"
@@ -4915,34 +4914,34 @@ msgstr "请登录，然后才能标记最佳答案。"
 msgid ""
 "You don't have permission to mark best answers in the \"%(category)s\" "
 "category."
-msgstr "您无法在 \"%(category)s\" 版块中标记最佳答案。"
+msgstr "你无法在 \"%(category)s\" 版块中标记最佳答案。"
 
 #: threads/permissions/bestanswers.py:153
 #: threads/permissions/bestanswers.py:315
 msgid ""
 "You don't have permission to mark best answer in this thread because you "
 "didn't start it."
-msgstr "您只能在您发起的话题中标记最佳答案。"
+msgstr "你只能在你发起的话题中标记最佳答案。"
 
 #: threads/permissions/bestanswers.py:162
 #, python-format
 msgid ""
 "You don't have permission to mark best answer in this thread because its "
 "category \"%(category)s\" is closed."
-msgstr "您无法在此话题中标记最佳答案，因为所属版块 “%(category)s” 已关闭。"
+msgstr "你无法在此话题中标记最佳答案，因为所属版块 “%(category)s” 已关闭。"
 
 #: threads/permissions/bestanswers.py:170
 msgid ""
 "You can't mark best answer in this thread because it's closed and you don't "
 "have permission to open it."
-msgstr "您不可以在此话题中标记最佳答案，因为此话题已关闭且您不能重新开启该话题。"
+msgstr "你不可以在此话题中标记最佳答案，因为此话题已关闭且你不能重新开启该话题。"
 
 #: threads/permissions/bestanswers.py:188
 #, python-format
 msgid ""
 "You don't have permission to change this thread's marked answer because it's"
 " in the \"%(category)s\" category."
-msgstr "您无法修改此话题的最佳答案，因为该话题发表在 “%(category)s” 版块中。"
+msgstr "你无法修改此话题的最佳答案，因为该话题发表在 “%(category)s” 版块中。"
 
 #: threads/permissions/bestanswers.py:198
 msgid ""
@@ -4958,7 +4957,7 @@ msgid ""
 msgid_plural ""
 "You don't have permission to change best answer that was marked for more "
 "than %(minutes)s minutes."
-msgstr[0] "您不可以修改已标记最佳答案超过 %(minutes)s 分钟的最佳答案。"
+msgstr[0] "你不可以修改已标记最佳答案超过 %(minutes)s 分钟的最佳答案。"
 
 #: threads/permissions/bestanswers.py:216
 msgid ""
@@ -4968,20 +4967,20 @@ msgstr "你无法修改此话题的最佳答案，因为版主锁定了该话题
 
 #: threads/permissions/bestanswers.py:227
 msgid "You have to sign in to unmark best answers."
-msgstr "您必须登录才能取消标记最佳答案。"
+msgstr "你必须登录才能取消标记最佳答案。"
 
 #: threads/permissions/bestanswers.py:237
 #, python-format
 msgid ""
 "You don't have permission to unmark threads answers in the \"%(category)s\" "
 "category."
-msgstr "您无法取消标记 “%(category)s” 版块中话题的答案。"
+msgstr "你无法取消标记 “%(category)s” 版块中话题的答案。"
 
 #: threads/permissions/bestanswers.py:247
 msgid ""
 "You don't have permission to unmark this best answer because you are not a "
 "thread starter."
-msgstr "您无法取消标记最佳答案，因为您不是该话题的发起者。"
+msgstr "你无法取消标记最佳答案，因为你不是该话题的发起者。"
 
 #: threads/permissions/bestanswers.py:254
 #, python-format
@@ -4991,26 +4990,26 @@ msgid ""
 msgid_plural ""
 "You don't have permission to unmark best answer that was marked for more "
 "than %(minutes)s minutes."
-msgstr[0] "您不可以取消已标记最佳答案超过 %(minutes)s 分钟的最佳答案。"
+msgstr[0] "你不可以取消已标记最佳答案超过 %(minutes)s 分钟的最佳答案。"
 
 #: threads/permissions/bestanswers.py:266
 #, python-format
 msgid ""
 "You don't have permission to unmark this best answer because its category "
 "\"%(category)s\" is closed."
-msgstr "您无法取消标记最佳答案，因为 “%(category)s” 版块已关闭。"
+msgstr "你无法取消标记最佳答案，因为 “%(category)s” 版块已关闭。"
 
 #: threads/permissions/bestanswers.py:274
 msgid ""
 "You can't unmark this thread's best answer because it's closed and you don't"
 " have permission to open it."
-msgstr "您无法取消该话题的最佳答案，因为该话题已关闭，且您无法重新开启话题。"
+msgstr "你无法取消该话题的最佳答案，因为该话题已关闭，且你无法重新开启话题。"
 
 #: threads/permissions/bestanswers.py:282
 msgid ""
 "You don't have permission to unmark this thread's best answer because a "
 "moderator has protected it."
-msgstr "您无法取消标记最佳答案，因为版主已锁定该话题。"
+msgstr "你无法取消标记最佳答案，因为版主已锁定该话题。"
 
 #: threads/permissions/bestanswers.py:296
 msgid "Events can't be marked as best answers."
@@ -5032,15 +5031,15 @@ msgstr "未通过审查的帖子不能被标记为最佳答案。"
 msgid ""
 "You don't have permission to mark this post as best answer because a "
 "moderator has protected it."
-msgstr "您无法标记此帖子为最佳答案，因为版主已锁定该话题。"
+msgstr "你无法标记此帖子为最佳答案，因为版主已锁定该话题。"
 
 #: threads/permissions/bestanswers.py:346
 msgid "You can't hide this post because its marked as best answer."
-msgstr "您不能隐藏此帖子，因为它已标记为最佳答案。"
+msgstr "你不能隐藏此帖子，因为它已标记为最佳答案。"
 
 #: threads/permissions/bestanswers.py:356
 msgid "You can't delete this post because its marked as best answer."
-msgstr "您不能删除此帖子，因为它已标记为最佳答案。"
+msgstr "你不能删除此帖子，因为它已标记为最佳答案。"
 
 #: threads/permissions/polls.py:28
 msgid "Polls"
@@ -5084,41 +5083,41 @@ msgstr "无论投票是否是保密的均可查看投票者。"
 
 #: threads/permissions/polls.py:112
 msgid "You have to sign in to start polls."
-msgstr "您必须登录才能发起投票。"
+msgstr "你必须登录才能发起投票。"
 
 #: threads/permissions/polls.py:119
 msgid "You can't start polls."
-msgstr "您不能发起投票。"
+msgstr "你不能发起投票。"
 
 #: threads/permissions/polls.py:121
 msgid "You can't start polls in other users threads."
-msgstr "您不能在其他用户的话题中发起投票。"
+msgstr "你不能在其他用户的话题中发起投票。"
 
 #: threads/permissions/polls.py:126
 msgid "This category is closed. You can't start polls in it."
-msgstr "您不能在已关闭的版块中发起投票。"
+msgstr "你不能在已关闭的版块中发起投票。"
 
 #: threads/permissions/polls.py:130
 msgid "This thread is closed. You can't start polls in it."
-msgstr "您不能在已关闭的话题中发起投票。"
+msgstr "你不能在已关闭的话题中发起投票。"
 
 #: threads/permissions/polls.py:139
 msgid "You have to sign in to edit polls."
-msgstr "您必须登录才能编辑投票。"
+msgstr "你必须登录才能编辑投票。"
 
 #: threads/permissions/polls.py:146
 msgid "You can't edit polls."
-msgstr "您无法编辑投票。"
+msgstr "你无法编辑投票。"
 
 #: threads/permissions/polls.py:151
 msgid "You can't edit other users polls in this category."
-msgstr "您无法编辑此版块中其他用户的投票。"
+msgstr "你无法编辑此版块中其他用户的投票。"
 
 #: threads/permissions/polls.py:155
 #, python-format
 msgid "You can't edit polls that are older than %(minutes)s minute."
 msgid_plural "You can't edit polls that are older than %(minutes)s minutes."
-msgstr[0] "您无法编辑发起投票时间超过 %(minutes)s 分钟的投票。"
+msgstr[0] "你无法编辑发起投票时间超过 %(minutes)s 分钟的投票。"
 
 #: threads/permissions/polls.py:162
 msgid "This poll is over. You can't edit it."
@@ -5126,11 +5125,11 @@ msgstr "投票已结束，无法编辑。"
 
 #: threads/permissions/polls.py:167
 msgid "This category is closed. You can't edit polls in it."
-msgstr "您不能编辑已关闭的版块中的投票。"
+msgstr "你不能编辑已关闭的版块中的投票。"
 
 #: threads/permissions/polls.py:171
 msgid "This thread is closed. You can't edit polls in it."
-msgstr "您不能编辑已关闭话题中的投票。"
+msgstr "你不能编辑已关闭话题中的投票。"
 
 #: threads/permissions/polls.py:180
 msgid "You have to sign in to delete polls."
@@ -5138,53 +5137,53 @@ msgstr "登录后才能删除投票。"
 
 #: threads/permissions/polls.py:187
 msgid "You can't delete polls."
-msgstr "您不能删除投票。"
+msgstr "你不能删除投票。"
 
 #: threads/permissions/polls.py:192
 msgid "You can't delete other users polls in this category."
-msgstr "您不能删除此版块中其他用户发起的投票。"
+msgstr "你不能删除此版块中其他用户发起的投票。"
 
 #: threads/permissions/polls.py:196
 #, python-format
 msgid "You can't delete polls that are older than %(minutes)s minute."
 msgid_plural "You can't delete polls that are older than %(minutes)s minutes."
-msgstr[0] "您不能删除已发起投票超过 %(minutes)s 分钟的投票。"
+msgstr[0] "你不能删除已发起投票超过 %(minutes)s 分钟的投票。"
 
 #: threads/permissions/polls.py:202
 msgid "This poll is over. You can't delete it."
-msgstr "您不能删除已结束的投票。"
+msgstr "你不能删除已结束的投票。"
 
 #: threads/permissions/polls.py:207
 msgid "This category is closed. You can't delete polls in it."
-msgstr "您不能删除已关闭版块中的投票。"
+msgstr "你不能删除已关闭版块中的投票。"
 
 #: threads/permissions/polls.py:211
 msgid "This thread is closed. You can't delete polls in it."
-msgstr "您不能删除已关闭话题中的投票。"
+msgstr "你不能删除已关闭话题中的投票。"
 
 #: threads/permissions/polls.py:220
 msgid "You have to sign in to vote in polls."
-msgstr "您必须登录才能参与投票。"
+msgstr "你必须登录才能参与投票。"
 
 #: threads/permissions/polls.py:223
 msgid "You have already voted in this poll."
-msgstr "您已参与投票，谢谢。"
+msgstr "你已参与投票，谢谢。"
 
 #: threads/permissions/polls.py:225
 msgid "This poll is over. You can't vote in it."
-msgstr "投票已结束，您不能投票。"
+msgstr "投票已结束，你不能投票。"
 
 #: threads/permissions/polls.py:233
 msgid "This category is closed. You can't vote in it."
-msgstr "此版块已关闭。您不能投票。"
+msgstr "此版块已关闭。你不能投票。"
 
 #: threads/permissions/polls.py:235
 msgid "This thread is closed. You can't vote in it."
-msgstr "此话题已关闭。您不能投票。"
+msgstr "此话题已关闭。你不能投票。"
 
 #: threads/permissions/polls.py:243
 msgid "You dont have permission to this poll's voters."
-msgstr "您不能查看该投票的参与者。"
+msgstr "你不能查看该投票的参与者。"
 
 #: threads/permissions/privatethreads.py:35
 msgid "Can use private threads"
@@ -5232,11 +5231,11 @@ msgstr "允许用户阅读，回复，编辑和删除被举报隐蔽话题中的
 
 #: threads/permissions/privatethreads.py:179
 msgid "You have to sign in to use private threads."
-msgstr "您必须登录才能使用隐蔽话题。"
+msgstr "你必须登录才能使用隐蔽话题。"
 
 #: threads/permissions/privatethreads.py:181
 msgid "You can't use private threads."
-msgstr "您不能使用隐蔽话题。"
+msgstr "你不能使用隐蔽话题。"
 
 #: threads/permissions/privatethreads.py:210
 msgid "Only thread owner and moderators can change threads owners."
@@ -5256,7 +5255,7 @@ msgstr "只有版主可以向已关闭话题中添加参与者。"
 
 #: threads/permissions/privatethreads.py:238
 msgid "You can't add any more new users to this thread."
-msgstr "您不能再向此话题中添加任何新用户。"
+msgstr "你不能再向此话题中添加任何新用户。"
 
 #: threads/permissions/privatethreads.py:253
 msgid "Only moderators can remove participants from closed threads."
@@ -5264,7 +5263,7 @@ msgstr "只有版主可以从关闭的话题中删除参与者。"
 
 #: threads/permissions/privatethreads.py:258
 msgid "You have to be thread owner to remove participants from it."
-msgstr "您必须是话题所有者才能从中删除参与者。"
+msgstr "你必须是话题所有者才能从中删除参与者。"
 
 #: threads/permissions/privatethreads.py:270
 #, python-format
@@ -5274,7 +5273,7 @@ msgstr "%(user)s 不能参与隐蔽话题。"
 #: threads/permissions/privatethreads.py:277
 #, python-format
 msgid "%(user)s is blocking you."
-msgstr "%(user)s 拉黑了您。"
+msgstr "%(user)s 拉黑了你。"
 
 #: threads/permissions/privatethreads.py:281
 #, python-format
@@ -5288,7 +5287,7 @@ msgstr "%(user)s 仅接受关注用户的隐蔽话题邀请。"
 
 #: threads/permissions/threads.py:76
 msgid "Can see unapproved content list"
-msgstr "可以看到未批准的内容列表"
+msgstr "可以看到未审批的内容列表"
 
 #: threads/permissions/threads.py:78
 msgid ""
@@ -5297,8 +5296,8 @@ msgid ""
 "being available on all threads lists, it will only display threads belonging"
 " to categories in which the user has permission to approve content."
 msgstr ""
-"允许在话题列表中查看 “未批准” "
-"标签以便于列出那些包含被未批准帖子的或本身为未批准的话题。尽管该标签存在于所有版块话题中，但其仅对有权限批准相应版块帖子的用户展示相应话题。"
+"允许在话题列表中查看 “未审批” "
+"标签以便于列出那些包含未审批的帖子或未审批的话题。尽管该标签存在于所有版块话题中，但仅当用户有审批权限的时候，才显示含有 “未审批” 标签的话题或帖子。"
 
 #: threads/permissions/threads.py:87
 msgid "Can see reported content list"
@@ -5477,7 +5476,7 @@ msgstr "可以审批内容"
 
 #: threads/permissions/threads.py:209
 msgid "Will be able to see and approve unapproved content."
-msgstr "将能够查看和批准未批准的内容。"
+msgstr "将能够查看和审批未审批的内容。"
 
 #: threads/permissions/threads.py:211
 msgid "Can report posts"
@@ -5513,15 +5512,15 @@ msgstr "编辑内容需要审批"
 
 #: threads/permissions/threads.py:539
 msgid "You have to sign in to start threads."
-msgstr "您必须登录才能发起话题。"
+msgstr "你必须登录才能发起话题。"
 
 #: threads/permissions/threads.py:545
 msgid "You don't have permission to start new threads in this category."
-msgstr "您没有在此版块中发起新话题的权限。"
+msgstr "你没有在此版块中发起新话题的权限。"
 
 #: threads/permissions/threads.py:550
 msgid "This category is closed. You can't start new threads in it."
-msgstr "此版块已关闭。您不能在其中发起新话题。"
+msgstr "此版块已关闭。你不能在其中发起新话题。"
 
 #: threads/permissions/threads.py:559
 msgid "You have to sign in to reply threads."
@@ -5529,15 +5528,15 @@ msgstr "登录后才能回帖。"
 
 #: threads/permissions/threads.py:566
 msgid "You can't reply to threads in this category."
-msgstr "您不能在此版块中的话题下回帖。"
+msgstr "你不能在此版块中的话题下回帖。"
 
 #: threads/permissions/threads.py:571
 msgid "This category is closed. You can't reply to threads in it."
-msgstr "此版块已关闭。您不能在此回帖。"
+msgstr "此版块已关闭。你不能在此回帖。"
 
 #: threads/permissions/threads.py:575
 msgid "You can't reply to closed threads in this category."
-msgstr "您不能回复此版块中的已经关闭的话题。"
+msgstr "你不能回复此版块中的已经关闭的话题。"
 
 #: threads/permissions/threads.py:584
 msgid "You have to sign in to edit threads."
@@ -5545,29 +5544,29 @@ msgstr "登录后才能编辑话题。"
 
 #: threads/permissions/threads.py:591
 msgid "You can't edit threads in this category."
-msgstr "您不能编辑此版块中的话题。"
+msgstr "你不能编辑此版块中的话题。"
 
 #: threads/permissions/threads.py:596
 msgid "You can't edit other users threads in this category."
-msgstr "您无法编辑此版块中的其他用户话题。"
+msgstr "你无法编辑此版块中的其他用户话题。"
 
 #: threads/permissions/threads.py:601
 #, python-format
 msgid "You can't edit threads that are older than %(minutes)s minute."
 msgid_plural "You can't edit threads that are older than %(minutes)s minutes."
-msgstr[0] "您不能编辑早于 %(minutes)s 的话题。"
+msgstr[0] "你不能编辑早于 %(minutes)s 的话题。"
 
 #: threads/permissions/threads.py:612
 msgid "This category is closed. You can't edit threads in it."
-msgstr "此版块已关闭。您不能编辑话题。"
+msgstr "此版块已关闭。你不能编辑话题。"
 
 #: threads/permissions/threads.py:615
 msgid "This thread is closed. You can't edit it."
-msgstr "您不能编辑已关闭的话题。"
+msgstr "你不能编辑已关闭的话题。"
 
 #: threads/permissions/threads.py:623
 msgid "You have to sign in to change threads weights."
-msgstr "您必须登录才能置顶话题。"
+msgstr "你必须登录才能置顶话题。"
 
 #: threads/permissions/threads.py:630
 msgid "You can't change threads weights in this category."
@@ -5575,92 +5574,92 @@ msgstr "不能置顶此版块中的话题。"
 
 #: threads/permissions/threads.py:635
 msgid "This category is closed. You can't change threads weights in it."
-msgstr "您不能置顶已关闭版块中的话题。"
+msgstr "你不能置顶已关闭版块中的话题。"
 
 #: threads/permissions/threads.py:639
 msgid "This thread is closed. You can't change its weight."
-msgstr "您不能置顶已关闭话题。"
+msgstr "你不能置顶已关闭话题。"
 
 #: threads/permissions/threads.py:648 threads/permissions/threads.py:668
 msgid "You have to sign in to hide threads."
-msgstr "您必须登录才能隐藏话题。"
+msgstr "你必须登录才能隐藏话题。"
 
 #: threads/permissions/threads.py:657
 msgid "This category is closed. You can't reveal threads in it."
-msgstr "您不能再次显示已关闭版块中的话题。"
+msgstr "你不能再次显示已关闭版块中的话题。"
 
 #: threads/permissions/threads.py:660
 msgid "This thread is closed. You can't reveal it."
-msgstr "您不能再次显示已关闭的话题。"
+msgstr "你不能再次显示已关闭的话题。"
 
 #: threads/permissions/threads.py:678
 msgid "You can't hide threads in this category."
-msgstr "您不能隐藏此版块中的话题。"
+msgstr "你不能隐藏此版块中的话题。"
 
 #: threads/permissions/threads.py:683
 msgid "You can't hide other users theads in this category."
-msgstr "您不能隐藏此版块中其他用户的话题。"
+msgstr "你不能隐藏此版块中其他用户的话题。"
 
 #: threads/permissions/threads.py:688
 #, python-format
 msgid "You can't hide threads that are older than %(minutes)s minute."
 msgid_plural "You can't hide threads that are older than %(minutes)s minutes."
-msgstr[0] "您不能隐藏发布时间超过 %(minutes)s 分钟的话题。"
+msgstr[0] "你不能隐藏发布时间超过 %(minutes)s 分钟的话题。"
 
 #: threads/permissions/threads.py:699
 msgid "This category is closed. You can't hide threads in it."
-msgstr "您不能隐藏已关闭版块中的话题。"
+msgstr "你不能隐藏已关闭版块中的话题。"
 
 #: threads/permissions/threads.py:702
 msgid "This thread is closed. You can't hide it."
-msgstr "您不能隐藏已关闭的话题。"
+msgstr "你不能隐藏已关闭的话题。"
 
 #: threads/permissions/threads.py:710
 msgid "You have to sign in to delete threads."
-msgstr "您必须登录才能删除话题。"
+msgstr "你必须登录才能删除话题。"
 
 #: threads/permissions/threads.py:720
 msgid "You can't delete threads in this category."
-msgstr "您不能删除此版块中的话题。"
+msgstr "你不能删除此版块中的话题。"
 
 #: threads/permissions/threads.py:728
 msgid "You can't delete other users theads in this category."
-msgstr "您不能删除此版块中其他用户的话题。"
+msgstr "你不能删除此版块中其他用户的话题。"
 
 #: threads/permissions/threads.py:733
 #, python-format
 msgid "You can't delete threads that are older than %(minutes)s minute."
 msgid_plural ""
 "You can't delete threads that are older than %(minutes)s minutes."
-msgstr[0] "您不能删除发布时间超过 %(minutes)s 分钟的话题。"
+msgstr[0] "你不能删除发布时间超过 %(minutes)s 分钟的话题。"
 
 #: threads/permissions/threads.py:744
 msgid "This category is closed. You can't delete threads in it."
-msgstr "您不能删除已关闭版块中的话题。"
+msgstr "你不能删除已关闭版块中的话题。"
 
 #: threads/permissions/threads.py:747
 msgid "This thread is closed. You can't delete it."
-msgstr "您不能删除已关闭的话题。"
+msgstr "你不能删除已关闭的话题。"
 
 #: threads/permissions/threads.py:755
 msgid "You have to sign in to move threads."
-msgstr "您必须登录才能移动话题。"
+msgstr "你必须登录才能移动话题。"
 
 #: threads/permissions/threads.py:762
 msgid "You can't move threads in this category."
-msgstr "您不能移动此版块中的话题。"
+msgstr "你不能移动此版块中的话题。"
 
 #: threads/permissions/threads.py:767
 msgid "This category is closed. You can't move it's threads."
-msgstr "您不能移动已关闭版块中的帖子。"
+msgstr "你不能移动已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:770
 msgid "This thread is closed. You can't move it."
-msgstr "您不能移动已关闭的话题。"
+msgstr "你不能移动已关闭的话题。"
 
 #: threads/permissions/threads.py:778
 msgid "You have to sign in to merge threads."
-msgstr "您必须登录才能合并话题。"
+msgstr "你必须登录才能合并话题。"
 
 #: threads/permissions/threads.py:786
 msgid "Other thread can't be merged with."
@@ -5668,15 +5667,15 @@ msgstr "无法与其他话题合并。"
 
 #: threads/permissions/threads.py:787
 msgid "You can't merge threads in this category."
-msgstr "您不能合并此版块中的话题。"
+msgstr "你不能合并此版块中的话题。"
 
 #: threads/permissions/threads.py:793
 msgid "Other thread's category is closed. You can't merge with it."
-msgstr "您不能与版块已关闭的话题合并。"
+msgstr "你不能与版块已关闭的话题合并。"
 
 #: threads/permissions/threads.py:796
 msgid "This category is closed. You can't merge it's threads."
-msgstr "您不能合并已关闭版块中的话题。"
+msgstr "你不能合并已关闭版块中的话题。"
 
 #: threads/permissions/threads.py:801
 msgid "Other thread is closed and can't be merged with."
@@ -5684,27 +5683,27 @@ msgstr "其他话题已关闭，不能合并。"
 
 #: threads/permissions/threads.py:804
 msgid "This thread is closed. You can't merge it with other threads."
-msgstr "此话题已关闭，您不能将它和其它话题合并。"
+msgstr "此话题已关闭，你不能将它和其它话题合并。"
 
 #: threads/permissions/threads.py:813
 msgid "You have to sign in to approve threads."
-msgstr "您必须登录才能审查话题。"
+msgstr "你必须登录才能审查话题。"
 
 #: threads/permissions/threads.py:820
 msgid "You can't approve threads in this category."
-msgstr "您不能审查此版块中的话题。"
+msgstr "你不能审查此版块中的话题。"
 
 #: threads/permissions/threads.py:825
 msgid "This category is closed. You can't approve threads in it."
-msgstr "您不能审查已关闭版块中的帖子。"
+msgstr "你不能审查已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:828
 msgid "This thread is closed. You can't approve it."
-msgstr "您不能审查已关闭的话题。"
+msgstr "你不能审查已关闭的话题。"
 
 #: threads/permissions/threads.py:858
 msgid "You have to sign in to edit posts."
-msgstr "您必须登录才能编辑帖子。"
+msgstr "你必须登录才能编辑帖子。"
 
 #: threads/permissions/threads.py:861
 msgid "Events can't be edited."
@@ -5712,179 +5711,179 @@ msgstr "事件无法编辑。"
 
 #: threads/permissions/threads.py:868
 msgid "You can't edit posts in this category."
-msgstr "您无法编辑此版块中的帖子。"
+msgstr "你无法编辑此版块中的帖子。"
 
 #: threads/permissions/threads.py:875
 msgid "This post is hidden, you can't edit it."
-msgstr "此帖子是隐藏的，您不能编辑它。"
+msgstr "此帖子是隐藏的，你不能编辑它。"
 
 #: threads/permissions/threads.py:880
 msgid "You can't edit other users posts in this category."
-msgstr "您不能编辑此版块中的其他用户的帖子。"
+msgstr "你不能编辑此版块中的其他用户的帖子。"
 
 #: threads/permissions/threads.py:884
 msgid "This post is protected. You can't edit it."
-msgstr "此帖被保护。您不能编辑它。"
+msgstr "此帖被保护。你不能编辑它。"
 
 #: threads/permissions/threads.py:888
 #, python-format
 msgid "You can't edit posts that are older than %(minutes)s minute."
 msgid_plural "You can't edit posts that are older than %(minutes)s minutes."
-msgstr[0] "您不能编辑早于 %(minutes)s 分钟的帖子。"
+msgstr[0] "你不能编辑早于 %(minutes)s 分钟的帖子。"
 
 #: threads/permissions/threads.py:899
 msgid "This category is closed. You can't edit posts in it."
-msgstr "此版块已关闭。您无法编辑其中的帖子。"
+msgstr "此版块已关闭。你无法编辑其中的帖子。"
 
 #: threads/permissions/threads.py:903
 msgid "This thread is closed. You can't edit posts in it."
-msgstr "此话题已关闭。您无法编辑其中的帖子。"
+msgstr "此话题已关闭。你无法编辑其中的帖子。"
 
 #: threads/permissions/threads.py:912
 msgid "You have to sign in to reveal posts."
-msgstr "您必须登录才能显示帖子。"
+msgstr "你必须登录才能显示帖子。"
 
 #: threads/permissions/threads.py:920
 msgid "You can't reveal posts in this category."
-msgstr "您不能显示此版块中的帖子。"
+msgstr "你不能显示此版块中的帖子。"
 
 #: threads/permissions/threads.py:924
 msgid "You can't reveal other users posts in this category."
-msgstr "您不能显示此版块中的其他用户的帖子。"
+msgstr "你不能显示此版块中的其他用户的帖子。"
 
 #: threads/permissions/threads.py:928
 msgid "This post is protected. You can't reveal it."
-msgstr "此帖被保护。您不能显示它。"
+msgstr "此帖被保护。你不能显示它。"
 
 #: threads/permissions/threads.py:932
 #, python-format
 msgid "You can't reveal posts that are older than %(minutes)s minute."
 msgid_plural "You can't reveal posts that are older than %(minutes)s minutes."
-msgstr[0] "您不能重新显示超过于 %(minutes)s 分钟的帖子。"
+msgstr[0] "你不能重新显示超过于 %(minutes)s 分钟的帖子。"
 
 #: threads/permissions/threads.py:941
 msgid "You can't reveal thread's first post."
-msgstr "您不能显示话题的第一篇文章。"
+msgstr "你不能显示话题的第一篇文章。"
 
 #: threads/permissions/threads.py:946
 msgid "This category is closed. You can't reveal posts in it."
-msgstr "此版块已关闭。您不能显示其中的帖子。"
+msgstr "此版块已关闭。你不能显示其中的帖子。"
 
 #: threads/permissions/threads.py:950
 msgid "This thread is closed. You can't reveal posts in it."
-msgstr "此话题已关闭。您不能显示其中的帖子。"
+msgstr "此话题已关闭。你不能显示其中的帖子。"
 
 #: threads/permissions/threads.py:959
 msgid "You have to sign in to hide posts."
-msgstr "您必须登录才能隐藏帖子。"
+msgstr "你必须登录才能隐藏帖子。"
 
 #: threads/permissions/threads.py:967
 msgid "You can't hide posts in this category."
-msgstr "您无法隐藏此版块中的帖子。"
+msgstr "你无法隐藏此版块中的帖子。"
 
 #: threads/permissions/threads.py:971
 msgid "You can't hide other users posts in this category."
-msgstr "您不能隐藏此版块中的其他用户的帖子。"
+msgstr "你不能隐藏此版块中的其他用户的帖子。"
 
 #: threads/permissions/threads.py:975
 msgid "This post is protected. You can't hide it."
-msgstr "此帖被保护。您不能隐藏它。"
+msgstr "此帖被保护。你不能隐藏它。"
 
 #: threads/permissions/threads.py:979
 #, python-format
 msgid "You can't hide posts that are older than %(minutes)s minute."
 msgid_plural "You can't hide posts that are older than %(minutes)s minutes."
-msgstr[0] "您不能隐藏早于 %(minutes)s 分钟的帖子。"
+msgstr[0] "你不能隐藏早于 %(minutes)s 分钟的帖子。"
 
 #: threads/permissions/threads.py:988
 msgid "You can't hide thread's first post."
-msgstr "您不能隐藏话题中的第一个帖子。"
+msgstr "你不能隐藏话题中的第一个帖子。"
 
 #: threads/permissions/threads.py:993
 msgid "This category is closed. You can't hide posts in it."
-msgstr "此版块已关闭。您不能隐藏其中的帖子。"
+msgstr "此版块已关闭。你不能隐藏其中的帖子。"
 
 #: threads/permissions/threads.py:997
 msgid "This thread is closed. You can't hide posts in it."
-msgstr "此话题已关闭。您不能隐藏其中的帖子。"
+msgstr "此话题已关闭。你不能隐藏其中的帖子。"
 
 #: threads/permissions/threads.py:1006
 msgid "You have to sign in to delete posts."
-msgstr "您必须登录才能删除帖子。"
+msgstr "你必须登录才能删除帖子。"
 
 #: threads/permissions/threads.py:1014
 msgid "You can't delete posts in this category."
-msgstr "您不能删除此版块中的帖子。"
+msgstr "你不能删除此版块中的帖子。"
 
 #: threads/permissions/threads.py:1018
 msgid "You can't delete other users posts in this category."
-msgstr "您不能删除此版块中的其他用户的帖子。"
+msgstr "你不能删除此版块中的其他用户的帖子。"
 
 #: threads/permissions/threads.py:1022
 msgid "This post is protected. You can't delete it."
-msgstr "此帖被保护。您不能删除它。"
+msgstr "此帖被保护。你不能删除它。"
 
 #: threads/permissions/threads.py:1026
 #, python-format
 msgid "You can't delete posts that are older than %(minutes)s minute."
 msgid_plural "You can't delete posts that are older than %(minutes)s minutes."
-msgstr[0] "您不能删除早于 %(minutes)s 分钟的帖子。"
+msgstr[0] "你不能删除早于 %(minutes)s 分钟的帖子。"
 
 #: threads/permissions/threads.py:1035
 msgid "You can't delete thread's first post."
-msgstr "您不能删除话题的第一篇文章。"
+msgstr "你不能删除话题的第一篇文章。"
 
 #: threads/permissions/threads.py:1040
 msgid "This category is closed. You can't delete posts in it."
-msgstr "此版块已关闭。您不能删除其中的帖子。"
+msgstr "此版块已关闭。你不能删除其中的帖子。"
 
 #: threads/permissions/threads.py:1044
 msgid "This thread is closed. You can't delete posts in it."
-msgstr "此话题已关闭。您不能删除其中的帖子。"
+msgstr "此话题已关闭。你不能删除其中的帖子。"
 
 #: threads/permissions/threads.py:1053
 msgid "You have to sign in to protect posts."
-msgstr "您必须登录才能保护帖子。"
+msgstr "你必须登录才能保护帖子。"
 
 #: threads/permissions/threads.py:1060
 msgid "You can't protect posts in this category."
-msgstr "您无法保护此版块中的帖子。"
+msgstr "你无法保护此版块中的帖子。"
 
 #: threads/permissions/threads.py:1062
 msgid "You can't protect posts you can't edit."
-msgstr "您无法保护您无法编辑的帖子。"
+msgstr "你无法保护你无法编辑的帖子。"
 
 #: threads/permissions/threads.py:1070
 msgid "You have to sign in to approve posts."
-msgstr "登录后才能批准帖子。"
+msgstr "你必须登录后才能审批帖子。"
 
 #: threads/permissions/threads.py:1077
 msgid "You can't approve posts in this category."
-msgstr "您不能批准此版块中的帖子。"
+msgstr "你不能审批此版块中的帖子。"
 
 #: threads/permissions/threads.py:1079
 msgid "You can't approve thread's first post."
-msgstr "您不能批准话题的第一篇文章。"
+msgstr "你不能审批话题的第一篇帖子。"
 
 #: threads/permissions/threads.py:1085
 msgid "You can't approve posts the content you can't see."
-msgstr "您不能批准您看不到的内容的帖子。"
+msgstr "你不能审批你看不到内容的帖子。"
 
 #: threads/permissions/threads.py:1090
 msgid "This category is closed. You can't approve posts in it."
-msgstr "您不能审查已关闭版块中的帖子。"
+msgstr "你不能审查已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:1094
 msgid "This thread is closed. You can't approve posts in it."
-msgstr "您不能审查已关闭话题中的帖子。"
+msgstr "你不能审查已关闭话题中的帖子。"
 
 #: threads/permissions/threads.py:1103
 msgid "You have to sign in to move posts."
-msgstr "您必须登录才能移动帖子。"
+msgstr "你必须登录才能移动帖子。"
 
 #: threads/permissions/threads.py:1110
 msgid "You can't move posts in this category."
-msgstr "您无法移动此版块中的帖子。"
+msgstr "你无法移动此版块中的帖子。"
 
 #: threads/permissions/threads.py:1112
 msgid "Events can't be moved."
@@ -5892,27 +5891,27 @@ msgstr "活动无法移动。"
 
 #: threads/permissions/threads.py:1114
 msgid "You can't move thread's first post."
-msgstr "您不能移动话题的第一个帖子。"
+msgstr "你不能移动话题的第一个帖子。"
 
 #: threads/permissions/threads.py:1116
 msgid "You can't move posts the content you can't see."
-msgstr "您不能移动您看不到的内容的帖子。"
+msgstr "你不能移动你看不到的内容的帖子。"
 
 #: threads/permissions/threads.py:1121
 msgid "This category is closed. You can't move posts in it."
-msgstr "您不能移动已关闭版块中的帖子。"
+msgstr "你不能移动已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:1125
 msgid "This thread is closed. You can't move posts in it."
-msgstr "您不能移动已关闭话题中的帖子。"
+msgstr "你不能移动已关闭话题中的帖子。"
 
 #: threads/permissions/threads.py:1134
 msgid "You have to sign in to merge posts."
-msgstr "您必须登录才能合并帖子。"
+msgstr "你必须登录才能合并帖子。"
 
 #: threads/permissions/threads.py:1141
 msgid "You can't merge posts in this category."
-msgstr "您不能合并此版块中的帖子。"
+msgstr "你不能合并此版块中的帖子。"
 
 #: threads/permissions/threads.py:1143
 msgid "Events can't be merged."
@@ -5920,23 +5919,23 @@ msgstr "无法合并事件。"
 
 #: threads/permissions/threads.py:1149
 msgid "You can't merge posts the content you can't see."
-msgstr "您不能合并您看不到内容的帖子。"
+msgstr "你不能合并你看不到内容的帖子。"
 
 #: threads/permissions/threads.py:1154
 msgid "This category is closed. You can't merge posts in it."
-msgstr "您不能合并已关闭版块中的帖子。"
+msgstr "你不能合并已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:1158
 msgid "This thread is closed. You can't merge posts in it."
-msgstr "您不能合并已关闭话题中的帖子。"
+msgstr "你不能合并已关闭话题中的帖子。"
 
 #: threads/permissions/threads.py:1167
 msgid "You have to sign in to split posts."
-msgstr "您必须登录才能拆分帖子。"
+msgstr "你必须登录才能拆分帖子。"
 
 #: threads/permissions/threads.py:1174
 msgid "You can't split posts in this category."
-msgstr "您不能拆分此版块中的帖子。"
+msgstr "你不能拆分此版块中的帖子。"
 
 #: threads/permissions/threads.py:1176
 msgid "Events can't be split."
@@ -5944,71 +5943,71 @@ msgstr "无法拆分事件。"
 
 #: threads/permissions/threads.py:1178
 msgid "You can't split thread's first post."
-msgstr "您不能拆分话题的第一个帖子。"
+msgstr "你不能拆分话题的第一个帖子。"
 
 #: threads/permissions/threads.py:1180
 msgid "You can't split posts the content you can't see."
-msgstr "您不能拆分您看不到的内容。"
+msgstr "你不能拆分你看不到的内容。"
 
 #: threads/permissions/threads.py:1185
 msgid "This category is closed. You can't split posts in it."
-msgstr "您不能拆分已关闭版块中的帖子。"
+msgstr "你不能拆分已关闭版块中的帖子。"
 
 #: threads/permissions/threads.py:1189
 msgid "This thread is closed. You can't split posts in it."
-msgstr "您不能拆分已关闭话题中的帖子。"
+msgstr "你不能拆分已关闭话题中的帖子。"
 
 #: threads/permissions/threads.py:1198
 msgid "You have to sign in to reveal events."
-msgstr "您必须登录以重新显示事件。"
+msgstr "你必须登录以重新显示事件。"
 
 #: threads/permissions/threads.py:1205
 msgid "You can't reveal events in this category."
-msgstr "您无法重新显示此版块中的事件。"
+msgstr "你无法重新显示此版块中的事件。"
 
 #: threads/permissions/threads.py:1210
 msgid "This category is closed. You can't reveal events in it."
-msgstr "您不能重新显示已关闭版块中的事件。"
+msgstr "你不能重新显示已关闭版块中的事件。"
 
 #: threads/permissions/threads.py:1214
 msgid "This thread is closed. You can't reveal events in it."
-msgstr "您不能重新显示已关闭话题中的事件。"
+msgstr "你不能重新显示已关闭话题中的事件。"
 
 #: threads/permissions/threads.py:1223
 msgid "You have to sign in to hide events."
-msgstr "您必须登录才能隐藏事件。"
+msgstr "你必须登录才能隐藏事件。"
 
 #: threads/permissions/threads.py:1230
 msgid "You can't hide events in this category."
-msgstr "您无法隐藏此版块中的事件。"
+msgstr "你无法隐藏此版块中的事件。"
 
 #: threads/permissions/threads.py:1235
 msgid "This category is closed. You can't hide events in it."
-msgstr "您不能隐藏已关闭版块中的事件。"
+msgstr "你不能隐藏已关闭版块中的事件。"
 
 #: threads/permissions/threads.py:1239
 msgid "This thread is closed. You can't hide events in it."
-msgstr "您不能隐藏已关闭话题中的事件。"
+msgstr "你不能隐藏已关闭话题中的事件。"
 
 #: threads/permissions/threads.py:1248
 msgid "You have to sign in to delete events."
-msgstr "您必须登录才能删除事件。"
+msgstr "你必须登录才能删除事件。"
 
 #: threads/permissions/threads.py:1255
 msgid "You can't delete events in this category."
-msgstr "您不能删除此版块中的事件。"
+msgstr "你不能删除此版块中的事件。"
 
 #: threads/permissions/threads.py:1260
 msgid "This category is closed. You can't delete events in it."
-msgstr "您不能删除已关闭版块中的事件。"
+msgstr "你不能删除已关闭版块中的事件。"
 
 #: threads/permissions/threads.py:1264
 msgid "This thread is closed. You can't delete events in it."
-msgstr "您不能删除已关闭话题中的事件。"
+msgstr "你不能删除已关闭话题中的事件。"
 
 #: threads/serializers/moderation.py:49
 msgid "You have to specify at least one post to delete."
-msgstr "您必须至少指定一个要删除的帖子。"
+msgstr "你必须至少指定一个要删除的帖子。"
 
 #: threads/serializers/moderation.py:56 threads/serializers/moderation.py:111
 #: threads/serializers/moderation.py:205 threads/serializers/moderation.py:363
@@ -6071,11 +6070,11 @@ msgstr "帖子移动目的地与当前位置相同。"
 msgid ""
 "The thread you have entered link to doesn't exist or you don't have "
 "permission to see it."
-msgstr "您输入的话题链接不存在或您没有浏览它的权限。"
+msgstr "你输入的话题链接不存在或你没有浏览它的权限。"
 
 #: threads/serializers/moderation.py:240
 msgid "You can't move posts to threads you can't reply."
-msgstr "您不能将帖子移动到您无法回帖的话题中。"
+msgstr "你不能将帖子移动到你无法回帖的话题中。"
 
 #: threads/serializers/moderation.py:250
 #, python-format
@@ -6089,23 +6088,23 @@ msgstr "无法找到要移动的一个或多个帖子。"
 
 #: threads/serializers/moderation.py:305
 msgid "You can't create new threads in selected category."
-msgstr "您不能在选定的版块中创建新话题。"
+msgstr "你不能在选定的版块中创建新话题。"
 
 #: threads/serializers/moderation.py:319
 msgid "You don't have permission to pin threads globally in this category."
-msgstr "您没有权限在此版块中将话题全局置顶。"
+msgstr "你没有权限在此版块中将话题全局置顶。"
 
 #: threads/serializers/moderation.py:325
 msgid "You don't have permission to pin threads in this category."
-msgstr "您没有权限在此版块内置顶话题。"
+msgstr "你没有权限在此版块内置顶话题。"
 
 #: threads/serializers/moderation.py:337
 msgid "You don't have permission to hide threads in this category."
-msgstr "您没有在此版块中隐藏话题的权限。"
+msgstr "你没有在此版块中隐藏话题的权限。"
 
 #: threads/serializers/moderation.py:349
 msgid "You don't have permission to close threads in this category."
-msgstr "您没有权限关闭此版块中的话题。"
+msgstr "你没有权限关闭此版块中的话题。"
 
 #: threads/serializers/moderation.py:356
 msgid "You have to specify at least one post to split."
@@ -6123,7 +6122,7 @@ msgstr "无法找到要拆分的一个或多个帖子。"
 
 #: threads/serializers/moderation.py:411
 msgid "You have to specify at least one thread to delete."
-msgstr "您必须至少指定一个要删除的话题。"
+msgstr "你必须至少指定一个要删除的话题。"
 
 #: threads/serializers/moderation.py:418 threads/serializers/moderation.py:534
 msgid "One or more thread ids received were invalid."
@@ -6141,15 +6140,15 @@ msgstr "无法找到要删除的一个或多个话题。"
 
 #: threads/serializers/moderation.py:490
 msgid "You can't merge thread with itself."
-msgstr "您不能将话题与自身合并。"
+msgstr "你不能将话题与自身合并。"
 
 #: threads/serializers/moderation.py:507
 msgid "You can't merge this thread into thread you can't reply."
-msgstr "您无法将此话题合并到您无法回帖的话题中。"
+msgstr "你无法将此话题合并到你无法回帖的话题中。"
 
 #: threads/serializers/moderation.py:526
 msgid "You have to select at least two threads to merge."
-msgstr "您必须至少选择两个话题进行合并。"
+msgstr "你必须至少选择两个话题进行合并。"
 
 #: threads/serializers/moderation.py:555
 #, python-format
@@ -6167,7 +6166,7 @@ msgstr "一个或多个投票选项无效。"
 
 #: threads/serializers/poll.py:116
 msgid "You need to add at least two choices to a poll."
-msgstr "您需要在投票中添加至少两个选项。"
+msgstr "你需要在投票中添加至少两个选项。"
 
 #: threads/serializers/poll.py:122
 #, python-format
@@ -6177,7 +6176,7 @@ msgid ""
 msgid_plural ""
 "You can't add more than %(limit_value)s options to a single poll (added "
 "%(show_value)s)."
-msgstr[0] "您不能在一次投票中加入多于 %(limit_value)s 个选项(已加入 %(show_value)s 个)."
+msgstr[0] "你不能在一次投票中加入多于 %(limit_value)s 个选项(已加入 %(show_value)s 个)."
 
 #: threads/serializers/poll.py:134
 msgid "Number of allowed choices can't be greater than number of all choices."
@@ -6195,7 +6194,7 @@ msgstr "一个或多个投票选项无效。"
 
 #: threads/serializers/pollvote.py:36
 msgid "You have to make a choice."
-msgstr "您必须做出选择。"
+msgstr "你必须做出选择。"
 
 #: threads/signals.py:168
 msgid "Question"
@@ -6236,7 +6235,7 @@ msgstr "无法找到请求的版块。"
 
 #: threads/validators.py:29
 msgid "You don't have permission to access this category."
-msgstr "您没有访问此版块的权限。"
+msgstr "你没有访问此版块的权限。"
 
 #: threads/validators.py:36
 msgid "Thread title should contain alpha-numeric characters."
@@ -6248,7 +6247,7 @@ msgstr "话题名称太长。"
 
 #: threads/validators.py:45
 msgid "You have to enter an thread title."
-msgstr "您必须输入话题名称。"
+msgstr "你必须输入话题名称。"
 
 #: threads/validators.py:50
 #, python-format
@@ -6292,7 +6291,7 @@ msgstr[0] "发帖不能超过 %(limit_value)s 个字符（已有 %(show_value)s 
 
 #: threads/viewmodels/threads.py:23
 msgid "Your threads"
-msgstr "您的话题"
+msgstr "你的话题"
 
 #: threads/viewmodels/threads.py:24
 msgid "New threads"
@@ -6308,15 +6307,15 @@ msgstr "订阅话题"
 
 #: threads/viewmodels/threads.py:27
 msgid "Unapproved content"
-msgstr "未批准的内容"
+msgstr "未审批的内容"
 
 #: threads/viewmodels/threads.py:32
 msgid "You have to sign in to see list of threads that you have started."
-msgstr "您必须登录才能看到您发起的话题列表。"
+msgstr "你必须登录才能看到你发起的话题列表。"
 
 #: threads/viewmodels/threads.py:34
 msgid "You have to sign in to see list of threads you haven't read."
-msgstr "您必须登录才能看到您尚未阅读的话题列表。"
+msgstr "你必须登录才能看到你尚未阅读的话题列表。"
 
 #: threads/viewmodels/threads.py:36
 msgid "You have to sign in to see list of threads with new replies."
@@ -6324,21 +6323,21 @@ msgstr "登录后才能看到有新回复的话题列表。"
 
 #: threads/viewmodels/threads.py:39
 msgid "You have to sign in to see list of threads you are subscribing."
-msgstr "您必须登录才能看到您订阅的话题列表。"
+msgstr "你必须登录才能看到你订阅的话题列表。"
 
 #: threads/viewmodels/threads.py:42
 msgid "You have to sign in to see list of threads with unapproved posts."
-msgstr "您必须登录才能看到有未批准帖子的话题列表。"
+msgstr "你必须登录才能查看含有未审批帖子的话题列表。"
 
 #: threads/viewmodels/threads.py:113
 msgid "You don't have permission to see unapproved content lists."
-msgstr "您没有权限查看未批准的内容列表。"
+msgstr "你没有权限查看未审批的内容列表。"
 
 #: threads/views/goto.py:130
 msgid ""
 "You need permission to approve content to be able to go to first unapproved "
 "post."
-msgstr "您必须有批准内容的权限才能前往第一条未批准的帖子。"
+msgstr "你必须有审批内容的权限才能访问第一条未审批的帖子。"
 
 #: users/admin/__init__.py:77
 msgid "Bans"
@@ -6358,7 +6357,7 @@ msgstr "编辑权限和组"
 
 #: users/admin/djangoadmin.py:76
 msgid "Edit the user from Misago admin panel"
-msgstr "在论坛框架管理面版编辑用户"
+msgstr "从 Misago 管理面板编辑用户"
 
 #: users/admin/forms.py:22 users/admin/forms.py:313 users/models/ban.py:71
 #: users/signals.py:29
@@ -6634,7 +6633,7 @@ msgid ""
 "registration step. This is good if you want to block certain registrations "
 "like ones from recently comprimised e-mail providers, without harming "
 "existing users."
-msgstr "设置为 “是” 可以使得该封禁只在注册步骤生效。例如，这能帮助您阻止来自近期被攻击的电子邮件提供商的用户注册，而不影响现有的用户。"
+msgstr "设置为 “是” 可以使得该封禁只在注册步骤生效。例如，这能帮助你阻止来自近期被攻击的电子邮件提供商的用户注册，而不影响现有的用户。"
 
 #: users/admin/forms.py:512
 msgid "Banned value"
@@ -6693,7 +6692,7 @@ msgstr ""
 msgid ""
 "You may not enter more than 20 items at a single time (You have entered "
 "%(show_value)s)."
-msgstr "您不能一次输入超过 20 个项目（您已输入 %(show_value)s 个）。"
+msgstr "你不能一次输入超过 20 个项目（你已输入 %(show_value)s 个）。"
 
 #: users/admin/forms.py:660
 msgid "One or more specified users could not be found."
@@ -6717,7 +6716,7 @@ msgstr "移除封禁"
 
 #: users/admin/views/bans.py:36
 msgid "Are you sure you want to remove those bans?"
-msgstr "您确定要删除这些封禁吗？"
+msgstr "你确定要删除这些封禁吗？"
 
 #: users/admin/views/bans.py:43
 msgid "Selected bans have been removed."
@@ -6760,7 +6759,7 @@ msgstr "删除下载"
 
 #: users/admin/views/datadownloads.py:37
 msgid "Are you sure you want to delete selected data downloads?"
-msgstr "您确定要删除选定的数据下载吗？"
+msgstr "你确定要删除选定的数据下载吗？"
 
 #: users/admin/views/datadownloads.py:52
 msgid "Selected data downloads have been set as expired."
@@ -6853,7 +6852,7 @@ msgstr "删除账号"
 
 #: users/admin/views/users.py:78
 msgid "Are you sure you want to delete selected users?"
-msgstr "您确定要删除选定的用户吗？"
+msgstr "你确定要删除选定的用户吗？"
 
 #: users/admin/views/users.py:82
 msgid "Delete with content"
@@ -6863,16 +6862,16 @@ msgstr "同时删除内容"
 msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
-msgstr "您确定要删除选定的用户吗？这也会删除所有和此账号关联的内容。"
+msgstr "你确定要删除选定的用户吗？这也会删除所有和此账号关联的内容。"
 
 #: users/admin/views/users.py:105
 msgid "You have to select inactive users."
-msgstr "您必须选择已冻结用户。"
+msgstr "你必须选择已冻结用户。"
 
 #: users/admin/views/users.py:112
 #, python-format
 msgid "Your account on %(forum_name)s forums has been activated"
-msgstr "您在 %(forum_name)s 论坛上的账号已经被激活"
+msgstr "你在 %(forum_name)s 论坛上的账号已经被激活"
 
 #: users/admin/views/users.py:122
 msgid "Selected users accounts have been activated."
@@ -6893,7 +6892,7 @@ msgstr "已为选定用户请求了数据下载。"
 
 #: users/admin/views/users.py:213 users/admin/views/users.py:228
 msgid "You can't delete yourself."
-msgstr "您不能删除自己。"
+msgstr "你不能删除自己。"
 
 #: users/admin/views/users.py:215 users/admin/views/users.py:230
 #, python-format
@@ -6908,7 +6907,7 @@ msgstr "已删除选中的用户。"
 msgid ""
 "Selected users have been disabled and queued for deletion together with "
 "their content."
-msgstr ""
+msgstr "已禁用所选用户并与其内容一起放入了待删除队列。"
 
 #: users/admin/views/users.py:253
 #, python-format
@@ -6936,7 +6935,7 @@ msgstr "表单链接无效。请再试一次。"
 
 #: users/api/auth.py:165
 msgid "Your link has expired. Please request new one."
-msgstr "您的链接已过期,请申请新的。"
+msgstr "你的链接已过期,请申请新的。"
 
 #: users/api/rest_permissions.py:30
 msgid "This action is not available to signed in users."
@@ -6944,7 +6943,7 @@ msgstr "此操作无法登录用户。"
 
 #: users/api/userendpoints/avatar.py:26
 msgid "Your avatar is locked. You can't change it."
-msgstr "您的头像被锁定.您不能改变它。"
+msgstr "你的头像被锁定.你不能改变它。"
 
 #: users/api/userendpoints/avatar.py:109
 msgid "This avatar type is not allowed."
@@ -6956,7 +6955,7 @@ msgstr "未知的头像类型。"
 
 #: users/api/userendpoints/avatar.py:137
 msgid "New avatar based on your account was set."
-msgstr "根据您的账号设置了新的头像。"
+msgstr "根据你的账号设置了新的头像。"
 
 #: users/api/userendpoints/avatar.py:143
 msgid "Gravatar was downloaded and set as new avatar."
@@ -6964,7 +6963,7 @@ msgstr "Gravatar 已下载并设置为新头像。"
 
 #: users/api/userendpoints/avatar.py:145
 msgid "No Gravatar is associated with your e-mail address."
-msgstr "没有Gravatar与您的电子邮件地址相关联。"
+msgstr "没有Gravatar与你的电子邮件地址相关联。"
 
 #: users/api/userendpoints/avatar.py:147
 msgid "Failed to connect to Gravatar servers."
@@ -7006,7 +7005,7 @@ msgstr "确认更改 %(forum_name)s 论坛上的密码"
 
 #: users/api/userendpoints/changepassword.py:33
 msgid "Password change confirmation link was sent to your address."
-msgstr "密码更改确认链接已经发送到您的地址。"
+msgstr "密码更改确认链接已经发送到你的地址。"
 
 #: users/api/userendpoints/create.py:25
 msgid "New users registrations are currently closed."
@@ -7014,15 +7013,15 @@ msgstr "新用户注册目前已关闭。"
 
 #: users/api/userendpoints/signature.py:13
 msgid "You don't have permission to change signature."
-msgstr "您没有更改签名的权限。"
+msgstr "你没有更改签名的权限。"
 
 #: users/api/userendpoints/signature.py:25
 msgid "Your signature is locked. You can't change it."
-msgstr "您的签名被锁定，您不能改变它。"
+msgstr "你的签名被锁定，你不能改变它。"
 
 #: users/api/userendpoints/username.py:32
 msgid "You can't change your username now."
-msgstr "您现在无法更改用户名。"
+msgstr "你现在无法更改用户名。"
 
 #: users/api/userendpoints/username.py:60
 #: users/api/userendpoints/username.py:82
@@ -7031,55 +7030,55 @@ msgstr "更改用户名时出错，请再试一次。"
 
 #: users/api/usernamechanges.py:28
 msgid "You don't have permission to see other users name history."
-msgstr "您没有权限查看其他用户名称历史记录。"
+msgstr "你没有权限查看其他用户名称历史记录。"
 
 #: users/api/users.py:63
 msgid "You have to sign in to perform this action."
-msgstr "您必须登录才能执行此操作。"
+msgstr "你必须登录才能执行此操作。"
 
 #: users/api/users.py:109
 msgid "You can't change other users avatars."
-msgstr "您不能改变其他用户的头像。"
+msgstr "你不能改变其他用户的头像。"
 
 #: users/api/users.py:121
 msgid "You can't change other users options."
-msgstr "您不能更改其他用户选项。"
+msgstr "你不能更改其他用户选项。"
 
 #: users/api/users.py:126
 msgid "Your forum options have been changed."
-msgstr "您的论坛设置已更改。"
+msgstr "你的论坛设置已更改。"
 
 #: users/api/users.py:132
 msgid "You can't change other users names."
-msgstr "您不能更改其他用户名。"
+msgstr "你不能更改其他用户名。"
 
 #: users/api/users.py:139
 msgid "You can't change other users signatures."
-msgstr "您不能更改其他用户签名。"
+msgstr "你不能更改其他用户签名。"
 
 #: users/api/users.py:151
 msgid "You can't change other users passwords."
-msgstr "您不能更改其他用户的密码。"
+msgstr "你不能更改其他用户的密码。"
 
 #: users/api/users.py:161
 msgid "You can't change other users e-mail addresses."
-msgstr "您不能更改其他用户的电子邮件地址。"
+msgstr "你不能更改其他用户的电子邮件地址。"
 
 #: users/api/users.py:268
 msgid "You can't request data downloads for other users."
-msgstr "您不能为其他用户请求数据下载。"
+msgstr "你不能为其他用户请求数据下载。"
 
 #: users/api/users.py:272
 msgid "You can't download your data."
-msgstr "您无法下载数据。"
+msgstr "你无法下载数据。"
 
 #: users/api/users.py:277
 msgid "You can't have more than one data download request at a single time."
-msgstr "您不能一次请求多个数据下载。"
+msgstr "你不能一次请求多个数据下载。"
 
 #: users/api/users.py:333
 msgid "You can't see other users data downloads."
-msgstr "您无法看到其他用户可下载数据。"
+msgstr "你无法看到其他用户可下载数据。"
 
 #: users/apps.py:30
 msgid "Edit details"
@@ -7136,7 +7135,7 @@ msgstr "此页面无法登录用户。"
 
 #: users/decorators.py:26
 msgid "You have to sign in to access this page."
-msgstr "您必须登录才能访问此页面。"
+msgstr "你必须登录才能访问此页面。"
 
 #: users/forms/auth.py:15
 msgid "Fill out both fields."
@@ -7148,17 +7147,17 @@ msgstr "登录或密码不正确。"
 
 #: users/forms/auth.py:18
 msgid "You have to activate your account before you will be able to sign in."
-msgstr "您必须先激活账号才能登录。"
+msgstr "你必须先激活账号才能登录。"
 
 #: users/forms/auth.py:21
 msgid ""
 "Your account has to be activated by site administrator before you will be "
 "able to sign in."
-msgstr "您的帐户必须由网站管理员激活，然后才能登录。"
+msgstr "你的帐户必须由网站管理员激活，然后才能登录。"
 
 #: users/forms/auth.py:98
 msgid "Your account does not have admin privileges."
-msgstr "您的账号没有管理员权限。"
+msgstr "你的账号没有管理员权限。"
 
 #: users/forms/auth.py:118
 msgid "Enter e-mail address."
@@ -7175,24 +7174,24 @@ msgstr "没有使用此电子邮件的用户。"
 #: users/forms/auth.py:150 users/views/activation.py:45
 #, python-format
 msgid "%(user)s, your account is already active."
-msgstr "%(user)s，您的账号已激活。"
+msgstr "%(user)s，你的账号已激活。"
 
 #: users/forms/auth.py:156
 #, python-format
 msgid "%(user)s, only administrator may activate your account."
-msgstr "%(user)s，只有管理员能激活您的账号。"
+msgstr "%(user)s，只有管理员能激活你的账号。"
 
 #: users/forms/auth.py:165
 msgid ""
 "You have to activate your account before you will be able to request new "
 "password."
-msgstr "您必须激活您的账号，然后才能申请新密码。"
+msgstr "你必须激活你的账号，然后才能申请新密码。"
 
 #: users/forms/auth.py:169
 msgid ""
 "Administrator has to activate your account before you will be able to "
 "request new password."
-msgstr "管理员必须激活您的账号，您才能申请新密码。"
+msgstr "管理员必须激活你的账号，你才能申请新密码。"
 
 #: users/forms/register.py:34
 msgid "This usernane is not allowed."
@@ -7213,7 +7212,7 @@ msgstr "不允许从该IP地址新注册。"
 #: users/management/commands/prepareuserdatadownloads.py:38
 #, python-format
 msgid "%(user)s, your data download is ready"
-msgstr "%(user)s，您的数据下载已准备就绪"
+msgstr "%(user)s，你的数据下载已准备就绪"
 
 #: users/migrations/0004_default_ranks.py:13
 #: users/migrations/0004_default_ranks.py:14 users/models/user.py:77
@@ -7325,7 +7324,7 @@ msgstr "控制用户是否可以在签名中放置引用，代码，扰流块和
 
 #: users/permissions/decorators.py:10
 msgid "You have to sig in to perform this action."
-msgstr "您必须登录后才能进行此操作。"
+msgstr "你必须登录后才能进行此操作。"
 
 #: users/permissions/decorators.py:19
 msgid "Only guests can perform this action."
@@ -7345,36 +7344,36 @@ msgstr "可删除账号的最大帖子数"
 
 #: users/permissions/delete.py:74
 msgid "You can't delete users."
-msgstr "您无法删除用户。"
+msgstr "你无法删除用户。"
 
 #: users/permissions/delete.py:77 users/permissions/delete.py:106
 msgid "You can't delete your account."
-msgstr "您不能删除您的帐户。"
+msgstr "你不能删除你的帐户。"
 
 #: users/permissions/delete.py:79
 msgid "You can't delete administrators."
-msgstr "您不能删除管理员。"
+msgstr "你不能删除管理员。"
 
 #: users/permissions/delete.py:84
 #, python-format
 msgid "You can't delete users that are members for more than %(days)s day."
 msgid_plural ""
 "You can't delete users that are members for more than %(days)s days."
-msgstr[0] "您不能删除已经成为成员超过 %(days)s 天的用户。"
+msgstr[0] "你不能删除已经成为成员超过 %(days)s 天的用户。"
 
 #: users/permissions/delete.py:92
 #, python-format
 msgid "You can't delete users that made more than %(posts)s post."
 msgid_plural "You can't delete users that made more than %(posts)s posts."
-msgstr[0] "您不能删除发帖数超过 %(posts)s 的用户。"
+msgstr[0] "你不能删除发帖数超过 %(posts)s 的用户。"
 
 #: users/permissions/delete.py:104
 msgid "You can't delete other users accounts."
-msgstr "您不能删除其他用户帐户。"
+msgstr "你不能删除其他用户帐户。"
 
 #: users/permissions/delete.py:109
 msgid "You can't delete your account because you are an administrator."
-msgstr "您不能删除您的帐户，因为您是管理员。"
+msgstr "你不能删除你的帐户，因为你是管理员。"
 
 #: users/permissions/moderation.py:33
 msgid "Users moderation"
@@ -7422,51 +7421,51 @@ msgstr "输入0，允许版主解除永久封禁。"
 
 #: users/permissions/moderation.py:111
 msgid "You can't rename users."
-msgstr "您无法重命名用户。"
+msgstr "你无法重命名用户。"
 
 #: users/permissions/moderation.py:113
 msgid "You can't rename administrators."
-msgstr "您无法重命名管理员。"
+msgstr "你无法重命名管理员。"
 
 #: users/permissions/moderation.py:121
 msgid "You can't moderate avatars."
-msgstr "您不能审查头像。"
+msgstr "你不能审查头像。"
 
 #: users/permissions/moderation.py:123
 msgid "You can't moderate administrators avatars."
-msgstr "您不能审查管理员头像。"
+msgstr "你不能审查管理员头像。"
 
 #: users/permissions/moderation.py:131
 msgid "You can't moderate signatures."
-msgstr "您不能审查签名。"
+msgstr "你不能审查签名。"
 
 #: users/permissions/moderation.py:133
 msgid "You can't moderate administrators signatures."
-msgstr "您不能审查管理员签名。"
+msgstr "你不能审查管理员签名。"
 
 #: users/permissions/moderation.py:142
 msgid "You have to sign in to edit profile details."
-msgstr "您需要登录才能编辑个人资料。"
+msgstr "你需要登录才能编辑个人资料。"
 
 #: users/permissions/moderation.py:147
 msgid "You can't edit other users details."
-msgstr "您不能编辑别人的个人资料。"
+msgstr "你不能编辑别人的个人资料。"
 
 #: users/permissions/moderation.py:149
 msgid "You can't edit administrators details."
-msgstr "您不能编辑管理员的个人资料。"
+msgstr "你不能编辑管理员的个人资料。"
 
 #: users/permissions/moderation.py:158
 msgid "You can't ban users."
-msgstr "您不能封禁用户。"
+msgstr "你不能封禁用户。"
 
 #: users/permissions/moderation.py:160
 msgid "You can't ban administrators."
-msgstr "您无法封禁管理员。"
+msgstr "你无法封禁管理员。"
 
 #: users/permissions/moderation.py:168
 msgid "You can't lift bans."
-msgstr "您不能解除永久封禁。"
+msgstr "你不能解除永久封禁。"
 
 #: users/permissions/moderation.py:171
 msgid "This user is not banned."
@@ -7474,12 +7473,12 @@ msgstr "该用户未被封禁。"
 
 #: users/permissions/moderation.py:176
 msgid "You can't lift permanent bans."
-msgstr "您不能接触封禁。"
+msgstr "你不能接触封禁。"
 
 #: users/permissions/moderation.py:178
 #, python-format
 msgid "You can't lift bans that expire after %(expiration)s."
-msgstr "您不能移除在 %(expiration)s 后到期的封禁。"
+msgstr "你不能移除在 %(expiration)s 后到期的封禁。"
 
 #: users/permissions/profiles.py:23
 msgid "Can browse users list"
@@ -7527,27 +7526,27 @@ msgstr "可以看到隐藏的成员"
 
 #: users/permissions/profiles.py:113
 msgid "You can't browse users list."
-msgstr "您无法浏览用户列表。"
+msgstr "你无法浏览用户列表。"
 
 #: users/permissions/profiles.py:122
 msgid "You can't follow other users."
-msgstr "您不能关注其他用户。"
+msgstr "你不能关注其他用户。"
 
 #: users/permissions/profiles.py:124
 msgid "You can't add yourself to followed."
-msgstr "您不能把自己添加为关注者。"
+msgstr "你不能把自己添加为关注者。"
 
 #: users/permissions/profiles.py:133
 msgid "You can't block administrators."
-msgstr "您无法屏蔽管理员。"
+msgstr "你无法屏蔽管理员。"
 
 #: users/permissions/profiles.py:135
 msgid "You can't block yourself."
-msgstr "您不能屏蔽自己。"
+msgstr "你不能屏蔽自己。"
 
 #: users/permissions/profiles.py:145
 msgid "You can't see users bans details."
-msgstr "您看不到用户封禁详细信息。"
+msgstr "你看不到用户封禁详细信息。"
 
 #: users/profilefields/default.py:12
 msgid "Bio"
@@ -7590,7 +7589,7 @@ msgid ""
 "If you own website in the internet you wish to share on your profile you may"
 " enter its address here. Remember to for it to be valid http address "
 "starting with either \"http://\" or \"https://\"."
-msgstr "如果您想在个人资料内展示您的个人网站,您可以在这里填写您的网站地址.请保证它是有效的http地址,以http://或https://开头."
+msgstr "如果你想在个人资料内展示你的个人网站,你可以在这里填写你的网站地址.请保证它是有效的http地址,以http://或https://开头."
 
 #: users/profilefields/default.py:49
 msgid "Skype ID"
@@ -7600,7 +7599,7 @@ msgstr "Skype ID"
 msgid ""
 "Entering your Skype ID in this field may invite other users to contact you "
 "over the Skype instead of via private threads."
-msgstr "输入您的 Skype ID，方便别的用户找到您。"
+msgstr "输入你的 Skype ID，方便别的用户找到你。"
 
 #: users/profilefields/default.py:58
 msgid "Twitter handle"
@@ -7613,7 +7612,7 @@ msgid ""
 " users to find you. Starting your handle with \"@\" sign is optional. Either"
 " \"@%(slug)s\" or \"%(slug)s\" are valid values."
 msgstr ""
-"如果您拥有推特账户，您可以在此输入您的推特用户名，以便其他用户可以找到您。用户名开头的 “@” 是可选项，您可以输入 “@%(slug)s” 或者 "
+"如果你拥有推特账户，你可以在此输入你的推特用户名，以便其他用户可以找到你。用户名开头的 “@” 是可选项，你可以输入 “@%(slug)s” 或者 "
 "“%(slug)s”。"
 
 #: users/profilefields/default.py:73
@@ -7631,15 +7630,15 @@ msgstr "欢迎来到 %(forum_name)s 论坛！"
 
 #: users/search.py:22
 msgid "You don't have permission to search users."
-msgstr "您没有权限搜索用户。"
+msgstr "你没有权限搜索用户。"
 
 #: users/serializers/ban.py:26
 msgid "Your IP address is banned."
-msgstr "您的IP地址被封禁了。"
+msgstr "你的IP地址被封禁了。"
 
 #: users/serializers/ban.py:28
 msgid "You are banned."
-msgstr "您被封禁了。"
+msgstr "你被封禁了。"
 
 #: users/serializers/options.py:46
 msgid "Signature is too long."
@@ -7660,7 +7659,7 @@ msgstr "输入的密码无效。"
 
 #: users/serializers/options.py:100
 msgid "You have to enter new e-mail address."
-msgstr "您必须输入新的电子邮件地址。"
+msgstr "你必须输入新的电子邮件地址。"
 
 #: users/serializers/options.py:104
 msgid "New e-mail is same as current one."
@@ -7723,30 +7722,30 @@ msgstr "此电子邮件不被许可。"
 msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
 "activation link."
-msgstr "%(user)s，您的激活链接不可用，请重试或者申请一个新的链接。"
+msgstr "%(user)s，你的激活链接不可用，请重试或者申请一个新的链接。"
 
 #: users/views/activation.py:68
 #, python-format
 msgid "%(user)s, your account has been activated!"
-msgstr "%(user)s，您的账号已经被激活！"
+msgstr "%(user)s，你的账号已经被激活！"
 
 #: users/views/forgottenpassword.py:39
 #, python-format
 msgid ""
 "%(user)s, your link has expired. Please request new link and try again."
-msgstr "%(user)s，您的链接已经过期，请申请一个新链接并重试。"
+msgstr "%(user)s，你的链接已经过期，请申请一个新链接并重试。"
 
 #: users/views/forgottenpassword.py:46
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
-msgstr "%(user)s，您的链接不可用，请重试并申请一个新链接。"
+msgstr "%(user)s，你的链接不可用，请重试并申请一个新链接。"
 
 #: users/views/options.py:55
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
-msgstr "%(user)s,您的电子邮件已经被改变。"
+msgstr "%(user)s, 你的电子邮件已修改。"
 
 #: users/views/options.py:73
 #, python-format
 msgid "%(user)s, your password has been changed."
-msgstr "%(user)s，您的密码已经改变。"
+msgstr "%(user)s，你的密码已经改变。"
