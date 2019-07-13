@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-12 20:20+0000\n"
+"POT-Creation-Date: 2019-07-13 14:07+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -294,11 +294,11 @@ msgstr "插入代码"
 
 #: static/misago/js/misago.js:2
 msgid "Emphase selection"
-msgstr "重点选择"
+msgstr "斜体"
 
 #: static/misago/js/misago.js:3
 msgid "Insert horizontal ruler"
-msgstr "插入水平尺"
+msgstr "插入分割线"
 
 #: static/misago/js/misago.js:3
 msgid "Enter link to image"
@@ -330,7 +330,7 @@ msgstr "输入报价autor，前缀用户名@"
 
 #: static/misago/js/misago.js:3
 msgid "Insert quote"
-msgstr "插入报价"
+msgstr "插入引用"
 
 #: static/misago/js/misago.js:3
 msgid "Striketrough selection"
@@ -338,7 +338,7 @@ msgstr "删除线"
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"
-msgstr "更大的选择"
+msgstr "粗体"
 
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:9
 msgid "%(filetype)s, %(size)s, uploaded by %(uploader)s %(uploaded_on)s."
@@ -636,7 +636,7 @@ msgstr "隐私设置"
 
 #: static/misago/js/misago.js:5
 msgid "Hide my presence"
-msgstr "隐藏我的存在"
+msgstr "在线状态"
 
 #: static/misago/js/misago.js:5
 msgid ""
@@ -1109,7 +1109,7 @@ msgstr "已关闭"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Open"
-msgstr "打开"
+msgstr "开放"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:18 static/misago/js/misago.js:21
@@ -1241,7 +1241,7 @@ msgstr "话题已通过审批。"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been opened."
-msgstr "话题已打开。"
+msgstr "话题已开放。"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been closed."
@@ -2269,7 +2269,7 @@ msgstr "所选话题已通过审批。"
 
 #: static/misago/js/misago.js:19
 msgid "Selected threads were opened."
-msgstr "所选话题已打开。"
+msgstr "所选话题已开放。"
 
 #: static/misago/js/misago.js:19
 msgid "Selected threads were closed."
