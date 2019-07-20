@@ -119,9 +119,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_blocks:
         # Add [hr] and [quote] blocks
-        md.parser.blockprocessors.add(
-            "bb_hr", BBCodeHRProcessor(md.parser), ">hr"
-        )
+        md.parser.blockprocessors.add("bb_hr", BBCodeHRProcessor(md.parser), ">hr")
 
         fenced_code = FencedCodeExtension()
         fenced_code.extendMarkdown(md, None)

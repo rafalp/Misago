@@ -8,6 +8,7 @@ from .serializers import MarkupSerializer
 
 @api_view(["POST"])
 def parse_markup(request):
+    print(request.data)
     serializer = MarkupSerializer(
         data=request.data, context={"settings": request.settings}
     )
