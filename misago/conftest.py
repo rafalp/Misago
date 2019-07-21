@@ -7,6 +7,7 @@ from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
 from .socialauth import SOCIALAUTH_CACHE
+from .test import MisagoClient
 from .themes import THEME_CACHE
 from .threads.test import post_thread
 from .users import BANS_CACHE
@@ -113,6 +114,11 @@ def other_superuser(db, user_password):
     return create_test_superuser(
         "OtherSuperuser", "othersuperuser@example.com", user_password
     )
+
+
+@pytest.fixture
+def client():
+    return MisagoClient()
 
 
 @pytest.fixture

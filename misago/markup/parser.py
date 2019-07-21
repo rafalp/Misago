@@ -7,9 +7,12 @@ from htmlmin.minify import html_minify
 from markdown.extensions.fenced_code import FencedCodeExtension
 
 from ..conf import settings
-from .bbcode import blocks, inline
+from .bbcode.code import CodeBlockExtension
+from .bbcode.hr import BBCodeHRProcessor
+from .bbcode.inline import bold, image, italics, underline, url
+from .bbcode.quote import QuoteExtension
 from .md.shortimgs import ShortImagesExtension
-from .md.striketrough import StriketroughExtension
+from .md.strikethrough import StrikethroughExtension
 from .mentions import add_mentions
 from .pipeline import pipeline
 
@@ -88,17 +91,17 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     del md.inlinePatterns["short_reference"]
 
     # Add [b], [i], [u]
-    md.inlinePatterns.add("bb_b", inline.bold, "<strong")
-    md.inlinePatterns.add("bb_i", inline.italics, "<emphasis")
-    md.inlinePatterns.add("bb_u", inline.underline, "<emphasis2")
+    md.inlinePatterns.add("bb_b", bold, "<strong")
+    md.inlinePatterns.add("bb_i", italics, "<emphasis")
+    md.inlinePatterns.add("bb_u", underline, "<emphasis2")
 
     # Add ~~deleted~~
-    striketrough_md = StriketroughExtension()
+    striketrough_md = StrikethroughExtension()
     striketrough_md.extendMarkdown(md)
 
     if allow_links:
         # Add [url]
-        md.inlinePatterns.add("bb_url", inline.url(md), "<link")
+        md.inlinePatterns.add("bb_url", url(md), "<link")
     else:
         # Remove links
         del md.inlinePatterns["link"]
@@ -107,7 +110,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_images:
         # Add [img]
-        md.inlinePatterns.add("bb_img", inline.image(md), "<image_link")
+        md.inlinePatterns.add("bb_img", image(md), "<image_link")
         short_images_md = ShortImagesExtension()
         short_images_md.extendMarkdown(md)
     else:
@@ -116,17 +119,15 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
     if allow_blocks:
         # Add [hr] and [quote] blocks
-        md.parser.blockprocessors.add(
-            "bb_hr", blocks.BBCodeHRProcessor(md.parser), ">hr"
-        )
+        md.parser.blockprocessors.add("bb_hr", BBCodeHRProcessor(md.parser), ">hr")
 
         fenced_code = FencedCodeExtension()
         fenced_code.extendMarkdown(md, None)
 
-        code_bbcode = blocks.CodeBlockExtension()
+        code_bbcode = CodeBlockExtension()
         code_bbcode.extendMarkdown(md)
 
-        quote_bbcode = blocks.QuoteExtension()
+        quote_bbcode = QuoteExtension()
         quote_bbcode.extendMarkdown(md)
     else:
         # Remove blocks
@@ -227,6 +228,8 @@ def clean_internal_link(link, host):
 def clean_attachment_link(link, force_shva=False):
     try:
         resolution = resolve(link)
+        if not resolution.namespaces:
+            return link
         url_name = ":".join(resolution.namespaces + [resolution.url_name])
     except (Http404, ValueError):
         return link
