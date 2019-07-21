@@ -4,13 +4,9 @@ Misago
 > **NOTE:** This branch contains exploration code for potential future version of Misago that is fully asynchronous and developer without Django.
 
 [![Tests Result](https://travis-ci.org/rafalp/Misago.svg?branch=master)](https://travis-ci.org/rafalp/Misago)
-
 [![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master)
-
 [![Release 0.21](https://img.shields.io/badge/release-0.21-brightgreen.svg)](https://pypi.org/project/Misago/)
-
 [![Works on Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://travis-ci.org/rafalp/Misago)
-
 [![Community Chat](https://img.shields.io/badge/chat-on_discord-7289da.svg)](https://discord.gg/fwvrZgB) 
 
 
