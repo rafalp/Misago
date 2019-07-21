@@ -14,10 +14,6 @@ with open(os.path.join(SETUP_DIR, 'README.rst'), 'rb') as f:
 with open(os.path.join(SETUP_DIR, 'requirements.txt'), "r") as f:
     REQUIREMENTS = f.read()
 
-EXCLUDE_FROM_PACKAGES = [
-    'misago.project_template',
-    'misago.bin'
-]
 
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
@@ -36,7 +32,7 @@ setup(
     author=u'Rafał Pitoń',
     author_email='kontakt@rpiton.com',
     install_requires=REQUIREMENTS,
-    packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
+    packages=find_packages(),
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Beta',
