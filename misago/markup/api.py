@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from . import common_flavour, finalise_markup
+from . import common_flavour, finalize_markup
 from .serializers import MarkupSerializer
 
 
@@ -19,6 +19,6 @@ def parse_markup(request):
     parsing_result = common_flavour(
         request, request.user, serializer.data["post"], force_shva=True
     )
-    finalised = finalise_markup(parsing_result["parsed_text"])
+    finalized = finalize_markup(parsing_result["parsed_text"])
 
-    return Response({"parsed": finalised})
+    return Response({"parsed": finalized})

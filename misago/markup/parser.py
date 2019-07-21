@@ -12,7 +12,7 @@ from .bbcode.hr import BBCodeHRProcessor
 from .bbcode.inline import bold, image, italics, underline, url
 from .bbcode.quote import QuoteExtension
 from .md.shortimgs import ShortImagesExtension
-from .md.striketrough import StriketroughExtension
+from .md.strikethrough import StrikethroughExtension
 from .mentions import add_mentions
 from .pipeline import pipeline
 
@@ -96,7 +96,7 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     md.inlinePatterns.add("bb_u", underline, "<emphasis2")
 
     # Add ~~deleted~~
-    striketrough_md = StriketroughExtension()
+    striketrough_md = StrikethroughExtension()
     striketrough_md.extendMarkdown(md)
 
     if allow_links:

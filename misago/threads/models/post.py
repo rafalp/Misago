@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from ...conf import settings
 from ...core.utils import parse_iso8601_string
-from ...markup import finalise_markup
+from ...markup import finalize_markup
 from ..checksums import is_post_valid, update_post_checksum
 from ..filtersearch import filter_search
 
@@ -176,7 +176,7 @@ class Post(models.Model):
     @property
     def content(self):
         if not hasattr(self, "_finalised_parsed"):
-            self._finalised_parsed = finalise_markup(self.parsed)
+            self._finalised_parsed = finalize_markup(self.parsed)
         return self._finalised_parsed
 
     @property

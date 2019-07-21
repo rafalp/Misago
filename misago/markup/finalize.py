@@ -10,7 +10,7 @@ HEADER_RE = re.compile(
 )
 
 
-def finalise_markup(post):
+def finalize_markup(post):
     return HEADER_RE.sub(replace_headers, post)
 
 
