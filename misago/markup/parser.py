@@ -11,6 +11,7 @@ from .bbcode.code import CodeBlockExtension
 from .bbcode.hr import BBCodeHRProcessor
 from .bbcode.inline import bold, image, italics, underline, url
 from .bbcode.quote import QuoteExtension
+from .bbcode.spoiler import SpoilerExtension
 from .md.shortimgs import ShortImagesExtension
 from .md.strikethrough import StrikethroughExtension
 from .mentions import add_mentions
@@ -129,6 +130,9 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
 
         quote_bbcode = QuoteExtension()
         quote_bbcode.extendMarkdown(md)
+
+        spoiler_bbcode = SpoilerExtension()
+        spoiler_bbcode.extendMarkdown(md)
     else:
         # Remove blocks
         del md.parser.blockprocessors["hashheader"]

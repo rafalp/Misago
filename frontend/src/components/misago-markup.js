@@ -4,10 +4,12 @@ import onebox from "misago/services/one-box"
 export default class extends React.Component {
   componentDidMount() {
     onebox.render(this.documentNode)
+    $(this.documentNode).find(".spoiler-reveal").click(revealSpoiler)
   }
 
   componentDidUpdate(prevProps, prevState) {
     onebox.render(this.documentNode)
+    $(this.documentNode).find(".spoiler-reveal").click(revealSpoiler)
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -25,4 +27,9 @@ export default class extends React.Component {
       />
     )
   }
+}
+
+function revealSpoiler(event) {
+  var btn = event.target
+  $(btn).parent().parent().addClass("revealed")
 }

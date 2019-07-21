@@ -73,6 +73,41 @@
 }
 
 
+// Style spoilers
+.misago-markup .spoiler-block {
+  background: @gray-lighter;
+  border: none;
+
+  font-size: @font-size-base;
+}
+
+.misago-markup>.spoiler-block {
+  border: 1px solid darken(@gray-lighter, 8%);
+  position: relative;
+}
+
+.misago-markup .spoiler-body {
+  background: @body-bg;
+  margin: 0px;
+  padding: @line-height-computed;
+}
+
+.misago-markup .spoiler-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: @body-bg;
+}
+
+  .misago-markup .spoiler-block.revealed .spoiler-overlay {
+    display: none;
+  }
+
 // Add bullets to lists
 .misago-markup ul {
   list-style-type: square;
