@@ -51,6 +51,7 @@ pylint.txt
 .idea/
 .vscode/
 
-# Django stuff:
+# Python-specific
+venv
 *.log
 *.pot

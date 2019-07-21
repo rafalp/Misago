@@ -1,7 +1,0 @@
-{% for action in extra_actions %}
-<td>
-  <a href="{% url action.link pk=item.pk %}" class="btn btn-light btn-sm" data-tooltip="top" title="{{ action.name }}">
-    <span class="{{ action.icon }}"></span>
-  </a>
-</td>
-{% endfor %}

@@ -1,0 +1,1 @@
+from misago.asgi import app

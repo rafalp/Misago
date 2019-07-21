@@ -2,6 +2,8 @@
 Misago
 ======
 
+> **NOTE:** This branch contains exploration code for potential future version of Misago that is fully asynchronous and developer without Django.
+
 .. image:: https://travis-ci.org/rafalp/Misago.svg?branch=master
    :target: https://travis-ci.org/rafalp/Misago
    :alt: Tests Result

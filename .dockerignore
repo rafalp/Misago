@@ -1,5 +1,4 @@
 # Speed up bulding by excluding files from the docker context
-_book/
 dev/
 dist/
 docs/

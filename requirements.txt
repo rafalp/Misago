@@ -4,63 +4,24 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-amqp==2.5.0               # via kombu
+alembic==1.0.11
 ariadne==0.5.0
-atomicwrites==1.3.0       # via pytest
-attrs==19.1.0             # via pytest
-beautifulsoup4==4.7.1
-billiard==3.6.0.0         # via celery
-bleach==3.1.0
-celery[redis]==4.3.0
-certifi==2019.6.16        # via requests
-chardet==3.0.4            # via requests
-defusedxml==0.6.0         # via python3-openid, social-auth-core
-django-debug-toolbar==1.11
-django-htmlmin==0.11.0
-django-js-asset==1.2.2    # via django-mptt
-django-mptt==0.10.0
-django==2.2.3
-djangorestframework==3.9.4
-faker==1.0.7
-graphql-core-next==1.0.5  # via ariadne
-html5lib==1.0.1
-idna==2.8                 # via requests
-importlib-metadata==0.18  # via pluggy, pytest
-kombu==4.6.3              # via celery
-markdown==2.6.11
-more-itertools==7.1.0     # via pytest
-oauthlib==3.0.2           # via requests-oauthlib, social-auth-core
-packaging==19.0           # via pytest
-pillow==6.1.0
-pluggy==0.12.0            # via pytest
-psycopg2-binary==2.8.3
-py==1.8.0                 # via pytest
-pyjwt==1.7.1              # via social-auth-core
-pyparsing==2.4.0          # via packaging
-pytest-django==3.5.1
-pytest-mock==1.10.4
-pytest==5.0.1
-python-dateutil==2.8.0    # via faker
+asyncpg==0.18.3           # via databases
+click==7.0                # via uvicorn
+databases[postgresql]==0.2.5
+graphql-core-next==1.1.1  # via ariadne
+h11==0.8.1                # via uvicorn
+httptools==0.0.13         # via uvicorn
+mako==1.0.14              # via alembic
+markupsafe==1.1.1         # via mako
+psycopg2-binary==2.8.3    # via databases
+python-dateutil==2.8.0    # via alembic
+python-editor==1.0.4      # via alembic
 python-multipart==0.0.5   # via ariadne
-python3-openid==3.1.0     # via social-auth-core
-pytz==2019.1
-redis==3.2.1              # via celery
-requests-oauthlib==1.2.0  # via social-auth-core
-requests==2.22.0
-responses==0.10.6
-six==1.12.0               # via bleach, faker, html5lib, packaging, python-dateutil, python-multipart, responses, snapshottest, social-auth-app-django, social-auth-core
-snapshottest==0.5.0
-social-auth-app-django==3.1.0
-social-auth-core==3.2.0   # via social-auth-app-django
-soupsieve==1.9.2          # via beautifulsoup4
-sqlparse==0.3.0           # via django, django-debug-toolbar
-starlette==0.12.2         # via ariadne
-termcolor==1.1.0          # via snapshottest
-text-unidecode==1.2       # via faker
+six==1.12.0               # via python-dateutil, python-multipart
+sqlalchemy==1.3.6         # via alembic, databases
+starlette==0.12.4
 typing-extensions==3.7.4  # via ariadne
-unidecode==1.0.23
-urllib3==1.25.3           # via requests
-vine==1.3.0               # via amqp, celery
-wcwidth==0.1.7            # via pytest
-webencodings==0.5.1       # via bleach, html5lib
-zipp==0.5.2               # via importlib-metadata
+uvicorn==0.8.4
+uvloop==0.12.2            # via uvicorn
+websockets==7.0           # via uvicorn

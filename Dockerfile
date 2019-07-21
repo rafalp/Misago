@@ -11,15 +11,13 @@ RUN apt-get update && apt-get install -y \
     vim \
     libffi-dev \
     libssl-dev \
-    sqlite3 \
     libjpeg-dev \
     libopenjp2-7-dev \
     locales \
-    cron \
     postgresql-client \
     gettext
 
-# Add requirements and install them. We do this unnecessasy rebuilding.
+# Add requirements and install them.
 ADD requirements.txt /
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
@@ -27,4 +25,4 @@ WORKDIR /srv/misago
 
 EXPOSE 8000
 
-CMD python manage.py runserver 0.0.0.0:8000
+CMD uvicorn app.asgi:app --host 0.0.0.0 --reload
