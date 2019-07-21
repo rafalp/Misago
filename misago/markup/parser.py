@@ -228,6 +228,8 @@ def clean_internal_link(link, host):
 def clean_attachment_link(link, force_shva=False):
     try:
         resolution = resolve(link)
+        if not resolution.namespaces:
+            return link
         url_name = ":".join(resolution.namespaces + [resolution.url_name])
     except (Http404, ValueError):
         return link
