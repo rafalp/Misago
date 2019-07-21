@@ -27,43 +27,21 @@ class SpoilerPreprocessor(Preprocessor):
 """.strip(),
         re.IGNORECASE | re.MULTILINE | re.DOTALL,
     )
-    SPOILER_BLOCK_TITLE_RE = re.compile(
-        r"""
-\[spoiler=("?)(?P<title>.*?)("?)](?P<text>.*?)\[/spoiler\]
-""".strip(),
-        re.IGNORECASE | re.MULTILINE | re.DOTALL,
-    )
 
     def run(self, lines):
         text = "\n".join(lines)
         while self.SPOILER_BLOCK_RE.search(text):
             text = self.SPOILER_BLOCK_RE.sub(self.replace, text)
-        while self.SPOILER_BLOCK_TITLE_RE.search(text):
-            text = self.SPOILER_BLOCK_TITLE_RE.sub(self.replace_titled, text)
         return text.split("\n")
 
     def replace(self, matchobj):
         text = matchobj.group("text")
         return "\n\n%s\n\n%s\n\n%s\n\n" % (SPOILER_START, text, SPOILER_END)
 
-    def replace_titled(self, matchobj):
-        title = matchobj.group("title").strip()
-        text = matchobj.group("text")
-
-        if title:
-            return "\n\n%s%s\n\n%s\n\n%s\n\n" % (
-                SPOILER_START,
-                title,
-                text,
-                SPOILER_END,
-            )
-        return "\n\n%s\n\n%s\n\n%s\n\n" % (SPOILER_START, text, SPOILER_END)
-
 
 class SpoilerBlockProcessor(BlockProcessor):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._title = None
         self._spoiler = 0
         self._children = []
 
@@ -74,8 +52,6 @@ class SpoilerBlockProcessor(BlockProcessor):
         block = blocks.pop(0)
         if block.strip().startswith(SPOILER_START):
             self._spoiler += 1
-            if self._spoiler == 1:
-                self._title = block[len(SPOILER_START) :].strip() or None
 
         self._children.append(block)
 
@@ -84,22 +60,18 @@ class SpoilerBlockProcessor(BlockProcessor):
 
         if not self._spoiler:
             children, self._children = self._children[1:-1], []
-            title, self._title = self._title, None
 
             aside = etree.SubElement(parent, "aside")
             aside.set("class", "spoiler-block")
 
-            heading = etree.SubElement(aside, "div")
-            heading.set("class", "spoiler-heading")
+            blockquote = etree.SubElement(aside, "blockquote")
+            blockquote.set("class", "spoiler-body")
 
-            reveal_btn = etree.SubElement(aside, "button")
+            overlay = etree.SubElement(aside, "div")
+            overlay.set("class", "spoiler-overlay")
+
+            reveal_btn = etree.SubElement(overlay, "button")
             reveal_btn.set("class", "spoiler-reveal")
             reveal_btn.set("type", "button")
 
-            blockspoiler = etree.SubElement(aside, "blockquote")
-            blockspoiler.set("class", "spoiler-body")
-
-            if title:
-                heading.text = title
-
-            self.parser.parseBlocks(blockspoiler, children)
+            self.parser.parseBlocks(blockquote, children)

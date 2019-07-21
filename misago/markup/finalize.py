@@ -9,19 +9,11 @@ QUOTE_HEADER_RE = re.compile(
     re.IGNORECASE | re.MULTILINE | re.DOTALL,
 )
 
-SPOILER_HEADER_RE = re.compile(
-    r"""
-<div class="spoiler-heading">(?P<title>.*?)</div>
-""".strip(),
-    re.IGNORECASE | re.MULTILINE | re.DOTALL,
-)
-
 SPOILER_REVEAL_BTN = '<button class="spoiler-reveal" type="button"></button>'
 
 
 def finalize_markup(post):
     post = QUOTE_HEADER_RE.sub(replace_quote_headers, post)
-    post = SPOILER_HEADER_RE.sub(replace_spoiler_headers, post)
     post = replace_spoiler_reveal_buttons(post)
     return post
 

@@ -31,6 +31,5 @@ export default class extends React.Component {
 
 function revealSpoiler(event) {
   var btn = event.target
-  $(btn).hide()
-  $(btn).siblings(".spoiler-body").fadeIn()
+  $(btn).parent().parent().addClass("revealed")
 }

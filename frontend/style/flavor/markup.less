@@ -63,30 +63,51 @@
 .misago-markup .spoiler-block {
   background: repeating-linear-gradient(
     45deg,
-    @gray-lighter,
-    @gray-lighter 10px,
+    fadeout(@gray-lighter, 50%),
+    fadeout(@gray-lighter, 50%) 10px,
     @post-bg 10px,
     @post-bg 20px
   );
   border: none;
-  text-align: center;
+}
 
-  .spoiler-heading {
-    background: fadeout(@post-bg, 80%);
-    border-bottom: none;
-    text-align: left;
+.misago-markup .spoiler-body {
+  background: transparent;
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
+}
+
+  .misago-markup .spoiler-block.revealed .spoiler-body {
+    -webkit-filter: none;
+    -moz-filter: none;
+    -o-filter: none;
+    -ms-filter: none;
+    filter: none;
   }
 
-  .spoiler-reveal {
-    .btn-default();
-    .btn-block();
-    padding: @padding-large-horizontal;
-    border: none;
-    border-radius: 0;
-  }
+.misago-markup .spoiler-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: fadeout(@post-bg, 90%);
+}
 
-  .spoiler-body {
-    background: fadeout(@post-bg, 30%);
-    text-align: left;
-  }
+.misago-markup .spoiler-reveal {
+  .btn-default();
+}
+
+.misago-markup .spoiler-reveal,
+.misago-markup .spoiler-reveal:active,
+.misago-markup .spoiler-reveal:hover {
+  border-radius: 4px;
+  box-shadow: 0px 0px 0px 4px @post-bg;
+  padding: @padding-base-vertical @padding-base-horizontal;
 }
