@@ -73,6 +73,34 @@
 }
 
 
+// Style spoilers
+.misago-markup .spoiler-block {
+  background: @gray-lighter;
+  border: none;
+
+  font-size: @font-size-base;
+
+  .spoiler-heading {
+    border-bottom: 1px solid darken(@gray-lighter, 8%);
+    padding: (@line-height-computed / 2) @line-height-computed;
+
+    font-size: @font-size-small;
+    font-weight: bold;
+  }
+}
+
+.misago-markup>.spoiler-block {
+  border: 1px solid darken(@gray-lighter, 8%);
+}
+
+.misago-markup .spoiler-body {
+  display: none;
+  background: @body-bg;
+  margin: 0px;
+  padding: @line-height-computed;
+}
+
+
 // Add bullets to lists
 .misago-markup ul {
   list-style-type: square;

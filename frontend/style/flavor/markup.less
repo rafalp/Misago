@@ -57,3 +57,36 @@
     border-radius: @border-radius-base;
   }
 }
+
+
+// Spoiler block
+.misago-markup .spoiler-block {
+  background: repeating-linear-gradient(
+    45deg,
+    @gray-lighter,
+    @gray-lighter 10px,
+    @post-bg 10px,
+    @post-bg 20px
+  );
+  border: none;
+  text-align: center;
+
+  .spoiler-heading {
+    background: fadeout(@post-bg, 80%);
+    border-bottom: none;
+    text-align: left;
+  }
+
+  .spoiler-reveal {
+    .btn-default();
+    .btn-block();
+    padding: @padding-large-horizontal;
+    border: none;
+    border-radius: 0;
+  }
+
+  .spoiler-body {
+    background: fadeout(@post-bg, 30%);
+    text-align: left;
+  }
+}
