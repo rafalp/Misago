@@ -1,7 +1,7 @@
 Misago
 ======
 
-> **NOTE:** This branch contains exploration code for potential future version of Misago that is fully asynchronous and developer without Django.
+> **NOTE:** This branch contains exploration code for potential future version of Misago that is fully asynchronous and built without Django.
 
 [![Tests Result](https://travis-ci.org/rafalp/Misago.svg?branch=master)](https://travis-ci.org/rafalp/Misago)
 [![Test Coverage](https://coveralls.io/repos/github/rafalp/Misago/badge.svg?branch=master)](https://coveralls.io/github/rafalp/Misago?branch=master)
