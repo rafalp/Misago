@@ -192,8 +192,7 @@ INSTALLED_APPS = [
     "misago.search",
     "misago.graphql",
     "misago.faker",
-    # Django Simple SSO for integrating external authentication
-    'simple_sso.sso_server',
+    "misago.sso",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -416,4 +415,4 @@ DEBUG_TOOLBAR_CONFIG = {
 # SECURITY WARNING: keep the private key used in production secret!
 SSO_PRIVATE_KEY = None  # This key should be secret (max 64 chars)
 SSO_PUBLIC_KEY = None  # This key may be public (max 64 chars)
-SSO_SERVER = 'http://www.example.com/server/'
+SSO_SERVER = "http://www.example.com/server/"
