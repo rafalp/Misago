@@ -3,13 +3,24 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
+# Translators:
+# Mesut GÜLECEN <mesutgulecen@hotmail.com>, 2017
+# Yiğit Tanrıverdi <x_game92@hotmail.com>, 2017
+# ReYHa <reha.akalan@gmail.com>, 2017
+# orkun bademli <orkunbademli@gmail.com>, 2017
+# Aysenur Tolun <aysenur_tolun@hotmail.com>, 2017
+# Halil Burak Fedai <burak.fedai@ozu.edu.tr>, 2018
+# Sümeyye Yiğit <qunishment@gmail.com>, 2018
+# Bilal Akgül <billakgl@gmail.com>, 2018
+# gülce abatay <gulceabatay@gmail.com>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-15 23:22+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: gülce abatay <gulceabatay@gmail.com>, 2018\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +28,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: tr_TR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: static/misago/admin/index.js:16
+msgid "defineLocaleOverride"
+msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
@@ -1615,8 +1630,8 @@ msgid "Posts"
 msgstr "İletiler"
 
 #: static/misago/js/misago.js:12
-msgid "Show more (%(more)s)"
-msgstr "Daha fazlasını gör (%(more)s)"
+msgid "Show older activity"
+msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Following"
@@ -1659,6 +1674,10 @@ msgstr "Hiç takipçin yok."
 #: static/misago/js/misago.js:12
 msgid "%(username)s has no followers."
 msgstr "%(username)s kullanıcısının hiç takipçisi yok."
+
+#: static/misago/js/misago.js:12
+msgid "Show more (%(more)s)"
+msgstr "Daha fazlasını gör (%(more)s)"
 
 #: static/misago/js/misago.js:12
 msgid "Search users..."
@@ -2618,10 +2637,10 @@ msgid "Total posts"
 msgstr "Toplam iletiler"
 
 #: static/misago/js/misago.js:22
-msgid "%(posters)s most active poster from last %(days)s days."
-msgid_plural "%(posters)s most active posters from last %(days)s days."
-msgstr[0] "son %(days)s günlerden en aktif posterleri %(posters)s"
-msgstr[1] "son %(days)s günlerden en aktif posterleri %(posters)s"
+msgid "%(posters)s top poster from last %(days)s days."
+msgid_plural "%(posters)s top posters from last %(days)s days."
+msgstr[0] ""
+msgstr[1] ""
 
 #: static/misago/js/misago.js:22
 msgid "Users"

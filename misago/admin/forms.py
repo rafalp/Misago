@@ -1,4 +1,13 @@
-from django.forms import DateTimeField, RadioSelect, TypedChoiceField, ValidationError
+import re
+
+from django.forms import (
+    CharField,
+    DateTimeField,
+    RadioSelect,
+    TypedChoiceField,
+    ValidationError,
+)
+from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 
 from ..core.utils import parse_iso8601_string
@@ -25,6 +34,22 @@ class IsoDateTimeField(DateTimeField):
             return parse_iso8601_string(value)
         except ValueError:
             raise ValidationError(self.error_messages["invalid"], code="invalid")
+
+
+def ColorField(**kwargs):
+    return CharField(
+        validators=[
+            RegexValidator(
+                r"^#[0-9a-f]{6}$",
+                flags=re.IGNORECASE,
+                message=_(
+                    "Value must be a 7-character string specifying an RGB color "
+                    "in a hexadecimal format."
+                ),
+            )
+        ],
+        **kwargs
+    )
 
 
 class YesNoSwitchBase(TypedChoiceField):

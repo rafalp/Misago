@@ -31,9 +31,8 @@
 {% endblock meta-extra %}
 
 
-{% block og-title %}
-  {{ rank.name }}
-{% endblock og-title %}
+{% block og-title %}{{ rank.name }}{% endblock %}
+{% block twitter-title %}{{ rank.name }}{% endblock %}
 
 
 {% block og-description %}
@@ -47,7 +46,19 @@
 {% endblock og-description %}
 
 
+{% block twitter-description %}
+  {% if rank.description %}
+    {{ rank.description }}
+  {% endif %} {% blocktrans trimmed count users=paginator.count %}
+    {{ users }} user have this rank.
+  {% plural %}
+    {{ users }} users have this rank.
+  {% endblocktrans %}
+{% endblock twitter-description %}
+
+
 {% block og-url %}{% absoluteurl rank.get_absolute_url %}{% endblock %}
+{% block twitter-url %}{% absoluteurl rank.get_absolute_url %}{% endblock %}
 
 
 {% block content %}

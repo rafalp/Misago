@@ -4,8 +4,8 @@ import misago from "misago"
 import mount from "misago/utils/mount-component"
 
 export default function initializer(context) {
-  if (context.get("CURRENT_LINK") === "social:complete") {
-    const props = context.get("SOCIAL_AUTH")
+  if (context.get("CURRENT_LINK") === "misago:social-complete") {
+    const props = context.get("SOCIAL_AUTH_FORM")
     mount(<SocialAuth {...props} />, "page-mount")
   }
 }

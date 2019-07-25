@@ -1,0 +1,56 @@
+{% extends "misago/admin/generic/form.html" %}
+{% load i18n misago_admin_form %}
+
+
+{% block title %}
+{{ target }} | {{ active_link.name }} | {{ block.super }}
+{% endblock title %}
+
+
+{% block page-header %}
+{{ block.super }} <small>{{ target }}</small>
+{% endblock page-header %}
+
+
+{% block form-header %}
+{% if target.order %}
+  {% trans "Edit social login" %}
+{% else %}
+  {% trans "Setup social login" %}
+{% endif %}
+{% endblock %}
+
+
+{% block form-body %}
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "General" %}</legend>
+
+    {% form_row form.is_active %}
+    {% block form-settings %}
+    {% form_row form.key %}
+    {% form_row form.secret %}
+    {% form_row form.associate_by_email %}
+    {% endblock form-settings %}
+
+  </fieldset>
+</div>
+<div class="form-fieldset">
+  <fieldset>
+    <legend>{% trans "Button appearance" %}</legend>
+
+    {% form_row form.button_text %}
+    {% form_row form.button_color %}
+
+  </fieldset>
+</div>
+{% endblock form-body %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initColorpicker({
+    elementId: "id_button_color"
+  })
+</script>
+{% endblock %}

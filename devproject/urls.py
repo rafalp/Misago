@@ -31,7 +31,6 @@ admin.site.login_form = AdminAuthenticationForm
 
 urlpatterns = [
     url(r"^", include("misago.urls", namespace="misago")),
-    url(r"^", include("social_django.urls", namespace="social")),
     # Javascript translations
     url(
         r"^django-i18n.js$",

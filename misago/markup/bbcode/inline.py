@@ -82,12 +82,12 @@ class BBCodeUrlPattern(BBcodePattern, LinkPattern):
     def handleMatch(self, m):
         el = util.etree.Element("a")
 
-        if m.group(6):
-            el.text = m.group(8)
-            href = m.group(5)
+        if m.group("arg"):
+            el.text = m.group("content")
+            href = m.group("arg")
         else:
-            el.text = m.group(8).strip()
-            href = m.group(8)
+            el.text = m.group("content").strip()
+            href = m.group("content")
 
         if href:
             el.set("href", self.sanitize_url(self.unescape(href.strip())))
@@ -96,7 +96,7 @@ class BBCodeUrlPattern(BBcodePattern, LinkPattern):
         return el
 
 
-URL_PATTERN = r'((\[url=("?)(.*?)("?)\])|(\[url\]))(.*?)\[/url\]'
+URL_PATTERN = r'((\[url=("?)(?P<arg>.*?)("?)\])|(\[url\]))(?P<content>.*?)\[/url\]'
 
 
 def url(md):

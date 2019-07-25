@@ -1,0 +1,134 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_admin_form misago_capture %}
+
+
+{% block card-header %}
+<div class="card-body">
+  <h4 class="card-title">
+    {% trans "Enabled login methods" %}
+  </h4>
+</div>
+{% endblock card-header %}
+
+
+{% block table-header %}
+<th>{% trans "Provider" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="pr-0 small">
+  <a href="{% url 'misago:admin:settings:socialauth:edit' pk=item.pk %}" class="item-name">
+    {{ item }}
+  </a>
+</td>
+<td>
+  {% if not forloop.last %}
+    <form action="{% url 'misago:admin:settings:socialauth:down' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' %}">
+        <span class="fa fa-chevron-down"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-down"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  {% if not forloop.first %}
+    <form action="{% url 'misago:admin:settings:socialauth:up' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' %}">
+        <span class="fa fa-chevron-up"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-up"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
+      <a class="dropdown-item" href="{% url 'misago:admin:settings:socialauth:edit' pk=item.pk %}">
+        {% trans "Change settings" %}
+      </a>
+      <form action="{% url 'misago:admin:settings:socialauth:disable' pk=item.pk %}" method="post" data-delete-confirmation="true">
+        {% csrf_token %}
+        <button class="dropdown-item">
+          {% trans "Disable login" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</td>
+{% endblock %}
+
+
+{% block blankslate %}
+<td colspan="4">
+  {% trans "No social login methods are enabled." %}
+</td>
+{% endblock blankslate %}
+
+
+{% block javascripts %}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to disable this social login provider?' %}"
+  )
+</script>
+{% endblock %}
+
+
+{% block view %}
+{{ block.super }}
+
+<div class="card card-admin-table mt-3">
+  <div class="card-body">
+    <h4 class="card-title">
+      {% trans "Setup new login method" %}
+    </h4>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>{% trans "Provider" %}</th>
+        <th style="width: 1px;">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for provider in inactive_providers %}
+        <tr>
+          <td class="pr-0 small">
+            <a href="{% url 'misago:admin:settings:socialauth:edit' pk=provider.provider %}" class="item-name">
+              {{ provider.name }}
+            </a>
+          </td>
+          <td>
+            <a href="{% url 'misago:admin:settings:socialauth:edit' pk=provider.provider %}" class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Setup login with this provider' %}">
+              {% trans "Setup" %}
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr class="blankslate">
+          <td colspan="8">
+            {% trans "No new login providers are available for setup at this time." %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock view %}

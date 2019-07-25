@@ -5,17 +5,15 @@
 {% block title %}{% trans "Problem with sign in" %} | {{ block.super }}{% endblock %}
 
 
-{% block meta-description %}
-{{ message }}
-{% endblock meta-description %}
+{% block meta-description %}{{ message }}{% endblock %}
 
 
 {% block og-title %}{% trans "Problem with sign in" %}{% endblock %}
+{% block twitter-title %}{% trans "Problem with sign in" %}{% endblock %}
 
 
-{% block og-description %}
-{{ message }}
-{% endblock %}
+{% block og-description %}{{ message }}{% endblock %}
+{% block twitter-description %}{{ message }}{% endblock %}
 
 
 {% block content %}

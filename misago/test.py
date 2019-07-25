@@ -1,5 +1,6 @@
 from django.contrib.messages.api import get_messages
 from django.contrib.messages.constants import ERROR, INFO, SUCCESS
+from django.test import Client
 
 
 def assert_contains(response, string, status_code=200):
@@ -55,3 +56,16 @@ def assert_has_message(response, message, level=None):
         raise AssertionError(
             'Message containing "%s" was not set during the request' % message
         )
+
+
+class MisagoClient(Client):
+    def post(self, *args, **kwargs):
+        if "json" in kwargs:
+            return super().post(
+                *args,
+                data=kwargs.pop("json"),
+                content_type="application/json",
+                **kwargs,
+            )
+
+        return super().post(*args, **kwargs)

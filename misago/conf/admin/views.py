@@ -23,7 +23,7 @@ class ChangeSettingsView(AdminView):
     template_name = None
     form_class = None
 
-    def get_template_name(self):
+    def get_template_name(self, request):
         return self.template_name
 
     def dispatch(self, request, *args, **kwargs):

@@ -109,12 +109,6 @@ MISAGO_NEW_REGISTRATIONS_VALIDATORS = [
 MISAGO_PROFILE_FIELDS = []
 
 
-# Social Auth Backends Names Overrides
-# This seeting may be used to customise auth backends names displayed in the UI
-
-MISAGO_SOCIAL_AUTH_BACKENDS_NAMES = {}
-
-
 # Login API URL
 
 MISAGO_LOGIN_API_URL = "auth"

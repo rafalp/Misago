@@ -11,17 +11,23 @@
       {% block meta-extra %}{% endblock meta-extra %}
       {% block og-tags %}
         <meta property="og:site_name" content="{% spaceless %}{% block og-site-name %}{{ settings.forum_name }}{% endblock og-site-name %}{% endspaceless %}" />
+        <meta name="twitter:card" content="summary" />
         <meta property="og:title" content="{% spaceless %}{% block og-title %}{% endblock og-title %}{% endspaceless %}" />
+        <meta name="twitter:title" content="{% spaceless %}{% block twitter-title %}{% endblock twitter-title %}{% endspaceless %}" />
         <meta property="og:description" content="{% spaceless %}{% block og-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock og-description %}{% endspaceless %}" />
+        <meta name="twitter:description" content="{% spaceless %}{% block twitter-description %}{{ settings.forum_index_meta_description|default:'' }}{% endblock twitter-description %}{% endspaceless %}" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="{% spaceless %}{% block og-url %}{{ settings.forum_address }}{% endblock og-url %}{% endspaceless %}" />
+        <meta name="twitter:url" content="{% spaceless %}{% block twitter-url %}{{ settings.forum_address }}{% endblock twitter-url %}{% endspaceless %}" />
         {% block og-image %}
           {% if og_image %}
+            <meta name="twitter:image" content="{% absoluteurl og_image.url %}" />
             <meta property="og:image" content="{% absoluteurl og_image.url %}" />
             <meta property="og:image:width" content="{{ og_image.width }}" />
             <meta property="og:image:height" content="{{ og_image.height }}" />
           {% else %}
             {% static "misago/img/og-image.jpg" as og_image_url %}
+            <meta name="twitter:image" content="{% absoluteurl og_image_url %}" />
             <meta property="og:image" content="{% absoluteurl og_image_url %}" />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />

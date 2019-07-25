@@ -6,9 +6,11 @@
 
 
 {% block og-title %}{{ title }}{% endblock %}
+{% block twitter-title %}{{ title }}{% endblock %}
 
 
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
+{% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block content %}

@@ -12,6 +12,7 @@
 
 
 {% block og-title %}{{ thread.title }}{% endblock %}
+{% block twitter-title %}{{ thread.title }}{% endblock %}
 
 
 {% block og-description %}
@@ -25,14 +26,25 @@
 {% endblock og-description %}
 
 
-{% block og-url %}
-{% absoluteurl thread.get_absolute_url %}
-{% endblock og-url %}
+{% block twitter-description %}
+  {% blocktrans trimmed with starter=thread.starter_name started_on=thread.started_on|date category=category.name %}
+    Started by {{ starter }} on {{ started_on }} in the {{ category }} category.
+  {% endblocktrans %} {% blocktrans trimmed count replies=thread.replies with last_post_on=thread.last_post_on|date %}
+    {{ replies }} reply, last one from {{ last_post_on }}.
+  {% plural %}
+    {{ replies }} replies, last one from {{ last_post_on }}.
+  {% endblocktrans %}{% if thread.has_best_answer %} {% trans "Answered." %}{% endif %}{% if thread.has_best_answer %} {% trans "Closed." %}{% endif %}
+{% endblock twitter-description %}
+
+
+{% block og-url %}{% absoluteurl thread.get_absolute_url %}{% endblock %}
+{% block twitter-url %}{% absoluteurl thread.get_absolute_url %}{% endblock %}
 
 
 {% block og-image %}
 {% if settings.og_image_avatar_on_thread and thread.starter %}
   {% with thread.starter.avatars|first as og_image %}
+    <meta name="twitter:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image" content="{% absoluteurl og_image.url %}" />
     <meta property="og:image:width" content="{{ og_image.size }}" />
     <meta property="og:image:height" content="{{ og_image.size }}" />
