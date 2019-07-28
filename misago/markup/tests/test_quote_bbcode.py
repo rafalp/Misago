@@ -48,7 +48,7 @@ Sit amet elit.
     snapshot.assert_match(result["parsed_text"])
 
 
-# Rtest for weird edge case in which hr gets moved outside of quote
+# Regression test for weird edge case in which hr gets moved outside of quote
 def test_quotes_can_contain_hr_markdown(request_mock, user, snapshot):
     text = """
 [quote]

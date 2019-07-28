@@ -36,7 +36,7 @@ Sit amet elit.
     snapshot.assert_match(result["parsed_text"])
 
 
-# Rtest for weird edge case in which hr gets moved outside of spoiler
+# Regression test for weird edge case in which hr gets moved outside of spoiler
 def test_spoilers_can_contain_hr_markdown(request_mock, user, snapshot):
     text = """
 [spoiler]
