@@ -3,8 +3,8 @@ import os
 from .static import StaticConf
 
 
-conf = StaticConf()
+settings = StaticConf()
 
 
-def configure(settings_module: str):
-    conf.configure(settings_module or os.environ.get("MISAGO_SETTINGS_MODULE"))
+def setup(settings_module: str):
+    settings.setup(settings_module or os.environ.get("MISAGO_SETTINGS_MODULE"))
