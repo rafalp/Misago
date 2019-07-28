@@ -1,3 +1,5 @@
+from typing import List
+
 # Disable debug mode by default
 DEBUG = False
 
@@ -9,4 +11,4 @@ STATIC_ROOT = None
 
 MEDIA_ROOT = None
 
-INSTALLED_PLUGINS = []
+INSTALLED_PLUGINS: List[str] = []

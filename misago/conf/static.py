@@ -21,7 +21,7 @@ class StaticConf:
             if key != key.upper():
                 continue
             self._conf[key] = value
-        
+
         self._is_setup = True
 
     def __getattr__(self, setting: str) -> Any:

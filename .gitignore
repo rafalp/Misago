@@ -42,6 +42,9 @@ flake8.txt
 # Pylint report
 pylint.txt
 
+# mypy cache
+.mypy_cache
+
 # Mr Developer
 .mr.developer.cfg
 .project
