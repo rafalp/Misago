@@ -19,6 +19,7 @@ django-debug-toolbar==1.11
 django-htmlmin==0.11.0
 django-js-asset==1.2.2    # via django-mptt
 django-mptt==0.10.0
+django-simple-sso==0.14.0
 django==2.2.3
 djangorestframework==3.9.4
 faker==1.0.7
@@ -26,6 +27,7 @@ graphql-core-next==1.0.5  # via ariadne
 html5lib==1.0.1
 idna==2.8                 # via requests
 importlib-metadata==0.18  # via pluggy, pytest
+itsdangerous==1.1.0       # via django-simple-sso, webservices
 kombu==4.6.3              # via celery
 markdown==2.6.11
 more-itertools==7.1.0     # via pytest
@@ -63,4 +65,5 @@ urllib3==1.25.3           # via requests
 vine==1.3.0               # via amqp, celery
 wcwidth==0.1.7            # via pytest
 webencodings==0.5.1       # via bleach, html5lib
+webservices[django]==0.7  # via django-simple-sso
 zipp==0.5.2               # via importlib-metadata

@@ -193,6 +193,7 @@ INSTALLED_APPS = [
     "misago.socialauth",
     "misago.graphql",
     "misago.faker",
+    "misago.sso",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -416,3 +417,8 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
 }
+
+# SECURITY WARNING: keep the private key used in production secret!
+SSO_PRIVATE_KEY = None  # This key should be secret (max 64 chars)
+SSO_PUBLIC_KEY = None  # This key may be public (max 64 chars)
+SSO_SERVER = "http://www.example.com/server/"
