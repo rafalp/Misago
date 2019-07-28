@@ -1,0 +1,6 @@
+black
+coveralls
+mypy
+pylint
+pytest
+pytest-cov
