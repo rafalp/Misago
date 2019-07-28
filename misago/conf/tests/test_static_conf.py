@@ -18,4 +18,4 @@ def test_static_conf_setup_raises_import_error_when_invalid_path_is_given():
 def test_unconfigured_static_conf_raises_error_when_setting_is_accessed():
     conf = StaticConf()
     with pytest.raises(AssertionError):
-        conf.DEBUG
+        conf.DEBUG  # pylint: disable=pointless-statement
