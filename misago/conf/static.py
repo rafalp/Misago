@@ -1,5 +1,5 @@
 from importlib import import_module
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from . import defaults
 
@@ -13,8 +13,9 @@ class StaticConf:
         self._is_setup = False
         self._conf = {}
 
-    def setup(self, settings_module: str):
+    def setup(self, settings_module: Optional[str]):
         assert not self._is_setup, "'setup()' was already called"
+        assert settings_module, "'settings_module' argument is required"
 
         settings = import_module(settings_module)
         for key, value in settings.__dict__.items():
