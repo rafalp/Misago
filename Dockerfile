@@ -19,8 +19,9 @@ RUN apt-get update && apt-get install -y \
 
 # Add requirements and install them.
 ADD requirements.txt /
+ADD requirements-dev.txt /
 RUN pip install --upgrade pip && \
-    pip install -e . && \
+    pip install -r requirements.txt && \
     pip install -r requirements-dev.txt
 
 WORKDIR /srv/misago
