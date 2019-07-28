@@ -1,6 +1,5 @@
 [MASTER]
 
-load-plugins=pylint_django
 ignore=migrations
 max-line-length=88
 
@@ -21,7 +20,6 @@ disable=
     inconsistent-return-statements,
     invalid-name,
     missing-docstring,
-    model-no-explicit-unicode,  # pylint-django
     no-member,
     no-self-use,
     protected-access,
