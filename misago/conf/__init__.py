@@ -1,4 +1,4 @@
-from .static import StaticConf
+from .staticsettings import StaticSettings
 
 
-settings = StaticConf()
+settings = StaticSettings()

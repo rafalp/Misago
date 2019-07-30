@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from . import defaults
 
 
-class StaticConf:
+class StaticSettings:
     _is_setup: bool
     _conf: Dict[str, Any]
     _overrides: Dict[str, Any] = {}
@@ -26,7 +26,7 @@ class StaticConf:
         self._is_setup = True
 
     def __getattr__(self, setting: str) -> Any:
-        assert self._is_setup, "'StaticConf' instance has to be setup first"
+        assert self._is_setup, "'StaticSettings' instance has to be setup first"
 
         if setting in self._overrides:
             return self._overrides[setting]
