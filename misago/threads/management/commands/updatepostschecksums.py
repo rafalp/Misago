@@ -3,7 +3,6 @@ import time
 from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 from ...checksums import update_post_checksum
 from ...models import Post
 
@@ -27,7 +26,7 @@ class Command(BaseCommand):
         start_time = time.time()
 
         queryset = Post.objects.filter(is_event=False)
-        for post in chunk_queryset(queryset):
+        for post in queryset.iterator(chunk_size=20):
             update_post_checksum(post)
             post.save(update_fields=["checksum"])
 

@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from ....conf.shortcuts import get_dynamic_settings
-from ....core.pgutils import chunk_queryset
 
 User = get_user_model()
 
@@ -31,7 +30,7 @@ class Command(BaseCommand):
             requires_activation__gt=User.ACTIVATION_NONE, joined_on__lt=joined_on_cutoff
         )
 
-        for user in chunk_queryset(queryset):
+        for user in queryset.iterator(chunk_size=20):
             user.delete(anonymous_username=settings.anonymous_username)
             users_deleted += 1
 

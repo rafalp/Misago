@@ -10,7 +10,6 @@ from ....admin.auth import authorize_admin
 from ....admin.views import generic
 from ....categories.models import Category
 from ....core.mail import mail_users
-from ....core.pgutils import chunk_queryset
 from ....threads.models import Thread
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request

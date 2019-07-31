@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from ...cache.models import CacheVersion
-from ..pgutils import chunk_queryset
 
 
 class ChunkQuerysetTest(TestCase):
@@ -21,7 +20,7 @@ class ChunkQuerysetTest(TestCase):
 
         with self.assertNumQueries(11):
             queryset = CacheVersion.objects.order_by("cache")
-            for obj in chunk_queryset(queryset, chunk_size=5):
+            for obj in queryset.iterator(chunk_size=5):
                 chunked_pks.append(obj.pk)
 
         self.assertEqual(chunked_pks, self.items_pks)
@@ -30,7 +29,7 @@ class ChunkQuerysetTest(TestCase):
         """chunk_queryset utility chunks queryset in delete action"""
         with self.assertNumQueries(61):
             queryset = CacheVersion.objects.all()
-            for obj in chunk_queryset(queryset, chunk_size=5):
+            for obj in queryset.iterator(chunk_size=5):
                 obj.delete()
 
         self.assertEqual(CacheVersion.objects.count(), 0)

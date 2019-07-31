@@ -3,7 +3,6 @@ import time
 from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 from ...models import Post
 
 
@@ -26,7 +25,7 @@ class Command(BaseCommand):
         start_time = time.time()
 
         queryset = Post.objects.select_related("thread").filter(is_event=False)
-        for post in chunk_queryset(queryset):
+        for post in queryset.iterator(chunk_size=20):
             if post.id == post.thread.first_post_id:
                 post.set_search_document(post.thread.title)
             else:

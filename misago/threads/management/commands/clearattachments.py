@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from ....conf.shortcuts import get_dynamic_settings
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 from ...models import Attachment
 
 
@@ -33,7 +32,7 @@ class Command(BaseCommand):
         show_progress(self, cleared_count, attachments_to_sync)
         start_time = time.time()
 
-        for attachment in chunk_queryset(queryset):
+        for attachment in queryset.iterator(chunk_size=20):
             attachment.delete()
 
             cleared_count += 1
