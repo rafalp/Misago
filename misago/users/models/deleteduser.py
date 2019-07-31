@@ -15,8 +15,7 @@ class DeletedUser(models.Model):
     )
 
     deleted_on = models.DateTimeField(default=timezone.now)
-    deleted_by = models.CharField(
-        max_length=50,
+    deleted_by = models.PositiveIntegerField(
         choices=DELETED_BY_CHOICES,
         db_index=True
     )
