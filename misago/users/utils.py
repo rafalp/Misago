@@ -10,15 +10,15 @@ def hash_email(email):
 
 def record_user_deleted_by_self():
     return DeletedUser.objects.create(
-        deleted_by='by_user'
+        deleted_by=1
     )
 
 def record_user_deleted_by_staff():
     return DeletedUser.objects.create(
-        deleted_by='by_staff'
+        deleted_by=2
     )
 
 def record_user_deleted_by_system():
     return DeletedUser.objects.create(
-        deleted_by='by_system'
+        deleted_by=3
     )
