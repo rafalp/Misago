@@ -3,9 +3,9 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-DELETED_BY_USER = 1
-DELETED_BY_STAFF = 2
-DELETED_BY_SYSTEM = 3
+DELETED_BY_USER = 'by_user'
+DELETED_BY_STAFF = 'by_staff'
+DELETED_BY_SYSTEM = 'by_system'
 
 DELETED_BY_CHOICES = (
     (DELETED_BY_USER, _('By User')),
@@ -16,9 +16,10 @@ DELETED_BY_CHOICES = (
 
 class DeletedUser(models.Model):
     deleted_on = models.DateTimeField(default=timezone.now)
-    deleted_by = models.PositiveIntegerField(
+    deleted_by = models.CharField(
+        max_length=50,
         choices=DELETED_BY_CHOICES,
-        default=1
+        default=DELETED_BY_USER
     )
 
     class Meta:
