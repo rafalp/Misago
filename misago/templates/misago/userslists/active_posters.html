@@ -21,6 +21,7 @@
 
 
 {% block og-title %}{% trans "Top posters" %}{% endblock %}
+{% block twitter-title %}{% trans "Top posters" %}{% endblock %}
 
 
 {% block og-description %}
@@ -38,7 +39,23 @@
 {% endblock og-description %}
 
 
+{% block twitter-description %}
+  {% if users_count %}
+    {% blocktrans trimmed with posters=users_count days=tracked_period count counter=users_count %}
+      {{ posters }} top poster from last {{ days }} days.
+    {% plural %}
+      {{ posters }} top posters from last {{ days }} days.
+    {% endblocktrans %}
+  {% else %}
+    {% blocktrans trimmed with days=tracked_period %}
+      No users have posted any new messages during last {{ days }} days.
+    {% endblocktrans %}
+  {% endif %}
+{% endblock twitter-description %}
+
+
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
+{% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block content %}

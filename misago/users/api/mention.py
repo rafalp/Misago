@@ -22,7 +22,9 @@ def mention_suggestions(request):
             try:
                 avatar = user.avatars[-1]["url"]
             except IndexError:
-                avatar = static(settings.MISAGO_BLANK_AVATAR)
+                avatar = request.settings.blank_avatar
+                if not avatar:
+                    avatar = static(settings.MISAGO_BLANK_AVATAR)
 
             suggestions.append({"username": user.username, "avatar": avatar})
 

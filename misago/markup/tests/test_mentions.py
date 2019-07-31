@@ -1,88 +1,78 @@
-from ...users.test import AuthenticatedUserTestCase
 from ..mentions import add_mentions
 
 
-class MockRequest:
-    def __init__(self, user):
-        self.user = user
+def test_util_replaces_mention_with_link_to_user_profile_in_parsed_text(
+    request_mock, user
+):
+    parsing_result = {"parsed_text": f"<p>Hello, @{user.username}!</p>", "mentions": []}
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["parsed_text"] == (
+        f'<p>Hello, <a href="{user.get_absolute_url()}">@{user.username}</a>!</p>'
+    )
 
 
-class MentionsTests(AuthenticatedUserTestCase):
-    def test_single_mention(self):
-        """markup extension parses single mention"""
-        TEST_CASES = [
-            ("<p>Hello, @%s!</p>", '<p>Hello, <a href="%s">@%s</a>!</p>'),
-            ("<h1>Hello, @%s!</h1>", '<h1>Hello, <a href="%s">@%s</a>!</h1>'),
-            ("<div>Hello, @%s!</div>", '<div>Hello, <a href="%s">@%s</a>!</div>'),
-            (
-                "<h1>Hello, <strong>@%s!</strong></h1>",
-                '<h1>Hello, <strong><a href="%s">@%s</a>!</strong></h1>',
-            ),
-            (
-                "<h1>Hello, <strong>@%s</strong>!</h1>",
-                '<h1>Hello, <strong><a href="%s">@%s</a></strong>!</h1>',
-            ),
-        ]
+def test_util_adds_mention_to_parsig_result(request_mock, user):
+    parsing_result = {"parsed_text": f"<p>Hello, @{user.username}!</p>", "mentions": []}
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["mentions"] == [user]
 
-        for before, after in TEST_CASES:
-            result = {"parsed_text": before % self.user.username, "mentions": []}
 
-            add_mentions(MockRequest(self.user), result)
+def test_mentions_arent_added_for_nonexisting_user(request_mock, user):
+    parsing_result = {"parsed_text": f"<p>Hello, @OtherUser!</p>", "mentions": []}
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["parsed_text"] == "<p>Hello, @OtherUser!</p>"
 
-            expected_outcome = after % (
-                self.user.get_absolute_url(),
-                self.user.username,
-            )
-            self.assertEqual(result["parsed_text"], expected_outcome)
-            self.assertEqual(result["mentions"], [self.user])
 
-    def test_invalid_mentions(self):
-        """markup extension leaves invalid mentions alone"""
-        TEST_CASES = [
-            "<p>Hello, Bob!</p>",
-            "<p>Hello, @Bob!</p>",
-            '<p>Hello, <a href="/">@%s</a>!</p>' % self.user.username,
-            '<p>Hello, <a href="/"><b>@%s</b></a>!</p>' % self.user.username,
-        ]
+def test_util_replaces_multiple_mentions_with_link_to_user_profiles_in_parsed_text(
+    request_mock, user, other_user
+):
+    parsing_result = {
+        "parsed_text": f"<p>Hello, @{user.username} and @{other_user.username}!</p>",
+        "mentions": [],
+    }
+    add_mentions(request_mock, parsing_result)
+    assert (
+        f'<a href="{user.get_absolute_url()}">@{user.username}</a>'
+        in parsing_result["parsed_text"]
+    )
+    assert (
+        f'<a href="{other_user.get_absolute_url()}">@{other_user.username}</a>'
+        in parsing_result["parsed_text"]
+    )
 
-        for markup in TEST_CASES:
-            result = {"parsed_text": markup, "mentions": []}
 
-            add_mentions(MockRequest(self.user), result)
+def test_util_adds_multiple_mentions_to_parsig_result(request_mock, user, other_user):
+    parsing_result = {
+        "parsed_text": f"<p>Hello, @{user.username} and @{other_user.username}!</p>",
+        "mentions": [],
+    }
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["mentions"] == [user, other_user]
 
-            self.assertEqual(result["parsed_text"], markup)
-            self.assertFalse(result["mentions"])
 
-    def test_multiple_mentions(self):
-        """markup extension handles multiple mentions"""
-        before = "<p>Hello @{0} and @{0}, how is it going?</p>".format(
-            self.user.username
-        )
+def test_util_handles_repeated_mentions_of_same_user(request_mock, user):
+    parsing_result = {
+        "parsed_text": f"<p>Hello, @{user.username} and @{user.username}!</p>",
+        "mentions": [],
+    }
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["mentions"] == [user]
 
-        after = (
-            # pylint: disable=line-too-long
-            '<p>Hello <a href="{0}">@{1}</a> and <a href="{0}">@{1}</a>, how is it going?</p>'
-        ).format(self.user.get_absolute_url(), self.user.username)
 
-        result = {"parsed_text": before, "mentions": []}
+def test_util_skips_mentions_in_links(request_mock, user, snapshot):
+    parsing_result = {
+        "parsed_text": f'<p>Hello, <a href="/">@{user.username}</a></p>',
+        "mentions": [],
+    }
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["parsed_text"] == (
+        f'<p>Hello, <a href="/">@{user.username}</a></p>'
+    )
+    assert parsing_result["mentions"] == []
 
-        add_mentions(MockRequest(self.user), result)
-        self.assertEqual(result["parsed_text"], after)
-        self.assertEqual(result["mentions"], [self.user])
 
-    def test_repeated_mention(self):
-        """markup extension handles mentions across document"""
-        before = "<p>Hello @{0}</p><p>@{0}, how is it going?</p>".format(
-            self.user.username
-        )
-
-        after = (
-            # pylint: disable=line-too-long
-            '<p>Hello <a href="{0}">@{1}</a></p><p><a href="{0}">@{1}</a>, how is it going?</p>'
-        ).format(self.user.get_absolute_url(), self.user.username)
-
-        result = {"parsed_text": before, "mentions": []}
-
-        add_mentions(MockRequest(self.user), result)
-        self.assertEqual(result["parsed_text"], after)
-        self.assertEqual(result["mentions"], [self.user])
+def test_util_handles_text_without_mentions(request_mock):
+    parsing_result = {"parsed_text": f"<p>Hello, world!</p>", "mentions": []}
+    add_mentions(request_mock, parsing_result)
+    assert parsing_result["parsed_text"] == ("<p>Hello, world!</p>")
+    assert parsing_result["mentions"] == []

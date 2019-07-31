@@ -1,14 +1,23 @@
-from django.test import TestCase
+from ..checksums import is_checksum_valid, make_checksum
 
-from .. import checksums
+message = "Test message."
+post_pk = 123
 
 
-class ChecksumsTests(TestCase):
-    def test_checksums(self):
-        fake_message = "<p>Woow, thats awesome!</p>"
-        post_pk = 231
+def test_checksum_can_be_generated_for_post_message_and_pk():
+    assert make_checksum(message, [post_pk])
 
-        checksum = checksums.make_checksum(fake_message, [post_pk])
 
-        self.assertTrue(checksums.is_checksum_valid(fake_message, checksum, [post_pk]))
-        self.assertFalse(checksums.is_checksum_valid(fake_message, checksum, [3]))
+def test_valid_message_checksum_is_checked():
+    checksum = make_checksum(message, [post_pk])
+    assert is_checksum_valid(message, checksum, [post_pk])
+
+
+def test_checksum_invalidates_if_message_is_changed():
+    checksum = make_checksum(message, [post_pk])
+    assert not is_checksum_valid("Changed message.", checksum, [post_pk])
+
+
+def test_checksum_invalidates_if_pk_is_changed():
+    checksum = make_checksum(message, [post_pk])
+    assert not is_checksum_valid(message, checksum, [post_pk + 1])

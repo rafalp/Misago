@@ -18,6 +18,7 @@ def create_request():
     request.user_acl = get_user_acl(request.user, request.cache_versions)
     request.include_frontend_context = True
     request.frontend_context = {}
+    request.socialauth = {}
     return request
 
 

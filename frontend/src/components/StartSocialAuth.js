@@ -9,7 +9,7 @@ const StartSocialAuth = props => {
     header,
     labelClassName
   } = props
-  const socialAuth = misago.get("SETTINGS").SOCIAL_AUTH
+  const socialAuth = misago.get("SOCIAL_AUTH")
 
   if (socialAuth.length === 0) return null
 
@@ -17,9 +17,10 @@ const StartSocialAuth = props => {
     <div className="form-group form-social-auth">
       <FormHeader className={labelClassName} text={header} />
       <div className="row">
-        {socialAuth.map(({ id, name, url }) => {
+        {socialAuth.map(({ id, name, button_text, button_color, url }) => {
           const className = "btn btn-block btn-default btn-social-" + id
-          const finalButtonLabel = interpolate(
+          const style = button_color ? {color: button_color} : null
+          const finalButtonLabel = button_text || interpolate(
             buttonLabel,
             { site: name },
             true
@@ -27,7 +28,7 @@ const StartSocialAuth = props => {
 
           return (
             <div className={buttonClassName || "col-xs-12"} key={id}>
-              <a className={className} href={url}>
+              <a className={className} style={style} href={url}>
                 {finalButtonLabel}
               </a>
             </div>

@@ -241,7 +241,7 @@ class UsersList(UserAdmin, generic.ListView):
         messages.success(
             request,
             _(
-                "Selected users have disabled and been queued for deletion "
+                "Selected users have been disabled and queued for deletion "
                 "together with their content."
             ),
         )

@@ -4,6 +4,7 @@ import Emphasis from "./actions/emphasis"
 import Hr from "./actions/hr"
 import Image from "./actions/image"
 import Link from "./actions/link"
+import Spoiler from "./actions/Spoiler"
 import Striketrough from "./actions/striketrough"
 import Strong from "./actions/strong"
 import Quote from "./actions/quote"
@@ -131,6 +132,11 @@ export default class extends React.Component {
               replaceSelection={this.replaceSelection}
             />
             <Quote
+              className="btn-default btn-sm pull-left"
+              disabled={this.props.loading || this.state.isPreviewLoading}
+              replaceSelection={this.replaceSelection}
+            />
+            <Spoiler
               className="btn-default btn-sm pull-left"
               disabled={this.props.loading || this.state.isPreviewLoading}
               replaceSelection={this.replaceSelection}

@@ -61,8 +61,11 @@ class RoleFormMixin:
 
                 form.add_error(None, _("Form contains errors."))
 
+        template_name = self.get_template_name(request, target)
         return self.render(
-            request, {"form": form, "target": target, "perms_forms": perms_forms}
+            request,
+            {"form": form, "target": target, "perms_forms": perms_forms},
+            template_name,
         )
 
 
@@ -134,7 +137,8 @@ class CategoryPermissions(CategoryAdmin, generic.ModelFormView):
                 return redirect(request.path)
             return redirect(self.root_link)
 
-        return self.render(request, {"forms": forms, "target": target})
+        template_name = self.get_template_name(request, target)
+        return self.render(request, {"forms": forms, "target": target}, template_name)
 
 
 CategoriesList.add_item_action(
@@ -196,7 +200,8 @@ class RoleCategoriesACL(RoleAdmin, generic.ModelFormView):
                 return redirect(request.path)
             return redirect(self.root_link)
 
-        return self.render(request, {"forms": forms, "target": target})
+        template_name = self.get_template_name(request, target)
+        return self.render(request, {"forms": forms, "target": target}, template_name)
 
 
 RolesList.add_item_action(

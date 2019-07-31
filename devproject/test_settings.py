@@ -52,6 +52,9 @@ MISAGO_POST_VALIDATORS = ["misago.core.testproject.validators.test_post_validato
 # Register test post search filter
 MISAGO_POST_SEARCH_FILTERS = ["misago.core.testproject.searchfilters.test_filter"]
 
+# Default test name
+TEST_NAME = "miasago_test"
+
 # Additional overrides for Travis-CI
 if os.environ.get("TRAVIS"):
     DATABASES = {
@@ -66,3 +69,8 @@ if os.environ.get("TRAVIS"):
     }
 
     TEST_NAME = "travis_ci_test"
+
+# for testing misago.sso module (single sign on)
+SSO_PRIVATE_KEY = "priv1"
+SSO_PUBLIC_KEY = "fakeSsoPublicKey"
+SSO_SERVER = "http://example.com/server/"

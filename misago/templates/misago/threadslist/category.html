@@ -24,9 +24,8 @@
 {% endblock meta-description %}
 
 
-{% block og-title %}
-  {{ category }}
-{% endblock og-title %}
+{% block og-title %}{{ category }}{% endblock %}
+{% block twitter-title %}{{ category }}{% endblock %}
 
 
 {% block og-description %}
@@ -36,7 +35,15 @@
 {% endblock og-description %}
 
 
+{% block twitter-description %}
+  {% if category.description %}
+    {{ category.description }}
+  {% endif %}
+{% endblock twitter-description %}
+
+
 {% block og-url %}{% absoluteurl request_path %}{% endblock %}
+{% block twitter-url %}{% absoluteurl request_path %}{% endblock %}
 
 
 {% block extra-css %}

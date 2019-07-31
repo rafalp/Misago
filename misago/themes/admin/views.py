@@ -300,7 +300,10 @@ class ThemeCssFormAdmin(ThemeCssAdmin, generic.ModelFormView):
                 return self.redirect_to_edit_form(theme, form.instance)
             return self.redirect_to_theme_assets(theme)
 
-        return self.render(request, {"form": form, "theme": theme, "target": css})
+        template_name = self.get_template_name(request, css)
+        return self.render(
+            request, {"form": form, "theme": theme, "target": css}, template_name
+        )
 
     def get_form(self, form_class, request, theme, css):
         raise NotImplementedError(
@@ -346,7 +349,7 @@ class EditThemeCss(NewThemeCss):
     def get_form(self, form_class, request, theme, css):
         if request.method == "POST":
             return form_class(request.POST, instance=css)
-        initial_data = {"source": css.source_file.read()}
+        initial_data = {"source": css.source_file.read().decode("utf-8")}
         return form_class(instance=css, initial=initial_data)
 
     def handle_form(self, form, request, theme, css):

@@ -15,9 +15,19 @@
 
 
 {% block og-title %}{% trans "Page not found" %}{% endblock %}
+{% block twitter-title %}{% trans "Page not found" %}{% endblock %}
 
 
 {% block og-description %}
+  {% if message %}
+    {{ message }}
+  {% else %}
+    {% trans "You don't have permission to access this page." %}
+  {% endif %}
+{% endblock %}
+
+
+{% block twitter-description %}
   {% if message %}
     {{ message }}
   {% else %}

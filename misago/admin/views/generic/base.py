@@ -4,7 +4,7 @@ from .. import render
 
 
 class AdminView(View):
-    def get_template_name(self):
+    def get_template_name(self, request):
         return "%s/%s" % (self.templates_dir, self.template_name)
 
     def current_link(self, request):
@@ -23,5 +23,5 @@ class AdminView(View):
 
         context = self.process_context(request, context)
 
-        template_name = template_name or self.get_template_name()
+        template_name = template_name or self.get_template_name(request)
         return render(request, template_name, context)
