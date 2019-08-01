@@ -32,9 +32,3 @@ def test_static_settings_setup_raises_import_error_when_invalid_path_is_given():
     settings = StaticSettings()
     with pytest.raises(ImportError):
         settings.setup("misago.invalid")
-
-
-def test_static_settings_raises_error_when_setting_is_accessed_before_setup():
-    settings = StaticSettings()
-    with pytest.raises(AssertionError):
-        settings.DEBUG  # pylint: disable=pointless-statement
