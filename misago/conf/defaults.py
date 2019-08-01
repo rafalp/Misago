@@ -5,7 +5,7 @@ DEBUG = False
 
 DATABASE = None
 
-CACHE = "dummy://null"
+CACHE = None
 
 STATIC_ROOT = None
 

@@ -245,8 +245,8 @@ run_bash() {
 }
 
 # Shortcut for docker-compose run --rm misago python manage.py
-run_managepy() {
-    docker-compose run --rm misago python manage.py "${@:2}"
+run_misagoclipy() {
+    docker-compose run --rm misago python misagocli.py "${@:2}"
 }
 
 # Shortcut for docker-compose run --rm misago...
@@ -314,8 +314,8 @@ if [[ $1 ]]; then
         txpull
     elif [[ $1 = "bash" ]]; then
         run_bash
-    elif [[ $1 = "manage.py" ]]; then
-        run_managepy $@
+    elif [[ $1 = "misagocli.py" ]]; then
+        run_misagoclipy $@
     elif [[ $1 = "run" ]]; then
         docker_run $@
     elif [[ $1 = "psql" ]]; then
