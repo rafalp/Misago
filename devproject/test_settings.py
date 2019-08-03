@@ -69,8 +69,3 @@ if os.environ.get("TRAVIS"):
     }
 
     TEST_NAME = "travis_ci_test"
-
-# for testing misago.sso module (single sign on)
-SSO_PRIVATE_KEY = "priv1"
-SSO_PUBLIC_KEY = "fakeSsoPublicKey"
-SSO_SERVER = "http://example.com/server/"

@@ -8,7 +8,16 @@ from django.shortcuts import reverse
 from django.test import override_settings, TestCase
 from django.utils.timezone import now
 
+from ..conf.test import override_dynamic_settings
+
 User = get_user_model()
+
+TEST_SSO_SETTINGS = {
+    "enable_sso": True,
+    "sso_private_key": "priv1",
+    "sso_public_key": "fakeSsoPublicKey",
+    "sso_server": "http://example.com/server/",
+}
 
 
 class ConnectionMock:
@@ -67,38 +76,58 @@ class TimestampSignerMock:
         setattr(self.TimestampSigner, "unsign", self.origin_unsign)
 
 
-class SsoModuleTestCase(TestCase):
-    def test_sso_client(self):
-        url_to_external_logging = reverse("simple-sso-login")
-        self.assertEqual("/sso/client/", url_to_external_logging)
+@override_dynamic_settings(enable_sso=False)
+def test_sso_login_view_returns_404_if_sso_is_disabled(db, client):
+    url_to_external_logging = reverse("simple-sso-login")
+    assert url_to_external_logging == "/sso/client/"
 
-        with ConnectionMock():
-            response = self.client.get(url_to_external_logging)
+    response = client.get(url_to_external_logging)
+    assert response.status_code == 404
 
-        self.assertEqual(302, response.status_code)
 
-        url_parsed = urlparse(response.url)
-        self.assertEqual("/server/authorize/", url_parsed.path)
-        self.assertEqual(
-            "token=XcHtuemqcjnIT6J2WHTFswLQP0W07nI96XfxqGkm6b1zFToF0YGEoIYu37QOajkc",
-            url_parsed.query,
-        )
+@override_dynamic_settings(**TEST_SSO_SETTINGS)
+def test_sso_login_view_initiates_auth_flow(db, client):
+    url_to_external_logging = reverse("simple-sso-login")
+    assert url_to_external_logging == "/sso/client/"
 
-    def test_sso_client_authenticate(self):
-        url_to_authenticate = reverse("simple-sso-authenticate")
-        self.assertEqual("/sso/client/authenticate/", url_to_authenticate)
-        query = (
-            "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
-            "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
-        )
-        url_to_authenticate += "?" + query
+    with ConnectionMock():
+        response = client.get(url_to_external_logging)
 
-        with ConnectionMock():
-            with TimestampSignerMock():
-                response = self.client.get(url_to_authenticate)
+    assert response.status_code == 302
 
-        self.assertEqual(302, response.status_code)
-        self.assertEqual("/", response.url)
+    url_parsed = urlparse(response.url)
+    assert url_parsed.path == "/server/authorize/"
+    assert url_parsed.query == (
+        "token=XcHtuemqcjnIT6J2WHTFswLQP0W07nI96XfxqGkm6b1zFToF0YGEoIYu37QOajkc"
+    )
 
-        u = User.objects.first()
-        self.assertEqual("jkowalski", u.username)
+
+@override_dynamic_settings(enable_sso=False)
+def test_sso_auth_view_returns_404_if_sso_is_disabled(db, client):
+    url_to_authenticate = reverse("simple-sso-authenticate")
+    assert url_to_authenticate == "/sso/client/authenticate/"
+
+    response = client.get(url_to_authenticate)
+    assert response.status_code == 404
+
+
+@override_dynamic_settings(**TEST_SSO_SETTINGS)
+def test_sso_auth_view_authenticates_user(db, client):
+    url_to_authenticate = reverse("simple-sso-authenticate")
+    assert url_to_authenticate == "/sso/client/authenticate/"
+
+    query = (
+        "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
+        "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
+    )
+    url_to_authenticate += "?" + query
+
+    with ConnectionMock():
+        with TimestampSignerMock():
+            response = client.get(url_to_authenticate)
+
+    assert response.status_code == 302
+    assert response.url == "/"
+
+    user = User.objects.first()
+    assert user.username == "jkowalski"
