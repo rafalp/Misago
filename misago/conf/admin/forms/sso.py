@@ -23,14 +23,16 @@ class ChangeSSOSettingsForm(ChangeSettingsForm):
         help_text=_(
             "Leave this field empty for Misago to generate this key on form submission."
         ),
-        max_length=64, required=False
+        max_length=64,
+        required=False,
     )
     sso_private_key = forms.CharField(
         label=_("Private key"),
         help_text=_(
             "Leave this field empty for Misago to generate this key on form submission."
         ),
-        max_length=64, required=False
+        max_length=64,
+        required=False,
     )
     sso_url = forms.URLField(label=_("Server URL"), max_length=255, required=False)
 
