@@ -12,15 +12,25 @@ class ChangeSSOSettingsForm(ChangeSettingsForm):
     enable_sso = YesNoSwitch(
         label=_("Enable Single Sign-On"),
         help_text=_(
-            "Turning this option on will result in Misago validating new user's e-mail "
-            "and IP address against SFS database."
+            "Enabling SSO will make login option redirect users to the server URL "
+            "configured below. It will also disable option to register on forum, "
+            "change username, email or passward, as those features will be delegated "
+            "to the 3rd party site."
         ),
     )
     sso_public_key = forms.CharField(
-        label=_("Public key"), max_length=64, required=False
+        label=_("Public key"),
+        help_text=_(
+            "Leave this field empty for Misago to generate this key on form submission."
+        ),
+        max_length=64, required=False
     )
     sso_private_key = forms.CharField(
-        label=_("Private key"), max_length=64, required=False
+        label=_("Private key"),
+        help_text=_(
+            "Leave this field empty for Misago to generate this key on form submission."
+        ),
+        max_length=64, required=False
     )
     sso_url = forms.URLField(label=_("Server URL"), max_length=255, required=False)
 
