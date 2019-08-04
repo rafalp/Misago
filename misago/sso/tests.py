@@ -19,10 +19,12 @@ TEST_SSO_SETTINGS = {
     "sso_server": "http://example.com/server/",
 }
 
+SSO_USER_EMAIL = "jkowalski@example.com"
+
 
 class ConnectionMock:
     def __init__(self):
-        self.Session = Session
+        self.session = Session
 
     def __enter__(self):
         self.origin_post = Session.post
@@ -38,19 +40,22 @@ class ConnectionMock:
                 )
             elif "/server/verify/" == urlparse(requested_url).path:
                 mocked_response._content = (
-                    b'{"username": "jkowalski", "email": "jkowalski@example.com", "first_name": '
-                    b'"Jan", "last_name": "Kowalski", "is_staff": false, "is_superuser": false, '
-                    b'"is_active": true}.XTg4IQ._cANZR5jHvtwhNzcnNYDfE1nLHE'
-                )
+                    (
+                        '{"username": "jkowalski", "email": "%s", "first_name": '
+                        '"Jan", "last_name": "Kowalski", "is_staff": false, "is_superuser": false, '
+                        '"is_active": true}.XTg4IQ._cANZR5jHvtwhNzcnNYDfE1nLHE'
+                    )
+                    % SSO_USER_EMAIL
+                ).encode("utf-8")
 
             mocked_response.status_code = 200
             return mocked_response
 
-        setattr(self.Session, "post", mocked_post)
-        return self.Session
+        setattr(self.session, "post", mocked_post)
+        return self.session
 
     def __exit__(self, type, value, traceback):
-        setattr(self.Session, "post", self.origin_post)
+        setattr(self.session, "post", self.origin_post)
 
 
 class TimestampSignerMock:
@@ -112,7 +117,7 @@ def test_sso_auth_view_returns_404_if_sso_is_disabled(db, client):
 
 
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_authenticates_user(db, client):
+def test_sso_auth_view_creates_new_user(db, client):
     url_to_authenticate = reverse("simple-sso-authenticate")
     assert url_to_authenticate == "/sso/client/authenticate/"
 
@@ -131,3 +136,27 @@ def test_sso_auth_view_authenticates_user(db, client):
 
     user = User.objects.first()
     assert user.username == "jkowalski"
+
+
+@override_dynamic_settings(**TEST_SSO_SETTINGS)
+def test_sso_auth_view_authenticates_existing_user(user, client):
+    user.set_email(SSO_USER_EMAIL)
+    user.save()
+
+    url_to_authenticate = reverse("simple-sso-authenticate")
+    assert url_to_authenticate == "/sso/client/authenticate/"
+
+    query = (
+        "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
+        "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
+    )
+    url_to_authenticate += "?" + query
+
+    with ConnectionMock():
+        with TimestampSignerMock():
+            response = client.get(url_to_authenticate)
+
+    assert response.status_code == 302
+    assert response.url == "/"
+
+    assert User.objects.count() == 1

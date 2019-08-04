@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.http import Http404
-from simple_sso.sso_client.client import AuthenticateView, LoginView, Client
+from simple_sso.sso_client.client import AuthenticateView, Client, LoginView
 
 from ..users.authbackends import MisagoBackend
 from ..users.setupnewuser import setup_new_user
-
 
 User = get_user_model()
 
@@ -52,7 +51,7 @@ class ClientMisago(Client):
 
     def build_user(self, user_data):
         try:
-            return User.objects.get(username=user_data["username"])
+            return User.objects.get_by_email(user_data["email"])
         except User.DoesNotExist:
             user = User.objects.create_user(user_data["username"], user_data["email"])
             user.update_acl_key()
