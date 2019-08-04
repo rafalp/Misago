@@ -9,7 +9,7 @@ from ...serializers import DeleteThreadsSerializer
 @transaction.atomic
 def delete_thread(request, thread):
     allow_delete_thread(request.user_acl, thread)
-    moderation.delete_thread(request.user, thread)
+    moderation.delete_thread(request, thread)
     return Response({})
 
 
