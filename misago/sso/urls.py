@@ -1,4 +1,12 @@
-from django.conf.urls import url, include
-from .client import client
+from django.conf.urls import url
 
-urlpatterns = [url(r"^client/", include(client.get_urls()))]
+from .client import MisagoAuthenticateView, MisagoLoginView
+
+urlpatterns = [
+    url(r"^client/$", MisagoLoginView.as_view(), name="simple-sso-login"),
+    url(
+        r"^client/authenticate/$",
+        MisagoAuthenticateView.as_view(),
+        name="simple-sso-authenticate",
+    ),
+]
