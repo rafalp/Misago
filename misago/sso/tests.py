@@ -1,7 +1,8 @@
+from urllib.parse import urlparse
+
 from itsdangerous.timed import TimestampSigner
 from requests import Response
 from requests.sessions import Session
-from urllib.parse import urlparse
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
