@@ -10,4 +10,4 @@ app = Starlette(debug=settings.DEBUG)
 
 @app.route("/")
 async def homepage(request):
-    return JSONResponse({time": time(), "debug": settings.DEBUG})
+    return JSONResponse({"time": time(), "debug": settings.DEBUG})
