@@ -1,6 +1,8 @@
 import os
 from importlib import import_module
 
+from starlette.applications import Starlette
+
 __version__ = "4.0"
 __released__ = False
 
@@ -20,3 +22,8 @@ def setup():
         raise ImportError(f"'{settings_module_name}' module could not be imported")
     else:
         settings.setup(settings_module)
+
+
+def get_asgi_application() -> Starlette:
+    from .asgi import app
+    return app
