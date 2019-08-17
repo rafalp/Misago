@@ -3,7 +3,7 @@ from django.http import Http404
 from simple_sso.sso_client.client import AuthenticateView, Client, LoginView
 
 from ..users.authbackends import MisagoBackend
-from .builduser import get_or_create_user
+from .user import get_or_create_user
 from .validators import UserDataValidator
 
 
@@ -53,4 +53,4 @@ class ClientMisago(Client):
         if not validator.is_valid():
             failed_fields = ", ".join(validator.errors.keys())
             raise SuspiciousOperation(f"User data failed to validate: {failed_fields}")
-        return get_or_create_user(self.request, user_data)
+        return get_or_create_user(self.request, validator.cleaned_data)

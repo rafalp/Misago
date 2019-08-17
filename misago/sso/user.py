@@ -38,6 +38,6 @@ def update_user(user, user_data):
         user.set_username(user_data["username"])
     if user.email != user_data["email"]:
         user.set_email(user_data["email"])
-    if user.is_active != user_data["is_active"]:
+    if user.is_active != user_data.get("is_active", user.is_active):
         user.is_active = user_data["is_active"]
     user.save()
