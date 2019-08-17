@@ -1,11 +1,10 @@
-from django.contrib.auth import get_user_model
+from django.core.exceptions import SuspiciousOperation
 from django.http import Http404
 from simple_sso.sso_client.client import AuthenticateView, Client, LoginView
 
 from ..users.authbackends import MisagoBackend
-from ..users.setupnewuser import setup_new_user
-
-User = get_user_model()
+from .user import get_or_create_user
+from .validators import UserDataValidator
 
 
 class MisagoAuthenticateView(AuthenticateView):
@@ -50,10 +49,8 @@ class ClientMisago(Client):
         self.backend = "%s.%s" % (MisagoBackend.__module__, MisagoBackend.__name__)
 
     def build_user(self, user_data):
-        try:
-            return User.objects.get_by_email(user_data["email"])
-        except User.DoesNotExist:
-            user = User.objects.create_user(user_data["username"], user_data["email"])
-            user.update_acl_key()
-            setup_new_user(self.request.settings, user)
-            return user
+        validator = UserDataValidator(user_data)
+        if not validator.is_valid():
+            failed_fields = ", ".join(validator.errors.keys())
+            raise SuspiciousOperation(f"User data failed to validate: {failed_fields}")
+        return get_or_create_user(self.request, validator.cleaned_data)
