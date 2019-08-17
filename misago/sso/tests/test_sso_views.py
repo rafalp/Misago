@@ -29,8 +29,9 @@ def create_verify_response(data):
 
 
 class ConnectionMock:
-    def __init__(self):
+    def __init__(self, user_data=None):
         self.session = Session
+        self.user_data = user_data
 
     def __enter__(self):
         self.origin_post = Session.post
@@ -45,18 +46,21 @@ class ConnectionMock:
                     b'oF0YGEoIYu37QOajkc"}.XTd9sA.quRsXFxqMk-ufwSc79q-_YLDNzg'
                 )
             elif "/server/verify/" == urlparse(requested_url).path:
-                mocked_response._content = create_verify_response(
-                    {
-                        "id": SSO_USER_ID,
-                        "username": "jkowalski",
-                        "email": "jkowalski@example.com",
-                        "first_name": "Jan",
-                        "last_name": "Kowalski",
-                        "is_staff": False,
-                        "is_superuser": False,
-                        "is_active": True,
-                    }
-                )
+                user_data = {
+                    "id": SSO_USER_ID,
+                    "username": "jkowalski",
+                    "email": "jkowalski@example.com",
+                    "first_name": "Jan",
+                    "last_name": "Kowalski",
+                    "is_staff": False,
+                    "is_superuser": False,
+                    "is_active": True,
+                }
+
+                if self.user_data:
+                    user_data.update(self.user_data)
+
+                mocked_response._content = create_verify_response(user_data)
 
             mocked_response.status_code = 200
             return mocked_response
@@ -195,3 +199,21 @@ def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, client):
     assert user.username == "jkowalski"
     assert user.email == "jkowalski@example.com"
     assert user.is_active is True
+
+
+@override_dynamic_settings(**TEST_SSO_SETTINGS)
+def test_sso_auth_view_returns_bad_request_error_for_invalid_user_data(db, client):
+
+    url_to_authenticate = reverse("simple-sso-authenticate")
+    assert url_to_authenticate == "/sso/client/authenticate/"
+
+    query = (
+        "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
+        "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
+    )
+    url_to_authenticate += "?" + query
+
+    with ConnectionMock({"email": "invalid"}):
+        with TimestampSignerMock():
+            response = client.get(url_to_authenticate)
+            assert response.status_code == 400
