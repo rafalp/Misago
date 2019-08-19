@@ -92,6 +92,12 @@
 
 
 {% block view %}
+{% if settings.enable_sso %}  
+  <div class="alert alert-warning" role="alert">
+    <strong>{% trans "Note" %}:</strong> {% trans "Single Sign-On is enabled. Social authentication has been disabled and delegated to the third-party site." %}
+  </div>
+{% endif %}
+
 {{ block.super }}
 
 <div class="card card-admin-table mt-3">

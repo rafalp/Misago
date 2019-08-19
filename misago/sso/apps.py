@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class MisagoSsoConfig(AppConfig):
+class MisagoSSOConfig(AppConfig):
     """
     Using https://github.com/divio/django-simple-sso
     """

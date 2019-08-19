@@ -1,39 +1,56 @@
-from django.contrib.auth import get_user_model
-from django.contrib.auth.hashers import make_password
-from misago.conf import settings
-from misago.conf.shortcuts import get_dynamic_settings
-from misago.users.authbackends import MisagoBackend
-from misago.users.setupnewuser import setup_new_user
+from django.core.exceptions import SuspiciousOperation
+from django.http import Http404
+from simple_sso.sso_client.client import AuthenticateView, Client, LoginView
 
-from simple_sso.sso_client.client import Client
+from ..users.authbackends import MisagoBackend
+from .user import get_or_create_user
+from .validators import UserDataValidator
 
-User = get_user_model()
+
+class MisagoAuthenticateView(AuthenticateView):
+    @property
+    def client(self):
+        return create_configured_client(self.request)
+
+    def get(self, request):
+        if not request.settings.enable_sso:
+            raise Http404()
+
+        return super().get(request)
+
+
+class MisagoLoginView(LoginView):
+    @property
+    def client(self):
+        return create_configured_client(self.request)
+
+    def get(self, request):
+        if not request.settings.enable_sso:
+            raise Http404()
+
+        return super().get(request)
+
+
+def create_configured_client(request):
+    settings = request.settings
+
+    return ClientMisago(
+        settings.sso_server,
+        settings.sso_public_key,
+        settings.sso_private_key,
+        request=request,
+    )
 
 
 class ClientMisago(Client):
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
         self.backend = "%s.%s" % (MisagoBackend.__module__, MisagoBackend.__name__)
 
     def build_user(self, user_data):
-        try:
-            user = User.objects.get(username=user_data["username"])
-        except User.DoesNotExist:
-
-            user = User.objects.create_user(
-                user_data["username"],
-                user_data["email"],
-                make_password(make_password("ItDoesMatter")),
-            )
-
-            user.update_acl_key()
-
-            user_settings = get_dynamic_settings()
-            setup_new_user(user_settings, user)
-
-        return user
-
-
-client = ClientMisago(
-    settings.SSO_SERVER, settings.SSO_PUBLIC_KEY, settings.SSO_PRIVATE_KEY
-)
+        validator = UserDataValidator(user_data)
+        if not validator.is_valid():
+            failed_fields = ", ".join(validator.errors.keys())
+            raise SuspiciousOperation(f"User data failed to validate: {failed_fields}")
+        return get_or_create_user(self.request, validator.cleaned_data)

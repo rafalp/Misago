@@ -216,6 +216,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_fields = HStoreField(default=dict)
     agreements = ArrayField(models.PositiveIntegerField(), default=list)
 
+    sso_id = models.PositiveIntegerField(null=True, blank=True, unique=True)
+
     USERNAME_FIELD = "slug"
     REQUIRED_FIELDS = ["email"]
 
