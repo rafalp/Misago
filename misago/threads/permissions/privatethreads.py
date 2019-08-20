@@ -43,7 +43,7 @@ class PermissionsForm(forms.Form):
     can_add_everyone_to_private_threads = YesNoSwitch(
         label=_("Can add everyone to threads"),
         help_text=_(
-            "Allows user to add users that are blocking him to private threads."
+            "Allows user to add users that are blocking them to private threads."
         ),
     )
     can_report_private_threads = YesNoSwitch(
