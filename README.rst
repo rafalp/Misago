@@ -134,7 +134,7 @@ If you have found bug, please report it on `issue tracker <https://github.com/ra
 
 For feature or support requests as well as general feedback please use `official forum <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
 
-There's also Gitter for those looking for intant-messaging approach for discussing Misago development.
+There's also Gitter for those looking for instant-messaging approach for discussing Misago development.
 
 
 Contributing
