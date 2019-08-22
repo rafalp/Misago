@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('misago_users', '0015_user_agreements'),
+        ('misago_users', '0020_set_dj_partial_indexes'),
     ]
 
     operations = [
