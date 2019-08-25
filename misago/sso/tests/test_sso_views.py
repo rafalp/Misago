@@ -10,15 +10,9 @@ from django.test import override_settings, TestCase
 from django.utils.timezone import now
 
 from ...conf.test import override_dynamic_settings
+from .utils import TEST_SSO_SETTINGS
 
 User = get_user_model()
-
-TEST_SSO_SETTINGS = {
-    "enable_sso": True,
-    "sso_private_key": "priv1",
-    "sso_public_key": "fakeSsoPublicKey",
-    "sso_server": "http://example.com/server/",
-}
 
 SSO_USER_ID = 1
 
