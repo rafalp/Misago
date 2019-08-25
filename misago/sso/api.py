@@ -9,7 +9,7 @@ from .validators import UserDataValidator
 
 @csrf_exempt
 @require_POST
-def sync_user(request):
+def sso_sync(request):
     if not request.settings.enable_sso:
         raise Http404()
 

@@ -6,7 +6,7 @@ from ...conf.test import override_dynamic_settings
 from .utils import TEST_SSO_SETTINGS
 
 User = get_user_model()
-api_link = reverse("simple-sso-user-sync")
+api_link = reverse("simple-sso-sync")
 
 
 @override_dynamic_settings(enable_sso=False)
