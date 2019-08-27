@@ -434,6 +434,18 @@ class UserCreateTests(UserTestCase):
             },
         )
 
+    @override_dynamic_settings(enable_sso=True)
+    def test_registration_fails_when_sso_is_enabled(self):
+        response = self.client.post(
+            self.api_link,
+            data={
+                "username": "User",
+                "email": "user@example.com",
+                "password": self.USER_PASSWORD,
+            },
+        )
+        self.assertEqual(response.status_code, 403)
+
     @override_dynamic_settings(account_activation="none")
     def test_registration_creates_active_user(self):
         """api creates active and signed in user on POST"""

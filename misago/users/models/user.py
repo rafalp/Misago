@@ -12,10 +12,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from .. import avatars
 from ...acl.models import Role
 from ...conf import settings
 from ...core.utils import slugify
+from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
 from ..utils import hash_email
 from .online import Online
@@ -167,10 +167,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_deleting_account = models.BooleanField(default=False)
 
     avatar_tmp = models.ImageField(
-        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
+        max_length=255, upload_to=avatars_store.upload_to, null=True, blank=True
     )
     avatar_src = models.ImageField(
-        max_length=255, upload_to=avatars.store.upload_to, null=True, blank=True
+        max_length=255, upload_to=avatars_store.upload_to, null=True, blank=True
     )
     avatar_crop = models.CharField(max_length=255, null=True, blank=True)
     avatars = JSONField(null=True, blank=True)
@@ -260,7 +260,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         else:
             raise ValueError("user.delete() requires 'anonymous_username' argument")
 
-        avatars.delete_avatar(self)
+        delete_avatar(self)
 
         return super().delete(*args, **kwargs)
 

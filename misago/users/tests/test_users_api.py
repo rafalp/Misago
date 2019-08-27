@@ -534,6 +534,11 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True, enable_sso=True)
+    def test_own_account_deletion_fails_when_sso_is_enabled(self):
+        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+
     @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account(self):
         """deactivates account and marks it for deletion"""

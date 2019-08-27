@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -11,8 +12,13 @@ from ..tokens import is_password_change_token_valid
 
 def reset_view(f):
     @deny_banned_ips
-    def decorator(*args, **kwargs):
-        return f(*args, **kwargs)
+    def decorator(request, *args, **kwargs):
+        if request.settings.enable_sso:
+            raise PermissionDenied(
+                _("Please use the 3rd party site to change password.")
+            )
+
+        return f(request, *args, **kwargs)
 
     return decorator
 
