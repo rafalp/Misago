@@ -17,12 +17,14 @@ services:
     build: .
     restart: unless-stopped
     environment:
-      # Postgres
-      - POSTGRES_USER=misago
-      - POSTGRES_PASSWORD=misago
-      - POSTGRES_DB=misago
-      - POSTGRES_HOST=postgres
-      - POSTGRES_TEST_DB=misago_test
+      # Misago
+      - MISAGO_DEBUG=True
+      - MISAGO_DATABASE_URL=postgresql://postgres/misago?user=misago&password=misago
+      - MISAGO_TEST_DATABASE_URL=postgresql://postgres/test?user=misago&password=misago
+      - MISAGO_CACHE_URL=redis://redis
+      - MISAGO_STATIC_ROOT=/app/media
+      - MISAGO_MEDIA_ROOT=/app/static
+      - MISAGO_PLUGINS=/app/plugins.txt
       # Superuser
       - SUPERUSER_USERNAME=Admin
       - SUPERUSER_EMAIL=admin@example.com

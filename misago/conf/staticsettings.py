@@ -1,38 +1,33 @@
 from typing import Any, Dict, Optional
 
-from . import defaults
+TRUE_STR_VALUES = ("true", "yes", "y", "on")
 
 
 class StaticSettings:
-    _is_setup: bool
-    _conf: Dict[str, Any]
     _overrides: Dict[str, Any] = {}
 
-    def __init__(self):
-        self._is_setup = False
-        self._conf = {}
+    _debug: bool
+    _test: bool
 
-    def setup(self, settings_module: object):
-        assert not self._is_setup, "'setup()' was already called"
+    _database_url: Optional[str]
+    _cache_url: Optional[str]
 
-        for key, value in settings_module.__dict__.items():
-            if key != key.upper():
-                continue
-            self._conf[key] = value
+    _static_root: Optional[str]
+    _media_root: Optional[str]
 
-        self._is_setup = True
+    _plugins: Optional[str]
 
-    def __getattr__(self, setting: str) -> Any:
-        assert self._is_setup, "'StaticSettings' instance has to be setup first"
+    def __init__(self, settings: Dict[str, Any]):
+        self._debug = settings.get("MISAGO_DEBUG", "").lowercase() in TRUE_STR_VALUES
+        self._test = settings.get("MISAGO_TEST", "").lowercase() in TRUE_STR_VALUES
 
-        if setting in self._overrides:
-            return self._overrides[setting]
-        if setting in self._conf:
-            return self._conf[setting]
-        try:
-            return getattr(defaults, setting)
-        except AttributeError:
-            raise AttributeError(f"Setting '{setting}' is not defined")
+        self._database_url = settings.get("MISAGO_DATABASE_URL")
+        self._cache_url = settings.get("MISAGO_CACHE_URL")
+
+        self._static_root = settings.get("MISAGO_STATIC_ROOT")
+        self._media_root = settings.get("MISAGO_MEDIA_ROOT")
+
+        self._plugins = settings.get("MISAGO_PLUGINS")
 
     @classmethod
     def override_settings(cls, overrides):
@@ -41,3 +36,31 @@ class StaticSettings:
     @classmethod
     def remove_overrides(cls):
         cls._overrides = {}
+
+    @property
+    def debug(self) -> bool:
+        return self._overrides.get("DEBUG", self._debug)
+
+    @property
+    def test(self) -> bool:
+        return self._test
+
+    @property
+    def database_url(self) -> str:
+        return self._overrides.get("DATABASE_URL", self._database_url)
+
+    @property
+    def cache_url(self) -> str:
+        return self._overrides.get("CACHE_URL", self._cache_url)
+
+    @property
+    def static_root(self) -> str:
+        return self._overrides.get("STATIC_ROOT", self.static_root)
+
+    @property
+    def media_root(self) -> str:
+        return self._overrides.get("MEDIA_ROOT", self._media_root)
+
+    @property
+    def plugins(self) -> str:
+        return self._overrides.get("PLUGINS", self._plugins)

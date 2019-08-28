@@ -26,4 +26,5 @@ def setup():
 
 def get_asgi_application() -> Starlette:
     from .asgi import app
+
     return app

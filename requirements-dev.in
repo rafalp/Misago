@@ -4,3 +4,4 @@ mypy
 pylint
 pytest
 pytest-cov
+pytest-env
