@@ -3,8 +3,8 @@ dev/
 dist/
 docs/
 env/
-frontend/
 venv/
+.vscode/
 
 .DS_Store
 thumbs.db

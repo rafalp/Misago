@@ -5,6 +5,7 @@ from starlette.responses import JSONResponse
 
 from .conf import settings
 
+
 app = Starlette(debug=settings.DEBUG)
 
 

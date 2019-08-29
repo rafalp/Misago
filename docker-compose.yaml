@@ -21,7 +21,7 @@ services:
       - MISAGO_DEBUG=True
       - MISAGO_DATABASE_URL=postgresql://postgres/misago?user=misago&password=misago
       - MISAGO_TEST_DATABASE_URL=postgresql://postgres/test?user=misago&password=misago
-      - MISAGO_CACHE_URL=redis://redis
+      - MISAGO_CACHE_URL=locmem://0
       - MISAGO_STATIC_ROOT=/app/media
       - MISAGO_MEDIA_ROOT=/app/static
       - MISAGO_PLUGINS=/app/plugins.txt
@@ -40,4 +40,4 @@ services:
     volumes:
       # Map in the entire project into the container
       # This makes sure files in the container updates on the fly as we were working locally
-      - .:/srv/misago:Z
+      - .:/app/:Z

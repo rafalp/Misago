@@ -7,7 +7,7 @@
 alembic==1.0.11
 ariadne==0.5.0
 asyncpg==0.18.3           # via databases
-click==7.0                # via uvicorn
+click==7.0
 databases[postgresql]==0.2.5
 graphql-core-next==1.1.1  # via ariadne
 h11==0.8.1                # via uvicorn

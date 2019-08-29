@@ -24,10 +24,6 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
     pip install -r requirements-dev.txt
 
-ADD misago /app/misago
-ADD media /app/media
-ADD static /app/static
-
 WORKDIR /app/
 
 EXPOSE 8000
