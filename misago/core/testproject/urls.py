@@ -26,6 +26,8 @@ urlpatterns = [
         ),
         name="django-i18n",
     ),
+    # django-simple-sso doesn't have namespaces, we can't use namespace here
+    url(r"^sso/", include("misago.sso.urls")),
     url(r"^forum/test-pagination/$", views.test_pagination, name="test-pagination"),
     url(
         r"^forum/test-pagination/(?P<page>[1-9][0-9]*)/$",
