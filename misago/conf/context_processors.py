@@ -39,6 +39,7 @@ def preload_settings_json(request):
 
     preloaded_settings.update(
         {
+            "SSO_LOGIN_URL": reverse("simple-sso-login"),
             "LOGIN_API_URL": settings.MISAGO_LOGIN_API_URL,
             "LOGIN_REDIRECT_URL": reverse(settings.LOGIN_REDIRECT_URL),
             "LOGIN_URL": reverse(settings.LOGIN_URL),

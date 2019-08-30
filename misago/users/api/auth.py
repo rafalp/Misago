@@ -1,6 +1,6 @@
 from django.contrib import auth
 from django.contrib.auth.password_validation import validate_password
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_protect
 from rest_framework import status
@@ -38,6 +38,9 @@ def login(request):
     POST /auth/ with CSRF, username and password
     will attempt to authenticate new user
     """
+    if request.settings.enable_sso:
+        raise PermissionDenied(_("Please use the 3rd party site to authenticate."))
+
     form = AuthenticationForm(request, data=request.data)
     if form.is_valid():
         auth.login(request, form.user_cache)
@@ -85,6 +88,9 @@ def send_activation(request):
     POST /auth/send-activation/ with CSRF token and email
     will mail account activation link to requester
     """
+    if request.settings.enable_sso:
+        raise PermissionDenied(_("Please use the 3rd party site to authenticate."))
+
     form = ResendActivationForm(request.data)
     if not form.is_valid():
         return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
@@ -120,6 +126,9 @@ def send_password_form(request):
     POST /auth/send-password-form/ with CSRF token and email
     will mail change password form link to requester
     """
+    if request.settings.enable_sso:
+        raise PermissionDenied(_("Please use the 3rd party site to authenticate."))
+
     form = ResetPasswordForm(request.data)
     if not form.is_valid():
         return Response(form.get_errors_dict(), status=status.HTTP_400_BAD_REQUEST)
@@ -161,6 +170,9 @@ def change_forgotten_password(request, pk, token):
     POST /auth/change-password/user/token/ with CSRF and new password
     will change forgotten password
     """
+    if request.settings.enable_sso:
+        raise PermissionDenied(_("Please use the 3rd party site to authenticate."))
+
     invalid_message = _("Form link is invalid. Please try again.")
     expired_message = _("Your link has expired. Please request new one.")
 

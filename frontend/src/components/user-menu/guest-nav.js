@@ -3,6 +3,7 @@ import Avatar from "misago/components/avatar"
 import NavbarSearch from "misago/components/navbar-search"
 import RegisterButton from "misago/components/register-button"
 import SignInModal from "misago/components/sign-in.js"
+import misago from "misago"
 import dropdown from "misago/services/mobile-navbar-dropdown"
 import modal from "misago/services/modal"
 
@@ -25,20 +26,33 @@ export class GuestMenu extends React.Component {
             )}
           </p>
           <div className="row">
-            <div className="col-xs-6">
-              <button
-                className="btn btn-default btn-sign-in btn-block"
-                onClick={this.showSignInModal}
-                type="button"
-              >
-                {gettext("Sign in")}
-              </button>
-            </div>
-            <div className="col-xs-6">
-              <RegisterButton className="btn-primary btn-register btn-block">
-                {gettext("Register")}
-              </RegisterButton>
-            </div>
+            {misago.get("SETTINGS").enable_sso ? (
+              <div className="col-xs-12">
+                <a
+                  className="btn btn-primary btn-register btn-block"
+                  href={misago.get("SETTINGS").SSO_LOGIN_URL}
+                >
+                  {gettext("Sign in")}
+                </a>
+              </div>
+            ) : (
+              <div className="col-xs-6">
+                <button
+                  className="btn btn-default btn-sign-in btn-block"
+                  onClick={this.showSignInModal}
+                  type="button"
+                >
+                  {gettext("Sign in")}
+                </button>
+              </div>
+            )}
+            {!misago.get("SETTINGS").enable_sso && (
+              <div className="col-xs-6">
+                <RegisterButton className="btn-primary btn-register btn-block">
+                  {gettext("Register")}
+                </RegisterButton>
+              </div>
+            )}
           </div>
         </li>
       </ul>
@@ -50,16 +64,27 @@ export class GuestNav extends GuestMenu {
   render() {
     return (
       <div className="nav nav-guest">
-        <button
-          className="btn navbar-btn btn-default btn-sign-in"
-          onClick={this.showSignInModal}
-          type="button"
-        >
-          {gettext("Sign in")}
-        </button>
-        <RegisterButton className="navbar-btn btn-primary btn-register">
-          {gettext("Register")}
-        </RegisterButton>
+        {misago.get("SETTINGS").enable_sso ? (
+          <a
+            className="btn navbar-btn btn-primary btn-register"
+            href={misago.get("SETTINGS").SSO_LOGIN_URL}
+          >
+            {gettext("Sign in")}
+          </a>
+        ) : (
+          <button
+            className="btn navbar-btn btn-default btn-sign-in"
+            onClick={this.showSignInModal}
+            type="button"
+          >
+            {gettext("Sign in")}
+          </button>
+        )}
+        {!misago.get("SETTINGS").enable_sso && (
+          <RegisterButton className="navbar-btn btn-primary btn-register">
+            {gettext("Register")}
+          </RegisterButton>
+        )}
         <div className="navbar-left">
           <NavbarSearch />
         </div>

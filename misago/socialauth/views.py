@@ -1,6 +1,8 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME, login
+from django.core.exceptions import PermissionDenied
 from django.http import Http404
 from django.urls import reverse
+from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from social_core.actions import do_auth, do_complete
@@ -17,6 +19,9 @@ def get_provider_from_request(request, backend):
 
 def social_auth_view(f):
     def social_auth_view_wrapper(request, backend, *args, **kwargs):
+        if request.settings.enable_sso:
+            raise PermissionDenied(_("Please use the 3rd party site to login."))
+
         provider = get_provider_from_request(request, backend)
         request.strategy = load_strategy(request)
 

@@ -68,6 +68,11 @@ class UserUsernameTests(AuthenticatedUserTestCase):
             {"detail": "Username can only contain latin alphabet letters and digits."},
         )
 
+    @override_dynamic_settings(enable_sso=True)
+    def test_username_change_fails_when_sso_is_enabled(self):
+        response = self.client.post(self.link, data={"username": "Pointless"})
+        self.assertEqual(response.status_code, 403)
+
     def test_change_username(self):
         """api changes username and records change"""
         response = self.client.get(self.link)

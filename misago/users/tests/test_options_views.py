@@ -46,6 +46,11 @@ class ConfirmChangeEmailTests(AuthenticatedUserTestCase):
             response, "Change confirmation link is invalid.", status_code=400
         )
 
+    @override_dynamic_settings(enable_sso=True)
+    def test_email_change_fails_when_sso_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
+
     def test_change_email(self):
         """valid token changes email"""
         response = self.client.get(self.link)
@@ -84,6 +89,11 @@ class ConfirmChangePasswordTests(AuthenticatedUserTestCase):
         self.assertContains(
             response, "Change confirmation link is invalid.", status_code=400
         )
+
+    @override_dynamic_settings(enable_sso=True)
+    def test_password_change_fails_when_sso_is_enabled(self):
+        response = self.client.get(self.link)
+        self.assertEqual(response.status_code, 403)
 
     def test_change_password(self):
         """valid token changes password"""
