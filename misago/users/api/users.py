@@ -157,7 +157,7 @@ class UserViewSet(viewsets.GenericViewSet):
     def change_password(self, request, pk=None):
         if request.settings.enable_sso:
             raise PermissionDenied(
-                _("Please use the 3rd party site to change password.")
+                _("Please use the 3rd party site to change your password.")
             )
 
         get_int_or_404(pk)
@@ -170,7 +170,9 @@ class UserViewSet(viewsets.GenericViewSet):
     )
     def change_email(self, request, pk=None):
         if request.settings.enable_sso:
-            raise PermissionDenied(_("Please use the 3rd party site to change e-mail."))
+            raise PermissionDenied(
+                _("Please use the 3rd party site to change your e-mail.")
+            )
 
         get_int_or_404(pk)
         allow_self_only(
