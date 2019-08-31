@@ -4,13 +4,7 @@
 
 {% block title %}
 {% if list_name %}
-  {% if paginator.page > 1 %}
-    {{ list_name }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ category }} | {{ block.super }}
-  {% else %}
-    {{ list_name }} | {{ category }} | {{ block.super }}
-  {% endif %}
-{% elif paginator.page > 1 %}
-  {{ category }} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
+  {{ list_name }} | {{ category }} | {{ block.super }}
 {% else %}
   {{ category }} | {{ block.super }}
 {% endif %}
