@@ -43,7 +43,6 @@
         <div class="threads-list ui-ready">
           {% block threads-list %}
             <ul class="list-group" itemscope itemtype="http://schema.org/ItemList">
-              <meta itemprop="numberOfItems" content="{{ paginator.count }}">
               <meta itemprop="itemListOrder" content="http://schema.org/ItemListOrderDescending">
               {% for thread in threads %}
                 {% block thread %}

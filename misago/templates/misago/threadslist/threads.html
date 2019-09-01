@@ -3,7 +3,7 @@
 
 
 {% block title %}
-  {% if THREADS_ON_INDEX and paginator.page == 1 %}
+  {% if THREADS_ON_INDEX %}
     {% if list_name %}
       {{ list_name }} | {{ block.super }}
     {% else %}
@@ -12,8 +12,6 @@
   {% else %}
     {% if list_name %}
       {{ list_name }} | {% trans "Threads" %} | {{ block.super }}
-    {% elif paginator.page > 1 %}
-      {% trans "Threads" %} ({% blocktrans with page=paginator.page %}page: {{ page }}{% endblocktrans %}) | {{ block.super }}
     {% else %}
       {% trans "Threads" %} | {{ block.super }}
     {% endif %}
