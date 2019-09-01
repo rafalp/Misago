@@ -73,6 +73,7 @@ As of now Misago implements all features considered "must have" on live internet
 Even more features will follow in future releases:
 
 * Forum-wide JS routing further reducing navigation times.
+* Replacing current API with GraphQL API for easier integrations and extending.
 * Plugin system to extend core package with new features.
 * WYSIWYM content editor for even easier post formatting.
 * Ranking system for forum search results based on post links, likes, author and thread importance.
