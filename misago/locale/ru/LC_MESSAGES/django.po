@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-07 17:33+0000\n"
+"POT-Creation-Date: 2019-09-01 14:10+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: alff0x1f <alff3one@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -218,22 +218,21 @@ msgstr ""
 "Только пользователи с соответствующими правами могут оставлять сообщения в "
 "закрытых категориях."
 
-#: categories/admin/forms.py:70 conf/admin/__init__.py:79
+#: categories/admin/forms.py:70 conf/admin/__init__.py:93
 #: templates/misago/admin/categories/list.html:19
 #: templates/misago/admin/dashboard/totals.html:19
 #: templates/misago/navbar.html:20 templates/misago/navbar.html:36
 #: templates/misago/profile/threads.html:5
 #: templates/misago/profile/threads.html:8
 #: templates/misago/profile/threads.html:9
-#: templates/misago/threadslist/category.html:74
+#: templates/misago/threadslist/category.html:68
 #: templates/misago/threadslist/threads.html:14
 #: templates/misago/threadslist/threads.html:16
-#: templates/misago/threadslist/threads.html:18
-#: templates/misago/threadslist/threads.html:35
-#: templates/misago/threadslist/threads.html:44
-#: templates/misago/threadslist/threads.html:63
+#: templates/misago/threadslist/threads.html:33
+#: templates/misago/threadslist/threads.html:42
+#: templates/misago/threadslist/threads.html:66
 #: threads/permissions/threads.py:73 threads/permissions/threads.py:104
-#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:98
+#: threads/search.py:16 threads/viewmodels/thread.py:122 users/apps.py:106
 msgid "Threads"
 msgstr "Темы"
 
@@ -465,20 +464,20 @@ msgstr "Можно смотреть содержимое категории"
 msgid "You don't have permission to browse \"%(category)s\" contents."
 msgstr "У вас нет разрешения просматривать содержимое \"%(category)s\"."
 
-#: conf/admin/__init__.py:41 templates/misago/admin/conf/index.html:5
+#: conf/admin/__init__.py:45 templates/misago/admin/conf/index.html:5
 #: templates/misago/admin/themes/form.html:48
 msgid "Settings"
 msgstr "Настройки"
 
-#: conf/admin/__init__.py:48 templates/misago/admin/socialauth/form.html:27
+#: conf/admin/__init__.py:52 templates/misago/admin/socialauth/form.html:27
 msgid "General"
 msgstr "Общее"
 
-#: conf/admin/__init__.py:49
+#: conf/admin/__init__.py:53
 msgid "Change forum details like name, description or footer."
 msgstr ""
 
-#: conf/admin/__init__.py:54 templates/misago/admin/dashboard/totals.html:7
+#: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
 #: templates/misago/userslists/base.html:5
 #: templates/misago/userslists/base.html:14 users/admin/__init__.py:74
@@ -486,28 +485,38 @@ msgstr ""
 msgid "Users"
 msgstr "Пользователи"
 
-#: conf/admin/__init__.py:56
+#: conf/admin/__init__.py:60
 msgid "Customize user accounts default behavior and features availability."
 msgstr ""
 
-#: conf/admin/__init__.py:63
+#: conf/admin/__init__.py:67
 msgid "Captcha"
 msgstr ""
 
-#: conf/admin/__init__.py:65
+#: conf/admin/__init__.py:69
 msgid "Setup protection against automatic registrations on the site."
 msgstr ""
 
-#: conf/admin/__init__.py:72 templates/misago/admin/dashboard/analytics.html:7
+#: conf/admin/__init__.py:76
+msgid "Single Sign-On"
+msgstr ""
+
+#: conf/admin/__init__.py:78
+msgid ""
+"SSO enables you to delegate user login and registration from Misago tothe "
+"third party site."
+msgstr ""
+
+#: conf/admin/__init__.py:86 templates/misago/admin/dashboard/analytics.html:7
 #: templates/misago/admin/dashboard/index.html:40
 msgid "Analytics"
 msgstr ""
 
-#: conf/admin/__init__.py:73
+#: conf/admin/__init__.py:87
 msgid "Enable Google Analytics or setup Google Site Verification."
 msgstr ""
 
-#: conf/admin/__init__.py:80
+#: conf/admin/__init__.py:94
 msgid "Threads, posts, polls and attachments options."
 msgstr ""
 
@@ -742,6 +751,39 @@ msgstr ""
 msgid ""
 "Misago uses this setting to build links in e-mails sent to site users. "
 "Address under which site is running appears to be \"%(address)s\"."
+msgstr ""
+
+#: conf/admin/forms/sso.py:13
+msgid "Enable Single Sign-On"
+msgstr ""
+
+#: conf/admin/forms/sso.py:15
+msgid ""
+"Enabling SSO will make login option redirect users to the server URL "
+"configured below. It will also disable option to register on forum, change "
+"username, email or passward, as those features will be delegated to the 3rd "
+"party site."
+msgstr ""
+
+#: conf/admin/forms/sso.py:22
+msgid "Public key"
+msgstr ""
+
+#: conf/admin/forms/sso.py:24 conf/admin/forms/sso.py:32
+msgid ""
+"Leave this field empty for Misago to generate this key on form submission."
+msgstr ""
+
+#: conf/admin/forms/sso.py:30
+msgid "Private key"
+msgstr ""
+
+#: conf/admin/forms/sso.py:37
+msgid "Server URL"
+msgstr ""
+
+#: conf/admin/forms/sso.py:50
+msgid "You need to enter server URL to enable SSO."
 msgstr ""
 
 #: conf/admin/forms/threads.py:27
@@ -1054,7 +1096,7 @@ msgstr ""
 msgid "This value must be lower than number of users per page."
 msgstr ""
 
-#: conf/admin/views.py:39
+#: conf/admin/views.py:40
 msgid "Settings have been saved."
 msgstr ""
 
@@ -1104,11 +1146,6 @@ msgstr "Это действие не доступно гостю"
 #: core/templatetags/misago_pagetitle.py:10
 #: templates/misago/thread/private_thread.html:7
 #: templates/misago/thread/thread.html:7
-#: templates/misago/threadslist/category.html:8
-#: templates/misago/threadslist/category.html:13
-#: templates/misago/threadslist/private_threads.html:8
-#: templates/misago/threadslist/private_threads.html:13
-#: templates/misago/threadslist/threads.html:16
 #, python-format
 msgid "page: %(page)s"
 msgstr "страница: %(page)s"
@@ -1336,14 +1373,27 @@ msgstr "Условия использования"
 msgid "Privacy policy"
 msgstr "Политика конфиденциальности"
 
-#: markup/finalise.py:20
+#: markup/finalize.py:24
 #, python-format
 msgid "%(title)s has written:"
 msgstr "%(title)s написал:"
 
-#: markup/finalise.py:22
+#: markup/finalize.py:26
 msgid "Quoted message:"
 msgstr "Цитата:"
+
+#: markup/finalize.py:33
+#, python-format
+msgid "%(title)s:"
+msgstr ""
+
+#: markup/finalize.py:35
+msgid "Spoiler:"
+msgstr ""
+
+#: markup/finalize.py:40
+msgid "Reveal spoiler"
+msgstr ""
 
 #: search/api.py:17 search/views.py:12 search/views.py:21
 msgid "You don't have permission to search site."
@@ -1460,6 +1510,18 @@ msgstr ""
 #: socialauth/pipeline.py:223 users/api/userendpoints/create.py:60
 msgid "Please try resubmitting the form."
 msgstr "Пожалуйста, попробуйте повторно отправить эту форму."
+
+#: socialauth/views.py:23
+msgid "Please use the 3rd party site to login."
+msgstr ""
+
+#: sso/validators.py:24 users/validators.py:79
+msgid "This username is not allowed."
+msgstr "Данное имя пользователя запрещено."
+
+#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:51
+msgid "This e-mail address is not allowed."
+msgstr "Этот e-mail адрес недоступен."
 
 #: templates/misago/acl_debug.html:5
 #, python-format
@@ -1891,7 +1953,7 @@ msgstr "Категория"
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
-#: templates/misago/profile/posts.html:9 users/apps.py:94
+#: templates/misago/profile/posts.html:9 users/apps.py:102
 msgid "Posts"
 msgstr "Сообщения"
 
@@ -2033,45 +2095,56 @@ msgstr ""
 msgid "Attachment error images"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:8
+#: templates/misago/admin/conf/users_settings.html:9
+#: templates/misago/admin/socialauth/list.html:97
+msgid "Note"
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:9
+msgid ""
+"Single Sign-On is enabled. Site's registration, password and deletion "
+"features have been disabled and delegated to the third-party site."
+msgstr ""
+
+#: templates/misago/admin/conf/users_settings.html:14
 msgid "New accounts"
 msgstr "Новые аккаунты"
 
-#: templates/misago/admin/conf/users_settings.html:17 users/admin/forms.py:484
+#: templates/misago/admin/conf/users_settings.html:23 users/admin/forms.py:484
 #: users/admin/forms.py:573
 msgid "Usernames"
 msgstr "Имена пользователя"
 
-#: templates/misago/admin/conf/users_settings.html:27
+#: templates/misago/admin/conf/users_settings.html:33
 msgid "Avatars"
 msgstr "Аватары"
 
-#: templates/misago/admin/conf/users_settings.html:43
+#: templates/misago/admin/conf/users_settings.html:49
 msgid "Signatures"
 msgstr "Подписи"
 
-#: templates/misago/admin/conf/users_settings.html:51
+#: templates/misago/admin/conf/users_settings.html:57
 #: users/admin/__init__.py:80
 msgid "Data downloads"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:60
+#: templates/misago/admin/conf/users_settings.html:66
 msgid "Own account deletion"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:68 users/admin/forms.py:492
+#: templates/misago/admin/conf/users_settings.html:74 users/admin/forms.py:492
 msgid "IP addresses"
 msgstr "IP адреса"
 
-#: templates/misago/admin/conf/users_settings.html:76
+#: templates/misago/admin/conf/users_settings.html:82
 msgid "Default subscription preferences"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:85
+#: templates/misago/admin/conf/users_settings.html:91
 msgid "Users lists"
 msgstr ""
 
-#: templates/misago/admin/conf/users_settings.html:94
+#: templates/misago/admin/conf/users_settings.html:100
 msgid "Top posters ranking"
 msgstr ""
 
@@ -2597,7 +2670,7 @@ msgid "Enabled login methods"
 msgstr ""
 
 #: templates/misago/admin/socialauth/list.html:15
-#: templates/misago/admin/socialauth/list.html:106
+#: templates/misago/admin/socialauth/list.html:112
 msgid "Provider"
 msgstr ""
 
@@ -2613,19 +2686,25 @@ msgstr ""
 msgid "Are you sure you want to disable this social login provider?"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:100
+#: templates/misago/admin/socialauth/list.html:97
+msgid ""
+"Single Sign-On is enabled. Social authentication has been disabled and "
+"delegated to the third-party site."
+msgstr ""
+
+#: templates/misago/admin/socialauth/list.html:106
 msgid "Setup new login method"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:119
+#: templates/misago/admin/socialauth/list.html:125
 msgid "Setup login with this provider"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:120
+#: templates/misago/admin/socialauth/list.html:126
 msgid "Setup"
 msgstr ""
 
-#: templates/misago/admin/socialauth/list.html:127
+#: templates/misago/admin/socialauth/list.html:133
 msgid "No new login providers are available for setup at this time."
 msgstr ""
 
@@ -2928,7 +3007,7 @@ msgstr ""
 msgid "Signature"
 msgstr "Подпись"
 
-#: templates/misago/admin/users/edit.html:228 users/apps.py:24
+#: templates/misago/admin/users/edit.html:228 users/apps.py:27
 msgid "Forum options"
 msgstr "Опции форума"
 
@@ -3191,7 +3270,7 @@ msgid ""
 "download."
 msgstr ""
 
-#: templates/misago/emails/data_download.html:11 users/apps.py:52
+#: templates/misago/emails/data_download.html:11 users/apps.py:57
 msgid "Download data"
 msgstr ""
 
@@ -3623,7 +3702,7 @@ msgstr "Смотреть результаты"
 #: templates/misago/profile/ban_details.html:5
 #: templates/misago/profile/ban_details.html:8
 #: templates/misago/profile/ban_details.html:9
-#: templates/misago/profile/ban_details.html:16 users/apps.py:129
+#: templates/misago/profile/ban_details.html:16 users/apps.py:137
 msgid "Ban details"
 msgstr "Детали блокировки"
 
@@ -3676,7 +3755,7 @@ msgstr[3] "Начал %(threads)s тем."
 #: templates/misago/profile/details.html:5
 #: templates/misago/profile/details.html:8
 #: templates/misago/profile/details.html:9
-#: templates/misago/profile/details.html:19 users/apps.py:116
+#: templates/misago/profile/details.html:19 users/apps.py:124
 msgid "Details"
 msgstr "Детали"
 
@@ -3706,7 +3785,7 @@ msgstr ""
 
 #: templates/misago/profile/followers.html:5
 #: templates/misago/profile/followers.html:8
-#: templates/misago/profile/followers.html:9 users/apps.py:104
+#: templates/misago/profile/followers.html:9 users/apps.py:112
 msgid "Followers"
 msgstr "Последователи"
 
@@ -3739,7 +3818,7 @@ msgstr "У %(username)s нет последователей."
 
 #: templates/misago/profile/follows.html:5
 #: templates/misago/profile/follows.html:8
-#: templates/misago/profile/follows.html:9 users/apps.py:110
+#: templates/misago/profile/follows.html:9 users/apps.py:118
 msgid "Follows"
 msgstr "Следить"
 
@@ -3839,7 +3918,7 @@ msgstr "У %(username)s нет начатых тем."
 
 #: templates/misago/profile/username_history.html:5
 #: templates/misago/profile/username_history.html:8
-#: templates/misago/profile/username_history.html:9 users/apps.py:122
+#: templates/misago/profile/username_history.html:9 users/apps.py:130
 msgid "Username history"
 msgstr "История имени пользователя"
 
@@ -4164,29 +4243,29 @@ msgstr ""
 msgid "Best answer"
 msgstr "Лучший ответ"
 
-#: templates/misago/threadslist/base.html:58
+#: templates/misago/threadslist/base.html:57
 msgid "There are no threads in this category."
 msgstr "В этой категории ещё нет тем."
 
-#: templates/misago/threadslist/base.html:60
+#: templates/misago/threadslist/base.html:59
 msgid "There are no threads on this forum... yet!"
 msgstr "На этом форуме ещё нет тем... пока что!"
 
-#: templates/misago/threadslist/base.html:64
-#: templates/misago/threadslist/private_threads.html:67
+#: templates/misago/threadslist/base.html:63
+#: templates/misago/threadslist/private_threads.html:61
 msgid "Why not start one yourself?"
 msgstr "Почему бы Вам не начать тему?"
 
-#: templates/misago/threadslist/base.html:68
-#: templates/misago/threadslist/private_threads.html:70
+#: templates/misago/threadslist/base.html:67
+#: templates/misago/threadslist/private_threads.html:64
 msgid "No threads matching specified criteria were found."
 msgstr "Не найдено тем совпадающих с указанными критериями."
 
-#: templates/misago/threadslist/base.html:83
+#: templates/misago/threadslist/base.html:82
 msgid "Next page"
 msgstr "Следующая страница"
 
-#: templates/misago/threadslist/private_threads.html:48
+#: templates/misago/threadslist/private_threads.html:42
 msgid ""
 "Private threads are threads which only those that started them and those "
 "they have invited may see and participate in."
@@ -4194,7 +4273,7 @@ msgstr ""
 "Приватные темы - темы, в которые есть доступ только по приглашению другого "
 "участника, создавшего или имеющего разрешение приглашать в тему."
 
-#: templates/misago/threadslist/private_threads.html:64
+#: templates/misago/threadslist/private_threads.html:58
 msgid "You aren't participating in any private threads."
 msgstr "Вы не участник ни в каких приватных темах."
 
@@ -4228,7 +4307,7 @@ msgstr "Опрос"
 
 #: templates/misago/userslists/active_posters.html:5
 #: templates/misago/userslists/active_posters.html:23
-#: templates/misago/userslists/active_posters.html:24 users/apps.py:73
+#: templates/misago/userslists/active_posters.html:24 users/apps.py:81
 msgid "Top posters"
 msgstr ""
 
@@ -5443,10 +5522,8 @@ msgid "Can add everyone to threads"
 msgstr "Можно добавлять в тему кого угодно"
 
 #: threads/permissions/privatethreads.py:46
-msgid "Allows user to add users that are blocking him to private threads."
+msgid "Allows user to add users that are blocking them to private threads."
 msgstr ""
-"Разрешает пользователю добавлять пользователей, которые заблокированы им, в "
-"приватный темы."
 
 #: threads/permissions/privatethreads.py:50
 msgid "Can report private threads"
@@ -7366,21 +7443,26 @@ msgstr "Новый пользователь \"%(user)s\" был зарегист
 msgid "User \"%(user)s\" has been edited."
 msgstr "Пользователь \"%(user)s\" был отредактирован."
 
-#: users/api/auth.py:94
+#: users/api/auth.py:42 users/api/auth.py:92 users/api/auth.py:130
+#: users/api/auth.py:174
+msgid "Please use the 3rd party site to authenticate."
+msgstr ""
+
+#: users/api/auth.py:100
 #, python-format
 msgid "Activate %(user)s account on %(forum_name)s forums"
 msgstr "Активировать аккаунт %(user)s на %(forum_name)s форумах."
 
-#: users/api/auth.py:129
+#: users/api/auth.py:138
 #, python-format
 msgid "Change %(user)s password on %(forum_name)s forums"
 msgstr "Изменить пароль %(user)s на %(forum_name)s форумах"
 
-#: users/api/auth.py:164
+#: users/api/auth.py:176
 msgid "Form link is invalid. Please try again."
 msgstr "Ссылка формы неправильна. Пожалуйста, попробуйте заново."
 
-#: users/api/auth.py:165
+#: users/api/auth.py:177
 msgid "Your link has expired. Please request new one."
 msgstr "Ваша ссылка истекла. Пожалуйста, запросите новую."
 
@@ -7483,63 +7565,83 @@ msgstr "У вас нет разрешения просматривать ист�
 msgid "You have to sign in to perform this action."
 msgstr "Вы должны войти, чтобы выполнить это действие."
 
-#: users/api/users.py:109
+#: users/api/users.py:89
+msgid "Please use the 3rd party site to register."
+msgstr ""
+
+#: users/api/users.py:112
 msgid "You can't change other users avatars."
 msgstr "Вы не можете изменять аватары других пользователей."
 
-#: users/api/users.py:121
+#: users/api/users.py:124
 msgid "You can't change other users options."
 msgstr "Вы не можете изменять настройки других пользователей."
 
-#: users/api/users.py:126
+#: users/api/users.py:129
 msgid "Your forum options have been changed."
 msgstr "Ваши настройки форума были изменены."
 
-#: users/api/users.py:132
+#: users/api/users.py:136
+msgid "Please use the 3rd party site to change your username."
+msgstr ""
+
+#: users/api/users.py:140
 msgid "You can't change other users names."
 msgstr "Вы не можете менять имена других пользователей."
 
-#: users/api/users.py:139
+#: users/api/users.py:147
 msgid "You can't change other users signatures."
 msgstr "Вы не можете менять подписи других пользователей."
 
-#: users/api/users.py:151
+#: users/api/users.py:160
+msgid "Please use the 3rd party site to change your password."
+msgstr ""
+
+#: users/api/users.py:164
 msgid "You can't change other users passwords."
 msgstr "Вы не можете менять пароли других пользователей."
 
-#: users/api/users.py:161
+#: users/api/users.py:174
+msgid "Please use the 3rd party site to change your e-mail."
+msgstr ""
+
+#: users/api/users.py:179
 msgid "You can't change other users e-mail addresses."
 msgstr "Вы не можете менять e-mail адреса других пользователей."
 
-#: users/api/users.py:268
+#: users/api/users.py:210
+msgid "Please use the 3rd party site to delete account."
+msgstr ""
+
+#: users/api/users.py:291
 msgid "You can't request data downloads for other users."
 msgstr ""
 
-#: users/api/users.py:272
+#: users/api/users.py:295
 msgid "You can't download your data."
 msgstr ""
 
-#: users/api/users.py:277
+#: users/api/users.py:300
 msgid "You can't have more than one data download request at a single time."
 msgstr ""
 
-#: users/api/users.py:333
+#: users/api/users.py:356
 msgid "You can't see other users data downloads."
 msgstr ""
 
-#: users/apps.py:30
+#: users/apps.py:33
 msgid "Edit details"
 msgstr "Редактировать детали"
 
-#: users/apps.py:36
+#: users/apps.py:39
 msgid "Change username"
 msgstr "Изменить имя пользователя"
 
-#: users/apps.py:42
+#: users/apps.py:46
 msgid "Change email or password"
 msgstr "Изменить email или пароль"
 
-#: users/apps.py:63
+#: users/apps.py:71
 msgid "Delete account"
 msgstr ""
 
@@ -7620,7 +7722,7 @@ msgstr "Введеный e-mail недействителен."
 msgid "No user with this e-mail exists."
 msgstr "Пользователей с данным e-mail не существует."
 
-#: users/forms/auth.py:150 users/views/activation.py:45
+#: users/forms/auth.py:150 users/views/activation.py:51
 #, python-format
 msgid "%(user)s, your account is already active."
 msgstr "%(user)s, Ваш аккаунт уже активен."
@@ -7649,10 +7751,6 @@ msgstr ""
 #: users/forms/register.py:34
 msgid "This usernane is not allowed."
 msgstr "Это имя пользователя недоступно."
-
-#: users/forms/register.py:45 users/validators.py:51
-msgid "This e-mail address is not allowed."
-msgstr "Этот e-mail адрес недоступен."
 
 #: users/forms/register.py:51
 msgid "This agreement is required."
@@ -8182,10 +8280,6 @@ msgstr "Данный e-mail адрес недоступен."
 msgid "This username is not available."
 msgstr "Данное имя пользователя недоступно."
 
-#: users/validators.py:79
-msgid "This username is not allowed."
-msgstr "Данное имя пользователя запрещено."
-
 #: users/validators.py:85
 msgid "Username can only contain latin alphabet letters and digits."
 msgstr "Имя пользователя может содержать только латинские буквы и цифры."
@@ -8224,7 +8318,11 @@ msgstr "Введенные данные были найдены в базе да
 msgid "This email is not allowed."
 msgstr "Данный e-mail запрещен."
 
-#: users/views/activation.py:50
+#: users/views/activation.py:21
+msgid "Please use the 3rd party site to activate your account."
+msgstr ""
+
+#: users/views/activation.py:56
 #, python-format
 msgid ""
 "%(user)s, your activation link is invalid. Try again or request new "
@@ -8233,12 +8331,16 @@ msgstr ""
 "%(user)s, ваша ссылка активации недействительна. Попробуйте еще раз или "
 "запросите новую ссылку активации."
 
-#: users/views/activation.py:68
+#: users/views/activation.py:74
 #, python-format
 msgid "%(user)s, your account has been activated!"
 msgstr "%(user)s, Ваш аккаунт был активирован."
 
-#: users/views/forgottenpassword.py:39
+#: users/views/forgottenpassword.py:18 users/views/options.py:70
+msgid "Please use the 3rd party site to change password."
+msgstr ""
+
+#: users/views/forgottenpassword.py:45
 #, python-format
 msgid ""
 "%(user)s, your link has expired. Please request new link and try again."
@@ -8246,19 +8348,23 @@ msgstr ""
 "%(user)s, Ваша ссылка устарела. Пожалуйста, запросите новую и попробуйте еще"
 " раз."
 
-#: users/views/forgottenpassword.py:46
+#: users/views/forgottenpassword.py:52
 #, python-format
 msgid "%(user)s, your link is invalid. Please try again or request new link."
 msgstr ""
 "%(user)s, Ваша ссылка недействительна. Пожалуйста, попробуйте снова или "
 "запросите новую ссылку."
 
-#: users/views/options.py:55
+#: users/views/options.py:47
+msgid "Please use the 3rd party site to change e-mail."
+msgstr ""
+
+#: users/views/options.py:59
 #, python-format
 msgid "%(user)s, your e-mail has been changed."
 msgstr "%(user)s, Ваш e-mail был изменен."
 
-#: users/views/options.py:73
+#: users/views/options.py:80
 #, python-format
 msgid "%(user)s, your password has been changed."
 msgstr "%(user)s, Ваш пароль был изменен."

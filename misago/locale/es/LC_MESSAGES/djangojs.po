@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"POT-Creation-Date: 2019-09-01 14:10+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Javier Lorenzo <javichio@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -103,7 +103,7 @@ msgstr "Usuario a añadir"
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:13
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -288,6 +288,10 @@ msgid "Edit details"
 msgstr "Editar detalles"
 
 #: static/misago/js/misago.js:2
+msgid "Insert spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:2
 msgid "Enter name of syntax of your code (optional)"
 msgstr "Introduce el nombre de la sintaxis de tu código (opcional)"
 
@@ -295,7 +299,7 @@ msgstr "Introduce el nombre de la sintaxis de tu código (opcional)"
 msgid "Insert code"
 msgstr "Insertar código"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Emphase selection"
 msgstr "Añadir énfasis a la selección"
 
@@ -404,7 +408,7 @@ msgstr "(error)"
 msgid "(success)"
 msgstr "(correcto)"
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:11
 #: static/misago/js/misago.js:17
 msgid "Best answer"
 msgstr ""
@@ -458,7 +462,8 @@ msgstr "Escrito por %(poster)s en %(posted_on)s en %(category)s."
 msgid "%(title)s, joined on %(joined_on)s"
 msgstr "%(title)s, ha entrado en %(joined_on)s"
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:13
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
+#: static/misago/js/misago.js:13
 msgid "Change username"
 msgstr "Cambiar nombre de usuario"
 
@@ -498,12 +503,11 @@ msgstr "El nombre propuesto es igual al anterior."
 msgid "New username"
 msgstr "Nuevo nombre de usuario"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid "Your username has been changed successfully."
 msgstr "Tu nombre de usuario se ha cambiado correctamente."
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:5 static/misago/js/misago.js:6
 msgid "Change your options"
 msgstr "Cambia tus opciones"
 
@@ -908,11 +912,11 @@ msgstr "Publicar encuesta"
 msgid "Posted by %(poster)s %(posted_on)s."
 msgstr "Publicado por %(poster)s en %(posted_on)s."
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "Voting ends %(ends_on)s."
 msgstr "La votación termina %(ends_on)s."
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
 msgstr[0] "%(votes)s voto"
@@ -964,6 +968,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -1001,11 +1006,11 @@ msgstr "Guardar tu voto"
 msgid "See results"
 msgstr "Ver resultados"
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert post to state from before this edit."
 msgstr "Revertir el mensaje al estado anterior a la edición."
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert"
 msgstr "Revertir"
 
@@ -1025,7 +1030,7 @@ msgstr ""
 msgid "Post has been reverted to previous state."
 msgstr "El mensaje ha sido revertido al estado anterior."
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr "Ver cambio anterior"
 
@@ -1128,7 +1133,7 @@ msgstr "Título del hilo"
 msgid "Post thread"
 msgstr "Publicar hilo"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid "Are you sure you want to discard thread?"
 msgstr "¿Estás seguro de querer descartar el hilo?"
 
@@ -1223,7 +1228,7 @@ msgstr[1] ""
 " %(show_value)s)."
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:17
 msgid "Hide"
 msgstr "Ocultar"
 
@@ -1331,14 +1336,14 @@ msgstr "Oculto por %(hiden_by)s %(hidden_on)s."
 msgid "This post is hidden. You cannot see its contents."
 msgstr "El mensaje está oculto. No puedes ver su contenido."
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid ""
 "Are you sure you want to delete this post? This action is not reversible!"
 msgstr ""
 "¿Estás seguro de querer eliminar este mensaje? ¡Esta acción no puede "
 "deshacerse!"
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Post has been deleted."
 msgstr "El mensaje ha sido eliminado"
 
@@ -1881,7 +1886,8 @@ msgstr "Los registros están actualmente cerrados."
 msgid "Registration is currently unavailable due to an error."
 msgstr "Se han cerrado los registros debido a un error inesperado."
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:20
 msgid "Register"
 msgstr "Registro"
 
@@ -2118,7 +2124,7 @@ msgstr ""
 "¿Estás seguro de que quieres mezclar los mensajes seleccionados? Esta opción"
 " no puede deshacerse."
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
@@ -2449,14 +2455,14 @@ msgstr "Moderar hilos"
 msgid "One or more threads could not be deleted:"
 msgstr "Uno o más hilos no pueden ser eliminados:"
 
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid ""
 "You can't move threads because there are no categories you are allowed to "
 "move them to."
 msgstr ""
 "No pudes mover hilos porque no existen categorías a las que puedas moverlas"
 
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:20
 msgid ""
 "You need permission to start threads in category to be able to merge threads"
 " to it."
@@ -2532,16 +2538,15 @@ msgstr "Estás navegando como invitado."
 msgid "Sign in or register to start and participate in discussions."
 msgstr "Inicia sesión o registrate para comenzar a participar en los foros."
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "You have unread private threads!"
 msgstr ""
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:21 static/misago/js/misago.js:23
 msgid "Private threads"
 msgstr "Hilos privados"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "Are you sure you want to sign out?"
 msgstr "¿Estás seguro de que quieres cerrar sesión?"
 
@@ -2619,11 +2624,11 @@ msgstr[1] "%(followers)s seguidores"
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "Los usuarios no han escrito en los últimos %(days)s days."
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Rank"
 msgstr "Rango"
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Ranked posts"
 msgstr "Mensajes de rango"
 
@@ -2715,7 +2720,7 @@ msgstr "Estás escribiendo un mensaje, ¿quieres descartarlo?"
 msgid "You are already working on a poll. Do you want to discard it?"
 msgstr "Estás haciendo una encuesta, ¿quieres descartarla?"
 
-#: static/misago/js/misago.js:24
+#: static/misago/js/misago.js:25
 msgid "You don't have permission to perform this action."
 msgstr "No tienes permisos para realizar esta acción."
 

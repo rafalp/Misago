@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-13 14:07+0000\n"
+"POT-Creation-Date: 2019-09-01 14:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,7 +100,7 @@ msgstr ""
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:13
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid "Cancel"
 msgstr ""
 
@@ -280,6 +280,10 @@ msgid "Edit details"
 msgstr ""
 
 #: static/misago/js/misago.js:2
+msgid "Insert spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:2
 msgid "Enter name of syntax of your code (optional)"
 msgstr ""
 
@@ -287,7 +291,7 @@ msgstr ""
 msgid "Insert code"
 msgstr ""
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Emphase selection"
 msgstr ""
 
@@ -396,7 +400,7 @@ msgstr ""
 msgid "(success)"
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:11
 #: static/misago/js/misago.js:17
 msgid "Best answer"
 msgstr ""
@@ -448,7 +452,8 @@ msgstr ""
 msgid "%(title)s, joined on %(joined_on)s"
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:13
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
+#: static/misago/js/misago.js:13
 msgid "Change username"
 msgstr ""
 
@@ -485,12 +490,11 @@ msgstr ""
 msgid "New username"
 msgstr ""
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid "Your username has been changed successfully."
 msgstr ""
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:5 static/misago/js/misago.js:6
 msgid "Change your options"
 msgstr ""
 
@@ -886,11 +890,11 @@ msgstr ""
 msgid "Posted by %(poster)s %(posted_on)s."
 msgstr ""
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "Voting ends %(ends_on)s."
 msgstr ""
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
 msgstr[0] ""
@@ -940,6 +944,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "Delete"
 msgstr ""
 
@@ -977,11 +982,11 @@ msgstr ""
 msgid "See results"
 msgstr ""
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert post to state from before this edit."
 msgstr ""
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert"
 msgstr ""
 
@@ -998,7 +1003,7 @@ msgstr ""
 msgid "Post has been reverted to previous state."
 msgstr ""
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr ""
 
@@ -1099,7 +1104,7 @@ msgstr ""
 msgid "Post thread"
 msgstr ""
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid "Are you sure you want to discard thread?"
 msgstr ""
 
@@ -1178,7 +1183,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:17
 msgid "Hide"
 msgstr ""
 
@@ -1284,12 +1289,12 @@ msgstr ""
 msgid "This post is hidden. You cannot see its contents."
 msgstr ""
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid ""
 "Are you sure you want to delete this post? This action is not reversible!"
 msgstr ""
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Post has been deleted."
 msgstr ""
 
@@ -1817,7 +1822,8 @@ msgstr ""
 msgid "Registration is currently unavailable due to an error."
 msgstr ""
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:20
 msgid "Register"
 msgstr ""
 
@@ -2043,7 +2049,7 @@ msgid ""
 "Are you sure you want to merge selected posts? This action is not reversible!"
 msgstr ""
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
@@ -2370,13 +2376,13 @@ msgstr ""
 msgid "One or more threads could not be deleted:"
 msgstr ""
 
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid ""
 "You can't move threads because there are no categories you are allowed to "
 "move them to."
 msgstr ""
 
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:20
 msgid ""
 "You need permission to start threads in category to be able to merge threads "
 "to it."
@@ -2448,16 +2454,15 @@ msgstr ""
 msgid "Sign in or register to start and participate in discussions."
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "You have unread private threads!"
 msgstr ""
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:21 static/misago/js/misago.js:23
 msgid "Private threads"
 msgstr ""
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "Are you sure you want to sign out?"
 msgstr ""
 
@@ -2535,11 +2540,11 @@ msgstr[1] ""
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr ""
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Rank"
 msgstr ""
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Ranked posts"
 msgstr ""
 
@@ -2629,7 +2634,7 @@ msgstr ""
 msgid "You are already working on a poll. Do you want to discard it?"
 msgstr ""
 
-#: static/misago/js/misago.js:24
+#: static/misago/js/misago.js:25
 msgid "You don't have permission to perform this action."
 msgstr ""
 

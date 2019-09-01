@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-06 13:05+0000\n"
+"POT-Creation-Date: 2019-09-01 14:10+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: gülce abatay <gulceabatay@gmail.com>, 2018\n"
 "Language-Team: Turkish (Turkey) (https://www.transifex.com/misago/teams/65369/tr_TR/)\n"
@@ -111,7 +111,7 @@ msgstr "Eklenecek kullanıcı"
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:13
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:17
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid "Cancel"
 msgstr "İptal et"
 
@@ -295,6 +295,10 @@ msgid "Edit details"
 msgstr "Ayrıntıları düzenle"
 
 #: static/misago/js/misago.js:2
+msgid "Insert spoiler"
+msgstr ""
+
+#: static/misago/js/misago.js:2
 msgid "Enter name of syntax of your code (optional)"
 msgstr "Kodunuzun sözdiziminin adını girin (isteğe bağlı) "
 
@@ -302,7 +306,7 @@ msgstr "Kodunuzun sözdiziminin adını girin (isteğe bağlı) "
 msgid "Insert code"
 msgstr "Kod ekle"
 
-#: static/misago/js/misago.js:2
+#: static/misago/js/misago.js:3
 msgid "Emphase selection"
 msgstr "Vurgu seçimi"
 
@@ -413,7 +417,7 @@ msgstr "(hata)"
 msgid "(success)"
 msgstr "(başarılı)"
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:10
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:11
 #: static/misago/js/misago.js:17
 msgid "Best answer"
 msgstr ""
@@ -469,7 +473,8 @@ msgstr ""
 msgid "%(title)s, joined on %(joined_on)s"
 msgstr "%(title)s, %(joined_on)s'da katıldı."
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:13
+#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
+#: static/misago/js/misago.js:13
 msgid "Change username"
 msgstr "Kullanıcı adını değiştir"
 
@@ -510,12 +515,11 @@ msgstr "Kullanici ismin şuankiyle ayni."
 msgid "New username"
 msgstr "Yeni kullanıcı adı"
 
-#: static/misago/js/misago.js:4
+#: static/misago/js/misago.js:5
 msgid "Your username has been changed successfully."
 msgstr "Kullanıcı adin başarıyla değiştirildi."
 
-#: static/misago/js/misago.js:4 static/misago/js/misago.js:5
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:5 static/misago/js/misago.js:6
 msgid "Change your options"
 msgstr "Seçeneklerini değiştir"
 
@@ -921,11 +925,11 @@ msgstr "Anket yayımla"
 msgid "Posted by %(poster)s %(posted_on)s."
 msgstr "%(poster)s tarafından, %(posted_on)s tarihinde yayımlandı."
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "Voting ends %(ends_on)s."
 msgstr "Oylama %(ends_on)s tarihinde sonlanır."
 
-#: static/misago/js/misago.js:6
+#: static/misago/js/misago.js:7
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
 msgstr[0] "%(votes)s oy."
@@ -975,6 +979,7 @@ msgstr "Bu anketi silmek istediğinizden emin misiniz? Bu eylem geri alınamaz."
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
+#: static/misago/js/misago.js:17
 msgid "Delete"
 msgstr "Silmek"
 
@@ -1012,11 +1017,11 @@ msgstr "Oyunuzu kaydedin"
 msgid "See results"
 msgstr "Sonuçlara bak"
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert post to state from before this edit."
 msgstr "İleti bu düzenlemeden önceki haline döner."
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert"
 msgstr "Geriye almak"
 
@@ -1034,7 +1039,7 @@ msgstr "Bu ileti düzenlemeden önceki haline döner emin misiniz?"
 msgid "Post has been reverted to previous state."
 msgstr "İleti önceki duruma döndü."
 
-#: static/misago/js/misago.js:7
+#: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr "Önceki değişikliği gör"
 
@@ -1135,7 +1140,7 @@ msgstr "Konu başlığı"
 msgid "Post thread"
 msgstr "Konu Aç"
 
-#: static/misago/js/misago.js:8
+#: static/misago/js/misago.js:9
 msgid "Are you sure you want to discard thread?"
 msgstr "Konuyu silmek istediğinden emin misin?"
 
@@ -1230,7 +1235,7 @@ msgstr[1] ""
 "karakterdir)"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
-#: static/misago/js/misago.js:16
+#: static/misago/js/misago.js:16 static/misago/js/misago.js:17
 msgid "Hide"
 msgstr "Gizle"
 
@@ -1336,13 +1341,13 @@ msgstr "%(hidden_by)s tarafından %(hidden_on)s tarihinde gizlendi."
 msgid "This post is hidden. You cannot see its contents."
 msgstr "Bu ileti gizli. İçeriğini göremezsiniz."
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid ""
 "Are you sure you want to delete this post? This action is not reversible!"
 msgstr ""
 "Bu ileti yi silmek istediğinizden emin misiniz? Bu eylem geri alınamaz!"
 
-#: static/misago/js/misago.js:9
+#: static/misago/js/misago.js:10
 msgid "Post has been deleted."
 msgstr "İleti silindi."
 
@@ -1883,7 +1888,8 @@ msgstr "Yeni kullanıcı kayıtları şu anda devde dışıdır."
 msgid "Registration is currently unavailable due to an error."
 msgstr "Kayıt şu anda bir hata nedeniyle kullanılamıyor."
 
-#: static/misago/js/misago.js:13 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:13 static/misago/js/misago.js:14
+#: static/misago/js/misago.js:20
 msgid "Register"
 msgstr "Kayıt Ol"
 
@@ -2118,7 +2124,7 @@ msgstr ""
 "Seçilen iletiler i birleştirmek istediğinizden emin misiniz? Bu eylem geri "
 "alınamaz!"
 
-#: static/misago/js/misago.js:15
+#: static/misago/js/misago.js:16
 msgid ""
 "Are you sure you want to delete selected posts? This action is not "
 "reversible!"
@@ -2453,14 +2459,14 @@ msgstr "Konular moderasyonu"
 msgid "One or more threads could not be deleted:"
 msgstr "Bir veya daha fazla konular silinemedi:"
 
-#: static/misago/js/misago.js:19 static/misago/js/misago.js:20
+#: static/misago/js/misago.js:20
 msgid ""
 "You can't move threads because there are no categories you are allowed to "
 "move them to."
 msgstr ""
 "Konular taşınamaz çünkü onları taşımanıza izin verilen kategori yoktur."
 
-#: static/misago/js/misago.js:19
+#: static/misago/js/misago.js:20
 msgid ""
 "You need permission to start threads in category to be able to merge threads"
 " to it."
@@ -2537,16 +2543,15 @@ msgid "Sign in or register to start and participate in discussions."
 msgstr ""
 "Tartışmaya katılmak ve tartışma başlatmak için oturum açın veya kayıt olun."
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "You have unread private threads!"
 msgstr ""
 
-#: static/misago/js/misago.js:20 static/misago/js/misago.js:21
-#: static/misago/js/misago.js:23
+#: static/misago/js/misago.js:21 static/misago/js/misago.js:23
 msgid "Private threads"
 msgstr "Özel Konular"
 
-#: static/misago/js/misago.js:20
+#: static/misago/js/misago.js:21
 msgid "Are you sure you want to sign out?"
 msgstr "Oturumu kapatmak istediğinizden emin misiniz?"
 
@@ -2624,11 +2629,11 @@ msgstr[1] "%(followers)s takipçiler"
 msgid "No users have posted any new messages during last %(days)s days."
 msgstr "Hiçbir kullanıcı son %(days)s gün içinde yeni mesaj göndermedi."
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Rank"
 msgstr "Rütbe"
 
-#: static/misago/js/misago.js:21 static/misago/js/misago.js:22
+#: static/misago/js/misago.js:22
 msgid "Ranked posts"
 msgstr "Rütbeli iletiler"
 
@@ -2721,7 +2726,7 @@ msgstr "Zaten başka bir ileti üzerinde çalışıyoruz. Çöpe atmak ister mis
 msgid "You are already working on a poll. Do you want to discard it?"
 msgstr "Zaten bir anket üzerinde çalışıyorsun. Çöpe atmak ister misin?"
 
-#: static/misago/js/misago.js:24
+#: static/misago/js/misago.js:25
 msgid "You don't have permission to perform this action."
 msgstr "Bu eylemi gerçekleştirmek için iznin yok."
 
