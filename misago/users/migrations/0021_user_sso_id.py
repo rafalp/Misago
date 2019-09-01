@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [("misago_users", "0020_set_dj_partial_indexes")]
+    dependencies = [("misago_users", "0021_user_sso_id")]
 
     operations = [
         migrations.AddField(
