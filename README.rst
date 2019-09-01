@@ -10,9 +10,9 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://img.shields.io/badge/release-0.21-brightgreen.svg
+.. image:: https://img.shields.io/badge/release-0.22-brightgreen.svg
    :target: https://pypi.org/project/Misago/
-   :alt: Release 0.21
+   :alt: Release 0.22
 
 .. image:: https://img.shields.io/badge/python-3.7-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
@@ -68,23 +68,14 @@ As of now Misago implements all features considered "must have" on live internet
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
 * Features and settings for achieving GDPR compliance.
+* Integrate forum with your site using implemented Single Sign On client and JSON API.
 
 Even more features will follow in future releases:
 
-* Achievements and awards system.
-* Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
-* IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
-* Notifications for users to notice content and events of concern faster.
-* OAuth2 server for those looking to use Misago as auth provider for other apps.
-* Warning system for easy tracking users history of infractions and offenses.
+* Plugin system to extend core package with new features.
 * WYSIWYM content editor for even easier post formatting.
 * Ranking system for forum search results based on post links, likes, author and thread importance.
-* Post reactions in place of likes.
-
-...and more!
-
-If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
 
 Development
