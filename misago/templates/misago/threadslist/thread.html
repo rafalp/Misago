@@ -1,4 +1,4 @@
-{% load i18n misago_avatars misago_capture %}
+{% load i18n misago_absoluteurl misago_avatars misago_capture %}
 <li class="list-group-item {% if thread.category.css_class %}list-group-category-has-flavor list-group-item-category-{{ thread.category.css_class }}{% endif %} thread-{{ thread.is_read|yesno:'read,new' }}" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
 
   <div class="thread-details-top">
@@ -212,5 +212,8 @@
       </div>
     </div>
   </div>
-  <meta itemprop="position" content="{{ paginator.before|add:forloop.counter }}">
+  
+  <meta itemprop="position" content="{{ list_page.start|add:forloop.counter }}">
+  <meta itemprop="url" content="{% absoluteurl thread.get_absolute_url %}">
+  <meta itemprop="name" content="{{ thread.title }}">
 </li>
