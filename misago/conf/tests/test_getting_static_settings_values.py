@@ -31,6 +31,11 @@ def test_test_setting_value_defaults_to_false():
     assert settings.test is False
 
 
+def test_test_database_url_setting_value_is_set_and_retrieved():
+    settings = StaticSettings({"MISAGO_TEST_DATABASE_URL": "/database-test/"})
+    assert settings.test_database_url == "/database-test/"
+
+
 def test_database_url_setting_value_is_set_and_retrieved():
     settings = StaticSettings({"MISAGO_DATABASE_URL": "/database-test/"})
     assert settings.database_url == "/database-test/"

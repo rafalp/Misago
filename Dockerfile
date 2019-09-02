@@ -17,12 +17,16 @@ RUN apt-get update && apt-get install -y \
     postgresql-client \
     gettext
 
-# Add requirements and install them.
-ADD requirements.txt /
-ADD requirements-dev.txt /
+# Add requirements and install them
+ADD requirements.txt /app/
+ADD requirements-dev.txt /app/
+ADD requirements-plugins.txt /app/
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install -r requirements-dev.txt
+    pip install -r /app/requirements.txt && \
+    pip install -r /app/requirements-dev.txt && \
+    pip install -r /app/requirements-plugins.txt
+
+ADD . /app/
 
 WORKDIR /app/
 
