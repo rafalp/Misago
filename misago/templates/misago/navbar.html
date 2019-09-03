@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static misago_menutags %}
 <nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
 
   <div class="container navbar-full navbar-desktop-nav">
@@ -42,6 +42,8 @@
           {% trans "Users" %}
         </a>
       </li>
+            {% top_menu_links %}
+
     </ul>
 
     <div id="user-menu-mount"></div>

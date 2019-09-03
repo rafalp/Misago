@@ -194,6 +194,7 @@ INSTALLED_APPS = [
     "misago.graphql",
     "misago.faker",
     "misago.sso",
+    "misago.menus",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]

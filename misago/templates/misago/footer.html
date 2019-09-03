@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n misago_menutags %}
 <footer class="misago-footer">
   <div class="container">
     <div class="footer-content">
@@ -17,6 +17,7 @@
               {{ settings.forum_footnote }}
             </li>
           {% endif %}
+          {% footer_menu_links %}
           {% if TERMS_OF_SERVICE_URL %}
             <li>
               <a href="{{ TERMS_OF_SERVICE_URL }}">{% trans "Terms of service" %}</a>
