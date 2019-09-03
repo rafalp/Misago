@@ -1,8 +1,6 @@
 from django.test import TestCase
-from django.urls import reverse
 from django.template import Context, Template
 
-from ...users.test import create_test_superuser
 
 from ..models import MenuLink
 
