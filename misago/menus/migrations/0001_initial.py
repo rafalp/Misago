@@ -8,6 +8,7 @@ import django.utils.timezone
 
 from ...cache.operations import StartCacheVersioning
 
+
 class Migration(migrations.Migration):
 
     initial = True
@@ -19,24 +20,69 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='MenuLink',
+            name="MenuLink",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('link', models.URLField()),
-                ('title', models.CharField(max_length=150)),
-                ('position', models.CharField(choices=[('top', 'Top navbar'), ('footer', 'Footer')], max_length=20)),
-                ('relevance', models.PositiveSmallIntegerField(default=500, help_text='Relevance that the link has, used for ordering. (Max: 1000)', validators=[django.core.validators.MaxValueValidator(1000)])),
-                ('created_on', models.DateTimeField(default=django.utils.timezone.now)),
-                ('created_by_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('last_modified_on', models.DateTimeField(blank=True, null=True)),
-                ('last_modified_by_name', models.CharField(blank=True, max_length=255, null=True)),
-                ('created_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('last_modified_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("link", models.URLField()),
+                ("title", models.CharField(max_length=150)),
+                (
+                    "position",
+                    models.CharField(
+                        choices=[("top", "Top navbar"), ("footer", "Footer")],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "relevance",
+                    models.PositiveSmallIntegerField(
+                        default=500,
+                        help_text="Relevance that the link has, used for ordering. (Max: 1000)",
+                        validators=[django.core.validators.MaxValueValidator(1000)],
+                    ),
+                ),
+                ("created_on", models.DateTimeField(default=django.utils.timezone.now)),
+                (
+                    "created_by_name",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                ("last_modified_on", models.DateTimeField(blank=True, null=True)),
+                (
+                    "last_modified_by_name",
+                    models.CharField(blank=True, max_length=255, null=True),
+                ),
+                (
+                    "created_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "last_modified_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-relevance',),
-                'unique_together': {('link', 'position')},
+                "ordering": ("-relevance",),
+                "unique_together": {("link", "position")},
             },
         ),
-        StartCacheVersioning("menus")
+        StartCacheVersioning("menus"),
     ]

@@ -9,7 +9,6 @@ CACHE_KEY = "misago_menulinks"
 
 
 class MenuLinkManager(models.Manager):
-
     def invalidate_cache(self):
         cache.delete(CACHE_KEY)
 
@@ -30,33 +29,35 @@ class MenuLinkManager(models.Manager):
         return cache.get(CACHE_KEY, "nada")
 
     def get_links_from_db(self):
-        links = {
-            MenuLink.POSITION_TOP: [],
-            MenuLink.POSITION_FOOTER: []
-        }
+        links = {MenuLink.POSITION_TOP: [], MenuLink.POSITION_FOOTER: []}
         for link in MenuLink.objects.all():
-            links[link.position].append({
-                "id": link.id,
-                "title": link.title,
-                "link": link.link,
-                "relevance": link.relevance,
-            })
+            links[link.position].append(
+                {
+                    "id": link.id,
+                    "title": link.title,
+                    "link": link.link,
+                    "relevance": link.relevance,
+                }
+            )
         return links
 
 
 class MenuLink(models.Model):
-    POSITION_TOP = 'top'
-    POSITION_FOOTER = 'footer'
+    POSITION_TOP = "top"
+    POSITION_FOOTER = "footer"
     LINK_POSITION_CHOICES = [
-        (POSITION_TOP, _('Top navbar')),
-        (POSITION_FOOTER, _('Footer'))
+        (POSITION_TOP, _("Top navbar")),
+        (POSITION_FOOTER, _("Footer")),
     ]
 
     link = models.URLField()
     title = models.CharField(max_length=150)
     position = models.CharField(max_length=20, choices=LINK_POSITION_CHOICES)
-    relevance = models.PositiveSmallIntegerField(validators=[MaxValueValidator(1000)], default=500, help_text=_(
-        "Relevance that the link has, used for ordering. (Max: 1000)"))
+    relevance = models.PositiveSmallIntegerField(
+        validators=[MaxValueValidator(1000)],
+        default=500,
+        help_text=_("Relevance that the link has, used for ordering. (Max: 1000)"),
+    )
     created_on = models.DateTimeField(default=timezone.now)
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -79,8 +80,8 @@ class MenuLink(models.Model):
     objects = MenuLinkManager()
 
     class Meta:
-        unique_together = ('link', 'position')
-        ordering = ('-relevance',)
+        unique_together = ("link", "position")
+        ordering = ("-relevance",)
 
     def __str__(self):
         return self.link

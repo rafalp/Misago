@@ -9,17 +9,15 @@ from ..models import MenuLink
 class MenuLinkForm(forms.ModelForm):
     link = forms.URLField(
         label=_("Link"),
-        help_text=_(
-            "URL where the link should point to."
-        ),
+        help_text=_("URL where the link should point to."),
         required=True,
     )
     title = forms.CharField(
-        label=_("Title"),
-        help_text=_("Title that will be used"),
-        required=True,
+        label=_("Title"), help_text=_("Title that will be used"), required=True
     )
-    position = forms.ChoiceField(label=_("Position"), choices=MenuLink.LINK_POSITION_CHOICES)
+    position = forms.ChoiceField(
+        label=_("Position"), choices=MenuLink.LINK_POSITION_CHOICES
+    )
 
     class Meta:
         model = MenuLink

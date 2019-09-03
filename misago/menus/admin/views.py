@@ -18,9 +18,7 @@ class MenuLinkAdmin(generic.AdminBaseMixin):
         form.save()
 
         if self.message_submit:
-            messages.success(
-                request, self.message_submit % {"title": target.title}
-            )
+            messages.success(request, self.message_submit % {"title": target.title})
 
 
 class MenuLinksList(MenuLinkAdmin, generic.ListView):
@@ -76,5 +74,3 @@ class DeleteMenuLink(MenuLinkAdmin, generic.ButtonView):
         MenuLink.objects.invalidate_cache()
         message = _('MenuLink "%(title)s" has been deleted.')
         messages.success(request, message % {"title": target.title})
-
-
