@@ -51,9 +51,11 @@
     <legend>{% trans "Extra configuration" %}</legend>
 
     <div class="alert alert-info" role="alert">
-      {% trans "Optionally, change the relevance." %}
+      {% trans "Optional link configurations." %}
     </div>
-    {% form_row form.relevance %}
+    {% form_row form.css_class %}
+    {% form_row form.target %}
+    {% form_row form.rel %}
 
   </fieldset>
 </div>

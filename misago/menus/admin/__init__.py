@@ -1,7 +1,14 @@
 from django.conf.urls import url
 from django.utils.translation import gettext_lazy as _
 
-from .views import MenuLinksList, DeleteMenuLink, EditMenuLink, NewMenuLink
+from .views import (
+    MenuLinksList,
+    DeleteMenuLink,
+    EditMenuLink,
+    NewMenuLink,
+    MoveUpMenuLink,
+    MoveDownMenuLink,
+)
 
 
 class MisagoAdminExtension:
@@ -15,12 +22,14 @@ class MisagoAdminExtension:
             url(r"^new/$", NewMenuLink.as_view(), name="new"),
             url(r"^edit/(?P<pk>\d+)/$", EditMenuLink.as_view(), name="edit"),
             url(r"^delete/(?P<pk>\d+)/$", DeleteMenuLink.as_view(), name="delete"),
+            url(r"^down/(?P<pk>(\w|-)+)/$", MoveDownMenuLink.as_view(), name="down"),
+            url(r"^up/(?P<pk>(\w|-)+)/$", MoveUpMenuLink.as_view(), name="up"),
         )
 
     def register_navigation_nodes(self, site):
         site.add_node(
-            name=_("Menu Links"),
-            description=_("Set custom links to top top navbar and footer."),
+            name=_("Menu links"),
+            description=_("Set custom links to navbar and footer menus."),
             parent="settings",
             namespace="links",
         )

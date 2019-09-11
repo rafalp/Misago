@@ -1,4 +1,4 @@
-{% load i18n static misago_menutags %}
+{% load i18n static %}
 <nav class="navbar navbar-misago navbar-default navbar-static-top" role="navigation">
 
   <div class="container navbar-full navbar-desktop-nav">
@@ -42,7 +42,13 @@
           {% trans "Users" %}
         </a>
       </li>
-            {% top_menu_links %}
+      {% for link in top_menu_links %}
+      <li>
+          <a href="{{ link.link }}"{% if link.css_class %} class="{{ link.css_class}}"{% endif %}{% if link.rel %} rel="{{link.rel}}"{% endif %}{% if link.target %} target="{{link.target}}"{% endif %}>
+            {{ link.title }}
+          </a>
+      </li>
+      {% endfor %}
 
     </ul>
 

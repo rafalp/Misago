@@ -15,11 +15,12 @@
 {% block table-header %}
 <th>{% trans "Menu Link" %}</th>
 <th >{% trans "Link" %}</th>
-
 <th style="width: 180px;">{% trans "Position" %}</th>
-<th style="width: 180px;">{% trans "Relevance" %}</th>
-<th style="width: 250px;">{% trans "Created" %}</th>
-<th style="width: 250px;">{% trans "Modified" %}</th>
+<th style="width: 250px;">{% trans "CSS Class" %}</th>
+<th style="width: 250px;">{% trans "Target" %}</th>
+<th style="width: 250px;">{% trans "Rel" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
 <th style="width: 1px;">&nbsp;</th>
 {% endblock table-header %}
 
@@ -38,42 +39,41 @@
   {{ item.get_position_display }}
 </td>
 <td class="small">
-  {{ item.relevance }}
+  {{ item.css_class }}
 </td>
 <td class="small">
-  {% capture trimmed as created_on %}
-    <abbr data-timestamp="{{ item.created_on.isoformat }}" data-format="LL"></abbr>
-  {% endcapture %}
-  {% capture trimmed as created_by %}
-    {% if item.created_by %}
-      <a href="{{ item.created_by.get_absolute_url }}" class="item-title">{{ item.created_by }}</a>
-    {% else %}
-      <span class="item-title">{{ item.created_by_name }}</span>
-    {% endif %}
-  {% endcapture %}
-  {% blocktrans trimmed with created_on=created_on|safe created_by=created_by|safe %}
-    {{ created_on }} by {{ created_by }}
-  {% endblocktrans %}
+  {{ item.target }}
 </td>
 <td class="small">
-  {% if item.last_modified_on %}
-    {% capture trimmed as last_modified_on %}
-      <abbr data-timestamp="{{ item.last_modified_on.isoformat }}" data-format="LL">
-        {{ item.last_modified_on }}
-      </abbr>
-    {% endcapture %}
-    {% capture trimmed as last_modified_by %}
-      {% if item.last_modified_by %}
-        <a href="{{ item.last_modified_by.get_absolute_url }}" class="item-title">{{ item.last_modified_by }}</a>
-      {% else %}
-        <span class="item-title">{{ item.last_modified_by }}</span>
-      {% endif %}
-    {% endcapture %}
-    {% blocktrans trimmed with last_modified_on=last_modified_on|safe last_modified_by=last_modified_by|safe %}
-      {{ last_modified_on }} by {{ last_modified_by }}
-    {% endblocktrans %}
+  {{ item.rel }}
+</td>
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
+  {% if not forloop.last %}
+    <form action="{% url 'misago:admin:settings:links:down' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' %}">
+        <span class="fa fa-chevron-down"></span>
+      </button>
+    </form>
   {% else %}
-    <em>{% trans "never" %}</em>
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-down"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  {% if not forloop.first %}
+    <form action="{% url 'misago:admin:settings:links:up' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' %}">
+        <span class="fa fa-chevron-up"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-up"></span>
+    </button>
   {% endif %}
 </td>
 <td>

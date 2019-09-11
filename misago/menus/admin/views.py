@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 
 from ...admin.views import generic
 from ..models import MenuLink
-from .forms import MenuLinkForm, FilterMenuLinksForm
+from .forms import MenuLinkForm
+from .ordering import get_next_free_order
 
 
 class MenuLinkAdmin(generic.AdminBaseMixin):
@@ -22,9 +23,7 @@ class MenuLinkAdmin(generic.AdminBaseMixin):
 
 
 class MenuLinksList(MenuLinkAdmin, generic.ListView):
-    items_per_page = 30
-    ordering = [("-id", _("From newest")), ("id", _("From oldest"))]
-    filter_form = FilterMenuLinksForm
+    ordering = (("order", None),)
     selection_label = _("With MenuLinks: 0")
     empty_selection_label = _("Select MenuLinks")
     mass_actions = [
@@ -34,10 +33,6 @@ class MenuLinksList(MenuLinkAdmin, generic.ListView):
             "confirmation": _("Are you sure you want to delete those MenuLinks?"),
         }
     ]
-
-    def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.select_related()
 
     def action_delete(self, request, items):
         items.delete()
@@ -50,8 +45,7 @@ class NewMenuLink(MenuLinkAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
-
-        form.instance.set_created_by(request.user)
+        form.instance.order = get_next_free_order()
         form.instance.save()
         MenuLink.objects.invalidate_cache()
 
@@ -61,9 +55,6 @@ class EditMenuLink(MenuLinkAdmin, generic.ModelFormView):
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
-
-        form.instance.last_modified_on = timezone.now()
-        form.instance.set_last_modified_by(request.user)
         form.instance.save()
         MenuLink.objects.invalidate_cache()
 
@@ -74,3 +65,41 @@ class DeleteMenuLink(MenuLinkAdmin, generic.ButtonView):
         MenuLink.objects.invalidate_cache()
         message = _('MenuLink "%(title)s" has been deleted.')
         messages.success(request, message % {"title": target.title})
+
+
+class MoveDownMenuLink(MenuLinkAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = MenuLink.objects.filter(order__gt=target.order)
+            other_target = other_target.earliest("order")
+        except MenuLink.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            other_target.order, target.order = target.order, other_target.order
+            other_target.save(update_fields=["order"])
+            target.save(update_fields=["order"])
+            MenuLink.objects.invalidate_cache()
+
+            message = _("Menu link to %(link)s has been moved after %(other)s.")
+            targets_names = {"link": target, "other": other_target}
+            messages.success(request, message % targets_names)
+
+
+class MoveUpMenuLink(MenuLinkAdmin, generic.ButtonView):
+    def button_action(self, request, target):
+        try:
+            other_target = MenuLink.objects.filter(order__lt=target.order)
+            other_target = other_target.latest("order")
+        except MenuLink.DoesNotExist:
+            other_target = None
+
+        if other_target:
+            other_target.order, target.order = target.order, other_target.order
+            other_target.save(update_fields=["order"])
+            target.save(update_fields=["order"])
+            MenuLink.objects.invalidate_cache()
+
+            message = _("Menu link to %(link)s has been moved before %(other)s.")
+            targets_names = {"link": target, "other": other_target}
+            messages.success(request, message % targets_names)

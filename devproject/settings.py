@@ -285,6 +285,8 @@ TEMPLATES = [
                 "misago.search.context_processors.search_providers",
                 "misago.themes.context_processors.theme",
                 "misago.legal.context_processors.legal_links",
+                "misago.menus.context_processors.navbar",
+                "misago.menus.context_processors.footer",
                 "misago.users.context_processors.user_links",
                 # Data preloaders
                 "misago.conf.context_processors.preload_settings_json",

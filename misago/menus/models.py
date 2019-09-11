@@ -1,9 +1,7 @@
-from django.conf import settings
 from django.db import models
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import MaxValueValidator
 from django.core.cache import cache
+from django.db.models import Q
 
 CACHE_KEY = "misago_menulinks"
 
@@ -28,68 +26,48 @@ class MenuLinkManager(models.Manager):
     def get_links_from_cache(self):
         return cache.get(CACHE_KEY, "nada")
 
+    def get_footer_menu_links_from_db(self):
+        return self.filter(
+            Q(position=MenuLink.POSITION_TOP) | Q(position=MenuLink.POSITION_BOTH)
+        ).values()
+
+    def get_top_menu_links_from_db(self):
+        return self.filter(
+            Q(position=MenuLink.POSITION_FOOTER) | Q(position=MenuLink.POSITION_BOTH)
+        ).values()
+
     def get_links_from_db(self):
-        links = {MenuLink.POSITION_TOP: [], MenuLink.POSITION_FOOTER: []}
-        for link in MenuLink.objects.all():
-            links[link.position].append(
-                {
-                    "id": link.id,
-                    "title": link.title,
-                    "link": link.link,
-                    "relevance": link.relevance,
-                }
-            )
+        links = {
+            MenuLink.POSITION_TOP: self.get_footer_menu_links_from_db(),
+            MenuLink.POSITION_FOOTER: self.get_top_menu_links_from_db(),
+        }
         return links
 
 
 class MenuLink(models.Model):
     POSITION_TOP = "top"
     POSITION_FOOTER = "footer"
+    POSITION_BOTH = "both"
     LINK_POSITION_CHOICES = [
-        (POSITION_TOP, _("Top navbar")),
+        (POSITION_TOP, _("Header navbar")),
         (POSITION_FOOTER, _("Footer")),
+        (POSITION_BOTH, _("Header and footer")),
     ]
 
     link = models.URLField()
     title = models.CharField(max_length=150)
     position = models.CharField(max_length=20, choices=LINK_POSITION_CHOICES)
-    relevance = models.PositiveSmallIntegerField(
-        validators=[MaxValueValidator(1000)],
-        default=500,
-        help_text=_("Relevance that the link has, used for ordering. (Max: 1000)"),
-    )
-    created_on = models.DateTimeField(default=timezone.now)
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="+",
-    )
-    created_by_name = models.CharField(max_length=255, null=True, blank=True)
-    last_modified_on = models.DateTimeField(null=True, blank=True)
-    last_modified_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="+",
-    )
-    last_modified_by_name = models.CharField(max_length=255, null=True, blank=True)
+    order = models.IntegerField(default=0)
+    css_class = models.CharField(max_length=255, null=True, blank=True)
+    target = models.CharField(max_length=100, null=True, blank=True)
+    rel = models.CharField(max_length=100, null=True, blank=True)
 
     objects = MenuLinkManager()
 
     class Meta:
         unique_together = ("link", "position")
-        ordering = ("-relevance",)
+        ordering = ("order",)
+        get_latest_by = "order"
 
     def __str__(self):
         return self.link
-
-    def set_created_by(self, user):
-        self.created_by = user
-        self.created_by_name = user.username
-
-    def set_last_modified_by(self, user):
-        self.last_modified_by = user
-        self.last_modified_by_name = user.username

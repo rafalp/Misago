@@ -1,8 +1,6 @@
 from django import forms
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from ...admin.forms import YesNoSwitch
 from ..models import MenuLink
 
 
@@ -16,34 +14,35 @@ class MenuLinkForm(forms.ModelForm):
         label=_("Title"), help_text=_("Title that will be used"), required=True
     )
     position = forms.ChoiceField(
-        label=_("Position"), choices=MenuLink.LINK_POSITION_CHOICES
+        label=_("Position"),
+        choices=MenuLink.LINK_POSITION_CHOICES,
+        help_text=_("Position/s the link should be located"),
+    )
+    css_class = forms.CharField(
+        label=_("CSS Class"),
+        help_text=_(
+            "Optional CSS class used to customize this link appearance in templates."
+        ),
+        required=False,
+    )
+    target = forms.CharField(
+        label=_("Target"),
+        help_text=_(
+            "Optional target attribute that this link will use (ex. '_blank')."
+        ),
+        required=False,
+    )
+    rel = forms.CharField(
+        label=_("Rel"),
+        help_text=_("Optional rel attribute that this link will use (ex. 'nofollow')."),
+        required=False,
     )
 
     class Meta:
         model = MenuLink
-        fields = ["link", "title", "position", "relevance"]
+        fields = ["link", "title", "position", "css_class", "target", "rel"]
 
     def save(self):
         link = super().save()
         MenuLink.objects.invalidate_cache()
         return link
-
-
-class FilterMenuLinksForm(forms.Form):
-    position = forms.ChoiceField(
-        label=_("Position"),
-        required=False,
-        choices=[("", _("All types"))] + MenuLink.LINK_POSITION_CHOICES,
-    )
-    content = forms.CharField(label=_("Content"), required=False)
-
-    def filter_queryset(self, criteria, queryset):
-        if criteria.get("position") is not None:
-            queryset = queryset.filter(type=criteria["position"])
-
-        if criteria.get("content"):
-            search_title = Q(title__icontains=criteria["content"])
-            search_link = Q(link__icontains=criteria["content"])
-            queryset = queryset.filter(search_title | search_link)
-
-        return queryset
