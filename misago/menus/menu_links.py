@@ -38,12 +38,3 @@ def _get_top_menu_links_from_db():
     return MenuLink.objects.filter(
         Q(position=MenuLink.POSITION_FOOTER) | Q(position=MenuLink.POSITION_BOTH)
     ).values()
-
-
-
-
-
-
-
-
-
