@@ -13,6 +13,7 @@ from .threads.test import post_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
+from .menus import MENU_LINKS_CACHE
 
 
 def get_cache_versions():
@@ -22,6 +23,7 @@ def get_cache_versions():
         SETTINGS_CACHE: "abcdefgh",
         SOCIALAUTH_CACHE: "abcdefgh",
         THEME_CACHE: "abcdefgh",
+        MENU_LINKS_CACHE: "abcdefgh",
     }
 
 

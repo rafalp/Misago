@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ..models import MenuLink
+from ..cache import clear_menus_cache
 
 
 class MenuLinkForm(forms.ModelForm):
@@ -44,5 +45,5 @@ class MenuLinkForm(forms.ModelForm):
 
     def save(self):
         link = super().save()
-        MenuLink.objects.invalidate_cache()
+        clear_menus_cache()
         return link

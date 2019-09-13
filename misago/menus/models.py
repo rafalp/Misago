@@ -1,47 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.core.cache import cache
-from django.db.models import Q
-
-CACHE_KEY = "misago_menulinks"
 
 
 class MenuLinkManager(models.Manager):
-    def invalidate_cache(self):
-        cache.delete(CACHE_KEY)
-
-    def get_top_menu_links(self):
-        return self.get_links().get(MenuLink.POSITION_TOP)
-
-    def get_footer_menu_links(self):
-        return self.get_links().get(MenuLink.POSITION_FOOTER)
-
-    def get_links(self):
-        links = self.get_links_from_cache()
-        if links == "nada":
-            links = self.get_links_from_db()
-            cache.set(CACHE_KEY, links)
-        return links
-
-    def get_links_from_cache(self):
-        return cache.get(CACHE_KEY, "nada")
-
-    def get_footer_menu_links_from_db(self):
-        return self.filter(
-            Q(position=MenuLink.POSITION_TOP) | Q(position=MenuLink.POSITION_BOTH)
-        ).values()
-
-    def get_top_menu_links_from_db(self):
-        return self.filter(
-            Q(position=MenuLink.POSITION_FOOTER) | Q(position=MenuLink.POSITION_BOTH)
-        ).values()
-
-    def get_links_from_db(self):
-        links = {
-            MenuLink.POSITION_TOP: self.get_footer_menu_links_from_db(),
-            MenuLink.POSITION_FOOTER: self.get_top_menu_links_from_db(),
-        }
-        return links
+    pass
 
 
 class MenuLink(models.Model):

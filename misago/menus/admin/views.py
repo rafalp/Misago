@@ -1,9 +1,10 @@
 from django.contrib import messages
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ...admin.views import generic
 from ..models import MenuLink
+from ..cache import clear_menus_cache
+
 from .forms import MenuLinkForm
 from .ordering import get_next_free_order
 
@@ -36,7 +37,7 @@ class MenuLinksList(MenuLinkAdmin, generic.ListView):
 
     def action_delete(self, request, items):
         items.delete()
-        MenuLink.objects.invalidate_cache()
+        clear_menus_cache()
         messages.success(request, _("Selected MenuLinks have been deleted."))
 
 
@@ -47,7 +48,7 @@ class NewMenuLink(MenuLinkAdmin, generic.ModelFormView):
         super().handle_form(form, request, target)
         form.instance.order = get_next_free_order()
         form.instance.save()
-        MenuLink.objects.invalidate_cache()
+        clear_menus_cache()
 
 
 class EditMenuLink(MenuLinkAdmin, generic.ModelFormView):
@@ -56,13 +57,13 @@ class EditMenuLink(MenuLinkAdmin, generic.ModelFormView):
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
         form.instance.save()
-        MenuLink.objects.invalidate_cache()
+        clear_menus_cache()
 
 
 class DeleteMenuLink(MenuLinkAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
-        MenuLink.objects.invalidate_cache()
+        clear_menus_cache()
         message = _('MenuLink "%(title)s" has been deleted.')
         messages.success(request, message % {"title": target.title})
 
@@ -79,7 +80,7 @@ class MoveDownMenuLink(MenuLinkAdmin, generic.ButtonView):
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=["order"])
             target.save(update_fields=["order"])
-            MenuLink.objects.invalidate_cache()
+            clear_menus_cache()
 
             message = _("Menu link to %(link)s has been moved after %(other)s.")
             targets_names = {"link": target, "other": other_target}
@@ -98,7 +99,7 @@ class MoveUpMenuLink(MenuLinkAdmin, generic.ButtonView):
             other_target.order, target.order = target.order, other_target.order
             other_target.save(update_fields=["order"])
             target.save(update_fields=["order"])
-            MenuLink.objects.invalidate_cache()
+            clear_menus_cache()
 
             message = _("Menu link to %(link)s has been moved before %(other)s.")
             targets_names = {"link": target, "other": other_target}

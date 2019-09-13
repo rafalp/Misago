@@ -2,6 +2,7 @@
 
 from django.db import migrations, models
 from ...cache.operations import StartCacheVersioning
+from .. import MENU_LINKS_CACHE
 
 
 class Migration(migrations.Migration):
@@ -47,5 +48,5 @@ class Migration(migrations.Migration):
                 "unique_together": {("link", "position")},
             },
         ),
-        StartCacheVersioning("menus"),
+        StartCacheVersioning(MENU_LINKS_CACHE),
     ]

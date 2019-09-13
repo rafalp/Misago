@@ -1,7 +1,7 @@
 import pytest
 
 from ..models import MenuLink
-
+from ..menu_links import get_footer_menu_links, get_top_menu_links
 
 @pytest.fixture
 def menu_link_top(db):
@@ -43,10 +43,10 @@ def menu_link_with_attributes(db):
 
 
 @pytest.fixture
-def links_footer(db, menu_link_footer, menu_link_both, menu_link_with_attributes):
-    return MenuLink.objects.get_footer_menu_links()
+def links_footer(db, cache_versions, menu_link_footer, menu_link_both, menu_link_with_attributes):
+    return get_footer_menu_links(cache_versions)
 
 
 @pytest.fixture
-def links_top(db, menu_link_top, menu_link_both, menu_link_with_attributes):
-    return MenuLink.objects.get_top_menu_links()
+def links_top(db, cache_versions, menu_link_top, menu_link_both, menu_link_with_attributes):
+    return get_top_menu_links(cache_versions)
