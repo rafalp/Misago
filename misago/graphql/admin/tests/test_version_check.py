@@ -5,7 +5,7 @@ from ariadne import gql
 from requests.exceptions import RequestException
 
 from .... import __version__
-from ..versioncheck import CACHE_KEY, CACHE_LENGTH, resolve_version, get_latest_version
+from ..versioncheck import CACHE_KEY, CACHE_LENGTH, get_latest_version, resolve_version
 
 test_query = gql("{ version { status message description } }")
 
@@ -77,5 +77,5 @@ def test_remote_api_is_not_called_if_version_check_cache_is_available(mocker):
 def test_version_check_cache_is_returned_when_set(mocker):
     mocker.patch("misago.graphql.admin.versioncheck.__released__", True)
     mocker.patch("django.core.cache.cache.get", return_value={"status": "TEST"})
-    api_mock = mock_requests_get(mocker, Mock())
+    mock_requests_get(mocker, Mock())
     assert get_latest_version() == {"status": "TEST"}
