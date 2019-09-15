@@ -2,7 +2,7 @@ import markdown
 from markdown.inlinepatterns import LinkPattern
 from markdown.util import etree
 
-IMAGES_RE = r"\!(\s?)\((<.*?>|([^\)]*))\)"
+IMAGES_RE = r"\!\((<.*?>|([^\)]*))\)"
 
 
 class ShortImagesExtension(markdown.Extension):
