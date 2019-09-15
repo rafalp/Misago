@@ -24,7 +24,7 @@ services:
       - MISAGO_CACHE_URL=locmem://0
       - MISAGO_STATIC_ROOT=/app/media
       - MISAGO_MEDIA_ROOT=/app/static
-      - MISAGO_PLUGINS=/app/plugins.txt
+      - MISAGO_ENABLED_PLUGINS=/app/plugins.txt
       # Superuser
       - SUPERUSER_USERNAME=Admin
       - SUPERUSER_EMAIL=admin@example.com

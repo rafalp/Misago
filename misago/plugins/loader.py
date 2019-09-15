@@ -1,13 +1,13 @@
 import sys
-from importlib import import_module
 from typing import List, Optional, Tuple
 from types import ModuleType
 
+from .plugin import Plugin
 from .pluginlist import load_plugin_list_if_exists
 
 
 class PluginLoader:
-    _plugins: List["Plugin"]
+    _plugins: List[Plugin]
 
     def __init__(self, plugin_list_path: Optional[str]):
         if plugin_list_path:
@@ -24,9 +24,7 @@ class PluginLoader:
             plugins.append(Plugin(plugin))
         return plugins
 
-    def import_modules_if_exists(
-        self, module_name: str
-    ) -> List[Tuple[str, ModuleType]]:
+    def import_module_if_exists(self, module_name: str) -> List[Tuple[str, ModuleType]]:
         modules = []
         for plugin in self._plugins:
             module = plugin.import_module_if_exists(module_name)
@@ -34,22 +32,3 @@ class PluginLoader:
                 modules.append((plugin.module_name, module))
 
         return modules
-
-
-class Plugin:
-    module_name: str
-
-    _module: ModuleType
-
-    def __init__(self, module_name: str):
-        self.module_name = module_name
-        self._module = import_module(module_name)
-
-    def import_module(self, module_name: str) -> ModuleType:
-        return import_module(f"{self.module_name}.{module_name}")
-
-    def import_module_if_exists(self, module_name: str) -> Optional[ModuleType]:
-        try:
-            return self.import_module(module_name)
-        except ImportError:
-            return None

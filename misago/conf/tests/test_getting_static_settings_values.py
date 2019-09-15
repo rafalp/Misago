@@ -56,6 +56,6 @@ def test_media_root_url_setting_value_is_set_and_retrieved():
     assert settings.media_root == "/media-test/"
 
 
-def test_plugins_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_PLUGINS": "/plugins-test/"})
-    assert settings.plugins == "/plugins-test/"
+def test_enabled_plugins_setting_value_is_set_and_retrieved():
+    settings = StaticSettings({"MISAGO_ENABLED_PLUGINS": "/plugins-test/"})
+    assert settings.enabled_plugins == "/plugins-test/"

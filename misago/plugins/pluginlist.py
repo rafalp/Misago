@@ -17,10 +17,37 @@ def load_plugin_list(path: str) -> List[str]:
 
 def parse_plugins_list(data: str) -> List[str]:
     plugins = []
-    for line in data.splitlines():
-        plugin = line.strip()
-        if not plugin or line.startswith("#"):
+    modules = {}
+
+    for line, entry in enumerate(data.splitlines()):
+        plugin = entry.strip()
+
+        if "#" in plugin:
+            comment_start = plugin.find("#")
+            plugin = plugin[:comment_start].strip()
+        if not plugin:
             continue
-        if plugin not in plugins:
-            plugins.append(plugin)
+
+        if ":" in plugin:
+            path, module = plugin.split(":", 1)
+            validate_local_plugin(line, path, module)
+        else:
+            module = plugin
+        if module in modules:
+            first_line, first_entry = modules[module]
+            raise ValueError(
+                f"plugin '{module}' is listed more than once: "
+                f"at line {first_line} ('{first_entry}') and at {line} ('{entry}')"
+            )
+        modules[module] = line, entry
+
+        plugins.append(plugin)
+
     return plugins
+
+
+def validate_local_plugin(line: int, path: str, module: str):
+    if not module:
+        raise ValueError(f"local plugin entry at line {line} is missing a module name")
+    if not path:
+        raise ValueError(f"local plugin entry at line {line} is missing a path")

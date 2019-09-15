@@ -15,7 +15,7 @@ class StaticSettings:
     _static_root: Optional[str]
     _media_root: Optional[str]
 
-    _plugins: Optional[str]
+    _enabled_plugins: Optional[str]
 
     def __init__(self, settings: Dict[str, Any]):
         self._debug = settings.get("MISAGO_DEBUG", "").lower() in TRUE_STR_VALUES
@@ -29,7 +29,7 @@ class StaticSettings:
         self._static_root = settings.get("MISAGO_STATIC_ROOT")
         self._media_root = settings.get("MISAGO_MEDIA_ROOT")
 
-        self._plugins = settings.get("MISAGO_PLUGINS")
+        self._enabled_plugins = settings.get("MISAGO_ENABLED_PLUGINS")
 
     @property
     def debug(self) -> bool:
@@ -60,5 +60,5 @@ class StaticSettings:
         return self._media_root
 
     @property
-    def plugins(self) -> str:
-        return self._plugins
+    def enabled_plugins(self) -> str:
+        return self._enabled_plugins
