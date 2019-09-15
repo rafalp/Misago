@@ -18,8 +18,8 @@ class PluginLoader:
     def load_plugins(self, plugin_list_path: Optional[str]) -> Optional[List["Plugin"]]:
         plugins = []
         for plugin in load_plugin_list_if_exists(plugin_list_path):
-            if ":" in plugin:
-                path, plugin = plugin.split(":")
+            if "@" in plugin:
+                plugin, path = plugin.split("@", 1)
                 sys.path.append(path)
             plugins.append(Plugin(plugin))
         return plugins

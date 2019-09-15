@@ -28,9 +28,10 @@ def parse_plugins_list(data: str) -> List[str]:
         if not plugin:
             continue
 
-        if ":" in plugin:
-            path, module = plugin.split(":", 1)
-            validate_local_plugin(line, path, module)
+        if "@" in plugin:
+            module, path = map(lambda x: x.strip(), plugin.split("@", 1))
+            plugin = f"{module}@{path}"
+            validate_local_plugin(line, module, path)
         else:
             module = plugin
         if module in modules:
@@ -46,7 +47,7 @@ def parse_plugins_list(data: str) -> List[str]:
     return plugins
 
 
-def validate_local_plugin(line: int, path: str, module: str):
+def validate_local_plugin(line: int, module: str, path: str):
     if not module:
         raise ValueError(f"local plugin entry at line {line} is missing a module name")
     if not path:

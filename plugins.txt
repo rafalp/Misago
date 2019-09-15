@@ -3,11 +3,11 @@
 #
 # plugin_module
 #
-# If plugin is outside of python path, you can use the `some/path:module` syntax:
+# If plugin is outside of Python path, you can follow its name with a path:
 #
-# /app/my/custom/plugin:plugin_module
+# plugin_module @ /app/my/custom/plugin
 #
 # To enable multiple plugins, list their names in separate lines!
 
 testplugin
-/app/plugins:otherplugin
+otherplugin@/app/plugins
