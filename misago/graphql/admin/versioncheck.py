@@ -18,12 +18,7 @@ def resolve_version(*_):
     if not __released__:
         return get_unreleased_error()
 
-    data = cache.get(CACHE_KEY)
-    if not data:
-        data = check_version_with_api()
-        if data["status"] != Status.WARNING:
-            cache.set(CACHE_KEY, data, CACHE_LENGTH)
-    return data
+    return check_version_with_api()
 
 
 def get_unreleased_error():
@@ -54,10 +49,16 @@ def check_version_with_api():
 
 
 def get_latest_version():
-    api_url = "https://pypi.org/pypi/Misago/json"
-    r = requests.get(api_url)
-    r.raise_for_status()
-    return r.json()["info"]["version"]
+    data = cache.get(CACHE_KEY)
+
+    if not data:
+        api_url = "https://pypi.org/pypi/Misago/json"
+        r = requests.get(api_url)
+        r.raise_for_status()
+        data = r.json()["info"]["version"]
+        cache.set(CACHE_KEY, data, CACHE_LENGTH)
+
+    return data
 
 
 def compare_versions(current, latest):
