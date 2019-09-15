@@ -2,12 +2,12 @@ import pytest
 from django.urls import reverse
 
 from ....test import assert_contains
-from ...models import MenuLink
+from ...models import MenuItem
 
 
-def test_nav_contains_menus_link(admin_client, list_url):
+def test_nav_contains_menus_item(admin_client, list_url):
     response = admin_client.get(list_url)
-    assert_contains(response, reverse("misago:admin:settings:links:index"))
+    assert_contains(response, reverse("misago:admin:settings:items:index"))
 
 
 def test_empty_list_renders(admin_client, list_url):
@@ -15,80 +15,80 @@ def test_empty_list_renders(admin_client, list_url):
     assert response.status_code == 200
 
 
-def test_list_renders_menu_link(admin_client, list_url, menu_link):
+def test_list_renders_menu_item(admin_client, list_url, menu_item):
     response = admin_client.get(list_url)
-    assert_contains(response, menu_link.title)
+    assert_contains(response, menu_item.title)
 
 
-def test_menu_links_can_be_mass_deleted(admin_client, list_url, superuser):
-    links = []
+def test_menu_items_can_be_mass_deleted(admin_client, list_url, superuser):
+    items = []
     for _ in range(10):
-        link = MenuLink.objects.create(
-            position=MenuLink.POSITION_FOOTER,
-            title="Test Link {}".format(_),
-            link="https://links{}.com".format(_),
+        item = MenuItem.objects.create(
+            menu=MenuItem.POSITION_FOOTER,
+            title="Test Item {}".format(_),
+            item="https://items{}.com".format(_),
         )
-        links.append(link.pk)
+        items.append(item.pk)
 
-    assert MenuLink.objects.count() == 10
+    assert MenuItem.objects.count() == 10
 
     response = admin_client.post(
-        list_url, data={"action": "delete", "selected_items": links}
+        list_url, data={"action": "delete", "selected_items": items}
     )
     assert response.status_code == 302
-    assert MenuLink.objects.count() == 0
+    assert MenuItem.objects.count() == 0
 
 
 def test_creation_form_renders(admin_client):
-    response = admin_client.get(reverse("misago:admin:settings:links:new"))
+    response = admin_client.get(reverse("misago:admin:settings:items:new"))
     assert response.status_code == 200
 
 
-def test_form_creates_new_menu_link(admin_client):
+def test_form_creates_new_menu_item(admin_client):
     response = admin_client.post(
-        reverse("misago:admin:settings:links:new"),
+        reverse("misago:admin:settings:items:new"),
         {
-            "position": MenuLink.POSITION_FOOTER,
-            "title": "Test Link",
-            "link": "https://admin.com/links/",
+            "menu": MenuItem.POSITION_FOOTER,
+            "title": "Test Item",
+            "item": "https://admin.com/items/",
         },
     )
 
-    link = MenuLink.objects.get()
-    assert link.position == MenuLink.POSITION_FOOTER
-    assert link.title == "Test Link"
-    assert link.link == "https://admin.com/links/"
+    item = MenuItem.objects.get()
+    assert item.menu == MenuItem.POSITION_FOOTER
+    assert item.title == "Test Item"
+    assert item.item == "https://admin.com/items/"
 
 
-def test_edit_form_renders(admin_client, menu_link):
+def test_edit_form_renders(admin_client, menu_item):
     response = admin_client.get(
-        reverse("misago:admin:settings:links:edit", kwargs={"pk": menu_link.pk})
+        reverse("misago:admin:settings:items:edit", kwargs={"pk": menu_item.pk})
     )
-    assert_contains(response, menu_link.title)
+    assert_contains(response, menu_item.title)
 
 
-def test_edit_form_updates_menu_links(admin_client, menu_link):
+def test_edit_form_updates_menu_items(admin_client, menu_item):
     response = admin_client.post(
-        reverse("misago:admin:settings:links:edit", kwargs={"pk": menu_link.pk}),
+        reverse("misago:admin:settings:items:edit", kwargs={"pk": menu_item.pk}),
         data={
-            "position": menu_link.POSITION_BOTH,
+            "menu": menu_item.POSITION_BOTH,
             "title": "Test Edited",
-            "link": "https://example.com/edited/",
+            "item": "https://example.com/edited/",
         },
     )
     assert response.status_code == 302
 
-    menu_link.refresh_from_db()
-    assert menu_link.position == MenuLink.POSITION_BOTH
-    assert menu_link.title == "Test Edited"
-    assert menu_link.link == "https://example.com/edited/"
+    menu_item.refresh_from_db()
+    assert menu_item.menu == MenuItem.POSITION_BOTH
+    assert menu_item.title == "Test Edited"
+    assert menu_item.item == "https://example.com/edited/"
 
 
-def test_menu_link_can_be_deleted(admin_client, menu_link):
+def test_menu_item_can_be_deleted(admin_client, menu_item):
     response = admin_client.post(
-        reverse("misago:admin:settings:links:delete", kwargs={"pk": menu_link.pk})
+        reverse("misago:admin:settings:items:delete", kwargs={"pk": menu_item.pk})
     )
     assert response.status_code == 302
 
-    with pytest.raises(MenuLink.DoesNotExist):
-        menu_link.refresh_from_db()
+    with pytest.raises(MenuItem.DoesNotExist):
+        menu_item.refresh_from_db()

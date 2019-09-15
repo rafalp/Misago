@@ -10,18 +10,18 @@
         </p>
       </noscript>
 
-      {% if TERMS_OF_SERVICE_URL or PRIVACY_POLICY_URL or settings.forum_footnote or footer_menu_links %}
+      {% if TERMS_OF_SERVICE_URL or PRIVACY_POLICY_URL or settings.forum_footnote or footer_menu %}
         <ul class="list-inline footer-nav">
           {% if settings.forum_footnote %}
             <li class="site-footnote">
               {{ settings.forum_footnote }}
             </li>
           {% endif %}
-          {% for link in footer_menu_links %}
+          {% for link in footer_menu %}
             <li>
-                <a href="{{ link.link }}"{% if link.css_class %} class="{{ link.css_class}}"{% endif %}{% if link.rel %} rel="{{link.rel}}"{% endif %}{% if link.target %} target="{{link.target}}"{% endif %}>
-                  {{ link.title }}
-                </a>
+              <a href="{{ link.url }}"{% if link.css_class %} class="{{ link.css_class }}"{% endif %}{% if link.rel %} rel="{{ link.rel }}"{% endif %}{% if link.target_blank %} target="_blank"{% endif %}>
+                {{ link.title }}
+              </a>
             </li>
           {% endfor %}
           {% if TERMS_OF_SERVICE_URL %}

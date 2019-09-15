@@ -15,7 +15,7 @@
 {{ block.super }}
 {% if target.pk %}
   <small>
-    {{ target.title }}
+    {{ target }}
   </small>
 {% endif %}
 {% endblock page-header %}
@@ -40,21 +40,18 @@
   <fieldset>
     <legend>{% trans "Basic settings" %}</legend>
 
-    {% form_row form.link %}
     {% form_row form.title %}
-    {% form_row form.position %}
-
+    {% form_row form.url %}
+    
   </fieldset>
 </div>
 <div class="form-fieldset">
   <fieldset>
-    <legend>{% trans "Extra configuration" %}</legend>
-
-    <div class="alert alert-info" role="alert">
-      {% trans "Optional link configurations." %}
-    </div>
+    <legend>{% trans "Behavior and appearance" %}</legend>
+    
+    {% form_row form.position %}
     {% form_row form.css_class %}
-    {% form_row form.target %}
+    {% form_row form.target_blank %}
     {% form_row form.rel %}
 
   </fieldset>

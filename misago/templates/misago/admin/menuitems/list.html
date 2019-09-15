@@ -4,7 +4,7 @@
 
 {% block page-actions %}
 <div class="col-auto page-action">
-  <a href="{% url 'misago:admin:settings:links:new' %}" class="btn btn-primary btn-sm">
+  <a href="{% url 'misago:admin:settings:menu-items:new' %}" class="btn btn-primary btn-sm">
     <span class="fa fa-plus-circle"></span>
     {% trans "New menu link" %}
   </a>
@@ -13,8 +13,8 @@
 
 
 {% block table-header %}
-<th>{% trans "Menu Link" %}</th>
-<th >{% trans "Link" %}</th>
+<th>{% trans "Title" %}</th>
+<th >{% trans "URL" %}</th>
 <th style="width: 180px;">{% trans "Position" %}</th>
 <th style="width: 250px;">{% trans "CSS Class" %}</th>
 <th style="width: 250px;">{% trans "Target" %}</th>
@@ -26,14 +26,13 @@
 
 
 {% block table-row %}
-
 <td class="pr-0 small">
-  <a href="{% url 'misago:admin:settings:links:edit' pk=item.pk %}" class="item-name">
-    {{ item.title }}
+  <a href="{% url 'misago:admin:settings:menu-items:edit' pk=item.pk %}" class="item-name">
+    {{ item }}
   </a>
 </td>
 <td class="small">
-  {{ item.link }}
+  {{ item.url }}
 </td>
 <td class="small">
   {{ item.get_position_display }}
@@ -42,7 +41,11 @@
   {{ item.css_class }}
 </td>
 <td class="small">
-  {{ item.target }}
+  {% if item.target_blank %}
+    <pre>target="_blank"</pre>
+  {% else %}
+    &nbsp;
+  {% endif %}
 </td>
 <td class="small">
   {{ item.rel }}
@@ -50,7 +53,7 @@
 {% include "misago/admin/generic/list_extra_actions.html" %}
 <td>
   {% if not forloop.last %}
-    <form action="{% url 'misago:admin:settings:links:down' pk=item.pk %}" method="post">
+    <form action="{% url 'misago:admin:settings:menu-items:down' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' %}">
         <span class="fa fa-chevron-down"></span>
@@ -64,7 +67,7 @@
 </td>
 <td>
   {% if not forloop.first %}
-    <form action="{% url 'misago:admin:settings:links:up' pk=item.pk %}" method="post">
+    <form action="{% url 'misago:admin:settings:menu-items:up' pk=item.pk %}" method="post">
       {% csrf_token %}
       <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' %}">
         <span class="fa fa-chevron-up"></span>
@@ -82,10 +85,10 @@
       <i class="fas fa-ellipsis-h"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
-      <a class="dropdown-item" href="{% url 'misago:admin:settings:links:edit' pk=item.pk %}">
+      <a class="dropdown-item" href="{% url 'misago:admin:settings:menu-items:edit' pk=item.pk %}">
         {% trans "Edit menu link" %}
       </a>
-      <form action="{% url 'misago:admin:settings:links:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+      <form action="{% url 'misago:admin:settings:menu-items:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
         {% csrf_token %}
         <button class="dropdown-item">
           {% trans "Remove menu link" %}
@@ -98,12 +101,8 @@
 
 
 {% block blankslate %}
-<td colspan="8">
-  {% if active_filters %}
-    {% trans "No menu links matching criteria exist." %}
-  {% else %}
-    {% trans "No menu links are set." %}
-  {% endif %}
+<td colspan="9">
+  {% trans "No menu links are set." %}
 </td>
 {% endblock blankslate %}
 
@@ -117,17 +116,3 @@
   )
 </script>
 {% endblock %}
-
-
-{% block filters-modal-body %}
-<div class="row">
-  <div class="col">
-    {% form_row filter_form.position %}
-  </div>
-</div>
-<div class="row">
-  <div class="col">
-    {% form_row filter_form.content %}
-  </div>
-</div>
-{% endblock filters-modal-body %}
