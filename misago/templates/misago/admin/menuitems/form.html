@@ -6,7 +6,7 @@
 {% if target.pk %}
 {% trans target.title %}
 {% else %}
-{% trans "New menu link" %}
+{% trans "New menu item" %}
 {% endif %} | {{ active_link.name }} | {{ block.super }}
 {% endblock title %}
 
@@ -28,9 +28,9 @@
 
 {% block form-header %}
 {% if target.pk %}
-  {% trans "Edit link" %}
+  {% trans "Edit menu item" %}
 {% else %}
-  {% trans "New link" %}
+  {% trans "New menu item" %}
 {% endif %}
 {% endblock %}
 
@@ -49,7 +49,7 @@
   <fieldset>
     <legend>{% trans "Behavior and appearance" %}</legend>
     
-    {% form_row form.position %}
+    {% form_row form.menu %}
     {% form_row form.css_class %}
     {% form_row form.target_blank %}
     {% form_row form.rel %}

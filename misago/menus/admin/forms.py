@@ -17,12 +17,12 @@ class MenuItemForm(forms.ModelForm):
         help_text=_("Menu in which this item will be displayed."),
     )
     css_class = forms.CharField(
-        label=_("CSS Class"),
+        label=_("CSS class"),
         help_text=_('If you want to set custom value for link\'s "class".'),
         required=False,
     )
     target_blank = YesNoSwitch(
-        label=_("Open this link in new tab"),
+        label=_("Open this link in new window"),
         help_text=_(
             'Enabling this option will result in the target="_blank" attribute being '
             "added to this link's HTML element."
@@ -30,8 +30,10 @@ class MenuItemForm(forms.ModelForm):
         required=False,
     )
     rel = forms.CharField(
-        label=_("Rel"),
-        help_text=_("Optional rel attribute that this item will use (ex. 'nofollow')."),
+        label=_("Rel attribute"),
+        help_text=_(
+            'Optional "rel" attribute that this item will use (ex. "nofollow").'
+        ),
         required=False,
     )
 

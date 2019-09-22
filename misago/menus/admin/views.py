@@ -9,7 +9,7 @@ from .ordering import get_next_free_order
 
 
 class MenuItemAdmin(generic.AdminBaseMixin):
-    root_item = "misago:admin:settings:menu-items:index"
+    root_link = "misago:admin:settings:menu-items:index"
     model = MenuItem
     form_class = MenuItemForm
     templates_dir = "misago/admin/menuitems"
@@ -19,7 +19,7 @@ class MenuItemAdmin(generic.AdminBaseMixin):
         form.save()
 
         if self.message_submit:
-            messages.success(request, self.message_submit % {"title": target.title})
+            messages.success(request, self.message_submit % {"item": target})
 
 
 class MenuItemsList(MenuItemAdmin, generic.ListView):
@@ -39,7 +39,7 @@ class MenuItemsList(MenuItemAdmin, generic.ListView):
 
 
 class NewMenuItem(MenuItemAdmin, generic.ModelFormView):
-    message_submit = _('New menu item "%(title)s" has been saved.')
+    message_submit = _("New menu item %(item)s has been saved.")
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -49,7 +49,7 @@ class NewMenuItem(MenuItemAdmin, generic.ModelFormView):
 
 
 class EditMenuItem(MenuItemAdmin, generic.ModelFormView):
-    message_submit = _('Menu item "%(title)s" has been edited.')
+    message_submit = _("Menu item %(item)s has been edited.")
 
     def handle_form(self, form, request, target):
         super().handle_form(form, request, target)
@@ -61,8 +61,8 @@ class DeleteMenuItem(MenuItemAdmin, generic.ButtonView):
     def button_action(self, request, target):
         target.delete()
         clear_menus_cache()
-        message = _('Menu item "%(title)s" has been deleted.')
-        messages.success(request, message % {"title": target.title})
+        message = _("Menu item %(item)s has been deleted.")
+        messages.success(request, message % {"item": target})
 
 
 class MoveDownMenuItem(MenuItemAdmin, generic.ButtonView):
@@ -79,7 +79,7 @@ class MoveDownMenuItem(MenuItemAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_menus_cache()
 
-            message = _("Menu item to %(item)s has been moved after %(other)s.")
+            message = _("Menu item %(item)s has been moved after %(other)s.")
             targets_names = {"item": target, "other": other_target}
             messages.success(request, message % targets_names)
 
@@ -98,6 +98,6 @@ class MoveUpMenuItem(MenuItemAdmin, generic.ButtonView):
             target.save(update_fields=["order"])
             clear_menus_cache()
 
-            message = _("Menu item to %(item)s has been moved before %(other)s.")
+            message = _("Menu item %(item)s has been moved before %(other)s.")
             targets_names = {"item": target, "other": other_target}
             messages.success(request, message % targets_names)

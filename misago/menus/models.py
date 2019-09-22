@@ -12,9 +12,9 @@ class MenuItem(models.Model):
         (MENU_FOOTER, _("Footer")),
     ]
 
+    menu = models.CharField(max_length=6, choices=MENU_CHOICES)
     title = models.CharField(max_length=255)
     url = models.URLField()
-    menu = models.CharField(max_length=6, choices=MENU_CHOICES)
     order = models.IntegerField(default=0)
     css_class = models.CharField(max_length=255, null=True, blank=True)
     target_blank = models.BooleanField(default=False)
