@@ -42,12 +42,12 @@
           {% trans "Users" %}
         </a>
       </li>
-      {% for link in top_menu_links %}
-      <li>
-          <a href="{{ link.link }}"{% if link.css_class %} class="{{ link.css_class}}"{% endif %}{% if link.rel %} rel="{{link.rel}}"{% endif %}{% if link.target %} target="{{link.target}}"{% endif %}>
+      {% for link in navbar_menu %}
+        <li>
+          <a href="{{ link.url }}"{% if link.css_class %} class="{{ link.css_class }}"{% endif %}{% if link.rel %} rel="{{ link.rel }}"{% endif %}{% if link.target_blank %} target="_blank"{% endif %}>
             {{ link.title }}
           </a>
-      </li>
+        </li>
       {% endfor %}
 
     </ul>

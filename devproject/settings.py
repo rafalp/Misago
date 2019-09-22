@@ -193,8 +193,8 @@ INSTALLED_APPS = [
     "misago.socialauth",
     "misago.graphql",
     "misago.faker",
-    "misago.sso",
     "misago.menus",
+    "misago.sso",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -285,8 +285,7 @@ TEMPLATES = [
                 "misago.search.context_processors.search_providers",
                 "misago.themes.context_processors.theme",
                 "misago.legal.context_processors.legal_links",
-                "misago.menus.context_processors.navbar",
-                "misago.menus.context_processors.footer",
+                "misago.menus.context_processors.menus",
                 "misago.users.context_processors.user_links",
                 # Data preloaders
                 "misago.conf.context_processors.preload_settings_json",

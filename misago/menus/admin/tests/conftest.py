@@ -1,32 +1,29 @@
 import pytest
 from django.urls import reverse
 
-from ...models import MenuLink
+from ...models import MenuItem
 
 
 @pytest.fixture
 def list_url(admin_client):
-    return reverse("misago:admin:settings:links:index")
+    return reverse("misago:admin:settings:menu-items:index")
 
 
 @pytest.fixture
-def menu_link(superuser):
-    return MenuLink.objects.create(
-        position=MenuLink.POSITION_TOP,
+def menu_item(superuser):
+    return MenuItem.objects.create(
+        menu=MenuItem.MENU_NAVBAR,
         title="Test TMLA",
-        link="https://top_menu_link_admin.com",
+        url="https://top_menu_item_admin.com",
         order=0,
     )
 
 
 @pytest.fixture
-def other_menu_link(superuser):
-    return MenuLink.objects.create(
-        position=MenuLink.POSITION_BOTH,
-        title="Other Menu Link",
-        link="https://other_menu_link.com",
-        css_class="other-menu-link",
-        rel="noopener noreferrer",
-        target="_blank",
+def other_menu_item(superuser):
+    return MenuItem.objects.create(
+        menu=MenuItem.MENU_BOTH,
+        title="Other Menu Item",
+        url="https://other_menu_item.com",
         order=1,
     )

@@ -1,49 +1,47 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from ..models import MenuLink
+from ...admin.forms import YesNoSwitch
+from ..models import MenuItem
 from ..cache import clear_menus_cache
 
 
-class MenuLinkForm(forms.ModelForm):
-    link = forms.URLField(
-        label=_("Link"),
-        help_text=_("URL where the link should point to."),
-        required=True,
+class MenuItemForm(forms.ModelForm):
+    title = forms.CharField(label=_("Title"))
+    url = forms.URLField(
+        label=_("URL"), help_text=_("URL where this item will point to.")
     )
-    title = forms.CharField(
-        label=_("Title"), help_text=_("Title that will be used"), required=True
-    )
-    position = forms.ChoiceField(
-        label=_("Position"),
-        choices=MenuLink.LINK_POSITION_CHOICES,
-        help_text=_("Position/s the link should be located"),
+    menu = forms.ChoiceField(
+        label=_("Menu"),
+        choices=MenuItem.MENU_CHOICES,
+        help_text=_("Menu in which this item will be displayed."),
     )
     css_class = forms.CharField(
-        label=_("CSS Class"),
-        help_text=_(
-            "Optional CSS class used to customize this link appearance in templates."
-        ),
+        label=_("CSS class"),
+        help_text=_('If you want to set custom value for link\'s "class".'),
         required=False,
     )
-    target = forms.CharField(
-        label=_("Target"),
+    target_blank = YesNoSwitch(
+        label=_("Open this link in new window"),
         help_text=_(
-            "Optional target attribute that this link will use (ex. '_blank')."
+            'Enabling this option will result in the target="_blank" attribute being '
+            "added to this link's HTML element."
         ),
         required=False,
     )
     rel = forms.CharField(
-        label=_("Rel"),
-        help_text=_("Optional rel attribute that this link will use (ex. 'nofollow')."),
+        label=_("Rel attribute"),
+        help_text=_(
+            'Optional "rel" attribute that this item will use (ex. "nofollow").'
+        ),
         required=False,
     )
 
     class Meta:
-        model = MenuLink
-        fields = ["link", "title", "position", "css_class", "target", "rel"]
+        model = MenuItem
+        fields = ["title", "url", "menu", "css_class", "target_blank", "rel"]
 
     def save(self):
-        link = super().save()
+        item = super().save()
         clear_menus_cache()
-        return link
+        return item
