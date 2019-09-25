@@ -19,7 +19,9 @@ type Analytics {
 
 type AnalyticsData {
     current: [Int!]!
+    currentCumulative: [Int!]!
     previous: [Int!]!
+    previousCumulative: [Int!]!
 }
 
 type Version {
