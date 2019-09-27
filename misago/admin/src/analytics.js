@@ -26,26 +26,28 @@ const getAnalytics = gql`
   query getAnalytics($span: Int!) {
     analytics(span: $span) {
       users {
-        current
-        previous
+        ...data
       }
       threads {
-        current
-        previous
+        ...data
       }
       posts {
-        current
-        previous
+        ...data
       }
       attachments {
-        current
-        previous
+        ...data
       }
       dataDownloads {
-        current
-        previous
+        ...data
       }
     }
+  }
+
+  fragment data on AnalyticsData {
+    current
+    currentCumulative
+    previous
+    previousCumulative
   }
 `
 
@@ -152,6 +154,7 @@ const Error = ({ message }) => (
 
 const CURRENT = "C"
 const PREVIOUS = "P"
+const CURRENT_SERIES = 0
 
 const AnalyticsItem = ({ data, legend, name, span }) => {
   const options = {
@@ -188,6 +191,12 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
             now.subtract(span - dataPointIndex - 1, "days")
             return now.format("ll")
           }
+        },
+        formatter: function(value, { dataPointIndex, seriesIndex }) {
+          if (seriesIndex === CURRENT_SERIES) {
+            return data.current[dataPointIndex]
+          }
+          return data.previous[dataPointIndex]
         }
       }
     },
@@ -214,8 +223,8 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
   }
 
   const series = [
-    { name: CURRENT, data: data.current },
-    { name: PREVIOUS, data: data.previous }
+    { name: CURRENT, data: data.currentCumulative },
+    { name: PREVIOUS, data: data.previousCumulative }
   ]
 
   return (

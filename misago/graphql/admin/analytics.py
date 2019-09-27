@@ -76,7 +76,22 @@ class Analytics:
                 data[date] += 1
 
         values = list(data.values())
+        current = list(reversed(values[: self.span]))
+        previous = list(reversed(values[self.span :]))
+
         return {
-            "current": list(reversed(values[: self.span])),
-            "previous": list(reversed(values[self.span :])),
+            "current": current,
+            "currentCumulative": cumulate_data(current),
+            "previous": previous,
+            "previousCumulative": cumulate_data(previous),
         }
+
+
+def cumulate_data(data_series):
+    data = []
+    for v in data_series:
+        if not data:
+            data.append(v)
+        else:
+            data.append(data[-1] + v)
+    return data
