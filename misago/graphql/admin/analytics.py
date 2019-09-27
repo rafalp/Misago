@@ -83,7 +83,7 @@ class Analytics:
             "current": current,
             "currentCumulative": cumulate_data(current),
             "previous": previous,
-            "previousCumulative": cumulate_data(previous)
+            "previousCumulative": cumulate_data(previous),
         }
 
 
