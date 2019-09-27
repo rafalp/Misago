@@ -8,6 +8,7 @@ from ....threads.models import Attachment, AttachmentType
 from ....threads.test import post_thread
 from ....users.datadownloads import request_user_data_download
 from ....users.test import create_test_user
+from ..analytics import cumulate_data
 
 
 test_query = gql(
@@ -15,26 +16,28 @@ test_query = gql(
         query getAnalytics($span: Int!) {
             analytics(span: $span) {
                 users {
-                    current
-                    previous
+                    ...data
                 }
                 threads {
-                    current
-                    previous
+                    ...data
                 }
                 posts {
-                    current
-                    previous
+                    ...data
                 }
                 attachments {
-                    current
-                    previous
+                    ...data
                 }
                 dataDownloads {
-                    current
-                    previous
+                    ...data
                 }
             }
+        }
+
+        fragment data on AnalyticsData {
+            current
+            currentCumulative
+            previous
+            previousCumulative
         }
     """
 )
@@ -53,21 +56,27 @@ def test_all_analytics_are_limited_to_requested_span(admin_graphql_client):
     result = admin_graphql_client.query(test_query, {"span": 30})
     for model_analytics in result["analytics"].values():
         assert len(model_analytics["current"]) == 30
+        assert len(model_analytics["currentCumulative"]) == 30
         assert len(model_analytics["previous"]) == 30
+        assert len(model_analytics["previousCumulative"]) == 30
 
 
 def test_large_analytics_span_is_reduced_to_360(admin_graphql_client):
     result = admin_graphql_client.query(test_query, {"span": 3000})
     for model_analytics in result["analytics"].values():
         assert len(model_analytics["current"]) == 360
+        assert len(model_analytics["currentCumulative"]) == 360
         assert len(model_analytics["previous"]) == 360
+        assert len(model_analytics["previousCumulative"]) == 360
 
 
 def test_short_analytics_span_is_extended_to_30(admin_graphql_client):
     result = admin_graphql_client.query(test_query, {"span": 0})
     for model_analytics in result["analytics"].values():
         assert len(model_analytics["current"]) == 30
+        assert len(model_analytics["currentCumulative"]) == 30
         assert len(model_analytics["previous"]) == 30
+        assert len(model_analytics["previousCumulative"]) == 30
 
 
 def test_recent_user_registration_appears_in_current_analytics(admin_graphql_client):
@@ -238,3 +247,7 @@ def test_old_data_download_is_excluded_from_analytics(admin_graphql_client, supe
     analytics = result["analytics"]["dataDownloads"]
     assert sum(analytics["current"]) == 0
     assert sum(analytics["previous"]) == 0
+
+
+def test_data_is_cumulated():
+    assert cumulate_data([1, 2]) == [1, 3]
