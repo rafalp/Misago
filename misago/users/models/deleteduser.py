@@ -14,8 +14,8 @@ class DeletedUser(models.Model):
         (DELETED_BY_SYSTEM, _("By system")),
     )
 
-    deleted_on = models.DateTimeField(default=timezone.now)
+    deleted_on = models.DateTimeField(default=timezone.now, db_index=True)
     deleted_by = models.PositiveIntegerField(choices=DELETED_BY_CHOICES, db_index=True)
 
     class Meta:
-        ordering = ["-deleted_on"]
+        ordering = ["-id"]

@@ -28,6 +28,9 @@ const getAnalytics = gql`
       users {
         ...data
       }
+      userDeletions {
+        ...data
+      }
       threads {
         ...data
       }
@@ -84,11 +87,6 @@ class Analytics extends React.Component {
             return (
               <>
                 <AnalyticsItem
-                  data={analytics.users}
-                  name={labels.users}
-                  span={span}
-                />
-                <AnalyticsItem
                   data={analytics.threads}
                   name={labels.threads}
                   span={span}
@@ -101,6 +99,17 @@ class Analytics extends React.Component {
                 <AnalyticsItem
                   data={analytics.attachments}
                   name={labels.attachments}
+                  span={span}
+                />
+                <AnalyticsItem
+                  data={analytics.users}
+                  name={labels.users}
+                  span={span}
+                />
+                <AnalyticsItem
+                  data={analytics.userDeletions}
+                  name={labels.userDeletions}
+                  negative={true}
                   span={span}
                 />
                 <AnalyticsItem
@@ -156,7 +165,7 @@ const CURRENT = "C"
 const PREVIOUS = "P"
 const CURRENT_SERIES = 0
 
-const AnalyticsItem = ({ data, legend, name, span }) => {
+const AnalyticsItem = ({ data, legend, name, negative, span }) => {
   const options = {
     legend: {
       show: false
@@ -232,7 +241,7 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
       <h5 className="m-0">{name}</h5>
       <div className="row align-items-center">
         <div className="col-auto">
-          <Summary data={data} />
+          <Summary data={data} negative={negative} />
         </div>
         <div className="col">
           <ChartContainer>
@@ -254,19 +263,25 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
   )
 }
 
-const Summary = ({ data }) => {
+const Summary = ({ data, negative }) => {
   const current = data.current.reduce((a, b) => a + b)
   const previous = data.previous.reduce((a, b) => a + b)
   const diff = current - previous
 
   let color = "text-light"
   let icon = "fas fa-equals"
+  if (negative) {
+    if (diff > 0) color = "text-danger"
+    if (diff < 0) color = "text-success"
+  } else {
+    if (diff > 0) color = "text-success"
+    if (diff < 0) color = "text-danger"
+  }
+
   if (diff > 0) {
-    color = "text-success"
     icon = "fas fa-chevron-up"
   }
   if (diff < 0) {
-    color = "text-danger"
     icon = "fas fa-chevron-down"
   }
 
