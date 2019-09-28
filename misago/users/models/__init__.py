@@ -7,3 +7,4 @@ from .audittrail import AuditTrail
 from .avatargallery import AvatarGallery
 from .ban import Ban, BanCache
 from .datadownload import DataDownload
+from .deleteduser import DeletedUser

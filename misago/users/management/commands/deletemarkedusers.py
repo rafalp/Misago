@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 
 from ....conf.shortcuts import get_dynamic_settings
 from ....core.pgutils import chunk_queryset
+from ...deletesrecord import record_user_deleted_by_self
 from ...permissions import can_delete_own_account
 
 User = get_user_model()
@@ -23,6 +24,7 @@ class Command(BaseCommand):
         for user in chunk_queryset(queryset):
             if can_delete_own_account(settings, user, user):
                 user.delete(anonymous_username=settings.anonymous_username)
+                record_user_deleted_by_self()
                 users_deleted += 1
 
         self.stdout.write("Deleted users: %s" % users_deleted)

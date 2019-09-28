@@ -14,6 +14,7 @@ from ....core.pgutils import chunk_queryset
 from ....threads.models import Thread
 from ...avatars.dynamic import set_avatar as set_dynamic_avatar
 from ...datadownloads import request_user_data_download, user_has_data_download_request
+from ...deletesrecord import record_user_deleted_by_staff
 from ...models import Ban
 from ...profilefields import profilefields
 from ...setupnewuser import setup_new_user
@@ -219,6 +220,7 @@ class UsersList(UserAdmin, generic.ListView):
 
         for user in users:
             user.delete(anonymous_username=request.settings.anonymous_username)
+            record_user_deleted_by_staff()
 
         messages.success(request, _("Selected users have been deleted."))
 

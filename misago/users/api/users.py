@@ -17,6 +17,7 @@ from ...core.shortcuts import get_int_or_404
 from ...threads.moderation import hide_post, hide_thread
 from ..bans import get_user_ban
 from ..datadownloads import request_user_data_download, user_has_data_download_request
+from ..deletesrecord import record_user_deleted_by_staff
 from ..online.utils import get_user_status
 from ..permissions import (
     allow_browse_users_list,
@@ -341,6 +342,7 @@ class UserViewSet(viewsets.GenericViewSet):
                         category.save()
 
                 profile.delete(anonymous_username=request.settings.anonymous_username)
+                record_user_deleted_by_staff()
 
         return Response({})
 

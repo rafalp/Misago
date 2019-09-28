@@ -4,11 +4,11 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
 
+from ... import BANS_CACHE
 from ....cache.test import assert_invalidates_cache
 from ....test import assert_contains, assert_has_error_message, assert_not_contains
-from ... import BANS_CACHE
 from ...datadownloads import request_user_data_download
-from ...models import Ban, DataDownload
+from ...models import Ban, DataDownload, DeletedUser
 from ...test import create_test_user
 
 User = get_user_model()
@@ -183,6 +183,19 @@ def test_multiple_users_can_be_deleted_with_mass_action(admin_client, users_admi
     for user in users:
         with pytest.raises(User.DoesNotExist):
             user.refresh_from_db()
+
+
+def test_mass_action_records_users_deletion_by_staff(admin_client, users_admin_link):
+    users = create_multiple_users()
+    response = admin_client.post(
+        users_admin_link,
+        data={"action": "delete_accounts", "selected_items": [u.id for u in users]},
+    )
+
+    deleted_count = DeletedUser.objects.filter(
+        deleted_by=DeletedUser.DELETED_BY_STAFF
+    ).count()
+    assert deleted_count == len(users)
 
 
 def test_delete_users_mass_action_fails_if_user_tries_to_delete_themselves(
