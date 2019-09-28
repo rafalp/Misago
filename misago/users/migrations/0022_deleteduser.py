@@ -6,20 +6,35 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('misago_users', '0021_user_sso_id'),
-    ]
+    dependencies = [("misago_users", "0021_user_sso_id")]
 
     operations = [
         migrations.CreateModel(
-            name='DeletedUser',
+            name="DeletedUser",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('deleted_on', models.DateTimeField(db_index=True, default=django.utils.timezone.now)),
-                ('deleted_by', models.PositiveIntegerField(choices=[(1, 'By self'), (2, 'By staff'), (3, 'By system')], db_index=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "deleted_on",
+                    models.DateTimeField(
+                        db_index=True, default=django.utils.timezone.now
+                    ),
+                ),
+                (
+                    "deleted_by",
+                    models.PositiveIntegerField(
+                        choices=[(1, "By self"), (2, "By staff"), (3, "By system")],
+                        db_index=True,
+                    ),
+                ),
             ],
-            options={
-                'ordering': ['-id'],
-            },
-        ),
+            options={"ordering": ["-id"]},
+        )
     ]
