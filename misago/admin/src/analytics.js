@@ -270,6 +270,7 @@ const Summary = ({ data, negative }) => {
 
   let color = "text-light"
   let icon = "fas fa-equals"
+
   if (negative) {
     if (diff > 0) color = "text-danger"
     if (diff < 0) color = "text-success"
