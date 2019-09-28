@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 (
                     "deleted_by",
                     models.PositiveIntegerField(
-                        choices=[(1, "By user"), (2, "By staff"), (3, "By system")],
+                        choices=[(1, "By self"), (2, "By staff"), (3, "By system")],
                         db_index=True,
                     ),
                 ),

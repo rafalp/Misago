@@ -3,12 +3,12 @@ from ..deletesrecord import (
     record_user_deleted_by_staff,
     record_user_deleted_by_system,
 )
-from ..models.deleteduser import DeletedUser
+from ..models import DeletedUser
 
 
 def test_deletion_by_self_creates_record(db):
     record_user_deleted_by_self()
-    DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_USER)
+    DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_SELF)
 
 
 def test_deletion_by_staff_creates_record(db):
