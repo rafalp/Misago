@@ -9,16 +9,13 @@ class DeletedUser(models.Model):
     DELETED_BY_SYSTEM = 3
 
     DELETED_BY_CHOICES = (
-        (DELETED_BY_USER, _('By user')),
-        (DELETED_BY_STAFF, _('By staff')),
-        (DELETED_BY_SYSTEM, _('By system')),
+        (DELETED_BY_USER, _("By user")),
+        (DELETED_BY_STAFF, _("By staff")),
+        (DELETED_BY_SYSTEM, _("By system")),
     )
 
     deleted_on = models.DateTimeField(default=timezone.now)
-    deleted_by = models.PositiveIntegerField(
-        choices=DELETED_BY_CHOICES,
-        db_index=True
-    )
+    deleted_by = models.PositiveIntegerField(choices=DELETED_BY_CHOICES, db_index=True)
 
     class Meta:
-        ordering = ['-deleted_on']
+        ordering = ["-deleted_on"]

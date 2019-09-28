@@ -6,7 +6,7 @@ from misago.users.models.deleteduser import DeletedUser
 
 
 def hash_email(email):
-    return hashlib.md5(email.lower().encode('utf-8')).hexdigest()
+    return hashlib.md5(email.lower().encode("utf-8")).hexdigest()
 
 
 def record_user_deleted_by_self():
