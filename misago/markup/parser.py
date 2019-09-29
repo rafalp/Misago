@@ -97,8 +97,8 @@ def md_factory(allow_links=True, allow_images=True, allow_blocks=True):
     md.inlinePatterns.add("bb_u", underline, "<emphasis2")
 
     # Add ~~deleted~~
-    striketrough_md = StrikethroughExtension()
-    striketrough_md.extendMarkdown(md)
+    strikethrough_md = StrikethroughExtension()
+    strikethrough_md.extendMarkdown(md)
 
     if allow_links:
         # Add [url]

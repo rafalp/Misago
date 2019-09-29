@@ -348,7 +348,7 @@ msgid "Insert quote"
 msgstr "Alıntı yap"
 
 #: static/misago/js/misago.js:3
-msgid "Striketrough selection"
+msgid "Strikethrough selection"
 msgstr "Üstü çizili seçim"
 
 #: static/misago/js/misago.js:3
