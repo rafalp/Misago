@@ -346,7 +346,7 @@ msgid "Insert quote"
 msgstr "Вставить цитату"
 
 #: static/misago/js/misago.js:3
-msgid "Striketrough selection"
+msgid "Strikethrough selection"
 msgstr "Зачеркнуть выделенное"
 
 #: static/misago/js/misago.js:3

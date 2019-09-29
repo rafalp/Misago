@@ -340,7 +340,7 @@ msgid "Insert quote"
 msgstr "Añadir cita"
 
 #: static/misago/js/misago.js:3
-msgid "Striketrough selection"
+msgid "Strikethrough selection"
 msgstr "Tachar selección"
 
 #: static/misago/js/misago.js:3

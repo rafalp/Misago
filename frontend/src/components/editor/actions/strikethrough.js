@@ -4,8 +4,8 @@ import Action from "./action"
 export default function(props) {
   return (
     <Action
-      execAction={makeStriketrough}
-      title={gettext("Striketrough selection")}
+      execAction={makeStrikethrough}
+      title={gettext("Strikethrough selection")}
       {...props}
     >
       <span className="material-icon">format_strikethrough</span>
@@ -13,7 +13,7 @@ export default function(props) {
   )
 }
 
-export function makeStriketrough(selection, replace) {
+export function makeStrikethrough(selection, replace) {
   if (selection.length) {
     replace("~~" + selection + "~~")
   }
