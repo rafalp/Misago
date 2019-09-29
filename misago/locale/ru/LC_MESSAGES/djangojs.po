@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-09-29 19:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Katrin Kutepova <blackkatelv@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -347,7 +347,7 @@ msgstr "Вставить цитату"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr "Зачеркнуть выделенное"
+msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"

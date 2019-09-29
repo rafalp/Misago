@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-09-29 19:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Javier Lorenzo <javichio@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -341,7 +341,7 @@ msgstr "Añadir cita"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr "Tachar selección"
+msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"
