@@ -7,6 +7,7 @@ from django.utils import timezone
 from ....threads.models import Attachment, AttachmentType
 from ....threads.test import post_thread
 from ....users.datadownloads import request_user_data_download
+from ....users.deletesrecord import record_user_deleted_by_self
 from ....users.test import create_test_user
 from ..analytics import cumulate_data
 
@@ -16,6 +17,9 @@ test_query = gql(
         query getAnalytics($span: Int!) {
             analytics(span: $span) {
                 users {
+                    ...data
+                }
+                userDeletions {
                     ...data
                 }
                 threads {
@@ -245,6 +249,36 @@ def test_old_data_download_is_excluded_from_analytics(admin_graphql_client, supe
 
     result = admin_graphql_client.query(test_query, {"span": 30})
     analytics = result["analytics"]["dataDownloads"]
+    assert sum(analytics["current"]) == 0
+    assert sum(analytics["previous"]) == 0
+
+
+def test_recent_user_deletion_appears_in_current_analytics(admin_graphql_client):
+    record_user_deleted_by_self()
+    result = admin_graphql_client.query(test_query, {"span": 30})
+    analytics = result["analytics"]["userDeletions"]
+    assert sum(analytics["current"]) == 1
+    assert sum(analytics["previous"]) == 0
+
+
+def test_older_user_deletion_appears_in_previous_analytics(admin_graphql_client):
+    deletion = record_user_deleted_by_self()
+    deletion.deleted_on = previous_datetime
+    deletion.save()
+
+    result = admin_graphql_client.query(test_query, {"span": 30})
+    analytics = result["analytics"]["userDeletions"]
+    assert sum(analytics["current"]) == 0
+    assert sum(analytics["previous"]) == 1
+
+
+def test_old_user_deletion_is_excluded_from_analytics(admin_graphql_client):
+    deletion = record_user_deleted_by_self()
+    deletion.deleted_on = excluded_datetime
+    deletion.save()
+
+    result = admin_graphql_client.query(test_query, {"span": 30})
+    analytics = result["analytics"]["userDeletions"]
     assert sum(analytics["current"]) == 0
     assert sum(analytics["previous"]) == 0
 
