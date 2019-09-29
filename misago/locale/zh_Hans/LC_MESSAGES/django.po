@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-01 14:10+0000\n"
+"POT-Creation-Date: 2019-09-29 00:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -199,7 +199,8 @@ msgstr "描述"
 msgid "Optional description explaining category intented purpose."
 msgstr "解释此版块的主要内容。（可选）。"
 
-#: categories/admin/forms.py:55 templates/misago/admin/categories/list.html:18
+#: categories/admin/forms.py:55 menus/admin/forms.py:20
+#: templates/misago/admin/categories/list.html:18
 #: templates/misago/admin/ranks/list.html:20 users/admin/forms.py:419
 msgid "CSS class"
 msgstr "CSS class"
@@ -1150,21 +1151,21 @@ msgstr "过长。"
 msgid "Uploaded image is not a square."
 msgstr "上传的图片不是正方形。"
 
-#: graphql/admin/versioncheck.py:32
+#: graphql/admin/versioncheck.py:27
 msgid "The site is running using unreleased version of Misago."
 msgstr "该网站正在使用未发布的 Misago 版本。"
 
-#: graphql/admin/versioncheck.py:34
+#: graphql/admin/versioncheck.py:29
 msgid ""
 "Unreleased versions of Misago can lack security features and there is no "
 "supported way to upgrade them to release versions later."
 msgstr "未发布 Misago 版本可能包含安全隐患，并且无法保证可以升级到正式版本。"
 
-#: graphql/admin/versioncheck.py:47
+#: graphql/admin/versioncheck.py:42
 msgid "Failed to connect to pypi.org API. Try again later."
 msgstr "访问 pypi.org API 失败，请稍候尝试。"
 
-#: graphql/admin/versioncheck.py:49
+#: graphql/admin/versioncheck.py:44
 #: templates/misago/admin/dashboard/checks.html:17
 #: templates/misago/admin/dashboard/index.html:33
 msgid ""
@@ -1172,20 +1173,20 @@ msgid ""
 " (pypi.org) API to retrieve latest Misago release version."
 msgstr "版本检查功能依赖于由 Python 包索引 (pypi. org) 的 API 来检索最新的 Misago 版本。"
 
-#: graphql/admin/versioncheck.py:67
+#: graphql/admin/versioncheck.py:70
 msgid "The site is running updated version of Misago."
 msgstr "该网站正在运行 Misago 的最新版本。"
 
-#: graphql/admin/versioncheck.py:68
+#: graphql/admin/versioncheck.py:71
 #, python-format
 msgid "Misago %(version)s is latest release."
 msgstr "Misago %(version)s 是最新版本。"
 
-#: graphql/admin/versioncheck.py:74
+#: graphql/admin/versioncheck.py:77
 msgid "The site is running outdated version of Misago."
 msgstr "该网站正在运行旧版本的 Misago。"
 
-#: graphql/admin/versioncheck.py:76
+#: graphql/admin/versioncheck.py:79
 #, python-format
 msgid ""
 "The site is running Misago version %(version)s while version %(latest)s is "
@@ -1241,7 +1242,8 @@ msgstr "设置服务条款和隐私政策内容。"
 msgid "Type"
 msgstr "类型"
 
-#: legal/admin/forms.py:13 templates/misago/admin/ranks/list.html:19
+#: legal/admin/forms.py:13 menus/admin/forms.py:10
+#: templates/misago/admin/ranks/list.html:19
 msgid "Title"
 msgstr "标题"
 
@@ -1290,13 +1292,13 @@ msgstr "请求的协议不存在。"
 
 #: legal/admin/views.py:29 threads/admin/views/attachments.py:26
 #: users/admin/views/bans.py:24 users/admin/views/datadownloads.py:22
-#: users/admin/views/users.py:62
+#: users/admin/views/users.py:63
 msgid "From newest"
 msgstr "从最新"
 
 #: legal/admin/views.py:29 threads/admin/views/attachments.py:27
 #: users/admin/views/bans.py:25 users/admin/views/datadownloads.py:22
-#: users/admin/views/users.py:63
+#: users/admin/views/users.py:64
 msgid "From oldest"
 msgstr "从最早"
 
@@ -1353,11 +1355,11 @@ msgstr "你已经接受了这个协议。"
 msgid "You need to submit a valid choice."
 msgstr "你需要提交有效的选择。"
 
-#: legal/models.py:42 templates/misago/footer.html:22
+#: legal/models.py:42 templates/misago/footer.html:29
 msgid "Terms of service"
 msgstr "服务条款"
 
-#: legal/models.py:43 templates/misago/footer.html:27
+#: legal/models.py:43 templates/misago/footer.html:34
 msgid "Privacy policy"
 msgstr "隐私政策"
 
@@ -1381,6 +1383,105 @@ msgstr ""
 
 #: markup/finalize.py:40
 msgid "Reveal spoiler"
+msgstr ""
+
+#: menus/admin/__init__.py:31
+msgid "Menu items"
+msgstr ""
+
+#: menus/admin/__init__.py:33
+msgid "Use those options to add custom items to the navbar and footer menus."
+msgstr ""
+
+#: menus/admin/forms.py:12
+msgid "URL"
+msgstr ""
+
+#: menus/admin/forms.py:12
+msgid "URL where this item will point to."
+msgstr ""
+
+#: menus/admin/forms.py:15
+msgid "Menu"
+msgstr ""
+
+#: menus/admin/forms.py:17
+msgid "Menu in which this item will be displayed."
+msgstr ""
+
+#: menus/admin/forms.py:21
+msgid "If you want to set custom value for link's \"class\"."
+msgstr ""
+
+#: menus/admin/forms.py:25
+msgid "Open this link in new window"
+msgstr ""
+
+#: menus/admin/forms.py:27
+msgid ""
+"Enabling this option will result in the target=\"_blank\" attribute being "
+"added to this link's HTML element."
+msgstr ""
+
+#: menus/admin/forms.py:33
+msgid "Rel attribute"
+msgstr ""
+
+#: menus/admin/forms.py:35
+msgid "Optional \"rel\" attribute that this item will use (ex. \"nofollow\")."
+msgstr ""
+
+#: menus/admin/views.py:16
+msgid "Requested menu item does not exist."
+msgstr ""
+
+#: menus/admin/views.py:30
+msgid "Delete items"
+msgstr ""
+
+#: menus/admin/views.py:31
+msgid "Are you sure you want to delete those menu items?"
+msgstr ""
+
+#: menus/admin/views.py:38
+msgid "Selected menu items have been deleted."
+msgstr ""
+
+#: menus/admin/views.py:42
+#, python-format
+msgid "New menu item %(item)s has been saved."
+msgstr ""
+
+#: menus/admin/views.py:52
+#, python-format
+msgid "Menu item %(item)s has been edited."
+msgstr ""
+
+#: menus/admin/views.py:64
+#, python-format
+msgid "Menu item %(item)s has been deleted."
+msgstr ""
+
+#: menus/admin/views.py:82
+#, python-format
+msgid "Menu item %(item)s has been moved after %(other)s."
+msgstr ""
+
+#: menus/admin/views.py:101
+#, python-format
+msgid "Menu item %(item)s has been moved before %(other)s."
+msgstr ""
+
+#: menus/models.py:10
+msgid "Navbar and footer"
+msgstr ""
+
+#: menus/models.py:11 templates/misago/admin/menuitems/list.html:41
+msgid "Navbar"
+msgstr ""
+
+#: menus/models.py:12 templates/misago/admin/menuitems/list.html:46
+msgid "Footer"
 msgstr ""
 
 #: search/api.py:17 search/views.py:12 search/views.py:21
@@ -1615,6 +1716,7 @@ msgstr "编辑协议"
 #: templates/misago/admin/agreements/form.html:48
 #: templates/misago/admin/categoryroles/form.html:36
 #: templates/misago/admin/conf/captcha_settings.html:8
+#: templates/misago/admin/menuitems/form.html:41
 #: templates/misago/admin/roles/form.html:36
 msgid "Basic settings"
 msgstr "基本设置"
@@ -1788,6 +1890,7 @@ msgstr "已禁用"
 
 #: templates/misago/admin/attachmenttypes/list.html:57
 #: templates/misago/admin/categories/list.html:45
+#: templates/misago/admin/menuitems/list.html:54
 #: templates/misago/admin/ranks/list.html:59
 #: templates/misago/admin/ranks/list.html:66
 msgid "Not set"
@@ -1930,7 +2033,7 @@ msgid "Category"
 msgstr "版块"
 
 #: templates/misago/admin/categories/list.html:20
-#: templates/misago/admin/dashboard/index.html:44
+#: templates/misago/admin/dashboard/index.html:45
 #: templates/misago/admin/dashboard/totals.html:31
 #: templates/misago/admin/users/list.html:21
 #: templates/misago/profile/posts.html:5 templates/misago/profile/posts.html:8
@@ -1939,6 +2042,7 @@ msgid "Posts"
 msgstr "帖子"
 
 #: templates/misago/admin/categories/list.html:58
+#: templates/misago/admin/menuitems/list.html:72
 #: templates/misago/admin/ranks/list.html:74
 #: templates/misago/admin/socialauth/list.html:32
 #: templates/misago/admin/themes/assets/css.html:68
@@ -1947,6 +2051,7 @@ msgid "Move down"
 msgstr "向下移动"
 
 #: templates/misago/admin/categories/list.html:72
+#: templates/misago/admin/menuitems/list.html:86
 #: templates/misago/admin/ranks/list.html:88
 #: templates/misago/admin/socialauth/list.html:46
 #: templates/misago/admin/themes/assets/css.html:73
@@ -2227,18 +2332,22 @@ msgid "User registrations"
 msgstr "用户注册"
 
 #: templates/misago/admin/dashboard/index.html:43
+msgid "User deletions"
+msgstr ""
+
+#: templates/misago/admin/dashboard/index.html:44
 msgid "Threads started"
 msgstr "发起的话题"
 
-#: templates/misago/admin/dashboard/index.html:45
+#: templates/misago/admin/dashboard/index.html:46
 msgid "Attachments uploaded"
 msgstr "已上传的附件"
 
-#: templates/misago/admin/dashboard/index.html:46
+#: templates/misago/admin/dashboard/index.html:47
 msgid "Data download requests"
 msgstr "数据下载请求"
 
-#: templates/misago/admin/dashboard/index.html:48
+#: templates/misago/admin/dashboard/index.html:49
 msgid "Site analytics are currently unavailable due to an error."
 msgstr "由于出现错误，站点分析当前不可用。"
 
@@ -2526,6 +2635,60 @@ msgstr "登录"
 #: templates/misago/admin/login.html:60
 msgid "Return to site"
 msgstr "返回到网站"
+
+#: templates/misago/admin/menuitems/form.html:9
+#: templates/misago/admin/menuitems/form.html:33
+#: templates/misago/admin/menuitems/list.html:9
+msgid "New menu item"
+msgstr ""
+
+#: templates/misago/admin/menuitems/form.html:31
+msgid "Edit menu item"
+msgstr ""
+
+#: templates/misago/admin/menuitems/form.html:50
+msgid "Behavior and appearance"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:16
+msgid "Item"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:18
+msgid "CSS Class"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:19
+msgid "Target"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:20
+msgid "Rel"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:40
+msgid "Is displayed on the forum navbar."
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:45
+msgid "Is displayed on the forum footer."
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:103
+msgid "Edit item"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:108
+msgid "Remove item"
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:119
+msgid "No menu items are set."
+msgstr ""
+
+#: templates/misago/admin/menuitems/list.html:129
+msgid "Are you sure you want to remove this menu item?"
+msgstr ""
 
 #: templates/misago/admin/navbar.html:12
 msgid "GitHub"
@@ -2847,7 +3010,7 @@ msgid ""
 msgstr "你确定要删除选定的主题吗？删除该主题将同时子主题。"
 
 #: templates/misago/admin/users/ban.html:6
-#: templates/misago/admin/users/ban.html:82 users/admin/views/users.py:73
+#: templates/misago/admin/users/ban.html:82 users/admin/views/users.py:74
 msgid "Ban users"
 msgstr "封禁用户"
 
@@ -4559,12 +4722,12 @@ msgid "Requested attachment could not be found."
 msgstr "无法找到请求的附件。"
 
 #: threads/admin/views/attachments.py:28 users/admin/views/bans.py:26
-#: users/admin/views/users.py:64
+#: users/admin/views/users.py:65
 msgid "A to z"
 msgstr "A到z"
 
 #: threads/admin/views/attachments.py:29 users/admin/views/bans.py:27
-#: users/admin/views/users.py:65
+#: users/admin/views/users.py:66
 msgid "Z to a"
 msgstr "Z到a"
 
@@ -6901,99 +7064,99 @@ msgstr "“%(name)s\" 级别已经是默认等级。"
 msgid "Rank \"%(name)s\" has been made default."
 msgstr "“%(name)s” 级别已设为默认级别。"
 
-#: users/admin/views/users.py:66
+#: users/admin/views/users.py:67
 msgid "Biggest posters"
 msgstr "最多发帖"
 
-#: users/admin/views/users.py:67
+#: users/admin/views/users.py:68
 msgid "Smallest posters"
 msgstr "最少发帖"
 
-#: users/admin/views/users.py:69
+#: users/admin/views/users.py:70
 msgid "With users: 0"
 msgstr "已选用户：0"
 
-#: users/admin/views/users.py:70
+#: users/admin/views/users.py:71
 msgid "Select users"
 msgstr "选择用户"
 
-#: users/admin/views/users.py:72
+#: users/admin/views/users.py:73
 msgid "Activate accounts"
 msgstr "激活账号"
 
-#: users/admin/views/users.py:74
+#: users/admin/views/users.py:75
 msgid "Request data download"
 msgstr "请求数据下载"
 
-#: users/admin/views/users.py:77
+#: users/admin/views/users.py:78
 msgid "Delete accounts"
 msgstr "删除账号"
 
-#: users/admin/views/users.py:78
+#: users/admin/views/users.py:79
 msgid "Are you sure you want to delete selected users?"
 msgstr "你确定要删除选定的用户吗？"
 
-#: users/admin/views/users.py:82
+#: users/admin/views/users.py:83
 msgid "Delete with content"
 msgstr "同时删除内容"
 
-#: users/admin/views/users.py:84
+#: users/admin/views/users.py:85
 msgid ""
 "Are you sure you want to delete selected users? This will also delete all "
 "content associated with their accounts."
 msgstr "你确定要删除选定的用户吗？将同时删除选定用户的所有内容。"
 
-#: users/admin/views/users.py:105
+#: users/admin/views/users.py:106
 msgid "You have to select inactive users."
 msgstr "你必须选择未激活的用户。"
 
-#: users/admin/views/users.py:112
+#: users/admin/views/users.py:113
 #, python-format
 msgid "Your account on %(forum_name)s forums has been activated"
 msgstr "你在 %(forum_name)s 论坛上的账号已经被激活"
 
-#: users/admin/views/users.py:122
+#: users/admin/views/users.py:123
 msgid "Selected users accounts have been activated."
 msgstr "选中的用户已经被激活。"
 
-#: users/admin/views/users.py:130
+#: users/admin/views/users.py:131
 #, python-format
 msgid "%(user)s is super admin and can't be banned."
 msgstr "%(user)s是超级管理员，不能被封禁。"
 
-#: users/admin/views/users.py:192
+#: users/admin/views/users.py:193
 msgid "Selected users have been banned."
 msgstr "选中的用户已经被封禁。"
 
-#: users/admin/views/users.py:207
+#: users/admin/views/users.py:208
 msgid "Data download requests have been placed for selected users."
 msgstr "已为选定用户请求了数据下载。"
 
-#: users/admin/views/users.py:213 users/admin/views/users.py:228
+#: users/admin/views/users.py:214 users/admin/views/users.py:230
 msgid "You can't delete yourself."
 msgstr "你不能删除自己。"
 
-#: users/admin/views/users.py:215 users/admin/views/users.py:230
+#: users/admin/views/users.py:216 users/admin/views/users.py:232
 #, python-format
 msgid "%(user)s is admin and can't be deleted."
 msgstr "%(user)s是管理员，不能被删除。"
 
-#: users/admin/views/users.py:223
+#: users/admin/views/users.py:225
 msgid "Selected users have been deleted."
 msgstr "已删除选中的用户。"
 
-#: users/admin/views/users.py:244
+#: users/admin/views/users.py:246
 msgid ""
 "Selected users have been disabled and queued for deletion together with "
 "their content."
 msgstr "已禁用所选用户并与其内容一起放入了待删除队列。"
 
-#: users/admin/views/users.py:253
+#: users/admin/views/users.py:255
 #, python-format
 msgid "New user \"%(user)s\" has been registered."
 msgstr "新用户 \"%(user)s\" 已成功注册。"
 
-#: users/admin/views/users.py:285
+#: users/admin/views/users.py:287
 #, python-format
 msgid "User \"%(user)s\" has been edited."
 msgstr "已编辑用户 “%(user)s”。"
@@ -7116,71 +7279,71 @@ msgstr "修改用户名时出错，请再试一次。"
 msgid "You don't have permission to see other users name history."
 msgstr "你无法查看其他用户名称的历史记录。"
 
-#: users/api/users.py:63
+#: users/api/users.py:64
 msgid "You have to sign in to perform this action."
 msgstr "你必须登录才能执行此操作。"
 
-#: users/api/users.py:89
+#: users/api/users.py:90
 msgid "Please use the 3rd party site to register."
 msgstr ""
 
-#: users/api/users.py:112
+#: users/api/users.py:113
 msgid "You can't change other users avatars."
 msgstr "你无法修改其他用户的头像。"
 
-#: users/api/users.py:124
+#: users/api/users.py:125
 msgid "You can't change other users options."
 msgstr "你不能更改其他用户选项。"
 
-#: users/api/users.py:129
+#: users/api/users.py:130
 msgid "Your forum options have been changed."
 msgstr "你的论坛设置已修改。"
 
-#: users/api/users.py:136
+#: users/api/users.py:137
 msgid "Please use the 3rd party site to change your username."
 msgstr ""
 
-#: users/api/users.py:140
+#: users/api/users.py:141
 msgid "You can't change other users names."
 msgstr "你不能修改其他用户的名称。"
 
-#: users/api/users.py:147
+#: users/api/users.py:148
 msgid "You can't change other users signatures."
 msgstr "你不能修改其他用户的签名。"
 
-#: users/api/users.py:160
+#: users/api/users.py:161
 msgid "Please use the 3rd party site to change your password."
 msgstr ""
 
-#: users/api/users.py:164
+#: users/api/users.py:165
 msgid "You can't change other users passwords."
 msgstr "你不能修改其他用户的密码。"
 
-#: users/api/users.py:174
+#: users/api/users.py:175
 msgid "Please use the 3rd party site to change your e-mail."
 msgstr ""
 
-#: users/api/users.py:179
+#: users/api/users.py:180
 msgid "You can't change other users e-mail addresses."
 msgstr "你不能修改其他用户的电子邮件地址。"
 
-#: users/api/users.py:210
+#: users/api/users.py:211
 msgid "Please use the 3rd party site to delete account."
 msgstr ""
 
-#: users/api/users.py:291
+#: users/api/users.py:292
 msgid "You can't request data downloads for other users."
 msgstr "你不能为其他用户请求数据下载。"
 
-#: users/api/users.py:295
+#: users/api/users.py:296
 msgid "You can't download your data."
 msgstr "你不能下载你的数据。"
 
-#: users/api/users.py:300
+#: users/api/users.py:301
 msgid "You can't have more than one data download request at a single time."
 msgstr "你不能一次请求多个数据下载。"
 
-#: users/api/users.py:356
+#: users/api/users.py:358
 msgid "You can't see other users data downloads."
 msgstr "你无法看到其他用户的数据下载。"
 
@@ -7339,6 +7502,18 @@ msgstr "处理中"
 #: users/models/datadownload.py:28
 msgid "Ready"
 msgstr "已完成"
+
+#: users/models/deleteduser.py:12
+msgid "By self"
+msgstr ""
+
+#: users/models/deleteduser.py:13
+msgid "By staff"
+msgstr ""
+
+#: users/models/deleteduser.py:14
+msgid "By system"
+msgstr ""
 
 #: users/models/user.py:106
 msgid "Notify"

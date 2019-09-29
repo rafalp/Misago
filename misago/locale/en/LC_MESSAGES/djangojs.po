@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-01 14:10+0000\n"
+"POT-Creation-Date: 2019-09-29 00:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1005,6 +1005,10 @@ msgstr ""
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
+msgstr ""
+
+#: static/misago/js/misago.js:7
+msgid "See next change"
 msgstr ""
 
 #: static/misago/js/misago.js:8

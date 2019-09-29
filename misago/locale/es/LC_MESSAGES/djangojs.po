@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-01 14:10+0000\n"
+"POT-Creation-Date: 2019-09-29 00:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Javier Lorenzo <javichio@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
@@ -1033,6 +1033,10 @@ msgstr "El mensaje ha sido revertido al estado anterior."
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr "Ver cambio anterior"
+
+#: static/misago/js/misago.js:7
+msgid "See next change"
+msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "By %(edited_by)s %(edited_on)s."

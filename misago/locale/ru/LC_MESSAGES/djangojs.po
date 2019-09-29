@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-01 14:10+0000\n"
+"POT-Creation-Date: 2019-09-29 00:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: Katrin Kutepova <blackkatelv@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -1055,6 +1055,10 @@ msgstr "Сообщение было возвращено в предыдущее
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr "Посмотреть предыдущее изменение"
+
+#: static/misago/js/misago.js:7
+msgid "See next change"
+msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "By %(edited_by)s %(edited_on)s."

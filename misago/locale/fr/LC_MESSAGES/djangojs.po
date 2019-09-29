@@ -7,16 +7,16 @@
 # Amandine G <amandyfriendly@msn.com>, 2017
 # Olivier Cortès <olive@deep-ocean.net>, 2018
 # Palimpseste, 2018
-# Jimmy RUNDSTADLER, 2019
+# Jorg722, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-01 14:10+0000\n"
+"POT-Creation-Date: 2019-09-29 00:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
-"Last-Translator: Jimmy RUNDSTADLER, 2019\n"
+"Last-Translator: Jorg722, 2019\n"
 "Language-Team: French (https://www.transifex.com/misago/teams/65369/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1047,6 +1047,10 @@ msgstr "La version précédente de la publication a été rétablie."
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
 msgstr "Voir le changement précédent"
+
+#: static/misago/js/misago.js:7
+msgid "See next change"
+msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "By %(edited_by)s %(edited_on)s."
