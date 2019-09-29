@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-09-29 19:51+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -338,7 +338,7 @@ msgstr "插入引用"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr "删除线"
+msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"
