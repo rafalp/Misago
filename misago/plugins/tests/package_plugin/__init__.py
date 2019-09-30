@@ -1,0 +1,2 @@
+SIMPLE_PLUGIN = False
+PACKAGE_PLUGIN = True

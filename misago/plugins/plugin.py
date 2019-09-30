@@ -13,10 +13,17 @@ class Plugin:
         self.module_name = module_name
         self._module = import_module(module_name)
 
+    def get_main_module(self) -> ModuleType:
+        return self._module
+
     def import_module_if_exists(self, module_name: str) -> Optional[ModuleType]:
         full_module_name = f"{self.module_name}.{module_name}"
-        if find_spec(full_module_name):
-            return import_module(full_module_name)
+        try:
+            if find_spec(full_module_name):
+                return import_module(full_module_name)
+        except ModuleNotFoundError:
+            pass
+
         return None
 
     def import_module(self, module_name: str) -> ModuleType:
