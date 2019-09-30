@@ -15,14 +15,19 @@ class PluginLoader:
         else:
             self._plugins = []
 
-    def load_plugins(self, plugin_list_path: Optional[str]) -> Optional[List["Plugin"]]:
-        plugins = []
-        for plugin in load_plugin_list_if_exists(plugin_list_path):
+    def load_plugins(self, plugin_list_path: str) -> List["Plugin"]:
+        plugins = load_plugin_list_if_exists(plugin_list_path)
+        if not plugins:
+            return []
+
+        loaded_plugins = []
+        for plugin in plugins:
             if "@" in plugin:
                 plugin, path = plugin.split("@", 1)
                 sys.path.append(path)
-            plugins.append(Plugin(plugin))
-        return plugins
+            loaded_plugins.append(Plugin(plugin))
+
+        return loaded_plugins
 
     def import_module_if_exists(self, module_name: str) -> List[Tuple[str, ModuleType]]:
         modules = []

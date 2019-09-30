@@ -5,3 +5,4 @@ pylint
 pytest
 pytest-cov
 pytest-env
+pytest-mock
