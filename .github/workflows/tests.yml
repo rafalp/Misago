@@ -33,6 +33,9 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
           MISAGO_DATABASE_URL: postgresql://localhost/misago?user=misago&password=misago
+          MISAGO_CACHE_URL: locmem://0
+          MISAGO_STATIC_ROOT: /app/media
+          MISAGO_MEDIA_ROOT: /app/static
         run: |
           pytest --cov=misago
           coveralls

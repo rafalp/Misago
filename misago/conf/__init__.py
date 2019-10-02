@@ -1,6 +1,7 @@
 import os
+from typing import Dict, cast
 
 from .staticsettings import StaticSettings
 
 
-settings = StaticSettings(os.environ)
+settings = StaticSettings(cast(Dict, os.environ))

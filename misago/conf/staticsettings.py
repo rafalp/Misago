@@ -9,11 +9,11 @@ class StaticSettings:
     _test: bool
     _test_database_name: Optional[str]
 
-    _database_url: Optional[str]
-    _cache_url: Optional[str]
+    _database_url: str
+    _cache_url: str
 
-    _static_root: Optional[str]
-    _media_root: Optional[str]
+    _static_root: str
+    _media_root: str
 
     _enabled_plugins: Optional[str]
 
@@ -23,11 +23,11 @@ class StaticSettings:
         self._test = settings.get("MISAGO_TEST", "").lower() in TRUE_STR_VALUES
         self._test_database_name = settings.get("MISAGO_TEST_DATABASE_NAME")
 
-        self._database_url = settings.get("MISAGO_DATABASE_URL")
-        self._cache_url = settings.get("MISAGO_CACHE_URL")
+        self._database_url = get_setting_value(settings, "MISAGO_DATABASE_URL")
+        self._cache_url = get_setting_value(settings, "MISAGO_CACHE_URL")
 
-        self._static_root = settings.get("MISAGO_STATIC_ROOT")
-        self._media_root = settings.get("MISAGO_MEDIA_ROOT")
+        self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
+        self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
 
         self._enabled_plugins = settings.get("MISAGO_ENABLED_PLUGINS")
 
@@ -62,3 +62,10 @@ class StaticSettings:
     @property
     def enabled_plugins(self) -> Optional[str]:
         return self._enabled_plugins
+
+
+def get_setting_value(settings: Dict[str, Any], setting: str) -> Any:
+    if setting not in settings:
+        raise ValueError(f"'{setting}' setting has no value")
+
+    return settings[setting]
