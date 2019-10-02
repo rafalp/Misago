@@ -7,7 +7,7 @@ class StaticSettings:
     _debug: bool
 
     _test: bool
-    _test_database_url: Optional[str]
+    _test_database_name: Optional[str]
 
     _database_url: Optional[str]
     _cache_url: Optional[str]
@@ -21,7 +21,7 @@ class StaticSettings:
         self._debug = settings.get("MISAGO_DEBUG", "").lower() in TRUE_STR_VALUES
 
         self._test = settings.get("MISAGO_TEST", "").lower() in TRUE_STR_VALUES
-        self._test_database_url = settings.get("MISAGO_TEST_DATABASE_URL")
+        self._test_database_name = settings.get("MISAGO_TEST_DATABASE_NAME")
 
         self._database_url = settings.get("MISAGO_DATABASE_URL")
         self._cache_url = settings.get("MISAGO_CACHE_URL")
@@ -40,8 +40,8 @@ class StaticSettings:
         return self._test
 
     @property
-    def test_database_url(self) -> str:
-        return self._test_database_url
+    def test_database_name(self) -> str:
+        return self._test_database_name
 
     @property
     def database_url(self) -> str:

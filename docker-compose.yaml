@@ -20,7 +20,7 @@ services:
       # Misago
       - MISAGO_DEBUG=True
       - MISAGO_DATABASE_URL=postgresql://postgres/misago?user=misago&password=misago
-      - MISAGO_TEST_DATABASE_URL=postgresql://postgres/test?user=misago&password=misago
+      - MISAGO_TEST_DATABASE_NAME=test
       - MISAGO_CACHE_URL=locmem://0
       - MISAGO_STATIC_ROOT=/app/media
       - MISAGO_MEDIA_ROOT=/app/static

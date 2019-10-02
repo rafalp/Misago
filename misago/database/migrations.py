@@ -8,6 +8,7 @@ from alembic.config import Config
 
 from .. import migrations as misago_migrations
 from ..plugins import plugins
+from .sqlalchemy import database_url
 
 
 class MigrationError(Exception):
@@ -18,10 +19,9 @@ def make_migrations(
     module_name: str, message: str, *, data_migration: bool, dry_run: bool
 ):
     migrations_map = get_migrations_map()
-    print(migrations_map)
 
     config = Config()
-    config.set_main_option("sqlalchemy.url", "postgres://misago:misago@postgres/misago")
+    config.set_main_option("sqlalchemy.url", database_url)
     config.set_main_option("script_location", os.path.dirname(__file__))
     config.set_main_option("version_locations", " ".join(migrations_map.values()))
 
@@ -34,13 +34,13 @@ def make_migrations(
     )
 
 
-def run_migrations(*_, dry_run: bool):
-    migrations = import_module(f"misago.migrations")
-
+def run_migrations(*_):
     config = Config()
-    config.set_main_option("sqlalchemy.url", "postgres://misago:misago@postgres/misago")
+    config.set_main_option("sqlalchemy.url", database_url)
     config.set_main_option("script_location", os.path.dirname(__file__))
-    config.set_main_option("version_locations", os.path.dirname(migrations.__file__))
+    config.set_main_option(
+        "version_locations", os.path.dirname(misago_migrations.__file__)
+    )
 
     upgrade(config, "heads")
 
