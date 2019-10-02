@@ -1,6 +1,5 @@
 from unittest.mock import Mock
 
-from ..plugin import Plugin
 from ..loader import PluginLoader
 
 
@@ -75,7 +74,7 @@ def test_loader_imports_plugin_module_if_it_exists(mocker):
     mocker.patch("misago.plugins.loader.Plugin", Mock(return_value=plugin_mock))
 
     loader = PluginLoader("/plugins/path/")
-    loader.import_module_if_exists(module_name)
+    loader.import_modules_if_exists(module_name)
 
     plugin_mock.import_module_if_exists.assert_called_once_with(module_name)
 
@@ -93,7 +92,7 @@ def test_loader_returns_list_of_imported_existing_plugin_modules(mocker):
     mocker.patch("misago.plugins.loader.Plugin", Mock(return_value=plugin_mock))
 
     loader = PluginLoader("/plugins/path/")
-    imported_modules = loader.import_module_if_exists(module_name)
+    imported_modules = loader.import_modules_if_exists(module_name)
     assert imported_modules == [(plugin_name, "imported")]
 
 
@@ -106,6 +105,6 @@ def test_loader_returns_empty_list_if_plugin_module_didnt_exist(mocker):
     mocker.patch("misago.plugins.loader.Plugin", Mock(return_value=plugin_mock))
 
     loader = PluginLoader("/plugins/path/")
-    imported_modules = loader.import_module_if_exists(module_name)
+    imported_modules = loader.import_modules_if_exists(module_name)
     plugin_mock.import_module_if_exists.assert_called_once_with(module_name)
     assert imported_modules == []
