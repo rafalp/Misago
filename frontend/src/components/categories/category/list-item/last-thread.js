@@ -117,7 +117,7 @@ export function Protected({ category }) {
   return (
     <Message
       message={gettext(
-        "This category is protected. You can't browse it's contents."
+        "This category is protected. You can't browse its contents."
       )}
     />
   )

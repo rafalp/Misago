@@ -338,7 +338,7 @@ msgstr "插入引用"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr ""
+msgstr "删除线"
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"
