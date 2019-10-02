@@ -22,4 +22,4 @@ def makemigrations(module: str, message: str):
 @cli.add_command
 @click.command()
 def migrate():
-    run_migrations(dry_run=True)
+    run_migrations()

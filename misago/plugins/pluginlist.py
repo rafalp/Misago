@@ -1,5 +1,5 @@
 import os
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 def load_plugin_list_if_exists(path: str) -> Optional[List[str]]:
@@ -16,8 +16,8 @@ def load_plugin_list(path: str) -> List[str]:
 
 
 def parse_plugins_list(data: str) -> List[str]:
-    plugins = []
-    modules = {}
+    plugins: List[str] = []
+    modules: Dict[str, Tuple[int, str]] = {}
 
     for line, entry in enumerate(data.splitlines()):
         plugin = entry.strip()
