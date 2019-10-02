@@ -40,7 +40,7 @@ class StaticSettings:
         return self._test
 
     @property
-    def test_database_name(self) -> str:
+    def test_database_name(self) -> Optional[str]:
         return self._test_database_name
 
     @property
@@ -60,5 +60,5 @@ class StaticSettings:
         return self._media_root
 
     @property
-    def enabled_plugins(self) -> str:
+    def enabled_plugins(self) -> Optional[str]:
         return self._enabled_plugins
