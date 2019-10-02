@@ -29,7 +29,9 @@ class PluginLoader:
 
         return loaded_plugins
 
-    def import_modules_if_exists(self, module_name: str) -> List[Tuple[str, ModuleType]]:
+    def import_modules_if_exists(
+        self, module_name: str
+    ) -> List[Tuple[str, ModuleType]]:
         modules = []
         for plugin in self._plugins:
             module = plugin.import_module_if_exists(module_name)
