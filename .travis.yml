@@ -1,5 +1,17 @@
 dist: xenial
 language: python
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10
+      - postgresql-client-10
+env:
+  global:
+    - PGPORT=5433
+    - MISAGO_DATABASE_URL=postgresql://localhost:5433/travis_ci_test?user=postgres
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
 jobs:
   include:
     - python:
