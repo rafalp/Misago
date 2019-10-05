@@ -1,0 +1,10 @@
+# List of enabled plugins
+# To enable plugin, simply enter its module name here:
+#
+# plugin_module
+#
+# If plugin is outside of Python path, you can follow its name with a path:
+#
+# plugin_module @ /app/my/custom/plugin
+#
+# To enable multiple plugins, list their names in separate lines!
