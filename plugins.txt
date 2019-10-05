@@ -1,0 +1,6 @@
+# List of enabled plugins
+# To enable plugin, simply enter its module name here:
+#
+# plugin_module
+#
+# To enable multiple plugins, list their names in separate lines:
