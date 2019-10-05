@@ -3,4 +3,8 @@
 #
 # plugin_module
 #
-# To enable multiple plugins, list their names in separate lines:
+# If plugin is outside of Python path, you can follow its name with a path:
+#
+# plugin_module @ /app/my/custom/plugin
+#
+# To enable multiple plugins, list their names in separate lines!

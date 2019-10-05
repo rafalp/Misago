@@ -13,6 +13,18 @@ def test_line_containing_plugin_name_is_parsed():
     assert parse_plugins_list("plugin") == ["plugin"]
 
 
+def test_line_containing_local_plugin_name_is_parsed():
+    assert parse_plugins_list("plugin@/local/") == ["plugin@/local/"]
+
+
+def test_whitespace_is_stripped_from_local_plugin_name():
+    assert parse_plugins_list("plugin @/local/") == ["plugin@/local/"]
+
+
+def test_whitespace_is_stripped_from_local_plugin_path():
+    assert parse_plugins_list("plugin@ /local/") == ["plugin@/local/"]
+
+
 def test_comment_is_removed_from_line_containing_plugin_name():
     assert parse_plugins_list("plugin # comment") == ["plugin"]
 
