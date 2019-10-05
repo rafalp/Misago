@@ -31,7 +31,7 @@ class BaseRegisterForm(forms.Form):
             if ban.user_message:
                 raise ValidationError(ban.user_message)
             else:
-                raise ValidationError(_("This usernane is not allowed."))
+                raise ValidationError(_("This username is not allowed."))
         return data
 
     def clean_email(self):

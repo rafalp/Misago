@@ -341,7 +341,7 @@ msgstr "Añadir cita"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr ""
+msgstr "Tachar selección"
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"

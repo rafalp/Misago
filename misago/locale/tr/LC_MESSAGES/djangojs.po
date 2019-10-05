@@ -349,7 +349,7 @@ msgstr "Alıntı yap"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
-msgstr ""
+msgstr "Üstü çizili seçim"
 
 #: static/misago/js/misago.js:3
 msgid "Bolder selection"
