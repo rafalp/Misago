@@ -14,8 +14,12 @@ users = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String(length=50), nullable=False),
-    sqlalchemy.Column("slug", sqlalchemy.String(length=50), nullable=False),
-    sqlalchemy.Column("email", sqlalchemy.String(length=255), nullable=False),
+    sqlalchemy.Column(
+        "slug", sqlalchemy.String(length=50), nullable=False, unique=True
+    ),
+    sqlalchemy.Column(
+        "email", sqlalchemy.String(length=255), nullable=False, unique=True
+    ),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),

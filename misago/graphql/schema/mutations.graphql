@@ -1,0 +1,22 @@
+type Mutation {
+    login(username: String!, password: String!): LoginMutationResult!
+    register(input: RegisterInput!): RegisterMutationResult!
+}
+
+type LoginMutationResult {
+    error: String
+    token: String
+    user: User
+}
+
+input RegisterInput {
+    name: String!
+    email: String!
+    password: String!
+}
+
+type RegisterMutationResult {
+    error: String
+    token: String
+    user: User
+}

@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: e3ce704e9205
+Revision ID: 62e776aa7e98
 Revises: 
-Create Date: 2019-10-06 19:58:25.430050
+Create Date: 2019-10-06 23:11:25.468548
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "e3ce704e9205"
+revision = "62e776aa7e98"
 down_revision = None
 branch_labels = ("misago",)
 depends_on = None
@@ -47,6 +47,8 @@ def upgrade():
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
         sa.Column("joined_at", sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("email"),
+        sa.UniqueConstraint("slug"),
     )
     op.create_table(
         "misago_threads",

@@ -1,0 +1,36 @@
+scalar Datetime
+
+type Query {
+    settings: Settings
+    categories: [Category!]!
+    user: User
+}
+
+type Settings {
+    forumName: String!
+}
+
+type User {
+    id: ID!
+    name: String!
+    slug: String!
+    email: String!
+    isModerator: Boolean!
+    joinedAt: Datetime
+}
+
+type Category {
+    id: ID!
+    name: String!
+    slug: String!
+}
+
+type Thread {
+    id: ID!
+    name: String!
+    slug: String!
+}
+
+type Post {
+    id: ID!
+}
