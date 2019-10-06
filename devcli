@@ -85,7 +85,7 @@ intro() {
     echo
     echo "Shortcuts:"
     echo
-    echo "    ${BOLD}manage.py${NORMAL}         runs \"python manage.py\" inside docker."
+    echo "    ${BOLD}misagocli.py${NORMAL}      runs \"python misagocli.py\" inside docker."
     echo "    ${BOLD}bash${NORMAL}              starts bash session inside running Misago container."
     echo "    ${BOLD}run${NORMAL}               runs \"docker-compose run --rm misago\"."
     echo "    ${BOLD}psql${NORMAL}              runs psql connected to development database."

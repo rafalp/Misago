@@ -10,4 +10,4 @@ MODULES_TO_IMPORT = ("tables", "plugin", "cli")
 
 def import_plugins():
     for module in MODULES_TO_IMPORT:
-        plugins.import_module_if_exists(module)
+        plugins.import_modules_if_exists(module)
