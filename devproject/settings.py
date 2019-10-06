@@ -294,6 +294,7 @@ TEMPLATES = [
                 "misago.legal.context_processors.legal_links",
                 "misago.menus.context_processors.menus",
                 "misago.users.context_processors.user_links",
+                "misago.core.context_processors.hooks",
                 # Data preloaders
                 "misago.conf.context_processors.preload_settings_json",
                 "misago.core.context_processors.current_link",

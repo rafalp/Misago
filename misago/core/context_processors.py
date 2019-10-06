@@ -1,6 +1,7 @@
 from django.utils.translation import get_language
 
 from .. import __version__
+from ..hooks import context_processors as context_processors_hooks
 from .momentjs import get_locale_url
 
 
@@ -36,3 +37,10 @@ def frontend_context(request):
     if request.include_frontend_context:
         return {"frontend_context": request.frontend_context}
     return {}
+
+
+def hooks(request):
+    context = {}
+    for hook in context_processors_hooks:
+        context.update(hook(request))
+    return context
