@@ -1,6 +1,6 @@
 import click
 
-from .database.migrations import MigrationError, make_migrations, run_migrations
+from .database.migrations import make_migrations, run_migrations
 
 
 @click.group()
@@ -11,12 +11,9 @@ def cli():
 @cli.add_command
 @click.command()
 @click.argument("module")
-@click.argument("message")
-def makemigrations(module: str, message: str):
-    try:
-        make_migrations(module, message, data_migration=True, dry_run=True)
-    except MigrationError as e:
-        click.echo(click.style(str(e), fg="red"))
+@click.argument("description")
+def makemigrations(module: str, description: str):
+    make_migrations(module, description)
 
 
 @cli.add_command
