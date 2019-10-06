@@ -1,61 +1,74 @@
 from ..staticsettings import StaticSettings
 
 
+def mock_settings(settings):
+    mocks = {
+        "MISAGO_DATABASE_URL": "mock",
+        "MISAGO_CACHE_URL": "mock",
+        "MISAGO_STATIC_ROOT": "mock",
+        "MISAGO_MEDIA_ROOT": "mock",
+    }
+    mocks.update(settings)
+    return mocks
+
+
 def test_debug_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_DEBUG": "true"})
+    settings = StaticSettings(mock_settings({"MISAGO_DEBUG": "true"}))
     assert settings.debug is True
 
 
 def test_debug_setting_value_is_set_to_false():
-    settings = StaticSettings({"MISAGO_DEBUG": "false"})
+    settings = StaticSettings(mock_settings({"MISAGO_DEBUG": "false"}))
     assert settings.debug is False
 
 
 def test_debug_setting_value_defaults_to_false():
-    settings = StaticSettings({})
+    settings = StaticSettings(mock_settings({}))
     assert settings.debug is False
 
 
 def test_test_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_TEST": "true"})
+    settings = StaticSettings(mock_settings({"MISAGO_TEST": "true"}))
     assert settings.test is True
 
 
 def test_test_setting_value_is_set_to_false():
-    settings = StaticSettings({"MISAGO_TEST": "false"})
+    settings = StaticSettings(mock_settings({"MISAGO_TEST": "false"}))
     assert settings.test is False
 
 
 def test_test_setting_value_defaults_to_false():
-    settings = StaticSettings({})
+    settings = StaticSettings(mock_settings({}))
     assert settings.test is False
 
 
 def test_test_database_url_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_TEST_DATABASE_NAME": "test_db"})
+    settings = StaticSettings(mock_settings({"MISAGO_TEST_DATABASE_NAME": "test_db"}))
     assert settings.test_database_name == "test_db"
 
 
 def test_database_url_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_DATABASE_URL": "/database-test/"})
+    settings = StaticSettings(mock_settings({"MISAGO_DATABASE_URL": "/database-test/"}))
     assert settings.database_url == "/database-test/"
 
 
 def test_cache_url_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_CACHE_URL": "/cache-test/"})
+    settings = StaticSettings(mock_settings({"MISAGO_CACHE_URL": "/cache-test/"}))
     assert settings.cache_url == "/cache-test/"
 
 
 def test_static_root_url_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_STATIC_ROOT": "/static-test/"})
+    settings = StaticSettings(mock_settings({"MISAGO_STATIC_ROOT": "/static-test/"}))
     assert settings.static_root == "/static-test/"
 
 
 def test_media_root_url_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_MEDIA_ROOT": "/media-test/"})
+    settings = StaticSettings(mock_settings({"MISAGO_MEDIA_ROOT": "/media-test/"}))
     assert settings.media_root == "/media-test/"
 
 
 def test_enabled_plugins_setting_value_is_set_and_retrieved():
-    settings = StaticSettings({"MISAGO_ENABLED_PLUGINS": "/plugins-test/"})
+    settings = StaticSettings(
+        mock_settings({"MISAGO_ENABLED_PLUGINS": "/plugins-test/"})
+    )
     assert settings.enabled_plugins == "/plugins-test/"

@@ -65,7 +65,7 @@ class StaticSettings:
 
 
 def get_setting_value(settings: Dict[str, Any], setting: str) -> Any:
-    if setting not in settings:
+    if not settings.get(setting):
         raise ValueError(f"'{setting}' setting has no value")
 
     return settings[setting]
