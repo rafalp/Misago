@@ -1,8 +1,6 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from sqlalchemy import or_
-
 from .database import database
 from .tables import users
 
@@ -26,8 +24,18 @@ async def create_user(
 
 
 async def get_user_by_name_or_email(name_or_email: str) -> Optional[Dict[str, Any]]:
-    query = users.select().where(
-        or_(users.c.slug == name_or_email, users.c.email == name_or_email)
-    )
+    if "@" in name_or_email:
+        return await get_user_by_email(name_or_email)
+    return await get_user_by_name(name_or_email)
+
+
+async def get_user_by_name(name: str) -> Optional[Dict[str, Any]]:
+    query = users.select().where(users.c.slug == name)
+    data = await database.fetch_one(query)
+    return dict(**data) if data else None
+
+
+async def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
+    query = users.select().where(users.c.email == email)
     data = await database.fetch_one(query)
     return dict(**data) if data else None
