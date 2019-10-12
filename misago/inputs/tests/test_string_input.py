@@ -1,5 +1,3 @@
-import pytest
-
 from ..stringinput import StringInput
 
 
@@ -34,7 +32,7 @@ def test_string_input_proceessing_fails_if_value_is_required_and_cant_be_empty()
 def test_string_input_proceessing_passess_if_value_is_required_and_can_be_empty():
     input_type = StringInput(required=True, allow_empty=True)
     data, errors = input_type.process("")
-    assert data is ""
+    assert data == ""
     assert not errors
 
 

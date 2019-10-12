@@ -57,8 +57,7 @@ class DictInput(Input):
         if data is None:
             if self._required:
                 raise InputError("REQUIRED")
-            else:
-                return None
+            return None
 
         if not isinstance(data, dict) and self._strict:
             raise InputError("INVALID")
