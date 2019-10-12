@@ -5,6 +5,17 @@ from ...categories.models import Category
 from ...users.test import AuthenticatedUserTestCase
 
 
+def index_post(post):
+    if post.id == post.thread.first_post_id:
+        post.set_search_document(post.thread.title)
+    else:
+        post.set_search_document()
+    post.save(update_fields=["search_document"])
+
+    post.update_search_vector()
+    post.save(update_fields=["search_vector"])
+
+
 class SearchApiTests(AuthenticatedUserTestCase):
     def setUp(self):
         super().setUp()
@@ -12,16 +23,6 @@ class SearchApiTests(AuthenticatedUserTestCase):
         self.category = Category.objects.get(slug="first-category")
 
         self.api_link = reverse("misago:api:search")
-
-    def index_post(self, post):
-        if post.id == post.thread.first_post_id:
-            post.set_search_document(post.thread.title)
-        else:
-            post.set_search_document()
-        post.save(update_fields=["search_document"])
-
-        post.update_search_vector()
-        post.save(update_fields=["search_vector"])
 
     def test_no_query(self):
         """api handles no search query"""
@@ -51,7 +52,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles short search query"""
         thread = test.post_thread(self.category)
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=ip" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -67,7 +68,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles query miss"""
         thread = test.post_thread(self.category)
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=elit" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -83,7 +84,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """hidden posts are extempt from search"""
         thread = test.post_thread(self.category)
         post = test.reply_thread(thread, message="Lorem ipsum dolor.", is_hidden=True)
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=ipsum" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -101,7 +102,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         post = test.reply_thread(
             thread, message="Lorem ipsum dolor.", is_unapproved=True
         )
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=ipsum" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -117,7 +118,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles search query"""
         thread = test.post_thread(self.category)
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=ipsum" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -134,10 +135,10 @@ class SearchApiTests(AuthenticatedUserTestCase):
     def test_thread_title_search(self):
         """api searches threads by title"""
         thread = test.post_thread(self.category, title="Atmosphere of mars")
-        self.index_post(thread.first_post)
+        index_post(thread.first_post)
 
         post = test.reply_thread(thread, message="Lorem ipsum dolor.")
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=mars atmosphere" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -155,7 +156,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
         """api handles complex query that uses fulltext search facilities"""
         thread = test.post_thread(self.category)
         post = test.reply_thread(thread, message="Atmosphere of Mars")
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=Mars atmosphere" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -176,7 +177,7 @@ class SearchApiTests(AuthenticatedUserTestCase):
             thread, message="You just do MMM in 4th minute and its pwnt"
         )
 
-        self.index_post(post)
+        index_post(post)
 
         response = self.client.get("%s?q=MMM" % self.api_link)
         self.assertEqual(response.status_code, 200)
@@ -207,3 +208,27 @@ class SearchProviderApiTests(SearchApiTests):
         self.api_link = reverse(
             "misago:api:search", kwargs={"search_provider": "threads"}
         )
+
+
+def test_post_search_filters_hook_is_used_by_threads_search(
+    db, user_client, mocker, thread
+):
+    def search_filter(search):
+        return search.replace("apple phone", "iphone")
+
+    mocker.patch(
+        "misago.threads.filtersearch.hooks.post_search_filters", [search_filter]
+    )
+
+    post = test.reply_thread(thread, message="Lorem ipsum iphone dolor met.")
+    index_post(post)
+
+    response = user_client.get("/api/search/?q=apple phone")
+
+    reponse_json = response.json()
+    assert "threads" in [p["id"] for p in reponse_json]
+    for provider in reponse_json:
+        if provider["id"] == "threads":
+            results = provider["results"]["results"]
+            assert len(results) == 1
+            assert results[0]["id"] == post.id

@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 from requests.exceptions import RequestException
 
+from .. import hooks
 from ..conf import settings
 from .bans import get_email_ban, get_username_ban
 
@@ -157,6 +158,9 @@ def raise_validation_error(*_):
 
 def validate_new_registration(request, cleaned_data, add_error=None, validators=None):
     validators = validators or REGISTRATION_VALIDATORS
+
     add_error = add_error or raise_validation_error
     for validator in validators:
+        validator(request, cleaned_data, add_error)
+    for validator in hooks.new_registrations_validators:
         validator(request, cleaned_data, add_error)

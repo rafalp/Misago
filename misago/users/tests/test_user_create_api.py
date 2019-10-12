@@ -553,3 +553,23 @@ class UserCreateTests(UserTestCase):
         self.assertTrue(test_user.check_password(password))
 
         self.assertIn("Welcome", mail.outbox[0].subject)
+
+
+@override_dynamic_settings(account_activation="none")
+def test_new_registrations_validators_hook_is_used_by_registration_api(
+    db, client, mocker
+):
+    def validator(request, cleaned_data, add_error):
+        add_error("username", "ERROR FROM PLUGIN")
+
+    mocker.patch(
+        "misago.users.validators.hooks.new_registrations_validators", [validator]
+    )
+
+    response = client.post(
+        "/api/users/",
+        {"username": "User", "email": "user@example.com", "password": "PASSW0RD123"},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"username": ["ERROR FROM PLUGIN"]}
