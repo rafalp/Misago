@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.urls import reverse
 
 from ...categories.models import Category
@@ -86,3 +87,17 @@ class ValidatePostTests(AuthenticatedUserTestCase):
                 "post": ["This field may not be blank."],
             },
         )
+
+
+def test_post_validators_hook_is_used_by_posting_api(db, user_client, mocker, thread):
+    def validator(context, data):
+        raise ValidationError("ERROR FROM PLUGIN")
+
+    mocker.patch("misago.threads.validators.hooks.post_validators", [validator])
+
+    response = user_client.post(
+        f"/api/threads/{thread.id}/posts/", {"post": "Lorem ipsum dolor met"}
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"non_field_errors": ["ERROR FROM PLUGIN"]}

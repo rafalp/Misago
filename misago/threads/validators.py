@@ -3,6 +3,7 @@ from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
 from django.utils.translation import ngettext
 
+from .. import hooks
 from ..categories import THREADS_ROOT_NAME
 from ..categories.models import Category
 from ..categories.permissions import can_browse_category, can_see_category
@@ -107,6 +108,8 @@ def validate_post(context, data, validators=None):
     validators = validators or POST_VALIDATORS
 
     for validator in validators:
+        data = validator(context, data) or data
+    for validator in hooks.post_validators:
         data = validator(context, data) or data
 
     return data
