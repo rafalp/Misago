@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-10-13 18:22+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: alff0x1f <alff3one@gmail.com>, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/misago/teams/65369/ru/)\n"
@@ -1616,11 +1616,11 @@ msgstr "Пожалуйста, попробуйте повторно отправ
 msgid "Please use the 3rd party site to login."
 msgstr ""
 
-#: sso/validators.py:24 users/validators.py:79
+#: sso/validators.py:24 users/forms/register.py:34 users/validators.py:80
 msgid "This username is not allowed."
 msgstr "Данное имя пользователя запрещено."
 
-#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:51
+#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:52
 msgid "This e-mail address is not allowed."
 msgstr "Этот e-mail адрес недоступен."
 
@@ -1675,35 +1675,26 @@ msgstr "Запросить ссылку для активации"
 
 #: templates/misago/activation/request.html:25
 msgid ""
-"Site administrator may impose requirement on newly regitered accounts to be "
-"activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
 msgstr ""
-"Администратор сайта может требовать ручной активации новых пользователей, "
-"прежде чем они смогут войти в систему."
 
 #: templates/misago/activation/request.html:28
 msgid ""
-"Depending on time of registration, you will be able activate your account by"
-" clicking special activation link. This link will be valid only for your "
-"browser, for seven days or until your account is activated."
+"Depending on the time of registration, you will be able to activate your "
+"account by clicking a special activation link. This link will be valid only "
+"for your browser, for seven days or until your account is activated."
 msgstr ""
-"Зависимо от времени регистрации, вы сможете активировать ваш аккаунт, "
-"кликнув на специальную ссылку для активации. Эта ссылка будет действовать "
-"только для вашего браузера, семь дней или пока ваш аккаунт не активируется."
 
 #: templates/misago/activation/request.html:31
-#: templates/misago/forgottenpassword/request.html:42
 msgid ""
-"To receive this link, enter your account's e-mail addres in form and press "
-"the \"Send link\" button."
+"To receive this link, enter your account's e-mail address in the form and "
+"press the \"Send link\" button."
 msgstr ""
-"Чтобы получить эту ссылку, введите e-mail адрес вашего аккаунта в форму и "
-"нажмите кнопку \"Выслать ссылку\"."
 
 #: templates/misago/activation/request.html:49
-msgid "To request new activation link please enable JavaScript."
+msgid "To request a new activation link please enable JavaScript."
 msgstr ""
-"Чтобы запросить новую ссылку для активации, пожалуйста, включите JavaScript."
 
 #: templates/misago/activation/stopped.html:5
 msgid "Activation failed"
@@ -3737,6 +3728,14 @@ msgstr ""
 " только в вашем браузере, семь дней или до того, как ваш пароль будет "
 "изменён."
 
+#: templates/misago/forgottenpassword/request.html:42
+msgid ""
+"To receive this link, enter your account's e-mail addres in form and press "
+"the \"Send link\" button."
+msgstr ""
+"Чтобы получить эту ссылку, введите e-mail адрес вашего аккаунта в форму и "
+"нажмите кнопку \"Выслать ссылку\"."
+
 #: templates/misago/forgottenpassword/request.html:60
 msgid "To request new password reset link please enable JavaScript."
 msgstr ""
@@ -5138,7 +5137,7 @@ msgstr[3] ""
 msgid "One or more users could not be found: %(usernames)s"
 msgstr "Один или более пользователей не найдены: %(usernames)s"
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:76
+#: threads/api/postingendpoint/reply.py:81 threads/validators.py:77
 msgid "You have to enter a message."
 msgstr "Вы должны ввести сообщение."
 
@@ -6816,27 +6815,27 @@ msgstr "%(users)s и %(last_user)s\""
 msgid "None (will become top level category)"
 msgstr "Никакая (станет верхним уровнем категории)"
 
-#: threads/validators.py:26
+#: threads/validators.py:27
 msgid "Requested category could not be found."
 msgstr "Запрошенная категория не может быть найдена."
 
-#: threads/validators.py:29
+#: threads/validators.py:30
 msgid "You don't have permission to access this category."
 msgstr "У вас нет разрешения получить доступ к этой категории."
 
-#: threads/validators.py:36
+#: threads/validators.py:37
 msgid "Thread title should contain alpha-numeric characters."
 msgstr "Заголовок темы должен содержать алфавитно-цифровые символы."
 
-#: threads/validators.py:37
+#: threads/validators.py:38
 msgid "Thread title is too long."
 msgstr "Заголовок темы слишком длинный."
 
-#: threads/validators.py:45
+#: threads/validators.py:46
 msgid "You have to enter an thread title."
 msgstr ""
 
-#: threads/validators.py:50
+#: threads/validators.py:51
 #, python-format
 msgid ""
 "Thread title should be at least %(limit_value)s character long (it has "
@@ -6857,7 +6856,7 @@ msgstr[3] ""
 "Заголовок темы должен быть по крайне мере длиной в %(limit_value)s символа "
 "(он имеет %(show_value)s)."
 
-#: threads/validators.py:62
+#: threads/validators.py:63
 #, python-format
 msgid ""
 "Thread title cannot be longer than %(limit_value)s character (it has "
@@ -6878,7 +6877,7 @@ msgstr[3] ""
 "Заголовок темы не может быть длиннее, чем %(limit_value)s символа (у него "
 "%(show_value)s)."
 
-#: threads/validators.py:81
+#: threads/validators.py:82
 #, python-format
 msgid ""
 "Posted message should be at least %(limit_value)s character long (it has "
@@ -6899,7 +6898,7 @@ msgstr[3] ""
 "Опубликованное сообщение должно быть по крайне мере длиной в %(limit_value)s"
 " символа (у него %(show_value)s)."
 
-#: threads/validators.py:92
+#: threads/validators.py:93
 #, python-format
 msgid ""
 "Posted message cannot be longer than %(limit_value)s character (it has "
@@ -7911,10 +7910,6 @@ msgstr ""
 "Администратор должен активировать Ваш аккаунт до того как вы сможете "
 "запросить новый пароль."
 
-#: users/forms/register.py:34
-msgid "This usernane is not allowed."
-msgstr "Это имя пользователя недоступно."
-
 #: users/forms/register.py:51
 msgid "This agreement is required."
 msgstr ""
@@ -8447,19 +8442,19 @@ msgstr ""
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:39
+#: users/validators.py:40
 msgid "This e-mail address is not available."
 msgstr "Данный e-mail адрес недоступен."
 
-#: users/validators.py:67
+#: users/validators.py:68
 msgid "This username is not available."
 msgstr "Данное имя пользователя недоступно."
 
-#: users/validators.py:85
+#: users/validators.py:86
 msgid "Username can only contain latin alphabet letters and digits."
 msgstr "Имя пользователя может содержать только латинские буквы и цифры."
 
-#: users/validators.py:92
+#: users/validators.py:93
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
@@ -8476,7 +8471,7 @@ msgstr[3] ""
 "Имя пользователя должно быть по крайней мере длиной в %(limit_value)s "
 "символов."
 
-#: users/validators.py:100
+#: users/validators.py:101
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
@@ -8485,11 +8480,11 @@ msgstr[1] "Имя пользователя не может быть длинне
 msgstr[2] "Имя пользователя не может быть длиннее %(limit_value)s символов."
 msgstr[3] "Имя пользователя не может быть длиннее %(limit_value)s символов."
 
-#: users/validators.py:136
+#: users/validators.py:137
 msgid "Data entered was found in spammers database."
 msgstr "Введенные данные были найдены в базе данных спамеров."
 
-#: users/validators.py:146
+#: users/validators.py:147
 msgid "This email is not allowed."
 msgstr "Данный e-mail запрещен."
 

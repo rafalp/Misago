@@ -7,15 +7,16 @@
 # Javier Lorenzo <javichio@gmail.com>, 2017
 # Carlos López <carlos@vocalaze.com>, 2017
 # Rafał Pitoń <kontakt@rpiton.com>, 2017
+# Paulo Abraham <cnnick.ex@gmail.com>, 2019
 # 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-10-13 18:22+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
-"Last-Translator: Rafał Pitoń <kontakt@rpiton.com>, 2017\n"
+"Last-Translator: Paulo Abraham <cnnick.ex@gmail.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/misago/teams/65369/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +117,7 @@ msgstr "Usuario Anónimo"
 #: admin/admin.py:6 templates/misago/admin/dashboard/index.html:5
 #: templates/misago/admin/dashboard/index.html:11
 msgid "Dashboard"
-msgstr ""
+msgstr "General"
 
 #: admin/auth.py:29
 msgid "Your admin session has expired."
@@ -127,6 +128,8 @@ msgid ""
 "Value must be a 7-character string specifying an RGB color in a hexadecimal "
 "format."
 msgstr ""
+"El valor debe ser una cadena de caracteres de tamaño 7 especificando un "
+"color RGB en formato hexadecimal."
 
 #: admin/forms.py:67 templates/misago/admin/users/edit.html:145
 #: templates/misago/admin/users/edit.html:163
@@ -403,7 +406,7 @@ msgstr "Se han cambiado los permisos de la categoría %(name)s."
 #: templates/misago/admin/categoryroles/categoryroles.html:37
 #: templates/misago/admin/categoryroles/rolecategories.html:31
 msgid "Change permissions"
-msgstr ""
+msgstr "Cambiar Permisos"
 
 #: categories/admin/views/perms.py:158
 msgid "No categories exist."
@@ -444,11 +447,11 @@ msgstr "En cola de moderación"
 
 #: categories/migrations/0007_best_answers_roles.py:11
 msgid "Q&A user"
-msgstr ""
+msgstr "FAQ del usuario"
 
 #: categories/migrations/0007_best_answers_roles.py:23
 msgid "Q&A moderator"
-msgstr ""
+msgstr "P&R del moderador"
 
 #: categories/permissions.py:13
 msgid "Category access"
@@ -479,6 +482,8 @@ msgstr "General"
 #: conf/admin/__init__.py:53
 msgid "Change forum details like name, description or footer."
 msgstr ""
+"Cambiar los detalles del foro como lo es el nombre, la descripción o pie de "
+"página."
 
 #: conf/admin/__init__.py:58 templates/misago/admin/dashboard/totals.html:7
 #: templates/misago/admin/users/ban.html:22 templates/misago/navbar.html:42
@@ -494,7 +499,7 @@ msgstr ""
 
 #: conf/admin/__init__.py:67
 msgid "Captcha"
-msgstr ""
+msgstr "CAPTCHA"
 
 #: conf/admin/__init__.py:69
 msgid "Setup protection against automatic registrations on the site."
@@ -525,7 +530,7 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:17
 msgid "Tracking ID"
-msgstr ""
+msgstr "ID de seguimiento"
 
 #: conf/admin/forms/analytics.py:19
 msgid ""
@@ -545,7 +550,7 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:34
 msgid "Upload site verification file"
-msgstr ""
+msgstr "Subir archivo de verificación de sitio"
 
 #: conf/admin/forms/analytics.py:36
 msgid ""
@@ -555,15 +560,15 @@ msgstr ""
 
 #: conf/admin/forms/analytics.py:48
 msgid "Submitted file type is not HTML."
-msgstr ""
+msgstr "El archivo enviado no es un HTML."
 
 #: conf/admin/forms/analytics.py:54
 msgid "Submitted file doesn't contain a verification code."
-msgstr ""
+msgstr "El archivo enviado no contiene un código de verificación."
 
 #: conf/admin/forms/captcha.py:21
 msgid "Enable CAPTCHA"
-msgstr ""
+msgstr "Activar CAPTCHA"
 
 #: conf/admin/forms/captcha.py:23
 msgid "No CAPTCHA"
@@ -648,19 +653,19 @@ msgstr "Nombre del Foro"
 
 #: conf/admin/forms/general.py:26
 msgid "Forum address"
-msgstr ""
+msgstr "Dirección del foro"
 
 #: conf/admin/forms/general.py:29
 msgid "Header text"
-msgstr ""
+msgstr "Texto de cabecera"
 
 #: conf/admin/forms/general.py:30
 msgid "This text will replace forum name in page header."
-msgstr ""
+msgstr "Este texto reemplazará el nombre del foro en la cabecera de página."
 
 #: conf/admin/forms/general.py:34
 msgid "Page title"
-msgstr ""
+msgstr "Título de página"
 
 #: conf/admin/forms/general.py:36
 msgid "Meta Description"
@@ -675,19 +680,19 @@ msgstr ""
 #: conf/admin/forms/general.py:46
 #: templates/misago/admin/conf/general_settings.html:17
 msgid "Logo"
-msgstr ""
+msgstr "Logotipo"
 
 #: conf/admin/forms/general.py:47
 msgid "Image that will displayed in forum navbar."
-msgstr ""
+msgstr "La imagen aparecerá en la barra de navegación del foro."
 
 #: conf/admin/forms/general.py:50
 msgid "Delete logo image"
-msgstr ""
+msgstr "Borrar logotipo"
 
 #: conf/admin/forms/general.py:52
 msgid "Small logo"
-msgstr ""
+msgstr "Logotipo pequeño"
 
 #: conf/admin/forms/general.py:54
 msgid ""
@@ -697,11 +702,11 @@ msgstr ""
 
 #: conf/admin/forms/general.py:60
 msgid "Delete small logo image"
-msgstr ""
+msgstr "Eliminar el logotipo pequeño"
 
 #: conf/admin/forms/general.py:63 legal/admin/forms.py:34
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: conf/admin/forms/general.py:65
 msgid ""
@@ -711,7 +716,7 @@ msgstr ""
 
 #: conf/admin/forms/general.py:73
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: conf/admin/forms/general.py:75
 msgid ""
@@ -722,20 +727,20 @@ msgstr ""
 
 #: conf/admin/forms/general.py:81
 msgid "Delete image"
-msgstr ""
+msgstr "Eliminar imagen"
 
 #: conf/admin/forms/general.py:83
 msgid "Replace image with avatar on user profiles"
-msgstr ""
+msgstr "Reemplazar imagen con los avatáres de los usuarios"
 
 #: conf/admin/forms/general.py:86
 msgid "Replace image with avatar on threads"
-msgstr ""
+msgstr "Reemplazar imagen con avatáres en los hilos"
 
 #: conf/admin/forms/general.py:90
 #: templates/misago/admin/conf/general_settings.html:59
 msgid "Forum footnote"
-msgstr ""
+msgstr "Nota de pie del foro"
 
 #: conf/admin/forms/general.py:91
 msgid "Short message displayed in forum footer."
@@ -781,15 +786,15 @@ msgstr ""
 
 #: conf/admin/forms/sso.py:30
 msgid "Private key"
-msgstr ""
+msgstr "Llave pública"
 
 #: conf/admin/forms/sso.py:37
 msgid "Server URL"
-msgstr ""
+msgstr "URL del servidor"
 
 #: conf/admin/forms/sso.py:50
 msgid "You need to enter server URL to enable SSO."
-msgstr ""
+msgstr "Necesitas ingresar el URL del servidor para habilitar SSO."
 
 #: conf/admin/forms/threads.py:27
 msgid "Daily post limit per user"
@@ -1622,11 +1627,11 @@ msgstr "Intenta volver a enviar el formulario."
 msgid "Please use the 3rd party site to login."
 msgstr ""
 
-#: sso/validators.py:24 users/validators.py:79
+#: sso/validators.py:24 users/forms/register.py:34 users/validators.py:80
 msgid "This username is not allowed."
 msgstr "Este nombre de usuario no está permitido."
 
-#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:51
+#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:52
 msgid "This e-mail address is not allowed."
 msgstr "Esta dirección de correo electrónico no está permitida."
 
@@ -1681,35 +1686,26 @@ msgstr "Solicitud de enlace de activación"
 
 #: templates/misago/activation/request.html:25
 msgid ""
-"Site administrator may impose requirement on newly regitered accounts to be "
-"activated before users will be able to sign in."
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
 msgstr ""
-"El administrador del sitio puede imponer el requisito de que las cuentas "
-"recientemente registradas se activen antes de que los usuarios puedan "
-"iniciar sesión."
 
 #: templates/misago/activation/request.html:28
 msgid ""
-"Depending on time of registration, you will be able activate your account by"
-" clicking special activation link. This link will be valid only for your "
-"browser, for seven days or until your account is activated."
+"Depending on the time of registration, you will be able to activate your "
+"account by clicking a special activation link. This link will be valid only "
+"for your browser, for seven days or until your account is activated."
 msgstr ""
-"Dependiendo de la hora de registro, podrás activar tu cuenta haciendo clic "
-"en el enlace de activación especial. Este enlace será válido sólo para tu "
-"navegador, durante siete días o hasta que se active tu cuenta."
 
 #: templates/misago/activation/request.html:31
-#: templates/misago/forgottenpassword/request.html:42
 msgid ""
-"To receive this link, enter your account's e-mail addres in form and press "
-"the \"Send link\" button."
+"To receive this link, enter your account's e-mail address in the form and "
+"press the \"Send link\" button."
 msgstr ""
-"Para recibir este enlace, ingresa las direcciones de correo electrónico de "
-"tu cuenta en el formulario y presiona el botón \"Enviar enlace\"."
 
 #: templates/misago/activation/request.html:49
-msgid "To request new activation link please enable JavaScript."
-msgstr "Para solicitar un nuevo enlace de activación, habilite JavaScript."
+msgid "To request a new activation link please enable JavaScript."
+msgstr ""
 
 #: templates/misago/activation/stopped.html:5
 msgid "Activation failed"
@@ -3727,6 +3723,14 @@ msgstr ""
 "especial que estará disponible mediante un enlace mágico válido sólo para tu"
 " navegador, durante siete días o hasta que se cambie tu contraseña."
 
+#: templates/misago/forgottenpassword/request.html:42
+msgid ""
+"To receive this link, enter your account's e-mail addres in form and press "
+"the \"Send link\" button."
+msgstr ""
+"Para recibir este enlace, ingresa las direcciones de correo electrónico de "
+"tu cuenta en el formulario y presiona el botón \"Enviar enlace\"."
+
 #: templates/misago/forgottenpassword/request.html:60
 msgid "To request new password reset link please enable JavaScript."
 msgstr ""
@@ -5066,7 +5070,7 @@ msgstr[1] ""
 msgid "One or more users could not be found: %(usernames)s"
 msgstr "Uno o más usuarios no pudieron ser encontrados: %(usernames)s"
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:76
+#: threads/api/postingendpoint/reply.py:81 threads/validators.py:77
 msgid "You have to enter a message."
 msgstr "Debes introducir un mensaje."
 
@@ -6683,27 +6687,27 @@ msgstr "%(users)s y %(last_user)s"
 msgid "None (will become top level category)"
 msgstr "Ninguno (se convertirá en categoría de nivel superior)"
 
-#: threads/validators.py:26
+#: threads/validators.py:27
 msgid "Requested category could not be found."
 msgstr "La categoría solicitada no se pudo encontrar."
 
-#: threads/validators.py:29
+#: threads/validators.py:30
 msgid "You don't have permission to access this category."
 msgstr "No tienes permiso para acceder a esta categoría."
 
-#: threads/validators.py:36
+#: threads/validators.py:37
 msgid "Thread title should contain alpha-numeric characters."
 msgstr "El título del hilo debe contener caracteres alfanuméricos."
 
-#: threads/validators.py:37
+#: threads/validators.py:38
 msgid "Thread title is too long."
 msgstr "El título del hilo es demasiado largo."
 
-#: threads/validators.py:45
+#: threads/validators.py:46
 msgid "You have to enter an thread title."
 msgstr ""
 
-#: threads/validators.py:50
+#: threads/validators.py:51
 #, python-format
 msgid ""
 "Thread title should be at least %(limit_value)s character long (it has "
@@ -6718,7 +6722,7 @@ msgstr[1] ""
 "El título del hilo debe ser de al menos %(limit_value)s caracteres de "
 "longitud (es de %(show_value)s)."
 
-#: threads/validators.py:62
+#: threads/validators.py:63
 #, python-format
 msgid ""
 "Thread title cannot be longer than %(limit_value)s character (it has "
@@ -6733,7 +6737,7 @@ msgstr[1] ""
 "El título del hilo no debe ser mayor de %(limit_value)s caracteres (es de "
 "%(show_value)s)."
 
-#: threads/validators.py:81
+#: threads/validators.py:82
 #, python-format
 msgid ""
 "Posted message should be at least %(limit_value)s character long (it has "
@@ -6748,7 +6752,7 @@ msgstr[1] ""
 "El mensaje a publicar debe ser de al menos %(limit_value)s caracteres de "
 "longitud (es de %(show_value)s)."
 
-#: threads/validators.py:92
+#: threads/validators.py:93
 #, python-format
 msgid ""
 "Posted message cannot be longer than %(limit_value)s character (it has "
@@ -7754,10 +7758,6 @@ msgstr ""
 "El administrador debe activar tu cuenta antes de que pueda solicitar una "
 "nueva contraseña."
 
-#: users/forms/register.py:34
-msgid "This usernane is not allowed."
-msgstr "Este usuario no está permitido."
-
 #: users/forms/register.py:51
 msgid "This agreement is required."
 msgstr ""
@@ -8277,21 +8277,21 @@ msgstr ""
 msgid "Old username"
 msgstr ""
 
-#: users/validators.py:39
+#: users/validators.py:40
 msgid "This e-mail address is not available."
 msgstr "Esta dirección de correo electrónico no está disponible."
 
-#: users/validators.py:67
+#: users/validators.py:68
 msgid "This username is not available."
 msgstr "Este nombre de usuario no está disponible"
 
-#: users/validators.py:85
+#: users/validators.py:86
 msgid "Username can only contain latin alphabet letters and digits."
 msgstr ""
 "El nombre de usuario sólo puede contener caracteres latinos, letras y "
 "dígitos."
 
-#: users/validators.py:92
+#: users/validators.py:93
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
@@ -8299,7 +8299,7 @@ msgstr[0] "El nombre de usuario debe tener al menos %(limit_value)s caracter."
 msgstr[1] ""
 "El nombre de usuario debe tener al menos %(limit_value)s caracteres."
 
-#: users/validators.py:100
+#: users/validators.py:101
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
@@ -8308,12 +8308,12 @@ msgstr[0] ""
 msgstr[1] ""
 "El nombre de usuario no puede ser más largo que %(limit_value)s caracteres."
 
-#: users/validators.py:136
+#: users/validators.py:137
 msgid "Data entered was found in spammers database."
 msgstr ""
 "Los datos ingresados ​​se encontraron en la base de datos de spammers."
 
-#: users/validators.py:146
+#: users/validators.py:147
 msgid "This email is not allowed."
 msgstr "Este correo electrónico no está permitido."
 

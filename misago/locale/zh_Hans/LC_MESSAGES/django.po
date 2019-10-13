@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-29 00:51+0000\n"
+"POT-Creation-Date: 2019-10-13 18:22+0000\n"
 "PO-Revision-Date: 2017-01-16 00:04+0000\n"
 "Last-Translator: 蚂蚁先生 <pzf_karl@hotmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/misago/teams/65369/zh_CN/)\n"
@@ -1604,11 +1604,11 @@ msgstr "请重新尝试提交表单。"
 msgid "Please use the 3rd party site to login."
 msgstr ""
 
-#: sso/validators.py:24 users/validators.py:79
+#: sso/validators.py:24 users/forms/register.py:34 users/validators.py:80
 msgid "This username is not allowed."
 msgstr "不允许使用此用户名。"
 
-#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:51
+#: sso/validators.py:33 users/forms/register.py:45 users/validators.py:52
 msgid "This e-mail address is not allowed."
 msgstr "不能使用此电子邮件。"
 
@@ -1664,27 +1664,26 @@ msgstr "请求验证链接"
 
 #: templates/misago/activation/request.html:25
 msgid ""
-"Site administrator may impose requirement on newly regitered accounts to be "
-"activated before users will be able to sign in."
-msgstr "你需要激活账号才可以登录。"
+"The site administrator may impose a requirement on newly registered accounts"
+" to be activated before users will be able to sign in."
+msgstr ""
 
 #: templates/misago/activation/request.html:28
 msgid ""
-"Depending on time of registration, you will be able activate your account by"
-" clicking special activation link. This link will be valid only for your "
-"browser, for seven days or until your account is activated."
-msgstr "你可以点击我们发出的激活链接来激活你的账号。这个链接仅对你的浏览器有效，有效时间为七天。"
+"Depending on the time of registration, you will be able to activate your "
+"account by clicking a special activation link. This link will be valid only "
+"for your browser, for seven days or until your account is activated."
+msgstr ""
 
 #: templates/misago/activation/request.html:31
-#: templates/misago/forgottenpassword/request.html:42
 msgid ""
-"To receive this link, enter your account's e-mail addres in form and press "
-"the \"Send link\" button."
-msgstr "为了得到这个链接，输入你的电子邮箱地址并按下 “发送链接” 按钮。"
+"To receive this link, enter your account's e-mail address in the form and "
+"press the \"Send link\" button."
+msgstr ""
 
 #: templates/misago/activation/request.html:49
-msgid "To request new activation link please enable JavaScript."
-msgstr "要请求新的激活链接，请在浏览器中启用JavaScript。"
+msgid "To request a new activation link please enable JavaScript."
+msgstr ""
 
 #: templates/misago/activation/stopped.html:5
 msgid "Activation failed"
@@ -3658,6 +3657,12 @@ msgid ""
 "until your password is changed."
 msgstr "你可以在通过仅对你浏览器有效的安全密码重置链接来修改密码，链接有效期7天，请尽快修改。"
 
+#: templates/misago/forgottenpassword/request.html:42
+msgid ""
+"To receive this link, enter your account's e-mail addres in form and press "
+"the \"Send link\" button."
+msgstr "为了得到这个链接，输入你的电子邮箱地址并按下 “发送链接” 按钮。"
+
 #: templates/misago/forgottenpassword/request.html:60
 msgid "To request new password reset link please enable JavaScript."
 msgstr "要申请新的密码重置链接，请启用JavaScript。"
@@ -4929,7 +4934,7 @@ msgstr[0] "你不能添加超过 %(users)s 名用户到隐蔽话题（已添加 
 msgid "One or more users could not be found: %(usernames)s"
 msgstr "无法找到一个或多个用户：%(usernames)s"
 
-#: threads/api/postingendpoint/reply.py:81 threads/validators.py:76
+#: threads/api/postingendpoint/reply.py:81 threads/validators.py:77
 msgid "You have to enter a message."
 msgstr "你必须输入内容。"
 
@@ -6471,27 +6476,27 @@ msgstr "%(users)s 和 %(last_user)s"
 msgid "None (will become top level category)"
 msgstr "无（将成为顶级版块）"
 
-#: threads/validators.py:26
+#: threads/validators.py:27
 msgid "Requested category could not be found."
 msgstr "无法找到请求的版块。"
 
-#: threads/validators.py:29
+#: threads/validators.py:30
 msgid "You don't have permission to access this category."
 msgstr "你没有访问此版块的权限。"
 
-#: threads/validators.py:36
+#: threads/validators.py:37
 msgid "Thread title should contain alpha-numeric characters."
 msgstr "话题名称应包含文字。"
 
-#: threads/validators.py:37
+#: threads/validators.py:38
 msgid "Thread title is too long."
 msgstr "话题名称太长。"
 
-#: threads/validators.py:45
+#: threads/validators.py:46
 msgid "You have to enter an thread title."
 msgstr "你必须输入话题名称。"
 
-#: threads/validators.py:50
+#: threads/validators.py:51
 #, python-format
 msgid ""
 "Thread title should be at least %(limit_value)s character long (it has "
@@ -6501,7 +6506,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "话题名称至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
-#: threads/validators.py:62
+#: threads/validators.py:63
 #, python-format
 msgid ""
 "Thread title cannot be longer than %(limit_value)s character (it has "
@@ -6511,7 +6516,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "话题名称最多包含 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
-#: threads/validators.py:81
+#: threads/validators.py:82
 #, python-format
 msgid ""
 "Posted message should be at least %(limit_value)s character long (it has "
@@ -6521,7 +6526,7 @@ msgid_plural ""
 "%(show_value)s)."
 msgstr[0] "发帖内容至少需要 %(limit_value)s 个字符（现有 %(show_value)s 个字符）。"
 
-#: threads/validators.py:92
+#: threads/validators.py:93
 #, python-format
 msgid ""
 "Posted message cannot be longer than %(limit_value)s character (it has "
@@ -7460,10 +7465,6 @@ msgid ""
 "request new password."
 msgstr "请耐心等待管理员激活你的账号，然后你才能申请新密码。"
 
-#: users/forms/register.py:34
-msgid "This usernane is not allowed."
-msgstr "不能使用此用户名。"
-
 #: users/forms/register.py:51
 msgid "This agreement is required."
 msgstr "此协议是必需项。"
@@ -7956,35 +7957,35 @@ msgstr "新用户名"
 msgid "Old username"
 msgstr "旧用户名"
 
-#: users/validators.py:39
+#: users/validators.py:40
 msgid "This e-mail address is not available."
 msgstr "此电子邮件地址不可用。"
 
-#: users/validators.py:67
+#: users/validators.py:68
 msgid "This username is not available."
 msgstr "此用户名不可用。"
 
-#: users/validators.py:85
+#: users/validators.py:86
 msgid "Username can only contain latin alphabet letters and digits."
 msgstr "用户名只可以包含拉丁字母和数字。"
 
-#: users/validators.py:92
+#: users/validators.py:93
 #, python-format
 msgid "Username must be at least %(limit_value)s character long."
 msgid_plural "Username must be at least %(limit_value)s characters long."
 msgstr[0] "用户名至少需要 %(limit_value)s 个字符。"
 
-#: users/validators.py:100
+#: users/validators.py:101
 #, python-format
 msgid "Username cannot be longer than %(limit_value)s characters."
 msgid_plural "Username cannot be longer than %(limit_value)s characters."
 msgstr[0] "用户名不可以超过 %(limit_value)s 个字符。"
 
-#: users/validators.py:136
+#: users/validators.py:137
 msgid "Data entered was found in spammers database."
 msgstr "输入的数据被禁止或不合法。"
 
-#: users/validators.py:146
+#: users/validators.py:147
 msgid "This email is not allowed."
 msgstr "此电子邮件不可用。"
 
