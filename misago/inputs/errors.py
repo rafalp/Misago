@@ -20,10 +20,10 @@ class InputError(Exception):
 
 class Errors:
     def __bool__(self):
-        raise NotImplementedError("Errors container has to override '__bool__' method")
+        raise NotImplementedError("Errors container has to override '__bool__' method.")
 
     def unwrap(self):
-        raise NotImplementedError("Errors container has to override 'unwrap' method")
+        raise NotImplementedError("Errors container has to override 'unwrap' method.")
 
 
 Error = Union[InputError, List["Error"], Dict[str, "Error"]]

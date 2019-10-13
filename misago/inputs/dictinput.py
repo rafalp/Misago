@@ -1,32 +1,38 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from .base import Input
 from .errors import Error, ErrorsList, ErrorsMap, InputError
+from .validators import Validator
 
 
 class DictInput(Input):
     _allow_empty: bool
-    _fields: Dict[str, Input]
-    _required: bool
+    _data_types = dict
 
     def __init__(
         self,
         fields: Optional[Dict[str, Input]] = None,
         *,
-        allow_empty=False,
-        required=True,
+        allow_empty: bool = False,
+        default: Optional[Union[Callable[[], dict], dict]] = None,
+        required: bool = True,
+        strict: bool = True,
+        validators: Optional[List[Validator]] = None,
     ):
+        super().__init__(
+            default=default, required=required, strict=strict, validators=validators
+        )
+
         self._allow_empty = allow_empty
         self._fields = fields or {}
-        self._required = required
 
     def add_field(self, name: str, input_type: Input) -> Input:
-        assert name not in self._fields, f"field '{name}' already exists"
+        assert name not in self._fields, f"Field '{name}' already exists."
         self._fields[name] = input_type
         return input_type
 
     def get_field(self, name: str, input_type: Input) -> Input:
-        assert name in self._fields, f"field '{name}' doesn't exist"
+        assert name in self._fields, f"Field '{name}' doesn't exist."
         return self._fields[name]
 
     def get_fields(self) -> Dict[str, Input]:
@@ -54,15 +60,9 @@ class DictInput(Input):
         return cleaned_data, errors
 
     def clean(self, data: Any) -> Optional[Dict[str, Any]]:
-        if data is None:
-            if self._required:
-                raise InputError("REQUIRED")
-            return None
+        data = super().clean(data)
 
-        if not isinstance(data, dict) and self._strict:
-            raise InputError("INVALID")
-
-        if not data and not self._allow_empty:
+        if data is not None and not data and not self._allow_empty:
             raise InputError("EMPTY")
 
         return data
