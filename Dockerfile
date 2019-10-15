@@ -25,7 +25,7 @@ ADD requirements-plugins.txt /
 
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
-    pip install -r requirements-plugins.txt &&
+    pip install -r requirements-plugins.txt
 
 WORKDIR /srv/misago
 
