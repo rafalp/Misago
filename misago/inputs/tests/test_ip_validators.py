@@ -100,7 +100,7 @@ def test_ipv4_validator_object_raises_custom_code_error_for_invalid_value():
 
 
 def test_ipv4_validator_object_allows_ipv4_value():
-    validator = IPv6Validator()
+    validator = IPv4Validator()
     validator("127.0.0.1")
 
 
