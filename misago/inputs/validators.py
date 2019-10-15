@@ -13,28 +13,28 @@ class MinLengthValidator:
     _min_length: int
     _code: str
 
-    def __init__(self, min_length: int, *, code: str = "TOO_SHORT"):
+    def __init__(self, min_length: int, *, code: str = "TOO_SMALL"):
         self._min_length = min_length
         self._code = code
 
     def __call__(self, value: Sequence[Any]):
         value_len = len(value)
         if value_len < self._min_length:
-            raise InputError(self._code, f"{value_len} < {self._min_length}")
+            raise InputError(self._code)
 
 
 class MaxLengthValidator:
     _max_length: int
     _code: str
 
-    def __init__(self, max_length: int, *, code: str = "TOO_LONG"):
+    def __init__(self, max_length: int, *, code: str = "TOO_LARGE"):
         self._max_length = max_length
         self._code = code
 
     def __call__(self, value: Sequence[Any]):
         value_len = len(value)
         if value_len > self._max_length:
-            raise InputError(self._code, f"{value_len} > {self._max_length}")
+            raise InputError(self._code)
 
 
 class MinValueValidator:
@@ -47,7 +47,7 @@ class MinValueValidator:
 
     def __call__(self, value: Union[float, int]):
         if value < self._min_value:
-            raise InputError(self._code, f"{value} < {self._min_value}")
+            raise InputError(self._code)
 
 
 class MaxValueValidator:
@@ -60,7 +60,7 @@ class MaxValueValidator:
 
     def __call__(self, value: Union[float, int]):
         if value > self._max_value:
-            raise InputError(self._code, f"{value} > {self._max_value}")
+            raise InputError(self._code)
 
 
 class RegexValidator:
@@ -283,3 +283,33 @@ def validate_ipv46_address(value: str, *, code: str = "INVALID"):
         validate_ipv4_address(value, code=code)
     except InputError:
         validate_ipv6_address(value, code=code)
+
+
+class IPv4Validator:
+    _code: str
+
+    def __init__(self, *, code: str = "INVALID"):
+        self._code = code
+
+    def __call__(self, value: str):
+        validate_ipv4_address(value, code=self._code)
+
+
+class IPv6Validator:
+    _code: str
+
+    def __init__(self, *, code: str = "INVALID"):
+        self._code = code
+
+    def __call__(self, value: str):
+        validate_ipv6_address(value, code=self._code)
+
+
+class IPv46Validator:
+    _code: str
+
+    def __init__(self, *, code: str = "INVALID"):
+        self._code = code
+
+    def __call__(self, value: str):
+        validate_ipv46_address(value, code=self._code)

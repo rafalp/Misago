@@ -20,14 +20,6 @@ def test_value_validator_raises_custom_code_for_invalid_value():
     assert excinfo.value.code == "CUSTOM"
 
 
-def test_value_validator_includes_detail_in_raised_error():
-    validator = MinValueValidator(3)
-    with pytest.raises(InputError) as excinfo:
-        validator(2)
-
-    assert excinfo.value.detail == "2 < 3"
-
-
 def test_value_validator_allows_value_equal_to_min_value():
     validator = MinValueValidator(3)
     validator(3)

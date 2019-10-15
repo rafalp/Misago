@@ -3,13 +3,10 @@ from typing import Dict, List, Optional, Union
 
 class InputError(Exception):
     code: str
-    detail: Optional[str]
 
-    def __init__(self, code: str, detail: Optional[str] = None):
+    def __init__(self, code: str):
         self.code = code
-        self.detail = detail
-
-        super().__init__()
+        super().__init__(code)
 
     def __bool__(self) -> bool:
         return True
