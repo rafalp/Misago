@@ -11,7 +11,7 @@ attrs==19.1.0             # via black, pytest
 black==19.3b0
 certifi==2019.6.16        # via requests
 chardet==3.0.4            # via requests
-click==7.0                # via black
+click==7.0                # via black, pip-tools
 coverage==4.5.3           # via coveralls, pytest-cov
 coveralls==1.8.1
 docopt==0.6.2             # via coveralls
@@ -24,16 +24,18 @@ more-itertools==7.2.0     # via pytest
 mypy-extensions==0.4.1    # via mypy
 mypy==0.720
 packaging==19.0           # via pytest
+pip-tools==4.2.0
 pluggy==0.12.0            # via pytest
 py==1.8.0                 # via pytest
 pylint==2.3.1
 pyparsing==2.4.1.1        # via packaging
+pytest-asyncio==0.10.0
 pytest-cov==2.7.1
 pytest-env==0.6.2
 pytest-mock==1.11.0
 pytest==5.0.1
 requests==2.22.0          # via coveralls
-six==1.12.0               # via astroid, packaging
+six==1.12.0               # via astroid, packaging, pip-tools
 toml==0.10.0              # via black
 typed-ast==1.4.0          # via astroid, mypy
 typing-extensions==3.7.4  # via mypy

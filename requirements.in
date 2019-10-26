@@ -2,5 +2,6 @@ alembic
 ariadne
 click
 databases[postgresql]
+pydantic[email,typing_extensions]
 starlette
 uvicorn
