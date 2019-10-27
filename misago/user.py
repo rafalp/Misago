@@ -1,24 +1,34 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from .database import database
+from .database import database, queries
+from .passwords import hash_password
 from .tables import users
 
 
 async def create_user(
-    name, email, *, password=None, is_moderator=False, joined_at=None
+    name: str,
+    email: str,
+    *,
+    password: Optional[str] = None,
+    is_moderator: bool = False,
+    joined_at: Optional[datetime] = None
 ) -> Dict[str, Any]:
+    if password:
+        password_hash = await hash_password(password)
+    else:
+        password_hash = None
+
     data = {
         "name": name,
         "slug": name.lower(),
         "email": email,
-        "password": password,
+        "password": password_hash,
         "is_moderator": is_moderator,
         "joined_at": joined_at or datetime.now(),
     }
-    query = users.insert(None).values(**data)
 
-    data["id"] = await database.execute(query)
+    data["id"] = await queries.insert(users, **data)
 
     return data
 

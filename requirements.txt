@@ -6,6 +6,7 @@
 #
 alembic==1.2.1
 ariadne==0.7.0
+asgiref==3.2.3
 asyncpg==0.18.3           # via databases
 click==7.0
 databases[postgresql]==0.2.5
@@ -17,6 +18,7 @@ httptools==0.0.13         # via uvicorn
 idna==2.8                 # via email-validator
 mako==1.1.0               # via alembic
 markupsafe==1.1.1         # via mako
+passlib==1.7.1
 psycopg2-binary==2.8.3    # via databases
 pydantic[email,typing_extensions]==1.0
 python-dateutil==2.8.0    # via alembic

@@ -1,7 +1,9 @@
 alembic
 ariadne
+asgiref
 click
 databases[postgresql]
+passlib
 pydantic[email,typing_extensions]
 starlette
 uvicorn
