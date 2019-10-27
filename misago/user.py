@@ -39,3 +39,11 @@ async def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
     query = users.select().where(users.c.email == email)
     data = await database.fetch_one(query)
     return dict(**data) if data else None
+
+
+async def get_user_by_id(
+    id: int  # pylint: disable=redefined-builtin
+) -> Optional[Dict[str, Any]]:
+    query = users.select().where(users.c.id == id)
+    data = await database.fetch_one(query)
+    return dict(**data) if data else None

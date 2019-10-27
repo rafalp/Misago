@@ -13,6 +13,6 @@ async def resolve_login(_, info, *, username: str, password: str):
 
     user = await get_user_by_name_or_email(username)
     if user and user["password"] == password:
-        return {"user": user}
+        return {"user": user, "token": "not-implemented"}
 
     return {"error": "NOT_FOUND"}

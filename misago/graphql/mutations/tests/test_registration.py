@@ -14,4 +14,3 @@ async def test_registration_mutation_creates_new_user_account(db):
             "password": " password123 ",
         },
     )
-

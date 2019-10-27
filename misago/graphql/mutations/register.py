@@ -8,7 +8,7 @@ register_mutation = MutationType()
 
 
 @register_mutation.field("register")
-async def resolve_register(_, info, *, input):
+async def resolve_register(_, info, *, input):  # pylint: disable=redefined-builtin
     InputModel = create_registration_model()
     try:
         data = InputModel(**input).dict()
@@ -26,4 +26,3 @@ def create_registration_model():
         email=EmailStr(),
         password=(constr(min_length=1, max_length=40, strip_whitespace=False), ...),
     )
-    
