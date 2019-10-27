@@ -1,5 +1,5 @@
 import os
-from typing import Any, List
+from typing import List
 
 from ariadne import SchemaBindable, load_schema_from_path, make_executable_schema
 
