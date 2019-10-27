@@ -10,7 +10,7 @@ from .sqlalchemy import database_url
 
 
 def make_migrations(
-    module_name: str, description: str, *, initial: bool = False, empty: bool = False
+    package_name: str, description: str, *, initial: bool = False, empty: bool = False
 ):
     migrations_map = get_migrations_map()
     config = get_migrations_config(migrations_map)
@@ -19,9 +19,9 @@ def make_migrations(
         config,
         description,
         autogenerate=not empty,
-        branch_label=module_name if initial else None,
-        head="base" if initial else f"{module_name}@head",
-        version_path=migrations_map[module_name],
+        branch_label=package_name if initial else None,
+        head="base" if initial else f"{package_name}@head",
+        version_path=migrations_map[package_name],
     )
 
 

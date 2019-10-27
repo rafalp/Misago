@@ -1,4 +1,5 @@
 import click
+from alembic.util import CommandError
 
 from .database.migrations import (
     make_migrations,
@@ -12,35 +13,56 @@ def cli():
     pass
 
 
+def alembic_command(f):
+    def decorated_alembic_command(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except CommandError as e:
+            click.echo(e, err=True)
+
+    decorated_alembic_command.__name__ = f.__name__
+    return decorated_alembic_command
+
+
 @cli.add_command
-@click.command()
-@click.argument("module")
+@click.command(short_help="Creates an initial database migration for the package.")
+@click.argument("package")
 @click.argument("description")
-@click.option("--empty", is_flag=True, flag_value=True)
-def initmigrations(module: str, description: str, empty: bool = False):
-    make_migrations(module, description, initial=True, empty=empty)
+@click.option(
+    "--empty",
+    help="Force generated migration script to be empty.",
+    is_flag=True,
+    flag_value=True,
+)
+@alembic_command
+def initmigrations(package: str, description: str, empty: bool = False):
+    make_migrations(package, description, initial=True, empty=empty)
 
 
 @cli.add_command
-@click.command()
-@click.argument("module")
+@click.command(short_help="Creates new database migration for the package.")
+@click.argument("package")
 @click.argument("description")
-@click.option("--empty", is_flag=True, flag_value=True)
-def makemigrations(module: str, description: str, empty: bool = False):
-    make_migrations(module, description, empty=empty)
+@click.option(
+    "--empty",
+    help="Force generated migration script to be empty.",
+    is_flag=True,
+    flag_value=True,
+)
+@alembic_command
+def makemigrations(package: str, description: str, empty: bool = False):
+    make_migrations(package, description, empty=empty)
 
 
 @cli.add_command
-@click.command()
+@click.command(short_help="Runs all database migrations.")
+@alembic_command
 def migrate():
     run_migrations()
 
 
 @cli.add_command
-@click.command()
+@click.command(short_help="Shows database migrations history.")
+@alembic_command
 def migrationshistory():
     show_migrations_history()
-
-
-# TODO:
-# - get migrations status

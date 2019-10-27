@@ -5,7 +5,7 @@ from passlib.utils.handlers import GenericHandler
 
 
 class PasswordHasher:
-    _hashers = List[GenericHandler]
+    _hashers: List[GenericHandler]
 
     def __init__(self, *hashers: Tuple[GenericHandler]):
         self._hashers = list(hashers)
@@ -16,7 +16,7 @@ class PasswordHasher:
     def add_deprecated_hasher(self, hasher: GenericHandler):
         self._hashers.append(hasher)
 
-    async def hash_password(self, password: str) -> bool:
+    async def hash_password(self, password: str) -> str:
         return await _hash_password(self._hashers[0], password)
 
     async def verify_password(self, password: str, password_hash: str) -> bool:

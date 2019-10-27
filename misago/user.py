@@ -14,12 +14,11 @@ async def create_user(
     is_moderator: bool = False,
     joined_at: Optional[datetime] = None
 ) -> Dict[str, Any]:
+    password_hash = None
     if password:
         password_hash = await hash_password(password)
-    else:
-        password_hash = None
 
-    data = {
+    data: Dict[str, Any] = {
         "name": name,
         "slug": name.lower(),
         "email": email,
