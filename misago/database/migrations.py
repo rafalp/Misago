@@ -1,7 +1,7 @@
 import os
 from typing import Dict
 
-from alembic.command import revision, upgrade
+from alembic.command import heads, history, revision, upgrade
 from alembic.config import Config
 
 from .. import migrations as misago_migrations
@@ -9,15 +9,18 @@ from ..plugins import plugins
 from .sqlalchemy import database_url
 
 
-def make_migrations(module_name: str, description: str):
+def make_migrations(
+    module_name: str, description: str, *, initial: bool = False, empty: bool = False
+):
     migrations_map = get_migrations_map()
     config = get_migrations_config(migrations_map)
 
     revision(
         config,
         description,
-        autogenerate=True,
-        branch_label=module_name,
+        autogenerate=not empty,
+        branch_label=module_name if initial else None,
+        head="base" if initial else f"{module_name}@head",
         version_path=migrations_map[module_name],
     )
 
@@ -27,6 +30,13 @@ def run_migrations():
     config = get_migrations_config(migrations_map)
 
     upgrade(config, "heads")
+    heads(config, verbose=True)
+
+
+def show_migrations_history():
+    migrations_map = get_migrations_map()
+    config = get_migrations_config(migrations_map)
+    history(config, indicate_current=True, verbose=True)
 
 
 def get_migrations_map() -> Dict[str, str]:

@@ -22,6 +22,10 @@ ENV IN_MISAGO_DOCKER 1
 COPY --from=build-python /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
 COPY --from=build-python /usr/local/bin/ /usr/local/bin/
 
+# Install dependencies in one single command/layer
+RUN apt-get update && apt-get install -y \
+    postgresql-client
+
 # Run APP
 ADD . /app/
 
