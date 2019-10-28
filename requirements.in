@@ -6,4 +6,5 @@ databases[postgresql]
 passlib
 pydantic[email,typing_extensions]
 starlette
+unidecode
 uvicorn
