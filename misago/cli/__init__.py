@@ -1,11 +1,13 @@
 import click
 from alembic.util import CommandError
 
-from .database.migrations import (
+from ..cacheversions import invalidate_all_caches
+from ..database.migrations import (
     make_migrations,
     run_migrations,
     show_migrations_history,
 )
+from ..utils.async_context import uses_database
 
 
 @click.group()
@@ -22,6 +24,15 @@ def alembic_command(f):
 
     decorated_alembic_command.__name__ = f.__name__
     return decorated_alembic_command
+
+
+@cli.add_command
+@click.command(short_help="Invalidates all caches on the server.")
+@uses_database
+async def invalidatecaches():
+    click.echo(f"Invalidated caches:")
+    for cache in await invalidate_all_caches():
+        click.echo(f"- {cache}")
 
 
 @cli.add_command

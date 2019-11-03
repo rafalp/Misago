@@ -1,6 +1,6 @@
 from typing import Dict
 
-from ..cacheversions import get_cache_versions
+from .versions import get_cache_versions
 
 
 class assert_invalidates_cache:
