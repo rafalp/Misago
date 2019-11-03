@@ -14,8 +14,10 @@ import_plugins()
 
 app = Starlette(debug=settings.debug)
 
-app.add_event_handler("startup", database.connect)
-app.add_event_handler("shutdown", database.disconnect)
+if not settings.test:
+    # In tests test-runner takes care of connecting and disconnecting
+    app.add_event_handler("startup", database.connect)
+    app.add_event_handler("shutdown", database.disconnect)
 
 
 @app.route("/")

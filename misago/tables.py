@@ -2,6 +2,13 @@ import sqlalchemy
 
 metadata = sqlalchemy.MetaData()
 
+cache_versions = sqlalchemy.Table(
+    "misago_cache_versions",
+    metadata,
+    sqlalchemy.Column("cache", sqlalchemy.String(length=32), primary_key=True),
+    sqlalchemy.Column("version", sqlalchemy.String(length=8), nullable=False),
+)
+
 settings = sqlalchemy.Table(
     "misago_settings",
     metadata,

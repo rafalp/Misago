@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 from .database import database, queries
 from .passwords import hash_password
 from .tables import users
+from .utils.strings import slugify
 
 
 async def create_user(
@@ -20,7 +21,7 @@ async def create_user(
 
     data: Dict[str, Any] = {
         "name": name,
-        "slug": name.lower(),
+        "slug": slugify(name),
         "email": email,
         "password": password_hash,
         "is_moderator": is_moderator,

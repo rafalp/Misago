@@ -14,5 +14,5 @@ def pytest_unconfigure():
 
 @pytest.fixture(scope="function")
 async def db():
-    async with database as connection:
-        yield connection
+    async with database:
+        yield
