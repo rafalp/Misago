@@ -12,8 +12,15 @@ async def resolve_register(_, info, *, input):  # pylint: disable=redefined-buil
     InputModel = create_registration_model()
     cleaned_data, errors = clean_input_data(input, InputModel)
 
-    # user = await create_user(data["name"], data["email"], password=data["password"])
-    # return {"user": user}
+    if not errors:
+        return {
+            "user": await create_user(
+                cleaned_data["name"],
+                cleaned_data["email"],
+                password=cleaned_data["password"],
+            )
+        }
+
     return {"errors": errors, "user": cleaned_data}
 
 
