@@ -97,7 +97,7 @@ def test_updating_authorization_validates_authorization(admin_request):
 
 
 def test_removing_authorization_removes_autorization_from_request_session(
-    admin_request
+    admin_request,
 ):
     admin_request.session[UPDATED_KEY] = 0
     remove_admin_authorization(admin_request)

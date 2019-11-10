@@ -61,7 +61,7 @@ def test_provider_can_be_added_to_providers(auth_backend):
 
 
 def test_adding_provider_fails_if_provider_key_is_different_from_backend_name(
-    auth_backend
+    auth_backend,
 ):
     providers = Providers()
     with pytest.raises(ValueError):

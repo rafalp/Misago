@@ -49,7 +49,7 @@ def test_middleware_is_used_if_user_has_permission_to_upload_attachments(context
 
 
 def test_middleware_is_not_used_if_user_has_no_permission_to_upload_attachments(
-    context
+    context,
 ):
     context["user_acl"]["max_attachment_size"] = 0
     middleware = AttachmentsMiddleware(**context)
@@ -261,7 +261,7 @@ def test_middleware_deletes_attachment_removed_from_post(context):
 
 
 def test_middleware_blocks_user_from_removing_other_user_attachment_without_permission(
-    context
+    context,
 ):
     attachment = create_attachment(post=context["post"])
     middleware = AttachmentsMiddleware(
@@ -276,7 +276,7 @@ def test_middleware_blocks_user_from_removing_other_user_attachment_without_perm
 
 
 def test_middleware_allows_user_with_permission_to_remove_other_user_attachment(
-    context
+    context,
 ):
     context["user_acl"]["can_delete_other_users_attachments"] = True
     attachment = create_attachment(post=context["post"])

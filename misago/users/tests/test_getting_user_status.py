@@ -18,7 +18,7 @@ class GetUserStatusTests(AuthenticatedUserTestCase):
         assert get_user_status(request, self.other_user)["is_online"]
 
     def test_get_hidden_user_status_without_seeing_hidden_permission_returns_offline(
-        self
+        self,
     ):
         """get_user_status has no showstopper for hidden user"""
         self.other_user.is_hiding_presence = True
@@ -32,7 +32,7 @@ class GetUserStatusTests(AuthenticatedUserTestCase):
         assert get_user_status(request, self.other_user)["is_hidden"]
 
     def test_get_hidden_user_status_with_seeing_hidden_permission_returns_online_hidden(
-        self
+        self,
     ):
         self.other_user.is_hiding_presence = True
         self.other_user.save()
