@@ -230,7 +230,7 @@ compilemessages_in_docker() {
 
 # Pull translation files from transifex
 txpull() {
-    tx pull
+    tx pull -a
     compilemessages
 }
 
