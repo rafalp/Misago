@@ -2,20 +2,23 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Rivo Zängov <eraser@eraser.ee>, 2018
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-10 16:42+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2017-01-16 00:04+0000\n"
+"Last-Translator: Rivo Zängov <eraser@eraser.ee>, 2018\n"
+"Language-Team: Estonian (https://www.transifex.com/misago/teams/65369/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: static/misago/admin/index.js:16
@@ -24,7 +27,7 @@ msgstr ""
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "delete"
-msgstr ""
+msgstr "kustuta"
 
 #: static/misago/js/es2015.js:1 static/misago/js/polyfill.js:1
 msgid "has"
@@ -77,15 +80,15 @@ msgstr ""
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 #: static/misago/js/misago.js:19 static/misago/js/misago.js:20
 msgid "Close"
-msgstr ""
+msgstr "Sulge"
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:6
 msgid "Add participant"
-msgstr ""
+msgstr "Lisa osaleja"
 
 #: static/misago/js/misago.js:1
 msgid "You have to enter user name."
-msgstr ""
+msgstr "Sa pead sisestama kasutaja nime."
 
 #: static/misago/js/misago.js:1
 msgid "New participant has been added to thread."
@@ -93,7 +96,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "User to add"
-msgstr ""
+msgstr "Kasutaja, keda lisada"
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:2
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:4
@@ -102,7 +105,7 @@ msgstr ""
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:20
 msgid "Cancel"
-msgstr ""
+msgstr "Loobu"
 
 #: static/misago/js/misago.js:1
 msgid ""
@@ -118,7 +121,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:1
 msgid "Reload page"
-msgstr ""
+msgstr "Laadi lehekülg uuesti"
 
 #: static/misago/js/misago.js:1
 msgid "or press F5 key."
@@ -126,158 +129,158 @@ msgstr ""
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
 msgid "This ban expires on %(expires_on)s."
-msgstr ""
+msgstr "See blokeering aegub %(expires_on)s."
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
 msgid "This ban expires %(expires_on)s."
-msgstr ""
+msgstr "See blokeering aegub %(expires_on)s."
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
 msgid "This ban has expired."
-msgstr ""
+msgstr "See blokeering on aegunud."
 
 #: static/misago/js/misago.js:1
 msgid "This ban is permanent."
-msgstr ""
+msgstr "See blokeering on püsiv."
 
 #: static/misago/js/misago.js:1
 msgid "No categories exist or you don't have permission to see them."
-msgstr ""
+msgstr "Ühtegi kategooriat pole veel või sul pole õigusi neid näha."
 
 #: static/misago/js/misago.js:1
 msgid "This category has no new posts. (closed)"
-msgstr ""
+msgstr "Selles kategoorias pole uusi postitusi. (suletud)"
 
 #: static/misago/js/misago.js:1
 msgid "This category has new posts. (closed)"
-msgstr ""
+msgstr "Selles kategoorias on uusi postitusi. (suletud)"
 
 #: static/misago/js/misago.js:1
 msgid "This category has no new posts."
-msgstr ""
+msgstr "Selles kategoorias pole ühtegi postitust."
 
 #: static/misago/js/misago.js:1
 msgid "This category has new posts."
-msgstr ""
+msgstr "Selles kategoorias on uusi postitusi."
 
 #: static/misago/js/misago.js:1
 msgid "This category is empty. No threads were posted within it so far."
-msgstr ""
+msgstr "See kategooria on tühi. Siiani pole veel ühtegi teemat lisatud."
 
 #: static/misago/js/misago.js:1
 msgid "This category is private. You can see only your own threads within it."
-msgstr ""
+msgstr "See kategooria on privaatne. Sa näed siin ainult enda teemasid."
 
 #: static/misago/js/misago.js:1
 msgid "This category is protected. You can't browse it's contents."
-msgstr ""
+msgstr "See aktegooria on kaitstud. Sa võid selle sisu ainult näha."
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:21
 msgid "%(threads)s thread"
 msgid_plural "%(threads)s threads"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(threads)s teema"
+msgstr[1] "%(threads)s teemat"
 
 #: static/misago/js/misago.js:1 static/misago/js/misago.js:11
 #: static/misago/js/misago.js:21
 msgid "%(posts)s post"
 msgid_plural "%(posts)s posts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(posts)s postitus"
+msgstr[1] "%(posts)s postitust"
 
 #: static/misago/js/misago.js:1
 msgid "Set avatar"
-msgstr ""
+msgstr "Määra avatar"
 
 #: static/misago/js/misago.js:1
 msgid "Crop image"
-msgstr ""
+msgstr "Lõika pilti"
 
 #: static/misago/js/misago.js:2
 msgid "Save choice"
-msgstr ""
+msgstr "Salvesta valik"
 
 #: static/misago/js/misago.js:2
 msgid "Select avatar"
-msgstr ""
+msgstr "Vali avatar"
 
 #: static/misago/js/misago.js:2
 msgid "Download my Gravatar"
-msgstr ""
+msgstr "Laadi minu Gravatar alla"
 
 #: static/misago/js/misago.js:2
 msgid "Re-crop uploaded image"
-msgstr ""
+msgstr "Lõika üles laaditud pilte uuesti"
 
 #: static/misago/js/misago.js:2
 msgid "Upload new image"
-msgstr ""
+msgstr "Laadi üles uus pilt"
 
 #: static/misago/js/misago.js:2
 msgid "Pick avatar from gallery"
-msgstr ""
+msgstr "Vali galeriist avatar"
 
 #: static/misago/js/misago.js:2
 msgid "Generate my individual avatar"
-msgstr ""
+msgstr "Loo minu enda avatar"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:4
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:20
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 #: static/misago/js/misago.js:2
 msgid "Change your avatar"
-msgstr ""
+msgstr "Muuda oma avatari"
 
 #: static/misago/js/misago.js:2
 msgid "Your image has been uploaded and you may now crop it."
-msgstr ""
+msgstr "Sinu pilt on üles laaditud ja sa võid nüüd seda lõigata."
 
 #: static/misago/js/misago.js:2
 msgid "Selected file is too big. (%(filesize)s)"
-msgstr ""
+msgstr "Valitud fail on liiga suur. (%(filesize)s)"
 
 #: static/misago/js/misago.js:2
 msgid "Selected file type is not supported."
-msgstr ""
+msgstr "Valitud faililaiend pole toetatud."
 
 #: static/misago/js/misago.js:2
 msgid "%(files)s files smaller than %(limit)s"
-msgstr ""
+msgstr "%(files)s filid on väiksemad kui %(limit)s"
 
 #: static/misago/js/misago.js:2
 msgid "Select file"
-msgstr ""
+msgstr "Vali fail"
 
 #: static/misago/js/misago.js:2
 msgid "%(progress)s % complete"
-msgstr ""
+msgstr "%(progress)s % valmis"
 
 #: static/misago/js/misago.js:2
 msgid "No profile details are editable at this time."
-msgstr ""
+msgstr "Profiili üksikasjad pole hetkel muudetavad."
 
 #: static/misago/js/misago.js:2
 msgid "This option is currently unavailable."
-msgstr ""
+msgstr "See valik pole praegu saadval."
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:6
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:13
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "Form contains errors."
-msgstr ""
+msgstr "Vormis on vigasid."
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:5
 #: static/misago/js/misago.js:6 static/misago/js/misago.js:12
 #: static/misago/js/misago.js:15
 msgid "Save changes"
-msgstr ""
+msgstr "Salvesta muudatused"
 
 #: static/misago/js/misago.js:2 static/misago/js/misago.js:5
 msgid "Edit details"
-msgstr ""
+msgstr "Muuda andmeid"
 
 #: static/misago/js/misago.js:2
 msgid "Insert spoiler"
@@ -289,7 +292,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:2
 msgid "Insert code"
-msgstr ""
+msgstr "Sisesta kood"
 
 #: static/misago/js/misago.js:3
 msgid "Emphase selection"
@@ -297,31 +300,31 @@ msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Insert horizontal ruler"
-msgstr ""
+msgstr "Sisesta horisontaalne joon"
 
 #: static/misago/js/misago.js:3
 msgid "Enter link to image"
-msgstr ""
+msgstr "Sisesta link pildile"
 
 #: static/misago/js/misago.js:3
 msgid "Enter image label (optional)"
-msgstr ""
+msgstr "Sisesta pildi silt (valikuline)"
 
 #: static/misago/js/misago.js:3
 msgid "Insert image"
-msgstr ""
+msgstr "Sisesta pilt"
 
 #: static/misago/js/misago.js:3
 msgid "Enter link address"
-msgstr ""
+msgstr "Sisesta lingi aadress"
 
 #: static/misago/js/misago.js:3
 msgid "Enter link label (optional)"
-msgstr ""
+msgstr "Sisesta lingi silt (valikuline)"
 
 #: static/misago/js/misago.js:3
 msgid "Insert link"
-msgstr ""
+msgstr "Sisesta link"
 
 #: static/misago/js/misago.js:3
 msgid "Enter quote autor, prefix usernames with @"
@@ -329,7 +332,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Insert quote"
-msgstr ""
+msgstr "Sisesta tsitaat"
 
 #: static/misago/js/misago.js:3
 msgid "Strikethrough selection"
@@ -345,15 +348,15 @@ msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Insert"
-msgstr ""
+msgstr "Sisesta"
 
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:6
 msgid "Remove"
-msgstr ""
+msgstr "Eemalda"
 
 #: static/misago/js/misago.js:3
 msgid "Undo removal"
-msgstr ""
+msgstr "Tühista eemaldamine"
 
 #: static/misago/js/misago.js:3
 msgid "Error uploading %(filename)s"
@@ -369,51 +372,51 @@ msgstr ""
 
 #: static/misago/js/misago.js:3
 msgid "Upload file"
-msgstr ""
+msgstr "Laadi fail üles"
 
 #: static/misago/js/misago.js:3
 msgid "Protected"
-msgstr ""
+msgstr "Kaitstud"
 
 #: static/misago/js/misago.js:3 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:16
 msgid "Protect"
-msgstr ""
+msgstr "Kaitse"
 
 #: static/misago/js/misago.js:3
 msgid "Preview"
-msgstr ""
+msgstr "Eelvaade"
 
 #: static/misago/js/misago.js:3
 msgid "Post"
-msgstr ""
+msgstr "Postita"
 
 #: static/misago/js/misago.js:3
 msgid "Preview message"
-msgstr ""
+msgstr "Sõnumi eelvaade"
 
 #: static/misago/js/misago.js:3
 msgid "(error)"
-msgstr ""
+msgstr "(viga)"
 
 #: static/misago/js/misago.js:3
 msgid "(success)"
-msgstr ""
+msgstr "(korras)"
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:11
 #: static/misago/js/misago.js:17
 msgid "Best answer"
-msgstr ""
+msgstr "Parim vastus"
 
 #: static/misago/js/misago.js:4
 msgid ""
-"Please select the best answer for your newly merged thread. No posts will be "
-"deleted during the merge."
+"Please select the best answer for your newly merged thread. No posts will be"
+" deleted during the merge."
 msgstr ""
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:18
 msgid "Poll"
-msgstr ""
+msgstr "Küsitlus"
 
 #: static/misago/js/misago.js:4
 msgid ""
@@ -428,15 +431,15 @@ msgstr ""
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:19
 #: static/misago/js/misago.js:20
 msgid "Merge threads"
-msgstr ""
+msgstr "Liida teemad"
 
 #: static/misago/js/misago.js:4
 msgid "Search returned no results."
-msgstr ""
+msgstr "Otsing ei andnud tulemusi."
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:14
 msgid "Search"
-msgstr ""
+msgstr "Otsi"
 
 #: static/misago/js/misago.js:4
 msgid "See full \"%(provider)s\" results page with %(count)s result."
@@ -455,7 +458,7 @@ msgstr ""
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:5
 #: static/misago/js/misago.js:13
 msgid "Change username"
-msgstr ""
+msgstr "Muuda kasutajanimi"
 
 #: static/misago/js/misago.js:4
 msgid "You will be able to change your username %(next_change)s."
@@ -467,7 +470,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:4
 msgid "You can't change your username at the moment."
-msgstr ""
+msgstr "Sa ei saa hetkel oma kasutajanime muuta."
 
 #: static/misago/js/misago.js:4
 msgid "You can change your username %(changes_left)s more time."
@@ -484,11 +487,11 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:4
 msgid "Your new username is same as current one."
-msgstr ""
+msgstr "Sinu uus kasutajanimi on sama, mis praegune."
 
 #: static/misago/js/misago.js:4 static/misago/js/misago.js:13
 msgid "New username"
-msgstr ""
+msgstr "Uus kasutajanimi"
 
 #: static/misago/js/misago.js:5
 msgid "Your username has been changed successfully."
@@ -496,20 +499,20 @@ msgstr ""
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:6
 msgid "Change your options"
-msgstr ""
+msgstr "Muuda oma valikuid"
 
 #: static/misago/js/misago.js:5
 msgid "Enter your password to confirm account deletion."
-msgstr ""
+msgstr "Sisesta oma parool, et kinnitada konto kustutamist."
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:13
 msgid "Delete account"
-msgstr ""
+msgstr "Kustuta konto"
 
 #: static/misago/js/misago.js:5
 msgid ""
-"You are going to delete your account. This action is nonreversible, and will "
-"result in following data being deleted:"
+"You are going to delete your account. This action is nonreversible, and will"
+" result in following data being deleted:"
 msgstr ""
 
 #: static/misago/js/misago.js:5
@@ -530,13 +533,13 @@ msgstr ""
 
 #: static/misago/js/misago.js:5
 msgid ""
-"All your posted content will NOT be deleted, but username associated with it "
-"will be changed to one shared by all deleted accounts."
+"All your posted content will NOT be deleted, but username associated with it"
+" will be changed to one shared by all deleted accounts."
 msgstr ""
 
 #: static/misago/js/misago.js:5
 msgid "Delete my account"
-msgstr ""
+msgstr "Kustuta minu konto"
 
 #: static/misago/js/misago.js:5
 msgid "Your request for data download has been registered."
@@ -587,56 +590,56 @@ msgstr ""
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:12
 msgid "Your details have been updated."
-msgstr ""
+msgstr "Sinu andmeid on uuendatud."
 
 #: static/misago/js/misago.js:5
 msgid "Everybody"
-msgstr ""
+msgstr "Kõik"
 
 #: static/misago/js/misago.js:5
 msgid "Users I follow"
-msgstr ""
+msgstr "Kasutajad, keda ma jälgin"
 
 #: static/misago/js/misago.js:5
 msgid "Nobody"
-msgstr ""
+msgstr "Mitte keegi"
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:19
 msgid "No"
-msgstr ""
+msgstr "Ei"
 
 #: static/misago/js/misago.js:5
 msgid "Notify"
-msgstr ""
+msgstr "Teavita"
 
 #: static/misago/js/misago.js:5
 msgid "Notify with e-mail"
-msgstr ""
+msgstr "Teavita e-postiga"
 
 #: static/misago/js/misago.js:5
 msgid "Your forum options have been changed."
-msgstr ""
+msgstr "Sinu foorumi valikuid on muudetud."
 
 #: static/misago/js/misago.js:5
 msgid "Please reload page and try again."
-msgstr ""
+msgstr "Palun laadi lehekülg uuesti ning proovi siis veel kord."
 
 #: static/misago/js/misago.js:5
 msgid "Forum options"
-msgstr ""
+msgstr "Foorumi valikud"
 
 #: static/misago/js/misago.js:5
 msgid "Change forum options"
-msgstr ""
+msgstr "Muuda foorumi valikuid"
 
 #: static/misago/js/misago.js:5
 msgid "Privacy settings"
-msgstr ""
+msgstr "Privaatsuse seaded"
 
 #: static/misago/js/misago.js:5
 msgid "Hide my presence"
-msgstr ""
+msgstr "Peida minu kohalolek"
 
 #: static/misago/js/misago.js:5
 msgid ""
@@ -654,23 +657,23 @@ msgstr ""
 
 #: static/misago/js/misago.js:5
 msgid "Private thread invitations"
-msgstr ""
+msgstr "Privaatsete teemade kutsed"
 
 #: static/misago/js/misago.js:5
 msgid "Automatic subscriptions"
-msgstr ""
+msgstr "Automaatsed jälgimised"
 
 #: static/misago/js/misago.js:5
 msgid "Threads I start"
-msgstr ""
+msgstr "Teemad, mida ma alustasin"
 
 #: static/misago/js/misago.js:5
 msgid "Threads I reply to"
-msgstr ""
+msgstr "Teemad, millele ma vastan"
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:6
 msgid "Change email or password"
-msgstr ""
+msgstr "Muuda e-posti või parooli"
 
 #: static/misago/js/misago.js:5
 msgid ""
@@ -684,39 +687,39 @@ msgstr ""
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:15
 msgid "Fill out all fields."
-msgstr ""
+msgstr "Täida kõik lahtrid."
 
 #: static/misago/js/misago.js:5
 msgid "Change e-mail address"
-msgstr ""
+msgstr "Muuda e-posti aadressi"
 
 #: static/misago/js/misago.js:5
 msgid "New e-mail"
-msgstr ""
+msgstr "Uus e-post"
 
 #: static/misago/js/misago.js:5
 msgid "Your current password"
-msgstr ""
+msgstr "Sinu praegune parool"
 
 #: static/misago/js/misago.js:5
 msgid "Change e-mail"
-msgstr ""
+msgstr "Muuda e-posti"
 
 #: static/misago/js/misago.js:5
 msgid "New passwords are different."
-msgstr ""
+msgstr "Uued paroolid on erinevad."
 
 #: static/misago/js/misago.js:5 static/misago/js/misago.js:14
 msgid "Change password"
-msgstr ""
+msgstr "Muuda parooli"
 
 #: static/misago/js/misago.js:5
 msgid "New password"
-msgstr ""
+msgstr "Uus parool"
 
 #: static/misago/js/misago.js:5
 msgid "Repeat password"
-msgstr ""
+msgstr "Korda parooli"
 
 #: static/misago/js/misago.js:6
 msgid "Change forgotten password"
@@ -724,7 +727,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "You have left this thread."
-msgstr ""
+msgstr "Sa lahkusid sellest teemast."
 
 #: static/misago/js/misago.js:6
 msgid "%(user)s has been removed from this thread."
@@ -736,11 +739,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Thread owner"
-msgstr ""
+msgstr "Teema omanik"
 
 #: static/misago/js/misago.js:6
 msgid "See profile"
-msgstr ""
+msgstr "Vaata profiili"
 
 #: static/misago/js/misago.js:6
 msgid "Are you sure you want to take over this thread?"
@@ -752,11 +755,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Make owner"
-msgstr ""
+msgstr "Tee omanikuks"
 
 #: static/misago/js/misago.js:6
 msgid "Are you sure you want to leave this thread?"
-msgstr ""
+msgstr "Oled sa kindel, et soovid sellest teemast lahkuda?"
 
 #: static/misago/js/misago.js:6
 msgid "Are you sure you want to remove %(user)s from this thread?"
@@ -764,7 +767,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Leave thread"
-msgstr ""
+msgstr "Lahku teemast"
 
 #: static/misago/js/misago.js:6
 msgid "This thread has %(users)s participant."
@@ -774,43 +777,43 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:6
 msgid "Entered password is very weak."
-msgstr ""
+msgstr "Sisestatud parool on väga nõrk."
 
 #: static/misago/js/misago.js:6
 msgid "Entered password is weak."
-msgstr ""
+msgstr "Sisestatud parool on nõrk."
 
 #: static/misago/js/misago.js:6
 msgid "Entered password is average."
-msgstr ""
+msgstr "Sisestatud parool on keskmise tugevusega."
 
 #: static/misago/js/misago.js:6
 msgid "Entered password is strong."
-msgstr ""
+msgstr "Sisestatud parool on tugev."
 
 #: static/misago/js/misago.js:6
 msgid "Entered password is very strong."
-msgstr ""
+msgstr "Sisestatud parool on väga tugev."
 
 #: static/misago/js/misago.js:6
 msgid "Add choice"
-msgstr ""
+msgstr "Lisa valik"
 
 #: static/misago/js/misago.js:6
 msgid "Are you sure you want to delete this choice?"
-msgstr ""
+msgstr "Oled sa kindel, et soovid seda vastusevarianti kustutada?"
 
 #: static/misago/js/misago.js:6
 msgid "Delete this choice"
-msgstr ""
+msgstr "Kustuta see vastusevariant"
 
 #: static/misago/js/misago.js:6
 msgid "choice label"
-msgstr ""
+msgstr "valiku silt"
 
 #: static/misago/js/misago.js:6
 msgid "Make voting public"
-msgstr ""
+msgstr "Tee vastamine avalikuks"
 
 #: static/misago/js/misago.js:6
 msgid ""
@@ -822,27 +825,27 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Votes are public"
-msgstr ""
+msgstr "Vastamine on avalik"
 
 #: static/misago/js/misago.js:6
 msgid "Votes are hidden"
-msgstr ""
+msgstr "Vastused on peidetud"
 
 #: static/misago/js/misago.js:6
 msgid "Are you sure you want to discard poll?"
-msgstr ""
+msgstr "Oled sa kindel, et soovid seda küsitlust kustutada?"
 
 #: static/misago/js/misago.js:6
 msgid "Poll has been edited."
-msgstr ""
+msgstr "Küsitlust on muudetud."
 
 #: static/misago/js/misago.js:6
 msgid "Poll has been posted."
-msgstr ""
+msgstr "Küsitlus on postitatud."
 
 #: static/misago/js/misago.js:6
 msgid "Question and choices"
-msgstr ""
+msgstr "Küsimused ja vastusevariandid"
 
 #: static/misago/js/misago.js:6
 msgid "Poll question"
@@ -850,15 +853,15 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Available choices"
-msgstr ""
+msgstr "Saadaolevad vastusevariandid"
 
 #: static/misago/js/misago.js:6
 msgid "Voting"
-msgstr ""
+msgstr "Vastamine"
 
 #: static/misago/js/misago.js:6
 msgid "Poll length"
-msgstr ""
+msgstr "Küsitluse pikkus"
 
 #: static/misago/js/misago.js:6
 msgid ""
@@ -868,41 +871,41 @@ msgstr ""
 
 #: static/misago/js/misago.js:6
 msgid "Allowed choices"
-msgstr ""
+msgstr "Luba vastusevariandid"
 
 #: static/misago/js/misago.js:6
 msgid "Allow vote changes"
-msgstr ""
+msgstr "Luba vastuse muutmist"
 
 #: static/misago/js/misago.js:6
 msgid "Allow participants to change their vote"
-msgstr ""
+msgstr "Luba vastajatel oma valikut muuta"
 
 #: static/misago/js/misago.js:6
 msgid "Don't allow participants to change their vote"
-msgstr ""
+msgstr "Ära luba vastajatel oma valikut muuta"
 
 #: static/misago/js/misago.js:6
 msgid "Post poll"
-msgstr ""
+msgstr "Postita küsitlus"
 
 #: static/misago/js/misago.js:6
 msgid "Posted by %(poster)s %(posted_on)s."
-msgstr ""
+msgstr "Postitas %(poster)s %(posted_on)s."
 
 #: static/misago/js/misago.js:7
 msgid "Voting ends %(ends_on)s."
-msgstr ""
+msgstr "Vastamine lõpeb %(ends_on)s."
 
 #: static/misago/js/misago.js:7
 msgid "%(votes)s vote."
 msgid_plural "%(votes)s votes."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(votes)s vastus."
+msgstr[1] "%(votes)s vastust."
 
 #: static/misago/js/misago.js:7
 msgid "Votes are public."
-msgstr ""
+msgstr "Vastamine on avalik."
 
 #: static/misago/js/misago.js:7
 msgid "%(votes)s vote, %(proc)s% of total."
@@ -912,7 +915,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:7
 msgid "Your choice."
-msgstr ""
+msgstr "Sinu valik."
 
 #: static/misago/js/misago.js:7
 msgid "%(votes)s user has voted for this choice."
@@ -922,35 +925,36 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:7
 msgid "Poll votes"
-msgstr ""
+msgstr "Küsitluse vastused"
 
 #: static/misago/js/misago.js:7
 msgid "Vote"
-msgstr ""
+msgstr "Vasta"
 
 #: static/misago/js/misago.js:7
 msgid "See votes"
-msgstr ""
+msgstr "Vaata vastuseid"
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:15
 msgid "Edit"
-msgstr ""
+msgstr "Muuda"
 
 #: static/misago/js/misago.js:7
 msgid ""
 "Are you sure you want to delete this poll? This action is not reversible."
 msgstr ""
+"Oled sa kindel, et soovid seda vastust kustutada? See tegevus on pöördumatu."
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:17
 msgid "Delete"
-msgstr ""
+msgstr "Kustuta"
 
 #: static/misago/js/misago.js:7
 msgid "You can't select any more choices."
-msgstr ""
+msgstr "Sa ei saa rohkem valikuid teha."
 
 #: static/misago/js/misago.js:7
 msgid "You can select %(choices)s more choice."
@@ -964,23 +968,23 @@ msgstr ""
 
 #: static/misago/js/misago.js:7
 msgid "Votes are final."
-msgstr ""
+msgstr "Vastused on lõplikud."
 
 #: static/misago/js/misago.js:7
 msgid "You need to select at least one choice"
-msgstr ""
+msgstr "Sa pead tegema vähemalt ühe valiku"
 
 #: static/misago/js/misago.js:7
 msgid "Your vote has been saved."
-msgstr ""
+msgstr "Sinu vastus on salvestatud."
 
 #: static/misago/js/misago.js:7
 msgid "Save your vote"
-msgstr ""
+msgstr "Salvesta oma vastus"
 
 #: static/misago/js/misago.js:7
 msgid "See results"
-msgstr ""
+msgstr "Vaata tulemusi"
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "Revert post to state from before this edit."
@@ -992,11 +996,12 @@ msgstr ""
 
 #: static/misago/js/misago.js:7
 msgid "Post edits history"
-msgstr ""
+msgstr "Postituste muutmise ajalugu"
 
 #: static/misago/js/misago.js:7
 msgid ""
-"Are you sure you with to revert this post to the state from before this edit?"
+"Are you sure you with to revert this post to the state from before this "
+"edit?"
 msgstr ""
 
 #: static/misago/js/misago.js:7
@@ -1005,7 +1010,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:7 static/misago/js/misago.js:8
 msgid "See previous change"
-msgstr ""
+msgstr "Vaata eelmist muudatust"
 
 #: static/misago/js/misago.js:7
 msgid "See next change"
@@ -1029,11 +1034,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:11
 msgid "Removed user"
-msgstr ""
+msgstr "Eemaldatud kasutaja"
 
 #: static/misago/js/misago.js:8
 msgid "See post"
-msgstr ""
+msgstr "Vaata postitust"
 
 #: static/misago/js/misago.js:8
 msgid "Post Likes"
@@ -1051,7 +1056,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "Are you sure you want to discard changes?"
-msgstr ""
+msgstr "Oled sa kindel, et soovid muudatustest loobuda?"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:9
 msgid "You have to enter a message."
@@ -1059,23 +1064,23 @@ msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "Reply has been edited."
-msgstr ""
+msgstr "Vastust on muudetud."
 
 #: static/misago/js/misago.js:8
 msgid "Edit reply"
-msgstr ""
+msgstr "Muuda vastust"
 
 #: static/misago/js/misago.js:8
 msgid "Are you sure you want to discard your reply?"
-msgstr ""
+msgstr "Oled sa kindel, et soovid oma vastusest loobuda?"
 
 #: static/misago/js/misago.js:8
 msgid "Your reply has been posted."
-msgstr ""
+msgstr "Sinu vastus on positatud."
 
 #: static/misago/js/misago.js:8
 msgid "Post reply"
-msgstr ""
+msgstr "Postita vastus"
 
 #: static/misago/js/misago.js:8
 msgid "Are you sure you want to discard private thread?"
@@ -1083,16 +1088,16 @@ msgstr ""
 
 #: static/misago/js/misago.js:8
 msgid "You have to enter at least one recipient."
-msgstr ""
+msgstr "Pead lisama vähemalt ühe saaja."
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:9
 #: static/misago/js/misago.js:15
 msgid "You have to enter thread title."
-msgstr ""
+msgstr "Pead sisestama teema pealkirja."
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:9
 msgid "Your thread has been posted."
-msgstr ""
+msgstr "Sinu teema on postitatud."
 
 #: static/misago/js/misago.js:8
 msgid "Comma separated list of user names, eg.: Danny, Lisa"
@@ -1102,11 +1107,11 @@ msgstr ""
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Thread title"
-msgstr ""
+msgstr "Teema pealkiri"
 
 #: static/misago/js/misago.js:8 static/misago/js/misago.js:9
 msgid "Post thread"
-msgstr ""
+msgstr "Postita teema"
 
 #: static/misago/js/misago.js:9
 msgid "Are you sure you want to discard thread?"
@@ -1115,20 +1120,20 @@ msgstr ""
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:18
 msgid "Closed"
-msgstr ""
+msgstr "Suletud"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Open"
-msgstr ""
+msgstr "Avatud"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:18 static/misago/js/misago.js:21
 msgid "Hidden"
-msgstr ""
+msgstr "Peidetud"
 
 #: static/misago/js/misago.js:9
 msgid "Not hidden"
-msgstr ""
+msgstr "Pole peidetud"
 
 #: static/misago/js/misago.js:9
 msgid "Unpinned"
@@ -1189,12 +1194,12 @@ msgstr[1] ""
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:16 static/misago/js/misago.js:17
 msgid "Hide"
-msgstr ""
+msgstr "Peida"
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:10
 #: static/misago/js/misago.js:16
 msgid "Unhide"
-msgstr ""
+msgstr "Näita"
 
 #: static/misago/js/misago.js:9
 msgid ""
@@ -1251,39 +1256,39 @@ msgstr ""
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been approved."
-msgstr ""
+msgstr "Teema on heaks kiidetud."
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been opened."
-msgstr ""
+msgstr "Teema on avatud."
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been closed."
-msgstr ""
+msgstr "Teema on suletud."
 
 #: static/misago/js/misago.js:9
 msgid "Thread has been revealed."
-msgstr ""
+msgstr "Teema on avaldatud."
 
 #: static/misago/js/misago.js:9 static/misago/js/misago.js:16
 msgid "Thread has been made hidden."
-msgstr ""
+msgstr "Teema on peidetud."
 
 #: static/misago/js/misago.js:9
 msgid "Took thread over."
-msgstr ""
+msgstr "Võta teema üle."
 
 #: static/misago/js/misago.js:9
 msgid "Owner has left thread. This thread is now closed."
-msgstr ""
+msgstr "Teema omanik lahkus. See teema onnüüd suletud."
 
 #: static/misago/js/misago.js:9
 msgid "Participant has left thread."
-msgstr ""
+msgstr "Osaleja lahkus teemast."
 
 #: static/misago/js/misago.js:9
 msgid "New event"
-msgstr ""
+msgstr "Uus sõndmus"
 
 #: static/misago/js/misago.js:9
 msgid "Hidden by %(hidden_by)s %(hidden_on)s."
@@ -1300,7 +1305,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:10
 msgid "Post has been deleted."
-msgstr ""
+msgstr "Postitus on kustuatud."
 
 #: static/misago/js/misago.js:10
 msgid "Permament link to this post:"
@@ -1308,7 +1313,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:10
 msgid "Permament link"
-msgstr ""
+msgstr "Püsilink"
 
 #: static/misago/js/misago.js:10
 msgid "Mark as best answer"
@@ -1326,27 +1331,27 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:10
 msgid "Changes history"
-msgstr ""
+msgstr "Muudatuste ajalugu"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "Approve"
-msgstr ""
+msgstr "iida heaks"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "Move"
-msgstr ""
+msgstr "iiguta"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 msgid "Split"
-msgstr ""
+msgstr "aga"
 
 #: static/misago/js/misago.js:10
 msgid "Remove protection"
-msgstr ""
+msgstr "Eemalda kaitse"
 
 #: static/misago/js/misago.js:10
 msgid "Move post"
-msgstr ""
+msgstr "Liiguta postitust"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:17
@@ -1372,7 +1377,7 @@ msgstr ""
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Yes"
-msgstr ""
+msgstr "Jah"
 
 #: static/misago/js/misago.js:10
 msgid "Selected post was split into new thread."
@@ -1391,21 +1396,21 @@ msgstr ""
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Hide thread"
-msgstr ""
+msgstr "Peida teema"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Close thread"
-msgstr ""
+msgstr "Sulge teema"
 
 #: static/misago/js/misago.js:10 static/misago/js/misago.js:16
 #: static/misago/js/misago.js:19
 msgid "Category"
-msgstr ""
+msgstr "Kategooria"
 
 #: static/misago/js/misago.js:10
 msgid "Split post"
-msgstr ""
+msgstr "Jaga postitus"
 
 #: static/misago/js/misago.js:10
 msgid "Marked as best answer by you %(marked_on)s."
@@ -1421,8 +1426,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:10
 msgid ""
-"This post is unapproved. Only users with permission to approve posts and its "
-"author may see its contents."
+"This post is unapproved. Only users with permission to approve posts and its"
+" author may see its contents."
 msgstr ""
 
 #: static/misago/js/misago.js:10
@@ -1457,16 +1462,16 @@ msgstr ""
 
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:17
 msgid "Reply"
-msgstr ""
+msgstr "Vasta"
 
 #: static/misago/js/misago.js:11
 msgid "New post"
-msgstr ""
+msgstr "Uus postitus"
 
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:20
 msgid "New"
-msgstr ""
+msgstr "Uus"
 
 #: static/misago/js/misago.js:11
 msgid "This post is protected and may not be edited."
@@ -1474,7 +1479,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:11
 msgid "protected"
-msgstr ""
+msgstr "kaitstud"
 
 #: static/misago/js/misago.js:11
 msgid "edited %(edits)s time"
@@ -1522,7 +1527,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:11 static/misago/js/misago.js:12
 msgid "Details"
-msgstr ""
+msgstr "Üksikasjad"
 
 #: static/misago/js/misago.js:12
 msgid "%(username)s's details have been updated."
@@ -1550,12 +1555,12 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:12 static/misago/js/misago.js:13
 msgid "Loading..."
-msgstr ""
+msgstr "aadimine..."
 
 #: static/misago/js/misago.js:12 static/misago/js/misago.js:19
 #: static/misago/js/misago.js:20
 msgid "Threads"
-msgstr ""
+msgstr "Teemad"
 
 #: static/misago/js/misago.js:12
 msgid "You have posted no messages."
@@ -1579,7 +1584,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:12
 msgid "Posts"
-msgstr ""
+msgstr "Postitused"
 
 #: static/misago/js/misago.js:12
 msgid "Show older activity"
@@ -1633,7 +1638,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Search users..."
-msgstr ""
+msgstr "Otsi kasutajaid..."
 
 #: static/misago/js/misago.js:12
 msgid "Follows"
@@ -1653,7 +1658,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:12
 msgid "You are not following any users."
-msgstr ""
+msgstr "Sa ei jälgi ühtegi kasutajat."
 
 #: static/misago/js/misago.js:12
 msgid "%(username)s is not following any users."
@@ -1678,11 +1683,11 @@ msgstr ""
 #: static/misago/js/misago.js:12 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:16
 msgid "Moderation"
-msgstr ""
+msgstr "Modereerimine"
 
 #: static/misago/js/misago.js:12
 msgid "Message"
-msgstr ""
+msgstr "Sõnum"
 
 #: static/misago/js/misago.js:12
 msgid "Avatar controls have been changed."
@@ -1690,7 +1695,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Lock avatar"
-msgstr ""
+msgstr "Lukusta avatar"
 
 #: static/misago/js/misago.js:12
 msgid ""
@@ -1704,11 +1709,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Allow user to change avatar"
-msgstr ""
+msgstr "Luba kasutajal avatari muuta"
 
 #: static/misago/js/misago.js:12
 msgid "User message"
-msgstr ""
+msgstr "Kasutaja sõnum"
 
 #: static/misago/js/misago.js:12
 msgid ""
@@ -1718,7 +1723,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:12
 msgid "Staff message"
-msgstr ""
+msgstr "Sõnum personalilt"
 
 #: static/misago/js/misago.js:12
 msgid ""
@@ -1732,7 +1737,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:13
 msgid "Username has been changed."
-msgstr ""
+msgstr "Kasutajanime on muudetud."
 
 #: static/misago/js/misago.js:13
 msgid ""
@@ -1746,15 +1751,15 @@ msgstr ""
 
 #: static/misago/js/misago.js:13
 msgid "Delete %(username)s"
-msgstr ""
+msgstr "Kustuta %(username)s"
 
 #: static/misago/js/misago.js:13
 msgid "Please wait... (%(countdown)ss)"
-msgstr ""
+msgstr "Palun oota... (%(countdown)ss)"
 
 #: static/misago/js/misago.js:13
 msgid "User content"
-msgstr ""
+msgstr "Kasutaja sisu"
 
 #: static/misago/js/misago.js:13
 msgid "Delete together with user's account"
@@ -1766,15 +1771,15 @@ msgstr ""
 
 #: static/misago/js/misago.js:13
 msgid "Return to users list"
-msgstr ""
+msgstr "Tagasi kasutajate nimekirja"
 
 #: static/misago/js/misago.js:13
 msgid "Delete user account"
-msgstr ""
+msgstr "Kustuta kasutaja konto"
 
 #: static/misago/js/misago.js:13
 msgid "Username history"
-msgstr ""
+msgstr "Kasutajanime ajalugu"
 
 #: static/misago/js/misago.js:13
 msgid "Found %(changes)s username change."
@@ -1816,7 +1821,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:13
 msgid "Search..."
-msgstr ""
+msgstr "Otsi..."
 
 #: static/misago/js/misago.js:13
 msgid "New registrations are currently disabled."
@@ -1829,7 +1834,7 @@ msgstr ""
 #: static/misago/js/misago.js:13 static/misago/js/misago.js:14
 #: static/misago/js/misago.js:20
 msgid "Register"
-msgstr ""
+msgstr "Registreeru"
 
 #: static/misago/js/misago.js:14
 msgid "Join with %(site)s"
@@ -1841,20 +1846,20 @@ msgstr ""
 
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 msgid "Username"
-msgstr ""
+msgstr "Kasutajanimi"
 
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:18
 msgid "E-mail"
-msgstr ""
+msgstr "E-post"
 
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 msgid "Password"
-msgstr ""
+msgstr "Parool"
 
 #: static/misago/js/misago.js:14
 msgid "Register account"
-msgstr ""
+msgstr "Loo konto"
 
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 msgid ""
@@ -1888,11 +1893,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:14
 msgid "Your e-mail address"
-msgstr ""
+msgstr "Sinu e-posti aadress"
 
 #: static/misago/js/misago.js:14
 msgid "Send link"
-msgstr ""
+msgstr "Saada link"
 
 #: static/misago/js/misago.js:14
 msgid "Activation link was sent to %(email)s"
@@ -1908,19 +1913,19 @@ msgstr ""
 
 #: static/misago/js/misago.js:14
 msgid "Activate your account."
-msgstr ""
+msgstr "Aktiveeri oma konto"
 
 #: static/misago/js/misago.js:14
 msgid "Your account is inactive."
-msgstr ""
+msgstr "Sinu konto pole aktiivne."
 
 #: static/misago/js/misago.js:14
 msgid "Enter new password."
-msgstr ""
+msgstr "Sisesta uus parool."
 
 #: static/misago/js/misago.js:14
 msgid "Enter new password"
-msgstr ""
+msgstr "Sisesta uus parool"
 
 #: static/misago/js/misago.js:14
 msgid "%(username)s, your password has been changed successfully."
@@ -1933,7 +1938,7 @@ msgstr ""
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:15
 #: static/misago/js/misago.js:20
 msgid "Sign in"
-msgstr ""
+msgstr "Logi sisse"
 
 #: static/misago/js/misago.js:14
 msgid "You have to enter search query."
@@ -1953,7 +1958,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:14 static/misago/js/misago.js:20
 msgid "Show more"
-msgstr ""
+msgstr "Näita lisa"
 
 #: static/misago/js/misago.js:14
 msgid "No users matching search query have been found."
@@ -1969,7 +1974,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:15
 msgid "Activate account"
-msgstr ""
+msgstr "Aktiveeri konto"
 
 #: static/misago/js/misago.js:15
 msgid "Sign in with %(site)s"
@@ -1981,11 +1986,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:15
 msgid "Username or e-mail"
-msgstr ""
+msgstr "Kasutajanimi või e-post"
 
 #: static/misago/js/misago.js:15
 msgid "Forgot password?"
-msgstr ""
+msgstr "Unustasid parooli?"
 
 #: static/misago/js/misago.js:15
 msgid ""
@@ -2023,20 +2028,20 @@ msgstr ""
 
 #: static/misago/js/misago.js:15
 msgid "Change title"
-msgstr ""
+msgstr "Muuda pealkirja"
 
 #: static/misago/js/misago.js:15
 msgid "Edit title"
-msgstr ""
+msgstr "Muuda pealkirja"
 
 #: static/misago/js/misago.js:15 static/misago/js/misago.js:17
 #: static/misago/js/misago.js:18 static/misago/js/misago.js:20
 msgid "Unapproved"
-msgstr ""
+msgstr "Heakskiitmata"
 
 #: static/misago/js/misago.js:15 static/misago/js/misago.js:18
 msgid "Unapproved posts"
-msgstr ""
+msgstr "Heakskiitmata postitused"
 
 #: static/misago/js/misago.js:15 static/misago/js/misago.js:18
 msgid "%(replies)s reply"
@@ -2050,7 +2055,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:15
 msgid ""
-"Are you sure you want to merge selected posts? This action is not reversible!"
+"Are you sure you want to merge selected posts? This action is not "
+"reversible!"
 msgstr ""
 
 #: static/misago/js/misago.js:16
@@ -2061,7 +2067,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:16
 msgid "Merge"
-msgstr ""
+msgstr "Liida"
 
 #: static/misago/js/misago.js:16
 msgid "Unprotect"
@@ -2077,7 +2083,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:16
 msgid "Posts options"
-msgstr ""
+msgstr "Postituse valikud"
 
 #: static/misago/js/misago.js:16
 msgid "Move posts"
@@ -2105,11 +2111,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:16
 msgid "Split posts"
-msgstr ""
+msgstr "Jaga postitused"
 
 #: static/misago/js/misago.js:16
 msgid "Thread has been made visible."
-msgstr ""
+msgstr "Teema on tehtud nähtavaks."
 
 #: static/misago/js/misago.js:16
 msgid "Are you sure you want to delete this thread?"
@@ -2117,7 +2123,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:16
 msgid "Thread has been deleted."
-msgstr ""
+msgstr "Teema on kustutatud."
 
 #: static/misago/js/misago.js:16
 msgid "Pin globally"
@@ -2151,7 +2157,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:17
 msgid "Move thread"
-msgstr ""
+msgstr "Liiguta teemat"
 
 #: static/misago/js/misago.js:17
 msgid "You can't move this thread at the moment."
@@ -2159,27 +2165,27 @@ msgstr ""
 
 #: static/misago/js/misago.js:17
 msgid "Thread has been moved."
-msgstr ""
+msgstr "Teema on liigutatud."
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:20
 msgid "New category"
-msgstr ""
+msgstr "Uus kategooria"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to first page"
-msgstr ""
+msgstr "Mine esimesele leheküljele"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to previous page"
-msgstr ""
+msgstr "Mine eelmisele leheküljele"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to next page"
-msgstr ""
+msgstr "Mine järgmisele leheküljele"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:22
 msgid "Go to last page"
-msgstr ""
+msgstr "Mine viimasele leheküljele"
 
 #: static/misago/js/misago.js:17
 msgid "There is %(more)s more post in this thread."
@@ -2193,11 +2199,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Enabled"
-msgstr ""
+msgstr "lülitatud"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:18
 msgid "Disabled"
-msgstr ""
+msgstr "Välja lülitatud"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:19
 msgid "Unsubscribe"
@@ -2225,23 +2231,23 @@ msgstr ""
 
 #: static/misago/js/misago.js:17
 msgid "Go to last post"
-msgstr ""
+msgstr "Mine viimasele postitusele"
 
 #: static/misago/js/misago.js:17
 msgid "Last"
-msgstr ""
+msgstr "Viimane"
 
 #: static/misago/js/misago.js:17
 msgid "Last post"
-msgstr ""
+msgstr "Viimane postitus"
 
 #: static/misago/js/misago.js:17 static/misago/js/misago.js:20
 msgid "Options"
-msgstr ""
+msgstr "Valikud"
 
 #: static/misago/js/misago.js:18
 msgid "Add poll"
-msgstr ""
+msgstr "Lisa küsitlus"
 
 #: static/misago/js/misago.js:18
 msgid ""
@@ -2254,7 +2260,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:18
 msgid "New posts"
-msgstr ""
+msgstr "Uued postitused"
 
 #: static/misago/js/misago.js:18
 msgid "Answered"
@@ -2266,7 +2272,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:19
 msgid "Start thread"
-msgstr ""
+msgstr "Alusta teemat"
 
 #: static/misago/js/misago.js:19
 msgid "Why not start one yourself?"
@@ -2346,31 +2352,31 @@ msgstr ""
 
 #: static/misago/js/misago.js:19 static/misago/js/misago.js:20
 msgid "Move threads"
-msgstr ""
+msgstr "Liiguta teemasid"
 
 #: static/misago/js/misago.js:19
 msgid "Approve threads"
-msgstr ""
+msgstr "Kiida teemad heaks"
 
 #: static/misago/js/misago.js:19
 msgid "Open threads"
-msgstr ""
+msgstr "Ava teemad"
 
 #: static/misago/js/misago.js:19
 msgid "Close threads"
-msgstr ""
+msgstr "Sulge teemad"
 
 #: static/misago/js/misago.js:19
 msgid "Unhide threads"
-msgstr ""
+msgstr "Peida teemad"
 
 #: static/misago/js/misago.js:19
 msgid "Hide threads"
-msgstr ""
+msgstr "Peida teemad"
 
 #: static/misago/js/misago.js:19
 msgid "Delete threads"
-msgstr ""
+msgstr "Kustuta teemad"
 
 #: static/misago/js/misago.js:19
 msgid "Threads moderation"
@@ -2388,8 +2394,8 @@ msgstr ""
 
 #: static/misago/js/misago.js:20
 msgid ""
-"You need permission to start threads in category to be able to merge threads "
-"to it."
+"You need permission to start threads in category to be able to merge threads"
+" to it."
 msgstr ""
 
 #: static/misago/js/misago.js:20
@@ -2404,39 +2410,39 @@ msgstr ""
 
 #: static/misago/js/misago.js:20
 msgid "Select all"
-msgstr ""
+msgstr "Vali kõik"
 
 #: static/misago/js/misago.js:20
 msgid "Select none"
-msgstr ""
+msgstr "Ära vali midagi"
 
 #: static/misago/js/misago.js:20
 msgid "All"
-msgstr ""
+msgstr "Kõik"
 
 #: static/misago/js/misago.js:20
 msgid "All threads"
-msgstr ""
+msgstr "Kõik teemad"
 
 #: static/misago/js/misago.js:20
 msgid "My"
-msgstr ""
+msgstr "Minu"
 
 #: static/misago/js/misago.js:20
 msgid "My threads"
-msgstr ""
+msgstr "Minu teemad"
 
 #: static/misago/js/misago.js:20
 msgid "New threads"
-msgstr ""
+msgstr "Uued teemad"
 
 #: static/misago/js/misago.js:20
 msgid "Unread"
-msgstr ""
+msgstr "Lugemata"
 
 #: static/misago/js/misago.js:20
 msgid "Unread threads"
-msgstr ""
+msgstr "Lugemata teemad"
 
 #: static/misago/js/misago.js:20
 msgid "Subscribed"
@@ -2464,7 +2470,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:21 static/misago/js/misago.js:23
 msgid "Private threads"
-msgstr ""
+msgstr "Privaatsed teemad"
 
 #: static/misago/js/misago.js:21
 msgid "Are you sure you want to sign out?"
@@ -2472,19 +2478,19 @@ msgstr ""
 
 #: static/misago/js/misago.js:21
 msgid "See your profile"
-msgstr ""
+msgstr "Vaata oma profiili"
 
 #: static/misago/js/misago.js:21
 msgid "Change options"
-msgstr ""
+msgstr "Muuda valikuid"
 
 #: static/misago/js/misago.js:21
 msgid "Change avatar"
-msgstr ""
+msgstr "uuda avatari"
 
 #: static/misago/js/misago.js:21
 msgid "Log out"
-msgstr ""
+msgstr "Logi välja"
 
 #: static/misago/js/misago.js:21
 msgid "%(username)s is banned until %(ban_expires)s"
@@ -2516,7 +2522,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:21
 msgid "Banned"
-msgstr ""
+msgstr "Bännitud"
 
 #: static/misago/js/misago.js:21
 msgid "Online (hidden)"
@@ -2528,11 +2534,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:21
 msgid "Online"
-msgstr ""
+msgstr "On saidil"
 
 #: static/misago/js/misago.js:21
 msgid "Offline"
-msgstr ""
+msgstr "Pole saidil"
 
 #: static/misago/js/misago.js:21
 msgid "%(followers)s follower"
@@ -2564,7 +2570,7 @@ msgstr[1] ""
 
 #: static/misago/js/misago.js:22
 msgid "Users"
-msgstr ""
+msgstr "Kasutajad"
 
 #: static/misago/js/misago.js:22
 msgid "There is %(more)s more member with this role."
@@ -2582,11 +2588,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:22
 msgid "yes"
-msgstr ""
+msgstr "jah"
 
 #: static/misago/js/misago.js:22
 msgid "no"
-msgstr ""
+msgstr "ei"
 
 #: static/misago/js/misago.js:23
 msgid ""
@@ -2644,11 +2650,11 @@ msgstr ""
 
 #: static/misago/js/misago.js:25
 msgid "You are banned"
-msgstr ""
+msgstr "Sa oled bännitud"
 
 #: static/misago/js/misago.js:25
 msgid "This field is required."
-msgstr ""
+msgstr "See väli on kohustuslik."
 
 #: static/misago/js/misago.js:25
 msgid "You have to accept the terms of service."
@@ -2696,6 +2702,7 @@ msgstr ""
 
 #: static/misago/js/misago.js:25
 msgid "Valid password must be at least %(limit_value)s character long."
-msgid_plural "Valid password must be at least %(limit_value)s characters long."
+msgid_plural ""
+"Valid password must be at least %(limit_value)s characters long."
 msgstr[0] ""
 msgstr[1] ""
