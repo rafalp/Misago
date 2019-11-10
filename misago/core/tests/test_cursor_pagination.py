@@ -48,7 +48,7 @@ def test_requesting_next_page_filters_queryset_using_filter_name(mock_queryset):
 
 
 def test_requesting_next_page_for_reversed_order_filters_queryset_with_descending(
-    mock_queryset
+    mock_queryset,
 ):
     page = get_page(mock_queryset, "-post", 6, 7)
     mock_queryset.filter.assert_called_once_with(post__lte=7)

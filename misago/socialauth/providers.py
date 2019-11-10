@@ -24,6 +24,12 @@ class Providers:
             "admin_template": admin_template,
         }
 
+        if provider != auth_backend.name:
+            raise ValueError(
+                f"Provider's key '{provider}' is not the same as backend's name "
+                f"attribute: '{auth_backend.name}'"
+            )
+
         self._dict[provider] = data
         self._list.append(data)
         self._list = sorted(self._list, key=lambda k: k["name"])

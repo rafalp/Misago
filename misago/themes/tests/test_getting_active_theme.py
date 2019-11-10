@@ -21,7 +21,7 @@ def test_if_active_theme_is_default_themes_child_include_defaults_flag_is_set(
 
 
 def test_if_active_theme_is_not_default_themes_child_include_defaults_flag_is_not_set(
-    active_theme
+    active_theme,
 ):
     assert not get_active_theme()["include_defaults"]
 
@@ -83,7 +83,7 @@ def test_active_theme_styles_list_contains_url_to_local_built_css(active_theme):
 
 
 def test_active_theme_styles_list_exclude_url_to_css_that_has_not_been_built(
-    active_theme
+    active_theme,
 ):
     active_theme.css.create(
         name="test",

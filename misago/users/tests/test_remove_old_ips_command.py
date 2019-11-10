@@ -41,7 +41,7 @@ def test_old_user_joined_ip_is_removed_by_command(user_with_old_ip):
 
 @override_dynamic_settings(ip_storage_time=None)
 def test_old_user_joined_ip_is_not_removed_by_command_if_removal_is_disabled(
-    user_with_old_ip
+    user_with_old_ip,
 ):
     call_command(removeoldips.Command(), stdout=StringIO())
     user_with_old_ip.refresh_from_db()
