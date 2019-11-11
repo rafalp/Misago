@@ -7,7 +7,7 @@ Filter = TypeVar("Filter")
 
 
 class FilterHook(Generic[Action, Filter]):
-    _cache: Dict[str, Action]
+    _cache: Dict[Action, Action]
     _filters: List[Filter]
 
     def __init__(self):
