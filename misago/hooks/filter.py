@@ -7,7 +7,7 @@ Filter = TypeVar("Filter")
 
 
 class FilterHook(Generic[Action, Filter]):
-    _cache: Dict[int, Action]
+    _cache: Dict[str, Action]
     _filters: List[Filter]
 
     def __init__(self):
@@ -35,7 +35,6 @@ class FilterHook(Generic[Action, Filter]):
         return reduce(reduce_filter, self._filters, action)
 
     async def filter(self, action: Action, *args, **kwargs):
-        action_id = id(action)
-        if action_id not in self._cache:
-            self._cache[action_id] = self.wrap_action(action)
-        return await self._cache[action_id](*args, **kwargs)  # type: ignore
+        if action not in self._cache:
+            self._cache[action] = self.wrap_action(action)
+        return await self._cache[action](*args, **kwargs)  # type: ignore
