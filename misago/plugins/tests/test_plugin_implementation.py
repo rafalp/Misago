@@ -26,7 +26,7 @@ def test_existing_plugin_module_is_safely_imported(package_plugin):
 
 
 def test_none_is_returned_if_nonexisting_plugin_module_is_safely_imported(
-    package_plugin
+    package_plugin,
 ):
     assert package_plugin.import_module_if_exists("not_exists") is None
 
@@ -41,14 +41,14 @@ def test_none_is_returned_module_is_safely_imported_from_non_package_plugin(plug
 
 
 def test_exception_is_raised_if_nonexisting_plugin_module_is_unsafely_imported(
-    package_plugin
+    package_plugin,
 ):
     with pytest.raises(ImportError):
         package_plugin.import_module("not_exists")
 
 
 def test_exception_is_raised_if_plugin_module_is_unsafely_imported_from_module_plugin(
-    plugin
+    plugin,
 ):
     with pytest.raises(ImportError):
         plugin.import_module("submodule")

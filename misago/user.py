@@ -52,7 +52,7 @@ async def get_user_by_email(email: str) -> Optional[Dict[str, Any]]:
 
 
 async def get_user_by_id(
-    id: int  # pylint: disable=redefined-builtin
+    id: int,  # pylint: disable=redefined-builtin
 ) -> Optional[Dict[str, Any]]:
     query = users.select().where(users.c.id == id)
     data = await database.fetch_one(query)

@@ -1,7 +1,7 @@
 # This dockerfile is only meant for local development of Misago
 # If you are looking for a proper docker setup for running Misago in production,
 # please use misago-docker instead
-FROM python:3.7 as build-python
+FROM python:3.8 as build-python
 
 # Add requirements and install them
 ADD requirements.txt /app/
@@ -13,7 +13,7 @@ RUN pip install --upgrade pip && \
     pip install -r /app/requirements-plugins.txt
 
 # Build final (slim) image
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 ENV PYTHONUNBUFFERED 1
 ENV IN_MISAGO_DOCKER 1
