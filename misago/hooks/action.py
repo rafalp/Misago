@@ -17,7 +17,7 @@ class ActionHook(Generic[Action]):
     def prepend(self, action: Action):
         self._actions.insert(0, action)
 
-    async def call_actions(self, *args, **kwargs):
+    async def call_action(self, *args, **kwargs):
         if not self._actions:
             return []
 
