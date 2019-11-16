@@ -38,8 +38,8 @@ class Database(BaseDatabase):
 
         # When `force_rollback=True` is used, we use a single global
         # connection, within a transaction that always rolls back.
-        self._global_connection = None  # type: typing.Optional[Connection]
-        self._global_transaction = None  # type: typing.Optional[Transaction]
+        self._global_connection: typing.Optional[Connection] = None
+        self._global_transaction: typing.Optional[Transaction] = None
 
     async def connect(self) -> None:
         """

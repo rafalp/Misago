@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements.txt requirements.in
 #
-alembic==1.3.0
+alembic==1.3.1
 ariadne==0.7.0
 asgiref==3.2.3
 asyncpg==0.19.0           # via databases
@@ -25,10 +25,10 @@ python-dateutil==2.8.1    # via alembic
 python-editor==1.0.4      # via alembic
 python-multipart==0.0.5   # via ariadne
 six==1.13.0               # via python-dateutil, python-multipart
-sqlalchemy==1.3.10        # via alembic, databases
+sqlalchemy==1.3.11        # via alembic, databases
 starlette==0.12.13
 typing-extensions==3.7.4.1  # via ariadne, pydantic
 unidecode==1.1.1
-uvicorn==0.10.4
-uvloop==0.14.0rc2         # via uvicorn
+uvicorn==0.10.8
+uvloop==0.14.0            # via uvicorn
 websockets==8.1           # via uvicorn

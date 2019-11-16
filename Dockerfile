@@ -19,7 +19,7 @@ ENV PYTHONUNBUFFERED 1
 ENV IN_MISAGO_DOCKER 1
 
 # Copy from previous image
-COPY --from=build-python /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
+COPY --from=build-python /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
 COPY --from=build-python /usr/local/bin/ /usr/local/bin/
 
 # Install dependencies in one single command/layer

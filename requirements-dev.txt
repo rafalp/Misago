@@ -27,19 +27,19 @@ pathspec==0.6.0           # via black
 pip-tools==4.2.0
 pluggy==0.13.0            # via pytest
 py==1.8.0                 # via pytest
-pylint==2.4.3
+pylint==2.4.4
 pyparsing==2.4.5          # via packaging
 pytest-asyncio==0.10.0
 pytest-cov==2.8.1
 pytest-env==0.6.2
 pytest-mock==1.11.2
-pytest==5.2.2
+pytest==5.2.4
 regex==2019.11.1          # via black
 requests==2.22.0          # via coveralls
 six==1.13.0               # via astroid, packaging, pip-tools
 toml==0.10.0              # via black
 typed-ast==1.4.0          # via black, mypy
 typing-extensions==3.7.4.1  # via mypy
-urllib3==1.25.6           # via requests
+urllib3==1.25.7           # via requests
 wcwidth==0.1.7            # via pytest
 wrapt==1.11.2             # via astroid
