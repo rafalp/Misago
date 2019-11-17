@@ -1,6 +1,7 @@
 alembic
 ariadne
 asgiref
+async-caches
 click
 databases[postgresql]
 passlib

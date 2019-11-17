@@ -5,6 +5,7 @@ from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from .cache import cache
 from .conf import settings
 from .database import database
 from .hooks import graphql_context_hook
@@ -17,6 +18,9 @@ from .types import GraphQLContext
 import_plugins()
 
 app = Starlette(debug=settings.debug)
+
+app.add_event_handler("startup", cache.connect)
+app.add_event_handler("shutdown", cache.disconnect)
 
 if not settings.test:
     # In tests test-runner takes care of connecting and disconnecting
