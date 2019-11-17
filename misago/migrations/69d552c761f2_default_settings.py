@@ -12,7 +12,7 @@ from sqlalchemy import String, Text
 
 
 settings = [
-    {"setting": "forum_name", "dry_value": "Misago"},
+    {"name": "forum_name", "dry_value": "Misago"},
 ]
 
 settings_table = table(
