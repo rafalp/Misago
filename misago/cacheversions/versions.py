@@ -1,13 +1,13 @@
 from asyncio import gather
-from typing import Dict
 
 from ..database import database
 from ..database.queries import fetch_all
 from ..tables import cache_versions
+from ..types import CacheVersions
 from .utils import generate_version_string
 
 
-async def get_cache_versions() -> Dict[str, str]:
+async def get_cache_versions() -> CacheVersions:
     return {i["cache"]: i["version"] for i in await fetch_all(cache_versions)}
 
 
@@ -22,7 +22,7 @@ async def invalidate_cache(cache: str) -> str:
     return new_version
 
 
-async def invalidate_all_caches() -> Dict[str, str]:
+async def invalidate_all_caches() -> CacheVersions:
     new_versions = {}
     queries = []
     for cache in await get_cache_versions():

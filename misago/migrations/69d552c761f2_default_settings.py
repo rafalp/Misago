@@ -12,14 +12,14 @@ from sqlalchemy import String, Text
 
 
 settings = [
-    {"name": "forum_name", "dry_value": "Misago"},
+    {"name": "forum_name", "value": "Misago"},
 ]
 
 settings_table = table(
     "misago_settings",
     column("name", String),
     column("python_type", String),
-    column("dry_value", Text),
+    column("value", Text),
 )
 
 # revision identifiers, used by Alembic.
