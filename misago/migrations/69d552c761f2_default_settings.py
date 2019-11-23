@@ -8,19 +8,14 @@ Create Date: 2019-11-17 01:49:55.824480
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.sql import table, column
-from sqlalchemy import String, Text
+from sqlalchemy import JSON, String
 
 
 settings = [
     {"name": "forum_name", "value": "Misago"},
 ]
 
-settings_table = table(
-    "misago_settings",
-    column("name", String),
-    column("python_type", String),
-    column("value", Text),
-)
+table = table("misago_settings", column("name", String), column("value", JSON),)
 
 # revision identifiers, used by Alembic.
 revision = "69d552c761f2"
@@ -30,12 +25,7 @@ depends_on = None
 
 
 def upgrade():
-    data = []
-    for setting in settings:
-        setting.setdefault("python_type", "string")
-        data.append(setting)
-
-    op.bulk_insert(settings_table, data)
+    op.bulk_insert(table, settings)
 
 
 def downgrade():

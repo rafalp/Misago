@@ -1,4 +1,4 @@
-from typing import Any, Callable, Coroutine, Dict, List, Optional, TypedDict, Union
+from typing import Any, Callable, Coroutine, Dict, List, TypedDict, Union
 
 from starlette.requests import Request
 
@@ -14,11 +14,11 @@ GraphQLContextFilter = Callable[
 ]
 
 
-class Setting(TypedDict):
-    value: "SettingValue"
-    width: Optional[int]
-    height: Optional[int]
+class SettingImage(TypedDict):
+    path: str
+    width: int
+    height: int
 
 
-Settings = Dict[str, "Setting"]
-SettingValue = Union[bool, int, str, List[str]]
+Setting = Union[bool, int, str, List[str], SettingImage]
+Settings = Dict[str, Setting]

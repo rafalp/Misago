@@ -21,11 +21,7 @@ def upgrade():
     op.create_table(
         "misago_settings",
         sa.Column("name", sa.String(length=255), nullable=False),
-        sa.Column("python_type", sa.String(length=10), nullable=False),
-        sa.Column("value", sa.Text(), nullable=False),
-        sa.Column("image_size", sa.Integer(), nullable=True),
-        sa.Column("image_width", sa.Integer(), nullable=True),
-        sa.Column("image_height", sa.Integer(), nullable=True),
+        sa.Column("value", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("name"),
     )
     # ### end Alembic commands ###

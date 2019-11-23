@@ -1,7 +1,9 @@
 from ..cache import cache
 from ..cacheversions import invalidate_cache
 from ..types import CacheVersions, Settings
-from . import SETTINGS_CACHE
+
+
+SETTINGS_CACHE = "settings"
 
 
 async def get_settings_cache(cache_versions: CacheVersions) -> Settings:

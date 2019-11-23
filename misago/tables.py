@@ -13,11 +13,7 @@ settings = sqlalchemy.Table(
     "misago_settings",
     metadata,
     sqlalchemy.Column("name", sqlalchemy.String(length=255), primary_key=True),
-    sqlalchemy.Column("python_type", sqlalchemy.String(length=10), nullable=False),
-    sqlalchemy.Column("value", sqlalchemy.Text(), nullable=False),
-    sqlalchemy.Column("image_size", sqlalchemy.Integer()),
-    sqlalchemy.Column("image_width", sqlalchemy.Integer()),
-    sqlalchemy.Column("image_height", sqlalchemy.Integer()),
+    sqlalchemy.Column("value", sqlalchemy.JSON(), nullable=False),
 )
 
 users = sqlalchemy.Table(
