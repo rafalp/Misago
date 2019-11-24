@@ -3,6 +3,9 @@ from typing import Any, Callable, Coroutine, Dict, List, TypedDict, Union
 from starlette.requests import Request
 
 
+AsyncRootValidator = Callable[[Any, "ErrorsList"], Coroutine[Any, Any, None]]
+AsyncValidator = Callable[[Any], Coroutine[Any, Any, None]]
+
 CacheVersions = Dict[str, str]
 
 GraphQLContext = Dict[str, Any]

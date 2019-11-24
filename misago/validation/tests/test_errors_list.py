@@ -87,3 +87,14 @@ def test_locations_can_be_obtained_from_errors_list(errors_list):
 def test_types_can_be_obtained_from_errors_list(errors_list):
     errors_list.add_error("username", UsernameIsNotAvailableError())
     assert errors_list.get_errors_types() == [UsernameIsNotAvailableError.code]
+
+
+def test_root_error_is_added_to_errors_list(errors_list):
+    errors_list.add_root_error(UsernameIsNotAvailableError())
+    assert errors_list == [
+        {
+            "loc": ("__root__",),
+            "msg": UsernameIsNotAvailableError.msg_template,
+            "type": UsernameIsNotAvailableError.code,
+        }
+    ]

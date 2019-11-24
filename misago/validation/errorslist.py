@@ -3,6 +3,9 @@ from typing import Any, Dict, List, Sequence, Union
 from pydantic import PydanticTypeError, PydanticValueError
 
 
+ROOT_LOCATION = "__root__"
+
+
 class ErrorsList(List[Dict[str, Any]]):
     def __add__(self, other_list):
         errors_list = list(self)
@@ -10,6 +13,9 @@ class ErrorsList(List[Dict[str, Any]]):
             if error not in errors_list:
                 errors_list.append(error)
         return ErrorsList(errors_list)
+
+    def add_root_error(self, error: Union[PydanticTypeError, PydanticValueError]):
+        self.add_error(ROOT_LOCATION, error)
 
     def add_error(
         self,

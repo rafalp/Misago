@@ -17,16 +17,18 @@ register_mutation = MutationType()
 
 @register_mutation.field("register")
 async def resolve_register(_, info, *, input):  # pylint: disable=redefined-builtin
+    # TODO:
+    # add filter for create_input_model
+    # add filter for cleaned_data
+    # add filter for constructing data validators dict
+    # add filter for create_user
     input_model = create_input_model(info.context)
     cleaned_data, errors = validate_model(input_model, input)
 
     errors = await validate_data(
         cleaned_data,
         {
-            "name": [
-                validate_username_is_available(),
-                validate_username_is_available(),
-            ],
+            "name": [validate_username_is_available(),],
             "email": [validate_email_is_available()],
         },
         errors,

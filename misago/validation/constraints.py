@@ -6,7 +6,7 @@ from pydantic import constr
 from ..types import Settings
 
 
-PASSWORD_MAX_LENGTH = 40  # Hardcoded for
+PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
 USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
 
 

@@ -4,11 +4,12 @@ from sqlalchemy.sql import select
 
 from ..database import database
 from ..tables import users
+from ..types import AsyncValidator
 from ..users.email import get_email_hash
 from .errors import EmailIsNotAvailableError, UsernameIsNotAvailableError
 
 
-def validate_email_is_available(exclude_user: Optional[int] = None):
+def validate_email_is_available(exclude_user: Optional[int] = None) -> AsyncValidator:
     async def validate_email_is_available_in_db(email):
         email_hash = get_email_hash(email)
         query = select([users.c.id]).where(users.c.email_hash == email_hash)
@@ -21,7 +22,9 @@ def validate_email_is_available(exclude_user: Optional[int] = None):
     return validate_email_is_available_in_db
 
 
-def validate_username_is_available(exclude_user: Optional[int] = None):
+def validate_username_is_available(
+    exclude_user: Optional[int] = None,
+) -> AsyncValidator:
     async def validate_username_is_available_in_db(username):
         query = select([users.c.id]).where(users.c.slug == username.lower())
         if exclude_user:
