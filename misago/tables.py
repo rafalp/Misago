@@ -27,8 +27,12 @@ users = sqlalchemy.Table(
     sqlalchemy.Column(
         "email", sqlalchemy.String(length=255), nullable=False, unique=True
     ),
+    sqlalchemy.Column(
+        "email_hash", sqlalchemy.String(length=255), nullable=False, unique=True
+    ),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),
 )
 

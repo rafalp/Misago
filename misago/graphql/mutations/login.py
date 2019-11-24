@@ -1,7 +1,7 @@
 from ariadne import MutationType
 
 from ...passwords import verify_password
-from ...user import get_user_by_name_or_email
+from ...users.get import get_user_by_name_or_email
 
 
 login_mutation = MutationType()

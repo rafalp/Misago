@@ -57,7 +57,7 @@ fi
 
 # Commands
 intro() {
-    echo "Usage: ./devcli [arg] ..."
+    echo "Usage: ./dev [arg] ..."
     echo "Arguments grouped by type:"
     echo
     echo "Development project:"
@@ -122,7 +122,7 @@ init() {
     
     docker-compose stop
     docker-compose build --pull --force-rm "${@:2}"
-    docker-compose run --rm misago ./devcli init_in_docker
+    docker-compose run --rm misago ./dev init_in_docker
 }
 
 # Initialization step that has to occur inside docker
@@ -196,7 +196,7 @@ test() {
 
 # Make messages
 makemessages() {
-    docker-compose run --rm --no-deps misago ./devcli makemessages_in_docker $1
+    docker-compose run --rm --no-deps misago ./dev makemessages_in_docker $1
 }
 
 # Docker part of makemessages
@@ -215,7 +215,7 @@ makemessages_in_docker() {
 
 # Compile messages
 compilemessages() {
-    docker-compose run --rm --no-deps misago ./devcli compilemessages_in_docker
+    docker-compose run --rm --no-deps misago ./dev compilemessages_in_docker
 }
 
 # Docker part of compile messages
@@ -253,7 +253,7 @@ docker_run() {
 
 # Shortcut for psql
 run_psql() {
-    docker-compose run --rm misago ./devcli psql_in_docker
+    docker-compose run --rm misago ./dev psql_in_docker
 }
 
 # Docker part of psql shortcut
