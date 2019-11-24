@@ -13,6 +13,7 @@ from sqlalchemy import JSON, String
 
 settings = [
     {"name": "forum_name", "value": "Misago"},
+    {"name": "password_min_length", "value": 8},
     {"name": "username_min_length", "value": 3},
     {"name": "username_max_length", "value": 10},
 ]

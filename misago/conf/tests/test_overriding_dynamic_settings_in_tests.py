@@ -1,6 +1,6 @@
 import pytest
 
-from ..test import override_dynamic_settings
+from ..testing import override_dynamic_settings
 
 
 def test_dynamic_setting_can_be_overridden_using_context_manager(dynamic_settings):

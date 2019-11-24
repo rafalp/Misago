@@ -1,3 +1,4 @@
+from asyncio import gather
 from typing import Any, Dict, Sequence, Tuple, Type, Union
 
 from pydantic import (
@@ -20,14 +21,43 @@ def validate_model(
     return validated_data, errors.errors()
 
 
+async def validate_data(valid_data: Dict[str, Any], validators) -> ErrorsList:
+    errors: ErrorsList = []
+    validators_to_run = []
+    for field_name, validators in validators.items():
+        if field_name not in valid_data:
+            continue
+
+        for validator in validators:
+            validators_to_run.append(
+                wrap_field_data_validator(
+                    field_name, valid_data[field_name], validator, errors
+                )
+            )
+
+    if validators_to_run:
+        await gather(*validators_to_run)
+
+    return errors
+
+
+def wrap_field_data_validator(
+    field_name: str, data: Any, validator, errors: ErrorsList
+):
+    async def validate_field():
+        try:
+            await validator(data)
+        except (TypeError, ValueError) as error:
+            add_error_to_list(errors, field_name, error)
+
+    return validate_field
+
+
 def add_error_to_list(
     errors: ErrorsList,
-    location: Union[str, Sequence[Union[str, int]]],
+    location: str,
     error: Union[PydanticTypeError, PydanticValueError],
 ):
-    if isinstance(location, str):
-        location = (location,)
-
     errors.append(
-        {"loc": tuple(location), "msg": error.msg_template, "type": error.code,}
+        {"loc": (location,), "msg": error.msg_template, "type": error.code,}
     )

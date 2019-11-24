@@ -1,6 +1,11 @@
 from pydantic import PydanticValueError
 
 
-class UsernameIsInvalidError(PydanticValueError):
-    code = "username.invalid"
-    msg_template = "str is not a valid username"
+class EmailIsNotAvailableError(PydanticValueError):
+    code = "email.not-available"
+    msg_template = "this e-mail is not available"
+
+
+class UsernameIsNotAvailableError(PydanticValueError):
+    code = "username.not-available"
+    msg_template = "this username is not available"

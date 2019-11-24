@@ -5,3 +5,6 @@ from .staticsettings import StaticSettings
 
 
 settings = StaticSettings(cast(Dict, os.environ))
+
+
+__all__ = ["settings"]
