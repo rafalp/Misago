@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Any, Dict, List, Tuple, Type, cast
+from typing import Any, Dict, List, Tuple, Type, Union, cast
 
 from pydantic import (
     BaseModel,
@@ -24,7 +24,7 @@ def validate_model(
 
 async def validate_data(
     validated_data: Dict[str, Any],
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
     errors: ErrorsList,
 ) -> ErrorsList:
     new_errors = ErrorsList()
@@ -34,6 +34,7 @@ async def validate_data(
             continue
 
         for validator in field_validators:
+            validator = cast(AsyncValidator, validator)
             validators_queue.append(
                 validate_field_data(
                     field_name, validated_data[field_name], validator, new_errors
