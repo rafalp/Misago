@@ -5,8 +5,6 @@ from starlette.requests import Request
 
 CacheVersions = Dict[str, str]
 
-ErrorsList = List[Dict[str, Any]]
-
 GraphQLContext = Dict[str, Any]
 GraphQLContextAction = Callable[
     [Request, GraphQLContext], Coroutine[Any, Any, GraphQLContext]

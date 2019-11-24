@@ -1,11 +1,14 @@
-from typing import Union
-
 from ariadne import MutationType
-from pydantic import EmailStr, create_model, constr
+from pydantic import EmailStr, create_model
 
 from ...types import GraphQLContext
 from ...users.create import create_user
-from ...validation import validate_data, validate_model
+from ...validation import (
+    validate_data,
+    validate_email_is_available,
+    validate_model,
+    validate_username_is_available,
+)
 from ...validation.constraints import passwordstr, usernamestr
 
 
@@ -17,7 +20,17 @@ async def resolve_register(_, info, *, input):  # pylint: disable=redefined-buil
     input_model = create_input_model(info.context)
     cleaned_data, errors = validate_model(input_model, input)
 
-    errors += await validate_data(cleaned_data, {"name": [], "email": [],})
+    errors = await validate_data(
+        cleaned_data,
+        {
+            "name": [
+                validate_username_is_available(),
+                validate_username_is_available(),
+            ],
+            "email": [validate_email_is_available()],
+        },
+        errors,
+    )
 
     if errors:
         return {"errors": errors}

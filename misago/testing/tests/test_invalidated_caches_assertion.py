@@ -1,7 +1,7 @@
 import pytest
 
-from ..testing import assert_invalidates_cache
-from ..versions import invalidate_cache
+from ...cacheversions import invalidate_cache
+from ..cacheversions import assert_invalidates_cache
 
 
 @pytest.mark.asyncio

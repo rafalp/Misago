@@ -1,8 +1,10 @@
 import pytest
 
+from . import tables
 from .conf.cache import SETTINGS_CACHE
 from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
+from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
 from .users.create import create_user
 
@@ -27,6 +29,18 @@ def cache_versions():
 
 
 @pytest.fixture
+async def cache_version(db):
+    await insert(tables.cache_versions, cache="test_cache", version="version")
+    return {"cache": "test_cache", "version": "version"}
+
+
+@pytest.fixture
+async def other_cache_version(db):
+    await insert(tables.cache_versions, cache="test_other_cache", version="version")
+    return {"cache": "test_other_cache", "version": "version"}
+
+
+@pytest.fixture
 async def dynamic_settings(db, cache_versions):
     return await get_dynamic_settings(cache_versions)
 
@@ -39,3 +53,10 @@ async def user_password():
 @pytest.fixture
 async def user(db, user_password):
     return await create_user("User", "user@example.com", password=user_password)
+
+
+@pytest.fixture
+async def other_user(db, user_password):
+    return await create_user(
+        "OtherUser", "other-user@example.com", password=user_password
+    )

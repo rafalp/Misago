@@ -1,5 +1,33 @@
-from ..users.get import get_user_by_email, get_user_by_name
+from typing import Optional
+
+from sqlalchemy.sql import select
+
+from ..database import database
+from ..tables import users
+from ..users.email import get_email_hash
+from .errors import EmailIsNotAvailableError, UsernameIsNotAvailableError
 
 
-def validate_username(exclude_user: int):
-    pass
+def validate_email_is_available(exclude_user: Optional[int] = None):
+    async def validate_email_is_available_in_db(email):
+        email_hash = get_email_hash(email)
+        query = select([users.c.id]).where(users.c.email_hash == email_hash)
+        if exclude_user:
+            query = query.where(users.c.id != exclude_user)
+
+        if await database.fetch_one(query):
+            raise EmailIsNotAvailableError()
+
+    return validate_email_is_available_in_db
+
+
+def validate_username_is_available(exclude_user: Optional[int] = None):
+    async def validate_username_is_available_in_db(username):
+        query = select([users.c.id]).where(users.c.slug == username.lower())
+        if exclude_user:
+            query = query.where(users.c.id != exclude_user)
+
+        if await database.fetch_one(query):
+            raise UsernameIsNotAvailableError()
+
+    return validate_username_is_available_in_db
