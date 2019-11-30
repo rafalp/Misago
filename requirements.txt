@@ -6,11 +6,11 @@
 #
 aioredis==1.3.0           # via async-caches
 alembic==1.3.1
-ariadne==0.7.0
+ariadne==0.8.0
 asgiref==3.2.3
 async-caches==0.3.0
 async-timeout==3.0.1      # via aioredis
-asyncpg==0.19.0           # via databases
+asyncpg==0.20.0           # via databases
 click==7.0
 databases[postgresql]==0.2.6
 dnspython==1.16.0         # via email-validator
@@ -22,15 +22,14 @@ httptools==0.0.13         # via uvicorn
 idna==2.8                 # via email-validator
 mako==1.1.0               # via alembic
 markupsafe==1.1.1         # via mako
-passlib==1.7.1
+passlib==1.7.2
 psycopg2-binary==2.8.4    # via databases
-pydantic[email,typing_extensions]==1.1
+pydantic[email,typing_extensions]==1.2
 python-dateutil==2.8.1    # via alembic
 python-editor==1.0.4      # via alembic
-python-multipart==0.0.5   # via ariadne
-six==1.13.0               # via python-dateutil, python-multipart
+six==1.13.0               # via python-dateutil
 sqlalchemy==1.3.11        # via alembic, databases
-starlette==0.12.13
+starlette==0.13.0
 typing-extensions==3.7.4.1  # via ariadne, pydantic
 unidecode==1.1.1
 uvicorn==0.10.8
