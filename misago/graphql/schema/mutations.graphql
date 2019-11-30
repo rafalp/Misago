@@ -3,7 +3,7 @@ type Mutation {
     register(input: RegisterInput!): RegisterMutationResult!
 }
 
-type MutationError {
+type ValidationError {
     location: [String!]!
     message: String!
     type: String!
@@ -22,7 +22,7 @@ input RegisterInput {
 }
 
 type RegisterMutationResult {
-    errors: [MutationError!]
+    errors: [ValidationError!]
     token: String
     user: User
 }
