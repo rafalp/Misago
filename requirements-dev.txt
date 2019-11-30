@@ -6,10 +6,9 @@
 #
 appdirs==1.4.3            # via black
 astroid==2.3.3            # via pylint
-atomicwrites==1.3.0       # via pytest
 attrs==19.3.0             # via black, pytest
 black==19.10b0
-certifi==2019.9.11        # via requests
+certifi==2019.11.28       # via requests
 chardet==3.0.4            # via requests
 click==7.0                # via black, pip-tools
 coverage==4.5.4           # via coveralls, pytest-cov
@@ -19,21 +18,21 @@ idna==2.8                 # via requests
 isort==4.3.21             # via pylint
 lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
-more-itertools==7.2.0     # via pytest
+more-itertools==8.0.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
-mypy==0.740
+mypy==0.750
 packaging==19.2           # via pytest
 pathspec==0.6.0           # via black
-pip-tools==4.2.0
-pluggy==0.13.0            # via pytest
+pip-tools==4.3.0
+pluggy==0.13.1            # via pytest
 py==1.8.0                 # via pytest
 pylint==2.4.4
 pyparsing==2.4.5          # via packaging
 pytest-asyncio==0.10.0
 pytest-cov==2.8.1
 pytest-env==0.6.2
-pytest-mock==1.11.2
-pytest==5.2.4
+pytest-mock==1.12.1
+pytest==5.3.1
 regex==2019.11.1          # via black
 requests==2.22.0          # via coveralls
 six==1.13.0               # via astroid, packaging, pip-tools
