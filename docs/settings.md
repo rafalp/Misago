@@ -23,3 +23,6 @@ Dynamic settings
 ----------------
 
 - `forum_name: str` - Forum name.
+- `password_min_length: int` - Min. allowed password length.
+- `username_max_length: int` - Min. allowed username length.
+- `username_min_length: int` - Max. allowed username length.
