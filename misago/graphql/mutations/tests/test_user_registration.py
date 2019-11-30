@@ -42,6 +42,41 @@ async def test_registration_mutation_preserves_spaces_in_user_password(graphql_i
 
 
 @pytest.mark.asyncio
+@override_dynamic_settings(password_min_length=10)
+async def test_registration_mutation_validates_min_password_length(graphql_info):
+    data = await resolve_register(
+        None,
+        graphql_info,
+        input={
+            "name": "abcd",
+            "email": "john@example.com",
+            "password": "pass",
+        },
+    )
+
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["password"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+
+
+@pytest.mark.asyncio
+async def test_registration_mutation_validates_max_password_length(graphql_info):
+    data = await resolve_register(
+        None,
+        graphql_info,
+        input={
+            "name": "abcd",
+            "email": "john@example.com",
+            "password": "p" * 60,
+        },
+    )
+
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["password"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.max_length"]
+
+
+@pytest.mark.asyncio
 @override_dynamic_settings(username_min_length=10)
 async def test_registration_mutation_validates_min_user_name_length(graphql_info):
     data = await resolve_register(
