@@ -9,7 +9,10 @@ from pydantic import (
 )
 
 from ..types import AsyncRootValidator, AsyncValidator
-from .errorslist import ROOT_LOCATION, ErrorsList
+from .errorslist import ErrorsList
+
+
+ROOT_LOCATION = ErrorsList.ROOT_LOCATION
 
 
 def validate_model(
@@ -42,9 +45,11 @@ async def validate_data(
             )
 
     if ROOT_LOCATION in validators:
-        for validator in validators[ROOT_LOCATION]:
-            validator = cast(AsyncRootValidator, validator)
-            validators_queue.append(validator(validated_data, new_errors))
+        for root_validator in validators[ROOT_LOCATION]:
+            root_validator = cast(AsyncRootValidator, root_validator)
+            validators_queue.append(
+                validate_root_data(validated_data, root_validator, new_errors)
+            )
 
     if validators_queue:
         await gather(*validators_queue)
@@ -59,3 +64,12 @@ async def validate_field_data(
         await validator(data)
     except (PydanticTypeError, PydanticValueError) as error:
         errors.add_error(field_name, error)
+
+
+async def validate_root_data(
+    data: Any, validator: AsyncRootValidator, errors: ErrorsList
+):
+    try:
+        await validator(data, errors)
+    except (PydanticTypeError, PydanticValueError) as error:
+        errors.add_root_error(error)

@@ -15,7 +15,7 @@ def test_error_is_added_to_errors_list(errors_list):
         {
             "loc": ("username",),
             "msg": UsernameIsNotAvailableError.msg_template,
-            "type": UsernameIsNotAvailableError.code,
+            "type": "value_error." + UsernameIsNotAvailableError.code,
         }
     ]
 
@@ -27,7 +27,7 @@ def test_duplicate_error_is_not_added_to_errors_list(errors_list):
         {
             "loc": ("username",),
             "msg": UsernameIsNotAvailableError.msg_template,
-            "type": UsernameIsNotAvailableError.code,
+            "type": "value_error." + UsernameIsNotAvailableError.code,
         }
     ]
 
@@ -46,12 +46,12 @@ def test_two_errors_lists_can_be_combined():
         {
             "loc": ("email",),
             "msg": EmailIsNotAvailableError.msg_template,
-            "type": EmailIsNotAvailableError.code,
+            "type": "value_error." + EmailIsNotAvailableError.code,
         },
         {
             "loc": ("username",),
             "msg": UsernameIsNotAvailableError.msg_template,
-            "type": UsernameIsNotAvailableError.code,
+            "type": "value_error." + UsernameIsNotAvailableError.code,
         },
     ]
 
@@ -69,12 +69,12 @@ def test_combining_errors_lists_removes_duplicates():
         {
             "loc": ("email",),
             "msg": EmailIsNotAvailableError.msg_template,
-            "type": EmailIsNotAvailableError.code,
+            "type": "value_error." + EmailIsNotAvailableError.code,
         },
         {
             "loc": ("username",),
             "msg": UsernameIsNotAvailableError.msg_template,
-            "type": UsernameIsNotAvailableError.code,
+            "type": "value_error." + UsernameIsNotAvailableError.code,
         },
     ]
 
@@ -86,7 +86,9 @@ def test_locations_can_be_obtained_from_errors_list(errors_list):
 
 def test_types_can_be_obtained_from_errors_list(errors_list):
     errors_list.add_error("username", UsernameIsNotAvailableError())
-    assert errors_list.get_errors_types() == [UsernameIsNotAvailableError.code]
+    assert errors_list.get_errors_types() == [
+        "value_error." + UsernameIsNotAvailableError.code
+    ]
 
 
 def test_root_error_is_added_to_errors_list(errors_list):
@@ -95,6 +97,6 @@ def test_root_error_is_added_to_errors_list(errors_list):
         {
             "loc": ("__root__",),
             "msg": UsernameIsNotAvailableError.msg_template,
-            "type": UsernameIsNotAvailableError.code,
+            "type": "value_error." + UsernameIsNotAvailableError.code,
         }
     ]

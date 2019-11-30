@@ -4,10 +4,10 @@ from typing import Type, cast
 from pydantic import constr
 
 from ..types import Settings
+from .fields import UsernameStr
 
 
 PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
-USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
 
 
 def passwordstr(settings: Settings) -> Type[str]:
@@ -19,9 +19,10 @@ def passwordstr(settings: Settings) -> Type[str]:
 
 
 def usernamestr(settings: Settings) -> Type[str]:
-    return constr(
-        strip_whitespace=True,
+    # use kwargs then define conf in a dict to aid with IDE type hinting
+    namespace = dict(
         min_length=cast(int, settings["username_min_length"]),
         max_length=cast(int, settings["username_max_length"]),
-        regex=cast(str, USERNAME_RE),
     )
+
+    return type("UsernameStrValue", (UsernameStr,), namespace)

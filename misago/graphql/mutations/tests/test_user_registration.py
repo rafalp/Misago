@@ -91,7 +91,7 @@ async def test_registration_mutation_validates_user_name_content(graphql_info):
 
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["name"]
-    assert data["errors"].get_errors_types() == ["value_error.str.regex"]
+    assert data["errors"].get_errors_types() == ["value_error.username"]
 
 
 @pytest.mark.asyncio
@@ -110,7 +110,7 @@ async def test_registration_mutation_validates_if_username_is_available(
 
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["name"]
-    assert data["errors"].get_errors_types() == ["username.not_available"]
+    assert data["errors"].get_errors_types() == ["value_error.username.not_available"]
 
 
 @pytest.mark.asyncio
@@ -138,4 +138,4 @@ async def test_registration_mutation_validates_if_user_email_is_available(
 
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["email"]
-    assert data["errors"].get_errors_types() == ["email.not_available"]
+    assert data["errors"].get_errors_types() == ["value_error.email.not_available"]
