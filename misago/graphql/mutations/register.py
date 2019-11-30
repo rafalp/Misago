@@ -4,12 +4,13 @@ from pydantic import EmailStr, create_model
 from ...types import GraphQLContext
 from ...users.create import create_user
 from ...validation import (
+    passwordstr,
+    usernamestr,
     validate_data,
     validate_email_is_available,
     validate_model,
     validate_username_is_available,
 )
-from ...validation.constraints import passwordstr, usernamestr
 
 
 register_mutation = MutationType()

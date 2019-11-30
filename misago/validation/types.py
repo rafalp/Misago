@@ -1,13 +1,16 @@
 import re
-from typing import Type, cast
+from typing import Any, Callable, Generator, Type, cast
 
-from pydantic import constr
+from pydantic import ConstrainedStr, constr
 
 from ..types import Settings
-from .fields import UsernameStr
+from .errors import UsernameError
 
+
+CallableGenerator = Generator[Callable[..., Any], None, None]
 
 PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
+USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
 
 
 def passwordstr(settings: Settings) -> Type[str]:
@@ -16,6 +19,18 @@ def passwordstr(settings: Settings) -> Type[str]:
         min_length=cast(int, settings["password_min_length"]),
         max_length=PASSWORD_MAX_LENGTH,
     )
+
+
+class UsernameStr(ConstrainedStr):
+    strip_whitespace: bool = True
+    strict: bool = False
+
+    @classmethod
+    def validate(cls, value: str) -> str:
+        if not USERNAME_RE.match(value):
+            raise UsernameError(pattern=cast(str, USERNAME_RE))
+
+        return value
 
 
 def usernamestr(settings: Settings) -> Type[str]:
