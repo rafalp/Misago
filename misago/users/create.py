@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, cast
 
 from ..database import queries
 from ..passwords import hash_password
 from ..tables import users
+from ..types import User
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
 
@@ -15,8 +16,9 @@ async def create_user(
     password: Optional[str] = None,
     is_moderator: bool = False,
     is_admin: bool = False,
-    joined_at: Optional[datetime] = None
-) -> Dict[str, Any]:
+    joined_at: Optional[datetime] = None,
+    extra: Optional[Dict[str, Any]] = None
+) -> User:
     password_hash = None
     if password:
         password_hash = await hash_password(password)
@@ -30,8 +32,9 @@ async def create_user(
         "is_moderator": is_moderator,
         "is_admin": is_admin,
         "joined_at": joined_at or datetime.now(),
+        "extra": extra or {},
     }
 
     data["id"] = await queries.insert(users, **data)
 
-    return data
+    return cast(User, data)

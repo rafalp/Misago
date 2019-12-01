@@ -1,9 +1,12 @@
+from datetime import datetime
 from typing import (
     Any,
     Callable,
     Coroutine,
     Dict,
     List,
+    Optional,
+    Protocol,
     Sequence,
     Tuple,
     Type,
@@ -20,6 +23,44 @@ AsyncValidator = Callable[[Any], Coroutine[Any, Any, None]]
 
 CacheVersions = Dict[str, str]
 
+
+class CreateUserAction(Protocol):
+    async def __call__(
+        self,
+        name: str,
+        email: str,
+        *,
+        password: Optional[str] = None,
+        is_moderator: bool = False,
+        is_admin: bool = False,
+        joined_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None
+    ) -> "User":
+        ...
+
+
+class CreateUserFilter(Protocol):
+    async def __call__(
+        self,
+        action: CreateUserAction,
+        name: str,
+        email: str,
+        *,
+        password: Optional[str] = None,
+        is_moderator: bool = False,
+        is_admin: bool = False,
+        joined_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None
+    ) -> "User":
+        ...
+
+
+RegisterUserAction = Callable[
+    ["GraphQLContext", "RegisterInput"], Coroutine[Any, Any, "User"]
+]
+RegisterUserFilter = Callable[
+    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Coroutine[Any, Any, "User"]
+]
 
 Error = Dict[str, Any]
 
@@ -77,3 +118,16 @@ class SettingImage(TypedDict):
 
 Setting = Union[bool, int, str, List[str], SettingImage]
 Settings = Dict[str, Setting]
+
+
+class User(TypedDict):
+    id: int
+    name: str
+    slug: str
+    email: str
+    email_hash: str
+    password: Optional[str]
+    is_moderator: bool
+    is_admin: bool
+    joined_at: datetime
+    extra: dict

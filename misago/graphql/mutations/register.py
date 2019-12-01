@@ -1,14 +1,21 @@
-from typing import Any, Dict, List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 from ariadne import MutationType
 from pydantic import EmailStr, create_model
 
-from ...hooks import register_input_hook, register_input_model_hook
+from ...hooks import (
+    create_user_hook,
+    register_input_hook,
+    register_input_model_hook,
+    register_user_hook,
+)
 from ...types import (
     AsyncRootValidator,
     AsyncValidator,
     GraphQLContext,
+    RegisterInput,
     RegisterInputModel,
+    User,
 )
 from ...users.create import create_user
 from ...validation import (
@@ -44,13 +51,11 @@ async def resolve_register(_, info, *, input):  # pylint: disable=redefined-buil
     if errors:
         return {"errors": errors}
 
-    return {
-        "user": await create_user(
-            cleaned_data["name"],
-            cleaned_data["email"],
-            password=cleaned_data["password"],
-        )
-    }
+    user = await register_user_hook.call_action(
+        register_user, info.context, cleaned_data
+    )
+
+    return {"user": user}
 
 
 async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
@@ -65,8 +70,18 @@ async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
-    cleaned_data: Dict[str, Any],
+    cleaned_data: RegisterInput,
     errors: ErrorsList,
-) -> Tuple[Dict[str, Any], ErrorsList]:
+) -> Tuple[RegisterInput, ErrorsList]:
     errors = await validate_data(cleaned_data, validators, errors)
     return cleaned_data, errors
+
+
+async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
+    return await create_user_hook.call_action(
+        create_user,
+        cleaned_data["name"],
+        cleaned_data["email"],
+        password=cleaned_data["password"],
+        extra={},
+    )

@@ -34,6 +34,7 @@ users = sqlalchemy.Table(
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
 
 categories = sqlalchemy.Table(
