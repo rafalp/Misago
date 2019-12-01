@@ -1,4 +1,4 @@
-from typing import List, Sequence, Union
+from typing import List, Sequence, Union, cast
 
 from pydantic import PydanticTypeError, PydanticValueError
 
@@ -23,8 +23,11 @@ class ErrorsList(List[Error]):
         location: Union[str, Sequence[str]],
         error: Union[PydanticTypeError, PydanticValueError],
     ):
+        if not isinstance(location, (list, tuple)):
+            location = (cast(str, location),)
+
         error_dict = {
-            "loc": list(location),
+            "loc": location,
             "msg": str(error),
             "type": get_error_type(error),
         }
