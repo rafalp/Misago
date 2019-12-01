@@ -41,7 +41,8 @@ All standard hooks are defined in `misago.hooks` package and can be imported fro
 
 ```python
 create_user_hook.call_action(action: CreateUserAction, name: str, email: str, *, password: Optional[str] = None, is_moderator: bool = False, is_admin: bool = False, oined_at: Optional[datetime] = None, extra: Optional[Dict[str, Any]] = None
-) -> User
+) -> User:
+    ...
 ```
 
 A filter for the function used to create new user account in the database.
@@ -161,18 +162,42 @@ Filter should return a tuple of `data` that should be used to create new user an
 
 ### `register_input_model_hook`
 
-A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterInput` GraphQL input type. Is called with two arguments:
+```python
+register_input_model_hook.call_action(action: RegisterInputModelAction, context: GraphQLContext) -> RegisterInputModel:
+    ...
+```
 
-- `create_input_model: Callable[[GraphQLContext], Coroutine[Model]]` - next filter in hook or original function implemented by Misago.
-- `context: GraphQLContext` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterInput` GraphQL input type.
 
-Filter should return new Pydantic model to use for validating input data.
+Returns input model type.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
+    ...
+```
+
+Next filter or built-in function used to create input model type.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
 
 
 ### `register_user_hook`
 
 ```python
-register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput) -> User
+register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput) -> User:
+    ...
 ```
 
 A filter for the function used by GraphQL mutation registering new user account to register new user in the database.
