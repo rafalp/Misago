@@ -40,7 +40,16 @@ All standard hooks are defined in `misago.hooks` package and can be imported fro
 ### `create_user_hook`:
 
 ```python
-create_user_hook.call_action(action: CreateUserAction, name: str, email: str, *, password: Optional[str] = None, is_moderator: bool = False, is_admin: bool = False, oined_at: Optional[datetime] = None, extra: Optional[Dict[str, Any]] = None
+create_user_hook.call_action(
+    action: CreateUserAction,
+    name: str,
+    email: str,
+    *,
+    password: Optional[str] = None,
+    is_moderator: bool = False,
+    is_admin: bool = False,
+    joined_at: Optional[datetime] = None,
+    extra: Optional[Dict[str, Any]] = None
 )
 ```
 
@@ -284,7 +293,11 @@ A dict with GraphQL query context.
 ### `register_user_hook`
 
 ```python
-register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput)
+register_user_hook.call_action(
+    action: RegisterUserAction,
+    context: GraphQLContext,
+    cleaned_data: RegisterInput
+)
 ```
 
 A filter for the function used by GraphQL mutation registering new user account to register new user in the database.
