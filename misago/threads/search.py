@@ -21,7 +21,7 @@ class SearchThreads(SearchProvider):
         root_category = ThreadsRootCategory(self.request)
         threads_categories = [root_category.unwrap()] + root_category.subcategories
 
-        if len(query) > 2:
+        if len(query) > 1:
             visible_threads = exclude_invisible_threads(
                 self.request.user_acl, threads_categories, Thread.objects
             )
