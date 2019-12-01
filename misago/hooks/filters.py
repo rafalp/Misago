@@ -53,9 +53,9 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
 
 class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter]):
     async def call_action(
-        self, action: GraphQLContextAction, request: Request, context: GraphQLContext
+        self, action: GraphQLContextAction, request: Request
     ) -> GraphQLContext:
-        return await self.filter(action, request, context)
+        return await self.filter(action, request)
 
 
 class RegisterInputHook(FilterHook[RegisterInputAction, RegisterInputFilter]):

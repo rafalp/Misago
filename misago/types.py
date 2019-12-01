@@ -79,10 +79,10 @@ class ErrorsList(List[Error]):
 
 GraphQLContext = Dict[str, Any]
 GraphQLContextAction = Callable[
-    [Request, GraphQLContext], Coroutine[Any, Any, GraphQLContext]
+    [Request], Coroutine[Any, Any, GraphQLContext]
 ]
 GraphQLContextFilter = Callable[
-    [GraphQLContextAction, Request, GraphQLContext], Coroutine[Any, Any, GraphQLContext]
+    [GraphQLContextAction, Request], Coroutine[Any, Any, GraphQLContext]
 ]
 
 RegisterInput = Dict[str, Any]

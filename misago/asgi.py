@@ -34,7 +34,7 @@ async def homepage(request):
 
 
 async def resolve_graphql_context(request: Request) -> GraphQLContext:
-    return await graphql_context_hook.call_action(get_graphql_context, request, {})
+    return await graphql_context_hook.call_action(get_graphql_context, request)
 
 
 graphql_app = GraphQL(

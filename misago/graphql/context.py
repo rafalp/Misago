@@ -5,17 +5,10 @@ from ..conf.dynamicsettings import get_dynamic_settings
 from ..types import GraphQLContext
 
 
-async def get_graphql_context(
-    request: Request, context: GraphQLContext
-) -> GraphQLContext:
+async def get_graphql_context(request: Request) -> GraphQLContext:
     cache_versions = await get_cache_versions()
-
-    context.update(
-        {
-            "cache_versions": cache_versions,
-            "request": request,
-            "settings": await get_dynamic_settings(cache_versions),
-        }
-    )
-
-    return context
+    return {
+        "cache_versions": cache_versions,
+        "request": request,
+        "settings": await get_dynamic_settings(cache_versions),
+    }

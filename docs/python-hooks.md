@@ -16,10 +16,10 @@ from misago.hooks import graphql_context_hook
 
 
 @graphql_context_hook.append
-async def inject_extra_data_to_graphql_context(get_graphql_context, request, context):
+async def inject_extra_data_to_graphql_context(get_graphql_context, request):
     # unless your filter replaces built-in logic, it should call the callable passed as first argument.
     # if more plugins are filtering this hook, `get_graphql_context` may be next filter instead!
-    context = await get_graphql_context(request, context)
+    context = await get_graphql_context(request)
 
     # add custom data to context
     context["extra_data"] = "I am plugin!"
@@ -41,13 +41,12 @@ All standard hooks are defined in `misago.hooks` package and can be imported fro
 
 ```python
 create_user_hook.call_action(action: CreateUserAction, name: str, email: str, *, password: Optional[str] = None, is_moderator: bool = False, is_admin: bool = False, oined_at: Optional[datetime] = None, extra: Optional[Dict[str, Any]] = None
-) -> User:
-    ...
+)
 ```
 
 A filter for the function used to create new user account in the database.
 
-Returns a dict with newly created user data.
+Returns `User` dict with newly created user data.
 
 
 #### Required arguments
@@ -141,13 +140,34 @@ JSON-serializable dict with extra data for this user. This value is not used by 
 
 ### `graphql_context_hook`
 
-A filter for the function used to create a GraphQL context. Is called with three arguments:
+```python
+graphql_context_hook.call_action(action: GraphQLContextAction, request: Request)
+```
 
-- `get_graphql_context: Callable[[request, context], Coroutine[context]]` - next filter in hook or original function implemented by Misago.
-- `request: Request` - an instance of [`Request`](https://www.starlette.io/requests/) representing current HTTP request to GraphQL API.
-- `context: Dict[str, Any]` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
+A filter for the function used to create a GraphQL context.
 
-Filter should return `Dict[str, Any]` with a context.
+Returns `GraphQLContext` dict with current GraphQL query context.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def get_graphql_context(request: Request) -> GraphQLContext:
+    ...
+```
+
+Next filter or built-in function used to create GraphQL context.
+
+
+#### `request`
+
+```python
+Request
+```
+
+An instance of [`Request`](https://www.starlette.io/requests/) representing current HTTP request to GraphQL API.
 
 
 - - -
@@ -155,15 +175,72 @@ Filter should return `Dict[str, Any]` with a context.
 
 ### `register_input_hook`
 
-A filter for the function used to validate data for `RegisterInput` GraphQL input type. Is called with five arguments:
+```python
+register_input_hook.call_action(
+    action: RegisterInputAction,
+    context: GraphQLContext,
+    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    data: RegisterInput,
+    errors_list: ErrorsList
+)
+```
 
-- `create_input_model: RegisterInputAction` - next filter in hook or original function implemented by Misago.
-- `context: GraphQLContext` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
-- `validators: Dict[str, List[Union[AsyncValidator, AsyncRootValidator]]]` - a dict of async data validators that should be used in data validation.
-- `data: Dict[str, Any]` - dict with cleaned data that should be validated and used to create new user. This dict will contain only valid keys.
-- `errors: ErrorsList` - list of validation errors.
+A filter for the function used to validate data for `RegisterInput` GraphQL input type.
 
-Filter should return a tuple of `data` that should be used to create new user and validation `errors`.
+Returns a tuple of `data` that should be used to create new user and validation `errors`.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def validate_input_data(
+    context: GraphQLContext,
+    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    cleaned_data: RegisterInput,
+    errors: ErrorsList,
+) -> Tuple[RegisterInput, ErrorsList]:
+    ...
+```
+
+Next filter or built-in function used to validate registration input data.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `validators`
+
+```python
+Dict[str, List[Union[AsyncValidator, AsyncRootValidator]]]
+```
+
+A dict of lists of validators that should be used to validate inputs values.
+
+
+##### `data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with input data that passed initial cleaning and validation. If any of fields failed initial cleanup and validation, it won't be present in this dict.
+
+
+##### `errors`
+
+```python
+ErrorsList
+```
+
+List of validation errors found so far. Can be extended using it's `add_error` and `add_root_error` methods.
 
 
 - - -
@@ -172,13 +249,12 @@ Filter should return a tuple of `data` that should be used to create new user an
 ### `register_input_model_hook`
 
 ```python
-register_input_model_hook.call_action(action: RegisterInputModelAction, context: GraphQLContext) -> RegisterInputModel:
-    ...
+register_input_model_hook.call_action(action: RegisterInputModelAction, context: GraphQLContext)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterInput` GraphQL input type.
 
-Returns input model type.
+Returns `RegisterInputModel` input model type.
 
 
 #### Required arguments
@@ -208,13 +284,12 @@ A dict with GraphQL query context.
 ### `register_user_hook`
 
 ```python
-register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput) -> User:
-    ...
+register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput)
 ```
 
 A filter for the function used by GraphQL mutation registering new user account to register new user in the database.
 
-Returns a dict with newly created user data.
+Returns `User` dict with newly created user data.
 
 
 #### Required arguments
