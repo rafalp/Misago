@@ -47,11 +47,7 @@ async def test_registration_mutation_validates_min_password_length(graphql_info)
     data = await resolve_register(
         None,
         graphql_info,
-        input={
-            "name": "abcd",
-            "email": "john@example.com",
-            "password": "pass",
-        },
+        input={"name": "abcd", "email": "john@example.com", "password": "pass",},
     )
 
     assert "errors" in data
@@ -64,11 +60,7 @@ async def test_registration_mutation_validates_max_password_length(graphql_info)
     data = await resolve_register(
         None,
         graphql_info,
-        input={
-            "name": "abcd",
-            "email": "john@example.com",
-            "password": "p" * 60,
-        },
+        input={"name": "abcd", "email": "john@example.com", "password": "p" * 60,},
     )
 
     assert "errors" in data

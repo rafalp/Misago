@@ -1,9 +1,11 @@
-from typing import Any, Dict, List, Sequence, Union
+from typing import List, Sequence, Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
+from ..types import Error
 
-class ErrorsList(List[Dict[str, Any]]):
+
+class ErrorsList(List[Error]):
     ROOT_LOCATION = "__root__"
 
     def __add__(self, other_list):
@@ -22,7 +24,7 @@ class ErrorsList(List[Dict[str, Any]]):
         error: Union[PydanticTypeError, PydanticValueError],
     ):
         error_dict = {
-            "loc": (location,),
+            "loc": list(location),
             "msg": str(error),
             "type": get_error_type(error),
         }

@@ -40,13 +40,36 @@ All standard hooks are defined in `misago.hooks` package and can be imported fro
 
 ### `graphql_context_hook`
 
-A filter for the function Misago calls to retrieve a GraphQL context. Is called with three arguments:
+A filter for the function used to create a GraphQL context. Is called with three arguments:
 
 - `get_graphql_context: Callable[[request, context], Coroutine[context]]` - next filter in hook or original function implemented by Misago.
 - `request: Request` - an instance of [`Request`](https://www.starlette.io/requests/) representing current HTTP request to GraphQL API.
 - `context: Dict[str, Any]` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
 
 Filter should return `Dict[str, Any]` with a context.
+
+
+### `register_input_hook`
+
+A filter for the function used to validate data for `RegisterInput` GraphQL input type. Is called with five arguments:
+
+- `create_input_model: RegisterInputAction` - next filter in hook or original function implemented by Misago.
+- `context: GraphQLContext` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
+- `validators: Dict[str, List[Union[AsyncValidator, AsyncRootValidator]]]` - a dict of async data validators that should be used in data validation.
+- `data: Dict[str, Any]` - dict with cleaned data that should be validated and used to create new user. This dict will contain only valid keys.
+- `errors: ErrorsList` - list of validation errors.
+
+Filter should return a tuple of `data` that should be used to create new user and validation `errors`.
+
+
+### `register_input_model_hook`
+
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterInput` GraphQL input type. Is called with two arguments:
+
+- `create_input_model: Callable[[GraphQLContext], Coroutine[Model]]` - next filter in hook or original function implemented by Misago.
+- `context: GraphQLContext` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
+
+Filter should return new Pydantic model to use for validating input data.
 
 
 Implementing custom action hook
