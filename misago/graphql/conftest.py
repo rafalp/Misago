@@ -7,9 +7,7 @@ from .context import get_graphql_context
 
 @pytest.fixture
 async def graphql_context(db):
-    context = {}
-    await get_graphql_context(None, context)
-    return context
+    return await get_graphql_context(None)
 
 
 @pytest.fixture
