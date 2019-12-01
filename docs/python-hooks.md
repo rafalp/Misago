@@ -136,6 +136,9 @@ Optional[Dict[str, Any]] = dict()
 JSON-serializable dict with extra data for this user. This value is not used by Misago, but allows plugin authors to store additional information about user directly on their database row.
 
 
+- - -
+
+
 ### `graphql_context_hook`
 
 A filter for the function used to create a GraphQL context. Is called with three arguments:
@@ -145,6 +148,9 @@ A filter for the function used to create a GraphQL context. Is called with three
 - `context: Dict[str, Any]` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
 
 Filter should return `Dict[str, Any]` with a context.
+
+
+- - -
 
 
 ### `register_input_hook`
@@ -158,6 +164,9 @@ A filter for the function used to validate data for `RegisterInput` GraphQL inpu
 - `errors: ErrorsList` - list of validation errors.
 
 Filter should return a tuple of `data` that should be used to create new user and validation `errors`.
+
+
+- - -
 
 
 ### `register_input_model_hook`
@@ -191,6 +200,9 @@ GraphQLContext
 ```
 
 A dict with GraphQL query context.
+
+
+- - -
 
 
 ### `register_user_hook`
