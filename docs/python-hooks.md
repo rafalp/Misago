@@ -17,7 +17,7 @@ from misago.hooks import graphql_context_hook
 
 @graphql_context_hook.append
 async def inject_extra_data_to_graphql_context(get_graphql_context, request, context):
-    # call Misago function to obtain default GraphQL context values
+    # unless your filter replaces built-in logic, it should call the callable passed as first argument.
     # if more plugins are filtering this hook, `get_graphql_context` may be next filter instead!
     context = await get_graphql_context(request, context)
 
@@ -26,7 +26,6 @@ async def inject_extra_data_to_graphql_context(get_graphql_context, request, con
 
     # return context
     return context
-
 ```
 
 > All functions injected into hooks must be asynchronous.
@@ -36,6 +35,104 @@ Standard hooks
 --------------
 
 All standard hooks are defined in `misago.hooks` package and can be imported from it:
+
+
+### `create_user_hook`:
+
+```python
+create_user_hook.call_action(action: CreateUserAction, name: str, email: str, *, password: Optional[str] = None, is_moderator: bool = False, is_admin: bool = False, oined_at: Optional[datetime] = None, extra: Optional[Dict[str, Any]] = None
+) -> User
+```
+
+A filter for the function used to create new user account in the database.
+
+Returns a dict with newly created user data.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_user(
+    name: str,
+    email: str,
+    *,
+    password: Optional[str] = None,
+    is_moderator: bool = False,
+    is_admin: bool = False,
+    joined_at: Optional[datetime] = None,
+    extra: Optional[Dict[str, Any]] = None
+) -> User:
+    ...
+```
+
+Next filter or built-in function used to create new user account in the database.
+
+
+##### `name`
+
+```python
+str
+```
+
+User name.
+
+
+##### `email`
+
+```python
+str
+```
+
+User e-mail address.
+
+
+#### Optional arguments
+
+##### `password`
+
+```python
+Optional[str] = None
+```
+
+User password. If not set, user will not be able to log-in to their account using default method.
+
+
+##### `is_moderator`
+
+```python
+bool = False
+```
+
+Controls if user can moderate site.
+
+
+##### `is_admin`
+
+```python
+bool = False
+```
+
+Controls if user user can administrate the site.
+
+
+##### `joined_at`
+
+```python
+Optional[datetime] = datetime.now()
+```
+
+Joined at date for this user-account. Defaults to current date-time.
+
+
+##### `extra`
+
+```python
+Optional[Dict[str, Any]] = dict()
+```
+
+JSON-serializable dict with extra data for this user. This value is not used by Misago, but allows plugin authors to store additional information about user directly on their database row.
 
 
 ### `graphql_context_hook`
@@ -70,6 +167,47 @@ A filter for the function used to create [input model](https://pydantic-docs.hel
 - `context: GraphQLContext` - a dict with context that will be made available to GraphQL resolvers executing this request's query.
 
 Filter should return new Pydantic model to use for validating input data.
+
+
+### `register_user_hook`
+
+```python
+register_user_hook.call_action(action: RegisterUserAction, context: GraphQLContext, cleaned_data: RegisterInput) -> User
+```
+
+A filter for the function used by GraphQL mutation registering new user account to register new user in the database.
+
+Returns a dict with newly created user data.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
+    ...
+```
+
+Next filter or built-in function used to register new user account in the database.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `cleaned_data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with already validated and cleaned input data. Will contain at least `name`, `email` and `password` keys, all being strings.
 
 
 Implementing custom action hook
