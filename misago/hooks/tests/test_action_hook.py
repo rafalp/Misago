@@ -5,7 +5,7 @@ from ..action import ActionHook
 
 class MockActionHook(ActionHook):
     async def call_action(self, base):
-        return await super().call_action(base)
+        return await self.gather(base)
 
 
 async def lowercase_action(base: str) -> str:

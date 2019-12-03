@@ -1,10 +1,11 @@
 Python hooks
 ============
 
-There are two types of hooks in Misago's Python codebase:
+There are three types of hooks in Misago's Python codebase:
 
 - **Actions** that allow injecting additional logic at different parts of the software.
 - **Filters** that allow extending built-in functions with custom logic or overriding them altogether.
+- **Simple** lists and dicts of additional items that should be added to existing list of items.
 
 Depending on the hook, custom functions should return nothing or value of specified type.
 
@@ -182,6 +183,95 @@ An instance of [`Request`](https://www.starlette.io/requests/) representing curr
 - - -
 
 
+### `graphql_directives_hook`
+
+`dict` of [`SchemaDirectiveVisitor`](https://ariadnegraphql.org/docs/api-reference#schemadirectivevisitor) sub-types that should be added to GraphQL API.
+
+See Ariadne [Schema Directives](https://ariadnegraphql.org/docs/schema-directives) documentation for examples.
+
+> **Note:** Plugin adding directive to the GraphQL API should also use the `graphql_type_defs_hook` to add custom directive definition to GraphQL schema.
+
+
+#### Example
+
+```python
+from ariadne import SchemaDirectiveVisitor
+from misago.hooks import graphql_directives_hook
+
+
+class MyDirective(SchemaDirectiveVisitor):
+    ...
+
+
+graphql_directives_hook["myDirective"] = MyDirective
+```
+
+
+- - -
+
+### `graphql_type_defs_hook`
+
+`list` of `str` containing GraphQL type definitions in GraphQL Schema Definition Language that should be added to the GraphQL schema.
+
+
+#### Example
+
+Add new type `Like` to GraphQL schema:
+
+```python
+from ariadne import gql
+from misago.hooks import graphql_type_defs_hook
+
+
+graphql_type_defs_hook.append(
+    gql(
+        """
+            type Like {
+                id: ID
+                created_at: DateTime
+                post: Post
+            }
+
+            extend type Post {
+                likes: [Like]
+            }
+        """
+    )
+)
+```
+
+
+- - -
+
+
+### `graphql_types_hook`
+
+`list` of [Ariadne bindables](https://ariadnegraphql.org/docs/resolvers) that should be added to GraphQL API.
+
+
+#### Example
+
+```python
+from ariadne import TypeObject
+from misago.hooks import graphql_types_hook
+from misago.loaders import load_post
+
+
+like_type = TypeObject("Like)
+
+
+@like_type.field("post"):
+async def resolve_like_post(obj, _):
+    return await load_post(obj["post_id"])
+
+
+graphql_types_hook.append(like_type)
+```
+
+
+- - -
+
+
 ### `register_input_hook`
 
 ```python
@@ -338,7 +428,7 @@ A dict with already validated and cleaned input data. Will contain at least `nam
 Implementing custom action hook
 -------------------------------
 
-Action hooks should extend `misago.hooks.ActionHook` generic class, and define custom `call_action` method:
+Action hooks should extend `misago.hooks.ActionHook` generic class, and define custom `call_action` method calling `gather` method defined by `ActionHook`:
 
 ```python
 from typing import Any, Callable, Coroutine, Dict
@@ -350,7 +440,7 @@ Action = Callable[[Any], Coroutine[Any, Any, ...]]
 
 class MyActionHook(ActionHook[Action]):
     async def call_action(self, arg: Any) -> Any:
-        return await super().call_action(arg)
+        return await self.gather(arg)
 
 
 my_hook = MyActionHook()

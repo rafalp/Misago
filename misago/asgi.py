@@ -9,8 +9,8 @@ from .cache import cache
 from .conf import settings
 from .database import database
 from .hooks import graphql_context_hook
-from .graphql.schema import schema
 from .graphql.context import get_graphql_context
+from .graphql.schema import schema
 from .plugins import import_plugins
 from .types import GraphQLContext
 
