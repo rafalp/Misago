@@ -6,6 +6,8 @@ from .action import ActionHook
 from .filter import FilterHook
 from .filters import (
     CreateUserHook,
+    CreateUserTokenHook,
+    CreateUserTokenPayloadHook,
     GraphQLContextHook,
     RegisterInputHook,
     RegisterInputModelHook,
@@ -14,6 +16,8 @@ from .filters import (
 
 
 create_user_hook = CreateUserHook()
+create_user_token_hook = CreateUserTokenHook()
+create_user_token_payload_hook = CreateUserTokenPayloadHook()
 graphql_context_hook = GraphQLContextHook()
 graphql_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_type_defs_hook: List[str] = []

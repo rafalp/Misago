@@ -3,8 +3,10 @@ from typing import Dict, List, Tuple, Union
 from ariadne import MutationType
 from pydantic import EmailStr, create_model
 
+from ...auth import create_user_token
 from ...hooks import (
     create_user_hook,
+    create_user_token_hook,
     register_input_hook,
     register_input_model_hook,
     register_user_hook,
@@ -54,8 +56,11 @@ async def resolve_register(_, info, *, input):  # pylint: disable=redefined-buil
     user = await register_user_hook.call_action(
         register_user, info.context, cleaned_data
     )
+    token = await create_user_token_hook.call_action(
+        create_user_token, info.context, user
+    )
 
-    return {"user": user}
+    return {"user": user, "token": token}
 
 
 async def create_input_model(context: GraphQLContext) -> RegisterInputModel:

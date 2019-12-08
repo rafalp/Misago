@@ -148,6 +148,94 @@ JSON-serializable dict with extra data for this user. This value is not used by 
 - - -
 
 
+### `create_user_token_hook`
+
+```python
+create_user_token_hook.call_action(action: CreateUserTokenAction, context: GraphQLContext, user: User)
+```
+
+A filter for the function used to create an authorization token for user.
+
+Returns `str` with authorization token that should be included by the client in `Authorization` header in future calls to the API.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_user_token(context: GraphQLContext, user: User) -> str:
+    ...
+```
+
+Next filter or built-in function used to create authorization token for user.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+#### `user`
+
+```python
+User
+```
+
+A `dict` containing authorized user's data.
+
+
+- - -
+
+
+### `create_user_token_payload_hook`
+
+```python
+create_user_token_payload_hook.call_action(action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User)
+```
+
+A filter for the function used to create an payload for user authorization token.
+
+Returns `dict` which should be used as JWT token's payload.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_user_token_payload(context: GraphQLContext, user: User) -> Dict[str, Any]:
+    ...
+```
+
+Next filter or built-in function used to create payload for user authorization token.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+#### `user`
+
+```python
+User
+```
+
+A `dict` containing authorized user's data.
+
+
+- - -
+
+
 ### `graphql_context_hook`
 
 ```python
@@ -208,6 +296,7 @@ graphql_directives_hook["myDirective"] = MyDirective
 
 
 - - -
+
 
 ### `graphql_type_defs_hook`
 

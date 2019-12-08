@@ -6,6 +6,7 @@ click
 databases[postgresql]
 passlib
 pydantic[email,typing_extensions]
+pyjwt
 starlette
 unidecode
 uvicorn

@@ -9,6 +9,10 @@ from ..types import (
     AsyncValidator,
     CreateUserAction,
     CreateUserFilter,
+    CreateUserTokenAction,
+    CreateUserTokenFilter,
+    CreateUserTokenPayloadAction,
+    CreateUserTokenPayloadFilter,
     ErrorsList,
     GraphQLContext,
     GraphQLContextAction,
@@ -49,6 +53,22 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
             joined_at=joined_at,
             extra=extra,
         )
+
+
+class CreateUserTokenHook(FilterHook[CreateUserTokenAction, CreateUserTokenFilter]):
+    async def call_action(
+        self, action: CreateUserTokenAction, context: GraphQLContext, user: User,
+    ) -> str:
+        return await self.filter(action, context, user)
+
+
+class CreateUserTokenPayloadHook(
+    FilterHook[CreateUserTokenPayloadAction, CreateUserTokenPayloadFilter]
+):
+    async def call_action(
+        self, action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User,
+    ) -> Dict[str, Any]:
+        return await self.filter(action, context, user)
 
 
 class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter]):

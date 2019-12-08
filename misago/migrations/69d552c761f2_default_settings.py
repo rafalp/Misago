@@ -5,14 +5,20 @@ Revises: ad2a1d098a41
 Create Date: 2019-11-17 01:49:55.824480
 
 """
+from datetime import timedelta
+
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.sql import table, column
 from sqlalchemy import JSON, String
 
+from misago.utils.strings import get_random_string
+
 
 settings = [
     {"name": "forum_name", "value": "Misago"},
+    {"name": "jwt_exp", "value": int(timedelta(days=90).total_seconds())},
+    {"name": "jwt_secret", "value": get_random_string(64)},
     {"name": "password_min_length", "value": 8},
     {"name": "username_min_length", "value": 3},
     {"name": "username_max_length", "value": 10},

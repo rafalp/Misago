@@ -25,6 +25,7 @@ markupsafe==1.1.1         # via mako
 passlib==1.7.2
 psycopg2-binary==2.8.4    # via databases
 pydantic[email,typing_extensions]==1.2
+pyjwt==1.7.1
 python-dateutil==2.8.1    # via alembic
 python-editor==1.0.4      # via alembic
 six==1.13.0               # via python-dateutil

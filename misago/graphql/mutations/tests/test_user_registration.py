@@ -1,5 +1,6 @@
 import pytest
 
+from ....auth import get_user_from_token
 from ....passwords import verify_password
 from ....testing import override_dynamic_settings
 from ....users.get import get_user_by_id
@@ -166,3 +167,22 @@ async def test_registration_mutation_validates_if_user_email_is_available(
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["email"]
     assert data["errors"].get_errors_types() == ["value_error.email.not_available"]
+
+
+@pytest.mark.asyncio
+async def test_registration_mutation_returns_authorization_token_for_user(graphql_info):
+    data = await resolve_register(
+        None,
+        graphql_info,
+        input={
+            "name": "John",
+            "email": "john@example.com",
+            "password": " password123 ",
+        },
+    )
+
+    assert "errors" not in data
+    assert "token" in data
+
+    user = await get_user_from_token(graphql_info.context, data["token"])
+    assert user["id"] == data["user"]["id"]

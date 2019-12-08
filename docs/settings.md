@@ -23,6 +23,8 @@ Dynamic settings
 ----------------
 
 - `forum_name: str` - Forum name.
+- `jwt_exp: int` - Time for which JWT tokens stay valid, in seconds.
+- `jwt_secret: str` - JWT secret. Should be at least 64 characters long to be secure.
 - `password_min_length: int` - Min. allowed password length.
 - `username_max_length: int` - Min. allowed username length.
 - `username_min_length: int` - Max. allowed username length.

@@ -55,6 +55,19 @@ class CreateUserFilter(Protocol):
         ...
 
 
+CreateUserTokenAction = Callable[["GraphQLContext", "User"], Coroutine[Any, Any, str]]
+CreateUserTokenFilter = Callable[
+    [CreateUserTokenAction, "GraphQLContext", "User"], Coroutine[Any, Any, str]
+]
+
+CreateUserTokenPayloadAction = Callable[
+    ["GraphQLContext", "User"], Coroutine[Any, Any, Dict[str, Any]]
+]
+CreateUserTokenPayloadFilter = Callable[
+    [CreateUserTokenPayloadAction, "GraphQLContext", "User"],
+    Coroutine[Any, Any, Dict[str, Any]],
+]
+
 RegisterUserAction = Callable[
     ["GraphQLContext", "RegisterInput"], Coroutine[Any, Any, "User"]
 ]
