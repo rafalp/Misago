@@ -14,6 +14,10 @@ from ..types import (
     CreateUserTokenPayloadAction,
     CreateUserTokenPayloadFilter,
     ErrorsList,
+    GetUserFromTokenAction,
+    GetUserFromTokenFilter,
+    GetUserFromTokenPayloadAction,
+    GetUserFromTokenPayloadFilter,
     GraphQLContext,
     GraphQLContextAction,
     GraphQLContextFilter,
@@ -69,6 +73,25 @@ class CreateUserTokenPayloadHook(
         self, action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User,
     ) -> Dict[str, Any]:
         return await self.filter(action, context, user)
+
+
+class GetUserFromTokenHook(FilterHook[GetUserFromTokenAction, GetUserFromTokenFilter]):
+    async def call_action(
+        self, action: GetUserFromTokenAction, context: GraphQLContext, token: bytes
+    ) -> Optional[User]:
+        return await self.filter(action, context, token)
+
+
+class GetUserFromTokenPayloadHook(
+    FilterHook[GetUserFromTokenPayloadAction, GetUserFromTokenPayloadFilter]
+):
+    async def call_action(
+        self,
+        action: GetUserFromTokenPayloadAction,
+        context: GraphQLContext,
+        token_payload: Dict[str, Any],
+    ) -> Optional[User]:
+        return await self.filter(action, context, token_payload)
 
 
 class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter]):

@@ -9,6 +9,8 @@ from .filters import (
     CreateUserTokenHook,
     CreateUserTokenPayloadHook,
     GraphQLContextHook,
+    GetUserFromTokenHook,
+    GetUserFromTokenPayloadHook,
     RegisterInputHook,
     RegisterInputModelHook,
     RegisterUserHook,
@@ -18,6 +20,8 @@ from .filters import (
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
+get_user_from_token_hook = GetUserFromTokenHook()
+get_user_from_token_payload_hook = GetUserFromTokenPayloadHook()
 graphql_context_hook = GraphQLContextHook()
 graphql_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_type_defs_hook: List[str] = []

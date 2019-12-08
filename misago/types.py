@@ -90,6 +90,24 @@ class ErrorsList(List[Error]):
         ...
 
 
+GetUserFromTokenAction = Callable[
+    ["GraphQLContext", bytes], Coroutine[Any, Any, Optional["User"]]
+]
+GetUserFromTokenFilter = Callable[
+    [GetUserFromTokenAction, "GraphQLContext", bytes],
+    Coroutine[Any, Any, Optional["User"]],
+]
+
+
+GetUserFromTokenPayloadAction = Callable[
+    ["GraphQLContext", Dict[str, Any]], Coroutine[Any, Any, Optional["User"]]
+]
+GetUserFromTokenPayloadFilter = Callable[
+    [GetUserFromTokenPayloadAction, "GraphQLContext", Dict[str, Any]],
+    Coroutine[Any, Any, Optional["User"]],
+]
+
+
 GraphQLContext = Dict[str, Any]
 GraphQLContextAction = Callable[[Request], Coroutine[Any, Any, GraphQLContext]]
 GraphQLContextFilter = Callable[

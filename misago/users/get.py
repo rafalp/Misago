@@ -15,13 +15,13 @@ async def get_user_by_name_or_email(name_or_email: str) -> Optional[User]:
 async def get_user_by_name(name: str) -> Optional[User]:
     query = users.select().where(users.c.slug == name.lower())
     data = await database.fetch_one(query)
-    return cast_user(data) if data else None
+    return cast_mapping_to_user(data) if data else None
 
 
 async def get_user_by_email(email: str) -> Optional[User]:
     query = users.select().where(users.c.email_hash == get_email_hash(email))
     data = await database.fetch_one(query)
-    return cast_user(data) if data else None
+    return cast_mapping_to_user(data) if data else None
 
 
 async def get_user_by_id(
@@ -29,8 +29,8 @@ async def get_user_by_id(
 ) -> Optional[User]:
     query = users.select().where(users.c.id == id)
     data = await database.fetch_one(query)
-    return cast_user(data) if data else None
+    return cast_mapping_to_user(data) if data else None
 
 
-def cast_user(data) -> User:
-    return cast(User, data)
+def cast_mapping_to_user(data) -> User:
+    return cast(User, dict(**data))

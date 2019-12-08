@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from . import tables
@@ -6,6 +8,7 @@ from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
 from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
+from .graphql.context import get_graphql_context
 from .users.create import create_user
 
 
@@ -60,3 +63,13 @@ async def other_user(db, user_password):
     return await create_user(
         "OtherUser", "other-user@example.com", password=user_password
     )
+
+
+@pytest.fixture
+async def graphql_context(db):
+    return await get_graphql_context(None)
+
+
+@pytest.fixture
+def graphql_info(graphql_context):
+    return Mock(context=graphql_context)

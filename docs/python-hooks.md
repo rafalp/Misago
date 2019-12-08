@@ -236,6 +236,94 @@ A `dict` containing authorized user's data.
 - - -
 
 
+### `get_user_from_token_hook`
+
+```python
+get_user_from_token_hook.call_action(action: GetUserFromTokenAction, context: GraphQLContext, token: bytes)
+```
+
+A filter for the function used to get user for given authorization token.
+
+Returns `User` dict with authorized user data or `None` if token was invalid or expired.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def get_user_from_token(context: GraphQLContext, token: bytes) -> Optional[User]:
+    ...
+```
+
+Next filter or built-in function used to obtain user for authorization token.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+#### `token`
+
+```python
+bytes
+```
+
+A `bytes` containing authorization token. It may be invalid.
+
+
+- - -
+
+
+### `get_user_from_token_payload_hook`
+
+```python
+get_user_from_token_payload_hook.call_action(action: GetUserFromTokenAction, context: GraphQLContext, payload: Dict[str, Any])
+```
+
+A filter for the function used to get user for given authorization token payload.
+
+Returns `User` dict with authorized user data or `None` if token's payload was invalid or expired.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def get_user_from_token_payload(context: GraphQLContext, token_payload: Dict[str, any]) -> Optional[User]:
+    ...
+```
+
+Next filter or built-in function used to obtain user for authorization token payload.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+#### `payload`
+
+```python
+Dict[str, Any]
+```
+
+A `dict` containing payload extracted from authorization token.
+
+
+- - -
+
+
 ### `graphql_context_hook`
 
 ```python
