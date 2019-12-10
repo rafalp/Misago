@@ -11,10 +11,11 @@ LoaderFunction = Callable[[Sequence[Any]], Awaitable[Sequence[Any]]]
 def get_loader(
     context: GraphQLContext, name: str, loader_function: LoaderFunction,
 ) -> DataLoader:
-    if name not in context:
+    context_key = f"__loader_{name}"
+    if context_key not in context:
         wrapped_loader_function = wrap_loader_function(loader_function)
-        context[name] = DataLoader(wrapped_loader_function)
-    return context[name]
+        context[context_key] = DataLoader(wrapped_loader_function)
+    return context[context_key]
 
 
 def wrap_loader_function(loader_function: LoaderFunction) -> LoaderFunction:

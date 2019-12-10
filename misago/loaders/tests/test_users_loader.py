@@ -16,7 +16,7 @@ async def test_user_loader_returns_none_for_nonexistent_user_id(db):
 
 
 @pytest.mark.asyncio
-async def test_users_loader_returns_users(user, other_user):
+async def test_users_loader_returns_multiple_users(user, other_user):
     loaded_users = await load_users({}, [user.id, other_user.id])
     assert loaded_users == [user, other_user]
 
