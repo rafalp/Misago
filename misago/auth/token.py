@@ -23,7 +23,7 @@ async def create_user_token(context: GraphQLContext, user: User) -> bytes:
 async def create_user_token_payload(
     context: GraphQLContext, user: User
 ) -> Dict[str, Any]:
-    return {"exp": get_jwt_exp(context), "user": user["id"]}
+    return {"exp": get_jwt_exp(context), "user": user.id}
 
 
 def get_jwt_exp(context: GraphQLContext) -> datetime:

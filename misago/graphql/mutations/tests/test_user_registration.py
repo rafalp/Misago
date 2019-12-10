@@ -21,7 +21,7 @@ async def test_registration_mutation_creates_new_user_account(graphql_info):
 
     assert "errors" not in data
     assert "user" in data
-    assert await get_user_by_id(data["user"]["id"])
+    assert await get_user_by_id(data["user"].id)
 
 
 @pytest.mark.asyncio
@@ -38,8 +38,8 @@ async def test_registration_mutation_preserves_spaces_in_user_password(graphql_i
 
     assert "user" in data
 
-    user = await get_user_by_id(data["user"]["id"])
-    assert await verify_password(" password123 ", user["password"])
+    user = await get_user_by_id(data["user"].id)
+    assert await verify_password(" password123 ", user.password)
 
 
 @pytest.mark.asyncio
@@ -130,7 +130,7 @@ async def test_registration_mutation_validates_if_username_is_available(
         None,
         graphql_info,
         input={
-            "name": user["name"],
+            "name": user.name,
             "email": "john@example.com",
             "password": " password123 ",
         },
@@ -161,7 +161,7 @@ async def test_registration_mutation_validates_if_user_email_is_available(
     data = await resolve_register(
         None,
         graphql_info,
-        input={"name": "John", "email": user["email"], "password": " password123 ",},
+        input={"name": "John", "email": user.email, "password": " password123 ",},
     )
 
     assert "errors" in data
@@ -185,4 +185,4 @@ async def test_registration_mutation_returns_authorization_token_for_user(graphq
     assert "token" in data
 
     user = await get_user_from_token(graphql_info.context, data["token"])
-    assert user["id"] == data["user"]["id"]
+    assert user.id == data["user"].id

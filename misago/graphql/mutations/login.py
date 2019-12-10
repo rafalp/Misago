@@ -18,8 +18,8 @@ async def resolve_login(_, info, *, username: str, password: str):
     user = await get_user_by_name_or_email(username)
     if (
         user
-        and user["password"] is not None
-        and await verify_password(password, user["password"])
+        and user.password is not None
+        and await verify_password(password, user.password)
     ):
         return {"user": user, "token": "not-implemented"}
 

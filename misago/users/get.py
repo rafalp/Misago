@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import List, Optional, Sequence
 
 from ..database import database
 from ..tables import users
@@ -15,22 +15,22 @@ async def get_user_by_name_or_email(name_or_email: str) -> Optional[User]:
 async def get_user_by_name(name: str) -> Optional[User]:
     query = users.select().where(users.c.slug == name.lower())
     data = await database.fetch_one(query)
-    return cast_mapping_to_user(data) if data else None
+    return User(**data) if data else None
 
 
 async def get_user_by_email(email: str) -> Optional[User]:
     query = users.select().where(users.c.email_hash == get_email_hash(email))
     data = await database.fetch_one(query)
-    return cast_mapping_to_user(data) if data else None
+    return User(**data) if data else None
 
 
-async def get_user_by_id(
-    id: int,  # pylint: disable=redefined-builtin
-) -> Optional[User]:
-    query = users.select().where(users.c.id == id)
+async def get_user_by_id(user_id: int) -> Optional[User]:
+    query = users.select().where(users.c.id == user_id)
     data = await database.fetch_one(query)
-    return cast_mapping_to_user(data) if data else None
+    return User(**data) if data else None
 
 
-def cast_mapping_to_user(data) -> User:
-    return cast(User, dict(**data))
+async def get_users_by_id(ids: Sequence[int]) -> List[User]:
+    query = users.select().where(users.c.id.in_(ids))
+    data = await database.fetch_all(query)
+    return [User(**row) for row in data]

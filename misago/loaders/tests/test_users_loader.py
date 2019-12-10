@@ -1,0 +1,27 @@
+import pytest
+
+from ..users import load_user, load_users
+
+
+@pytest.mark.asyncio
+async def test_user_loader_returns_user(user):
+    loaded_user = await load_user({}, user.id)
+    assert loaded_user == user
+
+
+@pytest.mark.asyncio
+async def test_user_loader_returns_none_for_nonexistent_user_id(db):
+    loaded_user = await load_user({}, 1)
+    assert loaded_user is None
+
+
+@pytest.mark.asyncio
+async def test_users_loader_returns_users(user, other_user):
+    loaded_users = await load_users({}, [user.id, other_user.id])
+    assert loaded_users == [user, other_user]
+
+
+@pytest.mark.asyncio
+async def test_users_loader_returns_none_for_nonexistent_user_id(user):
+    loaded_users = await load_users({}, [user.id, user.id + 1])
+    assert loaded_users == [user, None]

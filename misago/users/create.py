@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Optional, cast
+from typing import Any, Dict, Optional
 
 from ..database import queries
 from ..passwords import hash_password
@@ -37,4 +37,4 @@ async def create_user(
 
     data["id"] = await queries.insert(users, **data)
 
-    return cast(User, data)
+    return User(**data)

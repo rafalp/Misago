@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from typing import (
     Any,
@@ -149,7 +150,8 @@ Setting = Union[bool, int, str, List[str], SettingImage]
 Settings = Dict[str, Setting]
 
 
-class User(TypedDict):
+@dataclass
+class User:
     id: int
     name: str
     slug: str
