@@ -1,6 +1,6 @@
 import pytest
 
-from ..auth import get_user
+from ..user import get_user
 
 
 @pytest.mark.asyncio

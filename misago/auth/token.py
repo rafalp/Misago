@@ -10,7 +10,7 @@ from ..hooks import (
     get_user_from_token_payload_hook,
 )
 from ..types import GraphQLContext, User
-from .auth import get_user
+from .user import get_user
 
 
 JWT_ALGORITHM = "HS256"

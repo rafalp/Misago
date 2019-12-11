@@ -93,13 +93,17 @@ GetAuthUserFilter = Callable[
     [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional["User"]]
 ]
 
+GetUserFromContextAction = Callable[["GraphQLContext"], Awaitable[Optional["User"]]]
+GetUserFromContextFilter = Callable[
+    [GetUserFromContextAction, "GraphQLContext"], Awaitable[Optional["User"]],
+]
+
 GetUserFromTokenAction = Callable[
     ["GraphQLContext", bytes], Awaitable[Optional["User"]]
 ]
 GetUserFromTokenFilter = Callable[
     [GetUserFromTokenAction, "GraphQLContext", bytes], Awaitable[Optional["User"]],
 ]
-
 
 GetUserFromTokenPayloadAction = Callable[
     ["GraphQLContext", Dict[str, Any]], Awaitable[Optional["User"]]
@@ -108,7 +112,6 @@ GetUserFromTokenPayloadFilter = Callable[
     [GetUserFromTokenPayloadAction, "GraphQLContext", Dict[str, Any]],
     Awaitable[Optional["User"]],
 ]
-
 
 GraphQLContext = Dict[str, Any]
 GraphQLContextAction = Callable[[Request], Awaitable[GraphQLContext]]

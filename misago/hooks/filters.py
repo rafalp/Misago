@@ -16,6 +16,8 @@ from ..types import (
     ErrorsList,
     GetAuthUserAction,
     GetAuthUserFilter,
+    GetUserFromContextAction,
+    GetUserFromContextFilter,
     GetUserFromTokenAction,
     GetUserFromTokenFilter,
     GetUserFromTokenPayloadAction,
@@ -84,6 +86,15 @@ class CreateUserTokenPayloadHook(
         self, action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User,
     ) -> Dict[str, Any]:
         return await self.filter(action, context, user)
+
+
+class GetUserFromContextHook(
+    FilterHook[GetUserFromContextAction, GetUserFromContextFilter]
+):
+    async def call_action(
+        self, action: GetUserFromContextAction, context: GraphQLContext
+    ) -> Optional[User]:
+        return await self.filter(action, context)
 
 
 class GetUserFromTokenHook(FilterHook[GetUserFromTokenAction, GetUserFromTokenFilter]):
