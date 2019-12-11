@@ -39,12 +39,20 @@ users = sqlalchemy.Table(
 )
 
 sqlalchemy.Index(
-    "users_disabled", users.c.id, postgresql_where=users.c.is_disabled == True
+    "users_disabled",
+    users.c.id,
+    postgresql_where=users.c.is_disabled == True,  # pylint: disable=C0121
 )
 sqlalchemy.Index(
-    "users_moderators", users.c.id, postgresql_where=users.c.is_moderator == True
+    "users_moderators",
+    users.c.id,
+    postgresql_where=users.c.is_moderator == True,  # pylint: disable=C0121
 )
-sqlalchemy.Index("users_admins", users.c.id, postgresql_where=users.c.is_admin == True)
+sqlalchemy.Index(
+    "users_admins",
+    users.c.id,
+    postgresql_where=users.c.is_admin == True,  # pylint: disable=C0121
+)
 
 categories = sqlalchemy.Table(
     "misago_categories",
