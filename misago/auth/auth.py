@@ -48,4 +48,4 @@ def get_auth_token(header: str) -> Optional[bytes]:
     if token_parts[0].lower() != AUTHORIZATION_TYPE:
         return None
 
-    return token_parts[1].decode(TOKEN_ENCODING) or None
+    return token_parts[1].encode(TOKEN_ENCODING) or None
