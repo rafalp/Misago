@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import (
     Any,
+    Awaitable,
     Callable,
-    Coroutine,
     Dict,
     List,
     Optional,
@@ -19,8 +19,8 @@ from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 from starlette.requests import Request
 
 
-AsyncRootValidator = Callable[[Any, Any], Coroutine[Any, Any, None]]
-AsyncValidator = Callable[[Any], Coroutine[Any, Any, None]]
+AsyncRootValidator = Callable[[Any, Any], Awaitable[None]]
+AsyncValidator = Callable[[Any], Awaitable[None]]
 
 CacheVersions = Dict[str, str]
 
@@ -56,24 +56,21 @@ class CreateUserFilter(Protocol):
         ...
 
 
-CreateUserTokenAction = Callable[["GraphQLContext", "User"], Coroutine[Any, Any, str]]
+CreateUserTokenAction = Callable[["GraphQLContext", "User"], Awaitable[str]]
 CreateUserTokenFilter = Callable[
-    [CreateUserTokenAction, "GraphQLContext", "User"], Coroutine[Any, Any, str]
+    [CreateUserTokenAction, "GraphQLContext", "User"], Awaitable[str]
 ]
 
 CreateUserTokenPayloadAction = Callable[
-    ["GraphQLContext", "User"], Coroutine[Any, Any, Dict[str, Any]]
+    ["GraphQLContext", "User"], Awaitable[Dict[str, Any]]
 ]
 CreateUserTokenPayloadFilter = Callable[
-    [CreateUserTokenPayloadAction, "GraphQLContext", "User"],
-    Coroutine[Any, Any, Dict[str, Any]],
+    [CreateUserTokenPayloadAction, "GraphQLContext", "User"], Awaitable[Dict[str, Any]],
 ]
 
-RegisterUserAction = Callable[
-    ["GraphQLContext", "RegisterInput"], Coroutine[Any, Any, "User"]
-]
+RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable["User"]]
 RegisterUserFilter = Callable[
-    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Coroutine[Any, Any, "User"]
+    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable["User"]
 ]
 
 Error = Dict[str, Any]
@@ -91,28 +88,32 @@ class ErrorsList(List[Error]):
         ...
 
 
+GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional["User"]]]
+GetAuthUserFilter = Callable[
+    [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional["User"]]
+]
+
 GetUserFromTokenAction = Callable[
-    ["GraphQLContext", bytes], Coroutine[Any, Any, Optional["User"]]
+    ["GraphQLContext", bytes], Awaitable[Optional["User"]]
 ]
 GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, "GraphQLContext", bytes],
-    Coroutine[Any, Any, Optional["User"]],
+    [GetUserFromTokenAction, "GraphQLContext", bytes], Awaitable[Optional["User"]],
 ]
 
 
 GetUserFromTokenPayloadAction = Callable[
-    ["GraphQLContext", Dict[str, Any]], Coroutine[Any, Any, Optional["User"]]
+    ["GraphQLContext", Dict[str, Any]], Awaitable[Optional["User"]]
 ]
 GetUserFromTokenPayloadFilter = Callable[
     [GetUserFromTokenPayloadAction, "GraphQLContext", Dict[str, Any]],
-    Coroutine[Any, Any, Optional["User"]],
+    Awaitable[Optional["User"]],
 ]
 
 
 GraphQLContext = Dict[str, Any]
-GraphQLContextAction = Callable[[Request], Coroutine[Any, Any, GraphQLContext]]
+GraphQLContextAction = Callable[[Request], Awaitable[GraphQLContext]]
 GraphQLContextFilter = Callable[
-    [GraphQLContextAction, Request], Coroutine[Any, Any, GraphQLContext]
+    [GraphQLContextAction, Request], Awaitable[GraphQLContext]
 ]
 
 RegisterInput = Dict[str, Any]
@@ -123,20 +124,17 @@ RegisterInputAction = Callable[
         RegisterInput,
         ErrorsList,
     ],
-    Coroutine[Any, Any, Tuple[RegisterInput, ErrorsList]],
+    Awaitable[Tuple[RegisterInput, ErrorsList]],
 ]
 RegisterInputFilter = Callable[
     [RegisterInputAction, "GraphQLContext", RegisterInput],
-    Coroutine[Any, Any, Tuple[RegisterInput, ErrorsList]],
+    Awaitable[Tuple[RegisterInput, ErrorsList]],
 ]
 
 RegisterInputModel = Type[BaseModel]
-RegisterInputModelAction = Callable[
-    ["GraphQLContext"], Coroutine[Any, Any, RegisterInputModel]
-]
+RegisterInputModelAction = Callable[["GraphQLContext"], Awaitable[RegisterInputModel]]
 RegisterInputModelFilter = Callable[
-    [RegisterInputModelAction, "GraphQLContext"],
-    Coroutine[Any, Any, RegisterInputModel],
+    [RegisterInputModelAction, "GraphQLContext"], Awaitable[RegisterInputModel],
 ]
 
 
@@ -158,7 +156,7 @@ class User:
     email: str
     email_hash: str
     password: Optional[str]
-    is_disabled: bool
+    is_deactivated: bool
     is_moderator: bool
     is_admin: bool
     joined_at: datetime

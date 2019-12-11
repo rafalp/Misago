@@ -31,7 +31,7 @@ users = sqlalchemy.Table(
         "email_hash", sqlalchemy.String(length=255), nullable=False, unique=True
     ),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
-    sqlalchemy.Column("is_disabled", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("is_deactivated", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),
@@ -39,9 +39,9 @@ users = sqlalchemy.Table(
 )
 
 sqlalchemy.Index(
-    "users_disabled",
+    "users_deactivated",
     users.c.id,
-    postgresql_where=users.c.is_disabled == True,  # pylint: disable=C0121
+    postgresql_where=users.c.is_deactivated == True,  # pylint: disable=C0121
 )
 sqlalchemy.Index(
     "users_moderators",

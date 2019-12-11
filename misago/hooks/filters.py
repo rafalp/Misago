@@ -14,6 +14,8 @@ from ..types import (
     CreateUserTokenPayloadAction,
     CreateUserTokenPayloadFilter,
     ErrorsList,
+    GetAuthUserAction,
+    GetAuthUserFilter,
     GetUserFromTokenAction,
     GetUserFromTokenFilter,
     GetUserFromTokenPayloadAction,
@@ -34,6 +36,13 @@ from ..types import (
 from .filter import FilterHook
 
 
+class GetAuthUserHook(FilterHook[GetAuthUserAction, GetAuthUserFilter]):
+    async def call_action(
+        self, action: GetAuthUserAction, context: GraphQLContext, user_id: int
+    ) -> Optional[User]:
+        return await self.filter(action, context, user_id)
+
+
 class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
     async def call_action(
         self,
@@ -42,7 +51,7 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
         email: str,
         *,
         password: Optional[str] = None,
-        is_disabled: bool = False,
+        is_deactivated: bool = False,
         is_moderator: bool = False,
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
@@ -53,7 +62,7 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
             name,
             email,
             password=password,
-            is_disabled=is_disabled,
+            is_deactivated=is_deactivated,
             is_moderator=is_moderator,
             is_admin=is_admin,
             joined_at=joined_at,

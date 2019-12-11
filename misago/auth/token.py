@@ -4,9 +4,13 @@ from typing import Any, Dict, Optional
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..hooks import create_user_token_payload_hook, get_user_from_token_payload_hook
+from ..hooks import (
+    create_user_token_payload_hook,
+    get_auth_user_hook,
+    get_user_from_token_payload_hook,
+)
 from ..types import GraphQLContext, User
-from ..users.get import get_user_by_id
+from .auth import get_user
 
 
 JWT_ALGORITHM = "HS256"
@@ -44,7 +48,11 @@ async def get_user_from_token(context: GraphQLContext, token: bytes) -> Optional
 async def get_user_from_token_payload(
     context: GraphQLContext, token_payload: Dict[str, Any]
 ) -> Optional[User]:
-    return await get_user_by_id(token_payload["user"])
+    if token_payload.get("user"):
+        return await get_auth_user_hook.call_action(
+            get_user, context, token_payload["user"]
+        )
+    return None
 
 
 def get_jwt_secret(context: GraphQLContext) -> str:

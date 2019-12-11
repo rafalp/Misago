@@ -8,9 +8,10 @@ from .filters import (
     CreateUserHook,
     CreateUserTokenHook,
     CreateUserTokenPayloadHook,
-    GraphQLContextHook,
+    GetAuthUserHook,
     GetUserFromTokenHook,
     GetUserFromTokenPayloadHook,
+    GraphQLContextHook,
     RegisterInputHook,
     RegisterInputModelHook,
     RegisterUserHook,
@@ -20,6 +21,7 @@ from .filters import (
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
+get_auth_user_hook = GetAuthUserHook()
 get_user_from_token_hook = GetUserFromTokenHook()
 get_user_from_token_payload_hook = GetUserFromTokenPayloadHook()
 graphql_context_hook = GraphQLContextHook()
