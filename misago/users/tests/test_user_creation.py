@@ -26,6 +26,20 @@ async def test_user_is_created_with_useable_password(db, user_password):
 
 
 @pytest.mark.asyncio
+async def test_user_statuses_default_to_false(db, user_password):
+    user = await create_user("test", "test@example.com")
+    assert not user.is_disabled
+    assert not user.is_moderator
+    assert not user.is_admin
+
+
+@pytest.mark.asyncio
+async def test_user_is_created_with_disabled_status(db, user_password):
+    user = await create_user("test", "test@example.com", is_disabled=True)
+    assert user.is_disabled
+
+
+@pytest.mark.asyncio
 async def test_user_is_created_with_moderator_status(db, user_password):
     user = await create_user("test", "test@example.com", is_moderator=True)
     assert user.is_moderator

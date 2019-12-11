@@ -31,11 +31,20 @@ users = sqlalchemy.Table(
         "email_hash", sqlalchemy.String(length=255), nullable=False, unique=True
     ),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
+    sqlalchemy.Column("is_disabled", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
+
+sqlalchemy.Index(
+    "users_disabled", users.c.id, postgresql_where=users.c.is_disabled == True
+)
+sqlalchemy.Index(
+    "users_moderators", users.c.id, postgresql_where=users.c.is_moderator == True
+)
+sqlalchemy.Index("users_admins", users.c.id, postgresql_where=users.c.is_admin == True)
 
 categories = sqlalchemy.Table(
     "misago_categories",

@@ -47,6 +47,7 @@ create_user_hook.call_action(
     email: str,
     *,
     password: Optional[str] = None,
+    is_disabled: bool = False,
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
@@ -56,7 +57,7 @@ create_user_hook.call_action(
 
 A filter for the function used to create new user account in the database.
 
-Returns `User` dict with newly created user data.
+Returns `User` dataclass with newly created user data.
 
 
 #### Required arguments
@@ -244,7 +245,7 @@ get_user_from_token_hook.call_action(action: GetUserFromTokenAction, context: Gr
 
 A filter for the function used to get user for given authorization token.
 
-Returns `User` dict with authorized user data or `None` if token was invalid or expired.
+Returns `User` dataclass with authorized user data or `None` if token was invalid or expired.
 
 
 #### Required arguments
@@ -288,7 +289,7 @@ get_user_from_token_payload_hook.call_action(action: GetUserFromTokenAction, con
 
 A filter for the function used to get user for given authorization token payload.
 
-Returns `User` dict with authorized user data or `None` if token's payload was invalid or expired.
+Returns `User` dataclass with authorized user data or `None` if token's payload was invalid or expired.
 
 
 #### Required arguments
@@ -569,7 +570,7 @@ register_user_hook.call_action(
 
 A filter for the function used by GraphQL mutation registering new user account to register new user in the database.
 
-Returns `User` dict with newly created user data.
+Returns `User` dataclass with newly created user data.
 
 
 #### Required arguments

@@ -158,6 +158,7 @@ class User:
     email: str
     email_hash: str
     password: Optional[str]
+    is_disabled: bool
     is_moderator: bool
     is_admin: bool
     joined_at: datetime
