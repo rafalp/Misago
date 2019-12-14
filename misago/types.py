@@ -80,7 +80,11 @@ RegisterUserFilter = Callable[
     [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable["User"]
 ]
 
-Error = Dict[str, Any]
+
+class Error(TypedDict):
+    loc: Sequence[Union[int, str]]
+    msg: str
+    type: str
 
 
 class ErrorsList(List[Error]):

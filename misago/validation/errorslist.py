@@ -1,14 +1,15 @@
-from typing import List, Sequence, Union, cast
+from typing import List, Sequence, Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
 from ..types import Error
+from .errorformat import ROOT_LOCATION as DEFAULT_ROOT_LOCATION, get_error_dict
 
 
 class ErrorsList(List[Error]):
-    ROOT_LOCATION = "__root__"
+    ROOT_LOCATION = DEFAULT_ROOT_LOCATION
 
-    def __add__(self, other_list):
+    def __add__(self, other_list: Sequence[Error]):
         errors_list = list(self)
         for error in other_list:
             if error not in errors_list:
@@ -23,35 +24,15 @@ class ErrorsList(List[Error]):
         location: Union[str, Sequence[str]],
         error: Union[PydanticTypeError, PydanticValueError],
     ):
-        if not isinstance(location, (list, tuple)):
-            location = (cast(str, location),)
-
-        error_dict = {
-            "loc": location,
-            "msg": str(error),
-            "type": get_error_type(error),
-        }
-
+        error_dict = get_error_dict(error, location)
         if error_dict not in self:  # pylint: disable=unsupported-membership-test
             super().append(error_dict)
 
     def get_errors_locations(self) -> List[str]:
-        return [".".join(e["loc"]) for e in self]  # pylint: disable=not-an-iterable
+        return [
+            ".".join(map(str, e["loc"]))
+            for e in self  # pylint: disable=not-an-iterable
+        ]
 
     def get_errors_types(self) -> List[str]:
         return [e["type"] for e in self]  # pylint: disable=not-an-iterable
-
-
-def get_error_type(error: Exception) -> str:
-    if isinstance(error, AssertionError):
-        return "assertion_error"
-
-    base_name = "value_error"
-    if isinstance(error, TypeError):
-        base_name = "type_error"
-
-    code = (
-        getattr(error, "code", None)
-        or type(error).__name__.replace("Error", "").lower()
-    )
-    return base_name + "." + code

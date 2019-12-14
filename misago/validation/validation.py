@@ -22,7 +22,7 @@ def validate_model(
     validated_data, _, errors = pydantic_validate_model(model, input_data)
     if not errors:
         return validated_data, ErrorsList()
-    return validated_data, ErrorsList(errors.errors())
+    return validated_data, ErrorsList(cast(ErrorsList, errors.errors()))
 
 
 async def validate_data(
