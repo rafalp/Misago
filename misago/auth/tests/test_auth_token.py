@@ -57,7 +57,7 @@ async def test_user_can_be_obtained_from_token(graphql_context, user):
 
 @pytest.mark.asyncio
 async def test_no_user_is_returned_for_invalid_token(graphql_context):
-    user = await get_user_from_token(graphql_context, b"invalid")
+    user = await get_user_from_token(graphql_context, "invalid")
     assert user is None
 
 
