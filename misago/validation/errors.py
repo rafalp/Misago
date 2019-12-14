@@ -1,9 +1,19 @@
 from pydantic import PydanticValueError
 
 
+class AllFieldsAreRequiredError(PydanticValueError):
+    code = "all_fields_are_required"
+    msg_template = "all fields are required"
+
+
 class EmailIsNotAvailableError(PydanticValueError):
     code = "email.not_available"
     msg_template = "e-mail is not available"
+
+
+class InvalidCredentialsError(PydanticValueError):
+    code = "invalid_credentials"
+    msg_template = "invalid credentials"
 
 
 class UsernameError(PydanticValueError):

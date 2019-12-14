@@ -22,6 +22,13 @@ from starlette.requests import Request
 AsyncRootValidator = Callable[[Any, Any], Awaitable[None]]
 AsyncValidator = Callable[[Any], Awaitable[None]]
 
+AuthenticateUserAction = Callable[
+    ["GraphQLContext", str, str], Awaitable[Optional["User"]]
+]
+AuthenticateUserFilter = Callable[
+    [AuthenticateUserAction, "GraphQLContext", str, str], Awaitable[Optional["User"]]
+]
+
 CacheVersions = Dict[str, str]
 
 

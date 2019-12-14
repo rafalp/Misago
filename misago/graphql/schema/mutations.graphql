@@ -3,6 +3,11 @@ type Mutation {
     register(input: RegisterInput!): RegisterMutationResult!
 }
 
+type Error {
+    message: String!
+    type: String!
+}
+
 type ValidationError {
     location: [String!]!
     message: String!
@@ -10,7 +15,7 @@ type ValidationError {
 }
 
 type LoginMutationResult {
-    error: String
+    error: Error
     token: String
     user: User
 }

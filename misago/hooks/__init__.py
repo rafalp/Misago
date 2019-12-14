@@ -5,6 +5,7 @@ from ariadne import SchemaBindable, SchemaDirectiveVisitor
 from .action import ActionHook
 from .filter import FilterHook
 from .filters import (
+    AuthenticateUserHook,
     CreateUserHook,
     CreateUserTokenHook,
     CreateUserTokenPayloadHook,
@@ -19,6 +20,7 @@ from .filters import (
 )
 
 
+authenticate_user_hook = AuthenticateUserHook()
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()

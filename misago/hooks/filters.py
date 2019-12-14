@@ -7,6 +7,8 @@ from starlette.requests import Request
 from ..types import (
     AsyncRootValidator,
     AsyncValidator,
+    AuthenticateUserAction,
+    AuthenticateUserFilter,
     CreateUserAction,
     CreateUserFilter,
     CreateUserTokenAction,
@@ -38,11 +40,15 @@ from ..types import (
 from .filter import FilterHook
 
 
-class GetAuthUserHook(FilterHook[GetAuthUserAction, GetAuthUserFilter]):
+class AuthenticateUserHook(FilterHook[AuthenticateUserAction, AuthenticateUserFilter]):
     async def call_action(
-        self, action: GetAuthUserAction, context: GraphQLContext, user_id: int
+        self,
+        action: AuthenticateUserAction,
+        context: GraphQLContext,
+        username: str,
+        password: str,
     ) -> Optional[User]:
-        return await self.filter(action, context, user_id)
+        return await self.filter(action, context, username, password)
 
 
 class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
@@ -86,6 +92,13 @@ class CreateUserTokenPayloadHook(
         self, action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User,
     ) -> Dict[str, Any]:
         return await self.filter(action, context, user)
+
+
+class GetAuthUserHook(FilterHook[GetAuthUserAction, GetAuthUserFilter]):
+    async def call_action(
+        self, action: GetAuthUserAction, context: GraphQLContext, user_id: int
+    ) -> Optional[User]:
+        return await self.filter(action, context, user_id)
 
 
 class GetUserFromContextHook(

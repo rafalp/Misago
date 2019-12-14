@@ -11,7 +11,7 @@ AUTHORIZATION_HEADER = "authorization"
 AUTHORIZATION_TYPE = "bearer"
 
 
-async def authenticate(
+async def authenticate_user(
     context: GraphQLContext, username: str, password: str
 ) -> Optional[User]:
     user = await get_user_by_name_or_email(username)
