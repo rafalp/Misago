@@ -35,7 +35,60 @@ async def inject_extra_data_to_graphql_context(get_graphql_context, request):
 Standard hooks
 --------------
 
-All standard hooks are defined in `misago.hooks` package and can be imported from it:
+All standard hooks can be imported from `misago.hooks` module:
+
+
+### `authenticate_user_hook`
+
+```python
+authenticate_user_hook.call_action(
+    action: AuthenticateUserAction,
+    context: GraphQLContext,
+    username: str,
+    password: str,
+)
+```
+
+A filter for the function used to authenticate user for given user name/email and password.
+
+Returns `User` dataclass with authenticated user data or `None` if user should not be able to authenticate (eg. deactivated or invalid credentials).
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def authenticate_user(
+    context: GraphQLContext,
+    username: str,
+    password: str,
+) -> Optional[User:]
+    ...
+```
+
+Next filter or built-in function used to authenticate user for given credentials.
+
+
+##### `username`
+
+```python
+str
+```
+
+User name or e-mail address.
+
+
+##### `password`
+
+```python
+str
+```
+
+User password.
+
+
+- - -
 
 
 ### `create_user_hook`:
