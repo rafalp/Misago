@@ -98,9 +98,7 @@ GetUserFromContextFilter = Callable[
     [GetUserFromContextAction, "GraphQLContext"], Awaitable[Optional["User"]],
 ]
 
-GetUserFromTokenAction = Callable[
-    ["GraphQLContext", str], Awaitable[Optional["User"]]
-]
+GetUserFromTokenAction = Callable[["GraphQLContext", str], Awaitable[Optional["User"]]]
 GetUserFromTokenFilter = Callable[
     [GetUserFromTokenAction, "GraphQLContext", str], Awaitable[Optional["User"]],
 ]

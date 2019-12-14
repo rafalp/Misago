@@ -1,7 +1,9 @@
 from typing import Optional
 
 from ..hooks import get_user_from_context_hook, get_user_from_token_hook
+from ..passwords import verify_password
 from ..types import GraphQLContext, User
+from ..users.get import get_user_by_name_or_email
 from .token import get_user_from_token
 
 
@@ -12,7 +14,16 @@ AUTHORIZATION_TYPE = "bearer"
 async def authenticate(
     context: GraphQLContext, username: str, password: str
 ) -> Optional[User]:
-    return None  # TODO
+    user = await get_user_by_name_or_email(username)
+
+    if not user:
+        return None
+    if user.is_deactivated:
+        return None
+    if user.password is None or not await verify_password(password, user.password):
+        return None
+
+    return user
 
 
 async def get_authenticated_user(context: GraphQLContext) -> Optional[User]:

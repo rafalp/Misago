@@ -73,6 +73,11 @@ async def deactivated_user(db, user_password):
 
 
 @pytest.fixture
+async def no_password_user(db):
+    return await create_user("NopassUser", "nopass-user@example.com")
+
+
+@pytest.fixture
 async def graphql_context(db):
     return await get_graphql_context(None)
 
