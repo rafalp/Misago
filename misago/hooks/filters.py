@@ -99,7 +99,7 @@ class GetUserFromContextHook(
 
 class GetUserFromTokenHook(FilterHook[GetUserFromTokenAction, GetUserFromTokenFilter]):
     async def call_action(
-        self, action: GetUserFromTokenAction, context: GraphQLContext, token: bytes
+        self, action: GetUserFromTokenAction, context: GraphQLContext, token: str
     ) -> Optional[User]:
         return await self.filter(action, context, token)
 

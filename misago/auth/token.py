@@ -14,9 +14,10 @@ from .user import get_user
 
 
 JWT_ALGORITHM = "HS256"
+TOKEN_ENCODING = "utf-8"
 
 
-async def create_user_token(context: GraphQLContext, user: User) -> bytes:
+async def create_user_token(context: GraphQLContext, user: User) -> str:
     secret = get_jwt_secret(context)
     payload = await create_user_token_payload_hook.call_action(
         create_user_token_payload, context, user
@@ -34,7 +35,7 @@ def get_jwt_exp(context: GraphQLContext) -> datetime:
     return datetime.now() + timedelta(seconds=context["settings"]["jwt_exp"])
 
 
-async def get_user_from_token(context: GraphQLContext, token: bytes) -> Optional[User]:
+async def get_user_from_token(context: GraphQLContext, token: str) -> Optional[User]:
     secret = get_jwt_secret(context)
     token_payload = decode_jwt_token(secret, token)
     if not token_payload:
@@ -59,12 +60,14 @@ def get_jwt_secret(context: GraphQLContext) -> str:
     return context["settings"]["jwt_secret"]
 
 
-def encode_jwt_token(secret: str, payload: Dict[str, Any]) -> bytes:
-    return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
+def encode_jwt_token(secret: str, payload: Dict[str, Any]) -> str:
+    token_bytes = jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
+    return token_bytes.decode(TOKEN_ENCODING)
 
 
-def decode_jwt_token(secret: str, token: bytes) -> Optional[Dict[str, Any]]:
+def decode_jwt_token(secret: str, token: str) -> Optional[Dict[str, Any]]:
     try:
-        return jwt.decode(token, secret, algorithms=[JWT_ALGORITHM])
+        token_bytes = token.encode(TOKEN_ENCODING)
+        return jwt.decode(token_bytes, secret, algorithms=[JWT_ALGORITHM])
     except InvalidTokenError:
         return None

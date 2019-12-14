@@ -7,7 +7,6 @@ from .token import get_user_from_token
 
 AUTHORIZATION_HEADER = "authorization"
 AUTHORIZATION_TYPE = "bearer"
-TOKEN_ENCODING = "latin-1"
 
 
 async def authenticate(
@@ -40,7 +39,7 @@ async def get_user_from_context(context: GraphQLContext) -> Optional[User]:
     )
 
 
-def get_auth_token(header: str) -> Optional[bytes]:
+def get_auth_token(header: str) -> Optional[str]:
     token_parts = header.split(" ")
     if len(token_parts) != 2:
         return None
@@ -48,4 +47,4 @@ def get_auth_token(header: str) -> Optional[bytes]:
     if token_parts[0].lower() != AUTHORIZATION_TYPE:
         return None
 
-    return token_parts[1].encode(TOKEN_ENCODING) or None
+    return token_parts[1] or None

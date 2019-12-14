@@ -1,9 +1,9 @@
 scalar Datetime
 
 type Query {
-    settings: Settings
+    auth: User
     categories: [Category!]!
-    user: User
+    settings: Settings
 }
 
 type Settings {
@@ -16,6 +16,7 @@ type User {
     slug: String!
     email: String!
     isModerator: Boolean!
+    isAdministrator: Boolean!
     joinedAt: Datetime
 }
 
