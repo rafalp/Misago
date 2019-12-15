@@ -558,7 +558,7 @@ graphql_type_defs_hook.append(
 
 ### `graphql_types_hook`
 
-`list` of [Ariadne bindables](https://ariadnegraphql.org/docs/resolvers) that should be added to GraphQL API.
+A `list` of [Ariadne bindables](https://ariadnegraphql.org/docs/resolvers) that should be added to GraphQL API.
 
 
 #### Example
@@ -579,6 +579,22 @@ async def resolve_like_post(obj, _):
 
 graphql_types_hook.append(like_type)
 ```
+
+
+- - -
+
+
+### `jinja2_extensions`
+
+A `list` of [Jinja extensions](https://jinja.palletsprojects.com/en/2.10.x/extensions/#jinja-extensions) that should be used by template engine.
+
+
+- - -
+
+
+### `jinja2_filters`
+
+A `dict` of [Jinja filters](https://jinja.palletsprojects.com/en/2.10.x/api/#custom-filters) that should be used by template engine.
 
 
 - - -

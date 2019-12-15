@@ -10,10 +10,10 @@ from .database import database
 from .hooks import graphql_context_hook
 from .graphql.context import get_graphql_context
 from .graphql.schema import schema
+from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .types import GraphQLContext
 from .template import render
-from .views.middleware import MisagoMiddleware
 
 
 import_plugins()
