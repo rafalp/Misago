@@ -52,3 +52,13 @@ def test_exception_is_raised_if_plugin_module_is_unsafely_imported_from_module_p
 ):
     with pytest.raises(ImportError):
         plugin.import_module("submodule")
+
+
+def test_plugin_path_is_returned(plugin):
+    assert plugin.get_path()
+
+
+def test_plugin_can_be_tested_if_it_contains_directory(plugin, package_plugin):
+    assert package_plugin.has_directory("somedir")
+    assert not package_plugin.has_directory("otherdir")
+    assert not plugin.has_directory("somedir")

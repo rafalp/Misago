@@ -3,7 +3,6 @@ from time import time
 from ariadne.asgi import GraphQL
 from starlette.applications import Starlette
 from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from .cache import cache
 from .conf import settings
@@ -13,6 +12,8 @@ from .graphql.context import get_graphql_context
 from .graphql.schema import schema
 from .plugins import import_plugins
 from .types import GraphQLContext
+from .template import render
+from .views.middleware import MisagoMiddleware
 
 
 import_plugins()
@@ -27,10 +28,12 @@ if not settings.test:
     app.add_event_handler("startup", database.connect)
     app.add_event_handler("shutdown", database.disconnect)
 
+app.add_middleware(MisagoMiddleware)
+
 
 @app.route("/")
 async def homepage(request):
-    return JSONResponse({"time": time(), "debug": settings.debug})
+    return await render(request, "index.html", {"time": time()})
 
 
 async def resolve_graphql_context(request: Request) -> GraphQLContext:

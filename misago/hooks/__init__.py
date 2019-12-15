@@ -1,4 +1,4 @@
-from typing import Dict, List, Type
+from typing import Any, Dict, List, Type
 
 from ariadne import SchemaBindable, SchemaDirectiveVisitor
 
@@ -17,6 +17,7 @@ from .filters import (
     RegisterInputHook,
     RegisterInputModelHook,
     RegisterUserHook,
+    TemplateContextHook,
 )
 
 
@@ -32,6 +33,9 @@ graphql_context_hook = GraphQLContextHook()
 graphql_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_type_defs_hook: List[str] = []
 graphql_types_hook: List[SchemaBindable] = []
+jinja2_extensions: List[Any] = []
+jinja2_filters: Dict[str, Any] = {}
 register_input_hook = RegisterInputHook()
 register_input_model_hook = RegisterInputModelHook()
 register_user_hook = RegisterUserHook()
+template_context_hook = TemplateContextHook()

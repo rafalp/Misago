@@ -15,7 +15,7 @@ class PluginLoader:
         else:
             self._plugins = []
 
-    def load_plugins(self, plugin_list_path: str) -> List["Plugin"]:
+    def load_plugins(self, plugin_list_path: str) -> List[Plugin]:
         plugins = load_plugin_list_if_exists(plugin_list_path)
         if not plugins:
             return []
@@ -39,3 +39,10 @@ class PluginLoader:
                 modules.append((plugin.module_name, module))
 
         return modules
+
+    def get_plugins_with_directory(self, directory_name: str) -> List[Plugin]:
+        plugins = []
+        for plugin in self._plugins:
+            if plugin.has_directory(directory_name):
+                plugins.append(plugin)
+        return plugins

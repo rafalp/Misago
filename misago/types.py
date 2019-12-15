@@ -159,6 +159,12 @@ class SettingImage(TypedDict):
 Setting = Union[bool, int, str, List[str], SettingImage]
 Settings = Dict[str, Setting]
 
+TemplateContext = Dict[str, Any]
+TemplateContextAction = Callable[[Request], Awaitable[TemplateContext]]
+TemplateContextFilter = Callable[
+    [TemplateContextAction, Request], Awaitable[TemplateContext]
+]
+
 
 @dataclass
 class User:

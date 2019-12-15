@@ -5,6 +5,7 @@ asgiref
 async-caches
 click
 databases[postgresql]
+jinja2
 passlib
 pydantic[email,typing_extensions]
 pyjwt

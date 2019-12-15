@@ -1,3 +1,4 @@
+import os
 from importlib import import_module
 from importlib.util import find_spec
 from types import ModuleType
@@ -34,3 +35,11 @@ class Plugin:
         raise ImportError(
             f"Plugin {self.module_name} has no module named '{module_name}'"
         )
+
+    def get_path(self) -> str:
+        return os.path.abspath(os.path.dirname(self._module.__file__))
+
+    def has_directory(self, directory_name: str) -> bool:
+        plugin_path = self.get_path()
+        directory_path = os.path.join(plugin_path, directory_name)
+        return os.path.isdir(directory_path)

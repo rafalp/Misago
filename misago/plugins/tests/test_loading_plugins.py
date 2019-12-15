@@ -108,3 +108,33 @@ def test_loader_returns_empty_list_if_plugin_module_didnt_exist(mocker):
     imported_modules = loader.import_modules_if_exists(module_name)
     plugin_mock.import_module_if_exists.assert_called_once_with(module_name)
     assert imported_modules == []
+
+
+def test_loader_returns_list_of_plugins_with_directory(mocker):
+    plugin_name = "plugin"
+    directory_name = "statics"
+
+    mocker.patch(
+        "misago.plugins.loader.load_plugin_list_if_exists", return_value=[plugin_name]
+    )
+    plugin_mock = Mock(module_name=plugin_name, has_directory=Mock(return_value=True))
+    mocker.patch("misago.plugins.loader.Plugin", Mock(return_value=plugin_mock))
+
+    loader = PluginLoader("/plugins/path/")
+    found_plugins = loader.get_plugins_with_directory(directory_name)
+    assert found_plugins == [plugin_mock]
+
+
+def test_loader_returns_empty_list_if_plugin_didnt_have_directory(mocker):
+    plugin_name = "plugin"
+    directory_name = "statics"
+
+    mocker.patch(
+        "misago.plugins.loader.load_plugin_list_if_exists", return_value=[plugin_name]
+    )
+    plugin_mock = Mock(module_name=plugin_name, has_directory=Mock(return_value=False))
+    mocker.patch("misago.plugins.loader.Plugin", Mock(return_value=plugin_mock))
+
+    loader = PluginLoader("/plugins/path/")
+    found_plugins = loader.get_plugins_with_directory(directory_name)
+    assert found_plugins == []

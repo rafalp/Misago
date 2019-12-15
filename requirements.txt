@@ -21,8 +21,9 @@ h11==0.8.1                # via uvicorn
 hiredis==1.0.1            # via aioredis
 httptools==0.0.13         # via uvicorn
 idna==2.8                 # via email-validator
+jinja2==2.10.3
 mako==1.1.0               # via alembic
-markupsafe==1.1.1         # via mako
+markupsafe==1.1.1         # via jinja2, mako
 passlib==1.7.2
 psycopg2-binary==2.8.4    # via databases
 pydantic[email,typing_extensions]==1.2

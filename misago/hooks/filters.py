@@ -35,6 +35,9 @@ from ..types import (
     RegisterInputModelFilter,
     RegisterUserAction,
     RegisterUserFilter,
+    TemplateContext,
+    TemplateContextAction,
+    TemplateContextFilter,
     User,
 )
 from .filter import FilterHook
@@ -165,3 +168,10 @@ class RegisterUserHook(FilterHook[RegisterUserAction, RegisterUserFilter]):
         cleaned_data: RegisterInput,
     ) -> User:
         return await self.filter(action, context, cleaned_data)
+
+
+class TemplateContextHook(FilterHook[TemplateContextAction, TemplateContextFilter]):
+    async def call_action(
+        self, action: TemplateContextAction, request: Request
+    ) -> TemplateContext:
+        return await self.filter(action, request)
