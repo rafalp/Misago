@@ -58,6 +58,16 @@ categories = sqlalchemy.Table(
     "misago_categories",
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("type", sqlalchemy.Integer, nullable=False, index=True),
+    sqlalchemy.Column(
+        "parent_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("misago_categories.id"),
+        nullable=True,
+    ),
+    sqlalchemy.Column("depth", sqlalchemy.Integer, nullable=False),
+    sqlalchemy.Column("left", sqlalchemy.Integer, nullable=False, index=True),
+    sqlalchemy.Column("right", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
 )

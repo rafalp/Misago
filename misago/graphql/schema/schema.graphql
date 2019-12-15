@@ -3,6 +3,7 @@ scalar Datetime
 type Query {
     auth: User
     categories: [Category!]!
+    category(id: ID!): Category
     settings: Settings
 }
 
@@ -18,12 +19,6 @@ type User {
     isModerator: Boolean!
     isAdministrator: Boolean!
     joinedAt: Datetime
-}
-
-type Category {
-    id: ID!
-    name: String!
-    slug: String!
 }
 
 type Thread {

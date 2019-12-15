@@ -9,11 +9,20 @@ from datetime import timedelta
 
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.sql import table, column
 from sqlalchemy import JSON, String
+from sqlalchemy.sql import table, column
 
 from misago.utils.strings import get_random_string
 
+
+# revision identifiers, used by Alembic.
+revision = "69d552c761f2"
+down_revision = "ad2a1d098a41"
+branch_labels = None
+depends_on = None
+
+# default data
+table = table("misago_settings", column("name", String), column("value", JSON),)
 
 settings = [
     {"name": "forum_name", "value": "Misago"},
@@ -23,14 +32,6 @@ settings = [
     {"name": "username_min_length", "value": 3},
     {"name": "username_max_length", "value": 10},
 ]
-
-table = table("misago_settings", column("name", String), column("value", JSON),)
-
-# revision identifiers, used by Alembic.
-revision = "69d552c761f2"
-down_revision = "ad2a1d098a41"
-branch_labels = None
-depends_on = None
 
 
 def upgrade():

@@ -1,0 +1,11 @@
+type Category {
+    id: ID!
+    parent: Category
+    children: [Category!]!
+    depth: Int!
+    left: Int!
+    right: Int!
+    name: String!
+    slug: String!
+    color: String!
+}

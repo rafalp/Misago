@@ -32,6 +32,24 @@ AuthenticateUserFilter = Callable[
 CacheVersions = Dict[str, str]
 
 
+@dataclass
+class Category:
+    id: int
+    type: int
+    parent_id: int
+    depth: int
+    left: int
+    right: int
+    name: str
+    slug: str
+
+    def is_parent(self, category: "Category") -> bool:
+        return self.left < category.left and self.right > category.right
+
+    def is_child(self, category: "Category") -> bool:
+        return self.left > category.left and self.right < category.right
+
+
 class CreateUserAction(Protocol):
     async def __call__(
         self,
