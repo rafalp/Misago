@@ -2,8 +2,8 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 
-from ..cacheversions import get_cache_versions
-from ..conf.dynamicsettings import get_dynamic_settings
+from .cacheversions import get_cache_versions
+from .conf.dynamicsettings import get_dynamic_settings
 
 
 class MisagoMiddleware(BaseHTTPMiddleware):
