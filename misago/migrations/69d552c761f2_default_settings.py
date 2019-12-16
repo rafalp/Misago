@@ -8,7 +8,6 @@ Create Date: 2019-11-17 01:49:55.824480
 from datetime import timedelta
 
 from alembic import op
-import sqlalchemy as sa
 from sqlalchemy import JSON, String
 from sqlalchemy.sql import table, column
 

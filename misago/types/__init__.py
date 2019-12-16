@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import (
     Any,
@@ -18,36 +17,21 @@ from typing import (
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 from starlette.requests import Request
 
+from .category import Category
+from .user import User
+
 
 AsyncRootValidator = Callable[[Any, Any], Awaitable[None]]
 AsyncValidator = Callable[[Any], Awaitable[None]]
 
 AuthenticateUserAction = Callable[
-    ["GraphQLContext", str, str], Awaitable[Optional["User"]]
+    ["GraphQLContext", str, str], Awaitable[Optional[User]]
 ]
 AuthenticateUserFilter = Callable[
-    [AuthenticateUserAction, "GraphQLContext", str, str], Awaitable[Optional["User"]]
+    [AuthenticateUserAction, "GraphQLContext", str, str], Awaitable[Optional[User]]
 ]
 
 CacheVersions = Dict[str, str]
-
-
-@dataclass
-class Category:
-    id: int
-    type: int
-    parent_id: int
-    depth: int
-    left: int
-    right: int
-    name: str
-    slug: str
-
-    def is_parent(self, category: "Category") -> bool:
-        return self.left < category.left and self.right > category.right
-
-    def is_child(self, category: "Category") -> bool:
-        return self.left > category.left and self.right < category.right
 
 
 class CreateUserAction(Protocol):
@@ -61,7 +45,7 @@ class CreateUserAction(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None
-    ) -> "User":
+    ) -> User:
         ...
 
 
@@ -77,25 +61,25 @@ class CreateUserFilter(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None
-    ) -> "User":
+    ) -> User:
         ...
 
 
-CreateUserTokenAction = Callable[["GraphQLContext", "User"], Awaitable[str]]
+CreateUserTokenAction = Callable[["GraphQLContext", User], Awaitable[str]]
 CreateUserTokenFilter = Callable[
-    [CreateUserTokenAction, "GraphQLContext", "User"], Awaitable[str]
+    [CreateUserTokenAction, "GraphQLContext", User], Awaitable[str]
 ]
 
 CreateUserTokenPayloadAction = Callable[
-    ["GraphQLContext", "User"], Awaitable[Dict[str, Any]]
+    ["GraphQLContext", User], Awaitable[Dict[str, Any]]
 ]
 CreateUserTokenPayloadFilter = Callable[
-    [CreateUserTokenPayloadAction, "GraphQLContext", "User"], Awaitable[Dict[str, Any]],
+    [CreateUserTokenPayloadAction, "GraphQLContext", User], Awaitable[Dict[str, Any]],
 ]
 
-RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable["User"]]
+RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable[User]]
 RegisterUserFilter = Callable[
-    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable["User"]
+    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable[User]
 ]
 
 
@@ -117,27 +101,27 @@ class ErrorsList(List[Error]):
         ...
 
 
-GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional["User"]]]
+GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional[User]]]
 GetAuthUserFilter = Callable[
-    [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional["User"]]
+    [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional[User]]
 ]
 
-GetUserFromContextAction = Callable[["GraphQLContext"], Awaitable[Optional["User"]]]
+GetUserFromContextAction = Callable[["GraphQLContext"], Awaitable[Optional[User]]]
 GetUserFromContextFilter = Callable[
-    [GetUserFromContextAction, "GraphQLContext"], Awaitable[Optional["User"]],
+    [GetUserFromContextAction, "GraphQLContext"], Awaitable[Optional[User]],
 ]
 
-GetUserFromTokenAction = Callable[["GraphQLContext", str], Awaitable[Optional["User"]]]
+GetUserFromTokenAction = Callable[["GraphQLContext", str], Awaitable[Optional[User]]]
 GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, "GraphQLContext", str], Awaitable[Optional["User"]],
+    [GetUserFromTokenAction, "GraphQLContext", str], Awaitable[Optional[User]],
 ]
 
 GetUserFromTokenPayloadAction = Callable[
-    ["GraphQLContext", Dict[str, Any]], Awaitable[Optional["User"]]
+    ["GraphQLContext", Dict[str, Any]], Awaitable[Optional[User]]
 ]
 GetUserFromTokenPayloadFilter = Callable[
     [GetUserFromTokenPayloadAction, "GraphQLContext", Dict[str, Any]],
-    Awaitable[Optional["User"]],
+    Awaitable[Optional[User]],
 ]
 
 GraphQLContext = Dict[str, Any]
@@ -182,18 +166,3 @@ TemplateContextAction = Callable[[Request], Awaitable[TemplateContext]]
 TemplateContextFilter = Callable[
     [TemplateContextAction, Request], Awaitable[TemplateContext]
 ]
-
-
-@dataclass
-class User:
-    id: int
-    name: str
-    slug: str
-    email: str
-    email_hash: str
-    password: Optional[str]
-    is_deactivated: bool
-    is_moderator: bool
-    is_admin: bool
-    joined_at: datetime
-    extra: dict
