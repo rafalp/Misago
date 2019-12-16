@@ -13,6 +13,12 @@ async def test_user_is_created_in_db(db):
 
 
 @pytest.mark.asyncio
+async def test_user_is_created_with_slug(db):
+    user = await create_user("TeST", "test@example.com")
+    assert user.slug == "test"
+
+
+@pytest.mark.asyncio
 async def test_user_is_created_with_join_datetime(db, user_password):
     user = await create_user("test", "test@example.com", password=user_password)
     assert user.joined_at

@@ -11,8 +11,8 @@ async def create_category(
     name: str,
     *,
     parent: Optional[Category] = None,
-    left: Optional[int] = 1,
-    right: Optional[int] = 2,
+    left: Optional[int] = 0,
+    right: Optional[int] = 0,
     depth: Optional[int] = 0,
     extra: Optional[Dict[str, Any]] = None
 ) -> Category:

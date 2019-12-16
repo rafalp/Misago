@@ -26,3 +26,9 @@ async def test_category_child_loader_returns_category_children(
 ):
     loaded_categories = await load_category_children({}, category.id)
     assert loaded_categories == [child_category]
+
+
+@pytest.mark.asyncio
+async def test_category_child_loader_returns_empty_list_for_nonexistant_category(db):
+    loaded_categories = await load_category_children({}, 1)
+    assert loaded_categories == []
