@@ -7,7 +7,7 @@ Create Date: 2019-12-15 21:51:27.434952
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, JSON, String
 from sqlalchemy.sql import table, column
 
 from misago.categories.categorytypes import CategoryTypes
@@ -23,19 +23,19 @@ depends_on = None
 table = table(
     "misago_categories",
     column("type", Integer),
-    column("id", Integer),
     column("parent_id", Integer),
     column("depth", Integer),
     column("left", Integer),
     column("right", Integer),
     column("name", String(length=255)),
     column("slug", String(length=255)),
+    column("extra", JSON),
 )
 
 
 categories = [
     {
-        "id": 1,
+        # id: 1
         "type": CategoryTypes.THREADS,
         "parent_id": None,
         "depth": 0,
@@ -43,9 +43,10 @@ categories = [
         "right": 6,
         "name": "Hobbies",
         "slug": "hobbies",
+        "extra": {},
     },
     {
-        "id": 2,
+        # id: 2
         "type": CategoryTypes.THREADS,
         "parent_id": 1,
         "depth": 1,
@@ -53,16 +54,18 @@ categories = [
         "right": 3,
         "name": "Books",
         "slug": "books",
+        "extra": {},
     },
     {
-        "id": 3,
+        # id: 3
         "type": CategoryTypes.THREADS,
-        "parent_id": 1,
+        "parent_id": None,
         "depth": 1,
         "left": 4,
         "right": 5,
         "name": "Movies",
         "slug": "movies",
+        "extra": {},
     },
 ]
 

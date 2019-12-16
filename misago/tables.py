@@ -70,6 +70,7 @@ categories = sqlalchemy.Table(
     sqlalchemy.Column("right", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
+    sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
 
 threads = sqlalchemy.Table(

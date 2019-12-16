@@ -3,6 +3,7 @@ from unittest.mock import Mock
 import pytest
 
 from . import tables
+from .categories.create import create_category
 from .conf.cache import SETTINGS_CACHE
 from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
@@ -20,7 +21,7 @@ def pytest_unconfigure():
     teardown_test_database()
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 async def db():
     async with database:
         yield
@@ -49,7 +50,32 @@ async def dynamic_settings(db, cache_versions):
 
 
 @pytest.fixture
-async def user_password():
+async def categories(db):
+    top_category = await create_category(name="Category", left=7, right=10)
+    child_category = await create_category(
+        name="Child Category", parent=top_category, left=8, right=9, depth=1
+    )
+    sibling_category = await create_category(name="Sibling Category", left=11, right=12)
+    return (top_category, child_category, sibling_category)
+
+
+@pytest.fixture
+def category(categories):
+    return categories[0]
+
+
+@pytest.fixture
+def child_category(categories):
+    return categories[1]
+
+
+@pytest.fixture
+def sibling_category(categories):
+    return categories[2]
+
+
+@pytest.fixture
+def user_password():
     return "t3st+p4ssw0rd!"
 
 
