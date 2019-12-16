@@ -109,13 +109,14 @@ threads = sqlalchemy.Table(
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("started_at", sqlalchemy.DateTime, nullable=False),
     sqlalchemy.Column("last_posted_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("ordering", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("replies", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("is_closed", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
 
 sqlalchemy.Index(
-    "misago_threads_order", threads.c.last_posted_at.desc(), threads.c.category_id
+    "misago_threads_order", threads.c.ordering.desc(), threads.c.category_id
 )
 
 posts = sqlalchemy.Table(

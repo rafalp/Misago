@@ -18,6 +18,8 @@ from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 from starlette.requests import Request
 
 from .category import Category
+from .post import Post
+from .thread import Thread
 from .user import User
 
 
