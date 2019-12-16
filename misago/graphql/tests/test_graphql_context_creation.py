@@ -5,20 +5,24 @@ import pytest
 from ..context import get_graphql_context
 
 
-@pytest.mark.asyncio
-async def test_graphql_context_includes_cache_versions(db):
-    context = await get_graphql_context(None)
-    assert context["cache_versions"]
+@pytest.fixture
+def request_mock():
+    return Mock(state=Mock(request=Mock(), cache_versions=Mock(), settings=Mock()))
 
 
 @pytest.mark.asyncio
-async def test_graphql_context_includes_settings_versions(db, dynamic_settings):
-    context = await get_graphql_context(None)
-    assert context["settings"] == dynamic_settings
+async def test_graphql_context_includes_request(request_mock):
+    context = await get_graphql_context(request_mock)
+    assert context["request"] is request_mock
 
 
 @pytest.mark.asyncio
-async def test_graphql_context_includes_request(db):
-    request = Mock()
-    context = await get_graphql_context(request)
-    assert context["request"] is request
+async def test_graphql_context_includes_cache_versions(request_mock):
+    context = await get_graphql_context(request_mock)
+    assert context["cache_versions"] == request_mock.state.cache_versions
+
+
+@pytest.mark.asyncio
+async def test_graphql_context_includes_settings(request_mock):
+    context = await get_graphql_context(request_mock)
+    assert context["settings"] == request_mock.state.settings

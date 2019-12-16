@@ -9,7 +9,6 @@ from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
 from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
-from .graphql.context import get_graphql_context
 from .users.create import create_user
 
 
@@ -104,8 +103,12 @@ async def no_password_user(db):
 
 
 @pytest.fixture
-async def graphql_context(db):
-    return await get_graphql_context(None)
+def graphql_context(cache_versions, dynamic_settings):
+    return {
+        "request": None,
+        "cache_versions": cache_versions,
+        "settings": dynamic_settings,
+    }
 
 
 @pytest.fixture
