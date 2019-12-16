@@ -4,8 +4,13 @@ from ..categories import load_categories, load_category, load_category_children
 
 
 @pytest.mark.asyncio
-async def test_all_categories_can_be_loaded(categories):
-    assert await load_categories({})
+async def test_top_level_categories_can_be_loaded(
+    category, child_category, sibling_category
+):
+    loaded_categories = await load_categories({})
+    assert category in loaded_categories
+    assert child_category not in loaded_categories
+    assert sibling_category in loaded_categories
 
 
 @pytest.mark.asyncio

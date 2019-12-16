@@ -105,7 +105,7 @@ async def no_password_user(db):
 @pytest.fixture
 def graphql_context(cache_versions, dynamic_settings):
     return {
-        "request": None,
+        "request": Mock(headers={}),
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
     }
@@ -114,3 +114,18 @@ def graphql_context(cache_versions, dynamic_settings):
 @pytest.fixture
 def graphql_info(graphql_context):
     return Mock(context=graphql_context)
+
+
+@pytest.fixture
+def user_graphql_context(cache_versions, dynamic_settings, user):
+    return {
+        "request": Mock(headers={}),
+        "cache_versions": cache_versions,
+        "settings": dynamic_settings,
+        "user": user,
+    }
+
+
+@pytest.fixture
+def user_graphql_info(user_graphql_context):
+    return Mock(context=user_graphql_context)
