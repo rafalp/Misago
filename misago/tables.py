@@ -39,18 +39,18 @@ users = sqlalchemy.Table(
 )
 
 sqlalchemy.Index(
-    "users_deactivated",
-    users.c.id,
+    "misago_users_deactivated",
+    users.c.is_deactivated,
     postgresql_where=users.c.is_deactivated == True,  # pylint: disable=C0121
 )
 sqlalchemy.Index(
-    "users_moderators",
-    users.c.id,
+    "misago_users_moderators",
+    users.c.is_moderator,
     postgresql_where=users.c.is_moderator == True,  # pylint: disable=C0121
 )
 sqlalchemy.Index(
-    "users_admins",
-    users.c.id,
+    "misago_users_admins",
+    users.c.is_admin,
     postgresql_where=users.c.is_admin == True,  # pylint: disable=C0121
 )
 
@@ -62,7 +62,7 @@ categories = sqlalchemy.Table(
     sqlalchemy.Column(
         "parent_id",
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("misago_categories.id"),
+        sqlalchemy.ForeignKey("misago_categories.id", ondelete="RESTRICT"),
         nullable=True,
     ),
     sqlalchemy.Column("depth", sqlalchemy.Integer, nullable=False),
@@ -84,16 +84,22 @@ threads = sqlalchemy.Table(
         nullable=False,
     ),
     sqlalchemy.Column(
+        "first_post_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("misago_posts.id", ondelete="SET NULL"),
+        nullable=True,
+    ),
+    sqlalchemy.Column(
         "starter_id",
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("misago_users.id"),
+        sqlalchemy.ForeignKey("misago_users.id", ondelete="SET NULL"),
         nullable=True,
     ),
     sqlalchemy.Column("starter_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column(
         "last_poster_id",
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("misago_users.id"),
+        sqlalchemy.ForeignKey("misago_users.id", ondelete="SET NULL"),
         nullable=True,
     ),
     sqlalchemy.Column(
@@ -102,9 +108,14 @@ threads = sqlalchemy.Table(
     sqlalchemy.Column("title", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("started_at", sqlalchemy.DateTime, nullable=False),
-    sqlalchemy.Column(
-        "last_posted_at", sqlalchemy.DateTime, nullable=False, index=True
-    ),
+    sqlalchemy.Column("last_posted_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("replies", sqlalchemy.Integer, nullable=False),
+    sqlalchemy.Column("is_closed", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
+)
+
+sqlalchemy.Index(
+    "misago_threads_order", threads.c.last_posted_at.desc(), threads.c.category_id
 )
 
 posts = sqlalchemy.Table(
@@ -126,10 +137,12 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column(
         "poster_id",
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("misago_users.id"),
+        sqlalchemy.ForeignKey("misago_users.id", ondelete="SET NULL"),
         nullable=True,
     ),
     sqlalchemy.Column("poster_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("body", sqlalchemy.JSON, nullable=False),
+    sqlalchemy.Column("edits", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("posted_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
