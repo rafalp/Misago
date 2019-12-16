@@ -1,4 +1,4 @@
-name: Black formatting
+name: Code formatting
 
 on: [push]
 

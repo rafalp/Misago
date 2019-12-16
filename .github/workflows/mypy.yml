@@ -1,4 +1,4 @@
-name: mypy types
+name: Types
 
 on: [push]
 

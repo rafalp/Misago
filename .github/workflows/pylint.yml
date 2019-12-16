@@ -1,4 +1,4 @@
-name: Linters
+name: Pylint
 
 on: [push]
 
