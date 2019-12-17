@@ -33,8 +33,8 @@ def test_jwt_token_is_not_decoded_if_payload_is_incorrect():
 
 def test_util_creates_jwt_exp_date_using_context():
     exp = get_jwt_exp({"settings": {"jwt_exp": 60}})
-    assert exp > datetime.now() + timedelta(seconds=59)
-    assert exp < datetime.now() + timedelta(seconds=61)
+    assert exp > datetime.utcnow() + timedelta(seconds=59)
+    assert exp < datetime.utcnow() + timedelta(seconds=61)
 
 
 def test_util_extracts_jwt_secret_from_context():

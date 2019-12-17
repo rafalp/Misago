@@ -32,7 +32,7 @@ async def create_user_token_payload(
 
 
 def get_jwt_exp(context: GraphQLContext) -> datetime:
-    return datetime.now() + timedelta(seconds=context["settings"]["jwt_exp"])
+    return datetime.utcnow() + timedelta(seconds=context["settings"]["jwt_exp"])
 
 
 async def get_user_from_token(context: GraphQLContext, token: str) -> Optional[User]:

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pytest
 
 from ...passwords import verify_password
@@ -19,9 +21,16 @@ async def test_user_is_created_with_slug(db):
 
 
 @pytest.mark.asyncio
-async def test_user_is_created_with_join_datetime(db, user_password):
-    user = await create_user("test", "test@example.com", password=user_password)
+async def test_user_is_created_with_default_join_datetime(db, user_password):
+    user = await create_user("test", "test@example.com")
     assert user.joined_at
+
+
+@pytest.mark.asyncio
+async def test_user_is_created_with_specifed_join_datetime(db, user_password):
+    joined_at = datetime.utcnow()
+    user = await create_user("test", "test@example.com", joined_at=joined_at)
+    assert user.joined_at == joined_at
 
 
 @pytest.mark.asyncio

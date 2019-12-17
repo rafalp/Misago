@@ -33,7 +33,7 @@ async def create_user(
         "is_deactivated": is_deactivated,
         "is_moderator": is_moderator,
         "is_admin": is_admin,
-        "joined_at": joined_at or datetime.now(),
+        "joined_at": joined_at or datetime.utcnow(),
         "extra": extra or {},
     }
 
