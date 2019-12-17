@@ -25,6 +25,7 @@ def upgrade():
         sa.Column("first_post_id", sa.Integer(), nullable=True),
         sa.Column("starter_id", sa.Integer(), nullable=True),
         sa.Column("starter_name", sa.String(length=255), nullable=False),
+        sa.Column("last_post_id", sa.Integer(), nullable=True),
         sa.Column("last_poster_id", sa.Integer(), nullable=True),
         sa.Column("last_poster_name", sa.String(length=255), nullable=False),
         sa.Column("title", sa.String(length=255), nullable=False),
@@ -73,6 +74,14 @@ def upgrade():
         "misago_threads",
         "misago_posts",
         ["first_post_id"],
+        ["id"],
+        ondelete="SET NULL",
+    )
+    op.create_foreign_key(
+        None,
+        "misago_threads",
+        "misago_posts",
+        ["last_post_id"],
         ["id"],
         ondelete="SET NULL",
     )

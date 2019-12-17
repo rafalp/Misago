@@ -93,6 +93,7 @@ async def create_thread(
         "first_post_id": first_post.id if first_post else None,
         "starter_id": starter_id,
         "starter_name": starter_name,
+        "last_post_id": first_post.id if first_post else None,
         "last_poster_id": starter_id,
         "last_poster_name": starter_name,
         "title": title,

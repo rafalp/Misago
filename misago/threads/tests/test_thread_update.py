@@ -4,6 +4,7 @@ from datetime import datetime
 import pytest
 
 from ..create import create_post, create_thread
+from ..get import get_thread_by_id
 from ..update import update_thread
 
 
@@ -39,6 +40,13 @@ async def test_thread_starter_name_can_be_updated(category, user):
     updated_thread = await update_thread(thread, starter=renamed_user)
     assert updated_thread.starter_id == renamed_user.id
     assert updated_thread.starter_name == renamed_user.name
+
+
+@pytest.mark.asyncio
+async def test_thread_last_post_can_be_updated(category, thread):
+    post = await create_post(category, thread, {}, poster_name="User")
+    updated_thread = await update_thread(thread, last_post=post)
+    assert updated_thread.last_post_id == post.id
 
 
 @pytest.mark.asyncio
@@ -85,6 +93,21 @@ async def test_thread_replies_count_can_be_updated(thread):
 
 
 @pytest.mark.asyncio
+async def test_thread_replies_count_can_be_incremented(thread):
+    updated_thread = await update_thread(thread, increment_replies=True)
+    assert updated_thread.replies == 1
+
+    thread_from_db = await get_thread_by_id(thread.id)
+    assert thread_from_db.replies == 1
+
+
+@pytest.mark.asyncio
+async def test_updating_and_incrementing_thread_replies_raises_value_error(thread):
+    with pytest.raises(ValueError):
+        await update_thread(thread, replies=1, increment_replies=True)
+
+
+@pytest.mark.asyncio
 async def test_thread_closed_status_can_be_updated(thread):
     updated_thread = await update_thread(thread, is_closed=True)
     assert updated_thread.is_closed
@@ -95,3 +118,41 @@ async def test_thread_extra_can_be_updated(thread):
     extra = {"new": True}
     updated_thread = await update_thread(thread, extra=extra)
     assert updated_thread.extra == extra
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_first_post_and_starter_raises_value_error(
+    category, thread, user
+):
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, first_post=post, starter=user)
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_first_post_and_start_date_raises_value_error(
+    category, thread, user
+):
+    started_at = datetime.utcnow()
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, first_post=post, started_at=started_at)
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_last_post_and_last_poster_raises_value_error(
+    category, thread, user
+):
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, last_post=post, last_poster=user)
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_last_post_and_last_post_date_raises_value_error(
+    category, thread, user
+):
+    started_at = datetime.utcnow()
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, last_post=post, last_posted_at=started_at)

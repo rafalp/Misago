@@ -20,4 +20,5 @@ class Thread:
 
     first_post_id: Optional[int]
     starter_id: Optional[int]
+    last_post_id: Optional[int]
     last_poster_id: Optional[int]

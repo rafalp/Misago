@@ -111,6 +111,15 @@ async def test_creating_thread_with_first_post_and_started_at_raises_value_error
 
 
 @pytest.mark.asyncio
+async def test_thread_is_created_with_first_id(category):
+    other_thread = await create_thread(category, "Other thread", starter_name="User")
+    post = await create_post(category, other_thread, {}, poster_name="User")
+    thread = await create_thread(category, "Test thread", first_post=post)
+    assert thread.first_post_id == post.id
+    assert thread.last_post_id == post.id
+
+
+@pytest.mark.asyncio
 async def test_thread_is_created_with_first_post_poster_as_starter(category, user):
     post = Mock(
         id=None, poster_id=user.id, poster_name=user.name, posted_at=datetime.utcnow()
@@ -175,12 +184,3 @@ async def test_thread_is_created_closed(category):
         category, "Test thread", starter_name="User", is_closed=True
     )
     assert thread.is_closed
-
-
-@pytest.mark.asyncio
-async def test_thread_is_created_with_first_and_last_post_id(category):
-    other_thread = await create_thread(category, "Test thread", starter_name="User")
-    post = await create_post(category, other_thread, {}, poster_name="User")
-
-    thread = await create_thread(category, "Test thread", first_post=post)
-    assert thread.first_post_id == post.id

@@ -97,6 +97,12 @@ threads = sqlalchemy.Table(
     ),
     sqlalchemy.Column("starter_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column(
+        "last_post_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("misago_posts.id", ondelete="SET NULL"),
+        nullable=True,
+    ),
+    sqlalchemy.Column(
         "last_poster_id",
         sqlalchemy.Integer,
         sqlalchemy.ForeignKey("misago_users.id", ondelete="SET NULL"),
