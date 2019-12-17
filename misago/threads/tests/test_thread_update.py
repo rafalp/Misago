@@ -43,6 +43,14 @@ async def test_thread_starter_name_can_be_updated(category, user):
 
 
 @pytest.mark.asyncio
+async def test_thread_starter_id_can_be_removed(thread, user):
+    thread = await update_thread(thread, starter=user)
+    updated_thread = await update_thread(thread, starter_name="User")
+    assert updated_thread.starter_id is None
+    assert updated_thread.starter_name == "User"
+
+
+@pytest.mark.asyncio
 async def test_thread_last_post_can_be_updated(category, thread):
     post = await create_post(category, thread, {}, poster_name="User")
     updated_thread = await update_thread(thread, last_post=post)
@@ -63,6 +71,14 @@ async def test_thread_last_poster_name_can_be_updated(category, user):
     updated_thread = await update_thread(thread, last_poster=renamed_user)
     assert updated_thread.last_poster_id == renamed_user.id
     assert updated_thread.last_poster_name == renamed_user.name
+
+
+@pytest.mark.asyncio
+async def test_thread_last_poster_id_can_be_removed(thread, user):
+    thread = await update_thread(thread, last_poster=user)
+    updated_thread = await update_thread(thread, last_poster_name="User")
+    assert updated_thread.last_poster_id is None
+    assert updated_thread.last_poster_name == "User"
 
 
 @pytest.mark.asyncio
@@ -130,6 +146,23 @@ async def test_updating_thread_first_post_and_starter_raises_value_error(
 
 
 @pytest.mark.asyncio
+async def test_updating_thread_starter_and_starter_name_raises_value_error(
+    thread, user
+):
+    with pytest.raises(ValueError):
+        await update_thread(thread, starter=user, starter_name="User")
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_first_post_and_starter_name_raises_value_error(
+    category, thread
+):
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, first_post=post, starter_name="User")
+
+
+@pytest.mark.asyncio
 async def test_updating_thread_first_post_and_start_date_raises_value_error(
     category, thread, user
 ):
@@ -146,6 +179,23 @@ async def test_updating_thread_last_post_and_last_poster_raises_value_error(
     post = await create_post(category, thread, {}, poster_name="User")
     with pytest.raises(ValueError):
         await update_thread(thread, last_post=post, last_poster=user)
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_last_poster_and_last_poster_name_raises_value_error(
+    thread, user
+):
+    with pytest.raises(ValueError):
+        await update_thread(thread, last_poster=user, last_poster_name="User")
+
+
+@pytest.mark.asyncio
+async def test_updating_thread_last_post_and_last_poster_name_raises_value_error(
+    category, thread
+):
+    post = await create_post(category, thread, {}, poster_name="User")
+    with pytest.raises(ValueError):
+        await update_thread(thread, last_post=post, last_poster_name="User")
 
 
 @pytest.mark.asyncio

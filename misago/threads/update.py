@@ -6,6 +6,7 @@ from ..database.queries import update
 from ..tables import threads
 from ..types import Category, Post, Thread, User
 from ..utils.strings import slugify
+from .ordering import get_ordering
 
 
 async def update_thread(
@@ -14,8 +15,10 @@ async def update_thread(
     category: Optional[Category] = None,
     first_post: Optional[Post] = None,
     starter: Optional[User] = None,
+    starter_name: Optional[str] = None,
     last_post: Optional[Post] = None,
     last_poster: Optional[User] = None,
+    last_poster_name: Optional[str] = None,
     title: Optional[str] = None,
     started_at: Optional[datetime] = None,
     last_posted_at: Optional[datetime] = None,
@@ -34,6 +37,10 @@ async def update_thread(
             raise ValueError(
                 "'first_post' and 'starter' options are mutually exclusive"
             )
+        if starter_name:
+            raise ValueError(
+                "'first_post' and 'starter_name' options are mutually exclusive"
+            )
         if started_at:
             raise ValueError(
                 "'first_post' and 'started_at' options are mutually exclusive"
@@ -48,16 +55,29 @@ async def update_thread(
             changes["started_at"] = first_post.posted_at
 
     if starter:
+        if starter_name:
+            raise ValueError(
+                "'starter' and 'starter_name' options are mutually exclusive"
+            )
         if starter.id != thread.starter_id:
             changes["starter_id"] = starter.id
             changes["starter_name"] = starter.name
         elif starter.name != thread.starter_name:
             changes["starter_name"] = starter.name
+    elif starter_name:
+        if thread.starter_id:
+            changes["starter_id"] = None
+        if starter_name != thread.starter_name:
+            changes["starter_name"] = starter_name
 
     if last_post:
         if last_poster:
             raise ValueError(
                 "'last_post' and 'last_poster' options are mutually exclusive"
+            )
+        if last_poster_name:
+            raise ValueError(
+                "'last_post' and 'last_poster_name' options are mutually exclusive"
             )
         if last_posted_at:
             raise ValueError(
@@ -71,14 +91,23 @@ async def update_thread(
             changes["last_poster_name"] = last_post.poster_name
         if last_post.posted_at != thread.last_posted_at:
             changes["last_posted_at"] = last_post.posted_at
-            changes["ordering"] = int(last_posted_at.timestamp())
+            changes["ordering"] = get_ordering(last_post.posted_at)
 
     if last_poster:
+        if last_poster_name:
+            raise ValueError(
+                "'last_poster' and 'last_poster_name' options are mutually exclusive"
+            )
         if last_poster.id != thread.last_poster_id:
             changes["last_poster_id"] = last_poster.id
             changes["last_poster_name"] = last_poster.name
         elif last_poster.name != thread.last_poster_name:
             changes["last_poster_name"] = last_poster.name
+    elif last_poster_name:
+        if thread.last_poster_id:
+            changes["last_poster_id"] = None
+        if last_poster_name != thread.last_poster_name:
+            changes["last_poster_name"] = last_poster_name
 
     if title and title != thread.title:
         changes["title"] = title
@@ -88,7 +117,7 @@ async def update_thread(
         changes["started_at"] = started_at
     if last_posted_at and last_posted_at != thread.last_posted_at:
         changes["last_posted_at"] = last_posted_at
-        changes["ordering"] = int(last_posted_at.timestamp())
+        changes["ordering"] = get_ordering(last_posted_at)
 
     if replies is not None and increment_replies:
         raise ValueError(

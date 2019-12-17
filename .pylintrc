@@ -29,9 +29,10 @@ disable=
     too-many-arguments,
     too-many-branches,
     too-many-instance-attributes,
-    too-many-lines,  # FIXME
+    too-many-lines,
+    too-many-locals,
     too-many-public-methods,
-    too-many-statements,  # FIXME
+    too-many-statements,
     ungrouped-imports,
     unsubscriptable-object,
     unused-argument
