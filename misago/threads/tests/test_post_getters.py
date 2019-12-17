@@ -7,7 +7,7 @@ from ..get import get_post_by_id, get_posts_by_id
 @pytest.fixture
 async def post(category):
     thread = await create_thread(category, "Test thread", starter_name="User")
-    return await create_post(category, thread, {}, poster_name="User")
+    return await create_post(thread, {}, poster_name="User")
 
 
 @pytest.mark.asyncio

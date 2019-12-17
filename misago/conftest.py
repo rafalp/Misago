@@ -9,6 +9,8 @@ from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
 from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
+from .threads.create import create_post, create_thread
+from .threads.update import update_thread
 from .users.create import create_user
 
 
@@ -129,3 +131,50 @@ def user_graphql_context(cache_versions, dynamic_settings, user):
 @pytest.fixture
 def user_graphql_info(user_graphql_context):
     return Mock(context=user_graphql_context)
+
+
+@pytest.fixture
+async def thread_and_post(category):
+    thread = await create_thread(category, "Thread", starter_name="Guest")
+    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    thread = await update_thread(thread, first_post=post, last_post=post)
+    return thread, post
+
+
+@pytest.fixture
+def thread(thread_and_post):
+    thread, _ = thread_and_post
+    return thread
+
+
+@pytest.fixture
+def post(thread_and_post):
+    _, post = thread_and_post
+    return post
+
+
+@pytest.fixture
+async def reply(thread):
+    reply = await create_post(thread, {"test": "reply"}, poster_name="Guest")
+    await update_thread(thread, last_post=reply)
+    return reply
+
+
+@pytest.fixture
+async def user_thread_and_post(category, user):
+    thread = await create_thread(category, "Thread", starter_name="Guest")
+    post = await create_post(thread, {"test": "yes"}, poster=user)
+    thread = await update_thread(thread, first_post=post, last_post=post)
+    return thread, post
+
+
+@pytest.fixture
+def user_thread(user_thread_and_post):
+    thread, _ = user_thread_and_post
+    return thread
+
+
+@pytest.fixture
+def user_post(user_thread_and_post):
+    _, post = user_thread_and_post
+    return post

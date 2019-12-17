@@ -13,8 +13,8 @@ async def thread(category):
 
 
 @pytest.fixture
-async def post(category, thread):
-    return await create_post(category, thread, {}, poster_name="Guest")
+async def post(thread):
+    return await create_post(thread, {}, poster_name="Guest")
 
 
 @pytest.mark.asyncio

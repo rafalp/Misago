@@ -9,7 +9,6 @@ from .ordering import get_ordering
 
 
 async def create_post(
-    category: Category,
     thread: Thread,
     body: dict,
     *,
@@ -23,7 +22,7 @@ async def create_post(
         raise ValueError("'poster' and 'poster_name' arguments are mutually exclusive")
 
     data: Dict[str, Any] = {
-        "category_id": category.id,
+        "category_id": thread.category_id,
         "thread_id": thread.id,
         "poster_id": poster.id if poster else None,
         "poster_name": poster.name if poster else poster_name,
