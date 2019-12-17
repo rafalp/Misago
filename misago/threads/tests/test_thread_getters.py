@@ -6,7 +6,7 @@ from ..get import get_thread_by_id, get_threads_by_id
 
 @pytest.fixture
 async def thread(category):
-    return await create_thread("Test thread", category, starter_name="User")
+    return await create_thread(category, "Test thread", starter_name="User")
 
 
 @pytest.mark.asyncio

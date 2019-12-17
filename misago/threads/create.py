@@ -8,9 +8,9 @@ from ..utils.strings import slugify
 
 
 async def create_post(
-    body: dict,
-    thread: Thread,
     category: Category,
+    thread: Thread,
+    body: dict,
     *,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
@@ -38,8 +38,8 @@ async def create_post(
 
 
 async def create_thread(
-    title: str,
     category: Category,
+    title: str,
     *,
     first_post: Optional[Post] = None,
     starter: Optional[User] = None,
