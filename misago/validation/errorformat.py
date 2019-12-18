@@ -1,7 +1,6 @@
 from typing import Sequence, Union, cast
 
-from ..types import Error
-from .errors import AuthError
+from ..types import AuthError, Error
 
 
 ROOT_LOCATION = "__root__"

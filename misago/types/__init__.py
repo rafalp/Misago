@@ -15,6 +15,7 @@ from typing import (
 )
 
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
+from pydantic.errors import PydanticErrorMixin
 from starlette.requests import Request
 
 from .category import Category
@@ -85,6 +86,10 @@ RegisterUserFilter = Callable[
 ]
 
 
+class AuthError(PydanticErrorMixin, Exception):
+    pass
+
+
 class Error(TypedDict):
     loc: Sequence[Union[int, str]]
     msg: str
@@ -92,13 +97,15 @@ class Error(TypedDict):
 
 
 class ErrorsList(List[Error]):
-    def add_root_error(self, error: Union[PydanticTypeError, PydanticValueError]):
+    def add_root_error(
+        self, error: Union[AuthError, PydanticTypeError, PydanticValueError]
+    ):
         ...
 
     def add_error(
         self,
         location: Union[str, Sequence[str]],
-        error: Union[PydanticTypeError, PydanticValueError],
+        error: Union[AuthError, PydanticTypeError, PydanticValueError],
     ):
         ...
 

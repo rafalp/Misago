@@ -8,9 +8,8 @@ from pydantic import (
     validate_model as pydantic_validate_model,
 )
 
-from ..types import AsyncRootValidator, AsyncValidator
+from ..types import AsyncRootValidator, AsyncValidator, AuthError
 from .errorslist import ErrorsList
-from .errors import AuthError
 
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION

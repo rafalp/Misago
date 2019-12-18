@@ -1,9 +1,7 @@
 from pydantic import PydanticValueError
 from pydantic.errors import PydanticErrorMixin
 
-
-class AuthError(PydanticErrorMixin, Exception):
-    pass
+from ..types import AuthError
 
 
 class AllFieldsAreRequiredError(PydanticValueError):

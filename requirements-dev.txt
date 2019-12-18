@@ -20,7 +20,7 @@ lazy-object-proxy==1.4.3  # via astroid
 mccabe==0.6.1             # via pylint
 more-itertools==8.0.0     # via pytest
 mypy-extensions==0.4.3    # via mypy
-mypy==0.750
+mypy==0.760
 packaging==19.2           # via pytest
 pathspec==0.6.0           # via black
 pip-tools==4.3.0
