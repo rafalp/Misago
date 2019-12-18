@@ -1,7 +1,8 @@
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Union
 
 from ..categories.get import get_all_categories
 from ..types import GraphQLContext, Category
+from .loader import positive_int
 
 
 CACHE_NAME = "__categories"
@@ -14,10 +15,13 @@ async def load_all_categories(context: GraphQLContext) -> Dict[int, Category]:
 
 
 async def load_category(
-    context: GraphQLContext, category_id: int
+    context: GraphQLContext, category_id: Union[int, str]
 ) -> Optional[Category]:
-    categories = await load_all_categories(context)
-    return categories.get(category_id)
+    internal_id = positive_int(category_id)
+    if internal_id:
+        categories = await load_all_categories(context)
+        return categories.get(internal_id)
+    return None
 
 
 async def load_categories(context: GraphQLContext) -> List[Category]:
@@ -26,7 +30,7 @@ async def load_categories(context: GraphQLContext) -> List[Category]:
 
 
 async def load_category_children(
-    context: GraphQLContext, category_id: int
+    context: GraphQLContext, category_id: Union[int, str]
 ) -> List[Category]:
     category = await load_category(context, category_id)
     if not category:

@@ -5,6 +5,8 @@ type Query {
     auth: User
     categories: [Category!]!
     category(id: ID!): Category
+    thread(id: ID!): Thread
+    user(id: ID!): User
     settings: Settings
 }
 

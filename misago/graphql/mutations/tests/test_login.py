@@ -53,7 +53,7 @@ async def test_login_mutation_requires_password(graphql_info, user, user_passwor
 
 
 @pytest.mark.asyncio
-async def test_login_mutation_returns_error_on_nonexistant_user_credentials(
+async def test_login_mutation_returns_error_on_nonexistent_user_credentials(
     graphql_info, user
 ):
     data = await resolve_login(

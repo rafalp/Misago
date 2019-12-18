@@ -1,10 +1,10 @@
 type Thread {
     id: ID!
     category: Category!
-    firstPost: Post!
+    firstPost: Post
     starter: User
     starterName: String!
-    lastPost: Post!
+    lastPost: Post
     lastPoster: User
     lastPosterName: String!
     title: String!

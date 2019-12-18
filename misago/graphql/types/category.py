@@ -31,7 +31,6 @@ def resolve_color(category: Category, info: GraphQLResolveInfo) -> str:
     color_offset = category.left - 1
     if color_offset > COLOR_PALETTE_SIZE:
         color_offset -= (color_offset // COLOR_PALETTE_SIZE) * color_offset
-    print(color_offset)
     return COLOR_PALETTE[color_offset]
 
 

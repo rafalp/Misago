@@ -4,8 +4,8 @@ from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
 from ...auth import get_authenticated_user
-from ...loaders import load_categories, load_category
-from ...types import Category, Settings, User
+from ...loaders import load_categories, load_category, load_thread, load_user
+from ...types import Category, Settings, Thread, User
 
 
 query_type = QueryType()
@@ -23,9 +23,23 @@ async def resolve_categories(_, info: GraphQLResolveInfo) -> List:
 
 @query_type.field("category")
 async def resolve_category(
-    _, info: GraphQLResolveInfo, *, id: int  # pylint: disable=redefined-builtin
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[Category]:
     return await load_category(info.context, id)
+
+
+@query_type.field("thread")
+async def resolve_thread(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Optional[Thread]:
+    return await load_thread(info.context, id)
+
+
+@query_type.field("user")
+async def resolve_user(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Optional[User]:
+    return await load_user(info.context, id)
 
 
 @query_type.field("settings")

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, cast
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
@@ -18,12 +18,15 @@ thread_type.set_alias("isClosed", "is_closed")
 
 @thread_type.field("category")
 async def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Category:
-    return await load_category(info.context, obj.category_id)
+    category = await load_category(info.context, obj.category_id)
+    return cast(Category, category)
 
 
 @thread_type.field("firstPost")
-async def resolve_first_post(obj: Thread, info: GraphQLResolveInfo) -> Post:
-    return await load_post(info.context, obj.first_post_id)
+async def resolve_first_post(obj: Thread, info: GraphQLResolveInfo) -> Optional[Post]:
+    if obj.first_post_id:
+        return await load_post(info.context, obj.first_post_id)
+    return None
 
 
 @thread_type.field("starter")
@@ -34,8 +37,10 @@ async def resolve_starter(obj: Thread, info: GraphQLResolveInfo) -> Optional[Use
 
 
 @thread_type.field("lastPost")
-async def resolve_last_post(obj: Thread, info: GraphQLResolveInfo) -> Post:
-    return await load_post(info.context, obj.last_post_id)
+async def resolve_last_post(obj: Thread, info: GraphQLResolveInfo) -> Optional[Post]:
+    if obj.last_post_id:
+        return await load_post(info.context, obj.last_post_id)
+    return None
 
 
 @thread_type.field("lastPosterName")
