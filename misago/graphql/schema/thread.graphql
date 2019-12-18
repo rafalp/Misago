@@ -1,0 +1,18 @@
+type Thread {
+    id: ID!
+    category: Category!
+    firstPost: Post!
+    starter: User
+    starterName: String!
+    lastPost: Post!
+    lastPoster: User
+    lastPosterName: String!
+    title: String!
+    slug: String!
+    startedAt: DateTime!
+    lastPostedAt: DateTime!
+    ordering: Int!
+    replies: Int!
+    isClosed: Boolean!
+    extra: Generic!
+}
