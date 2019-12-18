@@ -1,4 +1,5 @@
-scalar Datetime
+scalar DateTime
+scalar Generic
 
 type Query {
     auth: User
@@ -9,24 +10,4 @@ type Query {
 
 type Settings {
     forumName: String!
-}
-
-type User {
-    id: ID!
-    name: String!
-    slug: String!
-    email: String!
-    isModerator: Boolean!
-    isAdministrator: Boolean!
-    joinedAt: Datetime
-}
-
-type Thread {
-    id: ID!
-    name: String!
-    slug: String!
-}
-
-type Post {
-    id: ID!
 }

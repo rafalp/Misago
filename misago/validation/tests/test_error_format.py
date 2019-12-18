@@ -1,5 +1,5 @@
 from ..errorformat import ROOT_LOCATION, get_error_dict, get_error_type
-from ..errors import InvalidCredentialsError
+from ..errors import AuthError, InvalidCredentialsError
 
 
 def test_error_dict_includes_error_messsage():
@@ -37,6 +37,10 @@ def test_error_type_is_resolved_for_value_error():
 
 def test_error_type_is_resolved_for_type_error():
     assert get_error_type(TypeError()) == "type_error.type"
+
+
+def test_error_type_is_resolved_for_auth_error():
+    assert get_error_type(AuthError()) == "auth_error.auth"
 
 
 def test_error_type_is_resolved_for_pydantic_error():

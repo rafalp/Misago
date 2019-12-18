@@ -20,7 +20,7 @@ async def test_category_children_resolver_returns_empty_list_for_leaf_category(
 
 
 def test_category_color_resolver_returns_string_with_category_color(
-    category, child_category, graphql_info
+    category, graphql_info
 ):
     value = resolve_color(category, graphql_info)
     assert value == "#FF5630"

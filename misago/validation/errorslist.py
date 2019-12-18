@@ -4,6 +4,7 @@ from pydantic import PydanticTypeError, PydanticValueError
 
 from ..types import Error
 from .errorformat import ROOT_LOCATION as DEFAULT_ROOT_LOCATION, get_error_dict
+from .errors import AuthError
 
 
 class ErrorsList(List[Error]):
@@ -16,13 +17,15 @@ class ErrorsList(List[Error]):
                 errors_list.append(error)
         return ErrorsList(errors_list)
 
-    def add_root_error(self, error: Union[PydanticTypeError, PydanticValueError]):
+    def add_root_error(
+        self, error: Union[AuthError, PydanticTypeError, PydanticValueError]
+    ):
         self.add_error(self.ROOT_LOCATION, error)
 
     def add_error(
         self,
         location: Union[str, Sequence[str]],
-        error: Union[PydanticTypeError, PydanticValueError],
+        error: Union[AuthError, PydanticTypeError, PydanticValueError],
     ):
         error_dict = get_error_dict(error, location)
         if error_dict not in self:  # pylint: disable=unsupported-membership-test

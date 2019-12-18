@@ -1,6 +1,7 @@
 from typing import Dict, List, Tuple, Union
 
 from ariadne import MutationType
+from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ...auth import create_user_token
@@ -35,7 +36,9 @@ register_mutation = MutationType()
 
 
 @register_mutation.field("register")
-async def resolve_register(_, info, *, input):  # pylint: disable=redefined-builtin
+async def resolve_register(
+    _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
+):
     input_model = await register_input_model_hook.call_action(
         create_input_model, info.context
     )

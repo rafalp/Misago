@@ -10,6 +10,7 @@ from pydantic import (
 
 from ..types import AsyncRootValidator, AsyncValidator
 from .errorslist import ErrorsList
+from .errors import AuthError
 
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
@@ -62,7 +63,7 @@ async def validate_field_data(
 ):
     try:
         await validator(data)
-    except (PydanticTypeError, PydanticValueError) as error:
+    except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_error(field_name, error)
 
 
@@ -71,5 +72,5 @@ async def validate_root_data(
 ):
     try:
         await validator(data, errors)
-    except (PydanticTypeError, PydanticValueError) as error:
+    except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_root_error(error)

@@ -1,6 +1,7 @@
 from typing import Sequence, Union, cast
 
 from ..types import Error
+from .errors import AuthError
 
 
 ROOT_LOCATION = "__root__"
@@ -26,6 +27,8 @@ def get_error_type(error: Exception) -> str:
     base_name = "value_error"
     if isinstance(error, TypeError):
         base_name = "type_error"
+    if isinstance(error, AuthError):
+        base_name = "auth_error"
 
     code = (
         getattr(error, "code", None)

@@ -1,6 +1,7 @@
 from typing import Dict, Union
 
 from ariadne import MutationType
+from graphql import GraphQLResolveInfo
 from pydantic import PydanticTypeError, PydanticValueError
 
 from ...auth import authenticate_user, create_user_token
@@ -14,7 +15,7 @@ login_mutation = MutationType()
 
 
 @login_mutation.field("login")
-async def resolve_login(_, info, *, username: str, password: str):
+async def resolve_login(_, info: GraphQLResolveInfo, *, username: str, password: str):
     username = str(username or "").strip()
     password = str(password or "")
 

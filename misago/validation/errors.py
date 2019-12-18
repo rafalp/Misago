@@ -1,9 +1,19 @@
 from pydantic import PydanticValueError
+from pydantic.errors import PydanticErrorMixin
+
+
+class AuthError(PydanticErrorMixin, Exception):
+    pass
 
 
 class AllFieldsAreRequiredError(PydanticValueError):
     code = "all_fields_are_required"
     msg_template = "all fields are required"
+
+
+class NotAuthorizedError(AuthError):
+    code = "not_authorized"
+    msg_template = "authorization is required"
 
 
 class EmailIsNotAvailableError(PydanticValueError):
