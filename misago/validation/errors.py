@@ -1,5 +1,4 @@
 from pydantic import PydanticValueError
-from pydantic.errors import PydanticErrorMixin
 
 from ..types import AuthError
 
