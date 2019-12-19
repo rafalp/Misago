@@ -13,6 +13,7 @@ from ...hooks import (
     register_input_model_hook,
     register_user_hook,
 )
+from ...loaders import store_user
 from ...types import (
     AsyncValidator,
     GraphQLContext,
@@ -84,10 +85,12 @@ async def validate_input_data(
 
 
 async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
-    return await create_user_hook.call_action(
+    user = await create_user_hook.call_action(
         create_user,
         cleaned_data["name"],
         cleaned_data["email"],
         password=cleaned_data["password"],
         extra={},
     )
+    store_user(context, user)
+    return user

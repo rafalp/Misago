@@ -1,6 +1,6 @@
 import pytest
 
-from ..threads import load_thread, load_threads
+from ..threads import load_thread, load_threads, store_thread
 
 
 @pytest.mark.asyncio
@@ -25,3 +25,11 @@ async def test_threads_loader_returns_multiple_threads(thread, user_thread):
 async def test_threads_loader_returns_none_for_nonexistent_thread_id(thread):
     loaded_threads = await load_threads({}, [thread.id, thread.id + 1])
     assert loaded_threads == [thread, None]
+
+
+@pytest.mark.asyncio
+async def test_thread_is_stored_in_loader_for_future_use(thread):
+    context = {}
+    store_thread(context, thread)
+    loaded_thread = await load_thread(context, thread.id)
+    assert id(loaded_thread) == id(thread)

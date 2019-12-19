@@ -6,7 +6,7 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
 from ...errors import NotAuthorizedError
-from ...loaders import load_category
+from ...loaders import load_category, store_post, store_thread
 from ...threads.create import create_post, create_thread
 from ...threads.update import update_thread
 from ...types import GraphQLContext
@@ -26,6 +26,13 @@ async def resolve_post_thread(
     if not user:
         raise NotAuthorizedError()
 
+    # todo:
+    # input model hook
+    # input data validation hook
+    # post thread hook
+    # create thread hook
+    # create post hook
+
     input_model = await create_input_model(info.context)
     data, errors = validate_model(input_model, input)
     if errors:
@@ -38,6 +45,9 @@ async def resolve_post_thread(
     thread = await create_thread(category, data["title"], starter=user)
     post = await create_post(thread, {"text": data["body"]}, poster=user)
     thread = await update_thread(thread, first_post=post, last_post=post)
+
+    store_thread(info.context, thread)
+    store_post(info.context, post)
 
     return {"thread": thread}
 

@@ -17,3 +17,9 @@ def load_posts(
 ) -> Awaitable[Sequence[Optional[Post]]]:
     loader = get_loader(context, "post_loader", get_posts_by_id)
     return loader.load_many(ids)
+
+
+def store_post(context: GraphQLContext, post: Post):
+    loader = get_loader(context, "post_loader", get_posts_by_id)
+    loader.clear(post.id)
+    loader.prime(post.id, post)

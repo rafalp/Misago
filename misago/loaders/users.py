@@ -17,3 +17,9 @@ def load_users(
 ) -> Awaitable[Sequence[Optional[User]]]:
     loader = get_loader(context, "user_loader", get_users_by_id)
     return loader.load_many(ids)
+
+
+def store_user(context: GraphQLContext, user: User):
+    loader = get_loader(context, "user_loader", get_users_by_id)
+    loader.clear(user.id)
+    loader.prime(user.id, user)
