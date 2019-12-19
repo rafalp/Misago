@@ -7,7 +7,7 @@ Create Date: 2019-12-15 21:51:27.434952
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy import Integer, JSON, String
+from sqlalchemy import Boolean, Integer, JSON, String
 from sqlalchemy.sql import table, column
 
 from misago.categories.categorytypes import CategoryTypes
@@ -29,6 +29,7 @@ table = table(
     column("right", Integer),
     column("name", String(length=255)),
     column("slug", String(length=255)),
+    column("is_closed", Boolean),
     column("extra", JSON),
 )
 
@@ -43,6 +44,7 @@ categories = [
         "right": 2,
         "name": "PRIVATE_THREADS",
         "slug": "private-threads",
+        "is_closed": False,
         "extra": {},
     },
     {
@@ -54,6 +56,7 @@ categories = [
         "right": 6,
         "name": "Hobbies",
         "slug": "hobbies",
+        "is_closed": False,
         "extra": {},
     },
     {
@@ -65,6 +68,7 @@ categories = [
         "right": 3,
         "name": "Books",
         "slug": "books",
+        "is_closed": False,
         "extra": {},
     },
     {
@@ -76,6 +80,7 @@ categories = [
         "right": 5,
         "name": "Movies",
         "slug": "movies",
+        "is_closed": False,
         "extra": {},
     },
 ]
