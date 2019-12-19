@@ -24,6 +24,7 @@ disable=
     no-self-use,
     protected-access,
     redefined-outer-name,
+    super-init-not-called,
     too-few-public-methods,
     too-many-ancestors,
     too-many-arguments,
@@ -36,7 +37,6 @@ disable=
     ungrouped-imports,
     unsubscriptable-object,
     unused-argument
-
 
 [REPORTS]
 

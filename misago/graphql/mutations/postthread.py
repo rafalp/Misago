@@ -22,7 +22,12 @@ from ...types import (
     PostThreadInputModel,
     Thread,
 )
-from ...validation import validate_category_exists, validate_data, validate_model
+from ...validation import (
+    CategoryExistsValidator,
+    CategoryIsOpenValidator,
+    validate_data,
+    validate_model,
+)
 from ..errorhandler import error_handler
 
 
@@ -44,8 +49,11 @@ async def resolve_post_thread(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators = {
-            "category": [validate_category_exists(info.context)],
+        validators: Dict[str, List[AsyncValidator]] = {
+            "category": [
+                CategoryExistsValidator(info.context),
+                CategoryIsOpenValidator(info.context),
+            ],
         }
         cleaned_data, errors = await post_thread_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

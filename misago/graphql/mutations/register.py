@@ -23,12 +23,12 @@ from ...types import (
 )
 from ...users.create import create_user
 from ...validation import (
+    EmailIsAvailableValidator,
+    UsernameIsAvailableValidator,
     passwordstr,
     usernamestr,
     validate_data,
-    validate_email_is_available,
     validate_model,
-    validate_username_is_available,
 )
 
 
@@ -45,9 +45,9 @@ async def resolve_register(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators = {
-            "name": [validate_username_is_available(),],
-            "email": [validate_email_is_available()],
+        validators: Dict[str, List[AsyncValidator]] = {
+            "name": [UsernameIsAvailableValidator(),],
+            "email": [EmailIsAvailableValidator(),],
         }
         cleaned_data, errors = await register_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

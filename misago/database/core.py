@@ -21,7 +21,7 @@ class Database(BaseDatabase):
         *,
         force_rollback: bool = False,
         **options: typing.Any,
-    ):  # pylint: disable=super-init-not-called
+    ):
         self.url = DatabaseURL(url)
         self.options = options
         self.is_connected = False

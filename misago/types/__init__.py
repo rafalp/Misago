@@ -24,7 +24,10 @@ from .thread import Thread
 from .user import User
 
 
-AsyncValidator = Callable[[Any, ErrorsList], Awaitable[Any]]
+class AsyncValidator(Protocol):
+    async def __call__(self, value: Any, errors: ErrorsList) -> Any:
+        ...
+
 
 AuthenticateUserAction = Callable[
     ["GraphQLContext", str, str], Awaitable[Optional[User]]
@@ -136,7 +139,7 @@ PostThreadFilter = Callable[
 
 RegisterInput = Dict[str, Any]
 RegisterInputAction = Callable[
-    ["GraphQLContext", Dict[str, List[AsyncValidator]], RegisterInput, ErrorsList,],
+    ["GraphQLContext", Dict[str, List[AsyncValidator]], RegisterInput, ErrorsList],
     Awaitable[Tuple[RegisterInput, ErrorsList]],
 ]
 RegisterInputFilter = Callable[

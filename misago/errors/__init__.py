@@ -21,6 +21,14 @@ class CategoryDoesNotExistError(PydanticValueError):
         super().__init__(id=category_id)
 
 
+class CategoryIsClosedError(AuthError):
+    code = "category_is_closed"
+    msg_template = "category with id '{id}' is closed"
+
+    def __init__(self, *, category_id: Union[int, str]) -> None:
+        super().__init__(id=category_id)
+
+
 class NotAuthorizedError(AuthError):
     code = "not_authorized"
     msg_template = "authorization is required"
@@ -47,6 +55,14 @@ class PostDoesNotExistError(PydanticValueError):
 class ThreadDoesNotExistError(PydanticValueError):
     code = "thread_does_not_exist"
     msg_template = "thread with id '{id}' does not exist"
+
+    def __init__(self, *, thread_id: Union[int, str]) -> None:
+        super().__init__(id=thread_id)
+
+
+class ThreadIsClosedError(AuthError):
+    code = "thread_is_closed"
+    msg_template = "thread with id '{id}' is closed"
 
     def __init__(self, *, thread_id: Union[int, str]) -> None:
         super().__init__(id=thread_id)

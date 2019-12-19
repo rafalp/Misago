@@ -113,6 +113,13 @@ async def no_password_user(db):
 
 
 @pytest.fixture
+async def moderator(db, user_password):
+    return await create_user(
+        "Moderator", "moderator@example.com", password=user_password, is_moderator=True
+    )
+
+
+@pytest.fixture
 def graphql_context(cache_versions, dynamic_settings):
     return {
         "request": Mock(headers={}),
@@ -139,6 +146,21 @@ def user_graphql_context(cache_versions, dynamic_settings, user):
 @pytest.fixture
 def user_graphql_info(user_graphql_context):
     return Mock(context=user_graphql_context)
+
+
+@pytest.fixture
+def moderator_graphql_context(cache_versions, dynamic_settings, moderator):
+    return {
+        "request": Mock(headers={}),
+        "cache_versions": cache_versions,
+        "settings": dynamic_settings,
+        "user": moderator,
+    }
+
+
+@pytest.fixture
+def moderator_graphql_info(moderator_graphql_context):
+    return Mock(context=moderator_graphql_context)
 
 
 @pytest.fixture

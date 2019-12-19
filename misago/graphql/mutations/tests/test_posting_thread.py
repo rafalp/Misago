@@ -73,3 +73,77 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
     assert "errors" in data
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_fails_if_category_id_is_invalid(user_graphql_info):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": "invalid",
+            "title": "Hello world!",
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["category"]
+    assert data["errors"].get_errors_types() == ["type_error.integer"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_info):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": "4000",
+            "title": "Hello world!",
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["category"]
+    assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_fails_if_category_is_closed(
+    user_graphql_info, closed_category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(closed_category.id),
+            "title": "Hello world!",
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["category"]
+    assert data["errors"].get_errors_types() == ["auth_error.category_is_closed"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_category(
+    moderator_graphql_info, closed_category
+):
+    data = await resolve_post_thread(
+        None,
+        moderator_graphql_info,
+        input={
+            "category": str(closed_category.id),
+            "title": "Hello world!",
+            "body": "This is test post!",
+        },
+    )
+
+    assert "errors" not in data
+    assert "thread" in data
