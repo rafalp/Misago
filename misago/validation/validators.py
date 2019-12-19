@@ -10,7 +10,7 @@ from ..users.email import get_email_hash
 
 
 def validate_email_is_available(exclude_user: Optional[int] = None) -> AsyncValidator:
-    async def validate_email_is_available_in_db(email):
+    async def validate_email_is_available_in_db(email: str, _=None):
         email_hash = get_email_hash(email)
         query = select([users.c.id]).where(users.c.email_hash == email_hash)
         if exclude_user:
@@ -25,7 +25,7 @@ def validate_email_is_available(exclude_user: Optional[int] = None) -> AsyncVali
 def validate_username_is_available(
     exclude_user: Optional[int] = None,
 ) -> AsyncValidator:
-    async def validate_username_is_available_in_db(username):
+    async def validate_username_is_available_in_db(username: str, _=None):
         query = select([users.c.id]).where(users.c.slug == username.lower())
         if exclude_user:
             query = query.where(users.c.id != exclude_user)

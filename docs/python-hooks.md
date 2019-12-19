@@ -606,7 +606,7 @@ A `dict` of [Jinja filters](https://jinja.palletsprojects.com/en/2.10.x/api/#cus
 register_input_hook.call_action(
     action: RegisterInputAction,
     context: GraphQLContext,
-    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    validators: Dict[str, List[AsyncValidator]],
     data: RegisterInput,
     errors_list: ErrorsList
 )
@@ -624,7 +624,7 @@ Returns a tuple of `data` that should be used to create new user and validation 
 ```python
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    validators: Dict[str, List[AsyncValidator]],
     cleaned_data: RegisterInput,
     errors: ErrorsList,
 ) -> Tuple[RegisterInput, ErrorsList]:
@@ -646,7 +646,7 @@ A dict with GraphQL query context.
 ##### `validators`
 
 ```python
-Dict[str, List[Union[AsyncValidator, AsyncRootValidator]]]
+Dict[str, List[AsyncValidator]]
 ```
 
 A dict of lists of validators that should be used to validate inputs values.

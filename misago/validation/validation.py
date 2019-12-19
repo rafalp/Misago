@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Any, Dict, List, Tuple, Type, Union, cast
+from typing import Any, Dict, List, Optional, Tuple, Type, cast
 
 from pydantic import (
     BaseModel,
@@ -9,7 +9,7 @@ from pydantic import (
 )
 
 from ..errors import AuthError, ErrorsList
-from ..types import AsyncRootValidator, AsyncValidator
+from ..types import AsyncValidator
 
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
@@ -26,50 +26,53 @@ def validate_model(
 
 
 async def validate_data(
-    validated_data: Dict[str, Any],
-    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    model_data: Dict[str, Any],
+    validators: Dict[str, List[AsyncValidator]],
     errors: ErrorsList,
-) -> ErrorsList:
-    new_errors = ErrorsList()
-    validators_queue = []
-    for field_name, field_validators in validators.items():
-        if field_name not in validated_data:
-            continue
+) -> Tuple[Dict[str, Any], ErrorsList]:
+    if not model_data or not validators:
+        return model_data, errors
 
-        for validator in field_validators:
-            validator = cast(AsyncValidator, validator)
+    new_errors = ErrorsList()
+    validated_data: Dict[str, Any] = {}
+
+    validators_queue = []
+    validators_queue_fields = []
+    for field_name, field_data in model_data.items():
+        if validators.get(field_name):
+            field_validators = validators[field_name]
+            validators_queue_fields.append(field_name)
             validators_queue.append(
                 validate_field_data(
-                    field_name, validated_data[field_name], validator, new_errors
+                    field_name, field_data, field_validators, new_errors
                 )
             )
-
-    if ROOT_LOCATION in validators:
-        for root_validator in validators[ROOT_LOCATION]:
-            root_validator = cast(AsyncRootValidator, root_validator)
-            validators_queue.append(
-                validate_root_data(validated_data, root_validator, new_errors)
-            )
+        else:
+            validated_data[field_name] = field_data
 
     if validators_queue:
-        await gather(*validators_queue)
+        for i, validated_field_data in enumerate(await gather(*validators_queue)):
+            validated_field_name = validators_queue_fields[i]
+            if validated_field_data is not None:
+                validated_data[validated_field_name] = validated_field_data
 
-    return errors + new_errors
+    if ROOT_LOCATION in validators and validated_data:
+        for root_validator in validators[ROOT_LOCATION]:
+            try:
+                validated_data = await root_validator(validated_data, new_errors)
+            except (AuthError, PydanticTypeError, PydanticValueError) as error:
+                errors.add_root_error(error)
+
+    return validated_data, errors + new_errors
 
 
 async def validate_field_data(
-    field_name: str, data: Any, validator: AsyncValidator, errors: ErrorsList
-):
+    field_name: str, data: Any, validators: List[AsyncValidator], errors: ErrorsList
+) -> Optional[Any]:
     try:
-        await validator(data)
+        for validator in validators:
+            data = await validator(data, errors)
+        return data
     except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_error(field_name, error)
-
-
-async def validate_root_data(
-    data: Any, validator: AsyncRootValidator, errors: ErrorsList
-):
-    try:
-        await validator(data, errors)
-    except (AuthError, PydanticTypeError, PydanticValueError) as error:
-        errors.add_root_error(error)
+        return None

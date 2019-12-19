@@ -1,11 +1,10 @@
 from datetime import datetime
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple
 
 from starlette.requests import Request
 
 from ..types import (
-    AsyncRootValidator,
     AsyncValidator,
     AuthenticateUserAction,
     AuthenticateUserFilter,
@@ -144,7 +143,7 @@ class RegisterInputHook(FilterHook[RegisterInputAction, RegisterInputFilter]):
         self,
         action: RegisterInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+        validators: Dict[str, List[AsyncValidator]],
         data: RegisterInput,
         errors_list: ErrorsList,
     ) -> Tuple[RegisterInput, ErrorsList]:

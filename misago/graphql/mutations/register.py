@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Tuple
 
 from ariadne import MutationType
 from graphql import GraphQLResolveInfo
@@ -14,7 +14,6 @@ from ...hooks import (
     register_user_hook,
 )
 from ...types import (
-    AsyncRootValidator,
     AsyncValidator,
     GraphQLContext,
     RegisterInput,
@@ -77,12 +76,11 @@ async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[Union[AsyncRootValidator, AsyncValidator]]],
+    validators: Dict[str, List[AsyncValidator]],
     cleaned_data: RegisterInput,
     errors: ErrorsList,
 ) -> Tuple[RegisterInput, ErrorsList]:
-    errors = await validate_data(cleaned_data, validators, errors)
-    return cleaned_data, errors
+    return await validate_data(cleaned_data, validators, errors)
 
 
 async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
