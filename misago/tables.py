@@ -19,7 +19,7 @@ settings = sqlalchemy.Table(
 users = sqlalchemy.Table(
     "misago_users",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String(length=50), nullable=False),
     sqlalchemy.Column(
         "slug", sqlalchemy.String(length=50), nullable=False, unique=True
@@ -57,7 +57,7 @@ sqlalchemy.Index(
 categories = sqlalchemy.Table(
     "misago_categories",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column("type", sqlalchemy.Integer, nullable=False, index=True),
     sqlalchemy.Column(
         "parent_id",
@@ -76,7 +76,7 @@ categories = sqlalchemy.Table(
 threads = sqlalchemy.Table(
     "misago_threads",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column(
         "category_id",
         sqlalchemy.Integer,
@@ -128,7 +128,7 @@ sqlalchemy.Index(
 posts = sqlalchemy.Table(
     "misago_posts",
     metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column(
         "category_id",
         sqlalchemy.Integer,

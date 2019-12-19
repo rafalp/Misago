@@ -35,7 +35,18 @@ table = table(
 
 categories = [
     {
-        # id: 1
+        # id: 2
+        "type": CategoryTypes.PRIVATE_THREADS,
+        "parent_id": None,
+        "depth": 0,
+        "left": 1,
+        "right": 2,
+        "name": "PRIVATE_THREADS",
+        "slug": "private-threads",
+        "extra": {},
+    },
+    {
+        # id: 2
         "type": CategoryTypes.THREADS,
         "parent_id": None,
         "depth": 0,
@@ -46,9 +57,9 @@ categories = [
         "extra": {},
     },
     {
-        # id: 2
+        # id: 3
         "type": CategoryTypes.THREADS,
-        "parent_id": 1,
+        "parent_id": 2,
         "depth": 1,
         "left": 2,
         "right": 3,
@@ -57,7 +68,7 @@ categories = [
         "extra": {},
     },
     {
-        # id: 3
+        # id: 4
         "type": CategoryTypes.THREADS,
         "parent_id": None,
         "depth": 1,
