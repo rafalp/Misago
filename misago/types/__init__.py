@@ -39,6 +39,72 @@ AuthenticateUserFilter = Callable[
 CacheVersions = Dict[str, str]
 
 
+class CreatePostAction(Protocol):
+    async def __call__(
+        self,
+        thread: Thread,
+        body: dict,
+        *,
+        poster: Optional[User] = None,
+        poster_name: Optional[str] = None,
+        edits: Optional[int] = 0,
+        posted_at: Optional[datetime] = None,
+        extra: Optional[dict] = None,
+    ) -> Post:
+        ...
+
+
+class CreatePostFilter(Protocol):
+    async def __call__(
+        self,
+        action: CreatePostAction,
+        thread: Thread,
+        body: dict,
+        *,
+        poster: Optional[User] = None,
+        poster_name: Optional[str] = None,
+        edits: Optional[int] = 0,
+        posted_at: Optional[datetime] = None,
+        extra: Optional[dict] = None,
+    ) -> Post:
+        ...
+
+
+class CreateThreadAction(Protocol):
+    async def __call__(
+        self,
+        category: Category,
+        title: str,
+        *,
+        first_post: Optional[Post] = None,
+        starter: Optional[User] = None,
+        starter_name: Optional[str] = None,
+        replies: int = 0,
+        is_closed: bool = False,
+        started_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> Thread:
+        ...
+
+
+class CreateThreadFilter(Protocol):
+    async def __call__(
+        self,
+        action: CreateThreadAction,
+        category: Category,
+        title: str,
+        *,
+        first_post: Optional[Post] = None,
+        starter: Optional[User] = None,
+        starter_name: Optional[str] = None,
+        replies: int = 0,
+        is_closed: bool = False,
+        started_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> Thread:
+        ...
+
+
 class CreateUserAction(Protocol):
     async def __call__(
         self,
@@ -49,7 +115,7 @@ class CreateUserAction(Protocol):
         is_moderator: bool = False,
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None
+        extra: Optional[Dict[str, Any]] = None,
     ) -> User:
         ...
 
@@ -65,7 +131,7 @@ class CreateUserFilter(Protocol):
         is_moderator: bool = False,
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None
+        extra: Optional[Dict[str, Any]] = None,
     ) -> User:
         ...
 

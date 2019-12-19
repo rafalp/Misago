@@ -8,6 +8,11 @@ from ..types import (
     AsyncValidator,
     AuthenticateUserAction,
     AuthenticateUserFilter,
+    Category,
+    CreatePostAction,
+    CreatePostFilter,
+    CreateThreadAction,
+    CreateThreadFilter,
     CreateUserAction,
     CreateUserFilter,
     CreateUserTokenAction,
@@ -63,6 +68,60 @@ class AuthenticateUserHook(FilterHook[AuthenticateUserAction, AuthenticateUserFi
         return await self.filter(action, context, username, password)
 
 
+class CreatePostHook(FilterHook[CreatePostAction, CreatePostFilter]):
+    async def call_action(
+        self,
+        action: CreatePostAction,
+        thread: Thread,
+        body: dict,
+        *,
+        poster: Optional[User] = None,
+        poster_name: Optional[str] = None,
+        edits: Optional[int] = 0,
+        posted_at: Optional[datetime] = None,
+        extra: Optional[dict] = None,
+    ) -> Post:
+        return await self.filter(
+            action,
+            thread,
+            body,
+            poster=poster,
+            poster_name=poster_name,
+            edits=edits,
+            posted_at=posted_at,
+            extra=extra,
+        )
+
+
+class CreateThreadHook(FilterHook[CreateThreadAction, CreateThreadFilter]):
+    async def call_action(
+        self,
+        action: CreateThreadAction,
+        category: Category,
+        title: str,
+        *,
+        first_post: Optional[Post] = None,
+        starter: Optional[User] = None,
+        starter_name: Optional[str] = None,
+        replies: int = 0,
+        is_closed: bool = False,
+        started_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None,
+    ) -> Thread:
+        return await self.filter(
+            action,
+            category,
+            title,
+            first_post=first_post,
+            starter=starter,
+            starter_name=starter_name,
+            replies=replies,
+            is_closed=is_closed,
+            started_at=started_at,
+            extra=extra,
+        )
+
+
 class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
     async def call_action(
         self,
@@ -75,7 +134,7 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
         is_moderator: bool = False,
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None
+        extra: Optional[Dict[str, Any]] = None,
     ) -> User:
         return await self.filter(
             action,

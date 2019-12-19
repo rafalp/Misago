@@ -6,6 +6,8 @@ from .action import ActionHook
 from .filter import FilterHook
 from .filters import (
     AuthenticateUserHook,
+    CreatePostHook,
+    CreateThreadHook,
     CreateUserHook,
     CreateUserTokenHook,
     CreateUserTokenPayloadHook,
@@ -25,6 +27,8 @@ from .filters import (
 
 
 authenticate_user_hook = AuthenticateUserHook()
+create_post_hook = CreatePostHook()
+create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()

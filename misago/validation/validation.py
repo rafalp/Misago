@@ -67,10 +67,7 @@ async def validate_data(
 
 
 async def validate_field_data(
-    field_name: str,
-    data: Any,
-    validators: List[AsyncValidator],
-    errors: ErrorsList,
+    field_name: str, data: Any, validators: List[AsyncValidator], errors: ErrorsList,
 ) -> Optional[Any]:
     try:
         for validator in validators:

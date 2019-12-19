@@ -91,6 +91,250 @@ User password.
 - - -
 
 
+### `create_post_hook`:
+
+```python
+create_post_hook.call_action(
+    action: CreatePostAction,
+    thread: Thread,
+    body: dict,
+    *,
+    poster: Optional[User] = None,
+    poster_name: Optional[str] = None,
+    edits: Optional[int] = 0,
+    posted_at: Optional[datetime] = None,
+    extra: Optional[dict] = None,
+)
+```
+
+A filter for the function used to create new post in the database.
+
+Returns `Post` dataclass with newly created post data.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_post(
+    thread: Thread,
+    body: dict,
+    *,
+    poster: Optional[User] = None,
+    poster_name: Optional[str] = None,
+    edits: Optional[int] = 0,
+    posted_at: Optional[datetime] = None,
+    extra: Optional[dict] = None,
+) -> Thread:
+    ...
+```
+
+Next filter or built-in function used to create new post in the database.
+
+
+##### `thread`
+
+```python
+Thread
+```
+
+`Thread` dataclass for thread in which thread will be created.
+
+
+##### `body`
+
+```python
+dict
+```
+
+`dict` containing JSON with [ProseMirror](https://prosemirror.net) document representing post body.
+
+
+#### Optional arguments
+
+##### `poster`
+
+```python
+Optional[User] = None
+```
+
+`User` dataclass with post creator.
+
+
+##### `starter_name`
+
+```python
+Optional[str] = None
+```
+
+`str` with post creator name. Is mutually exclusive with `poster` argument. If given instead of `poster`, this means post creator was guest user.
+
+
+##### `edits`
+
+```python
+int = False
+```
+
+Initial count of number of times that post has been edited.
+
+
+##### `posted_at`
+
+```python
+Optional[datetime] = datetime.utcnow()
+```
+
+`datetime` of post creation.
+
+
+##### `extra`
+
+```python
+Optional[Dict[str, Any]] = dict()
+```
+
+JSON-serializable dict with extra data for this post. This value is not used by Misago, but allows plugin authors to store additional information about post directly on it's database row.
+
+
+- - -
+
+
+### `create_thread_hook`:
+
+```python
+create_thread_hook.call_action(
+    action: CreateThreadAction,
+    category: Category,
+    title: str,
+    *,
+    first_post: Optional[Post] = None,
+    starter: Optional[User] = None,
+    starter_name: Optional[str] = None,
+    replies: int = 0,
+    is_closed: bool = False,
+    started_at: Optional[datetime] = None,
+    extra: Optional[Dict[str, Any]] = None,
+)
+```
+
+A filter for the function used to create new thread in the database.
+
+Returns `Thread` dataclass with newly created thread data.
+
+> **Note:** Misago requires for thread to exist in the database before thread first post can be created. Most of times this method will be called with `first_post` being empty and updated later.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_thread(
+    category: Category,
+    title: str,
+    *,
+    first_post: Optional[Post] = None,
+    starter: Optional[User] = None,
+    starter_name: Optional[str] = None,
+    replies: int = 0,
+    is_closed: bool = False,
+    started_at: Optional[datetime] = None,
+    extra: Optional[Dict[str, Any]] = None,
+) -> Thread:
+    ...
+```
+
+Next filter or built-in function used to create new thread in the database.
+
+
+##### `category`
+
+```python
+Category
+```
+
+`Category` dataclass for category in which thread will be created.
+
+
+##### `title`
+
+```python
+str
+```
+
+String with thread title.
+
+
+#### Optional arguments
+
+##### `first_post`
+
+```python
+Optional[Post] = None
+```
+
+`Post` dataclass with thread first post.
+
+
+##### `starter`
+
+```python
+Optional[User] = None
+```
+
+`User` dataclass with thread starter.
+
+
+##### `starter_name`
+
+```python
+Optional[str] = None
+```
+
+`str` with thread starter name. Is mutually exclusive with `starter` argument. If given instead of `starter`, this means thread creator was guest user.
+
+
+##### `replies`
+
+```python
+int = False
+```
+
+Initial count of thread replies.
+
+
+#####  `is_closed`
+
+```python
+bool = False
+```
+
+Controls if thread should be created closed.
+
+
+##### `started_at`
+
+```python
+Optional[datetime]
+```
+
+`datetime` of thread creation. Mutually exclusive with `first_post`. If `first_post` is given, it's `posted_at` `datetime` will be used instead.
+
+
+##### `extra`
+
+```python
+Optional[Dict[str, Any]] = dict()
+```
+
+JSON-serializable dict with extra data for this thread. This value is not used by Misago, but allows plugin authors to store additional information about thread directly on it's database row.
+
+
+- - -
+
+
 ### `create_user_hook`:
 
 ```python
@@ -185,7 +429,7 @@ Controls if user user can administrate the site.
 ##### `joined_at`
 
 ```python
-Optional[datetime] = datetime.now()
+Optional[datetime] = datetime.utcnow()
 ```
 
 Joined at date for this user-account. Defaults to current date-time.
