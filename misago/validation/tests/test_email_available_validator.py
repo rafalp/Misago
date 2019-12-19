@@ -7,13 +7,13 @@ from ..validators import validate_email_is_available
 @pytest.mark.asyncio
 async def test_validator_allows_email_if_its_not_used_by_other_user(db):
     validator = validate_email_is_available()
-    await validator("new@example.com")
+    assert await validator("new@example.com") == "new@example.com"
 
 
 @pytest.mark.asyncio
 async def test_validator_allows_email_if_its_used_by_excluded_user(user):
     validator = validate_email_is_available(user.id)
-    await validator(user.email)
+    assert await validator(user.email) == user.email
 
 
 @pytest.mark.asyncio

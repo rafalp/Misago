@@ -1,3 +1,5 @@
+from typing import Union
+
 from pydantic import PydanticValueError
 
 from .autherror import AuthError
@@ -9,6 +11,14 @@ from .format import get_error_dict, get_error_type
 class AllFieldsAreRequiredError(PydanticValueError):
     code = "all_fields_are_required"
     msg_template = "all fields are required"
+
+
+class CategoryDoesNotExistError(PydanticValueError):
+    code = "category_does_not_exist"
+    msg_template = "category with id '{id}' does not exist"
+
+    def __init__(self, *, category_id: Union[int, str]) -> None:
+        super().__init__(id=category_id)
 
 
 class NotAuthorizedError(AuthError):
@@ -24,6 +34,22 @@ class EmailIsNotAvailableError(PydanticValueError):
 class InvalidCredentialsError(PydanticValueError):
     code = "invalid_credentials"
     msg_template = "invalid credentials"
+
+
+class PostDoesNotExistError(PydanticValueError):
+    code = "post_does_not_exist"
+    msg_template = "post with id '{id}' does not exist"
+
+    def __init__(self, *, post_id: Union[int, str]) -> None:
+        super().__init__(id=post_id)
+
+
+class ThreadDoesNotExistError(PydanticValueError):
+    code = "thread_does_not_exist"
+    msg_template = "thread with id '{id}' does not exist"
+
+    def __init__(self, *, thread_id: Union[int, str]) -> None:
+        super().__init__(id=thread_id)
 
 
 class UsernameError(PydanticValueError):

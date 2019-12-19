@@ -7,13 +7,13 @@ from ..validators import validate_username_is_available
 @pytest.mark.asyncio
 async def test_validator_allows_username_if_its_not_used_by_other_user(db):
     validator = validate_username_is_available()
-    await validator("TestUsername")
+    assert await validator("TestUsername") == "TestUsername"
 
 
 @pytest.mark.asyncio
 async def test_validator_allows_username_if_its_used_by_excluded_user(user):
     validator = validate_username_is_available(user.id)
-    await validator(user.name)
+    assert await validator(user.name) == user.name
 
 
 @pytest.mark.asyncio
