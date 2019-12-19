@@ -26,6 +26,15 @@ from ..types import (
     GraphQLContext,
     GraphQLContextAction,
     GraphQLContextFilter,
+    Post,
+    PostThreadAction,
+    PostThreadFilter,
+    PostThreadInput,
+    PostThreadInputAction,
+    PostThreadInputFilter,
+    PostThreadInputModel,
+    PostThreadInputModelAction,
+    PostThreadInputModelFilter,
     RegisterInput,
     RegisterInputAction,
     RegisterInputFilter,
@@ -37,6 +46,7 @@ from ..types import (
     TemplateContext,
     TemplateContextAction,
     TemplateContextFilter,
+    Thread,
     User,
 )
 from .filter import FilterHook
@@ -136,6 +146,37 @@ class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter])
         self, action: GraphQLContextAction, request: Request
     ) -> GraphQLContext:
         return await self.filter(action, request)
+
+
+class PostThreadInputHook(FilterHook[PostThreadInputAction, PostThreadInputFilter]):
+    async def call_action(
+        self,
+        action: PostThreadInputAction,
+        context: GraphQLContext,
+        validators: Dict[str, List[AsyncValidator]],
+        data: PostThreadInput,
+        errors_list: ErrorsList,
+    ) -> Tuple[PostThreadInput, ErrorsList]:
+        return await self.filter(action, context, validators, data, errors_list)
+
+
+class PostThreadInputModelHook(
+    FilterHook[PostThreadInputModelAction, PostThreadInputModelFilter]
+):
+    async def call_action(
+        self, action: PostThreadInputModelAction, context: GraphQLContext
+    ) -> PostThreadInputModel:
+        return await self.filter(action, context)
+
+
+class PostThreadHook(FilterHook[PostThreadAction, PostThreadFilter]):
+    async def call_action(
+        self,
+        action: PostThreadAction,
+        context: GraphQLContext,
+        cleaned_data: PostThreadInput,
+    ) -> Tuple[Thread, Post]:
+        return await self.filter(action, context, cleaned_data)
 
 
 class RegisterInputHook(FilterHook[RegisterInputAction, RegisterInputFilter]):

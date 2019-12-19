@@ -79,12 +79,6 @@ CreateUserTokenPayloadFilter = Callable[
     [CreateUserTokenPayloadAction, "GraphQLContext", User], Awaitable[Dict[str, Any]],
 ]
 
-RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable[User]]
-RegisterUserFilter = Callable[
-    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable[User]
-]
-
-
 GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional[User]]]
 GetAuthUserFilter = Callable[
     [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional[User]]
@@ -114,6 +108,32 @@ GraphQLContextFilter = Callable[
     [GraphQLContextAction, Request], Awaitable[GraphQLContext]
 ]
 
+PostThreadInput = Dict[str, Any]
+PostThreadInputAction = Callable[
+    ["GraphQLContext", Dict[str, List[AsyncValidator]], PostThreadInput, ErrorsList,],
+    Awaitable[Tuple[PostThreadInput, ErrorsList]],
+]
+PostThreadInputFilter = Callable[
+    [PostThreadInputAction, "GraphQLContext", PostThreadInput],
+    Awaitable[Tuple[PostThreadInput, ErrorsList]],
+]
+
+PostThreadInputModel = Type[BaseModel]
+PostThreadInputModelAction = Callable[
+    ["GraphQLContext"], Awaitable[PostThreadInputModel]
+]
+PostThreadInputModelFilter = Callable[
+    [PostThreadInputModelAction, "GraphQLContext"], Awaitable[PostThreadInputModel],
+]
+
+PostThreadAction = Callable[
+    ["GraphQLContext", "PostThreadInput"], Awaitable[Tuple[Thread, Post]]
+]
+PostThreadFilter = Callable[
+    [PostThreadAction, "GraphQLContext", "PostThreadInput"],
+    Awaitable[Tuple[Thread, Post]],
+]
+
 RegisterInput = Dict[str, Any]
 RegisterInputAction = Callable[
     ["GraphQLContext", Dict[str, List[AsyncValidator]], RegisterInput, ErrorsList,],
@@ -128,6 +148,11 @@ RegisterInputModel = Type[BaseModel]
 RegisterInputModelAction = Callable[["GraphQLContext"], Awaitable[RegisterInputModel]]
 RegisterInputModelFilter = Callable[
     [RegisterInputModelAction, "GraphQLContext"], Awaitable[RegisterInputModel],
+]
+
+RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable[User]]
+RegisterUserFilter = Callable[
+    [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable[User]
 ]
 
 

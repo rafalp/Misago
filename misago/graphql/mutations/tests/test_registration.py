@@ -21,7 +21,7 @@ async def test_registration_mutation_creates_new_user_account(graphql_info):
 
     assert "errors" not in data
     assert "user" in data
-    assert await get_user_by_id(data["user"].id)
+    assert data["user"] == await get_user_by_id(data["user"].id)
 
 
 @pytest.mark.asyncio

@@ -68,7 +68,7 @@ async def resolve_register(
 
 async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
     return create_model(
-        "RegisterInput",
+        "RegisterInputModel",
         name=(usernamestr(context["settings"]), ...),
         email=(EmailStr, ...),
         password=(passwordstr(context["settings"]), ...),

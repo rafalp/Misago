@@ -14,6 +14,9 @@ from .filters import (
     GetUserFromTokenHook,
     GetUserFromTokenPayloadHook,
     GraphQLContextHook,
+    PostThreadHook,
+    PostThreadInputHook,
+    PostThreadInputModelHook,
     RegisterInputHook,
     RegisterInputModelHook,
     RegisterUserHook,
@@ -35,6 +38,9 @@ graphql_type_defs_hook: List[str] = []
 graphql_types_hook: List[SchemaBindable] = []
 jinja2_extensions: List[Any] = []
 jinja2_filters: Dict[str, Any] = {}
+post_thread_hook = PostThreadHook()
+post_thread_input_hook = PostThreadInputHook()
+post_thread_input_model_hook = PostThreadInputModelHook()
 register_input_hook = RegisterInputHook()
 register_input_model_hook = RegisterInputModelHook()
 register_user_hook = RegisterUserHook()

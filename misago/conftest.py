@@ -57,7 +57,10 @@ async def categories(db):
         name="Child Category", parent=top_category, left=8, right=9, depth=1
     )
     sibling_category = await create_category(name="Sibling Category", left=11, right=12)
-    return (top_category, child_category, sibling_category)
+    closed_category = await create_category(
+        name="Closed Category", left=13, right=14, is_closed=True
+    )
+    return (top_category, child_category, sibling_category, closed_category)
 
 
 @pytest.fixture
@@ -73,6 +76,11 @@ def child_category(categories):
 @pytest.fixture
 def sibling_category(categories):
     return categories[2]
+
+
+@pytest.fixture
+def closed_category(categories):
+    return categories[3]
 
 
 @pytest.fixture
