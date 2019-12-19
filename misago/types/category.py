@@ -15,3 +15,4 @@ class Category(MPTTNode):
     right: int = 0
     depth: int = 0
     parent_id: Optional[int] = None
+    is_closed: Optional[bool] = False

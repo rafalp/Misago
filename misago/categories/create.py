@@ -14,6 +14,7 @@ async def create_category(
     left: Optional[int] = 0,
     right: Optional[int] = 0,
     depth: Optional[int] = 0,
+    is_closed: Optional[bool] = False,
     extra: Optional[Dict[str, Any]] = None
 ) -> Category:
     data: Dict[str, Any] = {
@@ -24,6 +25,7 @@ async def create_category(
         "left": left,
         "right": right,
         "depth": depth,
+        "is_closed": is_closed or False,
         "extra": extra or {},
     }
 

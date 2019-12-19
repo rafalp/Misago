@@ -38,3 +38,15 @@ async def test_category_is_created_with_mptt_data(db):
     assert category.left == 1
     assert category.right == 2
     assert category.depth == 3
+
+
+@pytest.mark.asyncio
+async def test_category_is_created_open(db):
+    category = await create_category("TeST")
+    assert not category.is_closed
+
+
+@pytest.mark.asyncio
+async def test_category_is_created_closed(db):
+    category = await create_category("TeST", is_closed=True)
+    assert category.is_closed
