@@ -5,10 +5,13 @@ from graphql import GraphQLResolveInfo
 from pydantic import PydanticTypeError, PydanticValueError
 
 from ...auth import authenticate_user, create_user_token
+from ...errors import (
+    AllFieldsAreRequiredError,
+    ErrorDict,
+    InvalidCredentialsError,
+    get_error_dict,
+)
 from ...hooks import authenticate_user_hook, create_user_token_hook
-from ...types import Error
-from ...validation import get_error_dict
-from ...validation.errors import AllFieldsAreRequiredError, InvalidCredentialsError
 
 
 login_mutation = MutationType()
@@ -40,5 +43,5 @@ async def resolve_login(_, info: GraphQLResolveInfo, *, username: str, password:
 
 def get_error_result(
     error: Union[PydanticTypeError, PydanticValueError]
-) -> Dict[str, Error]:
+) -> Dict[str, ErrorDict]:
     return {"error": get_error_dict(error)}

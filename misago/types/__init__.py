@@ -15,9 +15,9 @@ from typing import (
 )
 
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
-from pydantic.errors import PydanticErrorMixin
 from starlette.requests import Request
 
+from ..errors import ErrorsList
 from .category import Category
 from .post import Post
 from .thread import Thread
@@ -84,30 +84,6 @@ RegisterUserAction = Callable[["GraphQLContext", "RegisterInput"], Awaitable[Use
 RegisterUserFilter = Callable[
     [RegisterUserAction, "GraphQLContext", "RegisterInput"], Awaitable[User]
 ]
-
-
-class AuthError(PydanticErrorMixin, Exception):
-    pass
-
-
-class Error(TypedDict):
-    loc: Sequence[Union[int, str]]
-    msg: str
-    type: str
-
-
-class ErrorsList(List[Error]):
-    def add_root_error(
-        self, error: Union[AuthError, PydanticTypeError, PydanticValueError]
-    ):
-        ...
-
-    def add_error(
-        self,
-        location: Union[str, Sequence[str]],
-        error: Union[AuthError, PydanticTypeError, PydanticValueError],
-    ):
-        ...
 
 
 GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional[User]]]

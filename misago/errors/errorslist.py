@@ -2,14 +2,15 @@ from typing import List, Sequence, Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
-from ..types import AuthError, Error
-from .errorformat import ROOT_LOCATION as DEFAULT_ROOT_LOCATION, get_error_dict
+from .autherror import AuthError
+from .errordict import ErrorDict
+from .format import ROOT_LOCATION as DEFAULT_ROOT_LOCATION, get_error_dict
 
 
-class ErrorsList(List[Error]):
+class ErrorsList(List[ErrorDict]):
     ROOT_LOCATION = DEFAULT_ROOT_LOCATION
 
-    def __add__(self, other_list: Sequence[Error]) -> "ErrorsList":
+    def __add__(self, other_list: Sequence[ErrorDict]) -> "ErrorsList":
         errors_list = list(self)
         for error in other_list:
             if error not in errors_list:

@@ -2,7 +2,7 @@ import pytest
 
 from pydantic import PydanticValueError
 
-from ..errorslist import ErrorsList
+from ...errors import ErrorsList
 from ..validation import ROOT_LOCATION, validate_data
 
 

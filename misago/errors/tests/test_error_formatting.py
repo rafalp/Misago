@@ -1,5 +1,5 @@
-from ..errorformat import ROOT_LOCATION, get_error_dict, get_error_type
-from ..errors import AuthError, InvalidCredentialsError
+from .. import AuthError, InvalidCredentialsError
+from ..format import ROOT_LOCATION, get_error_dict, get_error_type
 
 
 def test_error_dict_includes_error_messsage():

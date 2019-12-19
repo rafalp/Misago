@@ -1,6 +1,6 @@
 import pytest
 
-from ..errors import EmailIsNotAvailableError, UsernameIsNotAvailableError
+from .. import EmailIsNotAvailableError, UsernameIsNotAvailableError
 from ..errorslist import ErrorsList
 
 

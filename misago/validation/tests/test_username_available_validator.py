@@ -1,6 +1,6 @@
 import pytest
 
-from ..errors import UsernameIsNotAvailableError
+from ...errors import UsernameIsNotAvailableError
 from ..validators import validate_username_is_available
 
 

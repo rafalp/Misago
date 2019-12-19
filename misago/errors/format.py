@@ -1,6 +1,7 @@
 from typing import Sequence, Union, cast
 
-from ..types import AuthError, Error
+from .autherror import AuthError
+from .errordict import ErrorDict
 
 
 ROOT_LOCATION = "__root__"
@@ -8,7 +9,7 @@ ROOT_LOCATION = "__root__"
 
 def get_error_dict(
     error: Exception, location: Union[str, Sequence[str]] = ROOT_LOCATION
-) -> Error:
+) -> ErrorDict:
     if not isinstance(location, (list, tuple)):
         location = (cast(str, location),)
 

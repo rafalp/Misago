@@ -3,10 +3,10 @@ from typing import Optional
 from sqlalchemy.sql import select
 
 from ..database import database
+from ..errors import EmailIsNotAvailableError, UsernameIsNotAvailableError
 from ..tables import users
 from ..types import AsyncValidator
 from ..users.email import get_email_hash
-from .errors import EmailIsNotAvailableError, UsernameIsNotAvailableError
 
 
 def validate_email_is_available(exclude_user: Optional[int] = None) -> AsyncValidator:

@@ -3,8 +3,7 @@ from typing import Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
-from ..types import AuthError, Error
-from ..validation import get_error_dict
+from ..errors import AuthError, ErrorDict, get_error_dict
 
 
 ERRORS = "errors"
@@ -26,7 +25,7 @@ def error_handler(f):
     return wrapper
 
 
-def format_error(error: Union[Error, Exception]) -> Error:
+def format_error(error: Union[ErrorDict, Exception]) -> ErrorDict:
     if isinstance(error, Exception):
         return get_error_dict(error)
     return error

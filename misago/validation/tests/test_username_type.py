@@ -1,6 +1,6 @@
 import pytest
 
-from ..errors import UsernameError
+from ...errors import UsernameError
 from ..types import usernamestr
 
 

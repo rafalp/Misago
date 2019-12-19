@@ -1,14 +1,16 @@
+from typing import Type
+
 from ariadne import MutationType
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
+from ...errors import NotAuthorizedError
 from ...loaders import load_category
 from ...threads.create import create_post, create_thread
 from ...threads.update import update_thread
 from ...types import GraphQLContext
 from ...validation import validate_model
-from ...validation.errors import NotAuthorizedError
 from ..errorhandler import error_handler
 
 
@@ -40,7 +42,7 @@ async def resolve_post_thread(
     return {"thread": thread}
 
 
-async def create_input_model(context: GraphQLContext):
+async def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     return create_model(
         "PostThreadInput",
         category=(PositiveInt, ...),

@@ -3,8 +3,8 @@ from typing import Any, Callable, Generator, Type, cast
 
 from pydantic import ConstrainedStr, constr
 
+from ..errors import UsernameError
 from ..types import Settings
-from .errors import UsernameError
 
 
 CallableGenerator = Generator[Callable[..., Any], None, None]
