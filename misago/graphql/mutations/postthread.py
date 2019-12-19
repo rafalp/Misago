@@ -83,10 +83,10 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    cleaned_data: PostThreadInput,
+    data: PostThreadInput,
     errors: ErrorsList,
 ) -> Tuple[PostThreadInput, ErrorsList]:
-    return await validate_data(cleaned_data, validators, errors)
+    return await validate_data(data, validators, errors)
 
 
 async def post_thread(

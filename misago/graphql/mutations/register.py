@@ -78,10 +78,10 @@ async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    cleaned_data: RegisterInput,
+    data: RegisterInput,
     errors: ErrorsList,
 ) -> Tuple[RegisterInput, ErrorsList]:
-    return await validate_data(cleaned_data, validators, errors)
+    return await validate_data(data, validators, errors)
 
 
 async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
