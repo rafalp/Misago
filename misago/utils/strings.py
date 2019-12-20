@@ -1,5 +1,6 @@
 import re
 import secrets
+from typing import Optional
 
 from unidecode import unidecode
 
@@ -18,8 +19,11 @@ def get_random_string(
     return "".join(secrets.choice(allowed_chars) for i in range(length))
 
 
-def slugify(value: str) -> str:
+def slugify(value: str, max_length: Optional[int] = 255) -> str:
     value = str(value)
     value = unidecode(value)
     value = re.sub(r"[^\w\s-]", "", value).strip().lower()
-    return re.sub(r"[-\s]+", "-", value)
+    value = re.sub(r"[-\s]+", "-", value)
+    if max_length:
+        value = value[:max_length]
+    return value.strip("-")

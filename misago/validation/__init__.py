@@ -1,4 +1,4 @@
-from .types import passwordstr, usernamestr
+from .types import passwordstr, sluggablestr, threadtitlestr, usernamestr
 from .validation import validate_data, validate_model
 from .validators import (
     CategoryExistsValidator,
@@ -18,6 +18,8 @@ __all__ = [
     "ThreadExistsValidator",
     "UsernameIsAvailableValidator",
     "passwordstr",
+    "sluggablestr",
+    "threadtitlestr",
     "usernamestr",
     "validate_data",
     "validate_model",

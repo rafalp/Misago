@@ -27,6 +27,7 @@ from ...types import (
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
+    threadtitlestr,
     validate_data,
     validate_model,
 )
@@ -75,7 +76,7 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
     return create_model(
         "PostThreadInputModel",
         category=(PositiveInt, ...),
-        title=(constr(strip_whitespace=True), ...),
+        title=(threadtitlestr(context["settings"]), ...),
         body=(constr(strip_whitespace=True), ...),
     )
 

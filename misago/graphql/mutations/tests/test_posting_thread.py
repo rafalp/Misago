@@ -1,6 +1,7 @@
 import pytest
 
 from ....errors import ErrorsList
+from ....testing import override_dynamic_settings
 from ....threads.get import get_post_by_id, get_thread_by_id
 from ..postthread import resolve_post_thread
 
@@ -109,6 +110,68 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
+
+
+@pytest.mark.asyncio
+@override_dynamic_settings(thread_title_min_length=5)
+async def test_post_thread_mutation_validates_min_title_length(
+    user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "Test",
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["title"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+
+
+@pytest.mark.asyncio
+@override_dynamic_settings(thread_title_max_length=10)
+async def test_post_thread_mutation_validates_max_title_length(
+    user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "a" * 11,
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["title"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.max_length"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_validates_title_contains_alphanumeric_characters(
+    user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "!" * 10,
+            "body": "This is test post!",
+        },
+    )
+
+    assert "thread" not in data
+    assert "errors" in data
+    assert data["errors"].get_errors_locations() == ["title"]
+    assert data["errors"].get_errors_types() == ["value_error.str.regex"]
 
 
 @pytest.mark.asyncio
