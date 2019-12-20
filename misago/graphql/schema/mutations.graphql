@@ -37,4 +37,5 @@ input PostThreadInput {
 type PostThreadMutationResult {
     errors: [Error!]
     thread: Thread
+    post: Post
 }

@@ -65,11 +65,11 @@ async def resolve_post_thread(
     if errors:
         return {"errors": errors}
 
-    thread, _ = await post_thread_hook.call_action(
+    thread, post = await post_thread_hook.call_action(
         post_thread, info.context, cleaned_data
     )
 
-    return {"thread": thread}
+    return {"thread": thread, "post": post}
 
 
 async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:

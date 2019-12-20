@@ -26,6 +26,10 @@ async def test_post_thread_mutation_creates_new_thread(
     assert data["thread"].category_id == category.id
     assert data["thread"].starter_id == user.id
     assert data["thread"].starter_name == user.name
+    assert data["thread"].last_poster_id == user.id
+    assert data["thread"].last_poster_name == user.name
+    assert data["thread"].first_post_id
+    assert data["thread"].first_post_id == data["thread"].last_post_id
 
 
 @pytest.mark.asyncio
@@ -40,10 +44,9 @@ async def test_post_thread_mutation_creates_new_post(user_graphql_info, user, ca
         },
     )
 
-    assert data["thread"].last_poster_id == user.id
-    assert data["thread"].last_poster_name == user.name
-    assert data["thread"].first_post_id
-    assert data["thread"].first_post_id == data["thread"].last_post_id
+    assert "errors" not in data
+    assert "post" in data
+    assert data["post"] == data["thread"].first_post_id
 
     post = await get_post_by_id(data["thread"].first_post_id)
     assert post
