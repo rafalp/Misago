@@ -46,17 +46,15 @@ async def test_post_thread_mutation_creates_new_post(user_graphql_info, user, ca
 
     assert "errors" not in data
     assert "post" in data
-    assert data["post"] == data["thread"].first_post_id
-
-    post = await get_post_by_id(data["thread"].first_post_id)
-    assert post
-    assert post.thread_id == data["thread"].id
-    assert post.category_id == category.id
-    assert post.poster_id == user.id
-    assert post.poster_name == user.name
-    assert post.posted_at == data["thread"].started_at
-    assert post.posted_at == data["thread"].last_posted_at
-    assert post.body == {"text": "This is test post!"}
+    assert data["post"].id == data["thread"].first_post_id
+    assert data["post"] == await get_post_by_id(data["thread"].first_post_id)
+    assert data["post"].thread_id == data["thread"].id
+    assert data["post"].category_id == category.id
+    assert data["post"].poster_id == user.id
+    assert data["post"].poster_name == user.name
+    assert data["post"].posted_at == data["thread"].started_at
+    assert data["post"].posted_at == data["thread"].last_posted_at
+    assert data["post"].body == {"text": "This is test post!"}
 
 
 @pytest.mark.asyncio
@@ -74,6 +72,7 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
@@ -92,6 +91,7 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(user_graphql
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
@@ -110,6 +110,7 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
@@ -131,6 +132,7 @@ async def test_post_thread_mutation_validates_min_title_length(
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
@@ -152,6 +154,7 @@ async def test_post_thread_mutation_validates_max_title_length(
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.any_str.max_length"]
@@ -172,6 +175,7 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.str.regex"]
@@ -192,6 +196,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
     )
 
     assert "thread" not in data
+    assert "post" not in data
     assert "errors" in data
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["auth_error.category_is_closed"]
@@ -213,3 +218,4 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
 
     assert "errors" not in data
     assert "thread" in data
+    assert "post" in data

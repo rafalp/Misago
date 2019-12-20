@@ -1,7 +1,8 @@
 type Mutation {
     login(username: String!, password: String!): LoginMutationResult!
     register(input: RegisterInput!): RegisterMutationResult!
-    postThread(input: PostThreadInput!): PostThreadMutationResult!
+    postThread(input: PostThreadInput!): PostMutationResult!
+    postReply(input: PostReplyInput!): PostMutationResult!
 }
 
 type Error {
@@ -34,7 +35,12 @@ input PostThreadInput {
     body: String!
 }
 
-type PostThreadMutationResult {
+input PostReplyInput {
+    thread: ID!
+    body: String!
+}
+
+type PostMutationResult {
     errors: [Error!]
     thread: Thread
     post: Post
