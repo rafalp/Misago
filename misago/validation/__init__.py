@@ -5,7 +5,9 @@ from .validators import (
     CategoryIsOpenValidator,
     EmailIsAvailableValidator,
     PostExistsValidator,
+    ThreadCategoryValidator,
     ThreadExistsValidator,
+    ThreadIsOpenValidator,
     UsernameIsAvailableValidator,
 )
 
@@ -15,7 +17,9 @@ __all__ = [
     "CategoryIsOpenValidator",
     "EmailIsAvailableValidator",
     "PostExistsValidator",
+    "ThreadCategoryValidator",
     "ThreadExistsValidator",
+    "ThreadIsOpenValidator",
     "UsernameIsAvailableValidator",
     "passwordstr",
     "sluggablestr",

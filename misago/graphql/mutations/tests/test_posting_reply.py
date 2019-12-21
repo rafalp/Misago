@@ -13,8 +13,8 @@ async def test_post_reply_mutation_creates_new_reply(user_graphql_info, user, th
         input={"thread": str(thread.id), "body": "This is test post!",},
     )
 
-    assert "errors" not in data
-    assert "post" in data
+    assert not data.get("errors")
+    assert data.get("post")
     assert data["post"] == await get_post_by_id(data["post"].id)
     assert data["post"].thread_id == data["thread"].id
     assert data["post"].category_id == thread.category_id
@@ -33,8 +33,8 @@ async def test_post_reply_mutation_updates_thread(user_graphql_info, user, threa
         input={"thread": str(thread.id), "body": "This is test post!",},
     )
 
-    assert "errors" not in data
-    assert "thread" in data
+    assert not data.get("errors")
+    assert data.get("thread")
     assert data["post"].id == data["thread"].last_post_id
     assert data["thread"] == await get_thread_by_id(data["thread"].id)
     assert data["thread"].last_post_id != data["thread"].first_post_id
@@ -57,9 +57,9 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
         input={"thread": str(thread.id), "body": "This is test post!",},
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
 
@@ -72,9 +72,9 @@ async def test_post_reply_mutation_fails_if_thread_id_is_invalid(user_graphql_in
         input={"thread": "invalid", "body": "This is test post!",},
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
 
@@ -87,8 +87,72 @@ async def test_post_reply_mutation_fails_if_thread_doesnt_exist(user_graphql_inf
         input={"thread": "4000", "body": "This is test post!",},
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["value_error.thread_does_not_exist"]
+
+
+@pytest.mark.asyncio
+async def test_post_reply_mutation_fails_if_thread_is_closed(
+    user_graphql_info, closed_thread
+):
+    data = await resolve_post_reply(
+        None,
+        user_graphql_info,
+        input={"thread": str(closed_thread.id), "body": "This is test post!",},
+    )
+
+    assert data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["thread"]
+    assert data["errors"].get_errors_types() == ["auth_error.thread_is_closed"]
+
+
+@pytest.mark.asyncio
+async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thread(
+    moderator_graphql_info, closed_thread
+):
+    data = await resolve_post_reply(
+        None,
+        moderator_graphql_info,
+        input={"thread": str(closed_thread.id), "body": "This is test post!",},
+    )
+
+    assert data.get("thread")
+    assert data.get("post")
+    assert not data.get("errors")
+
+
+@pytest.mark.asyncio
+async def test_post_reply_mutation_fails_if_category_is_closed(
+    user_graphql_info, closed_category_thread
+):
+    data = await resolve_post_reply(
+        None,
+        user_graphql_info,
+        input={"thread": str(closed_category_thread.id), "body": "This is test post!",},
+    )
+
+    assert data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["thread"]
+    assert data["errors"].get_errors_types() == ["auth_error.category_is_closed"]
+
+
+@pytest.mark.asyncio
+async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_category(
+    moderator_graphql_info, closed_category_thread
+):
+    data = await resolve_post_reply(
+        None,
+        moderator_graphql_info,
+        input={"thread": str(closed_category_thread.id), "body": "This is test post!",},
+    )
+
+    assert data.get("thread")
+    assert data.get("post")
+    assert not data.get("errors")

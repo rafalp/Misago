@@ -208,3 +208,45 @@ def user_thread(user_thread_and_post):
 def user_post(user_thread_and_post):
     _, post = user_thread_and_post
     return post
+
+
+@pytest.fixture
+async def closed_thread_and_post(category):
+    thread = await create_thread(
+        category, "Thread", starter_name="Guest", is_closed=True
+    )
+    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    thread = await update_thread(thread, first_post=post, last_post=post)
+    return thread, post
+
+
+@pytest.fixture
+def closed_thread(closed_thread_and_post):
+    thread, _ = closed_thread_and_post
+    return thread
+
+
+@pytest.fixture
+def closed_thread_post(closed_thread_and_post):
+    _, post = closed_thread_and_post
+    return post
+
+
+@pytest.fixture
+async def closed_category_thread_and_post(closed_category):
+    thread = await create_thread(closed_category, "Thread", starter_name="Guest")
+    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    thread = await update_thread(thread, first_post=post, last_post=post)
+    return thread, post
+
+
+@pytest.fixture
+def closed_category_thread(closed_category_thread_and_post):
+    thread, _ = closed_category_thread_and_post
+    return thread
+
+
+@pytest.fixture
+def closed_category_post(closed_category_thread_and_post):
+    _, post = closed_category_thread_and_post
+    return post

@@ -21,7 +21,7 @@ async def test_validator_raises_category_does_not_exist_error_if_category_not_ex
 
 
 @pytest.mark.asyncio
-async def test_validator_returns_category_if_given_id_and_type_exists_in_db(category,):
+async def test_validator_returns_category_if_given_id_and_type_exists_in_db(category):
     validator = CategoryExistsValidator({}, CategoryTypes.THREADS)
     assert await validator(category.id) == category
 

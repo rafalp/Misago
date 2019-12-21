@@ -20,8 +20,8 @@ async def test_post_thread_mutation_creates_new_thread(
         },
     )
 
-    assert "errors" not in data
-    assert "thread" in data
+    assert not data.get("errors")
+    assert data.get("thread")
     assert data["thread"] == await get_thread_by_id(data["thread"].id)
     assert data["thread"].category_id == category.id
     assert data["thread"].starter_id == user.id
@@ -44,8 +44,8 @@ async def test_post_thread_mutation_creates_new_post(user_graphql_info, user, ca
         },
     )
 
-    assert "errors" not in data
-    assert "post" in data
+    assert not data.get("errors")
+    assert data.get("post")
     assert data["post"].id == data["thread"].first_post_id
     assert data["post"] == await get_post_by_id(data["thread"].first_post_id)
     assert data["post"].thread_id == data["thread"].id
@@ -71,9 +71,9 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
 
@@ -90,9 +90,9 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(user_graphql
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
 
@@ -109,9 +109,9 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
 
@@ -131,9 +131,9 @@ async def test_post_thread_mutation_validates_min_title_length(
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
 
@@ -153,9 +153,9 @@ async def test_post_thread_mutation_validates_max_title_length(
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.any_str.max_length"]
 
@@ -174,9 +174,9 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["title"]
     assert data["errors"].get_errors_types() == ["value_error.str.regex"]
 
@@ -195,9 +195,9 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
         },
     )
 
-    assert "thread" not in data
-    assert "post" not in data
-    assert "errors" in data
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
     assert data["errors"].get_errors_types() == ["auth_error.category_is_closed"]
 
@@ -216,6 +216,6 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
         },
     )
 
-    assert "errors" not in data
-    assert "thread" in data
-    assert "post" in data
+    assert not data.get("errors")
+    assert data.get("thread")
+    assert data.get("post")

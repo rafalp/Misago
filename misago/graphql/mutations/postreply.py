@@ -12,7 +12,7 @@ from ...hooks import (
     post_thread_input_hook,
     post_thread_input_model_hook,
 )
-from ...loaders import store_post, store_thread
+from ...loaders import load_thread, store_post, store_thread
 from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
@@ -24,7 +24,10 @@ from ...types import (
     Thread,
 )
 from ...validation import (
+    CategoryIsOpenValidator,
+    ThreadCategoryValidator,
     ThreadExistsValidator,
+    ThreadIsOpenValidator,
     validate_data,
     validate_model,
 )
@@ -48,16 +51,24 @@ async def resolve_post_reply(
     )
     cleaned_data, errors = validate_model(input_model, input)
 
+    thread = await load_thread(info.context, input["thread"])
+
     if cleaned_data:
         validators: Dict[str, List[AsyncValidator]] = {
-            "thread": [ThreadExistsValidator(info.context),],
+            "thread": [
+                ThreadExistsValidator(info.context),
+                ThreadCategoryValidator(
+                    info.context, CategoryIsOpenValidator(info.context)
+                ),
+                ThreadIsOpenValidator(info.context),
+            ],
         }
         cleaned_data, errors = await post_thread_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
-        return {"errors": errors}
+        return {"errors": errors, "thread": thread}
 
     thread, post = await post_thread_hook.call_action(
         post_reply, info.context, cleaned_data

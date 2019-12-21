@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, cast
 
 from sqlalchemy.sql import select
 
@@ -9,14 +9,23 @@ from ..errors import (
     CategoryDoesNotExistError,
     CategoryIsClosedError,
     EmailIsNotAvailableError,
+    ErrorsList,
     PostDoesNotExistError,
     ThreadDoesNotExistError,
+    ThreadIsClosedError,
     UsernameIsNotAvailableError,
 )
 from ..loaders import load_category, load_post, load_thread
 from ..tables import users
 from ..types import AsyncValidator, Category, GraphQLContext, Post, Thread
 from ..users.email import get_email_hash
+
+
+async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
+    category = await load_category(context, category_id)
+    if category:
+        return category.type
+    return 0
 
 
 class CategoryExistsValidator(AsyncValidator):
@@ -74,27 +83,78 @@ class EmailIsAvailableValidator(AsyncValidator):
 
 class PostExistsValidator(AsyncValidator):
     _context: GraphQLContext
+    _category_type: int
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(
+        self, context: GraphQLContext, category_type: int = CategoryTypes.THREADS
+    ):
         self._context = context
+        self._category_type = category_type
 
     async def __call__(self, post_id: Union[int, str], _=None) -> Post:
         post = await load_post(self._context, post_id)
         if not post:
             raise PostDoesNotExistError(post_id=post_id)
+        category_type = await _get_category_type(self._context, post.category_id)
+        if category_type != self._category_type:
+            raise PostDoesNotExistError(post_id=post_id)
         return post
+
+
+class ThreadCategoryValidator(AsyncValidator):
+    _context: GraphQLContext
+    _validator: AsyncValidator
+
+    def __init__(self, context: GraphQLContext, category_validator: AsyncValidator):
+        self._context = context
+        self._validator = category_validator
+
+    @property
+    def category_validator(self) -> AsyncValidator:
+        return self._validator
+
+    async def __call__(self, thread: Thread, errors: ErrorsList) -> Thread:
+        category = await load_category(self._context, thread.category_id)
+        category = cast(Category, category)
+        await self._validator(category, errors)
+        return thread
 
 
 class ThreadExistsValidator(AsyncValidator):
     _context: GraphQLContext
+    _category_type: int
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(
+        self, context: GraphQLContext, category_type: int = CategoryTypes.THREADS
+    ):
         self._context = context
+        self._category_type = category_type
 
     async def __call__(self, thread_id: Union[int, str], _=None) -> Thread:
         thread = await load_thread(self._context, thread_id)
         if not thread:
             raise ThreadDoesNotExistError(thread_id=thread_id)
+        category_type = await _get_category_type(self._context, thread.category_id)
+        if category_type != self._category_type:
+            raise ThreadDoesNotExistError(thread_id=thread_id)
+        return thread
+
+
+class ThreadIsOpenValidator(AsyncValidator):
+    _context: GraphQLContext
+    _exclude_moderators: bool
+
+    def __init__(self, context: GraphQLContext, exclude_moderators: bool = True):
+        self._context = context
+        self._exclude_moderators = exclude_moderators
+
+    async def __call__(self, thread: Thread, _=None) -> Thread:
+        if thread.is_closed:
+            if not self._exclude_moderators:
+                raise ThreadIsClosedError(thread_id=thread.id)
+            user = await get_authenticated_user(self._context)
+            if user and not user.is_moderator:
+                raise ThreadIsClosedError(thread_id=thread.id)
         return thread
 
 
