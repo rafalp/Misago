@@ -4,8 +4,7 @@ from ariadne import MutationType
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
-from ...auth import get_authenticated_user
-from ...errors import ErrorsList, NotAuthorizedError
+from ...errors import ErrorsList
 from ...hooks import (
     edit_thread_title_hook,
     edit_thread_title_input_hook,
@@ -30,7 +29,7 @@ from ...validation import (
     validate_data,
     validate_model,
 )
-from ..errorhandler import error_handler
+from ..decorators import error_handler, require_auth
 
 
 edit_thread_title_mutation = MutationType()
@@ -38,13 +37,10 @@ edit_thread_title_mutation = MutationType()
 
 @edit_thread_title_mutation.field("editThreadTitle")
 @error_handler
+@require_auth
 async def resolve_edit_thread_title(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    user = await get_authenticated_user(info.context)
-    if not user:
-        raise NotAuthorizedError()
-
     input_model = await edit_thread_title_input_model_hook.call_action(
         create_input_model, info.context
     )

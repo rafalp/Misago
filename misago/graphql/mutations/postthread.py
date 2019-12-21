@@ -6,7 +6,7 @@ from pydantic import PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
 from ...database import database
-from ...errors import ErrorsList, NotAuthorizedError
+from ...errors import ErrorsList
 from ...hooks import (
     create_post_hook,
     create_thread_hook,
@@ -32,7 +32,7 @@ from ...validation import (
     validate_data,
     validate_model,
 )
-from ..errorhandler import error_handler
+from ..decorators import error_handler, require_auth
 
 
 post_thread_mutation = MutationType()
@@ -40,13 +40,10 @@ post_thread_mutation = MutationType()
 
 @post_thread_mutation.field("postThread")
 @error_handler
+@require_auth
 async def resolve_post_thread(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    user = await get_authenticated_user(info.context)
-    if not user:
-        raise NotAuthorizedError()
-
     input_model = await post_thread_input_model_hook.call_action(
         create_input_model, info.context
     )

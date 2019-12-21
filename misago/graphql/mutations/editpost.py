@@ -4,8 +4,7 @@ from ariadne import MutationType
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
-from ...auth import get_authenticated_user
-from ...errors import ErrorsList, NotAuthorizedError
+from ...errors import ErrorsList
 from ...hooks import (
     edit_post_hook,
     edit_post_input_hook,
@@ -31,21 +30,18 @@ from ...validation import (
     validate_data,
     validate_model,
 )
-from ..errorhandler import error_handler
+from ..decorators import error_handler, require_auth
 
 
 edit_post_mutation = MutationType()
 
 
-@edit_post_mutation.field("editPosst")
+@edit_post_mutation.field("editPost")
 @error_handler
+@require_auth
 async def resolve_edit_post(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    user = await get_authenticated_user(info.context)
-    if not user:
-        raise NotAuthorizedError()
-
     input_model = await edit_post_input_model_hook.call_action(
         create_input_model, info.context
     )

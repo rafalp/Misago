@@ -30,12 +30,14 @@ from ...validation import (
     validate_data,
     validate_model,
 )
+from ..decorators import error_handler
 
 
 register_mutation = MutationType()
 
 
 @register_mutation.field("register")
+@error_handler
 async def resolve_register(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):

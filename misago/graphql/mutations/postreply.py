@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
-from ...errors import ErrorsList, NotAuthorizedError
+from ...errors import ErrorsList
 from ...hooks import (
     create_post_hook,
     post_reply_hook,
@@ -31,7 +31,7 @@ from ...validation import (
     validate_data,
     validate_model,
 )
-from ..errorhandler import error_handler
+from ..decorators import error_handler, require_auth
 
 
 post_reply_mutation = MutationType()
@@ -39,13 +39,10 @@ post_reply_mutation = MutationType()
 
 @post_reply_mutation.field("postReply")
 @error_handler
+@require_auth
 async def resolve_post_reply(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    user = await get_authenticated_user(info.context)
-    if not user:
-        raise NotAuthorizedError()
-
     input_model = await post_reply_input_model_hook.call_action(
         create_input_model, info.context
     )

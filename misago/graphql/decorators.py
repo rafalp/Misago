@@ -3,10 +3,29 @@ from typing import Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
-from ..errors import AuthError, ErrorDict, ErrorsList, get_error_dict
+from ..auth import get_authenticated_user
+from ..errors import (
+    AuthError,
+    ErrorDict,
+    ErrorsList,
+    NotAuthorizedError,
+    get_error_dict,
+)
 
 
 ERRORS = "errors"
+
+
+def require_auth(f):
+    @wraps(f)
+    async def wrapper(obj, info, *args, **kwargs):
+        user = await get_authenticated_user(info.context)
+        if not user:
+            raise NotAuthorizedError()
+
+        return await f(obj, info, *args, **kwargs)
+
+    return wrapper
 
 
 def error_handler(f):
