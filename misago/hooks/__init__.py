@@ -14,6 +14,9 @@ from .filters import (
     EditPostHook,
     EditPostInputHook,
     EditPostInputModelHook,
+    EditThreadTitleHook,
+    EditThreadTitleInputHook,
+    EditThreadTitleInputModelHook,
     GetAuthUserHook,
     GetUserFromContextHook,
     GetUserFromTokenHook,
@@ -41,6 +44,9 @@ create_user_token_payload_hook = CreateUserTokenPayloadHook()
 edit_post_hook = EditPostHook()
 edit_post_input_hook = EditPostInputHook()
 edit_post_input_model_hook = EditPostInputModelHook()
+edit_thread_title_hook = EditThreadTitleHook()
+edit_thread_title_input_hook = EditThreadTitleInputHook()
+edit_thread_title_input_model_hook = EditThreadTitleInputModelHook()
 get_auth_user_hook = GetAuthUserHook()
 get_user_from_context_hook = GetUserFromContextHook()
 get_user_from_token_hook = GetUserFromTokenHook()

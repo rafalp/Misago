@@ -27,6 +27,14 @@ from ..types import (
     EditPostInputModelFilter,
     EditPostAction,
     EditPostFilter,
+    EditThreadTitleInput,
+    EditThreadTitleInputAction,
+    EditThreadTitleInputFilter,
+    EditThreadTitleInputModel,
+    EditThreadTitleInputModelAction,
+    EditThreadTitleInputModelFilter,
+    EditThreadTitleAction,
+    EditThreadTitleFilter,
     ErrorsList,
     GetAuthUserAction,
     GetAuthUserFilter,
@@ -209,6 +217,39 @@ class EditPostInputModelHook(
     async def call_action(
         self, action: EditPostInputModelAction, context: GraphQLContext
     ) -> EditPostInputModel:
+        return await self.filter(action, context)
+
+
+class EditThreadTitleHook(FilterHook[EditThreadTitleAction, EditThreadTitleFilter]):
+    async def call_action(
+        self,
+        action: EditThreadTitleAction,
+        context: GraphQLContext,
+        cleaned_data: EditThreadTitleInput,
+    ) -> Thread:
+        return await self.filter(action, context, cleaned_data)
+
+
+class EditThreadTitleInputHook(
+    FilterHook[EditThreadTitleInputAction, EditThreadTitleInputFilter]
+):
+    async def call_action(
+        self,
+        action: EditThreadTitleInputAction,
+        context: GraphQLContext,
+        validators: Dict[str, List[AsyncValidator]],
+        data: EditThreadTitleInput,
+        errors_list: ErrorsList,
+    ) -> Tuple[EditThreadTitleInput, ErrorsList]:
+        return await self.filter(action, context, validators, data, errors_list)
+
+
+class EditThreadTitleInputModelHook(
+    FilterHook[EditThreadTitleInputModelAction, EditThreadTitleInputModelFilter]
+):
+    async def call_action(
+        self, action: EditThreadTitleInputModelAction, context: GraphQLContext
+    ) -> EditThreadTitleInputModel:
         return await self.filter(action, context)
 
 

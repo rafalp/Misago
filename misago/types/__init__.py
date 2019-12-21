@@ -171,6 +171,37 @@ EditPostFilter = Callable[
     [EditPostAction, "GraphQLContext", "EditPostInput"], Awaitable[Tuple[Thread, Post]],
 ]
 
+EditThreadTitleInput = Dict[str, Any]
+EditThreadTitleInputAction = Callable[
+    [
+        "GraphQLContext",
+        Dict[str, List[AsyncValidator]],
+        EditThreadTitleInput,
+        ErrorsList,
+    ],
+    Awaitable[Tuple[EditThreadTitleInput, ErrorsList]],
+]
+EditThreadTitleInputFilter = Callable[
+    [EditThreadTitleInputAction, "GraphQLContext", EditThreadTitleInput],
+    Awaitable[Tuple[EditThreadTitleInput, ErrorsList]],
+]
+
+EditThreadTitleInputModel = Type[BaseModel]
+EditThreadTitleInputModelAction = Callable[
+    ["GraphQLContext"], Awaitable[EditThreadTitleInputModel]
+]
+EditThreadTitleInputModelFilter = Callable[
+    [EditThreadTitleInputModelAction, "GraphQLContext"],
+    Awaitable[EditThreadTitleInputModel],
+]
+
+EditThreadTitleAction = Callable[
+    ["GraphQLContext", "EditThreadTitleInput"], Awaitable[Thread]
+]
+EditThreadTitleFilter = Callable[
+    [EditThreadTitleAction, "GraphQLContext", "EditThreadTitleInput"], Awaitable[Thread]
+]
+
 GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional[User]]]
 GetAuthUserFilter = Callable[
     [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional[User]]
