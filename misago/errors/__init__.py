@@ -44,6 +44,22 @@ class InvalidCredentialsError(PydanticValueError):
     msg_template = "invalid credentials"
 
 
+class NotPostAuthorError(AuthError):
+    code = "not_post_author_error"
+    msg_template = "must be author of post with id '{id}'"
+
+    def __init__(self, *, post_id: Union[int, str]) -> None:
+        super().__init__(id=post_id)
+
+
+class NotThreadAuthorError(AuthError):
+    code = "not_thread_author_error"
+    msg_template = "must be author of thread with id '{id}'"
+
+    def __init__(self, *, thread_id: Union[int, str]) -> None:
+        super().__init__(id=thread_id)
+
+
 class PostDoesNotExistError(PydanticValueError):
     code = "post_does_not_exist"
     msg_template = "post with id '{id}' does not exist"

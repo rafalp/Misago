@@ -211,6 +211,26 @@ def user_post(user_thread_and_post):
 
 
 @pytest.fixture
+async def other_user_thread_and_post(category, other_user):
+    thread = await create_thread(category, "Thread", starter_name="Guest")
+    post = await create_post(thread, {"test": "yes"}, poster=other_user)
+    thread = await update_thread(thread, first_post=post, last_post=post)
+    return thread, post
+
+
+@pytest.fixture
+def other_user_thread(other_user_thread_and_post):
+    thread, _ = other_user_thread_and_post
+    return thread
+
+
+@pytest.fixture
+def other_user_post(other_user_thread_and_post):
+    _, post = other_user_thread_and_post
+    return post
+
+
+@pytest.fixture
 async def closed_thread_and_post(category):
     thread = await create_thread(
         category, "Thread", starter_name="Guest", is_closed=True
