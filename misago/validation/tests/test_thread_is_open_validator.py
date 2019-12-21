@@ -5,16 +5,16 @@ from ..validators import ThreadIsOpenValidator
 
 
 @pytest.mark.asyncio
-async def test_validator_returns_thread_if_its_open(user_graphql_context, thread):
-    validator = ThreadIsOpenValidator(user_graphql_context)
+async def test_validator_returns_thread_if_its_open(graphql_context, thread):
+    validator = ThreadIsOpenValidator(graphql_context)
     assert await validator(thread) == thread
 
 
 @pytest.mark.asyncio
 async def test_validator_raises_thread_is_closed_error_if_thread_is_closed(
-    user_graphql_context, closed_thread
+    graphql_context, closed_thread
 ):
-    validator = ThreadIsOpenValidator(user_graphql_context)
+    validator = ThreadIsOpenValidator(graphql_context)
     with pytest.raises(ThreadIsClosedError):
         await validator(closed_thread)
 
