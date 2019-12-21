@@ -105,7 +105,7 @@ async def edit_post(
     post = await update_post(
         cleaned_data["post"], body={"text": cleaned_data["body"]}, increment_edits=True
     )
-    
+
     store_post(context, post)
 
     thread = await load_thread(context, post.thread_id)
