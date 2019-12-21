@@ -532,6 +532,331 @@ User
 A `dict` containing authorized user's data.
 
 
+
+- - -
+
+
+### `edit_post_hook`
+
+```python
+edit_post_hook.call_action(
+    action: EditPostAction,
+    context: GraphQLContext,
+    cleaned_data: EditPostInput,
+)
+```
+
+A filter for the function used by GraphQL mutation editing post to update the post in the database.
+
+Returns `Post` dataclass with updated post data.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def edit_post(context: GraphQLContext, cleaned_data: RegisterInput) -> Post:
+    ...
+```
+
+Next filter or built-in function used to update the post in the database.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `cleaned_data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with already validated and cleaned input data. Will contain at least `post` and `body` keys:
+
+```python
+class EditPostInput(TypedDict):
+    post: Post
+    body: str
+```
+
+
+- - -
+
+
+### `edit_post_input_hook`
+
+```python
+edit_post_hook.call_action(
+    action: EditPostInputAction,
+    context: GraphQLContext,
+    validators: Dict[str, List[AsyncValidator]],
+    data: EditPostInput,
+    errors_list: ErrorsList,
+)
+```
+
+A filter for the function used to validate data for `EditPostInputModel` GraphQL input type.
+
+Returns a tuple of `data` that should be used to update the post and validation `errors`.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def validate_input_data(
+    context: GraphQLContext,
+    validators: Dict[str, List[AsyncValidator]],
+    data: RegisterInput,
+    errors: ErrorsList,
+) -> Tuple[RegisterInput, ErrorsList]:
+    ...
+```
+
+Next filter or built-in function used to validate edited post input data.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `validators`
+
+```python
+Dict[str, List[AsyncValidator]]
+```
+
+A dict of lists of validators that should be used to validate inputs values.
+
+
+##### `data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with input data that passed initial cleaning and validation. If any of fields failed initial cleanup and validation, it won't be present in this dict.
+
+
+##### `errors`
+
+```python
+ErrorsList
+```
+
+List of validation errors found so far. Can be extended using it's `add_error` and `add_root_error` methods.
+
+
+- - -
+
+
+### `edit_post_input_model_hook`
+
+```python
+edit_post_input_model_hook.call_action(action: EditPostInputModelAction, context: GraphQLContext)
+```
+
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `EditPostInputModel` GraphQL input type used by the "post reply" GraphQL mutation.
+
+Returns `EditPostInputModel` input model type.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
+    ...
+```
+
+Next filter or built-in function used to create input model type.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+- - -
+
+
+### `edit_thread_title_hook`
+
+```python
+edit_thread_title_hook.call_action(
+    action: EditThreadTitleAction,
+    context: GraphQLContext,
+    cleaned_data: EditThreadTitleInput,
+)
+```
+
+A filter for the function used by GraphQL mutation editing thread title to update the thread in the database.
+
+Returns `Thread` dataclass with updated thread data.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def edit_thread_title(context: GraphQLContext, cleaned_data: RegisterInput) -> Thread:
+    ...
+```
+
+Next filter or built-in function used to update the thread in the database.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `cleaned_data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with already validated and cleaned input data. Will contain at least `thread` and `title` keys:
+
+```python
+class EditThreadTitleInput(TypedDict):
+    thread: Thread
+    title: str
+```
+
+
+- - -
+
+
+### `edit_thread_title_input_hook`
+
+```python
+edit_thread_title_hook.call_action(
+    action: EditThreadTitleInputAction,
+    context: GraphQLContext,
+    validators: Dict[str, List[AsyncValidator]],
+    data: EditThreadTitleInput,
+    errors_list: ErrorsList,
+)
+```
+
+A filter for the function used to validate data for `EditThreadTitleInputModel` GraphQL input type.
+
+Returns a tuple of `data` that should be used to update the thread and validation `errors`.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def validate_input_data(
+    context: GraphQLContext,
+    validators: Dict[str, List[AsyncValidator]],
+    data: RegisterInput,
+    errors: ErrorsList,
+) -> Tuple[RegisterInput, ErrorsList]:
+    ...
+```
+
+Next filter or built-in function used to validate edited thread input data.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
+##### `validators`
+
+```python
+Dict[str, List[AsyncValidator]]
+```
+
+A dict of lists of validators that should be used to validate inputs values.
+
+
+##### `data`
+
+```python
+Dict[str, Any]
+```
+
+A dict with input data that passed initial cleaning and validation. If any of fields failed initial cleanup and validation, it won't be present in this dict.
+
+
+##### `errors`
+
+```python
+ErrorsList
+```
+
+List of validation errors found so far. Can be extended using it's `add_error` and `add_root_error` methods.
+
+
+- - -
+
+
+### `edit_thread_title_input_model_hook`
+
+```python
+edit_thread_title_input_model_hook.call_action(action: EditThreadTitleInputModelAction, context: GraphQLContext)
+```
+
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `EditThreadTitleInputModel` GraphQL input type used by the "thread reply" GraphQL mutation.
+
+Returns `EditThreadTitleInputModel` input model type.
+
+
+#### Required arguments
+
+##### `action`
+
+```python
+async def create_input_model(context: GraphQLContext) -> EditThreadTitleInputModel:
+    ...
+```
+
+Next filter or built-in function used to create input model type.
+
+
+##### `context`
+
+```python
+GraphQLContext
+```
+
+A dict with GraphQL query context.
+
+
 - - -
 
 
