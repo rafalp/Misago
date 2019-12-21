@@ -177,6 +177,30 @@ GraphQLContextFilter = Callable[
     [GraphQLContextAction, Request], Awaitable[GraphQLContext]
 ]
 
+PostReplyInput = Dict[str, Any]
+PostReplyInputAction = Callable[
+    ["GraphQLContext", Dict[str, List[AsyncValidator]], PostReplyInput, ErrorsList,],
+    Awaitable[Tuple[PostReplyInput, ErrorsList]],
+]
+PostReplyInputFilter = Callable[
+    [PostReplyInputAction, "GraphQLContext", PostReplyInput],
+    Awaitable[Tuple[PostReplyInput, ErrorsList]],
+]
+
+PostReplyInputModel = Type[BaseModel]
+PostReplyInputModelAction = Callable[["GraphQLContext"], Awaitable[PostReplyInputModel]]
+PostReplyInputModelFilter = Callable[
+    [PostReplyInputModelAction, "GraphQLContext"], Awaitable[PostReplyInputModel],
+]
+
+PostReplyAction = Callable[
+    ["GraphQLContext", "PostReplyInput"], Awaitable[Tuple[Thread, Post]]
+]
+PostReplyFilter = Callable[
+    [PostReplyAction, "GraphQLContext", "PostReplyInput"],
+    Awaitable[Tuple[Thread, Post]],
+]
+
 PostThreadInput = Dict[str, Any]
 PostThreadInputAction = Callable[
     ["GraphQLContext", Dict[str, List[AsyncValidator]], PostThreadInput, ErrorsList,],

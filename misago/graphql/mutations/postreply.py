@@ -8,9 +8,9 @@ from ...auth import get_authenticated_user
 from ...errors import ErrorsList, NotAuthorizedError
 from ...hooks import (
     create_post_hook,
-    post_thread_hook,
-    post_thread_input_hook,
-    post_thread_input_model_hook,
+    post_reply_hook,
+    post_reply_input_hook,
+    post_reply_input_model_hook,
 )
 from ...loaders import load_thread, store_post, store_thread
 from ...threads.create import create_post
@@ -46,7 +46,7 @@ async def resolve_post_reply(
     if not user:
         raise NotAuthorizedError()
 
-    input_model = await post_thread_input_model_hook.call_action(
+    input_model = await post_reply_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -63,14 +63,14 @@ async def resolve_post_reply(
                 ThreadIsOpenValidator(info.context),
             ],
         }
-        cleaned_data, errors = await post_thread_input_hook.call_action(
+        cleaned_data, errors = await post_reply_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread, post = await post_thread_hook.call_action(
+    thread, post = await post_reply_hook.call_action(
         post_reply, info.context, cleaned_data
     )
 
