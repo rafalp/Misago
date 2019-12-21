@@ -19,6 +19,14 @@ from ..types import (
     CreateUserTokenFilter,
     CreateUserTokenPayloadAction,
     CreateUserTokenPayloadFilter,
+    EditPostInput,
+    EditPostInputAction,
+    EditPostInputFilter,
+    EditPostInputModel,
+    EditPostInputModelAction,
+    EditPostInputModelFilter,
+    EditPostAction,
+    EditPostFilter,
     ErrorsList,
     GetAuthUserAction,
     GetAuthUserFilter,
@@ -173,6 +181,37 @@ class CreateUserTokenPayloadHook(
         return await self.filter(action, context, user)
 
 
+class EditPostHook(FilterHook[EditPostAction, EditPostFilter]):
+    async def call_action(
+        self,
+        action: EditPostAction,
+        context: GraphQLContext,
+        cleaned_data: EditPostInput,
+    ) -> Tuple[Thread, Post]:
+        return await self.filter(action, context, cleaned_data)
+
+
+class EditPostInputHook(FilterHook[EditPostInputAction, EditPostInputFilter]):
+    async def call_action(
+        self,
+        action: EditPostInputAction,
+        context: GraphQLContext,
+        validators: Dict[str, List[AsyncValidator]],
+        data: EditPostInput,
+        errors_list: ErrorsList,
+    ) -> Tuple[EditPostInput, ErrorsList]:
+        return await self.filter(action, context, validators, data, errors_list)
+
+
+class EditPostInputModelHook(
+    FilterHook[EditPostInputModelAction, EditPostInputModelFilter]
+):
+    async def call_action(
+        self, action: EditPostInputModelAction, context: GraphQLContext
+    ) -> EditPostInputModel:
+        return await self.filter(action, context)
+
+
 class GetAuthUserHook(FilterHook[GetAuthUserAction, GetAuthUserFilter]):
     async def call_action(
         self, action: GetAuthUserAction, context: GraphQLContext, user_id: int
@@ -215,6 +254,16 @@ class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter])
         return await self.filter(action, request)
 
 
+class PostReplyHook(FilterHook[PostReplyAction, PostReplyFilter]):
+    async def call_action(
+        self,
+        action: PostReplyAction,
+        context: GraphQLContext,
+        cleaned_data: PostReplyInput,
+    ) -> Tuple[Thread, Post]:
+        return await self.filter(action, context, cleaned_data)
+
+
 class PostReplyInputHook(FilterHook[PostReplyInputAction, PostReplyInputFilter]):
     async def call_action(
         self,
@@ -236,12 +285,12 @@ class PostReplyInputModelHook(
         return await self.filter(action, context)
 
 
-class PostReplyHook(FilterHook[PostReplyAction, PostReplyFilter]):
+class PostThreadHook(FilterHook[PostThreadAction, PostThreadFilter]):
     async def call_action(
         self,
-        action: PostReplyAction,
+        action: PostThreadAction,
         context: GraphQLContext,
-        cleaned_data: PostReplyInput,
+        cleaned_data: PostThreadInput,
     ) -> Tuple[Thread, Post]:
         return await self.filter(action, context, cleaned_data)
 
@@ -265,16 +314,6 @@ class PostThreadInputModelHook(
         self, action: PostThreadInputModelAction, context: GraphQLContext
     ) -> PostThreadInputModel:
         return await self.filter(action, context)
-
-
-class PostThreadHook(FilterHook[PostThreadAction, PostThreadFilter]):
-    async def call_action(
-        self,
-        action: PostThreadAction,
-        context: GraphQLContext,
-        cleaned_data: PostThreadInput,
-    ) -> Tuple[Thread, Post]:
-        return await self.filter(action, context, cleaned_data)
 
 
 class RegisterInputHook(FilterHook[RegisterInputAction, RegisterInputFilter]):

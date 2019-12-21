@@ -11,14 +11,17 @@ from .filters import (
     CreateUserHook,
     CreateUserTokenHook,
     CreateUserTokenPayloadHook,
+    EditPostHook,
+    EditPostInputHook,
+    EditPostInputModelHook,
     GetAuthUserHook,
     GetUserFromContextHook,
     GetUserFromTokenHook,
     GetUserFromTokenPayloadHook,
     GraphQLContextHook,
+    PostReplyHook,
     PostReplyInputHook,
     PostReplyInputModelHook,
-    PostReplyHook,
     PostThreadHook,
     PostThreadInputHook,
     PostThreadInputModelHook,
@@ -35,6 +38,9 @@ create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
+edit_post_hook = EditPostHook()
+edit_post_input_hook = EditPostInputHook()
+edit_post_input_model_hook = EditPostInputModelHook()
 get_auth_user_hook = GetAuthUserHook()
 get_user_from_context_hook = GetUserFromContextHook()
 get_user_from_token_hook = GetUserFromTokenHook()

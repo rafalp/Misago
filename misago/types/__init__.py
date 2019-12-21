@@ -148,6 +148,29 @@ CreateUserTokenPayloadFilter = Callable[
     [CreateUserTokenPayloadAction, "GraphQLContext", User], Awaitable[Dict[str, Any]],
 ]
 
+EditPostInput = Dict[str, Any]
+EditPostInputAction = Callable[
+    ["GraphQLContext", Dict[str, List[AsyncValidator]], EditPostInput, ErrorsList,],
+    Awaitable[Tuple[EditPostInput, ErrorsList]],
+]
+EditPostInputFilter = Callable[
+    [EditPostInputAction, "GraphQLContext", EditPostInput],
+    Awaitable[Tuple[EditPostInput, ErrorsList]],
+]
+
+EditPostInputModel = Type[BaseModel]
+EditPostInputModelAction = Callable[["GraphQLContext"], Awaitable[EditPostInputModel]]
+EditPostInputModelFilter = Callable[
+    [EditPostInputModelAction, "GraphQLContext"], Awaitable[EditPostInputModel],
+]
+
+EditPostAction = Callable[
+    ["GraphQLContext", "EditPostInput"], Awaitable[Tuple[Thread, Post]]
+]
+EditPostFilter = Callable[
+    [EditPostAction, "GraphQLContext", "EditPostInput"], Awaitable[Tuple[Thread, Post]],
+]
+
 GetAuthUserAction = Callable[["GraphQLContext", int], Awaitable[Optional[User]]]
 GetAuthUserFilter = Callable[
     [GetAuthUserAction, "GraphQLContext", int], Awaitable[Optional[User]]

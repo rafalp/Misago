@@ -19,8 +19,8 @@ from ...types import (
     AsyncValidator,
     GraphQLContext,
     Post,
-    PostThreadInput,
-    PostThreadInputModel,
+    PostReplyInput,
+    PostReplyInputModel,
     Thread,
 )
 from ...validation import (
@@ -77,9 +77,9 @@ async def resolve_post_reply(
     return {"thread": thread, "post": post}
 
 
-async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
+async def create_input_model(context: GraphQLContext) -> PostReplyInputModel:
     return create_model(
-        "PostThreadInputModel",
+        "PostReplyInputModel",
         thread=(PositiveInt, ...),
         body=(constr(strip_whitespace=True), ...),
     )
@@ -88,14 +88,14 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: PostThreadInput,
+    data: PostReplyInput,
     errors: ErrorsList,
-) -> Tuple[PostThreadInput, ErrorsList]:
+) -> Tuple[PostReplyInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
 async def post_reply(
-    context: GraphQLContext, cleaned_data: PostThreadInput
+    context: GraphQLContext, cleaned_data: PostReplyInput
 ) -> Tuple[Thread, Post]:
     thread = cleaned_data["thread"]
     user = await get_authenticated_user(context)
