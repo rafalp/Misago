@@ -54,7 +54,7 @@ class CategoryIsOpenValidator(AsyncValidator):
     async def __call__(self, category: Category, _=None) -> Category:
         if category.is_closed:
             user = await get_authenticated_user(self._context)
-            if not user or not user.is_moderator:
+            if not (user and user.is_moderator):
                 raise CategoryIsClosedError(category_id=category.id)
         return category
 
@@ -143,7 +143,7 @@ class ThreadIsOpenValidator(AsyncValidator):
     async def __call__(self, thread: Thread, _=None) -> Thread:
         if thread.is_closed:
             user = await get_authenticated_user(self._context)
-            if not user or not user.is_moderator:
+            if not (user and user.is_moderator):
                 raise ThreadIsClosedError(thread_id=thread.id)
         return thread
 
