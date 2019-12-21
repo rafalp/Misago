@@ -25,14 +25,3 @@ async def test_validator_returns_category_if_its_closed_but_user_is_moderator(
 ):
     validator = CategoryIsOpenValidator(moderator_graphql_context)
     assert await validator(closed_category) == closed_category
-
-
-@pytest.mark.asyncio
-async def test_validator_returns_category_if_its_closed_and_moderator_check_is_disabled(
-    moderator_graphql_context, closed_category
-):
-    validator = CategoryIsOpenValidator(
-        moderator_graphql_context, exclude_moderators=False
-    )
-    with pytest.raises(CategoryIsClosedError):
-        await validator(closed_category)

@@ -25,14 +25,3 @@ async def test_validator_returns_thread_if_its_closed_but_user_is_moderator(
 ):
     validator = ThreadIsOpenValidator(moderator_graphql_context)
     assert await validator(closed_thread) == closed_thread
-
-
-@pytest.mark.asyncio
-async def test_validator_returns_thread_if_its_closed_and_moderator_check_is_disabled(
-    moderator_graphql_context, closed_thread
-):
-    validator = ThreadIsOpenValidator(
-        moderator_graphql_context, exclude_moderators=False
-    )
-    with pytest.raises(ThreadIsClosedError):
-        await validator(closed_thread)

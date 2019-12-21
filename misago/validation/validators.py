@@ -47,16 +47,12 @@ class CategoryExistsValidator(AsyncValidator):
 
 class CategoryIsOpenValidator(AsyncValidator):
     _context: GraphQLContext
-    _exclude_moderators: bool
 
-    def __init__(self, context: GraphQLContext, exclude_moderators: bool = True):
+    def __init__(self, context: GraphQLContext):
         self._context = context
-        self._exclude_moderators = exclude_moderators
 
     async def __call__(self, category: Category, _=None) -> Category:
         if category.is_closed:
-            if not self._exclude_moderators:
-                raise CategoryIsClosedError(category_id=category.id)
             user = await get_authenticated_user(self._context)
             if user and not user.is_moderator:
                 raise CategoryIsClosedError(category_id=category.id)
@@ -74,10 +70,8 @@ class EmailIsAvailableValidator(AsyncValidator):
         query = select([users.c.id]).where(users.c.email_hash == email_hash)
         if self._exclude_user:
             query = query.where(users.c.id != self._exclude_user)
-
         if await database.fetch_one(query):
             raise EmailIsNotAvailableError()
-
         return email
 
 
@@ -142,16 +136,12 @@ class ThreadExistsValidator(AsyncValidator):
 
 class ThreadIsOpenValidator(AsyncValidator):
     _context: GraphQLContext
-    _exclude_moderators: bool
 
-    def __init__(self, context: GraphQLContext, exclude_moderators: bool = True):
+    def __init__(self, context: GraphQLContext):
         self._context = context
-        self._exclude_moderators = exclude_moderators
 
     async def __call__(self, thread: Thread, _=None) -> Thread:
         if thread.is_closed:
-            if not self._exclude_moderators:
-                raise ThreadIsClosedError(thread_id=thread.id)
             user = await get_authenticated_user(self._context)
             if user and not user.is_moderator:
                 raise ThreadIsClosedError(thread_id=thread.id)
@@ -168,8 +158,6 @@ class UsernameIsAvailableValidator(AsyncValidator):
         query = select([users.c.id]).where(users.c.slug == username.lower())
         if self._exclude_user:
             query = query.where(users.c.id != self._exclude_user)
-
         if await database.fetch_one(query):
             raise UsernameIsNotAvailableError()
-
         return username
