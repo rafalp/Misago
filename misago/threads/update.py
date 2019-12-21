@@ -6,7 +6,6 @@ from ..database.queries import update
 from ..tables import posts, threads
 from ..types import Category, Post, Thread, User
 from ..utils.strings import slugify
-from .ordering import get_ordering
 
 
 async def update_post(
@@ -158,7 +157,6 @@ async def update_thread(
             changes["last_poster_name"] = last_post.poster_name
         if last_post.posted_at != thread.last_posted_at:
             changes["last_posted_at"] = last_post.posted_at
-            changes["ordering"] = get_ordering(last_post.posted_at)
 
     if last_poster:
         if last_poster_name:
@@ -183,7 +181,6 @@ async def update_thread(
         changes["started_at"] = started_at
     if last_posted_at and last_posted_at != thread.last_posted_at:
         changes["last_posted_at"] = last_posted_at
-        changes["ordering"] = get_ordering(last_posted_at)
 
     if replies is not None and increment_replies:
         raise ValueError(

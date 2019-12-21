@@ -32,7 +32,6 @@ def upgrade():
         sa.Column("slug", sa.String(length=255), nullable=False),
         sa.Column("started_at", sa.DateTime(), nullable=False),
         sa.Column("last_posted_at", sa.DateTime(), nullable=False),
-        sa.Column("ordering", sa.BigInteger(), nullable=False),
         sa.Column("replies", sa.Integer(), nullable=False),
         sa.Column("is_closed", sa.Boolean(), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
@@ -48,7 +47,7 @@ def upgrade():
     op.create_index(
         "misago_threads_order",
         "misago_threads",
-        [sa.text("ordering DESC"), "category_id"],
+        [sa.text("last_post_id DESC"), "category_id"],
         unique=False,
     )
     op.create_table(

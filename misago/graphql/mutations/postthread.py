@@ -5,6 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
+from ...database import database
 from ...errors import ErrorsList, NotAuthorizedError
 from ...hooks import (
     create_post_hook,
@@ -94,13 +95,14 @@ async def post_thread(
     context: GraphQLContext, cleaned_data: PostThreadInput
 ) -> Tuple[Thread, Post]:
     user = await get_authenticated_user(context)
-    thread = await create_thread_hook.call_action(
-        create_thread, cleaned_data["category"], cleaned_data["title"], starter=user
-    )
-    post = await create_post_hook.call_action(
-        create_post, thread, {"text": cleaned_data["body"]}, poster=user
-    )
-    thread = await update_thread(thread, first_post=post, last_post=post)
+    async with database.transaction():
+        thread = await create_thread_hook.call_action(
+            create_thread, cleaned_data["category"], cleaned_data["title"], starter=user
+        )
+        post = await create_post_hook.call_action(
+            create_post, thread, {"text": cleaned_data["body"]}, poster=user
+        )
+        thread = await update_thread(thread, first_post=post, last_post=post)
 
     store_thread(context, thread)
     store_post(context, post)

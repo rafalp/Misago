@@ -153,12 +153,6 @@ async def test_thread_is_created_with_first_post_posted_at_date(category):
 
 
 @pytest.mark.asyncio
-async def test_thread_is_created_with_ordering(category):
-    thread = await create_thread(category, "Test thread", starter_name="User")
-    assert thread.ordering
-
-
-@pytest.mark.asyncio
 async def test_thread_is_created_with_zero_replies(category):
     thread = await create_thread(category, "Test thread", starter_name="User")
     assert thread.replies == 0

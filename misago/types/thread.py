@@ -13,7 +13,6 @@ class Thread:
     slug: str
     started_at: datetime
     last_posted_at: datetime
-    ordering: int
     replies: int
     is_closed: bool
     extra: dict

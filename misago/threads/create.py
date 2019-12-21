@@ -5,7 +5,6 @@ from ..database import queries
 from ..tables import posts, threads
 from ..types import Category, Post, Thread, User
 from ..utils.strings import slugify
-from .ordering import get_ordering
 
 
 async def create_post(
@@ -100,7 +99,6 @@ async def create_thread(
         "slug": slugify(title),
         "started_at": started_at,
         "last_posted_at": started_at,
-        "ordering": get_ordering(started_at),
         "replies": replies,
         "is_closed": is_closed,
         "extra": extra or {},
