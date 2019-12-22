@@ -55,6 +55,16 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`get_user_from_context_hook`](./get-user-from-context-hook.md)
 - [`get_user_from_token_hook`](./get-user-from-token-hook.md)
 - [`get_user_from_token_payload_hook`](./get-user-from-token-payload-hook.md)
+- [`graphql_context_hook`](./graphql-context-hook.md)
+- [`graphql_directives_hook`](./graphql-directives-hook.md)
+- [`graphql_type_defs_hook`](./graphql-type-defs-hook.md)
+- [`graphql_types_hook`](./graphql-types-hook.md)
+- [`jinja2_extensions_hook`](./jinja2-extensions-hook.md)
+- [`jinja2_filters_hook`](./jinja2-filters-hook.md)
+- [`post_reply_hook`](./post-reply-hook.md)
+- [`post_reply_input_hook`](./post-reply-input-hook.md)
+- [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
+- [`template_context_hook`](./template-context-hook.md)
 
 
 Implementing custom action hook

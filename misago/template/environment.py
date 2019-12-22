@@ -3,7 +3,7 @@ from typing import List
 from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 
 from ..conf import settings
-from ..hooks import jinja2_extensions, jinja2_filters
+from ..hooks import jinja2_extensions_hook, jinja2_filters_hook
 from ..plugins import plugins
 
 
@@ -22,8 +22,8 @@ def get_jinja2_environment() -> Environment:
         loader=ChoiceLoader(get_template_loaders()),
     )
 
-    env.filters.update(jinja2_filters)
-    for extension in jinja2_extensions:
+    env.filters.update(jinja2_filters_hook)
+    for extension in jinja2_extensions_hook:
         env.add_extension(extension)
 
     return env
