@@ -15,7 +15,6 @@ from typing import (
 )
 
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
-from starlette.requests import Request
 
 from ..errors import ErrorsList
 from .asyncvalidator import AsyncValidator
@@ -30,6 +29,9 @@ from .closethread import (
     CloseThreadInputModelAction,
     CloseThreadInputModelFilter,
 )
+from .createpost import CreatePostAction, CreatePostFilter
+from .createthread import CreateThreadAction, CreateThreadFilter
+from .createuser import CreateUserAction, CreateUserFilter
 from .createusertoken import (
     CreateUserTokenAction,
     CreateUserTokenFilter,
@@ -88,150 +90,26 @@ from .registeruser import (
     RegisterUserInputModelAction,
     RegisterUserInputModelFilter,
 )
+from .settings import Setting, SettingImage, Settings
+from .templatecontext import (
+    TemplateContext,
+    TemplateContextAction,
+    TemplateContextFilter,
+)
 from .thread import Thread
 from .user import User
+from .userauth import (
+    AuthenticateUserAction,
+    AuthenticateUserFilter,
+    GetAuthUserAction,
+    GetAuthUserFilter,
+    GetUserFromContextAction,
+    GetUserFromContextFilter,
+    GetUserFromTokenAction,
+    GetUserFromTokenFilter,
+    GetUserFromTokenPayloadAction,
+    GetUserFromTokenPayloadFilter,
+)
 
-
-AuthenticateUserAction = Callable[[GraphQLContext, str, str], Awaitable[Optional[User]]]
-AuthenticateUserFilter = Callable[
-    [AuthenticateUserAction, GraphQLContext, str, str], Awaitable[Optional[User]]
-]
 
 CacheVersions = Dict[str, str]
-
-
-class CreatePostAction(Protocol):
-    async def __call__(
-        self,
-        thread: Thread,
-        body: dict,
-        *,
-        poster: Optional[User] = None,
-        poster_name: Optional[str] = None,
-        edits: Optional[int] = 0,
-        posted_at: Optional[datetime] = None,
-        extra: Optional[dict] = None,
-    ) -> Post:
-        ...
-
-
-class CreatePostFilter(Protocol):
-    async def __call__(
-        self,
-        action: CreatePostAction,
-        thread: Thread,
-        body: dict,
-        *,
-        poster: Optional[User] = None,
-        poster_name: Optional[str] = None,
-        edits: Optional[int] = 0,
-        posted_at: Optional[datetime] = None,
-        extra: Optional[dict] = None,
-    ) -> Post:
-        ...
-
-
-class CreateThreadAction(Protocol):
-    async def __call__(
-        self,
-        category: Category,
-        title: str,
-        *,
-        first_post: Optional[Post] = None,
-        starter: Optional[User] = None,
-        starter_name: Optional[str] = None,
-        replies: int = 0,
-        is_closed: bool = False,
-        started_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None,
-    ) -> Thread:
-        ...
-
-
-class CreateThreadFilter(Protocol):
-    async def __call__(
-        self,
-        action: CreateThreadAction,
-        category: Category,
-        title: str,
-        *,
-        first_post: Optional[Post] = None,
-        starter: Optional[User] = None,
-        starter_name: Optional[str] = None,
-        replies: int = 0,
-        is_closed: bool = False,
-        started_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None,
-    ) -> Thread:
-        ...
-
-
-class CreateUserAction(Protocol):
-    async def __call__(
-        self,
-        name: str,
-        email: str,
-        *,
-        password: Optional[str] = None,
-        is_moderator: bool = False,
-        is_admin: bool = False,
-        joined_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None,
-    ) -> User:
-        ...
-
-
-class CreateUserFilter(Protocol):
-    async def __call__(
-        self,
-        action: CreateUserAction,
-        name: str,
-        email: str,
-        *,
-        password: Optional[str] = None,
-        is_moderator: bool = False,
-        is_admin: bool = False,
-        joined_at: Optional[datetime] = None,
-        extra: Optional[Dict[str, Any]] = None,
-    ) -> User:
-        ...
-
-
-GetAuthUserAction = Callable[[GraphQLContext, int], Awaitable[Optional[User]]]
-GetAuthUserFilter = Callable[
-    [GetAuthUserAction, GraphQLContext, int], Awaitable[Optional[User]]
-]
-
-GetUserFromContextAction = Callable[[GraphQLContext], Awaitable[Optional[User]]]
-GetUserFromContextFilter = Callable[
-    [GetUserFromContextAction, GraphQLContext], Awaitable[Optional[User]],
-]
-
-GetUserFromTokenAction = Callable[[GraphQLContext, str], Awaitable[Optional[User]]]
-GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, GraphQLContext, str], Awaitable[Optional[User]],
-]
-
-GetUserFromTokenPayloadAction = Callable[
-    [GraphQLContext, Dict[str, Any]], Awaitable[Optional[User]]
-]
-GetUserFromTokenPayloadFilter = Callable[
-    [GetUserFromTokenPayloadAction, GraphQLContext, Dict[str, Any]],
-    Awaitable[Optional[User]],
-]
-
-
-class SettingImage(TypedDict):
-    path: str
-    width: int
-    height: int
-
-
-Setting = Union[bool, int, str, List[str], SettingImage]
-Settings = Dict[str, Setting]
-
-TemplateContext = Dict[str, Any]
-TemplateContextAction = Callable[[Request], Awaitable[TemplateContext]]
-TemplateContextFilter = Callable[
-    [TemplateContextAction, Request], Awaitable[TemplateContext]
-]
