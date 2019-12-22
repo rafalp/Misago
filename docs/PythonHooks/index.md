@@ -64,6 +64,12 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`post_reply_hook`](./post-reply-hook.md)
 - [`post_reply_input_hook`](./post-reply-input-hook.md)
 - [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
+- [`post_thread_hook`](./post-thread-hook.md)
+- [`post_thread_input_hook`](./post-thread-input-hook.md)
+- [`post_thread_input_model_hook`](./post-thread-input-model-hook.md)
+- [`register_user_hook`](./register-user-hook.md)
+- [`register_user_input_hook`](./register-user-input-hook.md)
+- [`register_user_input_model_hook`](./register-user-input-model-hook.md)
 - [`template_context_hook`](./template-context-hook.md)
 
 
