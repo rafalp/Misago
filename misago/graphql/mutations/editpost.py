@@ -27,10 +27,11 @@ from ...validation import (
     PostExistsValidator,
     PostThreadValidator,
     ThreadIsOpenValidator,
+    UserIsAuthorizedRootValidator,
     validate_data,
     validate_model,
 )
-from ..decorators import error_handler, require_auth
+from ..errorhandler import error_handler
 
 
 edit_post_mutation = MutationType()
@@ -38,7 +39,6 @@ edit_post_mutation = MutationType()
 
 @edit_post_mutation.field("editPost")
 @error_handler
-@require_auth
 async def resolve_edit_post(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
@@ -63,6 +63,7 @@ async def resolve_edit_post(
                 ),
                 PostThreadValidator(info.context, ThreadIsOpenValidator(info.context)),
             ],
+            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
         }
         cleaned_data, errors = await edit_post_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

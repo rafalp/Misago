@@ -30,7 +30,7 @@ from ...validation import (
     validate_data,
     validate_model,
 )
-from ..decorators import error_handler
+from ..errorhandler import error_handler
 
 
 register_mutation = MutationType()

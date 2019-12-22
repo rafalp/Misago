@@ -28,10 +28,11 @@ from ...validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
+    UserIsAuthorizedRootValidator,
     validate_data,
     validate_model,
 )
-from ..decorators import error_handler, require_auth
+from ..errorhandler import error_handler
 
 
 post_reply_mutation = MutationType()
@@ -39,7 +40,6 @@ post_reply_mutation = MutationType()
 
 @post_reply_mutation.field("postReply")
 @error_handler
-@require_auth
 async def resolve_post_reply(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
@@ -59,6 +59,7 @@ async def resolve_post_reply(
                 ),
                 ThreadIsOpenValidator(info.context),
             ],
+            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
         }
         cleaned_data, errors = await post_reply_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

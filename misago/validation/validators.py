@@ -1,4 +1,4 @@
-from typing import Optional, Union, cast
+from typing import Any, Optional, Union, cast
 
 from sqlalchemy.sql import select
 
@@ -10,6 +10,8 @@ from ..errors import (
     CategoryIsClosedError,
     EmailIsNotAvailableError,
     ErrorsList,
+    NotAuthorizedError,
+    NotModeratorError,
     NotPostAuthorError,
     NotThreadAuthorError,
     PostDoesNotExistError,
@@ -75,6 +77,19 @@ class EmailIsAvailableValidator(AsyncValidator):
         if await database.fetch_one(query):
             raise EmailIsNotAvailableError()
         return email
+
+
+class IsCategoryModeratorValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, category: Category, _=None) -> Category:
+        user = await get_authenticated_user(self._context)
+        if not user or not user.is_moderator:
+            raise NotModeratorError()
+        return category
 
 
 class IsPostAuthorValidator(AsyncValidator):
@@ -216,6 +231,19 @@ class ThreadIsOpenValidator(AsyncValidator):
             if not (user and user.is_moderator):
                 raise ThreadIsClosedError(thread_id=thread.id)
         return thread
+
+
+class UserIsAuthorizedRootValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, data: Any, _=None) -> Any:
+        user = await get_authenticated_user(self._context)
+        if not user:
+            raise NotAuthorizedError()
+        return data
 
 
 class UsernameIsAvailableValidator(AsyncValidator):

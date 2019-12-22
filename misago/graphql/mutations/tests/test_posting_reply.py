@@ -57,7 +57,7 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
         input={"thread": str(thread.id), "body": "This is test post!",},
     )
 
-    assert not data.get("thread")
+    assert data.get("thread")
     assert not data.get("post")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]

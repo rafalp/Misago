@@ -149,17 +149,17 @@ async def test_root_validators_can_customize_errors_location(errors):
 
 
 @pytest.mark.asyncio
-async def test_root_validators_arent_ran_for_invalid_data(errors):
+async def test_root_validators_are_ran_for_completely_invalid_data(errors):
     _, new_errors = await validate_data(
         {"data": INVALID_VALUE},
-        {ROOT_LOCATION: [validate_root_value, validate_root_value_local]},
+        {"data": [validate_value], ROOT_LOCATION: [validate_root_value]},
         errors,
     )
     assert new_errors
-    assert new_errors.get_errors_locations() == [ROOT_LOCATION, "data"]
+    assert new_errors.get_errors_locations() == ["data", ROOT_LOCATION]
     assert new_errors.get_errors_types() == [
         "value_error.invalid",
-        "value_error.invalid_other",
+        "value_error.invalid",
     ]
 
 
@@ -167,14 +167,14 @@ async def test_root_validators_arent_ran_for_invalid_data(errors):
 async def test_root_validators_are_ran_for_partially_valid_data(errors):
     _, new_errors = await validate_data(
         {"data": INVALID_VALUE, "valid_data": "ok!"},
-        {ROOT_LOCATION: [validate_root_value, validate_root_value_local]},
+        {"data": [validate_value], ROOT_LOCATION: [validate_root_value]},
         errors,
     )
     assert new_errors
-    assert new_errors.get_errors_locations() == [ROOT_LOCATION, "data"]
+    assert new_errors.get_errors_locations() == ["data", ROOT_LOCATION]
     assert new_errors.get_errors_types() == [
         "value_error.invalid",
-        "value_error.invalid_other",
+        "value_error.invalid",
     ]
 
 

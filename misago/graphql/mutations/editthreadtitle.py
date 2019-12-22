@@ -25,11 +25,12 @@ from ...validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
+    UserIsAuthorizedRootValidator,
     threadtitlestr,
     validate_data,
     validate_model,
 )
-from ..decorators import error_handler, require_auth
+from ..errorhandler import error_handler
 
 
 edit_thread_title_mutation = MutationType()
@@ -37,7 +38,6 @@ edit_thread_title_mutation = MutationType()
 
 @edit_thread_title_mutation.field("editThreadTitle")
 @error_handler
-@require_auth
 async def resolve_edit_thread_title(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
@@ -58,6 +58,7 @@ async def resolve_edit_thread_title(
                 ),
                 ThreadIsOpenValidator(info.context),
             ],
+            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
         }
         cleaned_data, errors = await edit_thread_title_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

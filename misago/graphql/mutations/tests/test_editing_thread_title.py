@@ -30,10 +30,13 @@ async def test_edit_title_mutation_fails_if_user_is_not_authorized(
         input={"thread": str(user_thread.id), "title": "Edited thread"},
     )
 
-    assert not data.get("thread")
+    assert data.get("thread")
     assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
+    assert data["errors"].get_errors_locations() == ["thread", ErrorsList.ROOT_LOCATION]
+    assert data["errors"].get_errors_types() == [
+        "auth_error.not_thread_author_error",
+        "auth_error.not_authorized",
+    ]
 
 
 @pytest.mark.asyncio

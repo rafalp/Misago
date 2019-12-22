@@ -28,11 +28,12 @@ from ...types import (
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
+    UserIsAuthorizedRootValidator,
     threadtitlestr,
     validate_data,
     validate_model,
 )
-from ..decorators import error_handler, require_auth
+from ..errorhandler import error_handler
 
 
 post_thread_mutation = MutationType()
@@ -40,7 +41,6 @@ post_thread_mutation = MutationType()
 
 @post_thread_mutation.field("postThread")
 @error_handler
-@require_auth
 async def resolve_post_thread(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
@@ -55,6 +55,7 @@ async def resolve_post_thread(
                 CategoryExistsValidator(info.context),
                 CategoryIsOpenValidator(info.context),
             ],
+            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
         }
         cleaned_data, errors = await post_thread_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

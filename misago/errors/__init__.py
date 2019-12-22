@@ -34,6 +34,11 @@ class NotAuthorizedError(AuthError):
     msg_template = "authorization is required"
 
 
+class NotModeratorError(AuthError):
+    code = "not_moderator"
+    msg_template = "moderator permission is required"
+
+
 class EmailIsNotAvailableError(PydanticValueError):
     code = "email.not_available"
     msg_template = "e-mail is not available"

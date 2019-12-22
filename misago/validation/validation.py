@@ -56,12 +56,12 @@ async def validate_data(
             if validated_field_data is not None:
                 validated_data[validated_field_name] = validated_field_data
 
-    if ROOT_LOCATION in validators and validated_data:
+    if ROOT_LOCATION in validators:
         for root_validator in validators[ROOT_LOCATION]:
             try:
                 validated_data = await root_validator(validated_data, new_errors)
             except (AuthError, PydanticTypeError, PydanticValueError) as error:
-                errors.add_root_error(error)
+                new_errors.add_root_error(error)
 
     return validated_data, errors + new_errors
 
