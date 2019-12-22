@@ -13,6 +13,11 @@ from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
 from .createusertoken import CreateUserTokenHook, CreateUserTokenPayloadHook
+from .deletethread import (
+    DeleteThreadHook,
+    DeleteThreadInputHook,
+    DeleteThreadInputModelHook,
+)
 from .editpost import EditPostHook, EditPostInputHook, EditPostInputModelHook
 from .editthreadtitle import (
     EditThreadTitleHook,
@@ -47,6 +52,9 @@ create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
+delete_thread_hook = DeleteThreadHook()
+delete_thread_input_hook = DeleteThreadInputHook()
+delete_thread_input_model_hook = DeleteThreadInputModelHook()
 edit_post_hook = EditPostHook()
 edit_post_input_hook = EditPostInputHook()
 edit_post_input_model_hook = EditPostInputModelHook()

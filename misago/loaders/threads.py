@@ -23,3 +23,13 @@ def store_thread(context: GraphQLContext, thread: Thread):
     loader = get_loader(context, "thread_loader", get_threads_by_id)
     loader.clear(thread.id)
     loader.prime(thread.id, thread)
+
+
+def clear_thread(context: GraphQLContext, thread: Thread):
+    loader = get_loader(context, "thread_loader", get_threads_by_id)
+    loader.clear(thread.id)
+
+
+def clear_threads(context: GraphQLContext):
+    loader = get_loader(context, "thread_loader", get_threads_by_id)
+    loader.clear_all()

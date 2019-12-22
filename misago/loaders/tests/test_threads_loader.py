@@ -1,6 +1,12 @@
 import pytest
 
-from ..threads import load_thread, load_threads, store_thread
+from ..threads import (
+    clear_thread,
+    clear_threads,
+    load_thread,
+    load_threads,
+    store_thread,
+)
 
 
 @pytest.mark.asyncio
@@ -33,3 +39,21 @@ async def test_thread_is_stored_in_loader_for_future_use(thread):
     store_thread(context, thread)
     loaded_thread = await load_thread(context, thread.id)
     assert id(loaded_thread) == id(thread)
+
+
+@pytest.mark.asyncio
+async def test_thread_is_cleared_from_loader(thread):
+    context = {}
+    loaded_thread = await load_thread(context, thread.id)
+    clear_thread(context, thread)
+    new_loaded_thread = await load_thread(context, thread.id)
+    assert id(loaded_thread) != id(new_loaded_thread)
+
+
+@pytest.mark.asyncio
+async def test_all_threads_are_cleared_from_loader(thread):
+    context = {}
+    loaded_thread = await load_thread(context, thread.id)
+    clear_threads(context)
+    new_loaded_thread = await load_thread(context, thread.id)
+    assert id(loaded_thread) != id(new_loaded_thread)

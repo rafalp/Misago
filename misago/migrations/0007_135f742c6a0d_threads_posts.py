@@ -65,7 +65,9 @@ def upgrade():
         sa.ForeignKeyConstraint(
             ["poster_id"], ["misago_users.id"], ondelete="SET NULL"
         ),
-        sa.ForeignKeyConstraint(["thread_id"], ["misago_threads.id"],),
+        sa.ForeignKeyConstraint(
+            ["thread_id"], ["misago_threads.id"], ondelete="CASCADE"
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_foreign_key(

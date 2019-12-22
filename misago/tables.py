@@ -138,7 +138,7 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column(
         "thread_id",
         sqlalchemy.Integer,
-        sqlalchemy.ForeignKey("misago_threads.id"),
+        sqlalchemy.ForeignKey("misago_threads.id", ondelete="CASCADE"),
         nullable=False,
     ),
     sqlalchemy.Column(

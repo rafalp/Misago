@@ -7,6 +7,7 @@ type Mutation {
     editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
     closeThread(input: CloseThreadInput!): ThreadMutationResult!
     moveThread(input: MoveThreadInput!): ThreadMutationResult!
+    deleteThread(input: DeleteThreadInput!): ThreadMutationResult!
 }
 
 type Error {
@@ -73,4 +74,8 @@ input MoveThreadInput {
 type ThreadMutationResult {
     errors: [Error!]
     thread: Thread
+}
+
+type DeleteThreadInput {
+    thread: ID!
 }
