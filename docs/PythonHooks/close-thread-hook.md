@@ -8,7 +8,7 @@ close_thread_hook.call_action(
 )
 ```
 
-A filter for the function used by GraphQL mutation closing to update the thread in the database.
+A filter for the function used by GraphQL mutation closing thread to update the thread in the database.
 
 Returns `Thread` dataclass with updated thread data.
 

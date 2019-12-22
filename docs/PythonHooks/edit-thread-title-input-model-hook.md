@@ -4,7 +4,7 @@
 edit_thread_title_input_model_hook.call_action(action: EditThreadTitleInputModelAction, context: GraphQLContext)
 ```
 
-A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `EditThreadTitleInputModel` GraphQL input type used by the "thread reply" GraphQL mutation.
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `EditThreadTitleInputModel` GraphQL input type used by the "edit thread title" GraphQL mutation.
 
 Returns `EditThreadTitleInputModel` input model type.
 
