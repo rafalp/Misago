@@ -5,7 +5,8 @@ type Mutation {
     postReply(input: PostReplyInput!): PostMutationResult!
     editPost(input: EditPostInput!): PostMutationResult!
     editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
-    closeThreads(input: CloseThreadInput!): ThreadMutationResult!
+    closeThread(input: CloseThreadInput!): ThreadMutationResult!
+    moveThread(input: MoveThreadInput!): ThreadMutationResult!
 }
 
 type Error {
@@ -62,6 +63,11 @@ input EditThreadTitleInput {
 input CloseThreadInput {
     thread: ID!
     isClosed: Boolean!
+}
+
+input MoveThreadInput {
+    thread: ID!
+    category: ID!
 }
 
 type ThreadMutationResult {

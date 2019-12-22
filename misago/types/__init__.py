@@ -59,6 +59,16 @@ from .editthreadtitle import (
     EditThreadTitleInputModelFilter,
 )
 from .graphqlcontext import GraphQLContext, GraphQLContextAction, GraphQLContextFilter
+from .movethread import (
+    MoveThreadAction,
+    MoveThreadFilter,
+    MoveThreadInput,
+    MoveThreadInputAction,
+    MoveThreadInputFilter,
+    MoveThreadInputModel,
+    MoveThreadInputModelAction,
+    MoveThreadInputModelFilter,
+)
 from .post import Post
 from .postreply import (
     PostReplyAction,

@@ -21,6 +21,7 @@ from .editthreadtitle import (
 )
 from .filter import FilterHook
 from .graphqlcontext import GraphQLContextHook
+from .movethread import MoveThreadHook, MoveThreadInputHook, MoveThreadInputModelHook
 from .postreply import PostReplyHook, PostReplyInputHook, PostReplyInputModelHook
 from .postthread import PostThreadHook, PostThreadInputHook, PostThreadInputModelHook
 from .registeruser import (
@@ -62,6 +63,9 @@ graphql_type_defs_hook: List[str] = []
 graphql_types_hook: List[SchemaBindable] = []
 jinja2_extensions_hook: List[Any] = []
 jinja2_filters_hook: Dict[str, Any] = {}
+move_thread_hook = MoveThreadHook()
+move_thread_input_hook = MoveThreadInputHook()
+move_thread_input_model_hook = MoveThreadInputModelHook()
 post_reply_hook = PostReplyHook()
 post_reply_input_hook = PostReplyInputHook()
 post_reply_input_model_hook = PostReplyInputModelHook()
