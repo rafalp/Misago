@@ -9,6 +9,14 @@ from ..types import (
     AuthenticateUserAction,
     AuthenticateUserFilter,
     Category,
+    CloseThreadAction,
+    CloseThreadFilter,
+    CloseThreadInput,
+    CloseThreadInputAction,
+    CloseThreadInputFilter,
+    CloseThreadInputModel,
+    CloseThreadInputModelAction,
+    CloseThreadInputModelFilter,
     CreatePostAction,
     CreatePostFilter,
     CreateThreadAction,
@@ -90,6 +98,37 @@ class AuthenticateUserHook(FilterHook[AuthenticateUserAction, AuthenticateUserFi
         password: str,
     ) -> Optional[User]:
         return await self.filter(action, context, username, password)
+
+
+class CloseThreadHook(FilterHook[CloseThreadAction, CloseThreadFilter]):
+    async def call_action(
+        self,
+        action: CloseThreadAction,
+        context: GraphQLContext,
+        cleaned_data: CloseThreadInput,
+    ) -> Thread:
+        return await self.filter(action, context, cleaned_data)
+
+
+class CloseThreadInputHook(FilterHook[CloseThreadInputAction, CloseThreadInputFilter]):
+    async def call_action(
+        self,
+        action: CloseThreadInputAction,
+        context: GraphQLContext,
+        validators: Dict[str, List[AsyncValidator]],
+        data: CloseThreadInput,
+        errors_list: ErrorsList,
+    ) -> Tuple[CloseThreadInput, ErrorsList]:
+        return await self.filter(action, context, validators, data, errors_list)
+
+
+class CloseThreadInputModelHook(
+    FilterHook[CloseThreadInputModelAction, CloseThreadInputModelFilter]
+):
+    async def call_action(
+        self, action: CloseThreadInputModelAction, context: GraphQLContext
+    ) -> CloseThreadInputModel:
+        return await self.filter(action, context)
 
 
 class CreatePostHook(FilterHook[CreatePostAction, CreatePostFilter]):

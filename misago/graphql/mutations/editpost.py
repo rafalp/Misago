@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple, cast
 
-from ariadne import MutationType
+from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
@@ -38,6 +38,7 @@ edit_post_mutation = MutationType()
 
 
 @edit_post_mutation.field("editPost")
+@convert_kwargs_to_snake_case
 @error_handler
 async def resolve_edit_post(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin

@@ -6,7 +6,7 @@ from ..editpost import resolve_edit_post
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_updates_post(user_graphql_info, user, user_post):
+async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
     data = await resolve_edit_post(
         None,
         user_graphql_info,

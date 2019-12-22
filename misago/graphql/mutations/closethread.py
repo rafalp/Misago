@@ -6,43 +6,40 @@ from pydantic import PositiveInt, create_model
 
 from ...errors import ErrorsList
 from ...hooks import (
-    edit_thread_title_hook,
-    edit_thread_title_input_hook,
-    edit_thread_title_input_model_hook,
+    close_thread_hook,
+    close_thread_input_hook,
+    close_thread_input_model_hook,
 )
 from ...loaders import load_thread, store_thread
 from ...threads.update import update_thread
 from ...types import (
     AsyncValidator,
     GraphQLContext,
-    EditThreadTitleInput,
-    EditThreadTitleInputModel,
+    CloseThreadInput,
+    CloseThreadInputModel,
     Thread,
 )
 from ...validation import (
-    CategoryIsOpenValidator,
-    IsThreadAuthorValidator,
+    IsCategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
-    ThreadIsOpenValidator,
     UserIsAuthorizedRootValidator,
-    threadtitlestr,
     validate_data,
     validate_model,
 )
 from ..errorhandler import error_handler
 
 
-edit_thread_title_mutation = MutationType()
+close_thread_mutation = MutationType()
 
 
-@edit_thread_title_mutation.field("editThreadTitle")
-@convert_kwargs_to_snake_case
+@close_thread_mutation.field("closeThread")
 @error_handler
-async def resolve_edit_thread_title(
+@convert_kwargs_to_snake_case
+async def resolve_close_thread(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await edit_thread_title_input_model_hook.call_action(
+    input_model = await close_thread_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -53,50 +50,46 @@ async def resolve_edit_thread_title(
         validators: Dict[str, List[AsyncValidator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
-                IsThreadAuthorValidator(info.context),
                 ThreadCategoryValidator(
-                    info.context, CategoryIsOpenValidator(info.context)
+                    info.context, IsCategoryModeratorValidator(info.context)
                 ),
-                ThreadIsOpenValidator(info.context),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
+            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
-        cleaned_data, errors = await edit_thread_title_input_hook.call_action(
+        cleaned_data, errors = await close_thread_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread = await edit_thread_title_hook.call_action(
-        edit_thread_title, info.context, cleaned_data
+    thread = await close_thread_hook.call_action(
+        close_thread, info.context, cleaned_data
     )
 
     return {"thread": thread}
 
 
-async def create_input_model(context: GraphQLContext) -> EditThreadTitleInputModel:
+async def create_input_model(context: GraphQLContext) -> CloseThreadInputModel:
     return create_model(
-        "EditThreadTitleInputModel",
-        thread=(PositiveInt, ...),
-        title=(threadtitlestr(context["settings"]), ...),
+        "CloseThreadInputModel", thread=(PositiveInt, ...), is_closed=(bool, ...),
     )
 
 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: EditThreadTitleInput,
+    data: CloseThreadInput,
     errors: ErrorsList,
-) -> Tuple[EditThreadTitleInput, ErrorsList]:
+) -> Tuple[CloseThreadInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def edit_thread_title(
-    context: GraphQLContext, cleaned_data: EditThreadTitleInput
+async def close_thread(
+    context: GraphQLContext, cleaned_data: CloseThreadInput
 ) -> Thread:
     thread = cleaned_data["thread"]
-    thread = await update_thread(thread, title=cleaned_data["title"])
+    thread = await update_thread(thread, is_closed=cleaned_data["is_closed"])
 
     store_thread(context, thread)
 

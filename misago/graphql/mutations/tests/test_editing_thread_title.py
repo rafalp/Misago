@@ -6,7 +6,7 @@ from ..editthreadtitle import resolve_edit_thread_title
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_updates_thread(user_graphql_info, user, user_thread):
+async def test_edit_title_mutation_updates_thread(user_graphql_info, user_thread):
     data = await resolve_edit_thread_title(
         None,
         user_graphql_info,

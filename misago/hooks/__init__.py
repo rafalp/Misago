@@ -6,6 +6,9 @@ from .action import ActionHook
 from .filter import FilterHook
 from .filters import (
     AuthenticateUserHook,
+    CloseThreadHook,
+    CloseThreadInputHook,
+    CloseThreadInputModelHook,
     CreatePostHook,
     CreateThreadHook,
     CreateUserHook,
@@ -36,6 +39,9 @@ from .filters import (
 
 
 authenticate_user_hook = AuthenticateUserHook()
+close_thread_hook = CloseThreadHook()
+close_thread_input_hook = CloseThreadInputHook()
+close_thread_input_model_hook = CloseThreadInputModelHook()
 create_post_hook = CreatePostHook()
 create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()

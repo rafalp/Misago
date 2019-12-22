@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple
 
-from ariadne import MutationType
+from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
@@ -37,6 +37,7 @@ register_mutation = MutationType()
 
 
 @register_mutation.field("register")
+@convert_kwargs_to_snake_case
 @error_handler
 async def resolve_register(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin

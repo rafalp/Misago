@@ -1,3 +1,4 @@
+from .closethread import close_thread_mutation
 from .editpost import edit_post_mutation
 from .editthreadtitle import edit_thread_title_mutation
 from .login import login_mutation
@@ -7,6 +8,7 @@ from .register import register_mutation
 
 
 mutations = [
+    close_thread_mutation,
     edit_post_mutation,
     edit_thread_title_mutation,
     login_mutation,

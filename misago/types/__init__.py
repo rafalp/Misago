@@ -38,6 +38,29 @@ AuthenticateUserFilter = Callable[
 
 CacheVersions = Dict[str, str]
 
+CloseThreadInput = Dict[str, Any]
+CloseThreadInputAction = Callable[
+    ["GraphQLContext", Dict[str, List[AsyncValidator]], CloseThreadInput, ErrorsList,],
+    Awaitable[Tuple[CloseThreadInput, ErrorsList]],
+]
+CloseThreadInputFilter = Callable[
+    [CloseThreadInputAction, "GraphQLContext", CloseThreadInput],
+    Awaitable[Tuple[CloseThreadInput, ErrorsList]],
+]
+
+CloseThreadInputModel = Type[BaseModel]
+CloseThreadInputModelAction = Callable[
+    ["GraphQLContext"], Awaitable[CloseThreadInputModel]
+]
+CloseThreadInputModelFilter = Callable[
+    [CloseThreadInputModelAction, "GraphQLContext"], Awaitable[CloseThreadInputModel],
+]
+
+CloseThreadAction = Callable[["GraphQLContext", "CloseThreadInput"], Awaitable[Thread]]
+CloseThreadFilter = Callable[
+    [CloseThreadAction, "GraphQLContext", "CloseThreadInput"], Awaitable[Thread]
+]
+
 
 class CreatePostAction(Protocol):
     async def __call__(
