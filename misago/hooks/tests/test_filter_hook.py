@@ -1,6 +1,6 @@
 import pytest
 
-from ..filters import FilterHook
+from ..filter import FilterHook
 
 
 ACTION = 0
