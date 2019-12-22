@@ -78,6 +78,16 @@ from .postthread import (
     PostThreadInputModelAction,
     PostThreadInputModelFilter,
 )
+from .registeruser import (
+    RegisterUserAction,
+    RegisterUserFilter,
+    RegisterUserInput,
+    RegisterUserInputAction,
+    RegisterUserInputFilter,
+    RegisterUserInputModel,
+    RegisterUserInputModelAction,
+    RegisterUserInputModelFilter,
+)
 from .thread import Thread
 from .user import User
 
@@ -208,28 +218,6 @@ GetUserFromTokenPayloadAction = Callable[
 GetUserFromTokenPayloadFilter = Callable[
     [GetUserFromTokenPayloadAction, GraphQLContext, Dict[str, Any]],
     Awaitable[Optional[User]],
-]
-
-
-RegisterInput = Dict[str, Any]
-RegisterInputAction = Callable[
-    [GraphQLContext, Dict[str, List[AsyncValidator]], RegisterInput, ErrorsList],
-    Awaitable[Tuple[RegisterInput, ErrorsList]],
-]
-RegisterInputFilter = Callable[
-    [RegisterInputAction, GraphQLContext, RegisterInput],
-    Awaitable[Tuple[RegisterInput, ErrorsList]],
-]
-
-RegisterInputModel = Type[BaseModel]
-RegisterInputModelAction = Callable[[GraphQLContext], Awaitable[RegisterInputModel]]
-RegisterInputModelFilter = Callable[
-    [RegisterInputModelAction, GraphQLContext], Awaitable[RegisterInputModel],
-]
-
-RegisterUserAction = Callable[[GraphQLContext, "RegisterInput"], Awaitable[User]]
-RegisterUserFilter = Callable[
-    [RegisterUserAction, GraphQLContext, "RegisterInput"], Awaitable[User]
 ]
 
 

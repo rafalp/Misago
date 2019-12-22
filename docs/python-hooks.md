@@ -111,7 +111,7 @@ Returns `Thread` dataclass with updated thread data.
 ##### `action`
 
 ```python
-async def close_thread(context: GraphQLContext, cleaned_data: RegisterInput) -> Thread:
+async def close_thread(context: GraphQLContext, cleaned_data: CloseThreadInput) -> Thread:
     ...
 ```
 
@@ -170,13 +170,13 @@ Returns a tuple of `data` that should be used to update the thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: CloseThreadInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[CloseThreadInput, ErrorsList]:
     ...
 ```
 
-Next filter or built-in function used to validate edited thread input data.
+Next filter or built-in function used to validate closed thread input data.
 
 
 ##### `context`
@@ -718,7 +718,7 @@ Returns `Post` dataclass with updated post data.
 ##### `action`
 
 ```python
-async def edit_post(context: GraphQLContext, cleaned_data: RegisterInput) -> Post:
+async def edit_post(context: GraphQLContext, cleaned_data: EditPostInput) -> Post:
     ...
 ```
 
@@ -777,9 +777,9 @@ Returns a tuple of `data` that should be used to update the post and validation 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: EditPostInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[EditPostInput, ErrorsList]:
     ...
 ```
 
@@ -880,7 +880,7 @@ Returns `Thread` dataclass with updated thread data.
 ##### `action`
 
 ```python
-async def edit_thread_title(context: GraphQLContext, cleaned_data: RegisterInput) -> Thread:
+async def edit_thread_title(context: GraphQLContext, cleaned_data: EditThreadTitleInput) -> Thread:
     ...
 ```
 
@@ -939,9 +939,9 @@ Returns a tuple of `data` that should be used to update the thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: EditThreadTitleInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[EditThreadTitleInput, ErrorsList]:
     ...
 ```
 
@@ -1351,7 +1351,10 @@ Returns tuple of `Thread` and `Post` dataclasses with newly created reply data.
 ##### `action`
 
 ```python
-async def post_reply(context: GraphQLContext, cleaned_data: RegisterInput) -> Tuple[Thread, Post]:
+async def post_reply(
+    context: GraphQLContext,
+    cleaned_data: PostReplyInput,
+) -> Tuple[Thread, Post]:
     ...
 ```
 
@@ -1410,9 +1413,9 @@ Returns a tuple of `data` that should be used to create new reply and validation
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: PostReplyInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[PostReplyInput, ErrorsList]:
     ...
 ```
 
@@ -1513,7 +1516,10 @@ Returns tuple of `Thread` and `Post` dataclasses with newly created thread data.
 ##### `action`
 
 ```python
-async def post_thread(context: GraphQLContext, cleaned_data: RegisterInput) -> Tuple[Thread, Post]:
+async def post_thread(
+    context: GraphQLContext,
+    cleaned_data: PostThreadInput,
+) -> Tuple[Thread, Post]:
     ...
 ```
 
@@ -1573,9 +1579,9 @@ Returns a tuple of `data` that should be used to create new thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: PostThreadInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[PostThreadInput, ErrorsList]:
     ...
 ```
 
@@ -1656,19 +1662,19 @@ A dict with GraphQL query context.
 - - -
 
 
-### `register_input_hook`
+### `register_user_input_hook`
 
 ```python
-register_input_hook.call_action(
-    action: RegisterInputAction,
+register_user_input_hook.call_action(
+    action: RegisterUserInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: RegisterUserInput,
     errors_list: ErrorsList
 )
 ```
 
-A filter for the function used to validate data for `RegisterInputModel` GraphQL input type.
+A filter for the function used to validate data for `RegisterUserInputModel` GraphQL input type.
 
 Returns a tuple of `data` that should be used to create new user and validation `errors`.
 
@@ -1681,9 +1687,9 @@ Returns a tuple of `data` that should be used to create new user and validation 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: RegisterUserInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[RegisterUserInput, ErrorsList]:
     ...
 ```
 
@@ -1729,15 +1735,15 @@ List of validation errors found so far. Can be extended using it's `add_error` a
 - - -
 
 
-### `register_input_model_hook`
+### `register_user_input_model_hook`
 
 ```python
-register_input_model_hook.call_action(action: RegisterInputModelAction, context: GraphQLContext)
+register_user_input_model_hook.call_action(action: RegisterUserInputModelAction, context: GraphQLContext)
 ```
 
-A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterInputModel` GraphQL input type used by the "register new user" GraphQL mutation.
+A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterUserInputModel` GraphQL input type used by the "register new user" GraphQL mutation.
 
-Returns `RegisterInputModel` input model type.
+Returns `RegisterUserInputModel` input model type.
 
 
 #### Required arguments
@@ -1745,7 +1751,7 @@ Returns `RegisterInputModel` input model type.
 ##### `action`
 
 ```python
-async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
+async def create_input_model(context: GraphQLContext) -> RegisterUserInputModel:
     ...
 ```
 
@@ -1770,7 +1776,7 @@ A dict with GraphQL query context.
 register_user_hook.call_action(
     action: RegisterUserAction,
     context: GraphQLContext,
-    cleaned_data: RegisterInput
+    cleaned_data: RegisterUserInput
 )
 ```
 
@@ -1784,7 +1790,7 @@ Returns `User` dataclass with newly created user data.
 ##### `action`
 
 ```python
-async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
+async def register_user(context: GraphQLContext, cleaned_data: RegisterUserInput) -> User:
     ...
 ```
 

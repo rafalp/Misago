@@ -72,14 +72,14 @@ from ..types import (
     PostThreadInputModel,
     PostThreadInputModelAction,
     PostThreadInputModelFilter,
-    RegisterInput,
-    RegisterInputAction,
-    RegisterInputFilter,
-    RegisterInputModel,
-    RegisterInputModelAction,
-    RegisterInputModelFilter,
     RegisterUserAction,
     RegisterUserFilter,
+    RegisterUserInput,
+    RegisterUserInputAction,
+    RegisterUserInputFilter,
+    RegisterUserInputModel,
+    RegisterUserInputModelAction,
+    RegisterUserInputModelFilter,
     TemplateContext,
     TemplateContextAction,
     TemplateContextFilter,
@@ -396,35 +396,37 @@ class PostThreadInputModelHook(
         return await self.filter(action, context)
 
 
-class RegisterInputHook(FilterHook[RegisterInputAction, RegisterInputFilter]):
-    async def call_action(
-        self,
-        action: RegisterInputAction,
-        context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
-        data: RegisterInput,
-        errors_list: ErrorsList,
-    ) -> Tuple[RegisterInput, ErrorsList]:
-        return await self.filter(action, context, validators, data, errors_list)
-
-
-class RegisterInputModelHook(
-    FilterHook[RegisterInputModelAction, RegisterInputModelFilter]
-):
-    async def call_action(
-        self, action: RegisterInputModelAction, context: GraphQLContext
-    ) -> RegisterInputModel:
-        return await self.filter(action, context)
-
-
 class RegisterUserHook(FilterHook[RegisterUserAction, RegisterUserFilter]):
     async def call_action(
         self,
         action: RegisterUserAction,
         context: GraphQLContext,
-        cleaned_data: RegisterInput,
+        cleaned_data: RegisterUserInput,
     ) -> User:
         return await self.filter(action, context, cleaned_data)
+
+
+class RegisterUserInputHook(
+    FilterHook[RegisterUserInputAction, RegisterUserInputFilter]
+):
+    async def call_action(
+        self,
+        action: RegisterUserInputAction,
+        context: GraphQLContext,
+        validators: Dict[str, List[AsyncValidator]],
+        data: RegisterUserInput,
+        errors_list: ErrorsList,
+    ) -> Tuple[RegisterUserInput, ErrorsList]:
+        return await self.filter(action, context, validators, data, errors_list)
+
+
+class RegisterUserInputModelHook(
+    FilterHook[RegisterUserInputModelAction, RegisterUserInputModelFilter]
+):
+    async def call_action(
+        self, action: RegisterUserInputModelAction, context: GraphQLContext
+    ) -> RegisterUserInputModel:
+        return await self.filter(action, context)
 
 
 class TemplateContextHook(FilterHook[TemplateContextAction, TemplateContextFilter]):

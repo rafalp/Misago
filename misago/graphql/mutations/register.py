@@ -9,16 +9,16 @@ from ...errors import ErrorsList
 from ...hooks import (
     create_user_hook,
     create_user_token_hook,
-    register_input_hook,
-    register_input_model_hook,
     register_user_hook,
+    register_user_input_hook,
+    register_user_input_model_hook,
 )
 from ...loaders import store_user
 from ...types import (
     AsyncValidator,
     GraphQLContext,
-    RegisterInput,
-    RegisterInputModel,
+    RegisterUserInput,
+    RegisterUserInputModel,
     User,
 )
 from ...users.create import create_user
@@ -42,7 +42,7 @@ register_mutation = MutationType()
 async def resolve_register(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await register_input_model_hook.call_action(
+    input_model = await register_user_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -52,7 +52,7 @@ async def resolve_register(
             "name": [UsernameIsAvailableValidator(),],
             "email": [EmailIsAvailableValidator(),],
         }
-        cleaned_data, errors = await register_input_hook.call_action(
+        cleaned_data, errors = await register_user_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
@@ -69,9 +69,9 @@ async def resolve_register(
     return {"user": user, "token": token}
 
 
-async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
+async def create_input_model(context: GraphQLContext) -> RegisterUserInputModel:
     return create_model(
-        "RegisterInputModel",
+        "RegisterInpuRegisterUserInputModeltModel",
         name=(usernamestr(context["settings"]), ...),
         email=(EmailStr, ...),
         password=(passwordstr(context["settings"]), ...),
@@ -81,13 +81,15 @@ async def create_input_model(context: GraphQLContext) -> RegisterInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: RegisterInput,
+    data: RegisterUserInput,
     errors: ErrorsList,
-) -> Tuple[RegisterInput, ErrorsList]:
+) -> Tuple[RegisterUserInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def register_user(context: GraphQLContext, cleaned_data: RegisterInput) -> User:
+async def register_user(
+    context: GraphQLContext, cleaned_data: RegisterUserInput
+) -> User:
     user = await create_user_hook.call_action(
         create_user,
         cleaned_data["name"],

@@ -31,9 +31,9 @@ from .filters import (
     PostThreadHook,
     PostThreadInputHook,
     PostThreadInputModelHook,
-    RegisterInputHook,
-    RegisterInputModelHook,
     RegisterUserHook,
+    RegisterUserInputHook,
+    RegisterUserInputModelHook,
     TemplateContextHook,
 )
 
@@ -69,7 +69,7 @@ post_reply_input_model_hook = PostReplyInputModelHook()
 post_thread_hook = PostThreadHook()
 post_thread_input_hook = PostThreadInputHook()
 post_thread_input_model_hook = PostThreadInputModelHook()
-register_input_hook = RegisterInputHook()
-register_input_model_hook = RegisterInputModelHook()
 register_user_hook = RegisterUserHook()
+register_user_input_hook = RegisterUserInputHook()
+register_user_input_model_hook = RegisterUserInputModelHook()
 template_context_hook = TemplateContextHook()
