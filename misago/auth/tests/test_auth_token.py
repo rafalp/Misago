@@ -64,5 +64,5 @@ async def test_no_user_is_returned_for_invalid_token(graphql_context):
 @pytest.mark.asyncio
 async def test_deleted_user_is_not_obtained_from_token(graphql_context, user):
     token = await create_user_token(graphql_context, user)
-    await delete_user(user.id)
+    await delete_user(user)
     assert await get_user_from_token(graphql_context, token) is None
