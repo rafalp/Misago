@@ -14,8 +14,8 @@ async def test_post_category_validator_calls_given_validator_against_post_catego
     future.set_result(category)
     category_validator = Mock(return_value=future)
     validator = PostCategoryValidator({}, category_validator)
-    await validator(post, None)
-    category_validator.assert_called_once_with(category, None)
+    await validator(post, "errors", "field")
+    category_validator.assert_called_once_with(category, "errors", "field")
 
 
 @pytest.mark.asyncio

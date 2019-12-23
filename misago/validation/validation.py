@@ -59,7 +59,9 @@ async def validate_data(
     if ROOT_LOCATION in validators:
         for root_validator in validators[ROOT_LOCATION]:
             try:
-                validated_data = await root_validator(validated_data, new_errors)
+                validated_data = await root_validator(
+                    validated_data, new_errors, ROOT_LOCATION
+                )
             except (AuthError, PydanticTypeError, PydanticValueError) as error:
                 new_errors.add_root_error(error)
 
@@ -71,7 +73,7 @@ async def validate_field_data(
 ) -> Optional[Any]:
     try:
         for validator in validators:
-            data = await validator(data, errors)
+            data = await validator(data, errors, field_name)
         return data
     except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_error(field_name, error)

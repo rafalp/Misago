@@ -4,5 +4,5 @@ from ..errors import ErrorsList
 
 
 class AsyncValidator(Protocol):
-    async def __call__(self, value: Any, errors: ErrorsList) -> Any:
+    async def __call__(self, value: Any, errors: ErrorsList, field_name: str) -> Any:
         ...

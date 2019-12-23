@@ -13,6 +13,7 @@ from .validators import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
+    ThreadsBulkValidator,
     UserIsAuthorizedRootValidator,
     UsernameIsAvailableValidator,
 )
@@ -31,6 +32,7 @@ __all__ = [
     "ThreadCategoryValidator",
     "ThreadExistsValidator",
     "ThreadIsOpenValidator",
+    "ThreadsBulkValidator",
     "UserIsAuthorizedRootValidator",
     "UsernameIsAvailableValidator",
     "passwordstr",

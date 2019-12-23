@@ -14,8 +14,8 @@ async def test_thread_category_validator_calls_given_validator_against_thread_ca
     future.set_result(category)
     category_validator = Mock(return_value=future)
     validator = ThreadCategoryValidator({}, category_validator)
-    await validator(thread, None)
-    category_validator.assert_called_once_with(category, None)
+    await validator(thread, "errors", "field")
+    category_validator.assert_called_once_with(category, "errors", "field")
 
 
 @pytest.mark.asyncio

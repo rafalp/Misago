@@ -1,11 +1,14 @@
-from typing import Any, Optional, Union, cast
+from asyncio import gather
+from typing import Any, Optional, List, Union, cast
 
+from pydantic import PydanticTypeError, PydanticValueError
 from sqlalchemy.sql import select
 
 from ..auth import get_authenticated_user
 from ..categories import CategoryTypes
 from ..database import database
 from ..errors import (
+    AuthError,
     CategoryDoesNotExistError,
     CategoryIsClosedError,
     EmailIsNotAvailableError,
@@ -32,6 +35,43 @@ async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
     return 0
 
 
+class BulkValidator(AsyncValidator):
+    _validators: List[AsyncValidator]
+
+    def __init__(self, validators: List[AsyncValidator]):
+        self._validators = validators
+
+    async def __call__(
+        self, items: List[Any], errors: ErrorsList, field_name: str
+    ) -> List[Any]:
+        validators = []
+        for i, item in enumerate(items):
+            validators.append(
+                _validate_bulk_item(
+                    [field_name, str(i)], item, self._validators, errors
+                )
+            )
+
+        if validators:
+            validated_items = await gather(*validators)
+            return [i for i in validated_items if i]
+
+        return []
+
+
+async def _validate_bulk_item(
+    location: List[str], data: Any, validators: List[AsyncValidator], errors: ErrorsList
+) -> Any:
+    validated_data = data
+    try:
+        for validator in validators:
+            validated_data = await validator(data, errors, location[-1])
+        return validated_data
+    except (AuthError, PydanticTypeError, PydanticValueError) as error:
+        errors.add_error(location, error)
+        return None
+
+
 class CategoryExistsValidator(AsyncValidator):
     _context: GraphQLContext
     _category_type: int
@@ -42,7 +82,7 @@ class CategoryExistsValidator(AsyncValidator):
         self._context = context
         self._category_type = category_type
 
-    async def __call__(self, category_id: Union[int, str], _=None) -> Category:
+    async def __call__(self, category_id: Union[int, str], *_) -> Category:
         category = await load_category(self._context, category_id)
         if not category or category.type != self._category_type:
             raise CategoryDoesNotExistError(category_id=category_id)
@@ -55,7 +95,7 @@ class CategoryIsOpenValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, category: Category, _=None) -> Category:
+    async def __call__(self, category: Category, *_) -> Category:
         if category.is_closed:
             user = await get_authenticated_user(self._context)
             if not (user and user.is_moderator):
@@ -69,7 +109,7 @@ class EmailIsAvailableValidator(AsyncValidator):
     def __init__(self, exclude_user: Optional[int] = None):
         self._exclude_user = exclude_user
 
-    async def __call__(self, email: str, _=None) -> str:
+    async def __call__(self, email: str, *_) -> str:
         email_hash = get_email_hash(email)
         query = select([users.c.id]).where(users.c.email_hash == email_hash)
         if self._exclude_user:
@@ -85,7 +125,7 @@ class IsCategoryModeratorValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, category: Category, _=None) -> Category:
+    async def __call__(self, category: Category, *_) -> Category:
         user = await get_authenticated_user(self._context)
         if not user or not user.is_moderator:
             raise NotModeratorError()
@@ -98,7 +138,7 @@ class IsPostAuthorValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, post: Post, _=None) -> Post:
+    async def __call__(self, post: Post, *_) -> Post:
         user = await get_authenticated_user(self._context)
         if not user:
             raise NotPostAuthorError(post_id=post.id)
@@ -113,7 +153,7 @@ class IsThreadAuthorValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, thread: Thread, _=None) -> Thread:
+    async def __call__(self, thread: Thread, *_) -> Thread:
         user = await get_authenticated_user(self._context)
         if not user:
             raise NotThreadAuthorError(thread_id=thread.id)
@@ -134,10 +174,10 @@ class PostCategoryValidator(AsyncValidator):
     def category_validator(self) -> AsyncValidator:
         return self._validator
 
-    async def __call__(self, post: Post, errors: ErrorsList) -> Post:
+    async def __call__(self, post: Post, errors: ErrorsList, field_name: str) -> Post:
         category = await load_category(self._context, post.category_id)
         category = cast(Category, category)
-        await self._validator(category, errors)
+        await self._validator(category, errors, field_name)
         return post
 
 
@@ -151,7 +191,7 @@ class PostExistsValidator(AsyncValidator):
         self._context = context
         self._category_type = category_type
 
-    async def __call__(self, post_id: Union[int, str], _=None) -> Post:
+    async def __call__(self, post_id: Union[int, str], *_) -> Post:
         post = await load_post(self._context, post_id)
         if not post:
             raise PostDoesNotExistError(post_id=post_id)
@@ -173,10 +213,10 @@ class PostThreadValidator(AsyncValidator):
     def thread_validator(self) -> AsyncValidator:
         return self._validator
 
-    async def __call__(self, post: Post, errors: ErrorsList) -> Post:
+    async def __call__(self, post: Post, errors: ErrorsList, field_name: str) -> Post:
         thread = await load_thread(self._context, post.thread_id)
         thread = cast(Thread, thread)
-        await self._validator(thread, errors)
+        await self._validator(thread, errors, field_name)
         return post
 
 
@@ -192,10 +232,12 @@ class ThreadCategoryValidator(AsyncValidator):
     def category_validator(self) -> AsyncValidator:
         return self._validator
 
-    async def __call__(self, thread: Thread, errors: ErrorsList) -> Thread:
+    async def __call__(
+        self, thread: Thread, errors: ErrorsList, field_name: str
+    ) -> Thread:
         category = await load_category(self._context, thread.category_id)
         category = cast(Category, category)
-        await self._validator(category, errors)
+        await self._validator(category, errors, field_name)
         return thread
 
 
@@ -209,7 +251,7 @@ class ThreadExistsValidator(AsyncValidator):
         self._context = context
         self._category_type = category_type
 
-    async def __call__(self, thread_id: Union[int, str], _=None) -> Thread:
+    async def __call__(self, thread_id: Union[int, str], *_) -> Thread:
         thread = await load_thread(self._context, thread_id)
         if not thread:
             raise ThreadDoesNotExistError(thread_id=thread_id)
@@ -225,12 +267,19 @@ class ThreadIsOpenValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, thread: Thread, _=None) -> Thread:
+    async def __call__(self, thread: Thread, *_) -> Thread:
         if thread.is_closed:
             user = await get_authenticated_user(self._context)
             if not (user and user.is_moderator):
                 raise ThreadIsClosedError(thread_id=thread.id)
         return thread
+
+
+class ThreadsBulkValidator(BulkValidator):
+    async def __call__(
+        self, threads: List[Any], errors: ErrorsList, field_name: str
+    ) -> List[Thread]:
+        return await super().__call__(threads, errors, field_name)
 
 
 class UserIsAuthorizedRootValidator(AsyncValidator):
@@ -239,7 +288,7 @@ class UserIsAuthorizedRootValidator(AsyncValidator):
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, data: Any, _=None) -> Any:
+    async def __call__(self, data: Any, *_) -> Any:
         user = await get_authenticated_user(self._context)
         if not user:
             raise NotAuthorizedError()
@@ -252,7 +301,7 @@ class UsernameIsAvailableValidator(AsyncValidator):
     def __init__(self, exclude_user: Optional[int] = None):
         self._exclude_user = exclude_user
 
-    async def __call__(self, username: str, _=None) -> str:
+    async def __call__(self, username: str, *_) -> str:
         query = select([users.c.id]).where(users.c.slug == username.lower())
         if self._exclude_user:
             query = query.where(users.c.id != self._exclude_user)

@@ -20,37 +20,37 @@ class OtherInvalidValueError(PydanticValueError):
     msg_template = "other invalid test data"
 
 
-async def validate_value(value, _):
+async def validate_value(value, *_):
     if value != VALID_VALUE:
         raise InvalidValueError()
     return value
 
 
-async def validate_and_change_value(value, _):
+async def validate_and_change_value(value, *_):
     if value != VALID_VALUE:
         raise InvalidValueError()
     return "changed!"
 
 
-async def validate_value_other(value, _):
+async def validate_value_other(value, *_):
     if value != VALID_VALUE:
         raise OtherInvalidValueError()
     return value
 
 
-async def validate_root_value(value, errors):
+async def validate_root_value(value, *_):
     if value != {"data": VALID_VALUE}:
         raise InvalidValueError()
     return value
 
 
-async def validate_and_change_root_value(value, errors):
+async def validate_and_change_root_value(value, *_):
     if value != {"data": VALID_VALUE}:
         raise InvalidValueError()
     return dict(changed=True, **value)
 
 
-async def validate_root_value_local(value, errors):
+async def validate_root_value_local(value, errors, *_):
     if value != {"data": VALID_VALUE}:
         errors.add_error("data", OtherInvalidValueError())
     return value

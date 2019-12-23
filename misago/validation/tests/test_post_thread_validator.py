@@ -14,8 +14,8 @@ async def test_post_thread_validator_calls_given_validator_against_post_thread(
     future.set_result(thread)
     thread_validator = Mock(return_value=future)
     validator = PostThreadValidator({}, thread_validator)
-    await validator(post, None)
-    thread_validator.assert_called_once_with(thread, None)
+    await validator(post, "errors", "field")
+    thread_validator.assert_called_once_with(thread, "errors", "field")
 
 
 @pytest.mark.asyncio
