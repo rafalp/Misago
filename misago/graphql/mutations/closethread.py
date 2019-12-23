@@ -11,7 +11,7 @@ from ...hooks import (
     close_thread_input_model_hook,
 )
 from ...loaders import load_thread, store_thread
-from ...threads.update import update_thread
+from ...threads.close import close_thread
 from ...types import (
     AsyncValidator,
     GraphQLContext,
@@ -64,7 +64,7 @@ async def resolve_close_thread(
         return {"errors": errors, "thread": thread}
 
     thread = await close_thread_hook.call_action(
-        close_thread, info.context, cleaned_data
+        close_thread_action, info.context, cleaned_data
     )
 
     return {"thread": thread}
@@ -85,11 +85,11 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def close_thread(
+async def close_thread_action(
     context: GraphQLContext, cleaned_data: CloseThreadInput
 ) -> Thread:
     thread = cleaned_data["thread"]
-    thread = await update_thread(thread, is_closed=cleaned_data["is_closed"])
+    thread = await close_thread(thread, cleaned_data["is_closed"])
 
     store_thread(context, thread)
 

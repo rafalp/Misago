@@ -13,12 +13,6 @@ type Mutation {
     deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
-type Error {
-    location: [String!]!
-    message: String!
-    type: String!
-}
-
 type LoginMutationResult {
     error: Error
     token: String

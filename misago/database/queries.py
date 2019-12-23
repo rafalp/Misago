@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Mapping, Union
+from typing import Any, Dict, List, Mapping, Sequence, Union
 
 from sqlalchemy.sql import ColumnElement, TableClause
 
@@ -23,6 +23,12 @@ async def fetch_all(table: TableClause) -> List[Mapping]:
 async def delete(table: TableClause, row_id=Any):
     pk = get_table_pk(table)
     query = table.delete(None).where(pk == row_id)
+    await database.execute(query)
+
+
+async def delete_many(table: TableClause, rows_ids=Sequence[Any]):
+    pk = get_table_pk(table)
+    query = table.delete(None).where(pk.in_(rows_ids))
     await database.execute(query)
 
 
