@@ -11,7 +11,8 @@ create_user_hook.call_action(
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
-    extra: Optional[Dict[str, Any]] = None
+    extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 )
 ```
 
@@ -34,7 +35,8 @@ async def create_user(
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
-    extra: Optional[Dict[str, Any]] = None
+    extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> User:
     ...
 ```
@@ -105,3 +107,12 @@ Optional[Dict[str, Any]] = dict()
 ```
 
 JSON-serializable dict with extra data for this user. This value is not used by Misago, but allows plugin authors to store additional information about user directly on their database row.
+
+
+### `context`
+
+```python
+Optional[GraphQLContext]
+```
+
+A dict with GraphQL query context. Depending on where user is created may be unavailable and thus `None`.

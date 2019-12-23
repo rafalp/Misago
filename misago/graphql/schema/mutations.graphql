@@ -5,9 +5,12 @@ type Mutation {
     postReply(input: PostReplyInput!): PostMutationResult!
     editPost(input: EditPostInput!): PostMutationResult!
     editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
+    bulkCloseThreads(input: BulkCloseThreadsInput!): BulkThreadsMutationResult!
+    bulkMoveThreads(input: BulkMoveThreadsInput!): BulkThreadsMutationResult!
+    bulkDeleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
     closeThread(input: CloseThreadInput!): ThreadMutationResult!
     moveThread(input: MoveThreadInput!): ThreadMutationResult!
-    deleteThread(input: DeleteThreadInput!): ThreadMutationResult!
+    deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
 type Error {
@@ -76,6 +79,33 @@ type ThreadMutationResult {
     thread: Thread
 }
 
-type DeleteThreadInput {
+input DeleteThreadInput {
     thread: ID!
+}
+
+type DeleteThreadMutationResult {
+    errors: [Error!]
+}
+
+input BulkCloseThreadsInput {
+    threads: [ID!]!
+    isClosed: Boolean!
+}
+
+input BulkMoveThreadsInput {
+    threads: [ID!]!
+    category: ID!
+}
+
+type BulkThreadsMutationResult {
+    errors: [Error!]
+    threads: [Thread!]
+}
+
+input BulkDeleteThreadsInput {
+    threads: [ID!]!
+}
+
+type BulkDeleteThreadsMutationResult {
+    errors: [Error!]
 }

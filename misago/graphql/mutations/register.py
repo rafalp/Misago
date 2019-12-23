@@ -96,6 +96,7 @@ async def register_user(
         cleaned_data["email"],
         password=cleaned_data["password"],
         extra={},
+        context=context,
     )
     store_user(context, user)
     return user

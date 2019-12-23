@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional
 
 from ..database import queries
 from ..tables import posts, threads
-from ..types import Category, Post, Thread, User
+from ..types import Category, GraphQLContext, Post, Thread, User
 from ..utils.strings import slugify
 
 
@@ -16,6 +16,7 @@ async def create_post(
     edits: Optional[int] = 0,
     posted_at: Optional[datetime] = None,
     extra: Optional[dict] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> Post:
     if poster and poster_name:
         raise ValueError("'poster' and 'poster_name' arguments are mutually exclusive")
@@ -47,6 +48,7 @@ async def create_thread(
     is_closed: bool = False,
     started_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> Thread:
     if first_post:
         if starter:

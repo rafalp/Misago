@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Any, Dict, Optional, Protocol
 
 from .category import Category
+from .graphqlcontext import GraphQLContext
 from .post import Post
 from .thread import Thread
 from .user import User
@@ -20,6 +21,7 @@ class CreateThreadAction(Protocol):
         is_closed: bool = False,
         started_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> Thread:
         ...
 
@@ -38,5 +40,6 @@ class CreateThreadFilter(Protocol):
         is_closed: bool = False,
         started_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> Thread:
         ...

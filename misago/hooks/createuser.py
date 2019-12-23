@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from ..types import CreateUserAction, CreateUserFilter, User
+from ..types import CreateUserAction, CreateUserFilter, GraphQLContext, User
 from .filter import FilterHook
 
 
@@ -18,6 +18,7 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> User:
         return await self.filter(
             action,
@@ -29,4 +30,5 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
             is_admin=is_admin,
             joined_at=joined_at,
             extra=extra,
+            context=context,
         )

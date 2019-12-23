@@ -1,7 +1,15 @@
 from datetime import datetime
 from typing import Any, Dict, Optional
 
-from ..types import Category, CreateThreadAction, CreateThreadFilter, Post, Thread, User
+from ..types import (
+    Category,
+    CreateThreadAction,
+    CreateThreadFilter,
+    GraphQLContext,
+    Post,
+    Thread,
+    User,
+)
 from .filter import FilterHook
 
 
@@ -19,6 +27,7 @@ class CreateThreadHook(FilterHook[CreateThreadAction, CreateThreadFilter]):
         is_closed: bool = False,
         started_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> Thread:
         return await self.filter(
             action,
@@ -31,4 +40,5 @@ class CreateThreadHook(FilterHook[CreateThreadAction, CreateThreadFilter]):
             is_closed=is_closed,
             started_at=started_at,
             extra=extra,
+            context=context,
         )

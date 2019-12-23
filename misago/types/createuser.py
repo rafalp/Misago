@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, Protocol
 
+from .graphqlcontext import GraphQLContext
 from .user import User
 
 
@@ -15,6 +16,7 @@ class CreateUserAction(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> User:
         ...
 
@@ -31,5 +33,6 @@ class CreateUserFilter(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> User:
         ...

@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from ..database import queries
 from ..passwords import hash_password
 from ..tables import users
-from ..types import User
+from ..types import GraphQLContext, User
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
 
@@ -18,7 +18,8 @@ async def create_user(
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
-    extra: Optional[Dict[str, Any]] = None
+    extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> User:
     password_hash = None
     if password:

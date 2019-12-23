@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import Any, Dict, Optional, Protocol
 
+from .graphqlcontext import GraphQLContext
 from .post import Post
 from .thread import Thread
 from .user import User
@@ -17,6 +18,7 @@ class CreatePostAction(Protocol):
         edits: Optional[int] = 0,
         posted_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> Post:
         ...
 
@@ -33,5 +35,6 @@ class CreatePostFilter(Protocol):
         edits: Optional[int] = 0,
         posted_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
     ) -> Post:
         ...

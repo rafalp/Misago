@@ -11,6 +11,7 @@ create_post_hook.call_action(
     edits: Optional[int] = 0,
     posted_at: Optional[datetime] = None,
     extra: Optional[dict] = None,
+    context: Optional[GraphQLContext] = None,
 )
 ```
 
@@ -33,6 +34,7 @@ async def create_post(
     edits: Optional[int] = 0,
     posted_at: Optional[datetime] = None,
     extra: Optional[dict] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> Thread:
     ...
 ```
@@ -103,3 +105,12 @@ Optional[Dict[str, Any]] = dict()
 ```
 
 JSON-serializable dict with extra data for this post. This value is not used by Misago, but allows plugin authors to store additional information about post directly on it's database row.
+
+
+### `context`
+
+```python
+Optional[GraphQLContext]
+```
+
+A dict with GraphQL query context. Depending on where post is created may be unavailable and thus `None`.

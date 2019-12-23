@@ -99,7 +99,11 @@ async def post_reply(
     thread = cleaned_data["thread"]
     user = await get_authenticated_user(context)
     reply = await create_post_hook.call_action(
-        create_post, thread, {"text": cleaned_data["body"]}, poster=user
+        create_post,
+        thread,
+        {"text": cleaned_data["body"]},
+        poster=user,
+        context=context,
     )
     thread = await update_thread(thread, last_post=reply, increment_replies=True)
 

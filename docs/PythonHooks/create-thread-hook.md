@@ -13,6 +13,7 @@ create_thread_hook.call_action(
     is_closed: bool = False,
     started_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 )
 ```
 
@@ -39,6 +40,7 @@ async def create_thread(
     is_closed: bool = False,
     started_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> Thread:
     ...
 ```
@@ -127,3 +129,12 @@ Optional[Dict[str, Any]] = dict()
 ```
 
 JSON-serializable dict with extra data for this thread. This value is not used by Misago, but allows plugin authors to store additional information about thread directly on it's database row.
+
+
+### `context`
+
+```python
+Optional[GraphQLContext]
+```
+
+A dict with GraphQL query context. Depending on where thread is created may be unavailable and thus `None`.

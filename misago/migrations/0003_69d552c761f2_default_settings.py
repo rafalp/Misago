@@ -29,8 +29,11 @@ settings = [
     {"name": "jwt_secret", "value": get_random_string(64)},
     {"name": "password_min_length", "value": 8},
     {"name": "post_body_min_length", "value": 3},
+    {"name": "posts_per_page", "value": 18},
+    {"name": "posts_per_page_orphans", "value": 6},
     {"name": "thread_title_min_length", "value": 5},
     {"name": "thread_title_max_length", "value": 90},
+    {"name": "threads_per_page", "value": 26},
     {"name": "username_min_length", "value": 3},
     {"name": "username_max_length", "value": 10},
 ]

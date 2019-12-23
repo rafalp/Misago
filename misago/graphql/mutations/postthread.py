@@ -96,10 +96,18 @@ async def post_thread(
     user = await get_authenticated_user(context)
     async with database.transaction():
         thread = await create_thread_hook.call_action(
-            create_thread, cleaned_data["category"], cleaned_data["title"], starter=user
+            create_thread,
+            cleaned_data["category"],
+            cleaned_data["title"],
+            starter=user,
+            context=context,
         )
         post = await create_post_hook.call_action(
-            create_post, thread, {"text": cleaned_data["body"]}, poster=user
+            create_post,
+            thread,
+            {"text": cleaned_data["body"]},
+            poster=user,
+            context=context,
         )
         thread = await update_thread(thread, first_post=post, last_post=post)
 
