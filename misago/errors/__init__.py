@@ -49,6 +49,11 @@ class InvalidCredentialsError(PydanticValueError):
     msg_template = "invalid credentials"
 
 
+class ListRepeatedItemsError(PydanticValueError):
+    code = "list.repeated_items_error"
+    msg_template = "ensure this value has no repeating items"
+
+
 class NotPostAuthorError(AuthError):
     code = "not_post_author_error"
     msg_template = "must be author of post with id '{id}'"

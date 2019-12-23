@@ -1,9 +1,10 @@
 import re
 from typing import Any, Callable, Generator, Type, cast
 
-from pydantic import ConstrainedStr, constr
+from pydantic import ConstrainedList, ConstrainedStr, constr
+from pydantic.validators import list_validator
 
-from ..errors import UsernameError
+from ..errors import ListRepeatedItemsError, UsernameError
 from ..types import Settings
 
 
@@ -11,6 +12,31 @@ CallableGenerator = Generator[Callable[..., Any], None, None]
 
 PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
 USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
+
+
+class BulkActionIdsList(ConstrainedList):
+    @classmethod
+    def __get_validators__(cls) -> CallableGenerator:
+        yield list_validator
+        yield cls.list_length_validator
+        yield cls.list_items_are_unique_validator
+
+    @classmethod
+    def list_items_are_unique_validator(cls, v):
+        if len(v) != len(set(v)):
+            raise ListRepeatedItemsError()
+        return v
+
+
+def bulkactionidslist(item_type: Type[Any], settings: Settings) -> Type[str]:
+    # use kwargs then define conf in a dict to aid with IDE type hinting
+    namespace = dict(
+        min_items=1,
+        max_items=cast(int, settings["bulk_action_size_limit"]),
+        item_type=item_type,
+    )
+
+    return type("BulkActionIdsListValue", (BulkActionIdsList,), namespace)
 
 
 def passwordstr(settings: Settings) -> Type[str]:

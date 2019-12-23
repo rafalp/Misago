@@ -1,4 +1,10 @@
-from .types import passwordstr, sluggablestr, threadtitlestr, usernamestr
+from .types import (
+    bulkactionidslist,
+    passwordstr,
+    sluggablestr,
+    threadtitlestr,
+    usernamestr,
+)
 from .validation import validate_data, validate_model
 from .validators import (
     CategoryExistsValidator,
@@ -35,6 +41,7 @@ __all__ = [
     "ThreadsBulkValidator",
     "UserIsAuthorizedRootValidator",
     "UsernameIsAvailableValidator",
+    "bulkactionidslist",
     "passwordstr",
     "sluggablestr",
     "threadtitlestr",

@@ -24,7 +24,7 @@ depends_on = None
 table = table("misago_settings", column("name", String), column("value", JSON),)
 
 settings = [
-    {"name": "bulk_mutation_size_limit", "value": 30},
+    {"name": "bulk_action_size_limit", "value": 30},
     {"name": "forum_name", "value": "Misago"},
     {"name": "jwt_exp", "value": int(timedelta(days=90).total_seconds())},
     {"name": "jwt_secret", "value": get_random_string(64)},
