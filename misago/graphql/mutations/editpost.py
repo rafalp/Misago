@@ -48,11 +48,13 @@ async def resolve_edit_post(
     )
     cleaned_data, errors = validate_model(input_model, input)
 
-    post = await load_post(info.context, input["post"])
-    if post:
-        thread = await load_thread(info.context, post.thread_id)
-    else:
-        thread = None
+    post = None
+    thread = None
+
+    if cleaned_data.get("post"):
+        post = await load_post(info.context, input["post"])
+        if post:
+            thread = await load_thread(info.context, post.thread_id)
 
     if cleaned_data:
         validators: Dict[str, List[AsyncValidator]] = {

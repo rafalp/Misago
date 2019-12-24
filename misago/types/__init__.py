@@ -29,6 +29,16 @@ from .closethread import (
     CloseThreadInputModelAction,
     CloseThreadInputModelFilter,
 )
+from .closethreads import (
+    CloseThreadsAction,
+    CloseThreadsFilter,
+    CloseThreadsInput,
+    CloseThreadsInputAction,
+    CloseThreadsInputFilter,
+    CloseThreadsInputModel,
+    CloseThreadsInputModelAction,
+    CloseThreadsInputModelFilter,
+)
 from .createpost import CreatePostAction, CreatePostFilter
 from .createthread import CreateThreadAction, CreateThreadFilter
 from .createuser import CreateUserAction, CreateUserFilter

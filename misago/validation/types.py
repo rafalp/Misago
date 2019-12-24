@@ -31,6 +31,7 @@ class BulkActionIdsList(ConstrainedList):
 def bulkactionidslist(item_type: Type[Any], settings: Settings) -> Type[str]:
     # use kwargs then define conf in a dict to aid with IDE type hinting
     namespace = dict(
+        __args__=[item_type],
         min_items=1,
         max_items=cast(int, settings["bulk_action_size_limit"]),
         item_type=item_type,

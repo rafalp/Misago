@@ -5,12 +5,12 @@ type Mutation {
     postReply(input: PostReplyInput!): PostMutationResult!
     editPost(input: EditPostInput!): PostMutationResult!
     editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
-    bulkCloseThreads(input: BulkCloseThreadsInput!): BulkThreadsMutationResult!
-    bulkMoveThreads(input: BulkMoveThreadsInput!): BulkThreadsMutationResult!
-    bulkDeleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
     closeThread(input: CloseThreadInput!): ThreadMutationResult!
     moveThread(input: MoveThreadInput!): ThreadMutationResult!
     deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
+    closeThreads(input: BulkCloseThreadsInput!): BulkThreadsMutationResult!
+    moveThreads(input: BulkMoveThreadsInput!): BulkThreadsMutationResult!
+    deleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
 }
 
 type LoginMutationResult {

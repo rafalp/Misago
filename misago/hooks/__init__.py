@@ -9,6 +9,11 @@ from .closethread import (
     CloseThreadInputHook,
     CloseThreadInputModelHook,
 )
+from .closethreads import (
+    CloseThreadsHook,
+    CloseThreadsInputHook,
+    CloseThreadsInputModelHook,
+)
 from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
@@ -47,6 +52,9 @@ authenticate_user_hook = AuthenticateUserHook()
 close_thread_hook = CloseThreadHook()
 close_thread_input_hook = CloseThreadInputHook()
 close_thread_input_model_hook = CloseThreadInputModelHook()
+close_threads_hook = CloseThreadsHook()
+close_threads_input_hook = CloseThreadsInputHook()
+close_threads_input_model_hook = CloseThreadsInputModelHook()
 create_post_hook = CreatePostHook()
 create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()

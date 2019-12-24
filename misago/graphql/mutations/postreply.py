@@ -49,7 +49,10 @@ async def resolve_post_reply(
     )
     cleaned_data, errors = validate_model(input_model, input)
 
-    thread = await load_thread(info.context, input["thread"])
+    if cleaned_data.get("thread"):
+        thread = await load_thread(info.context, cleaned_data["thread"])
+    else:
+        thread = None
 
     if cleaned_data:
         validators: Dict[str, List[AsyncValidator]] = {

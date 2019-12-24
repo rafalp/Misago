@@ -26,6 +26,7 @@ from ..loaders import load_category, load_post, load_thread
 from ..tables import users
 from ..types import AsyncValidator, Category, GraphQLContext, Post, Thread
 from ..users.email import get_email_hash
+from ..utils.lists import clear_list
 
 
 async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
@@ -54,7 +55,7 @@ class BulkValidator(AsyncValidator):
 
         if validators:
             validated_items = await gather(*validators)
-            return [i for i in validated_items if i]
+            return clear_list(validated_items)
 
         return []
 
@@ -62,11 +63,10 @@ class BulkValidator(AsyncValidator):
 async def _validate_bulk_item(
     location: List[str], data: Any, validators: List[AsyncValidator], errors: ErrorsList
 ) -> Any:
-    validated_data = data
     try:
         for validator in validators:
-            validated_data = await validator(data, errors, location[-1])
-        return validated_data
+            data = await validator(data, errors, location[0])
+        return data
     except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_error(location, error)
         return None
