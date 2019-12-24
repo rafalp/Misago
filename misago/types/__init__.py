@@ -89,6 +89,16 @@ from .movethread import (
     MoveThreadInputModelAction,
     MoveThreadInputModelFilter,
 )
+from .movethreads import (
+    MoveThreadsAction,
+    MoveThreadsFilter,
+    MoveThreadsInput,
+    MoveThreadsInputAction,
+    MoveThreadsInputFilter,
+    MoveThreadsInputModel,
+    MoveThreadsInputModelAction,
+    MoveThreadsInputModelFilter,
+)
 from .post import Post
 from .postreply import (
     PostReplyAction,

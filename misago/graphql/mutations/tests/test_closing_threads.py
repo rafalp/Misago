@@ -72,36 +72,6 @@ async def test_close_threads_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_threads_id_list_is_empty(
-    moderator_graphql_info,
-):
-    data = await resolve_close_threads(
-        None, moderator_graphql_info, input={"threads": [], "isClosed": True},
-    )
-
-    assert not data.get("threads")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["threads"]
-    assert data["errors"].get_errors_types() == ["value_error.list.min_items"]
-
-
-@pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_threads_id_list_is_too_long(
-    moderator_graphql_info,
-):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": list(range(100)), "isClosed": True},
-    )
-
-    assert not data.get("threads")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["threads"]
-    assert data["errors"].get_errors_types() == ["value_error.list.max_items"]
-
-
-@pytest.mark.asyncio
 async def test_close_threads_mutation_fails_if_thread_id_is_invalid(
     moderator_graphql_info,
 ):
