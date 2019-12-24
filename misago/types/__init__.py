@@ -58,6 +58,16 @@ from .deletethread import (
     DeleteThreadInputModelAction,
     DeleteThreadInputModelFilter,
 )
+from .deletethreads import (
+    DeleteThreadsAction,
+    DeleteThreadsFilter,
+    DeleteThreadsInput,
+    DeleteThreadsInputAction,
+    DeleteThreadsInputFilter,
+    DeleteThreadsInputModel,
+    DeleteThreadsInputModelAction,
+    DeleteThreadsInputModelFilter,
+)
 from .editpost import (
     EditPostAction,
     EditPostFilter,

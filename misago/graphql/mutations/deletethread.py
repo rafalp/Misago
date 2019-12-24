@@ -10,7 +10,7 @@ from ...hooks import (
     delete_thread_input_hook,
     delete_thread_input_model_hook,
 )
-from ...loaders import clear_thread
+from ...loaders import clear_posts, clear_thread
 from ...threads.delete import delete_thread
 from ...types import (
     AsyncValidator,
@@ -86,3 +86,4 @@ async def delete_thread_action(
     thread = cleaned_data["thread"]
     await delete_thread(thread)
     clear_thread(context, thread)
+    clear_posts(context)
