@@ -1,4 +1,4 @@
-from typing import Awaitable, Optional, Sequence, Union
+from typing import Awaitable, Iterable, Optional, Sequence, Union
 
 from ..types import GraphQLContext, User
 from ..users.get import get_users_by_id
@@ -23,3 +23,20 @@ def store_user(context: GraphQLContext, user: User):
     loader = get_loader(context, "user_loader", get_users_by_id)
     loader.clear(user.id)
     loader.prime(user.id, user)
+
+
+def store_users(context: GraphQLContext, users: Iterable[User]):
+    loader = get_loader(context, "user_loader", get_users_by_id)
+    for user in users:
+        loader.clear(user.id)
+        loader.prime(user.id, user)
+
+
+def clear_user(context: GraphQLContext, user: User):
+    loader = get_loader(context, "user_loader", get_users_by_id)
+    loader.clear(user.id)
+
+
+def clear_users(context: GraphQLContext):
+    loader = get_loader(context, "user_loader", get_users_by_id)
+    loader.clear_all()

@@ -1,4 +1,4 @@
-from typing import Awaitable, Optional, Sequence, Union
+from typing import Awaitable, Iterable, Optional, Sequence, Union
 
 from ..types import GraphQLContext, Thread
 from ..threads.get import get_threads_by_id
@@ -23,6 +23,13 @@ def store_thread(context: GraphQLContext, thread: Thread):
     loader = get_loader(context, "thread_loader", get_threads_by_id)
     loader.clear(thread.id)
     loader.prime(thread.id, thread)
+
+
+def store_threads(context: GraphQLContext, threads: Iterable[Thread]):
+    loader = get_loader(context, "thread_loader", get_threads_by_id)
+    for thread in threads:
+        loader.clear(thread.id)
+        loader.prime(thread.id, thread)
 
 
 def clear_thread(context: GraphQLContext, thread: Thread):

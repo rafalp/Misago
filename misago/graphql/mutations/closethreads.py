@@ -10,7 +10,7 @@ from ...hooks import (
     close_threads_input_hook,
     close_threads_input_model_hook,
 )
-from ...loaders import load_threads, store_thread
+from ...loaders import load_threads, store_threads
 from ...threads.close import close_threads
 from ...types import (
     AsyncValidator,
@@ -102,7 +102,6 @@ async def close_threads_action(
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
     threads = await close_threads(threads, cleaned_data["is_closed"])
-    for thread in threads:
-        store_thread(context, thread)
+    store_threads(context, threads)
 
     return threads

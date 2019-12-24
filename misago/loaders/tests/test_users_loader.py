@@ -1,6 +1,13 @@
 import pytest
 
-from ..users import load_user, load_users, store_user
+from ..users import (
+    clear_user,
+    clear_users,
+    load_user,
+    load_users,
+    store_user,
+    store_users,
+)
 
 
 @pytest.mark.asyncio
@@ -33,3 +40,29 @@ async def test_user_is_stored_in_loader_for_future_use(user):
     store_user(context, user)
     loaded_user = await load_user(context, user.id)
     assert id(loaded_user) == id(user)
+
+
+@pytest.mark.asyncio
+async def test_users_are_stored_in_loader_for_future_use(user):
+    context = {}
+    store_users(context, [user])
+    loaded_user = await load_user(context, user.id)
+    assert id(loaded_user) == id(user)
+
+
+@pytest.mark.asyncio
+async def test_user_is_cleared_from_loader(user):
+    context = {}
+    loaded_user = await load_user(context, user.id)
+    clear_user(context, user)
+    new_loaded_user = await load_user(context, user.id)
+    assert id(loaded_user) != id(new_loaded_user)
+
+
+@pytest.mark.asyncio
+async def test_all_users_are_cleared_from_loader(user):
+    context = {}
+    loaded_user = await load_user(context, user.id)
+    clear_users(context)
+    new_loaded_user = await load_user(context, user.id)
+    assert id(loaded_user) != id(new_loaded_user)

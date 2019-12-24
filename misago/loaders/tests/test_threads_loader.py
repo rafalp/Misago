@@ -6,6 +6,7 @@ from ..threads import (
     load_thread,
     load_threads,
     store_thread,
+    store_threads,
 )
 
 
@@ -37,6 +38,14 @@ async def test_threads_loader_returns_none_for_nonexistent_thread_id(thread):
 async def test_thread_is_stored_in_loader_for_future_use(thread):
     context = {}
     store_thread(context, thread)
+    loaded_thread = await load_thread(context, thread.id)
+    assert id(loaded_thread) == id(thread)
+
+
+@pytest.mark.asyncio
+async def test_threads_are_stored_in_loader_for_future_use(thread):
+    context = {}
+    store_threads(context, [thread])
     loaded_thread = await load_thread(context, thread.id)
     assert id(loaded_thread) == id(thread)
 
