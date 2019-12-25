@@ -186,7 +186,26 @@ def post(thread_and_post):
 @pytest.fixture
 async def reply(thread):
     reply = await create_post(thread, {"test": "reply"}, poster_name="Guest")
-    await update_thread(thread, last_post=reply)
+    await update_thread(thread, replies=1, last_post=reply)
+    return reply
+
+
+@pytest.fixture
+async def thread_and_reply(thread):
+    reply = await create_post(thread, {"test": "reply"}, poster_name="Guest")
+    thread = await update_thread(thread, replies=1, last_post=reply)
+    return thread, reply
+
+
+@pytest.fixture
+async def thread_with_reply(thread_and_reply):
+    thread, _ = thread_and_reply
+    return thread
+
+
+@pytest.fixture
+async def thread_reply(thread_and_reply):
+    _, reply = thread_and_reply
     return reply
 
 
