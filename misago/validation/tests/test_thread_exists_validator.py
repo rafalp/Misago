@@ -12,7 +12,7 @@ async def test_validator_returns_thread_if_id_given_exists_in_db(thread):
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_thread_does_not_exist_error_if_thread_not_exists(db):
+async def test_validator_raises_thread_not_exists_error_if_thread_not_exists(db):
     validator = ThreadExistsValidator({})
     with pytest.raises(ThreadDoesNotExistError):
         await validator(100)
@@ -25,7 +25,7 @@ async def test_validator_returns_thread_if_given_id_and_type_exists_in_db(thread
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_thread_does_not_exist_error_for_wrong_category_type(
+async def test_validator_raises_thread_not_exists_error_for_wrong_category_type(
     thread,
 ):
     validator = ThreadExistsValidator({}, CategoryTypes.PRIVATE_THREADS)

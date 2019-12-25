@@ -69,4 +69,4 @@ async def test_delete_thread_mutation_fails_if_thread_doesnt_exist(
 
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread_does_not_exist"]
+    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]

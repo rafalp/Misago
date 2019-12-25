@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import UsernameIsNotAvailableError
+from ...errors import UsernameNotAvailableError
 from ..validators import UsernameIsAvailableValidator
 
 
@@ -19,7 +19,7 @@ async def test_validator_allows_username_if_its_used_by_excluded_user(user):
 @pytest.mark.asyncio
 async def test_validator_raises_error_if_username_is_not_available(user):
     validator = UsernameIsAvailableValidator()
-    with pytest.raises(UsernameIsNotAvailableError):
+    with pytest.raises(UsernameNotAvailableError):
         await validator(user.name)
 
 
@@ -28,5 +28,5 @@ async def test_validator_raises_error_if_username_is_used_by_non_excluded_user(
     user, other_user
 ):
     validator = UsernameIsAvailableValidator(user.id)
-    with pytest.raises(UsernameIsNotAvailableError):
+    with pytest.raises(UsernameNotAvailableError):
         await validator(other_user.name)

@@ -22,5 +22,5 @@ async def test_bulk_threads_validator_partially_validates_threads(thread):
     threads = await validator([thread.id, "1000"], errors, "threads")
     assert errors
     assert errors.get_errors_locations() == ["threads.1"]
-    assert errors.get_errors_types() == ["value_error.thread_does_not_exist"]
+    assert errors.get_errors_types() == ["value_error.thread.not_exists"]
     assert threads == [thread]

@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import CategoryIsClosedError
+from ...errors import CategoryClosedError
 from ..validators import CategoryIsOpenValidator
 
 
@@ -11,11 +11,11 @@ async def test_validator_returns_category_if_its_open(graphql_context, category)
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_category_is_closed_error_if_category_is_closed(
+async def test_validator_raises_category_closed_error_if_category_is_closed(
     graphql_context, closed_category
 ):
     validator = CategoryIsOpenValidator(graphql_context)
-    with pytest.raises(CategoryIsClosedError):
+    with pytest.raises(CategoryClosedError):
         await validator(closed_category)
 
 

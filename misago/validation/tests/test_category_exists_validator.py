@@ -12,9 +12,7 @@ async def test_validator_returns_category_if_id_given_exists_in_db(category):
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_category_does_not_exist_error_if_category_not_exists(
-    db,
-):
+async def test_validator_raises_category_not_exists_error_if_category_not_exists(db,):
     validator = CategoryExistsValidator({})
     with pytest.raises(CategoryDoesNotExistError):
         await validator(100)
@@ -27,7 +25,7 @@ async def test_validator_returns_category_if_given_id_and_type_exists_in_db(cate
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_category_does_not_exist_error_for_wrong_category_type(
+async def test_validator_raises_category_not_exists_error_for_wrong_category_type(
     category,
 ):
     validator = CategoryExistsValidator({}, CategoryTypes.PRIVATE_THREADS)

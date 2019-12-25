@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import EmailIsNotAvailableError
+from ...errors import EmailNotAvailableError
 from ..validators import EmailIsAvailableValidator
 
 
@@ -19,7 +19,7 @@ async def test_validator_allows_email_if_its_used_by_excluded_user(user):
 @pytest.mark.asyncio
 async def test_validator_raises_error_if_email_is_not_available(user):
     validator = EmailIsAvailableValidator()
-    with pytest.raises(EmailIsNotAvailableError):
+    with pytest.raises(EmailNotAvailableError):
         await validator(user.email)
 
 
@@ -28,5 +28,5 @@ async def test_validator_raises_error_if_email_is_used_by_non_excluded_user(
     user, other_user
 ):
     validator = EmailIsAvailableValidator(user.id)
-    with pytest.raises(EmailIsNotAvailableError):
+    with pytest.raises(EmailNotAvailableError):
         await validator(other_user.email)

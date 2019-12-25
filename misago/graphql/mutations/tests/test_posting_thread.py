@@ -113,7 +113,7 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_
     assert not data.get("post")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
+    assert data["errors"].get_errors_types() == ["value_error.category.not_exists"]
 
 
 @pytest.mark.asyncio
@@ -199,7 +199,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
     assert not data.get("post")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["auth_error.category_is_closed"]
+    assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
 
 
 @pytest.mark.asyncio

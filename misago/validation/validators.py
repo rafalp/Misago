@@ -10,8 +10,8 @@ from ..database import database
 from ..errors import (
     AuthError,
     CategoryDoesNotExistError,
-    CategoryIsClosedError,
-    EmailIsNotAvailableError,
+    CategoryClosedError,
+    EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
     NotModeratorError,
@@ -19,8 +19,9 @@ from ..errors import (
     NotThreadAuthorError,
     PostDoesNotExistError,
     ThreadDoesNotExistError,
-    ThreadIsClosedError,
-    UsernameIsNotAvailableError,
+    ThreadFirstPostError,
+    ThreadClosedError,
+    UsernameNotAvailableError,
 )
 from ..loaders import load_category, load_post, load_thread
 from ..tables import users
@@ -99,7 +100,7 @@ class CategoryIsOpenValidator(AsyncValidator):
         if category.is_closed:
             user = await get_authenticated_user(self._context)
             if not (user and user.is_moderator):
-                raise CategoryIsClosedError(category_id=category.id)
+                raise CategoryClosedError(category_id=category.id)
         return category
 
 
@@ -115,7 +116,7 @@ class EmailIsAvailableValidator(AsyncValidator):
         if self._exclude_user:
             query = query.where(users.c.id != self._exclude_user)
         if await database.fetch_one(query):
-            raise EmailIsNotAvailableError()
+            raise EmailNotAvailableError()
         return email
 
 
@@ -201,6 +202,20 @@ class PostExistsValidator(AsyncValidator):
         return post
 
 
+class PostIsReplyValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, post: Post, *_) -> Post:
+        thread = await load_thread(self._context, post.thread_id)
+        thread = cast(Thread, thread)
+        if post.id == thread.first_post_id:
+            raise ThreadFirstPostError(post_id=post.id)
+        return post
+
+
 class PostThreadValidator(AsyncValidator):
     _context: GraphQLContext
     _validator: AsyncValidator
@@ -271,7 +286,7 @@ class ThreadIsOpenValidator(AsyncValidator):
         if thread.is_closed:
             user = await get_authenticated_user(self._context)
             if not (user and user.is_moderator):
-                raise ThreadIsClosedError(thread_id=thread.id)
+                raise ThreadClosedError(thread_id=thread.id)
         return thread
 
 
@@ -306,5 +321,5 @@ class UsernameIsAvailableValidator(AsyncValidator):
         if self._exclude_user:
             query = query.where(users.c.id != self._exclude_user)
         if await database.fetch_one(query):
-            raise UsernameIsNotAvailableError()
+            raise UsernameNotAvailableError()
         return username

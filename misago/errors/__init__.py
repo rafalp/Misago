@@ -14,15 +14,15 @@ class AllFieldsAreRequiredError(PydanticValueError):
 
 
 class CategoryDoesNotExistError(PydanticValueError):
-    code = "category_does_not_exist"
+    code = "category.not_exists"
     msg_template = "category with id '{id}' does not exist"
 
     def __init__(self, *, category_id: Union[int, str]) -> None:
         super().__init__(id=category_id)
 
 
-class CategoryIsClosedError(AuthError):
-    code = "category_is_closed"
+class CategoryClosedError(AuthError):
+    code = "category.closed"
     msg_template = "category with id '{id}' is closed"
 
     def __init__(self, *, category_id: Union[int, str]) -> None:
@@ -39,7 +39,7 @@ class NotModeratorError(AuthError):
     msg_template = "moderator permission is required"
 
 
-class EmailIsNotAvailableError(PydanticValueError):
+class EmailNotAvailableError(PydanticValueError):
     code = "email.not_available"
     msg_template = "e-mail is not available"
 
@@ -71,7 +71,7 @@ class NotThreadAuthorError(AuthError):
 
 
 class PostDoesNotExistError(PydanticValueError):
-    code = "post_does_not_exist"
+    code = "post.not_exists"
     msg_template = "post with id '{id}' does not exist"
 
     def __init__(self, *, post_id: Union[int, str]) -> None:
@@ -79,15 +79,23 @@ class PostDoesNotExistError(PydanticValueError):
 
 
 class ThreadDoesNotExistError(PydanticValueError):
-    code = "thread_does_not_exist"
+    code = "thread.not_exists"
     msg_template = "thread with id '{id}' does not exist"
 
     def __init__(self, *, thread_id: Union[int, str]) -> None:
         super().__init__(id=thread_id)
 
 
-class ThreadIsClosedError(AuthError):
-    code = "thread_is_closed"
+class ThreadFirstPostError(PydanticValueError):
+    code = "thread.first_post"
+    msg_template = "post with id '{id}' is thread's first post"
+
+    def __init__(self, *, post_id: Union[int, str]) -> None:
+        super().__init__(id=post_id)
+
+
+class ThreadClosedError(AuthError):
+    code = "thread.closed"
     msg_template = "thread with id '{id}' is closed"
 
     def __init__(self, *, thread_id: Union[int, str]) -> None:
@@ -104,6 +112,6 @@ class UsernameError(PydanticValueError):
         super().__init__(pattern=pattern)
 
 
-class UsernameIsNotAvailableError(PydanticValueError):
+class UsernameNotAvailableError(PydanticValueError):
     code = "username.not_available"
     msg_template = "username is not available"

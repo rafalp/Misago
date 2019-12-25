@@ -93,4 +93,4 @@ async def test_close_thread_mutation_fails_if_thread_doesnt_exist(
     assert not data.get("thread")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread_does_not_exist"]
+    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]

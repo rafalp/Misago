@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import ThreadIsClosedError
+from ...errors import ThreadClosedError
 from ..validators import ThreadIsOpenValidator
 
 
@@ -11,11 +11,11 @@ async def test_validator_returns_thread_if_its_open(graphql_context, thread):
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_thread_is_closed_error_if_thread_is_closed(
+async def test_validator_raises_thread_closed_error_if_thread_is_closed(
     graphql_context, closed_thread
 ):
     validator = ThreadIsOpenValidator(graphql_context)
-    with pytest.raises(ThreadIsClosedError):
+    with pytest.raises(ThreadClosedError):
         await validator(closed_thread)
 
 

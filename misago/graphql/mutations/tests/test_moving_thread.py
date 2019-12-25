@@ -87,7 +87,7 @@ async def test_move_thread_mutation_fails_if_thread_doesnt_exist(
     assert not data.get("thread")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread_does_not_exist"]
+    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
 
 
 @pytest.mark.asyncio
@@ -119,4 +119,4 @@ async def test_move_thread_mutation_fails_if_category_doesnt_exist(
     assert data.get("thread")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["value_error.category_does_not_exist"]
+    assert data["errors"].get_errors_types() == ["value_error.category.not_exists"]
