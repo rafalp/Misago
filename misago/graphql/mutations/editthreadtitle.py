@@ -21,7 +21,7 @@ from ...types import (
 )
 from ...validation import (
     CategoryIsOpenValidator,
-    IsThreadAuthorValidator,
+    ThreadAuthorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
@@ -56,7 +56,7 @@ async def resolve_edit_thread_title(
         validators: Dict[str, List[AsyncValidator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
-                IsThreadAuthorValidator(info.context),
+                ThreadAuthorValidator(info.context),
                 ThreadCategoryValidator(
                     info.context, CategoryIsOpenValidator(info.context)
                 ),

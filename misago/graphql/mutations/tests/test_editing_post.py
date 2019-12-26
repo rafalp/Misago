@@ -32,7 +32,7 @@ async def test_edit_post_mutation_fails_if_user_is_not_authorized(
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["post", ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == [
-        "auth_error.not_post_author_error",
+        "auth_error.post.not_author",
         "auth_error.not_authorized",
     ]
 
@@ -79,7 +79,7 @@ async def test_edit_post_mutation_fails_if_post_author_is_other_user(
     assert data.get("post")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["auth_error.not_post_author_error"]
+    assert data["errors"].get_errors_types() == ["auth_error.post.not_author"]
 
 
 @pytest.mark.asyncio

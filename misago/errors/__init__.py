@@ -50,12 +50,12 @@ class InvalidCredentialsError(PydanticValueError):
 
 
 class ListRepeatedItemsError(PydanticValueError):
-    code = "list.repeated_items_error"
-    msg_template = "ensure this value has no repeating items"
+    code = "list.repeated_items"
+    msg_template = "ensure all items of the list are unique"
 
 
 class NotPostAuthorError(AuthError):
-    code = "not_post_author_error"
+    code = "post.not_author"
     msg_template = "must be author of post with id '{id}'"
 
     def __init__(self, *, post_id: Union[int, str]) -> None:
@@ -63,7 +63,7 @@ class NotPostAuthorError(AuthError):
 
 
 class NotThreadAuthorError(AuthError):
-    code = "not_thread_author_error"
+    code = "thread.not_author"
     msg_template = "must be author of thread with id '{id}'"
 
     def __init__(self, *, thread_id: Union[int, str]) -> None:

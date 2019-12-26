@@ -23,7 +23,7 @@ from ...utils.lists import clear_list
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
-    IsCategoryModeratorValidator,
+    CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadsBulkValidator,
@@ -61,7 +61,7 @@ async def resolve_move_threads(
                     [
                         ThreadExistsValidator(info.context),
                         ThreadCategoryValidator(
-                            info.context, IsCategoryModeratorValidator(info.context)
+                            info.context, CategoryModeratorValidator(info.context)
                         ),
                     ]
                 )

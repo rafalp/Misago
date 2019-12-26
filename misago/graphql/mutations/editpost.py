@@ -22,7 +22,7 @@ from ...types import (
 )
 from ...validation import (
     CategoryIsOpenValidator,
-    IsPostAuthorValidator,
+    PostAuthorValidator,
     PostCategoryValidator,
     PostExistsValidator,
     PostThreadValidator,
@@ -60,7 +60,7 @@ async def resolve_edit_post(
         validators: Dict[str, List[AsyncValidator]] = {
             "post": [
                 PostExistsValidator(info.context),
-                IsPostAuthorValidator(info.context),
+                PostAuthorValidator(info.context),
                 PostCategoryValidator(
                     info.context, CategoryIsOpenValidator(info.context)
                 ),

@@ -21,7 +21,7 @@ from ...types import (
 )
 from ...utils.lists import clear_list
 from ...validation import (
-    IsCategoryModeratorValidator,
+    CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadsBulkValidator,
@@ -59,7 +59,7 @@ async def resolve_close_threads(
                     [
                         ThreadExistsValidator(info.context),
                         ThreadCategoryValidator(
-                            info.context, IsCategoryModeratorValidator(info.context)
+                            info.context, CategoryModeratorValidator(info.context)
                         ),
                     ]
                 ),

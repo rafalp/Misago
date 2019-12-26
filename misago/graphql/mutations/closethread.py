@@ -20,7 +20,7 @@ from ...types import (
     Thread,
 )
 from ...validation import (
-    IsCategoryModeratorValidator,
+    CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     UserIsAuthorizedRootValidator,
@@ -54,7 +54,7 @@ async def resolve_close_thread(
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
-                    info.context, IsCategoryModeratorValidator(info.context)
+                    info.context, CategoryModeratorValidator(info.context)
                 ),
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],

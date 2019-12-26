@@ -105,6 +105,19 @@ class CategoryIsOpenValidator(AsyncValidator):
         return category
 
 
+class CategoryModeratorValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, category: Category, *_) -> Category:
+        user = await get_authenticated_user(self._context)
+        if not user or not user.is_moderator:
+            raise NotModeratorError()
+        return category
+
+
 class EmailIsAvailableValidator(AsyncValidator):
     _exclude_user: Optional[int]
 
@@ -121,20 +134,7 @@ class EmailIsAvailableValidator(AsyncValidator):
         return email
 
 
-class IsCategoryModeratorValidator(AsyncValidator):
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, category: Category, *_) -> Category:
-        user = await get_authenticated_user(self._context)
-        if not user or not user.is_moderator:
-            raise NotModeratorError()
-        return category
-
-
-class IsPostAuthorValidator(AsyncValidator):
+class PostAuthorValidator(AsyncValidator):
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -147,21 +147,6 @@ class IsPostAuthorValidator(AsyncValidator):
         if not user.is_moderator and user.id != post.poster_id:
             raise NotPostAuthorError(post_id=post.id)
         return post
-
-
-class IsThreadAuthorValidator(AsyncValidator):
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, thread: Thread, *_) -> Thread:
-        user = await get_authenticated_user(self._context)
-        if not user:
-            raise NotThreadAuthorError(thread_id=thread.id)
-        if not user.is_moderator and user.id != thread.starter_id:
-            raise NotThreadAuthorError(thread_id=thread.id)
-        return thread
 
 
 class PostCategoryValidator(AsyncValidator):
@@ -236,6 +221,13 @@ class PostThreadValidator(AsyncValidator):
         return post
 
 
+class PostsBulkValidator(BulkValidator):
+    async def __call__(
+        self, threads: List[Any], errors: ErrorsList, field_name: str
+    ) -> List[Post]:
+        return await super().__call__(threads, errors, field_name)
+
+
 class PostsInSameThreadBulkValidator(AsyncValidator):
     _context: GraphQLContext
 
@@ -247,6 +239,21 @@ class PostsInSameThreadBulkValidator(AsyncValidator):
         if len(threads_ids) > 1:
             raise PostsThreadsDifferError()
         return posts
+
+
+class ThreadAuthorValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, thread: Thread, *_) -> Thread:
+        user = await get_authenticated_user(self._context)
+        if not user:
+            raise NotThreadAuthorError(thread_id=thread.id)
+        if not user.is_moderator and user.id != thread.starter_id:
+            raise NotThreadAuthorError(thread_id=thread.id)
+        return thread
 
 
 class ThreadCategoryValidator(AsyncValidator):

@@ -1,14 +1,14 @@
 import pytest
 
 from ...errors import NotModeratorError
-from ..validators import IsCategoryModeratorValidator
+from ..validators import CategoryModeratorValidator
 
 
 @pytest.mark.asyncio
 async def test_validator_returns_category_if_user_is_moderator(
     moderator_graphql_context, category
 ):
-    validator = IsCategoryModeratorValidator(moderator_graphql_context)
+    validator = CategoryModeratorValidator(moderator_graphql_context)
     assert await validator(category) == category
 
 
@@ -16,7 +16,7 @@ async def test_validator_returns_category_if_user_is_moderator(
 async def test_validator_raises_not_moderator_error_if_user_is_not_moderator(
     user_graphql_context, category
 ):
-    validator = IsCategoryModeratorValidator(user_graphql_context)
+    validator = CategoryModeratorValidator(user_graphql_context)
     with pytest.raises(NotModeratorError):
         await validator(category)
 
@@ -25,6 +25,6 @@ async def test_validator_raises_not_moderator_error_if_user_is_not_moderator(
 async def test_validator_raises_not_moderator_error_if_user_is_not_authenticated(
     graphql_context, category
 ):
-    validator = IsCategoryModeratorValidator(graphql_context)
+    validator = CategoryModeratorValidator(graphql_context)
     with pytest.raises(NotModeratorError):
         await validator(category)

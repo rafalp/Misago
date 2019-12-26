@@ -19,7 +19,7 @@ from ...types import (
     DeleteThreadsInputModel,
 )
 from ...validation import (
-    IsCategoryModeratorValidator,
+    CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadsBulkValidator,
@@ -56,7 +56,7 @@ async def resolve_delete_threads(
                     [
                         ThreadExistsValidator(info.context),
                         ThreadCategoryValidator(
-                            info.context, IsCategoryModeratorValidator(info.context)
+                            info.context, CategoryModeratorValidator(info.context)
                         ),
                     ]
                 )

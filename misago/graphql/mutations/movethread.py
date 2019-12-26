@@ -22,7 +22,7 @@ from ...types import (
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
-    IsCategoryModeratorValidator,
+    CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     UserIsAuthorizedRootValidator,
@@ -56,7 +56,7 @@ async def resolve_move_thread(
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
-                    info.context, IsCategoryModeratorValidator(info.context)
+                    info.context, CategoryModeratorValidator(info.context)
                 ),
             ],
             "category": [
