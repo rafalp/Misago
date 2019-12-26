@@ -18,6 +18,7 @@ from ..errors import (
     NotPostAuthorError,
     NotThreadAuthorError,
     PostDoesNotExistError,
+    PostsThreadsDifferError,
     ThreadDoesNotExistError,
     ThreadFirstPostError,
     ThreadClosedError,
@@ -233,6 +234,19 @@ class PostThreadValidator(AsyncValidator):
         thread = cast(Thread, thread)
         await self._validator(thread, errors, field_name)
         return post
+
+
+class PostsInSameThreadBulkValidator(AsyncValidator):
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, posts: List[Post], *_) -> List[Post]:
+        threads_ids = {i.thread_id for i in posts}
+        if len(threads_ids) > 1:
+            raise PostsThreadsDifferError()
+        return posts
 
 
 class ThreadCategoryValidator(AsyncValidator):
