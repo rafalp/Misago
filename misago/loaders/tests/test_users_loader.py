@@ -1,6 +1,7 @@
 import pytest
 
 from ..users import (
+    clear_all_users,
     clear_user,
     clear_users,
     load_user,
@@ -60,9 +61,18 @@ async def test_user_is_cleared_from_loader(user):
 
 
 @pytest.mark.asyncio
+async def test_users_are_cleared_from_loader(user):
+    context = {}
+    loaded_user = await load_user(context, user.id)
+    clear_users(context, [user])
+    new_loaded_user = await load_user(context, user.id)
+    assert id(loaded_user) != id(new_loaded_user)
+
+
+@pytest.mark.asyncio
 async def test_all_users_are_cleared_from_loader(user):
     context = {}
     loaded_user = await load_user(context, user.id)
-    clear_users(context)
+    clear_all_users(context)
     new_loaded_user = await load_user(context, user.id)
     assert id(loaded_user) != id(new_loaded_user)

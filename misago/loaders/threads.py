@@ -37,6 +37,12 @@ def clear_thread(context: GraphQLContext, thread: Thread):
     loader.clear(thread.id)
 
 
-def clear_threads(context: GraphQLContext):
+def clear_threads(context: GraphQLContext, threads: Iterable[Thread]):
+    loader = get_loader(context, "thread_loader", get_threads_by_id)
+    for thread in threads:
+        loader.clear(thread.id)
+
+
+def clear_all_threads(context: GraphQLContext):
     loader = get_loader(context, "thread_loader", get_threads_by_id)
     loader.clear_all()

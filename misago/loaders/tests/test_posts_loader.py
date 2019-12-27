@@ -1,6 +1,7 @@
 import pytest
 
 from ..posts import (
+    clear_all_posts,
     clear_post,
     clear_posts,
     load_post,
@@ -60,9 +61,18 @@ async def test_post_is_cleared_from_loader(post):
 
 
 @pytest.mark.asyncio
+async def test_posts_are_cleared_from_loader(post):
+    context = {}
+    loaded_post = await load_post(context, post.id)
+    clear_posts(context, [post])
+    new_loaded_post = await load_post(context, post.id)
+    assert id(loaded_post) != id(new_loaded_post)
+
+
+@pytest.mark.asyncio
 async def test_all_posts_are_cleared_from_loader(post):
     context = {}
     loaded_post = await load_post(context, post.id)
-    clear_posts(context)
+    clear_all_posts(context)
     new_loaded_post = await load_post(context, post.id)
     assert id(loaded_post) != id(new_loaded_post)

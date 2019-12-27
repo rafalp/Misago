@@ -1,5 +1,6 @@
 from .categories import load_categories, load_category, load_category_children
 from .posts import (
+    clear_all_posts,
     clear_post,
     clear_posts,
     load_post,
@@ -8,6 +9,7 @@ from .posts import (
     store_posts,
 )
 from .threads import (
+    clear_all_threads,
     clear_thread,
     clear_threads,
     load_thread,
@@ -16,6 +18,7 @@ from .threads import (
     store_threads,
 )
 from .users import (
+    clear_all_users,
     clear_user,
     clear_users,
     load_user,
@@ -26,6 +29,9 @@ from .users import (
 
 
 __all__ = [
+    "clear_all_posts",
+    "clear_all_threads",
+    "clear_all_users",
     "clear_post",
     "clear_posts",
     "clear_thread",

@@ -37,6 +37,12 @@ def clear_user(context: GraphQLContext, user: User):
     loader.clear(user.id)
 
 
-def clear_users(context: GraphQLContext):
+def clear_users(context: GraphQLContext, users: Iterable[User]):
+    loader = get_loader(context, "user_loader", get_users_by_id)
+    for user in users:
+        loader.clear(user.id)
+
+
+def clear_all_users(context: GraphQLContext):
     loader = get_loader(context, "user_loader", get_users_by_id)
     loader.clear_all()

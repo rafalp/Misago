@@ -37,6 +37,12 @@ def clear_post(context: GraphQLContext, post: Post):
     loader.clear(post.id)
 
 
-def clear_posts(context: GraphQLContext):
+def clear_posts(context: GraphQLContext, posts: Iterable[Post]):
+    loader = get_loader(context, "post_loader", get_posts_by_id)
+    for post in posts:
+        loader.clear(post.id)
+
+
+def clear_all_posts(context: GraphQLContext):
     loader = get_loader(context, "post_loader", get_posts_by_id)
     loader.clear_all()

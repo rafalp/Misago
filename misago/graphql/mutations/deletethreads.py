@@ -10,7 +10,7 @@ from ...hooks import (
     delete_threads_input_hook,
     delete_threads_input_model_hook,
 )
-from ...loaders import load_threads, clear_posts, clear_threads
+from ...loaders import clear_all_posts, clear_threads, load_threads
 from ...threads.delete import delete_threads
 from ...types import (
     AsyncValidator,
@@ -97,5 +97,5 @@ async def delete_threads_action(
     context: GraphQLContext, cleaned_data: DeleteThreadsInput
 ):
     await delete_threads(cleaned_data["threads"])
-    clear_threads(context)
-    clear_posts(context)
+    clear_threads(context, cleaned_data["threads"])
+    clear_all_posts(context)
