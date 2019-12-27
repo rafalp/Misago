@@ -47,11 +47,11 @@ async def delete_thread_posts(
         .order_by(desc(posts_table.c.id))
         .limit(1)
     )
-    posts_count, last_post = await gather(
+    posts_count, last_post_data = await gather(
         database.fetch_val(posts_count_query), database.fetch_one(last_reply_query),
     )
 
-    last_post = Post(**cast(dict, last_post))
+    last_post = Post(**cast(dict, last_post_data))
 
     updated_thread = await update_thread(
         thread,

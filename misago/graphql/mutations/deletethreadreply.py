@@ -52,7 +52,7 @@ async def resolve_delete_thread_reply(
         thread = None
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        thread_validators: Dict[str, List[AsyncValidator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -62,20 +62,28 @@ async def resolve_delete_thread_reply(
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
         cleaned_data, errors = await delete_thread_reply_input_thread_hook.call_action(
-            validate_input_thread_data, info.context, validators, cleaned_data, errors
+            validate_input_thread_data,
+            info.context,
+            thread_validators,
+            cleaned_data,
+            errors,
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+    if cleaned_data.get("thread"):
+        reply_validators: Dict[str, List[AsyncValidator]] = {
             "reply": [
-                ThreadReplyExistsValidator(info.context, cleaned_data.get("thread")),
+                ThreadReplyExistsValidator(info.context, cleaned_data["thread"]),
             ],
         }
         cleaned_data, errors = await delete_thread_reply_input_reply_hook.call_action(
-            validate_input_reply_data, info.context, validators, cleaned_data, errors
+            validate_input_reply_data,
+            info.context,
+            reply_validators,
+            cleaned_data,
+            errors,
         )
 
     if errors:
