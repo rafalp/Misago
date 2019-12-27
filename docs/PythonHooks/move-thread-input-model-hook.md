@@ -1,7 +1,9 @@
 # `move_thread_input_model_hook`
 
 ```python
-move_thread_input_model_hook.call_action(action: MoveThreadInputModelAction, context: GraphQLContext)
+move_thread_input_model_hook.call_action(
+    action: MoveThreadInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `MoveThreadInputModel` GraphQL input type used by the "move thread" GraphQL mutation.

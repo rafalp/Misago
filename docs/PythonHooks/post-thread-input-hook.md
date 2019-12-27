@@ -1,7 +1,7 @@
 # `post_thread_input_hook`
 
 ```python
-post_thread_hook.call_action(
+post_thread_input_hook.call_action(
     action: PostThreadInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

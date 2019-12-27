@@ -1,7 +1,7 @@
 # `post_reply_input_hook`
 
 ```python
-post_reply_hook.call_action(
+post_reply_input_hook.call_action(
     action: PostReplyInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

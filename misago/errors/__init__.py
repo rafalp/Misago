@@ -78,11 +78,6 @@ class PostDoesNotExistError(PydanticValueError):
         super().__init__(id=post_id)
 
 
-class PostsThreadsDifferError(PydanticValueError):
-    code = "posts.threads_differ"
-    msg_template = "posts belong to different threads"
-
-
 class ThreadDoesNotExistError(PydanticValueError):
     code = "thread.not_exists"
     msg_template = "thread with id '{id}' does not exist"
@@ -92,7 +87,7 @@ class ThreadDoesNotExistError(PydanticValueError):
 
 
 class ThreadFirstPostError(PydanticValueError):
-    code = "thread.first_post"
+    code = "post.thread_start"
     msg_template = "post with id '{id}' is thread's first post"
 
     def __init__(self, *, post_id: Union[int, str]) -> None:

@@ -1,7 +1,9 @@
 # `register_user_input_model_hook`
 
 ```python
-register_user_input_model_hook.call_action(action: RegisterUserInputModelAction, context: GraphQLContext)
+register_user_input_model_hook.call_action(
+    action: RegisterUserInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `RegisterUserInputModel` GraphQL input type used by the "register new user" GraphQL mutation.

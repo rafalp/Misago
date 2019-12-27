@@ -1,7 +1,9 @@
 # `edit_post_input_model_hook`
 
 ```python
-edit_post_input_model_hook.call_action(action: EditPostInputModelAction, context: GraphQLContext)
+edit_post_input_model_hook.call_action(
+    action: EditPostInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `EditPostInputModel` GraphQL input type used by the "post reply" GraphQL mutation.

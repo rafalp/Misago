@@ -1,7 +1,9 @@
 # `create_user_token_payload_hook`
 
 ```python
-create_user_token_payload_hook.call_action(action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User)
+create_user_token_payload_hook.call_action(
+    action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User
+)
 ```
 
 A filter for the function used to create an payload for user authorization token.

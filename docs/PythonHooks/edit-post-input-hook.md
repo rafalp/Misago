@@ -1,7 +1,7 @@
 # `edit_post_input_hook`
 
 ```python
-edit_post_hook.call_action(
+edit_post_input_hook.call_action(
     action: EditPostInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

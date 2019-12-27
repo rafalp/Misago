@@ -1,6 +1,7 @@
 from .closethread import close_thread_mutation
 from .closethreads import close_threads_mutation
 from .deletethread import delete_thread_mutation
+from .deletethreadreply import delete_thread_reply_mutation
 from .deletethreads import delete_threads_mutation
 from .editpost import edit_post_mutation
 from .editthreadtitle import edit_thread_title_mutation
@@ -16,6 +17,7 @@ mutations = [
     close_thread_mutation,
     close_threads_mutation,
     delete_thread_mutation,
+    delete_thread_reply_mutation,
     delete_threads_mutation,
     edit_post_mutation,
     edit_thread_title_mutation,

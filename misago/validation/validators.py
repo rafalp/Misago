@@ -18,7 +18,6 @@ from ..errors import (
     NotPostAuthorError,
     NotThreadAuthorError,
     PostDoesNotExistError,
-    PostsThreadsDifferError,
     ThreadDoesNotExistError,
     ThreadFirstPostError,
     ThreadClosedError,
@@ -188,20 +187,6 @@ class PostExistsValidator(AsyncValidator):
         return post
 
 
-class PostIsReplyValidator(AsyncValidator):
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, post: Post, *_) -> Post:
-        thread = await load_thread(self._context, post.thread_id)
-        thread = cast(Thread, thread)
-        if post.id == thread.first_post_id:
-            raise ThreadFirstPostError(post_id=post.id)
-        return post
-
-
 class PostThreadValidator(AsyncValidator):
     _context: GraphQLContext
     _validator: AsyncValidator
@@ -226,19 +211,6 @@ class PostsBulkValidator(BulkValidator):
         self, threads: List[Any], errors: ErrorsList, field_name: str
     ) -> List[Post]:
         return await super().__call__(threads, errors, field_name)
-
-
-class PostsInSameThreadBulkValidator(AsyncValidator):
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, posts: List[Post], *_) -> List[Post]:
-        threads_ids = {i.thread_id for i in posts}
-        if len(threads_ids) > 1:
-            raise PostsThreadsDifferError()
-        return posts
 
 
 class ThreadAuthorValidator(AsyncValidator):
@@ -309,6 +281,23 @@ class ThreadIsOpenValidator(AsyncValidator):
             if not (user and user.is_moderator):
                 raise ThreadClosedError(thread_id=thread.id)
         return thread
+
+
+class ThreadReplyExistsValidator(AsyncValidator):
+    _context: GraphQLContext
+    _thread: Thread
+
+    def __init__(self, context: GraphQLContext, thread: Thread):
+        self._context = context
+        self._thread = thread
+
+    async def __call__(self, post_id: Union[int, str], *_) -> Post:
+        post = await load_post(self._context, post_id)
+        if not post or post.thread_id != self._thread.id:
+            raise PostDoesNotExistError(post_id=post_id)
+        if post.id == self._thread.first_post_id:
+            raise ThreadFirstPostError(post_id=post.id)
+        return post
 
 
 class ThreadsBulkValidator(BulkValidator):

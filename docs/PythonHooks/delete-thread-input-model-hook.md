@@ -1,7 +1,9 @@
 # `delete_thread_input_model_hook`
 
 ```python
-delete_thread_input_model_hook.call_action(action: DeleteThreadInputModelAction, context: GraphQLContext)
+delete_thread_input_model_hook.call_action(
+    action: DeleteThreadInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `DeleteThreadInputModel` GraphQL input type used by the "delete thread" GraphQL mutation.

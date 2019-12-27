@@ -1,18 +1,18 @@
-# `move_threads_input_hook`
+# `delete_thread_reply_input_thread_hook`
 
 ```python
-move_threads_input_hook.call_action(
-    action: MoveThreadsInputAction,
+delete_thread_reply_input_thread_hook.call_action(
+    action: DeleteThreadReplyInputThreadAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: MoveThreadsInput,
+    data: DeleteThreadReplyInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `MoveThreadsInputModel` GraphQL input type.
+A filter for the function used to validate data for `DeleteThreadReplyInputModel` GraphQL input type after before data was validated by [`delete_thread_reply_input_reply_hook`](./delete-thread-reply-input-reply-hook.md).
 
-Returns a tuple of `data` that should be used to update threads and validation `errors`.
+Returns a tuple of `data` that should be used to validate if thread reply can be deleted and validation `errors`.
 
 
 ## Required arguments
@@ -23,13 +23,13 @@ Returns a tuple of `data` that should be used to update threads and validation `
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: MoveThreadsInput,
+    data: DeleteThreadReplyInput,
     errors: ErrorsList,
-) -> Tuple[MoveThreadsInput, ErrorsList]:
+) -> Tuple[DeleteThreadReplyInput, ErrorsList]:
     ...
 ```
 
-Next filter or built-in function used to validate moved threads input data.
+Next filter or built-in function used to validate deleted thread reply input data.
 
 
 ### `context`

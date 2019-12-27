@@ -1,7 +1,7 @@
 # `move_thread_input_hook`
 
 ```python
-move_thread_hook.call_action(
+move_thread_input_hook.call_action(
     action: MoveThreadInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

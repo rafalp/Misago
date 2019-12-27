@@ -1,7 +1,9 @@
 # `post_thread_input_model_hook`
 
 ```python
-post_thread_input_model_hook.call_action(action: PostThreadInputModelAction, context: GraphQLContext)
+post_thread_input_model_hook.call_action(
+    action: PostThreadInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `PostThreadInputModel` GraphQL input type used by the "post thread" GraphQL mutation.

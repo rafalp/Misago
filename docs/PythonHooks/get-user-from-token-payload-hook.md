@@ -1,7 +1,11 @@
 # `get_user_from_token_payload_hook`
 
 ```python
-get_user_from_token_payload_hook.call_action(action: GetUserFromTokenAction, context: GraphQLContext, payload: Dict[str, Any])
+get_user_from_token_payload_hook.call_action(
+    action: GetUserFromTokenAction,
+    context: GraphQLContext,
+    payload: Dict[str, Any],
+)
 ```
 
 A filter for the function used to get user for given authorization token payload.

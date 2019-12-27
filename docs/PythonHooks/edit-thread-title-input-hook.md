@@ -1,7 +1,7 @@
 # `edit_thread_title_input_hook`
 
 ```python
-edit_thread_title_hook.call_action(
+edit_thread_title_input_hook.call_action(
     action: EditThreadTitleInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

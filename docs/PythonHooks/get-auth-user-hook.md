@@ -1,7 +1,9 @@
 # `get_auth_user_hook`
 
 ```python
-get_auth_user_hook.call_action(action: GetAuthUserAction, context: GraphQLContext, user_id: int)
+get_auth_user_hook.call_action(
+    action: GetAuthUserAction, context: GraphQLContext, user_id: int
+)
 ```
 
 A filter for the function used to get authorized user for given auth credential (eg. token).

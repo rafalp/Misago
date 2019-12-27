@@ -1,7 +1,7 @@
 # `delete_threads_input_hook`
 
 ```python
-delete_threads_hook.call_action(
+delete_threads_input_hook.call_action(
     action: DeleteThreadsInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],

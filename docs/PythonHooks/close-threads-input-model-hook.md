@@ -1,7 +1,9 @@
 # `close_threads_input_model_hook`
 
 ```python
-close_threads_input_model_hook.call_action(action: CloseThreadsInputModelAction, context: GraphQLContext)
+close_threads_input_model_hook.call_action(
+    action: CloseThreadsInputModelAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to create [input model](https://pydantic-docs.helpmanual.io/usage/models/) for `CloseThreadsInputModel` GraphQL input type used by the "close threads" GraphQL mutation.

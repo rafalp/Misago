@@ -2,7 +2,9 @@
 
 
 ```python
-get_user_from_token_hook.get_user_from_context_hook(action: GetUserFromContextAction, context: GraphQLContext)
+get_user_from_context_hook.call_action(
+    action: GetUserFromContextAction, context: GraphQLContext
+)
 ```
 
 A filter for the function used to get user for current context.

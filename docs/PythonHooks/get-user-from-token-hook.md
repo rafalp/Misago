@@ -1,7 +1,9 @@
 # `get_user_from_token_hook`
 
 ```python
-get_user_from_token_hook.call_action(action: GetUserFromTokenAction, context: GraphQLContext, token: str)
+get_user_from_token_hook.call_action(
+    action: GetUserFromTokenAction, context: GraphQLContext, token: str
+)
 ```
 
 A filter for the function used to get user for given authorization token.

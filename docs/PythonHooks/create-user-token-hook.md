@@ -1,7 +1,9 @@
 # `create_user_token_hook`
 
 ```python
-create_user_token_hook.call_action(action: CreateUserTokenAction, context: GraphQLContext, user: User)
+create_user_token_hook.call_action(
+    action: CreateUserTokenAction, context: GraphQLContext, user: User
+)
 ```
 
 A filter for the function used to create an authorization token for user.
