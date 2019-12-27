@@ -29,7 +29,7 @@ async def validate_input_data(
     ...
 ```
 
-Next filter or built-in function used to validate moved thread input data.
+Next filter or built-in function used to validate input data.
 
 
 ### `context`

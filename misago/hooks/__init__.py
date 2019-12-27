@@ -23,6 +23,12 @@ from .deletethread import (
     DeleteThreadInputHook,
     DeleteThreadInputModelHook,
 )
+from .deletethreadreplies import (
+    DeleteThreadRepliesHook,
+    DeleteThreadRepliesInputModelHook,
+    DeleteThreadRepliesInputRepliesHook,
+    DeleteThreadRepliesInputThreadHook,
+)
 from .deletethreadreply import (
     DeleteThreadReplyHook,
     DeleteThreadReplyInputModelHook,
@@ -79,6 +85,10 @@ create_user_token_payload_hook = CreateUserTokenPayloadHook()
 delete_thread_hook = DeleteThreadHook()
 delete_thread_input_hook = DeleteThreadInputHook()
 delete_thread_input_model_hook = DeleteThreadInputModelHook()
+delete_thread_replies_hook = DeleteThreadRepliesHook()
+delete_thread_replies_input_model_hook = DeleteThreadRepliesInputModelHook()
+delete_thread_replies_input_replies_hook = DeleteThreadRepliesInputRepliesHook()
+delete_thread_replies_input_thread_hook = DeleteThreadRepliesInputThreadHook()
 delete_thread_reply_hook = DeleteThreadReplyHook()
 delete_thread_reply_input_model_hook = DeleteThreadReplyInputModelHook()
 delete_thread_reply_input_reply_hook = DeleteThreadReplyInputReplyHook()
