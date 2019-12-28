@@ -6,8 +6,14 @@ type Query {
     categories: [Category!]!
     category(id: ID!): Category
     thread(id: ID!): Thread
+    threads(cursor: ID, category: ID, user: ID): ThreadsFeed!
     user(id: ID!): User
     settings: Settings
+}
+
+type ThreadsFeed {
+    items: [Thread!]!
+    nextCursor: ID
 }
 
 type Settings {

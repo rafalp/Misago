@@ -6,6 +6,7 @@ from ..query import (
     resolve_category,
     resolve_settings,
     resolve_thread,
+    resolve_threads,
     resolve_user,
 )
 
@@ -53,6 +54,38 @@ async def test_thread_resolver_returns_thread_by_id(thread, graphql_info):
 async def test_thread_resolver_returns_none_for_nonexistent_thread_id(graphql_info):
     value = await resolve_thread(None, graphql_info, id="100")
     assert value is None
+
+
+@pytest.mark.asyncio
+async def test_threads_resolver_returns_threads_feed(thread, graphql_info):
+    value = await resolve_threads(None, graphql_info)
+    assert value.items == [thread]
+
+
+@pytest.mark.asyncio
+async def test_threads_resolver_returns_threads_feed_for_category(
+    thread, graphql_info, category
+):
+    value = await resolve_threads(None, graphql_info, category=str(category.id))
+    assert value.items == [thread]
+
+
+@pytest.mark.asyncio
+async def test_threads_resolver_returns_threads_feed_for_cursor(
+    graphql_info, thread, user_thread
+):
+    value = await resolve_threads(
+        None, graphql_info, cursor=str(user_thread.last_post_id)
+    )
+    assert value.items == [thread]
+
+
+@pytest.mark.asyncio
+async def test_threads_resolver_returns_threads_feed_for_user(
+    graphql_info, user, user_thread
+):
+    value = await resolve_threads(None, graphql_info, user=str(user.id))
+    assert value.items == [user_thread]
 
 
 @pytest.mark.asyncio

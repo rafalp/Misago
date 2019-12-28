@@ -4,8 +4,16 @@ from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
 from ...auth import get_authenticated_user
-from ...loaders import load_categories, load_category, load_thread, load_user
-from ...types import Category, Settings, Thread, User
+from ...loaders import (
+    load_categories,
+    load_category,
+    load_category_with_children,
+    load_root_categories,
+    load_thread,
+    load_threads_feed,
+    load_user,
+)
+from ...types import Category, Settings, Thread, ThreadsFeed, User
 
 
 query_type = QueryType()
@@ -18,7 +26,7 @@ async def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
 
 @query_type.field("categories")
 async def resolve_categories(_, info: GraphQLResolveInfo) -> List:
-    return await load_categories(info.context)
+    return await load_root_categories(info.context)
 
 
 @query_type.field("category")
@@ -33,6 +41,25 @@ async def resolve_thread(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[Thread]:
     return await load_thread(info.context, id)
+
+
+@query_type.field("threads")
+async def resolve_threads(
+    _,
+    info: GraphQLResolveInfo,
+    *,
+    cursor: Optional[str] = None,
+    category: Optional[str] = None,
+    user: Optional[str] = None
+) -> ThreadsFeed:
+    if category:
+        categories = await load_category_with_children(info.context, category)
+    else:
+        categories = await load_categories(info.context)
+
+    return await load_threads_feed(
+        info.context, categories=categories, cursor=cursor, starter_id=user
+    )
 
 
 @query_type.field("user")

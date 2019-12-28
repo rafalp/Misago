@@ -171,6 +171,7 @@ from .templatecontext import (
     TemplateContextFilter,
 )
 from .thread import Thread
+from .threadsfeed import ThreadsFeed
 from .user import User
 from .userauth import (
     AuthenticateUserAction,

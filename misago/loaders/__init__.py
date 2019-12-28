@@ -1,4 +1,10 @@
-from .categories import load_categories, load_category, load_category_children
+from .categories import (
+    load_categories,
+    load_category,
+    load_category_children,
+    load_category_with_children,
+    load_root_categories,
+)
 from .posts import (
     clear_all_posts,
     clear_post,
@@ -14,6 +20,7 @@ from .threads import (
     clear_threads,
     load_thread,
     load_threads,
+    load_threads_feed,
     store_thread,
     store_threads,
 )
@@ -41,10 +48,13 @@ __all__ = [
     "load_categories",
     "load_category",
     "load_category_children",
+    "load_category_with_children",
+    "load_root_categories",
     "load_post",
     "load_posts",
     "load_thread",
     "load_threads",
+    "load_threads_feed",
     "load_user",
     "load_users",
     "store_post",
