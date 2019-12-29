@@ -1,10 +1,12 @@
 # Speed up bulding by excluding files from the docker context
+.vscode/
 dev/
 dist/
 docs/
 env/
 venv/
-.vscode/
+node_modules/
+misago-client/
 
 .DS_Store
 thumbs.db
