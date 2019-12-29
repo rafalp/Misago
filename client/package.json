@@ -1,9 +1,14 @@
 {
   "name": "misago-client",
   "description": "Default React.js client for Misago forum software.",
-  "license": "GPLv2",
   "version": "0.1.0",
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/rafalp/Misago.git"
+  },
   "dependencies": {
+    "@apollo/react-hooks": "^3.1.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -11,6 +16,8 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "apollo-boost": "^0.4.7",
+    "graphql": "^14.5.8",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
