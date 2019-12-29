@@ -1,6 +1,7 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 TRUE_STR_VALUES = ("true", "yes", "y", "on")
+DEFAULT_AVATAR_SIZES = [400, 200, 150, 100, 64, 50, 30]
 
 
 class StaticSettings:
@@ -15,6 +16,7 @@ class StaticSettings:
     _static_root: str
     _media_root: str
 
+    _avatar_sizes: List[int]
     _enabled_plugins: Optional[str]
 
     def __init__(self, settings: Dict[str, Any]):
@@ -29,7 +31,8 @@ class StaticSettings:
         self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
         self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
 
-        self._enabled_plugins = settings.get("MISAGO_ENABLED_PLUGINS")
+        self._avatar_sizes = get_avatar_sizes_value(settings, "MISAGO_AVATAR_SIZES")
+        self._enabled_plugins = settings.get("MISAGO_ENABLED_PLUGINS", "").strip()
 
     @property
     def debug(self) -> bool:
@@ -63,9 +66,27 @@ class StaticSettings:
     def enabled_plugins(self) -> Optional[str]:
         return self._enabled_plugins
 
+    @property
+    def avatar_sizes(self) -> List[int]:
+        return self._avatar_sizes
+
 
 def get_setting_value(settings: Dict[str, Any], setting: str) -> Any:
-    if not settings.get(setting):
+    if not settings.get(setting, "").strip():
         raise ValueError(f"'{setting}' setting has no value")
 
     return settings[setting]
+
+
+def get_avatar_sizes_value(settings: Dict[str, Any], setting: str) -> List[int]:
+    if not settings.get(setting, "").strip():
+        return DEFAULT_AVATAR_SIZES
+
+    try:
+        sizes = [int(i.strip()) for i in settings[setting].split(",")]
+    except (TypeError, ValueError):
+        raise ValueError(
+            f"'{setting}' setting should be comma-separated list of integers (40,120,400)"
+        )
+
+    return sorted(set(sizes), reverse=True) or DEFAULT_AVATAR_SIZES

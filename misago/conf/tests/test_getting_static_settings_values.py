@@ -1,3 +1,5 @@
+import pytest
+
 from ..staticsettings import StaticSettings
 
 
@@ -72,3 +74,15 @@ def test_enabled_plugins_setting_value_is_set_and_retrieved():
         mock_settings({"MISAGO_ENABLED_PLUGINS": "/plugins-test/"})
     )
     assert settings.enabled_plugins == "/plugins-test/"
+
+
+def test_avatar_sizes_setting_value_is_set_and_retrieved():
+    settings = StaticSettings(
+        mock_settings({"MISAGO_AVATAR_SIZES": "20 , 40 ,40, 100"})
+    )
+    assert settings.avatar_sizes == [100, 40, 20]
+
+
+def test_avatar_sizes_setting_value_is_validated():
+    with pytest.raises(ValueError):
+        StaticSettings(mock_settings({"MISAGO_AVATAR_SIZES": "20 , invalid , 100"}))

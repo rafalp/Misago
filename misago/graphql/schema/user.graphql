@@ -6,5 +6,11 @@ type User {
     isModerator: Boolean!
     isAdministrator: Boolean!
     joinedAt: DateTime!
+    avatars: [Avatar!]!
     extra: Generic!
+}
+
+type Avatar {
+    size: Int!
+    url: String!
 }

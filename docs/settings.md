@@ -16,6 +16,7 @@ Static settings values are accessible throught the attributes of `misago.conf.se
 - `cache_url: str` - Cache connection URL as used by [`async-caches` library](https://rafalp.github.io/async-caches/backends/).
 - `static_root: str` - Absolute path to directory from which static files are served by the HTTP server.
 - `media_root: str` - Absolute path to directory from which uploaded files are served by the HTTP server.
+- `avatar_sizes: List[int]` - List of user avatar sizes supported on site. Env variable should be comma separated list: `40, 100, 400`.
 - `enabled_plugins: Optional[str]` - Absolute path to text file with a list of enabled plugins.
 
 
