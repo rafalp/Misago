@@ -1,9 +1,9 @@
-import { ApolloProvider, useQuery } from '@apollo/react-hooks';
-import ApolloClient, { gql } from 'apollo-boost';
-import React from 'react';
+import { ApolloProvider, useQuery } from "@apollo/react-hooks";
+import ApolloClient, { gql } from "apollo-boost";
+import React, { Suspense } from "react";
 
 const client = new ApolloClient({
-  uri: '/graphql/',
+  uri: "/graphql/"
 });
 
 const App: React.FC = () => {
@@ -12,28 +12,53 @@ const App: React.FC = () => {
       <GraphQLTest />
     </ApolloProvider>
   );
-}
+};
 
-const SITE_SETTINGS = gql`
-  query SiteSettings {
+const Navbar = React.lazy(() => import("./Navbar"));
+
+const INITIAL_DATA = gql`
+  query InitialData {
+    auth {
+      id
+      name
+      avatars {
+        size
+        url
+      }
+    }
     settings {
       forumName
     }
   }
 `;
 
+interface IAvatar {
+  size: number;
+  url: string;
+}
+
 interface ISiteSettings {
+  auth: {
+    id: string;
+    name: string;
+    avatars: Array<IAvatar>;
+  };
   settings: {
-    forumName: string
-  }
-};
+    forumName: string;
+  };
+}
 
 const GraphQLTest: React.FC = () => {
-  const { loading, data } = useQuery<ISiteSettings>(SITE_SETTINGS);
+  const { loading, data } = useQuery<ISiteSettings>(INITIAL_DATA);
 
-  if (loading) return <div>...</div>;
-  if (!data) return <div>nope!</div>;
-  return <div>{data.settings.forumName}</div>
-}
+  return (
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Navbar />
+        <div>{loading ? "..." : (data && data.settings.forumName)}</div>
+      </Suspense>
+    </div>
+  );
+};
 
 export default App;
