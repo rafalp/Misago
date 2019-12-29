@@ -113,7 +113,9 @@ class Page:
     def __init__(
         self, query: Select, number: int, start: int, stop: int, paginator: Paginator
     ):
+        self._paginator = paginator
         self._query = query
+
         self.number = number
         self.start = start
         self.stop = stop

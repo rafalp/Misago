@@ -3,8 +3,8 @@ from typing import Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
-from ...loaders import load_category, load_post, load_user
-from ...types import Category, Post, Thread, User
+from ...loaders import load_category, load_post, load_thread_posts_page, load_user
+from ...types import Category, Post, Thread, ThreadPostsPage, User
 
 
 thread_type = ObjectType("Thread")
@@ -20,6 +20,13 @@ thread_type.set_alias("isClosed", "is_closed")
 async def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Category:
     category = await load_category(info.context, obj.category_id)
     return cast(Category, category)
+
+
+@thread_type.field("posts")
+async def resolve_posts(
+    obj: Thread, info: GraphQLResolveInfo, page: int = 1
+) -> Optional[ThreadPostsPage]:
+    return await load_thread_posts_page(info.context, obj, page)
 
 
 @thread_type.field("firstPost")

@@ -1,6 +1,6 @@
 from typing import List, Optional, Sequence
 
-from sqlalchemy import desc
+from sqlalchemy import asc, desc
 
 from ..database import database
 from ..database.paginator import PageDoesNotExist, Paginator
@@ -41,7 +41,7 @@ async def get_thread_posts_page(
         posts_page = await paginator.get_page(page)
     except PageDoesNotExist:
         return None
-    data = await database.fetch_all(posts_page.query.order_by(desc(posts.c.id)))
+    data = await database.fetch_all(posts_page.query.order_by(asc(posts.c.id)))
     return ThreadPostsPage.from_paginator_page(
         posts_page, [Post(**row) for row in data]
     )

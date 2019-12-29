@@ -24,7 +24,7 @@ async def test_getting_threads_by_nonexistent_id_returns_empty_list(db):
 
 
 @pytest.mark.asyncio
-async def test_threads_feed_can_be_obtained(thread):
+async def test_threads_feed_can_be_get(thread):
     feed = await get_threads_feed(10)
     assert feed.items == [thread]
 

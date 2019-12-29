@@ -1,7 +1,7 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
-from ..types import GraphQLContext, Post
-from ..threads.get import get_posts_by_id
+from ..types import GraphQLContext, Post, Thread, ThreadPostsPage
+from ..threads.get import get_posts_by_id, get_thread_posts_page
 from .loader import get_loader
 
 
@@ -17,6 +17,20 @@ def load_posts(
 ) -> Awaitable[Sequence[Optional[Post]]]:
     loader = get_loader(context, "post", get_posts_by_id)
     return loader.load_many(ids)
+
+
+async def load_thread_posts_page(
+    context: GraphQLContext, thread: Thread, page: int
+) -> Optional[ThreadPostsPage]:
+    posts_page = await get_thread_posts_page(
+        thread,
+        context["settings"]["posts_per_page"],
+        context["settings"]["posts_per_page_orphans"],
+        page,
+    )
+    if posts_page:
+        store_posts(context, posts_page.items)
+    return posts_page
 
 
 def store_post(context: GraphQLContext, post: Post):

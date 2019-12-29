@@ -11,6 +11,7 @@ from .posts import (
     clear_posts,
     load_post,
     load_posts,
+    load_thread_posts_page,
     store_post,
     store_posts,
 )
@@ -53,6 +54,7 @@ __all__ = [
     "load_post",
     "load_posts",
     "load_thread",
+    "load_thread_posts_page",
     "load_threads",
     "load_threads_feed",
     "load_user",

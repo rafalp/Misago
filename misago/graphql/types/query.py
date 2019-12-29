@@ -51,7 +51,7 @@ async def resolve_threads(
     cursor: Optional[str] = None,
     category: Optional[str] = None,
     user: Optional[str] = None
-) -> ThreadsFeed:
+) -> Optional[ThreadsFeed]:
     if category:
         categories = await load_category_with_children(info.context, category)
     else:

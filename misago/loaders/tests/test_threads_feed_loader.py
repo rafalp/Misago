@@ -20,11 +20,11 @@ async def test_threads_feed_loader_returns_feed_with_threads_after_cursor(
 
 
 @pytest.mark.asyncio
-async def test_threads_feed_loader_returns_empty_feed_if_cursor_is_invalid(
+async def test_threads_feed_loader_returns_none_if_cursor_is_invalid(
     graphql_context, thread
 ):
     loaded_feed = await load_threads_feed(graphql_context, cursor="invalid")
-    assert loaded_feed.items == []
+    assert loaded_feed is None
 
 
 @pytest.mark.asyncio
@@ -40,7 +40,7 @@ async def test_threads_feed_loader_returns_empty_feed_if_starter_id_is_invalid(
     graphql_context, thread
 ):
     loaded_feed = await load_threads_feed(graphql_context, starter_id="invalid")
-    assert loaded_feed.items == []
+    assert loaded_feed is None
 
 
 @pytest.mark.asyncio

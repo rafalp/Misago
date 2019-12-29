@@ -5,6 +5,7 @@ from ..thread import (
     resolve_first_post,
     resolve_last_post,
     resolve_last_poster,
+    resolve_posts,
     resolve_starter,
 )
 
@@ -15,6 +16,12 @@ async def test_category_resolver_returns_thread_category(
 ):
     value = await resolve_category(thread, graphql_info)
     assert value == category
+
+
+@pytest.mark.asyncio
+async def test_posts_resolver_returns_thread_posts_page(graphql_info, thread, post):
+    value = await resolve_posts(thread, graphql_info)
+    assert value.items == [post]
 
 
 @pytest.mark.asyncio

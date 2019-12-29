@@ -25,18 +25,18 @@ async def load_threads_feed(
     cursor: Optional[Union[int, str]] = None,
     categories: Optional[Sequence[Category]] = None,
     starter_id: Optional[Union[int, str]] = None,
-) -> ThreadsFeed:
+) -> Optional[ThreadsFeed]:
     if cursor:
         clean_cursor = positive_int(cursor)
         if not clean_cursor:
-            return ThreadsFeed()
+            return None
     else:
         clean_cursor = None
 
     if starter_id:
         clean_starter_id = positive_int(starter_id)
         if not clean_starter_id:
-            return ThreadsFeed()
+            return None
     else:
         clean_starter_id = None
 
@@ -47,8 +47,7 @@ async def load_threads_feed(
         starter_id=clean_starter_id,
     )
 
-    for thread in feed.items:
-        store_thread(context, thread)
+    store_threads(context, feed.items)
 
     return feed
 
