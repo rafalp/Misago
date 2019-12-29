@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
+    "@lingui/react": "^2.9.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
@@ -30,7 +31,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "add-locale": "lingui add-locale",
+    "extract": "lingui extract",
+    "compile": "lingui compile"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -48,9 +52,13 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@lingui/cli": "^2.9.0",
+    "@lingui/macro": "^2.9.0",
     "@storybook/addon-actions": "^5.2.8",
     "@storybook/addon-links": "^5.2.8",
     "@storybook/addons": "^5.2.8",
-    "@storybook/react": "^5.2.8"
+    "@storybook/react": "^5.2.8",
+    "babel-core": "^7.0.0-bridge.0"
   }
 }
