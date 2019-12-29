@@ -15,3 +15,13 @@ type Thread {
     isClosed: Boolean!
     extra: Generic!
 }
+
+type ThreadsFeed {
+    items: [Thread!]!
+    nextCursor: ID
+}
+
+type ThreadPostsPage {
+    items: [Post!]!
+    number: Int!
+}

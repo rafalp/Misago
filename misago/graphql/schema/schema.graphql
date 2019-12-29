@@ -11,11 +11,6 @@ type Query {
     settings: Settings
 }
 
-type ThreadsFeed {
-    items: [Thread!]!
-    nextCursor: ID
-}
-
 type Settings {
     forumName: String!
 }

@@ -3,8 +3,9 @@ from typing import List, Optional, Sequence
 from sqlalchemy import desc
 
 from ..database import database
+from ..database.paginator import PageDoesNotExist, Paginator
 from ..tables import posts, threads
-from ..types import Category, Post, Thread, ThreadsFeed
+from ..types import Category, Post, Thread, ThreadPostsPage, ThreadsFeed
 
 
 async def get_post_by_id(post_id: int) -> Optional[Post]:
@@ -29,6 +30,21 @@ async def get_threads_by_id(ids: Sequence[int]) -> List[Thread]:
     query = threads.select().where(threads.c.id.in_(ids))
     data = await database.fetch_all(query)
     return [Thread(**row) for row in data]
+
+
+async def get_thread_posts_page(
+    thread: Thread, per_page: int, orphans: int, page: int
+) -> Optional[ThreadPostsPage]:
+    query = posts.select().where(posts.c.thread_id == thread.id)
+    paginator = Paginator(query, per_page, orphans, overlap_pages=True)
+    try:
+        posts_page = await paginator.get_page(page)
+    except PageDoesNotExist:
+        return None
+    data = await database.fetch_all(posts_page.query.order_by(desc(posts.c.id)))
+    return ThreadPostsPage.from_paginator_page(
+        posts_page, [Post(**row) for row in data]
+    )
 
 
 async def get_threads_feed(
