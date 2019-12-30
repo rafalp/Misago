@@ -1,13 +1,3 @@
-import React from "react";
+import Navbar from "./Navbar"
 
-const Navbar: React.FC = () => {
-  return (
-    <nav className="navbar navbar-light bg-white">
-      <a className="navbar-brand" href="#">
-        Misago
-      </a>
-    </nav>
-  );
-};
-
-export default Navbar;
+export default Navbar

@@ -17,6 +17,7 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/react-router-dom": "^5.1.3",
     "apollo-boost": "^0.4.7",
     "bootstrap": "^4.4.1",
     "graphql": "^14.5.8",
@@ -24,6 +25,7 @@
     "node-sass": "^4.13.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "typescript": "~3.7.2"
   },
@@ -32,14 +34,33 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public src/styles",
+    "storybook": "start-storybook --watch -p 9009 -s public src/styles",
     "build-storybook": "build-storybook -s public",
     "add-locale": "lingui add-locale",
     "extract": "lingui extract",
-    "compile": "lingui compile"
+    "compile": "lingui compile",
+    "prettier": "prettier src/**/*.ts* --write"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@lingui/cli": "^2.9.0",
+    "@lingui/macro": "^2.9.0",
+    "@storybook/addon-actions": "^5.2.8",
+    "@storybook/addon-links": "^5.2.8",
+    "@storybook/addons": "^5.2.8",
+    "@storybook/react": "^5.2.8",
+    "babel-core": "^7.0.0-bridge.0",
+    "prettier": "1.19.1"
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": false
   },
   "browserslist": {
     "production": [
@@ -52,15 +73,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.7.7",
-    "@lingui/cli": "^2.9.0",
-    "@lingui/macro": "^2.9.0",
-    "@storybook/addon-actions": "^5.2.8",
-    "@storybook/addon-links": "^5.2.8",
-    "@storybook/addons": "^5.2.8",
-    "@storybook/react": "^5.2.8",
-    "babel-core": "^7.0.0-bridge.0"
   }
 }

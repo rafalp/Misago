@@ -1,20 +1,16 @@
-import { ApolloProvider, useQuery } from "@apollo/react-hooks";
-import ApolloClient, { gql } from "apollo-boost";
-import React, { Suspense } from "react";
+import { useQuery } from "@apollo/react-hooks"
+import { gql } from "apollo-boost"
+import React from "react"
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import Navbar from "./Navbar"
+import { RootContainer, RootSpinner } from "./UI"
+import { ICategory, ISettings, IUser } from "./types"
 
-const client = new ApolloClient({
-  uri: "/graphql/"
-});
-
-const App: React.FC = () => {
-  return (
-    <ApolloProvider client={client}>
-      <GraphQLTest />
-    </ApolloProvider>
-  );
-};
-
-const Navbar = React.lazy(() => import("./Navbar"));
+interface IInitialData {
+  auth: IUser
+  categories: Array<ICategory>
+  settings: ISettings
+}
 
 const INITIAL_DATA = gql`
   query InitialData {
@@ -26,39 +22,40 @@ const INITIAL_DATA = gql`
         url
       }
     }
+    categories {
+      id
+      name
+      slug
+      color
+      children {
+        id
+        name
+        slug
+        color
+      }
+    }
     settings {
       forumName
     }
   }
-`;
+`
 
-interface IAvatar {
-  size: number;
-  url: string;
-}
-
-interface ISiteSettings {
-  auth: {
-    id: string;
-    name: string;
-    avatars: Array<IAvatar>;
-  };
-  settings: {
-    forumName: string;
-  };
-}
-
-const GraphQLTest: React.FC = () => {
-  const { loading, data } = useQuery<ISiteSettings>(INITIAL_DATA);
+const App: React.FC = () => {
+  const { loading, data, error } = useQuery<IInitialData>(INITIAL_DATA)
 
   return (
-    <div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Navbar />
-        <div>{loading ? "..." : (data && data.settings.forumName)}</div>
-      </Suspense>
-    </div>
-  );
-};
+    <RootContainer>
+      {loading ? (
+        <RootSpinner />
+      ) : error || !data ? (
+        <div>ERROR</div>
+      ) : (
+        <Router>
+          <Navbar settings={data.settings} user={data.auth} />
+        </Router>
+      )}
+    </RootContainer>
+  )
+}
 
-export default App;
+export default App
