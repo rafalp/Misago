@@ -33,4 +33,4 @@ WORKDIR /app/
 
 EXPOSE 8000
 
-CMD uvicorn misago.asgi:app --host 0.0.0.0 --reload
+CMD uvicorn misago.asgi:app --host 0.0.0.0 --reload --reload-dir misago --reload-dir plugins
