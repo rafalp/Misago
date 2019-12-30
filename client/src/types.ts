@@ -16,13 +16,13 @@ export interface IUser {
 }
 
 export interface ICategory {
-    id: string
-    parent: ICategory | null
-    children: Array<ICategory>
-    depth: number
-    name: string
-    slug: string
-    color: string
+  id: string
+  parent: ICategory | null
+  children: Array<ICategory>
+  depth: number
+  name: string
+  slug: string
+  color: string
 }
 
 export interface ISettings {
