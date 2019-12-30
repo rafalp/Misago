@@ -3,7 +3,7 @@ import Navbar from "../Navbar"
 import { IAvatar } from "../types"
 
 export default {
-  title: "Navbar",
+  title: "Layout/Navbar",
 }
 
 const avatarSizes: Array<number> = [400, 200, 150, 100, 64, 50, 30]

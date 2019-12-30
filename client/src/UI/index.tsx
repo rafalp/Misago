@@ -1,5 +1,5 @@
-import RootContainer from "./RootContainer"
+import AppContainer from "./AppContainer"
 import RootSpinner from "./RootSpinner"
 import Spinner from "./Spinner"
 
-export { RootContainer, RootSpinner, Spinner }
+export { AppContainer, RootSpinner, Spinner }

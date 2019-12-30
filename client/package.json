@@ -47,6 +47,7 @@
     "@lingui/macro": "^2.9.0",
     "@storybook/addon-actions": "^5.2.8",
     "@storybook/addon-links": "^5.2.8",
+    "@storybook/addon-viewport": "^5.2.8",
     "@storybook/addons": "^5.2.8",
     "@storybook/react": "^5.2.8",
     "babel-core": "^7.0.0-bridge.0",

@@ -1,13 +1,13 @@
 import React from "react"
-import RootContainer from "./RootContainer"
+import AppContainer from "./AppContainer"
 import Spinner from "./Spinner"
 
 const RootSpinner: React.FC = () => (
-  <RootContainer>
+  <AppContainer>
     <div className="root-spinner">
       <Spinner />
     </div>
-  </RootContainer>
+  </AppContainer>
 )
 
 export default RootSpinner

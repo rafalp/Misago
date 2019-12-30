@@ -3,7 +3,7 @@ import { gql } from "apollo-boost"
 import React from "react"
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
 import Navbar from "./Navbar"
-import { RootContainer, RootSpinner } from "./UI"
+import { AppContainer, RootSpinner } from "./UI"
 import { ICategory, ISettings, IUser } from "./types"
 
 interface IInitialData {
@@ -44,7 +44,7 @@ const App: React.FC = () => {
   const { loading, data, error } = useQuery<IInitialData>(INITIAL_DATA)
 
   return (
-    <RootContainer>
+    <AppContainer>
       {loading ? (
         <RootSpinner />
       ) : error || !data ? (
@@ -54,7 +54,7 @@ const App: React.FC = () => {
           <Navbar settings={data.settings} user={data.auth} />
         </Router>
       )}
-    </RootContainer>
+    </AppContainer>
   )
 }
 
