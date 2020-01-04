@@ -1,14 +1,14 @@
-import { faCommentAlt } from "@fortawesome/free-regular-svg-icons/faCommentAlt"
 import React from "react"
-import { Icon } from "../UI"
+import { Button } from "../UI"
 import { INavbarProps } from "./Navbar.types"
 
 const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
+  if (!settings) return null
+
   return (
     <nav className="navbar navbar-light bg-white">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
-          <Icon icon={faCommentAlt} />
           {settings.forumName}
         </a>
         {user ? (
@@ -17,7 +17,14 @@ const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
             {`Hello, ${user.name}`}
           </div>
         ) : (
-          <div>GUEST</div>
+          <div className="row">
+            <div className="col">
+              <Button text="Log-in" />
+            </div>
+            <div className="col">
+              <Button text="Register" />
+            </div>
+          </div>
         )}
       </div>
     </nav>

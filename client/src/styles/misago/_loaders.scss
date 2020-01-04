@@ -1,0 +1,12 @@
+.root-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+@include media-breakpoint-up(md) {
+  .root-loader {
+    height: 80vh;
+  }
+}
