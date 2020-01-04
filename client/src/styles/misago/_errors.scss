@@ -1,0 +1,20 @@
+.root-error {
+  display: flex;
+  justify-content: center;
+  padding: $font-size-base;
+}
+
+@include media-breakpoint-up(md) {
+  .root-error {
+    align-items: center;
+    height: 80vh;
+  }
+}
+
+.root-error-body {
+  text-align: center;
+}
+
+.root-error-icon {
+  font-size: $font-size-base * 8;
+}

@@ -1,3 +1,4 @@
+import { I18nProvider } from "@lingui/react"
 import React from "react"
 import Navbar from "."
 import { IAvatar } from "../types"
@@ -29,6 +30,14 @@ const user = {
   avatars: getAvatars(),
 }
 
-export const Anonymous = () => <Navbar settings={settings} user={null} />
+export const Anonymous = () => (
+  <I18nProvider language="en">
+    <Navbar settings={settings} user={null} />
+  </I18nProvider>
+)
 
-export const Authenticated = () => <Navbar settings={settings} user={user} />
+export const Authenticated = () => (
+  <I18nProvider language="en">
+    <Navbar settings={settings} user={user} />
+  </I18nProvider>
+)

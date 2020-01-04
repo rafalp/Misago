@@ -1,20 +1,18 @@
-import classNames from "classnames"
 import React from "react"
+import { Icon } from "../UI"
 
-interface IRootErrorProps {
-  className?: string
-  icon: React.ReactNode
-  message: string
-  help: string
-}
-
-const RootError: React.FC<IRootErrorProps> = ({ className, icon, help, message }) => (
-  <div className={classNames("root-error", className)}>
+const RootError: React.FC = () => (
+  <div className="root-error">
     <div className="root-error-body">
-      <div className="root-error-icon">{icon}</div>
+      <div className="root-error-icon">
+        <Icon icon="exclamation-triangle" solid />
+      </div>
       <div className="root-error-message">
-        <h1>{message}</h1>
-        <p>{help}</p>
+        <h1>The site can't be loaded due to an error.</h1>
+        <p>
+          You may be disconnected from the internet or there is a problem with the site that
+          prohibits it from loading correctly.
+        </p>
       </div>
     </div>
   </div>
