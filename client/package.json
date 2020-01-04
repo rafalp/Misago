@@ -49,6 +49,7 @@
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@lingui/cli": "^2.9.0",
+    "@lingui/loader": "^2.9.0",
     "@lingui/macro": "^2.9.0",
     "@storybook/addon-actions": "^5.2.8",
     "@storybook/addon-links": "^5.2.8",
@@ -56,6 +57,9 @@
     "@storybook/addon-viewport": "^5.2.8",
     "@storybook/addons": "^5.2.8",
     "@storybook/react": "^5.2.8",
+    "@types/lingui__core": "^2.7.0",
+    "@types/lingui__macro": "^2.7.3",
+    "@types/lingui__react": "^2.8.1",
     "babel-core": "^7.0.0-bridge.0",
     "prettier": "1.19.1",
     "react-test-renderer": "^16.12.0",

@@ -1,0 +1,20 @@
+{
+  "btn.login": {
+    "defaults": "Log in",
+    "origin": [
+      [
+        "src/Navbar/Navbar.tsx",
+        19
+      ]
+    ]
+  },
+  "btn.register": {
+    "defaults": "Register",
+    "origin": [
+      [
+        "src/Navbar/Navbar.tsx",
+        22
+      ]
+    ]
+  }
+}

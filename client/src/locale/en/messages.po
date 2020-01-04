@@ -12,3 +12,11 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/Navbar/Navbar.tsx:19
+msgid "btn.login"
+msgstr "Log in"
+
+#: src/Navbar/Navbar.tsx:22
+msgid "btn.register"
+msgstr "Register"

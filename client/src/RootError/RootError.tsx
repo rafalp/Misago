@@ -1,12 +1,20 @@
+import classNames from "classnames"
 import React from "react"
 
-const RootError: React.FC = () => (
-  <div className="root-error">
+interface IRootErrorProps {
+  className?: string
+  icon: React.ReactNode
+  message: string
+  help: string
+}
+
+const RootError: React.FC<IRootErrorProps> = ({ className, icon, help, message }) => (
+  <div className={classNames("root-error", className)}>
     <div className="root-error-body">
-      <div className="root-error-icon">ICON</div>
+      <div className="root-error-icon">{icon}</div>
       <div className="root-error-message">
-        <h1>Lorem ipsum dolor met.</h1>
-        <p>Sit amet elit, si vis pacem para bellum.</p>
+        <h1>{message}</h1>
+        <p>{help}</p>
       </div>
     </div>
   </div>
