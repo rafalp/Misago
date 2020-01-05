@@ -1,14 +1,9 @@
 .root-error {
   display: flex;
+  align-items: center;
   justify-content: center;
+  height: 100vh;
   padding: $font-size-base;
-}
-
-@include media-breakpoint-up(md) {
-  .root-error {
-    align-items: center;
-    height: 80vh;
-  }
 }
 
 .root-error-body {

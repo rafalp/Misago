@@ -1,5 +1,5 @@
-import RootContainer from "./RootContainer"
 import CardContainer from "./CardContainer"
 import Gallery from "./Gallery"
+import RootContainer from "./RootContainer"
 
-export { RootContainer, CardContainer, Gallery }
+export { CardContainer, Gallery, RootContainer }

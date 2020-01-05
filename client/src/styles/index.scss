@@ -9,10 +9,12 @@
 @import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~@fortawesome/fontawesome-free/scss/regular';
 
+// Theme configuration
+
+@import "./theme/variables";
 
 // Misago configuration
 
-@import "./variables";
 
 // Bootstrap configuration
 
@@ -42,8 +44,12 @@
 @import "~bootstrap/scss/modal";
 @import "~bootstrap/scss/spinners";
 
-// Misago UI components
+// Misago components
 
 @import "./misago/buttons";
 @import "./misago/errors";
 @import "./misago/loaders";
+
+// Theme components
+
+@import "./theme/navbar";

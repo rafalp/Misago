@@ -28,3 +28,9 @@ export interface ICategory {
 export interface ISettings {
   forumName: string
 }
+
+export interface IRegisterModalContext {
+  isOpen: boolean
+  openModal: () => void
+  closeModal: () => void
+}

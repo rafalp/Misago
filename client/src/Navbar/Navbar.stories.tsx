@@ -1,4 +1,5 @@
 import { I18nProvider } from "@lingui/react"
+import { actions } from "@storybook/addon-actions"
 import React from "react"
 import Navbar from "."
 import { IAvatar } from "../types"
@@ -7,6 +8,7 @@ export default {
   title: "Layout/Navbar",
 }
 
+const navbarActions = actions({ openLogin: "open login", openRegister: "open register" })
 const avatarSizes: Array<number> = [400, 200, 150, 100, 64, 50, 30]
 
 const getAvatars = (): Array<IAvatar> => {
@@ -32,12 +34,12 @@ const user = {
 
 export const Anonymous = () => (
   <I18nProvider language="en">
-    <Navbar settings={settings} user={null} />
+    <Navbar settings={settings} user={null} {...navbarActions} />
   </I18nProvider>
 )
 
 export const Authenticated = () => (
   <I18nProvider language="en">
-    <Navbar settings={settings} user={user} />
+    <Navbar settings={settings} user={user} {...navbarActions} />
   </I18nProvider>
 )
