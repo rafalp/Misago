@@ -15,12 +15,6 @@ import { ICategory, ISettings, IUser } from "../types"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
 
-interface IInitialData {
-  auth: IUser
-  categories: Array<ICategory>
-  settings: ISettings
-}
-
 const INITIAL_DATA = gql`
   query InitialData {
     auth {
@@ -45,9 +39,19 @@ const INITIAL_DATA = gql`
     }
     settings {
       forumName
+      passwordMinLength
+      passwordMaxLength
+      usernameMinLength
+      usernameMaxLength
     }
   }
 `
+
+interface IInitialData {
+  auth: IUser
+  categories: Array<ICategory>
+  settings: ISettings
+}
 
 const Navbar = React.lazy(() => import("../Navbar"))
 const RegisterModal = React.lazy(() => import("../RegisterModal"))

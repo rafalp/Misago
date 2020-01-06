@@ -1,4 +1,5 @@
 from .types import (
+    PASSWORD_MAX_LENGTH,
     bulkactionidslist,
     passwordstr,
     sluggablestr,
@@ -28,6 +29,7 @@ from .validators import (
 
 
 __all__ = [
+    "PASSWORD_MAX_LENGTH",
     "CategoryExistsValidator",
     "CategoryIsOpenValidator",
     "CategoryModeratorValidator",

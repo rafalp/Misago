@@ -1,5 +1,6 @@
 import Button from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
+import FieldError from "./FieldError"
 import Icon from "./Icon"
 import {
   Modal,
@@ -19,6 +20,7 @@ export {
   CardBody,
   CardFooter,
   CardHeader,
+  FieldError,
   Icon,
   Modal,
   ModalBacktrop,

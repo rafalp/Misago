@@ -1,3 +1,9 @@
+export interface IMutationError {
+  location: Array<string>
+  message: string
+  type: string
+}
+
 export interface IAvatar {
   size: number
   url: string
@@ -27,6 +33,10 @@ export interface ICategory {
 
 export interface ISettings {
   forumName: string
+  passwordMinLength: number
+  passwordMaxLength: number
+  usernameMinLength: number
+  usernameMaxLength: number
 }
 
 export interface IRegisterModalContext {

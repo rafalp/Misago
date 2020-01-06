@@ -3,6 +3,7 @@ import React from "react"
 import Icon from "../Icon"
 
 interface IButtonProps {
+  disabled?: boolean
   icon?: string
   iconSolid?: boolean
   text?: React.ReactNode
@@ -12,6 +13,7 @@ interface IButtonProps {
 }
 
 const Button: React.FC<IButtonProps> = ({
+  disabled,
   icon,
   iconSolid,
   text,
@@ -23,6 +25,7 @@ const Button: React.FC<IButtonProps> = ({
     <button
       className={classNames("btn", outline ? `btn-outline-${type}` : `btn-${type}`)}
       type={onClick ? "button" : "submit"}
+      disabled={disabled}
       onClick={onClick}
     >
       {icon && <Icon icon={icon} solid={iconSolid} fixedWidth />}

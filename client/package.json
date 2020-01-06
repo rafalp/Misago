@@ -20,9 +20,11 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-router-dom": "^5.1.3",
+    "@types/yup": "^0.26.27",
     "apollo-boost": "^0.4.7",
     "bootstrap": "^4.4.1",
     "classnames": "^2.2.6",
+    "formik": "^2.1.1",
     "graphql": "^14.5.8",
     "http-proxy-middleware": "^0.20.0",
     "node-sass": "^4.13.0",
@@ -31,7 +33,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "source-map-explorer": "^2.1.2",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.2",
+    "yup": "^0.28.0"
   },
   "scripts": {
     "analyze": "source-map-explorer 'build/static/js/*.js'",

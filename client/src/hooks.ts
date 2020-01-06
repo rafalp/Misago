@@ -6,11 +6,9 @@ interface IModalState {
   closeModal: () => void
 }
 
-const useModalState = (): IModalState => {
+export const useModalState = (): IModalState => {
   const [isOpen, updateOpen] = React.useState(false)
   const openModal = () => updateOpen(true)
   const closeModal = () => updateOpen(false)
   return { isOpen, openModal, closeModal }
 }
-
-export { useModalState }
