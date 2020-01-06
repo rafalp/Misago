@@ -1,0 +1,7 @@
+type Settings {
+    forumName: String!
+    passwordMinLength: Int!
+    passwordMaxLength: Int!
+    usernameMinLength: Int!
+    usernameMaxLength: Int!
+}
