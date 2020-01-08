@@ -1,4 +1,4 @@
-.root-error {
+.app-error {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6,10 +6,10 @@
   padding: $font-size-base;
 }
 
-.root-error-body {
+.app-error-body {
   text-align: center;
 }
 
-.root-error-icon {
+.app-error-icon {
   font-size: $font-size-base * 8;
 }

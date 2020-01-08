@@ -1,4 +1,4 @@
-.root-loader {
+.app-loader {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6,7 +6,7 @@
 }
 
 @include media-breakpoint-up(md) {
-  .root-loader {
+  .app-loader {
     height: 80vh;
   }
 }

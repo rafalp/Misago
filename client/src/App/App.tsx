@@ -8,10 +8,10 @@ import {
   RegisterModalProvider,
   SettingsProvider,
 } from "../contexts"
-import RootError from "../RootError"
-import RootLoader from "../RootLoader"
 import { useModalState } from "../hooks"
 import { ICategory, ISettings, IUser } from "../types"
+import AppError from "./AppError"
+import AppLoader from "./AppLoader"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
 
@@ -59,14 +59,8 @@ const RegisterModal = React.lazy(() => import("../RegisterModal"))
 const App: React.FC = () => {
   const registerModal = useModalState()
   const { loading, data, error } = useQuery<IInitialData>(INITIAL_DATA)
-  if (loading) return <RootLoader />
-  if (error) {
-    console.log(error)
-    if (error.networkError && "statusCode" in error.networkError) {
-      console.log(error.networkError["statusCode"])
-    }
-  }
-  if (error) return <RootError />
+  if (loading) return <AppLoader />
+  if (error) return <AppError />
 
   const { auth, categories, settings } = data || { auth: null, categories: [], settings: null }
 

@@ -1,5 +1,5 @@
 import React from "react"
-import RootError from "../RootError"
+import AppError from "./AppError"
 
 interface IAppErrorBoundaryProps {
   children: React.ReactNode
@@ -13,7 +13,7 @@ class AppErrorBoundary extends React.Component<IAppErrorBoundaryProps> {
   }
 
   render() {
-    if (this.state.hasError) return <RootError />
+    if (this.state.hasError) return <AppError />
     return this.props.children
   }
 }
