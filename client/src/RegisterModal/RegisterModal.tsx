@@ -5,7 +5,16 @@ import { Formik, Form } from "formik"
 import React from "react"
 import ReactDOM from "react-dom"
 import * as Yup from "yup"
-import { Button, FieldError, Modal, ModalBody, ModalFooter, Spinner } from "../UI"
+import {
+  Button,
+  CombinedError,
+  FieldError,
+  Modal,
+  ModalAlert,
+  ModalBody,
+  ModalFooter,
+  Spinner,
+} from "../UI"
 import root from "../modalsRoot"
 import { IMutationError, ISettings } from "../types"
 
@@ -54,7 +63,10 @@ interface IRegisterModalProps {
 }
 
 const RegisterModal: React.FC<IRegisterModalProps> = ({ isOpen, settings, closeModal }) => {
-  const [register] = useMutation<IRegisterData, IRegisterInput>(REGISTER)
+  const [register, { data, error: clientError }] = useMutation<IRegisterData, IRegisterInput>(
+    REGISTER,
+    { errorPolicy: "all" }
+  )
 
   if (!settings || !root) return null
 
@@ -95,9 +107,12 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ isOpen, settings, closeM
       >
         {({ values, errors, handleChange, isSubmitting }) => (
           <Form>
+            <CombinedError clientError={clientError} graphqlErrors={data?.register.errors}>
+              {({ message }) => <ModalAlert>{message}</ModalAlert>}
+            </CombinedError>
             <ModalBody>
               <div className="form-group">
-                Name
+                User name
                 <input
                   className="form-control"
                   type="text"
@@ -108,7 +123,10 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ isOpen, settings, closeM
                 <FieldError
                   error={errors.name}
                   messages={{
-                    "value_error.missing": <Trans>Enter your name.</Trans>,
+                    "value_error.missing": <Trans>Enter your user name.</Trans>,
+                    "value_error.username.not_available": (
+                      <Trans>This user name is not available.</Trans>
+                    ),
                     "value_error.any_str.min_length": (
                       <Plural
                         value={settings.usernameMinLength}
@@ -151,7 +169,13 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ isOpen, settings, closeM
                   onChange={handleChange}
                   value={values.email}
                 />
-                <FieldError error={errors.email} messages={{}} />
+                <FieldError
+                  error={errors.email}
+                  messages={{
+                    "value_error.missing": <Trans>Enter your e-mail address.</Trans>,
+                    "value_error.email.not_available": <Trans>This e-mail is not available.</Trans>,
+                  }}
+                />
               </div>
               <div className="form-group">
                 Password

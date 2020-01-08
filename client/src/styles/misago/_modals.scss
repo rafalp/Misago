@@ -1,0 +1,11 @@
+/* Make modal scrollable on smaller viewports */
+.modal {
+  overflow: auto;
+}
+
+/* Make modal alert visually blend with rest of modal blocks */
+.modal-alert .alert {
+  border: none;
+  border-radius: 0;
+  text-align: center;
+}

@@ -60,6 +60,12 @@ const App: React.FC = () => {
   const registerModal = useModalState()
   const { loading, data, error } = useQuery<IInitialData>(INITIAL_DATA)
   if (loading) return <RootLoader />
+  if (error) {
+    console.log(error)
+    if (error.networkError && "statusCode" in error.networkError) {
+      console.log(error.networkError["statusCode"])
+    }
+  }
   if (error) return <RootError />
 
   const { auth, categories, settings } = data || { auth: null, categories: [], settings: null }

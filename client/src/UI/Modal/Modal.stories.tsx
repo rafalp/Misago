@@ -4,7 +4,7 @@ import { withKnobs, boolean, select } from "@storybook/addon-knobs"
 import React from "react"
 import { Button, Spinner } from ".."
 import { RootContainer } from "../Storybook"
-import { Modal, ModalBody, ModalFooter, ModalSize } from "."
+import { Modal, ModalAlert, ModalBody, ModalFooter, ModalSize } from "."
 
 export default {
   title: "UI/Modal",
@@ -13,25 +13,49 @@ export default {
 
 const { close, button } = actions({ close: "close modal", button: "click button" })
 
-const size = () => select(
-  "Size",
-  {
-    Default: ModalSize.DEFAULT,
-    Small: ModalSize.SMALL,
-    Large: ModalSize.LARGE,
-    "Extra large": ModalSize.EXTRA_LARGE,
-  },
-  ModalSize.DEFAULT
-)
-const resistant = () => boolean(
-  "Resistant", false
-)
+const size = () =>
+  select(
+    "Size",
+    {
+      Default: ModalSize.DEFAULT,
+      Small: ModalSize.SMALL,
+      Large: ModalSize.LARGE,
+      "Extra large": ModalSize.EXTRA_LARGE,
+    },
+    ModalSize.DEFAULT
+  )
+const alert = () => boolean("Display alert", false)
+const alertAppearance = () =>
+  select(
+    "Alert appearance",
+    {
+      Primary: "primary",
+      Secondary: "secondary",
+      Success: "success",
+      Danger: "danger",
+      Warning: "warning",
+      Info: "info",
+    },
+    "danger"
+  )
+const resistant = () => boolean("Resistant", false)
 
 export const Basic = () => {
   return (
     <I18nProvider language="en">
       <RootContainer>
-        <Modal close={close} isOpen={true} resistant={resistant()} size={size()} title="Basic modal">
+        <Modal
+          close={close}
+          isOpen={true}
+          resistant={resistant()}
+          size={size()}
+          title="Basic modal"
+        >
+          {alert() && (
+            <ModalAlert appearance={alertAppearance()}>
+              Ut malesuada interdum massa in ultrices.
+            </ModalAlert>
+          )}
           <ModalBody>
             <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
           </ModalBody>
@@ -45,7 +69,18 @@ export const Complex = () => {
   return (
     <I18nProvider language="en">
       <RootContainer>
-        <Modal close={close} isOpen={true} resistant={resistant()} size={size()} title="Basic modal">
+        <Modal
+          close={close}
+          isOpen={true}
+          resistant={resistant()}
+          size={size()}
+          title="Basic modal"
+        >
+          {alert() && (
+            <ModalAlert appearance={alertAppearance()}>
+              Ut malesuada interdum massa in ultrices.
+            </ModalAlert>
+          )}
           <ModalBody>
             <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
           </ModalBody>

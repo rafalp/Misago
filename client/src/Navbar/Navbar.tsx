@@ -1,5 +1,5 @@
-import { I18n } from "@lingui/react"
 import { t } from "@lingui/macro"
+import { I18n } from "@lingui/react"
 import React from "react"
 import { Link } from "react-router-dom"
 import { Button } from "../UI"
