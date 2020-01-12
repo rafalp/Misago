@@ -2,7 +2,12 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import React from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import { AuthModalProvider, AuthContext, CategoriesContext, SettingsContext } from "../Context"
+import {
+  AuthModalProvider,
+  AuthContext,
+  CategoriesContext,
+  SettingsContext,
+} from "../Context"
 import { ICategory, ISettings, IUser } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
@@ -55,7 +60,11 @@ const App: React.FC = () => {
   if (loading) return <AppLoader />
   if (error) return <AppError />
 
-  const { auth, categories, settings } = data || { auth: null, categories: [], settings: null }
+  const { auth, categories, settings } = data || {
+    auth: null,
+    categories: [],
+    settings: null,
+  }
 
   return (
     <AppErrorBoundary>

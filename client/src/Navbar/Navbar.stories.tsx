@@ -8,7 +8,10 @@ export default {
   title: "Layout/Navbar",
 }
 
-const navbarActions = actions({ openLogin: "open login", openRegister: "open register" })
+const navbarActions = actions({
+  openLogin: "open login",
+  openRegister: "open register",
+})
 const avatarSizes: Array<number> = [400, 200, 150, 100, 64, 50, 30]
 
 const getAvatars = (): Array<IAvatar> => {

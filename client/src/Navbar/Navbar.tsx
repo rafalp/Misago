@@ -7,7 +7,9 @@ import { Button } from "../UI"
 import { INavbarProps } from "./Navbar.types"
 
 const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
-  const { openLoginModal, openRegisterModal } = React.useContext(AuthModalContext)
+  const { openLoginModal, openRegisterModal } = React.useContext(
+    AuthModalContext
+  )
 
   if (!settings) return null
 
@@ -27,10 +29,16 @@ const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
             ) : (
               <div className="row">
                 <div className="col">
-                  <Button text={i18n._(t("btn.login")`Log in`)} onClick={openLoginModal} />
+                  <Button
+                    text={i18n._(t("btn.login")`Log in`)}
+                    onClick={openLoginModal}
+                  />
                 </div>
                 <div className="col">
-                  <Button text={i18n._(t("btn.register")`Register`)} onClick={openRegisterModal} />
+                  <Button
+                    text={i18n._(t("btn.register")`Register`)}
+                    onClick={openRegisterModal}
+                  />
                 </div>
               </div>
             )}

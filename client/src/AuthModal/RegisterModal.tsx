@@ -64,11 +64,14 @@ interface IRegisterModalProps {
   closeModal: () => void
 }
 
-const RegisterModal: React.FC<IRegisterModalProps> = ({ settings, closeModal }) => {
-  const [register, { data, error: graphqlError }] = useMutation<IRegisterData, IRegisterInput>(
-    REGISTER,
-    { errorPolicy: "all" }
-  )
+const RegisterModal: React.FC<IRegisterModalProps> = ({
+  settings,
+  closeModal,
+}) => {
+  const [register, { data, error: graphqlError }] = useMutation<
+    IRegisterData,
+    IRegisterInput
+  >(REGISTER, { errorPolicy: "all" })
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string()
@@ -87,7 +90,10 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ settings, closeModal }) 
 
   return (
     <>
-      <ModalHeader title={<Trans id="register.title">Register</Trans>} close={closeModal} />
+      <ModalHeader
+        title={<Trans id="register.title">Register</Trans>}
+        close={closeModal}
+      />
       <Formik<IRegisterValues>
         initialValues={{ name: "", email: "", password: "" }}
         validationSchema={RegisterSchema}
@@ -103,7 +109,10 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ settings, closeModal }) 
       >
         {({ isSubmitting }) => (
           <Form>
-            <RootError graphqlError={graphqlError} dataErrors={data?.register.errors}>
+            <RootError
+              graphqlError={graphqlError}
+              dataErrors={data?.register.errors}
+            >
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>
             <ModalFormBody>
@@ -138,7 +147,12 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({ settings, closeModal }) 
                 id="register_password"
                 label={<Trans>Password:</Trans>}
                 name="password"
-                input={<Input maxLength={settings.passwordMaxLength} type="password" />}
+                input={
+                  <Input
+                    maxLength={settings.passwordMaxLength}
+                    type="password"
+                  />
+                }
                 error={(error, value) => (
                   <PasswordValidationError
                     error={error}

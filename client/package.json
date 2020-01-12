@@ -73,7 +73,7 @@
     "extends": "react-app"
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 79,
     "trailingComma": "es5",
     "tabWidth": 2,
     "semi": false,

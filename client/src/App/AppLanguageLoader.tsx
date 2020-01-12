@@ -8,7 +8,10 @@ interface IAppLanguageLoaderProps {
   language: string
 }
 
-const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({ children, language }) => {
+const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({
+  children,
+  language,
+}) => {
   const [catalogs, setCatalogs] = React.useState<Catalogs>({})
 
   React.useEffect(() => {

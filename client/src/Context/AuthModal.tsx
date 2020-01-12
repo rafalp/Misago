@@ -16,7 +16,9 @@ interface IAuthModalProviderProps {
   children: React.ReactNode
 }
 
-const AuthModalProvider: React.FC<IAuthModalProviderProps> = ({ children }) => {
+const AuthModalProvider: React.FC<IAuthModalProviderProps> = ({
+  children,
+}) => {
   const [mode, setMode] = React.useState<AuthModalMode>(AuthModalMode.REGISTER)
   const { isOpen, closeModal, openModal } = useModalState()
 
