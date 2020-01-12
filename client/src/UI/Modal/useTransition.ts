@@ -1,8 +1,8 @@
 import React from "react"
 
 const useTransition = (open: boolean) => {
-  const [display, setDisplay] = React.useState(false)
-  const [fade, setFade] = React.useState(false)
+  const [display, setDisplay] = React.useState(open)
+  const [fade, setFade] = React.useState(open)
 
   React.useEffect(() => {
     if (open) {

@@ -2,10 +2,13 @@ import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import { Link } from "react-router-dom"
+import { AuthModalContext } from "../Context"
 import { Button } from "../UI"
 import { INavbarProps } from "./Navbar.types"
 
-const Navbar: React.FC<INavbarProps> = ({ openRegister, settings, user }) => {
+const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
+  const { openLoginModal, openRegisterModal } = React.useContext(AuthModalContext)
+
   if (!settings) return null
 
   return (
@@ -24,10 +27,10 @@ const Navbar: React.FC<INavbarProps> = ({ openRegister, settings, user }) => {
             ) : (
               <div className="row">
                 <div className="col">
-                  <Button text={i18n._(t("btn.login")`Log in`)} />
+                  <Button text={i18n._(t("btn.login")`Log in`)} onClick={openLoginModal} />
                 </div>
                 <div className="col">
-                  <Button text={i18n._(t("btn.register")`Register`)} onClick={openRegister} />
+                  <Button text={i18n._(t("btn.register")`Register`)} onClick={openRegisterModal} />
                 </div>
               </div>
             )}

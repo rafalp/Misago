@@ -7,9 +7,9 @@ interface IModalState {
 }
 
 const useModalState = (): IModalState => {
-  const [isOpen, updateOpen] = React.useState(false)
-  const openModal = () => updateOpen(true)
-  const closeModal = () => updateOpen(false)
+  const [isOpen, setState] = React.useState(false)
+  const openModal = () => setState(true)
+  const closeModal = () => setState(false)
   return { isOpen, openModal, closeModal }
 }
 

@@ -2,13 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import React from "react"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import {
-  AuthProvider,
-  CategoriesProvider,
-  RegisterModalProvider,
-  SettingsProvider,
-} from "../contexts"
-import { useModalState } from "../hooks"
+import { AuthModalProvider, AuthContext, CategoriesContext, SettingsContext } from "../Context"
 import { ICategory, ISettings, IUser } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
@@ -54,10 +48,9 @@ interface IInitialData {
 }
 
 const Navbar = React.lazy(() => import("../Navbar"))
-const RegisterModal = React.lazy(() => import("../RegisterModal"))
+const AuthModal = React.lazy(() => import("../AuthModal"))
 
 const App: React.FC = () => {
-  const registerModal = useModalState()
   const { loading, data, error } = useQuery<IInitialData>(INITIAL_DATA)
   if (loading) return <AppLoader />
   if (error) return <AppError />
@@ -67,17 +60,13 @@ const App: React.FC = () => {
   return (
     <AppErrorBoundary>
       <AppLanguageLoader language="en">
-        <AuthProvider value={auth}>
-          <CategoriesProvider value={categories}>
-            <SettingsProvider value={settings}>
-              <RegisterModalProvider value={registerModal}>
+        <AuthContext.Provider value={auth}>
+          <CategoriesContext.Provider value={categories}>
+            <SettingsContext.Provider value={settings}>
+              <AuthModalProvider>
                 <Router>
                   <React.Suspense fallback={<div />}>
-                    <Navbar
-                      settings={settings}
-                      user={auth}
-                      openRegister={registerModal.openModal}
-                    />
+                    <Navbar settings={settings} user={auth} />
                   </React.Suspense>
                   <Switch>
                     <Route path="/">
@@ -85,17 +74,13 @@ const App: React.FC = () => {
                     </Route>
                   </Switch>
                   <React.Suspense fallback={<div />}>
-                    <RegisterModal
-                      closeModal={registerModal.closeModal}
-                      isOpen={registerModal.isOpen}
-                      settings={settings}
-                    />
+                    <AuthModal settings={settings} />
                   </React.Suspense>
                 </Router>
-              </RegisterModalProvider>
-            </SettingsProvider>
-          </CategoriesProvider>
-        </AuthProvider>
+              </AuthModalProvider>
+            </SettingsContext.Provider>
+          </CategoriesContext.Provider>
+        </AuthContext.Provider>
       </AppLanguageLoader>
     </AppErrorBoundary>
   )

@@ -1,7 +1,6 @@
 import { IAvatar } from "../types"
 
 export interface INavbarProps {
-  openRegister: () => void
   settings?: INavbarSettingsProp | null
   user?: INavbarUserProp | null
 }

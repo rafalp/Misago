@@ -39,8 +39,17 @@ export interface ISettings {
   usernameMaxLength: number
 }
 
-export interface IRegisterModalContext {
+export enum AuthModalMode {
+  LOGIN,
+  REGISTER,
+}
+
+export interface IAuthModalContext {
   isOpen: boolean
-  openModal: () => void
+  mode: AuthModalMode
   closeModal: () => void
+  showLoginForm: () => void
+  showRegisterForm: () => void
+  openLoginModal: () => void
+  openRegisterModal: () => void
 }

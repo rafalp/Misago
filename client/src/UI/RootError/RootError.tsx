@@ -4,34 +4,34 @@ import React from "react"
 import { ApolloError } from "apollo-client"
 import { IMutationError } from "../../types"
 
-interface ICombinedError {
+interface IRootError {
   message: React.ReactNode
   type: string
 }
 
-interface ICombinedErrorProps {
-  children: (error: ICombinedError) => React.ReactElement
-  clientError?: ApolloError | null
-  graphqlErrors?: Array<IMutationError> | null
+interface IRootErrorProps {
+  children: (error: IRootError) => React.ReactNode
+  dataErrors?: Array<IMutationError> | null
+  graphqlError?: ApolloError | null
   locations?: Array<string> | null
   messages?: {
     [type: string]: React.ReactNode
   }
 }
 
-const CombinedError: React.FC<ICombinedErrorProps> = ({
+const RootError: React.FC<IRootErrorProps> = ({
   children,
-  clientError,
-  graphqlErrors,
+  dataErrors,
+  graphqlError,
   locations,
   messages,
 }) => (
   <I18n>
     {({ i18n }) => {
       const errors: Array<IMutationError> = []
-      if (clientError) {
+      if (graphqlError) {
         console.log()
-        if (clientError.networkError) {
+        if (graphqlError.networkError) {
           errors.push({
             location: ["__root__"],
             type: "client_error.network",
@@ -46,7 +46,7 @@ const CombinedError: React.FC<ICombinedErrorProps> = ({
         }
       }
 
-      if (graphqlErrors) errors.push(...graphqlErrors)
+      if (dataErrors) errors.push(...dataErrors)
       if (!errors.length) return null
 
       const finLocations: Array<string> = locations || ["__root__"]
@@ -67,4 +67,4 @@ const CombinedError: React.FC<ICombinedErrorProps> = ({
   </I18n>
 )
 
-export default CombinedError
+export default RootError

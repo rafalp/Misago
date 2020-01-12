@@ -4,7 +4,7 @@ import { withKnobs, boolean, select } from "@storybook/addon-knobs"
 import React from "react"
 import { Button, Spinner } from ".."
 import { RootContainer } from "../Storybook"
-import { Modal, ModalAlert, ModalBody, ModalFooter, ModalSize } from "."
+import { Modal, ModalAlert, ModalBody, ModalFooter, ModalFormBody, ModalSize } from "."
 
 export default {
   title: "UI/Modal",
@@ -84,6 +84,36 @@ export const Complex = () => {
           <ModalBody>
             <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
           </ModalBody>
+          <ModalFooter>
+            <Spinner small />
+            <Button text="Ok" type="primary" onClick={button} />
+            <Button text="Cancel" type="secondary" onClick={button} />
+          </ModalFooter>
+        </Modal>
+      </RootContainer>
+    </I18nProvider>
+  )
+}
+
+export const Form = () => {
+  return (
+    <I18nProvider language="en">
+      <RootContainer>
+        <Modal
+          close={close}
+          isOpen={true}
+          resistant={resistant()}
+          size={size()}
+          title="Form modal"
+        >
+          {alert() && (
+            <ModalAlert appearance={alertAppearance()}>
+              Ut malesuada interdum massa in ultrices.
+            </ModalAlert>
+          )}
+          <ModalFormBody>
+            Here
+          </ModalFormBody>
           <ModalFooter>
             <Spinner small />
             <Button text="Ok" type="primary" onClick={button} />

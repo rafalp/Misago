@@ -1,7 +1,7 @@
 import { Catalogs } from "@lingui/core"
 import { I18nProvider } from "@lingui/react"
 import React from "react"
-import RootLoader from "../RootLoader"
+import AppLoader from "./AppLoader"
 
 interface IAppLanguageLoaderProps {
   children: React.ReactNode
@@ -22,7 +22,7 @@ const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({ children, langua
     })
   }, [language])
 
-  if (!catalogs[language]) return <RootLoader />
+  if (!catalogs[language]) return <AppLoader />
   return (
     <I18nProvider language={language} catalogs={catalogs}>
       {children}
