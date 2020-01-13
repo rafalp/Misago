@@ -1,0 +1,6 @@
+/* Add shadow to card wrapper */
+.card {
+  @include shadow-1;
+
+  border: 0;
+}

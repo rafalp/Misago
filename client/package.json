@@ -47,7 +47,7 @@
     "add-locale": "lingui add-locale",
     "extract": "lingui extract",
     "compile": "lingui compile",
-    "prettier": "prettier src/**/*.{ts,tsx} --write"
+    "prettier": "prettier src/**/*.{ts,tsx,scss} --write"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",
