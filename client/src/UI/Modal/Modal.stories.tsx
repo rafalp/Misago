@@ -4,14 +4,25 @@ import { withKnobs, boolean, select } from "@storybook/addon-knobs"
 import React from "react"
 import { Button, Spinner } from ".."
 import { RootContainer } from "../Storybook"
-import { Modal, ModalAlert, ModalBody, ModalFooter, ModalFormBody, ModalSize } from "."
+import {
+  Modal,
+  ModalAlert,
+  ModalBody,
+  ModalDialog,
+  ModalFooter,
+  ModalFormBody,
+  ModalSize,
+} from "."
 
 export default {
   title: "UI/Modal",
   decorators: [withKnobs],
 }
 
-const { close, button } = actions({ close: "close modal", button: "click button" })
+const { close, button } = actions({
+  close: "close modal",
+  button: "click button",
+})
 
 const size = () =>
   select(
@@ -44,21 +55,17 @@ export const Basic = () => {
   return (
     <I18nProvider language="en">
       <RootContainer>
-        <Modal
-          close={close}
-          isOpen={true}
-          resistant={resistant()}
-          size={size()}
-          title="Basic modal"
-        >
-          {alert() && (
-            <ModalAlert appearance={alertAppearance()}>
-              Ut malesuada interdum massa in ultrices.
-            </ModalAlert>
-          )}
-          <ModalBody>
-            <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
-          </ModalBody>
+        <Modal close={close} isOpen={true} resistant={resistant()}>
+          <ModalDialog close={close} size={size()} title="Basic modal">
+            {alert() && (
+              <ModalAlert appearance={alertAppearance()}>
+                Ut malesuada interdum massa in ultrices.
+              </ModalAlert>
+            )}
+            <ModalBody>
+              <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
+            </ModalBody>
+          </ModalDialog>
         </Modal>
       </RootContainer>
     </I18nProvider>
@@ -69,26 +76,22 @@ export const Complex = () => {
   return (
     <I18nProvider language="en">
       <RootContainer>
-        <Modal
-          close={close}
-          isOpen={true}
-          resistant={resistant()}
-          size={size()}
-          title="Basic modal"
-        >
-          {alert() && (
-            <ModalAlert appearance={alertAppearance()}>
-              Ut malesuada interdum massa in ultrices.
-            </ModalAlert>
-          )}
-          <ModalBody>
-            <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
-          </ModalBody>
-          <ModalFooter>
-            <Spinner small />
-            <Button text="Ok" type="primary" onClick={button} />
-            <Button text="Cancel" type="secondary" onClick={button} />
-          </ModalFooter>
+        <Modal close={close} isOpen={true} resistant={resistant()}>
+          <ModalDialog close={close} size={size()} title="Complex modal">
+            {alert() && (
+              <ModalAlert appearance={alertAppearance()}>
+                Ut malesuada interdum massa in ultrices.
+              </ModalAlert>
+            )}
+            <ModalBody>
+              <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
+            </ModalBody>
+            <ModalFooter>
+              <Spinner small />
+              <Button text="Ok" type="primary" onClick={button} />
+              <Button text="Cancel" type="secondary" onClick={button} />
+            </ModalFooter>
+          </ModalDialog>
         </Modal>
       </RootContainer>
     </I18nProvider>
@@ -99,26 +102,20 @@ export const Form = () => {
   return (
     <I18nProvider language="en">
       <RootContainer>
-        <Modal
-          close={close}
-          isOpen={true}
-          resistant={resistant()}
-          size={size()}
-          title="Form modal"
-        >
-          {alert() && (
-            <ModalAlert appearance={alertAppearance()}>
-              Ut malesuada interdum massa in ultrices.
-            </ModalAlert>
-          )}
-          <ModalFormBody>
-            Here
-          </ModalFormBody>
-          <ModalFooter>
-            <Spinner small />
-            <Button text="Ok" type="primary" onClick={button} />
-            <Button text="Cancel" type="secondary" onClick={button} />
-          </ModalFooter>
+        <Modal close={close} isOpen={true} resistant={resistant()}>
+          <ModalDialog close={close} size={size()} title="Form modal">
+            {alert() && (
+              <ModalAlert appearance={alertAppearance()}>
+                Ut malesuada interdum massa in ultrices.
+              </ModalAlert>
+            )}
+            <ModalFormBody>Here</ModalFormBody>
+            <ModalFooter>
+              <Spinner small />
+              <Button text="Ok" type="primary" onClick={button} />
+              <Button text="Cancel" type="secondary" onClick={button} />
+            </ModalFooter>
+          </ModalDialog>
         </Modal>
       </RootContainer>
     </I18nProvider>

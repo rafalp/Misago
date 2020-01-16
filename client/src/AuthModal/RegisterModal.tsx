@@ -12,6 +12,7 @@ import {
   FormField,
   Input,
   ModalAlert,
+  ModalDialog,
   ModalFooter,
   ModalFormBody,
   ModalHeader,
@@ -89,7 +90,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
   })
 
   return (
-    <>
+    <ModalDialog className="modal-dialog-auth modal-dialog-register">
       <ModalHeader
         title={<Trans id="register.title">Register</Trans>}
         close={closeModal}
@@ -175,7 +176,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           </Form>
         )}
       </Formik>
-    </>
+    </ModalDialog>
   )
 }
 

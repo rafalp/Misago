@@ -1,4 +1,3 @@
-import classNames from "classnames"
 import React from "react"
 import ReactDOM from "react-dom"
 import { AuthModalContext } from "../Context"
@@ -19,15 +18,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ settings }) => {
   const root = modalsRoot
 
   return ReactDOM.createPortal(
-    <Modal
-      className={classNames("modal-auth", {
-        "modal-register": AuthModalMode.REGISTER,
-        "modal-login": AuthModalMode.LOGIN,
-      })}
-      close={closeModal}
-      isOpen={isOpen}
-      resistant
-    >
+    <Modal close={closeModal} isOpen={isOpen} resistant>
       {mode === AuthModalMode.REGISTER && (
         <RegisterModal settings={settings} closeModal={closeModal} />
       )}

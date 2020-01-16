@@ -12,13 +12,30 @@ interface IFormFieldProps {
   name: string
 }
 
-const FormField: React.FC<IFormFieldProps> = ({ id, input, label, name, error }) => {
-  const { isSubmitting: disabled } = useFormikContext()
-  const [{ value, onBlur, onChange }, { error: fieldError, touched }] = useField(name)
+const FormField: React.FC<IFormFieldProps> = ({
+  id,
+  input,
+  label,
+  name,
+  error,
+}) => {
+  const { isSubmitting } = useFormikContext()
+  const [
+    { value, onBlur, onChange },
+    { error: fieldError, touched },
+  ] = useField(name)
 
   return (
     <FormFieldContext.Provider
-      value={{ id, name, disabled, value, onBlur, onChange, valid: touched && fieldError ? false : null }}
+      value={{
+        id,
+        name,
+        value,
+        onBlur,
+        onChange,
+        disabled: isSubmitting,
+        valid: touched && fieldError ? false : null,
+      }}
     >
       <FormGroup>
         <FieldLabel htmlFor={id}>{label}</FieldLabel>
