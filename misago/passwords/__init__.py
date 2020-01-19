@@ -14,9 +14,9 @@ __all__ = [
 
 if settings.test:
     # Use plaintext to keep tests suite fast
-    password_hasher = PasswordHasher(plaintext)
+    password_hasher = PasswordHasher([plaintext])
 else:
-    password_hasher = PasswordHasher(pbkdf2_sha256, django_pbkdf2_sha256)
+    password_hasher = PasswordHasher([pbkdf2_sha256, django_pbkdf2_sha256])
 
 
 hash_password = password_hasher.hash_password

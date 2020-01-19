@@ -1,21 +1,38 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { CardContainer, Gallery, RootContainer } from "../Storybook"
-import Button from "."
+import Button, { ButtonType } from "."
 
 export default {
   title: "UI/Button",
   decorators: [withKnobs],
 }
 
-const types = ["primary", "secondary", "success", "warning", "danger", "link"]
+const blockKnob = () => boolean("Block", false)
+const disabledKnob = () => boolean("Disabled", false)
+const types = [
+  ButtonType.PRIMARY,
+  ButtonType.SECONDARY,
+  ButtonType.SUCCESS,
+  ButtonType.WARNING,
+  ButtonType.DANGER,
+  ButtonType.LINK,
+]
 
 export const TextOnly = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
-    component: <Button text="Lorem ipsum" type={type} disabled={disabled} />,
+    component: (
+      <Button
+        block={block}
+        text="Lorem ipsum"
+        type={type}
+        disabled={disabled}
+      />
+    ),
   }))
 
   return (
@@ -31,11 +48,19 @@ export const TextOnly = () => {
 }
 
 export const IconOnly = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
-    component: <Button icon={"comment-alt"} type={type} disabled={disabled} />,
+    component: (
+      <Button
+        block={block}
+        icon={"comment-alt"}
+        type={type}
+        disabled={disabled}
+      />
+    ),
   }))
 
   return (
@@ -51,12 +76,19 @@ export const IconOnly = () => {
 }
 
 export const IconAndText = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
     component: (
-      <Button icon={"comment-alt"} text="Start thread" type={type} disabled={disabled} />
+      <Button
+        block={block}
+        icon={"comment-alt"}
+        text="Start thread"
+        type={type}
+        disabled={disabled}
+      />
     ),
   }))
 
@@ -72,11 +104,20 @@ export const IconAndText = () => {
   )
 }
 export const OutlineTextOnly = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
-    component: <Button text="Lorem ipsum" type={type} disabled={disabled} outline />,
+    component: (
+      <Button
+        block={block}
+        text="Lorem ipsum"
+        type={type}
+        disabled={disabled}
+        outline
+      />
+    ),
   }))
 
   return (
@@ -92,11 +133,20 @@ export const OutlineTextOnly = () => {
 }
 
 export const OutlineIconOnly = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
-    component: <Button icon={"comment-alt"} type={type} disabled={disabled} outline />,
+    component: (
+      <Button
+        block={block}
+        icon={"comment-alt"}
+        type={type}
+        disabled={disabled}
+        outline
+      />
+    ),
   }))
 
   return (
@@ -112,12 +162,20 @@ export const OutlineIconOnly = () => {
 }
 
 export const OutlineIconAndText = () => {
-  const disabled = boolean("Disabled", false)
+  const block = blockKnob()
+  const disabled = disabledKnob()
 
   const items = types.map(type => ({
     name: type,
     component: (
-      <Button icon={"comment-alt"} text="Start thread" type={type} disabled={disabled} outline />
+      <Button
+        block={block}
+        icon={"comment-alt"}
+        text="Start thread"
+        type={type}
+        disabled={disabled}
+        outline
+      />
     ),
   }))
 

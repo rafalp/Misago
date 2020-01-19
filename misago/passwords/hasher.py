@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 
 from asgiref.sync import sync_to_async
 from passlib.utils.handlers import GenericHandler
@@ -7,8 +7,8 @@ from passlib.utils.handlers import GenericHandler
 class PasswordHasher:
     _hashers: List[GenericHandler]
 
-    def __init__(self, *hashers: Tuple[GenericHandler]):
-        self._hashers = list(hashers)
+    def __init__(self, hashers: List[GenericHandler]):
+        self._hashers = hashers
 
     def add_hasher(self, hasher: GenericHandler):
         self._hashers.insert(0, hasher)
@@ -36,4 +36,7 @@ def _hash_password(hasher: GenericHandler, password: str) -> str:
 
 @sync_to_async
 def _verify_password(hasher: GenericHandler, password: str, password_hash: str) -> bool:
-    return hasher.verify(password, password_hash)
+    try:
+        return hasher.verify(password, password_hash)
+    except ValueError:  # some passlib hashers raise ValueError on incompatible hash
+        return False

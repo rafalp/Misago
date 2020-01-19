@@ -4,9 +4,11 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { AuthModalContext } from "../Context"
 import { Button } from "../UI"
+import { useAuth } from "../auth"
 import { INavbarProps } from "./Navbar.types"
 
 const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
+  const { logout } = useAuth()
   const { openLoginModal, openRegisterModal } = React.useContext(
     AuthModalContext
   )
@@ -22,21 +24,34 @@ const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
               {settings.forumName}
             </Link>
             {user ? (
-              <div>
-                <img src={user.avatars[0].url} width="40" height="40" alt="" />
-                {`Hello, ${user.name}`}
+              <div className="row">
+                <div className="col-auto">
+                  <img
+                    src={user.avatars[0].url}
+                    width="32"
+                    height="32"
+                    alt=""
+                  />
+                  {`Hello, ${user.name}`}
+                </div>
+                <div className="col-auto">
+                  <Button
+                    text={i18n._(t("navbar.logout")`Log out`)}
+                    onClick={logout}
+                  />
+                </div>
               </div>
             ) : (
               <div className="row">
-                <div className="col">
+                <div className="col-auto">
                   <Button
-                    text={i18n._(t("btn.login")`Log in`)}
+                    text={i18n._(t("navbar.login")`Log in`)}
                     onClick={openLoginModal}
                   />
                 </div>
-                <div className="col">
+                <div className="col-auto">
                   <Button
-                    text={i18n._(t("btn.register")`Register`)}
+                    text={i18n._(t("navbar.register")`Sign on`)}
                     onClick={openRegisterModal}
                   />
                 </div>

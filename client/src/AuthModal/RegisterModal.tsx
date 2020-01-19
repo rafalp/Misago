@@ -6,6 +6,7 @@ import React from "react"
 import * as Yup from "yup"
 import {
   Button,
+  ButtonType,
   RootError,
   EmailValidationError,
   FieldError,
@@ -17,10 +18,10 @@ import {
   ModalFormBody,
   ModalHeader,
   PasswordValidationError,
-  Spinner,
   UsernameValidationError,
 } from "../UI"
-import { IMutationError, ISettings } from "../types"
+import { useAuth } from "../auth"
+import { IMutationError } from "../types"
 
 const REGISTER = gql`
   mutation Register($input: RegisterInput!) {
@@ -60,15 +61,25 @@ interface IRegisterInput {
   input: IRegisterValues
 }
 
+interface ISettings {
+  passwordMinLength: number
+  passwordMaxLength: number
+  usernameMinLength: number
+  usernameMaxLength: number
+}
+
 interface IRegisterModalProps {
   settings: ISettings
-  closeModal: () => void
+  close: () => void
+  showLogin: () => void
 }
 
 const RegisterModal: React.FC<IRegisterModalProps> = ({
   settings,
-  closeModal,
+  close,
+  showLogin,
 }) => {
+  const { login } = useAuth()
   const [register, { data, error: graphqlError }] = useMutation<
     IRegisterData,
     IRegisterInput
@@ -90,22 +101,31 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
   })
 
   return (
-    <ModalDialog className="modal-dialog-auth modal-dialog-register">
+    <ModalDialog
+      className="modal-dialog-auth modal-dialog-register"
+      size="small"
+    >
       <ModalHeader
-        title={<Trans id="register.title">Register</Trans>}
-        close={closeModal}
+        title={<Trans id="register.title">Sign up</Trans>}
+        close={close}
       />
       <Formik<IRegisterValues>
         initialValues={{ name: "", email: "", password: "" }}
         validationSchema={RegisterSchema}
         onSubmit={async (input, { setFieldError, setSubmitting }) => {
           const data = await register({ variables: { input } })
-          const errors = data.data?.register?.errors
+          const { errors, token, user } = data.data?.register || {}
+          setSubmitting(false)
+
           errors?.forEach(({ location, type }) => {
             const field = location.join(".")
             setFieldError(field, type)
           })
-          setSubmitting(false)
+
+          if (token && user) {
+            login(token, user)
+            close()
+          }
         }}
       >
         {({ isSubmitting }) => (
@@ -119,7 +139,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
             <ModalFormBody>
               <FormField
                 id="register_name"
-                label={<Trans>User name:</Trans>}
+                label={<Trans id="input.name">User name</Trans>}
                 name="name"
                 input={<Input maxLength={settings.usernameMaxLength} />}
                 error={(error, value) => (
@@ -135,7 +155,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
               />
               <FormField
                 id="register_email"
-                label={<Trans>E-mail:</Trans>}
+                label={<Trans id="input.email">E-mail</Trans>}
                 name="email"
                 input={<Input maxLength={100} type="email" />}
                 error={error => (
@@ -146,7 +166,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
               />
               <FormField
                 id="register_password"
-                label={<Trans>Password:</Trans>}
+                label={<Trans id="input.password">Password</Trans>}
                 name="password"
                 input={
                   <Input
@@ -167,10 +187,21 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
               />
             </ModalFormBody>
             <ModalFooter>
-              {isSubmitting && <Spinner small />}
               <Button
                 disabled={isSubmitting}
-                text={<Trans id="register.submit">Register account</Trans>}
+                text={<Trans id="register.submit">Sign up</Trans>}
+                block
+              />
+              <Button
+                disabled={isSubmitting}
+                text={
+                  <Trans id="register.login">
+                    Already a member? <strong>Log in</strong>
+                  </Trans>
+                }
+                type={ButtonType.LINK}
+                block
+                onClick={showLogin}
               />
             </ModalFooter>
           </Form>

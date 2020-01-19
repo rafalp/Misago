@@ -27,7 +27,7 @@ async def test_invalid_password_hash_fails_verification():
 
 @pytest.mark.asyncio
 async def test_new_default_password_hasher_can_be_added_after_initialization():
-    hasher = PasswordHasher(plaintext)
+    hasher = PasswordHasher([plaintext])
     hasher.add_hasher(pbkdf2_sha256)
 
     password_hash = await hasher.hash_password(PASSWORD)
@@ -36,7 +36,7 @@ async def test_new_default_password_hasher_can_be_added_after_initialization():
 
 @pytest.mark.asyncio
 async def test_new_deprecated_password_hasher_can_be_added_after_initialization():
-    hasher = PasswordHasher(pbkdf2_sha256)
+    hasher = PasswordHasher([pbkdf2_sha256])
     hasher.add_deprecated_hasher(plaintext)
 
     password_hash = await hasher.hash_password(PASSWORD)
@@ -45,7 +45,7 @@ async def test_new_deprecated_password_hasher_can_be_added_after_initialization(
 
 @pytest.mark.asyncio
 async def test_deprecated_password_hash_is_verified():
-    hasher = PasswordHasher(plaintext)
+    hasher = PasswordHasher([plaintext])
     password_hash = await hasher.hash_password(PASSWORD)
 
     hasher.add_hasher(pbkdf2_sha256)
@@ -54,7 +54,7 @@ async def test_deprecated_password_hash_is_verified():
 
 @pytest.mark.asyncio
 async def test_deprecated_password_hash_is_detected_as_outdated():
-    hasher = PasswordHasher(plaintext)
+    hasher = PasswordHasher([plaintext])
     password_hash = await hasher.hash_password(PASSWORD)
     hasher.add_hasher(pbkdf2_sha256)
     assert await password_hasher.is_password_outdated(PASSWORD, password_hash)
@@ -62,7 +62,7 @@ async def test_deprecated_password_hash_is_detected_as_outdated():
 
 @pytest.mark.asyncio
 async def test_password_hash_is_detected_as_up_to_date():
-    hasher = PasswordHasher(pbkdf2_sha256)
+    hasher = PasswordHasher([pbkdf2_sha256])
     password_hash = await hasher.hash_password(PASSWORD)
     hasher.add_hasher(plaintext)
     assert not await password_hasher.is_password_outdated(PASSWORD, password_hash)

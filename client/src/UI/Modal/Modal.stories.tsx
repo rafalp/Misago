@@ -2,7 +2,7 @@ import { I18nProvider } from "@lingui/react"
 import { actions } from "@storybook/addon-actions"
 import { withKnobs, boolean, select } from "@storybook/addon-knobs"
 import React from "react"
-import { Button, Spinner } from ".."
+import { Button, ButtonType, Spinner } from ".."
 import { RootContainer } from "../Storybook"
 import {
   Modal,
@@ -11,7 +11,6 @@ import {
   ModalDialog,
   ModalFooter,
   ModalFormBody,
-  ModalSize,
 } from "."
 
 export default {
@@ -28,12 +27,12 @@ const size = () =>
   select(
     "Size",
     {
-      Default: ModalSize.DEFAULT,
-      Small: ModalSize.SMALL,
-      Large: ModalSize.LARGE,
-      "Extra large": ModalSize.EXTRA_LARGE,
+      Default: "default",
+      Small: "small",
+      Large: "large",
+      "Extra large": "extra_large",
     },
-    ModalSize.DEFAULT
+    "default"
   )
 const alert = () => boolean("Display alert", false)
 const alertAppearance = () =>
@@ -88,8 +87,8 @@ export const Complex = () => {
             </ModalBody>
             <ModalFooter>
               <Spinner small />
-              <Button text="Ok" type="primary" onClick={button} />
-              <Button text="Cancel" type="secondary" onClick={button} />
+              <Button text="Ok" onClick={button} />
+              <Button text="Cancel" type={ButtonType.SECONDARY} onClick={button} />
             </ModalFooter>
           </ModalDialog>
         </Modal>
@@ -112,8 +111,8 @@ export const Form = () => {
             <ModalFormBody>Here</ModalFormBody>
             <ModalFooter>
               <Spinner small />
-              <Button text="Ok" type="primary" onClick={button} />
-              <Button text="Cancel" type="secondary" onClick={button} />
+              <Button text="Ok" onClick={button} />
+              <Button text="Cancel" type={ButtonType.SECONDARY} onClick={button} />
             </ModalFooter>
           </ModalDialog>
         </Modal>

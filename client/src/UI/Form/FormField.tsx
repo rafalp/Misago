@@ -5,7 +5,7 @@ import { FieldLabel } from "../Field"
 import FormGroup from "./FormGroup"
 
 interface IFormFieldProps {
-  error: (error: string | null | undefined, value: any) => React.ReactNode
+  error?: (error: string | null | undefined, value: any) => React.ReactNode
   input: React.ReactNode
   id: string
   label: React.ReactNode
@@ -40,7 +40,7 @@ const FormField: React.FC<IFormFieldProps> = ({
       <FormGroup>
         <FieldLabel htmlFor={id}>{label}</FieldLabel>
         {input}
-        {fieldError && error(fieldError, value)}
+        {error && fieldError && error(fieldError, value)}
       </FormGroup>
     </FormFieldContext.Provider>
   )

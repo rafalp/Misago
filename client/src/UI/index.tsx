@@ -1,4 +1,4 @@
-import Button from "./Button"
+import Button, { ButtonType } from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
 import { FieldError, FieldLabel } from "./Field"
 import { FormField, FormGroup, FormRow } from "./Form"
@@ -13,7 +13,6 @@ import {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
-  ModalSize,
   ModalTitle,
 } from "./Modal"
 import RootError from "./RootError"
@@ -27,6 +26,7 @@ import {
 
 export {
   Button,
+  ButtonType,
   Card,
   CardBody,
   CardFooter,
@@ -47,7 +47,6 @@ export {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
-  ModalSize,
   ModalTitle,
   PasswordValidationError,
   RootError,

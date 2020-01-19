@@ -13,6 +13,7 @@ interface IRootErrorProps {
   children: (error: IRootError) => React.ReactNode
   dataErrors?: Array<IMutationError> | null
   graphqlError?: ApolloError | null
+  plainError?: string | null
   locations?: Array<string> | null
   messages?: {
     [type: string]: React.ReactNode
@@ -23,25 +24,30 @@ const RootError: React.FC<IRootErrorProps> = ({
   children,
   dataErrors,
   graphqlError,
+  plainError,
   locations,
   messages,
 }) => (
   <I18n>
     {({ i18n }) => {
+      if (plainError && messages && messages[plainError]) {
+        return children({ type: plainError, message: messages[plainError]})
+      }
+
       const errors: Array<IMutationError> = []
       if (graphqlError) {
-        console.log()
-        if (graphqlError.networkError) {
-          errors.push({
-            location: ["__root__"],
-            type: "client_error.network",
-            message: i18n._(t("client_error.network")`Site server can't be reached.`),
-          })
-        } else {
+        const code = getNetworkErrorCode(graphqlError)
+        if (code === 400 || !graphqlError.networkError) {
           errors.push({
             location: ["__root__"],
             type: "client_error.graphql",
             message: i18n._(t("client_error.graphql")`Unexpected error has occurred.`),
+          })
+        } else if (graphqlError.networkError) {
+          errors.push({
+            location: ["__root__"],
+            type: "client_error.network",
+            message: i18n._(t("client_error.network")`Site server can't be reached.`),
           })
         }
       }
@@ -66,5 +72,11 @@ const RootError: React.FC<IRootErrorProps> = ({
     }}
   </I18n>
 )
+
+const getNetworkErrorCode = (error: ApolloError): number => {
+  if (!error.networkError) return 0;
+  if (!("statusCode" in error.networkError)) return 0;
+  return error.networkError["statusCode"]
+}
 
 export default RootError

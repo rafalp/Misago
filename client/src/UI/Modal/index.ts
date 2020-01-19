@@ -1,6 +1,5 @@
 import Modal from "./Modal"
 import ModalAlert from "./ModalAlert"
-import { ModalSize } from "./Modal.types"
 import ModalBacktrop from "./ModalBacktrop"
 import ModalBody from "./ModalBody"
 import ModalDialog from "./ModalDialog"
@@ -18,6 +17,5 @@ export {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
-  ModalSize,
   ModalTitle,
 }

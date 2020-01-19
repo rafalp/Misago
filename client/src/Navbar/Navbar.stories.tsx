@@ -2,10 +2,11 @@ import { I18nProvider } from "@lingui/react"
 import { actions } from "@storybook/addon-actions"
 import React from "react"
 import Navbar from "."
+import { RootContainer } from "../UI/Storybook"
 import { IAvatar } from "../types"
 
 export default {
-  title: "Layout/Navbar",
+  title: "Navbar",
 }
 
 const navbarActions = actions({
@@ -37,12 +38,16 @@ const user = {
 
 export const Anonymous = () => (
   <I18nProvider language="en">
-    <Navbar settings={settings} user={null} {...navbarActions} />
+    <RootContainer>
+      <Navbar settings={settings} user={null} {...navbarActions} />
+    </RootContainer>
   </I18nProvider>
 )
 
 export const Authenticated = () => (
   <I18nProvider language="en">
-    <Navbar settings={settings} user={user} {...navbarActions} />
+    <RootContainer>
+      <Navbar settings={settings} user={user} {...navbarActions} />
+    </RootContainer>
   </I18nProvider>
 )
