@@ -125,8 +125,14 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
             </ModalFormBody>
             <ModalFooter>
               <Button
-                disabled={isSubmitting}
-                text={<Trans id="login.submit">Log in</Trans>}
+                loading={isSubmitting}
+                text={
+                  isSubmitting ? (
+                    <Trans id="login.submitting">Logging in...</Trans>
+                  ) : (
+                    <Trans id="login.submit">Log in</Trans>
+                  )
+                }
                 block
               />
               <Button

@@ -8,6 +8,7 @@ interface IButtonProps {
   disabled?: boolean
   icon?: string
   iconSolid?: boolean
+  loading?: boolean
   text?: React.ReactNode
   type?: ButtonType
   outline?: boolean
@@ -19,6 +20,7 @@ const Button: React.FC<IButtonProps> = ({
   disabled,
   icon,
   iconSolid,
+  loading,
   text,
   type = ButtonType.PRIMARY,
   outline,
@@ -35,10 +37,15 @@ const Button: React.FC<IButtonProps> = ({
       disabled={disabled}
       onClick={onClick}
     >
-      {icon && <Icon icon={icon} solid={iconSolid} fixedWidth />}
+      {icon && !loading && <Icon icon={icon} solid={iconSolid} fixedWidth />}
+      {loading && <ButtonSpinner />}
       {text && <span>{text}</span>}
     </button>
   )
 }
+
+const ButtonSpinner: React.FC = () => (
+  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+)
 
 export default Button

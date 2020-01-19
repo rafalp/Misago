@@ -1,8 +1,9 @@
 import { I18nProvider } from "@lingui/react"
 import { actions } from "@storybook/addon-actions"
-import { withKnobs, boolean, select } from "@storybook/addon-knobs"
+import { withKnobs, boolean, select, text } from "@storybook/addon-knobs"
+import { Formik, Form } from "formik"
 import React from "react"
-import { Button, ButtonType, Spinner } from ".."
+import { Button, ButtonType, FormField, Input, Spinner } from ".."
 import { RootContainer } from "../Storybook"
 import {
   Modal,
@@ -51,11 +52,13 @@ const alertAppearance = () =>
 const resistant = () => boolean("Resistant", false)
 
 export const Basic = () => {
+  const title = text("Title", "Basic modal")
+
   return (
     <I18nProvider language="en">
       <RootContainer>
         <Modal close={close} isOpen={true} resistant={resistant()}>
-          <ModalDialog close={close} size={size()} title="Basic modal">
+          <ModalDialog close={close} size={size()} title={title}>
             {alert() && (
               <ModalAlert appearance={alertAppearance()}>
                 Ut malesuada interdum massa in ultrices.
@@ -72,11 +75,13 @@ export const Basic = () => {
 }
 
 export const Complex = () => {
+  const title = text("Title", "Complex modal")
+
   return (
     <I18nProvider language="en">
       <RootContainer>
         <Modal close={close} isOpen={true} resistant={resistant()}>
-          <ModalDialog close={close} size={size()} title="Complex modal">
+          <ModalDialog close={close} size={size()} title={title}>
             {alert() && (
               <ModalAlert appearance={alertAppearance()}>
                 Ut malesuada interdum massa in ultrices.
@@ -88,7 +93,11 @@ export const Complex = () => {
             <ModalFooter>
               <Spinner small />
               <Button text="Ok" onClick={button} />
-              <Button text="Cancel" type={ButtonType.SECONDARY} onClick={button} />
+              <Button
+                text="Cancel"
+                type={ButtonType.SECONDARY}
+                onClick={button}
+              />
             </ModalFooter>
           </ModalDialog>
         </Modal>
@@ -97,23 +106,54 @@ export const Complex = () => {
   )
 }
 
-export const Form = () => {
+interface IFormValues {
+  username: string
+  password: string
+}
+
+export const WithForm = () => {
+  const title = text("Title", "Form modal")
+  const btnText = text("Button text", "Submit")
+  const loading = boolean("Loading", false)
+
   return (
     <I18nProvider language="en">
       <RootContainer>
         <Modal close={close} isOpen={true} resistant={resistant()}>
-          <ModalDialog close={close} size={size()} title="Form modal">
-            {alert() && (
-              <ModalAlert appearance={alertAppearance()}>
-                Ut malesuada interdum massa in ultrices.
-              </ModalAlert>
-            )}
-            <ModalFormBody>Here</ModalFormBody>
-            <ModalFooter>
-              <Spinner small />
-              <Button text="Ok" onClick={button} />
-              <Button text="Cancel" type={ButtonType.SECONDARY} onClick={button} />
-            </ModalFooter>
+          <ModalDialog close={close} size={size()} title={title}>
+            <Formik<IFormValues>
+              initialValues={{ username: "Bob", password: "" }}
+              onSubmit={async (_, { setSubmitting }) => {
+                setSubmitting(false)
+              }}
+            >
+              {() => (
+                <Form>
+                  {alert() && (
+                    <ModalAlert appearance={alertAppearance()}>
+                      Ut malesuada interdum massa in ultrices.
+                    </ModalAlert>
+                  )}
+                  <ModalFormBody>
+                    <FormField
+                      id="login_username"
+                      label="User name or e-mail"
+                      name="username"
+                      input={<Input disabled={loading} />}
+                    />
+                    <FormField
+                      id="login_password"
+                      label="Password"
+                      name="password"
+                      input={<Input disabled={loading} type="password" />}
+                    />
+                  </ModalFormBody>
+                  <ModalFooter>
+                    <Button loading={loading} text={btnText} block />
+                  </ModalFooter>
+                </Form>
+              )}
+            </Formik>
           </ModalDialog>
         </Modal>
       </RootContainer>

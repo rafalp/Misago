@@ -1,10 +1,12 @@
 // Insert some space between button's icon and text
 .btn .far + span,
-.btn .fas + span {
+.btn .fas + span,
+.btn .spinner-border + span {
   margin-left: $input-btn-padding-x;
 }
 
 .btn.btn-sm .far + span,
-.btn.btn-sm .fas + span {
+.btn.btn-sm .fas + span,
+.btn.btn-sm .spinner-border + span {
   margin-left: $input-btn-padding-x-sm;
 }

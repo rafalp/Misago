@@ -188,8 +188,14 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
             </ModalFormBody>
             <ModalFooter>
               <Button
-                disabled={isSubmitting}
-                text={<Trans id="register.submit">Sign up</Trans>}
+                loading={isSubmitting}
+                text={
+                  isSubmitting ? (
+                    <Trans id="register.submitting">Signing up...</Trans>
+                  ) : (
+                    <Trans id="register.submit">Sign up</Trans>
+                  )
+                }
                 block
               />
               <Button
