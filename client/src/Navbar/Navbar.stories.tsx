@@ -1,3 +1,4 @@
+import { MockedProvider } from "@apollo/react-testing"
 import { I18nProvider } from "@lingui/react"
 import { actions } from "@storybook/addon-actions"
 import React from "react"
@@ -37,17 +38,21 @@ const user = {
 }
 
 export const Anonymous = () => (
-  <I18nProvider language="en">
-    <RootContainer>
-      <Navbar settings={settings} user={null} {...navbarActions} />
-    </RootContainer>
-  </I18nProvider>
+  <MockedProvider>
+    <I18nProvider language="en">
+      <RootContainer>
+        <Navbar settings={settings} user={null} {...navbarActions} />
+      </RootContainer>
+    </I18nProvider>
+  </MockedProvider>
 )
 
 export const Authenticated = () => (
-  <I18nProvider language="en">
-    <RootContainer>
-      <Navbar settings={settings} user={user} {...navbarActions} />
-    </RootContainer>
-  </I18nProvider>
+  <MockedProvider>
+    <I18nProvider language="en">
+      <RootContainer>
+        <Navbar settings={settings} user={user} {...navbarActions} />
+      </RootContainer>
+    </I18nProvider>
+  </MockedProvider>
 )

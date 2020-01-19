@@ -53,6 +53,7 @@ interface IInitialData {
 }
 
 const Navbar = React.lazy(() => import("../Navbar"))
+const AuthChangedAlert = React.lazy(() => import("../AuthChangedAlert"))
 const AuthModal = React.lazy(() => import("../AuthModal"))
 
 const App: React.FC = () => {
@@ -74,6 +75,9 @@ const App: React.FC = () => {
             <SettingsContext.Provider value={settings}>
               <AuthModalProvider>
                 <Router>
+                  <React.Suspense fallback={<div />}>
+                    <AuthChangedAlert user={auth} />
+                  </React.Suspense>
                   <React.Suspense fallback={<div />}>
                     <Navbar settings={settings} user={auth} />
                   </React.Suspense>

@@ -51,7 +51,7 @@ const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
                 </div>
                 <div className="col-auto">
                   <Button
-                    text={i18n._(t("navbar.register")`Sign on`)}
+                    text={i18n._(t("navbar.register")`Sign up`)}
                     onClick={openRegisterModal}
                   />
                 </div>

@@ -8,7 +8,7 @@ import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"
 
 export default {
-  title: "Auth modal",
+  title: "Auth/Modal",
 }
 
 const { close, showLogin, showRegister } = actions({
