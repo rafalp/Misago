@@ -24,7 +24,7 @@ const AuthChangedLoggedInAlert: React.FC<IAuthChangedLoggedInAlertProps> = ({
             text={
               <Trans id="auth_alert.logged_in.cta">
                 This page was displayed before you've logged in and is no
-                longer accurate. Click this message to update page contents.
+                longer accurate. Click this message to update its contents.
               </Trans>
             }
             type={ButtonType.LINK}
