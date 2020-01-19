@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
+  ModalSize,
 } from "../UI"
 import { useAuth } from "../auth"
 import { IMutationError } from "../types"
@@ -65,7 +66,10 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
   >(LOGIN, { errorPolicy: "all" })
 
   return (
-    <ModalDialog className="modal-dialog-auth modal-dialog-login" size="small">
+    <ModalDialog
+      className="modal-dialog-auth modal-dialog-login"
+      size={ModalSize.SMALL}
+    >
       <ModalHeader
         title={<Trans id="login.title">Log in</Trans>}
         close={close}

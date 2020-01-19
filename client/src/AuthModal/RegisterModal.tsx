@@ -17,6 +17,7 @@ import {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
+  ModalSize,
   PasswordValidationError,
   UsernameValidationError,
 } from "../UI"
@@ -103,7 +104,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
   return (
     <ModalDialog
       className="modal-dialog-auth modal-dialog-register"
-      size="small"
+      size={ModalSize.SMALL}
     >
       <ModalHeader
         title={<Trans id="register.title">Sign up</Trans>}

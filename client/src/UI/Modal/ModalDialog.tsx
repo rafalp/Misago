@@ -1,5 +1,6 @@
 import classNames from "classnames"
 import React from "react"
+import { ModalSize } from "./Modal.types"
 import ModalHeader from "./ModalHeader"
 import ModalTitle from "./ModalTitle"
 
@@ -7,7 +8,7 @@ interface IModalDialogProps {
   centered?: boolean
   children: React.ReactNode
   className?: string
-  size?: "default" | "small" | "large" | "extra_large" | null
+  size?: ModalSize
   title?: React.ReactNode
   close?: () => void
 }
@@ -25,9 +26,9 @@ const ModalDialog: React.FC<IModalDialogProps> = ({
       "modal-dialog",
       {
         "modal-dialog-centered": centered,
-        "modal-sm": size === "small",
-        "modal-lg": size === "large",
-        "modal-xl": size === "extra_large",
+        "modal-sm": size === ModalSize.SMALL,
+        "modal-lg": size === ModalSize.LARGE,
+        "modal-xl": size === ModalSize.EXTRA_LARGE,
       },
       className
     )}

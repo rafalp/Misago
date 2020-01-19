@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
+  ModalSize,
   ModalTitle,
 } from "./Modal"
 import RootError from "./RootError"
@@ -47,6 +48,7 @@ export {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
+  ModalSize,
   ModalTitle,
   PasswordValidationError,
   RootError,

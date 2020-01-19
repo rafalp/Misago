@@ -12,6 +12,7 @@ import {
   ModalDialog,
   ModalFooter,
   ModalFormBody,
+  ModalSize,
 } from "."
 
 export default {
@@ -28,12 +29,12 @@ const size = () =>
   select(
     "Size",
     {
-      Default: "default",
-      Small: "small",
-      Large: "large",
-      "Extra large": "extra_large",
+      Default: ModalSize.DEFAULT,
+      Small: ModalSize.SMALL,
+      Large: ModalSize.LARGE,
+      "Extra large": ModalSize.EXTRA_LARGE,
     },
-    "default"
+    ModalSize.DEFAULT
   )
 const alert = () => boolean("Display alert", false)
 const alertAppearance = () =>
