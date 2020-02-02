@@ -2,10 +2,13 @@ import classNames from "classnames"
 import React from "react"
 import Icon from "../Icon"
 import { ButtonType } from "./Button.types"
+import ButtonSpinner from "./ButtonSpinner"
 
 interface IButtonProps {
   block?: boolean
+  className?: string | null
   disabled?: boolean
+  elementRef?: React.MutableRefObject<HTMLButtonElement>
   icon?: string
   iconSolid?: boolean
   loading?: boolean
@@ -17,7 +20,9 @@ interface IButtonProps {
 
 const Button: React.FC<IButtonProps> = ({
   block,
+  className,
   disabled,
+  elementRef,
   icon,
   iconSolid,
   loading,
@@ -31,10 +36,12 @@ const Button: React.FC<IButtonProps> = ({
       className={classNames(
         "btn",
         outline ? `btn-outline-${type}` : `btn-${type}`,
-        { "btn-block": block }
+        { "btn-block": block },
+        className
       )}
+      ref={elementRef}
       type={onClick ? "button" : "submit"}
-      disabled={disabled}
+      disabled={disabled || loading}
       onClick={onClick}
     >
       {icon && !loading && <Icon icon={icon} solid={iconSolid} fixedWidth />}
@@ -43,9 +50,5 @@ const Button: React.FC<IButtonProps> = ({
     </button>
   )
 }
-
-const ButtonSpinner: React.FC = () => (
-  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
-)
 
 export default Button

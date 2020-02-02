@@ -1,8 +1,7 @@
 import React from "react"
-import ReactDOM from "react-dom"
 import { AuthModalContext } from "../Context"
 import { Modal } from "../UI"
-import modalsRoot from "../modalsRoot"
+import portal from "../portal"
 import { AuthModalMode, ISettings } from "../types"
 import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"
@@ -20,10 +19,9 @@ const AuthModal: React.FC<IAuthModalProps> = ({ settings }) => {
     showRegisterForm,
   } = React.useContext(AuthModalContext)
 
-  if (!settings || !modalsRoot) return null
-  const root = modalsRoot
+  if (!settings) return null
 
-  return ReactDOM.createPortal(
+  return portal(
     <Modal close={closeModal} isOpen={isOpen} resistant>
       {mode === AuthModalMode.LOGIN && (
         <LoginModal close={closeModal} showRegister={showRegisterForm} />
@@ -35,8 +33,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ settings }) => {
           showLogin={showLoginForm}
         />
       )}
-    </Modal>,
-    root
+    </Modal>
   )
 }
 

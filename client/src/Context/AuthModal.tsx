@@ -1,5 +1,5 @@
 import React from "react"
-import { useModalState } from "../hooks"
+import { useModal } from "../hooks"
 import { IAuthModalContext, AuthModalMode } from "../types"
 
 const AuthModalContext = React.createContext<IAuthModalContext>({
@@ -20,7 +20,7 @@ const AuthModalProvider: React.FC<IAuthModalProviderProps> = ({
   children,
 }) => {
   const [mode, setMode] = React.useState<AuthModalMode>(AuthModalMode.REGISTER)
-  const { isOpen, closeModal, openModal } = useModalState()
+  const { isOpen, closeModal, openModal } = useModal()
 
   const showLoginForm = () => setMode(AuthModalMode.LOGIN)
   const showRegisterForm = () => setMode(AuthModalMode.REGISTER)

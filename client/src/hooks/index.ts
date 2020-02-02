@@ -1,3 +1,3 @@
-import useModalState from "./useModalState"
+import useModal from "./useModal"
 
-export { useModalState }
+export { useModal }

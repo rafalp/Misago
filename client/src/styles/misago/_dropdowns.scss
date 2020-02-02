@@ -1,0 +1,8 @@
+/*
+Bootstrap by default hides dropdowns below bottom edge of the screen.
+This can cause flicker on screens without scrollbar when dropdown gets opened,
+but before its repositioned by popper.
+*/
+.dropdown-menu {
+  margin: 0;
+}

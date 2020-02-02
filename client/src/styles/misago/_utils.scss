@@ -1,0 +1,6 @@
+/* d-xs-none class that hides item on small screens */
+@include media-breakpoint-down(xs) {
+  .d-xs-none {
+    display: none;
+  }
+}
