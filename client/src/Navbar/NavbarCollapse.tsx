@@ -30,18 +30,20 @@ const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
     window.document.addEventListener("click", eventHandler)
 
     return () => window.document.removeEventListener("click", eventHandler)
-  }, [isOpen, button.current])
+  }, [isOpen])
 
   return (
     <I18n>
       {({ i18n }) => (
         <>
           <button
-            className="navbar-toggler"
+            className={className("navbar-toggler", {
+              "navbar-toggler-user": user,
+            })}
             ref={button}
             type="button"
             aria-controls="navbarToggle"
-            aria-expanded="false"
+            aria-expanded={isOpen ? "true" : "false"}
             aria-label={i18n._(t("navbar.toggle")`Toggle navigation`)}
             onClick={() => updateOpen(state => !state)}
           >

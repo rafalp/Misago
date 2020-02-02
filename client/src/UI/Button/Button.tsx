@@ -8,9 +8,10 @@ interface IButtonProps {
   block?: boolean
   className?: string | null
   disabled?: boolean
-  elementRef?: React.MutableRefObject<HTMLButtonElement>
+  elementRef?: React.MutableRefObject<HTMLButtonElement | null>
   icon?: string
   iconSolid?: boolean
+  image?: React.ReactNode
   loading?: boolean
   text?: React.ReactNode
   type?: ButtonType
@@ -25,6 +26,7 @@ const Button: React.FC<IButtonProps> = ({
   elementRef,
   icon,
   iconSolid,
+  image,
   loading,
   text,
   type = ButtonType.PRIMARY,
@@ -37,6 +39,7 @@ const Button: React.FC<IButtonProps> = ({
         "btn",
         outline ? `btn-outline-${type}` : `btn-${type}`,
         { "btn-block": block },
+        { "btn-img": image },
         className
       )}
       ref={elementRef}
@@ -45,6 +48,7 @@ const Button: React.FC<IButtonProps> = ({
       onClick={onClick}
     >
       {icon && !loading && <Icon icon={icon} solid={iconSolid} fixedWidth />}
+      {!loading && image}
       {loading && <ButtonSpinner />}
       {text && <span>{text}</span>}
     </button>

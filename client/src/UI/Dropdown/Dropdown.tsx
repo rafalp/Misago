@@ -4,7 +4,7 @@ import React from "react"
 import portal from "../../portal"
 
 interface IToggleArgs {
-  ref: React.MutableRefObject<HTMLButtonElement>
+  ref: React.MutableRefObject<HTMLButtonElement | null>
   close: () => void
   toggle: () => void
 }
@@ -18,7 +18,7 @@ interface IDropdownProps {
 
 const Dropdown: React.FC<IDropdownProps> = ({ className, menu, leftAligned, toggle }) => {
   const [isOpen, updateOpen] = React.useState(false)
-  const button = React.useRef<HTMLButtonElement>()
+  const button = React.useRef<HTMLButtonElement | null>(null)
   const dropdown = React.useRef<HTMLDivElement | null>(null)
 
   React.useLayoutEffect(() => {

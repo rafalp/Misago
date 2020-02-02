@@ -1,9 +1,10 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { AuthModalContext } from "../Context"
-import { Avatar, Button, ButtonType, Dropdown } from "../UI"
+import { Button, ButtonType } from "../UI"
 import { useAuth } from "../auth"
 import { INavbarUserProp } from "./Navbar.types"
+import UserDropdown from "./NavbarUserDropdown"
 
 interface INavbarNavProps {
   user?: INavbarUserProp | null
@@ -21,13 +22,12 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
         <>
           <UserDropdown logout={logout} user={user} />
           <li className="nav-item d-sm-none">
-            <button
-              className="btn btn-block border-0 nav-link text-left"
-              type="button"
+            <Button
+              className="btn-logout"
+              text={<Trans id="navbar.logout">Log out</Trans>}
+              type={ButtonType.LINK}
               onClick={logout}
-            >
-              <Trans id="navbar.logout">Log out</Trans>
-            </button>
+            />
           </li>
         </>
       ) : (
@@ -53,34 +53,5 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
     </ul>
   )
 }
-
-interface IUserDropdownProps {
-  logout: () => void
-  user: INavbarUserProp
-}
-
-const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
-  <Dropdown
-    className="dropdown-menu-user"
-    toggle={({ ref, toggle }) => (
-      <li className={"nav-item dropdown d-xs-none d-sm-block"}>
-        <Button
-          elementRef={ref}
-          type={ButtonType.LINK}
-          onClick={toggle}
-          text={user.name}
-        />
-      </li>
-    )}
-    menu={
-      <>
-        <h6 className="dropdown-header">{user.name}</h6>
-        <button className="dropdown-item" type="button" onClick={logout}>
-          <Trans id="navbar.logout">Log out</Trans>
-        </button>
-      </>
-    }
-  />
-)
 
 export default NavbarNav

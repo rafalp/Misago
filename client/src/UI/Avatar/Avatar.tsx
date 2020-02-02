@@ -3,6 +3,7 @@ import { IAvatar } from "../../types"
 import blankAvatar from "./blank-avatar.png"
 
 interface IAvatarProps {
+  alt?: string
   size?: number
   user?: {
     avatars: Array<IAvatar>
@@ -14,11 +15,11 @@ interface IAvatarSrc {
   srcSet?: string
 }
 
-const Avatar: React.FC<IAvatarProps> = ({ size = 100, user = null }) => {
+const Avatar: React.FC<IAvatarProps> = ({ alt, size = 100, user = null }) => {
   if (!user) {
     return (
       <img
-        alt=""
+        alt={alt || ""}
         className="user-avatar"
         src={blankAvatar}
         width={size}
@@ -31,7 +32,7 @@ const Avatar: React.FC<IAvatarProps> = ({ size = 100, user = null }) => {
 
   return (
     <img
-      alt=""
+      alt={alt || ""}
       className="user-avatar"
       width={size}
       height={size}
