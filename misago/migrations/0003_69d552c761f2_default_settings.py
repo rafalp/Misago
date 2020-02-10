@@ -25,6 +25,9 @@ table = table("misago_settings", column("name", String), column("value", JSON),)
 
 settings = [
     {"name": "bulk_action_size_limit", "value": 30},
+    {"name": "forum_index_header", "value": ""},
+    {"name": "forum_index_threads", "value": True},
+    {"name": "forum_index_title", "value": ""},
     {"name": "forum_name", "value": "Misago"},
     {"name": "jwt_exp", "value": int(timedelta(days=90).total_seconds())},
     {"name": "jwt_secret", "value": get_random_string(64)},

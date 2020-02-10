@@ -3,13 +3,17 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  padding: $font-size-base;
+  padding: $font-size-base 0;
 }
 
 .app-error-body {
   text-align: center;
 }
 
-.app-error-icon {
-  font-size: $font-size-base * 8;
+.page-error {
+  padding: 4rem 0;
+}
+
+.page-error-body {
+  text-align: center;
 }

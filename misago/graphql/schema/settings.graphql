@@ -1,4 +1,7 @@
 type Settings {
+    forumIndexHeader: String!
+    forumIndexThreads: Bool!
+    forumIndexTitle: String!
     forumName: String!
     passwordMinLength: Int!
     passwordMaxLength: Int!

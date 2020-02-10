@@ -5,6 +5,9 @@ from ...validation import PASSWORD_MAX_LENGTH
 
 settings_type = ObjectType("Settings")
 
+settings_type.set_alias("forumIndexHeader", "forum_index_header")
+settings_type.set_alias("forumIndexThreads", "forum_index_threads")
+settings_type.set_alias("forumIndexTitle", "forum_index_title")
 settings_type.set_alias("forumName", "forum_name")
 settings_type.set_alias("passwordMinLength", "password_min_length")
 settings_type.set_alias("usernameMinLength", "username_min_length")

@@ -6,9 +6,9 @@ import { ICategory, ISettings, IUser } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
 
-const POLL_INTERVAL = 2 * 1000 // 50s
+const POLL_INTERVAL = 50 * 1000 // 50s
 
-const INITIAL_DATA = gql`
+const INITIAL_DATA_QUERY = gql`
   query InitialData {
     auth {
       id
@@ -31,6 +31,9 @@ const INITIAL_DATA = gql`
       }
     }
     settings {
+      forumIndexHeader
+      forumIndexThreads
+      forumIndexTitle
       forumName
       passwordMinLength
       passwordMaxLength
@@ -46,14 +49,14 @@ interface IInitialData {
   settings: ISettings | null
 }
 
+interface IAppDataProps {
+  children: (props: IAppDataChildrenProps) => React.ReactElement
+}
+
 interface IAppDataChildrenProps {
   data: IInitialData
   error: ApolloError | undefined
   loading: boolean
-}
-
-interface IAppDataProps {
-  children: (props: IAppDataChildrenProps) => React.ReactElement
 }
 
 const defaultData = {
@@ -63,7 +66,7 @@ const defaultData = {
 }
 
 const AppDataQuery: React.FC<IAppDataProps> = ({ children }) => {
-  const { data, error, loading } = useQuery<IInitialData>(INITIAL_DATA, {
+  const { data, error, loading } = useQuery<IInitialData>(INITIAL_DATA_QUERY, {
     pollInterval: POLL_INTERVAL,
   })
 

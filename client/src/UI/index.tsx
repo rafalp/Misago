@@ -19,6 +19,10 @@ import {
   ModalTitle,
 } from "./Modal"
 import RootError from "./RootError"
+import PageContainer from "./PageContainer"
+import { PageError, PageNotFound } from "./PageError"
+import PageLoader from "./PageLoader"
+import PageTitle from "./PageTitle"
 import Spinner from "./Spinner"
 import {
   EmailValidationError,
@@ -59,6 +63,11 @@ export {
   ModalTitle,
   PasswordValidationError,
   RootError,
+  PageContainer,
+  PageError,
+  PageLoader,
+  PageNotFound,
+  PageTitle,
   Spinner,
   UsernameValidationError,
   ValidationError,

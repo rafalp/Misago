@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
+import { BrowserRouter as Router } from "react-router-dom"
 import {
   AuthModalProvider,
   AuthContext,
@@ -9,6 +9,7 @@ import {
 import AppDataQuery from "./AppDataQuery"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
+import AppRoutes from "./AppRoutes"
 
 const Navbar = React.lazy(() => import("../Navbar"))
 const AuthChangedAlert = React.lazy(() => import("../AuthChangedAlert"))
@@ -31,11 +32,7 @@ const App: React.FC = () => {
                       <React.Suspense fallback={<div />}>
                         <Navbar settings={settings} user={auth} />
                       </React.Suspense>
-                      <Switch>
-                        <Route path="/">
-                          <div>Hello world!</div>
-                        </Route>
-                      </Switch>
+                      <AppRoutes />
                       <React.Suspense fallback={<div />}>
                         <AuthModal settings={settings} />
                       </React.Suspense>
