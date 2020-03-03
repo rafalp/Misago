@@ -253,7 +253,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Offline"),
+    assert.equal(element.text().trim(), gettext("Offline") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'),
       "Boberson was last seen " + status.last_click.fromNow(),
@@ -270,7 +270,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Offline (hidden)"),
+    assert.equal(element.text().trim(), gettext("Offline (hidden)") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'),
       "Boberson was last seen " + status.last_click.fromNow() + " (hidden)",
@@ -287,7 +287,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Online"),
+    assert.equal(element.text().trim(), gettext("Online") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'), "Boberson is online",
       "component renders with valid help");
@@ -303,7 +303,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Online (hidden)"),
+    assert.equal(element.text().trim(), gettext("Online (hidden)") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'), "Boberson is online (hidden)",
       "component renders with valid help");
@@ -319,7 +319,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Hidden"),
+    assert.equal(element.text().trim(), gettext("Hidden") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'), "Boberson is hiding presence",
       "component renders with valid help");
@@ -335,7 +335,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Banned"),
+    assert.equal(element.text().trim(), gettext("Banned") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'),
       "Boberson is banned until " + status.banned_until.format('LL, LT'),
@@ -353,7 +353,7 @@ describe("User Status Label", function() {
     /* jshint ignore:end */
 
     let element = $('#test-mount .status-label');
-    assert.equal(element.text().trim(), gettext("Banned"),
+    assert.equal(element.text().trim(), gettext("Banned") + "&nbsp;",
       "component renders with valid label");
     assert.equal(element.attr('title'), "Boberson is banned",
       "component renders with valid help");

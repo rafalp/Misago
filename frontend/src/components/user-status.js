@@ -59,7 +59,7 @@ export class StatusLabel extends React.Component {
         className={this.props.className || "status-label"}
         title={this.getHelp()}
       >
-        {this.getLabel()}
+        {this.getLabel()}&nbsp;
       </span>
     )
   }
