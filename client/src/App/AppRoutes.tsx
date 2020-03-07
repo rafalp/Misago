@@ -1,13 +1,13 @@
 import React, { Suspense, lazy } from "react"
 import { Route, Switch } from "react-router-dom"
-import { PageLoader } from "../UI"
+import { RouteLoader } from "../UI"
 
-const ThreadsPage = lazy(() => import("../ThreadsPage"))
+const ThreadsRoute = lazy(() => import("../ThreadsRoute"))
 
 const AppRoutes: React.FC = () => (
-  <Suspense fallback={<PageLoader />}>
+  <Suspense fallback={<RouteLoader />}>
     <Switch>
-      <Route path="/" component={ThreadsPage} />
+      <Route path="/" component={ThreadsRoute} />
     </Switch>
   </Suspense>
 )

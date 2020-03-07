@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { PageLoader } from "../UI"
+import { RouteLoader, RouteNotFound } from "../UI"
 
 const POLL_INTERVAL = 50 * 1000 // 50s
 
@@ -48,9 +48,9 @@ const ThreadsQuery: React.FC<IThreadsQueryProps> = ({ children }) => {
   })
 
   if (!data) {
-    if (loading) return <PageLoader />
+    if (loading) return <RouteLoader />
     if (error) return <div>ERROR</div>
-    return <div>ERROR</div>
+    return <RouteNotFound />
   }
 
   return children({ error, loading, data })

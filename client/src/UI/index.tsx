@@ -19,11 +19,10 @@ import {
   ModalTitle,
 } from "./Modal"
 import RootError from "./RootError"
-import PageContainer from "./PageContainer"
-import { PageError, PageNotFound } from "./PageError"
-import PageErrorBoundary from "./PageErrorBoundary"
-import PageLoader from "./PageLoader"
-import PageTitle from "./PageTitle"
+import RouteContainer from "./RouteContainer"
+import { RouteError, RouteNotFound } from "./RouteError"
+import RouteErrorBoundary from "./RouteErrorBoundary"
+import RouteLoader from "./RouteLoader"
 import Spinner from "./Spinner"
 import {
   EmailValidationError,
@@ -31,6 +30,7 @@ import {
   UsernameValidationError,
   ValidationError,
 } from "./ValidationError"
+import WindowTitle from "./WindowTitle"
 
 export {
   Avatar,
@@ -64,13 +64,13 @@ export {
   ModalTitle,
   PasswordValidationError,
   RootError,
-  PageContainer,
-  PageError,
-  PageErrorBoundary,
-  PageLoader,
-  PageNotFound,
-  PageTitle,
+  RouteContainer,
+  RouteError,
+  RouteErrorBoundary,
+  RouteLoader,
+  RouteNotFound,
   Spinner,
   UsernameValidationError,
   ValidationError,
+  WindowTitle,
 }

@@ -1,25 +1,25 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import PageError from "./PageError"
+import PageError from "./RouteError"
 
-interface IPageNotFoundProps {
+interface IRouteNotFoundProps {
   header?: React.ReactNode | null
   message?: React.ReactNode | null
 }
 
-const PageNotFound: React.FC<IPageNotFoundProps> = ({ header, message }) => (
+const RouteNotFound: React.FC<IRouteNotFoundProps> = ({ header, message }) => (
   <PageError
-    className="page-not-found-container"
+    className="route-not-found-container"
     header={
       header || (
-        <Trans id="page_not_found_error.title">
+        <Trans id="route_not_found.title">
           Requested page could not be found.
         </Trans>
       )
     }
     message={
       message || (
-        <Trans id="page_not_found_error.message">
+        <Trans id="route_not_found.message">
           The link you followed was incorrect or the page has been moved or
           deleted.
         </Trans>
@@ -28,4 +28,4 @@ const PageNotFound: React.FC<IPageNotFoundProps> = ({ header, message }) => (
   />
 )
 
-export default PageNotFound
+export default RouteNotFound

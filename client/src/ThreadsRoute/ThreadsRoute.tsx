@@ -1,7 +1,7 @@
 import React from "react"
 import ThreadsQuery from "./ThreadsQuery"
 
-const Threads: React.FC = () => (
+const ThreadsRoute: React.FC = () => (
   <ThreadsQuery>
     {({ data }) => (
       <ul>
@@ -15,4 +15,4 @@ const Threads: React.FC = () => (
   </ThreadsQuery>
 )
 
-export default Threads
+export default ThreadsRoute

@@ -1,11 +1,11 @@
 import React from "react"
 import { SettingsContext } from "../../Context"
 
-interface IPageTitleProps {
+interface IWindowTitleProps {
   title?: string | null
 }
 
-const PageTitle: React.FC<IPageTitleProps> = ({ title }) => {
+const WindowTitle: React.FC<IWindowTitleProps> = ({ title }) => {
   const settings = React.useContext(SettingsContext)
   if (!settings) return null
   
@@ -18,4 +18,4 @@ const PageTitle: React.FC<IPageTitleProps> = ({ title }) => {
   return null  // never render itself
 }
 
-export default PageTitle
+export default WindowTitle

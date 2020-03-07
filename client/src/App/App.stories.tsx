@@ -3,7 +3,7 @@ import AppError from "./AppError"
 import AppLoader from "./AppLoader"
 
 export default {
-  title: "Pages/App",
+  title: "App",
 }
 
 export const Error = () => <AppError />
