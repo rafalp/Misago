@@ -1,6 +1,6 @@
 type Settings {
     forumIndexHeader: String!
-    forumIndexThreads: Bool!
+    forumIndexThreads: Boolean!
     forumIndexTitle: String!
     forumName: String!
     passwordMinLength: Int!
