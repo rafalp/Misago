@@ -9,17 +9,17 @@ interface IPageNotFoundProps {
 
 const PageNotFound: React.FC<IPageNotFoundProps> = ({ header, message }) => (
   <PageError
-    className="page-not-found"
+    className="page-not-found-container"
     header={
       header || (
-        <Trans id="not_found_error.title">
+        <Trans id="page_not_found_error.title">
           Requested page could not be found.
         </Trans>
       )
     }
     message={
       message || (
-        <Trans id="not_found_error.message">
+        <Trans id="page_not_found_error.message">
           The link you followed was incorrect or the page has been moved or
           deleted.
         </Trans>

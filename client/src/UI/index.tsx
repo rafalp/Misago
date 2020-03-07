@@ -21,6 +21,7 @@ import {
 import RootError from "./RootError"
 import PageContainer from "./PageContainer"
 import { PageError, PageNotFound } from "./PageError"
+import PageErrorBoundary from "./PageErrorBoundary"
 import PageLoader from "./PageLoader"
 import PageTitle from "./PageTitle"
 import Spinner from "./Spinner"
@@ -65,6 +66,7 @@ export {
   RootError,
   PageContainer,
   PageError,
+  PageErrorBoundary,
   PageLoader,
   PageNotFound,
   PageTitle,
