@@ -13,6 +13,7 @@ const INITIAL_DATA_QUERY = gql`
     auth {
       id
       name
+      slug
       avatars {
         size
         url

@@ -5,6 +5,7 @@ import { CardContainer, RootContainer } from "../Storybook"
 import Dropdown from "./Dropdown"
 import DropdownButton from "./DropdownButton"
 import DropdownDivider from "./DropdownDivider"
+import DropdownLink from "./DropdownLink"
 
 export default {
   title: "UI/Dropdown",
@@ -36,6 +37,7 @@ export const Default = () => (
 export const MenuItems = () => (
   <RootContainer padding>
     <div className="dropdown-menu d-block position-static">
+      <DropdownLink to="/">Private messages</DropdownLink>
       <DropdownButton
         icon="sign-in-alt"
         text="Log in"

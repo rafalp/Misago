@@ -20,7 +20,7 @@ const RouteNotFound: React.FC<IRouteNotFoundProps> = ({ header, message }) => (
     message={
       message || (
         <Trans id="route_not_found.message">
-          The link you've followed was incorrect or the page has been moved or
+          The link you've followed may be broken, or the page has been moved or
           deleted.
         </Trans>
       )

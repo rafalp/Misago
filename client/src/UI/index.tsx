@@ -1,7 +1,7 @@
 import Avatar from "./Avatar"
 import Button, { ButtonSpinner, ButtonType } from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
-import { Dropdown, DropdownButton, DropdownDivider } from "./Dropdown"
+import { Dropdown, DropdownButton, DropdownDivider, DropdownLink } from "./Dropdown"
 import { FieldError, FieldLabel } from "./Field"
 import { FormField, FormGroup, FormRow } from "./Form"
 import { Input } from "./FormControl"
@@ -22,6 +22,7 @@ import RootError from "./RootError"
 import RouteContainer from "./RouteContainer"
 import { RouteError, RouteNotFound } from "./RouteError"
 import RouteErrorBoundary from "./RouteErrorBoundary"
+import RouteGraphQLError from "./RouteGraphQLError"
 import RouteLoader from "./RouteLoader"
 import Spinner from "./Spinner"
 import {
@@ -44,6 +45,7 @@ export {
   Dropdown,
   DropdownButton,
   DropdownDivider,
+  DropdownLink,
   EmailValidationError,
   FieldError,
   FieldLabel,
@@ -67,6 +69,7 @@ export {
   RouteContainer,
   RouteError,
   RouteErrorBoundary,
+  RouteGraphQLError,
   RouteLoader,
   RouteNotFound,
   Spinner,

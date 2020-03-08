@@ -3,6 +3,7 @@ import { I18n } from "@lingui/react"
 import React from "react"
 import { ApolloError } from "apollo-client"
 import { IMutationError } from "../../types"
+import getNetworkErrorCode from "../getNetworkErrorCode"
 
 interface IRootError {
   message: React.ReactNode
@@ -72,11 +73,5 @@ const RootError: React.FC<IRootErrorProps> = ({
     }}
   </I18n>
 )
-
-const getNetworkErrorCode = (error: ApolloError): number => {
-  if (!error.networkError) return 0;
-  if (!("statusCode" in error.networkError)) return 0;
-  return error.networkError["statusCode"]
-}
 
 export default RootError

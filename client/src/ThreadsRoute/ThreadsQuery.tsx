@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { RouteLoader, RouteNotFound } from "../UI"
+import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../UI"
 
 const POLL_INTERVAL = 50 * 1000 // 50s
 
@@ -19,7 +19,7 @@ const THREADS_QUERY = gql`
   }
 `
 
-interface IThreadsData {
+interface IThreadsQueryData {
   threads: {
     items: Array<IThreadData>
     nextCursor: string | null
@@ -37,19 +37,19 @@ interface IThreadsQueryProps {
 }
 
 interface IThreadsQueryChildrenProps {
-  data: IThreadsData
+  data: IThreadsQueryData
   error: ApolloError | undefined
   loading: boolean
 }
 
 const ThreadsQuery: React.FC<IThreadsQueryProps> = ({ children }) => {
-  const { data, error, loading } = useQuery<IThreadsData>(THREADS_QUERY, {
+  const { data, error, loading } = useQuery<IThreadsQueryData>(THREADS_QUERY, {
     pollInterval: POLL_INTERVAL,
   })
 
   if (!data) {
     if (loading) return <RouteLoader />
-    if (error) return <div>ERROR</div>
+    if (error) return <RouteGraphQLError error={error} />
     return <RouteNotFound />
   }
 

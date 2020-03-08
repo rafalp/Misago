@@ -24,15 +24,14 @@ const RouteError: React.FC<IRouteErrorProps> = ({
           <h1>
             {header || (
               <Trans id="route_error.title">
-                Requested page could not be displayed due to an error.
+                Requested page could not be displayed.
               </Trans>
             )}
           </h1>
           <p>
             {message || (
               <Trans id="route_error.message">
-                An unexpected error has occurred during displaying of this
-                page.
+                An unexpected error has occurred.
               </Trans>
             )}
           </p>

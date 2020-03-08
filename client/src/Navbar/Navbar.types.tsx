@@ -12,5 +12,6 @@ export interface INavbarSettingsProp {
 export interface INavbarUserProp {
   id: string
   name: string
+  slug: string
   avatars: Array<IAvatar>
 }
