@@ -30,7 +30,7 @@ def alembic_command(f):
 @click.command(short_help="Invalidates all caches on the server.")
 @uses_database
 async def invalidatecaches():
-    click.echo(f"Invalidated caches:")
+    click.echo("Invalidated caches:")
     for cache in await invalidate_all_caches():
         click.echo(f"- {cache}")
 
