@@ -27,6 +27,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .
           pip install -r requirements-dev.txt
+          pip install -r requirements-plugins.txt
       - name: Test with pytest
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
