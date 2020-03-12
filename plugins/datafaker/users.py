@@ -24,8 +24,6 @@ def get_fake_username(fake: Faker) -> str:
     ]
 
     username = random.choice(possible_usernames)
-
-    if random.randint(0, 1):
-        username += get_random_string(random.randint(1, 4))
+    username += get_random_string(random.randint(1, 5))
 
     return username
