@@ -15,6 +15,7 @@ RUN pip install --upgrade pip && \
 # Build final (slim) image
 FROM python:3.8-slim
 
+ENV PYTHONPATH="/app/"
 ENV PYTHONUNBUFFERED 1
 ENV IN_MISAGO_DOCKER 1
 

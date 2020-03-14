@@ -4,7 +4,7 @@ from sqlalchemy import and_
 
 from ..database import database
 from ..tables import categories
-from ..types import Category
+from ..types import Category, MPTT
 from .categorytypes import CategoryTypes
 
 
@@ -28,3 +28,19 @@ async def get_category_by_id(
     )
     row = await database.fetch_one(query)
     return Category(**row) if row else None
+
+
+async def get_categories_mptt(
+    category_type: int = CategoryTypes.THREADS,
+) -> MPTT:
+    mptt = MPTT()
+
+    categories_map = {}
+    for category in await get_all_categories(category_type):
+        categories_map[category.id] = category
+        if category.parent_id:
+            mptt.insert_node(category, parent=categories_map[category.parent_id])
+        else:
+            mptt.insert_node(category)
+
+    return mptt

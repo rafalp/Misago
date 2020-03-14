@@ -36,7 +36,7 @@ table = table(
 
 categories = [
     {
-        # id: 2
+        # id: 1
         "type": CategoryTypes.PRIVATE_THREADS,
         "parent_id": None,
         "depth": 0,

@@ -133,6 +133,7 @@ from .movethreads import (
     MoveThreadsInputModelAction,
     MoveThreadsInputModelFilter,
 )
+from .mptt import MPTT, MPTTNode
 from .pagination import Pagination, PaginationPage
 from .post import Post
 from .postreply import (

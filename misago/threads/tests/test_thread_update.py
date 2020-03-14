@@ -124,9 +124,16 @@ async def test_updating_and_incrementing_thread_replies_raises_value_error(threa
 
 
 @pytest.mark.asyncio
-async def test_thread_closed_status_can_be_updated(thread):
+async def test_open_thread_can_be_closed(thread):
     updated_thread = await update_thread(thread, is_closed=True)
     assert updated_thread.is_closed
+
+
+@pytest.mark.asyncio
+async def test_closed_thread_can_be_opened(thread):
+    thread = replace(thread, is_closed=True)
+    updated_thread = await update_thread(thread, is_closed=False)
+    assert not updated_thread.is_closed
 
 
 @pytest.mark.asyncio
