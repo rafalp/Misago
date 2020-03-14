@@ -30,9 +30,7 @@ async def get_category_by_id(
     return Category(**row) if row else None
 
 
-async def get_categories_mptt(
-    category_type: int = CategoryTypes.THREADS,
-) -> MPTT:
+async def get_categories_mptt(category_type: int = CategoryTypes.THREADS,) -> MPTT:
     mptt = MPTT()
 
     categories_map = {}
