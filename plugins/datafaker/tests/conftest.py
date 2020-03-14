@@ -1,5 +1,6 @@
 import pytest
 from faker import Faker
+
 from misago.conftest import (  # pylint: disable=unused-import
     categories,
     category,

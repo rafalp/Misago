@@ -3,15 +3,16 @@ from datetime import datetime, timedelta
 from typing import AsyncGenerator, Union
 
 from faker import Faker
+from sqlalchemy import select
+
 from misago.categories.get import get_all_categories
 from misago.database import database
 from misago.database.queries import update
 from misago.tables import users
 from misago.threads.update import update_thread
 from misago.types import Post, Thread, User
-from sqlalchemy import select
 
-from .randomrow import get_random_thread, get_random_user
+from .randomrow import get_random_thread
 from .shortcuts import get_random_poster
 from .threads import create_fake_post, create_fake_thread
 from .users import create_fake_user

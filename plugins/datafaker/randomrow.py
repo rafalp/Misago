@@ -1,11 +1,12 @@
 import random
 from typing import Any, Mapping, Optional
 
+from sqlalchemy import select, func
+from sqlalchemy.sql import TableClause
+
 from misago.database import database
 from misago.tables import threads, users
 from misago.types import Thread, User
-from sqlalchemy import select, func
-from sqlalchemy.sql import TableClause
 
 
 async def get_random_thread() -> Optional[Thread]:

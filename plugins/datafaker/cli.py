@@ -2,6 +2,7 @@ import random
 
 import click
 from faker import Faker
+
 from misago.categories.get import get_all_categories
 from misago.cli import cli
 from misago.threads.update import update_thread
@@ -9,7 +10,7 @@ from misago.utils.async_context import uses_database
 
 from .categories import create_fake_category
 from .history import create_fake_forum_history
-from .randomrow import get_random_thread, get_random_user
+from .randomrow import get_random_thread
 from .shortcuts import get_random_poster
 from .threads import create_fake_post, create_fake_thread
 from .users import create_fake_user
@@ -100,8 +101,9 @@ async def createfakeposts(count):
             raise click.UsageError("No threads have been found in the database.")
 
         poster, poster_name = await get_random_poster(fake)
-
         post = await create_fake_post(thread, poster=poster, poster_name=poster_name)
+        await update_thread(thread, last_post=post, increment_replies=True)
+
         click.echo(f"- {post.poster_name} in thread #{thread.id}")
 
 

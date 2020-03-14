@@ -2,6 +2,7 @@ import random
 from typing import Optional, Tuple
 
 from faker import Faker
+
 from misago.types import User
 
 from .randomrow import get_random_user

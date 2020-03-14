@@ -1,4 +1,5 @@
 import pytest
+
 from misago.users.get import get_user_by_id
 from misago.types import Post, Thread, User
 
