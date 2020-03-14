@@ -11,28 +11,28 @@ from misago.categories.update import update_category
 async def create_fake_category(
     fake: Faker, *, parent: Optional[Category] = None
 ) -> Category:
-    categories = await get_categories_mptt()
-    categories_map = {c.id: c for c in categories.nodes()}
+    categories_tree = await get_categories_mptt()
+    categories_map = {c.id: c for c in categories_tree.nodes()}
 
     new_category = await create_category(
         name=get_fake_category_name(fake), parent=parent,
     )
-    categories.insert_node(new_category, parent)
+    categories_tree.insert_node(new_category, parent)
     categories_map[new_category.id] = new_category
 
     updated_categories = {}
-    for category in categories.nodes():
-        if category.parent_id:
-            parent = updated_categories[category.parent_id]
+    for node in categories_tree.nodes():
+        if node.parent_id:
+            parent = updated_categories[node.parent_id]
         else:
             parent = False
 
-        updated_categories[category.id] = await update_category(
-            categories_map[category.id],
+        updated_categories[node.id] = await update_category(
+            categories_map[node.id],
             parent=parent,
-            left=category.left,
-            right=category.right,
-            depth=category.depth,
+            left=node.left,
+            right=node.right,
+            depth=node.depth,
             is_closed=random.randint(1, 100) > 80,
         )
 
