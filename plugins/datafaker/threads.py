@@ -1,3 +1,4 @@
+import random
 from datetime import datetime
 from typing import Optional
 
@@ -32,7 +33,6 @@ async def create_fake_thread(
     *,
     starter: Optional[User] = None,
     starter_name: Optional[str] = None,
-    is_closed: bool = False,
     started_at: Optional[datetime] = None,
 ) -> Thread:
     thread = await create_thread(
@@ -40,8 +40,8 @@ async def create_fake_thread(
         title=sentences.get_random_sentence(),
         starter=starter,
         starter_name=starter_name,
-        is_closed=is_closed,
         started_at=started_at,
+        is_closed=random.randint(0, 100) > 80,
     )
 
     post = await create_fake_post(

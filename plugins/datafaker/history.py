@@ -41,7 +41,6 @@ async def create_fake_forum_history(
                     starter=starter,
                     starter_name=starter_name,
                     started_at=action_date,
-                    is_closed=random.randint(0, 100) > 80,
                 )
             else:
                 thread = await get_random_thread()
