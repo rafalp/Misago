@@ -1,5 +1,5 @@
 import random
-from typing import Optional
+from typing import Dict, Optional, cast
 
 from faker import Faker
 from misago.types import Category
@@ -20,15 +20,15 @@ async def create_fake_category(
     categories_tree.insert_node(new_category, parent)
     categories_map[new_category.id] = new_category
 
-    updated_categories = {}
+    updated_categories: Dict[int, Category] = {}
     for node in categories_tree.nodes():
         if node.parent_id:
             parent = updated_categories[node.parent_id]
         else:
-            parent = False
+            parent = None
 
         updated_categories[node.id] = await update_category(
-            categories_map[node.id],
+            cast(Category, categories_map[node.id]),
             parent=parent,
             left=node.left,
             right=node.right,

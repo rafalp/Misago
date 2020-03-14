@@ -17,4 +17,4 @@ jobs:
           pip install -e .
           pip install -r requirements-dev.txt
       - name: Mypy
-        run: mypy misago --ignore-missing-imports
+        run: mypy misago plugins --ignore-missing-imports

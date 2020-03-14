@@ -17,4 +17,4 @@ jobs:
           pip install -e .
           pip install -r requirements-dev.txt
       - name: Pylint
-        run: pylint misago setup.py --unsafe-load-any-extension=y
+        run: pylint misago plugins setup.py --unsafe-load-any-extension=y
