@@ -1,5 +1,3 @@
-from typing import Optional
-
 from misago.hooks import graphql_context_hook
 
 print("PLUGIN!", __file__)
