@@ -235,7 +235,7 @@ Such long gaps occur between transits because Earth's and Venus' orbits around t
 Named after the goddess of love and beauty, Venus has become nearly synonymous with "woman" in popular culture, as referenced by the famous relationship guide Men are from Mars, Women are from Venus.
 As a solar system locale, Venus was a popular destination for early 20th century science fiction writers; before we knew about what lay beneath Venus' mysterious cloud cover, writers could speculate about a more hospitable planet and its possible inhabitants.
 More recently, Venus has been a backdrop for video games such as Transhuman Space, Battlezone and Destiny.
-And in the Disney animated film The Princess and the Frog, Ray the firefly falls in love with Venus, "the evening star," as he has mistaken it for another firefly.
+And in the Disney animated film The Princess and the Frog, Ray the firefly falls in love with Venus, "the evening star", as he has mistaken it for another firefly.
 Earth is the third planet from the sun and the fifth largest in the solar system.
 Just slightly larger than nearby Venus, Earth is the biggest of the terrestrial planets.
 Our home planet is the only planet in our solar system known to harbor living things.
@@ -317,7 +317,7 @@ Earth is made up of complex, interactive systems that create a constantly changi
 From the vantage point of space, we are able to observe our planet globally, using sensitive instruments to understand the delicate balance among its oceans, air, land and life.
 NASA satellite observations help study and predict weather, drought, pollution, climate change, and many other phenomena that affect the environment, economy and society.
 This is a small sampling of the history of exploration of Earth from space.
-For more, visit NASA's Earth Science Division
+For more, visit NASA's Earth Science Division.
 Storytellers explore the nature of our planet and possible alternate realities in many books, movies and television shows.
 The iconic Planet of the Apes film (and many sequels) takes place in a future in which astronauts "discover" a planet inhabited by highly intelligent apes and primitive humans, only to realize later, much to their dismay, that — spoiler alert! — it was Earth all along.
 In the long-running and re-booted television series Battlestar Galactica, tired survivors of a war with highly evolved robots called Cylons are on a quest to find Earth, a long-lost colony.
@@ -335,10 +335,10 @@ The moon is an average of 238,855 miles (384,400 kilometers) away.
 That means 30 Earth-sized planets could fit in between Earth and the moon.
 The moon is slowly moving away from Earth, getting about an inch farther away each year.
 The moon is rotating at the same rate that it revolves around Earth (called synchronous rotation), so the same hemisphere faces Earth all the time.
-Some people call the far side — the hemisphere we never see from Earth — the "dark side," but that's misleading.
+Some people call the far side — the hemisphere we never see from Earth — the "dark side", but that's misleading.
 As the moon orbits Earth, different parts are in sunlight or darkness at different times.
 The changing illumination is why, from our perspective, the moon goes through phases.
-During a "full moon," the hemisphere of the moon we can see from Earth is fully illuminated by the sun.
+During a "full moon", the hemisphere of the moon we can see from Earth is fully illuminated by the sun.
 And a "new moon" occurs when the far side of the moon has full sunlight, and the side facing us is having its night.
 The moon makes a complete orbit around Earth in 27 Earth days and rotates or spins at that same rate, or in that same amount of time.
 Because Earth is moving as well — rotating on its axis as it orbits the sun — from our perspective, the moon appears to orbit us every 29 days.
@@ -382,7 +382,8 @@ This happens because Earth's atmosphere scatters blue and green light while it b
 The moon is the most explored body in our solar system besides Earth, having been visited by numerous spacecraft from multiple space agencies around the world.
 It's also the only place besides Earth where human beings have set foot.
 Our lunar neighbor has inspired stories since the first humans looked up at the sky and saw its grey, cratered face.
-Some observers saw among the craters the shape of a person's face, so stories refer to a mysterious "man in the moon." Hungrier observers compared its craters to cheese and dreamed of an entire sphere made of delicious dairy products.
+Some observers saw among the craters the shape of a person's face, so stories refer to a mysterious "man in the moon".
+Hungrier observers compared its craters to cheese and dreamed of an entire sphere made of delicious dairy products.
 The moon made its film debut in a 1902 black and white silent French film called Le Voyage Dans la Lune (a trip to the moon).
 And a year before astronauts walked on the moon, 2001: A Space Odyssey (1968) told the story of astronauts on an outpost on the moon.
 Decades later, it is still widely regarded as the best science fiction movie ever made.
@@ -426,11 +427,10 @@ Soil chemistry experiments led scientists to believe that the Phoenix landing si
 NASA's Mars Science Laboratory mission, with its large rover Curiosity, is examining Martian rocks and soil at Gale Crater, looking for minerals that formed in water, signs of subsurface water, and carbon-based molecules called organics, the chemical building blocks of life.
 That information will reveal more about the present and past habitability of Mars, as well as whether humans could survive on Mars some day.
 Mars was named by the Romans for their god of war because of its red, bloodlike color.
-Other civilizations also named this planet from this attribute; for example, the Egyptians named it "Her Desher," meaning "the red one."
+Other civilizations also named this planet from this attribute; for example, the Egyptians named it "Her Desher", meaning "the red one".
 Asteroids, sometimes called minor planets, are rocky remnants left over from the early formation of our solar system about 4.6 billion years ago.
 Most of this ancient space rubble can be found orbiting the sun between Mars and Jupiter within the main asteroid belt.
 Asteroids range in size from Vesta - the largest at about 329 miles (530 kilometers) in diameter - to bodies that are less than 33 feet (10 meters) across.
-.
 The total mass of all the asteroids combined is less than that of Earth's Moon.
 Editor's note: Even with more than one-half million asteroids known (and there are probably many more), they are still much more widely separated than sometimes seen in Hollywood movies: on average, their separation is in excess of 1-3 million km (depending on how one calculates it).
 Most asteroids are irregularly shaped, though a few are nearly spherical, and they are often pitted or cratered.
@@ -499,7 +499,7 @@ Well-documented stories of meteorite-caused injury or death are rare.
 In the first known case of an extraterrestrial object to have injured a human being in the U.S., Ann Hodges of Sylacauga, Alabama, was severely bruised by a 3.6-kilogram (8-pound) stony meteorite that crashed through her roof in November 1954.
 Meteorites may resemble Earth rocks, but they usually have a burned exterior.
 This fusion crust is formed as the meteorite is melted by friction as it passes through the atmosphere.
-There are three major types of meteorites: the "irons," the "stones," and the stony-irons.
+There are three major types of meteorites: the "irons", the "stones", and the stony-irons.
 Although the majority of meteorites that fall to Earth are stony, more of the meteorites that are discovered long after they fall are irons - these heavy objects are easier to distinguish from Earth rocks than stony meteorites.
 Meteorites also fall on other solar system bodies.
 Mars Exploration Rover Opportunity found the first meteorite of any type on another planet when it discovered an iron-nickel meteorite about the size of a basketball on Mars in 2005, and then found a much larger and heavier iron-nickel meteorite in 2009 in the same region.
@@ -662,7 +662,8 @@ In the distant past, people were both awed and alarmed by comets, perceiving the
 Chinese astronomers kept extensive records for centuries, including illustrations of characteristic types of comet tails, times of cometary appearances and disappearances, and celestial positions.
 These historic comet annals have proven to be a valuable resource for later astronomers.
 We now know that comets are leftovers from the dawn of our solar system around 4.6 billion years ago, and consist mostly of ice coated with dark organic material.
-They have been referred to as "dirty snowballs." They may yield important clues about the formation of our solar system.
+They have been referred to as "dirty snowballs".
+They may yield important clues about the formation of our solar system.
 Comets may have brought water and organic compounds, the building blocks of life, to the early Earth and other parts of the solar system.
 As theorized by astronomer Gerard Kuiper in 1951, a disc-like belt of icy bodies exists beyond Neptune, where a population of dark comets orbits the sun in the realm of Pluto.
 These icy objects, occasionally pushed by gravity into orbits bringing them closer to the sun, become the so-called short-period comets.
@@ -703,11 +704,11 @@ Comets from the Kuiper Belt take less than 200 years to orbit the sun and travel
 .Objects in the Kuiper Belt are presumed to be remnants from the formation of the solar system about 4.6 billion years ago.
 The first of these strange bodies, which astronomers call Kuiper Belt Objects (KBOs), came to light in 1992, discovered by Dave Jewitt and Jane Luu -- a pair of scientists who didn't believe the outer solar system was empty.
 Beginning in 1987 they had doggedly scanned the heavens in search of dim objects beyond Neptune.
-It took five years, looking off-and-on through the University of Hawaii's 2.2 m telescope, but they finally found what they were after: a reddish-colored speck 44 AU from the Sun -- even more distant than Pluto! Jewitt (University of Hawaii) and Luu (UC Berkeley) wanted to name their find "Smiley," but it has since been cataloged as "1992 QB1."
+It took five years, looking off-and-on through the University of Hawaii's 2.2 m telescope, but they finally found what they were after: a reddish-colored speck 44 AU from the Sun -- even more distant than Pluto! Jewitt (University of Hawaii) and Luu (UC Berkeley) wanted to name their find "Smiley", but it has since been cataloged as "1992 QB1".
 That discovery marked our first glimpse of the long-sought Kuiper Belt, named after Gerard Kuiper who, in 1951, proposed that a belt of icy bodies might lay beyond Neptune.
 It was the only way, he figured, to solve a baffling mystery about comets: Some comets loop through the solar system on periodic orbits of a half-dozen years or so.
 They encounter the Sun so often that they quickly evaporate -- vanishing in only a few hundred thousand years.
-Astronomers call them "short-period comets," although "short-lived" is more to the point.
+Astronomers call them "short-period comets", although "short-lived" is more to the point.
 Short-period comets evaporate so quickly compared to the age of the solar system that we shouldn't see any, yet astronomers routinely track dozens of them.
 It was a real puzzle.
 Kuiper's solution was a population of dark comets circling the Sun in the realm of Pluto -- leftovers from the dawn of our solar system when planetesimals were coalescing to make planets.
@@ -762,7 +763,7 @@ Many if not most of the stars host their own families of planets.
 More than a thousand of these extrasolar (or exoplanets) have been discovered and thousands more are awaiting confirmation.
 All of the stars in the Milky Way orbit a supermassive black hole at the galaxy's center, which is estimated to be some 4 million times as massive as our sun.
 Fortunately, it is a safe distance of around 28,000 light years away Earth.
-The Milky Way zips alonga galactic orbit at an average speed of about 514,000 miles per hour (828,000 km/hr).
+The Milky Way zips along a galactic orbit at an average speed of about 514,000 miles per hour (828,000 km/hr).
 It takes about 230 million years for our solar system to make one revolution around the galactic center.
 The Milky Way is part of the Local Group, a neighborhood about 10 million light years across, consisting of more than 30 galaxies that are gravitationally bound to each other.
 Aside from our galaxy, the most massive one in this group is Andromeda, which appears to be on course to collide with the Milky Way in about 4 billion years.
@@ -817,7 +818,8 @@ Eris, another dwarf planet even more distant than Pluto, has a small moon of its
 Haumea, another dwarf planet, has two satellites, Hi'iaka and Namaka.
 Most moons in our solar system are named for mythological characters from a wide variety of cultures.
 Uranus is the exception.
-Uranus' moons are named for characters in William Shakespeare's plays and from Alexander Pope's poem "Rape of the Lock." Moons are given provisional designations such as S/2009 S1, the first satellite discovered at Saturn in 2009.
+Uranus' moons are named for characters in William Shakespeare's plays and from Alexander Pope's poem "Rape of the Lock".
+Moons are given provisional designations such as S/2009 S1, the first satellite discovered at Saturn in 2009.
 The International Astronomical Union approves an official name when the discovery is confirmed.
 Pluto is classified as a dwarf planet and is also a member of a group of objects that orbit in a disc-like zone beyond the orbit of Neptune called the Kuiper Belt.
 This distant realm is populated with thousands of miniature icy worlds, which formed early in the history of our solar system.
@@ -862,7 +864,8 @@ This was a surprise to find on a dwarf planet that was anticipated to be heavily
 Dense cratering is seen in some areas, but so are tectonic features including scarps and troughs as long as about 370 miles (600 kilometers).
 Mountains are also seen rising 6500 to 9800 feet (2 to 3 kilometers) above their surroundings.
 The likely materials that can hold up the mountains and maintain their shapes over millions of years in Pluto's cold is limited.
-The science team concludes that the mountains are made of "water ice-based 'bedrock'." Frozen gases on Pluto's surface (the temperature there is about -391 F = -235 C = 38 K) include nitrogen (N2), carbon monoxide (CO),and methane (CH4).
+The science team concludes that the mountains are made of "water ice-based 'bedrock'".
+Frozen gases on Pluto's surface (the temperature there is about -391 F = -235 C = 38 K) include nitrogen (N2), carbon monoxide (CO),and methane (CH4).
 These were detected by ground-based telescopes and are now thought to be thin layers on top of the 'bedrock' water ice.
 Dark surface coloring appears to be due carbon residues called tholins.
 These are created by solar ultraviolet rays or charged particles falling on mixtures of nitrogen and methane.
@@ -903,7 +906,7 @@ Charon is named for the river Styx boatman who ferries souls in the underworld (
 Pluto's place in mythology can get a little muddled, so we asked Dr.
 Elizabeth Vandiver, chair of the Department of Classics in Whitman College in Walla Walla, Washington, to clarify the origins of the name: "Pluto is the name of the Roman god of the Underworld, equivalent to the Greek Hades.
 However, the Greek name "Plouton" (from which the Romans derived their name "Pluto") was also occasionally used as an alternative name for Hades.
-But Pluto is definitely the Roman spelling."
+But Pluto is definitely the Roman spelling.
 Dwarf planet Ceres is the largest object in the asteroid belt between Mars and Jupiter and the only dwarf planet located in the inner solar system.
 It was the first member of the asteroid belt to be discovered when Giuseppe Piazzi spotted it in 1801.
 And when Dawn arrived in 2015, Ceres became the first dwarf planet to receive a visit from a spacecraft.
@@ -921,7 +924,7 @@ As Ceres orbits the sun, it completes one rotation every 9 hours, making its day
 Ceres' axis of rotation is tilted just 4 degrees with respect to the plane of its orbit around the sun.
 That means it spins nearly perfectly upright and doesn't experience seasons like other more tilted planets do.
 Ceres formed along with the rest of the solar system about 4.5 billion years ago when gravity pulled swirling gas and dust in to become a small dwarf planet.
-Scientists describe Ceres as an "embryonic planet," which means it started to form but didn't quite finish.
+Scientists describe Ceres as an "embryonic planet", which means it started to form but didn't quite finish.
 Nearby Jupiter's strong gravity prevented it from becoming a fully formed planet.
 About 4 billion years ago, Ceres settled into its current location among the leftover pieces of planetary formation in the asteroid belt between Mars and Jupiter.
 Ceres is more similar to the terrestrial planets (Mercury, Venus, Earth and Mars) than its asteroid neighbors, but it is much less dense.
@@ -977,7 +980,7 @@ Based on the small number of craters observed, the surface of this moon appears 
 Along Europa's many fractures, and in splotchy patterns across its surface, is a reddish-brown material whose composition is not known, but may hold clues to the moon's potential as a habitable world.
 NASA's Galileo mission, which explored the Jupiter system from 1995 to 2003, made numerous flybys of Europa.
 It obtained the closest images to date of the moon's fractured surface, revealing strange pits and domes that suggested the ice could be slowly turning over, or convecting, due to heat from below.
-Also of particular interest were regions of "chaos terrain," which contained broken, blocky landscapes covered in the mysterious reddish material.
+Also of particular interest were regions of "chaos terrain", which contained broken, blocky landscapes covered in the mysterious reddish material.
 Scientists think that chaos regions represent places where geologic activity has disrupted the otherwise smooth surface.
 In 2011, scientists studying Galileo mission data announced the intriguing idea that chaos terrains are places where the surface has collapsed above lens-shaped lakes perched within the ice.
 In 2013, NASA announced startling evidence from researchers using the Hubble Space Telescope that Europa might be actively venting plumes of water into space.
@@ -1070,7 +1073,8 @@ It is possible Enceladus is heated by a tidal mechanism similar to Jupiter's moo
 The south polar region of Enceladus is almost entirely free of impact craters.
 The area is littered with house-sized ice boulders and surfaces carved by tectonic patterns unique to this region of the moon.
 A huge cloud of water vapor over the area and relatively warm fractures in the crust supply the cloud of water vapor and ice particles that extend into space.
-Scientists came to informally call the deep crevasses "tiger stripes." The jets originate near the hottest spots on the tiger stripe fractures (also known as "sulci").
+Scientists came to informally call the deep crevasses "tiger stripes".
+The jets originate near the hottest spots on the tiger stripe fractures (also known as "sulci").
 Enceladus is one of the major inner moons of Saturn along with Dione, Tethys, and Mimas.
 It orbits Saturn at a distance of 148,000 miles (238,000 km), falling between the orbits of Mimas and Tethys.
 It is tidally locked with Saturn, keeping the same face toward the planet.
