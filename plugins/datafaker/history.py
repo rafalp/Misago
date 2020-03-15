@@ -64,7 +64,7 @@ async def create_fake_forum_history(
 
 async def move_existing_users_to_past(days: int):
     query = select([users.c.id, users.c.joined_at])
-    async for row in database.iterate(query):
+    for row in await database.fetch_all(query):
         past_joined_at = row["joined_at"] - timedelta(days=days)
         await update(users, row["id"], joined_at=past_joined_at)
 

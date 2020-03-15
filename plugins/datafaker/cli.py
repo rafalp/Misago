@@ -6,6 +6,7 @@ from faker import Faker
 from misago.categories.get import get_all_categories
 from misago.cli import cli
 from misago.threads.update import update_thread
+from misago.types import Post, Thread, User
 from misago.utils.async_context import uses_database
 
 from .categories import create_fake_category
@@ -125,6 +126,9 @@ async def createfakeusers(count):
         click.echo(f"- {user.name} <{user.email}>")
 
 
+DATE_FORMAT = "%Y-%m-%d %H:%M-%S"
+
+
 @cli.add_command
 @click.command(short_help="Creates fake forum history")
 @click.argument("days", default=40, type=int)
@@ -144,5 +148,13 @@ async def createfakehistory(days, daily_actions):
         )
 
     fake = Faker()
-    async for action in create_fake_forum_history(fake, days, daily_actions):
-        click.echo(f"- {action}")
+    async for item in create_fake_forum_history(fake, days, daily_actions):
+        if isinstance(item, User):
+            timestamp = item.joined_at.strftime(DATE_FORMAT)
+            click.echo(f"- {timestamp}: New user {item.name} registered.")
+        if isinstance(item, Thread):
+            timestamp = item.started_at.strftime(DATE_FORMAT)
+            click.echo(f"- {timestamp}: {item.starter_name} started new thread.")
+        if isinstance(item, Post):
+            timestamp = item.posted_at.strftime(DATE_FORMAT)
+            click.echo(f"- {timestamp}: {item.poster_name} posted new reply.")

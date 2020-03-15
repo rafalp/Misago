@@ -7,6 +7,7 @@ const ThreadsRoute: React.FC = () => (
   <ThreadsQuery>
     {({ data }) => (
       <div>
+        <Link to={urls.categories()}>[CATEGORIES]</Link>
         <Link to={urls.startThread()}>[START THREAD]</Link>
         <ul>
           {data.threads.items.map(thread => (

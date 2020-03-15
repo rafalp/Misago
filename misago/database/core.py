@@ -4,7 +4,7 @@ from contextvars import ContextVar
 from databases.core import (
     CONNECT_EXTRA,
     DISCONNECT_EXTRA,
-    Connection as BaseConnection,
+    Connection,
     Database as BaseDatabase,
     DatabaseURL,
     Transaction,
@@ -38,7 +38,7 @@ class Database(BaseDatabase):
 
         # When `force_rollback=True` is used, we use a single global
         # connection, within a transaction that always rolls back.
-        self._global_connection: typing.Optional["Connection"] = None
+        self._global_connection: typing.Optional[Connection] = None
         self._global_transaction: typing.Optional[Transaction] = None
 
     async def connect(self) -> None:
@@ -78,14 +78,3 @@ class Database(BaseDatabase):
             extra=DISCONNECT_EXTRA,
         )
         self.is_connected = False
-
-
-class Connection(BaseConnection):
-    async def iterate(
-        self, query, values=None
-    ) -> typing.AsyncGenerator[typing.Any, None]:
-        async with self.transaction():
-            async for record in self._connection.iterate(
-                self._build_query(query, values)
-            ):
-                yield record
