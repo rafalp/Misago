@@ -57,6 +57,14 @@ def test_child_node_is_inserted_under_parent_one(mptt):
     assert simplify_mptt(mptt) == [(1, None, 1, 4, 0), (2, 1, 2, 3, 1)]
 
 
+def test_next_child_node_is_inserted_after_previous_one(mptt):
+    parent = Node(id=1)
+    mptt.insert_node(parent)
+    mptt.insert_node(Node(id=2), parent)
+    mptt.insert_node(Node(id=3), parent)
+    assert simplify_mptt(mptt) == [(1, None, 1, 6, 0), (2, 1, 2, 3, 1), (3, 1, 4, 5, 1)]
+
+
 def test_node_is_added_after_previous_root_node_in_mptt(mptt):
     parent = Node(id=1)
     mptt.insert_node(parent)

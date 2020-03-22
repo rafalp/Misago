@@ -67,7 +67,9 @@ class MPTT:
         root_node = replace(self._root, left=left, right=left + 1, depth=depth)
         nodes_list.append(root_node)
         if self._children:
-            for node in self._children:
-                nodes_list += node._flatten_nodes(depth=depth + 1, left=left + 1)
+            for i, node in enumerate(self._children):
+                nodes_list += node._flatten_nodes(
+                    depth=depth + 1, left=left + (i * 2) + 1
+                )
             root_node.right = nodes_list[-1].right + 1
         return nodes_list
