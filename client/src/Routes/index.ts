@@ -1,3 +1,4 @@
 import { lazy } from "react"
 
-export const Categories = lazy(() => import("./Categories"))
+export const CategoriesList = lazy(() => import("./CategoriesList"))
+export const ThreadsList = lazy(() => import("./ThreadsList"))

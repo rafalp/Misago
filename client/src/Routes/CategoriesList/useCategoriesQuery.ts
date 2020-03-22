@@ -9,10 +9,12 @@ const CATEGORIES_QUERY = gql`
       id
       name
       slug
+      color
       children {
         id
         name
         slug
+        color
       }
     }
   }
