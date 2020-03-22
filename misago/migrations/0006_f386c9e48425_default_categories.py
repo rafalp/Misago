@@ -6,7 +6,6 @@ Create Date: 2019-12-15 21:51:27.434952
 
 """
 from alembic import op
-import sqlalchemy as sa
 from sqlalchemy import Boolean, Integer, JSON, String
 from sqlalchemy.sql import table, column
 
