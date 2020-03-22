@@ -74,7 +74,7 @@ categories = [
     {
         # id: 4
         "type": CategoryTypes.THREADS,
-        "parent_id": None,
+        "parent_id": 2,
         "depth": 1,
         "left": 4,
         "right": 5,
