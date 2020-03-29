@@ -1,13 +1,12 @@
 import { useMutation } from "@apollo/react-hooks"
 import { Trans } from "@lingui/macro"
 import { gql } from "apollo-boost"
-import { Formik, Form } from "formik"
 import React from "react"
 import {
   Button,
   ButtonType,
-  RootError,
-  FormField,
+  Field,
+  Form,
   Input,
   ModalAlert,
   ModalDialog,
@@ -15,6 +14,7 @@ import {
   ModalFormBody,
   ModalHeader,
   ModalSize,
+  RootError,
 } from "../UI"
 import { useAuth } from "../auth"
 import { IMutationError } from "../types"
@@ -59,8 +59,9 @@ interface ILoginModalProps {
 
 const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
   const { login } = useAuth()
+  const [disabled, setDisabled] = React.useState<boolean>(false)
   const [error, setError] = React.useState<string | null>(null)
-  const [authenticate, { data, error: graphqlError }] = useMutation<
+  const [authenticate, { data, loading, error: graphqlError }] = useMutation<
     ILoginData,
     ILoginValues
   >(LOGIN, { errorPolicy: "all" })
@@ -74,86 +75,80 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
         title={<Trans id="login.title">Log in</Trans>}
         close={close}
       />
-      <Formik<ILoginValues>
-        initialValues={{ username: "", password: "" }}
-        onSubmit={async (variables, { setSubmitting }) => {
+      <Form<ILoginValues>
+        id="login_form"
+        defaultValues={{ username: "", password: "" }}
+        disabled={loading || disabled}
+        onSubmit={async ({ data: variables }) => {
           const { username, password } = variables
           if (!username.trim().length || !password.length) {
             setError("value_error.all_fields_are_required")
-            setSubmitting(false)
-            return false
+            return
           }
-
-          setError(null)
 
           const data = await authenticate({ variables })
           const { user, token } = data.data?.login || {}
           if (token && user) {
+            setDisabled(true)
             login(token, user)
             close()
           }
         }}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <RootError
-              graphqlError={graphqlError}
-              dataErrors={data?.login.errors}
-              plainError={error}
-              messages={{
-                "value_error.all_fields_are_required": (
-                  <Trans>Fill out all fields.</Trans>
-                ),
-                "value_error.invalid_credentials": (
-                  <Trans>Login or password is incorrect.</Trans>
-                ),
-              }}
-            >
-              {({ message }) => <ModalAlert>{message}</ModalAlert>}
-            </RootError>
-            <ModalFormBody>
-              <FormField
-                id="login_username"
-                label={
-                  <Trans id="login.input.username">User name or e-mail</Trans>
-                }
-                name="username"
-                input={<Input maxLength={255} />}
-              />
-              <FormField
-                id="login_password"
-                label={<Trans id="login.input.password">Password</Trans>}
-                name="password"
-                input={<Input maxLength={255} type="password" />}
-              />
-            </ModalFormBody>
-            <ModalFooter>
-              <Button
-                loading={isSubmitting}
-                text={
-                  isSubmitting ? (
-                    <Trans id="login.submitting">Logging in...</Trans>
-                  ) : (
-                    <Trans id="login.submit">Log in</Trans>
-                  )
-                }
-                block
-              />
-              <Button
-                disabled={isSubmitting}
-                text={
-                  <Trans id="login.register">
-                    Not a member? <strong>Sign up</strong>
-                  </Trans>
-                }
-                type={ButtonType.LINK}
-                block
-                onClick={showRegister}
-              />
-            </ModalFooter>
-          </Form>
-        )}
-      </Formik>
+        <RootError
+          graphqlError={graphqlError}
+          dataErrors={data?.login.errors}
+          plainError={error}
+          messages={{
+            "value_error.all_fields_are_required": (
+              <Trans>Fill out all fields.</Trans>
+            ),
+            "value_error.invalid_credentials": (
+              <Trans>Login or password is incorrect.</Trans>
+            ),
+          }}
+        >
+          {({ message }) => <ModalAlert>{message}</ModalAlert>}
+        </RootError>
+        <ModalFormBody>
+          <Field
+            label={
+              <Trans id="login.input.username">User name or e-mail</Trans>
+            }
+            name="username"
+            input={<Input maxLength={255} />}
+          />
+          <Field
+            label={<Trans id="login.input.password">Password</Trans>}
+            name="password"
+            input={<Input maxLength={255} type="password" />}
+          />
+        </ModalFormBody>
+        <ModalFooter>
+          <Button
+            loading={loading || disabled}
+            text={
+              loading || disabled ? (
+                <Trans id="login.submitting">Logging in...</Trans>
+              ) : (
+                <Trans id="login.submit">Log in</Trans>
+              )
+            }
+            block
+          />
+          <Button
+            disabled={loading || disabled}
+            text={
+              <Trans id="login.register">
+                Not a member? <strong>Sign up</strong>
+              </Trans>
+            }
+            type={ButtonType.LINK}
+            block
+            onClick={showRegister}
+          />
+        </ModalFooter>
+      </Form>
     </ModalDialog>
   )
 }

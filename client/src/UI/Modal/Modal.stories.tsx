@@ -1,8 +1,7 @@
 import { actions } from "@storybook/addon-actions"
 import { withKnobs, boolean, select, text } from "@storybook/addon-knobs"
-import { Formik, Form } from "formik"
 import React from "react"
-import { Button, ButtonType, FormField, Input, Spinner } from ".."
+import { Button, ButtonType, Field, Form, Input, Spinner } from ".."
 import { RootContainer } from "../Storybook"
 import {
   Modal,
@@ -116,39 +115,32 @@ export const WithForm = () => {
     <RootContainer>
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
-          <Formik<IFormValues>
-            initialValues={{ username: "Bob", password: "" }}
-            onSubmit={async (_, { setSubmitting }) => {
-              setSubmitting(false)
-            }}
+          <Form<IFormValues>
+            id="modal_form"
+            defaultValues={{ username: "Bob", password: "" }}
+            onSubmit={async () => {}}
           >
-            {() => (
-              <Form>
-                {alert() && (
-                  <ModalAlert appearance={alertAppearance()}>
-                    Ut malesuada interdum massa in ultrices.
-                  </ModalAlert>
-                )}
-                <ModalFormBody>
-                  <FormField
-                    id="login_username"
-                    label="User name or e-mail"
-                    name="username"
-                    input={<Input disabled={loading} />}
-                  />
-                  <FormField
-                    id="login_password"
-                    label="Password"
-                    name="password"
-                    input={<Input disabled={loading} type="password" />}
-                  />
-                </ModalFormBody>
-                <ModalFooter>
-                  <Button loading={loading} text={btnText} block />
-                </ModalFooter>
-              </Form>
+            {alert() && (
+              <ModalAlert appearance={alertAppearance()}>
+                Ut malesuada interdum massa in ultrices.
+              </ModalAlert>
             )}
-          </Formik>
+            <ModalFormBody>
+              <Field
+                label="User name or e-mail"
+                name="username"
+                input={<Input disabled={loading} />}
+              />
+              <Field
+                label="Password"
+                name="password"
+                input={<Input disabled={loading} type="password" />}
+              />
+            </ModalFormBody>
+            <ModalFooter>
+              <Button loading={loading} text={btnText} block />
+            </ModalFooter>
+          </Form>
         </ModalDialog>
       </Modal>
     </RootContainer>

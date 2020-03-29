@@ -1,16 +1,15 @@
 import { useMutation } from "@apollo/react-hooks"
 import { Trans } from "@lingui/macro"
 import { gql } from "apollo-boost"
-import { Formik, Form } from "formik"
 import React from "react"
 import * as Yup from "yup"
 import {
   Button,
   ButtonType,
-  RootError,
   EmailValidationError,
+  Field,
   FieldError,
-  FormField,
+  Form,
   Input,
   ModalAlert,
   ModalDialog,
@@ -19,6 +18,7 @@ import {
   ModalHeader,
   ModalSize,
   PasswordValidationError,
+  RootError,
   UsernameValidationError,
 } from "../UI"
 import { useAuth } from "../auth"
@@ -81,7 +81,8 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
   showLogin,
 }) => {
   const { login } = useAuth()
-  const [register, { data, error: graphqlError }] = useMutation<
+  const [disabled, setDisabled] = React.useState<boolean>(false)
+  const [register, { data, loading, error: graphqlError }] = useMutation<
     IRegisterData,
     IRegisterInput
   >(REGISTER, { errorPolicy: "all" })
@@ -110,110 +111,111 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
         title={<Trans id="register.title">Sign up</Trans>}
         close={close}
       />
-      <Formik<IRegisterValues>
-        initialValues={{ name: "", email: "", password: "" }}
+      <Form<IRegisterValues>
+        id="register_form"
+        defaultValues={{
+          name: "",
+          email: "",
+          password: "",
+        }}
+        disabled={loading || disabled}
         validationSchema={RegisterSchema}
-        onSubmit={async (input, { setFieldError, setSubmitting }) => {
+        onSubmit={async ({ clearError, setError, data: input }) => {
+          clearError()
+
           const data = await register({ variables: { input } })
           const { errors, token, user } = data.data?.register || {}
-          setSubmitting(false)
 
-          errors?.forEach(({ location, type }) => {
+          errors?.forEach(({ location, type, message }) => {
             const field = location.join(".")
-            setFieldError(field, type)
+            setError(field, type, message)
           })
 
           if (token && user) {
+            setDisabled(true)
             login(token, user)
             close()
           }
         }}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <RootError
-              graphqlError={graphqlError}
-              dataErrors={data?.register.errors}
-            >
-              {({ message }) => <ModalAlert>{message}</ModalAlert>}
-            </RootError>
-            <ModalFormBody>
-              <FormField
-                id="register_name"
-                label={<Trans id="input.name">User name</Trans>}
-                name="name"
-                input={<Input maxLength={settings.usernameMaxLength} />}
-                error={(error, value) => (
-                  <UsernameValidationError
-                    error={error}
-                    value={value.trim().length}
-                    min={settings.usernameMinLength}
-                    max={settings.usernameMaxLength}
-                  >
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </UsernameValidationError>
-                )}
-              />
-              <FormField
-                id="register_email"
-                label={<Trans id="input.email">E-mail</Trans>}
-                name="email"
-                input={<Input maxLength={100} type="email" />}
-                error={error => (
-                  <EmailValidationError error={error}>
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </EmailValidationError>
-                )}
-              />
-              <FormField
-                id="register_password"
-                label={<Trans id="input.password">Password</Trans>}
-                name="password"
-                input={
-                  <Input
-                    maxLength={settings.passwordMaxLength}
-                    type="password"
-                  />
-                }
-                error={(error, value) => (
-                  <PasswordValidationError
-                    error={error}
-                    value={value.length}
-                    min={settings.passwordMinLength}
-                    max={settings.passwordMaxLength}
-                  >
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </PasswordValidationError>
-                )}
-              />
-            </ModalFormBody>
-            <ModalFooter>
-              <Button
-                loading={isSubmitting}
-                text={
-                  isSubmitting ? (
-                    <Trans id="register.submitting">Signing up...</Trans>
-                  ) : (
-                    <Trans id="register.submit">Sign up</Trans>
-                  )
-                }
-                block
-              />
-              <Button
-                disabled={isSubmitting}
-                text={
-                  <Trans id="register.login">
-                    Already a member? <strong>Log in</strong>
-                  </Trans>
-                }
-                type={ButtonType.LINK}
-                block
-                onClick={showLogin}
-              />
-            </ModalFooter>
-          </Form>
-        )}
-      </Formik>
+        <RootError
+          graphqlError={graphqlError}
+          dataErrors={data?.register.errors}
+        >
+          {({ message }) => <ModalAlert>{message}</ModalAlert>}
+        </RootError>
+        <ModalFormBody>
+          <Field
+            label={<Trans id="input.name">User name</Trans>}
+            name="name"
+            input={<Input maxLength={settings.usernameMaxLength} />}
+            error={(error, value) => (
+              <UsernameValidationError
+                error={error}
+                value={value.trim().length}
+                min={settings.usernameMinLength}
+                max={settings.usernameMaxLength}
+              >
+                {({ message }) => <FieldError>{message}</FieldError>}
+              </UsernameValidationError>
+            )}
+            required
+          />
+          <Field
+            label={<Trans id="input.email">E-mail</Trans>}
+            name="email"
+            input={<Input maxLength={100} type="email" />}
+            error={error => (
+              <EmailValidationError error={error}>
+                {({ message }) => <FieldError>{message}</FieldError>}
+              </EmailValidationError>
+            )}
+            required
+          />
+          <Field
+            label={<Trans id="input.password">Password</Trans>}
+            name="password"
+            input={
+              <Input maxLength={settings.passwordMaxLength} type="password" />
+            }
+            error={(error, value) => (
+              <PasswordValidationError
+                error={error}
+                value={value.length}
+                min={settings.passwordMinLength}
+                max={settings.passwordMaxLength}
+              >
+                {({ message }) => <FieldError>{message}</FieldError>}
+              </PasswordValidationError>
+            )}
+            required
+          />
+        </ModalFormBody>
+        <ModalFooter>
+          <Button
+            loading={loading || disabled}
+            text={
+              loading || disabled ? (
+                <Trans id="register.submitting">Signing up...</Trans>
+              ) : (
+                <Trans id="register.submit">Sign up</Trans>
+              )
+            }
+            block
+          />
+          <Button
+            disabled={loading || disabled}
+            text={
+              <Trans id="register.login">
+                Already a member? <strong>Log in</strong>
+              </Trans>
+            }
+            type={ButtonType.LINK}
+            block
+            onClick={showLogin}
+          />
+        </ModalFooter>
+      </Form>
     </ModalDialog>
   )
 }

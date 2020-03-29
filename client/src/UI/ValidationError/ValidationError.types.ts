@@ -7,7 +7,7 @@ export interface IValidationError {
 
 export interface IValidationErrorProps {
   children: (error: IValidationError) => React.ReactElement
-  error?: string | null
+  error?: IValidationError | null
   value?: number
   max?: number
   min?: number
