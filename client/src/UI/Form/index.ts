@@ -1,5 +1,3 @@
-import FormField from "./FormField"
-import FormGroup from "./FormGroup"
-import FormRow from "./FormRow"
+import Form from "./Form"
 
-export { FormField, FormGroup, FormRow }
+export default Form

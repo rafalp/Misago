@@ -7,10 +7,14 @@ import {
   DropdownDivider,
   DropdownLink,
 } from "./Dropdown"
-import { FieldError, FieldLabel } from "./Field"
-import { FormField, FormGroup, FormRow } from "./Form"
-import { Input } from "./FormControl"
+import Field from "./Field"
+import FieldContext from "./FieldContext"
+import FieldError from "./FieldError"
+import FieldLabel from "./FieldLabel"
+import Form from "./Form"
+import FormContext from "./FormContext"
 import Icon from "./Icon"
+import Input from "./Input"
 import {
   Modal,
   ModalAlert,
@@ -52,11 +56,12 @@ export {
   DropdownDivider,
   DropdownLink,
   EmailValidationError,
+  Field,
+  FieldContext,
   FieldError,
   FieldLabel,
-  FormField,
-  FormGroup,
-  FormRow,
+  Form,
+  FormContext,
   Icon,
   Input,
   Modal,

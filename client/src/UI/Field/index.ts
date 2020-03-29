@@ -1,4 +1,3 @@
-import FieldError from "./FieldError"
-import FieldLabel from "./FieldLabel"
+import Field from "./Field"
 
-export { FieldError, FieldLabel }
+export default Field
