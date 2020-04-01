@@ -9,3 +9,11 @@ type Post {
     postedAt: DateTime!
     extra: Generic!
 }
+
+type ThreadPostsPage {
+    items: [Post!]!
+    number: Int!
+    start: Int!
+    stop: Int!
+    pagination: Pagination!
+}

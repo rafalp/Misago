@@ -28,8 +28,8 @@ class PaginationPage(Generic[Item]):
         return cls(
             items=items,
             number=page.number,
-            start=page.is_first + 1,
-            stop=page.is_last,
+            start=page.start or 1 if items else 0,
+            stop=page.stop,
             is_first=page.is_first,
             is_last=page.is_last,
             has_previous=page.has_previous,
@@ -37,7 +37,7 @@ class PaginationPage(Generic[Item]):
             pagination=Pagination(
                 count=page.paginator.get_count(),
                 pages=page.paginator.get_pages(),
-                pageSize=page.paginator.per_page,
+                per_page=page.paginator.per_page,
             ),
         )
 
@@ -46,4 +46,4 @@ class PaginationPage(Generic[Item]):
 class Pagination:
     count: int
     pages: int
-    pageSize: int
+    per_page: int
