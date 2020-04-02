@@ -8,6 +8,7 @@ from .cache import cache
 from .conf import settings
 from .database import database
 from .hooks import graphql_context_hook
+from .graphql.admin.schema import admin_schema
 from .graphql.context import get_graphql_context
 from .graphql.schema import schema
 from .middleware import MisagoMiddleware
@@ -44,3 +45,9 @@ graphql_app = GraphQL(
     schema, debug=settings.debug, context_value=resolve_graphql_context
 )
 app.mount("/graphql/", graphql_app)
+
+
+admin_graphql_app = GraphQL(
+    admin_schema, debug=settings.debug, context_value=resolve_graphql_context
+)
+app.mount("/admin/graphql/", admin_graphql_app)

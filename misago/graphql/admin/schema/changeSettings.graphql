@@ -1,0 +1,14 @@
+extend type Mutation {
+    changeSettings(input: ChangeSettingsInput!): [Error!]
+}
+
+input ChangeSettingsInput {
+    forumIndexHeader: String!
+    forumIndexThreads: Boolean!
+    forumIndexTitle: String!
+    forumName: String!
+    passwordMinLength: Int!
+    passwordMaxLength: Int!
+    usernameMinLength: Int!
+    usernameMaxLength: Int!
+}
