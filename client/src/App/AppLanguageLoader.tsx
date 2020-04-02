@@ -18,8 +18,8 @@ const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({
     import(
       /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
       `../locale/${language}/messages`
-    ).then(catalog => {
-      setCatalogs(c => {
+    ).then((catalog) => {
+      setCatalogs((c) => {
         return { ...c, [language]: catalog.default }
       })
     })

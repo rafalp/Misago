@@ -165,7 +165,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
             label={<Trans id="input.email">E-mail</Trans>}
             name="email"
             input={<Input maxLength={100} type="email" />}
-            error={error => (
+            error={(error) => (
               <EmailValidationError error={error}>
                 {({ message }) => <FieldError>{message}</FieldError>}
               </EmailValidationError>

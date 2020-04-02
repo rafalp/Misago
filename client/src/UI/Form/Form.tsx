@@ -4,7 +4,7 @@ import {
   FormContext as HookFormContext,
   useForm,
 } from "react-hook-form"
-import FormContext from "../FormContext"
+import FormContext from "./FormContext"
 
 interface IOnSubmit<FormValues> {
   data: FormValues

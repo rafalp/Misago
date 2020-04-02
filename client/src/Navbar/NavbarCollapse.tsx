@@ -45,7 +45,7 @@ const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
             aria-controls="navbarToggle"
             aria-expanded={isOpen ? "true" : "false"}
             aria-label={i18n._(t("navbar.toggle")`Toggle navigation`)}
-            onClick={() => updateOpen(state => !state)}
+            onClick={() => updateOpen((state) => !state)}
           >
             {user ? (
               <Avatar size={30} user={user} />
