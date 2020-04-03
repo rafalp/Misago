@@ -41,13 +41,12 @@ async def resolve_graphql_context(request: Request) -> GraphQLContext:
     return await graphql_context_hook.call_action(get_graphql_context, request)
 
 
-graphql_app = GraphQL(
-    schema, debug=settings.debug, context_value=resolve_graphql_context
+app.mount(
+    "/graphql/",
+    GraphQL(schema, debug=settings.debug, context_value=resolve_graphql_context),
 )
-app.mount("/graphql/", graphql_app)
 
-
-admin_graphql_app = GraphQL(
-    admin_schema, debug=settings.debug, context_value=resolve_graphql_context
+app.mount(
+    "/admin/graphql/",
+    GraphQL(admin_schema, debug=settings.debug, context_value=resolve_graphql_context),
 )
-app.mount("/admin/graphql/", admin_graphql_app)
