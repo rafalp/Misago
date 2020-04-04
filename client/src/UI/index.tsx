@@ -1,12 +1,14 @@
 import Avatar from "./Avatar"
 import Button, { ButtonSpinner, ButtonType } from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
+import CategoriesNav from "./CategoriesNav"
 import {
   Dropdown,
   DropdownButton,
   DropdownDivider,
   DropdownLink,
 } from "./Dropdown"
+import { Error, GraphQLError, NotFoundError } from "./Error"
 import {
   Field,
   FieldContext,
@@ -17,6 +19,7 @@ import {
 } from "./Form"
 import Icon from "./Icon"
 import Input from "./Input"
+import { Layout, LayoutMain, LayoutSide } from "./Layout"
 import {
   Modal,
   ModalAlert,
@@ -31,10 +34,9 @@ import {
 } from "./Modal"
 import RootError from "./RootError"
 import RouteContainer from "./RouteContainer"
-import { RouteError, RouteNotFound } from "./RouteError"
+import { RouteError, RouteGraphQLError, RouteNotFound } from "./RouteError"
 import RouteErrorBoundary from "./RouteErrorBoundary"
-import RouteGraphQLError from "./RouteGraphQLError"
-import RouteLoader from "./RouteLoader"
+import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
 import Spinner from "./Spinner"
 import {
   EmailValidationError,
@@ -53,19 +55,25 @@ export {
   CardBody,
   CardFooter,
   CardHeader,
+  CategoriesNav,
   Dropdown,
   DropdownButton,
   DropdownDivider,
   DropdownLink,
   EmailValidationError,
+  Error,
   Field,
   FieldContext,
   FieldError,
   FieldLabel,
   Form,
   FormContext,
+  GraphQLError,
   Icon,
   Input,
+  Layout,
+  LayoutMain,
+  LayoutSide,
   Modal,
   ModalAlert,
   ModalBacktrop,
@@ -76,6 +84,7 @@ export {
   ModalHeader,
   ModalSize,
   ModalTitle,
+  NotFoundError,
   PasswordValidationError,
   RootError,
   RouteContainer,
@@ -83,6 +92,7 @@ export {
   RouteErrorBoundary,
   RouteGraphQLError,
   RouteLoader,
+  RouteLoaderSpinner,
   RouteNotFound,
   Spinner,
   UsernameValidationError,

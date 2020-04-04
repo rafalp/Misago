@@ -1,6 +1,17 @@
+import classNames from "classnames"
 import React from "react"
 import { Link, useParams } from "react-router-dom"
-import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../../UI"
+import {
+  CategoriesNav,
+  Layout,
+  LayoutMain,
+  LayoutSide,
+  RouteContainer,
+  RouteGraphQLError,
+  RouteLoader,
+  RouteNotFound,
+  WindowTitle,
+} from "../../UI"
 import * as urls from "../../urls"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
@@ -14,46 +25,63 @@ const CategoryThreadsList: React.FC = () => {
   const { data, error, loading } = useCategoryThreadsQuery({ id })
 
   if (loading) return <RouteLoader />
-  if (error) return <RouteGraphQLError error={error} />
-  if (!data?.category) return <RouteNotFound />
+  if (!data && error) return <RouteGraphQLError error={error} />
+  if (!data || !data?.category) return <RouteNotFound />
+
+  const { category, threads } = data || { category: null, threads: null }
 
   return (
-    <div>
-      <Link to={urls.categories()}>[CATEGORIES]</Link>
-      <Link to={urls.startThread()}>[START THREAD]</Link>
-      <h1>{data?.category.name}</h1>
-      <ul>
-        {data?.threads.items.map(thread => (
-          <li key={thread.id}>
-            <strong>
-              <Link to={urls.thread(thread)}>{thread.title}</Link>
-            </strong>
-            <ul className="list-inline">
-              {thread.category.parent && (
-                <li className="list-inline-item">
-                  <Link
-                    to={urls.category(thread.category.parent)}
-                    style={{
-                      borderLeft: `4px solid ${thread.category.parent.color}`,
-                    }}
-                  >
-                    {thread.category.parent.name}
-                  </Link>
-                </li>
-              )}
-              <li className="list-inline-item">
-                <Link
-                  to={urls.category(thread.category)}
-                  style={{ borderLeft: `4px solid ${thread.category.color}` }}
-                >
-                  {thread.category.name}
-                </Link>
+    <RouteContainer
+      className={classNames(
+        "route-category",
+        category && `route-category-${category.id}`
+      )}
+    >
+      <Layout>
+        <LayoutSide>
+          <CategoriesNav active={category} />
+        </LayoutSide>
+        <LayoutMain>
+          <WindowTitle title={category.name} />
+          <Link to={urls.categories()}>[CATEGORIES]</Link>
+          <Link to={urls.startThread()}>[START THREAD]</Link>
+          <h1>{category.name}</h1>
+          <ul>
+            {threads.items.map((thread) => (
+              <li key={thread.id}>
+                <strong>
+                  <Link to={urls.thread(thread)}>{thread.title}</Link>
+                </strong>
+                <ul className="list-inline">
+                  {thread.category.parent && (
+                    <li className="list-inline-item">
+                      <Link
+                        to={urls.category(thread.category.parent)}
+                        style={{
+                          borderLeft: `4px solid ${thread.category.parent.color}`,
+                        }}
+                      >
+                        {thread.category.parent.name}
+                      </Link>
+                    </li>
+                  )}
+                  <li className="list-inline-item">
+                    <Link
+                      to={urls.category(thread.category)}
+                      style={{
+                        borderLeft: `4px solid ${thread.category.color}`,
+                      }}
+                    >
+                      {thread.category.name}
+                    </Link>
+                  </li>
+                </ul>
               </li>
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </div>
+            ))}
+          </ul>
+        </LayoutMain>
+      </Layout>
+    </RouteContainer>
   )
 }
 

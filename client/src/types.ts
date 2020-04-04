@@ -32,6 +32,9 @@ export interface ICategory {
 }
 
 export interface ISettings {
+  forumIndexHeader: string
+  forumIndexThreads: boolean
+  forumIndexTitle: string
   forumName: string
   passwordMinLength: number
   passwordMaxLength: number

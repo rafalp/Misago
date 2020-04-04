@@ -15,11 +15,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 30vh;
+  padding: 5rem 0;
 }
 
 @include media-breakpoint-up(md) {
   .route-loader {
-    height: 60vh;
+    padding: 5rem 0;
   }
 }

@@ -1,6 +1,6 @@
-import { Trans } from "@lingui/macro"
 import classNames from "classnames"
 import React from "react"
+import { Error } from "../Error"
 import RouteContainer from "../RouteContainer"
 import WindowTitle from "../WindowTitle"
 
@@ -17,27 +17,7 @@ const RouteError: React.FC<IRouteErrorProps> = ({
 }) => (
   <RouteContainer className={classNames("route-error-container", className)}>
     <WindowTitle />
-    <div className="route-error">
-      <div className="route-error-body">
-        <div className="route-error-icon" />
-        <div className="route-error-message">
-          <h1>
-            {header || (
-              <Trans id="route_error.title">
-                Requested page could not be displayed.
-              </Trans>
-            )}
-          </h1>
-          <p>
-            {message || (
-              <Trans id="route_error.message">
-                An unexpected error has occurred.
-              </Trans>
-            )}
-          </p>
-        </div>
-      </div>
-    </div>
+    <Error className="route" header={header} message={message} />
   </RouteContainer>
 )
 

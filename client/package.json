@@ -62,6 +62,7 @@
     "@storybook/addon-viewport": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/react": "^5.3.18",
+    "@storybook/preset-create-react-app": "^2.1.1",
     "@types/lingui__core": "^2.7.0",
     "@types/lingui__macro": "^2.7.3",
     "@types/lingui__react": "^2.8.2",

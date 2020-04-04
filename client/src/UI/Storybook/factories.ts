@@ -1,6 +1,9 @@
 import { IAvatar, ISettings, IUser } from "../../types"
 
 const defaultSettings = {
+  forumIndexHeader: "",
+  forumIndexThreads: true,
+  forumIndexTitle: "",
   forumName: "Misago",
   passwordMinLength: 1,
   passwordMaxLength: 40,
