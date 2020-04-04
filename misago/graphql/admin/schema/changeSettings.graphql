@@ -1,5 +1,5 @@
 extend type Mutation {
-    changeSettings(input: ChangeSettingsInput!): [Error!]
+    changeSettings(input: ChangeSettingsInput!): ChangeSettingsResult!
 }
 
 input ChangeSettingsInput {
@@ -7,8 +7,9 @@ input ChangeSettingsInput {
     forumIndexThreads: Boolean!
     forumIndexTitle: String!
     forumName: String!
-    passwordMinLength: Int!
-    passwordMaxLength: Int!
-    usernameMinLength: Int!
-    usernameMaxLength: Int!
+}
+
+type ChangeSettingsResult {
+    errors: [Error!]
+    settings: Settings
 }

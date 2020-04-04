@@ -113,16 +113,16 @@ async def no_password_user(db):
 
 
 @pytest.fixture
-async def admin(db, user_password):
+async def moderator(db, user_password):
     return await create_user(
-        "Admin", "admin@example.com", password=user_password, is_admin=True
+        "Moderator", "moderator@example.com", password=user_password, is_moderator=True
     )
 
 
 @pytest.fixture
-async def moderator(db, user_password):
+async def admin(db, user_password):
     return await create_user(
-        "Moderator", "moderator@example.com", password=user_password, is_moderator=True
+        "Admin", "admin@example.com", password=user_password, is_admin=True
     )
 
 
@@ -168,6 +168,22 @@ def moderator_graphql_context(cache_versions, dynamic_settings, moderator):
 @pytest.fixture
 def moderator_graphql_info(moderator_graphql_context):
     return Mock(context=moderator_graphql_context)
+
+
+@pytest.fixture
+def admin_graphql_context(cache_versions, dynamic_settings, admin):
+    return {
+        "request": Mock(headers={}),
+        "cache_versions": cache_versions,
+        "settings": dynamic_settings,
+        "checked_admin_auth": True,
+        "user": admin,
+    }
+
+
+@pytest.fixture
+def admin_graphql_info(admin_graphql_context):
+    return Mock(context=admin_graphql_context)
 
 
 @pytest.fixture
