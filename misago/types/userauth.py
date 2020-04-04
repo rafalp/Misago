@@ -4,9 +4,11 @@ from .graphqlcontext import GraphQLContext
 from .user import User
 
 
-AuthenticateUserAction = Callable[[GraphQLContext, str, str], Awaitable[Optional[User]]]
+AuthenticateUserAction = Callable[
+    [GraphQLContext, str, str, bool], Awaitable[Optional[User]]
+]
 AuthenticateUserFilter = Callable[
-    [AuthenticateUserAction, GraphQLContext, str, str], Awaitable[Optional[User]]
+    [AuthenticateUserAction, GraphQLContext, str, str, bool], Awaitable[Optional[User]]
 ]
 
 GetAuthUserAction = Callable[[GraphQLContext, int], Awaitable[Optional[User]]]
@@ -14,20 +16,22 @@ GetAuthUserFilter = Callable[
     [GetAuthUserAction, GraphQLContext, int], Awaitable[Optional[User]]
 ]
 
-GetUserFromContextAction = Callable[[GraphQLContext], Awaitable[Optional[User]]]
+GetUserFromContextAction = Callable[[GraphQLContext, bool], Awaitable[Optional[User]]]
 GetUserFromContextFilter = Callable[
-    [GetUserFromContextAction, GraphQLContext], Awaitable[Optional[User]],
+    [GetUserFromContextAction, GraphQLContext, bool], Awaitable[Optional[User]],
 ]
 
-GetUserFromTokenAction = Callable[[GraphQLContext, str], Awaitable[Optional[User]]]
+GetUserFromTokenAction = Callable[
+    [GraphQLContext, str, bool], Awaitable[Optional[User]]
+]
 GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, GraphQLContext, str], Awaitable[Optional[User]],
+    [GetUserFromTokenAction, GraphQLContext, str, bool], Awaitable[Optional[User]],
 ]
 
 GetUserFromTokenPayloadAction = Callable[
-    [GraphQLContext, Dict[str, Any]], Awaitable[Optional[User]]
+    [GraphQLContext, Dict[str, Any], bool], Awaitable[Optional[User]]
 ]
 GetUserFromTokenPayloadFilter = Callable[
-    [GetUserFromTokenPayloadAction, GraphQLContext, Dict[str, Any]],
+    [GetUserFromTokenPayloadAction, GraphQLContext, Dict[str, Any], bool],
     Awaitable[Optional[User]],
 ]

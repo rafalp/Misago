@@ -20,13 +20,13 @@ async def resolve_login(_, info: GraphQLResolveInfo, *, username: str, password:
         raise AllFieldsAreRequiredError()
 
     user = await authenticate_user_hook.call_action(
-        authenticate_user, info.context, username, password
+        authenticate_user, info.context, username, password, in_admin=False
     )
 
     if not user:
         raise InvalidCredentialsError()
 
     token = await create_user_token_hook.call_action(
-        create_user_token, info.context, user
+        create_user_token, info.context, user, in_admin=False
     )
     return {"user": user, "token": token}

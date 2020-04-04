@@ -63,7 +63,7 @@ async def resolve_register(
         register_user, info.context, cleaned_data
     )
     token = await create_user_token_hook.call_action(
-        create_user_token, info.context, user
+        create_user_token, info.context, user, in_admin=False
     )
 
     return {"user": user, "token": token}

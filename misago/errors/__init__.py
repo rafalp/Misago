@@ -34,6 +34,11 @@ class NotAuthorizedError(AuthError):
     msg_template = "authorization is required"
 
 
+class NotAdminError(AuthError):
+    code = "not_admin"
+    msg_template = "administrator permission is required"
+
+
 class NotModeratorError(AuthError):
     code = "not_moderator"
     msg_template = "moderator permission is required"

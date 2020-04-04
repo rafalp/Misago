@@ -14,6 +14,7 @@ from ..mutations import mutations
 from ..scalars import scalars
 from ..schema import type_defs
 from ..types import types
+from .mutations import admin_mutations
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +33,7 @@ admin_schema = make_executable_schema(
     *types,
     *mutations,
     *graphql_types_hook,
+    *admin_mutations,
     *graphql_admin_types_hook,
     directives={**graphql_directives_hook, **graphql_admin_directives_hook},
 )

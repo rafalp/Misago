@@ -6,6 +6,7 @@ authenticate_user_hook.call_action(
     context: GraphQLContext,
     username: str,
     password: str,
+    in_admin: bool,
 )
 ```
 
@@ -23,6 +24,7 @@ async def authenticate_user(
     context: GraphQLContext,
     username: str,
     password: str,
+    in_admin: str,
 ) -> Optional[User:]
     ...
 ```
@@ -46,3 +48,12 @@ str
 ```
 
 User password.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if authentication is happening in the admin panel, `False` otherwise.

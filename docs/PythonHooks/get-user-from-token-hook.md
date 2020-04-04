@@ -2,7 +2,7 @@
 
 ```python
 get_user_from_token_hook.call_action(
-    action: GetUserFromTokenAction, context: GraphQLContext, token: str
+    action: GetUserFromTokenAction, context: GraphQLContext, token: str, in_admin: bool
 )
 ```
 
@@ -16,7 +16,9 @@ Returns `User` dataclass with authorized user data or `None` if token was invali
 ### `action`
 
 ```python
-async def get_user_from_token(context: GraphQLContext, token: str) -> Optional[User]:
+async def get_user_from_token(
+    context: GraphQLContext, token: str, in_admin: bool
+) -> Optional[User]:
     ...
 ```
 
@@ -39,3 +41,12 @@ str
 ```
 
 A `str` containing authorization token. It may be invalid.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if user is being retrieved in the admin panel, `False` otherwise.

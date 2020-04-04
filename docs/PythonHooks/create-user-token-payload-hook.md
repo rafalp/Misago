@@ -2,7 +2,10 @@
 
 ```python
 create_user_token_payload_hook.call_action(
-    action: CreateUserTokenPayloadAction, context: GraphQLContext, user: User
+    action: CreateUserTokenPayloadAction,
+    context: GraphQLContext,
+    user: User,
+    in_admin: bool
 )
 ```
 
@@ -16,7 +19,9 @@ Returns `dict` which should be used as JWT token's payload.
 ### `action`
 
 ```python
-async def create_user_token_payload(context: GraphQLContext, user: User) -> Dict[str, Any]:
+async def create_user_token_payload(
+    context: GraphQLContext, user: User, in_admin: bool
+) -> Dict[str, Any]:
     ...
 ```
 
@@ -39,3 +44,12 @@ User
 ```
 
 A `dict` containing authorized user's data.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if token payload will be used by the admin panel, `False` otherwise.

@@ -2,7 +2,10 @@
 
 ```python
 create_user_token_hook.call_action(
-    action: CreateUserTokenAction, context: GraphQLContext, user: User
+    action: CreateUserTokenAction,
+    context: GraphQLContext,
+    user: User,
+    in_admin: bool,
 )
 ```
 
@@ -16,7 +19,7 @@ Returns `str` with authorization token that should be included by the client in 
 ### `action`
 
 ```python
-async def create_user_token(context: GraphQLContext, user: User) -> str:
+async def create_user_token(context: GraphQLContext, user: User, in_admin: bool) -> str:
     ...
 ```
 
@@ -39,3 +42,12 @@ User
 ```
 
 A `dict` containing authorized user's data.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if user token will be used by the admin panel, `False` otherwise.

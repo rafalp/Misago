@@ -3,7 +3,7 @@
 
 ```python
 get_user_from_context_hook.call_action(
-    action: GetUserFromContextAction, context: GraphQLContext
+    action: GetUserFromContextAction, context: GraphQLContext, in_admin: bool
 )
 ```
 
@@ -17,7 +17,7 @@ Returns `User` dataclass with authorized user data or `None` if context didn't c
 ### `action`
 
 ```python
-async def get_user_from_context(context: GraphQLContext) -> Optional[User]:
+async def get_user_from_context(context: GraphQLContext, in_admin: bool) -> Optional[User]:
     ...
 ```
 
@@ -31,3 +31,12 @@ GraphQLContext
 ```
 
 A dict with GraphQL query context.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if user is being retrieved in the admin panel, `False` otherwise.

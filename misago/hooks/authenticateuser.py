@@ -11,5 +11,6 @@ class AuthenticateUserHook(FilterHook[AuthenticateUserAction, AuthenticateUserFi
         context: GraphQLContext,
         username: str,
         password: str,
+        in_admin: bool,
     ) -> Optional[User]:
-        return await self.filter(action, context, username, password)
+        return await self.filter(action, context, username, password, in_admin)

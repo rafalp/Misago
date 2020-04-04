@@ -4,14 +4,15 @@ from .graphqlcontext import GraphQLContext
 from .user import User
 
 
-CreateUserTokenAction = Callable[[GraphQLContext, User], Awaitable[str]]
+CreateUserTokenAction = Callable[[GraphQLContext, User, bool], Awaitable[str]]
 CreateUserTokenFilter = Callable[
-    [CreateUserTokenAction, GraphQLContext, User], Awaitable[str]
+    [CreateUserTokenAction, GraphQLContext, User, bool], Awaitable[str]
 ]
 
 CreateUserTokenPayloadAction = Callable[
-    [GraphQLContext, User], Awaitable[Dict[str, Any]]
+    [GraphQLContext, User, bool], Awaitable[Dict[str, Any]]
 ]
 CreateUserTokenPayloadFilter = Callable[
-    [CreateUserTokenPayloadAction, GraphQLContext, User], Awaitable[Dict[str, Any]],
+    [CreateUserTokenPayloadAction, GraphQLContext, User, bool],
+    Awaitable[Dict[str, Any]],
 ]

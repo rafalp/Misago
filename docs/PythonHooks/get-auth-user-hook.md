@@ -2,7 +2,7 @@
 
 ```python
 get_auth_user_hook.call_action(
-    action: GetAuthUserAction, context: GraphQLContext, user_id: int
+    action: GetAuthUserAction, context: GraphQLContext, user_id: int, in_admin: bool
 )
 ```
 
@@ -16,7 +16,9 @@ Returns `User` dataclass with authorized user data or `None` if user was not fou
 ### `action`
 
 ```python
-async def get_user(context: GraphQLContext, user_id: int) -> Optional[User]:
+async def get_user(
+    context: GraphQLContext, user_id: int, in_admin: bool
+) -> Optional[User]:
     ...
 ```
 
@@ -39,3 +41,12 @@ int
 ```
 
 An `int` containing authorized user's id. May no longer exist in database.
+
+
+### `in_admin`
+
+```python
+bool
+```
+
+`True` if authorized user is being retrieved in the admin panel, `False` otherwise.

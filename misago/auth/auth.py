@@ -12,7 +12,7 @@ AUTHORIZATION_TYPE = "bearer"
 
 
 async def authenticate_user(
-    context: GraphQLContext, username: str, password: str
+    context: GraphQLContext, username: str, password: str, in_admin: bool = False
 ) -> Optional[User]:
     user = await get_user_by_name_or_email(username)
 
@@ -26,25 +26,29 @@ async def authenticate_user(
     return user
 
 
-async def authenticate_admin(
-    context: GraphQLContext, username: str, password: str
-) -> Optional[User]:
-    user = await authenticate_user(context, username, password)
-    if user and not user.is_admin:
-        return None
-    return user
-
-
 async def get_authenticated_user(context: GraphQLContext) -> Optional[User]:
     if "user" not in context:
         context["user"] = await get_user_from_context_hook.call_action(
-            get_user_from_context, context
+            get_user_from_context, context, in_admin=False
         )
 
     return context["user"]
 
 
-async def get_user_from_context(context: GraphQLContext) -> Optional[User]:
+async def get_authenticated_admin(context: GraphQLContext) -> Optional[User]:
+    if "checked_admin_auth" not in context:
+        context["checked_admin_auth"] = True
+        context["user"] = await get_user_from_context_hook.call_action(
+            get_user_from_context, context, in_admin=True
+        )
+    if context["user"] and context["user"].is_admin:
+        return context["user"]
+    return None
+
+
+async def get_user_from_context(
+    context: GraphQLContext, in_admin: bool = False
+) -> Optional[User]:
     headers = context["request"].headers
     authorization = headers.get(AUTHORIZATION_HEADER)
     if not authorization:
@@ -55,7 +59,7 @@ async def get_user_from_context(context: GraphQLContext) -> Optional[User]:
         return None
 
     return await get_user_from_token_hook.call_action(
-        get_user_from_token, context, token
+        get_user_from_token, context, token, in_admin
     )
 
 

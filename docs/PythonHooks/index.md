@@ -37,7 +37,6 @@ Standard hooks
 
 All standard hooks can be imported from `misago.hooks` module:
 
-- [`authenticate_admin_hook`](./authenticate-admin-hook.md)
 - [`authenticate_user_hook`](./authenticate-user-hook.md)
 - [`close_thread_hook`](./close-thread-hook.md)
 - [`close_thread_input_hook`](./close-thread-input-hook.md)
