@@ -10,3 +10,16 @@
     height: 80vh;
   }
 }
+
+.route-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30vh;
+}
+
+@include media-breakpoint-up(md) {
+  .route-loader {
+    height: 60vh;
+  }
+}

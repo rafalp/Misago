@@ -3,6 +3,7 @@ from typing import Any, Dict, List, Type
 from ariadne import SchemaBindable, SchemaDirectiveVisitor
 
 from .action import ActionHook
+from .authenticateadmin import AuthenticateAdminHook
 from .authenticateuser import AuthenticateUserHook
 from .closethread import (
     CloseThreadHook,
@@ -70,6 +71,7 @@ from .userauth import (
 )
 
 
+authenticate_admin_hook = AuthenticateAdminHook()
 authenticate_user_hook = AuthenticateUserHook()
 close_thread_hook = CloseThreadHook()
 close_thread_input_hook = CloseThreadInputHook()

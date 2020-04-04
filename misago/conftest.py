@@ -113,6 +113,13 @@ async def no_password_user(db):
 
 
 @pytest.fixture
+async def admin(db, user_password):
+    return await create_user(
+        "Admin", "admin@example.com", password=user_password, is_admin=True
+    )
+
+
+@pytest.fixture
 async def moderator(db, user_password):
     return await create_user(
         "Moderator", "moderator@example.com", password=user_password, is_moderator=True

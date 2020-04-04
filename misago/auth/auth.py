@@ -26,6 +26,15 @@ async def authenticate_user(
     return user
 
 
+async def authenticate_admin(
+    context: GraphQLContext, username: str, password: str
+) -> Optional[User]:
+    user = await authenticate_user(context, username, password)
+    if user and not user.is_admin:
+        return None
+    return user
+
+
 async def get_authenticated_user(context: GraphQLContext) -> Optional[User]:
     if "user" not in context:
         context["user"] = await get_user_from_context_hook.call_action(
