@@ -1,6 +1,6 @@
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, constr, create_model
+from pydantic import constr, create_model
 
 from ....conf.cache import clear_settings_cache
 from ....conf.dynamicsettings import get_settings_from_db
