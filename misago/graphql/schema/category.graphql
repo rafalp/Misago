@@ -5,5 +5,6 @@ type Category {
     depth: Int!
     name: String!
     slug: String!
-    color: String!
+    color: String
+    icon: String
 }

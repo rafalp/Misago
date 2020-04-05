@@ -26,6 +26,7 @@ async def resolve_children(
     return await load_category_children(info.context, category.id)
 
 
+# placeholder resolvers for color and icon
 @category_type.field("color")
 def resolve_color(category: Category, info: GraphQLResolveInfo) -> str:
     color_offset = category.left - 1
@@ -34,13 +35,57 @@ def resolve_color(category: Category, info: GraphQLResolveInfo) -> str:
     return COLOR_PALETTE[color_offset]
 
 
+@category_type.field("icon")
+def resolve_icon(category: Category, info: GraphQLResolveInfo) -> str:
+    icon_offset = category.left - 1
+    if icon_offset > ICONS_PALETTE_SIZE:
+        icon_offset -= (icon_offset // ICONS_PALETTE_SIZE) * icon_offset
+    return ICONS_PALETTE[icon_offset]
+
+
 COLOR_PALETTE = (
     "#FF5630",
     "#36B37E",
-    "#0052CC",
     "#FFAB00",
     "#00B8D9",
     "#6554C0",
+    "#0065FF",
+    "#FF7452",
+    "#57D9A3",
+    "#FFC400",
+    "#00C7E6",
+    "#8777D9",
+    "#2684FF",
+    "#DE350B",
+    "#00875A",
+    "#FF991F",
+    "#00A3BF",
+    "#5243AA",
+    "#0052CC",
 )
 
 COLOR_PALETTE_SIZE = len(COLOR_PALETTE) - 1
+
+ICONS_PALETTE = (
+    "fas fa-pencil-ruler",
+    "fas fa-rocket",
+    "fas fa-heart",
+    "fas fa-hammer",
+    "fas fa-award",
+    "fas fa-cog",
+    "fas fa-adjust",
+    "far fa-bookmark",
+    "far fa-calendar",
+    "fas fa-clinic-medical",
+    "fas fa-coffee",
+    "fas fa-car-battery",
+    "far fa-compass",
+    "far fa-envelope",
+    "fas fa-flask",
+    "far fa-image",
+    "fas fa-paint-brush",
+    "far fa-paper-plane",
+    "fas fa-plane",
+)
+
+ICONS_PALETTE_SIZE = len(ICONS_PALETTE) - 1

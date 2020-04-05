@@ -1,6 +1,6 @@
 import pytest
 
-from ..category import resolve_children, resolve_color, resolve_parent
+from ..category import resolve_children, resolve_color, resolve_icon, resolve_parent
 
 
 @pytest.mark.asyncio
@@ -23,7 +23,14 @@ def test_category_color_resolver_returns_string_with_category_color(
     category, graphql_info
 ):
     value = resolve_color(category, graphql_info)
-    assert value == "#FF5630"
+    assert value == "#FF7452"
+
+
+def test_category_icon_resolver_returns_string_with_category_color(
+    category, graphql_info
+):
+    value = resolve_icon(category, graphql_info)
+    assert value == "fas fa-adjust"
 
 
 @pytest.mark.asyncio
