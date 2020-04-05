@@ -37,6 +37,7 @@ import RouteContainer from "./RouteContainer"
 import { RouteError, RouteGraphQLError, RouteNotFound } from "./RouteError"
 import RouteErrorBoundary from "./RouteErrorBoundary"
 import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
+import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
 import {
   EmailValidationError,
@@ -94,6 +95,8 @@ export {
   RouteLoader,
   RouteLoaderSpinner,
   RouteNotFound,
+  SideNav,
+  SideNavItem,
   Spinner,
   UsernameValidationError,
   ValidationError,

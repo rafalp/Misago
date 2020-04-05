@@ -1,11 +1,10 @@
 import { Trans } from "@lingui/macro"
-import classNames from "classnames"
 import React from "react"
-import { Link } from "react-router-dom"
 import { CategoriesContext, SettingsContext } from "../../Context"
+import Icon from "../Icon"
+import { SideNav, SideNavItem } from "../SideNav"
 import { IActiveCategory } from "./CategoriesNav.types"
-import Category from "./Category"
-import { NavItemIcon } from "./NavItem"
+import CategoriesNavItem from "./CategoriesNavItem"
 
 interface ICategoriesNavProps {
   active?: IActiveCategory | null
@@ -19,21 +18,22 @@ const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
   const activeRootId = active?.parent?.id || active?.id
 
   return (
-    <ul className="nav nav-side nav-categories flex-column">
-      <li className="nav-item">
-        <Link
-          aria-selected="true"
-          className={classNames("nav-link", { active: !activeRootId })}
-          to={settings.forumIndexThreads ? "/" : "/threads/"}
-        >
-          <NavItemIcon isActive={!activeRootId} />
-          <Trans id="threads.header">All threads</Trans>
-        </Link>
-      </li>
+    <SideNav className="categories-nav">
+      <SideNavItem
+        icon={<Icon icon="comment-alt" fixedWidth />}
+        to={settings.forumIndexThreads ? "/" : "/threads/"}
+        isActive={!activeRootId}
+      >
+        <Trans id="threads.header">All threads</Trans>
+      </SideNavItem>
       {categories.map((category) => (
-        <Category active={active} category={category} key={category.id} />
+        <CategoriesNavItem
+          active={active}
+          category={category}
+          key={category.id}
+        />
       ))}
-    </ul>
+    </SideNav>
   )
 }
 
