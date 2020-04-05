@@ -2,6 +2,7 @@ import Avatar from "./Avatar"
 import Button, { ButtonSpinner, ButtonType } from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
 import CategoriesNav from "./CategoriesNav"
+import CategoryIcon from "./CategoryIcon"
 import {
   Dropdown,
   DropdownButton,
@@ -58,6 +59,7 @@ export {
   CardFooter,
   CardHeader,
   CategoriesNav,
+  CategoryIcon,
   Dropdown,
   DropdownButton,
   DropdownDivider,

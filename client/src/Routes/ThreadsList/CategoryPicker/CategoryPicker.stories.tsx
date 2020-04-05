@@ -21,7 +21,7 @@ export const ButtonDefault = () => (
 export const ButtonWithCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer padding>
-      <CategoryPicker active={categories[2]} onClick={open} />
+      <CategoryPicker active={categories[0]} onClick={open} />
     </RootContainer>
   </CategoriesContext.Provider>
 )

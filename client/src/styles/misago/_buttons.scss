@@ -10,3 +10,18 @@
 .btn.btn-sm .spinner-border + span {
   margin-left: $input-btn-padding-x-sm;
 }
+
+// Justified button
+.btn-justified {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+  .btn-justified-center {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

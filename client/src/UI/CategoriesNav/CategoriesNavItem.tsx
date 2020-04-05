@@ -1,6 +1,6 @@
 import React from "react"
 import * as urls from "../../urls"
-import Icon from "../Icon"
+import CategoryIcon from "../CategoryIcon"
 import { SideNavItem } from "../SideNav"
 import { IActiveCategory, ICategory } from "./CategoriesNav.types"
 
@@ -42,25 +42,5 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
     </React.Fragment>
   )
 }
-
-interface ICategoryIconProps {
-  category: {
-    color: string | null
-    icon: string | null
-  }
-}
-
-const CategoryIcon: React.FC<ICategoryIconProps> = ({ category }) => (
-  <span
-    className="nav-link-category-icon"
-    style={category.color ? { color: category.color } : undefined}
-  >
-    {category.icon ? (
-      <i className={category.icon + " fa-fw"} />
-    ) : (
-      <Icon icon="comment-alt" fixedWidth />
-    )}
-  </span>
-)
 
 export default CategoriesNavItem
