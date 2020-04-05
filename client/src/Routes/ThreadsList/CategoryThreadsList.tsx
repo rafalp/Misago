@@ -13,6 +13,8 @@ import {
   WindowTitle,
 } from "../../UI"
 import * as urls from "../../urls"
+import { CategoryPickerButton } from "./CategoryPicker"
+import { IThreadsListProps } from "./ThreadsList.types"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
 interface ICategoryThreadsListParams {
@@ -20,7 +22,9 @@ interface ICategoryThreadsListParams {
   slug: string
 }
 
-const CategoryThreadsList: React.FC = () => {
+const CategoryThreadsList: React.FC<IThreadsListProps> = ({
+  openCategoryPicker,
+}) => {
   const { id } = useParams<ICategoryThreadsListParams>()
   const { data, error, loading } = useCategoryThreadsQuery({ id })
 
@@ -45,6 +49,7 @@ const CategoryThreadsList: React.FC = () => {
           <WindowTitle title={category.name} />
           <Link to={urls.categories()}>[CATEGORIES]</Link>
           <Link to={urls.startThread()}>[START THREAD]</Link>
+          <CategoryPickerButton active={category} onClick={() => openCategoryPicker(category)} />
           <h1>{category.name}</h1>
           <ul>
             {threads.items.map((thread) => (

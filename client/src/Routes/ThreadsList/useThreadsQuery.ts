@@ -96,10 +96,14 @@ interface ICategoryThreadsData {
     id: string
     name: string
     slug: string
+    color: string | null
+    icon: string | null
     parent: {
       id: string
       name: string
       slug: string
+      color: string | null
+      icon: string | null
     } | null
   }
   threads: {

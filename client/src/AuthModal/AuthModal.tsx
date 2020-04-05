@@ -1,7 +1,6 @@
 import React from "react"
 import { AuthModalContext } from "../Context"
-import { Modal } from "../UI"
-import portal from "../portal"
+import { Modal, portal } from "../UI"
 import { AuthModalMode, ISettings } from "../types"
 import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"

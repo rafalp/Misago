@@ -1,7 +1,7 @@
 import { Instance, createPopper } from "@popperjs/core"
 import classNames from "classnames"
 import React from "react"
-import portal from "../../portal"
+import portal from "../portal"
 
 interface IToggleArgs {
   ref: React.MutableRefObject<HTMLButtonElement | null>

@@ -46,6 +46,7 @@ import {
   ValidationError,
 } from "./ValidationError"
 import WindowTitle from "./WindowTitle"
+import portal from "./portal"
 
 export {
   Avatar,
@@ -101,4 +102,5 @@ export {
   UsernameValidationError,
   ValidationError,
   WindowTitle,
+  portal,
 }
