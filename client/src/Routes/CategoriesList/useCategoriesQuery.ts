@@ -10,11 +10,13 @@ const CATEGORIES_QUERY = gql`
       name
       slug
       color
+      icon
       children {
         id
         name
         slug
         color
+        icon
       }
     }
   }
@@ -28,7 +30,8 @@ interface Category {
   id: string
   name: string
   slug: string
-  color: string
+  color: string | null
+  icon: string | null
   children: Array<ChildCategory>
 }
 
@@ -36,7 +39,8 @@ interface ChildCategory {
   id: string
   name: string
   slug: string
-  color: string
+  color: string | null
+  icon: string | null
 }
 
 const useCategoriesQuery = () => {

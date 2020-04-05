@@ -24,11 +24,13 @@ const INITIAL_DATA_QUERY = gql`
       name
       slug
       color
+      icon
       children {
         id
         name
         slug
         color
+        icon
       }
     }
     settings {

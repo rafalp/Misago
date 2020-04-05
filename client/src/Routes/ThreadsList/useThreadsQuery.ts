@@ -13,11 +13,13 @@ const THREADS_FIELDS = `
       name
       slug
       color
+      icon
       parent {
         id
         name
         slug
         color
+        icon
       }
     }
   }
@@ -50,12 +52,14 @@ interface ICategory {
   id: string
   name: string
   slug: string
-  color: string
+  color: string | null
+  icon: string | null
   parent: {
     id: string
     name: string
     slug: string
-    color: string
+    color: string | null
+    icon: string | null
   } | null
 }
 

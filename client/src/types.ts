@@ -28,7 +28,8 @@ export interface ICategory {
   depth: number
   name: string
   slug: string
-  color: string
+  color: string | null
+  icon: string | null
 }
 
 export interface ISettings {

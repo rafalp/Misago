@@ -45,13 +45,21 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
 
 interface ICategoryIconProps {
   category: {
-    color: string
+    color: string | null
+    icon: string | null
   }
 }
 
 const CategoryIcon: React.FC<ICategoryIconProps> = ({ category }) => (
-  <span className="nav-link-category-icon" style={{ color: category.color }}>
-    <Icon icon="comment-alt" fixedWidth />
+  <span
+    className="nav-link-category-icon"
+    style={category.color ? { color: category.color } : undefined}
+  >
+    {category.icon ? (
+      <i className={category.icon + " fa-fw"} />
+    ) : (
+      <Icon icon="comment-alt" fixedWidth />
+    )}
   </span>
 )
 
