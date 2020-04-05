@@ -1,0 +1,35 @@
+.nav-side .nav-item {
+  margin-bottom: $spacer;
+}
+
+.nav-side .nav-link {
+  display: flex;
+  align-items: center;
+}
+
+.nav-side .nav-link.active {
+  font-weight: bold;
+}
+
+.nav-link .nav-link-title {
+  margin-right: auto;
+}
+
+// Item's icon
+.nav-link .nav-link-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  margin: -4px 0px;
+  margin-right: .5rem;
+
+  background-color: #fff;
+  border-radius: $border-radius-sm;
+}
+  .nav-link.active .nav-link-icon {
+    color: #fff;
+  }
