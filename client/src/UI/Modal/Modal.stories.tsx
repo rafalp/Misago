@@ -1,7 +1,7 @@
 import { actions } from "@storybook/addon-actions"
 import { withKnobs, boolean, select, text } from "@storybook/addon-knobs"
 import React from "react"
-import { Button, ButtonType, Field, Form, Input, Spinner } from ".."
+import { Button, ButtonSecondary, Field, Form, Input, Spinner } from ".."
 import { RootContainer } from "../Storybook"
 import {
   Modal,
@@ -89,9 +89,8 @@ export const Complex = () => {
           <ModalFooter>
             <Spinner small />
             <Button text="Ok" onClick={button} />
-            <Button
+            <ButtonSecondary
               text="Cancel"
-              type={ButtonType.SECONDARY}
               onClick={button}
             />
           </ModalFooter>

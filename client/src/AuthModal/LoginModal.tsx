@@ -4,7 +4,7 @@ import { gql } from "apollo-boost"
 import React from "react"
 import {
   Button,
-  ButtonType,
+  ButtonLink,
   Field,
   Form,
   Input,
@@ -136,14 +136,13 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
             }
             block
           />
-          <Button
+          <ButtonLink
             disabled={loading || disabled}
             text={
               <Trans id="login.register">
                 Not a member? <strong>Sign up</strong>
               </Trans>
             }
-            type={ButtonType.LINK}
             block
             onClick={showRegister}
           />

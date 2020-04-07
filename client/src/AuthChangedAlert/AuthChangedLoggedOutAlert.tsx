@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { Button, ButtonType } from "../UI"
+import { ButtonLink } from "../UI"
 
 interface IAuthChangedLoggedOutAlertProps {
   username: string
@@ -20,14 +20,13 @@ const AuthChangedLoggedOutAlert: React.FC<IAuthChangedLoggedOutAlertProps> = ({
           </Trans>
         </p>
         <p>
-          <Button
+          <ButtonLink
             text={
               <Trans id="auth_alert.logged_out.cta">
                 This page was displayed while you were still logged in and is
                 no longer accurate. Click this message to update its contents.
               </Trans>
             }
-            type={ButtonType.LINK}
             onClick={reload}
           />
         </p>

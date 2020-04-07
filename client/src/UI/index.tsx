@@ -1,5 +1,14 @@
 import Avatar from "./Avatar"
-import Button, { ButtonSpinner, ButtonType } from "./Button"
+import {
+  Button,
+  ButtonDanger,
+  ButtonLink,
+  ButtonSecondary,
+  ButtonSpinner,
+  ButtonSuccess,
+  ButtonType,
+  ButtonWarning,
+} from "./Button"
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
@@ -52,8 +61,13 @@ import portal from "./portal"
 export {
   Avatar,
   Button,
+  ButtonDanger,
+  ButtonLink,
+  ButtonSecondary,
   ButtonSpinner,
+  ButtonSuccess,
   ButtonType,
+  ButtonWarning,
   Card,
   CardBody,
   CardFooter,

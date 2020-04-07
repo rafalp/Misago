@@ -1,7 +1,7 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { CardContainer, Gallery, RootContainer } from "../Storybook"
-import Button, { ButtonType } from "."
+import { Button, ButtonType } from "."
 
 export default {
   title: "UI/Button",

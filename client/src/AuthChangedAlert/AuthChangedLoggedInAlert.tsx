@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { Button, ButtonType } from "../UI"
+import { ButtonLink } from "../UI"
 
 interface IAuthChangedLoggedInAlertProps {
   username: string
@@ -20,14 +20,13 @@ const AuthChangedLoggedInAlert: React.FC<IAuthChangedLoggedInAlertProps> = ({
           </Trans>
         </p>
         <p>
-          <Button
+          <ButtonLink
             text={
               <Trans id="auth_alert.logged_in.cta">
                 This page was displayed before you've logged in and is no
                 longer accurate. Click this message to update its contents.
               </Trans>
             }
-            type={ButtonType.LINK}
             onClick={reload}
           />
         </p>

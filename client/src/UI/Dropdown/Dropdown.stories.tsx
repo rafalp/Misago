@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions"
 import React from "react"
-import Button from "../Button"
+import { Button } from "../Button"
 import { CardContainer, RootContainer } from "../Storybook"
 import Dropdown from "./Dropdown"
 import DropdownButton from "./DropdownButton"

@@ -1,23 +1,8 @@
 import classNames from "classnames"
 import React from "react"
 import Icon from "../Icon"
-import { ButtonType } from "./Button.types"
+import { ButtonType, IButtonProps } from "./Button.types"
 import ButtonSpinner from "./ButtonSpinner"
-
-interface IButtonProps {
-  block?: boolean
-  className?: string | null
-  disabled?: boolean
-  elementRef?: React.MutableRefObject<HTMLButtonElement | null>
-  icon?: string
-  iconSolid?: boolean
-  image?: React.ReactNode
-  loading?: boolean
-  text?: React.ReactNode
-  type?: ButtonType
-  outline?: boolean
-  onClick?: () => void
-}
 
 const Button: React.FC<IButtonProps> = ({
   block,

@@ -5,7 +5,7 @@ import React from "react"
 import * as Yup from "yup"
 import {
   Button,
-  ButtonType,
+  ButtonLink,
   EmailValidationError,
   Field,
   FieldError,
@@ -203,14 +203,13 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
             }
             block
           />
-          <Button
+          <ButtonLink
             disabled={loading || disabled}
             text={
               <Trans id="register.login">
                 Already a member? <strong>Log in</strong>
               </Trans>
             }
-            type={ButtonType.LINK}
             block
             onClick={showLogin}
           />
