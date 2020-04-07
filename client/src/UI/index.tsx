@@ -13,6 +13,7 @@ import {
 import { Card, CardBody, CardFooter, CardHeader } from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
+import ClickTrap from "./ClickTrap"
 import {
   Dropdown,
   DropdownButton,
@@ -76,6 +77,7 @@ export {
   CardHeader,
   CategoriesNav,
   CategoryIcon,
+  ClickTrap,
   Dropdown,
   DropdownButton,
   DropdownDivider,

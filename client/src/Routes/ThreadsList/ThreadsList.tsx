@@ -24,7 +24,7 @@ const ThreadsList: React.FC = () => {
 
   return (
     <>
-      <CategoryPickerModal close={close} isOpen={isOpen} />
+      <CategoryPickerModal active={active} close={close} isOpen={isOpen} />
       <Route
         path={urls.category({ id: ":id", slug: ":slug" })}
         render={() => <CategoryThreadsList openCategoryPicker={open} />}

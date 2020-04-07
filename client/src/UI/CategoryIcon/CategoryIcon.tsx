@@ -2,15 +2,16 @@ import React from "react"
 import Icon from "../Icon"
 
 interface ICategoryIconProps {
+  className?: string
   category?: {
     color: string | null
     icon: string | null
   } | null
 }
 
-const CategoryIcon: React.FC<ICategoryIconProps> = ({ category }) => (
+const CategoryIcon: React.FC<ICategoryIconProps> = ({ className, category }) => (
   <span
-    className="nav-link-category-icon"
+    className={className || "category-icon"}
     style={category?.color ? { color: category.color } : undefined}
   >
     {category?.icon ? (

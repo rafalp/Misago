@@ -7,7 +7,7 @@ interface ISideNavProps {
 }
 
 const SideNav: React.FC<ISideNavProps> = ({ className, children }) => (
-  <ul className={classNames("nav side-nav flex-column", className)}>
+  <ul className={classNames("nav nav-side flex-column", className)}>
     {children}
   </ul>
 )

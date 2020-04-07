@@ -1,21 +1,31 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { Link } from "react-router-dom"
 import { CategoriesContext, SettingsContext } from "../../../Context"
-import { Modal, ModalBody, ModalDialog, portal } from "../../../UI"
-import * as urls from "../../../urls"
+import {
+  ClickTrap,
+  Modal,
+  ModalBody,
+  ModalDialog,
+  ModalSize,
+  portal,
+} from "../../../UI"
+import CategoryPickerActiveItem from "./CategoryPickerActiveItem"
+import CategoryPickerCategory from "./CategoryPickerCategory"
+import CategoryPickerItem from "./CategoryPickerItem"
 
 interface ICategoryPickerModalProps {
+  active?: { id: string } | null
   isOpen: boolean
   close: () => void
 }
 
 const CategoryPickerModal: React.FC<ICategoryPickerModalProps> = ({
+  active,
   close,
   isOpen,
 }) => {
   const categories = React.useContext(CategoriesContext)
-  const settings = React.useContext(SettingsContext) || {
+  const { forumIndexThreads } = React.useContext(SettingsContext) || {
     forumIndexThreads: true,
   }
 
@@ -23,16 +33,20 @@ const CategoryPickerModal: React.FC<ICategoryPickerModalProps> = ({
     <Modal close={close} isOpen={isOpen}>
       <ModalDialog
         close={close}
-        title={<Trans id="categories_modal.title">Go to category</Trans>}
+        size={ModalSize.SMALL}
+        title={<Trans id="category_picker.title">Category</Trans>}
       >
         <ModalBody>
-          {categories.map((category) => (
-            <div key={category.id}>
-              <Link to={urls.category(category)}>
-                {category.name}
-              </Link>
-            </div>
-          ))}
+          <ClickTrap className="category-picker" onClick={close}>
+            <CategoryPickerItem
+              text={<Trans id="threads.header">All threads</Trans>}
+              to={forumIndexThreads ? "/" : "/threads/"}
+            />
+            {active && <CategoryPickerActiveItem active={active} />}
+            {categories.map((category) => (
+              <CategoryPickerCategory category={category} key={category.id} />
+            ))}
+          </ClickTrap>
         </ModalBody>
       </ModalDialog>
     </Modal>

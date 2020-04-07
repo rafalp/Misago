@@ -1,16 +1,19 @@
-.side-nav .nav-link {
+.nav-side .nav-link {
   display: flex;
   align-items: center;
 }
 
-.side-nav .nav-link.active {
+.nav-side .nav-link.active {
   font-weight: bold;
 }
 
-.side-nav .nav-link-icon {
+.nav-side .nav-link-icon,
+.nav-side .nav-link-category-icon {
   margin-right: $spacer;
 }
 
-.side-nav .nav-link-text {
+.nav-side .nav-link-text {
   margin-right: auto;
+
+  word-break: break-word;
 }

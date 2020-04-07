@@ -17,14 +17,14 @@ const CategoryPickerButton: React.FC<ICategoryPickerButtonProps> = ({
   onClick,
 }) => (
   <ButtonJustified
-    left={<CategoryIcon category={active} />}
+    left={<CategoryIcon className="btn-category-icon" category={active} />}
+    center={
+      active ? active.name : <Trans id="threads.header">All threads</Trans>
+    }
     right={
       <span className="btn-more-icon">
         <Icon icon="ellipsis-v" fixedWidth solid />
       </span>
-    }
-    center={
-      active ? active.name : <Trans id="threads.header">All threads</Trans>
     }
     onClick={onClick}
   />

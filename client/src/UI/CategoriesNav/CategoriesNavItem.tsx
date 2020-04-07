@@ -21,7 +21,7 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
     <React.Fragment key={category.id}>
       <SideNavItem
         hasChildren={category.children.length > 0}
-        icon={<CategoryIcon category={category} />}
+        icon={<CategoryIcon className="nav-link-icon" category={category} />}
         to={urls.category(category)}
         isActive={isActive}
       >
@@ -30,7 +30,7 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
       {isActive &&
         category.children.map((child) => (
           <SideNavItem
-            icon={<CategoryIcon category={child} />}
+            icon={<CategoryIcon className="nav-link-icon" category={child} />}
             key={child.id}
             to={urls.category(child)}
             isActive={activeChildId === child.id}

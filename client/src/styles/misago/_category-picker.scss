@@ -1,0 +1,21 @@
+.category-picker .btn-group {
+  display: flex;
+  width: 100%;
+}
+
+.category-picker .btn-category {
+  display: flex;
+  width: 100%;
+  
+  align-items: center;
+  text-align: left;
+}
+
+.category-picker .btn-category-icon {
+  margin-right: $spacer;
+}
+
+.category-picker .btn-text {
+  flex: 1;
+  word-break: break-word;
+}

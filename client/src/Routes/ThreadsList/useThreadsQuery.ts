@@ -45,10 +45,10 @@ interface IThread {
   id: string
   title: string
   slug: string
-  category: ICategory
+  category: IThreadCategory
 }
 
-interface ICategory {
+interface IThreadCategory {
   id: string
   name: string
   slug: string
@@ -60,7 +60,7 @@ interface ICategory {
     slug: string
     color: string | null
     icon: string | null
-  } | null
+  }
 }
 
 export const useThreadsQuery = () => {

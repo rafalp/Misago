@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { CategoriesContext, SettingsContext } from "../../Context"
-import Icon from "../Icon"
+import CategoryIcon from "../CategoryIcon"
 import { SideNav, SideNavItem } from "../SideNav"
 import { IActiveCategory } from "./CategoriesNav.types"
 import CategoriesNavItem from "./CategoriesNavItem"
@@ -20,7 +20,7 @@ const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
   return (
     <SideNav className="categories-nav">
       <SideNavItem
-        icon={<Icon icon="comment-alt" fixedWidth />}
+        icon={<CategoryIcon className="nav-link-icon" />}
         to={settings.forumIndexThreads ? "/" : "/threads/"}
         isActive={!activeRootId}
       >
