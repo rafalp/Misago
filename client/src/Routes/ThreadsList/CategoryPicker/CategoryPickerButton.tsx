@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { CategoryIcon, Icon } from "../../../UI"
+import { ButtonJustified, CategoryIcon, Icon } from "../../../UI"
 
 interface ICategoryPickerButtonProps {
   active?: {
@@ -16,23 +16,18 @@ const CategoryPickerButton: React.FC<ICategoryPickerButtonProps> = ({
   active,
   onClick,
 }) => (
-  <button
-    className="btn btn-secondary btn-justified"
-    type="button"
-    onClick={onClick}
-  >
-    <span className="btn-justified-left">
-      <CategoryIcon category={active} />
-    </span>
-    <span className="btn-justified-center">
-      {active ? active.name : <Trans id="threads.header">All threads</Trans>}
-    </span>
-    <span className="btn-justified-right">
+  <ButtonJustified
+    left={<CategoryIcon category={active} />}
+    right={
       <span className="btn-more-icon">
         <Icon icon="ellipsis-v" fixedWidth solid />
       </span>
-    </span>
-  </button>
+    }
+    center={
+      active ? active.name : <Trans id="threads.header">All threads</Trans>
+    }
+    onClick={onClick}
+  />
 )
 
 export default CategoryPickerButton

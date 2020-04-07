@@ -1,5 +1,6 @@
 import Button from "./Button"
 import { ButtonType } from "./Button.types"
+import ButtonJustified from "./ButtonJustified"
 import ButtonSpinner from "./ButtonSpinner"
 import {
   ButtonSecondary,
@@ -12,6 +13,7 @@ import {
 export {
   Button,
   ButtonDanger,
+  ButtonJustified,
   ButtonLink,
   ButtonSecondary,
   ButtonSpinner,
