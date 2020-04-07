@@ -39,7 +39,7 @@ export const ModalWithActiveCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
       <CategoryPickerModal
-        active={categories[1]}
+        active={categories[0]}
         isOpen={true}
         close={close}
       />
