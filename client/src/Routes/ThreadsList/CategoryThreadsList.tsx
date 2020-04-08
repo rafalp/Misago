@@ -13,7 +13,7 @@ import {
   WindowTitle,
 } from "../../UI"
 import * as urls from "../../urls"
-import { CategoryPickerButton } from "./CategoryPicker"
+import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsListProps } from "./ThreadsList.types"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
@@ -49,7 +49,10 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
           <WindowTitle title={category.name} />
           <Link to={urls.categories()}>[CATEGORIES]</Link>
           <Link to={urls.startThread()}>[START THREAD]</Link>
-          <CategoryPickerButton active={category} onClick={() => openCategoryPicker(category)} />
+          <MobileCategoryNavButton
+            active={category}
+            onClick={() => openCategoryPicker(category.id)}
+          />
           <h1>{category.name}</h1>
           <ul>
             {threads.items.map((thread) => (

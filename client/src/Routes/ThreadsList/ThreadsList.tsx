@@ -2,12 +2,12 @@ import React from "react"
 import { Route } from "react-router-dom"
 import * as urls from "../../urls"
 import AllThreadsList from "./AllThreadsList"
-import { CategoryPickerModal } from "./CategoryPicker"
+import { MobileCategoryNavModal } from "./MobileCategoryNav"
 import CategoryThreadsList from "./CategoryThreadsList"
 
 interface ICategoriesModalState {
   isOpen: boolean
-  active: { id: string } | null
+  active: string  | null
 }
 
 const ThreadsList: React.FC = () => {
@@ -17,14 +17,14 @@ const ThreadsList: React.FC = () => {
       isOpen: false,
     }
   )
-  const open = (active?: { id: string } | null) => {
+  const open = (active?: string | null) => {
     setState({ isOpen: true, active: active || null })
   }
   const close = () => setState({ isOpen: false, active: null })
 
   return (
     <>
-      <CategoryPickerModal active={active} close={close} isOpen={isOpen} />
+      <MobileCategoryNavModal active={active} close={close} isOpen={isOpen} />
       <Route
         path={urls.category({ id: ":id", slug: ":slug" })}
         render={() => <CategoryThreadsList openCategoryPicker={open} />}

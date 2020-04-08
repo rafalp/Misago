@@ -3,7 +3,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { ButtonLink, CategoryIcon } from "../../../UI"
 
-interface ICategoryPickerItemProps {
+interface IMobileCategoryNavLinkProps {
   category?: {
     color: string | null
     icon: string | null
@@ -17,7 +17,7 @@ interface ICategoryPickerItemProps {
   toggle?: () => void
 }
 
-const CategoryPickerItem: React.FC<ICategoryPickerItemProps> = ({
+const MobileCategoryNavLink: React.FC<IMobileCategoryNavLinkProps> = ({
   category,
   to,
   text,
@@ -48,4 +48,4 @@ const CategoryPickerItem: React.FC<ICategoryPickerItemProps> = ({
   </>
 )
 
-export default CategoryPickerItem
+export default MobileCategoryNavLink

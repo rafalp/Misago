@@ -1,10 +1,10 @@
 import React from "react"
 import { CategoriesContext } from "../../../Context"
 import * as urls from "../../../urls"
-import CategoryPickerItem from "./CategoryPickerItem"
+import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
-interface ICategoryPickerActiveItemProps {
-  active: { id: string }
+interface IMobileCategoryNavActiveCategoryProps {
+  active: string
 }
 
 interface IActiveCategory {
@@ -22,7 +22,7 @@ interface IActiveCategory {
   }>
 }
 
-const CategoryPickerActiveItem: React.FC<ICategoryPickerActiveItemProps> = ({
+const MobileCategoryNavActiveCategory: React.FC<IMobileCategoryNavActiveCategoryProps> = ({
   active,
 }) => {
   const categories = React.useContext(CategoriesContext)
@@ -30,11 +30,11 @@ const CategoryPickerActiveItem: React.FC<ICategoryPickerActiveItemProps> = ({
 
   React.useEffect(() => {
     categories.forEach((parent) => {
-      if (parent.id === active.id && parent.children.length) {
+      if (parent.id === active && parent.children.length) {
         setState(parent)
       } else {
         parent.children.forEach((child) => {
-          if (child.id === active.id) {
+          if (child.id === active) {
             setState(parent)
           }
         })
@@ -47,19 +47,19 @@ const CategoryPickerActiveItem: React.FC<ICategoryPickerActiveItemProps> = ({
   return (
     <>
       <hr />
-      <CategoryPickerItem
+      <MobileCategoryNavLink
         category={category}
         text={category.name}
         to={urls.category(category)}
-        isActive={category.id === active.id}
+        isActive={category.id === active}
       />
       {category.children.map((child) => (
-        <CategoryPickerItem
+        <MobileCategoryNavLink
           category={child}
           key={child.id}
           text={child.name}
           to={urls.category(child)}
-          isActive={child.id === active.id}
+          isActive={child.id === active}
           isChild
         />
       ))}
@@ -68,4 +68,4 @@ const CategoryPickerActiveItem: React.FC<ICategoryPickerActiveItemProps> = ({
   )
 }
 
-export default CategoryPickerActiveItem
+export default MobileCategoryNavActiveCategory

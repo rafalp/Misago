@@ -1,8 +1,8 @@
 import React from "react"
 import * as urls from "../../../urls"
-import CategoryPickerItem from "./CategoryPickerItem"
+import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
-interface ICategoryPickerCategoryProps {
+interface IMobileCategoryNavCategoryProps {
   category: {
     id: string
     name: string
@@ -19,7 +19,7 @@ interface ICategoryPickerCategoryProps {
   }
 }
 
-const CategoryPickerCategory: React.FC<ICategoryPickerCategoryProps> = ({
+const MobileCategoryNavCategory: React.FC<IMobileCategoryNavCategoryProps> = ({
   category,
 }) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
@@ -30,7 +30,7 @@ const CategoryPickerCategory: React.FC<ICategoryPickerCategoryProps> = ({
         className="btn-group"
         role={category.children.length > 0 ? "group" : undefined}
       >
-        <CategoryPickerItem
+        <MobileCategoryNavLink
           category={category}
           text={category.name}
           to={urls.category(category)}
@@ -42,7 +42,7 @@ const CategoryPickerCategory: React.FC<ICategoryPickerCategoryProps> = ({
       {category.children.length > 0 && isOpen && (
         <>
           {category.children.map((child) => (
-            <CategoryPickerItem
+            <MobileCategoryNavLink
               category={child}
               key={child.id}
               text={child.name}
@@ -56,4 +56,4 @@ const CategoryPickerCategory: React.FC<ICategoryPickerCategoryProps> = ({
   )
 }
 
-export default CategoryPickerCategory
+export default MobileCategoryNavCategory

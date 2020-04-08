@@ -9,17 +9,17 @@ import {
   ModalSize,
   portal,
 } from "../../../UI"
-import CategoryPickerActiveItem from "./CategoryPickerActiveItem"
-import CategoryPickerCategory from "./CategoryPickerCategory"
-import CategoryPickerItem from "./CategoryPickerItem"
+import CategoryPickerActiveItem from "./MobileCategoryNavActiveCategory"
+import MobileCategoryNavCategory from "./MobileCategoryNavCategory"
+import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
-interface ICategoryPickerModalProps {
-  active?: { id: string } | null
+interface IMobileCategoryNavModalProps {
+  active?: string | null
   isOpen: boolean
   close: () => void
 }
 
-const CategoryPickerModal: React.FC<ICategoryPickerModalProps> = ({
+const MobileCategoryNavModal: React.FC<IMobileCategoryNavModalProps> = ({
   active,
   close,
   isOpen,
@@ -38,13 +38,13 @@ const CategoryPickerModal: React.FC<ICategoryPickerModalProps> = ({
       >
         <ModalBody>
           <ClickTrap className="category-picker" onClick={close}>
-            <CategoryPickerItem
+            <MobileCategoryNavLink
               text={<Trans id="threads.header">All threads</Trans>}
               to={forumIndexThreads ? "/" : "/threads/"}
             />
             {active && <CategoryPickerActiveItem active={active} />}
             {categories.map((category) => (
-              <CategoryPickerCategory category={category} key={category.id} />
+              <MobileCategoryNavCategory category={category} key={category.id} />
             ))}
           </ClickTrap>
         </ModalBody>
@@ -53,4 +53,4 @@ const CategoryPickerModal: React.FC<ICategoryPickerModalProps> = ({
   )
 }
 
-export default CategoryPickerModal
+export default MobileCategoryNavModal

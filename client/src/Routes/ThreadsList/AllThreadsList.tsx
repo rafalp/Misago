@@ -14,7 +14,7 @@ import {
 } from "../../UI"
 import { SettingsContext } from "../../Context"
 import * as urls from "../../urls"
-import { CategoryPickerButton } from "./CategoryPicker"
+import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsListProps } from "./ThreadsList.types"
 import { useThreadsQuery } from "./useThreadsQuery"
 
@@ -47,7 +47,7 @@ const AllThreadsList: React.FC<IThreadsListProps> = ({
                   />
                   <Link to={urls.categories()}>[CATEGORIES]</Link>
                   <Link to={urls.startThread()}>[START THREAD]</Link>
-                  <CategoryPickerButton onClick={openCategoryPicker} />
+                  <MobileCategoryNavButton onClick={openCategoryPicker} />
                   <h1>
                     {isIndex ? (
                       settings.forumIndexHeader || settings.forumName

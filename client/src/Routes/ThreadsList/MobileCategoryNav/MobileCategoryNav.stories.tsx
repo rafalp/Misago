@@ -2,11 +2,11 @@ import { actions } from "@storybook/addon-actions"
 import React from "react"
 import { CategoriesContext } from "../../../Context"
 import { RootContainer, categories } from "../../../UI/Storybook"
-import CategoryPickerButton from "./CategoryPickerButton"
-import CategoryPickerModal from "./CategoryPickerModal"
+import MobileCategoryNavButton from "./MobileCategoryNavButton"
+import MobileCategoryNavModal from "./MobileCategoryNavModal"
 
 export default {
-  title: "Route/Threads/CategoryPicker",
+  title: "Route/Threads/MobileCategoryNav",
 }
 
 const { open, close } = actions({ open: "open picker", close: "close picker" })
@@ -14,7 +14,7 @@ const { open, close } = actions({ open: "open picker", close: "close picker" })
 export const Button = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer padding>
-      <CategoryPickerButton onClick={open} />
+      <MobileCategoryNavButton onClick={open} />
     </RootContainer>
   </CategoriesContext.Provider>
 )
@@ -22,7 +22,7 @@ export const Button = () => (
 export const ButtonWithCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer padding>
-      <CategoryPickerButton active={categories[0]} onClick={open} />
+      <MobileCategoryNavButton active={categories[0]} onClick={open} />
     </RootContainer>
   </CategoriesContext.Provider>
 )
@@ -30,7 +30,7 @@ export const ButtonWithCategory = () => (
 export const Modal = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
-      <CategoryPickerModal isOpen={true} close={close} />
+      <MobileCategoryNavModal isOpen={true} close={close} />
     </RootContainer>
   </CategoriesContext.Provider>
 )
@@ -38,8 +38,8 @@ export const Modal = () => (
 export const ModalWithActiveCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
-      <CategoryPickerModal
-        active={categories[0]}
+      <MobileCategoryNavModal
+        active={categories[0].id}
         isOpen={true}
         close={close}
       />
@@ -50,8 +50,8 @@ export const ModalWithActiveCategory = () => (
 export const ModalWithActiveChildCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
-      <CategoryPickerModal
-        active={categories[0].children[1]}
+      <MobileCategoryNavModal
+        active={categories[0].children[1].id}
         isOpen={true}
         close={close}
       />

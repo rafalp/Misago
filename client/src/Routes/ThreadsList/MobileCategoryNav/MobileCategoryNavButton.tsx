@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { ButtonJustified, CategoryIcon, Icon } from "../../../UI"
 
-interface ICategoryPickerButtonProps {
+interface IMobileCategoryNavButtonProps {
   active?: {
     id: string
     name: string
@@ -12,7 +12,7 @@ interface ICategoryPickerButtonProps {
   onClick: () => void
 }
 
-const CategoryPickerButton: React.FC<ICategoryPickerButtonProps> = ({
+const MobileCategoryNavButton: React.FC<IMobileCategoryNavButtonProps> = ({
   active,
   onClick,
 }) => (
@@ -30,4 +30,4 @@ const CategoryPickerButton: React.FC<ICategoryPickerButtonProps> = ({
   />
 )
 
-export default CategoryPickerButton
+export default MobileCategoryNavButton
