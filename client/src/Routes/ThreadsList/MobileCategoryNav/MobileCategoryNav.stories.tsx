@@ -39,7 +39,7 @@ export const ModalWithActiveCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
       <MobileCategoryNavModal
-        active={categories[0].id}
+        active={{ category: categories[0], parent: categories[0] }}
         isOpen={true}
         close={close}
       />
@@ -51,7 +51,7 @@ export const ModalWithActiveChildCategory = () => (
   <CategoriesContext.Provider value={categories}>
     <RootContainer>
       <MobileCategoryNavModal
-        active={categories[0].children[1].id}
+        active={{ category: categories[0].children[1], parent: categories[0] }}
         isOpen={true}
         close={close}
       />

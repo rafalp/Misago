@@ -9,12 +9,13 @@ import {
   ModalSize,
   portal,
 } from "../../../UI"
+import { IActiveCategory } from "../ThreadsList.types"
 import CategoryPickerActiveItem from "./MobileCategoryNavActiveCategory"
 import MobileCategoryNavCategory from "./MobileCategoryNavCategory"
 import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
 interface IMobileCategoryNavModalProps {
-  active?: string | null
+  active?: IActiveCategory | null
   isOpen: boolean
   close: () => void
 }
@@ -28,6 +29,8 @@ const MobileCategoryNavModal: React.FC<IMobileCategoryNavModalProps> = ({
   const { forumIndexThreads } = React.useContext(SettingsContext) || {
     forumIndexThreads: true,
   }
+
+  const activeParentId = active?.parent.id || active?.category.id
 
   return portal(
     <Modal close={close} isOpen={isOpen}>
@@ -43,9 +46,15 @@ const MobileCategoryNavModal: React.FC<IMobileCategoryNavModalProps> = ({
               to={forumIndexThreads ? "/" : "/threads/"}
             />
             {active && <CategoryPickerActiveItem active={active} />}
-            {categories.map((category) => (
-              <MobileCategoryNavCategory category={category} key={category.id} />
-            ))}
+            {categories.map(
+              (category) =>
+                category.id !== activeParentId && (
+                  <MobileCategoryNavCategory
+                    category={category}
+                    key={category.id}
+                  />
+                )
+            )}
           </ClickTrap>
         </ModalBody>
       </ModalDialog>

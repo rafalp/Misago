@@ -15,6 +15,7 @@ import {
 import * as urls from "../../urls"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsListProps } from "./ThreadsList.types"
+import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
 interface ICategoryThreadsListParams {
@@ -26,13 +27,15 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
   openCategoryPicker,
 }) => {
   const { id } = useParams<ICategoryThreadsListParams>()
+  const activeCategory = useActiveCategory(id)
   const { data, error, loading } = useCategoryThreadsQuery({ id })
 
   if (loading) return <RouteLoader />
   if (!data && error) return <RouteGraphQLError error={error} />
   if (!data || !data?.category) return <RouteNotFound />
 
-  const { category, threads } = data || { category: null, threads: null }
+  const { category } = activeCategory || { category: null }
+  const { threads } = data || { threads: null }
 
   return (
     <RouteContainer
@@ -46,47 +49,53 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
           <CategoriesNav active={category} />
         </LayoutSide>
         <LayoutMain>
-          <WindowTitle title={category.name} />
-          <Link to={urls.categories()}>[CATEGORIES]</Link>
-          <Link to={urls.startThread()}>[START THREAD]</Link>
-          <MobileCategoryNavButton
-            active={category}
-            onClick={() => openCategoryPicker(category.id)}
-          />
-          <h1>{category.name}</h1>
-          <ul>
-            {threads.items.map((thread) => (
-              <li key={thread.id}>
-                <strong>
-                  <Link to={urls.thread(thread)}>{thread.title}</Link>
-                </strong>
-                <ul className="list-inline">
-                  {thread.category.parent && (
-                    <li className="list-inline-item">
-                      <Link
-                        to={urls.category(thread.category.parent)}
-                        style={{
-                          borderLeft: `4px solid ${thread.category.parent.color}`,
-                        }}
-                      >
-                        {thread.category.parent.name}
-                      </Link>
-                    </li>
-                  )}
-                  <li className="list-inline-item">
-                    <Link
-                      to={urls.category(thread.category)}
-                      style={{
-                        borderLeft: `4px solid ${thread.category.color}`,
-                      }}
-                    >
-                      {thread.category.name}
-                    </Link>
+          {category ? (
+            <>
+              <WindowTitle title={category.name} />
+              <Link to={urls.categories()}>[CATEGORIES]</Link>
+              <Link to={urls.startThread()}>[START THREAD]</Link>
+              <MobileCategoryNavButton
+                active={category}
+                onClick={() => openCategoryPicker(activeCategory)}
+              />
+              <h1>{category.name}</h1>
+              <ul>
+                {threads.items.map((thread) => (
+                  <li key={thread.id}>
+                    <strong>
+                      <Link to={urls.thread(thread)}>{thread.title}</Link>
+                    </strong>
+                    <ul className="list-inline">
+                      {thread.category.parent && (
+                        <li className="list-inline-item">
+                          <Link
+                            to={urls.category(thread.category.parent)}
+                            style={{
+                              borderLeft: `4px solid ${thread.category.parent.color}`,
+                            }}
+                          >
+                            {thread.category.parent.name}
+                          </Link>
+                        </li>
+                      )}
+                      <li className="list-inline-item">
+                        <Link
+                          to={urls.category(thread.category)}
+                          style={{
+                            borderLeft: `4px solid ${thread.category.color}`,
+                          }}
+                        >
+                          {thread.category.name}
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
-                </ul>
-              </li>
-            ))}
-          </ul>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>CATEGORY NOT FOUND</>
+          )}
         </LayoutMain>
       </Layout>
     </RouteContainer>

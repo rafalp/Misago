@@ -4,10 +4,11 @@ import * as urls from "../../urls"
 import AllThreadsList from "./AllThreadsList"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
 import CategoryThreadsList from "./CategoryThreadsList"
+import { IActiveCategory } from "./ThreadsList.types"
 
 interface ICategoriesModalState {
   isOpen: boolean
-  active: string  | null
+  active?: IActiveCategory | null
 }
 
 const ThreadsList: React.FC = () => {
@@ -17,7 +18,7 @@ const ThreadsList: React.FC = () => {
       isOpen: false,
     }
   )
-  const open = (active?: string | null) => {
+  const open = (active?: IActiveCategory | null) => {
     setState({ isOpen: true, active: active || null })
   }
   const close = () => setState({ isOpen: false, active: null })
