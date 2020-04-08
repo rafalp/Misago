@@ -43,6 +43,16 @@ def resolve_icon(category: Category, info: GraphQLResolveInfo) -> str:
     return ICONS_PALETTE[icon_offset]
 
 
+@category_type.field("banner")
+def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
+    return {
+        "align": "center",
+        "background": "#2c3e50",
+        "height": 200,
+        "url": "http://lorempixel.com/1280/200/",
+    }
+
+
 COLOR_PALETTE = (
     "#FF5630",
     "#36B37E",

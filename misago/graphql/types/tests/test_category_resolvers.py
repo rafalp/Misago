@@ -1,6 +1,12 @@
 import pytest
 
-from ..category import resolve_children, resolve_color, resolve_icon, resolve_parent
+from ..category import (
+    resolve_children,
+    resolve_banner,
+    resolve_color,
+    resolve_icon,
+    resolve_parent,
+)
 
 
 @pytest.mark.asyncio
@@ -31,6 +37,18 @@ def test_category_icon_resolver_returns_string_with_category_color(
 ):
     value = resolve_icon(category, graphql_info)
     assert value == "fas fa-adjust"
+
+
+def test_category_banner_resolver_returns_dict_with_category_banner(
+    category, graphql_info
+):
+    value = resolve_banner(category, graphql_info)
+    assert value == {
+        "align": "center",
+        "background": "#2c3e50",
+        "height": 200,
+        "url": "http://lorempixel.com/1280/200/",
+    }
 
 
 @pytest.mark.asyncio
