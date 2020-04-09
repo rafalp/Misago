@@ -1,3 +1,8 @@
+// Add default bottom margin to cards
+.card-wrapper {
+  margin-bottom: $spacer;
+}
+
 // Set default styles and top radius on card color band
 .card-color-band {
   height: 4px;
