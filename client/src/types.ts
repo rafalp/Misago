@@ -30,6 +30,14 @@ export interface ICategory {
   slug: string
   color: string | null
   icon: string | null
+  banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+}
+
+export interface ICategoryBanner {
+  align: string
+  background: string
+  height: number
+  url: string
 }
 
 export interface ISettings {

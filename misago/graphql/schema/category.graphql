@@ -7,7 +7,12 @@ type Category {
     slug: String!
     color: String
     icon: String
-    banner: CategoryBanner
+    banner: CategoryBannerSize
+}
+
+type CategoryBannerSize {
+    full: CategoryBanner!
+    half: CategoryBanner!
 }
 
 type CategoryBanner {

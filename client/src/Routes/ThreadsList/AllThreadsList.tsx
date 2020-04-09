@@ -14,6 +14,7 @@ import {
 } from "../../UI"
 import { SettingsContext } from "../../Context"
 import * as urls from "../../urls"
+import { AllThreadsHeader } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsListProps } from "./ThreadsList.types"
 import { useThreadsQuery } from "./useThreadsQuery"
@@ -45,6 +46,7 @@ const AllThreadsList: React.FC<IThreadsListProps> = ({
                     index={isIndex}
                     title={i18n._(t("threads.title")`Threads`)}
                   />
+                  <AllThreadsHeader />
                   <Link to={urls.categories()}>[CATEGORIES]</Link>
                   <Link to={urls.startThread()}>[START THREAD]</Link>
                   <MobileCategoryNavButton onClick={openCategoryPicker} />

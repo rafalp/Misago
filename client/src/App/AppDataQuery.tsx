@@ -9,6 +9,29 @@ import AppLoader from "./AppLoader"
 const POLL_INTERVAL = 50 * 1000 // 50s
 
 const INITIAL_DATA_QUERY = gql`
+  fragment CategoryBanner on CategoryBanner {
+    align
+    background
+    height
+    url
+  }
+
+  fragment CategoryFields on Category {
+    id
+    name
+    slug
+    color
+    icon
+    banner {
+      full {
+        ...CategoryBanner
+      }
+      half {
+        ...CategoryBanner
+      }
+    }
+  }
+
   query InitialData {
     auth {
       id
@@ -20,17 +43,9 @@ const INITIAL_DATA_QUERY = gql`
       }
     }
     categories {
-      id
-      name
-      slug
-      color
-      icon
+      ...CategoryFields
       children {
-        id
-        name
-        slug
-        color
-        icon
+        ...CategoryFields
       }
     }
     settings {

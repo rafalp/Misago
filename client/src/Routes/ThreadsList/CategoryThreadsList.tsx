@@ -13,6 +13,7 @@ import {
   WindowTitle,
 } from "../../UI"
 import * as urls from "../../urls"
+import { CategoryHeader } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsListProps } from "./ThreadsList.types"
 import useActiveCategory from "./useActiveCategory"
@@ -52,6 +53,7 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
           {category ? (
             <>
               <WindowTitle title={category.name} />
+              <CategoryHeader category={category} />
               <Link to={urls.categories()}>[CATEGORIES]</Link>
               <Link to={urls.startThread()}>[START THREAD]</Link>
               <MobileCategoryNavButton

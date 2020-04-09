@@ -10,7 +10,14 @@ import {
   ButtonType,
   ButtonWarning,
 } from "./Button"
-import { Card, CardBody, CardFooter, CardHeader } from "./Card"
+import {
+  Card,
+  CardBanner,
+  CardBody,
+  CardColorBand,
+  CardFooter,
+  CardHeader,
+} from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
 import ClickTrap from "./ClickTrap"
@@ -72,7 +79,9 @@ export {
   ButtonType,
   ButtonWarning,
   Card,
+  CardBanner,
   CardBody,
+  CardColorBand,
   CardFooter,
   CardHeader,
   CategoriesNav,

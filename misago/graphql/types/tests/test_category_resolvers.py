@@ -39,15 +39,23 @@ def test_category_icon_resolver_returns_string_with_category_color(
     assert value == "fas fa-adjust"
 
 
-def test_category_banner_resolver_returns_dict_with_category_banner(
+def test_category_banner_resolver_returns_dict_with_category_banners(
     category, graphql_info
 ):
     value = resolve_banner(category, graphql_info)
     assert value == {
-        "align": "center",
-        "background": "#2c3e50",
-        "height": 200,
-        "url": "http://lorempixel.com/1280/200/",
+        "full": {
+            "align": "center",
+            "background": "#2c3e50",
+            "height": 100,
+            "url": "http://lorempixel.com/1280/200/",
+        },
+        "half": {
+            "align": "center",
+            "background": "#2c3e50",
+            "height": 100,
+            "url": "http://lorempixel.com/768/200/",
+        },
     }
 
 

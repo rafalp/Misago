@@ -46,10 +46,18 @@ def resolve_icon(category: Category, info: GraphQLResolveInfo) -> str:
 @category_type.field("banner")
 def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
     return {
-        "align": "center",
-        "background": "#2c3e50",
-        "height": 200,
-        "url": "http://lorempixel.com/1280/200/",
+        "full": {
+            "align": "center",
+            "background": "#2c3e50",
+            "height": 100,
+            "url": "http://lorempixel.com/1280/200/",
+        },
+        "half": {
+            "align": "center",
+            "background": "#2c3e50",
+            "height": 100,
+            "url": "http://lorempixel.com/768/200/",
+        },
     }
 
 

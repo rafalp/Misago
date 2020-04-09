@@ -41,6 +41,21 @@ export const icons: Array<string> = [
   "fas fa-plane",
 ]
 
+export const categoryBanner = {
+  full: {
+    align: "center",
+    background: "#2c3e50",
+    height: 100,
+    url: "http://lorempixel.com/1280/200/",
+  },
+  half: {
+    align: "center",
+    background: "#2c3e50",
+    height: 100,
+    url: "http://lorempixel.com/768/200/",
+  }
+}
+
 export const categories = [
   {
     id: "1",
@@ -48,6 +63,7 @@ export const categories = [
     slug: "category",
     color: colors[0],
     icon: icons[0],
+    banner: categoryBanner,
     children: [
       {
         id: "2",
@@ -55,6 +71,7 @@ export const categories = [
         slug: "category",
         color: colors[6],
         icon: icons[6],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -65,6 +82,7 @@ export const categories = [
         slug: "category",
         color: colors[7],
         icon: icons[7],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -75,6 +93,7 @@ export const categories = [
         slug: "category",
         color: colors[8],
         icon: icons[8],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -89,6 +108,7 @@ export const categories = [
     slug: "category",
     color: colors[2],
     icon: icons[2],
+    banner: categoryBanner,
     children: [],
     depth: 0,
     parent: null,
@@ -99,6 +119,7 @@ export const categories = [
     slug: "category",
     color: colors[3],
     icon: icons[3],
+    banner: categoryBanner,
     children: [
       {
         id: "7",
@@ -106,6 +127,7 @@ export const categories = [
         slug: "category",
         color: colors[9],
         icon: icons[9],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -116,6 +138,7 @@ export const categories = [
         slug: "category",
         color: colors[10],
         icon: icons[10],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -126,6 +149,7 @@ export const categories = [
         slug: "category",
         color: colors[11],
         icon: icons[11],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -136,6 +160,7 @@ export const categories = [
         slug: "category",
         color: colors[12],
         icon: icons[12],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -146,6 +171,7 @@ export const categories = [
         slug: "category",
         color: colors[13],
         icon: icons[13],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -160,6 +186,7 @@ export const categories = [
     slug: "category",
     color: colors[4],
     icon: icons[4],
+    banner: categoryBanner,
     children: [],
     depth: 0,
     parent: null,
@@ -170,6 +197,7 @@ export const categories = [
     slug: "category",
     color: colors[5],
     icon: icons[5],
+    banner: categoryBanner,
     children: [
       {
         id: "14",
@@ -177,6 +205,7 @@ export const categories = [
         slug: "category",
         color: colors[14],
         icon: icons[14],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,
@@ -187,6 +216,7 @@ export const categories = [
         slug: "category",
         color: colors[15],
         icon: icons[15],
+        banner: categoryBanner,
         children: [],
         depth: 1,
         parent: null,

@@ -1,0 +1,17 @@
+// Set default styles and top radius on card color band
+.card-color-band {
+  height: 4px;
+
+  background-color: #ffffff;
+  @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+}
+
+// Set top radius on card banner
+.card-banner {
+  @include border-radius($card-inner-border-radius $card-inner-border-radius 0 0);
+}
+
+  .card-color-band + .card-banner,
+  .card-color-band + .card-banner + .card-banner {
+    border-radius: 0;
+  }
