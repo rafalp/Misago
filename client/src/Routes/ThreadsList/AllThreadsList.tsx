@@ -1,4 +1,4 @@
-import { Trans, t } from "@lingui/macro"
+import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import { Link } from "react-router-dom"
@@ -46,17 +46,10 @@ const AllThreadsList: React.FC<IThreadsListProps> = ({
                     index={isIndex}
                     title={i18n._(t("threads.title")`Threads`)}
                   />
-                  <AllThreadsHeader />
+                  <MobileCategoryNavButton onClick={openCategoryPicker} />
+                  <AllThreadsHeader settings={settings} />
                   <Link to={urls.categories()}>[CATEGORIES]</Link>
                   <Link to={urls.startThread()}>[START THREAD]</Link>
-                  <MobileCategoryNavButton onClick={openCategoryPicker} />
-                  <h1>
-                    {isIndex ? (
-                      settings.forumIndexHeader || settings.forumName
-                    ) : (
-                      <Trans id="threads.header">All threads</Trans>
-                    )}
-                  </h1>
                   <ul>
                     {threads.items.map((thread) => (
                       <li key={thread.id}>

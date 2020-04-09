@@ -39,6 +39,7 @@ import {
 import Icon from "./Icon"
 import Input from "./Input"
 import { Layout, LayoutMain, LayoutSide } from "./Layout"
+import MobileOnly from "./MobileOnly"
 import {
   Modal,
   ModalAlert,
@@ -105,6 +106,7 @@ export {
   Layout,
   LayoutMain,
   LayoutSide,
+  MobileOnly,
   Modal,
   ModalAlert,
   ModalBacktrop,

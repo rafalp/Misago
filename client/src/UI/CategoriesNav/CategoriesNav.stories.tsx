@@ -25,7 +25,9 @@ export const SelectedCategory = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "5", parent: null }} />
+          <CategoriesNav
+            active={{ category: { id: "5" }, parent: { id: "5" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>
@@ -37,7 +39,9 @@ export const SelectedParent = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "6", parent: null }} />
+          <CategoriesNav
+            active={{ category: { id: "6" }, parent: { id: "6" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>
@@ -49,7 +53,9 @@ export const SelectedFirstChild = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "7", parent: { id: "6" } }} />
+          <CategoriesNav
+            active={{ category: { id: "7" }, parent: { id: "6" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>
@@ -61,7 +67,9 @@ export const SelectedChild = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "10", parent: { id: "6" } }} />
+          <CategoriesNav
+            active={{ category: { id: "10" }, parent: { id: "6" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>
@@ -73,7 +81,9 @@ export const SelectedLastParent = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "13", parent: null }} />
+          <CategoriesNav
+            active={{ category: { id: "13" }, parent: { id: "13" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>
@@ -84,7 +94,9 @@ export const SelectedLastChild = () => (
     <RootContainer padding>
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={{ id: "15", parent: {id: "13"} }} />
+          <CategoriesNav
+            active={{ category: { id: "15" }, parent: { id: "13" } }}
+          />
         </LayoutSide>
       </Layout>
     </RootContainer>

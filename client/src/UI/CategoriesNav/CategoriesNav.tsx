@@ -15,14 +15,13 @@ const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
   const settings = React.useContext(SettingsContext) || {
     forumIndexThreads: true,
   }
-  const activeRootId = active?.parent?.id || active?.id
 
   return (
     <SideNav className="categories-nav">
       <SideNavItem
         icon={<CategoryIcon className="nav-link-icon" />}
         to={settings.forumIndexThreads ? "/" : "/threads/"}
-        isActive={!activeRootId}
+        isActive={!active}
       >
         <Trans id="threads.header">All threads</Trans>
       </SideNavItem>

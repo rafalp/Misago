@@ -13,9 +13,7 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
   category,
   active,
 }) => {
-  const activeRootId = active?.parent?.id || active?.id
-  const isActive = category.id === activeRootId
-  const activeChildId = active?.id
+  const isActive = category.id === active?.parent.id
 
   return (
     <React.Fragment key={category.id}>
@@ -33,7 +31,7 @@ const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
             icon={<CategoryIcon className="nav-link-icon" category={child} />}
             key={child.id}
             to={urls.category(child)}
-            isActive={activeChildId === child.id}
+            isActive={active?.category.id === child.id}
             isChild
           >
             {child.name}

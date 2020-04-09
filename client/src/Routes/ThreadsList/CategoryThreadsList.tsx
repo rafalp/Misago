@@ -47,20 +47,19 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
     >
       <Layout>
         <LayoutSide>
-          <CategoriesNav active={category} />
+          <CategoriesNav active={activeCategory} />
         </LayoutSide>
         <LayoutMain>
           {category ? (
             <>
               <WindowTitle title={category.name} />
-              <CategoryHeader category={category} />
-              <Link to={urls.categories()}>[CATEGORIES]</Link>
-              <Link to={urls.startThread()}>[START THREAD]</Link>
               <MobileCategoryNavButton
                 active={category}
                 onClick={() => openCategoryPicker(activeCategory)}
               />
-              <h1>{category.name}</h1>
+              <CategoryHeader category={category} />
+              <Link to={urls.categories()}>[CATEGORIES]</Link>
+              <Link to={urls.startThread()}>[START THREAD]</Link>
               <ul>
                 {threads.items.map((thread) => (
                   <li key={thread.id}>

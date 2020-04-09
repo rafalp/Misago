@@ -16,6 +16,6 @@ export interface IChild {
 }
 
 export interface IActiveCategory {
-  id: string
-  parent: { id: string } | null
+  category: { id: string }
+  parent: { id: string }
 }
