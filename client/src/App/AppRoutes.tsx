@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from "react"
 import { Route, Switch } from "react-router-dom"
 import { SettingsContext } from "../Context"
 import { CategoriesList, ThreadsList } from "../Routes"
-import { RouteLoader } from "../UI"
+import { RouteErrorBoundary, RouteLoader } from "../UI"
 import * as urls from "../urls"
 
 const StartThreadRoute = lazy(() => import("../StartThreadRoute"))
@@ -17,12 +17,37 @@ const AppRoutes: React.FC = () => {
   return (
     <Suspense fallback={<RouteLoader />}>
       <Switch>
-        <Route path={urls.startThread()} component={StartThreadRoute} />
-        <Route path={urls.thread(sluggable)} component={ThreadRoute} />
-        <Route path={urls.user(sluggable)} component={UserRoute} />
+        <Route
+          path={urls.startThread()}
+          render={() => (
+            <RouteErrorBoundary>
+              <StartThreadRoute />
+            </RouteErrorBoundary>
+          )}
+        />
+        <Route
+          path={urls.thread(sluggable)}
+          render={() => (
+            <RouteErrorBoundary>
+              <ThreadRoute />
+            </RouteErrorBoundary>
+          )}
+        />
+        <Route
+          path={urls.user(sluggable)}
+          render={() => (
+            <RouteErrorBoundary>
+              <UserRoute />
+            </RouteErrorBoundary>
+          )}
+        />
         <Route
           path={settings?.forumIndexThreads ? urls.categories() : urls.index()}
-          component={CategoriesList}
+          render={() => (
+            <RouteErrorBoundary>
+              <CategoriesList />
+            </RouteErrorBoundary>
+          )}
           exact
         />
         <Route path="/" component={ThreadsList} />

@@ -6,6 +6,7 @@ import {
   CategoriesContext,
   SettingsContext,
 } from "../Context"
+import { RouteErrorBoundary } from "../UI"
 import AppDataQuery from "./AppDataQuery"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
@@ -32,7 +33,9 @@ const App: React.FC = () => {
                       <React.Suspense fallback={<div />}>
                         <Navbar settings={settings} user={auth} />
                       </React.Suspense>
-                      <AppRoutes />
+                      <RouteErrorBoundary>
+                        <AppRoutes />
+                      </RouteErrorBoundary>
                       <React.Suspense fallback={<div />}>
                         <AuthModal settings={settings} />
                       </React.Suspense>

@@ -1,7 +1,7 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 import { SettingsContext } from "../../Context"
-import { RouteNotFound } from "../../UI"
+import { RouteErrorBoundary, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
 import AllThreadsList from "./AllThreadsList"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
@@ -32,12 +32,20 @@ const ThreadsList: React.FC = () => {
       <Switch>
         <Route
           path={urls.category({ id: ":id", slug: ":slug" })}
-          render={() => <CategoryThreadsList openCategoryPicker={open} />}
+          render={() => (
+            <RouteErrorBoundary>
+              <CategoryThreadsList openCategoryPicker={open} />
+            </RouteErrorBoundary>
+          )}
           exact
         />
         <Route
           path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
-          render={() => <AllThreadsList openCategoryPicker={open} />}
+          render={() => (
+            <RouteErrorBoundary>
+              <AllThreadsList openCategoryPicker={open} />
+            </RouteErrorBoundary>
+          )}
           exact
         />
         <Route path={urls.index()} component={RouteNotFound} />
