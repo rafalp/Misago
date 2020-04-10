@@ -8,6 +8,7 @@ interface ICardBannerProps {
   height: number
   url: string
   mobile?: boolean
+  desktop?: boolean
 }
 
 const CardBanner: React.FC<ICardBannerProps> = ({
@@ -17,11 +18,12 @@ const CardBanner: React.FC<ICardBannerProps> = ({
   height,
   url,
   mobile,
+  desktop,
 }) => (
   <div
     className={classNames(
       "card-banner",
-      mobile ? "d-md-none" : "d-none d-md-block",
+      {"d-md-none": mobile, "d-none d-md-block": desktop},
       className
     )}
     style={{

@@ -58,8 +58,6 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
                 onClick={() => openCategoryPicker(activeCategory)}
               />
               <CategoryHeader category={category} />
-              <Link to={urls.categories()}>[CATEGORIES]</Link>
-              <Link to={urls.startThread()}>[START THREAD]</Link>
               <ul>
                 {threads.items.map((thread) => (
                   <li key={thread.id}>

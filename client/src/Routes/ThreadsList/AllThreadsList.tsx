@@ -46,10 +46,8 @@ const AllThreadsList: React.FC<IThreadsListProps> = ({
                     index={isIndex}
                     title={i18n._(t("threads.title")`Threads`)}
                   />
-                  <MobileCategoryNavButton onClick={openCategoryPicker} />
+                  <MobileCategoryNavButton onClick={() => openCategoryPicker()} />
                   <AllThreadsHeader settings={settings} />
-                  <Link to={urls.categories()}>[CATEGORIES]</Link>
-                  <Link to={urls.startThread()}>[START THREAD]</Link>
                   <ul>
                     {threads.items.map((thread) => (
                       <li key={thread.id}>

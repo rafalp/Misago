@@ -18,14 +18,14 @@ const AuthModal = React.lazy(() => import("../AuthModal"))
 const App: React.FC = () => {
   return (
     <AppErrorBoundary>
-      <AppDataQuery>
-        {({ data: { auth, categories, settings } }) => (
-          <AppLanguageLoader language="en">
-            <AuthContext.Provider value={auth}>
-              <CategoriesContext.Provider value={categories}>
-                <SettingsContext.Provider value={settings}>
-                  <AuthModalProvider>
-                    <Router>
+      <Router>
+        <AppDataQuery>
+          {({ data: { auth, categories, settings } }) => (
+            <AppLanguageLoader language="en">
+              <AuthContext.Provider value={auth}>
+                <CategoriesContext.Provider value={categories}>
+                  <SettingsContext.Provider value={settings}>
+                    <AuthModalProvider>
                       <React.Suspense fallback={<div />}>
                         <AuthChangedAlert user={auth} />
                       </React.Suspense>
@@ -36,14 +36,14 @@ const App: React.FC = () => {
                       <React.Suspense fallback={<div />}>
                         <AuthModal settings={settings} />
                       </React.Suspense>
-                    </Router>
-                  </AuthModalProvider>
-                </SettingsContext.Provider>
-              </CategoriesContext.Provider>
-            </AuthContext.Provider>
-          </AppLanguageLoader>
-        )}
-      </AppDataQuery>
+                    </AuthModalProvider>
+                  </SettingsContext.Provider>
+                </CategoriesContext.Provider>
+              </AuthContext.Provider>
+            </AppLanguageLoader>
+          )}
+        </AppDataQuery>
+      </Router>
     </AppErrorBoundary>
   )
 }

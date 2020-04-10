@@ -1,8 +1,10 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { AuthModalContext } from "../Context"
+import { Link } from "react-router-dom"
+import { AuthModalContext, SettingsContext } from "../Context"
 import { ButtonLink } from "../UI"
 import { useAuth } from "../auth"
+import * as urls from "../urls"
 import { INavbarUserProp } from "./Navbar.types"
 import UserDropdown from "./NavbarUserDropdown"
 
@@ -12,12 +14,33 @@ interface INavbarNavProps {
 
 const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
   const { logout } = useAuth()
+  const settings = React.useContext(SettingsContext)
   const { openLoginModal, openRegisterModal } = React.useContext(
     AuthModalContext
   )
 
   return (
     <ul className="navbar-nav ml-auto">
+      <li className="nav-item">
+        <Link className="nav-link" to="/">
+          {settings?.forumIndexThreads ? (
+            <Trans id="navbar.threads">Threads</Trans>
+          ) : (
+            <Trans id="navbar.categories">Categories</Trans>
+          )}
+        </Link>
+      </li>
+      <li className="nav-item">
+        {settings?.forumIndexThreads ? (
+          <Link className="nav-link" to={urls.categories()}>
+            <Trans id="navbar.categories">Categories</Trans>
+          </Link>
+        ) : (
+          <Link className="nav-link" to={urls.threads()}>
+            <Trans id="navbar.threads">Threads</Trans>
+          </Link>
+        )}
+      </li>
       {user ? (
         <>
           <UserDropdown logout={logout} user={user} />

@@ -1,5 +1,7 @@
 import React from "react"
-import { Route } from "react-router-dom"
+import { Route, Switch } from "react-router-dom"
+import { SettingsContext } from "../../Context"
+import { RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
 import AllThreadsList from "./AllThreadsList"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
@@ -12,6 +14,7 @@ interface ICategoriesModalState {
 }
 
 const ThreadsList: React.FC = () => {
+  const settings = React.useContext(SettingsContext)
   const [{ active, isOpen }, setState] = React.useState<ICategoriesModalState>(
     {
       active: null,
@@ -26,16 +29,19 @@ const ThreadsList: React.FC = () => {
   return (
     <>
       <MobileCategoryNavModal active={active} close={close} isOpen={isOpen} />
-      <Route
-        path={urls.category({ id: ":id", slug: ":slug" })}
-        render={() => <CategoryThreadsList openCategoryPicker={open} />}
-        exact
-      />
-      <Route
-        path="/"
-        render={() => <AllThreadsList openCategoryPicker={open} />}
-        exact
-      />
+      <Switch>
+        <Route
+          path={urls.category({ id: ":id", slug: ":slug" })}
+          render={() => <CategoryThreadsList openCategoryPicker={open} />}
+          exact
+        />
+        <Route
+          path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+          render={() => <AllThreadsList openCategoryPicker={open} />}
+          exact
+        />
+        <Route path={urls.index()} component={RouteNotFound} />
+      </Switch>
     </>
   )
 }

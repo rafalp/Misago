@@ -18,14 +18,14 @@ const ClickTrap: React.FC<IClickTrapProps> = ({
     const element = ref.current
     const clickHandler = (event: MouseEvent) => {
       if (event.target instanceof HTMLAnchorElement) {
-        onClick()
+        window.setTimeout(onClick, 0)
         return
       }
 
       let parent = (event.target as HTMLElement).parentNode
       while (parent !== null) {
         if (parent instanceof HTMLAnchorElement) {
-          onClick()
+          window.setTimeout(onClick, 0)
           return
         }
         parent = parent.parentNode
