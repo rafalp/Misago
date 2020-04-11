@@ -5,6 +5,6 @@ export interface IActiveCategory {
   parent: ICategory
 }
 
-export interface IThreadsListProps {
+export interface IThreadsProps {
   openCategoryPicker: (active?: IActiveCategory | null) => void
 }

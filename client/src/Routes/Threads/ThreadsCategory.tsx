@@ -15,19 +15,19 @@ import {
 import * as urls from "../../urls"
 import { CategoryHeader } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
-import { IThreadsListProps } from "./Threads.types"
+import { IThreadsProps } from "./Threads.types"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
-interface ICategoryThreadsListParams {
+interface IThreadsCategoryParams {
   id: string
   slug: string
 }
 
-const CategoryThreadsList: React.FC<IThreadsListProps> = ({
+const ThreadsCategory: React.FC<IThreadsProps> = ({
   openCategoryPicker,
 }) => {
-  const { id } = useParams<ICategoryThreadsListParams>()
+  const { id } = useParams<IThreadsCategoryParams>()
   const activeCategory = useActiveCategory(id)
   const { data, error, loading } = useCategoryThreadsQuery({ id })
 
@@ -101,4 +101,4 @@ const CategoryThreadsList: React.FC<IThreadsListProps> = ({
   )
 }
 
-export default CategoryThreadsList
+export default ThreadsCategory

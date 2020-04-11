@@ -3,10 +3,10 @@ import { Route, Switch } from "react-router-dom"
 import { SettingsContext } from "../../Context"
 import { RouteErrorBoundary, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
-import AllThreadsList from "./AllThreadsList"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
-import CategoryThreadsList from "./CategoryThreadsList"
 import { IActiveCategory } from "./Threads.types"
+import ThreadsAll from "./ThreadsAll"
+import ThreadsCategory from "./ThreadsCategory"
 
 interface ICategoriesModalState {
   isOpen: boolean
@@ -34,7 +34,7 @@ const Threads: React.FC = () => {
           path={urls.category({ id: ":id", slug: ":slug" })}
           render={() => (
             <RouteErrorBoundary>
-              <CategoryThreadsList openCategoryPicker={open} />
+              <ThreadsCategory openCategoryPicker={open} />
             </RouteErrorBoundary>
           )}
           exact
@@ -43,7 +43,7 @@ const Threads: React.FC = () => {
           path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
           render={() => (
             <RouteErrorBoundary>
-              <AllThreadsList openCategoryPicker={open} />
+              <ThreadsAll openCategoryPicker={open} />
             </RouteErrorBoundary>
           )}
           exact
