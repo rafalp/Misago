@@ -13,7 +13,7 @@ import {
   WindowTitle,
 } from "../../UI"
 import * as urls from "../../urls"
-import { CategoryHeader } from "./Header"
+import { HeaderCategory } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IThreadsProps } from "./Threads.types"
 import useActiveCategory from "./useActiveCategory"
@@ -57,7 +57,7 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({
                 active={category}
                 onClick={() => openCategoryPicker(activeCategory)}
               />
-              <CategoryHeader category={category} />
+              <HeaderCategory category={category} />
               <ul>
                 {threads.items.map((thread) => (
                   <li key={thread.id}>

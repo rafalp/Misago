@@ -1,4 +1,4 @@
-import AllThreadsHeader from "./AllThreadsHeader"
-import CategoryHeader from "./CategoryHeader"
+import HeaderAllThreads from "./HeaderAllThreads"
+import HeaderCategory from "./HeaderCategory"
 
-export { AllThreadsHeader, CategoryHeader }
+export { HeaderAllThreads, HeaderCategory }
