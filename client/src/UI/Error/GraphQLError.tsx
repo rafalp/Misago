@@ -2,21 +2,17 @@ import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
 import Error from "./Error"
-import getNetworkErrorCode from "../getNetworkErrorCode"
+import GraphQLErrorRenderer from "../GraphQLErrorRenderer"
 
 interface IGraphQLErrorProps {
   className: string
   error: ApolloError
 }
 
-const GraphQLError: React.FC<IGraphQLErrorProps> = ({
-  className,
-  error,
-}) => {
-  const code = getNetworkErrorCode(error)
-
-  if (error.networkError && code !== 400) {
-    return (
+const GraphQLError: React.FC<IGraphQLErrorProps> = ({ className, error }) => (
+  <GraphQLErrorRenderer
+    error={error}
+    networkError={
       <Error
         className={className}
         header={
@@ -31,10 +27,9 @@ const GraphQLError: React.FC<IGraphQLErrorProps> = ({
           </Trans>
         }
       />
-    )
-  }
-
-  return <Error className={className} />
-}
+    }
+    queryError={<Error className={className} />}
+  />
+)
 
 export default GraphQLError

@@ -1,6 +1,17 @@
 import React from "react"
 import { RootContainer } from "../Storybook"
-import { Card, CardBanner, CardBody, CardColorBand, CardFooter, CardHeader } from "."
+import { Button } from "../Button"
+import {
+  Card,
+  CardBanner,
+  CardBlankslate,
+  CardBody,
+  CardColorBand,
+  CardError,
+  CardFooter,
+  CardHeader,
+  CardLoader,
+} from "."
 
 export default {
   title: "UI/Card",
@@ -85,3 +96,84 @@ export const WithColorBandBanner = () => {
     </RootContainer>
   )
 }
+
+export const Blankslate = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardBlankslate header="JohnDoe has no threads." />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const BlankslateWithMessage = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardBlankslate
+          header="There are no threads in this category."
+          message="Why not start one yourself?"
+        />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const BlankslateWithMessageAction = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardBlankslate
+          header="There are no threads in this category."
+          message="Why not start one yourself?"
+          actions={<Button text={"Start thread"} onClick={() => {}} />}
+        />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const BlankslateWithAction = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardBlankslate
+          header="There are no threads in this category."
+          actions={<Button text={"Start thread"} onClick={() => {}} />}
+        />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const Loader = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardLoader />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const Error = () => (
+  <RootContainer padding>
+    <Card>
+      <CardError header="This content is not available at the moment" />
+    </Card>
+  </RootContainer>
+)
+
+export const ErrorWithMessage = () => (
+  <RootContainer padding>
+    <Card>
+      <CardError
+        header="This content is not available."
+        message={
+          "It may have been moved or deleted, or you are missing permission to see it."
+        }
+      />
+    </Card>
+  </RootContainer>
+)

@@ -20,3 +20,22 @@
   .card-color-band + .card-banner + .card-banner {
     border-radius: 0;
   }
+
+// Error and blank slate messages in card
+.card-error,
+.card-blank-slate {
+  padding: $spacer * 2.5 $spacer;
+
+  text-align: center;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.card-error p,
+.card-blank-slate p,
+.card-blank-slate-actions {
+  margin: 0;
+  margin-top: $spacer;
+}
