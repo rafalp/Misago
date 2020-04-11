@@ -1,14 +1,14 @@
 import React from "react"
 import { useParams } from "react-router-dom"
-import { WindowTitle } from "../UI"
+import { WindowTitle } from "../../UI"
 import UserQuery from "./UserQuery"
 
-interface IUserRouteParams {
+interface IUserParams {
   id: string
 }
 
-const UserRoute: React.FC = () => {
-  const { id } = useParams<IUserRouteParams>()
+const User: React.FC = () => {
+  const { id } = useParams<IUserParams>()
 
   return (
     <UserQuery id={id}>
@@ -22,4 +22,4 @@ const UserRoute: React.FC = () => {
   )
 }
 
-export default UserRoute
+export default User

@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../UI"
+import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../../UI"
 
 const POLL_INTERVAL = 50 * 1000 // 50s
 

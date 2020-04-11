@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import React from "react"
-import { CategoriesContext } from "../Context"
-import { RouteContainer } from "../UI"
-import { IMutationError } from "../types"
+import { CategoriesContext } from "../../Context"
+import { RouteContainer } from "../../UI"
+import { IMutationError } from "../../types"
 
 const POST_THREAD = gql`
   mutation PostThread($input: PostThreadInput!) {
