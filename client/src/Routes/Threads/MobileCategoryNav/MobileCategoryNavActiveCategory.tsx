@@ -1,6 +1,6 @@
 import React from "react"
 import * as urls from "../../../urls"
-import { IActiveCategory } from "../ThreadsList.types"
+import { IActiveCategory } from "../Threads.types"
 import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
 interface IMobileCategoryNavActiveCategoryProps {

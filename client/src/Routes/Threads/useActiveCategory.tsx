@@ -1,6 +1,6 @@
 import React from "react"
 import { CategoriesContext } from "../../Context"
-import { IActiveCategory } from "./ThreadsList.types"
+import { IActiveCategory } from "./Threads.types"
 
 const useActiveCategory = (id?: string | null) => {
   const categories = React.useContext(CategoriesContext)

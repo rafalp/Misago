@@ -16,7 +16,7 @@ import { SettingsContext } from "../../Context"
 import * as urls from "../../urls"
 import { AllThreadsHeader } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
-import { IThreadsListProps } from "./ThreadsList.types"
+import { IThreadsListProps } from "./Threads.types"
 import { useThreadsQuery } from "./useThreadsQuery"
 
 const AllThreadsList: React.FC<IThreadsListProps> = ({

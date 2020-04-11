@@ -15,7 +15,7 @@ import {
 import * as urls from "../../urls"
 import { CategoryHeader } from "./Header"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
-import { IThreadsListProps } from "./ThreadsList.types"
+import { IThreadsListProps } from "./Threads.types"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 

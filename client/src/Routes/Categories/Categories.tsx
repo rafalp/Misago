@@ -5,7 +5,7 @@ import { RouteGraphQLError, RouteLoader } from "../../UI"
 import * as urls from "../../urls"
 import useCategoriesQuery from "./useCategoriesQuery"
 
-const CategoriesList: React.FC = () => {
+const Categories: React.FC = () => {
   const { data, error, loading } = useCategoriesQuery()
 
   if (loading) return <RouteLoader />
@@ -41,4 +41,4 @@ const CategoriesList: React.FC = () => {
   )
 }
 
-export default CategoriesList
+export default Categories

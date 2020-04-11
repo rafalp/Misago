@@ -6,14 +6,14 @@ import * as urls from "../../urls"
 import AllThreadsList from "./AllThreadsList"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
 import CategoryThreadsList from "./CategoryThreadsList"
-import { IActiveCategory } from "./ThreadsList.types"
+import { IActiveCategory } from "./Threads.types"
 
 interface ICategoriesModalState {
   isOpen: boolean
   active?: IActiveCategory | null
 }
 
-const ThreadsList: React.FC = () => {
+const Threads: React.FC = () => {
   const settings = React.useContext(SettingsContext)
   const [{ active, isOpen }, setState] = React.useState<ICategoriesModalState>(
     {
@@ -54,4 +54,4 @@ const ThreadsList: React.FC = () => {
   )
 }
 
-export default ThreadsList
+export default Threads

@@ -1,4 +1,3 @@
-import { lazy } from "react"
+import Routes from "./Routes"
 
-export const CategoriesList = lazy(() => import("./CategoriesList"))
-export const ThreadsList = lazy(() => import("./ThreadsList"))
+export default Routes

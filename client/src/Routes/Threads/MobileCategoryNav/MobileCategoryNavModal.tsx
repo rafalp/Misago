@@ -10,7 +10,7 @@ import {
   portal,
 } from "../../../UI"
 import * as urls from "../../../urls"
-import { IActiveCategory } from "../ThreadsList.types"
+import { IActiveCategory } from "../Threads.types"
 import CategoryPickerActiveItem from "./MobileCategoryNavActiveCategory"
 import MobileCategoryNavCategory from "./MobileCategoryNavCategory"
 import MobileCategoryNavLink from "./MobileCategoryNavLink"

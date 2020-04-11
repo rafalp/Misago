@@ -6,11 +6,11 @@ import {
   CategoriesContext,
   SettingsContext,
 } from "../Context"
+import Routes from "../Routes"
 import { RouteErrorBoundary } from "../UI"
 import AppDataQuery from "./AppDataQuery"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
-import AppRoutes from "./AppRoutes"
 
 const Navbar = React.lazy(() => import("../Navbar"))
 const AuthChangedAlert = React.lazy(() => import("../AuthChangedAlert"))
@@ -34,7 +34,7 @@ const App: React.FC = () => {
                         <Navbar settings={settings} user={auth} />
                       </React.Suspense>
                       <RouteErrorBoundary>
-                        <AppRoutes />
+                        <Routes />
                       </RouteErrorBoundary>
                       <React.Suspense fallback={<div />}>
                         <AuthModal settings={settings} />
