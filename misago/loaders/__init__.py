@@ -6,6 +6,7 @@ from .categories import (
     load_root_categories,
     store_category,
 )
+from .forumstats import load_forum_stats
 from .posts import (
     clear_all_posts,
     clear_post,
@@ -51,9 +52,10 @@ __all__ = [
     "load_category",
     "load_category_children",
     "load_category_with_children",
-    "load_root_categories",
+    "load_forum_stats",
     "load_post",
     "load_posts",
+    "load_root_categories",
     "load_thread",
     "load_thread_posts_page",
     "load_threads",

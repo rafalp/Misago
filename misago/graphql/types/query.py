@@ -8,6 +8,7 @@ from ...loaders import (
     load_categories,
     load_category,
     load_category_with_children,
+    load_forum_stats,
     load_root_categories,
     load_thread,
     load_threads_feed,
@@ -67,6 +68,11 @@ async def resolve_user(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[User]:
     return await load_user(info.context, id)
+
+
+@query_type.field("forumStats")
+async def resolve_forum_stats(_, info: GraphQLResolveInfo) -> dict:
+    return await load_forum_stats(info.context)
 
 
 @query_type.field("settings")

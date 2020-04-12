@@ -1,6 +1,7 @@
-from databases import Database, DatabaseURL
+from databases import DatabaseURL
 
 from ..conf import settings
+from .core import Database
 
 
 database_url = DatabaseURL(settings.database_url)

@@ -4,6 +4,7 @@ from ..query import (
     resolve_auth,
     resolve_categories,
     resolve_category,
+    resolve_forum_stats,
     resolve_settings,
     resolve_thread,
     resolve_threads,
@@ -98,6 +99,15 @@ async def test_user_resolver_returns_user_by_id(user, graphql_info):
 async def test_user_resolver_returns_none_for_nonexistent_user_id(graphql_info):
     value = await resolve_user(None, graphql_info, id="100")
     assert value is None
+
+
+@pytest.mark.asyncio
+async def test_forum_stats_resolver_returns_forum_stats(graphql_info):
+    value = await resolve_forum_stats(None, graphql_info)
+    assert value["id"]
+    assert "threads" in value
+    assert "posts" in value
+    assert "users" in value
 
 
 def test_settings_resolver_returns_settings_from_context(
