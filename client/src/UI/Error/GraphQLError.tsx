@@ -1,8 +1,9 @@
 import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import Error from "./Error"
 import GraphQLErrorRenderer from "../GraphQLErrorRenderer"
+import Error from "./Error"
+import GraphQLErrorMessage from "./GraphQLErrorMessage"
 
 interface IGraphQLErrorProps {
   className: string
@@ -21,10 +22,7 @@ const GraphQLError: React.FC<IGraphQLErrorProps> = ({ className, error }) => (
           </Trans>
         }
         message={
-          <Trans id="api_error.message">
-            Site server can't be reached. You may be offline or the site is
-            unavailable at the moment.
-          </Trans>
+          <GraphQLErrorMessage />
         }
       />
     }

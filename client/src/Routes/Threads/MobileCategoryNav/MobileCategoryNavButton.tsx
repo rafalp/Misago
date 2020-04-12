@@ -8,7 +8,7 @@ interface IMobileCategoryNavButtonProps {
     name: string
     color: string | null
     icon: string | null
-  }
+  } | null
   onClick: () => void
 }
 

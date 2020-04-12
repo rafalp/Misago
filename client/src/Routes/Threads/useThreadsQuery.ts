@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
-
-const POLL_INTERVAL = 50 * 1000 // 50s
+import { IThread } from "./Threads.types"
 
 const THREADS_FIELDS = `
   items {
@@ -41,32 +40,8 @@ interface IThreadsData {
   }
 }
 
-interface IThread {
-  id: string
-  title: string
-  slug: string
-  category: IThreadCategory
-}
-
-interface IThreadCategory {
-  id: string
-  name: string
-  slug: string
-  color: string | null
-  icon: string | null
-  parent: {
-    id: string
-    name: string
-    slug: string
-    color: string | null
-    icon: string | null
-  }
-}
-
 export const useThreadsQuery = () => {
-  return useQuery<IThreadsData>(THREADS_QUERY, {
-    pollInterval: POLL_INTERVAL,
-  })
+  return useQuery<IThreadsData>(THREADS_QUERY)
 }
 
 interface ICategoryQueryParams {
@@ -116,7 +91,6 @@ export const useCategoryThreadsQuery = (params: ICategoryQueryParams) => {
   return useQuery<ICategoryThreadsData, ICategoryQueryParams>(
     CATEGORY_THREADS_QUERY,
     {
-      pollInterval: POLL_INTERVAL,
       variables: params,
     }
   )

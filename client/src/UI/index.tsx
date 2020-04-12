@@ -30,7 +30,13 @@ import {
   DropdownDivider,
   DropdownLink,
 } from "./Dropdown"
-import { Error, GraphQLError, NotFoundError } from "./Error"
+import {
+  Error,
+  ErrorMessage,
+  GraphQLError,
+  GraphQLErrorMessage,
+  NotFoundError,
+} from "./Error"
 import {
   Field,
   FieldContext,
@@ -101,6 +107,7 @@ export {
   DropdownLink,
   EmailValidationError,
   Error,
+  ErrorMessage,
   Field,
   FieldContext,
   FieldError,
@@ -108,6 +115,7 @@ export {
   Form,
   FormContext,
   GraphQLError,
+  GraphQLErrorMessage,
   GraphQLErrorRenderer,
   Icon,
   Input,

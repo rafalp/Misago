@@ -1,5 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
+import ErrorMessage from "./ErrorMessage"
 
 interface IErrorProps {
   className: string
@@ -19,13 +20,7 @@ const Error: React.FC<IErrorProps> = ({ className, header, message }) => (
             </Trans>
           )}
         </h3>
-        <p>
-          {message || (
-            <Trans id="generic_error.message">
-              An unexpected error has occurred.
-            </Trans>
-          )}
-        </p>
+        <p>{message || <ErrorMessage />}</p>
       </div>
     </div>
   </div>

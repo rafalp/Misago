@@ -1,4 +1,5 @@
 .navbar {
   @include shadow-1;
-  margin-bottom: 1rem;
+
+  margin-bottom: $spacer;
 }
