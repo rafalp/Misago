@@ -1,6 +1,5 @@
 import pytest
 
-from ..cache import FORUM_STATS_CACHE
 from ..forumstats import get_forum_stats, get_forum_stats_from_db
 
 

@@ -1,5 +1,3 @@
-from asyncio import gather
-
 from ..database.queries import count
 from ..tables import posts, threads, users
 from ..utils.strings import get_random_string

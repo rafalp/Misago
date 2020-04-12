@@ -73,6 +73,7 @@ intro() {
     echo "Testing:"
     echo
     echo "    ${BOLD}test${NORMAL}              run tests suite using pytest."
+    echo "    ${BOLD}link${NORMAL}              run lintes."
     echo
     echo "Translations:"
     echo
@@ -194,6 +195,12 @@ test() {
     docker-compose run --rm misago pytest "${@:2}"
 }
 
+# Run linters
+lint() {
+    mypy misago --ignore-missing-imports
+    pylint misago
+}
+
 # Make messages
 makemessages() {
     docker-compose run --rm --no-deps misago ./dev makemessages_in_docker $1
@@ -293,6 +300,8 @@ if [[ $1 ]]; then
         rebuild $@
     elif [[ $1 = "test" ]]; then
         test $@
+    elif [[ $1 = "lint" ]]; then
+        lint
     elif [[ $1 = "makemessages" ]]; then
         makemessages ${2:-en}
     elif [[ $1 = "makemessages_in_docker" ]]; then
