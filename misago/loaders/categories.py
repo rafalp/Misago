@@ -66,7 +66,7 @@ async def load_category_with_children(
     return [category] + await load_category_children(context, category.id)
 
 
-def store_category(context: GraphQLContext, category: Category) -> List[Category]:
+def store_category(context: GraphQLContext, category: Category):
     if CACHE_NAME not in context:
         return
 

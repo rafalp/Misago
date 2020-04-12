@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, cast
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
@@ -25,6 +25,7 @@ from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
     AsyncValidator,
+    Category,
     GraphQLContext,
     Post,
     PostReplyInput,
@@ -116,7 +117,7 @@ async def post_reply(
         poster=user,
         context=context,
     )
-    category = await load_category(context, thread.category_id)
+    category = cast(Category, await load_category(context, thread.category_id))
 
     thread, category = await gather(
         update_thread(thread, last_post=reply, increment_replies=True),
