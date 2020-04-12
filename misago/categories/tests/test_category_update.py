@@ -71,6 +71,46 @@ async def test_category_depth_can_be_updated(category):
 
 
 @pytest.mark.asyncio
+async def test_category_threads_count_can_be_updated(category):
+    updated_category = await update_category(category, threads=42)
+    assert updated_category.threads == 42
+
+
+@pytest.mark.asyncio
+async def test_category_threads_count_can_be_incremented(category):
+    updated_category = await update_category(category, increment_threads=True)
+    assert updated_category.threads == 1
+
+
+@pytest.mark.asyncio
+async def test_updating_and_incrementing_category_threads_count_at_same_time_errors(
+    category,
+):
+    with pytest.raises(ValueError):
+        await update_category(category, threads=42, increment_threads=True)
+
+
+@pytest.mark.asyncio
+async def test_category_posts_count_can_be_updated(category):
+    updated_category = await update_category(category, posts=42)
+    assert updated_category.posts == 42
+
+
+@pytest.mark.asyncio
+async def test_category_posts_count_can_be_incremented(category):
+    updated_category = await update_category(category, increment_posts=True)
+    assert updated_category.posts == 1
+
+
+@pytest.mark.asyncio
+async def test_updating_and_incrementing_category_posts_count_at_same_time_errors(
+    category,
+):
+    with pytest.raises(ValueError):
+        await update_category(category, posts=42, increment_posts=True)
+
+
+@pytest.mark.asyncio
 async def test_open_category_can_be_closed(category):
     updated_category = await update_category(category, is_closed=True)
     assert updated_category.is_closed

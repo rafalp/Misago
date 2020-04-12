@@ -1,4 +1,5 @@
 import pytest
+from dataclasses import replace
 
 from ..categories import (
     load_categories,
@@ -6,6 +7,7 @@ from ..categories import (
     load_category_children,
     load_category_with_children,
     load_root_categories,
+    store_category,
 )
 
 
@@ -67,3 +69,20 @@ async def test_category_with_children_loader_returns_list_with_category_and_chil
 ):
     loaded_categories = await load_category_with_children({}, category.id)
     assert loaded_categories == [category, child_category]
+
+
+@pytest.mark.asyncio
+async def test_category_can_be_stored_in_context_containing_loaded_categories(category):
+    context = {}
+    loaded_category = await load_category(context, category.id)
+    updated_category = replace(loaded_category, name="Updated")
+    store_category(context, updated_category)
+    assert (await load_category(context, category.id)).name == updated_category.name
+
+
+@pytest.mark.asyncio
+async def test_storing_category_in_context_without_loaded_categories_is_noop(category):
+    context = {}
+    updated_category = replace(category, name="Updated")
+    store_category(context, updated_category)
+    assert not context

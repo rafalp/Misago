@@ -9,6 +9,8 @@ from ...types import Category
 
 category_type = ObjectType("Category")
 
+category_type.set_alias("isClosed", "is_closed")
+
 
 @category_type.field("parent")
 async def resolve_parent(

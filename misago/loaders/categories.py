@@ -64,3 +64,12 @@ async def load_category_with_children(
         return []
 
     return [category] + await load_category_children(context, category.id)
+
+
+def store_category(context: GraphQLContext, category: Category) -> List[Category]:
+    if CACHE_NAME not in context:
+        return
+
+    new_categories = context[CACHE_NAME].copy()
+    new_categories[category.id] = category
+    context[CACHE_NAME] = new_categories

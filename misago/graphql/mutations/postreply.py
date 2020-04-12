@@ -1,3 +1,4 @@
+from asyncio import gather
 from typing import Dict, List, Tuple
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
@@ -12,7 +13,14 @@ from ...hooks import (
     post_reply_input_hook,
     post_reply_input_model_hook,
 )
-from ...loaders import load_thread, store_post, store_thread
+from ...loaders import (
+    load_category,
+    load_thread,
+    store_category,
+    store_post,
+    store_thread,
+)
+from ...categories.update import update_category
 from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
@@ -108,8 +116,14 @@ async def post_reply(
         poster=user,
         context=context,
     )
-    thread = await update_thread(thread, last_post=reply, increment_replies=True)
+    category = await load_category(context, thread.category_id)
 
+    thread, category = await gather(
+        update_thread(thread, last_post=reply, increment_replies=True),
+        update_category(category, increment_posts=True),
+    )
+
+    store_category(context, category)
     store_thread(context, thread)
     store_post(context, reply)
 

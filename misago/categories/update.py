@@ -15,6 +15,10 @@ async def update_category(
     left: Optional[int] = None,
     right: Optional[int] = None,
     depth: Optional[int] = None,
+    threads: Optional[int] = None,
+    increment_threads: Optional[bool] = False,
+    posts: Optional[int] = None,
+    increment_posts: Optional[bool] = False,
     is_closed: Optional[bool] = None,
     extra: Optional[Dict[str, Any]] = None
 ) -> Category:
@@ -44,6 +48,22 @@ async def update_category(
     if depth is not None and depth != category.depth:
         changes["depth"] = depth
 
+    if threads is not None and increment_threads:
+        raise ValueError(
+            "'threads' and 'increment_threads' options are mutually exclusive"
+        )
+    if threads is not None and threads != category.threads:
+        changes["threads"] = threads
+    if increment_threads:
+        changes["threads"] = categories.c.threads + 1
+
+    if posts is not None and increment_posts:
+        raise ValueError("'posts' and 'increment_posts' options are mutually exclusive")
+    if posts is not None and posts != category.posts:
+        changes["posts"] = posts
+    if increment_posts:
+        changes["posts"] = categories.c.posts + 1
+
     if is_closed is not None and is_closed != category.is_closed:
         changes["is_closed"] = is_closed
 
@@ -54,6 +74,12 @@ async def update_category(
         return category
 
     await update(categories, category.id, **changes)
+
+    # replace SQL expressions with actual ints for use in new dataclass
+    if increment_threads:
+        changes["threads"] = category.threads + 1
+    if increment_posts:
+        changes["posts"] = category.posts + 1
 
     updated_category = replace(category, **changes)
     return updated_category

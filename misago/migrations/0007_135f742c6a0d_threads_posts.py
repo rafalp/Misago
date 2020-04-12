@@ -32,7 +32,7 @@ def upgrade():
         sa.Column("slug", sa.String(length=255), nullable=False),
         sa.Column("started_at", sa.DateTime(), nullable=False),
         sa.Column("last_posted_at", sa.DateTime(), nullable=False),
-        sa.Column("replies", sa.Integer(), nullable=False),
+        sa.Column("replies", sa.Integer(), server_default="0", nullable=False),
         sa.Column("is_closed", sa.Boolean(), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
         sa.ForeignKeyConstraint(["category_id"], ["misago_categories.id"],),

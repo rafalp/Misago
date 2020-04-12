@@ -70,6 +70,10 @@ categories = sqlalchemy.Table(
     sqlalchemy.Column("right", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
+    sqlalchemy.Column(
+        "threads", sqlalchemy.Integer, server_default="0", nullable=False
+    ),
+    sqlalchemy.Column("posts", sqlalchemy.Integer, server_default="0", nullable=False),
     sqlalchemy.Column("is_closed", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
@@ -116,7 +120,9 @@ threads = sqlalchemy.Table(
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("started_at", sqlalchemy.DateTime, nullable=False),
     sqlalchemy.Column("last_posted_at", sqlalchemy.DateTime, nullable=False),
-    sqlalchemy.Column("replies", sqlalchemy.Integer, nullable=False),
+    sqlalchemy.Column(
+        "replies", sqlalchemy.Integer, server_default="0", nullable=False
+    ),
     sqlalchemy.Column("is_closed", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )

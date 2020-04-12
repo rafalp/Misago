@@ -8,6 +8,9 @@ type Category {
     color: String
     icon: String
     banner: CategoryBannerSize
+    threads: Int!
+    posts: Int!
+    isClosed: Boolean!
 }
 
 type CategoryBannerSize {

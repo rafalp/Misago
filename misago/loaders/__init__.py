@@ -4,6 +4,7 @@ from .categories import (
     load_category_children,
     load_category_with_children,
     load_root_categories,
+    store_category,
 )
 from .posts import (
     clear_all_posts,
@@ -59,6 +60,7 @@ __all__ = [
     "load_threads_feed",
     "load_user",
     "load_users",
+    "store_category",
     "store_post",
     "store_posts",
     "store_thread",
