@@ -23,7 +23,7 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
   const { data, error, loading } = useCategoryThreadsQuery({ id })
 
   const { category } = activeCategory || { category: null }
-  const { threads } = data || { threads: null }
+  const { threads } = data && data.category.id === id ? data : { threads: null }
 
   if (!category) return <RouteNotFound />
 

@@ -1,7 +1,7 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 import { SettingsContext } from "../../Context"
-import { RouteErrorBoundary, RouteNotFound } from "../../UI"
+import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
 import { IActiveCategory } from "./Threads.types"
@@ -48,7 +48,10 @@ const Threads: React.FC = () => {
           )}
           exact
         />
-        <Route path={urls.index()} component={RouteNotFound} />
+        <Route
+          path={urls.index()}
+          render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
+        />
       </Switch>
     </>
   )
