@@ -1,12 +1,14 @@
 # Speed up bulding by excluding files from the docker context
+.mypy_cache
+.pytest_cache
 .vscode/
+client/
 dev/
 dist/
 docs/
 env/
 venv/
 node_modules/
-misago-client/
 
 .DS_Store
 thumbs.db

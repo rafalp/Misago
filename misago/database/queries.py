@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Mapping, Sequence, Union
 
-from sqlalchemy.sql import ColumnElement, TableClause
+from sqlalchemy import func
+from sqlalchemy.sql import ColumnElement, TableClause, select
 
 from .database import database
 
@@ -18,6 +19,10 @@ async def update(table: TableClause, row_id: Union[str, int], **values: Dict[str
 
 async def fetch_all(table: TableClause) -> List[Mapping]:
     return await database.fetch_all(table.select(None))
+
+
+async def count(table: TableClause) -> int:
+    return await database.fetch_val(select([func.count()]).select_from(table))
 
 
 async def delete(table: TableClause, row_id=Any):
