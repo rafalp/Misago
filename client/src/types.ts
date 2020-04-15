@@ -31,6 +31,9 @@ export interface ICategory {
   color: string | null
   icon: string | null
   banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+  threads: number
+  posts: number
+  isClosed: boolean
 }
 
 export interface ICategoryBanner {
@@ -49,6 +52,12 @@ export interface ISettings {
   passwordMaxLength: number
   usernameMinLength: number
   usernameMaxLength: number
+}
+
+export interface IForumStats {
+  id: string
+  threads: number
+  posts: number
 }
 
 export enum AuthModalMode {

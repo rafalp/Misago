@@ -7,6 +7,8 @@ interface IHeaderCategoryProps {
     name: string
     color: string | null
     banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+    threads: number
+    posts: number
   }
 }
 
@@ -15,6 +17,7 @@ const HeaderCategory: React.FC<IHeaderCategoryProps> = ({ category }) => (
     banner={category.banner}
     color={category.color}
     text={category.name}
+    stats={category}
   />
 )
 

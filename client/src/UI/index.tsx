@@ -69,6 +69,7 @@ import RouteErrorBoundary from "./RouteErrorBoundary"
 import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
 import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
+import { TidbitItem, TidbitPosts, TidbitThreads, Tidbits } from "./Tidbits"
 import {
   EmailValidationError,
   PasswordValidationError,
@@ -146,6 +147,10 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
+  TidbitItem,
+  TidbitPosts,
+  TidbitThreads,
+  Tidbits,
   UsernameValidationError,
   ValidationError,
   WindowTitle,

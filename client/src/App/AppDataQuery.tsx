@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { ICategory, ISettings, IUser } from "../types"
+import { ICategory, IForumStats, ISettings, IUser } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
 
@@ -30,6 +30,9 @@ const INITIAL_DATA_QUERY = gql`
         ...CategoryBanner
       }
     }
+    threads
+    posts
+    isClosed
   }
 
   query InitialData {
@@ -58,6 +61,10 @@ const INITIAL_DATA_QUERY = gql`
       usernameMinLength
       usernameMaxLength
     }
+    forumStats {
+      threads
+      posts
+    }
   }
 `
 
@@ -65,6 +72,7 @@ interface IInitialData {
   auth: IUser | null
   categories: Array<ICategory>
   settings: ISettings | null
+  forumStats: IForumStats | null
 }
 
 interface IAppDataProps {
@@ -81,6 +89,7 @@ const defaultData = {
   auth: null,
   categories: [],
   settings: null,
+  forumStats: null,
 }
 
 const AppDataQuery: React.FC<IAppDataProps> = ({ children }) => {
