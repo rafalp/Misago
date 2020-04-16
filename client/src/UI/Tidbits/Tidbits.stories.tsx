@@ -21,8 +21,8 @@ export const PostsThreads = () => {
   return (
     <CardContainer padding>
       <Tidbits>
-        <TidbitPosts posts={42} />
-        <TidbitThreads threads={64} />
+        <TidbitPosts posts={71315} />
+        <TidbitThreads threads={22453} />
       </Tidbits>
     </CardContainer>
   )

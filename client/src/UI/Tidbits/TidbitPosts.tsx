@@ -11,8 +11,8 @@ const TidbitPosts: React.FC<ITidbitPostsProps> = ({ posts }) => (
     <Plural
       id="tidbit.posts"
       value={posts}
-      one={"# post"}
-      other={"# posts"}
+      one="# post"
+      other="# posts"
     />
   </TidbitItem>
 )
