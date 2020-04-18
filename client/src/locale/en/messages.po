@@ -13,10 +13,236 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/AuthModal/LoginModal.tsx:55
+msgid "Fill out all fields."
+msgstr "Fill out all fields."
+
+#: src/AuthModal/LoginModal.tsx:56
+msgid "Login or password is incorrect."
+msgstr "Login or password is incorrect."
+
+#: src/UI/Error/GraphQLErrorMessage.tsx:3
+msgid "api_error.message"
+msgstr "Site server can't be reached. You may be offline or the site is unavailable at the moment."
+
+#: src/UI/Error/GraphQLError.tsx:6
+msgid "api_error.title"
+msgstr "Requested page could not be loaded."
+
+#: src/AuthChangedAlert/AuthChangedLoggedInAlert.tsx:13
+msgid "auth_alert.logged_in.cta"
+msgstr "This page was displayed before you've logged in and is no longer accurate. Click this message to update its contents."
+
+#: src/AuthChangedAlert/AuthChangedLoggedInAlert.tsx:8
+msgid "auth_alert.logged_in.title"
+msgstr "You have been logged in, <0>{username}</0>."
+
+#: src/AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:13
+msgid "auth_alert.logged_out.cta"
+msgstr "This page was displayed while you were still logged in and is no longer accurate. Click this message to update its contents."
+
+#: src/AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:8
+msgid "auth_alert.logged_out.title"
+msgstr "You have been logged out, <0>{username}</0>."
+
 #: src/Navbar/Navbar.tsx:19
-msgid "btn.login"
-msgstr "Log in"
+#~ msgid "btn.login"
+#~ msgstr "Log in"
 
 #: src/Navbar/Navbar.tsx:22
-msgid "btn.register"
-msgstr "Register"
+#~ msgid "btn.register"
+#~ msgstr "Register"
+
+#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavModal.tsx:14
+msgid "category_picker.title"
+msgstr "Category"
+
+#: src/UI/RootError/RootError.tsx:17
+msgid "client_error.graphql"
+msgstr "Unexpected error has occurred."
+
+#: src/UI/RootError/RootError.tsx:24
+msgid "client_error.network"
+msgstr "Site server can't be reached."
+
+#: src/UI/Error/ErrorMessage.tsx:3
+msgid "generic_error.message"
+msgstr "An unexpected error has occurred."
+
+#: src/UI/Error/Error.tsx:9
+msgid "generic_error.title"
+msgstr "Requested page could not be displayed."
+
+#: src/AuthModal/RegisterModal.tsx:79
+msgid "input.email"
+msgstr "E-mail"
+
+#: src/AuthModal/RegisterModal.tsx:76
+msgid "input.name"
+msgstr "User name"
+
+#: src/AuthModal/RegisterModal.tsx:82
+msgid "input.password"
+msgstr "Password"
+
+#: src/AuthModal/LoginModal.tsx:62
+msgid "login.input.password"
+msgstr "Password"
+
+#: src/AuthModal/LoginModal.tsx:61
+msgid "login.input.username"
+msgstr "User name or e-mail"
+
+#: src/AuthModal/LoginModal.tsx:66
+msgid "login.register"
+msgstr "Not a member? <0>Sign up</0>"
+
+#: src/AuthModal/LoginModal.tsx:65
+msgid "login.submit"
+msgstr "Log in"
+
+#: src/AuthModal/LoginModal.tsx:65
+msgid "login.submitting"
+msgstr "Logging in..."
+
+#: src/AuthModal/LoginModal.tsx:38
+msgid "login.title"
+msgstr "Log in"
+
+#: src/UI/Modal/ModalHeader.tsx:10
+msgid "modal.close"
+msgstr "Close"
+
+#: src/Navbar/NavbarNav.tsx:16
+#: src/Navbar/NavbarNav.tsx:21
+msgid "navbar.categories"
+msgstr "Categories"
+
+#: src/Navbar/NavbarNav.tsx:33
+msgid "navbar.login"
+msgstr "Log in"
+
+#: src/Navbar/NavbarNav.tsx:29
+#: src/Navbar/NavbarUserDropdown.tsx:12
+msgid "navbar.logout"
+msgstr "Log out"
+
+#: src/Navbar/NavbarUserDropdown.tsx:10
+msgid "navbar.profile"
+msgstr "See your profile"
+
+#: src/Navbar/NavbarNav.tsx:36
+msgid "navbar.register"
+msgstr "Sign up"
+
+#: src/Navbar/NavbarNav.tsx:16
+#: src/Navbar/NavbarNav.tsx:23
+msgid "navbar.threads"
+msgstr "Threads"
+
+#: src/Navbar/NavbarCollapse.tsx:29
+msgid "navbar.toggle"
+msgstr "Toggle navigation"
+
+#: src/UI/Error/NotFoundError.tsx:6
+msgid "not_found_error.message"
+msgstr "The link you've followed may be broken, or the page has been moved or deleted."
+
+#: src/UI/Error/NotFoundError.tsx:4
+msgid "not_found_error.title"
+msgstr "Requested page could not be found."
+
+#: src/AuthModal/RegisterModal.tsx:88
+msgid "register.login"
+msgstr "Already a member? <0>Log in</0>"
+
+#: src/AuthModal/RegisterModal.tsx:87
+msgid "register.submit"
+msgstr "Sign up"
+
+#: src/AuthModal/RegisterModal.tsx:87
+msgid "register.submitting"
+msgstr "Signing up..."
+
+#: src/AuthModal/RegisterModal.tsx:52
+msgid "register.title"
+msgstr "Sign up"
+
+#: src/Routes/Threads/ThreadsList/ThreadsListGraphQLError.tsx:5
+msgid "threads.graphql_error_header"
+msgstr "Threads list could not be displayed."
+
+#: src/Routes/Threads/Header/HeaderAllThreads.tsx:4
+#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavButton.tsx:5
+#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavModal.tsx:17
+#: src/UI/CategoriesNav/CategoriesNav.tsx:13
+msgid "threads.header"
+msgstr "All threads"
+
+#: src/Routes/Threads/ThreadsAll.tsx:21
+msgid "threads.title"
+msgstr "Threads"
+
+#: src/UI/Tidbits/TidbitPosts.tsx:5
+msgid "tidbit.posts"
+msgstr "{posts, plural, one {# post} other {# posts}}"
+
+#: src/UI/Tidbits/TidbitThreads.tsx:5
+msgid "tidbit.threads"
+msgstr "{threads, plural, one {# thread} other {# threads}}"
+
+#: src/UI/ValidationError/ValidationError.tsx:36
+msgid "value_error.any_str.max_length"
+msgstr "{max, plural, one {This value should be no longer than # character (it has {value}).} other {This value should be no longer than # characters (it has {value}).}}"
+
+#: src/UI/ValidationError/ValidationError.tsx:27
+msgid "value_error.any_str.min_length"
+msgstr "{min, plural, one {This value should be at least # character long (it has {value}).} other {This value should be at least # characters long (it has {value}).}}"
+
+#: src/UI/ValidationError/EmailValidationError.tsx:27
+msgid "value_error.email"
+msgstr "This e-mail address is not valid."
+
+#: src/UI/ValidationError/EmailValidationError.tsx:22
+msgid "value_error.email.missing"
+msgstr "E-mail address can't be empty."
+
+#: src/UI/ValidationError/EmailValidationError.tsx:32
+msgid "value_error.email.not_available"
+msgstr "This e-mail address is not available."
+
+#: src/UI/ValidationError/ValidationError.tsx:22
+msgid "value_error.missing"
+msgstr "This field can't be empty."
+
+#: src/UI/ValidationError/PasswordValidationError.tsx:38
+msgid "value_error.password.max_length"
+msgstr "{max, plural, one {Password should be no longer than # character (it has {value}).} other {Password should be no longer than # characters (it has {value}).}}"
+
+#: src/UI/ValidationError/PasswordValidationError.tsx:29
+msgid "value_error.password.min_length"
+msgstr "{min, plural, one {Password should be at least # character long (it has {value}).} other {Password should be at least # characters long (it has {value}).}}"
+
+#: src/UI/ValidationError/PasswordValidationError.tsx:24
+msgid "value_error.password.missing"
+msgstr "Password can't be empty."
+
+#: src/UI/ValidationError/UsernameValidationError.tsx:29
+msgid "value_error.username"
+msgstr "User name can only contain latin alphabet letters and digits."
+
+#: src/UI/ValidationError/UsernameValidationError.tsx:48
+msgid "value_error.username.max_length"
+msgstr "{max, plural, one {User name should be no longer than # character (it has {value}).} other {User name should be no longer than # characters (it has {value}).}}"
+
+#: src/UI/ValidationError/UsernameValidationError.tsx:39
+msgid "value_error.username.min_length"
+msgstr "{min, plural, one {User name should be at least # character long (it has {value}).} other {User name should be at least # characters long (it has {value}).}}"
+
+#: src/UI/ValidationError/UsernameValidationError.tsx:24
+msgid "value_error.username.missing"
+msgstr "User name can't be empty."
+
+#: src/UI/ValidationError/UsernameValidationError.tsx:34
+msgid "value_error.username.not_available"
+msgstr "This user name is not available."

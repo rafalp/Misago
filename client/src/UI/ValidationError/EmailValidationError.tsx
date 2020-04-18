@@ -31,7 +31,7 @@ const EmailValidationError: React.FC<IValidationErrorProps> = ({
           case "value_error.missing":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.username.missing")`E-mail address can't be empty.`),
+              message: i18n._(t("value_error.email.missing")`E-mail address can't be empty.`),
             })
 
           case "value_error.email":
