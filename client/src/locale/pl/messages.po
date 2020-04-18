@@ -13,14 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/AuthModal/LoginModal.tsx:55
-#~ msgid "Fill out all fields."
-#~ msgstr ""
-
-#: src/AuthModal/LoginModal.tsx:56
-#~ msgid "Login or password is incorrect."
-#~ msgstr ""
-
 #: src/UI/Error/GraphQLErrorMessage.tsx:3
 msgid "api_error.message"
 msgstr ""
@@ -120,7 +112,7 @@ msgstr ""
 
 #: src/Navbar/NavbarNav.tsx:33
 msgid "navbar.login"
-msgstr ""
+msgstr "Logowanie"
 
 #: src/Navbar/NavbarNav.tsx:29
 #: src/Navbar/NavbarUserDropdown.tsx:12
@@ -133,7 +125,7 @@ msgstr ""
 
 #: src/Navbar/NavbarNav.tsx:36
 msgid "navbar.register"
-msgstr ""
+msgstr "Rejestracja"
 
 #: src/Navbar/NavbarNav.tsx:16
 #: src/Navbar/NavbarNav.tsx:23
@@ -183,13 +175,13 @@ msgstr ""
 msgid "threads.title"
 msgstr ""
 
-#: src/UI/Tidbits/TidbitPosts.tsx:5
+#: src/UI/Tidbits/TidbitPosts.tsx:6
 msgid "tidbit.posts"
-msgstr ""
+msgstr "{posts, plural, one {<0>#</0> post} few {<0>#</0> posty} many {<0>#</0> postów}}"
 
-#: src/UI/Tidbits/TidbitThreads.tsx:5
+#: src/UI/Tidbits/TidbitThreads.tsx:6
 msgid "tidbit.threads"
-msgstr ""
+msgstr "{threads, plural, one {<0>#</0> temat} few {<0>#</0> tematy} many {<0>#</0> tematów}}"
 
 #: src/AuthModal/LoginModal.tsx:55
 msgid "value_error.all_fields_are_required"

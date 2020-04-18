@@ -183,13 +183,13 @@ msgstr "All threads"
 msgid "threads.title"
 msgstr "Threads"
 
-#: src/UI/Tidbits/TidbitPosts.tsx:5
+#: src/UI/Tidbits/TidbitPosts.tsx:6
 msgid "tidbit.posts"
-msgstr "{posts, plural, one {# post} other {# posts}}"
+msgstr "{posts, plural, one {<0>#</0> post} other {<1>#</1> posts}}"
 
-#: src/UI/Tidbits/TidbitThreads.tsx:5
+#: src/UI/Tidbits/TidbitThreads.tsx:6
 msgid "tidbit.threads"
-msgstr "{threads, plural, one {# thread} other {# threads}}"
+msgstr "{threads, plural, one {<0>#</0> thread} other {<1>#</1> threads}}"
 
 #: src/AuthModal/LoginModal.tsx:55
 msgid "value_error.all_fields_are_required"

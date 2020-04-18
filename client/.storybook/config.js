@@ -4,11 +4,16 @@ import React from "react"
 import { MemoryRouter } from "react-router-dom"
 import requireContext from "require-context.macro"
 
+import catalog from "../src/locale/en/messages"
 import "../src/styles/index.scss"
 
 // add memory router and I18n provider
-addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
-addDecorator(storyFn => <I18nProvider language="en">{storyFn()}</I18nProvider>)
+addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
+addDecorator((storyFn) => (
+  <I18nProvider language="en" catalogs={{ en: catalog }}>
+    {storyFn()}
+  </I18nProvider>
+))
 
 // automatically import all files ending in *.stories.js
 configure(requireContext("../src/", true, /\.stories\.tsx$/), module)

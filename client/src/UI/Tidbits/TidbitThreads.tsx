@@ -1,6 +1,7 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import TidbitItem from "./TidbitItem"
+import TidbitNumber from "./TidbitNumber"
 
 interface ITidbitThreadsProps {
   threads: number
@@ -11,9 +12,8 @@ const TidbitThreads: React.FC<ITidbitThreadsProps> = ({ threads }) => (
     <Plural
       id="tidbit.threads"
       value={threads}
-      one={<Trans>{Number(threads).toLocaleString("en")} thread</Trans>}
-      few={<Trans>{Number(threads).toLocaleString("en")} threads</Trans>}
-      other={<Trans>{Number(threads).toLocaleString("en")} threads</Trans>}
+      one={<Trans><TidbitNumber>#</TidbitNumber> thread</Trans>}
+      other={<Trans><TidbitNumber>#</TidbitNumber> threads</Trans>}
     />
   </TidbitItem>
 )
