@@ -101,10 +101,14 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
           plainError={error}
           messages={{
             "value_error.all_fields_are_required": (
-              <Trans id="value_error.all_fields_are_required">Fill out all fields.</Trans>
+              <Trans id="value_error.all_fields_are_required">
+                Fill out all fields.
+              </Trans>
             ),
             "value_error.invalid_credentials": (
-              <Trans id="value_error.invalid_credentials">Login or password is incorrect.</Trans>
+              <Trans id="value_errosr.invalid_credentials">
+                Login or password is incorrect.
+              </Trans>
             ),
           }}
         >

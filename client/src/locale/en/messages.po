@@ -85,23 +85,23 @@ msgstr "User name"
 msgid "input.password"
 msgstr "Password"
 
-#: src/AuthModal/LoginModal.tsx:62
+#: src/AuthModal/LoginModal.tsx:66
 msgid "login.input.password"
 msgstr "Password"
 
-#: src/AuthModal/LoginModal.tsx:61
+#: src/AuthModal/LoginModal.tsx:65
 msgid "login.input.username"
 msgstr "User name or e-mail"
 
-#: src/AuthModal/LoginModal.tsx:66
+#: src/AuthModal/LoginModal.tsx:70
 msgid "login.register"
 msgstr "Not a member? <0>Sign up</0>"
 
-#: src/AuthModal/LoginModal.tsx:65
+#: src/AuthModal/LoginModal.tsx:69
 msgid "login.submit"
 msgstr "Log in"
 
-#: src/AuthModal/LoginModal.tsx:65
+#: src/AuthModal/LoginModal.tsx:69
 msgid "login.submitting"
 msgstr "Logging in..."
 
@@ -216,8 +216,8 @@ msgid "value_error.email.not_available"
 msgstr "This e-mail address is not available."
 
 #: src/AuthModal/LoginModal.tsx:56
-msgid "value_error.invalid_credentials"
-msgstr "Login or password is incorrect."
+#~ msgid "value_error.invalid_credentials"
+#~ msgstr "Login or password is incorrect."
 
 #: src/UI/ValidationError/ValidationError.tsx:22
 msgid "value_error.missing"
@@ -254,3 +254,7 @@ msgstr "User name can't be empty."
 #: src/UI/ValidationError/UsernameValidationError.tsx:34
 msgid "value_error.username.not_available"
 msgstr "This user name is not available."
+
+#: src/AuthModal/LoginModal.tsx:58
+msgid "value_errosr.invalid_credentials"
+msgstr "Login or password is incorrect."

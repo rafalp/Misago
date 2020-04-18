@@ -85,23 +85,23 @@ msgstr ""
 msgid "input.password"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:62
+#: src/AuthModal/LoginModal.tsx:66
 msgid "login.input.password"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:61
+#: src/AuthModal/LoginModal.tsx:65
 msgid "login.input.username"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:66
+#: src/AuthModal/LoginModal.tsx:70
 msgid "login.register"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:65
+#: src/AuthModal/LoginModal.tsx:69
 msgid "login.submit"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:65
+#: src/AuthModal/LoginModal.tsx:69
 msgid "login.submitting"
 msgstr ""
 
@@ -216,8 +216,8 @@ msgid "value_error.email.not_available"
 msgstr ""
 
 #: src/AuthModal/LoginModal.tsx:56
-msgid "value_error.invalid_credentials"
-msgstr ""
+#~ msgid "value_error.invalid_credentials"
+#~ msgstr ""
 
 #: src/UI/ValidationError/ValidationError.tsx:22
 msgid "value_error.missing"
@@ -253,4 +253,8 @@ msgstr ""
 
 #: src/UI/ValidationError/UsernameValidationError.tsx:34
 msgid "value_error.username.not_available"
+msgstr ""
+
+#: src/AuthModal/LoginModal.tsx:58
+msgid "value_errosr.invalid_credentials"
 msgstr ""
