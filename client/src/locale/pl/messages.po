@@ -14,12 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/AuthModal/LoginModal.tsx:55
-msgid "Fill out all fields."
-msgstr ""
+#~ msgid "Fill out all fields."
+#~ msgstr ""
 
 #: src/AuthModal/LoginModal.tsx:56
-msgid "Login or password is incorrect."
-msgstr ""
+#~ msgid "Login or password is incorrect."
+#~ msgstr ""
 
 #: src/UI/Error/GraphQLErrorMessage.tsx:3
 msgid "api_error.message"
@@ -191,6 +191,10 @@ msgstr ""
 msgid "tidbit.threads"
 msgstr ""
 
+#: src/AuthModal/LoginModal.tsx:55
+msgid "value_error.all_fields_are_required"
+msgstr ""
+
 #: src/UI/ValidationError/ValidationError.tsx:36
 msgid "value_error.any_str.max_length"
 msgstr ""
@@ -209,6 +213,10 @@ msgstr ""
 
 #: src/UI/ValidationError/EmailValidationError.tsx:32
 msgid "value_error.email.not_available"
+msgstr ""
+
+#: src/AuthModal/LoginModal.tsx:56
+msgid "value_error.invalid_credentials"
 msgstr ""
 
 #: src/UI/ValidationError/ValidationError.tsx:22

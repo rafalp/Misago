@@ -14,12 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/AuthModal/LoginModal.tsx:55
-msgid "Fill out all fields."
-msgstr "Fill out all fields."
+#~ msgid "Fill out all fields."
+#~ msgstr "Fill out all fields."
 
 #: src/AuthModal/LoginModal.tsx:56
-msgid "Login or password is incorrect."
-msgstr "Login or password is incorrect."
+#~ msgid "Login or password is incorrect."
+#~ msgstr "Login or password is incorrect."
 
 #: src/UI/Error/GraphQLErrorMessage.tsx:3
 msgid "api_error.message"
@@ -191,6 +191,10 @@ msgstr "{posts, plural, one {# post} other {# posts}}"
 msgid "tidbit.threads"
 msgstr "{threads, plural, one {# thread} other {# threads}}"
 
+#: src/AuthModal/LoginModal.tsx:55
+msgid "value_error.all_fields_are_required"
+msgstr "Fill out all fields."
+
 #: src/UI/ValidationError/ValidationError.tsx:36
 msgid "value_error.any_str.max_length"
 msgstr "{max, plural, one {This value should be no longer than # character (it has {value}).} other {This value should be no longer than # characters (it has {value}).}}"
@@ -210,6 +214,10 @@ msgstr "E-mail address can't be empty."
 #: src/UI/ValidationError/EmailValidationError.tsx:32
 msgid "value_error.email.not_available"
 msgstr "This e-mail address is not available."
+
+#: src/AuthModal/LoginModal.tsx:56
+msgid "value_error.invalid_credentials"
+msgstr "Login or password is incorrect."
 
 #: src/UI/ValidationError/ValidationError.tsx:22
 msgid "value_error.missing"
