@@ -3,6 +3,7 @@ import React from "react"
 import { useParams } from "react-router-dom"
 import { RouteNotFound, WindowTitle } from "../../UI"
 import { HeaderCategory } from "./Header"
+import LoadMoreButton from "./LoadMoreButton"
 import { IThreadsProps } from "./Threads.types"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
@@ -17,7 +18,9 @@ interface IThreadsCategoryParams {
 const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
   const { id } = useParams<IThreadsCategoryParams>()
   const activeCategory = useActiveCategory(id)
-  const { data, error, loading } = useCategoryThreadsQuery({ id })
+  const { data, error, loading, fetchMoreThreads } = useCategoryThreadsQuery({
+    id,
+  })
 
   const { category } = activeCategory || { category: null }
   const { threads } =
@@ -45,6 +48,9 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
         </>
       )}
       <ThreadsList error={error} loading={loading} threads={threads} />
+      {threads && threads.nextCursor && (
+        <LoadMoreButton loading={loading} onClick={fetchMoreThreads} />
+      )}
     </ThreadsLayout>
   )
 }

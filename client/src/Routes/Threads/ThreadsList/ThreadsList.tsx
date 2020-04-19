@@ -21,7 +21,7 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
   loading,
   threads,
 }) => {
-  if (loading) {
+  if (loading && !threads) {
     return (
       <ThreadsListCard>
         <CardLoader />

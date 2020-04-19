@@ -26,8 +26,8 @@ const THREADS_FIELDS = `
 `
 
 const THREADS_QUERY = gql`
-  query Threads {
-    threads {
+  query Threads($cursor: ID) {
+    threads(cursor: $cursor) {
       ${THREADS_FIELDS}
     }
   }
@@ -37,11 +37,46 @@ interface IThreadsData {
   threads: {
     items: Array<IThread>
     nextCursor: string | null
+    __typename: string
   }
 }
 
+interface IThreadsVariables {
+  cursor?: string | null
+}
+
 export const useThreadsQuery = () => {
-  return useQuery<IThreadsData>(THREADS_QUERY)
+  const result = useQuery<IThreadsData, IThreadsVariables>(THREADS_QUERY, {
+    notifyOnNetworkStatusChange: true,
+  })
+
+  const fetchMoreThreads = () => {
+    const cursor = result.data?.threads.nextCursor
+    if (!cursor) return
+
+    result.fetchMore({
+      query: THREADS_QUERY,
+      variables: { cursor },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return previousResult
+
+        return fetchMoreResult
+          ? {
+              threads: {
+                items: [
+                  ...previousResult.threads.items,
+                  ...fetchMoreResult.threads.items,
+                ],
+                nextCursor: fetchMoreResult.threads.nextCursor,
+                __typename: previousResult.threads.__typename,
+              },
+            }
+          : previousResult
+      },
+    })
+  }
+
+  return { ...result, fetchMoreThreads }
 }
 
 interface ICategoryQueryParams {
@@ -49,7 +84,7 @@ interface ICategoryQueryParams {
 }
 
 const CATEGORY_THREADS_QUERY = gql`
-  query CategoryThreads($id: ID!) {
+  query CategoryThreads($id: ID!, $cursor: ID) {
     category(id: $id) {
       id
       name
@@ -60,13 +95,13 @@ const CATEGORY_THREADS_QUERY = gql`
         slug
       }
     }
-    threads(category: $id) {
+    threads(category: $id, cursor: $cursor) {
       ${THREADS_FIELDS}
     }
   }
 `
 
-interface ICategoryThreadsData {
+interface ICategoryThreadsData extends IThreadsData {
   category: {
     id: string
     name: string
@@ -81,17 +116,44 @@ interface ICategoryThreadsData {
       icon: string | null
     } | null
   }
-  threads: {
-    items: Array<IThread>
-    nextCursor: string | null
-  }
 }
 
-export const useCategoryThreadsQuery = (params: ICategoryQueryParams) => {
-  return useQuery<ICategoryThreadsData, ICategoryQueryParams>(
+interface ICategoryVariables extends IThreadsVariables {
+  id: string
+}
+
+export const useCategoryThreadsQuery = (variables: ICategoryQueryParams) => {
+  const result = useQuery<ICategoryThreadsData, ICategoryVariables>(
     CATEGORY_THREADS_QUERY,
-    {
-      variables: params,
-    }
+    { variables, notifyOnNetworkStatusChange: true }
   )
+
+  const fetchMoreThreads = () => {
+    const cursor = result.data?.threads.nextCursor
+    if (!cursor) return
+
+    result.fetchMore({
+      query: CATEGORY_THREADS_QUERY,
+      variables: { ...variables, cursor },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) return previousResult
+
+        return fetchMoreResult
+          ? {
+              category: fetchMoreResult.category,
+              threads: {
+                items: [
+                  ...previousResult.threads.items,
+                  ...fetchMoreResult.threads.items,
+                ],
+                nextCursor: fetchMoreResult.threads.nextCursor,
+                __typename: previousResult.threads.__typename,
+              },
+            }
+          : previousResult
+      },
+    })
+  }
+
+  return { ...result, fetchMoreThreads }
 }
