@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
 import { gql } from "apollo-boost"
+import { DocumentNode } from "graphql"
 import { IThread } from "./Threads.types"
 
 const THREADS_FIELDS = `
@@ -45,8 +46,16 @@ interface IThreadsVariables {
   cursor?: string | null
 }
 
-export const useThreadsQuery = () => {
-  const result = useQuery<IThreadsData, IThreadsVariables>(THREADS_QUERY, {
+export const useBaseThreadsQuery = <
+  TData extends IThreadsData,
+  TVariables extends IThreadsVariables
+>(
+  query: DocumentNode,
+  variables?: TVariables
+) => {
+  const result = useQuery<TData, TVariables>(query, {
+    variables,
+    fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
   })
 
@@ -58,20 +67,7 @@ export const useThreadsQuery = () => {
       query: THREADS_QUERY,
       variables: { cursor },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return previousResult
-
-        return fetchMoreResult
-          ? {
-              threads: {
-                items: [
-                  ...previousResult.threads.items,
-                  ...fetchMoreResult.threads.items,
-                ],
-                nextCursor: fetchMoreResult.threads.nextCursor,
-                __typename: previousResult.threads.__typename,
-              },
-            }
-          : previousResult
+        return mergeThreadsResults(previousResult, fetchMoreResult)
       },
     })
   }
@@ -79,20 +75,47 @@ export const useThreadsQuery = () => {
   return { ...result, fetchMoreThreads }
 }
 
+const mergeThreadsResults = <TData extends IThreadsData>(
+  previousResult: TData,
+  fetchMoreResult?: TData
+) => {
+  if (!fetchMoreResult) return previousResult
+
+  return {
+    ...previousResult,
+    threads: {
+      items: [
+        ...previousResult.threads.items,
+        ...fetchMoreResult.threads.items,
+      ],
+      nextCursor: fetchMoreResult.threads.nextCursor,
+      __typename: previousResult.threads.__typename,
+    },
+  }
+}
+
+export const useThreadsQuery = () => {
+  return useBaseThreadsQuery<IThreadsData, IThreadsVariables>(THREADS_QUERY)
+}
+
 interface ICategoryQueryParams {
   id: string
 }
 
 const CATEGORY_THREADS_QUERY = gql`
+  fragment CategoryFields on Category {
+    id
+    name
+    slug
+  }
+
   query CategoryThreads($id: ID!, $cursor: ID) {
     category(id: $id) {
-      id
-      name
-      slug
+      ...CategoryFields
+      threads
+      posts
       parent {
-        id
-        name
-        slug
+        ...CategoryFields
       }
     }
     threads(category: $id, cursor: $cursor) {
@@ -106,14 +129,12 @@ interface ICategoryThreadsData extends IThreadsData {
     id: string
     name: string
     slug: string
-    color: string | null
-    icon: string | null
+    threads: number
+    posts: number
     parent: {
       id: string
       name: string
       slug: string
-      color: string | null
-      icon: string | null
     } | null
   }
 }
@@ -123,37 +144,8 @@ interface ICategoryVariables extends IThreadsVariables {
 }
 
 export const useCategoryThreadsQuery = (variables: ICategoryQueryParams) => {
-  const result = useQuery<ICategoryThreadsData, ICategoryVariables>(
+  return useBaseThreadsQuery<ICategoryThreadsData, ICategoryVariables>(
     CATEGORY_THREADS_QUERY,
-    { variables, notifyOnNetworkStatusChange: true }
+    variables
   )
-
-  const fetchMoreThreads = () => {
-    const cursor = result.data?.threads.nextCursor
-    if (!cursor) return
-
-    result.fetchMore({
-      query: CATEGORY_THREADS_QUERY,
-      variables: { ...variables, cursor },
-      updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return previousResult
-
-        return fetchMoreResult
-          ? {
-              category: fetchMoreResult.category,
-              threads: {
-                items: [
-                  ...previousResult.threads.items,
-                  ...fetchMoreResult.threads.items,
-                ],
-                nextCursor: fetchMoreResult.threads.nextCursor,
-                __typename: previousResult.threads.__typename,
-              },
-            }
-          : previousResult
-      },
-    })
-  }
-
-  return { ...result, fetchMoreThreads }
 }
