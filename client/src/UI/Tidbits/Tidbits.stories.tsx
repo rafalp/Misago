@@ -1,6 +1,12 @@
 import React from "react"
 import { CardContainer } from "../Storybook"
-import { TidbitItem, TidbitPosts, TidbitThreads, Tidbits } from "."
+import {
+  TidbitItem,
+  TidbitMembers,
+  TidbitPosts,
+  TidbitThreads,
+  Tidbits,
+} from "."
 
 export default {
   title: "UI/Tidbits",
@@ -17,12 +23,13 @@ export const Item = () => {
   )
 }
 
-export const PostsThreads = () => {
+export const PostsThreadsMembers = () => {
   return (
     <CardContainer padding>
       <Tidbits>
-        <TidbitPosts posts={71315} />
-        <TidbitThreads threads={22453} />
+        <TidbitPosts value={142567} />
+        <TidbitThreads value={1089524} />
+        <TidbitMembers value={25663} />
       </Tidbits>
     </CardContainer>
   )

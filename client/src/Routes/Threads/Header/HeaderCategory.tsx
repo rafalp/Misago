@@ -16,8 +16,8 @@ const HeaderCategory: React.FC<IHeaderCategoryProps> = ({ category }) => (
   <Header
     banner={category.banner}
     color={category.color}
-    text={category.name}
     stats={category}
+    text={category.name}
   />
 )
 

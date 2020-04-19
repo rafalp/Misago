@@ -179,17 +179,21 @@ msgstr "Threads list could not be displayed."
 msgid "threads.header"
 msgstr "All threads"
 
-#: src/Routes/Threads/ThreadsAll.tsx:21
+#: src/Routes/Threads/ThreadsAll.tsx:22
 msgid "threads.title"
 msgstr "Threads"
 
+#: src/UI/Tidbits/TidbitMembers.tsx:6
+msgid "tidbit.members"
+msgstr "{value, plural, one {<0>#</0> member} other {<1>#</1> members}}"
+
 #: src/UI/Tidbits/TidbitPosts.tsx:6
 msgid "tidbit.posts"
-msgstr "{posts, plural, one {<0>#</0> post} other {<1>#</1> posts}}"
+msgstr "{value, plural, one {<0>#</0> post} other {<1>#</1> posts}}"
 
 #: src/UI/Tidbits/TidbitThreads.tsx:6
 msgid "tidbit.threads"
-msgstr "{threads, plural, one {<0>#</0> thread} other {<1>#</1> threads}}"
+msgstr "{value, plural, one {<0>#</0> thread} other {<1>#</1> threads}}"
 
 #: src/AuthModal/LoginModal.tsx:55
 msgid "value_error.all_fields_are_required"

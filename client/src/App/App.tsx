@@ -4,6 +4,7 @@ import {
   AuthModalProvider,
   AuthContext,
   CategoriesContext,
+  ForumStatsContext,
   SettingsContext,
 } from "../Context"
 import Routes from "../Routes"
@@ -21,25 +22,27 @@ const App: React.FC = () => {
     <AppErrorBoundary>
       <Router>
         <AppDataQuery>
-          {({ data: { auth, categories, settings } }) => (
+          {({ data: { auth, categories, forumStats, settings } }) => (
             <AppLanguageLoader language="en">
               <AuthContext.Provider value={auth}>
                 <CategoriesContext.Provider value={categories}>
                   <SettingsContext.Provider value={settings}>
-                    <AuthModalProvider>
-                      <React.Suspense fallback={<div />}>
-                        <AuthChangedAlert user={auth} />
-                      </React.Suspense>
-                      <React.Suspense fallback={<div />}>
-                        <Navbar settings={settings} user={auth} />
-                      </React.Suspense>
-                      <RouteErrorBoundary>
-                        <Routes />
-                      </RouteErrorBoundary>
-                      <React.Suspense fallback={<div />}>
-                        <AuthModal settings={settings} />
-                      </React.Suspense>
-                    </AuthModalProvider>
+                    <ForumStatsContext.Provider value={forumStats}>
+                      <AuthModalProvider>
+                        <React.Suspense fallback={<div />}>
+                          <AuthChangedAlert user={auth} />
+                        </React.Suspense>
+                        <React.Suspense fallback={<div />}>
+                          <Navbar settings={settings} user={auth} />
+                        </React.Suspense>
+                        <RouteErrorBoundary>
+                          <Routes />
+                        </RouteErrorBoundary>
+                        <React.Suspense fallback={<div />}>
+                          <AuthModal settings={settings} />
+                        </React.Suspense>
+                      </AuthModalProvider>
+                    </ForumStatsContext.Provider>
                   </SettingsContext.Provider>
                 </CategoriesContext.Provider>
               </AuthContext.Provider>

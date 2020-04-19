@@ -71,6 +71,7 @@ import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
 import {
   TidbitItem,
+  TidbitMembers,
   TidbitNumber,
   TidbitPosts,
   TidbitThreads,
@@ -154,6 +155,7 @@ export {
   SideNavItem,
   Spinner,
   TidbitItem,
+  TidbitMembers,
   TidbitNumber,
   TidbitPosts,
   TidbitThreads,

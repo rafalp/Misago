@@ -4,14 +4,14 @@ import TidbitItem from "./TidbitItem"
 import TidbitNumber from "./TidbitNumber"
 
 interface ITidbitThreadsProps {
-  threads: number
+  value: number
 }
 
-const TidbitThreads: React.FC<ITidbitThreadsProps> = ({ threads }) => (
+const TidbitThreads: React.FC<ITidbitThreadsProps> = ({ value }) => (
   <TidbitItem className="tidbit-threads">
     <Plural
       id="tidbit.threads"
-      value={threads}
+      value={value}
       one={<Trans><TidbitNumber>#</TidbitNumber> thread</Trans>}
       other={<Trans><TidbitNumber>#</TidbitNumber> threads</Trans>}
     />

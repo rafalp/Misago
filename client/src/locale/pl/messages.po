@@ -171,17 +171,21 @@ msgstr ""
 msgid "threads.header"
 msgstr ""
 
-#: src/Routes/Threads/ThreadsAll.tsx:21
+#: src/Routes/Threads/ThreadsAll.tsx:22
 msgid "threads.title"
+msgstr ""
+
+#: src/UI/Tidbits/TidbitMembers.tsx:6
+msgid "tidbit.members"
 msgstr ""
 
 #: src/UI/Tidbits/TidbitPosts.tsx:6
 msgid "tidbit.posts"
-msgstr "{posts, plural, one {<0>#</0> post} few {<0>#</0> posty} many {<0>#</0> postów}}"
+msgstr "{value, plural, one {<0>#</0> post} few {<0>#</0> posty} many {<0>#</0> postów}}"
 
 #: src/UI/Tidbits/TidbitThreads.tsx:6
 msgid "tidbit.threads"
-msgstr "{threads, plural, one {<0>#</0> temat} few {<0>#</0> tematy} many {<0>#</0> tematów}}"
+msgstr "{value, plural, one {<0>#</0> temat} few {<0>#</0> tematy} many {<0>#</0> tematów}}"
 
 #: src/AuthModal/LoginModal.tsx:55
 msgid "value_error.all_fields_are_required"

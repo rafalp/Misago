@@ -8,10 +8,16 @@ interface IHeaderAllThreadsProps {
     forumIndexThreads: boolean
     forumName: string
   }
+  stats: {
+    posts: number
+    threads: number
+    users?: number
+  }
 }
 
-const HeaderAllThreads: React.FC<IHeaderAllThreadsProps> = ({ settings }) => (
+const HeaderAllThreads: React.FC<IHeaderAllThreadsProps> = ({ settings, stats }) => (
   <Header
+    stats={stats}
     text={
       settings.forumIndexThreads ? (
         settings.forumIndexHeader || settings.forumName

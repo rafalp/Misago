@@ -58,6 +58,7 @@ export interface IForumStats {
   id: string
   threads: number
   posts: number
+  users: number
 }
 
 export enum AuthModalMode {

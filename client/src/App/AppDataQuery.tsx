@@ -64,6 +64,7 @@ const INITIAL_DATA_QUERY = gql`
     forumStats {
       threads
       posts
+      users
     }
   }
 `

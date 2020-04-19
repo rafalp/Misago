@@ -7,6 +7,8 @@ export default {
   title: "Route/Threads/Header",
 }
 
+const forumStats = { threads: 142567, posts: 1089524, users: 25663 }
+
 export const Category = () => (
   <RootContainer padding>
     <HeaderCategory category={categories[0]} />
@@ -21,6 +23,7 @@ export const ForumIndex = () => (
         forumIndexHeader: "Welcome to Misago official forums!",
         forumName: "Misago",
       }}
+      stats={forumStats}
     />
   </RootContainer>
 )
@@ -33,6 +36,7 @@ export const AllThreads = () => (
         forumIndexHeader: "",
         forumName: "Misago",
       }}
+      stats={forumStats}
     />
   </RootContainer>
 )

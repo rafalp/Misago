@@ -4,14 +4,14 @@ import TidbitItem from "./TidbitItem"
 import TidbitNumber from "./TidbitNumber"
 
 interface ITidbitPostsProps {
-  posts: number
+  value: number
 }
 
-const TidbitPosts: React.FC<ITidbitPostsProps> = ({ posts }) => (
+const TidbitPosts: React.FC<ITidbitPostsProps> = ({ value }) => (
   <TidbitItem className="tidbit-posts">
     <Plural
       id="tidbit.posts"
-      value={posts}
+      value={value}
       one={<Trans><TidbitNumber>#</TidbitNumber> post</Trans>}
       other={<Trans><TidbitNumber>#</TidbitNumber> posts</Trans>}
     />
