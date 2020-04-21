@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import React from "react"
 import { useParams } from "react-router-dom"
-import { RouteNotFound, WindowTitle } from "../../UI"
+import { RouteNotFound, ViewportEvent, WindowTitle } from "../../UI"
 import { HeaderCategory } from "./Header"
 import LoadMoreButton from "./LoadMoreButton"
 import { IThreadsProps } from "./Threads.types"
@@ -47,7 +47,9 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
           <HeaderCategory category={category} />
         </>
       )}
-      <ThreadsList error={error} loading={loading} threads={threads} />
+      <ViewportEvent disabled={loading} onEnter={fetchMoreThreads} desktopOnly>
+        <ThreadsList error={error} loading={loading} threads={threads} />
+      </ViewportEvent>
       {threads && threads.nextCursor && (
         <LoadMoreButton loading={loading} onClick={fetchMoreThreads} />
       )}

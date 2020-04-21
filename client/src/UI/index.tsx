@@ -49,6 +49,7 @@ import GraphQLErrorRenderer from "./GraphQLErrorRenderer"
 import Icon from "./Icon"
 import Input from "./Input"
 import { Layout, LayoutMain, LayoutSide } from "./Layout"
+import LoadMore from "./LoadMore"
 import MobileOnly from "./MobileOnly"
 import {
   Modal,
@@ -83,6 +84,7 @@ import {
   UsernameValidationError,
   ValidationError,
 } from "./ValidationError"
+import ViewportEvent from "./ViewportEvent"
 import WindowTitle from "./WindowTitle"
 import portal from "./portal"
 
@@ -130,6 +132,7 @@ export {
   Layout,
   LayoutMain,
   LayoutSide,
+  LoadMore,
   MobileOnly,
   Modal,
   ModalAlert,
@@ -162,6 +165,7 @@ export {
   Tidbits,
   UsernameValidationError,
   ValidationError,
+  ViewportEvent,
   WindowTitle,
   portal,
 }

@@ -76,6 +76,7 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
       ) : (
         <div>No threads!</div>
       )}
+      {loading && <CardLoader />}
     </ThreadsListCard>
   )
 }
