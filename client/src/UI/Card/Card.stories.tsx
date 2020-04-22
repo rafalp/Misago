@@ -10,6 +10,8 @@ import {
   CardError,
   CardFooter,
   CardHeader,
+  CardList,
+  CardListItem,
   CardLoader,
 } from "."
 
@@ -97,6 +99,53 @@ export const WithColorBandBanner = () => {
   )
 }
 
+export const List = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardList>
+          <CardListItem>
+            Nam rhoncus ipsum non neque dapibus, sit amet condimentum est
+            faucibus.
+          </CardListItem>
+          <CardListItem>
+            Sed porttitor semper massa, sit amet ultrices velit lobortis ac.
+          </CardListItem>
+        </CardList>
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const ListWithLoader = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardList>
+          <CardListItem>
+            Nam rhoncus ipsum non neque dapibus, sit amet condimentum est
+            faucibus.
+          </CardListItem>
+          <CardListItem>
+            Sed porttitor semper massa, sit amet ultrices velit lobortis ac.
+          </CardListItem>
+        </CardList>
+        <CardLoader />
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const Loader = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardLoader />
+      </Card>
+    </RootContainer>
+  )
+}
+
 export const Blankslate = () => {
   return (
     <RootContainer padding>
@@ -142,16 +191,6 @@ export const BlankslateWithAction = () => {
           header="There are no threads in this category."
           actions={<Button text={"Start thread"} onClick={() => {}} />}
         />
-      </Card>
-    </RootContainer>
-  )
-}
-
-export const Loader = () => {
-  return (
-    <RootContainer padding>
-      <Card>
-        <CardLoader />
       </Card>
     </RootContainer>
   )

@@ -19,6 +19,8 @@ import {
   CardError,
   CardFooter,
   CardHeader,
+  CardList,
+  CardListItem,
   CardLoader,
 } from "./Card"
 import CategoriesNav from "./CategoriesNav"
@@ -107,6 +109,8 @@ export {
   CardError,
   CardFooter,
   CardHeader,
+  CardList,
+  CardListItem,
   CardLoader,
   CategoriesNav,
   CategoryIcon,
