@@ -51,7 +51,7 @@ import GraphQLErrorRenderer from "./GraphQLErrorRenderer"
 import Icon from "./Icon"
 import Input from "./Input"
 import { Layout, LayoutMain, LayoutSide } from "./Layout"
-import LoadMore from "./LoadMore"
+import LoadMoreButton from "./LoadMoreButton"
 import MobileOnly from "./MobileOnly"
 import {
   Modal,
@@ -136,7 +136,7 @@ export {
   Layout,
   LayoutMain,
   LayoutSide,
-  LoadMore,
+  LoadMoreButton,
   MobileOnly,
   Modal,
   ModalAlert,

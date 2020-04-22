@@ -1,10 +1,9 @@
 import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
-import { RouteLoader, WindowTitle } from "../../UI"
+import { LoadMoreButton, RouteLoader, WindowTitle } from "../../UI"
 import { ForumStatsContext, SettingsContext } from "../../Context"
 import { HeaderAllThreads } from "./Header"
-import LoadMoreButton from "./LoadMoreButton"
 import { IThreadsProps } from "./Threads.types"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
@@ -32,9 +31,11 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
               />
               <HeaderAllThreads settings={settings} stats={forumStats} />
               <ThreadsList error={error} loading={loading} threads={threads} />
-              {threads && threads.nextCursor && (
-                <LoadMoreButton loading={loading} onClick={fetchMoreThreads} />
-              )}
+              <LoadMoreButton
+                data={threads}
+                loading={loading}
+                onEvent={fetchMoreThreads}
+              />
             </>
           )
         }}
