@@ -36,10 +36,10 @@ const Header: React.FC<IHeaderProps> = ({ banner, color, text, stats }) => (
           <h1 className="m-0">{text}</h1>
         </div>
         {stats && (
-          <div className="col-12 col-md-auto">
+          <div className="col-12 col-md-auto col-tidbits">
             <Tidbits>
-              <TidbitPosts value={stats.posts} />
               <TidbitThreads value={stats.threads} />
+              <TidbitPosts value={stats.posts} />
               {typeof stats.users !== "undefined" && (
                 <TidbitMembers value={stats.users} />
               )}
