@@ -9,9 +9,9 @@ from .loader import positive_int
 CACHE_NAME = "__categories"
 
 
-async def load_categories_from_db(context: GraphQLContext) -> Dict[int, Category]:
+async def load_categories_dict(context: GraphQLContext) -> Dict[int, Category]:
     if CACHE_NAME not in context:
-        context[CACHE_NAME] = {c.id: c for c in await get_all_categories()}
+        context[CACHE_NAME] = await get_all_categories()
     return context[CACHE_NAME]
 
 
@@ -22,7 +22,7 @@ async def load_category(
 ) -> Optional[Category]:
     internal_id = positive_int(category_id)
     if internal_id:
-        categories = await load_categories_from_db(context)
+        categories = await load_categories_dict(context)
         category = categories.get(internal_id)
         if category and category.type == category_type:
             return category
@@ -32,7 +32,7 @@ async def load_category(
 async def load_categories(
     context: GraphQLContext, category_type: Optional[int] = CategoryTypes.THREADS
 ) -> List[Category]:
-    categories = await load_categories_from_db(context)
+    categories = await load_categories_dict(context)
     return [c for c in categories.values() if c.type == category_type]
 
 
@@ -50,7 +50,7 @@ async def load_category_children(
     if not category:
         return []
 
-    categories = await load_categories_from_db(context)
+    categories = await load_categories_dict(context)
     return [c for c in categories.values() if c.is_child(category)]
 
 

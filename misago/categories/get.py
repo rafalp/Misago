@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, Optional
 
 from sqlalchemy import and_
 
@@ -10,14 +10,24 @@ from .categorytypes import CategoryTypes
 
 async def get_all_categories(
     category_type: int = CategoryTypes.THREADS,
-) -> List[Category]:
+) -> Dict[int, Category]:
     query = (
         categories.select()
         .where(categories.c.type == category_type)
         .order_by(categories.c.left)
     )
-    data = await database.fetch_all(query)
-    return [Category(**row) for row in data]
+    data = [Category(**row) for row in await database.fetch_all(query)]
+
+    # Aggregate child categories stats to parent categories, mutating data
+    categories_dict = {}
+    for category in data:
+        categories_dict[category.id] = category
+        if category.parent_id:
+            parent = categories_dict[category.parent_id]
+            parent.threads += category.threads
+            parent.posts += category.posts
+
+    return categories_dict
 
 
 async def get_category_by_id(
@@ -33,8 +43,9 @@ async def get_category_by_id(
 async def get_categories_mptt(category_type: int = CategoryTypes.THREADS,) -> MPTT:
     mptt = MPTT()
 
+    categories = await get_all_categories(category_type)
     categories_map = {}
-    for category in await get_all_categories(category_type):
+    for category in categories.values():
         categories_map[category.id] = category
         if category.parent_id:
             mptt.insert_node(category, parent=categories_map[category.parent_id])
