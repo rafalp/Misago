@@ -48,6 +48,7 @@ import {
   FormContext,
 } from "./Form"
 import GraphQLErrorRenderer from "./GraphQLErrorRenderer"
+import { GridPageHeader } from "./Grid"
 import Icon from "./Icon"
 import Input from "./Input"
 import { Layout, LayoutMain, LayoutSide } from "./Layout"
@@ -65,6 +66,7 @@ import {
   ModalSize,
   ModalTitle,
 } from "./Modal"
+import PageTitle from "./PageTitle"
 import RootError from "./RootError"
 import RouteContainer from "./RouteContainer"
 import { RouteError, RouteGraphQLError, RouteNotFound } from "./RouteError"
@@ -131,6 +133,7 @@ export {
   GraphQLError,
   GraphQLErrorMessage,
   GraphQLErrorRenderer,
+  GridPageHeader,
   Icon,
   Input,
   Layout,
@@ -149,6 +152,7 @@ export {
   ModalSize,
   ModalTitle,
   NotFoundError,
+  PageTitle,
   PasswordValidationError,
   RootError,
   RouteContainer,

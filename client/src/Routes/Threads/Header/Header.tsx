@@ -4,6 +4,7 @@ import {
   CardBanner,
   CardBody,
   CardColorBand,
+  GridPageHeader,
   TidbitMembers,
   TidbitPosts,
   TidbitThreads,
@@ -31,12 +32,10 @@ const Header: React.FC<IHeaderProps> = ({ banner, color, text, stats }) => (
     {banner && <CardBanner {...banner.full} desktop />}
     {banner && <CardBanner {...banner.half} mobile />}
     <CardBody>
-      <div className="row align-items-center">
-        <div className="col-12 col-md">
-          <h1 className="m-0">{text}</h1>
-        </div>
-        {stats && (
-          <div className="col-12 col-md-auto col-tidbits">
+      <GridPageHeader
+        title={text}
+        sideTidbits={
+          stats && (
             <Tidbits>
               <TidbitThreads value={stats.threads} />
               <TidbitPosts value={stats.posts} />
@@ -44,9 +43,9 @@ const Header: React.FC<IHeaderProps> = ({ banner, color, text, stats }) => (
                 <TidbitMembers value={stats.users} />
               )}
             </Tidbits>
-          </div>
-        )}
-      </div>
+          )
+        }
+      />
     </CardBody>
   </Card>
 )
