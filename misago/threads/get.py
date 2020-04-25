@@ -1,8 +1,10 @@
 from typing import List, Optional, Sequence
 
 from sqlalchemy import asc, desc
+from sqlalchemy.sql import ClauseElement
 
 from ..database import database
+from ..database.sql import count
 from ..database.paginator import PageDoesNotExist, Paginator
 from ..tables import posts, threads
 from ..types import Category, Post, Thread, ThreadPostsPage, ThreadsFeed
@@ -60,13 +62,11 @@ async def get_threads_feed(
         .limit(threads_per_page + 1)
     )
 
-    if categories is not None:
-        if not categories:
-            return ThreadsFeed()
-        categories_ids = [i.id for i in categories]
-        query = query.where(threads.c.category_id.in_(categories_ids))
-    if starter_id:
-        query = query.where(threads.c.starter_id == starter_id)
+    if categories is not None and not categories:
+        return ThreadsFeed()
+
+    query = filter_threads_query(query, categories=categories, starter_id=starter_id,)
+
     if cursor:
         query = query.where(threads.c.last_post_id < cursor)
 
@@ -78,3 +78,35 @@ async def get_threads_feed(
         next_cursor = None
 
     return ThreadsFeed(items=[Thread(**row) for row in rows], next_cursor=next_cursor)
+
+
+async def get_updated_threads_count(
+    threads_per_page: int,
+    cursor: int,
+    *,
+    categories: Optional[Sequence[Category]] = None,
+    starter_id: Optional[int] = None,
+) -> int:
+    if categories is not None and not categories:
+        return 0
+
+    query = (
+        count(threads).where(threads.c.last_post_id > cursor).limit(threads_per_page)
+    )
+
+    query = filter_threads_query(query, categories=categories, starter_id=starter_id,)
+    return await database.fetch_val(query)
+
+
+def filter_threads_query(
+    query: ClauseElement,
+    *,
+    categories: Optional[Sequence[Category]] = None,
+    starter_id: Optional[int] = None,
+) -> ClauseElement:
+    if categories is not None:
+        categories_ids = [i.id for i in categories]
+        query = query.where(threads.c.category_id.in_(categories_ids))
+    if starter_id:
+        query = query.where(threads.c.starter_id == starter_id)
+    return query
