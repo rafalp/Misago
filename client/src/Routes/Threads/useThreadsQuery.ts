@@ -1,6 +1,7 @@
-import { useQuery } from "@apollo/react-hooks"
-import { gql } from "apollo-boost"
+import { useQuery, useSubscription } from "@apollo/react-hooks"
 import { DocumentNode } from "graphql"
+import gql from "graphql-tag"
+import React from "react"
 import { IThread } from "./Threads.types"
 
 const THREADS_FIELDS = `
@@ -34,6 +35,12 @@ const THREADS_QUERY = gql`
   }
 `
 
+const THREADS_UPDATES_SUBSCRIPTION = gql`
+  subscription ThreadsUpdates {
+    threads
+  }
+`
+
 interface IThreadsData {
   threads: {
     items: Array<IThread>
@@ -44,6 +51,10 @@ interface IThreadsData {
 
 interface IThreadsVariables {
   cursor?: string | null
+}
+
+interface IThreadsUpdatesData {
+  threads: string
 }
 
 export const useBaseThreadsQuery = <
@@ -72,7 +83,28 @@ export const useBaseThreadsQuery = <
     })
   }
 
-  return { ...result, fetchMoreThreads }
+  const [updatedThreads, setUpdatedThreadsState] = React.useState<{
+    ids: Array<string>
+    length: number
+  }>({ ids: [], length: 0 })
+
+  useSubscription<IThreadsUpdatesData>(THREADS_UPDATES_SUBSCRIPTION, {
+    shouldResubscribe: !!result.data?.threads,
+    onSubscriptionData: ({ subscriptionData: { data } }) => {
+      if (!data) return
+      const { threads: id } = data
+      if (updatedThreads.ids.indexOf(id) !== -1) return
+
+      setUpdatedThreadsState((state) => {
+        return {
+          ids: [...state.ids, id],
+          length: state.length + 1,
+        }
+      })
+    },
+  })
+
+  return { ...result, fetchMoreThreads, updatedThreads: updatedThreads.length }
 }
 
 const mergeThreadsResults = <TData extends IThreadsData>(

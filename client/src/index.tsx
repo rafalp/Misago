@@ -1,23 +1,10 @@
 import { ApolloProvider } from "@apollo/react-hooks"
-import ApolloClient from "apollo-boost"
 import React from "react"
 import ReactDOM from "react-dom"
 import App from "./App"
-import { getAuthToken } from "./auth"
+import { client } from "./apolloClient"
 import * as serviceWorker from "./serviceWorker"
 import "./styles/index.scss"
-
-const client = new ApolloClient({
-  uri: "/graphql/",
-  request: (operation) => {
-    const token = getAuthToken()
-    operation.setContext({
-      headers: {
-        Authorization: token ? `Bearer ${token}` : ''
-      }
-    })
-  }
-})
 
 ReactDOM.render(
   <ApolloProvider client={client}>

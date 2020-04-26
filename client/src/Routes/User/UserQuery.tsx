@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
-import { gql } from "apollo-boost"
 import { ApolloError } from "apollo-client"
+import gql from "graphql-tag"
 import React from "react"
 import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../../UI"
 
