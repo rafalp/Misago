@@ -89,10 +89,7 @@ export const Complex = () => {
           <ModalFooter>
             <Spinner small />
             <Button text="Ok" onClick={button} />
-            <ButtonSecondary
-              text="Cancel"
-              onClick={button}
-            />
+            <ButtonSecondary text="Cancel" onClick={button} />
           </ModalFooter>
         </ModalDialog>
       </Modal>

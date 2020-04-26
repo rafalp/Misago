@@ -19,7 +19,7 @@ const avatarSizes: Array<number> = [400, 200, 150, 100, 64, 50, 30]
 
 export const avatarFactory = (): Array<IAvatar> => {
   let avatars: Array<IAvatar> = []
-  avatarSizes.forEach(size => {
+  avatarSizes.forEach((size) => {
     avatars.push({
       size,
       url: `https://placekitten.com/g/${size}/${size}`,

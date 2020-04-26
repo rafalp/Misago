@@ -5,10 +5,10 @@ import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
-  "required": "value_error.missing",
-  "matches": "value_error.username",
-  "min": "value_error.any_str.min_length",
-  "max": "value_error.any_str.max_length",
+  required: "value_error.missing",
+  matches: "value_error.username",
+  min: "value_error.any_str.min_length",
+  max: "value_error.any_str.max_length",
 }
 
 const UsernameValidationError: React.FC<IValidationErrorProps> = ({
@@ -33,19 +33,29 @@ const UsernameValidationError: React.FC<IValidationErrorProps> = ({
           case "value_error.missing":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.username.missing")`User name can't be empty.`),
+              message: i18n._(
+                t("value_error.username.missing")`User name can't be empty.`
+              ),
             })
 
           case "value_error.username":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.username")`User name can only contain latin alphabet letters and digits.`),
+              message: i18n._(
+                t(
+                  "value_error.username"
+                )`User name can only contain latin alphabet letters and digits.`
+              ),
             })
 
           case "value_error.username.not_available":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.username.not_available")`This user name is not available.`),
+              message: i18n._(
+                t(
+                  "value_error.username.not_available"
+                )`This user name is not available.`
+              ),
             })
 
           case "value_error.any_str.min_length":

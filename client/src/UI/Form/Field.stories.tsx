@@ -35,17 +35,12 @@ export const FormField = () => {
       disabled={boolean("Disabled", false)}
       validationSchema={FormSchema}
     >
-      <Field
-        label="Name"
-        name="name"
-        input={<Input />}
-        required={required}
-      />
+      <Field label="Name" name="name" input={<Input />} required={required} />
       <Field
         label="E-mail"
         name="email"
         input={<Input invalid={true} type="email" />}
-        error={error => (
+        error={(error) => (
           <EmailValidationError error={error}>
             {({ message }) => <FieldError>{message}</FieldError>}
           </EmailValidationError>

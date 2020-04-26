@@ -53,7 +53,7 @@ export const categoryBanner = {
     background: "#2c3e50",
     height: 100,
     url: "http://lorempixel.com/768/200/",
-  }
+  },
 }
 
 export const categories = [

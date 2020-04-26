@@ -5,8 +5,8 @@ import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
-  "required": "value_error.missing",
-  "email": "value_error.email",
+  required: "value_error.missing",
+  email: "value_error.email",
 }
 
 const EmailValidationError: React.FC<IValidationErrorProps> = ({
@@ -31,19 +31,27 @@ const EmailValidationError: React.FC<IValidationErrorProps> = ({
           case "value_error.missing":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.email.missing")`E-mail address can't be empty.`),
+              message: i18n._(
+                t("value_error.email.missing")`E-mail address can't be empty.`
+              ),
             })
 
           case "value_error.email":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.email")`This e-mail address is not valid.`),
+              message: i18n._(
+                t("value_error.email")`This e-mail address is not valid.`
+              ),
             })
 
           case "value_error.email.not_available":
             return children({
               type: errorType,
-              message: i18n._(t("value_error.email.not_available")`This e-mail address is not available.`),
+              message: i18n._(
+                t(
+                  "value_error.email.not_available"
+                )`This e-mail address is not available.`
+              ),
             })
 
           default:

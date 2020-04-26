@@ -6,7 +6,10 @@ interface ISpinnerProps {
 }
 
 const Spinner: React.FC<ISpinnerProps> = ({ small }) => (
-  <div className={classNames("spinner-border", { "spinner-border-sm": small })} role="status" />
+  <div
+    className={classNames("spinner-border", { "spinner-border-sm": small })}
+    role="status"
+  />
 )
 
 export default Spinner

@@ -32,7 +32,7 @@ const RootError: React.FC<IRootErrorProps> = ({
   <I18n>
     {({ i18n }) => {
       if (plainError && messages && messages[plainError]) {
-        return children({ type: plainError, message: messages[plainError]})
+        return children({ type: plainError, message: messages[plainError] })
       }
 
       const errors: Array<IMutationError> = []
@@ -42,13 +42,17 @@ const RootError: React.FC<IRootErrorProps> = ({
           errors.push({
             location: ["__root__"],
             type: "client_error.graphql",
-            message: i18n._(t("client_error.graphql")`Unexpected error has occurred.`),
+            message: i18n._(
+              t("client_error.graphql")`Unexpected error has occurred.`
+            ),
           })
         } else if (graphqlError.networkError) {
           errors.push({
             location: ["__root__"],
             type: "client_error.network",
-            message: i18n._(t("client_error.network")`Site server can't be reached.`),
+            message: i18n._(
+              t("client_error.network")`Site server can't be reached.`
+            ),
           })
         }
       }
@@ -64,7 +68,7 @@ const RootError: React.FC<IRootErrorProps> = ({
           const errorLocation = error.location.join(".")
           if (errorLocation === location) {
             const { type, message } = error
-            return children({ type, message: finMessages[type] || message})
+            return children({ type, message: finMessages[type] || message })
           }
         }
       }

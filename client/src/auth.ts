@@ -12,7 +12,7 @@ const useAuth = () => {
   return {
     login: (token: string, user: { id: string; name: string }) => {
       setItem(AUTH_TOKEN, token)
-      setItem(AUTH_USER, JSON.stringify({ id: user.id, name: user.name}))
+      setItem(AUTH_USER, JSON.stringify({ id: user.id, name: user.name }))
       client.resetStore()
     },
     logout: () => {

@@ -54,7 +54,7 @@
     "add-locale": "lingui add-locale",
     "extract": "lingui extract",
     "compile": "lingui compile",
-    "prettier": "prettier src/**/*.{ts,tsx,scss} --write"
+    "prettier": "prettier 'src/**/*.{ts,tsx,scss}' --write"
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.3",

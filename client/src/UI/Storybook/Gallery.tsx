@@ -9,7 +9,7 @@ interface IGalleryProps {
 
 const Gallery: React.FC<IGalleryProps> = ({ items }) => (
   <div className="row m-0 p-1">
-    {items.map(({ name, component}, i) => (
+    {items.map(({ name, component }, i) => (
       <div className="col-3 p-3" key={i}>
         <div className="pb-2">
           <strong>{`${name}:`}</strong>

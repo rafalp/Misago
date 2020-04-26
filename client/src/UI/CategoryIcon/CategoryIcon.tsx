@@ -9,7 +9,10 @@ interface ICategoryIconProps {
   } | null
 }
 
-const CategoryIcon: React.FC<ICategoryIconProps> = ({ className, category }) => (
+const CategoryIcon: React.FC<ICategoryIconProps> = ({
+  className,
+  category,
+}) => (
   <span
     className={className || "category-icon"}
     style={category?.color ? { color: category.color } : undefined}

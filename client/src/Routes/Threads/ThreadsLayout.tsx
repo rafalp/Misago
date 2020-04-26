@@ -19,7 +19,7 @@ const ThreadsLayout: React.FC<IThreadsLayoutProps> = ({
   category,
   className,
   children,
-  openCategoryPicker
+  openCategoryPicker,
 }) => (
   <RouteContainer className={className}>
     <Layout>

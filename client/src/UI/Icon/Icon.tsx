@@ -8,7 +8,11 @@ interface IIconProps {
 }
 
 const Icon: React.FC<IIconProps> = ({ fixedWidth, icon, solid }) => (
-  <i className={classNames(solid ? "fas" : "far", `fa-${icon}`, { "fa-fw": fixedWidth })} />
+  <i
+    className={classNames(solid ? "fas" : "far", `fa-${icon}`, {
+      "fa-fw": fixedWidth,
+    })}
+  />
 )
 
 export default Icon

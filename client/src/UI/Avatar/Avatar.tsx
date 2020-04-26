@@ -45,7 +45,7 @@ const findAvatarSrc = (avatars: Array<IAvatar>, size: number): IAvatarSrc => {
   let src = avatars[0].url
   let srcSet: string | null = null
 
-  avatars.forEach(avatar => {
+  avatars.forEach((avatar) => {
     if (avatar.size >= size) {
       src = avatar.url
     }

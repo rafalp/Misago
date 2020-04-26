@@ -23,7 +23,7 @@ const CardBanner: React.FC<ICardBannerProps> = ({
   <div
     className={classNames(
       "card-banner",
-      {"d-md-none": mobile, "d-none d-md-block": desktop},
+      { "d-md-none": mobile, "d-none d-md-block": desktop },
       className
     )}
     style={{

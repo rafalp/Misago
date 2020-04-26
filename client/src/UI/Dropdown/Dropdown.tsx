@@ -16,7 +16,12 @@ interface IDropdownProps {
   toggle: (args: IToggleArgs) => React.ReactNode
 }
 
-const Dropdown: React.FC<IDropdownProps> = ({ className, menu, leftAligned, toggle }) => {
+const Dropdown: React.FC<IDropdownProps> = ({
+  className,
+  menu,
+  leftAligned,
+  toggle,
+}) => {
   const [isOpen, updateOpen] = React.useState(false)
   const button = React.useRef<HTMLButtonElement | null>(null)
   const dropdown = React.useRef<HTMLDivElement | null>(null)
@@ -56,13 +61,17 @@ const Dropdown: React.FC<IDropdownProps> = ({ className, menu, leftAligned, togg
       {toggle({
         ref: button,
         close: () => updateOpen(false),
-        toggle: () => updateOpen(state => !state),
+        toggle: () => updateOpen((state) => !state),
       })}
-      {isOpen && portal(
-        <div className={classNames("dropdown-menu show", className )} ref={dropdown}>
-          {menu}
-        </div>
-      )}
+      {isOpen &&
+        portal(
+          <div
+            className={classNames("dropdown-menu show", className)}
+            ref={dropdown}
+          >
+            {menu}
+          </div>
+        )}
     </>
   )
 }

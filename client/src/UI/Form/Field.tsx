@@ -8,7 +8,10 @@ import FormContext from "./FormContext"
 interface IFieldProps {
   className?: string
   disabled?: boolean
-  error?: (error: { type: string, message: string }, value: any) => React.ReactNode
+  error?: (
+    error: { type: string; message: string },
+    value: any
+  ) => React.ReactNode
   id?: string
   input?: React.ReactNode
   label?: React.ReactNode

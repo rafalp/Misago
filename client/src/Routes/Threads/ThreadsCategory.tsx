@@ -21,10 +21,8 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
     data,
     error,
     loading,
+    update,
     fetchMoreThreads,
-    fetchUpdatedThreads,
-    updatedThreads,
-    updatingThreads
   } = useCategoryThreadsQuery({
     id,
   })
@@ -50,7 +48,7 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
     >
       {category && (
         <>
-          <WindowTitle title={category.name} />
+          <WindowTitle title={category.name} alerts={update.threads} />
           <HeaderCategory category={category} />
         </>
       )}
@@ -58,9 +56,7 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
         error={error}
         loading={loading}
         threads={threads}
-        updated={updatedThreads}
-        updateThreads={fetchUpdatedThreads}
-        updating={updatingThreads}
+        update={update}
       />
       <LoadMoreButton
         data={threads}

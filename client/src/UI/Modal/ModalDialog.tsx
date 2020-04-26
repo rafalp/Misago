@@ -33,7 +33,7 @@ const ModalDialog: React.FC<IModalDialogProps> = ({
       className
     )}
     role="document"
-    onClick={e => e.stopPropagation()}
+    onClick={(e) => e.stopPropagation()}
   >
     <div className="modal-content">
       {title && (

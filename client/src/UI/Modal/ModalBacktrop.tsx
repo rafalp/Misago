@@ -7,7 +7,10 @@ interface IModalBacktropProps {
 }
 
 const ModalBacktrop: React.FC<IModalBacktropProps> = ({ fade, onClick }) => (
-  <div className={classNames("modal-backdrop", "fade", { show: fade })} onClick={onClick || undefined} />
+  <div
+    className={classNames("modal-backdrop", "fade", { show: fade })}
+    onClick={onClick || undefined}
+  />
 )
 
 export default ModalBacktrop

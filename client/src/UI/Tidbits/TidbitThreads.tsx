@@ -12,8 +12,16 @@ const TidbitThreads: React.FC<ITidbitThreadsProps> = ({ value }) => (
     <Plural
       id="tidbit.threads"
       value={value}
-      one={<Trans><TidbitNumber>#</TidbitNumber> thread</Trans>}
-      other={<Trans><TidbitNumber>#</TidbitNumber> threads</Trans>}
+      one={
+        <Trans>
+          <TidbitNumber>#</TidbitNumber> thread
+        </Trans>
+      }
+      other={
+        <Trans>
+          <TidbitNumber>#</TidbitNumber> threads
+        </Trans>
+      }
     />
   </TidbitItem>
 )

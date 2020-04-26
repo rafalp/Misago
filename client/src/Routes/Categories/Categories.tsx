@@ -13,7 +13,7 @@ const Categories: React.FC = () => {
 
   return (
     <ul>
-      {data?.categories.map(category => (
+      {data?.categories.map((category) => (
         <li key={category.id}>
           <Link
             to={urls.category(category)}
@@ -23,7 +23,7 @@ const Categories: React.FC = () => {
           </Link>
           {category.children.length && (
             <ul>
-              {category.children.map(child => (
+              {category.children.map((child) => (
                 <li key={child.id}>
                   <Link
                     to={urls.category(child)}

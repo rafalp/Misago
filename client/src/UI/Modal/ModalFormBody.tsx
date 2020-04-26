@@ -6,8 +6,13 @@ interface IModalFormBodyProps {
   children: React.ReactNode
 }
 
-const ModalFormBody: React.FC<IModalFormBodyProps> = ({ children, className }) => (
-  <div className={classNames("modal-body", "modal-form-body", className)}>{children}</div>
+const ModalFormBody: React.FC<IModalFormBodyProps> = ({
+  children,
+  className,
+}) => (
+  <div className={classNames("modal-body", "modal-form-body", className)}>
+    {children}
+  </div>
 )
 
 export default ModalFormBody

@@ -12,15 +12,7 @@ import { useThreadsQuery } from "./useThreadsQuery"
 const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
   const forumStats = React.useContext(ForumStatsContext)
   const settings = React.useContext(SettingsContext)
-  const {
-    data,
-    error,
-    loading,
-    fetchMoreThreads,
-    fetchUpdatedThreads,
-    updatedThreads,
-    updatingThreads,
-  } = useThreadsQuery()
+  const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
 
   if (!forumStats || !settings) return <RouteLoader />
 
@@ -36,15 +28,14 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
               <WindowTitle
                 index={isIndex}
                 title={i18n._(t("threads.title")`Threads`)}
+                alerts={update.threads}
               />
               <HeaderAllThreads settings={settings} stats={forumStats} />
               <ThreadsList
                 error={error}
                 loading={loading}
                 threads={threads}
-                updated={updatedThreads}
-                updateThreads={fetchUpdatedThreads}
-                updating={updatingThreads}
+                update={update}
               />
               <LoadMoreButton
                 data={threads}

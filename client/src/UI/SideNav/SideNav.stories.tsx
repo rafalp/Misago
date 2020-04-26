@@ -13,15 +13,11 @@ export const Default = () => (
     <Layout>
       <LayoutSide>
         <SideNav>
-          <SideNavItem to="/">
-            Lorem ipsum
-          </SideNavItem>
+          <SideNavItem to="/">Lorem ipsum</SideNavItem>
           <SideNavItem to="/" hasChildren>
             Dolor met
           </SideNavItem>
-          <SideNavItem to="/">
-            Sit amet
-          </SideNavItem>
+          <SideNavItem to="/">Sit amet</SideNavItem>
         </SideNav>
       </LayoutSide>
     </Layout>
@@ -33,15 +29,11 @@ export const ActiveItem = () => (
     <Layout>
       <LayoutSide>
         <SideNav>
-          <SideNavItem to="/">
-            Lorem ipsum
-          </SideNavItem>
+          <SideNavItem to="/">Lorem ipsum</SideNavItem>
           <SideNavItem to="/" isActive>
             Dolor met
           </SideNavItem>
-          <SideNavItem to="/">
-            Sit amet
-          </SideNavItem>
+          <SideNavItem to="/">Sit amet</SideNavItem>
         </SideNav>
       </LayoutSide>
     </Layout>
@@ -53,18 +45,14 @@ export const ActiveItemWithChild = () => (
     <Layout>
       <LayoutSide>
         <SideNav>
-          <SideNavItem to="/">
-            Lorem ipsum
-          </SideNavItem>
+          <SideNavItem to="/">Lorem ipsum</SideNavItem>
           <SideNavItem to="/" isActive hasChildren>
             Dolor met
           </SideNavItem>
           <SideNavItem to="/" isChild>
             Nihi novi
           </SideNavItem>
-          <SideNavItem to="/">
-            Sit amet
-          </SideNavItem>
+          <SideNavItem to="/">Sit amet</SideNavItem>
         </SideNav>
       </LayoutSide>
     </Layout>
@@ -76,18 +64,14 @@ export const ItemWithActiveChild = () => (
     <Layout>
       <LayoutSide>
         <SideNav>
-          <SideNavItem to="/">
-            Lorem ipsum
-          </SideNavItem>
+          <SideNavItem to="/">Lorem ipsum</SideNavItem>
           <SideNavItem to="/" isActive hasChildren>
             Dolor met
           </SideNavItem>
           <SideNavItem to="/" isActive isChild>
             Nihi novi
           </SideNavItem>
-          <SideNavItem to="/">
-            Sit amet
-          </SideNavItem>
+          <SideNavItem to="/">Sit amet</SideNavItem>
         </SideNav>
       </LayoutSide>
     </Layout>

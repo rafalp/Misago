@@ -12,21 +12,13 @@ const data = { nextCursor: "next" }
 
 export const Default = () => (
   <RootContainer padding>
-    <LoadMoreButton
-      data={data}
-      loading={false}
-      onEvent={event}
-    />
+    <LoadMoreButton data={data} loading={false} onEvent={event} />
   </RootContainer>
 )
 
 export const Loading = () => (
   <RootContainer padding>
-    <LoadMoreButton
-      data={data}
-      loading={true}
-      onEvent={event}
-    />
+    <LoadMoreButton data={data} loading={true} onEvent={event} />
   </RootContainer>
 )
 
@@ -42,10 +34,6 @@ export const NoCursor = () => (
 
 export const NoData = () => (
   <RootContainer padding>
-    <LoadMoreButton
-      data={null}
-      loading={false}
-      onEvent={event}
-    />
+    <LoadMoreButton data={null} loading={false} onEvent={event} />
   </RootContainer>
 )

@@ -1,5 +1,10 @@
 import React from "react"
-import { CardContainer, Gallery, RootContainer, userFactory } from "../Storybook"
+import {
+  CardContainer,
+  Gallery,
+  RootContainer,
+  userFactory,
+} from "../Storybook"
 import Avatar from "."
 
 export default {
@@ -8,11 +13,9 @@ export default {
 
 export const UserAvatar = () => {
   const user = userFactory()
-  const items = [200, 100, 64, 32, 16].map(size => ({
+  const items = [200, 100, 64, 32, 16].map((size) => ({
     name: `${size} x ${size}`,
-    component: (
-      <Avatar size={size} user={user} />
-    ),
+    component: <Avatar size={size} user={user} />,
   }))
 
   return (
@@ -28,11 +31,9 @@ export const UserAvatar = () => {
 }
 
 export const BlankAvatar = () => {
-  const items = [200, 100, 64, 32, 16].map(size => ({
+  const items = [200, 100, 64, 32, 16].map((size) => ({
     name: `${size} x ${size}`,
-    component: (
-      <Avatar size={size} />
-    ),
+    component: <Avatar size={size} />,
   }))
 
   return (

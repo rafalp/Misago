@@ -135,6 +135,11 @@ export const useBaseThreadsQuery = <TData extends IThreadsData>(
     fetchUpdatedThreads,
     updatedThreads: updatedThreads.length,
     updatingThreads: updateResult.loading,
+    update: {
+      threads: updatedThreads.length,
+      loading: updateResult.loading,
+      fetch: fetchUpdatedThreads,
+    },
   }
 }
 

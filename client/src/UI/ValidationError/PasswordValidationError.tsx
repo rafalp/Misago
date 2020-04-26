@@ -5,10 +5,10 @@ import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
-  "required": "value_error.missing",
-  "matches": "value_error.username",
-  "min": "value_error.any_str.min_length",
-  "max": "value_error.any_str.max_length",
+  required: "value_error.missing",
+  matches: "value_error.username",
+  min: "value_error.any_str.min_length",
+  max: "value_error.any_str.max_length",
 }
 
 const PasswordValidationError: React.FC<IValidationErrorProps> = ({

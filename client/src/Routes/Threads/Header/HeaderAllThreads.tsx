@@ -15,7 +15,10 @@ interface IHeaderAllThreadsProps {
   }
 }
 
-const HeaderAllThreads: React.FC<IHeaderAllThreadsProps> = ({ settings, stats }) => (
+const HeaderAllThreads: React.FC<IHeaderAllThreadsProps> = ({
+  settings,
+  stats,
+}) => (
   <Header
     stats={stats}
     text={

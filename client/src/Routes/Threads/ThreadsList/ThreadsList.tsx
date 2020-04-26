@@ -6,6 +6,7 @@ import * as urls from "../../../urls"
 import { IThread } from "../Threads.types"
 import ThreadsListCard from "./ThreadsListCard"
 import ThreadsListGraphQLError from "./ThreadsListGraphQLError"
+import ThreadsListUpdateButton from "./ThreadsListUpdateButton"
 
 interface IThreadsListProps {
   loading?: boolean
@@ -14,18 +15,18 @@ interface IThreadsListProps {
     items: Array<IThread>
     nextCursor: string | null
   } | null
-  updated: number
-  updateThreads: () => void
-  updating?: boolean
+  update: {
+    threads: number
+    loading: boolean
+    fetch: () => void
+  }
 }
 
 const ThreadsList: React.FC<IThreadsListProps> = ({
   error,
   loading,
   threads,
-  updated,
-  updateThreads,
-  updating,
+  update,
 }) => {
   if (loading && !threads) {
     return (
@@ -45,14 +46,15 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
 
   return (
     <ThreadsListCard>
-      {updated > 0 && (
-        <button className="alert alert-warning d-block" disabled={loading || updating} onClick={updateThreads}>
-          {updating
-            ? "Updating threads!"
-            : `Show ${updated} new or updated threads`}
-        </button>
+      {update.threads > 0 && (
+        <ThreadsListUpdateButton
+          threads={update.threads}
+          loading={update.loading}
+          disabled={loading}
+          onClick={update.fetch}
+        />
       )}
-      {threads ? (
+      {threads && threads.items.length > 0 ? (
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (
             <li className="list-group-item" key={thread.id}>

@@ -11,7 +11,12 @@ interface IModalHeaderProps {
   close?: () => void
 }
 
-const ModalHeader: React.FC<IModalHeaderProps> = ({ children, className, close, title }) => (
+const ModalHeader: React.FC<IModalHeaderProps> = ({
+  children,
+  className,
+  close,
+  title,
+}) => (
   <I18n>
     {({ i18n }) => (
       <div className={classNames("modal-header", className)}>

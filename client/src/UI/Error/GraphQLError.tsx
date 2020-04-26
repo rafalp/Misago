@@ -21,9 +21,7 @@ const GraphQLError: React.FC<IGraphQLErrorProps> = ({ className, error }) => (
             Requested page could not be loaded.
           </Trans>
         }
-        message={
-          <GraphQLErrorMessage />
-        }
+        message={<GraphQLErrorMessage />}
       />
     }
     queryError={<Error className={className} />}
