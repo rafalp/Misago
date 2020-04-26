@@ -10,3 +10,8 @@ threads_subscription = SubscriptionType()
 async def threads_source(*_):
     async for event in threads_updates():
         yield event
+
+
+@threads_subscription.field("threads")
+def threads_resolver(obj, *_):
+    return obj
