@@ -79,4 +79,4 @@ async def test_threads_updates_source_skips_invalid_category_subscription(
 
 
 def test_threads_updates_resolver_resolves_thread_id_from_event():
-    assert threads_resolver({"id": 123}, *_, category=None) == 123
+    assert threads_resolver({"id": 123}, None, category=None) == 123
