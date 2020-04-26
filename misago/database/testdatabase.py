@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from databases import DatabaseURL
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -8,6 +10,7 @@ from .database import database_url
 from .migrations import run_migrations
 
 
+@lru_cache
 def create_test_database():
     with get_database_connection(database_url) as connection:
         # if test_database_url is set, we will create test db from scratch
