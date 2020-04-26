@@ -12,6 +12,7 @@ class StaticSettings:
 
     _database_url: str
     _cache_url: str
+    _pubsub_url: str
 
     _static_root: str
     _media_root: str
@@ -27,6 +28,7 @@ class StaticSettings:
 
         self._database_url = get_setting_value(settings, "MISAGO_DATABASE_URL")
         self._cache_url = get_setting_value(settings, "MISAGO_CACHE_URL")
+        self._pubsub_url = get_setting_value(settings, "MISAGO_PUBSUB_URL")
 
         self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
         self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
@@ -53,6 +55,10 @@ class StaticSettings:
     @property
     def cache_url(self) -> str:
         return self._cache_url
+
+    @property
+    def pubsub_url(self) -> str:
+        return self._pubsub_url
 
     @property
     def static_root(self) -> str:

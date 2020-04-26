@@ -6,6 +6,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ...auth import get_authenticated_user
+from ...categories.update import update_category
 from ...errors import ErrorsList
 from ...hooks import (
     create_post_hook,
@@ -20,7 +21,7 @@ from ...loaders import (
     store_post,
     store_thread,
 )
-from ...categories.update import update_category
+from ...pubsub.threads import publish_thread_update
 from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
@@ -127,5 +128,7 @@ async def post_reply(
     store_category(context, category)
     store_thread(context, thread)
     store_post(context, reply)
+
+    await publish_thread_update(thread)
 
     return thread, reply

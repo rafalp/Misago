@@ -5,6 +5,7 @@ from ariadne import load_schema_from_path, make_executable_schema
 from ..hooks import graphql_directives_hook, graphql_type_defs_hook, graphql_types_hook
 from .mutations import mutations
 from .scalars import scalars
+from .subscriptions import subscriptions
 from .types import types
 
 
@@ -18,6 +19,7 @@ schema = make_executable_schema(
     *scalars,
     *types,
     *mutations,
+    *subscriptions,
     *graphql_types_hook,
     directives=graphql_directives_hook
 )

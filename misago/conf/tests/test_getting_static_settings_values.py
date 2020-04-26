@@ -7,6 +7,7 @@ def mock_settings(settings):
     mocks = {
         "MISAGO_DATABASE_URL": "mock",
         "MISAGO_CACHE_URL": "mock",
+        "MISAGO_PUBSUB_URL": "mock",
         "MISAGO_STATIC_ROOT": "mock",
         "MISAGO_MEDIA_ROOT": "mock",
     }
@@ -57,6 +58,11 @@ def test_database_url_setting_value_is_set_and_retrieved():
 def test_cache_url_setting_value_is_set_and_retrieved():
     settings = StaticSettings(mock_settings({"MISAGO_CACHE_URL": "/cache-test/"}))
     assert settings.cache_url == "/cache-test/"
+
+
+def test_pubsub_url_setting_value_is_set_and_retrieved():
+    settings = StaticSettings(mock_settings({"MISAGO_PUBSUB_URL": "/pubsub-test/"}))
+    assert settings.pubsub_url == "/pubsub-test/"
 
 
 def test_static_root_url_setting_value_is_set_and_retrieved():

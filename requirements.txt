@@ -11,7 +11,9 @@ ariadne==0.11.0           # via -r requirements.in
 asgiref==3.2.7            # via -r requirements.in
 async-caches==0.3.0       # via -r requirements.in
 async-timeout==3.0.1      # via aioredis
+asyncio-redis==0.15.1     # via broadcaster
 asyncpg==0.20.1           # via databases
+broadcaster[redis]==0.2.0  # via -r requirements.in
 click==7.1.1              # via -r requirements.in, uvicorn
 databases[postgresql]==0.3.1  # via -r requirements.in
 dnspython==1.16.0         # via email-validator

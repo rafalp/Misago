@@ -22,7 +22,7 @@ services:
       - MISAGO_DATABASE_URL=postgresql://postgres/misago?user=misago&password=misago
       - MISAGO_TEST_DATABASE_NAME=test
       - MISAGO_CACHE_URL=locmem://0
-      - MISAGO_SESSIONS_URL=redis://redis/0
+      - MISAGO_PUBSUB_URL=redis://redis:6379
       - MISAGO_STATIC_ROOT=/app/media
       - MISAGO_MEDIA_ROOT=/app/static
       - MISAGO_ENABLED_PLUGINS=/app/plugins.txt

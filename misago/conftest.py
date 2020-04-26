@@ -29,6 +29,32 @@ async def db():
 
 
 @pytest.fixture
+def publish(mocker):
+    return mocker.patch("misago.pubsub.broadcast.publish")
+
+
+@pytest.fixture
+def mock_subscribe(mocker):
+    def patch_subscribe(expected_channel: str, message: any):
+        async def _mock_subscribe():
+            yield Mock(message=str(message))
+
+        class MockSubscribe:
+            def __init__(self, *, channel):
+                assert expected_channel == channel
+
+            async def __aenter__(self):
+                return _mock_subscribe()
+
+            async def __aexit__(self, *args, **kwargs):
+                pass
+
+        return mocker.patch("misago.pubsub.broadcast.subscribe", MockSubscribe)
+
+    return patch_subscribe
+
+
+@pytest.fixture
 def cache_versions():
     return {SETTINGS_CACHE: "settings-cache"}
 

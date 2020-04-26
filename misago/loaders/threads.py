@@ -1,7 +1,7 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
+from ..threads.get import get_threads_by_id, get_threads_feed
 from ..types import Category, GraphQLContext, Thread, ThreadsFeed
-from ..threads.get import get_threads_by_id, get_threads_feed, get_updated_threads_count
 from .loader import get_loader, positive_int
 
 
@@ -50,32 +50,6 @@ async def load_threads_feed(
     store_threads(context, feed.items)
 
     return feed
-
-
-async def load_updated_threads_count(
-    context: GraphQLContext,
-    cursor: Union[int, str],
-    *,
-    categories: Optional[Sequence[Category]] = None,
-    starter_id: Optional[Union[int, str]] = None,
-) -> Optional[ThreadsFeed]:
-    clean_cursor = positive_int(cursor)
-    if not clean_cursor:
-        return None
-
-    if starter_id:
-        clean_starter_id = positive_int(starter_id)
-        if not clean_starter_id:
-            return None
-    else:
-        clean_starter_id = None
-
-    return await get_updated_threads_count(
-        context["settings"]["threads_per_page"],
-        clean_cursor,
-        categories=categories,
-        starter_id=clean_starter_id,
-    )
 
 
 def store_thread(context: GraphQLContext, thread: Thread):
