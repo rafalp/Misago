@@ -66,7 +66,7 @@ async def test_post_thread_mutation_creates_new_post(
 async def test_post_thread_mutation_publishes_thread_updated_event(
     publish, user_graphql_info, category
 ):
-    data = await resolve_post_thread(
+    await resolve_post_thread(
         None,
         user_graphql_info,
         input={

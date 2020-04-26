@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable, Dict, List, Optional, Sequence
+from typing import Any, Awaitable, Callable, Dict, List, Sequence
 
 from aiodataloader import DataLoader
 
