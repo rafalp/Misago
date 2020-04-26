@@ -1,4 +1,4 @@
-import { useQuery, useSubscription } from "@apollo/react-hooks"
+import { useLazyQuery, useQuery, useSubscription } from "@apollo/react-hooks"
 import { DocumentNode } from "graphql"
 import gql from "graphql-tag"
 import React from "react"
@@ -36,8 +36,8 @@ const THREADS_QUERY = gql`
 `
 
 const THREADS_UPDATES_SUBSCRIPTION = gql`
-  subscription ThreadsUpdates {
-    threads
+  subscription ThreadsUpdates($category: ID) {
+    threads(category: $category)
   }
 `
 
@@ -50,6 +50,7 @@ interface IThreadsData {
 }
 
 interface IThreadsVariables {
+  category?: string | null
   cursor?: string | null
 }
 
@@ -57,14 +58,15 @@ interface IThreadsUpdatesData {
   threads: string
 }
 
-export const useBaseThreadsQuery = <
-  TData extends IThreadsData,
-  TVariables extends IThreadsVariables
->(
+interface IThreadsUpdatesVariables {
+  category?: string | null
+}
+
+export const useBaseThreadsQuery = <TData extends IThreadsData>(
   query: DocumentNode,
-  variables?: TVariables
+  variables?: IThreadsVariables
 ) => {
-  const result = useQuery<TData, TVariables>(query, {
+  const result = useQuery<TData, IThreadsVariables>(query, {
     variables,
     fetchPolicy: "cache-and-network",
     notifyOnNetworkStatusChange: true,
@@ -76,9 +78,9 @@ export const useBaseThreadsQuery = <
 
     result.fetchMore({
       query: THREADS_QUERY,
-      variables: { cursor },
+      variables: { ...variables, cursor },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        return mergeThreadsResults(previousResult, fetchMoreResult)
+        return mergeMergeThreadsResults(previousResult, fetchMoreResult)
       },
     })
   }
@@ -88,26 +90,55 @@ export const useBaseThreadsQuery = <
     length: number
   }>({ ids: [], length: 0 })
 
-  useSubscription<IThreadsUpdatesData>(THREADS_UPDATES_SUBSCRIPTION, {
-    shouldResubscribe: !!result.data?.threads,
-    onSubscriptionData: ({ subscriptionData: { data } }) => {
-      if (!data) return
-      const { threads: id } = data
-      if (updatedThreads.ids.indexOf(id) !== -1) return
+  useSubscription<IThreadsUpdatesData, IThreadsUpdatesVariables>(
+    THREADS_UPDATES_SUBSCRIPTION,
+    {
+      shouldResubscribe: !!result.data?.threads,
+      variables: variables ? { category: variables.category } : undefined,
+      onSubscriptionData: ({ subscriptionData: { data } }) => {
+        if (!data) return
+        const { threads: id } = data
+        if (updatedThreads.ids.indexOf(id) !== -1) return
 
-      setUpdatedThreadsState((state) => {
-        return {
-          ids: [...state.ids, id],
-          length: state.length + 1,
-        }
+        setUpdatedThreadsState((state) => {
+          return {
+            ids: [...state.ids, id],
+            length: state.length + 1,
+          }
+        })
+      },
+    }
+  )
+
+  const [fetchUpdatedThreads, updateResult] = useLazyQuery<
+    TData,
+    IThreadsVariables
+  >(query, {
+    fetchPolicy: "no-cache",
+    notifyOnNetworkStatusChange: true,
+    variables: variables ? { category: variables.category } : undefined,
+    onCompleted: (data) => {
+      setUpdatedThreadsState({
+        ids: [],
+        length: 0,
+      })
+
+      result.updateQuery((previousResult) => {
+        return mergeUpdatedThreadsResults(previousResult, data)
       })
     },
   })
 
-  return { ...result, fetchMoreThreads, updatedThreads: updatedThreads.length }
+  return {
+    ...result,
+    fetchMoreThreads,
+    fetchUpdatedThreads,
+    updatedThreads: updatedThreads.length,
+    updatingThreads: updateResult.loading,
+  }
 }
 
-const mergeThreadsResults = <TData extends IThreadsData>(
+const mergeMergeThreadsResults = <TData extends IThreadsData>(
   previousResult: TData,
   fetchMoreResult?: TData
 ) => {
@@ -126,8 +157,30 @@ const mergeThreadsResults = <TData extends IThreadsData>(
   }
 }
 
+const mergeUpdatedThreadsResults = <TData extends IThreadsData>(
+  previousResult: TData,
+  updatedResult: TData
+) => {
+  const updatedIds = updatedResult.threads.items.map(({ id }) => id)
+  const items = [
+    ...updatedResult.threads.items,
+    ...previousResult.threads.items.filter(
+      ({ id }) => updatedIds.indexOf(id) === -1
+    ),
+  ]
+
+  return {
+    ...updatedResult,
+    threads: {
+      items,
+      nextCursor: previousResult.threads.nextCursor,
+      __typename: previousResult.threads.__typename,
+    },
+  }
+}
+
 export const useThreadsQuery = () => {
-  return useBaseThreadsQuery<IThreadsData, IThreadsVariables>(THREADS_QUERY)
+  return useBaseThreadsQuery<IThreadsData>(THREADS_QUERY)
 }
 
 interface ICategoryQueryParams {
@@ -135,22 +188,22 @@ interface ICategoryQueryParams {
 }
 
 const CATEGORY_THREADS_QUERY = gql`
-  fragment CategoryFields on Category {
+  fragment ThreadsCategoryFields on Category {
     id
     name
     slug
   }
 
-  query CategoryThreads($id: ID!, $cursor: ID) {
-    category(id: $id) {
-      ...CategoryFields
+  query CategoryThreads($category: ID!, $cursor: ID) {
+    category(id: $category) {
+      ...ThreadsCategoryFields
       threads
       posts
       parent {
-        ...CategoryFields
+        ...ThreadsCategoryFields
       }
     }
-    threads(category: $id, cursor: $cursor) {
+    threads(category: $category, cursor: $cursor) {
       ${THREADS_FIELDS}
     }
   }
@@ -171,13 +224,8 @@ interface ICategoryThreadsData extends IThreadsData {
   }
 }
 
-interface ICategoryVariables extends IThreadsVariables {
-  id: string
-}
-
 export const useCategoryThreadsQuery = (variables: ICategoryQueryParams) => {
-  return useBaseThreadsQuery<ICategoryThreadsData, ICategoryVariables>(
-    CATEGORY_THREADS_QUERY,
-    variables
-  )
+  return useBaseThreadsQuery<ICategoryThreadsData>(CATEGORY_THREADS_QUERY, {
+    category: variables.id,
+  })
 }

@@ -17,7 +17,15 @@ interface IThreadsCategoryParams {
 const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
   const { id } = useParams<IThreadsCategoryParams>()
   const activeCategory = useActiveCategory(id)
-  const { data, error, loading, fetchMoreThreads } = useCategoryThreadsQuery({
+  const {
+    data,
+    error,
+    loading,
+    fetchMoreThreads,
+    fetchUpdatedThreads,
+    updatedThreads,
+    updatingThreads
+  } = useCategoryThreadsQuery({
     id,
   })
 
@@ -46,7 +54,14 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
           <HeaderCategory category={category} />
         </>
       )}
-      <ThreadsList error={error} loading={loading} threads={threads} />
+      <ThreadsList
+        error={error}
+        loading={loading}
+        threads={threads}
+        updated={updatedThreads}
+        updateThreads={fetchUpdatedThreads}
+        updating={updatingThreads}
+      />
       <LoadMoreButton
         data={threads}
         loading={loading}

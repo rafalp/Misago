@@ -14,12 +14,18 @@ interface IThreadsListProps {
     items: Array<IThread>
     nextCursor: string | null
   } | null
+  updated: number
+  updateThreads: () => void
+  updating?: boolean
 }
 
 const ThreadsList: React.FC<IThreadsListProps> = ({
   error,
   loading,
   threads,
+  updated,
+  updateThreads,
+  updating,
 }) => {
   if (loading && !threads) {
     return (
@@ -39,6 +45,13 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
 
   return (
     <ThreadsListCard>
+      {updated > 0 && (
+        <button className="alert alert-warning d-block" disabled={loading || updating} onClick={updateThreads}>
+          {updating
+            ? "Updating threads!"
+            : `Show ${updated} new or updated threads`}
+        </button>
+      )}
       {threads ? (
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (

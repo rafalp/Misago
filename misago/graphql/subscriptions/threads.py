@@ -54,5 +54,5 @@ async def is_event_in_subscribed_category(
 
 
 @threads_subscription.field("threads")
-def threads_resolver(obj, *_):
+def threads_resolver(obj, *_, category: Optional[str] = None):
     return obj["id"]

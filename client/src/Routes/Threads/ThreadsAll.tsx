@@ -17,7 +17,9 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
     error,
     loading,
     fetchMoreThreads,
+    fetchUpdatedThreads,
     updatedThreads,
+    updatingThreads,
   } = useThreadsQuery()
 
   if (!forumStats || !settings) return <RouteLoader />
@@ -36,10 +38,14 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
                 title={i18n._(t("threads.title")`Threads`)}
               />
               <HeaderAllThreads settings={settings} stats={forumStats} />
-              {updatedThreads > 0 && (
-                <div className="alert alert-warning">{`Show ${updatedThreads} new or updated threads`}</div>
-              )}
-              <ThreadsList error={error} loading={loading} threads={threads} />
+              <ThreadsList
+                error={error}
+                loading={loading}
+                threads={threads}
+                updated={updatedThreads}
+                updateThreads={fetchUpdatedThreads}
+                updating={updatingThreads}
+              />
               <LoadMoreButton
                 data={threads}
                 loading={loading}
