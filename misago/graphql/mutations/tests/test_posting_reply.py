@@ -1,12 +1,15 @@
 import pytest
 
+from ....pubsub.threads import THREADS_CHANNEL
 from ....errors import ErrorsList
 from ....threads.get import get_post_by_id, get_thread_by_id
 from ..postreply import resolve_post_reply
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_creates_new_reply(user_graphql_info, user, thread):
+async def test_post_reply_mutation_creates_new_reply(
+    publish, user_graphql_info, user, thread
+):
     data = await resolve_post_reply(
         None,
         user_graphql_info,
@@ -26,7 +29,9 @@ async def test_post_reply_mutation_creates_new_reply(user_graphql_info, user, th
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_updates_thread(user_graphql_info, user, thread):
+async def test_post_reply_mutation_updates_thread(
+    publish, user_graphql_info, user, thread
+):
     data = await resolve_post_reply(
         None,
         user_graphql_info,
@@ -45,6 +50,19 @@ async def test_post_reply_mutation_updates_thread(user_graphql_info, user, threa
     assert data["thread"].last_poster_name == user.name
     assert data["thread"].last_posted_at > thread.last_posted_at
     assert data["thread"].replies > thread.replies
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_publishes_thread_updated_event(
+    publish, user_graphql_info, thread
+):
+    await resolve_post_reply(
+        None,
+        user_graphql_info,
+        input={"thread": str(thread.id), "body": "This is test post!",},
+    )
+
+    publish.assert_called_once_with(channel=THREADS_CHANNEL, message=str(thread.id))
 
 
 @pytest.mark.asyncio
@@ -113,7 +131,7 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thread(
-    moderator_graphql_info, closed_thread
+    publish, moderator_graphql_info, closed_thread
 ):
     data = await resolve_post_reply(
         None,
@@ -145,7 +163,7 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_category(
-    moderator_graphql_info, closed_category_thread
+    publish, moderator_graphql_info, closed_category_thread
 ):
     data = await resolve_post_reply(
         None,

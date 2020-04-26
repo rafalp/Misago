@@ -3,6 +3,7 @@ alembic
 ariadne
 asgiref
 async-caches
+broadcaster[redis]
 click
 databases[postgresql]
 jinja2

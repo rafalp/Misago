@@ -1,5 +1,6 @@
 import pytest
 
+from ....pubsub.threads import THREADS_CHANNEL
 from ....errors import ErrorsList
 from ....testing import override_dynamic_settings
 from ....threads.get import get_post_by_id, get_thread_by_id
@@ -8,7 +9,7 @@ from ..postthread import resolve_post_thread
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_new_thread(
-    user_graphql_info, user, category
+    publish, user_graphql_info, user, category
 ):
     data = await resolve_post_thread(
         None,
@@ -33,7 +34,9 @@ async def test_post_thread_mutation_creates_new_thread(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_creates_new_post(user_graphql_info, user, category):
+async def test_post_thread_mutation_creates_new_post(
+    publish, user_graphql_info, user, category
+):
     data = await resolve_post_thread(
         None,
         user_graphql_info,
@@ -55,6 +58,25 @@ async def test_post_thread_mutation_creates_new_post(user_graphql_info, user, ca
     assert data["post"].posted_at == data["thread"].started_at
     assert data["post"].posted_at == data["thread"].last_posted_at
     assert data["post"].body == {"text": "This is test post!"}
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_publishes_thread_updated_event(
+    publish, user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "Hello world!",
+            "body": "This is test post!",
+        },
+    )
+
+    publish.assert_called_once_with(
+        channel=THREADS_CHANNEL, message=str(data["thread"].id)
+    )
 
 
 @pytest.mark.asyncio
@@ -204,7 +226,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_category(
-    moderator_graphql_info, closed_category
+    publish, moderator_graphql_info, closed_category
 ):
     data = await resolve_post_thread(
         None,

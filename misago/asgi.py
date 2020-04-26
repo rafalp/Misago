@@ -13,6 +13,7 @@ from .graphql.context import get_graphql_context
 from .graphql.schema import schema
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
+from .pubsub import broadcast
 from .types import GraphQLContext
 from .template import render
 
@@ -29,6 +30,9 @@ if not settings.test:
     app.add_event_handler("startup", database.connect)
     app.add_event_handler("shutdown", database.disconnect)
 
+    app.add_event_handler("startup", broadcast.connect)
+    app.add_event_handler("shutdown", broadcast.disconnect)
+
 app.add_middleware(MisagoMiddleware)
 
 
@@ -41,10 +45,10 @@ async def resolve_graphql_context(request: Request) -> GraphQLContext:
     return await graphql_context_hook.call_action(get_graphql_context, request)
 
 
-app.mount(
-    "/graphql/",
-    GraphQL(schema, debug=settings.debug, context_value=resolve_graphql_context),
-)
+graphql = GraphQL(schema, debug=settings.debug, context_value=resolve_graphql_context)
+
+app.mount("/graphql/", graphql)
+app.add_websocket_route("/graphql/", graphql.websocket_server)
 
 app.mount(
     "/admin/graphql/",

@@ -24,7 +24,6 @@ from .threads import (
     load_thread,
     load_threads,
     load_threads_feed,
-    load_updated_threads_count,
     store_thread,
     store_threads,
 )
@@ -61,7 +60,6 @@ __all__ = [
     "load_thread_posts_page",
     "load_threads",
     "load_threads_feed",
-    "load_updated_threads_count",
     "load_user",
     "load_users",
     "store_category",

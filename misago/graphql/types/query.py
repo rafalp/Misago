@@ -12,7 +12,6 @@ from ...loaders import (
     load_root_categories,
     load_thread,
     load_threads_feed,
-    load_updated_threads_count,
     load_user,
 )
 from ...types import Category, Settings, Thread, ThreadsFeed, User
@@ -61,25 +60,6 @@ async def resolve_threads(
 
     return await load_threads_feed(
         info.context, categories=categories, cursor=cursor, starter_id=user
-    )
-
-
-@query_type.field("updatedThreads")
-async def resolve_updated_threads(
-    _,
-    info: GraphQLResolveInfo,
-    *,
-    cursor: str,
-    category: Optional[str] = None,
-    user: Optional[str] = None
-) -> int:
-    if category:
-        categories = await load_category_with_children(info.context, category)
-    else:
-        categories = await load_categories(info.context)
-
-    return await load_updated_threads_count(
-        info.context, cursor, categories=categories, starter_id=user
     )
 
 
