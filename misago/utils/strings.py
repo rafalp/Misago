@@ -1,6 +1,6 @@
 import re
 import secrets
-from typing import Optional
+from typing import Any, Optional
 
 from unidecode import unidecode
 
@@ -27,3 +27,13 @@ def slugify(value: str, max_length: Optional[int] = 255) -> str:
     if max_length:
         value = value[:max_length]
     return value.strip("-")
+
+
+def parse_db_id(value: Any) -> Optional[int]:
+    try:
+        value = int(value)
+        if value > 0:
+            return value
+        return None
+    except (TypeError, ValueError):
+        return None

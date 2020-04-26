@@ -3,7 +3,7 @@ from typing import Dict, Optional, List, Union
 from ..categories import CategoryTypes
 from ..categories.get import get_all_categories
 from ..types import GraphQLContext, Category
-from .loader import positive_int
+from ..utils.strings import parse_db_id
 
 
 CACHE_NAME = "__categories"
@@ -20,7 +20,7 @@ async def load_category(
     category_id: Union[int, str],
     category_type: Optional[int] = CategoryTypes.THREADS,
 ) -> Optional[Category]:
-    internal_id = positive_int(category_id)
+    internal_id = parse_db_id(category_id)
     if internal_id:
         categories = await load_categories_dict(context)
         category = categories.get(internal_id)

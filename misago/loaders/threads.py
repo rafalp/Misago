@@ -2,7 +2,8 @@ from typing import Awaitable, Iterable, Optional, Sequence, Union
 
 from ..threads.get import get_threads_by_id, get_threads_feed
 from ..types import Category, GraphQLContext, Thread, ThreadsFeed
-from .loader import get_loader, positive_int
+from ..utils.strings import parse_db_id
+from .loader import get_loader
 
 
 def load_thread(
@@ -27,14 +28,14 @@ async def load_threads_feed(
     starter_id: Optional[Union[int, str]] = None,
 ) -> Optional[ThreadsFeed]:
     if cursor:
-        clean_cursor = positive_int(cursor)
+        clean_cursor = parse_db_id(cursor)
         if not clean_cursor:
             return None
     else:
         clean_cursor = None
 
     if starter_id:
-        clean_starter_id = positive_int(starter_id)
+        clean_starter_id = parse_db_id(starter_id)
         if not clean_starter_id:
             return None
     else:

@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 import pytest
 
 from ....pubsub.threads import THREADS_CHANNEL
@@ -74,9 +76,7 @@ async def test_post_thread_mutation_publishes_thread_updated_event(
         },
     )
 
-    publish.assert_called_once_with(
-        channel=THREADS_CHANNEL, message=str(data["thread"].id)
-    )
+    publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
 
 
 @pytest.mark.asyncio

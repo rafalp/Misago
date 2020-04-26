@@ -3,19 +3,10 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional, Sequence
 from aiodataloader import DataLoader
 
 from ..types import GraphQLContext
+from ..utils.strings import parse_db_id
 
 
 LoaderFunction = Callable[[Sequence[Any]], Awaitable[Sequence[Any]]]
-
-
-def positive_int(value: Any) -> Optional[int]:
-    try:
-        value = int(value)
-        if value > 0:
-            return value
-        return None
-    except (TypeError, ValueError):
-        return None
 
 
 def get_loader(
@@ -23,7 +14,7 @@ def get_loader(
     name: str,
     loader_function: LoaderFunction,
     *,
-    coerce_id_to=positive_int,
+    coerce_id_to=parse_db_id,
 ) -> DataLoader:
     context_key = f"__loader_{name}"
     if context_key not in context:
@@ -33,7 +24,7 @@ def get_loader(
 
 
 def wrap_loader_function(
-    loader_function: LoaderFunction, coerce_id=positive_int
+    loader_function: LoaderFunction, coerce_id=parse_db_id
 ) -> LoaderFunction:
     async def wrapped_loader_function(ids: Sequence[Any]) -> List[Any]:
         data: Dict[str, Any] = {}
