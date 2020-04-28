@@ -1,13 +1,4 @@
-export enum ButtonType {
-  PRIMARY = "primary",
-  SECONDARY = "secondary",
-  SUCCESS = "success",
-  WARNING = "warning",
-  DANGER = "danger",
-  LINK = "link",
-}
-
-export interface IBaseButtonProps {
+export interface IButtonProps {
   block?: boolean
   className?: string | null
   disabled?: boolean
@@ -16,11 +7,8 @@ export interface IBaseButtonProps {
   iconSolid?: boolean
   image?: React.ReactNode
   loading?: boolean
+  small?: boolean
   text?: React.ReactNode
   outline?: boolean
   onClick?: () => void
-}
-
-export interface IButtonProps extends IBaseButtonProps {
-  type?: ButtonType
 }

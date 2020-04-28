@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import React from "react"
 import Icon from "../Icon"
-import { ButtonType, IButtonProps } from "./Button.types"
+import { IButtonProps } from "./Button.types"
 import ButtonSpinner from "./ButtonSpinner"
 
 const Button: React.FC<IButtonProps> = ({
@@ -13,18 +13,15 @@ const Button: React.FC<IButtonProps> = ({
   iconSolid,
   image,
   loading,
+  small,
   text,
-  type = ButtonType.PRIMARY,
-  outline,
   onClick,
 }) => {
   return (
     <button
       className={classNames(
         "btn",
-        outline ? `btn-outline-${type}` : `btn-${type}`,
-        { "btn-block": block },
-        { "btn-img": image },
+        { "btn-block": block, "btn-img": image, "btn-sm": small },
         className
       )}
       ref={elementRef}

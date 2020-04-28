@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Link } from "react-router-dom"
 import { AuthModalContext, SettingsContext } from "../Context"
-import { ButtonLink } from "../UI"
+import { Button } from "../UI"
 import { useAuth } from "../auth"
 import * as urls from "../urls"
 import { INavbarUserProp } from "./Navbar.types"
@@ -45,7 +45,7 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
         <>
           <UserDropdown logout={logout} user={user} />
           <li className="nav-item d-sm-none">
-            <ButtonLink
+            <Button
               className="btn-logout"
               text={<Trans id="navbar.logout">Log out</Trans>}
               onClick={logout}
@@ -55,14 +55,14 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
       ) : (
         <>
           <li className="nav-item d-sm-block">
-            <ButtonLink
+            <Button
               className="btn-login"
               text={<Trans id="navbar.login">Log in</Trans>}
               onClick={openLoginModal}
             />
           </li>
           <li className="nav-item d-sm-block">
-            <ButtonLink
+            <Button
               className="btn-register"
               text={<Trans id="navbar.register">Sign up</Trans>}
               onClick={openRegisterModal}

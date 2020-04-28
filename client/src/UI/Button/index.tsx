@@ -1,23 +1,33 @@
 import Button from "./Button"
-import { ButtonType } from "./Button.types"
 import ButtonJustified from "./ButtonJustified"
 import ButtonSpinner from "./ButtonSpinner"
 import {
+  ButtonPrimary,
+  ButtonDanger,
+  ButtonLink,
   ButtonSecondary,
   ButtonSuccess,
   ButtonWarning,
-  ButtonDanger,
-  ButtonLink,
+  ButtonOutlinePrimary,
+  ButtonOutlineSecondary,
+  ButtonOutlineSuccess,
+  ButtonOutlineWarning,
+  ButtonOutlineDanger,
 } from "./ButtonTypes"
 
 export {
   Button,
   ButtonDanger,
+  ButtonPrimary,
   ButtonJustified,
   ButtonLink,
   ButtonSecondary,
   ButtonSpinner,
   ButtonSuccess,
-  ButtonType,
   ButtonWarning,
+  ButtonOutlineDanger,
+  ButtonOutlinePrimary,
+  ButtonOutlineSecondary,
+  ButtonOutlineSuccess,
+  ButtonOutlineWarning,
 }

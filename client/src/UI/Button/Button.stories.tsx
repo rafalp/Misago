@@ -1,7 +1,21 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { CardContainer, Matrix, RootContainer } from "../Storybook"
-import { Button, ButtonType } from "."
+import {
+  Button,
+  ButtonDanger,
+  ButtonPrimary,
+  ButtonLink,
+  ButtonSecondary,
+  ButtonSuccess,
+  ButtonWarning,
+  ButtonOutlineDanger,
+  ButtonOutlinePrimary,
+  ButtonOutlineSecondary,
+  ButtonOutlineSuccess,
+  ButtonOutlineWarning,
+} from "."
+import { IButtonProps } from "./Button.types"
 
 export default {
   title: "UI/Button",
@@ -9,33 +23,45 @@ export default {
 }
 
 const blockKnob = () => boolean("Block", false)
+const smallKnob = () => boolean("Small", false)
 
-const types = [
-  ButtonType.PRIMARY,
-  ButtonType.SECONDARY,
-  ButtonType.SUCCESS,
-  ButtonType.WARNING,
-  ButtonType.DANGER,
-  ButtonType.LINK,
+const buttons: Array<[string, React.FC<IButtonProps>]> = [
+  ["Default", Button],
+  ["Link", ButtonLink],
+  ["Primary", ButtonPrimary],
+  ["Secondary", ButtonSecondary],
+  ["Success", ButtonSuccess],
+  ["Warning", ButtonWarning],
+  ["Danger", ButtonDanger],
+]
+
+const outlineButtons: Array<[string, React.FC<IButtonProps>]> = [
+  ["Outline Primary", ButtonOutlinePrimary],
+  ["Outline Secondary", ButtonOutlineSecondary],
+  ["Outline Success", ButtonOutlineSuccess],
+  ["Outline Warning", ButtonOutlineWarning],
+  ["Outline Danger", ButtonOutlineDanger],
 ]
 
 export const TextOnly = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = buttons.map(([name, Component]) => [
     {
-      name: type,
-      component: <Button block={block} text="Lorem ipsum" type={type} />,
+      name,
+      component: <Component block={block} text="Lorem ipsum" small={small} />,
     },
     {
-      name: type + " loading",
+      name: name + " loading",
       component: (
-        <Button block={block} text="Lorem ipsum" type={type} loading />
+        <Component block={block} text="Lorem ipsum" small={small} loading />
       ),
     },
     {
-      name: type + " disabled",
+      name: name + " disabled",
       component: (
-        <Button block={block} text="Lorem ipsum" type={type} disabled />
+        <Component block={block} text="Lorem ipsum" small={small} disabled />
       ),
     },
   ])
@@ -52,31 +78,25 @@ export const TextOnly = () => {
   )
 }
 
-export const OutlinedTextOnly = () => {
+export const OutlineTextOnly = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = outlineButtons.map(([name, Component]) => [
     {
-      name: type,
+      name,
+      component: <Component block={block} text="Lorem ipsum" small={small} />,
+    },
+    {
+      name: name + " loading",
       component: (
-        <Button block={block} text="Lorem ipsum" type={type} outline />
+        <Component block={block} text="Lorem ipsum" small={small} loading />
       ),
     },
     {
-      name: type + " loading",
+      name: name + " disabled",
       component: (
-        <Button block={block} text="Lorem ipsum" type={type} loading outline />
-      ),
-    },
-    {
-      name: type + " disabled",
-      component: (
-        <Button
-          block={block}
-          text="Lorem ipsum"
-          type={type}
-          disabled
-          outline
-        />
+        <Component block={block} text="Lorem ipsum" small={small} disabled />
       ),
     },
   ])
@@ -95,21 +115,25 @@ export const OutlinedTextOnly = () => {
 
 export const IconOnly = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = buttons.map(([name, Component]) => [
     {
-      name: type,
-      component: <Button block={block} icon={"comment-alt"} type={type} />,
-    },
-    {
-      name: type + " loading",
+      name,
       component: (
-        <Button block={block} icon={"comment-alt"} type={type} loading />
+        <Component block={block} icon={"comment-alt"} small={small} />
       ),
     },
     {
-      name: type + " disabled",
+      name: name + " loading",
       component: (
-        <Button block={block} icon={"comment-alt"} type={type} disabled />
+        <Component block={block} icon={"comment-alt"} small={small} loading />
+      ),
+    },
+    {
+      name: name + " disabled",
+      component: (
+        <Component block={block} icon={"comment-alt"} small={small} disabled />
       ),
     },
   ])
@@ -126,37 +150,27 @@ export const IconOnly = () => {
   )
 }
 
-export const OutlinedIconOnly = () => {
+export const OutlineIconOnly = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = outlineButtons.map(([name, Component]) => [
     {
-      name: type,
+      name,
       component: (
-        <Button block={block} icon={"comment-alt"} type={type} outline />
+        <Component block={block} icon={"comment-alt"} small={small} />
       ),
     },
     {
-      name: type + " loading",
+      name: name + " loading",
       component: (
-        <Button
-          block={block}
-          icon={"comment-alt"}
-          type={type}
-          loading
-          outline
-        />
+        <Component block={block} icon={"comment-alt"} small={small} loading />
       ),
     },
     {
-      name: type + " disabled",
+      name: name + " disabled",
       component: (
-        <Button
-          block={block}
-          icon={"comment-alt"}
-          type={type}
-          disabled
-          outline
-        />
+        <Component block={block} icon={"comment-alt"} small={small} disabled />
       ),
     },
   ])
@@ -175,38 +189,40 @@ export const OutlinedIconOnly = () => {
 
 export const IconAndText = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = buttons.map(([name, Component]) => [
     {
-      name: type,
+      name,
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
+          small={small}
         />
       ),
     },
     {
-      name: type + " loading",
+      name: name + " loading",
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
+          small={small}
           loading
         />
       ),
     },
     {
-      name: type + " disabled",
+      name: name + " disabled",
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
+          small={small}
           disabled
         />
       ),
@@ -225,44 +241,43 @@ export const IconAndText = () => {
   )
 }
 
-export const OutlinedIconAndText = () => {
+export const OutlineIconAndText = () => {
   const block = blockKnob()
-  const items = types.map((type) => [
+  const small = smallKnob()
+
+  const items = outlineButtons.map(([name, Component]) => [
     {
-      name: type,
+      name,
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
-          outline
+          small={small}
         />
       ),
     },
     {
-      name: type + " loading",
+      name: name + " loading",
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
+          small={small}
           loading
-          outline
         />
       ),
     },
     {
-      name: type + " disabled",
+      name: name + " disabled",
       component: (
-        <Button
+        <Component
           block={block}
           icon={"comment-alt"}
           text="Start thread"
-          type={type}
+          small={small}
           disabled
-          outline
         />
       ),
     },
