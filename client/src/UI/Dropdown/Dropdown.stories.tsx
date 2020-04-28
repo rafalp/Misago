@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions"
 import React from "react"
-import { Button } from "../Button"
+import { ButtonPrimary } from "../Button"
 import { CardContainer, RootContainer } from "../Storybook"
 import Dropdown from "./Dropdown"
 import DropdownButton from "./DropdownButton"
@@ -18,7 +18,7 @@ export const Default = () => (
     <RootContainer center padding>
       <Dropdown
         toggle={({ ref, toggle }) => (
-          <Button elementRef={ref} text="Toggle" onClick={toggle} />
+          <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
         )}
         menu={<Menu />}
       />
@@ -26,7 +26,7 @@ export const Default = () => (
     <CardContainer center padding>
       <Dropdown
         toggle={({ ref, toggle }) => (
-          <Button elementRef={ref} text="Toggle" onClick={toggle} />
+          <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
         )}
         menu={<Menu />}
       />

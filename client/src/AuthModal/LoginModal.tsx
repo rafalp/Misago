@@ -3,8 +3,8 @@ import { Trans } from "@lingui/macro"
 import gql from "graphql-tag"
 import React from "react"
 import {
-  Button,
   ButtonLink,
+  ButtonPrimary,
   Field,
   Form,
   Input,
@@ -129,7 +129,7 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
           />
         </ModalFormBody>
         <ModalFooter>
-          <Button
+          <ButtonPrimary
             loading={loading || disabled}
             text={
               loading || disabled ? (

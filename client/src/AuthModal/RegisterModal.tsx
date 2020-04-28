@@ -4,8 +4,8 @@ import gql from "graphql-tag"
 import React from "react"
 import * as Yup from "yup"
 import {
-  Button,
   ButtonLink,
+  ButtonPrimary,
   EmailValidationError,
   Field,
   FieldError,
@@ -192,7 +192,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           />
         </ModalFormBody>
         <ModalFooter>
-          <Button
+          <ButtonPrimary
             loading={loading || disabled}
             text={
               loading || disabled ? (

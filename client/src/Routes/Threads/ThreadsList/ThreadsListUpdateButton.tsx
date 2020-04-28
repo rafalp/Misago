@@ -16,6 +16,7 @@ const ThreadsListUpdateButton: React.FC<IThreadsListUpdateButtonProps> = ({
   onClick,
 }) => (
   <Button
+    className="btn-update-threads"
     text={
       loading ? (
         <Trans id="threads.list.updating">Loading threads...</Trans>
@@ -28,7 +29,6 @@ const ThreadsListUpdateButton: React.FC<IThreadsListUpdateButtonProps> = ({
         />
       )
     }
-    className="btn-update-threads"
     loading={loading}
     disabled={disabled}
     onClick={onClick}

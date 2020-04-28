@@ -1,6 +1,6 @@
 import React from "react"
 import { RootContainer } from "../Storybook"
-import { Button } from "../Button"
+import { ButtonPrimary } from "../Button"
 import {
   Card,
   CardBanner,
@@ -176,7 +176,7 @@ export const BlankslateWithMessageAction = () => {
         <CardBlankslate
           header="There are no threads in this category."
           message="Why not start one yourself?"
-          actions={<Button text={"Start thread"} onClick={() => {}} />}
+          actions={<ButtonPrimary text={"Start thread"} onClick={() => {}} />}
         />
       </Card>
     </RootContainer>
@@ -189,7 +189,7 @@ export const BlankslateWithAction = () => {
       <Card>
         <CardBlankslate
           header="There are no threads in this category."
-          actions={<Button text={"Start thread"} onClick={() => {}} />}
+          actions={<ButtonPrimary text={"Start thread"} onClick={() => {}} />}
         />
       </Card>
     </RootContainer>
