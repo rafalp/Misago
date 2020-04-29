@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import {
   Avatar,
-  ButtonLink,
+  Button,
   Dropdown,
   DropdownButton,
   DropdownLink,
@@ -21,7 +21,7 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
     className="dropdown-menu-user"
     toggle={({ ref, toggle }) => (
       <li className={"nav-item dropdown d-xs-none d-sm-block"}>
-        <ButtonLink
+        <Button
           elementRef={ref}
           image={<Avatar alt={user.name} size={32} user={user} />}
           onClick={toggle}

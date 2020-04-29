@@ -12,4 +12,4 @@ pydantic[email,typing_extensions]
 pyjwt
 starlette
 unidecode
-uvicorn
+uvicorn[watchgodreload]
