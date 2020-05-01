@@ -1,12 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  DropdownButton,
-  DropdownLink,
-} from "../UI"
+import { Avatar, Button, Dropdown, DropdownButton, DropdownLink } from "../UI"
 import * as urls from "../urls"
 
 import { INavbarUserProp } from "./Navbar.types"

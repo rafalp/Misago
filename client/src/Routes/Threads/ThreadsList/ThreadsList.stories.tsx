@@ -1,4 +1,5 @@
 import { action } from "@storybook/addon-actions"
+import { ApolloError } from "apollo-client"
 import React from "react"
 import { Layout, LayoutMain, LayoutSide } from "../../../UI"
 import { RootContainer, categories } from "../../../UI/Storybook"
@@ -57,11 +58,6 @@ export const Threads = () => (
         }),
       ])}
       loading={false}
-      update={{
-        fetch,
-        threads: 0,
-        loading: false,
-      }}
     />
   </Container>
 )
@@ -103,42 +99,34 @@ export const WithUpdate = () => (
 
 export const Loading = () => (
   <Container>
-    <ThreadsList
-      threads={null}
-      loading={true}
-      update={{
-        fetch,
-        threads: 0,
-        loading: false,
-      }}
-    />
+    <ThreadsList threads={null} loading={true} />
   </Container>
 )
 
 export const LoadingMore = () => (
   <Container>
-    <ThreadsList
-      threads={threads([thread()])}
-      loading={true}
-      update={{
-        fetch,
-        threads: 0,
-        loading: false,
-      }}
-    />
+    <ThreadsList threads={threads([thread()])} loading={true} />
   </Container>
 )
 
 export const Empty = () => (
   <Container>
+    <ThreadsList threads={threads()} loading={false} />
+  </Container>
+)
+
+export const QueryError = () => (
+  <Container>
+    <ThreadsList error={new ApolloError({})} threads={null} loading={false} />
+  </Container>
+)
+
+export const NetworkError = () => (
+  <Container>
     <ThreadsList
-      threads={threads()}
+      error={new ApolloError({ networkError: new Error() })}
+      threads={null}
       loading={false}
-      update={{
-        fetch,
-        threads: 0,
-        loading: false,
-      }}
     />
   </Container>
 )

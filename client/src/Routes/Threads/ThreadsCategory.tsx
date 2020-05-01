@@ -2,10 +2,11 @@ import classNames from "classnames"
 import React from "react"
 import { useParams } from "react-router-dom"
 import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
-import { HeaderCategory } from "./Header"
 import { IThreadsProps } from "./Threads.types"
+import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
+import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 
@@ -49,10 +50,12 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
       {category && (
         <>
           <WindowTitle title={category.name} alerts={update.threads} />
-          <HeaderCategory category={category} />
+          <ThreadsHeaderCategory category={category} />
+          <ThreadsToolbar category={category} />
         </>
       )}
       <ThreadsList
+        category={category}
         error={error}
         loading={loading}
         threads={threads}

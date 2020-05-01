@@ -3,10 +3,11 @@ import { I18n } from "@lingui/react"
 import React from "react"
 import { LoadMoreButton, RouteLoader, WindowTitle } from "../../UI"
 import { ForumStatsContext, SettingsContext } from "../../Context"
-import { HeaderAllThreads } from "./Header"
+import { ThreadsHeaderAll } from "./ThreadsHeader"
 import { IThreadsProps } from "./Threads.types"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
+import ThreadsToolbar from "./ThreadsToolbar"
 import { useThreadsQuery } from "./useThreadsQuery"
 
 const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
@@ -30,7 +31,8 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
                 title={i18n._(t("threads.title")`Threads`)}
                 alerts={update.threads}
               />
-              <HeaderAllThreads settings={settings} stats={forumStats} />
+              <ThreadsHeaderAll settings={settings} stats={forumStats} />
+              <ThreadsToolbar />
               <ThreadsList
                 error={error}
                 loading={loading}

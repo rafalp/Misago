@@ -8,7 +8,7 @@
 .load-more .btn {
   display: block;
   width: 100%;
-  max-width: 320px;
+  max-width: $btn-max-width;
   margin-bottom: $spacer;
 
   @include media-breakpoint-up(lg) {

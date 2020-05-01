@@ -19,10 +19,10 @@ const ThreadsListUpdateButton: React.FC<IThreadsListUpdateButtonProps> = ({
     className="btn-update-threads"
     text={
       loading ? (
-        <Trans id="threads.list.updating">Loading threads...</Trans>
+        <Trans id="btn.updating-threads-list">Loading threads...</Trans>
       ) : (
         <Plural
-          id="threads.list.update"
+          id="btn.update-threads-list"
           value={threads}
           one="See # new or updated thread"
           other="See # new or updated threads"

@@ -5,7 +5,7 @@
 @include media-breakpoint-up(md) {
   .col-side {
     display: block;
-    width: 320px;
-    max-width: 320px;
+    width: $side-col-width;
+    max-width: $side-col-width;
   }
 }

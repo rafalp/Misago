@@ -1,8 +1,8 @@
 import React from "react"
-import Header from "./Header"
+import ThreadsHeader from "./ThreadsHeader"
 import { ICategoryBanner } from "../../../types"
 
-interface IHeaderCategoryProps {
+interface IThreadsHeaderCategoryProps {
   category: {
     name: string
     color: string | null
@@ -12,8 +12,10 @@ interface IHeaderCategoryProps {
   }
 }
 
-const HeaderCategory: React.FC<IHeaderCategoryProps> = ({ category }) => (
-  <Header
+const ThreadsHeaderCategory: React.FC<IThreadsHeaderCategoryProps> = ({
+  category,
+}) => (
+  <ThreadsHeader
     banner={category.banner}
     color={category.color}
     stats={category}
@@ -21,4 +23,4 @@ const HeaderCategory: React.FC<IHeaderCategoryProps> = ({ category }) => (
   />
 )
 
-export default HeaderCategory
+export default ThreadsHeaderCategory

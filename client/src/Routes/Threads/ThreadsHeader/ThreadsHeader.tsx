@@ -12,7 +12,7 @@ import {
 } from "../../../UI"
 import { ICategoryBanner } from "../../../types"
 
-interface IHeaderProps {
+interface IThreadsHeaderProps {
   banner?: {
     full: ICategoryBanner
     half: ICategoryBanner
@@ -26,8 +26,13 @@ interface IHeaderProps {
   }
 }
 
-const Header: React.FC<IHeaderProps> = ({ banner, color, text, stats }) => (
-  <Card>
+const ThreadsHeader: React.FC<IThreadsHeaderProps> = ({
+  banner,
+  color,
+  text,
+  stats,
+}) => (
+  <Card className="card-threads-header">
     {color && <CardColorBand color={color} />}
     {banner && <CardBanner {...banner.full} desktop />}
     {banner && <CardBanner {...banner.half} mobile />}
@@ -50,4 +55,4 @@ const Header: React.FC<IHeaderProps> = ({ banner, color, text, stats }) => (
   </Card>
 )
 
-export default Header
+export default ThreadsHeader

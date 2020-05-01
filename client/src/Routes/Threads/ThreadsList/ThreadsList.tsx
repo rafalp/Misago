@@ -5,24 +5,30 @@ import { CardLoader } from "../../../UI"
 import * as urls from "../../../urls"
 import { IThread } from "../Threads.types"
 import ThreadsListCard from "./ThreadsListCard"
+import ThreadsListBlankslate from "./ThreadsListBlankslate"
 import ThreadsListGraphQLError from "./ThreadsListGraphQLError"
 import ThreadsListUpdateButton from "./ThreadsListUpdateButton"
 
 interface IThreadsListProps {
+  category?: {
+    id: string
+    slug: string
+  } | null
   loading?: boolean
   error?: ApolloError | null
   threads: {
     items: Array<IThread>
     nextCursor: string | null
   } | null
-  update: {
+  update?: {
     threads: number
     loading: boolean
     fetch: () => void
-  }
+  } | null
 }
 
 const ThreadsList: React.FC<IThreadsListProps> = ({
+  category,
   error,
   loading,
   threads,
@@ -46,7 +52,7 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
 
   return (
     <ThreadsListCard>
-      {update.threads > 0 && (
+      {update && update.threads > 0 && (
         <ThreadsListUpdateButton
           threads={update.threads}
           loading={update.loading}
@@ -89,7 +95,7 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
           ))}
         </ul>
       ) : (
-        <div>No threads!</div>
+        <ThreadsListBlankslate category={category} />
       )}
       {loading && <CardLoader />}
     </ThreadsListCard>
