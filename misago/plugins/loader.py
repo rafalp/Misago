@@ -1,6 +1,6 @@
 import sys
-from typing import List, Optional, Tuple
 from types import ModuleType
+from typing import List, Optional, Tuple
 
 from .plugin import Plugin
 from .pluginlist import load_plugin_list_if_exists
