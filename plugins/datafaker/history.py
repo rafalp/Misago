@@ -1,5 +1,5 @@
 import random
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import AsyncGenerator, Union
 
 from faker import Faker
@@ -11,6 +11,7 @@ from misago.database.queries import update
 from misago.tables import users
 from misago.threads.update import update_thread
 from misago.types import Post, Thread, User
+from misago.utils import timezone
 
 from .randomrow import get_random_thread
 from .shortcuts import get_random_poster
@@ -28,7 +29,7 @@ async def create_fake_forum_history(
     if not categories:
         raise ValueError("No categories have been found.")
 
-    start_date = datetime.utcnow()
+    start_date = timezone.now()
     for days_ago in reversed(range(days)):
         for action_date in get_day_actions_dates(start_date, days_ago, daily_actions):
             action = random.randint(0, 100)

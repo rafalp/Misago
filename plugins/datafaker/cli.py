@@ -151,10 +151,10 @@ async def createfakehistory(days, daily_actions):
     async for item in create_fake_forum_history(fake, days, daily_actions):
         if isinstance(item, User):
             timestamp = item.joined_at.strftime(DATE_FORMAT)
-            click.echo(f"- {timestamp}: New user {item.name} registered.")
+            click.echo(f"- {timestamp}: {item.name} has registered.")
         if isinstance(item, Thread):
             timestamp = item.started_at.strftime(DATE_FORMAT)
             click.echo(f"- {timestamp}: {item.starter_name} started new thread.")
         if isinstance(item, Post):
             timestamp = item.posted_at.strftime(DATE_FORMAT)
-            click.echo(f"- {timestamp}: {item.poster_name} posted new reply.")
+            click.echo(f"- {timestamp}: {item.poster_name} posted a reply.")
