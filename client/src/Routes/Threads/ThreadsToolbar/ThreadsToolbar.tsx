@@ -1,4 +1,5 @@
 import React from "react"
+import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI"
 import ThreadsStartButton from "../ThreadsStartButton"
 
 interface IThreadsToolbarProps {
@@ -9,11 +10,20 @@ interface IThreadsToolbarProps {
 }
 
 const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({ category }) => (
-  <div className="row">
-    <div className="col">
-      <ThreadsStartButton category={category} />
-    </div>
-  </div>
+  <>
+    <Toolbar mobile>
+      <ToolbarSeparator />
+      <ToolbarItem>
+        <ThreadsStartButton category={category} small />
+      </ToolbarItem>
+    </Toolbar>
+    <Toolbar desktop>
+      <ToolbarSeparator />
+      <ToolbarItem>
+        <ThreadsStartButton category={category} />
+      </ToolbarItem>
+    </Toolbar>
+  </>
 )
 
 export default ThreadsToolbar

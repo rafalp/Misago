@@ -1,7 +1,7 @@
 import React from "react"
 
-const INTERVAL = 1000
-const INTERVAL_DESKTOP = 600
+const INTERVAL = 2000
+const INTERVAL_DESKTOP = 1000
 const BREAKPOINT = 768
 
 interface IViewportEventProps {

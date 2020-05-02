@@ -1,0 +1,10 @@
+// Toolbars are rows with buttons
+.toolbar {
+  margin-bottom: $spacer;
+}
+
+// Insert some spacing between toolbar items
+.toolbar-item + .toolbar-item,
+.toolbar-item + .toolbar-separator {
+  margin-left: $spacer;
+}

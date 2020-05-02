@@ -2,7 +2,7 @@
   display: none;
 }
 
-@include media-breakpoint-up(md) {
+@include media-breakpoint-up(lg) {
   .col-side {
     display: block;
     width: $side-col-width;
