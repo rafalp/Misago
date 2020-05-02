@@ -29,6 +29,7 @@ const LoadMore: React.FC<ILoadMoreProps> = ({ loading, data, onEvent }) => {
           )
         }
         onClick={onEvent}
+        responsive
       />
     </ViewportEvent>
   )

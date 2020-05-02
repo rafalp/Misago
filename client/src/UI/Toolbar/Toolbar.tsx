@@ -20,7 +20,7 @@ const Toolbar: React.FC<IToolbarProps> = ({
     tablet={tablet}
     mobile={mobile}
   >
-    <div className="row no-gutters">{children}</div>
+    <div className="row align-items-center no-gutters">{children}</div>
   </Responsive>
 )
 

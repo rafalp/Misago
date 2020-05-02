@@ -11,6 +11,14 @@
   margin-left: $input-btn-padding-x-sm;
 }
 
+@include media-breakpoint-down(md) {
+  .btn.btn-responsive .far + span,
+  .btn.btn-responsive .fas + span,
+  .btn.btn-responsive .spinner-border + span {
+    margin-left: $input-btn-padding-x-sm;
+  }
+}
+
 // Justified button
 .btn-justified {
   display: flex;
@@ -24,4 +32,17 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// Responsive button: small on <sm
+@include media-breakpoint-down(sm) {
+  .btn.btn-responsive {
+    @include button-size(
+      $btn-padding-y-sm,
+      $btn-padding-x-sm,
+      $btn-font-size-sm,
+      $btn-line-height-sm,
+      $btn-border-radius-sm
+    );
+  }
 }

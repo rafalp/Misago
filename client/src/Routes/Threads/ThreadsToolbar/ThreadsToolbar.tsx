@@ -10,20 +10,12 @@ interface IThreadsToolbarProps {
 }
 
 const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({ category }) => (
-  <>
-    <Toolbar mobile>
-      <ToolbarSeparator />
-      <ToolbarItem>
-        <ThreadsStartButton category={category} small />
-      </ToolbarItem>
-    </Toolbar>
-    <Toolbar desktop>
-      <ToolbarSeparator />
-      <ToolbarItem>
-        <ThreadsStartButton category={category} />
-      </ToolbarItem>
-    </Toolbar>
-  </>
+  <Toolbar>
+    <ToolbarSeparator />
+    <ToolbarItem>
+      <ThreadsStartButton category={category} />
+    </ToolbarItem>
+  </Toolbar>
 )
 
 export default ThreadsToolbar

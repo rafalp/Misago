@@ -7,6 +7,8 @@ interface IButtonJustifiedProps {
   left?: React.ReactNode
   right?: React.ReactNode
   center?: React.ReactNode
+  responsive?: boolean
+  small?: boolean
   onClick?: () => void
 }
 
@@ -16,12 +18,18 @@ const ButtonJustified: React.FC<IButtonJustifiedProps> = ({
   left,
   right,
   center,
+  responsive,
+  small,
   onClick,
 }) => (
   <button
     className={classNames(
       "btn btn-secondary btn-block btn-justified",
-      className
+      className,
+      {
+        "btn-responsive": responsive,
+        "btn-sm": small,
+      }
     )}
     disabled={disabled}
     type="button"

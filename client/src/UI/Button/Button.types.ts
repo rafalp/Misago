@@ -7,6 +7,7 @@ export interface IButtonProps {
   iconSolid?: boolean
   image?: React.ReactNode
   loading?: boolean
+  responsive?: boolean
   small?: boolean
   text?: React.ReactNode
   outline?: boolean

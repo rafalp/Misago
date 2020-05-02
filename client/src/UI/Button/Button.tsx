@@ -13,6 +13,7 @@ const Button: React.FC<IButtonProps> = ({
   iconSolid,
   image,
   loading,
+  responsive,
   small,
   text,
   onClick,
@@ -21,7 +22,12 @@ const Button: React.FC<IButtonProps> = ({
     <button
       className={classNames(
         "btn",
-        { "btn-block": block, "btn-img": image, "btn-sm": small },
+        {
+          "btn-block": block,
+          "btn-img": image,
+          "btn-responsive": responsive,
+          "btn-sm": small,
+        },
         className
       )}
       ref={elementRef}

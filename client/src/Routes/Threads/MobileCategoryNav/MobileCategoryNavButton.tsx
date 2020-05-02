@@ -35,6 +35,7 @@ const MobileCategoryNavButton: React.FC<IMobileCategoryNavButtonProps> = ({
           </span>
         }
         onClick={onClick}
+        responsive
       />
     </ToolbarItem>
   </Toolbar>

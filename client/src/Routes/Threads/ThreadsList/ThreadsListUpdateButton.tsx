@@ -33,6 +33,7 @@ const ThreadsListUpdateButton: React.FC<IThreadsListUpdateButtonProps> = ({
     disabled={disabled}
     onClick={onClick}
     outline
+    responsive
   />
 )
 

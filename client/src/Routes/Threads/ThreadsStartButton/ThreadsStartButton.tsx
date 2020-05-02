@@ -10,15 +10,13 @@ interface IThreadsStartButtonProps {
     id: string
     slug: string
   } | null
-  small?: boolean
 }
 
 const ThreadsStartButton: React.FC<IThreadsStartButtonProps> = ({
   category,
-  small,
 }) => (
   <Link
-    className={classNames("btn btn-primary", { "btn-sm": small })}
+    className={classNames("btn btn-primary btn-responsive")}
     to={urls.startThread(category)}
   >
     <Icon icon="edit" fixedWidth />
