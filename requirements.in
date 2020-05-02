@@ -10,6 +10,7 @@ jinja2
 passlib
 pydantic[email,typing_extensions]
 pyjwt
+pytz
 starlette
 unidecode
 uvicorn[watchgodreload]

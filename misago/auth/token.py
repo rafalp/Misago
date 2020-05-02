@@ -10,6 +10,7 @@ from ..hooks import (
     get_user_from_token_payload_hook,
 )
 from ..types import GraphQLContext, User
+from ..utils import timezone
 from .user import get_user
 
 
@@ -34,7 +35,7 @@ async def create_user_token_payload(
 
 
 def get_jwt_exp(context: GraphQLContext) -> datetime:
-    return datetime.utcnow() + timedelta(seconds=context["settings"]["jwt_exp"])
+    return timezone.now() + timedelta(seconds=context["settings"]["jwt_exp"])
 
 
 async def get_user_from_token(

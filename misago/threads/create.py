@@ -4,6 +4,7 @@ from typing import Any, Dict, Optional
 from ..database import queries
 from ..tables import posts, threads
 from ..types import Category, GraphQLContext, Post, Thread, User
+from ..utils import timezone
 from ..utils.strings import slugify
 
 
@@ -28,7 +29,7 @@ async def create_post(
         "poster_name": poster.name if poster else poster_name,
         "body": body,
         "edits": edits,
-        "posted_at": posted_at or datetime.utcnow(),
+        "posted_at": posted_at or timezone.now(),
         "extra": extra or {},
     }
 
@@ -74,7 +75,7 @@ async def create_thread(
             "either 'first_post', 'starter' or 'starter_name' argument must be provided"
         )
 
-    default_now = datetime.utcnow()
+    default_now = timezone.now()
     if first_post:
         started_at = first_post.posted_at
     else:

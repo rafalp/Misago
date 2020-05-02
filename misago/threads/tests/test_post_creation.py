@@ -1,7 +1,6 @@
-from datetime import datetime
-
 import pytest
 
+from ...utils import timezone
 from ..create import create_post, create_thread
 from ..get import get_post_by_id
 
@@ -33,7 +32,7 @@ async def test_post_is_created_with_posted_datetime(thread):
 
 @pytest.mark.asyncio
 async def test_post_is_created_with_explicit_posted_datetime(thread):
-    posted_at = datetime.utcnow()
+    posted_at = timezone.now()
     post = await create_post(thread, {}, poster_name="User", posted_at=posted_at)
     assert post.posted_at == posted_at
 

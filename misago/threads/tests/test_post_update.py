@@ -1,7 +1,6 @@
-from datetime import datetime
-
 import pytest
 
+from ...utils import timezone
 from ..create import create_post, create_thread
 from ..get import get_post_by_id
 from ..update import update_post
@@ -102,7 +101,7 @@ async def test_updating_and_incrementing_post_edits_raises_value_error(post):
 
 @pytest.mark.asyncio
 async def test_post_date_can_be_updated(post):
-    posted_at = datetime.utcnow()
+    posted_at = timezone.now()
     updated_post = await update_post(post, posted_at=posted_at)
     assert updated_post.posted_at == posted_at
 

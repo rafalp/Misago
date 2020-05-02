@@ -5,6 +5,7 @@ from ..database import queries
 from ..passwords import hash_password
 from ..tables import users
 from ..types import GraphQLContext, User
+from ..utils import timezone
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
 
@@ -34,7 +35,7 @@ async def create_user(
         "is_deactivated": is_deactivated,
         "is_moderator": is_moderator,
         "is_admin": is_admin,
-        "joined_at": joined_at or datetime.utcnow(),
+        "joined_at": joined_at or timezone.now(),
         "extra": extra or {},
     }
 

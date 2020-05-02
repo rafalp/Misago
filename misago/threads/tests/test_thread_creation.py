@@ -1,8 +1,8 @@
-from datetime import datetime
 from unittest.mock import Mock
 
 import pytest
 
+from ...utils import timezone
 from ..create import create_post, create_thread
 from ..get import get_thread_by_id
 
@@ -36,7 +36,7 @@ async def test_thread_is_created_with_default_start_and_last_posted_date(categor
 
 @pytest.mark.asyncio
 async def test_thread_is_created_with_explicit_start_and_last_posted_date(category):
-    started_at = datetime.utcnow()
+    started_at = timezone.now()
     thread = await create_thread(
         category, "Test thread", starter_name="User", started_at=started_at
     )
@@ -47,7 +47,7 @@ async def test_thread_is_created_with_explicit_start_and_last_posted_date(catego
 @pytest.mark.asyncio
 async def test_thread_is_created_with_removed_starter_user(category):
     thread = await create_thread(
-        category, "Test thread", starter_name="User", started_at=datetime.utcnow()
+        category, "Test thread", starter_name="User", started_at=timezone.now()
     )
     assert thread.starter_id is None
     assert thread.starter_name == "User"
@@ -106,7 +106,7 @@ async def test_creating_thread_with_first_post_and_started_at_raises_value_error
 ):
     with pytest.raises(ValueError):
         await create_thread(
-            category, "Test thread", first_post=Mock(), started_at=datetime.utcnow()
+            category, "Test thread", first_post=Mock(), started_at=timezone.now()
         )
 
 
@@ -122,7 +122,7 @@ async def test_thread_is_created_with_first_id(category):
 @pytest.mark.asyncio
 async def test_thread_is_created_with_first_post_poster_as_starter(category, user):
     post = Mock(
-        id=None, poster_id=user.id, poster_name=user.name, posted_at=datetime.utcnow()
+        id=None, poster_id=user.id, poster_name=user.name, posted_at=timezone.now()
     )
     thread = await create_thread(category, "Test thread", first_post=post)
     assert thread.starter_id == user.id
@@ -133,9 +133,7 @@ async def test_thread_is_created_with_first_post_poster_as_starter(category, use
 
 @pytest.mark.asyncio
 async def test_thread_is_created_with_first_post_removed_poster_as_starter(category):
-    post = Mock(
-        id=None, poster_id=None, poster_name="User", posted_at=datetime.utcnow()
-    )
+    post = Mock(id=None, poster_id=None, poster_name="User", posted_at=timezone.now())
     thread = await create_thread(category, "Test thread", first_post=post)
     assert thread.starter_id is None
     assert thread.starter_name == "User"
@@ -145,7 +143,7 @@ async def test_thread_is_created_with_first_post_removed_poster_as_starter(categ
 
 @pytest.mark.asyncio
 async def test_thread_is_created_with_first_post_posted_at_date(category):
-    posted_at = datetime.utcnow()
+    posted_at = timezone.now()
     post = Mock(id=None, poster_id=None, poster_name="User", posted_at=posted_at)
     thread = await create_thread(category, "Test thread", first_post=post)
     assert thread.started_at == posted_at

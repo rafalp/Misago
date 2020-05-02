@@ -29,7 +29,7 @@ def upgrade():
         sa.Column("is_deactivated", sa.Boolean(), nullable=False),
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
         sa.Column("is_admin", sa.Boolean(), nullable=False),
-        sa.Column("joined_at", sa.DateTime(), nullable=False),
+        sa.Column("joined_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email"),

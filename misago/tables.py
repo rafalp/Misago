@@ -34,7 +34,7 @@ users = sqlalchemy.Table(
     sqlalchemy.Column("is_deactivated", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
-    sqlalchemy.Column("joined_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("joined_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
 
@@ -118,8 +118,10 @@ threads = sqlalchemy.Table(
     ),
     sqlalchemy.Column("title", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
-    sqlalchemy.Column("started_at", sqlalchemy.DateTime, nullable=False),
-    sqlalchemy.Column("last_posted_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("started_at", sqlalchemy.DateTime(timezone=True), nullable=False),
+    sqlalchemy.Column(
+        "last_posted_at", sqlalchemy.DateTime(timezone=True), nullable=False
+    ),
     sqlalchemy.Column(
         "replies", sqlalchemy.Integer, server_default="0", nullable=False
     ),
@@ -156,6 +158,6 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column("poster_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("body", sqlalchemy.JSON, nullable=False),
     sqlalchemy.Column("edits", sqlalchemy.Integer, nullable=False),
-    sqlalchemy.Column("posted_at", sqlalchemy.DateTime, nullable=False),
+    sqlalchemy.Column("posted_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )

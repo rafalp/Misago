@@ -1,8 +1,8 @@
 from dataclasses import replace
-from datetime import datetime
 
 import pytest
 
+from ...utils import timezone
 from ..create import create_post, create_thread
 from ..get import get_thread_by_id
 from ..update import update_thread
@@ -90,14 +90,14 @@ async def test_thread_title_can_be_updated(thread):
 
 @pytest.mark.asyncio
 async def test_thread_start_date_can_be_updated(thread):
-    started_at = datetime.utcnow()
+    started_at = timezone.now()
     updated_thread = await update_thread(thread, started_at=started_at)
     assert updated_thread.started_at == started_at
 
 
 @pytest.mark.asyncio
 async def test_thread_last_post_date_can_be_updated(thread):
-    last_posted_at = datetime.utcnow()
+    last_posted_at = timezone.now()
     updated_thread = await update_thread(thread, last_posted_at=last_posted_at)
     assert updated_thread.last_posted_at == last_posted_at
 
@@ -169,7 +169,7 @@ async def test_updating_thread_first_post_and_starter_name_raises_value_error(th
 async def test_updating_thread_first_post_and_start_date_raises_value_error(
     thread, user
 ):
-    started_at = datetime.utcnow()
+    started_at = timezone.now()
     post = await create_post(thread, {}, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, first_post=post, started_at=started_at)
@@ -205,7 +205,7 @@ async def test_updating_thread_last_post_and_last_poster_name_raises_value_error
 async def test_updating_thread_last_post_and_last_post_date_raises_value_error(
     thread, user
 ):
-    started_at = datetime.utcnow()
+    started_at = timezone.now()
     post = await create_post(thread, {}, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, last_post=post, last_posted_at=started_at)
