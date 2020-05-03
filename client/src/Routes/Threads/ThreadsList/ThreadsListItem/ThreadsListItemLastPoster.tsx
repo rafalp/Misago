@@ -9,7 +9,7 @@ interface IThreadsListItemLastPosterProps {
 }
 
 const ThreadsListItemLastPoster: React.FC<IThreadsListItemLastPosterProps> = ({
-  thread: { lastPoster }
+  thread: { lastPoster },
 }) => (
   <div className="col-auto threads-list-last-poster">
     {lastPoster ? (

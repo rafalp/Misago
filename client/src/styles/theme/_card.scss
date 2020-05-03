@@ -3,7 +3,6 @@
   @include shadow-1;
 }
 
-
 /* Make cards full-width on XS */
 @include media-breakpoint-down(sm) {
   .card {

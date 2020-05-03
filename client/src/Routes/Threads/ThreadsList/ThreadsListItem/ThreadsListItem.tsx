@@ -21,7 +21,9 @@ const ThreadsListItem: React.FC<IThreadsListItemProps> = ({ thread }) => (
           <Link to={urls.thread(thread)}>{thread.title}</Link>
         </strong>
         <Tidbits small>
-          {thread.category.parent && <TidbitCategory category={thread.category.parent} parent />}
+          {thread.category.parent && (
+            <TidbitCategory category={thread.category.parent} parent />
+          )}
           <TidbitCategory category={thread.category} />
           <TidbitReplies value={thread.replies} />
         </Tidbits>

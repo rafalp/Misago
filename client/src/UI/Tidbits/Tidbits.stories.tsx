@@ -62,7 +62,7 @@ export const Timestamps = () => (
 export const User = () => (
   <CardContainer padding>
     <Tidbits small={smallKnob()} vertical={verticalKnow()}>
-      <TidbitUser user={{ id: "1", slug: "aerith", name: "Aerith"}} />
+      <TidbitUser user={{ id: "1", slug: "aerith", name: "Aerith" }} />
       <TidbitUser name="Bob" />
     </Tidbits>
   </CardContainer>

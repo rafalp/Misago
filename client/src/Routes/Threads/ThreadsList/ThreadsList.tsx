@@ -62,10 +62,7 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
       {threads && threads.items.length > 0 ? (
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (
-            <ThreadsListItem
-              key={thread.id}
-              thread={thread}
-            />
+            <ThreadsListItem key={thread.id} thread={thread} />
           ))}
         </ul>
       ) : (
