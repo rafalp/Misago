@@ -50,7 +50,7 @@ async def resolve_last_post(obj: Thread, info: GraphQLResolveInfo) -> Optional[P
     return None
 
 
-@thread_type.field("lastPosterName")
+@thread_type.field("lastPoster")
 async def resolve_last_poster(obj: Thread, info: GraphQLResolveInfo) -> Optional[User]:
     if obj.last_poster_id:
         return await load_user(info.context, obj.last_poster_id)

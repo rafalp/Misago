@@ -3,7 +3,7 @@ import { ApolloError } from "apollo-client"
 import React from "react"
 import { Layout, LayoutMain, LayoutSide } from "../../../UI"
 import { RootContainer, categories } from "../../../UI/Storybook"
-import { IThread, IThreadCategory } from "../Threads.types"
+import { IThread, IThreadPoster, IThreadCategory } from "../Threads.types"
 import ThreadsList from "./ThreadsList"
 
 export default {
@@ -20,14 +20,31 @@ const threads = (items?: Array<IThread> | null) => {
 const thread = (data?: {
   id: string
   title?: string
+  slug?: string
   category?: IThreadCategory
+  starter?: IThreadPoster | null
+  starterName?: string
+  lastPoster?: IThreadPoster | null
+  lastPosterName?: string
+  startedAt?: string
+  lastPostedAt?: string
+  replies?: number
+  isClosed?: boolean
 }): IThread => {
   return Object.assign(
     {
       id: "1",
       title: "Test thread",
       slug: "test-thread",
+      startedAt: "2020-05-01T10:49:02.159Z",
+      lastPostedAt: "2020-05-02T12:38:41.159Z",
+      starterName: "LoremIpsum",
+      starter: null,
+      lastPosterName: "DolorMet",
+      lastPoster: null,
       category: { ...categories[0], parent: categories[1] },
+      replies: 0,
+      isClosed: false,
     },
     data || {}
   )
@@ -55,6 +72,11 @@ export const Threads = () => (
           id: "2",
           title:
             "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
+        }),
+        thread({
+          id: "3",
+          title:
+            "ReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReRe",
         }),
       ])}
       loading={false}

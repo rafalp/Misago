@@ -80,13 +80,18 @@ import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
 import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
 import {
+  TidbitCategory,
   TidbitItem,
   TidbitMembers,
   TidbitNumber,
   TidbitPosts,
+  TidbitReplies,
   TidbitThreads,
+  TidbitTimestamp,
+  TidbitUser,
   Tidbits,
 } from "./Tidbits"
+import Timestamp from "./Timestamp"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "./Toolbar"
 import {
   EmailValidationError,
@@ -176,12 +181,17 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
+  TidbitCategory,
   TidbitItem,
   TidbitMembers,
   TidbitNumber,
   TidbitPosts,
+  TidbitReplies,
   TidbitThreads,
+  TidbitTimestamp,
+  TidbitUser,
   Tidbits,
+  Timestamp,
   Toolbar,
   ToolbarItem,
   ToolbarSeparator,

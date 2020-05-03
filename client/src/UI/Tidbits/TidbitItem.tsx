@@ -4,10 +4,17 @@ import React from "react"
 interface ITidbitItemProps {
   className?: string | null
   children?: React.ReactNode
+  title?: string
 }
 
-const TidbitItem: React.FC<ITidbitItemProps> = ({ className, children }) => (
-  <li className={classNames("list-inline-item", className)}>{children}</li>
+const TidbitItem: React.FC<ITidbitItemProps> = ({
+  className,
+  children,
+  title,
+}) => (
+  <li className={classNames("list-inline-item", className)} title={title}>
+    {children}
+  </li>
 )
 
 export default TidbitItem

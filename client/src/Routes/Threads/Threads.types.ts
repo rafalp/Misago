@@ -1,4 +1,4 @@
-import { ICategory } from "../../types"
+import { IAvatar, ICategory } from "../../types"
 
 export interface IActiveCategory {
   category: ICategory
@@ -11,9 +11,17 @@ export interface IThreadsProps {
 
 export interface IThread {
   id: string
+  category: IThreadCategory
+  starter: IThreadPoster | null
+  starterName: string
+  lastPoster: IThreadPoster | null
+  lastPosterName: string
   title: string
   slug: string
-  category: IThreadCategory
+  startedAt: string
+  lastPostedAt: string
+  replies: number
+  isClosed: boolean
 }
 
 export interface IThreadCategory {
@@ -23,4 +31,11 @@ export interface IThreadCategory {
   color: string | null
   icon: string | null
   parent: IThreadCategory | null
+}
+
+export interface IThreadPoster {
+  id: string
+  name: string
+  slug: string
+  avatars: Array<IAvatar>
 }

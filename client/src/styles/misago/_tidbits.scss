@@ -2,3 +2,32 @@
 .list-tidbits {
   margin: 0;
 }
+
+// Force inline items to stack on vertical tidbots
+.list-tidbits.list-unstyled > .list-inline-item {
+  display: block;
+}
+
+// Make tidbits font size small
+.tidbits-small {
+  font-size: $font-size-sm;
+}
+
+// Category tidbit
+.tidbit-category-color {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: $border-radius-sm;
+  position: relative;
+  top: 1px;
+}
+
+.tidbits-small .tidbit-category-color {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.tidbit-category-color + .tidbit-category-name {
+  margin-left: $spacer / 5;
+}

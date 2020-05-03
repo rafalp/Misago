@@ -1,12 +1,11 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { Link } from "react-router-dom"
 import { CardLoader } from "../../../UI"
-import * as urls from "../../../urls"
 import { IThread } from "../Threads.types"
-import ThreadsListCard from "./ThreadsListCard"
 import ThreadsListBlankslate from "./ThreadsListBlankslate"
+import ThreadsListCard from "./ThreadsListCard"
 import ThreadsListGraphQLError from "./ThreadsListGraphQLError"
+import ThreadsListItem from "./ThreadsListItem/ThreadsListItem"
 import ThreadsListUpdateButton from "./ThreadsListUpdateButton"
 
 interface IThreadsListProps {
@@ -63,35 +62,10 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
       {threads && threads.items.length > 0 ? (
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (
-            <li className="list-group-item" key={thread.id}>
-              <strong>
-                <Link to={urls.thread(thread)}>{thread.title}</Link>
-              </strong>
-              <ul className="list-inline">
-                {thread.category.parent && (
-                  <li className="list-inline-item">
-                    <Link
-                      to={urls.category(thread.category.parent)}
-                      style={{
-                        borderLeft: `4px solid ${thread.category.parent.color}`,
-                      }}
-                    >
-                      {thread.category.parent.name}
-                    </Link>
-                  </li>
-                )}
-                <li className="list-inline-item">
-                  <Link
-                    to={urls.category(thread.category)}
-                    style={{
-                      borderLeft: `4px solid ${thread.category.color}`,
-                    }}
-                  >
-                    {thread.category.name}
-                  </Link>
-                </li>
-              </ul>
-            </li>
+            <ThreadsListItem
+              key={thread.id}
+              thread={thread}
+            />
           ))}
         </ul>
       ) : (

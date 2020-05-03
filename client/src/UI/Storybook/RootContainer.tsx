@@ -15,7 +15,7 @@ const RootContainer: React.FC<IRootContainerProps> = ({
   <div
     className={classNames({
       "d-flex justify-content-center": center,
-      "p-4": padding,
+      "px-3 py-4": padding,
     })}
   >
     {children}

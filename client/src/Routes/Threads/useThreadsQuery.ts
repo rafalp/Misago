@@ -4,30 +4,56 @@ import gql from "graphql-tag"
 import React from "react"
 import { IThread } from "./Threads.types"
 
+const THREADS_FRAGMENTS = `
+  fragment ThreadsListThreadPoster on User {
+    id
+    name
+    slug
+    avatars {
+      size
+      url
+    }
+  }
+
+  fragment ThreadsListThreadCategory on Category {
+    id
+    name
+    slug
+    color
+    icon
+  }
+`
+
 const THREADS_FIELDS = `
   items {
     id
     title
     slug
+    startedAt
+    lastPostedAt
+    replies
+    starterName
+    lastPosterName
     category {
-      id
-      name
-      slug
-      color
-      icon
+      ...ThreadsListThreadCategory
       parent {
-        id
-        name
-        slug
-        color
-        icon
+        ...ThreadsListThreadCategory
       }
     }
+    starter {
+      ...ThreadsListThreadPoster
+    }
+    lastPoster {
+      ...ThreadsListThreadPoster
+    }
+    isClosed
   }
   nextCursor
 `
 
 const THREADS_QUERY = gql`
+  ${THREADS_FRAGMENTS}
+
   query Threads($cursor: ID) {
     threads(cursor: $cursor) {
       ${THREADS_FIELDS}
@@ -193,7 +219,9 @@ interface ICategoryQueryParams {
 }
 
 const CATEGORY_THREADS_QUERY = gql`
-  fragment ThreadsCategoryFields on Category {
+  ${THREADS_FRAGMENTS}
+
+  fragment ThreadsListCategory on Category {
     id
     name
     slug
@@ -201,11 +229,11 @@ const CATEGORY_THREADS_QUERY = gql`
 
   query CategoryThreads($category: ID!, $cursor: ID) {
     category(id: $category) {
-      ...ThreadsCategoryFields
+      ...ThreadsListCategory
       threads
       posts
       parent {
-        ...ThreadsCategoryFields
+        ...ThreadsListCategory
       }
     }
     threads(category: $category, cursor: $cursor) {
