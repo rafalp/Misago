@@ -6,9 +6,14 @@ import { formatDateShort } from "../formats"
 interface ITimestampProps {
   date: Date
   language?: string
+  prefixed?: boolean
 }
 
-const Timestamp: React.FC<ITimestampProps> = ({ date, language }) => {
+const Timestamp: React.FC<ITimestampProps> = ({
+  date,
+  language,
+  prefixed,
+}) => {
   const now = new Date()
   const diff = (now.getTime() - date.getTime()) / 1000
 
@@ -88,7 +93,9 @@ const Timestamp: React.FC<ITimestampProps> = ({ date, language }) => {
         />
       )
     }
+  }
 
+  if (prefixed) {
     if (language) {
       return <Trans id="time.on">on {formatDateShort(date, language)}</Trans>
     }
