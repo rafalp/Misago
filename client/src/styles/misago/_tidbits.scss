@@ -1,10 +1,10 @@
 // Remove margin from tidbits component
-.list-tidbits {
+.tidbits {
   margin: 0;
 }
 
 // Force inline items to stack on vertical tidbots
-.list-tidbits.list-unstyled > .list-inline-item {
+.tidbits.list-unstyled > .list-inline-item {
   display: block;
 }
 

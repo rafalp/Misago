@@ -9,11 +9,13 @@ interface ITidbitsProps {
 
 const Tidbits: React.FC<ITidbitsProps> = ({ children, small, vertical }) => (
   <ul
-    className={classNames("list-tidbits", {
-      "list-inline": !vertical,
-      "list-unstyled": vertical,
-      "tidbits-small": small,
-    })}
+    className={classNames(
+      "tidbits",
+      vertical ? "list-unstyled" : "list-inline",
+      {
+        "tidbits-small": small,
+      }
+    )}
   >
     {children}
   </ul>

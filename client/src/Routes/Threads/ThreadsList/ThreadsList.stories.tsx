@@ -67,6 +67,8 @@ export const Threads = () => (
           id: "1",
           title: "The atmosphere has many layers with different temperatures.",
           category: categories[1],
+          replies: 58102,
+          isClosed: true,
         }),
         thread({
           id: "2",

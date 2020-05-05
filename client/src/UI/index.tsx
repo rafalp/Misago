@@ -80,7 +80,10 @@ import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
 import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
 import {
+  TidbitActivityLastReply,
+  TidbitActivityStart,
   TidbitCategory,
+  TidbitClosed,
   TidbitItem,
   TidbitMembers,
   TidbitNumber,
@@ -181,7 +184,10 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
+  TidbitActivityLastReply,
+  TidbitActivityStart,
   TidbitCategory,
+  TidbitClosed,
   TidbitItem,
   TidbitMembers,
   TidbitNumber,
