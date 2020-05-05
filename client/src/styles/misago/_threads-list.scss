@@ -1,3 +1,69 @@
+// Cut down side padding for list items
+.threads-list-item {
+  padding: $list-group-item-padding-y;
+}
+
+// Add gutters to thread columns
+.threads-list-item .threads-list-thread,
+.threads-list-item .threads-list-last-poster,
+.threads-list-item .threads-list-activity {
+  padding-left: $spacer;
+}
+
+// Display small starter's avatar instead of full-size one on small displays
+.threads-list-starter {
+  display: none;
+}
+
+.threads-list-starter-sm {
+  display: block;
+}
+
+@include media-breakpoint-up(lg) {
+  .threads-list-starter {
+    display: block;
+  }
+
+  .threads-list-starter-sm {
+    display: none;
+  }
+}
+
+// Force long threads titles to break
+.threads-list-thread-title {
+  word-break: break-word;
+}
+
+// Hide thread started tidbit on small displays
+@include media-breakpoint-down(lg) {
+  .threads-list-thread .tidbit-start {
+    display: none;
+  }
+}
+
+// Hide last reply tidbit on large displays
+@include media-breakpoint-up(lg) {
+  .threads-list-thread .tidbit-last-reply {
+    display: none;
+  }
+}
+
+// Set constant width for thread's activity column
 .threads-list-activity {
   width: $threads-list-item-activity;
+}
+
+.threads-list-activity .tidbit-item {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Hide last poster and activity on small screens
+@include media-breakpoint-down(md) {
+  .threads-list-activity,
+  .threads-list-last-poster {
+    display: none;
+  }
 }

@@ -12,7 +12,10 @@ const TidbitItem: React.FC<ITidbitItemProps> = ({
   children,
   title,
 }) => (
-  <li className={classNames("list-inline-item", className)} title={title}>
+  <li
+    className={classNames("list-inline-item tidbit-item", className)}
+    title={title}
+  >
     {children}
   </li>
 )

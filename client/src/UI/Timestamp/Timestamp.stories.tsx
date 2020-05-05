@@ -6,7 +6,7 @@ export default {
   title: "UI/Timestamp",
 }
 
-export const Now = () => {
+export const Timestamps = () => {
   const date = new Date()
 
   return (
@@ -26,6 +26,14 @@ export const Now = () => {
       <p>
         5 hours ago:{" "}
         <Timestamp date={new Date(date.getTime() - 5 * 3600 * 1000)} />
+      </p>
+      <p>
+        12 hours ago:{" "}
+        <Timestamp date={new Date(date.getTime() - 12 * 3600 * 1000)} />
+      </p>
+      <p>
+        36 hours ago:{" "}
+        <Timestamp date={new Date(date.getTime() - 36 * 3600 * 1000)} />
       </p>
       <p>
         5 days ago:{" "}

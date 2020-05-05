@@ -1,7 +1,7 @@
 import { Plural, Trans } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
-import { formatDateShort } from "../formats"
+import { formatDateShort, formatTime } from "../formats"
 
 interface ITimestampProps {
   date: Date
@@ -35,7 +35,7 @@ const Timestamp: React.FC<ITimestampProps> = ({
       )
     }
 
-    if (diff < 3600 * 24) {
+    if (diff < 3600 * 12) {
       return (
         <Plural
           id="time.hours_ago"
@@ -43,6 +43,30 @@ const Timestamp: React.FC<ITimestampProps> = ({
           one="# hour ago"
           other="# hours ago"
         />
+      )
+    }
+
+    if (diff < 3600 * 48) {
+      if (now.getDay() === date.getDay()) {
+        return (
+          <I18n>
+            {({ i18n: { language } }) => (
+              <Trans id="time.today">
+                today at {formatTime(date, language)}
+              </Trans>
+            )}
+          </I18n>
+        )
+      }
+
+      return (
+        <I18n>
+          {({ i18n: { language } }) => (
+            <Trans id="time.yesterday">
+              yesterday at {formatTime(date, language)}
+            </Trans>
+          )}
+        </I18n>
       )
     }
 

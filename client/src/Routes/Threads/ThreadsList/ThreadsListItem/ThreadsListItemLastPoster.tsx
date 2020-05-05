@@ -14,10 +14,10 @@ const ThreadsListItemLastPoster: React.FC<IThreadsListItemLastPosterProps> = ({
   <div className="col-auto threads-list-last-poster">
     {lastPoster ? (
       <Link to={urls.user(lastPoster)}>
-        <Avatar size={32} user={lastPoster} />
+        <Avatar size={40} user={lastPoster} />
       </Link>
     ) : (
-      <Avatar size={32} />
+      <Avatar size={40} />
     )}
   </div>
 )

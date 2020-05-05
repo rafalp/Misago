@@ -14,10 +14,19 @@ const shortDate = {
   day: "numeric",
 }
 
+const time = {
+  hour: "numeric",
+  minute: "numeric",
+}
+
 export const formatDate = (date: Date, locale: string): string => {
   return date.toLocaleString(locale, fullDate)
 }
 
 export const formatDateShort = (date: Date, locale: string): string => {
   return date.toLocaleString(locale, shortDate)
+}
+
+export const formatTime = (date: Date, locale: string): string => {
+  return date.toLocaleString(locale, time)
 }

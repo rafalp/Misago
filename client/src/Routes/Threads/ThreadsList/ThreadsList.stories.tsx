@@ -59,32 +59,41 @@ const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </RootContainer>
 )
 
-export const Threads = () => (
-  <Container>
-    <ThreadsList
-      threads={threads([
-        thread({
-          id: "1",
-          title: "The atmosphere has many layers with different temperatures.",
-          category: categories[1],
-          replies: 58102,
-          isClosed: true,
-        }),
-        thread({
-          id: "2",
-          title:
-            "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
-        }),
-        thread({
-          id: "3",
-          title:
-            "ReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReRe",
-        }),
-      ])}
-      loading={false}
-    />
-  </Container>
-)
+export const Threads = () => {
+  const now = new Date()
+
+  return (
+    <Container>
+      <ThreadsList
+        threads={threads([
+          thread({
+            id: "1",
+            title:
+              "The atmosphere has many layers with different temperatures.",
+            category: categories[1],
+            replies: 58102,
+            isClosed: true,
+          }),
+          thread({
+            id: "2",
+            title:
+              "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
+            lastPosterName: "LoremIpsumDolorMet",
+            lastPostedAt: new Date(
+              now.getTime() - 36 * 3600 * 1000
+            ).toUTCString(),
+          }),
+          thread({
+            id: "3",
+            title:
+              "ReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReRe",
+          }),
+        ])}
+        loading={false}
+      />
+    </Container>
+  )
+}
 
 export const WithUpdate = () => (
   <Container>
