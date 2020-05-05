@@ -7,7 +7,7 @@
 .threads-list-item .threads-list-thread,
 .threads-list-item .threads-list-last-poster,
 .threads-list-item .threads-list-activity {
-  padding-left: $spacer;
+  padding-left: $list-group-item-padding-y;
 }
 
 // Display small starter's avatar instead of full-size one on small displays

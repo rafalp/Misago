@@ -35,4 +35,4 @@ const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
   )
 }
 
-export default CategoriesNav
+export default React.memo(CategoriesNav)

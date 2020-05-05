@@ -4,13 +4,12 @@ import React from "react"
 import { LoadMoreButton, RouteLoader, WindowTitle } from "../../UI"
 import { ForumStatsContext, SettingsContext } from "../../Context"
 import { ThreadsHeaderAll } from "./ThreadsHeader"
-import { IThreadsProps } from "./Threads.types"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
 import ThreadsToolbar from "./ThreadsToolbar"
 import { useThreadsQuery } from "./useThreadsQuery"
 
-const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
+const ThreadsAll: React.FC = () => {
   const forumStats = React.useContext(ForumStatsContext)
   const settings = React.useContext(SettingsContext)
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
@@ -21,7 +20,7 @@ const ThreadsAll: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
   const { threads } = data || { threads: null }
 
   return (
-    <ThreadsLayout openCategoryPicker={openCategoryPicker}>
+    <ThreadsLayout>
       <I18n>
         {({ i18n }) => {
           return (

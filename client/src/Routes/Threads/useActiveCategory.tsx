@@ -4,20 +4,20 @@ import { IActiveCategory } from "./Threads.types"
 
 const useActiveCategory = (id?: string | null) => {
   const categories = React.useContext(CategoriesContext)
-  const [category, setCategory] = React.useState<IActiveCategory | null>(null)
 
-  React.useEffect(() => {
-    if (!id) return
+  return React.useMemo<IActiveCategory | null>(() => {
+    if (!id) return null
 
+    let category: IActiveCategory | null = null
     categories.find((item) => {
       if (item.id === id) {
-        setCategory({ category: item, parent: item })
+        category = { category: item, parent: item }
         return true
       }
 
       item.children.find((child) => {
         if (child.id === id) {
-          setCategory({ category: child, parent: item })
+          category = { category: child, parent: item }
           return true
         }
 
@@ -26,9 +26,9 @@ const useActiveCategory = (id?: string | null) => {
 
       return false
     })
-  }, [id, categories])
 
-  return category
+    return category
+  }, [id, categories])
 }
 
 export default useActiveCategory

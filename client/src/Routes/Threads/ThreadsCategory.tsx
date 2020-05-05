@@ -2,7 +2,6 @@ import classNames from "classnames"
 import React from "react"
 import { useParams } from "react-router-dom"
 import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
-import { IThreadsProps } from "./Threads.types"
 import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
@@ -15,7 +14,7 @@ interface IThreadsCategoryParams {
   slug: string
 }
 
-const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
+const ThreadsCategory: React.FC = () => {
   const { id } = useParams<IThreadsCategoryParams>()
   const activeCategory = useActiveCategory(id)
   const {
@@ -36,6 +35,7 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
 
   return (
     <ThreadsLayout
+      activeCategory={activeCategory}
       className={
         category
           ? classNames(
@@ -44,8 +44,6 @@ const ThreadsCategory: React.FC<IThreadsProps> = ({ openCategoryPicker }) => {
             )
           : undefined
       }
-      category={activeCategory}
-      openCategoryPicker={openCategoryPicker}
     >
       {category && (
         <>

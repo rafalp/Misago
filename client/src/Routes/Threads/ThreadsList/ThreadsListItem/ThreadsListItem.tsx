@@ -32,4 +32,4 @@ const ThreadsListItem: React.FC<IThreadsListItemProps> = ({ thread }) => (
   </li>
 )
 
-export default ThreadsListItem
+export default React.memo(ThreadsListItem)

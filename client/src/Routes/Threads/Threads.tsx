@@ -4,37 +4,22 @@ import { SettingsContext } from "../../Context"
 import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
 import { MobileCategoryNavModal } from "./MobileCategoryNav"
-import { IActiveCategory } from "./Threads.types"
 import ThreadsAll from "./ThreadsAll"
 import ThreadsCategory from "./ThreadsCategory"
-
-interface ICategoriesModalState {
-  isOpen: boolean
-  active?: IActiveCategory | null
-}
+import { ThreadsCategoryModalContextProvider } from "./ThreadsCategoryModalContext"
 
 const Threads: React.FC = () => {
   const settings = React.useContext(SettingsContext)
-  const [{ active, isOpen }, setState] = React.useState<ICategoriesModalState>(
-    {
-      active: null,
-      isOpen: false,
-    }
-  )
-  const open = (active?: IActiveCategory | null) => {
-    setState({ isOpen: true, active: active || null })
-  }
-  const close = () => setState({ isOpen: false, active: null })
 
   return (
-    <>
-      <MobileCategoryNavModal active={active} close={close} isOpen={isOpen} />
+    <ThreadsCategoryModalContextProvider>
+      <MobileCategoryNavModal />
       <Switch>
         <Route
           path={urls.category({ id: ":id", slug: ":slug" })}
           render={() => (
             <RouteErrorBoundary>
-              <ThreadsCategory openCategoryPicker={open} />
+              <ThreadsCategory />
             </RouteErrorBoundary>
           )}
           exact
@@ -43,7 +28,7 @@ const Threads: React.FC = () => {
           path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
           render={() => (
             <RouteErrorBoundary>
-              <ThreadsAll openCategoryPicker={open} />
+              <ThreadsAll />
             </RouteErrorBoundary>
           )}
           exact
@@ -53,7 +38,7 @@ const Threads: React.FC = () => {
           render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
         />
       </Switch>
-    </>
+    </ThreadsCategoryModalContextProvider>
   )
 }
 

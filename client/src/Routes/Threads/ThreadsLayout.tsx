@@ -7,30 +7,26 @@ import {
   RouteContainer,
 } from "../../UI"
 import { MobileCategoryNavButton } from "./MobileCategoryNav"
-import { IThreadsProps, IActiveCategory } from "./Threads.types"
+import { IActiveCategory } from "./Threads.types"
 
-interface IThreadsLayoutProps extends IThreadsProps {
-  category?: IActiveCategory | null
+interface IThreadsLayoutProps {
+  activeCategory?: IActiveCategory | null
   className?: string
   children: React.ReactNode
 }
 
 const ThreadsLayout: React.FC<IThreadsLayoutProps> = ({
-  category,
+  activeCategory,
   className,
   children,
-  openCategoryPicker,
 }) => (
   <RouteContainer className={className}>
     <Layout>
       <LayoutSide>
-        <CategoriesNav active={category} />
+        <CategoriesNav active={activeCategory} />
       </LayoutSide>
       <LayoutMain>
-        <MobileCategoryNavButton
-          active={category?.category}
-          onClick={() => openCategoryPicker(category)}
-        />
+        <MobileCategoryNavButton active={activeCategory} />
         {children}
       </LayoutMain>
     </Layout>

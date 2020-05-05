@@ -55,4 +55,4 @@ const ThreadsHeader: React.FC<IThreadsHeaderProps> = ({
   </Card>
 )
 
-export default ThreadsHeader
+export default React.memo(ThreadsHeader)

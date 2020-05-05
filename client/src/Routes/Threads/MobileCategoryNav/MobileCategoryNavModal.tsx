@@ -10,24 +10,17 @@ import {
   portal,
 } from "../../../UI"
 import * as urls from "../../../urls"
-import { IActiveCategory } from "../Threads.types"
+import { ThreadsCategoryModalContext } from "../ThreadsCategoryModalContext"
 import CategoryPickerActiveItem from "./MobileCategoryNavActiveCategory"
 import MobileCategoryNavCategory from "./MobileCategoryNavCategory"
 import MobileCategoryNavLink from "./MobileCategoryNavLink"
 
-interface IMobileCategoryNavModalProps {
-  active?: IActiveCategory | null
-  isOpen: boolean
-  close: () => void
-}
-
-const MobileCategoryNavModal: React.FC<IMobileCategoryNavModalProps> = ({
-  active,
-  close,
-  isOpen,
-}) => {
+const MobileCategoryNavModal: React.FC = () => {
   const categories = React.useContext(CategoriesContext)
   const settings = React.useContext(SettingsContext)
+  const { active, isOpen, close } = React.useContext(
+    ThreadsCategoryModalContext
+  )
 
   const activeParentId = active ? active.parent.id || active.category.id : null
 

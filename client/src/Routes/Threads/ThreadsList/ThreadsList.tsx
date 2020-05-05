@@ -72,4 +72,5 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
     </ThreadsListCard>
   )
 }
+
 export default ThreadsList

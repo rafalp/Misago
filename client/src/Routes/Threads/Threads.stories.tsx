@@ -1,4 +1,4 @@
-import { actions } from "@storybook/addon-actions"
+import { action } from "@storybook/addon-actions"
 import React from "react"
 import { CategoriesContext } from "../../Context"
 import { LoadMoreButton } from "../../UI"
@@ -12,14 +12,11 @@ export default {
   title: "Route/Threads/FullPage",
 }
 
-const { openCategoryPicker, loadMore } = actions({
-  openCategoryPicker: "open category picker",
-  loadMore: "load more threads",
-})
+const loadMore = action("load more threads")
 
 export const AllThreads = () => (
   <CategoriesContext.Provider value={categories}>
-    <ThreadsLayout openCategoryPicker={openCategoryPicker}>
+    <ThreadsLayout>
       <ThreadsHeaderAll
         settings={settingsFactory()}
         stats={{ threads: 142567, posts: 1089524, users: 25663 }}
@@ -37,7 +34,9 @@ export const AllThreads = () => (
 
 export const Category = () => (
   <CategoriesContext.Provider value={categories}>
-    <ThreadsLayout openCategoryPicker={openCategoryPicker}>
+    <ThreadsLayout
+      activeCategory={{ category: categories[1], parent: categories[1] }}
+    >
       <ThreadsHeaderCategory category={categories[1]} />
       <ThreadsToolbar />
       <ThreadsList loading={true} threads={null} />

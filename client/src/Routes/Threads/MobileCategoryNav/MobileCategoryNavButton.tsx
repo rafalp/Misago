@@ -7,38 +7,46 @@ import {
   Toolbar,
   ToolbarItem,
 } from "../../../UI"
+import { IActiveCategory } from "../Threads.types"
+import { ThreadsCategoryModalContext } from "../ThreadsCategoryModalContext"
 
 interface IMobileCategoryNavButtonProps {
-  active?: {
-    id: string
-    name: string
-    color: string | null
-    icon: string | null
-  } | null
-  onClick: () => void
+  active?: IActiveCategory | null
 }
 
 const MobileCategoryNavButton: React.FC<IMobileCategoryNavButtonProps> = ({
   active,
-  onClick,
-}) => (
-  <Toolbar mobile tablet>
-    <ToolbarItem fill>
-      <ButtonJustified
-        left={<CategoryIcon className="btn-category-icon" category={active} />}
-        center={
-          active ? active.name : <Trans id="threads.header">All threads</Trans>
-        }
-        right={
-          <span className="btn-more-icon">
-            <Icon icon="ellipsis-v" fixedWidth solid />
-          </span>
-        }
-        onClick={onClick}
-        responsive
-      />
-    </ToolbarItem>
-  </Toolbar>
-)
+}) => {
+  const { open } = React.useContext(ThreadsCategoryModalContext)
+
+  return (
+    <Toolbar mobile tablet>
+      <ToolbarItem fill>
+        <ButtonJustified
+          left={
+            <CategoryIcon
+              className="btn-category-icon"
+              category={active?.category}
+            />
+          }
+          center={
+            active ? (
+              active.category.name
+            ) : (
+              <Trans id="threads.header">All threads</Trans>
+            )
+          }
+          right={
+            <span className="btn-more-icon">
+              <Icon icon="ellipsis-v" fixedWidth solid />
+            </span>
+          }
+          onClick={() => open(active)}
+          responsive
+        />
+      </ToolbarItem>
+    </Toolbar>
+  )
+}
 
 export default MobileCategoryNavButton

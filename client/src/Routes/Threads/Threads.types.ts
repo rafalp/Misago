@@ -5,10 +5,6 @@ export interface IActiveCategory {
   parent: ICategory
 }
 
-export interface IThreadsProps {
-  openCategoryPicker: (active?: IActiveCategory | null) => void
-}
-
 export interface IThread {
   id: string
   category: IThreadCategory
