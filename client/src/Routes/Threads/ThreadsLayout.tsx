@@ -6,8 +6,8 @@ import {
   LayoutSide,
   RouteContainer,
 } from "../../UI"
-import { MobileCategoryNavButton } from "./MobileCategoryNav"
 import { IActiveCategory } from "./Threads.types"
+import { ThreadsCategoriesModalButton } from "./ThreadsCategoriesModal"
 
 interface IThreadsLayoutProps {
   activeCategory?: IActiveCategory | null
@@ -26,7 +26,7 @@ const ThreadsLayout: React.FC<IThreadsLayoutProps> = ({
         <CategoriesNav active={activeCategory} />
       </LayoutSide>
       <LayoutMain>
-        <MobileCategoryNavButton active={activeCategory} />
+        <ThreadsCategoriesModalButton active={activeCategory} />
         {children}
       </LayoutMain>
     </Layout>

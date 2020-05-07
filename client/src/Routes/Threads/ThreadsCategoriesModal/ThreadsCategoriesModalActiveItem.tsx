@@ -1,27 +1,27 @@
 import React from "react"
 import * as urls from "../../../urls"
 import { IActiveCategory } from "../Threads.types"
-import MobileCategoryNavLink from "./MobileCategoryNavLink"
+import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
-interface IMobileCategoryNavActiveCategoryProps {
+interface IThreadsCategoriesModalActiveItemProps {
   active: IActiveCategory
 }
 
-const MobileCategoryNavActiveCategory: React.FC<IMobileCategoryNavActiveCategoryProps> = ({
+const ThreadsCategoriesModalActiveItem: React.FC<IThreadsCategoriesModalActiveItemProps> = ({
   active,
 }) => {
   const { category, parent } = active
 
   return (
     <>
-      <MobileCategoryNavLink
+      <ThreadsCategoriesModalLink
         category={parent}
         text={parent.name}
         to={urls.category(parent)}
         isActive
       />
       {parent.children.map((child) => (
-        <MobileCategoryNavLink
+        <ThreadsCategoriesModalLink
           category={child}
           key={child.id}
           text={child.name}
@@ -34,4 +34,4 @@ const MobileCategoryNavActiveCategory: React.FC<IMobileCategoryNavActiveCategory
   )
 }
 
-export default MobileCategoryNavActiveCategory
+export default ThreadsCategoriesModalActiveItem

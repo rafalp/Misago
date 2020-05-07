@@ -8,16 +8,16 @@ import {
   ToolbarItem,
 } from "../../../UI"
 import { IActiveCategory } from "../Threads.types"
-import { ThreadsCategoryModalContext } from "../ThreadsCategoryModalContext"
+import { ThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 
-interface IMobileCategoryNavButtonProps {
+interface IThreadsCategoriesModalButtonProps {
   active?: IActiveCategory | null
 }
 
-const MobileCategoryNavButton: React.FC<IMobileCategoryNavButtonProps> = ({
+const ThreadsCategoriesModalButton: React.FC<IThreadsCategoriesModalButtonProps> = ({
   active,
 }) => {
-  const { open } = React.useContext(ThreadsCategoryModalContext)
+  const { open } = React.useContext(ThreadsCategoriesModalContext)
 
   return (
     <Toolbar mobile tablet>
@@ -49,4 +49,4 @@ const MobileCategoryNavButton: React.FC<IMobileCategoryNavButtonProps> = ({
   )
 }
 
-export default MobileCategoryNavButton
+export default ThreadsCategoriesModalButton

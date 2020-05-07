@@ -10,16 +10,16 @@ import {
   portal,
 } from "../../../UI"
 import * as urls from "../../../urls"
-import { ThreadsCategoryModalContext } from "../ThreadsCategoryModalContext"
-import CategoryPickerActiveItem from "./MobileCategoryNavActiveCategory"
-import MobileCategoryNavCategory from "./MobileCategoryNavCategory"
-import MobileCategoryNavLink from "./MobileCategoryNavLink"
+import ThreadsCategoriesModalActiveItem from "./ThreadsCategoriesModalActiveItem"
+import { ThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
+import ThreadsCategoriesModalItem from "./ThreadsCategoriesModalItem"
+import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
-const MobileCategoryNavModal: React.FC = () => {
+const ThreadsCategoriesModal: React.FC = () => {
   const categories = React.useContext(CategoriesContext)
   const settings = React.useContext(SettingsContext)
   const { active, isOpen, close } = React.useContext(
-    ThreadsCategoryModalContext
+    ThreadsCategoriesModalContext
   )
 
   const activeParentId = active ? active.parent.id || active.category.id : null
@@ -33,15 +33,15 @@ const MobileCategoryNavModal: React.FC = () => {
       >
         <ModalBody>
           <ClickTrap className="category-picker" onClick={close}>
-            <MobileCategoryNavLink
+            <ThreadsCategoriesModalLink
               text={<Trans id="threads.header">All threads</Trans>}
               to={settings?.forumIndexThreads ? urls.index() : urls.threads()}
             />
-            {active && <CategoryPickerActiveItem active={active} />}
+            {active && <ThreadsCategoriesModalActiveItem active={active} />}
             {categories.map(
               (category) =>
                 category.id !== activeParentId && (
-                  <MobileCategoryNavCategory
+                  <ThreadsCategoriesModalItem
                     category={category}
                     key={category.id}
                   />
@@ -54,4 +54,4 @@ const MobileCategoryNavModal: React.FC = () => {
   )
 }
 
-export default MobileCategoryNavModal
+export default ThreadsCategoriesModal

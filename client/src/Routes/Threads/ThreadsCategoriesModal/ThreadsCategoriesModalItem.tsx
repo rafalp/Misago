@@ -1,8 +1,8 @@
 import React from "react"
 import * as urls from "../../../urls"
-import MobileCategoryNavLink from "./MobileCategoryNavLink"
+import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
-interface IMobileCategoryNavCategoryProps {
+interface IThreadsCategoriesModalItemProps {
   category: {
     id: string
     name: string
@@ -19,7 +19,7 @@ interface IMobileCategoryNavCategoryProps {
   }
 }
 
-const MobileCategoryNavCategory: React.FC<IMobileCategoryNavCategoryProps> = ({
+const ThreadsCategoriesModalItem: React.FC<IThreadsCategoriesModalItemProps> = ({
   category,
 }) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)
@@ -30,7 +30,7 @@ const MobileCategoryNavCategory: React.FC<IMobileCategoryNavCategoryProps> = ({
         className="btn-group"
         role={category.children.length > 0 ? "group" : undefined}
       >
-        <MobileCategoryNavLink
+        <ThreadsCategoriesModalLink
           category={category}
           text={category.name}
           to={urls.category(category)}
@@ -42,7 +42,7 @@ const MobileCategoryNavCategory: React.FC<IMobileCategoryNavCategoryProps> = ({
       {category.children.length > 0 && isOpen && (
         <>
           {category.children.map((child) => (
-            <MobileCategoryNavLink
+            <ThreadsCategoriesModalLink
               category={child}
               key={child.id}
               text={child.name}
@@ -56,4 +56,4 @@ const MobileCategoryNavCategory: React.FC<IMobileCategoryNavCategoryProps> = ({
   )
 }
 
-export default MobileCategoryNavCategory
+export default ThreadsCategoriesModalItem

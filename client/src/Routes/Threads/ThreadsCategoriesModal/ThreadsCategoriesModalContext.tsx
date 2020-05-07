@@ -1,30 +1,30 @@
 import React from "react"
-import { useModal } from "../../hooks"
-import { IActiveCategory } from "./Threads.types"
+import { useModal } from "../../../hooks"
+import { IActiveCategory } from "../Threads.types"
 
-interface IThreadsCategoryModalContext {
+interface IThreadsCategoriesModalContext {
   isOpen: boolean
   active?: IActiveCategory | null
   open: (active?: IActiveCategory | null) => void
   close: () => void
 }
 
-const ThreadsCategoryModalContext = React.createContext<
-  IThreadsCategoryModalContext
+const ThreadsCategoriesModalContext = React.createContext<
+  IThreadsCategoriesModalContext
 >({ isOpen: false, active: null, open: () => {}, close: () => {} })
 
-interface IThreadsCategoryModalContextProviderProps {
+interface IThreadsCategoriesModalContextProviderProps {
   children: React.ReactNode
 }
 
-const ThreadsCategoryModalContextProvider: React.FC<IThreadsCategoryModalContextProviderProps> = ({
+const ThreadsCategoriesModalContextProvider: React.FC<IThreadsCategoriesModalContextProviderProps> = ({
   children,
 }) => {
   const [active, setActive] = React.useState<IActiveCategory | null>(null)
   const { isOpen, closeModal, openModal } = useModal()
 
   return (
-    <ThreadsCategoryModalContext.Provider
+    <ThreadsCategoriesModalContext.Provider
       value={{
         isOpen,
         active,
@@ -36,8 +36,8 @@ const ThreadsCategoryModalContextProvider: React.FC<IThreadsCategoryModalContext
       }}
     >
       {children}
-    </ThreadsCategoryModalContext.Provider>
+    </ThreadsCategoriesModalContext.Provider>
   )
 }
 
-export { ThreadsCategoryModalContext, ThreadsCategoryModalContextProvider }
+export { ThreadsCategoriesModalContext, ThreadsCategoriesModalContextProvider }

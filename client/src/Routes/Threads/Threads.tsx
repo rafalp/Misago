@@ -3,17 +3,19 @@ import { Route, Switch } from "react-router-dom"
 import { SettingsContext } from "../../Context"
 import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
-import { MobileCategoryNavModal } from "./MobileCategoryNav"
 import ThreadsAll from "./ThreadsAll"
 import ThreadsCategory from "./ThreadsCategory"
-import { ThreadsCategoryModalContextProvider } from "./ThreadsCategoryModalContext"
+import {
+  ThreadsCategoriesModal,
+  ThreadsCategoriesModalContextProvider,
+} from "./ThreadsCategoriesModal"
 
 const Threads: React.FC = () => {
   const settings = React.useContext(SettingsContext)
 
   return (
-    <ThreadsCategoryModalContextProvider>
-      <MobileCategoryNavModal />
+    <ThreadsCategoriesModalContextProvider>
+      <ThreadsCategoriesModal />
       <Switch>
         <Route
           path={urls.category({ id: ":id", slug: ":slug" })}
@@ -38,7 +40,7 @@ const Threads: React.FC = () => {
           render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
         />
       </Switch>
-    </ThreadsCategoryModalContextProvider>
+    </ThreadsCategoriesModalContextProvider>
   )
 }
 

@@ -3,7 +3,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import { ButtonLink, CategoryIcon } from "../../../UI"
 
-interface IMobileCategoryNavLinkProps {
+interface IThreadsCategoriesModalLinkProps {
   category?: {
     color: string | null
     icon: string | null
@@ -17,7 +17,7 @@ interface IMobileCategoryNavLinkProps {
   toggle?: () => void
 }
 
-const MobileCategoryNavLink: React.FC<IMobileCategoryNavLinkProps> = ({
+const ThreadsCategoriesModalLink: React.FC<IThreadsCategoriesModalLinkProps> = ({
   category,
   to,
   text,
@@ -48,4 +48,4 @@ const MobileCategoryNavLink: React.FC<IMobileCategoryNavLinkProps> = ({
   </>
 )
 
-export default MobileCategoryNavLink
+export default ThreadsCategoriesModalLink
