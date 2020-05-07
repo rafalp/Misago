@@ -17,6 +17,29 @@ const Timestamp: React.FC<ITimestampProps> = ({
   const now = new Date()
   const diff = (now.getTime() - date.getTime()) / 1000
 
+  const [state, setState] = React.useState<{} | null>(null)
+  const update = React.useCallback(() => setState({}), [])
+
+  React.useEffect(() => {
+    // Update "x minutes" every 50s
+    if (Math.abs(diff) < 3600) {
+      const timeout = window.setTimeout(update, 50 * 1000)
+      return () => window.clearTimeout(timeout)
+    }
+
+    // Update "x hours" every 20 minutes
+    if (Math.abs(diff) < 3600 * 12) {
+      const timeout = window.setTimeout(update, 20 * 60 * 1000)
+      return () => window.clearInterval(timeout)
+    }
+
+    // Update "x days" every 40 minutes
+    if (Math.abs(diff) < 3600 * 24 * 6) {
+      const timeout = window.setTimeout(update, 40 * 60 * 1000)
+      return () => window.clearInterval(timeout)
+    }
+  }, [diff, state, update])
+
   // Test future dates with 15s offset for small
   // clock differences between client and user
   if (diff > -15) {

@@ -1,5 +1,6 @@
 import React from "react"
 import { RootContainer } from "../Storybook"
+import { formatDate } from "../formats"
 import Timestamp from "."
 
 export default {
@@ -11,6 +12,8 @@ export const Timestamps = () => {
 
   return (
     <RootContainer padding>
+      <p>Datetime: {formatDate(date, "en")}</p>
+
       <p>
         Now: <Timestamp date={date} />
       </p>
