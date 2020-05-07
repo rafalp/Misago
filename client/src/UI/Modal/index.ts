@@ -8,6 +8,7 @@ import ModalFooter from "./ModalFooter"
 import ModalFormBody from "./ModalFormBody"
 import ModalHeader from "./ModalHeader"
 import ModalTitle from "./ModalTitle"
+import useModal from "./useModal"
 
 export {
   Modal,
@@ -20,4 +21,5 @@ export {
   ModalHeader,
   ModalSize,
   ModalTitle,
+  useModal,
 }

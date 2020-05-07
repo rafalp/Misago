@@ -1,5 +1,5 @@
 import React from "react"
-import { useModal } from "../../../hooks"
+import { useModal } from "../../../UI"
 import { IActiveCategory } from "../Threads.types"
 
 interface IThreadsCategoriesModalContext {

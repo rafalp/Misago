@@ -1,5 +1,5 @@
 import React from "react"
-import { useModal } from "../hooks"
+import { useModal } from "../UI"
 import { IAuthModalContext, AuthModalMode } from "../types"
 
 const AuthModalContext = React.createContext<IAuthModalContext>({

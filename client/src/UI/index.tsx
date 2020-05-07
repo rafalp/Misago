@@ -69,6 +69,7 @@ import {
   ModalHeader,
   ModalSize,
   ModalTitle,
+  useModal,
 } from "./Modal"
 import PageTitle from "./PageTitle"
 import Responsive from "./Responsive"
@@ -206,4 +207,5 @@ export {
   ViewportEvent,
   WindowTitle,
   portal,
+  useModal,
 }
