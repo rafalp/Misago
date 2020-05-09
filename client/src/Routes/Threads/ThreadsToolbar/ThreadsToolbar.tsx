@@ -1,10 +1,5 @@
 import React from "react"
-import {
-  ButtonSecondary,
-  Toolbar,
-  ToolbarItem,
-  ToolbarSeparator,
-} from "../../../UI"
+import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI"
 import ThreadsStartButton from "../ThreadsStartButton"
 
 interface IThreadsToolbarProps {

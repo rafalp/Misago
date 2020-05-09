@@ -8,6 +8,8 @@ import ThreadsList from "./ThreadsList"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
+import useThreadsModeration from "./useThreadsModeration"
+import useThreadsSelection from "./useThreadsSelection"
 
 interface IThreadsCategoryParams {
   id: string
@@ -30,6 +32,9 @@ const ThreadsCategory: React.FC = () => {
   const { category } = activeCategory || { category: null }
   const { threads } =
     data && data.category.id === id ? data : { threads: null }
+
+  const selection = useThreadsSelection(threads?.items || [])
+  const moderation = useThreadsModeration()
 
   if (data && !data.category) return <RouteNotFound />
 
@@ -56,6 +61,8 @@ const ThreadsCategory: React.FC = () => {
         category={category}
         error={error}
         loading={loading}
+        selectable={moderation !== null}
+        selection={selection}
         threads={threads}
         update={update}
       />

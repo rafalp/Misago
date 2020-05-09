@@ -9,6 +9,7 @@ import ThreadsList from "./ThreadsList"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useThreadsModeration from "./useThreadsModeration"
 import { useThreadsQuery } from "./useThreadsQuery"
+import useThreadsSelection from "./useThreadsSelection"
 
 const ThreadsAll: React.FC = () => {
   const forumStats = React.useContext(ForumStatsContext)
@@ -16,6 +17,7 @@ const ThreadsAll: React.FC = () => {
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
   const { threads } = data || { threads: null }
 
+  const selection = useThreadsSelection(threads?.items || [])
   const moderation = useThreadsModeration()
 
   if (!forumStats || !settings) return <RouteLoader />
@@ -38,6 +40,8 @@ const ThreadsAll: React.FC = () => {
               <ThreadsList
                 error={error}
                 loading={loading}
+                selectable={moderation !== null}
+                selection={selection}
                 threads={threads}
                 update={update}
               />

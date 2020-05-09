@@ -5,6 +5,7 @@ import { Layout, LayoutMain, LayoutSide } from "../../../UI"
 import { RootContainer, categories } from "../../../UI/Storybook"
 import { IThread, IThreadPoster, IThreadCategory } from "../Threads.types"
 import ThreadsList from "./ThreadsList"
+import useThreadsSelection from "../useThreadsSelection"
 
 export default {
   title: "Route/Threads/ThreadsList",
@@ -61,36 +62,33 @@ const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 
 export const Threads = () => {
   const now = new Date()
+  const items = threads([
+    thread({
+      id: "1",
+      title: "The atmosphere has many layers with different temperatures.",
+      category: categories[1],
+      replies: 58102,
+      isClosed: true,
+    }),
+    thread({
+      id: "2",
+      title:
+        "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
+      lastPosterName: "LoremIpsumDolorMet",
+      lastPostedAt: new Date(now.getTime() - 36 * 3600 * 1000).toUTCString(),
+    }),
+    thread({
+      id: "3",
+      title:
+        "ReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReRe",
+    }),
+  ])
+
+  const selection = useThreadsSelection(items.items)
 
   return (
     <Container>
-      <ThreadsList
-        threads={threads([
-          thread({
-            id: "1",
-            title:
-              "The atmosphere has many layers with different temperatures.",
-            category: categories[1],
-            replies: 58102,
-            isClosed: true,
-          }),
-          thread({
-            id: "2",
-            title:
-              "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
-            lastPosterName: "LoremIpsumDolorMet",
-            lastPostedAt: new Date(
-              now.getTime() - 36 * 3600 * 1000
-            ).toUTCString(),
-          }),
-          thread({
-            id: "3",
-            title:
-              "ReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReReRe",
-          }),
-        ])}
-        loading={false}
-      />
+      <ThreadsList threads={items} selection={selection} loading={false} />
     </Container>
   )
 }
@@ -99,6 +97,7 @@ export const WithUpdate = () => (
   <Container>
     <h5>Update available</h5>
     <ThreadsList
+      selection={useThreadsSelection()}
       threads={threads([thread()])}
       loading={false}
       update={{
@@ -109,6 +108,7 @@ export const WithUpdate = () => (
     />
     <h5>Update loading</h5>
     <ThreadsList
+      selection={useThreadsSelection()}
       threads={threads([thread()])}
       loading={false}
       update={{
@@ -119,6 +119,7 @@ export const WithUpdate = () => (
     />
     <h5>Update disabled</h5>
     <ThreadsList
+      selection={useThreadsSelection()}
       threads={threads([thread()])}
       loading={true}
       update={{
@@ -132,25 +133,42 @@ export const WithUpdate = () => (
 
 export const Loading = () => (
   <Container>
-    <ThreadsList threads={null} loading={true} />
+    <ThreadsList
+      threads={null}
+      selection={useThreadsSelection()}
+      loading={true}
+    />
   </Container>
 )
 
 export const LoadingMore = () => (
   <Container>
-    <ThreadsList threads={threads([thread()])} loading={true} />
+    <ThreadsList
+      threads={threads([thread()])}
+      selection={useThreadsSelection()}
+      loading={true}
+    />
   </Container>
 )
 
 export const Empty = () => (
   <Container>
-    <ThreadsList threads={threads()} loading={false} />
+    <ThreadsList
+      threads={threads()}
+      selection={useThreadsSelection()}
+      loading={false}
+    />
   </Container>
 )
 
 export const QueryError = () => (
   <Container>
-    <ThreadsList error={new ApolloError({})} threads={null} loading={false} />
+    <ThreadsList
+      error={new ApolloError({})}
+      threads={null}
+      selection={useThreadsSelection()}
+      loading={false}
+    />
   </Container>
 )
 
@@ -159,6 +177,7 @@ export const NetworkError = () => (
     <ThreadsList
       error={new ApolloError({ networkError: new Error() })}
       threads={null}
+      selection={useThreadsSelection()}
       loading={false}
     />
   </Container>

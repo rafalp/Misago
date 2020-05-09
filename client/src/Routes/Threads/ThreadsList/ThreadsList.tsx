@@ -13,8 +13,13 @@ interface IThreadsListProps {
     id: string
     slug: string
   } | null
-  loading?: boolean
   error?: ApolloError | null
+  loading?: boolean
+  selectable?: boolean
+  selection: {
+    selection: Record<string, boolean>
+    change: (id: string, selected: boolean) => void
+  }
   threads: {
     items: Array<IThread>
     nextCursor: string | null
@@ -30,6 +35,8 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
   category,
   error,
   loading,
+  selectable,
+  selection,
   threads,
   update,
 }) => {
@@ -62,7 +69,13 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
       {threads && threads.items.length > 0 ? (
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (
-            <ThreadsListItem key={thread.id} thread={thread} />
+            <ThreadsListItem
+              key={thread.id}
+              thread={thread}
+              selectable={selectable}
+              selected={selection.selection[thread.id]}
+              selectionChange={selection.change}
+            />
           ))}
         </ul>
       ) : (

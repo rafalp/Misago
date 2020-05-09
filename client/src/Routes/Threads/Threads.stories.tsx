@@ -7,6 +7,7 @@ import { ThreadsHeaderAll, ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
 import ThreadsToolbar from "./ThreadsToolbar"
+import useThreadsSelection from "./useThreadsSelection"
 
 export default {
   title: "Route/Threads/FullPage",
@@ -22,7 +23,11 @@ export const AllThreads = () => (
         stats={{ threads: 142567, posts: 1089524, users: 25663 }}
       />
       <ThreadsToolbar />
-      <ThreadsList loading={true} threads={null} />
+      <ThreadsList
+        loading={true}
+        threads={null}
+        selection={useThreadsSelection()}
+      />
       <LoadMoreButton
         data={{ nextCursor: "true" }}
         loading={false}
@@ -39,7 +44,11 @@ export const Category = () => (
     >
       <ThreadsHeaderCategory category={categories[1]} />
       <ThreadsToolbar />
-      <ThreadsList loading={true} threads={null} />
+      <ThreadsList
+        loading={true}
+        threads={null}
+        selection={useThreadsSelection()}
+      />
       <LoadMoreButton
         data={{ nextCursor: "true" }}
         loading={false}
