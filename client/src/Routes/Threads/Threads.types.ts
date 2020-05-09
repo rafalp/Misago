@@ -35,3 +35,10 @@ export interface IThreadPoster {
   slug: string
   avatars: Array<IAvatar>
 }
+
+export interface IThreadsModeration {
+  closeThreads: () => void
+  openThreads: () => void
+  moveThreads: () => void
+  deleteThreads: () => void
+}

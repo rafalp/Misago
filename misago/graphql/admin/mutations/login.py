@@ -27,7 +27,7 @@ async def resolve_admin_login(
 
     if not user:
         raise InvalidCredentialsError()
-    if not user.is_admin:
+    if not user.is_administrator:
         raise NotAdminError()
 
     token = await create_user_token_hook.call_action(

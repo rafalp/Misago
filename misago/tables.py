@@ -33,7 +33,7 @@ users = sqlalchemy.Table(
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("is_deactivated", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
-    sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("is_administrator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
 )
@@ -50,8 +50,8 @@ sqlalchemy.Index(
 )
 sqlalchemy.Index(
     "misago_users_admins",
-    users.c.is_admin,
-    postgresql_where=users.c.is_admin == True,  # pylint: disable=C0121
+    users.c.is_administrator,
+    postgresql_where=users.c.is_administrator == True,  # pylint: disable=C0121
 )
 
 categories = sqlalchemy.Table(

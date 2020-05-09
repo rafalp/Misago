@@ -7,17 +7,20 @@ import { ThreadsHeaderAll } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
 import ThreadsToolbar from "./ThreadsToolbar"
+import useThreadsModeration from "./useThreadsModeration"
 import { useThreadsQuery } from "./useThreadsQuery"
 
 const ThreadsAll: React.FC = () => {
   const forumStats = React.useContext(ForumStatsContext)
   const settings = React.useContext(SettingsContext)
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
+  const { threads } = data || { threads: null }
+
+  const moderation = useThreadsModeration()
 
   if (!forumStats || !settings) return <RouteLoader />
 
   const isIndex = settings.forumIndexThreads
-  const { threads } = data || { threads: null }
 
   return (
     <ThreadsLayout>

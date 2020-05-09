@@ -8,6 +8,8 @@ const CategoriesContext = React.createContext<Array<ICategory>>([])
 const ForumStatsContext = React.createContext<IForumStats | null>(null)
 const SettingsContext = React.createContext<ISettings | null>(null)
 
+const useAuthContext = () => React.useContext(AuthContext)
+
 export {
   AuthContext,
   AuthModalContext,
@@ -16,4 +18,5 @@ export {
   FormFieldContext,
   ForumStatsContext,
   SettingsContext,
+  useAuthContext,
 }

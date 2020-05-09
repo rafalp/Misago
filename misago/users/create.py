@@ -17,7 +17,7 @@ async def create_user(
     password: Optional[str] = None,
     is_deactivated: bool = False,
     is_moderator: bool = False,
-    is_admin: bool = False,
+    is_administrator: bool = False,
     joined_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
     context: Optional[GraphQLContext] = None,
@@ -34,7 +34,7 @@ async def create_user(
         "password": password_hash,
         "is_deactivated": is_deactivated,
         "is_moderator": is_moderator,
-        "is_admin": is_admin,
+        "is_administrator": is_administrator,
         "joined_at": joined_at or timezone.now(),
         "extra": extra or {},
     }

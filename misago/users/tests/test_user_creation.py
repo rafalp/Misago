@@ -44,7 +44,7 @@ async def test_user_statuses_default_to_false(db, user_password):
     user = await create_user("test", "test@example.com")
     assert not user.is_deactivated
     assert not user.is_moderator
-    assert not user.is_admin
+    assert not user.is_administrator
 
 
 @pytest.mark.asyncio
@@ -61,5 +61,5 @@ async def test_user_is_created_with_moderator_status(db, user_password):
 
 @pytest.mark.asyncio
 async def test_user_is_created_with_admin_status(db, user_password):
-    user = await create_user("test", "test@example.com", is_admin=True)
-    assert user.is_admin
+    user = await create_user("test", "test@example.com", is_administrator=True)
+    assert user.is_administrator

@@ -13,6 +13,6 @@ class User:
     password: Optional[str]
     is_deactivated: bool
     is_moderator: bool
-    is_admin: bool
+    is_administrator: bool
     joined_at: datetime
     extra: dict

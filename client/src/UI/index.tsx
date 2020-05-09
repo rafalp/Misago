@@ -106,6 +106,7 @@ import {
 import ViewportEvent from "./ViewportEvent"
 import WindowTitle from "./WindowTitle"
 import portal from "./portal"
+import useSelection from "./useSelection"
 
 export {
   Avatar,
@@ -208,4 +209,5 @@ export {
   WindowTitle,
   portal,
   useModal,
+  useSelection,
 }
