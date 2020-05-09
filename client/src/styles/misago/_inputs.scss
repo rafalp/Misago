@@ -2,6 +2,7 @@
 .form-check-input {
   width: $custom-control-indicator-size;
   height: $custom-control-indicator-size;
+  margin-left: 0;
   margin-top: ($line-height-base - $custom-control-indicator-size) / 2; // line-height minus check height
   vertical-align: top;
   background-color: $custom-control-indicator-bg;

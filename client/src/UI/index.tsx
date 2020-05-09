@@ -30,6 +30,7 @@ import {
 } from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
+import Checkbox from "./Checkbox"
 import ClickTrap from "./ClickTrap"
 import {
   Dropdown,
@@ -137,6 +138,7 @@ export {
   CardLoader,
   CategoriesNav,
   CategoryIcon,
+  Checkbox,
   ClickTrap,
   Dropdown,
   DropdownButton,

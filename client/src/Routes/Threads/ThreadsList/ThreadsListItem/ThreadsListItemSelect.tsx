@@ -1,5 +1,5 @@
-import classNames from "classnames"
 import React from "react"
+import { Checkbox } from "../../../../UI"
 
 interface IThreadsListItemSelectProps {
   selected: boolean
@@ -10,13 +10,8 @@ const ThreadsListItemSelect: React.FC<IThreadsListItemSelectProps> = ({
   selected,
   onChange,
 }) => (
-  <div className={classNames("col-auto threads-list-select")}>
-    <input
-      className="form-check-input"
-      type="checkbox"
-      checked={selected}
-      onChange={onChange}
-    />
+  <div className="col-auto threads-list-select">
+    <Checkbox checked={selected} onChange={onChange} />
   </div>
 )
 
