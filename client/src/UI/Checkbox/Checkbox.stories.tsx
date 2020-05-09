@@ -1,39 +1,49 @@
 import React from "react"
 import { RootContainer } from "../Storybook"
-import Checkbox from "."
+import { FormCheckbox } from "../Form"
+import { Checkbox, CheckboxLabel } from "."
 
 export default {
   title: "UI/Checkbox",
 }
 
-export const Default = () => {
-  return (
-    <RootContainer padding>
+export const Default = () => (
+  <RootContainer padding>
+    <FormCheckbox>
       <Checkbox />
-    </RootContainer>
-  )
-}
+    </FormCheckbox>
+  </RootContainer>
+)
 
-export const Checked = () => {
-  return (
-    <RootContainer padding>
+export const Checked = () => (
+  <RootContainer padding>
+    <FormCheckbox>
       <Checkbox checked />
-    </RootContainer>
-  )
-}
+    </FormCheckbox>
+  </RootContainer>
+)
 
-export const Disabled = () => {
-  return (
-    <RootContainer padding>
+export const Disabled = () => (
+  <RootContainer padding>
+    <FormCheckbox>
       <Checkbox disabled />
-    </RootContainer>
-  )
-}
+    </FormCheckbox>
+  </RootContainer>
+)
 
-export const DisabledAndChecked = () => {
-  return (
-    <RootContainer padding>
+export const DisabledAndChecked = () => (
+  <RootContainer padding>
+    <FormCheckbox>
       <Checkbox checked disabled />
-    </RootContainer>
-  )
-}
+    </FormCheckbox>
+  </RootContainer>
+)
+
+export const WithLabel = () => (
+  <RootContainer padding>
+    <FormCheckbox>
+      <Checkbox id="test-checkbox" />
+      <CheckboxLabel htmlFor="test-checkbox">Lorem ipsum dolor</CheckboxLabel>
+    </FormCheckbox>
+  </RootContainer>
+)

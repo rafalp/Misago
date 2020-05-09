@@ -19,4 +19,4 @@ const FieldLabel: React.FC<IFieldLabelProps> = ({
 
 const FieldRequired: React.FC = () => <span className="field-required">*</span>
 
-export default FieldLabel
+export { FieldLabel, FieldRequired }

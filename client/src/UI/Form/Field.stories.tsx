@@ -4,9 +4,7 @@ import * as Yup from "yup"
 import Input from "../Input"
 import { CardContainer, RootContainer } from "../Storybook"
 import { EmailValidationError } from "../ValidationError"
-import Field from "./Field"
-import FieldError from "./FieldError"
-import Form from "./Form"
+import { Field, FieldError, Form } from "."
 
 export default {
   title: "UI/Form field",

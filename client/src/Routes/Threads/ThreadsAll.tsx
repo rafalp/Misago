@@ -40,7 +40,7 @@ const ThreadsAll: React.FC = () => {
               <ThreadsList
                 error={error}
                 loading={loading}
-                selectable={moderation !== null}
+                selectable={!!moderation}
                 selection={selection}
                 threads={threads}
                 update={update}

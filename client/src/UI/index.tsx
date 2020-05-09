@@ -30,7 +30,7 @@ import {
 } from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
-import Checkbox from "./Checkbox"
+import { Checkbox, CheckboxLabel } from "./Checkbox"
 import ClickTrap from "./ClickTrap"
 import {
   Dropdown,
@@ -50,7 +50,9 @@ import {
   FieldContext,
   FieldError,
   FieldLabel,
+  FieldRequired,
   Form,
+  FormCheckbox,
   FormContext,
 } from "./Form"
 import GraphQLErrorRenderer from "./GraphQLErrorRenderer"
@@ -139,6 +141,7 @@ export {
   CategoriesNav,
   CategoryIcon,
   Checkbox,
+  CheckboxLabel,
   ClickTrap,
   Dropdown,
   DropdownButton,
@@ -151,7 +154,9 @@ export {
   FieldContext,
   FieldError,
   FieldLabel,
+  FieldRequired,
   Form,
+  FormCheckbox,
   FormContext,
   GraphQLError,
   GraphQLErrorMessage,

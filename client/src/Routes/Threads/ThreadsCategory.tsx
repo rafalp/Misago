@@ -61,7 +61,7 @@ const ThreadsCategory: React.FC = () => {
         category={category}
         error={error}
         loading={loading}
-        selectable={moderation !== null}
+        selectable={!!moderation}
         selection={selection}
         threads={threads}
         update={update}

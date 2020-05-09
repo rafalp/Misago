@@ -1,4 +1,5 @@
 import { action } from "@storybook/addon-actions"
+import { withKnobs, boolean } from "@storybook/addon-knobs"
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { Layout, LayoutMain, LayoutSide } from "../../../UI"
@@ -9,6 +10,7 @@ import useThreadsSelection from "../useThreadsSelection"
 
 export default {
   title: "Route/Threads/ThreadsList",
+  decorators: [withKnobs],
 }
 
 const fetch = action("fetch")
@@ -88,7 +90,12 @@ export const Threads = () => {
 
   return (
     <Container>
-      <ThreadsList threads={items} selection={selection} loading={false} />
+      <ThreadsList
+        threads={items}
+        selectable={boolean("Moderation", false)}
+        selection={selection}
+        loading={false}
+      />
     </Container>
   )
 }

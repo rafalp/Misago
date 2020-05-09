@@ -1,3 +1,4 @@
 import Checkbox from "./Checkbox"
+import CheckboxLabel from "./CheckboxLabel"
 
-export default Checkbox
+export { Checkbox, CheckboxLabel }
