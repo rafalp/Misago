@@ -41,6 +41,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
               disabled={moderation.disabled}
               icon="shield-alt"
               iconSolid
+              responsive
               onClick={toggle}
             />
           )}
@@ -62,13 +63,13 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
                 text="Move"
                 icon="arrow-right"
                 iconSolid
-                onClick={() => {}}
+                onClick={moderation.moveThreads}
               />
               <DropdownButton
                 text="Delete"
                 icon="times"
                 iconSolid
-                onClick={() => {}}
+                onClick={moderation.deleteThreads}
               />
               <DropdownDivider />
               {selection && (

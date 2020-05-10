@@ -9,38 +9,47 @@ import {
   ThreadsCategoriesModal,
   ThreadsCategoriesModalContextProvider,
 } from "./ThreadsCategoriesModal"
+import {
+  ThreadsModerationModalContextProvider,
+  ThreadsModerationModalDelete,
+  ThreadsModerationModalMove,
+} from "./ThreadsModeration"
 
 const Threads: React.FC = () => {
   const settings = React.useContext(SettingsContext)
 
   return (
-    <ThreadsCategoriesModalContextProvider>
-      <ThreadsCategoriesModal />
-      <Switch>
-        <Route
-          path={urls.category({ id: ":id", slug: ":slug" })}
-          render={() => (
-            <RouteErrorBoundary>
-              <ThreadsCategory />
-            </RouteErrorBoundary>
-          )}
-          exact
-        />
-        <Route
-          path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
-          render={() => (
-            <RouteErrorBoundary>
-              <ThreadsAll />
-            </RouteErrorBoundary>
-          )}
-          exact
-        />
-        <Route
-          path={urls.index()}
-          render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
-        />
-      </Switch>
-    </ThreadsCategoriesModalContextProvider>
+    <ThreadsModerationModalContextProvider>
+      <ThreadsModerationModalDelete />
+      <ThreadsModerationModalMove />
+      <ThreadsCategoriesModalContextProvider>
+        <ThreadsCategoriesModal />
+        <Switch>
+          <Route
+            path={urls.category({ id: ":id", slug: ":slug" })}
+            render={() => (
+              <RouteErrorBoundary>
+                <ThreadsCategory />
+              </RouteErrorBoundary>
+            )}
+            exact
+          />
+          <Route
+            path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+            render={() => (
+              <RouteErrorBoundary>
+                <ThreadsAll />
+              </RouteErrorBoundary>
+            )}
+            exact
+          />
+          <Route
+            path={urls.index()}
+            render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
+          />
+        </Switch>
+      </ThreadsCategoriesModalContextProvider>
+    </ThreadsModerationModalContextProvider>
   )
 }
 
