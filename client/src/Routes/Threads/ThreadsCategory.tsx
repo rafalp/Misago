@@ -5,10 +5,10 @@ import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
 import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
+import useThreadsModeration from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
-import useThreadsModeration from "./useThreadsModeration"
 import useThreadsSelection from "./useThreadsSelection"
 
 interface IThreadsCategoryParams {
@@ -34,7 +34,7 @@ const ThreadsCategory: React.FC = () => {
     data && data.category.id === id ? data : { threads: null }
 
   const selection = useThreadsSelection(threads?.items || [])
-  const moderation = useThreadsModeration()
+  const moderation = useThreadsModeration(selection.selected)
 
   if (data && !data.category) return <RouteNotFound />
 
@@ -54,7 +54,11 @@ const ThreadsCategory: React.FC = () => {
         <>
           <WindowTitle title={category.name} alerts={update.threads} />
           <ThreadsHeaderCategory category={category} />
-          <ThreadsToolbar category={category} />
+          <ThreadsToolbar
+            category={category}
+            moderation={moderation}
+            selection={selection}
+          />
         </>
       )}
       <ThreadsList

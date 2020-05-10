@@ -37,6 +37,7 @@ export interface IThreadPoster {
 }
 
 export interface IThreadsModeration {
+  disabled: boolean
   closeThreads: () => void
   openThreads: () => void
   moveThreads: () => void
