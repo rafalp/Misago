@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import * as urls from "../../../../urls"
@@ -21,14 +22,19 @@ const ThreadsListItem: React.FC<IThreadsListItemProps> = ({
   selectionChange,
   thread,
 }) => (
-  <li className="list-group-item threads-list-item">
+  <li
+    className={classNames("list-group-item threads-list-item", {
+      "threads-list-item-with-replies": thread.replies > 0,
+      "threads-list-item-without-replies": thread.replies === 0,
+    })}
+  >
     <div className="row no-gutters">
-      <ThreadsListItemStarter
+      <ThreadsListItemStarter thread={thread} />
+      <ThreadsListItemLastPoster
         avatarSize={32}
-        className="threads-list-starter-sm"
+        className="threads-list-last-poster-sm"
         thread={thread}
       />
-      <ThreadsListItemStarter thread={thread} />
       <div className="col threads-list-thread">
         <Link className="threads-list-thread-title" to={urls.thread(thread)}>
           {thread.title}

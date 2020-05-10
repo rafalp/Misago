@@ -27,33 +27,29 @@ const ThreadsAll: React.FC = () => {
   return (
     <ThreadsLayout>
       <I18n>
-        {({ i18n }) => {
-          return (
-            <>
-              <WindowTitle
-                index={isIndex}
-                title={i18n._(t("threads.title")`Threads`)}
-                alerts={update.threads}
-              />
-              <ThreadsHeaderAll settings={settings} stats={forumStats} />
-              <ThreadsToolbar />
-              <ThreadsList
-                error={error}
-                loading={loading}
-                selectable={!!moderation}
-                selection={selection}
-                threads={threads}
-                update={update}
-              />
-              <LoadMoreButton
-                data={threads}
-                loading={loading}
-                onEvent={fetchMoreThreads}
-              />
-            </>
-          )
-        }}
+        {({ i18n }) => (
+          <WindowTitle
+            index={isIndex}
+            title={i18n._(t("threads.title")`Threads`)}
+            alerts={update.threads}
+          />
+        )}
       </I18n>
+      <ThreadsHeaderAll settings={settings} stats={forumStats} />
+      <ThreadsToolbar />
+      <ThreadsList
+        error={error}
+        loading={loading}
+        selectable={!!moderation}
+        selection={selection}
+        threads={threads}
+        update={update}
+      />
+      <LoadMoreButton
+        data={threads}
+        loading={loading}
+        onEvent={fetchMoreThreads}
+      />
     </ThreadsLayout>
   )
 }

@@ -6,27 +6,9 @@
 // Add gutters to thread columns
 .threads-list-item .threads-list-thread,
 .threads-list-item .threads-list-last-poster,
-.threads-list-item .threads-list-activity {
+.threads-list-item .threads-list-activity,
+.threads-list-item .threads-list-select {
   padding-left: $list-group-item-padding-y;
-}
-
-// Display small starter's avatar instead of full-size one on small displays
-.threads-list-starter {
-  display: none;
-}
-
-.threads-list-starter-sm {
-  display: block;
-}
-
-@include media-breakpoint-up(lg) {
-  .threads-list-starter {
-    display: block;
-  }
-
-  .threads-list-starter-sm {
-    display: none;
-  }
 }
 
 // Force long threads titles to break
@@ -34,9 +16,11 @@
   word-break: break-word;
 }
 
-// Hide thread started tidbit on small displays
-@include media-breakpoint-down(lg) {
-  .threads-list-thread .tidbit-start {
+// Hide thread started/replied tidbits on small displays depending
+// on threads activity
+@include media-breakpoint-down(md) {
+  .threads-list-item-without-replies .tidbit-last-reply,
+  .threads-list-item-with-replies .tidbit-start {
     display: none;
   }
 }
@@ -46,6 +30,11 @@
   .threads-list-thread .tidbit-last-reply {
     display: none;
   }
+}
+
+// Hide replies tidbit on empty threads
+.threads-list-item-without-replies .tidbit-replies {
+  display: none;
 }
 
 // Set constant width for thread's activity column
@@ -66,4 +55,29 @@
   .threads-list-last-poster {
     display: none;
   }
+}
+
+// Display small last poster's avatar instead of starter
+.threads-list-starter {
+  display: none;
+}
+
+.threads-list-last-poster-sm {
+  display: block;
+}
+
+@include media-breakpoint-up(lg) {
+  .threads-list-starter {
+    display: block;
+  }
+
+  .threads-list-last-poster-sm {
+    display: none;
+  }
+}
+
+// Set constant width for select thread column
+.threads-list-select {
+  width: $custom-control-indicator-size * 2;
+  text-align: center;
 }
