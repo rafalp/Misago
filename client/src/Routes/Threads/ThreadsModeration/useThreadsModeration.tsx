@@ -1,3 +1,5 @@
+import { Trans } from "@lingui/macro"
+import React from "react"
 import { useAuthContext } from "../../../Context"
 import { IThread, IThreadsModeration } from "../Threads.types"
 import { useThreadModerationModalContext } from "./ThreadsModerationModalContext"
@@ -20,6 +22,32 @@ const useThreadsModeration = (
     openThreads,
     moveThreads,
     deleteThreads,
+    actions: [
+      {
+        name: <Trans id="moderation.open">Open</Trans>,
+        icon: "unlock",
+        iconSolid: true,
+        action: openThreads,
+      },
+      {
+        name: <Trans id="moderation.close">Close</Trans>,
+        icon: "lock",
+        iconSolid: true,
+        action: closeThreads,
+      },
+      {
+        name: <Trans id="moderation.move">Move</Trans>,
+        icon: "arrow-right",
+        iconSolid: true,
+        action: moveThreads,
+      },
+      {
+        name: <Trans id="moderation.delete">Delete</Trans>,
+        icon: "times",
+        iconSolid: true,
+        action: deleteThreads,
+      },
+    ],
   }
 
   if (user && user.isModerator) return moderation

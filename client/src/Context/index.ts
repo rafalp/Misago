@@ -9,6 +9,20 @@ const ForumStatsContext = React.createContext<IForumStats | null>(null)
 const SettingsContext = React.createContext<ISettings | null>(null)
 
 const useAuthContext = () => React.useContext(AuthContext)
+const useCategoriesContext = () => React.useContext(CategoriesContext)
+const useCategoriesListContext = () => {
+  const categories = useCategoriesContext()
+  return React.useMemo(() => {
+    const choices: Array<{ category: ICategory; depth: number }> = []
+    categories.forEach((category) => {
+      choices.push({ category, depth: 0 })
+      category.children.forEach((child) =>
+        choices.push({ category: child, depth: 1 })
+      )
+    })
+    return choices
+  }, [categories])
+}
 
 export {
   AuthContext,
@@ -19,4 +33,6 @@ export {
   ForumStatsContext,
   SettingsContext,
   useAuthContext,
+  useCategoriesListContext,
+  useCategoriesContext,
 }

@@ -1,10 +1,9 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import React from "react"
 import { IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 
-const CLOSE_THREADS_MUTATION = gql`
+const CLOSE_THREADS = gql`
   mutation CloseThreads($input: BulkCloseThreadsInput!) {
     closeThreads(input: $input) {
       errors {
@@ -41,33 +40,16 @@ const useCloseThreadsMutation = (
   threads: Array<IThread>,
   isClosed: boolean
 ) => {
-  const optimisticResponse = React.useMemo(() => {
-    return {
-      closeThreads: {
-        __typename: "BulkThreadsMutationResult",
-        errors: null,
-        threads: threads.map((thread) => {
-          return {
-            __typename: "Thread",
-            isClosed,
-            id: thread.id,
-          }
-        }),
-      },
-    }
-  }, [threads, isClosed])
-
   const [mutation] = useMutation<
     ICloseThreadsMutationData,
     ICloseThreadsMutationVariables
-  >(CLOSE_THREADS_MUTATION, {
+  >(CLOSE_THREADS, {
     variables: {
       input: {
         isClosed,
         threads: threads.map((thread) => thread.id),
       },
     },
-    optimisticResponse,
   })
 
   return mutation

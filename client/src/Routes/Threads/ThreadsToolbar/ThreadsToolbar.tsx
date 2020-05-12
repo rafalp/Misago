@@ -47,30 +47,15 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
           )}
           menu={
             <>
-              <DropdownButton
-                text="Open"
-                icon="unlock"
-                iconSolid
-                onClick={moderation.openThreads}
-              />
-              <DropdownButton
-                text="Close"
-                icon="lock"
-                iconSolid
-                onClick={moderation.closeThreads}
-              />
-              <DropdownButton
-                text="Move"
-                icon="arrow-right"
-                iconSolid
-                onClick={moderation.moveThreads}
-              />
-              <DropdownButton
-                text="Delete"
-                icon="times"
-                iconSolid
-                onClick={moderation.deleteThreads}
-              />
+              {moderation.actions.map((action) => (
+                <DropdownButton
+                  key={action.icon}
+                  text={action.name}
+                  icon={action.icon}
+                  iconSolid={action.iconSolid}
+                  onClick={action.action}
+                />
+              ))}
               <DropdownDivider />
               {selection && (
                 <DropdownButton

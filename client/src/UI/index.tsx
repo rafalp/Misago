@@ -81,6 +81,7 @@ import RouteContainer from "./RouteContainer"
 import { RouteError, RouteGraphQLError, RouteNotFound } from "./RouteError"
 import RouteErrorBoundary from "./RouteErrorBoundary"
 import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
+import Select from "./Select"
 import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
 import {
@@ -190,6 +191,7 @@ export {
   RouteLoader,
   RouteLoaderSpinner,
   RouteNotFound,
+  Select,
   SideNav,
   SideNavItem,
   Spinner,

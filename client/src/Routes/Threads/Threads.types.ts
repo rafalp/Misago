@@ -37,9 +37,17 @@ export interface IThreadPoster {
 }
 
 export interface IThreadsModeration {
+  actions: Array<IThreadsModerationAction>
   disabled: boolean
   closeThreads: () => void
   openThreads: () => void
   moveThreads: () => void
   deleteThreads: () => void
+}
+
+export interface IThreadsModerationAction {
+  name: React.ReactNode
+  icon: string
+  iconSolid?: boolean
+  action: () => void
 }
