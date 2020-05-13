@@ -9,14 +9,13 @@ interface ISelectProps {
   id?: string
   invalid?: boolean
   name?: string
-  options: Array<IISelectOption>
-  placeholder?: string
+  options: Array<ISelectOption>
   required?: boolean
   onBlur?: (event: React.BaseSyntheticEvent<object, any, any>) => void
   onChange?: (event: React.BaseSyntheticEvent<object, any, any>) => void
 }
 
-interface IISelectOption {
+interface ISelectOption {
   name: React.ReactNode
   value: string | number
 }
@@ -28,7 +27,6 @@ const Select: React.FC<ISelectProps> = ({
   invalid,
   name,
   options,
-  placeholder,
   required,
   onBlur,
   onChange,
@@ -46,7 +44,6 @@ const Select: React.FC<ISelectProps> = ({
       disabled={disabled || context.disabled}
       id={id || context.id}
       name={name || context.name}
-      placeholder={placeholder}
       ref={hookContext.register}
       required={required || context.required}
       onBlur={onBlur}
