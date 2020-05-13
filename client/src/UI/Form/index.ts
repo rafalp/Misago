@@ -1,10 +1,10 @@
 import Field from "./Field"
-import FieldContext from "./FieldContext"
+import { FieldContext, useFieldContext } from "./FieldContext"
 import FieldError from "./FieldError"
 import { FieldLabel, FieldRequired } from "./FieldLabel"
 import Form from "./Form"
 import FormCheckbox from "./FormCheckbox"
-import FormContext from "./FormContext"
+import { FormContext, useFormContext } from "./FormContext"
 
 export {
   Field,
@@ -15,4 +15,6 @@ export {
   Form,
   FormCheckbox,
   FormContext,
+  useFieldContext,
+  useFormContext,
 }

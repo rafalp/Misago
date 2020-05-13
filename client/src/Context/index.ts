@@ -10,7 +10,6 @@ import {
   useCategoriesContext,
   useCategoriesListContext,
 } from "./CategoriesContext"
-import { FormFieldContext, useFormFieldContext } from "./FormFieldContext"
 
 const AuthContext = React.createContext<IUser | null>(null)
 const ForumStatsContext = React.createContext<IForumStats | null>(null)
@@ -25,14 +24,12 @@ export {
   AuthModalContext,
   AuthModalProvider,
   CategoriesContext,
-  FormFieldContext,
   ForumStatsContext,
   SettingsContext,
   useAuthContext,
   useAuthModalContext,
   useCategoriesListContext,
   useCategoriesContext,
-  useFormFieldContext,
   useForumStatsContext,
   useSettingsContext,
 }

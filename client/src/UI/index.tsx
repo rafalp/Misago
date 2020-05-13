@@ -54,6 +54,8 @@ import {
   Form,
   FormCheckbox,
   FormContext,
+  useFieldContext,
+  useFormContext,
 } from "./Form"
 import GraphQLErrorRenderer from "./GraphQLErrorRenderer"
 import { GridPageHeader } from "./Grid"
@@ -217,6 +219,8 @@ export {
   ViewportEvent,
   WindowTitle,
   portal,
+  useFieldContext,
+  useFormContext,
   useModal,
   useSelection,
 }

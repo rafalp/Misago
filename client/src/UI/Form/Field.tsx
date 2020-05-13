@@ -1,9 +1,9 @@
 import React from "react"
 import { useFormContext } from "react-hook-form"
 import classNames from "classnames"
-import FieldContext from "./FieldContext"
+import { FieldContext } from "./FieldContext"
 import { FieldLabel } from "./FieldLabel"
-import FormContext from "./FormContext"
+import { FormContext } from "./FormContext"
 
 interface IFieldProps {
   className?: string

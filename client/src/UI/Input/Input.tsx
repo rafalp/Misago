@@ -1,7 +1,7 @@
 import classNames from "classnames"
 import React from "react"
 import { useFormContext } from "react-hook-form"
-import { FieldContext } from "../Form"
+import { useFieldContext } from "../Form"
 
 interface IInputProps {
   className?: string
@@ -30,7 +30,7 @@ const Input: React.FC<IInputProps> = ({
   onBlur,
   onChange,
 }) => {
-  const context = React.useContext(FieldContext)
+  const context = useFieldContext()
   const hookContext = useFormContext() || {}
 
   return (

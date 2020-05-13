@@ -7,4 +7,6 @@ interface IFormContext {
 
 const FormContext = React.createContext<IFormContext>({})
 
-export default FormContext
+const useFormContext = () => React.useContext(FormContext)
+
+export { FormContext, useFormContext }

@@ -10,4 +10,6 @@ interface IFieldContext {
 
 const FieldContext = React.createContext<IFieldContext>({})
 
-export default FieldContext
+const useFieldContext = () => React.useContext(FieldContext)
+
+export { FieldContext, useFieldContext }
