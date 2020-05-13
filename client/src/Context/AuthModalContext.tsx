@@ -50,4 +50,6 @@ const AuthModalProvider: React.FC<IAuthModalProviderProps> = ({
   )
 }
 
-export { AuthModalContext, AuthModalProvider }
+const useAuthModalContext = () => React.useContext(AuthModalContext)
+
+export { AuthModalContext, AuthModalProvider, useAuthModalContext }

@@ -1,6 +1,6 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
-import { SettingsContext } from "../../Context"
+import { useSettingsContext } from "../../Context"
 import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
 import ThreadsAll from "./ThreadsAll"
@@ -16,7 +16,7 @@ import {
 } from "./ThreadsModeration"
 
 const Threads: React.FC = () => {
-  const settings = React.useContext(SettingsContext)
+  const settings = useSettingsContext()
 
   return (
     <ThreadsModerationModalContextProvider>

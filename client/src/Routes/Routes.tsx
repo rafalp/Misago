@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react"
 import { Route, Switch } from "react-router-dom"
-import { SettingsContext } from "../Context"
+import { useSettingsContext } from "../Context"
 import { RouteErrorBoundary, RouteLoader } from "../UI"
 import * as urls from "../urls"
 
@@ -13,7 +13,7 @@ const User = lazy(() => import("./User"))
 const sluggable = { id: ":id", slug: ":slug" }
 
 const Routes: React.FC = () => {
-  const settings = React.useContext(SettingsContext)
+  const settings = useSettingsContext()
 
   return (
     <>

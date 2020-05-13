@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { CategoriesContext, SettingsContext } from "../../../Context"
+import { useCategoriesContext, useSettingsContext } from "../../../Context"
 import {
   ClickTrap,
   Modal,
@@ -11,16 +11,14 @@ import {
 } from "../../../UI"
 import * as urls from "../../../urls"
 import ThreadsCategoriesModalActiveItem from "./ThreadsCategoriesModalActiveItem"
-import { ThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
+import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 import ThreadsCategoriesModalItem from "./ThreadsCategoriesModalItem"
 import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
 const ThreadsCategoriesModal: React.FC = () => {
-  const categories = React.useContext(CategoriesContext)
-  const settings = React.useContext(SettingsContext)
-  const { active, isOpen, close } = React.useContext(
-    ThreadsCategoriesModalContext
-  )
+  const categories = useCategoriesContext()
+  const settings = useSettingsContext()
+  const { active, isOpen, close } = useThreadsCategoriesModalContext()
 
   const activeParentId = active ? active.parent.id || active.category.id : null
 

@@ -12,4 +12,6 @@ interface IFormFieldContext {
 
 const FormFieldContext = React.createContext<IFormFieldContext | null>(null)
 
-export default FormFieldContext
+const useFormFieldContext = () => React.useContext(FormFieldContext)
+
+export { FormFieldContext, useFormFieldContext }

@@ -8,7 +8,7 @@ import {
   ToolbarItem,
 } from "../../../UI"
 import { IActiveCategory } from "../Threads.types"
-import { ThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
+import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 
 interface IThreadsCategoriesModalButtonProps {
   active?: IActiveCategory | null
@@ -17,7 +17,7 @@ interface IThreadsCategoriesModalButtonProps {
 const ThreadsCategoriesModalButton: React.FC<IThreadsCategoriesModalButtonProps> = ({
   active,
 }) => {
-  const { open } = React.useContext(ThreadsCategoriesModalContext)
+  const { open } = useThreadsCategoriesModalContext()
 
   return (
     <Toolbar mobile tablet>

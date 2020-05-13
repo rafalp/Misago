@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { Link } from "react-router-dom"
-import { AuthModalContext, SettingsContext } from "../Context"
+import { useAuthModalContext, useSettingsContext } from "../Context"
 import { Button } from "../UI"
 import { useAuth } from "../auth"
 import * as urls from "../urls"
@@ -14,10 +14,8 @@ interface INavbarNavProps {
 
 const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
   const { logout } = useAuth()
-  const settings = React.useContext(SettingsContext)
-  const { openLoginModal, openRegisterModal } = React.useContext(
-    AuthModalContext
-  )
+  const settings = useSettingsContext()
+  const { openLoginModal, openRegisterModal } = useAuthModalContext()
 
   return (
     <ul className="navbar-nav ml-auto">

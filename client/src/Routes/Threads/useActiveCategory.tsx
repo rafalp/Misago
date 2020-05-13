@@ -1,9 +1,9 @@
 import React from "react"
-import { CategoriesContext } from "../../Context"
+import { useCategoriesContext } from "../../Context"
 import { IActiveCategory } from "./Threads.types"
 
 const useActiveCategory = (id?: string | null) => {
-  const categories = React.useContext(CategoriesContext)
+  const categories = useCategoriesContext()
 
   return React.useMemo<IActiveCategory | null>(() => {
     if (!id) return null

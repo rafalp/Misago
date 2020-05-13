@@ -1,5 +1,5 @@
 import React from "react"
-import { SettingsContext } from "../../Context"
+import { useSettingsContext } from "../../Context"
 
 interface IWindowTitleProps {
   alerts?: number
@@ -12,7 +12,7 @@ const WindowTitle: React.FC<IWindowTitleProps> = ({
   index,
   title,
 }) => {
-  const settings = React.useContext(SettingsContext)
+  const settings = useSettingsContext()
   if (!settings) return null
 
   const prefix = alerts ? `(${alerts}) ` : ""

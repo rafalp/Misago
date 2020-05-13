@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { CategoriesContext, SettingsContext } from "../../Context"
+import { useCategoriesContext, useSettingsContext } from "../../Context"
 import * as urls from "../../urls"
 import CategoryIcon from "../CategoryIcon"
 import { SideNav, SideNavItem } from "../SideNav"
@@ -12,8 +12,8 @@ interface ICategoriesNavProps {
 }
 
 const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
-  const categories = React.useContext(CategoriesContext)
-  const settings = React.useContext(SettingsContext)
+  const categories = useCategoriesContext()
+  const settings = useSettingsContext()
 
   return (
     <SideNav className="categories-nav">

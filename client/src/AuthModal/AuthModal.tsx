@@ -1,5 +1,5 @@
 import React from "react"
-import { AuthModalContext } from "../Context"
+import { useAuthModalContext } from "../Context"
 import { Modal, portal } from "../UI"
 import { AuthModalMode, ISettings } from "../types"
 import LoginModal from "./LoginModal"
@@ -16,7 +16,7 @@ const AuthModal: React.FC<IAuthModalProps> = ({ settings }) => {
     closeModal,
     showLoginForm,
     showRegisterForm,
-  } = React.useContext(AuthModalContext)
+  } = useAuthModalContext()
 
   if (!settings) return null
 

@@ -2,7 +2,7 @@ import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import { LoadMoreButton, RouteLoader, WindowTitle } from "../../UI"
-import { ForumStatsContext, SettingsContext } from "../../Context"
+import { useForumStatsContext, useSettingsContext } from "../../Context"
 import { ThreadsHeaderAll } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
@@ -12,8 +12,8 @@ import { useThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
 const ThreadsAll: React.FC = () => {
-  const forumStats = React.useContext(ForumStatsContext)
-  const settings = React.useContext(SettingsContext)
+  const forumStats = useForumStatsContext()
+  const settings = useSettingsContext()
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
   const { threads } = data || { threads: null }
 

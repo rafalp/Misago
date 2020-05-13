@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import React from "react"
-import { CategoriesContext } from "../../Context"
+import { useCategoriesListContext } from "../../Context"
 import { RouteContainer } from "../../UI"
 import { IMutationError } from "../../types"
 
@@ -41,7 +41,7 @@ interface IStartThreadMutationValues {
 }
 
 const StartThreadRoute: React.FC = () => {
-  const categories = React.useContext(CategoriesContext)
+  const categories = useCategoriesListContext()
   const [category, setCategory] = React.useState("")
   const [title, setTitle] = React.useState("")
   const [body, setBody] = React.useState("")
@@ -62,17 +62,12 @@ const StartThreadRoute: React.FC = () => {
           onChange={({ target }) => setCategory(target.value)}
         >
           <option value="">Select category</option>
-          {categories.map(({ children, id, name }) => (
-            <React.Fragment key={id}>
-              <option value={id}>{name}</option>
-              {children.map(({ id, name }) => (
-                <option key={id} value={id}>{`- - ${name}`}</option>
-              ))}
-            </React.Fragment>
+          {categories.map(({ depth, category: { id, name } }) => (
+            <option value={id}>{depth ? "-   " + name : name}</option>
           ))}
         </select>
       </div>
-      <br />
+      <br />s
       <div>
         <label>Title:</label>
         <input

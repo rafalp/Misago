@@ -40,4 +40,12 @@ const ThreadsCategoriesModalContextProvider: React.FC<IThreadsCategoriesModalCon
   )
 }
 
-export { ThreadsCategoriesModalContext, ThreadsCategoriesModalContextProvider }
+const useThreadsCategoriesModalContext = () => {
+  return React.useContext(ThreadsCategoriesModalContext)
+}
+
+export {
+  ThreadsCategoriesModalContext,
+  ThreadsCategoriesModalContextProvider,
+  useThreadsCategoriesModalContext,
+}

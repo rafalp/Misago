@@ -1,28 +1,24 @@
 import React from "react"
-import { ICategory, IForumStats, ISettings, IUser } from "../types"
-import { AuthModalContext, AuthModalProvider } from "./AuthModal"
-import FormFieldContext from "./FormField"
+import { IForumStats, ISettings, IUser } from "../types"
+import {
+  AuthModalContext,
+  AuthModalProvider,
+  useAuthModalContext,
+} from "./AuthModalContext"
+import {
+  CategoriesContext,
+  useCategoriesContext,
+  useCategoriesListContext,
+} from "./CategoriesContext"
+import { FormFieldContext, useFormFieldContext } from "./FormFieldContext"
 
 const AuthContext = React.createContext<IUser | null>(null)
-const CategoriesContext = React.createContext<Array<ICategory>>([])
 const ForumStatsContext = React.createContext<IForumStats | null>(null)
 const SettingsContext = React.createContext<ISettings | null>(null)
 
 const useAuthContext = () => React.useContext(AuthContext)
-const useCategoriesContext = () => React.useContext(CategoriesContext)
-const useCategoriesListContext = () => {
-  const categories = useCategoriesContext()
-  return React.useMemo(() => {
-    const choices: Array<{ category: ICategory; depth: number }> = []
-    categories.forEach((category) => {
-      choices.push({ category, depth: 0 })
-      category.children.forEach((child) =>
-        choices.push({ category: child, depth: 1 })
-      )
-    })
-    return choices
-  }, [categories])
-}
+const useForumStatsContext = () => React.useContext(ForumStatsContext)
+const useSettingsContext = () => React.useContext(SettingsContext)
 
 export {
   AuthContext,
@@ -33,6 +29,10 @@ export {
   ForumStatsContext,
   SettingsContext,
   useAuthContext,
+  useAuthModalContext,
   useCategoriesListContext,
   useCategoriesContext,
+  useFormFieldContext,
+  useForumStatsContext,
+  useSettingsContext,
 }
