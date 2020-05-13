@@ -41,12 +41,12 @@ const ThreadsModerationModalMove: React.FC = () => {
             id="move_threads_form"
             disabled={loading}
             onSubmit={async ({ data: { category } }) => {
-              console.log(category)
               if (!category) {
                 setError("value_error.all_fields_are_required")
                 return
               }
 
+              setError(null)
               const data = await moveThreads(threads, category)
               const { errors } = data.data?.moveThreads || {}
               if (!errors) close()
@@ -55,6 +55,7 @@ const ThreadsModerationModalMove: React.FC = () => {
             <RootError
               graphqlError={graphqlError}
               dataErrors={data?.moveThreads.errors}
+              plainError={error}
             >
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>
