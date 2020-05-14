@@ -1,4 +1,4 @@
-import { Trans } from "@lingui/macro"
+import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import { useCategoriesListContext } from "../../../Context"
 import {
@@ -11,9 +11,11 @@ import {
   ModalFooter,
   RootError,
   Select,
+  Spinner,
 } from "../../../UI"
 import ThreadsModerationModal from "./ThreadsModerationModal"
 import { ThreadsModerationModalAction } from "./ThreadsModerationModalContext"
+import ThreadsModerationModalThreadsList from "./ThreadsModerationModalThreadsList"
 import useMoveThreadsMutation from "./moveThreads"
 
 interface IFormValues {
@@ -35,7 +37,7 @@ const ThreadsModerationModalMove: React.FC = () => {
       action={ThreadsModerationModalAction.MOVE}
       title={<Trans id="moderation.move_threads">Move threads</Trans>}
     >
-      {({ threads, close }) => {
+      {({ close, threads }) => {
         return (
           <Form<IFormValues>
             id="move_threads_form"
@@ -60,11 +62,7 @@ const ThreadsModerationModalMove: React.FC = () => {
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>
             <ModalFormBody>
-              <ul>
-                {threads.map((thread) => (
-                  <li key={thread.id}>{thread.title}</li>
-                ))}
-              </ul>
+              <ThreadsModerationModalThreadsList threads={threads} />
               <Field
                 label={
                   <Trans id="moderation.new_category">New category</Trans>
@@ -83,13 +81,25 @@ const ThreadsModerationModalMove: React.FC = () => {
               />
             </ModalFormBody>
             <ModalFooter>
+              <Spinner small />
               <ButtonSecondary
-                text="cancel"
+                text={<Trans id="cancel">Cancel</Trans>}
                 disabled={loading}
                 responsive
                 onClick={close}
               />
-              <ButtonPrimary text="move" loading={loading} responsive />
+              <ButtonPrimary
+                text={
+                  <Plural
+                    id="moderation.move_threads.submit"
+                    value={threads.length}
+                    one="Move # thread"
+                    other="Move # threads"
+                  />
+                }
+                disabled={loading}
+                responsive
+              />
             </ModalFooter>
           </Form>
         )

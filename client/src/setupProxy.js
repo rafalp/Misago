@@ -4,7 +4,7 @@ module.exports = function(app) {
   app.use(
     '/sockjs-node',
     createProxyMiddleware({
-      target: 'ws://localhost3000',
+      target: 'ws://localhost:3000',
     })
   );
   app.use(
