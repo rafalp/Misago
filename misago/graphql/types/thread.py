@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Awaitable, Optional, cast
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
@@ -17,41 +17,49 @@ thread_type.set_alias("isClosed", "is_closed")
 
 
 @thread_type.field("category")
-async def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Category:
-    category = await load_category(info.context, obj.category_id)
-    return cast(Category, category)
+def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Awaitable[Category]:
+    category = load_category(info.context, obj.category_id)
+    return cast(Awaitable[Category], category)
 
 
 @thread_type.field("posts")
-async def resolve_posts(
+def resolve_posts(
     obj: Thread, info: GraphQLResolveInfo, page: int = 1
-) -> Optional[ThreadPostsPage]:
-    return await load_thread_posts_page(info.context, obj, page)
+) -> Awaitable[Optional[ThreadPostsPage]]:
+    return load_thread_posts_page(info.context, obj, page)
 
 
 @thread_type.field("firstPost")
-async def resolve_first_post(obj: Thread, info: GraphQLResolveInfo) -> Optional[Post]:
+def resolve_first_post(
+    obj: Thread, info: GraphQLResolveInfo
+) -> Optional[Awaitable[Optional[Post]]]:
     if obj.first_post_id:
-        return await load_post(info.context, obj.first_post_id)
+        return load_post(info.context, obj.first_post_id)
     return None
 
 
 @thread_type.field("starter")
-async def resolve_starter(obj: Thread, info: GraphQLResolveInfo) -> Optional[User]:
+def resolve_starter(
+    obj: Thread, info: GraphQLResolveInfo
+) -> Optional[Awaitable[Optional[User]]]:
     if obj.starter_id:
-        return await load_user(info.context, obj.starter_id)
+        return load_user(info.context, obj.starter_id)
     return None
 
 
 @thread_type.field("lastPost")
-async def resolve_last_post(obj: Thread, info: GraphQLResolveInfo) -> Optional[Post]:
+def resolve_last_post(
+    obj: Thread, info: GraphQLResolveInfo
+) -> Optional[Awaitable[Optional[Post]]]:
     if obj.last_post_id:
-        return await load_post(info.context, obj.last_post_id)
+        return load_post(info.context, obj.last_post_id)
     return None
 
 
 @thread_type.field("lastPoster")
-async def resolve_last_poster(obj: Thread, info: GraphQLResolveInfo) -> Optional[User]:
+def resolve_last_poster(
+    obj: Thread, info: GraphQLResolveInfo
+) -> Optional[Awaitable[Optional[User]]]:
     if obj.last_poster_id:
-        return await load_user(info.context, obj.last_poster_id)
+        return load_user(info.context, obj.last_poster_id)
     return None

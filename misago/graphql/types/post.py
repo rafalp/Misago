@@ -1,4 +1,4 @@
-from typing import Optional, cast
+from typing import Awaitable, Optional, cast
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
@@ -14,19 +14,21 @@ post_type.set_alias("postedAt", "posted_at")
 
 
 @post_type.field("category")
-async def resolve_category(obj: Post, info: GraphQLResolveInfo) -> Category:
-    category = await load_category(info.context, obj.category_id)
-    return cast(Category, category)
+def resolve_category(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Category]:
+    category = load_category(info.context, obj.category_id)
+    return cast(Awaitable[Category], category)
 
 
 @post_type.field("thread")
-async def resolve_thread(obj: Post, info: GraphQLResolveInfo) -> Thread:
-    thread = await load_thread(info.context, obj.thread_id)
-    return cast(Thread, thread)
+def resolve_thread(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Thread]:
+    thread = load_thread(info.context, obj.thread_id)
+    return cast(Awaitable[Thread], thread)
 
 
 @post_type.field("poster")
-async def resolve_poster(obj: Post, info: GraphQLResolveInfo) -> Optional[User]:
+def resolve_poster(
+    obj: Post, info: GraphQLResolveInfo
+) -> Optional[Awaitable[Optional[User]]]:
     if obj.poster_id:
-        return await load_user(info.context, obj.poster_id)
+        return load_user(info.context, obj.poster_id)
     return None

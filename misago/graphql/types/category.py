@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Awaitable, Optional, List
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
@@ -13,19 +13,19 @@ category_type.set_alias("isClosed", "is_closed")
 
 
 @category_type.field("parent")
-async def resolve_parent(
+def resolve_parent(
     category: Category, info: GraphQLResolveInfo
-) -> Optional[Category]:
+) -> Optional[Awaitable[Optional[Category]]]:
     if category.parent_id:
-        return await load_category(info.context, category.parent_id)
+        return load_category(info.context, category.parent_id)
     return None
 
 
 @category_type.field("children")
-async def resolve_children(
+def resolve_children(
     category: Category, info: GraphQLResolveInfo
-) -> List[Category]:
-    return await load_category_children(info.context, category.id)
+) -> Awaitable[List[Category]]:
+    return load_category_children(info.context, category.id)
 
 
 # placeholder resolvers for color and icon

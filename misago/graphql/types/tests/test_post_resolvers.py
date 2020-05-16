@@ -15,9 +15,8 @@ async def test_post_resolver_returns_post_poster(graphql_info, user_post, user):
     assert value == user
 
 
-@pytest.mark.asyncio
-async def test_post_resolver_returns_none_if_poster_is_empty(graphql_info, post):
-    value = await resolve_poster(post, graphql_info)
+def test_post_resolver_returns_none_if_poster_is_empty(graphql_info, post):
+    value = resolve_poster(post, graphql_info)
     assert value is None
 
 

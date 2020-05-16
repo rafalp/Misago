@@ -67,9 +67,8 @@ async def test_category_parent_resolver_returns_category_parent(
     assert value == category
 
 
-@pytest.mark.asyncio
-async def test_category_parent_resolver_returns_none_for_top_level_category(
+def test_category_parent_resolver_returns_none_for_top_level_category(
     category, graphql_info
 ):
-    value = await resolve_parent(category, graphql_info)
+    value = resolve_parent(category, graphql_info)
     assert value is None

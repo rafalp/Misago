@@ -44,9 +44,8 @@ async def test_starter_resolver_returns_thread_starter(graphql_info, user_thread
     assert value == user
 
 
-@pytest.mark.asyncio
-async def test_starter_resolver_returns_none_if_starter_is_empty(graphql_info, thread):
-    value = await resolve_starter(thread, graphql_info)
+def test_starter_resolver_returns_none_if_starter_is_empty(graphql_info, thread):
+    value = resolve_starter(thread, graphql_info)
     assert value is None
 
 
@@ -58,9 +57,8 @@ async def test_last_poster_resolver_returns_threads_last_poster(
     assert value == user
 
 
-@pytest.mark.asyncio
-async def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
+def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
     graphql_info, thread
 ):
-    value = await resolve_last_poster(thread, graphql_info)
+    value = resolve_last_poster(thread, graphql_info)
     assert value is None
