@@ -11,11 +11,13 @@ interface ITidbitCategoryProps {
     name: string
     color: string | null
   }
+  disabled?: boolean
   parent?: boolean
 }
 
 const TidbitCategory: React.FC<ITidbitCategoryProps> = ({
   category,
+  disabled,
   parent,
 }) => (
   <TidbitItem
@@ -23,16 +25,37 @@ const TidbitCategory: React.FC<ITidbitCategoryProps> = ({
       "tidbit-parent-category": parent,
     })}
   >
-    <Link to={urls.category(category)}>
-      {category.color && (
-        <span
-          className="tidbit-category-color"
-          style={{ backgroundColor: category.color }}
-        />
-      )}
-      <span className="tidbit-category-name">{category.name}</span>
-    </Link>
+    {disabled ? (
+      <TidbitCategoryContent category={category} />
+    ) : (
+      <Link to={urls.category(category)}>
+        <TidbitCategoryContent category={category} />
+      </Link>
+    )}
   </TidbitItem>
+)
+
+interface ITidbitCategoryContentProps {
+  category: {
+    id: string
+    slug: string
+    name: string
+    color: string | null
+  }
+}
+
+const TidbitCategoryContent: React.FC<ITidbitCategoryContentProps> = ({
+  category,
+}) => (
+  <>
+    {category.color && (
+      <span
+        className="tidbit-category-color"
+        style={{ backgroundColor: category.color }}
+      />
+    )}
+    <span className="tidbit-category-name">{category.name}</span>
+  </>
 )
 
 export default TidbitCategory

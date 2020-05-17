@@ -5,6 +5,7 @@ import { FieldLabel, FieldRequired } from "./FieldLabel"
 import Form from "./Form"
 import FormCheckbox from "./FormCheckbox"
 import { FormContext, useFormContext } from "./FormContext"
+import FormFooter from "./FormFooter"
 
 export {
   Field,
@@ -15,6 +16,7 @@ export {
   Form,
   FormCheckbox,
   FormContext,
+  FormFooter,
   useFieldContext,
   useFormContext,
 }

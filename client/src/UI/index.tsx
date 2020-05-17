@@ -54,6 +54,7 @@ import {
   Form,
   FormCheckbox,
   FormContext,
+  FormFooter,
   useFieldContext,
   useFormContext,
 } from "./Form"
@@ -161,6 +162,7 @@ export {
   Form,
   FormCheckbox,
   FormContext,
+  FormFooter,
   GraphQLError,
   GraphQLErrorMessage,
   GraphQLErrorRenderer,

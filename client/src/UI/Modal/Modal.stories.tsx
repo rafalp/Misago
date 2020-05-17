@@ -6,6 +6,7 @@ import {
   ButtonSecondary,
   Field,
   Form,
+  FormFooter,
   Input,
   Spinner,
 } from ".."
@@ -110,6 +111,51 @@ interface IFormValues {
 }
 
 export const WithForm = () => {
+  const title = text("Title", "Form modal")
+  const btnText = text("Button text", "Submit")
+  const loading = boolean("Loading", false)
+
+  return (
+    <RootContainer>
+      <Modal close={close} isOpen={true} resistant={resistant()}>
+        <ModalDialog close={close} size={size()} title={title}>
+          <Form<IFormValues>
+            id="modal_form"
+            defaultValues={{ username: "Bob", password: "" }}
+            onSubmit={async () => {}}
+          >
+            {alert() && (
+              <ModalAlert appearance={alertAppearance()}>
+                Ut malesuada interdum massa in ultrices.
+              </ModalAlert>
+            )}
+            <ModalFormBody>
+              <Field
+                label="User name or e-mail"
+                name="username"
+                input={<Input disabled={loading} />}
+              />
+              <Field
+                label="Password"
+                name="password"
+                input={<Input disabled={loading} type="password" />}
+              />
+            </ModalFormBody>
+            <ModalFooter>
+              <FormFooter
+                submitText={btnText}
+                loading={loading}
+                onCancel={close}
+              />
+            </ModalFooter>
+          </Form>
+        </ModalDialog>
+      </Modal>
+    </RootContainer>
+  )
+}
+
+export const WithFormAlt = () => {
   const title = text("Title", "Form modal")
   const btnText = text("Button text", "Submit")
   const loading = boolean("Loading", false)
