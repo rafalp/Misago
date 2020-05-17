@@ -2,16 +2,14 @@ import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import { useCategoriesListContext } from "../../../Context"
 import {
-  ButtonPrimary,
-  ButtonSecondary,
   Field,
   Form,
+  FormFooter,
   ModalAlert,
   ModalFormBody,
   ModalFooter,
   RootError,
   Select,
-  Spinner,
 } from "../../../UI"
 import ThreadsModerationModal from "./ThreadsModerationModal"
 import { ThreadsModerationModalAction } from "./ThreadsModerationModalContext"
@@ -81,15 +79,8 @@ const ThreadsModerationModalMove: React.FC = () => {
               />
             </ModalFormBody>
             <ModalFooter>
-              <Spinner small />
-              <ButtonSecondary
-                text={<Trans id="cancel">Cancel</Trans>}
-                disabled={loading}
-                responsive
-                onClick={close}
-              />
-              <ButtonPrimary
-                text={
+              <FormFooter
+                submitText={
                   <Plural
                     id="moderation.move_threads.submit"
                     value={threads.length}
@@ -97,8 +88,8 @@ const ThreadsModerationModalMove: React.FC = () => {
                     other="Move # threads"
                   />
                 }
-                disabled={loading}
-                responsive
+                loading={loading}
+                onCancel={close}
               />
             </ModalFooter>
           </Form>
