@@ -245,18 +245,18 @@ function watchstyle() {
 
 // Entry points
 
-const build = gulp.series(
-  cleanstyle,
-  style,
+const buildstyle = gulp.series(cleanstyle, style);
+const buildjsapp = gulp.series(lintjsapp, jsapp);
+
+const build = gulp.parallel(
+  buildstyle,
   statics,
-  lintjsapp,
-  jsapp,
+  buildjsapp,
   vendors,
   copyzxcvbn
 )
 
 const watch = gulp.series(
-  build,
   watchjs,
   watchstyle,
 )
