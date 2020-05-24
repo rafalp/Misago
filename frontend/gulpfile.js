@@ -9,7 +9,7 @@ var buffer = require('vinyl-buffer');
 var eslint = require('gulp-eslint');
 var image = require('gulp-image');
 var less = require('gulp-less');
-var minify = require('gulp-minify-css');
+var cleanCss = require('gulp-clean-css');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
@@ -21,36 +21,6 @@ var glob = require('glob');
 var del = require('del');
 
 var misago = '../misago/static/misago/';
-
-// Entry points
-
-gulp.task('watch', ['watchifybuild'], function() {
-  gulp.watch('style/**/*.less', ['faststyle']);
-});
-
-gulp.task('watchstyle', ['faststyle', 'faststatic'], function() {
-  gulp.watch('style/**/*.less', ['faststyle']);
-});
-
-// Builds
-
-gulp.task('fastbuild', [
-  'fastsource',
-  'faststyle',
-  'faststatic',
-  'fastvendorsources',
-  'copypolyfill',
-  'copyzxcvbn'
-]);
-
-gulp.task('build', [
-  'source',
-  'style',
-  'static',
-  'vendorsources',
-  'copypolyfill',
-  'copyzxcvbn'
-]);
 
 // Source tasks
 
@@ -72,7 +42,7 @@ function getSources() {
   });
 };
 
-gulp.task('lintsource', function() {
+function lintjsapp() {
   return gulp.src('src/**/*.js')
     .pipe(eslint({
         'parser': 'babel-eslint',
@@ -103,9 +73,9 @@ gulp.task('lintsource', function() {
         ]
     }))
     .pipe(eslint.format());
-});
+};
 
-gulp.task('fastsource', ['lintsource'], function() {
+function fastsource() {
   process.env.NODE_ENV = 'development';
 
   return browserify({
@@ -124,9 +94,9 @@ gulp.task('fastsource', ['lintsource'], function() {
     .pipe(source('misago.js'))
     .pipe(buffer())
     .pipe(gulp.dest(misago + 'js'));
-});
+};
 
-gulp.task('watchifybuild', ['fastbuild'], function() {
+function watchifybuild() {
   process.env.NODE_ENV = 'development';
 
   var b = browserify({
@@ -167,9 +137,9 @@ gulp.task('watchifybuild', ['fastbuild'], function() {
     b.on('log', function (msg) {
       gutil.log(gutil.colors.cyan('watchify:'), msg);
     });
-})
+}
 
-gulp.task('source', ['lintsource'], function() {
+function jsapp() {
   process.env.NODE_ENV = 'production';
 
   return browserify({
@@ -183,23 +153,23 @@ gulp.task('source', ['lintsource'], function() {
     .external('react-router')
     .external('redux')
     .external('react-redux')
-    .transform(babelify)
+    .transform(babelify, { sourceMaps: true })
     .bundle()
     .pipe(source('misago.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(misago + 'js'));
-});
+};
 
 // Styles tasks
 
-gulp.task('cleanstyle', function(cb) {
-  del(misago + 'css', cb);
-});
+function cleanstyle() {
+  return del(misago + 'css', {force: true});
+};
 
-gulp.task('faststyle', function() {
+function faststyle() {
   return gulp.src('style/index.less')
     .pipe(less().on('error', function(err) {
         gutil.log(gutil.colors.red(err.toString()));
@@ -207,62 +177,33 @@ gulp.task('faststyle', function() {
       }))
     .pipe(rename('misago.css'))
     .pipe(gulp.dest(misago + 'css'));
-});
+};
 
-gulp.task('style', function() {
+function style() {
   return gulp.src('style/index.less')
     .pipe(less())
-    .pipe(minify())
+    .pipe(cleanCss({compatibility: 'ie11'}))
     .pipe(rename('misago.css'))
     .pipe(gulp.dest(misago + 'css'));
-});
+};
 
 // Static tasks
 
-gulp.task('copyfonts', function(cb) {
+function copyfonts() {
   return gulp.src('static/fonts/**/*')
     .pipe(gulp.dest(misago + 'fonts'));
-});
+};
 
-gulp.task('fastcopyimages', function() {
-  return gulp.src('static/img/**/*')
-    .pipe(gulp.dest(misago + 'img'));
-});
-
-gulp.task('copyimages', function() {
+function copyimages() {
   return gulp.src('static/img/**/*')
     .pipe(image())
     .pipe(gulp.dest(misago + 'img'));
-});
+};
 
-gulp.task('faststatic', ['copyfonts', 'fastcopyimages']);
-
-gulp.task('static', ['copyfonts', 'copyimages']);
+const statics = gulp.parallel(copyfonts, copyimages);
 
 // Vendor tasks
-
-gulp.task('fastvendorsources', function() {
-  process.env.NODE_ENV = 'development';
-
-  return browserify({
-      entries: 'src/vendor.js',
-      debug: true
-    })
-    .transform('browserify-shim')
-    .require('moment')
-    .require('cropit')
-    .require('react')
-    .require('react-dom')
-    .require('react-router')
-    .require('redux')
-    .require('react-redux')
-    .bundle()
-    .pipe(source('vendor.js'))
-    .pipe(buffer())
-    .pipe(gulp.dest(misago + 'js'));
-});
-
-gulp.task('vendorsources', function() {
+function vendors() {
   process.env.NODE_ENV = 'production';
 
   return browserify({
@@ -277,27 +218,51 @@ gulp.task('vendorsources', function() {
     .require('react-router')
     .require('redux')
     .require('react-redux')
-    .transform(babelify)
+    .transform(babelify, { sourceMaps: true })
     .bundle()
     .pipe(source('vendor.js'))
     .pipe(buffer())
-    .pipe(sourcemaps.init())
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
+    .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(misago + 'js'));
-});
+};
 
-gulp.task('copyzxcvbn', function() {
+function copyzxcvbn() {
   return gulp.src('node_modules/zxcvbn/dist/*')
     .pipe(gulp.dest(misago + 'js'));
-});
+};
 
-gulp.task('copypolyfill', function() {
-  return gulp.src('node_modules/babel-polyfill/dist/polyfill.js')
-    .pipe(rename('es2015.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init())
-    .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(misago + 'js'));
-});
+// Watchers
+
+function watchjs() {
+  gulp.watch('src/**/*.js', gulp.series(lintjsapp, watchifybuild));
+}
+
+function watchstyle() {
+  gulp.watch('style/**/*.less', faststyle);
+}
+
+// Entry points
+
+const build = gulp.series(
+  cleanstyle,
+  style,
+  statics,
+  lintjsapp,
+  jsapp,
+  vendors,
+  copyzxcvbn
+)
+
+const watch = gulp.series(
+  build,
+  watchjs,
+  watchstyle,
+)
+
+module.exports = {
+  build,
+  watch,
+  watchstyle,
+}
