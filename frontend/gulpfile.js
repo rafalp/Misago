@@ -265,4 +265,5 @@ module.exports = {
   build,
   watch,
   watchstyle,
+  lint: lintjsapp,
 }
