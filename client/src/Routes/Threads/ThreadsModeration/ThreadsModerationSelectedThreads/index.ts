@@ -1,0 +1,3 @@
+import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads"
+
+export default ThreadsModerationSelectedThreads

@@ -30,6 +30,7 @@ import {
 } from "./Card"
 import CategoriesNav from "./CategoriesNav"
 import CategoryIcon from "./CategoryIcon"
+import CategorySelect from "./CategorySelect"
 import { Checkbox, CheckboxLabel } from "./Checkbox"
 import ClickTrap from "./ClickTrap"
 import {
@@ -143,6 +144,7 @@ export {
   CardListItem,
   CardLoader,
   CategoriesNav,
+  CategorySelect,
   CategoryIcon,
   Checkbox,
   CheckboxLabel,

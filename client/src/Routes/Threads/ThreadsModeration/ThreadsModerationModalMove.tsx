@@ -1,7 +1,7 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
-import { useCategoriesListContext } from "../../../Context"
 import {
+  CategorySelect,
   Field,
   Form,
   FormFooter,
@@ -9,11 +9,10 @@ import {
   ModalFormBody,
   ModalFooter,
   RootError,
-  Select,
 } from "../../../UI"
 import ThreadsModerationModal from "./ThreadsModerationModal"
 import { ThreadsModerationModalAction } from "./ThreadsModerationModalContext"
-import ThreadsModerationModalThreadsList from "./ThreadsModerationModalThreadsList"
+import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads"
 import useMoveThreadsMutation from "./moveThreads"
 
 interface IFormValues {
@@ -21,7 +20,6 @@ interface IFormValues {
 }
 
 const ThreadsModerationModalMove: React.FC = () => {
-  const categories = useCategoriesListContext()
   const {
     data,
     loading,
@@ -60,22 +58,13 @@ const ThreadsModerationModalMove: React.FC = () => {
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>
             <ModalFormBody>
-              <ThreadsModerationModalThreadsList threads={threads} />
+              <ThreadsModerationSelectedThreads threads={threads} />
               <Field
                 label={
                   <Trans id="moderation.new_category">New category</Trans>
                 }
                 name="category"
-                input={
-                  <Select
-                    options={categories.map(({ category, depth }) => {
-                      return {
-                        value: category.id,
-                        name: depth ? "-   " + category.name : category.name,
-                      }
-                    })}
-                  />
-                }
+                input={<CategorySelect />}
               />
             </ModalFormBody>
             <ModalFooter>

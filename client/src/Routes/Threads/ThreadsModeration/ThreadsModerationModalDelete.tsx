@@ -9,7 +9,7 @@ import {
 } from "../../../UI"
 import ThreadsModerationModal from "./ThreadsModerationModal"
 import { ThreadsModerationModalAction } from "./ThreadsModerationModalContext"
-import ThreadsModerationModalThreadsList from "./ThreadsModerationModalThreadsList"
+import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads"
 
 const ThreadsModerationModalDelete: React.FC = () => {
   const loading = false
@@ -22,7 +22,7 @@ const ThreadsModerationModalDelete: React.FC = () => {
       {({ close, threads }) => (
         <>
           <ModalBody>
-            <ThreadsModerationModalThreadsList threads={threads} />
+            <ThreadsModerationSelectedThreads threads={threads} />
           </ModalBody>
           <ModalFooter>
             <Spinner small />
