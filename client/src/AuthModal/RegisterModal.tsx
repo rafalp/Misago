@@ -159,7 +159,6 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
                 {({ message }) => <FieldError>{message}</FieldError>}
               </UsernameValidationError>
             )}
-            required
           />
           <Field
             label={<Trans id="input.email">E-mail</Trans>}
@@ -170,7 +169,6 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
                 {({ message }) => <FieldError>{message}</FieldError>}
               </EmailValidationError>
             )}
-            required
           />
           <Field
             label={<Trans id="input.password">Password</Trans>}
@@ -188,7 +186,6 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
                 {({ message }) => <FieldError>{message}</FieldError>}
               </PasswordValidationError>
             )}
-            required
           />
         </ModalFormBody>
         <ModalFooter>

@@ -106,8 +106,10 @@ import {
 import Timestamp from "./Timestamp"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "./Toolbar"
 import {
+  CategoryValidationError,
   EmailValidationError,
   PasswordValidationError,
+  ThreadValidationError,
   UsernameValidationError,
   ValidationError,
 } from "./ValidationError"
@@ -115,6 +117,7 @@ import ViewportEvent from "./ViewportEvent"
 import WindowTitle from "./WindowTitle"
 import portal from "./portal"
 import useSelection from "./useSelection"
+import useSelectionErrors from "./useSelectionErrors"
 
 export {
   Avatar,
@@ -146,6 +149,7 @@ export {
   CategoriesNav,
   CategorySelect,
   CategoryIcon,
+  CategoryValidationError,
   Checkbox,
   CheckboxLabel,
   ClickTrap,
@@ -201,6 +205,7 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
+  ThreadValidationError,
   TidbitActivityLastReply,
   TidbitActivityStart,
   TidbitCategory,
@@ -227,4 +232,5 @@ export {
   useFormContext,
   useModal,
   useSelection,
+  useSelectionErrors,
 }

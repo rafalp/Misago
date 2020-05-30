@@ -14,3 +14,8 @@
 label {
   cursor: pointer;
 }
+
+// Force invalid feedback to always display
+.invalid-feedback {
+  display: block;
+}

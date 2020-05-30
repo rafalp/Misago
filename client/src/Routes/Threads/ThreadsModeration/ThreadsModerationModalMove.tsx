@@ -4,12 +4,15 @@ import * as Yup from "yup"
 import {
   CategorySelect,
   Field,
+  FieldError,
   Form,
   FormFooter,
   ModalAlert,
   ModalFormBody,
   ModalFooter,
   RootError,
+  CategoryValidationError,
+  useSelectionErrors,
 } from "../../../UI"
 import { IThread } from "../Threads.types"
 import ThreadsModerationModal from "./ThreadsModerationModal"
@@ -18,11 +21,17 @@ import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads
 import useMoveThreadsMutation from "./moveThreads"
 
 interface IFormValues {
-  category?: string
-  threads?: Array<IThread>
+  category: string
+  threads: Array<IThread>
 }
 
 const ThreadsModerationModalMove: React.FC = () => {
+  const {
+    errors: threadsErrors,
+    clearErrors: clearThreadsErrors,
+    setErrors: setThreadsErrors,
+  } = useSelectionErrors<IThread>("threads")
+
   const {
     data,
     loading,
@@ -32,7 +41,9 @@ const ThreadsModerationModalMove: React.FC = () => {
 
   const MoveThreadsSchema = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
-    threads: Yup.string().required("value_error.missing"),
+    threads: Yup.array()
+      .required("value_error.missing")
+      .min(1, "value_error.missing"),
   })
 
   return (
@@ -45,20 +56,20 @@ const ThreadsModerationModalMove: React.FC = () => {
           <Form<IFormValues>
             id="move_threads_form"
             disabled={loading}
-            defaultValues={{ threads }}
+            defaultValues={{ threads, category: "" }}
             validationSchema={MoveThreadsSchema}
             onSubmit={async ({
               clearError,
               setError,
               data: { category, threads },
             }) => {
-              if (!category || !threads) return
-
               clearError()
+              clearThreadsErrors()
 
               const data = await moveThreads(threads, category)
               const { errors } = data.data?.moveThreads || {}
               if (errors) {
+                setThreadsErrors(threads, errors)
                 errors?.forEach(({ location, type, message }) => {
                   const field = location.join(".")
                   setError(field, type, message)
@@ -75,13 +86,21 @@ const ThreadsModerationModalMove: React.FC = () => {
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>
             <ModalFormBody>
-              <ThreadsModerationSelectedThreads threads={threads} />
+              <ThreadsModerationSelectedThreads
+                errors={threadsErrors}
+                threads={threads}
+              />
               <Field
                 label={
                   <Trans id="moderation.new_category">New category</Trans>
                 }
                 name="category"
                 input={<CategorySelect />}
+                error={(error, value) => (
+                  <CategoryValidationError error={error} value={value}>
+                    {({ message }) => <FieldError>{message}</FieldError>}
+                  </CategoryValidationError>
+                )}
               />
             </ModalFormBody>
             <ModalFooter>
