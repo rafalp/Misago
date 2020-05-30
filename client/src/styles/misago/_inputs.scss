@@ -58,3 +58,15 @@
     }
   }
 }
+
+// Selected threads list
+.selected-threads-thread + .selected-threads-thread {
+  margin-top: $spacer * 0.5;
+}
+
+.selected-threads-thread-title {
+  margin: 0;
+
+  font-size: $font-size-sm;
+  word-break: break-word;
+}

@@ -10,16 +10,16 @@ import ThreadsListItemStarter from "./ThreadsListItemStarter"
 import ThreadsListItemTidbits from "./ThreadsListItemTidbits"
 
 interface IThreadsListItemProps {
+  changeSelection: (id: string, selected: boolean) => void
   selectable?: boolean
   selected?: boolean
   thread: IThread
-  selectionChange: (id: string, selected: boolean) => void
 }
 
 const ThreadsListItem: React.FC<IThreadsListItemProps> = ({
+  changeSelection,
   selectable,
   selected,
-  selectionChange,
   thread,
 }) => (
   <li
@@ -47,7 +47,7 @@ const ThreadsListItem: React.FC<IThreadsListItemProps> = ({
         <ThreadsListItemSelect
           selected={selected || false}
           onChange={(event) =>
-            selectionChange(thread.id, event.target.checked)
+            changeSelection(thread.id, event.target.checked)
           }
         />
       )}

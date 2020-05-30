@@ -18,15 +18,19 @@ const ThreadsModerationSelectedThreads: React.FC<IThreadsModerationSelectedThrea
     <Field
       label={<Trans id="moderation.selected_threads">Selected threads</Trans>}
       input={
-        isOpen ? (
-          <ThreadsModerationSelectedThreadsList threads={threads} />
-        ) : (
-          <ThreadsModerationSelectedThreadsButton
-            threadsCount={threads.length}
-            onClick={() => setState(true)}
-          />
-        )
+        <>
+          <div className={isOpen ? "" : "d-none"}>
+            <ThreadsModerationSelectedThreadsList threads={threads} />
+          </div>
+          {!isOpen && (
+            <ThreadsModerationSelectedThreadsButton
+              threadsCount={threads.length}
+              onClick={() => setState(true)}
+            />
+          )}
+        </>
       }
+      name="threads"
     />
   )
 }

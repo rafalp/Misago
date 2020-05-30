@@ -1,5 +1,6 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
+import * as Yup from "yup"
 import {
   CategorySelect,
   Field,
@@ -10,6 +11,7 @@ import {
   ModalFooter,
   RootError,
 } from "../../../UI"
+import { IThread } from "../Threads.types"
 import ThreadsModerationModal from "./ThreadsModerationModal"
 import { ThreadsModerationModalAction } from "./ThreadsModerationModalContext"
 import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads"
@@ -17,6 +19,7 @@ import useMoveThreadsMutation from "./moveThreads"
 
 interface IFormValues {
   category?: string
+  threads?: Array<IThread>
 }
 
 const ThreadsModerationModalMove: React.FC = () => {
@@ -26,7 +29,11 @@ const ThreadsModerationModalMove: React.FC = () => {
     moveThreads,
     error: graphqlError,
   } = useMoveThreadsMutation()
-  const [error, setError] = React.useState<string | null>(null)
+
+  const MoveThreadsSchema = Yup.object().shape({
+    category: Yup.string().required("value_error.missing"),
+    threads: Yup.string().required("value_error.missing"),
+  })
 
   return (
     <ThreadsModerationModal
@@ -38,22 +45,32 @@ const ThreadsModerationModalMove: React.FC = () => {
           <Form<IFormValues>
             id="move_threads_form"
             disabled={loading}
-            onSubmit={async ({ data: { category } }) => {
-              if (!category) {
-                setError("value_error.all_fields_are_required")
-                return
-              }
+            defaultValues={{ threads }}
+            validationSchema={MoveThreadsSchema}
+            onSubmit={async ({
+              clearError,
+              setError,
+              data: { category, threads },
+            }) => {
+              if (!category || !threads) return
 
-              setError(null)
+              clearError()
+
               const data = await moveThreads(threads, category)
               const { errors } = data.data?.moveThreads || {}
-              if (!errors) close()
+              if (errors) {
+                errors?.forEach(({ location, type, message }) => {
+                  const field = location.join(".")
+                  setError(field, type, message)
+                })
+              } else {
+                close()
+              }
             }}
           >
             <RootError
               graphqlError={graphqlError}
               dataErrors={data?.moveThreads.errors}
-              plainError={error}
             >
               {({ message }) => <ModalAlert>{message}</ModalAlert>}
             </RootError>

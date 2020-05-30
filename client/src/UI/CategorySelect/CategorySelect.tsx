@@ -7,6 +7,7 @@ const CategorySelect = () => {
 
   return (
     <Select
+      emptyValue=""
       options={categories.map(({ category, parent }) => {
         return {
           value: category.id,

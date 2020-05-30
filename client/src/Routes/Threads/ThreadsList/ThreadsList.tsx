@@ -70,11 +70,11 @@ const ThreadsList: React.FC<IThreadsListProps> = ({
         <ul className="list-group list-group-flush">
           {threads.items.map((thread) => (
             <ThreadsListItem
+              changeSelection={selection.change}
               key={thread.id}
               thread={thread}
               selectable={selectable}
               selected={selection.selection[thread.id]}
-              selectionChange={selection.change}
             />
           ))}
         </ul>

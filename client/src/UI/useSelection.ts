@@ -9,9 +9,14 @@ interface ISelection<TSelectable extends { id: string }> {
 }
 
 const useSelection = <TSelectable extends { id: string }>(
-  items?: Array<TSelectable>
+  items?: Array<TSelectable>,
+  initial?: Array<TSelectable>
 ): ISelection<TSelectable> => {
-  const [selection, setState] = React.useState<Record<string, boolean>>({})
+  const [selection, setState] = React.useState<Record<string, boolean>>(
+    initial && initial.length
+      ? initial.reduce((obj, item) => ({ ...obj, [item.id]: true }), {})
+      : {}
+  )
   const toggle = React.useCallback(
     (id: string) => {
       setState((prevState) => {

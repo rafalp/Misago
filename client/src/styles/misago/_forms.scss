@@ -9,3 +9,8 @@
 .form-footer .btn {
   margin-left: $spacer * 0.75;
 }
+
+// Display pointer cursor over labels
+label {
+  cursor: pointer;
+}

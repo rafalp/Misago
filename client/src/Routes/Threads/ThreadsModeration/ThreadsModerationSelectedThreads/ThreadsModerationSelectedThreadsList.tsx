@@ -1,6 +1,8 @@
 import React from "react"
-import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI"
+import { useFormContext } from "react-hook-form"
+import { useFieldContext, useSelection } from "../../../../UI"
 import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
+import ThreadsModerationSelectedThreadsListItem from "./ThreadsModerationSelectedThreadsListItem"
 
 interface IThreadsModerationSelectedThreadsListProps {
   threads: Array<ISelectedThread>
@@ -8,28 +10,43 @@ interface IThreadsModerationSelectedThreadsListProps {
 
 const ThreadsModerationSelectedThreadsList: React.FC<IThreadsModerationSelectedThreadsListProps> = ({
   threads,
-}) => (
-  <ul className="list-unstyled selected-threads-list">
-    {threads.map((thread) => (
-      <li
-        className="list-group-item selected-threads-list-item"
-        key={thread.id}
-      >
-        <div className="selected-thread-title">{thread.title}</div>
-        <Tidbits small>
-          {thread.category.parent && (
-            <TidbitCategory
-              category={thread.category.parent}
-              disabled
-              parent
-            />
-          )}
-          <TidbitCategory category={thread.category} disabled />
-          {thread.replies > 0 && <TidbitReplies value={thread.replies} />}
-        </Tidbits>
-      </li>
-    ))}
-  </ul>
-)
+}) => {
+  const context = useFieldContext()
+  const name = context ? context.name : undefined
+
+  const { register, unregister, setValue } = useFormContext() || {}
+  const { change, selection, selected } = useSelection<ISelectedThread>(
+    threads,
+    threads
+  )
+
+  React.useEffect(() => {
+    if (register && unregister) {
+      register({ name: "threads" })
+      return () => unregister("threads")
+    }
+  }, [register, unregister])
+
+  React.useEffect(() => {
+    if (name && setValue) {
+      setValue("threads", selected)
+    }
+  }, [name, setValue, selected])
+
+  return (
+    <ul className="list-unstyled selected-threads">
+      {threads.map((thread) => (
+        <ThreadsModerationSelectedThreadsListItem
+          disabled={context && context.disabled}
+          id={context && `${context.id}_${context.name}`}
+          key={thread.id}
+          selected={selection[thread.id]}
+          thread={thread}
+          changeSelection={change}
+        />
+      ))}
+    </ul>
+  )
+}
 
 export default ThreadsModerationSelectedThreadsList

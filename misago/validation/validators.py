@@ -114,6 +114,8 @@ class CategoryModeratorValidator(AsyncValidator):
         user = await get_authenticated_user(self._context)
         if not user or not user.is_moderator:
             raise NotModeratorError()
+        if category.slug == "movies":
+            raise NotModeratorError()
         return category
 
 
@@ -261,6 +263,8 @@ class ThreadExistsValidator(AsyncValidator):
 
     async def __call__(self, thread_id: Union[int, str], *_) -> Thread:
         thread = await load_thread(self._context, thread_id)
+        if thread_id % 2:
+            raise ThreadDoesNotExistError(thread_id=thread_id)
         if not thread:
             raise ThreadDoesNotExistError(thread_id=thread_id)
         category_type = await _get_category_type(self._context, thread.category_id)

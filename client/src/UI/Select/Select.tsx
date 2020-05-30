@@ -6,6 +6,7 @@ import { useFieldContext } from "../Form"
 interface ISelectProps {
   className?: string
   disabled?: boolean
+  emptyValue?: string | number
   id?: string
   invalid?: boolean
   name?: string
@@ -23,6 +24,7 @@ interface ISelectOption {
 const Select: React.FC<ISelectProps> = ({
   className,
   disabled,
+  emptyValue,
   id,
   invalid,
   name,
@@ -49,6 +51,7 @@ const Select: React.FC<ISelectProps> = ({
       onBlur={onBlur}
       onChange={onChange}
     >
+      {typeof emptyValue !== "undefined" && <option value={emptyValue} />}
       {options.map(({ name, value }) => (
         <option key={value} value={value}>
           {name}
