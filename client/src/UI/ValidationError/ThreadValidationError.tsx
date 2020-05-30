@@ -27,11 +27,21 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
     <I18n>
       {({ i18n }) => {
         switch (errorType) {
+          case "auth_error.not_moderator":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "auth_error.thread.not_moderator"
+                )`You can't moderate this thread.`
+              ),
+            })
+
           case "auth_error.thread.closed":
             return children({
               type: errorType,
               message: i18n._(
-                t("auth_error.thread.closed")`This thread is closed.`
+                t("auth_error.thread.closed")`Thread is closed.`
               ),
             })
 

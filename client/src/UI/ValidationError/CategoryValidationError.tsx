@@ -31,7 +31,7 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
             return children({
               type: errorType,
               message: i18n._(
-                t("auth_error.category.closed")`Selected category is closed.`
+                t("auth_error.category.closed")`Category is closed.`
               ),
             })
 
@@ -41,7 +41,7 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
               message: i18n._(
                 t(
                   "value_error.category.not_exists"
-                )`Selected category doesn't exist.`
+                )`Category could not be found.`
               ),
             })
 
