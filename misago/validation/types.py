@@ -33,7 +33,7 @@ def bulkactionidslist(item_type: Type[Any], settings: Settings) -> Type[str]:
     namespace = dict(
         __args__=[item_type],
         min_items=1,
-        max_items=cast(int, settings["bulk_action_size_limit"]),
+        max_items=cast(int, settings["bulk_action_limit"]),
         item_type=item_type,
     )
 

@@ -4,7 +4,7 @@ from ...errors import ListRepeatedItemsError
 from ..types import bulkactionidslist
 
 
-settings = {"bulk_action_size_limit": 5}
+settings = {"bulk_action_limit": 5}
 
 
 def test_bulkactionidslist_constraint_returns_list_type():

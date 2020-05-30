@@ -1,4 +1,5 @@
 type Settings {
+    bulkActionLimit: Int!
     forumIndexHeader: String!
     forumIndexThreads: Boolean!
     forumIndexTitle: String!

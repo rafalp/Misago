@@ -5,6 +5,7 @@ from ...validation import PASSWORD_MAX_LENGTH
 
 settings_type = ObjectType("Settings")
 
+settings_type.set_alias("bulkActionLimit", "bulk_action_limit")
 settings_type.set_alias("forumIndexHeader", "forum_index_header")
 settings_type.set_alias("forumIndexThreads", "forum_index_threads")
 settings_type.set_alias("forumIndexTitle", "forum_index_title")

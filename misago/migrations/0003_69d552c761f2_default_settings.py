@@ -24,7 +24,7 @@ depends_on = None
 table = table("misago_settings", column("name", String), column("value", JSON),)
 
 settings = [
-    {"name": "bulk_action_size_limit", "value": 30},
+    {"name": "bulk_action_limit", "value": 30},
     {"name": "enable_wizard", "value": True},
     {"name": "forum_index_header", "value": ""},
     {"name": "forum_index_threads", "value": True},
