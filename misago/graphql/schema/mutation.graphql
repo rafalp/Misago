@@ -1,18 +1,6 @@
 type Mutation {
     login(username: String!, password: String!): LoginMutationResult!
     register(input: RegisterInput!): RegisterMutationResult!
-    postThread(input: PostThreadInput!): PostMutationResult!
-    postReply(input: PostReplyInput!): PostMutationResult!
-    editPost(input: EditPostInput!): PostMutationResult!
-    editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
-    closeThread(input: CloseThreadInput!): ThreadMutationResult!
-    moveThread(input: MoveThreadInput!): ThreadMutationResult!
-    deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
-    closeThreads(input: BulkCloseThreadsInput!): BulkThreadsMutationResult!
-    moveThreads(input: BulkMoveThreadsInput!): BulkThreadsMutationResult!
-    deleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
-    deleteThreadReply(input: DeleteThreadReplyInput!): DeleteThreadReplyMutationResult!
-    deleteThreadReplies(input: BulkDeleteThreadRepliesInput!): BulkDeleteThreadRepliesMutationResult!
 }
 
 type LoginMutationResult {
@@ -31,6 +19,12 @@ type RegisterMutationResult {
     errors: [Error!]
     token: String
     user: User
+}
+
+extend type Mutation {
+    postThread(input: PostThreadInput!): PostMutationResult!
+    postReply(input: PostReplyInput!): PostMutationResult!
+    editPost(input: EditPostInput!): PostMutationResult!
 }
 
 input PostThreadInput {
@@ -53,6 +47,13 @@ type PostMutationResult {
     errors: [Error!]
     thread: Thread
     post: Post
+}
+
+extend type Mutation {
+    editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
+    closeThread(input: CloseThreadInput!): ThreadMutationResult!
+    moveThread(input: MoveThreadInput!): ThreadMutationResult!
+    deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
 input EditThreadTitleInput {
@@ -83,6 +84,12 @@ type DeleteThreadMutationResult {
     errors: [Error!]
 }
 
+extend type Mutation {
+    closeThreads(input: BulkCloseThreadsInput!): BulkThreadsMutationResult!
+    moveThreads(input: BulkMoveThreadsInput!): BulkThreadsMutationResult!
+    deleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
+}
+
 input BulkCloseThreadsInput {
     threads: [ID!]!
     isClosed: Boolean!
@@ -105,6 +112,11 @@ input BulkDeleteThreadsInput {
 
 type BulkDeleteThreadsMutationResult {
     errors: [Error!]
+}
+
+extend type Mutation {
+    deleteThreadReply(input: DeleteThreadReplyInput!): DeleteThreadReplyMutationResult!
+    deleteThreadReplies(input: BulkDeleteThreadRepliesInput!): BulkDeleteThreadRepliesMutationResult!
 }
 
 input DeleteThreadReplyInput {
