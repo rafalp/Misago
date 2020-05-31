@@ -1,11 +1,21 @@
 // Toasts styles
 .toasts-container {
-  position: absolute;
-  right: $grid-gutter-width / 2;
+  position: fixed;
+  top: $grid-gutter-width / 2;
+  right: 0;
+  width: 100%;
+  padding: 0 $grid-gutter-width / 2;
+  z-index: $zindex-tooltip - 1;
+
+  @include media-breakpoint-up(md) {
+    right: $grid-gutter-width / 2;
+    width: $toast-max-width;
+    padding: 0;
+  }
 }
 
 .toast {
-  max-width: $toast-max-width;
+  width: 100%;
   overflow: hidden; // cheap rounded corners on nested items
   @include font-size($toast-font-size);
   color: $toast-color;

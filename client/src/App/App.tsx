@@ -15,6 +15,7 @@ import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
 
 const Navbar = React.lazy(() => import("../Navbar"))
+const Toasts = React.lazy(() => import("../Toasts"))
 const AuthChangedAlert = React.lazy(() => import("../AuthChangedAlert"))
 const AuthModal = React.lazy(() => import("../AuthModal"))
 
@@ -36,6 +37,7 @@ const App: React.FC = () => {
                           </React.Suspense>
                           <React.Suspense fallback={<div />}>
                             <Navbar settings={settings} user={auth} />
+                            <Toasts />
                           </React.Suspense>
                           <RouteErrorBoundary>
                             <Routes />
