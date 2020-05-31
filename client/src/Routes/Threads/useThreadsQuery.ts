@@ -94,7 +94,7 @@ export const useBaseThreadsQuery = <TData extends IThreadsData>(
 ) => {
   const result = useQuery<TData, IThreadsVariables>(query, {
     variables,
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
   })
 
