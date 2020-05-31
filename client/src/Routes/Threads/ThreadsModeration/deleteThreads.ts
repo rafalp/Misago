@@ -1,7 +1,12 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../types"
+import { ICategory, IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
+import {
+  CATEGORY_THREADS_QUERY,
+  THREADS_QUERY,
+  IThreadsData,
+} from "../useThreadsQuery"
 
 const DELETE_THREADS = gql`
   mutation DeleteThreads($input: BulkDeleteThreadsInput!) {
@@ -37,10 +42,39 @@ const useDeleteThreadsMutation = () => {
     data,
     error,
     loading,
-    deleteThreads: (threads: Array<IThread>) => {
+    deleteThreads: (threads: Array<IThread>, category?: ICategory | null) => {
+      const deletedThreads = threads.map((thread) => thread.id)
       return mutation({
         variables: {
-          input: { threads: threads.map((thread) => thread.id) },
+          input: { threads: deletedThreads },
+        },
+        update: (cache, { data }) => {
+          if (!data || !data.deleteThreads || data.deleteThreads.errors) return
+
+          let queryID = category
+            ? {
+                query: CATEGORY_THREADS_QUERY,
+                variables: { category: category.id },
+              }
+            : {
+                query: THREADS_QUERY,
+              }
+
+          const query = cache.readQuery<IThreadsData>(queryID)
+          if (!query) return null
+
+          cache.writeQuery({
+            ...queryID,
+            data: {
+              ...query,
+              threads: {
+                ...query.threads,
+                items: query.threads.items.filter((thread) => {
+                  return deletedThreads.indexOf(thread.id) < 0
+                }),
+              },
+            },
+          })
         },
       })
     },

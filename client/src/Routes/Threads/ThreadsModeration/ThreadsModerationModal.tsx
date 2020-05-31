@@ -1,5 +1,6 @@
 import React from "react"
 import { Modal, ModalDialog, portal } from "../../../UI"
+import { ICategory } from "../../../types"
 import { IThread } from "../Threads.types"
 import {
   ThreadsModerationModalAction,
@@ -11,6 +12,7 @@ interface IThreadsModerationModalProps {
   title: React.ReactNode
   children: (props: {
     threads: Array<IThread>
+    category?: ICategory | null
     close: () => void
   }) => React.ReactNode
 }
@@ -18,7 +20,7 @@ interface IThreadsModerationModalProps {
 const ThreadsModerationModal: React.FC<IThreadsModerationModalProps> = (
   props
 ) => {
-  const { action, threads, isOpen, close } = React.useContext(
+  const { action, threads, category, isOpen, close } = React.useContext(
     ThreadsModerationModalContext
   )
 
@@ -29,7 +31,7 @@ const ThreadsModerationModal: React.FC<IThreadsModerationModalProps> = (
         close={close}
         title={props.title}
       >
-        {props.children({ threads, close })}
+        {props.children({ threads, category, close })}
       </ModalDialog>
     </Modal>
   )

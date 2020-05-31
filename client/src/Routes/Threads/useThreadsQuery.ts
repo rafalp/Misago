@@ -51,7 +51,7 @@ const THREADS_FIELDS = `
   nextCursor
 `
 
-const THREADS_QUERY = gql`
+export const THREADS_QUERY = gql`
   ${THREADS_FRAGMENTS}
 
   query Threads($cursor: ID) {
@@ -67,7 +67,7 @@ const THREADS_UPDATES_SUBSCRIPTION = gql`
   }
 `
 
-interface IThreadsData {
+export interface IThreadsData {
   threads: {
     items: Array<IThread>
     nextCursor: string | null
@@ -218,7 +218,7 @@ interface ICategoryQueryParams {
   id: string
 }
 
-const CATEGORY_THREADS_QUERY = gql`
+export const CATEGORY_THREADS_QUERY = gql`
   ${THREADS_FRAGMENTS}
 
   fragment ThreadsListCategory on Category {

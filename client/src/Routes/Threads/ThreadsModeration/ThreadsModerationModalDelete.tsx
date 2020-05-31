@@ -47,7 +47,7 @@ const ThreadsModerationModalDelete: React.FC = () => {
       action={ThreadsModerationModalAction.DELETE}
       title={<Trans id="moderation.delete_threads">Delete threads</Trans>}
     >
-      {({ close, threads }) => {
+      {({ category, close, threads }) => {
         return (
           <Form<IFormValues>
             id="delete_threads_form"
@@ -58,7 +58,7 @@ const ThreadsModerationModalDelete: React.FC = () => {
               clearError()
               clearThreadsErrors()
 
-              const result = await deleteThreads(threads)
+              const result = await deleteThreads(threads, category)
               const { errors } = result.data?.deleteThreads || {}
 
               if (errors) {
