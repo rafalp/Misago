@@ -96,6 +96,7 @@ input BulkMoveThreadsInput {
 type BulkThreadsMutationResult {
     errors: [Error!]
     threads: [Thread!]
+    updated: Boolean!
 }
 
 input BulkDeleteThreadsInput {

@@ -100,3 +100,39 @@ def test_root_error_is_added_to_errors_list(errors_list):
             "type": "value_error." + UsernameNotAvailableError.code,
         }
     ]
+
+
+def test_has_errors_at_location_check_returns_false_if_no_errors_are_present(
+    errors_list,
+):
+    assert not errors_list.has_errors_at_location("email")
+
+
+def test_has_errors_at_location_check_returns_false_if_errors_dont_match_location(
+    errors_list,
+):
+    errors_list.add_error("username", UsernameNotAvailableError())
+    assert not errors_list.has_errors_at_location("email")
+
+
+def test_has_errors_at_location_check_returns_true_if_errors_match_location(
+    errors_list,
+):
+    errors_list.add_error("username", UsernameNotAvailableError())
+    assert errors_list.has_errors_at_location("username")
+
+
+def test_has_root_errors_property_returns_false_if_no_errors_are_present(errors_list,):
+    assert not errors_list.has_root_errors
+
+
+def test_has_root_errors_property_returns_false_if_no_root_error_is_present(
+    errors_list,
+):
+    errors_list.add_error("username", UsernameNotAvailableError())
+    assert not errors_list.has_root_errors
+
+
+def test_has_root_errors_property_returns_true_if_root_error_is_present(errors_list):
+    errors_list.add_root_error(UsernameNotAvailableError())
+    assert errors_list.has_root_errors

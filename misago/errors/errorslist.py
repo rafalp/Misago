@@ -39,3 +39,13 @@ class ErrorsList(List[ErrorDict]):
 
     def get_errors_types(self) -> List[str]:
         return [e["type"] for e in self]  # pylint: disable=not-an-iterable
+
+    def has_errors_at_location(self, location: str) -> bool:
+        for e in self:  # pylint: disable=not-an-iterable
+            if e["loc"] and e["loc"][0] == location:
+                return True
+        return False
+
+    @property
+    def has_root_errors(self) -> bool:
+        return self.has_errors_at_location(ErrorsList.ROOT_LOCATION)

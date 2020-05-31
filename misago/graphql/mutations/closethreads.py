@@ -19,7 +19,7 @@ from ...types import (
     CloseThreadsInputModel,
     Thread,
 )
-from ...utils.lists import remove_none_items
+from ...utils.lists import remove_none_items, update_list_items
 from ...validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
@@ -72,14 +72,22 @@ async def resolve_close_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
+    if await update_threads(cleaned_data, errors):
+        updated_threads = await close_threads_hook.call_action(
+            close_threads_action, info.context, cleaned_data
+        )
+
+        result = {
+            "threads": update_list_items(threads, updated_threads),
+            "updated": True,
+        }
+    else:
+        result = {"threads": threads, "updated": False}
+
     if errors:
-        return {"errors": errors, "threads": threads or None}
+        result["errors"] = errors
 
-    threads = await close_threads_hook.call_action(
-        close_threads_action, info.context, cleaned_data
-    )
-
-    return {"threads": threads}
+    return result
 
 
 async def create_input_model(context: GraphQLContext) -> CloseThreadsInputModel:
@@ -97,6 +105,16 @@ async def validate_input_data(
     errors: ErrorsList,
 ) -> Tuple[CloseThreadsInput, ErrorsList]:
     return await validate_data(data, validators, errors)
+
+
+async def update_threads(
+    cleaned_data: CloseThreadsInput, errors_locations: ErrorsList
+) -> bool:
+    if errors_locations.has_root_errors:
+        return False
+    if not cleaned_data.get("threads") or "is_closed" not in cleaned_data:
+        return False
+    return True
 
 
 async def close_threads_action(
