@@ -27,7 +27,7 @@ from ..loaders import load_category, load_post, load_thread
 from ..tables import users
 from ..types import AsyncValidator, Category, GraphQLContext, Post, Thread
 from ..users.email import get_email_hash
-from ..utils.lists import clear_list
+from ..utils.lists import remove_none_items
 
 
 async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
@@ -56,7 +56,7 @@ class BulkValidator(AsyncValidator):
 
         if validators:
             validated_items = await gather(*validators)
-            return clear_list(validated_items)
+            return remove_none_items(validated_items)
 
         return []
 

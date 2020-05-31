@@ -19,7 +19,7 @@ from ...types import (
     MoveThreadsInputModel,
     Thread,
 )
-from ...utils.lists import clear_list
+from ...utils.lists import remove_none_items
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
@@ -50,7 +50,9 @@ async def resolve_move_threads(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("threads"):
-        threads = clear_list(await load_threads(info.context, cleaned_data["threads"]))
+        threads = remove_none_items(
+            await load_threads(info.context, cleaned_data["threads"])
+        )
     else:
         threads = []
 
