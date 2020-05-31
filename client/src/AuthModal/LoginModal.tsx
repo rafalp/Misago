@@ -86,8 +86,8 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
             return
           }
 
-          const data = await authenticate({ variables })
-          const { user, token } = data.data?.login || {}
+          const result = await authenticate({ variables })
+          const { user, token } = result.data?.login || {}
           if (token && user) {
             setDisabled(true)
             login(token, user)

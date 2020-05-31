@@ -123,8 +123,8 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
         onSubmit={async ({ clearError, setError, data: input }) => {
           clearError()
 
-          const data = await register({ variables: { input } })
-          const { errors, token, user } = data.data?.register || {}
+          const result = await register({ variables: { input } })
+          const { errors, token, user } = result.data?.register || {}
 
           errors?.forEach(({ location, type, message }) => {
             const field = location.join(".")

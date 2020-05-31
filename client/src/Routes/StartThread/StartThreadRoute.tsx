@@ -97,8 +97,8 @@ const StartThreadRoute: React.FC = () => {
             title,
           }
 
-          const data = await postThread({ variables: { input } })
-          console.log(data)
+          const result = await postThread({ variables: { input } })
+          console.log(result)
         }}
       >
         Submit
