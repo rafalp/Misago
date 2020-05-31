@@ -1,8 +1,7 @@
 // Toasts styles
 .toasts-container {
   position: absolute;
-  right: 0;
-  padding: $grid-gutter-width / 2;
+  right: $grid-gutter-width / 2;
 }
 
 .toast {
@@ -14,7 +13,6 @@
   background-clip: padding-box;
   border: $toast-border-width solid $toast-border-color;
   box-shadow: $toast-box-shadow;
-  backdrop-filter: blur(10px);
   opacity: 0;
   @include border-radius($toast-border-radius);
 
@@ -24,10 +22,6 @@
 
   &.show {
     opacity: 1;
-  }
-
-  &.hide {
-    display: none;
   }
 }
 

@@ -1,3 +1,5 @@
+import { t } from "@lingui/macro"
+import { I18n } from "@lingui/react"
 import classNames from "classnames"
 import React from "react"
 
@@ -47,17 +49,21 @@ const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
     >
       <div className="toast-body">
         <div>{text}</div>
-        <button
-          type="button"
-          className="ml-2 mb-1 close"
-          data-dismiss="toast"
-          aria-label="Close"
-          onClick={() => {
-            setState(ToastState.HIDE)
-          }}
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <I18n>
+          {({ i18n }) => (
+            <button
+              type="button"
+              className="ml-2 close"
+              data-dismiss="toast"
+              aria-label={i18n._(t("close")`Close`)}
+              onClick={() => {
+                setState(ToastState.HIDE)
+              }}
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          )}
+        </I18n>
       </div>
     </div>
   )
