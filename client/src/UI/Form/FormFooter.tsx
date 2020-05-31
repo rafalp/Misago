@@ -1,9 +1,10 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { ButtonPrimary, ButtonSecondary } from "../Button"
+import { ButtonPrimary, ButtonDanger, ButtonSecondary } from "../Button"
 import Spinner from "../Spinner"
 
 interface IFormFooterProps {
+  danger?: boolean
   submitText: React.ReactNode
   disabled?: boolean
   loading?: boolean
@@ -11,6 +12,7 @@ interface IFormFooterProps {
 }
 
 const FormFooter: React.FC<IFormFooterProps> = ({
+  danger,
   submitText,
   disabled,
   loading,
@@ -26,11 +28,19 @@ const FormFooter: React.FC<IFormFooterProps> = ({
         onClick={onCancel}
       />
     )}
-    <ButtonPrimary
-      text={submitText}
-      disabled={disabled || loading}
-      responsive
-    />
+    {danger ? (
+      <ButtonDanger
+        text={submitText}
+        disabled={disabled || loading}
+        responsive
+      />
+    ) : (
+      <ButtonPrimary
+        text={submitText}
+        disabled={disabled || loading}
+        responsive
+      />
+    )}
   </div>
 )
 

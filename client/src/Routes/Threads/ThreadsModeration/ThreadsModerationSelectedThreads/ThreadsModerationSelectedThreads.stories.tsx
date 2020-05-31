@@ -100,3 +100,44 @@ export const ManyThreads = () => {
     </Form>
   )
 }
+
+export const WithThreadError = () => {
+  const threads = [
+    {
+      id: "1",
+      title: "Nam id ante ultricies, laoreet leo tempor, venenatis ipsum.",
+      replies: 0,
+      category: categories[0],
+    },
+    {
+      id: "2",
+      title: "Donec in tempor tellus.",
+      replies: 719,
+      category: Object.assign({}, categories[0].children[2], {
+        parent: categories[0],
+      }),
+    },
+  ]
+
+  const errors = {
+    "1": {
+      location: ["threads", "0"],
+      type: "auth_error.not_moderator",
+      message: "message not displayed",
+    },
+  }
+
+  return (
+    <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
+      <ModalFormContainer title="Threads moderation">
+        <ThreadsModerationSelectedThreads
+          errors={errors}
+          max={10}
+          min={1}
+          threads={threads}
+        />
+        <ButtonPrimary text="Submit" block />
+      </ModalFormContainer>
+    </Form>
+  )
+}

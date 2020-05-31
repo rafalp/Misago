@@ -81,6 +81,7 @@ const { cancel, submit } = actions({
 })
 
 export const Footer = () => {
+  const danger = boolean("Danger", false)
   const disabled = boolean("Disabled", false)
   const loading = boolean("Loading", false)
 
@@ -97,6 +98,7 @@ export const Footer = () => {
           <CardFooter>
             <FormFooter
               submitText="Submit"
+              danger={danger}
               disabled={disabled}
               loading={loading}
               onCancel={cancel}
