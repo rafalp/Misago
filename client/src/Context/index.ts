@@ -20,7 +20,6 @@ const useForumStatsContext = () => React.useContext(ForumStatsContext)
 const useSettingsContext = () => React.useContext(SettingsContext)
 const useBulkActionLimit = () => {
   const settings = React.useContext(SettingsContext)
-  console.log(settings)
   if (settings) return settings.bulkActionLimit
   return 2
 }

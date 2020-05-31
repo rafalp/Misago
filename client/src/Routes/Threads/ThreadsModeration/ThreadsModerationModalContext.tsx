@@ -60,7 +60,7 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
   )
 }
 
-const useThreadModerationModalContext = (threads: Array<IThread>) => {
+const useThreadsModerationModalContext = (threads: Array<IThread>) => {
   const { open } = React.useContext(ThreadsModerationModalContext)
 
   return {
@@ -73,5 +73,5 @@ export {
   ThreadsModerationModalAction,
   ThreadsModerationModalContext,
   ThreadsModerationModalContextProvider,
-  useThreadModerationModalContext,
+  useThreadsModerationModalContext,
 }

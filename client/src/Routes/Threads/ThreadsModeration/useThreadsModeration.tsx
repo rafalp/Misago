@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useAuthContext } from "../../../Context"
 import { IThread, IThreadsModeration } from "../Threads.types"
-import { useThreadModerationModalContext } from "./ThreadsModerationModalContext"
+import { useThreadsModerationModalContext } from "./ThreadsModerationModalContext"
 import { useCloseThreads, useOpenThreads } from "./closeThreads"
 
 const useThreadsModeration = (
@@ -12,7 +12,7 @@ const useThreadsModeration = (
 
   const closeThreads = useCloseThreads(threads)
   const openThreads = useOpenThreads(threads)
-  const { moveThreads, deleteThreads } = useThreadModerationModalContext(
+  const { moveThreads, deleteThreads } = useThreadsModerationModalContext(
     threads
   )
 
