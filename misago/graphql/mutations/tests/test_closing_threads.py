@@ -100,7 +100,7 @@ async def test_close_threads_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_with_errors_still_updates_valid_threads(
+async def test_close_threads_mutation_with_threads_errors_still_updates_valid_threads(
     moderator_graphql_info, thread
 ):
     data = await resolve_close_threads(
