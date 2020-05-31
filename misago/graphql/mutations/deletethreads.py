@@ -67,14 +67,18 @@ async def resolve_delete_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
+    if await update_threads(cleaned_data, errors):
+        await delete_threads_hook.call_action(
+            delete_threads_action, info.context, cleaned_data
+        )
+        result = {"updated": True}
+    else:
+        result = {"updated": False}
+
     if errors:
-        return {"errors": errors}
+        result["errors"] = errors
 
-    await delete_threads_hook.call_action(
-        delete_threads_action, info.context, cleaned_data
-    )
-
-    return {}
+    return result
 
 
 async def create_input_model(context: GraphQLContext) -> DeleteThreadsInputModel:
@@ -91,6 +95,16 @@ async def validate_input_data(
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadsInput, ErrorsList]:
     return await validate_data(data, validators, errors)
+
+
+async def update_threads(
+    cleaned_data: DeleteThreadsInput, errors_locations: ErrorsList
+) -> bool:
+    if errors_locations.has_root_errors:
+        return False
+    if not cleaned_data.get("threads"):
+        return False
+    return True
 
 
 async def delete_threads_action(
