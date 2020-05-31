@@ -1,11 +1,12 @@
 import React from "react"
 import { BrowserRouter as Router } from "react-router-dom"
 import {
-  AuthModalProvider,
   AuthContext,
+  AuthModalProvider,
   CategoriesContext,
   ForumStatsContext,
   SettingsContext,
+  ToastsContextProvider,
 } from "../Context"
 import Routes from "../Routes"
 import { RouteErrorBoundary } from "../UI"
@@ -27,22 +28,24 @@ const App: React.FC = () => {
               <AuthContext.Provider value={auth}>
                 <CategoriesContext.Provider value={categories}>
                   <SettingsContext.Provider value={settings}>
-                    <ForumStatsContext.Provider value={forumStats}>
-                      <AuthModalProvider>
-                        <React.Suspense fallback={<div />}>
-                          <AuthChangedAlert user={auth} />
-                        </React.Suspense>
-                        <React.Suspense fallback={<div />}>
-                          <Navbar settings={settings} user={auth} />
-                        </React.Suspense>
-                        <RouteErrorBoundary>
-                          <Routes />
-                        </RouteErrorBoundary>
-                        <React.Suspense fallback={<div />}>
-                          <AuthModal settings={settings} />
-                        </React.Suspense>
-                      </AuthModalProvider>
-                    </ForumStatsContext.Provider>
+                    <ToastsContextProvider>
+                      <ForumStatsContext.Provider value={forumStats}>
+                        <AuthModalProvider>
+                          <React.Suspense fallback={<div />}>
+                            <AuthChangedAlert user={auth} />
+                          </React.Suspense>
+                          <React.Suspense fallback={<div />}>
+                            <Navbar settings={settings} user={auth} />
+                          </React.Suspense>
+                          <RouteErrorBoundary>
+                            <Routes />
+                          </RouteErrorBoundary>
+                          <React.Suspense fallback={<div />}>
+                            <AuthModal settings={settings} />
+                          </React.Suspense>
+                        </AuthModalProvider>
+                      </ForumStatsContext.Provider>
+                    </ToastsContextProvider>
                   </SettingsContext.Provider>
                 </CategoriesContext.Provider>
               </AuthContext.Provider>

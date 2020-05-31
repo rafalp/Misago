@@ -10,6 +10,11 @@ import {
   useCategoriesContext,
   useCategoriesListContext,
 } from "./CategoriesContext"
+import {
+  ToastsContext,
+  ToastsContextProvider,
+  useToastsContext,
+} from "./ToastsContext"
 
 const AuthContext = React.createContext<IUser | null>(null)
 const ForumStatsContext = React.createContext<IForumStats | null>(null)
@@ -32,10 +37,13 @@ export {
   CategoriesContext,
   ForumStatsContext,
   SettingsContext,
+  ToastsContext,
+  ToastsContextProvider,
   useAuthContext,
   useAuthModalContext,
   useCategoriesListContext,
   useCategoriesContext,
   useForumStatsContext,
   useSettingsContext,
+  useToastsContext,
 }
