@@ -12,7 +12,7 @@ interface IThreadsModerationModalContext {
   isOpen: boolean
   action: ThreadsModerationModalAction
   threads: Array<IThread>
-  category?: ICategory | null
+  category: ICategory | null
   open: (
     threads: Array<IThread>,
     category: ICategory | null | undefined,
@@ -27,6 +27,7 @@ const ThreadsModerationModalContext = React.createContext<
   isOpen: false,
   action: ThreadsModerationModalAction.DELETE,
   threads: [],
+  category: null,
   open: () => {},
   close: () => {},
 })
@@ -42,7 +43,7 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
     ThreadsModerationModalAction.DELETE
   )
   const [threads, setThreads] = React.useState<Array<IThread>>([])
-  const [category, setCategory] = React.useState<ICategory | null>()
+  const [category, setCategory] = React.useState<ICategory | null>(null)
   const { isOpen, closeModal, openModal } = useModal()
 
   return (
@@ -58,7 +59,7 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
           action: ThreadsModerationModalAction
         ) => {
           setThreads(threads)
-          setCategory(category)
+          setCategory(category || null)
           setAction(action)
           openModal()
         },

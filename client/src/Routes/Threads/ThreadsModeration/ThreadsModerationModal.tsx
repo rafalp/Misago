@@ -12,7 +12,7 @@ interface IThreadsModerationModalProps {
   title: React.ReactNode
   children: (props: {
     threads: Array<IThread>
-    category?: ICategory | null
+    category: ICategory | null
     close: () => void
   }) => React.ReactNode
 }
