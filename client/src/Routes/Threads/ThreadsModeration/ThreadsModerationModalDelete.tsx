@@ -1,5 +1,7 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
+import * as Yup from "yup"
+import { useBulkActionLimit } from "../../../Context"
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -14,6 +16,14 @@ import ThreadsModerationSelectedThreads from "./ThreadsModerationSelectedThreads
 const ThreadsModerationModalDelete: React.FC = () => {
   const loading = false
 
+  const bulkActionLimit = useBulkActionLimit()
+  const DeleteThreadsSchema = Yup.object().shape({
+    threads: Yup.array()
+      .required("value_error.missing")
+      .min(1, "value_error.list.min_items")
+      .max(bulkActionLimit, "value_error.list.max_items"),
+  })
+
   return (
     <ThreadsModerationModal
       action={ThreadsModerationModalAction.DELETE}
@@ -22,7 +32,11 @@ const ThreadsModerationModalDelete: React.FC = () => {
       {({ close, threads }) => (
         <>
           <ModalBody>
-            <ThreadsModerationSelectedThreads threads={threads} />
+            <ThreadsModerationSelectedThreads
+              max={bulkActionLimit}
+              min={1}
+              threads={threads}
+            />
           </ModalBody>
           <ModalFooter>
             <Spinner small />

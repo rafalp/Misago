@@ -30,7 +30,7 @@ export const SingleThread = () => {
   return (
     <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation">
-        <ThreadsModerationSelectedThreads threads={threads} />
+        <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
         <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
@@ -58,7 +58,7 @@ export const FewThreads = () => {
   return (
     <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation">
-        <ThreadsModerationSelectedThreads threads={threads} />
+        <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
         <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
@@ -94,7 +94,7 @@ export const ManyThreads = () => {
   return (
     <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation">
-        <ThreadsModerationSelectedThreads threads={threads} />
+        <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
         <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>

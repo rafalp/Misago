@@ -44,6 +44,7 @@ export interface ICategoryBanner {
 }
 
 export interface ISettings {
+  bulkActionLimit: number
   forumIndexHeader: string
   forumIndexThreads: boolean
   forumIndexTitle: string

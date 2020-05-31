@@ -1,6 +1,7 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
+import { useBulkActionLimit } from "../../../Context"
 import {
   CategorySelect,
   Field,
@@ -39,11 +40,12 @@ const ThreadsModerationModalMove: React.FC = () => {
     error: graphqlError,
   } = useMoveThreadsMutation()
 
+  const bulkActionLimit = useBulkActionLimit()
   const MoveThreadsSchema = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
     threads: Yup.array()
-      .required("value_error.missing")
-      .min(1, "value_error.missing"),
+      .min(1, "value_error.list.min_items")
+      .max(bulkActionLimit, "value_error.list.max_items"),
   })
 
   return (
@@ -66,8 +68,9 @@ const ThreadsModerationModalMove: React.FC = () => {
               clearError()
               clearThreadsErrors()
 
-              const data = await moveThreads(threads, category)
-              const { errors } = data.data?.moveThreads || {}
+              const result = await moveThreads(threads, category)
+              const { errors } = result.data?.moveThreads || {}
+
               if (errors) {
                 setThreadsErrors(threads, errors)
                 errors?.forEach(({ location, type, message }) => {
@@ -88,6 +91,8 @@ const ThreadsModerationModalMove: React.FC = () => {
             <ModalFormBody>
               <ThreadsModerationSelectedThreads
                 errors={threadsErrors}
+                max={bulkActionLimit}
+                min={1}
                 threads={threads}
               />
               <Field

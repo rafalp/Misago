@@ -1,4 +1,4 @@
-import { t } from "@lingui/macro"
+import { plural } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import ValidationError from "./ValidationError"
@@ -6,9 +6,11 @@ import { IValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
   required: "value_error.missing",
+  min: "value_error.list.min_items",
+  max: "value_error.list.max_items",
 }
 
-const ThreadValidationError: React.FC<IValidationErrorProps> = ({
+const ThreadsValidationError: React.FC<IValidationErrorProps> = ({
   children,
   error,
   messages,
@@ -27,29 +29,27 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
     <I18n>
       {({ i18n }) => {
         switch (errorType) {
-          case "auth_error.not_moderator":
+          case "value_error.list.min_items":
             return children({
               type: errorType,
               message: i18n._(
-                t(
-                  "auth_error.not_moderator.thread"
-                )`You can't moderate this thread.`
+                plural("value_error.threads.min_items", {
+                  value: min,
+                  one: `Select at least # thread.`,
+                  other: `Select at least # threads.`,
+                })
               ),
             })
 
-          case "auth_error.thread.closed":
+          case "value_error.list.max_items":
             return children({
               type: errorType,
               message: i18n._(
-                t("auth_error.thread.closed")`Thread is closed.`
-              ),
-            })
-
-          case "value_error.thread.not_exists":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t("value_error.thread.not_exists")`Thread could not be found.`
+                plural("value_error.threads.max_items", {
+                  value: max,
+                  one: `You can't select more than # thread (you've selected ${value}).`,
+                  other: `You can't select more than # threads (you've selected ${value}).`,
+                })
               ),
             })
 
@@ -65,4 +65,4 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
   )
 }
 
-export default ThreadValidationError
+export default ThreadsValidationError

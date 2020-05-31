@@ -110,6 +110,7 @@ import {
   EmailValidationError,
   PasswordValidationError,
   ThreadValidationError,
+  ThreadsValidationError,
   UsernameValidationError,
   ValidationError,
 } from "./ValidationError"
@@ -206,6 +207,7 @@ export {
   SideNavItem,
   Spinner,
   ThreadValidationError,
+  ThreadsValidationError,
   TidbitActivityLastReply,
   TidbitActivityStart,
   TidbitCategory,

@@ -54,6 +54,7 @@ const INITIAL_DATA_QUERY = gql`
       }
     }
     settings {
+      bulkActionLimit
       forumIndexHeader
       forumIndexThreads
       forumIndexTitle

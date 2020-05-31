@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { Field, FieldError, ValidationError } from "../../../../UI"
+import { Field, FieldError, ThreadsValidationError } from "../../../../UI"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
 import ThreadsModerationSelectedThreadsButton from "./ThreadsModerationSelectedThreadsButton"
@@ -9,11 +9,15 @@ import ThreadsModerationSelectedThreadsList from "./ThreadsModerationSelectedThr
 interface IThreadsModerationSelectedThreadsProps {
   errors?: Record<string, IMutationError>
   threads: Array<ISelectedThread>
+  min: number
+  max: number
 }
 
 const ThreadsModerationSelectedThreads: React.FC<IThreadsModerationSelectedThreadsProps> = ({
   errors,
   threads,
+  min,
+  max,
 }) => {
   const [isOpen, setState] = React.useState<boolean>(threads.length < 3)
 
@@ -38,9 +42,14 @@ const ThreadsModerationSelectedThreads: React.FC<IThreadsModerationSelectedThrea
         </>
       }
       error={(error, value) => (
-        <ValidationError error={error} value={value}>
+        <ThreadsValidationError
+          error={error}
+          max={max}
+          min={min}
+          value={value.length}
+        >
           {({ message }) => <FieldError>{message}</FieldError>}
-        </ValidationError>
+        </ThreadsValidationError>
       )}
     />
   )

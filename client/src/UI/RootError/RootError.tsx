@@ -21,6 +21,8 @@ interface IRootErrorProps {
   }
 }
 
+const NOT_AUTHORIZED_ERROR = "auth_error.not_authorized"
+
 const RootError: React.FC<IRootErrorProps> = ({
   children,
   dataErrors,
@@ -62,6 +64,14 @@ const RootError: React.FC<IRootErrorProps> = ({
 
       const finLocations: Array<string> = locations || ["__root__"]
       const finMessages: { [type: string]: React.ReactNode } = messages || {}
+
+      if (!finMessages[NOT_AUTHORIZED_ERROR]) {
+        finMessages[NOT_AUTHORIZED_ERROR] = i18n._(
+          t(
+            "auth_error.not_authorized"
+          )`You need to be signed in to perform this action.`
+        )
+      }
 
       for (const location of finLocations) {
         for (const error of errors) {

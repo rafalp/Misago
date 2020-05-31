@@ -27,6 +27,16 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
     <I18n>
       {({ i18n }) => {
         switch (errorType) {
+          case "auth_error.not_moderator":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "auth_error.not_moderator.category"
+                )`You can't moderate this category.`
+              ),
+            })
+
           case "auth_error.category.closed":
             return children({
               type: errorType,

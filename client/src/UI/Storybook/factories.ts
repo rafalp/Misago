@@ -1,6 +1,7 @@
 import { IAvatar, ISettings, IUser } from "../../types"
 
 const defaultSettings = {
+  bulkActionLimit: 30,
   forumIndexHeader: "",
   forumIndexThreads: true,
   forumIndexTitle: "",
