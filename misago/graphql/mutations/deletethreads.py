@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
@@ -67,13 +67,15 @@ async def resolve_delete_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
+    result: Dict[str, Any] = {}
+
     if await update_threads(cleaned_data, errors):
         await delete_threads_hook.call_action(
             delete_threads_action, info.context, cleaned_data
         )
-        result = {"updated": True}
+        result["updated"] = True
     else:
-        result = {"updated": False}
+        result["updated"] = False
 
     if errors:
         result["errors"] = errors
