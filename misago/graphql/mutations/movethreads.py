@@ -19,7 +19,7 @@ from ...types import (
     MoveThreadsInputModel,
     Thread,
 )
-from ...utils.lists import remove_none_items
+from ...utils.lists import remove_none_items, update_list_items
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
@@ -78,14 +78,22 @@ async def resolve_move_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
+    if is_valid(cleaned_data, errors):
+        updated_threads = await move_threads_hook.call_action(
+            move_threads_action, info.context, cleaned_data
+        )
+
+        result = {
+            "threads": update_list_items(threads, updated_threads),
+            "updated": True,
+        }
+    else:
+        result = {"threads": threads, "updated": False}
+
     if errors:
-        return {"errors": errors, "threads": threads or None}
+        result["errors"] = errors
 
-    threads = await move_threads_hook.call_action(
-        move_threads_action, info.context, cleaned_data
-    )
-
-    return {"threads": threads}
+    return result
 
 
 async def create_input_model(context: GraphQLContext) -> MoveThreadsInputModel:
@@ -103,6 +111,14 @@ async def validate_input_data(
     errors: ErrorsList,
 ) -> Tuple[MoveThreadsInput, ErrorsList]:
     return await validate_data(data, validators, errors)
+
+
+def is_valid(cleaned_data: MoveThreadsInput, errors_locations: ErrorsList) -> bool:
+    if errors_locations.has_root_errors:
+        return False
+    if not cleaned_data.get("category") or not cleaned_data.get("threads"):
+        return False
+    return True
 
 
 async def move_threads_action(
