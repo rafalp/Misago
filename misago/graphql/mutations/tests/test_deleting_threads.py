@@ -12,7 +12,7 @@ async def test_delete_threads_mutation_deletes_threads(moderator_graphql_info, t
     )
 
     assert "errors" not in data
-    assert data["updated"]
+    assert data["deleted"]
     assert await get_thread_by_id(thread.id) is None
 
 
@@ -32,7 +32,7 @@ async def test_delete_threads_mutation_fails_if_user_is_not_authorized(
         "auth_error.not_moderator",
         "auth_error.not_authorized",
     ]
-    assert not data["updated"]
+    assert not data["deleted"]
     assert await get_thread_by_id(thread.id)
 
 
@@ -48,7 +48,7 @@ async def test_delete_threads_mutation_fails_if_user_is_not_moderator(
     assert data["errors"].get_errors_types() == [
         "auth_error.not_moderator",
     ]
-    assert not data["updated"]
+    assert not data["deleted"]
     assert await get_thread_by_id(thread.id)
 
 
@@ -62,7 +62,7 @@ async def test_delete_threads_mutation_fails_if_thread_id_is_invalid(
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert not data["updated"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -75,7 +75,7 @@ async def test_delete_threads_mutation_fails_if_thread_doesnt_exist(
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
     assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert not data["updated"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -88,5 +88,5 @@ async def test_delete_threads_mutation_with_threads_errors_still_deletes_valid_t
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
     assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert data["updated"]
+    assert data["deleted"]
     assert await get_thread_by_id(thread.id) is None

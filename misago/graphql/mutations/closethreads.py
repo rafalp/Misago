@@ -72,7 +72,7 @@ async def resolve_close_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
-    if await update_threads(cleaned_data, errors):
+    if is_valid(cleaned_data, errors):
         updated_threads = await close_threads_hook.call_action(
             close_threads_action, info.context, cleaned_data
         )
@@ -107,10 +107,8 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def update_threads(
-    cleaned_data: CloseThreadsInput, errors_locations: ErrorsList
-) -> bool:
-    if errors_locations.has_root_errors:
+def is_valid(cleaned_data: CloseThreadsInput, errors: ErrorsList) -> bool:
+    if errors.has_root_errors:
         return False
     if not cleaned_data.get("threads") or "is_closed" not in cleaned_data:
         return False

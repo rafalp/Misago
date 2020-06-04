@@ -112,6 +112,7 @@ input BulkDeleteThreadsInput {
 
 type BulkDeleteThreadsMutationResult {
     errors: [Error!]
+    deleted: Boolean!
 }
 
 extend type Mutation {

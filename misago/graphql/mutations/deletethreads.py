@@ -69,13 +69,13 @@ async def resolve_delete_threads(
 
     result: Dict[str, Any] = {}
 
-    if await update_threads(cleaned_data, errors):
+    if await is_valid(cleaned_data, errors):
         await delete_threads_hook.call_action(
             delete_threads_action, info.context, cleaned_data
         )
-        result["updated"] = True
+        result["deleted"] = True
     else:
-        result["updated"] = False
+        result["deleted"] = False
 
     if errors:
         result["errors"] = errors
@@ -99,7 +99,7 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def update_threads(
+async def is_valid(
     cleaned_data: DeleteThreadsInput, errors_locations: ErrorsList
 ) -> bool:
     if errors_locations.has_root_errors:
