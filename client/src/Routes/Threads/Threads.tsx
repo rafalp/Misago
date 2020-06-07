@@ -10,9 +10,11 @@ import {
   ThreadsCategoriesModalContextProvider,
 } from "./ThreadsCategoriesModal"
 import {
+  ThreadsModerationModalClose,
   ThreadsModerationModalContextProvider,
   ThreadsModerationModalDelete,
   ThreadsModerationModalMove,
+  ThreadsModerationModalOpen,
 } from "./ThreadsModeration"
 
 const Threads: React.FC = () => {
@@ -20,6 +22,8 @@ const Threads: React.FC = () => {
 
   return (
     <ThreadsModerationModalContextProvider>
+      <ThreadsModerationModalOpen />
+      <ThreadsModerationModalClose />
       <ThreadsModerationModalDelete />
       <ThreadsModerationModalMove />
       <ThreadsCategoriesModalContextProvider>

@@ -1,28 +1,37 @@
+import { ApolloError } from "apollo-client"
 import React from "react"
 import { useModal } from "../../../UI"
-import { ICategory } from "../../../types"
+import { ICategory, IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 
 enum ThreadsModerationModalAction {
-  DELETE,
+  OPEN,
+  CLOSE,
   MOVE,
+  DELETE,
 }
 
 interface IThreadsModerationModalContext {
   isOpen: boolean
-  data: {
-    action: ThreadsModerationModalAction
-    threads: Array<IThread>
-    category: ICategory | null
-  }
+  data: IThreadsModerationModalData
   open: (
     action: ThreadsModerationModalAction,
     threads: Array<IThread>,
-    data?: {
-      category?: ICategory | null
-    }
+    data?: IThreadsModerationModalDataOptional
   ) => void
   close: () => void
+}
+
+export interface IThreadsModerationModalData
+  extends IThreadsModerationModalDataOptional {
+  action: ThreadsModerationModalAction
+  threads: Array<IThread>
+}
+
+interface IThreadsModerationModalDataOptional {
+  category?: ICategory | null
+  graphqlError?: ApolloError | null
+  errors?: Array<IMutationError> | null
 }
 
 const ThreadsModerationModalContext = React.createContext<
@@ -33,6 +42,8 @@ const ThreadsModerationModalContext = React.createContext<
     action: ThreadsModerationModalAction.DELETE,
     threads: [],
     category: null,
+    graphqlError: null,
+    errors: null,
   },
   open: () => {},
   close: () => {},
@@ -50,6 +61,12 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
   )
   const [threads, setThreads] = React.useState<Array<IThread>>([])
   const [category, setCategory] = React.useState<ICategory | null>(null)
+  const [graphqlError, setGraphqlError] = React.useState<ApolloError | null>(
+    null
+  )
+  const [errors, setErrors] = React.useState<Array<IMutationError> | null>(
+    null
+  )
   const { isOpen, closeModal, openModal } = useModal()
 
   return (
@@ -60,18 +77,20 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
           action,
           threads,
           category,
+          graphqlError,
+          errors,
         },
         open: (
           action: ThreadsModerationModalAction,
           threads: Array<IThread>,
-          data?: {
-            category?: ICategory | null
-          }
+          data?: IThreadsModerationModalDataOptional
         ) => {
           setAction(action)
           setThreads(threads)
           if (data) {
             setCategory(data?.category || null)
+            setGraphqlError(data?.graphqlError || null)
+            setErrors(data?.errors || null)
           }
           openModal()
         },
@@ -90,10 +109,18 @@ const useThreadsModerationModalContext = (
   const { open } = React.useContext(ThreadsModerationModalContext)
 
   return {
+    openThreads: (result: {
+      graphqlError?: ApolloError | null
+      errors?: Array<IMutationError> | null
+    }) => open(ThreadsModerationModalAction.OPEN, threads, result),
+    closeThreads: (result: {
+      graphqlError?: ApolloError | null
+      errors?: Array<IMutationError> | null
+    }) => open(ThreadsModerationModalAction.CLOSE, threads, result),
     moveThreads: () => open(ThreadsModerationModalAction.MOVE, threads),
     deleteThreads: () =>
       open(ThreadsModerationModalAction.DELETE, threads, {
-        category: category,
+        category,
       }),
   }
 }

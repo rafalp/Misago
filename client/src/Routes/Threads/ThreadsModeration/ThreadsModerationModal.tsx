@@ -1,8 +1,7 @@
 import React from "react"
 import { Modal, ModalDialog, portal } from "../../../UI"
-import { ICategory } from "../../../types"
-import { IThread } from "../Threads.types"
 import {
+  IThreadsModerationModalData,
   ThreadsModerationModalAction,
   ThreadsModerationModalContext,
 } from "./ThreadsModerationModalContext"
@@ -11,10 +10,7 @@ interface IThreadsModerationModalProps {
   action: ThreadsModerationModalAction
   title: React.ReactNode
   children: (props: {
-    data: {
-      threads: Array<IThread>
-      category?: ICategory | null
-    }
+    data: IThreadsModerationModalData
     close: () => void
   }) => React.ReactNode
 }
