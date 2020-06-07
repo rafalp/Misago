@@ -1,3 +1,4 @@
+import { MutationResult } from "@apollo/react-common"
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { IMutationError } from "../../../types"
@@ -15,6 +16,7 @@ const CLOSE_THREADS = gql`
         id
         isClosed
       }
+      updated
     }
   }
 `
@@ -26,6 +28,7 @@ interface ICloseThreadsMutationData {
       id: string
       isClosed: boolean
     }> | null
+    updated: boolean
   }
 }
 
@@ -39,8 +42,8 @@ interface ICloseThreadsMutationVariables {
 const useCloseThreadsMutation = (
   threads: Array<IThread>,
   isClosed: boolean
-) => {
-  const [mutation] = useMutation<
+): [() => Promise<void>, MutationResult<ICloseThreadsMutationData>] => {
+  const [mutation, state] = useMutation<
     ICloseThreadsMutationData,
     ICloseThreadsMutationVariables
   >(CLOSE_THREADS, {
@@ -52,7 +55,15 @@ const useCloseThreadsMutation = (
     },
   })
 
-  return mutation
+  const runMutation = async () => {
+    try {
+      await mutation()
+    } catch (error) {
+      console.warn(error)
+    }
+  }
+
+  return [runMutation, state]
 }
 
 const useCloseThreads = (threads: Array<IThread>) => {

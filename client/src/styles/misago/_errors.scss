@@ -17,3 +17,26 @@
 .route-error-body {
   text-align: center;
 }
+
+/* Card and modal errors */
+.card-error,
+.card-blank-slate,
+.modal-error {
+  padding: $spacer * 2.5 $spacer;
+
+  text-align: center;
+
+  p.lead {
+    margin: 0;
+
+    font-size: $font-size-lg;
+  }
+}
+
+.card-error p + p,
+.card-blank-slate p + p,
+.card-blank-slate-actions,
+.modal-error p + p {
+  margin: 0;
+  margin-top: $spacer;
+}

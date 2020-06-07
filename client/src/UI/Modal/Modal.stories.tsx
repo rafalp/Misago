@@ -16,6 +16,7 @@ import {
   ModalAlert,
   ModalBody,
   ModalDialog,
+  ModalErrorBody,
   ModalFooter,
   ModalFormBody,
   ModalSize,
@@ -79,6 +80,49 @@ export const Basic = () => {
   )
 }
 
+export const Error = () => {
+  const title = text("Title", "Error Modal")
+  const footer = boolean("Display footer", false)
+
+  return (
+    <RootContainer>
+      <Modal close={close} isOpen={true} resistant={resistant()}>
+        <ModalDialog close={close} size={size()} title={title}>
+          <ModalErrorBody header="This content is not available." />
+          {footer && (
+            <ModalFooter>
+              <ButtonPrimary text="Close" onClick={close} responsive />
+            </ModalFooter>
+          )}
+        </ModalDialog>
+      </Modal>
+    </RootContainer>
+  )
+}
+
+export const ErrorWithMessage = () => {
+  const title = text("Title", "Error Modal")
+  const footer = boolean("Display footer", false)
+
+  return (
+    <RootContainer>
+      <Modal close={close} isOpen={true} resistant={resistant()}>
+        <ModalDialog close={close} size={size()} title={title}>
+          <ModalErrorBody
+            header="This content is not available."
+            message="It may have been moved or deleted, or you are missing permission to see it."
+          />
+          {footer && (
+            <ModalFooter>
+              <ButtonPrimary text="Close" onClick={close} responsive />
+            </ModalFooter>
+          )}
+        </ModalDialog>
+      </Modal>
+    </RootContainer>
+  )
+}
+
 export const Complex = () => {
   const title = text("Title", "Complex modal")
 
@@ -96,8 +140,8 @@ export const Complex = () => {
           </ModalBody>
           <ModalFooter>
             <Spinner small />
-            <ButtonPrimary text="Ok" onClick={button} />
             <ButtonSecondary text="Cancel" onClick={button} />
+            <ButtonPrimary text="Ok" onClick={button} />
           </ModalFooter>
         </ModalDialog>
       </Modal>

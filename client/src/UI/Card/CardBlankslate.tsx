@@ -15,7 +15,7 @@ const CardBlankslate: React.FC<ICardBlankslateProps> = ({
     <div className="card-blank-slate-body">
       <div className="card-blank-slate-icon" />
       <div className="card-blank-slate-message">
-        <h3>{header}</h3>
+        <p className="lead">{header}</p>
         {message && <p>{message}</p>}
         {actions && <div className="card-blank-slate-actions">{actions}</div>}
       </div>

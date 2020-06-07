@@ -42,7 +42,7 @@ const useDeleteThreadsMutation = () => {
     data,
     error,
     loading,
-    deleteThreads: (threads: Array<IThread>, category: ICategory | null) => {
+    deleteThreads: (threads: Array<IThread>, category?: ICategory | null) => {
       const deletedThreads = threads.map((thread) => thread.id)
       return mutation({
         variables: {

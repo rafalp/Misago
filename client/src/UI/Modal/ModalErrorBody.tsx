@@ -1,21 +1,21 @@
 import classNames from "classnames"
 import React from "react"
 
-interface ICardErrorProps {
+interface IModalErrorBodyProps {
   className?: string | null
   header: React.ReactNode | null
   message?: React.ReactNode | null
 }
 
-const CardError: React.FC<ICardErrorProps> = ({
+const ModalErrorBody: React.FC<IModalErrorBodyProps> = ({
   className,
   header,
   message,
 }) => (
-  <div className={classNames("card-body card-error", className)}>
-    <div className="card-error-body">
-      <div className="card-error-icon" />
-      <div className="card-error-message">
+  <div className={classNames("modal-body", "modal-error", className)}>
+    <div className="modal-error-body">
+      <div className="modal-error-icon" />
+      <div className="modal-error-message">
         <p className="lead">{header}</p>
         {message && <p>{message}</p>}
       </div>
@@ -23,4 +23,4 @@ const CardError: React.FC<ICardErrorProps> = ({
   </div>
 )
 
-export default CardError
+export default ModalErrorBody

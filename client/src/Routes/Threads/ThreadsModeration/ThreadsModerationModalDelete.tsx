@@ -47,7 +47,7 @@ const ThreadsModerationModalDelete: React.FC = () => {
       action={ThreadsModerationModalAction.DELETE}
       title={<Trans id="moderation.delete_threads">Delete threads</Trans>}
     >
-      {({ category, close, threads }) => {
+      {({ data: { category, threads }, close }) => {
         return (
           <Form<IFormValues>
             id="delete_threads_form"

@@ -11,8 +11,10 @@ interface IThreadsModerationModalProps {
   action: ThreadsModerationModalAction
   title: React.ReactNode
   children: (props: {
-    threads: Array<IThread>
-    category: ICategory | null
+    data: {
+      threads: Array<IThread>
+      category?: ICategory | null
+    }
     close: () => void
   }) => React.ReactNode
 }
@@ -20,18 +22,18 @@ interface IThreadsModerationModalProps {
 const ThreadsModerationModal: React.FC<IThreadsModerationModalProps> = (
   props
 ) => {
-  const { action, threads, category, isOpen, close } = React.useContext(
+  const { data, isOpen, close } = React.useContext(
     ThreadsModerationModalContext
   )
 
   return portal(
-    <Modal close={close} isOpen={isOpen && action === props.action}>
+    <Modal close={close} isOpen={isOpen && data.action === props.action}>
       <ModalDialog
         className="modal-dialog-moderation"
         close={close}
         title={props.title}
       >
-        {props.children({ threads, category, close })}
+        {props.children({ data, close })}
       </ModalDialog>
     </Modal>
   )

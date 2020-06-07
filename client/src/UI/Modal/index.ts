@@ -4,6 +4,7 @@ import ModalAlert from "./ModalAlert"
 import ModalBacktrop from "./ModalBacktrop"
 import ModalBody from "./ModalBody"
 import ModalDialog from "./ModalDialog"
+import ModalErrorBody from "./ModalErrorBody"
 import ModalFooter from "./ModalFooter"
 import ModalFormBody from "./ModalFormBody"
 import ModalHeader from "./ModalHeader"
@@ -16,6 +17,7 @@ export {
   ModalBacktrop,
   ModalBody,
   ModalDialog,
+  ModalErrorBody,
   ModalFooter,
   ModalFormBody,
   ModalHeader,

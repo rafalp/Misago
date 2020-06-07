@@ -12,8 +12,8 @@ const useThreadsModeration = (
 ): IThreadsModeration | null => {
   const user = useAuthContext()
 
-  const closeThreads = useCloseThreads(threads)
-  const openThreads = useOpenThreads(threads)
+  const [closeThreads] = useCloseThreads(threads)
+  const [openThreads] = useOpenThreads(threads)
   const { moveThreads, deleteThreads } = useThreadsModerationModalContext(
     threads,
     category

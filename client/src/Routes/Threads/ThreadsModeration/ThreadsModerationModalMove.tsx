@@ -53,7 +53,7 @@ const ThreadsModerationModalMove: React.FC = () => {
       action={ThreadsModerationModalAction.MOVE}
       title={<Trans id="moderation.move_threads">Move threads</Trans>}
     >
-      {({ close, threads }) => {
+      {({ data: { threads }, close }) => {
         return (
           <Form<IFormValues>
             id="move_threads_form"

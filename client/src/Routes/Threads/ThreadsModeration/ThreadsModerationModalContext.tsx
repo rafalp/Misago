@@ -10,13 +10,17 @@ enum ThreadsModerationModalAction {
 
 interface IThreadsModerationModalContext {
   isOpen: boolean
-  action: ThreadsModerationModalAction
-  threads: Array<IThread>
-  category: ICategory | null
-  open: (
-    threads: Array<IThread>,
-    category: ICategory | null | undefined,
+  data: {
     action: ThreadsModerationModalAction
+    threads: Array<IThread>
+    category: ICategory | null
+  }
+  open: (
+    action: ThreadsModerationModalAction,
+    threads: Array<IThread>,
+    data?: {
+      category?: ICategory | null
+    }
   ) => void
   close: () => void
 }
@@ -25,9 +29,11 @@ const ThreadsModerationModalContext = React.createContext<
   IThreadsModerationModalContext
 >({
   isOpen: false,
-  action: ThreadsModerationModalAction.DELETE,
-  threads: [],
-  category: null,
+  data: {
+    action: ThreadsModerationModalAction.DELETE,
+    threads: [],
+    category: null,
+  },
   open: () => {},
   close: () => {},
 })
@@ -50,17 +56,23 @@ const ThreadsModerationModalContextProvider: React.FC<IThreadsModerationModalCon
     <ThreadsModerationModalContext.Provider
       value={{
         isOpen,
-        action,
-        threads,
-        category,
+        data: {
+          action,
+          threads,
+          category,
+        },
         open: (
+          action: ThreadsModerationModalAction,
           threads: Array<IThread>,
-          category: ICategory | null | undefined,
-          action: ThreadsModerationModalAction
+          data?: {
+            category?: ICategory | null
+          }
         ) => {
-          setThreads(threads)
-          setCategory(category || null)
           setAction(action)
+          setThreads(threads)
+          if (data) {
+            setCategory(data?.category || null)
+          }
           openModal()
         },
         close: closeModal,
@@ -78,10 +90,11 @@ const useThreadsModerationModalContext = (
   const { open } = React.useContext(ThreadsModerationModalContext)
 
   return {
-    moveThreads: () =>
-      open(threads, category, ThreadsModerationModalAction.MOVE),
+    moveThreads: () => open(ThreadsModerationModalAction.MOVE, threads),
     deleteThreads: () =>
-      open(threads, category, ThreadsModerationModalAction.DELETE),
+      open(ThreadsModerationModalAction.DELETE, threads, {
+        category: category,
+      }),
   }
 }
 
