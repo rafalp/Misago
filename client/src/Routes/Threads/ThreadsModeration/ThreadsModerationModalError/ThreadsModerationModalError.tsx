@@ -7,7 +7,6 @@ import {
   GraphQLErrorRenderer,
   ModalAlert,
   ModalCloseFooter,
-  ModalBody,
   ModalErrorBody,
   RootError,
   useRootError,
@@ -15,6 +14,7 @@ import {
 } from "../../../../UI"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
+import ThreadsModerationModalErrorThreads from "./ThreadsModerationModalErrorThreads"
 
 interface IThreadsModerationModalErrorProps {
   graphqlError?: ApolloError | null
@@ -81,7 +81,10 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
             <ErrorHeader />
           )}
         </ModalAlert>
-        <ModalBody>[TODO: FAILED THREADS AND THEIR ERRORS]</ModalBody>
+        <ThreadsModerationModalErrorThreads
+          errors={threadsErrors}
+          threads={threads}
+        />
         <ModalCloseFooter close={close} />
       </>
     )

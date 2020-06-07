@@ -5,7 +5,7 @@ import { ModalContainer, categories } from "../../../../UI/Storybook"
 import ThreadsModerationModalError from "./ThreadsModerationModalError"
 
 export default {
-  title: "Route/Threads/Moderation/Error",
+  title: "Route/Threads/Moderation/ErrorModal",
 }
 
 const close = action("close modal")

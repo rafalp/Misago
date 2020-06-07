@@ -121,7 +121,7 @@ import WindowTitle from "./WindowTitle"
 import portal from "./portal"
 import useRootError from "./useRootError"
 import useSelection from "./useSelection"
-import useSelectionErrors from "./useSelectionErrors"
+import { getSelectionErrors, useSelectionErrors } from "./useSelectionErrors"
 
 export {
   Avatar,
@@ -234,6 +234,7 @@ export {
   ValidationError,
   ViewportEvent,
   WindowTitle,
+  getSelectionErrors,
   portal,
   useFieldContext,
   useFormContext,

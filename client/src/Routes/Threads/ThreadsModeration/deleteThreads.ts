@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { ICategory, IMutationError } from "../../../types"
+import { getSelectionErrors } from "../../../UI"
+import { ERROR_TYPE, ICategory, IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 import {
   CATEGORY_THREADS_QUERY,
@@ -16,6 +17,7 @@ const DELETE_THREADS = gql`
         location
         type
       }
+      deleted
     }
   }
 `
@@ -23,6 +25,7 @@ const DELETE_THREADS = gql`
 interface IDeleteThreadsMutationData {
   deleteThreads: {
     errors: Array<IMutationError> | null
+    deleted: boolean
   }
 }
 
@@ -49,7 +52,13 @@ const useDeleteThreadsMutation = () => {
           input: { threads: deletedThreads },
         },
         update: (cache, { data }) => {
-          if (!data || !data.deleteThreads || data.deleteThreads.errors) return
+          if (!data || !data.deleteThreads) return
+
+          const errors = getSelectionErrors<IThread>(
+            "threads",
+            threads,
+            data.deleteThreads.errors || []
+          )
 
           let queryID = category
             ? {
@@ -70,6 +79,13 @@ const useDeleteThreadsMutation = () => {
               threads: {
                 ...query.threads,
                 items: query.threads.items.filter((thread) => {
+                  if (
+                    errors[thread.id] &&
+                    errors[thread.id].type !== ERROR_TYPE.THREAD_NOT_EXISTS
+                  ) {
+                    return true
+                  }
+
                   return deletedThreads.indexOf(thread.id) < 0
                 }),
               },

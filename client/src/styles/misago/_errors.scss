@@ -40,3 +40,25 @@
   margin: 0;
   margin-top: $spacer;
 }
+
+/* Threads errors list */
+.threads-errors {
+  margin: 0;
+}
+
+.threads-errors-thread {
+  font-size: $font-size-sm;
+}
+
+.threads-errors-thread + .threads-errors-thread {
+  margin-top: $spacer;
+}
+
+.threads-errors-thread-title {
+  font-weight: bold;
+  word-break: break-word;
+}
+
+.threads-errors-thread-error {
+  color: theme-color("danger");
+}

@@ -9,14 +9,14 @@ const useSelectionErrors = <TSelectable extends { id: string }>(
   const [state, setState] = React.useState<Record<string, IMutationError>>(
     () => {
       if (!selection || !errors) return {}
-      return getErrors(location, selection, errors)
+      return getSelectionErrors(location, selection, errors)
     }
   )
 
   const updated = React.useMemo(() => {
     if (!selection) return false
     return selection.length > Object.keys(state).length
-  }, [state])
+  }, [selection, state])
 
   return {
     updated,
@@ -26,13 +26,13 @@ const useSelectionErrors = <TSelectable extends { id: string }>(
       selection: Array<TSelectable>,
       errors: Array<IMutationError>
     ) => {
-      const newErrors = getErrors(location, selection, errors)
+      const newErrors = getSelectionErrors(location, selection, errors)
       setState(newErrors)
     },
   }
 }
 
-const getErrors = <TSelectable extends { id: string }>(
+const getSelectionErrors = <TSelectable extends { id: string }>(
   location: string,
   selection: Array<TSelectable>,
   errors: Array<IMutationError>
@@ -57,4 +57,4 @@ const getErrors = <TSelectable extends { id: string }>(
   return newErrors
 }
 
-export default useSelectionErrors
+export { getSelectionErrors, useSelectionErrors }
