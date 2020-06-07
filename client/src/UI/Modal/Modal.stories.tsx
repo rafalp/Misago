@@ -15,6 +15,7 @@ import {
   Modal,
   ModalAlert,
   ModalBody,
+  ModalCloseFooter,
   ModalDialog,
   ModalErrorBody,
   ModalFooter,
@@ -89,11 +90,7 @@ export const Error = () => {
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
           <ModalErrorBody header="This content is not available." />
-          {footer && (
-            <ModalFooter>
-              <ButtonPrimary text="Close" onClick={close} responsive />
-            </ModalFooter>
-          )}
+          {footer && <ModalCloseFooter close={close} />}
         </ModalDialog>
       </Modal>
     </RootContainer>
@@ -112,11 +109,7 @@ export const ErrorWithMessage = () => {
             header="This content is not available."
             message="It may have been moved or deleted, or you are missing permission to see it."
           />
-          {footer && (
-            <ModalFooter>
-              <ButtonPrimary text="Close" onClick={close} responsive />
-            </ModalFooter>
-          )}
+          {footer && <ModalCloseFooter close={close} />}
         </ModalDialog>
       </Modal>
     </RootContainer>

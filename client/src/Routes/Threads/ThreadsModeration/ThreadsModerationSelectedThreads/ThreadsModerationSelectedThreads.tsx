@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Field, FieldError, ThreadsValidationError } from "../../../../UI"
 import { IMutationError } from "../../../../types"
-import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
+import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsButton from "./ThreadsModerationSelectedThreadsButton"
 import ThreadsModerationSelectedThreadsList from "./ThreadsModerationSelectedThreadsList"
 

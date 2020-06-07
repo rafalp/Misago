@@ -9,7 +9,7 @@ import {
   Tidbits,
 } from "../../../../UI"
 import { IMutationError } from "../../../../types"
-import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
+import { ISelectedThread } from "../../Threads.types"
 
 interface IThreadsModerationSelectedThreadsListItemProps {
   disabled?: boolean

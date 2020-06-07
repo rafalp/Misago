@@ -51,3 +51,10 @@ export interface IThreadsModerationAction {
   iconSolid?: boolean
   action: () => Promise<void> | void
 }
+
+export interface ISelectedThread {
+  id: string
+  title: string
+  replies: number
+  category: IThreadCategory
+}

@@ -70,6 +70,7 @@ import {
   ModalAlert,
   ModalBacktrop,
   ModalBody,
+  ModalCloseFooter,
   ModalDialog,
   ModalErrorBody,
   ModalFooter,
@@ -118,6 +119,7 @@ import {
 import ViewportEvent from "./ViewportEvent"
 import WindowTitle from "./WindowTitle"
 import portal from "./portal"
+import useRootError from "./useRootError"
 import useSelection from "./useSelection"
 import useSelectionErrors from "./useSelectionErrors"
 
@@ -185,6 +187,7 @@ export {
   ModalAlert,
   ModalBacktrop,
   ModalBody,
+  ModalCloseFooter,
   ModalDialog,
   ModalErrorBody,
   ModalFooter,
@@ -235,6 +238,7 @@ export {
   useFieldContext,
   useFormContext,
   useModal,
+  useRootError,
   useSelection,
   useSelectionErrors,
 }

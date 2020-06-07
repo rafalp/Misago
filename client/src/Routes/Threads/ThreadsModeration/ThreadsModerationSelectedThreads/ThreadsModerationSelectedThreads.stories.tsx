@@ -2,8 +2,8 @@ import { action } from "@storybook/addon-actions"
 import React from "react"
 import { ButtonPrimary, Form } from "../../../../UI"
 import { ModalFormContainer, categories } from "../../../../UI/Storybook"
+import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreads from "./"
-import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
 
 export default {
   title: "Route/Threads/Moderation/SelectedThreads",

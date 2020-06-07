@@ -2,7 +2,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext, useSelection } from "../../../../UI"
 import { IMutationError } from "../../../../types"
-import { ISelectedThread } from "./ThreadsModerationSelectedThreads.types"
+import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsListItem from "./ThreadsModerationSelectedThreadsListItem"
 
 interface IThreadsModerationSelectedThreadsListProps {
