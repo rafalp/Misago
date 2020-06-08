@@ -28,6 +28,7 @@ const MOVE_THREADS = gql`
           }
         }
       }
+      updated
     }
   }
 `
@@ -39,6 +40,7 @@ interface IMoveThreadsMutationData {
       id: string
       category: IThreadCategory
     }> | null
+    updated: boolean
   }
 }
 

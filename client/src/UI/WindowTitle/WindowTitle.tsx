@@ -17,8 +17,9 @@ const WindowTitle: React.FC<IWindowTitleProps> = ({
 
   const prefix = alerts ? `(${alerts}) ` : ""
 
-  if (index && settings.forumIndexTitle) {
-    document.title = prefix + settings.forumIndexTitle
+  if (index) {
+    const indexTitle = settings.forumIndexTitle || settings.forumName
+    document.title = prefix + indexTitle
   } else if (title) {
     document.title = `${prefix}${title} | ${settings.forumName}`
   } else {
