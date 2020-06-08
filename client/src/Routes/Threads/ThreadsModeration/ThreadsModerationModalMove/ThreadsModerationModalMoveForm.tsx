@@ -79,17 +79,22 @@ const ThreadsModerationModalMoveForm: React.FC<IThreadsModerationModalMoveFormPr
         clearError()
         clearThreadsErrors()
 
-        const result = await moveThreads(threads, category)
-        const { errors } = result.data?.moveThreads || {}
+        try {
+          const result = await moveThreads(threads, category)
+          const { errors } = result.data?.moveThreads || {}
 
-        if (errors) {
-          setThreadsErrors(threads, errors)
-          errors?.forEach(({ location, type, message }) => {
-            const field = location.join(".")
-            setError(field, type, message)
-          })
-        } else {
-          close()
+          if (errors) {
+            setThreadsErrors(threads, errors)
+            errors?.forEach(({ location, type, message }) => {
+              const field = location.join(".")
+              setError(field, type, message)
+            })
+          } else {
+            close()
+          }
+        } catch (error) {
+          // do nothing when moveThreads throws
+          return
         }
       }}
     >
