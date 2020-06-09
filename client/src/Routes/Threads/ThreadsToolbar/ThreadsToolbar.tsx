@@ -38,7 +38,8 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
           toggle={({ ref, toggle }) => (
             <ButtonSecondary
               elementRef={ref}
-              disabled={moderation.disabled}
+              loading={moderation.loading}
+              disabled={moderation.disabled || moderation.loading}
               icon="shield-alt"
               iconSolid
               responsive

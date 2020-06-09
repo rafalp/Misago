@@ -26,6 +26,7 @@ const Button: React.FC<IButtonProps> = ({
           "btn-block": block,
           "btn-img": image,
           "btn-responsive": responsive,
+          "btn-loading": loading,
           "btn-sm": small,
         },
         className

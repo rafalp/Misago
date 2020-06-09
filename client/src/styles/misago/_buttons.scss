@@ -1,22 +1,29 @@
 // Insert some space between button's icon and text
 .btn .far + span,
 .btn .fas + span,
-.btn .spinner-border + span {
+.btn .btn-spinner + span {
   margin-left: $input-btn-padding-x;
 }
 
 .btn.btn-sm .far + span,
 .btn.btn-sm .fas + span,
-.btn.btn-sm .spinner-border + span {
+.btn.btn-sm .btn-spinner + span {
   margin-left: $input-btn-padding-x-sm;
 }
 
 @include media-breakpoint-down(md) {
   .btn.btn-responsive .far + span,
   .btn.btn-responsive .fas + span,
-  .btn.btn-responsive .spinner-border + span {
+  .btn.btn-responsive .btn-spinner + span {
     margin-left: $input-btn-padding-x-sm;
   }
+}
+
+// Button spinner fixed width
+.btn-spinner {
+  display: inline-block;
+  text-align: center;
+  width: 1.25em;
 }
 
 // Justified button
