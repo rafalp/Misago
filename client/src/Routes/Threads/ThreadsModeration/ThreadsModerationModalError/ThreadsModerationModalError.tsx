@@ -1,4 +1,3 @@
-import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
 import {
@@ -14,11 +13,13 @@ import {
 } from "../../../../UI"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
+import ThreadsModerationModalErrorHeader from "./ThreadsModerationModalErrorHeader"
 import ThreadsModerationModalErrorThreads from "./ThreadsModerationModalErrorThreads"
 
 interface IThreadsModerationModalErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<IMutationError> | null
+  forDelete?: boolean
   threads?: Array<ISelectedThread>
   close: () => void
 }
@@ -26,20 +27,28 @@ interface IThreadsModerationModalErrorProps {
 const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> = ({
   graphqlError,
   errors,
+  forDelete,
   threads,
   close,
 }) => {
   const hasRootError = !!useRootError(errors)
-  const { updated, errors: threadsErrors } = useSelectionErrors<
-    ISelectedThread
-  >("threads", threads, errors || [])
+  const { errors: threadsErrors } = useSelectionErrors<ISelectedThread>(
+    "threads",
+    threads,
+    errors || []
+  )
 
   if (hasRootError) {
     return (
       <RootError dataErrors={errors}>
         {({ message }) => (
           <>
-            <ModalErrorBody header={<ErrorHeader />} message={message} />
+            <ModalErrorBody
+              header={
+                <ThreadsModerationModalErrorHeader forDelete={forDelete} />
+              }
+              message={message}
+            />
             <ModalCloseFooter close={close} />
           </>
         )}
@@ -51,7 +60,7 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
     return (
       <>
         <ModalErrorBody
-          header={<ErrorHeader />}
+          header={<ThreadsModerationModalErrorHeader forDelete={forDelete} />}
           message={
             <GraphQLErrorRenderer
               error={graphqlError}
@@ -69,17 +78,11 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
     return (
       <>
         <ModalAlert>
-          {threads.length === 1 ? (
-            <Trans id="moderation.thread_error_header">
-              Selected thread could not be updated.
-            </Trans>
-          ) : updated ? (
-            <Trans id="moderation.threads_error_header_some">
-              Some of the selected threads could not be updated.
-            </Trans>
-          ) : (
-            <ErrorHeader />
-          )}
+          <ThreadsModerationModalErrorHeader
+            forDelete={forDelete}
+            threads={threads}
+            threadsErrors={threadsErrors}
+          />
         </ModalAlert>
         <ThreadsModerationModalErrorThreads
           errors={threadsErrors}
@@ -92,11 +95,5 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
 
   return null
 }
-
-const ErrorHeader: React.FC = () => (
-  <Trans id="moderation.threads_error_header">
-    Selected threads could not be updated.
-  </Trans>
-)
 
 export default ThreadsModerationModalError

@@ -12,7 +12,7 @@ const ThreadsModerationModalErrorThreads: React.FC<IThreadsModerationModalErrorT
   errors,
   threads,
 }) => (
-  <ModalBody className="modal-error modal-threads-errors">
+  <ModalBody className="modal-threads-errors">
     <ul className="list-unstyled threads-errors">
       {threads.map((thread) => {
         if (!errors[thread.id]) return null

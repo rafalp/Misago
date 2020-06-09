@@ -58,6 +58,7 @@ const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFo
         errors={data.deleteThreads.errors}
         threads={threads}
         close={close}
+        forDelete
       />
     )
   }
