@@ -14,7 +14,7 @@ const AuthChangedLoggedInAlert: React.FC<IAuthChangedLoggedInAlertProps> = ({
   <div className="auth-alert auth-alert-logged-in">
     <div className="alert alert-info">
       <div className="container-fluid">
-        <p>
+        <p className="lead">
           <Trans id="auth_alert.logged_in.title">
             You have been logged in, <strong>{username}</strong>.
           </Trans>

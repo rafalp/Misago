@@ -14,7 +14,7 @@ const AuthChangedLoggedOutAlert: React.FC<IAuthChangedLoggedOutAlertProps> = ({
   <div className="auth-alert auth-alert-logged-out">
     <div className="alert alert-info">
       <div className="container-fluid">
-        <p>
+        <p className="lead">
           <Trans id="auth_alert.logged_out.title">
             You have been logged out, <strong>{username}</strong>.
           </Trans>

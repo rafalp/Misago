@@ -12,6 +12,12 @@
 
 .route-error {
   padding: 4rem 0;
+
+  p.lead {
+    margin: 0;
+
+    font-size: $font-size-base * 1.5;
+  }
 }
 
 .route-error-body {

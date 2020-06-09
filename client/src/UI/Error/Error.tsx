@@ -13,13 +13,13 @@ const Error: React.FC<IErrorProps> = ({ className, header, message }) => (
     <div className={className + "-error-body"}>
       <div className={className + "-error-icon"} />
       <div className={className + "-error-message"}>
-        <h3>
+        <p className="lead">
           {header || (
             <Trans id="generic_error.title">
               Requested page could not be displayed.
             </Trans>
           )}
-        </h3>
+        </p>
         <p>{message || <ErrorMessage />}</p>
       </div>
     </div>
