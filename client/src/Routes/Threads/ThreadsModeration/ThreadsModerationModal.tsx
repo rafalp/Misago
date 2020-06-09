@@ -23,7 +23,11 @@ const ThreadsModerationModal: React.FC<IThreadsModerationModalProps> = (
   )
 
   return portal(
-    <Modal close={close} isOpen={isOpen && data.action === props.action}>
+    <Modal
+      close={close}
+      isOpen={isOpen && data.action === props.action}
+      resistant
+    >
       <ModalDialog
         className="modal-dialog-moderation"
         close={close}
