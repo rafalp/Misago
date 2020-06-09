@@ -76,7 +76,3 @@ export interface IAuthModalContext {
   openLoginModal: () => void
   openRegisterModal: () => void
 }
-
-export const ERROR_TYPE = {
-  THREAD_NOT_EXISTS: "value_error.thread.not_exists",
-}
