@@ -2,21 +2,18 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useAuthContext } from "../../../Context"
 import { IThread, IThreadModeration } from "../Thread.types"
+import { useCloseThread, useOpenThread } from "./closeThread"
 
-const useThreadModeration = (
-  thread: IThread | null
-): IThreadModeration | null => {
+const useThreadModeration = (thread: IThread): IThreadModeration | null => {
   const user = useAuthContext()
 
-  if (!thread) return null
-
-  const closeThread = () => {}
-  const openThread = () => {}
+  const [closeThread, { loading: closingThread }] = useCloseThread(thread)
+  const [openThread, { loading: openingThread }] = useOpenThread(thread)
   const moveThread = () => {}
   const deleteThread = () => {}
 
   const moderation = {
-    loading: false,
+    loading: closingThread || openingThread,
     closeThread,
     openThread,
     moveThread,

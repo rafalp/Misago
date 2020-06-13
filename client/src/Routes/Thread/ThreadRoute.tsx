@@ -7,10 +7,8 @@ import {
   RouteNotFound,
   WindowTitle,
 } from "../../UI"
-import { useThreadACL } from "../../acl"
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
-import { useThreadModeration } from "./ThreadModeration"
 import useThreadParams from "./useThreadParams"
 import { useThreadQuery } from "./useThreadQuery"
 
@@ -18,8 +16,6 @@ const ThreadRoute: React.FC = () => {
   const { id, slug, page } = useThreadParams()
   const { data, loading, error } = useThreadQuery({ id, page })
   const { thread } = data || { thread: null }
-  const acl = useThreadACL(thread)
-  const moderation = useThreadModeration(thread)
 
   if (!data) {
     if (error) return <RouteGraphQLError error={error} />
@@ -36,7 +32,7 @@ const ThreadRoute: React.FC = () => {
       className={`route-thread route-thread-${thread.category.id}`}
     >
       <WindowTitle title={thread.title} parent={thread.category.name} />
-      <ThreadHeader acl={acl} moderation={moderation} thread={thread} />
+      <ThreadHeader thread={thread} />
     </RouteContainer>
   )
 }

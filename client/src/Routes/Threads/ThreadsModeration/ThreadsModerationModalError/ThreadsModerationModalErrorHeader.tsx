@@ -40,13 +40,13 @@ const ThreadsModerationModalErrorHeaderForDelete: React.FC<IThreadsModerationMod
   if (threads) {
     if (threads.length === 1) {
       return (
-        <Trans id="moderation.thread_delete_error_header">
+        <Trans id="moderation.selected_thread_delete_error">
           Selected thread could not be deleted.
         </Trans>
       )
     } else if (errorsCount > 0 && errorsCount < threads.length) {
       return (
-        <Trans id="moderation.threads_delete_error_header_some">
+        <Trans id="moderation.selected_threads_delete_error_some">
           Some of the selected threads could not be deleted.
         </Trans>
       )
@@ -54,7 +54,7 @@ const ThreadsModerationModalErrorHeaderForDelete: React.FC<IThreadsModerationMod
   }
 
   return (
-    <Trans id="moderation.threads_delete_error_header">
+    <Trans id="moderation.selected_threads_delete_error">
       Selected threads could not be deleted.
     </Trans>
   )
@@ -69,13 +69,13 @@ const ThreadsModerationModalErrorHeaderForUpdate: React.FC<IThreadsModerationMod
   if (threads) {
     if (threads.length === 1) {
       return (
-        <Trans id="moderation.thread_error_header">
+        <Trans id="moderation.selected_thread_delete">
           Selected thread could not be updated.
         </Trans>
       )
     } else if (errorsCount > 0 && errorsCount < threads.length) {
       return (
-        <Trans id="moderation.threads_error_header_some">
+        <Trans id="moderation.selected_threads_error_some">
           Some of the selected threads could not be updated.
         </Trans>
       )
@@ -83,7 +83,7 @@ const ThreadsModerationModalErrorHeaderForUpdate: React.FC<IThreadsModerationMod
   }
 
   return (
-    <Trans id="moderation.threads_error_header">
+    <Trans id="moderation.selected_threads_error">
       Selected threads could not be updated.
     </Trans>
   )
