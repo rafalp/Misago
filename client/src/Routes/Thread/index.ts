@@ -1,3 +1,3 @@
-import ThreadRoute from "./ThreadRoute"
+import Thread from "./Thread"
 
-export default ThreadRoute
+export default Thread

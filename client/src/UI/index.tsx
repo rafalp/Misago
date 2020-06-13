@@ -93,6 +93,7 @@ import Spinner from "./Spinner"
 import {
   TidbitActivityLastReply,
   TidbitActivityStart,
+  TidbitAvatar,
   TidbitCategory,
   TidbitClosed,
   TidbitItem,
@@ -215,6 +216,7 @@ export {
   ThreadsValidationError,
   TidbitActivityLastReply,
   TidbitActivityStart,
+  TidbitAvatar,
   TidbitCategory,
   TidbitClosed,
   TidbitItem,

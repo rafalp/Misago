@@ -3,12 +3,11 @@ import { Route, Switch } from "react-router-dom"
 import { useSettingsContext } from "../../Context"
 import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
 import * as urls from "../../urls"
-import ThreadsAll from "./ThreadsAll"
-import ThreadsCategory from "./ThreadsCategory"
 import {
   ThreadsCategoriesModal,
   ThreadsCategoriesModalContextProvider,
 } from "./ThreadsCategoriesModal"
+import ThreadsCategoryRoute from "./ThreadsCategoryRoute"
 import {
   ThreadsModerationModalClose,
   ThreadsModerationModalContextProvider,
@@ -16,6 +15,7 @@ import {
   ThreadsModerationModalMove,
   ThreadsModerationModalOpen,
 } from "./ThreadsModeration"
+import ThreadsRoute from "./ThreadsRoute"
 
 const Threads: React.FC = () => {
   const settings = useSettingsContext()
@@ -33,7 +33,7 @@ const Threads: React.FC = () => {
             path={urls.category({ id: ":id", slug: ":slug" })}
             render={() => (
               <RouteErrorBoundary>
-                <ThreadsCategory />
+                <ThreadsCategoryRoute />
               </RouteErrorBoundary>
             )}
             exact
@@ -42,7 +42,7 @@ const Threads: React.FC = () => {
             path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
             render={() => (
               <RouteErrorBoundary>
-                <ThreadsAll />
+                <ThreadsRoute />
               </RouteErrorBoundary>
             )}
             exact

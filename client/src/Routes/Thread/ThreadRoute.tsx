@@ -1,24 +1,39 @@
 import React from "react"
-import { useParams } from "react-router-dom"
-import { WindowTitle } from "../../UI"
-import ThreadQuery from "./ThreadQuery"
-
-interface IThreadRouteParams {
-  id: string
-}
+import { Redirect } from "react-router-dom"
+import {
+  RouteContainer,
+  RouteGraphQLError,
+  RouteLoader,
+  RouteNotFound,
+  WindowTitle,
+} from "../../UI"
+import * as urls from "../../urls"
+import ThreadHeader from "./ThreadHeader"
+import useThreadParams from "./useThreadParams"
+import { useThreadQuery } from "./useThreadQuery"
 
 const ThreadRoute: React.FC = () => {
-  const { id } = useParams<IThreadRouteParams>()
+  const { id, slug, page } = useThreadParams()
+  const { data, loading, error } = useThreadQuery({ id, page })
+
+  if (!data) {
+    if (error) return <RouteGraphQLError error={error} />
+    if (loading) return <RouteLoader />
+  }
+
+  const { thread } = data || { thread: null }
+  if (!thread) return <RouteNotFound />
+  if (thread.slug !== slug) {
+    return <Redirect to={urls.thread({ id, page, slug: thread.slug })} />
+  }
 
   return (
-    <ThreadQuery id={id}>
-      {({ data: { thread } }) => (
-        <>
-          <WindowTitle title={thread.title} />
-          <h1>{thread.title}</h1>
-        </>
-      )}
-    </ThreadQuery>
+    <RouteContainer
+      className={`route-thread route-thread-${thread.category.id}`}
+    >
+      <WindowTitle title={thread.title} parent={thread.category.name} />
+      <ThreadHeader thread={thread} />
+    </RouteContainer>
   )
 }
 

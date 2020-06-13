@@ -32,21 +32,21 @@ const THREADS_FIELDS = `
     startedAt
     lastPostedAt
     replies
+    starterName
+    lastPosterName
+    isClosed
     category {
       ...ThreadsListThreadCategory
       parent {
         ...ThreadsListThreadCategory
       }
     }
-    starterName
-    lastPosterName
     starter {
       ...ThreadsListThreadPoster
     }
     lastPoster {
       ...ThreadsListThreadPoster
     }
-    isClosed
   }
   nextCursor
 `

@@ -32,11 +32,11 @@ const ThreadsHeader: React.FC<IThreadsHeaderProps> = ({
   text,
   stats,
 }) => (
-  <Card className="card-threads-header">
+  <Card className="threads-header">
     {color && <CardColorBand color={color} />}
     {banner && <CardBanner {...banner.full} desktop />}
     {banner && <CardBanner {...banner.half} mobile />}
-    <CardBody>
+    <CardBody className="threads-header-body">
       <GridPageHeader
         title={text}
         sideTidbits={

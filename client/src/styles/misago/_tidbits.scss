@@ -31,3 +31,10 @@
 .tidbit-category-color + .tidbit-category-name {
   margin-left: $spacer / 5;
 }
+
+// Vertically align avatar tidbit
+.tidbit-avatar img {
+  margin: -10px 0;
+  position: relative;
+  bottom: 1px;
+}

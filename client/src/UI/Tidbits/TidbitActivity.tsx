@@ -75,7 +75,7 @@ const TidbitActivityLastReply: React.FC<ITidbitActivityProps> = ({
   return (
     <TidbitItem className="tidbit-last-reply">
       <Trans id="tidbit.activity">
-        By {poster} {timestamp}
+        {poster} {timestamp}
       </Trans>
     </TidbitItem>
   )
@@ -93,7 +93,7 @@ const TidbitActivityStart: React.FC<ITidbitActivityProps> = ({
   return (
     <TidbitItem className="tidbit-start">
       <Trans id="tidbit.activity">
-        By {poster} {timestamp}
+        {poster} {timestamp}
       </Trans>
     </TidbitItem>
   )

@@ -43,7 +43,7 @@ const Avatar: React.FC<IAvatarProps> = ({ alt, size = 100, user = null }) => {
 
 const findAvatarSrc = (avatars: Array<IAvatar>, size: number): IAvatarSrc => {
   let src = avatars[0].url
-  let srcSet: string | null = null
+  let srcSet: string = src
 
   avatars.forEach((avatar) => {
     if (avatar.size >= size) {
@@ -58,4 +58,4 @@ const findAvatarSrc = (avatars: Array<IAvatar>, size: number): IAvatarSrc => {
   return { src }
 }
 
-export default Avatar
+export default React.memo(Avatar)

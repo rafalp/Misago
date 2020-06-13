@@ -1,9 +1,10 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
-import { CardContainer, categories } from "../Storybook"
+import { CardContainer, categories, userFactory } from "../Storybook"
 import {
   TidbitActivityLastReply,
   TidbitActivityStart,
+  TidbitAvatar,
   TidbitCategory,
   TidbitClosed,
   TidbitItem,
@@ -71,14 +72,32 @@ export const Timestamps = () => (
   </CardContainer>
 )
 
-export const User = () => (
-  <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
-      <TidbitUser user={{ id: "1", slug: "aerith", name: "Aerith" }} />
-      <TidbitUser name="Aerith" />
-    </Tidbits>
-  </CardContainer>
-)
+export const User = () => {
+  const small = smallKnob()
+  const user = userFactory({ slug: "aerith", name: "Aerith" })
+
+  return (
+    <CardContainer padding>
+      <Tidbits small={small} vertical={verticalKnob()}>
+        <TidbitAvatar user={user} />
+        <TidbitUser user={user} />
+      </Tidbits>
+    </CardContainer>
+  )
+}
+
+export const UserAnonymous = () => {
+  const small = smallKnob()
+
+  return (
+    <CardContainer padding>
+      <Tidbits small={small} vertical={verticalKnob()}>
+        <TidbitAvatar />
+        <TidbitUser name="Aerith" />
+      </Tidbits>
+    </CardContainer>
+  )
+}
 
 export const Closed = () => (
   <CardContainer padding>

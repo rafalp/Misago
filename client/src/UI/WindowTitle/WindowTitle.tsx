@@ -5,12 +5,14 @@ interface IWindowTitleProps {
   alerts?: number
   index?: boolean
   title?: string | null
+  parent?: string | null
 }
 
 const WindowTitle: React.FC<IWindowTitleProps> = ({
   alerts,
   index,
   title,
+  parent,
 }) => {
   const settings = useSettingsContext()
   if (!settings) return null
@@ -21,7 +23,11 @@ const WindowTitle: React.FC<IWindowTitleProps> = ({
     const indexTitle = settings.forumIndexTitle || settings.forumName
     document.title = prefix + indexTitle
   } else if (title) {
-    document.title = `${prefix}${title} | ${settings.forumName}`
+    if (parent) {
+      document.title = `${prefix}${title} | ${parent} | ${settings.forumName}`
+    } else {
+      document.title = `${prefix}${title} | ${settings.forumName}`
+    }
   } else {
     document.title = prefix + settings.forumName
   }
