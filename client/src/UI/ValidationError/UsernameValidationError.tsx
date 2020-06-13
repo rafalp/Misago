@@ -58,6 +58,16 @@ const UsernameValidationError: React.FC<IValidationErrorProps> = ({
               ),
             })
 
+          case "value_error.username.not_allowed":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "value_error.username.not_allowed"
+                )`This user name is not allowed.`
+              ),
+            })
+
           case "value_error.any_str.min_length":
             return children({
               type: errorType,

@@ -2,21 +2,31 @@ import React from "react"
 import PageTitle from "../PageTitle"
 
 interface IGridPageHeaderProps {
+  actions?: Array<React.ReactNode>
   title: React.ReactNode
-  sideTidbits?: React.ReactNode | null
+  tidbits?: React.ReactNode | null
 }
 
 const GridPageHeader: React.FC<IGridPageHeaderProps> = ({
+  actions,
   title,
-  sideTidbits,
+  tidbits,
 }) => (
   <div className="row align-items-center row-page-header">
     <div className="col-12 col-lg col-page-title">
       <PageTitle text={title} />
     </div>
-    {sideTidbits && (
-      <div className="col-12 col-lg-auto col-side-tidbits">{sideTidbits}</div>
+    {tidbits && (
+      <div className="col-12 col-lg-auto col-tidbits">{tidbits}</div>
     )}
+    {actions &&
+      actions.map((action, i) =>
+        action ? (
+          <div className="col-auto col-action" key={i}>
+            {action}
+          </div>
+        ) : null
+      )}
   </div>
 )
 

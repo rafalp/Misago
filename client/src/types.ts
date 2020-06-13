@@ -51,6 +51,8 @@ export interface ISettings {
   forumName: string
   passwordMinLength: number
   passwordMaxLength: number
+  threadTitleMinLength: number
+  threadTitleMaxLength: number
   usernameMinLength: number
   usernameMaxLength: number
 }

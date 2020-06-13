@@ -107,6 +107,11 @@ class ThreadClosedError(AuthError):
         super().__init__(id=thread_id)
 
 
+class ThreadTitleNotAllowedError(PydanticValueError):
+    code = "thread_title.not_allowed"
+    msg_template = "thread title is not allowed"
+
+
 class UsernameError(PydanticValueError):
     code = "username"
     msg_template = 'username does not match regex "{pattern}"'
@@ -120,3 +125,8 @@ class UsernameError(PydanticValueError):
 class UsernameNotAvailableError(PydanticValueError):
     code = "username.not_available"
     msg_template = "username is not available"
+
+
+class UsernameNotAllowedError(PydanticValueError):
+    code = "username.not_allowed"
+    msg_template = "username is not allowed"

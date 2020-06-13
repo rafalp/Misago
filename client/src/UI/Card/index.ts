@@ -1,4 +1,5 @@
 import Card from "./Card"
+import CardAlert from "./CardAlert"
 import CardBanner from "./CardBanner"
 import CardBlankslate from "./CardBlankslate"
 import CardBody from "./CardBody"
@@ -12,6 +13,7 @@ import CardLoader from "./CardLoader"
 
 export {
   Card,
+  CardAlert,
   CardBanner,
   CardBlankslate,
   CardBody,

@@ -39,7 +39,7 @@ const ThreadsHeader: React.FC<IThreadsHeaderProps> = ({
     <CardBody className="threads-header-body">
       <GridPageHeader
         title={text}
-        sideTidbits={
+        tidbits={
           stats && (
             <Tidbits>
               <TidbitThreads value={stats.threads} />

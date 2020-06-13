@@ -54,6 +54,16 @@ const EmailValidationError: React.FC<IValidationErrorProps> = ({
               ),
             })
 
+          case "value_error.email.not_allowed":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "value_error.email.not_allowed"
+                )`This e-mail address is not allowed.`
+              ),
+            })
+
           default:
             return (
               <ValidationError error={error} value={value} min={min} max={max}>

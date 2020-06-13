@@ -1,3 +1,4 @@
+import { Trans } from "@lingui/macro"
 import React from "react"
 import {
   ButtonSecondary,
@@ -39,7 +40,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
             <ButtonSecondary
               elementRef={ref}
               loading={moderation.loading}
-              disabled={moderation.disabled || moderation.loading}
+              disabled={moderation.disabled}
               icon="shield-alt"
               iconSolid
               responsive
@@ -60,7 +61,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
               <DropdownDivider />
               {selection && (
                 <DropdownButton
-                  text="Clear selection"
+                  text={<Trans id="clear_selection">Clear selection</Trans>}
                   icon="square"
                   onClick={selection.clear}
                 />

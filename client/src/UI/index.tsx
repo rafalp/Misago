@@ -17,6 +17,7 @@ import {
 } from "./Button"
 import {
   Card,
+  CardAlert,
   CardBanner,
   CardBlankslate,
   CardBody,
@@ -112,8 +113,9 @@ import {
   CategoryValidationError,
   EmailValidationError,
   PasswordValidationError,
-  ThreadValidationError,
   ThreadsValidationError,
+  ThreadTitleValidationError,
+  ThreadValidationError,
   UsernameValidationError,
   ValidationError,
 } from "./ValidationError"
@@ -141,6 +143,7 @@ export {
   ButtonOutlineSuccess,
   ButtonOutlineWarning,
   Card,
+  CardAlert,
   CardBanner,
   CardBlankslate,
   CardBody,
@@ -212,8 +215,9 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
-  ThreadValidationError,
   ThreadsValidationError,
+  ThreadTitleValidationError,
+  ThreadValidationError,
   TidbitActivityLastReply,
   TidbitActivityStart,
   TidbitAvatar,

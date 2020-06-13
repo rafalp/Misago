@@ -41,7 +41,7 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
             return children({
               type: errorType,
               message: i18n._(
-                t("auth_error.category.closed")`Category is closed.`
+                t("auth_error.category.closed")`This category is closed.`
               ),
             })
 

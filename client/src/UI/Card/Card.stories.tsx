@@ -1,8 +1,10 @@
+import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { RootContainer } from "../Storybook"
 import { ButtonPrimary } from "../Button"
 import {
   Card,
+  CardAlert,
   CardBanner,
   CardBlankslate,
   CardBody,
@@ -17,6 +19,7 @@ import {
 
 export default {
   title: "UI/Card",
+  decorators: [withKnobs],
 }
 
 export const Basic = () => {
@@ -41,6 +44,17 @@ export const HeaderAndFooter = () => {
   )
 }
 
+export const WithAlert = () => {
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardAlert>Ut malesuada interdum massa in ultrices.</CardAlert>
+        <CardBody>Lorem ipsum dolor met</CardBody>
+      </Card>
+    </RootContainer>
+  )
+}
+
 export const WithBanner = () => {
   return (
     <RootContainer padding>
@@ -58,6 +72,9 @@ export const WithBanner = () => {
           url="http://lorempixel.com/1536/200/"
           mobile
         />
+        {boolean("Show alert", false) && (
+          <CardAlert>Ut malesuada interdum massa in ultrices.</CardAlert>
+        )}
         <CardBody>Lorem ipsum dolor met</CardBody>
       </Card>
     </RootContainer>

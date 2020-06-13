@@ -19,6 +19,7 @@ const THREAD_FRAGMENTS = `
     slug
     color
     icon
+    isClosed
   }
 
   fragment ThreadCategoryBanner on CategoryBanner {

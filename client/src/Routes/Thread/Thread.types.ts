@@ -21,6 +21,7 @@ export interface IThreadCategory {
   slug: string
   parent: IThreadCategory | null
   color: string | null
+  isClosed: boolean
   banner: { full: ICategoryBanner; half: ICategoryBanner } | null
 }
 
@@ -29,4 +30,21 @@ export interface IThreadPoster {
   name: string
   slug: string
   avatars: Array<IAvatar>
+}
+
+export interface IThreadModeration {
+  actions: Array<IThreadModerationAction>
+  loading: boolean
+  closeThread: () => void
+  openThread: () => void
+  moveThread: () => void
+  deleteThread: () => void
+}
+
+export interface IThreadModerationAction {
+  name: React.ReactNode
+  icon: string
+  iconSolid?: boolean
+  disabled?: boolean
+  action: () => Promise<void> | void
 }

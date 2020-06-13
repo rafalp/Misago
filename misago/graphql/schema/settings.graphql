@@ -1,11 +1,13 @@
 type Settings {
-    bulkActionLimit: Int!
-    forumIndexHeader: String!
-    forumIndexThreads: Boolean!
-    forumIndexTitle: String!
-    forumName: String!
-    passwordMinLength: Int!
-    passwordMaxLength: Int!
-    usernameMinLength: Int!
-    usernameMaxLength: Int!
+    bulkActionLimit: Int
+    forumIndexHeader: String
+    forumIndexThreads: Boolean
+    forumIndexTitle: String
+    forumName: String
+    passwordMinLength: Int
+    passwordMaxLength: Int
+    threadTitleMinLength: Int
+    threadTitleMaxLength: Int
+    usernameMinLength: Int
+    usernameMaxLength: Int
 }
