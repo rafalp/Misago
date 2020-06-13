@@ -42,7 +42,7 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
               type: errorType,
               message: i18n._(
                 t(
-                  "auth_error.category.closed"
+                  "auth_error.thread_category.closed"
                 )`This thread's category is closed.`
               ),
             })
