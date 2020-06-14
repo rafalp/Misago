@@ -4,6 +4,7 @@ import * as urls from "../../urls"
 import {
   ThreadModerationModalClose,
   ThreadModerationModalContextProvider,
+  ThreadModerationModalMove,
   ThreadModerationModalOpen,
 } from "./ThreadModeration"
 import ThreadRoute from "./ThreadRoute"
@@ -12,6 +13,7 @@ const Thread: React.FC = () => (
   <ThreadModerationModalContextProvider>
     <ThreadModerationModalClose />
     <ThreadModerationModalOpen />
+    <ThreadModerationModalMove />
     <Switch>
       <Route
         path={urls.thread({ id: ":id", slug: ":slug" })}

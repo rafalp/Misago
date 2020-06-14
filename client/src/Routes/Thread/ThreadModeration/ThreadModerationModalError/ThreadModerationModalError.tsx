@@ -1,13 +1,9 @@
 import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import {
-  ModalCloseFooter,
-  ModalErrorBody,
-  RootError,
-  ThreadValidationError,
-} from "../../../../UI"
+import { ModalCloseFooter, ModalErrorBody } from "../../../../UI"
 import { IMutationError } from "../../../../types"
+import ThreadRootError from "../../ThreadRootError"
 
 interface IThreadModerationModalErrorProps {
   graphqlError?: ApolloError | null
@@ -22,35 +18,27 @@ const ThreadModerationModalError: React.FC<IThreadModerationModalErrorProps> = (
   forDelete,
   close,
 }) => (
-  <RootError
-    graphqlError={graphqlError}
-    dataErrors={errors}
-    locations={["__root__", "thread"]}
-  >
-    {(error) => (
-      <ThreadValidationError error={error}>
-        {({ message }) => (
-          <>
-            <ModalErrorBody
-              header={
-                forDelete ? (
-                  <Trans id="moderation.thread_delete_error">
-                    Thread could not be deleted.
-                  </Trans>
-                ) : (
-                  <Trans id="moderation.thread_error">
-                    Thread could not be updated.
-                  </Trans>
-                )
-              }
-              message={message}
-            />
-            <ModalCloseFooter close={close} />
-          </>
-        )}
-      </ThreadValidationError>
+  <ThreadRootError graphqlError={graphqlError} dataErrors={errors}>
+    {({ message }) => (
+      <>
+        <ModalErrorBody
+          header={
+            forDelete ? (
+              <Trans id="moderation.thread_delete_error">
+                Thread could not be deleted.
+              </Trans>
+            ) : (
+              <Trans id="moderation.thread_error">
+                Thread could not be updated.
+              </Trans>
+            )
+          }
+          message={message}
+        />
+        <ModalCloseFooter close={close} />
+      </>
     )}
-  </RootError>
+  </ThreadRootError>
 )
 
 export default ThreadModerationModalError

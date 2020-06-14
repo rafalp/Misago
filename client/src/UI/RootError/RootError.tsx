@@ -11,7 +11,7 @@ interface IRootError {
 }
 
 interface IRootErrorProps {
-  children: (error: IRootError) => React.ReactNode
+  children: (error: IRootError) => React.ReactElement
   dataErrors?: Array<IMutationError> | null
   graphqlError?: ApolloError | null
   plainError?: string | null

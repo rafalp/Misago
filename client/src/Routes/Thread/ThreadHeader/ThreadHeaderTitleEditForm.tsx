@@ -10,11 +10,10 @@ import {
   Form,
   FormFooter,
   Input,
-  RootError,
   ThreadTitleValidationError,
-  ThreadValidationError,
 } from "../../../UI"
 import { IThread } from "../Thread.types"
+import ThreadRootError from "../ThreadRootError"
 import useEditThreadTitleMutation from "./useEditThreadTitleMutation"
 
 interface IThreadHeaderTitleEditFormProps {
@@ -77,17 +76,12 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
         }
       }}
     >
-      <RootError
+      <ThreadRootError
         graphqlError={graphqlError}
         dataErrors={data?.editThreadTitle.errors}
-        locations={["__root__", "thread"]}
       >
-        {(error) => (
-          <ThreadValidationError error={error}>
-            {({ message }) => <CardAlert>{message}</CardAlert>}
-          </ThreadValidationError>
-        )}
-      </RootError>
+        {({ message }) => <CardAlert>{message}</CardAlert>}
+      </ThreadRootError>
       <CardBody className="thread-header-edit-form">
         <Field
           name="title"
