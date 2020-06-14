@@ -9,6 +9,7 @@ import ModalErrorBody from "./ModalErrorBody"
 import ModalFooter from "./ModalFooter"
 import ModalFormBody from "./ModalFormBody"
 import ModalHeader from "./ModalHeader"
+import ModalMessageBody from "./ModalMessageBody"
 import ModalTitle from "./ModalTitle"
 import useModal from "./useModal"
 
@@ -23,6 +24,7 @@ export {
   ModalFooter,
   ModalFormBody,
   ModalHeader,
+  ModalMessageBody,
   ModalSize,
   ModalTitle,
   useModal,

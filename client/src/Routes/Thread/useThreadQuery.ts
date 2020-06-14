@@ -30,7 +30,7 @@ const THREAD_FRAGMENTS = `
   }
 `
 
-export const THREAD_QUERY = gql`
+const THREAD_QUERY = gql`
   ${THREAD_FRAGMENTS}
 
   query Thread($id: ID!) {

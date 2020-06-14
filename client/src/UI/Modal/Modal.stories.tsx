@@ -20,6 +20,7 @@ import {
   ModalErrorBody,
   ModalFooter,
   ModalFormBody,
+  ModalMessageBody,
   ModalSize,
 } from "."
 
@@ -108,6 +109,24 @@ export const ErrorWithMessage = () => {
           <ModalErrorBody
             header="This content is not available."
             message="It may have been moved or deleted, or you are missing permission to see it."
+          />
+          {footer && <ModalCloseFooter close={close} />}
+        </ModalDialog>
+      </Modal>
+    </RootContainer>
+  )
+}
+
+export const Message = () => {
+  const footer = boolean("Display footer", false)
+
+  return (
+    <RootContainer>
+      <Modal close={close} isOpen={true} resistant={resistant()}>
+        <ModalDialog close={close} size={size()} title="Delete thread?">
+          <ModalMessageBody
+            header="Are you sure you want to delete this thread?"
+            message="This action is not reversible."
           />
           {footer && <ModalCloseFooter close={close} />}
         </ModalDialog>

@@ -42,7 +42,7 @@ const ThreadModerationModalMoveForm: React.FC<IThreadModerationModalMoveFormProp
 
   return (
     <Form<IFormValues>
-      id="move_threads_form"
+      id="move_thread_form"
       disabled={loading}
       defaultValues={{ category: "" }}
       validationSchema={MoveThreadSchema}

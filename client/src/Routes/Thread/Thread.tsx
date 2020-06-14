@@ -4,6 +4,7 @@ import * as urls from "../../urls"
 import {
   ThreadModerationModalClose,
   ThreadModerationModalContextProvider,
+  ThreadModerationModalDelete,
   ThreadModerationModalMove,
   ThreadModerationModalOpen,
 } from "./ThreadModeration"
@@ -13,6 +14,7 @@ const Thread: React.FC = () => (
   <ThreadModerationModalContextProvider>
     <ThreadModerationModalClose />
     <ThreadModerationModalOpen />
+    <ThreadModerationModalDelete />
     <ThreadModerationModalMove />
     <Switch>
       <Route
