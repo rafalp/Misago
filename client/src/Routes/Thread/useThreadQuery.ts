@@ -7,6 +7,7 @@ const THREAD_FRAGMENTS = `
     id
     name
     slug
+    extra
     avatars {
       size
       url
@@ -33,7 +34,7 @@ const THREAD_FRAGMENTS = `
 const THREAD_QUERY = gql`
   ${THREAD_FRAGMENTS}
 
-  query Thread($id: ID!) {
+  query Thread($id: ID!, $page: Int) {
     thread(id: $id) {
       id
       slug
@@ -62,6 +63,26 @@ const THREAD_QUERY = gql`
         }
         parent {
           ...ThreadCategory
+        }
+      }
+      posts(page: $page) {
+        items {
+          id
+          posterName
+          body
+          edits
+          postedAt
+          extra
+          poster {
+            ...ThreadPoster
+            extra
+          }
+        }
+        number
+        start
+        stop
+        pagination {
+          pages
         }
       }
     }

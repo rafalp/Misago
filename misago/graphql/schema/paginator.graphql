@@ -1,3 +1,0 @@
-type Paginator {
-    pages: Int
-}

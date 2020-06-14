@@ -27,6 +27,7 @@ export const ThreadByUser = () => (
           lastPostedAt: "2020-05-02T12:38:41.159Z",
           starterName: "LoremIpsum",
           lastPosterName: "DolorMet",
+          extra: {},
           starter: userFactory({ username: "DolorMet" }),
           lastPoster: userFactory({ username: "DolorMet" }),
           category: Object.assign({}, categories[0], {
@@ -55,6 +56,7 @@ export const ThreadByAnonymous = () => (
           lastPostedAt: "2020-05-02T12:38:41.159Z",
           starterName: "LoremIpsum",
           lastPosterName: "DolorMet",
+          extra: {},
           starter: null,
           lastPoster: null,
           category: Object.assign({}, categories[0], {
@@ -84,6 +86,7 @@ export const ThreadEditable = () => (
             lastPostedAt: "2020-05-02T12:38:41.159Z",
             starterName: "LoremIpsum",
             lastPosterName: "DolorMet",
+            extra: {},
             starter: userFactory({ username: "DolorMet" }),
             lastPoster: userFactory({ username: "DolorMet" }),
             category: Object.assign({}, categories[0], {
@@ -116,6 +119,7 @@ export const ThreadWithModeration = () => (
             lastPostedAt: "2020-05-02T12:38:41.159Z",
             starterName: "LoremIpsum",
             lastPosterName: "DolorMet",
+            extra: {},
             starter: userFactory({ username: "DolorMet" }),
             lastPoster: userFactory({ username: "DolorMet" }),
             category: Object.assign({}, categories[0], {

@@ -9,6 +9,7 @@ import {
 } from "../../UI"
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
+import ThreadPost from "./ThreadPost"
 import useThreadParams from "./useThreadParams"
 import { useThreadQuery } from "./useThreadQuery"
 
@@ -27,12 +28,17 @@ const ThreadRoute: React.FC = () => {
     return <Redirect to={urls.thread({ id, page, slug: thread.slug })} />
   }
 
+  const posts = thread.posts
+
   return (
     <RouteContainer
       className={`route-thread route-thread-${thread.category.id}`}
     >
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadHeader thread={thread} />
+      {posts?.items.map((post) => (
+        <ThreadPost key={post.id} post={post} />
+      ))}
     </RouteContainer>
   )
 }

@@ -78,3 +78,9 @@ export interface IAuthModalContext {
   openLoginModal: () => void
   openRegisterModal: () => void
 }
+
+export interface IPagination {
+  count: number
+  pages: number
+  perPage: number
+}

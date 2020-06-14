@@ -1,9 +1,11 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import React from "react"
+import { useHistory } from "react-router-dom"
 import { useCategoriesListContext } from "../../Context"
 import { RouteContainer } from "../../UI"
 import { IMutationError } from "../../types"
+import * as urls from "../../urls"
 
 const POST_THREAD = gql`
   mutation PostThread($input: PostThreadInput!) {
@@ -16,19 +18,20 @@ const POST_THREAD = gql`
       thread {
         id
         title
+        slug
       }
     }
   }
 `
 
 interface IStartThreadMutationData {
-  login: {
+  postThread: {
     errors: Array<IMutationError> | null
-    user: {
+    thread: {
       id: string
-      name: string
+      title: string
+      slug: string
     } | null
-    token: string | null
   }
 }
 
@@ -41,6 +44,7 @@ interface IStartThreadMutationValues {
 }
 
 const StartThreadRoute: React.FC = () => {
+  const history = useHistory()
   const categories = useCategoriesListContext()
   const [category, setCategory] = React.useState("")
   const [title, setTitle] = React.useState("")
@@ -67,7 +71,7 @@ const StartThreadRoute: React.FC = () => {
           ))}
         </select>
       </div>
-      <br />s
+      <br />
       <div>
         <label>Title:</label>
         <input
@@ -97,8 +101,15 @@ const StartThreadRoute: React.FC = () => {
             title,
           }
 
-          const result = await postThread({ variables: { input } })
-          console.log(result)
+          try {
+            const result = await postThread({ variables: { input } })
+            if (result.data?.postThread?.thread) {
+              history.push(urls.thread(result.data?.postThread?.thread))
+            }
+          } catch (error) {
+            // do nothing when postThread throws
+            return
+          }
         }}
       >
         Submit

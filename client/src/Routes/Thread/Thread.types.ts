@@ -1,4 +1,4 @@
-import { IAvatar, ICategoryBanner } from "../../types"
+import { IAvatar, ICategoryBanner, IPagination } from "../../types"
 
 export interface IThread {
   id: string
@@ -13,6 +13,8 @@ export interface IThread {
   starter: IThreadPoster | null
   lastPoster: IThreadPoster | null
   category: IThreadCategory
+  posts?: IThreadPostsPage | null
+  extra: Record<string, any>
 }
 
 export interface IThreadCategory {
@@ -47,4 +49,30 @@ export interface IThreadModerationAction {
   iconSolid?: boolean
   disabled?: boolean
   action: () => Promise<void> | void
+}
+
+export interface IPost {
+  id: string
+  poster: IPoster
+  posterName: string
+  body: { text: string }
+  edits: string
+  postedAt: string
+  extra: Record<string, any>
+}
+
+export interface IPoster {
+  id: string
+  name: string
+  slug: string
+  avatars: Array<IAvatar>
+  extra: Record<string, any>
+}
+
+export interface IThreadPostsPage {
+  items: Array<IPost>
+  number: number
+  start: number
+  stop: number
+  pagination: IPagination
 }

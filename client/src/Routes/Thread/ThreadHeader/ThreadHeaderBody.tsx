@@ -21,7 +21,7 @@ const ThreadHeaderBody: React.FC<IThreadHeaderBodyProps> = ({
   <CardBody className="thread-header-body">
     <ThreadHeaderStarterAvatar starter={thread.starter} />
     <div className="thread-header-content">
-      <div className="row align-items-center">
+      <div className="row">
         <div className="col">
           <PageTitle text={thread.title} />
         </div>
