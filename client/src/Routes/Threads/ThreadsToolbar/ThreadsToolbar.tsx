@@ -47,7 +47,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
               onClick={toggle}
             />
           )}
-          menu={
+          menu={() => (
             <>
               {moderation.actions.map((action) => (
                 <DropdownButton
@@ -67,7 +67,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({
                 />
               )}
             </>
-          }
+          )}
         />
       </ToolbarItem>
     )}

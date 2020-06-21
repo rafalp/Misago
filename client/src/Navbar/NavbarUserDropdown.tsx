@@ -22,7 +22,7 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
         />
       </li>
     )}
-    menu={
+    menu={() => (
       <>
         <h6 className="dropdown-header">{user.name}</h6>
         <DropdownLink to={urls.user(user)}>
@@ -34,7 +34,7 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
           onClick={logout}
         />
       </>
-    }
+    )}
   />
 )
 

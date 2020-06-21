@@ -4,3 +4,12 @@
     margin-left: $spacer;
   }
 }
+
+.paginator-goto {
+  display: flex;
+}
+
+.paginator-goto input {
+  margin-right: $spacer;
+  min-width: 100px;
+}

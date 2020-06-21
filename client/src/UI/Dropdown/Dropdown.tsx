@@ -9,17 +9,31 @@ interface IToggleArgs {
   toggle: () => void
 }
 
+interface IMenuArgs {
+  close: () => void
+}
+
 interface IDropdownProps {
   className?: string | null
-  menu: React.ReactNode
-  leftAligned?: boolean
+  resistant?: boolean
+  placement?:
+    | "bottom"
+    | "bottom-end"
+    | "bottom-start"
+    | "top"
+    | "top-start"
+    | "top-end"
+    | "left"
+    | "right"
   toggle: (args: IToggleArgs) => React.ReactNode
+  menu: (args: IMenuArgs) => React.ReactNode
 }
 
 const Dropdown: React.FC<IDropdownProps> = ({
   className,
   menu,
-  leftAligned,
+  placement,
+  resistant,
   toggle,
 }) => {
   const [isOpen, updateOpen] = React.useState(false)
@@ -33,6 +47,8 @@ const Dropdown: React.FC<IDropdownProps> = ({
       if (!(event.target instanceof Element)) return
       if (button.current === event.target) return
       if (button.current?.contains(event.target)) return
+      if (resistant && dropdown.current === event.target) return
+      if (resistant && dropdown.current?.contains(event.target)) return
 
       updateOpen(false)
     }
@@ -43,18 +59,19 @@ const Dropdown: React.FC<IDropdownProps> = ({
       button.current,
       dropdown.current,
       {
-        placement: leftAligned ? "bottom-start" : "bottom-end",
+        placement: placement || "bottom-end",
       }
     )
 
     return () => {
+      window.document.removeEventListener("click", eventHandler)
+
       if (popper) {
-        window.document.removeEventListener("click", eventHandler)
         popper.destroy()
         popper = null
       }
     }
-  }, [isOpen, leftAligned])
+  }, [isOpen, placement, resistant])
 
   return (
     <>
@@ -69,7 +86,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
             className={classNames("dropdown-menu show", className)}
             ref={dropdown}
           >
-            {menu}
+            {menu({ close: () => updateOpen(false) })}
           </div>
         )}
     </>

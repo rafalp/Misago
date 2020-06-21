@@ -1,25 +1,29 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { ButtonSecondary } from "../Button"
-import Icon from "../Icon"
 
 interface IPaginatorButtonProps {
-  icon: string
+  children: React.ReactNode
   page?: number | null | false
   url: (page: number) => string
 }
 
 const PaginatorButton: React.FC<IPaginatorButtonProps> = ({
-  icon,
+  children,
   page,
   url,
 }) =>
   page ? (
     <Link className="btn btn-secondary btn-responsive" to={url(page)}>
-      <Icon icon={icon} fixedWidth solid />
+      {children}
     </Link>
   ) : (
-    <ButtonSecondary icon={icon} iconSolid disabled responsive />
+    <button
+      className="btn btn-secondary btn-responsive"
+      type="button"
+      disabled
+    >
+      {children}
+    </button>
   )
 
 export default PaginatorButton

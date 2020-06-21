@@ -6,3 +6,7 @@ but before its repositioned by popper.
 .dropdown-menu {
   margin: 0;
 }
+
+.dropdown-container {
+  padding: $dropdown-item-padding-y $dropdown-item-padding-x;
+}

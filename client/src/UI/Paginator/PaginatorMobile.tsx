@@ -2,10 +2,9 @@ import React from "react"
 import Icon from "../Icon"
 import { IPaginatorProps } from "./Paginator.types"
 import PaginatorButton from "./PaginatorButton"
-import PaginatorDropdown from "./PaginatorDropdown"
 
-const Paginator: React.FC<IPaginatorProps> = ({ page, url }) => (
-  <div className="paginator paginator-md">
+const PaginatorMobile: React.FC<IPaginatorProps> = ({ page, url }) => (
+  <div className="paginator">
     <PaginatorButton page={page && page.number > 1 && 1} url={url}>
       <Icon icon="angle-double-left" solid fixedWidth />
     </PaginatorButton>
@@ -15,7 +14,6 @@ const Paginator: React.FC<IPaginatorProps> = ({ page, url }) => (
     >
       <Icon icon="angle-left" solid fixedWidth />
     </PaginatorButton>
-    <PaginatorDropdown page={page} url={url} />
     <PaginatorButton
       page={page && page.number < page.pagination.pages && page.number + 1}
       url={url}
@@ -33,4 +31,4 @@ const Paginator: React.FC<IPaginatorProps> = ({ page, url }) => (
   </div>
 )
 
-export default React.memo(Paginator)
+export default React.memo(PaginatorMobile)

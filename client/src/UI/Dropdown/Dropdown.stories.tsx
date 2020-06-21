@@ -4,7 +4,9 @@ import { ButtonPrimary } from "../Button"
 import { CardContainer, RootContainer } from "../Storybook"
 import Dropdown from "./Dropdown"
 import DropdownButton from "./DropdownButton"
+import DropdownContainer from "./DropdownContainer"
 import DropdownDivider from "./DropdownDivider"
+import DropdownHeader from "./DropdownHeader"
 import DropdownLink from "./DropdownLink"
 
 export default {
@@ -20,7 +22,7 @@ export const Default = () => (
         toggle={({ ref, toggle }) => (
           <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
         )}
-        menu={<Menu />}
+        menu={() => <Menu />}
       />
     </RootContainer>
     <CardContainer center padding>
@@ -28,7 +30,7 @@ export const Default = () => (
         toggle={({ ref, toggle }) => (
           <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
         )}
-        menu={<Menu />}
+        menu={() => <Menu />}
       />
     </CardContainer>
   </>
@@ -37,6 +39,7 @@ export const Default = () => (
 export const MenuItems = () => (
   <RootContainer padding>
     <div className="dropdown-menu d-block position-static">
+      <DropdownHeader text="Example menu" />
       <DropdownLink to="/">Private messages</DropdownLink>
       <DropdownButton
         icon="sign-in-alt"
@@ -48,12 +51,21 @@ export const MenuItems = () => (
       <DropdownButton text="Subscribe" onClick={click} loading />
       <DropdownDivider />
       <DropdownButton text="Plain item" onClick={click} />
+      <DropdownContainer>
+        Extra content in container.
+      </DropdownContainer>
     </div>
   </RootContainer>
 )
 
 const Menu = () => (
   <>
+    <DropdownHeader text="Example menu" />
     <DropdownButton text="Example item" onClick={click} />
+    <DropdownDivider />
+    <DropdownButton text="Example item" onClick={click} />
+    <DropdownContainer>
+      Extra content in container.
+    </DropdownContainer>
   </>
 )

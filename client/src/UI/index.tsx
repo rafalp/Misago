@@ -37,7 +37,9 @@ import ClickTrap from "./ClickTrap"
 import {
   Dropdown,
   DropdownButton,
+  DropdownContainer,
   DropdownDivider,
+  DropdownHeader,
   DropdownLink,
 } from "./Dropdown"
 import {
@@ -165,7 +167,9 @@ export {
   ClickTrap,
   Dropdown,
   DropdownButton,
+  DropdownContainer,
   DropdownDivider,
+  DropdownHeader,
   DropdownLink,
   EmailValidationError,
   Error,

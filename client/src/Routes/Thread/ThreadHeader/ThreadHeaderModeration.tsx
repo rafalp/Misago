@@ -23,7 +23,7 @@ const ThreadHeaderModeration: React.FC<IThreadHeaderModerationProps> = ({
         onClick={toggle}
       />
     )}
-    menu={
+    menu={() => (
       <>
         <DropdownButton
           text={<Trans id="moderation.edit">Edit</Trans>}
@@ -42,7 +42,7 @@ const ThreadHeaderModeration: React.FC<IThreadHeaderModerationProps> = ({
           />
         ))}
       </>
-    }
+    )}
   />
 )
 
