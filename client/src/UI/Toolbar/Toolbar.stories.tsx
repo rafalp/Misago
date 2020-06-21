@@ -1,5 +1,6 @@
 import React from "react"
 import { ButtonSecondary } from "../Button"
+import { Paginator } from "../Paginator"
 import { RootContainer } from "../Storybook"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "."
 
@@ -11,7 +12,7 @@ export const Default = () => (
   <RootContainer padding>
     <Toolbar>
       <ToolbarItem>
-        <ButtonSecondary text={"Lorem ipsum"} disabled />
+        <Paginator url={() => "/"} />
       </ToolbarItem>
       <ToolbarItem>
         <ButtonSecondary text={"Lorem ipsum"} disabled />
@@ -31,11 +32,11 @@ export const Mobile = () => (
   <RootContainer padding>
     <Toolbar mobile>
       <ToolbarItem>
-        <ButtonSecondary text={"Lorem ipsum"} block disabled small />
+        <ButtonSecondary text={"Lorem ipsum"} block disabled />
       </ToolbarItem>
       <ToolbarSeparator />
       <ToolbarItem>
-        <ButtonSecondary text={"Lorem ipsum"} block disabled small />
+        <ButtonSecondary text={"Lorem ipsum"} block disabled />
       </ToolbarItem>
     </Toolbar>
   </RootContainer>

@@ -1,0 +1,6 @@
+// Insert some spacing between paginator items
+.paginator {
+  .btn + .btn {
+    margin-left: $spacer;
+  }
+}

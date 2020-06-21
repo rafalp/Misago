@@ -83,6 +83,7 @@ import {
   useModal,
 } from "./Modal"
 import PageTitle from "./PageTitle"
+import { Paginator } from "./Paginator"
 import Responsive from "./Responsive"
 import RootError from "./RootError"
 import RouteContainer from "./RouteContainer"
@@ -203,6 +204,7 @@ export {
   ModalTitle,
   NotFoundError,
   PageTitle,
+  Paginator,
   PasswordValidationError,
   Responsive,
   RootError,

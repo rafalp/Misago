@@ -1,6 +1,6 @@
 import React from "react"
-import PageTitle from "./PageTitle"
 import { CardContainer } from "../Storybook"
+import PageTitle from "./PageTitle"
 
 export default {
   title: "UI/PageTitle",

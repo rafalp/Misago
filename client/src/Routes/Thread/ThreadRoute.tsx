@@ -10,6 +10,7 @@ import {
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
+import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
 import { useThreadQuery } from "./useThreadQuery"
 
@@ -24,11 +25,18 @@ const ThreadRoute: React.FC = () => {
   }
 
   if (!thread) return <RouteNotFound />
+  if (thread.id !== id) return <RouteLoader />
   if (thread.slug !== slug) {
     return <Redirect to={urls.thread({ id, page, slug: thread.slug })} />
   }
+  if (!thread.posts) {
+    return <Redirect to={urls.thread({ id, slug: thread.slug })} />
+  }
 
   const posts = thread.posts
+  const paginatorUrl = (page: number) => {
+    return urls.thread({ ...thread, page })
+  }
 
   return (
     <RouteContainer
@@ -36,9 +44,11 @@ const ThreadRoute: React.FC = () => {
     >
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadHeader thread={thread} />
-      {posts?.items.map((post) => (
-        <ThreadPost key={post.id} post={post} />
-      ))}
+      <ThreadToolbarTop page={posts} paginatorUrl={paginatorUrl} />
+      {loading && <RouteLoader />}
+      {!loading &&
+        posts.items.map((post) => <ThreadPost key={post.id} post={post} />)}
+      <ThreadToolbarBottom page={posts} paginatorUrl={paginatorUrl} />
     </RouteContainer>
   )
 }
