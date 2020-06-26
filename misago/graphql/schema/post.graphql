@@ -10,10 +10,14 @@ type Post {
     extra: Generic!
 }
 
+type ThreadPosts {
+    page(page: Int): ThreadPostsPage
+    pagination: Pagination!
+}
+
 type ThreadPostsPage {
     items: [Post!]!
-    number: Int!
-    start: Int!
-    stop: Int!
-    pagination: Pagination!
+    number: Int
+    start: Int
+    stop: Int
 }

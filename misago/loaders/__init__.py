@@ -14,6 +14,7 @@ from .posts import (
     load_post,
     load_posts,
     load_thread_posts_page,
+    load_thread_posts_paginator,
     store_post,
     store_posts,
 )
@@ -58,6 +59,7 @@ __all__ = [
     "load_root_categories",
     "load_thread",
     "load_thread_posts_page",
+    "load_thread_posts_paginator",
     "load_threads",
     "load_threads_feed",
     "load_user",

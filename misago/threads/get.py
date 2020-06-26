@@ -33,11 +33,18 @@ async def get_threads_by_id(ids: Sequence[int]) -> List[Thread]:
     return [Thread(**row) for row in data]
 
 
-async def get_thread_posts_page(
-    thread: Thread, per_page: int, orphans: int, page: int
-) -> Optional[ThreadPostsPage]:
+async def get_thread_posts_paginator(
+    thread: Thread, per_page: int, orphans: int = 0
+) -> Paginator:
     query = posts.select().where(posts.c.thread_id == thread.id)
     paginator = Paginator(query, per_page, orphans, overlap_pages=True)
+    await paginator.count_pages()
+    return paginator
+
+
+async def get_thread_posts_page(
+    paginator: Paginator, page: int
+) -> Optional[ThreadPostsPage]:
     try:
         posts_page = await paginator.get_page(page)
     except PageDoesNotExist:

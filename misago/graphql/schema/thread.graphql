@@ -1,7 +1,7 @@
 type Thread {
     id: ID!
     category: Category!
-    posts(page: Int): ThreadPostsPage
+    posts: ThreadPosts!
     firstPost: Post
     starter: User
     starterName: String!

@@ -1,8 +1,13 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
+from ..database.paginator import Paginator
 from ..types import GraphQLContext, Post, Thread, ThreadPostsPage
-from ..threads.get import get_posts_by_id, get_thread_posts_page
-from .loader import get_loader
+from ..threads.get import (
+    get_posts_by_id,
+    get_thread_posts_page,
+    get_thread_posts_paginator,
+)
+from .loader import get_loader, get_loader_context_key
 
 
 def load_post(
@@ -19,15 +24,28 @@ def load_posts(
     return loader.load_many(ids)
 
 
+async def load_thread_posts_paginator(
+    context: GraphQLContext, thread: Thread
+) -> Paginator:
+    context_key = get_loader_context_key("thread_posts_paginator")
+    if context_key not in context:
+        context[context_key] = {}
+
+    if thread.id not in context[context_key]:
+        paginator = await get_thread_posts_paginator(
+            thread,
+            context["settings"]["posts_per_page"],
+            context["settings"]["posts_per_page_orphans"],
+        )
+        context[context_key][thread.id] = paginator
+
+    return context[context_key][thread.id]
+
+
 async def load_thread_posts_page(
-    context: GraphQLContext, thread: Thread, page: int
+    context: GraphQLContext, paginator: Paginator, page: int
 ) -> Optional[ThreadPostsPage]:
-    posts_page = await get_thread_posts_page(
-        thread,
-        context["settings"]["posts_per_page"],
-        context["settings"]["posts_per_page_orphans"],
-        page,
-    )
+    posts_page = await get_thread_posts_page(paginator, page)
     if posts_page:
         store_posts(context, posts_page.items)
     return posts_page

@@ -3,8 +3,9 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
-from ...loaders import load_category, load_post, load_thread_posts_page, load_user
-from ...types import Category, Post, Thread, ThreadPostsPage, User
+from ...database.paginator import Paginator
+from ...loaders import load_category, load_post, load_thread_posts_paginator, load_user
+from ...types import Category, Post, Thread, User
 
 
 thread_type = ObjectType("Thread")
@@ -23,10 +24,8 @@ def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Awaitable[Categor
 
 
 @thread_type.field("posts")
-def resolve_posts(
-    obj: Thread, info: GraphQLResolveInfo, page: int = 1
-) -> Awaitable[Optional[ThreadPostsPage]]:
-    return load_thread_posts_page(info.context, obj, page)
+def resolve_posts(obj: Thread, info: GraphQLResolveInfo) -> Awaitable[Paginator]:
+    return load_thread_posts_paginator(info.context, obj)
 
 
 @thread_type.field("firstPost")

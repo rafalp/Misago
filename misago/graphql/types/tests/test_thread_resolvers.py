@@ -19,9 +19,12 @@ async def test_category_resolver_returns_thread_category(
 
 
 @pytest.mark.asyncio
-async def test_posts_resolver_returns_thread_posts_page(graphql_info, thread, post):
+async def test_posts_resolver_returns_thread_posts_paginator(
+    graphql_info, thread, post
+):
     value = await resolve_posts(thread, graphql_info)
-    assert value.items == [post]
+    assert value.get_count() == 1
+    assert value.get_pages() == 1
 
 
 @pytest.mark.asyncio

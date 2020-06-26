@@ -1,6 +1,11 @@
 import pytest
 
-from ..get import get_post_by_id, get_posts_by_id, get_thread_posts_page
+from ..get import (
+    get_post_by_id,
+    get_posts_by_id,
+    get_thread_posts_page,
+    get_thread_posts_paginator,
+)
 
 
 @pytest.mark.asyncio
@@ -24,8 +29,16 @@ async def test_getting_posts_by_nonexistent_id_returns_empty_list(db):
 
 
 @pytest.mark.asyncio
+async def test_thread_posts_paginator_can_be_get(thread, post):
+    paginator = await get_thread_posts_paginator(thread, 10, 0)
+    assert paginator.get_pages() == 1
+    assert paginator.get_count() == 1
+
+
+@pytest.mark.asyncio
 async def test_thread_posts_page_can_be_get(thread, post):
-    page = await get_thread_posts_page(thread, 10, 0, 1)
+    paginator = await get_thread_posts_paginator(thread, 10, 0)
+    page = await get_thread_posts_page(paginator, 1)
     assert post.thread_id == thread.id
     assert page.items == [post]
 
@@ -34,5 +47,6 @@ async def test_thread_posts_page_can_be_get(thread, post):
 async def test_none_is_returned_for_thread_posts_page_if_page_number_is_invalid(
     thread, post
 ):
-    page = await get_thread_posts_page(thread, 10, 0, 100)
+    paginator = await get_thread_posts_paginator(thread, 10, 0)
+    page = await get_thread_posts_page(paginator, 100)
     assert page is None

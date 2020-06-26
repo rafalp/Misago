@@ -16,11 +16,15 @@ def get_loader(
     *,
     coerce_id_to=parse_db_id,
 ) -> DataLoader:
-    context_key = f"__loader_{name}"
+    context_key = get_loader_context_key(name)
     if context_key not in context:
         wrapped_loader_function = wrap_loader_function(loader_function, coerce_id_to)
         context[context_key] = DataLoader(wrapped_loader_function, get_cache_key=str)
     return context[context_key]
+
+
+def get_loader_context_key(name: str) -> str:
+    return f"__loader_{name}"
 
 
 def wrap_loader_function(
