@@ -18,6 +18,7 @@ jobs:
           RELEASE=$(lsb_release -cs)
           echo "deb http://apt.postgresql.org/pub/repos/apt/ ${RELEASE}"-pgdg main | sudo tee  /etc/apt/sources.list.d/pgdg.list
           sudo apt-get update
+          sudo -u postgres pg_ctlcluster 11 main start
           sudo apt-get install -y postgresql-11
           echo "================================"
           sudo -u postgres pg_ctlcluster 11 main start
