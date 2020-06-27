@@ -51,9 +51,7 @@ export const MenuItems = () => (
       <DropdownButton text="Subscribe" onClick={click} loading />
       <DropdownDivider />
       <DropdownButton text="Plain item" onClick={click} />
-      <DropdownContainer>
-        Extra content in container.
-      </DropdownContainer>
+      <DropdownContainer>Extra content in container.</DropdownContainer>
     </div>
   </RootContainer>
 )
@@ -64,8 +62,6 @@ const Menu = () => (
     <DropdownButton text="Example item" onClick={click} />
     <DropdownDivider />
     <DropdownButton text="Example item" onClick={click} />
-    <DropdownContainer>
-      Extra content in container.
-    </DropdownContainer>
+    <DropdownContainer>Extra content in container.</DropdownContainer>
   </>
 )

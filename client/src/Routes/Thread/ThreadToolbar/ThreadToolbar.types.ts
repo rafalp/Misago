@@ -1,9 +1,7 @@
 export interface IThreadToolbarProps {
-  page?: {
-    number: number
-    pagination: {
-      pages: number
-    }
-  } | null
-  paginatorUrl: (page: number) => string
+  pagination: {
+    page: number
+    pages: number
+    url: (page: number) => string
+  }
 }

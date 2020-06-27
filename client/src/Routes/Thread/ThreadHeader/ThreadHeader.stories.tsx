@@ -10,11 +10,19 @@ export default {
   decorators: [withKnobs],
 }
 
+const posts = {
+  page: null,
+  pagination: {
+    pages: 1,
+  },
+}
+
 export const ThreadByUser = () => (
   <MockedProvider>
     <RootContainer padding>
       <ThreadHeader
         thread={{
+          posts,
           id: "1",
           title: text(
             "Title",
@@ -44,6 +52,7 @@ export const ThreadByAnonymous = () => (
     <RootContainer padding>
       <ThreadHeader
         thread={{
+          posts,
           id: "1",
           title: text(
             "Title",
@@ -74,6 +83,7 @@ export const ThreadEditable = () => (
       <RootContainer padding>
         <ThreadHeader
           thread={{
+            posts,
             id: "1",
             title: text(
               "Title",
@@ -107,6 +117,7 @@ export const ThreadWithModeration = () => (
       <RootContainer padding>
         <ThreadHeader
           thread={{
+            posts,
             id: "1",
             title: text(
               "Title",

@@ -12,7 +12,7 @@ export const Default = () => (
   <RootContainer padding>
     <Toolbar>
       <ToolbarItem>
-        <Paginator url={() => "/"} />
+        <Paginator page={2} pages={4} url={() => "/"} />
       </ToolbarItem>
       <ToolbarItem>
         <ButtonSecondary text={"Lorem ipsum"} disabled />

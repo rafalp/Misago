@@ -1,4 +1,4 @@
-import { IAvatar, ICategoryBanner, IPagination } from "../../types"
+import { IAvatar, ICategoryBanner } from "../../types"
 
 export interface IThread {
   id: string
@@ -13,7 +13,7 @@ export interface IThread {
   starter: IThreadPoster | null
   lastPoster: IThreadPoster | null
   category: IThreadCategory
-  posts?: IThreadPostsPage | null
+  posts: IThreadPosts
   extra: Record<string, any>
 }
 
@@ -69,10 +69,16 @@ export interface IPoster {
   extra: Record<string, any>
 }
 
+export interface IThreadPosts {
+  page: IThreadPostsPage | null
+  pagination: {
+    pages: number
+  }
+}
+
 export interface IThreadPostsPage {
   items: Array<IPost>
   number: number
   start: number
   stop: number
-  pagination: IPagination
 }

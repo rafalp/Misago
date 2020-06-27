@@ -4,7 +4,11 @@ import { Dropdown } from "../Dropdown"
 import { IPaginatorProps } from "./Paginator.types"
 import PaginatorDropdownMenu from "./PaginatorDropdownMenu"
 
-const PaginatorDropdown: React.FC<IPaginatorProps> = ({ page, url }) => (
+const PaginatorDropdown: React.FC<IPaginatorProps> = ({
+  page,
+  pages,
+  url,
+}) => (
   <Dropdown
     className="paginator-dropdown"
     placement="bottom"
@@ -16,12 +20,17 @@ const PaginatorDropdown: React.FC<IPaginatorProps> = ({ page, url }) => (
         onClick={toggle}
       >
         <Trans id="paginator">
-          Page {page?.number || 1} of {page?.pagination.pages || 1}
+          Page {page} of {pages}
         </Trans>
       </button>
     )}
     menu={({ close }) => (
-      <PaginatorDropdownMenu close={close} page={page} url={url} />
+      <PaginatorDropdownMenu
+        close={close}
+        page={page}
+        pages={pages}
+        url={url}
+      />
     )}
     resistant
   />

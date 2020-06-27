@@ -12,10 +12,20 @@ const url = (page: number) => {
   return "/thread/"
 }
 
-export const Default = () => (
-  <RootContainer padding>
-    <ThreadToolbarTop paginatorUrl={url} />
-    <hr />
-    <ThreadToolbarBottom paginatorUrl={url} />
-  </RootContainer>
-)
+export const Default = () => {
+  const props = {
+    pagination: {
+      url,
+      page: 1,
+      pages: 1,
+    },
+  }
+
+  return (
+    <RootContainer padding>
+      <ThreadToolbarTop {...props} />
+      <hr />
+      <ThreadToolbarBottom {...props} />
+    </RootContainer>
+  )
+}

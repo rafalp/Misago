@@ -65,22 +65,22 @@ const THREAD_QUERY = gql`
           ...ThreadCategory
         }
       }
-      posts(page: $page) {
-        items {
-          id
-          posterName
-          body
-          edits
-          postedAt
-          extra
-          poster {
-            ...ThreadPoster
+      posts {
+        page(page: $page) {
+          number
+          items {
+            id
+            posterName
+            body
+            edits
+            postedAt
             extra
+            poster {
+              ...ThreadPoster
+              extra
+            }
           }
         }
-        number
-        start
-        stop
         pagination {
           pages
         }

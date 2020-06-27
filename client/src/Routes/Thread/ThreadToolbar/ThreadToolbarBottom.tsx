@@ -3,12 +3,11 @@ import { Paginator, Toolbar, ToolbarItem } from "../../../UI"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
 
 const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
-  page,
-  paginatorUrl,
+  pagination,
 }) => (
   <Toolbar>
     <ToolbarItem>
-      <Paginator page={page} url={paginatorUrl} />
+      <Paginator {...pagination} />
     </ToolbarItem>
   </Toolbar>
 )

@@ -1,9 +1,5 @@
 export interface IPaginatorProps {
-  page?: {
-    number: number
-    pagination: {
-      pages: number
-    }
-  } | null
+  page: number
+  pages: number
   url: (page: number) => string
 }
