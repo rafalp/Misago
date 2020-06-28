@@ -13,3 +13,47 @@
   margin-right: $spacer;
   min-width: 100px;
 }
+
+.btn-paginator-page-active {
+  font-weight: bold;
+}
+
+// On mobile devices (tablet and down) make paginator compact
+@include media-breakpoint-down(md) {
+  .btn-paginator-page,
+  .btn-paginator-ellipsis,
+  .btn-paginator-toggle-full {
+    display: none;
+  }
+}
+
+// On very small devices make paginator full-width
+@include media-breakpoint-down(sm) {
+  .paginator {
+    display: flex;
+    width: 100%;
+
+    .btn + .btn {
+      margin-left: $spacer / 2;
+    }
+  }
+
+  .btn-paginator-toggle-compact.btn-responsive {
+    padding-left: 0;
+    padding-right: 0;
+    width: 100%;
+
+    align-items: center;
+    font-size: $font-size-base * 0.8;
+    font-weight: bold;
+  }
+}
+
+// On large screens hide compat-only items
+@include media-breakpoint-up(lg) {
+  .btn-paginator-start,
+  .btn-paginator-last,
+  .btn-paginator-toggle-compact {
+    display: none;
+  }
+}

@@ -1,10 +1,17 @@
 import { Trans } from "@lingui/macro"
+import classnames from "classnames"
 import React from "react"
+import { ButtonSecondary } from "../Button"
 import { Dropdown } from "../Dropdown"
 import { IPaginatorProps } from "./Paginator.types"
 import PaginatorDropdownMenu from "./PaginatorDropdownMenu"
 
-const PaginatorDropdown: React.FC<IPaginatorProps> = ({
+interface IPaginatorDropdownProps extends IPaginatorProps {
+  compact?: boolean
+}
+
+const PaginatorDropdown: React.FC<IPaginatorDropdownProps> = ({
+  compact,
   page,
   pages,
   url,
@@ -13,16 +20,28 @@ const PaginatorDropdown: React.FC<IPaginatorProps> = ({
     className="paginator-dropdown"
     placement="bottom"
     toggle={({ ref, toggle }) => (
-      <button
-        type="button"
-        className="btn btn-secondary btn-responsive"
-        ref={ref}
+      <ButtonSecondary
+        className={classnames("btn-secondary", "btn-paginator-toggle", {
+          "btn-paginator-toggle-compact": compact,
+          "btn-paginator-toggle-full": !compact,
+        })}
+        elementRef={ref}
+        text={
+          compact ? (
+            <Trans id="paginator_compact">
+              {page} of {pages}
+            </Trans>
+          ) : (
+            <Trans id="paginator">
+              Page {page} of {pages}
+            </Trans>
+          )
+        }
+        icon={!compact ? "ellipsis-v" : undefined}
+        iconSolid
+        responsive
         onClick={toggle}
-      >
-        <Trans id="paginator">
-          Page {page} of {pages}
-        </Trans>
-      </button>
+      />
     )}
     menu={({ close }) => (
       <PaginatorDropdownMenu
