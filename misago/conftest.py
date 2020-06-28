@@ -6,6 +6,7 @@ from .categories.models import Category
 from .conf import SETTINGS_CACHE
 from .conf.dynamicsettings import DynamicSettings
 from .conf.staticsettings import StaticSettings
+from .menus import MENU_ITEMS_CACHE
 from .socialauth import SOCIALAUTH_CACHE
 from .test import MisagoClient
 from .themes import THEME_CACHE
@@ -22,6 +23,7 @@ def get_cache_versions():
         SETTINGS_CACHE: "abcdefgh",
         SOCIALAUTH_CACHE: "abcdefgh",
         THEME_CACHE: "abcdefgh",
+        MENU_ITEMS_CACHE: "abcdefgh",
     }
 
 

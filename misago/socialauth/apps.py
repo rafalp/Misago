@@ -33,7 +33,7 @@ class MisagoSocialAuthConfig(AppConfig):
             admin_template="misago/admin/socialauth/form.html",
         )
         providers.add(
-            provider="google",
+            provider="google-oauth2",
             name="Google",
             auth_backend=GoogleOAuth2,
             admin_form=GoogleForm,

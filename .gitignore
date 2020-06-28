@@ -50,6 +50,7 @@ pylint.txt
 # IDEs
 .idea/
 .vscode/
+*.swp
 
 # Django stuff:
 *.log

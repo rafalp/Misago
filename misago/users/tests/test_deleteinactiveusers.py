@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from ...conf.test import override_dynamic_settings
 from ..management.commands import deleteinactiveusers
+from ..models import DeletedUser
 from ..test import create_test_user
 
 User = get_user_model()
@@ -48,6 +49,20 @@ class DeleteInactiveUsersTests(TestCase):
 
         with self.assertRaises(User.DoesNotExist):
             self.user.refresh_from_db()
+
+    @override_dynamic_settings(new_inactive_accounts_delete=2)
+    def test_inactive_user_deletion_is_recorded(self):
+        self.user.joined_on = timezone.now() - timedelta(days=2)
+        self.user.requires_activation = User.ACTIVATION_USER
+        self.user.save()
+
+        out = StringIO()
+        call_command(deleteinactiveusers.Command(), stdout=out)
+        command_output = out.getvalue().splitlines()[0].strip()
+
+        self.assertEqual(command_output, "Deleted inactive user accounts: 1")
+
+        DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_SYSTEM)
 
     @override_dynamic_settings(new_inactive_accounts_delete=2)
     def test_skip_new_user_activation_user(self):

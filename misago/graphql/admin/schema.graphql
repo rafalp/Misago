@@ -10,16 +10,19 @@ type Query {
 }
 
 type Analytics {
-    users: AnalyticsData!
-    threads: AnalyticsData!
-    posts: AnalyticsData!
     attachments: AnalyticsData!
     dataDownloads: AnalyticsData!
+    posts: AnalyticsData!
+    threads: AnalyticsData!
+    userDeletions: AnalyticsData!
+    users: AnalyticsData!
 }
 
 type AnalyticsData {
     current: [Int!]!
+    currentCumulative: [Int!]!
     previous: [Int!]!
+    previousCumulative: [Int!]!
 }
 
 type Version {

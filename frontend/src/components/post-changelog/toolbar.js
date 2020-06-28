@@ -85,7 +85,7 @@ export function GoForwardBtn(props) {
       className="btn-default btn-block btn-icon btn-sm"
       disabled={props.disabled || !props.edit.next}
       onClick={props.onClick}
-      title={gettext("See previous change")}
+      title={gettext("See next change")}
     >
       <span className="material-icon">chevron_right</span>
     </Button>

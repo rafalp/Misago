@@ -1,6 +1,5 @@
 import React from "react"
 import Action from "./action"
-import isUrl from "misago/utils/is-url"
 
 export default function(props) {
   return (

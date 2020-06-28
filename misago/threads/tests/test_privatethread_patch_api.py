@@ -170,7 +170,7 @@ class PrivateThreadAddParticipantApiTests(PrivateThreadPatchApiTestCase):
     def test_add_user(self):
         """
         adding user to thread add user to thread as participant,
-        sets event and emails him
+        sets event and emails them
         """
         ThreadParticipant.objects.set_owner(self.thread, self.user)
 
@@ -323,7 +323,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         )
 
     def test_user_leave_thread(self):
-        """api allows user to remove himself from thread"""
+        """api allows user to remove themself from thread"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
 
@@ -360,7 +360,7 @@ class PrivateThreadRemoveParticipantApiTests(PrivateThreadPatchApiTestCase):
         self.assertEqual(self.user.subscription_set.count(), 0)
 
     def test_user_leave_closed_thread(self):
-        """api allows user to remove himself from closed thread"""
+        """api allows user to remove themself from closed thread"""
         ThreadParticipant.objects.set_owner(self.thread, self.other_user)
         ThreadParticipant.objects.add_participants(self.thread, [self.user])
 

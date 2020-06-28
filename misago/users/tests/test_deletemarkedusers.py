@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from ...conf.test import override_dynamic_settings
 from ..management.commands import deletemarkedusers
+from ..models import DeletedUser
 from ..test import create_test_user
 
 User = get_user_model()
@@ -26,6 +27,15 @@ class DeleteMarkedUsersTests(TestCase):
 
         with self.assertRaises(User.DoesNotExist):
             self.user.refresh_from_db()
+
+    def test_marked_user_deletion_is_recorded(self):
+        out = StringIO()
+        call_command(deletemarkedusers.Command(), stdout=out)
+        command_output = out.getvalue().splitlines()[0].strip()
+
+        self.assertEqual(command_output, "Deleted users: 1")
+
+        DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_SELF)
 
     @override_dynamic_settings(allow_delete_own_account=False)
     def test_delete_disabled(self):

@@ -35,7 +35,7 @@ def create_configured_client(request):
     settings = request.settings
 
     return ClientMisago(
-        settings.sso_server,
+        settings.sso_url,
         settings.sso_public_key,
         settings.sso_private_key,
         request=request,

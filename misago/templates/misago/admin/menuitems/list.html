@@ -1,0 +1,132 @@
+{% extends "misago/admin/generic/list.html" %}
+{% load i18n misago_admin_form misago_capture %}
+
+
+{% block page-actions %}
+<div class="col-auto page-action">
+  <a href="{% url 'misago:admin:settings:menu-items:new' %}" class="btn btn-primary btn-sm">
+    <span class="fa fa-plus-circle"></span>
+    {% trans "New menu item" %}
+  </a>
+</div>
+{% endblock %}
+
+
+{% block table-header %}
+<th>{% trans "Item" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 170px;">{% trans "CSS Class" %}</th>
+<th style="width: 170px;">{% trans "Target" %}</th>
+<th style="width: 200px;">{% trans "Rel" %}</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+<th style="width: 1px;">&nbsp;</th>
+{% endblock table-header %}
+
+
+{% block table-row %}
+<td class="pr-0">
+  <div class="small">
+    <a href="{% url 'misago:admin:settings:menu-items:edit' pk=item.pk %}" class="item-name">
+      {{ item }}
+    </a>
+  </div>
+  <div class="small">
+    {{ item.url }}
+  </div>
+</td>
+<td class="badges-list">
+  {% if item.menu == item.MENU_NAVBAR or item.menu == item.MENU_BOTH %}
+    <span class="badge badge-primary" data-tooltip="top" title="{% trans 'Is displayed on the forum navbar.' %}">
+      {% trans "Navbar" %}
+    </span>
+  {% endif %}
+  {% if item.menu == item.MENU_FOOTER or item.menu == item.MENU_BOTH %}
+    <span class="badge badge-info" data-tooltip="top" title="{% trans 'Is displayed on the forum footer.' %}">
+      {% trans "Footer" %}
+    </span>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.css_class %}
+    <pre class="m-0">{{ item.css_class }}</pre>
+  {% else %}
+    <i class="text-muted">{% trans "Not set" %}</i>
+  {% endif %}
+</td>
+<td class="small">
+  {% if item.target_blank %}
+    <pre class="m-0">target="_blank"</pre>
+  {% else %}
+    &nbsp;
+  {% endif %}
+</td>
+<td class="small">
+  {{ item.rel }}
+</td>
+{% include "misago/admin/generic/list_extra_actions.html" %}
+<td>
+  {% if not forloop.last %}
+    <form action="{% url 'misago:admin:settings:menu-items:down' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move down' %}">
+        <span class="fa fa-chevron-down"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-down"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  {% if not forloop.first %}
+    <form action="{% url 'misago:admin:settings:menu-items:up' pk=item.pk %}" method="post">
+      {% csrf_token %}
+      <button class="btn btn-light btn-sm" data-tooltip="top" title="{% trans 'Move up' %}">
+        <span class="fa fa-chevron-up"></span>
+      </button>
+    </form>
+  {% else %}
+    <button class="btn btn-light btn-sm" disabled>
+      <span class="fa fa-chevron-up"></span>
+    </button>
+  {% endif %}
+</td>
+<td>
+  <div class="dropdown">
+    <button class="btn btn-light btn-sm dropdown-toggle" type="button" id="item-optioms-{{ item.pk }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <i class="fas fa-ellipsis-h"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="item-optioms-{{ item.pk }}">
+      <a class="dropdown-item" href="{% url 'misago:admin:settings:menu-items:edit' pk=item.pk %}">
+        {% trans "Edit item" %}
+      </a>
+      <form action="{% url 'misago:admin:settings:menu-items:delete' pk=item.pk %}" method="post" data-delete-confirmation="true">
+        {% csrf_token %}
+        <button class="dropdown-item">
+          {% trans "Remove item" %}
+        </button>
+      </form>
+    </div>
+  </div>
+</td>
+{% endblock %}
+
+
+{% block blankslate %}
+<td colspan="9">
+  {% trans "No menu items are set." %}
+</td>
+{% endblock blankslate %}
+
+
+{% block javascripts %}
+{{ block.super }}
+<script type="text/javascript">
+  window.misago.initConfirmation(
+    "[data-delete-confirmation]",
+    "{% trans 'Are you sure you want to remove this menu item?' %}"
+  )
+</script>
+{% endblock %}

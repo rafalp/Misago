@@ -10,7 +10,7 @@ from ...conf.test import override_dynamic_settings
 from ...threads.models import Post, Thread
 from ...threads.test import post_thread
 from ..activepostersranking import build_active_posters_ranking
-from ..models import Ban, Rank
+from ..models import Ban, DeletedUser, Rank
 from ..test import AuthenticatedUserTestCase, create_test_user
 
 User = get_user_model()
@@ -534,6 +534,11 @@ class UserDeleteOwnAccountTests(AuthenticatedUserTestCase):
         self.assertTrue(self.user.is_active)
         self.assertFalse(self.user.is_deleting_account)
 
+    @override_dynamic_settings(allow_delete_own_account=True, enable_sso=True)
+    def test_own_account_deletion_fails_when_sso_is_enabled(self):
+        response = self.client.post(self.api_link, {"password": self.USER_PASSWORD})
+        self.assertEqual(response.status_code, 403)
+
     @override_dynamic_settings(allow_delete_own_account=True)
     def test_delete_own_account(self):
         """deactivates account and marks it for deletion"""
@@ -676,3 +681,16 @@ class UserDeleteTests(AuthenticatedUserTestCase):
 
         self.assertEqual(Thread.objects.count(), self.threads + 1)
         self.assertEqual(Post.objects.count(), self.posts + 2)
+
+    @patch_user_acl(
+        {"can_delete_users_newer_than": 10, "can_delete_users_with_less_posts_than": 10}
+    )
+    def test_deleting_user_using_api_records_deletion_by_staff(self):
+        response = self.client.post(
+            self.link,
+            json.dumps({"with_content": False}),
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, 200)
+
+        DeletedUser.objects.get(deleted_by=DeletedUser.DELETED_BY_STAFF)

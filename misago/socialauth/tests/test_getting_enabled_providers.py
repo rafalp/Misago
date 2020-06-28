@@ -82,7 +82,7 @@ def test_enabled_providers_dict_includes_auth_backend(provider, mocker, cache_ve
 
 
 def test_provider_settings_keys_are_capitalized():
-    provider = Mock(pk="google", settings={"key": "text-key"})
+    provider = Mock(pk="google-oauth2", settings={"key": "text-key"})
     settings = get_provider_settings(provider)
     assert settings == {"KEY": "text-key"}
 

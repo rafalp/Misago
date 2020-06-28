@@ -6,7 +6,7 @@ from django.core.cache import cache
 from django.utils import timezone
 
 from ...threads.models import Attachment, Post, Thread
-from ...users.models import DataDownload
+from ...users.models import DataDownload, DeletedUser
 
 CACHE_KEY = "misago_admin_analytics"
 CACHE_LENGTH = 3600 * 4  # 4 hours
@@ -40,6 +40,7 @@ def get_data_from_db(span):
 
     return {
         "users": analytics.get_data_for_model(User, "joined_on"),
+        "userDeletions": analytics.get_data_for_model(DeletedUser, "deleted_on"),
         "threads": analytics.get_data_for_model(Thread, "started_on"),
         "posts": analytics.get_data_for_model(Post, "posted_on"),
         "attachments": analytics.get_data_for_model(Attachment, "uploaded_on"),
@@ -76,7 +77,22 @@ class Analytics:
                 data[date] += 1
 
         values = list(data.values())
+        current = list(reversed(values[: self.span]))
+        previous = list(reversed(values[self.span :]))
+
         return {
-            "current": list(reversed(values[: self.span])),
-            "previous": list(reversed(values[self.span :])),
+            "current": current,
+            "currentCumulative": cumulate_data(current),
+            "previous": previous,
+            "previousCumulative": cumulate_data(previous),
         }
+
+
+def cumulate_data(data_series):
+    data = []
+    for v in data_series:
+        if not data:
+            data.append(v)
+        else:
+            data.append(data[-1] + v)
+    return data

@@ -8,7 +8,7 @@ from ... import __released__, __version__
 from .status import Status
 
 CACHE_KEY = "misago_admin_version_check"
-CACHE_LENGTH = 3600 * 8  # 4 hours
+CACHE_LENGTH = 3600 * 4  # 4 hours
 
 version_check = QueryType()
 
@@ -18,12 +18,7 @@ def resolve_version(*_):
     if not __released__:
         return get_unreleased_error()
 
-    data = cache.get(CACHE_KEY)
-    if not data:
-        data = check_version_with_api()
-        if data["status"] != Status.WARNING:
-            cache.set(CACHE_KEY, data, CACHE_LENGTH)
-    return data
+    return check_version_with_api()
 
 
 def get_unreleased_error():
@@ -54,6 +49,14 @@ def check_version_with_api():
 
 
 def get_latest_version():
+    data = cache.get(CACHE_KEY)
+    if not data:
+        data = get_latest_version_from_api()
+        cache.set(CACHE_KEY, data, CACHE_LENGTH)
+    return data
+
+
+def get_latest_version_from_api():
     api_url = "https://pypi.org/pypi/Misago/json"
     r = requests.get(api_url)
     r.raise_for_status()

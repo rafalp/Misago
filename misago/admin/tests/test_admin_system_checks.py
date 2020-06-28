@@ -168,7 +168,7 @@ def test_warning_about_unset_forum_address_is_displayed_on_checks_list(admin_cli
 
 @override_dynamic_settings(forum_address=incorrect_address)
 def test_warning_about_incorrect_forum_address_is_displayed_on_checks_list(
-    admin_client
+    admin_client,
 ):
     response = admin_client.get(admin_link)
     assert_contains(response, "address")
@@ -201,7 +201,7 @@ def test_https_check_fails_if_site_is_accessed_without_https(mocker):
 
 
 def test_warning_about_accessing_site_without_https_is_displayed_on_checks_list(
-    admin_client
+    admin_client,
 ):
     response = admin_client.get(admin_link)
     assert_contains(response, "site is not running over HTTPS")

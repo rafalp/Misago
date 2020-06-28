@@ -29,7 +29,7 @@ class ColorPicker extends React.Component {
           <input
             type="color"
             className="form-control"
-            style={{width: "48px"}}
+            style={{ width: "48px" }}
             value={cleanColor(this.state.value)}
             onChange={this.onChange}
           />
@@ -50,7 +50,7 @@ class ColorPicker extends React.Component {
 
 const color = /^#[0-9a-fA-F]{6}$/
 
-const cleanColor = (value) => {
+const cleanColor = value => {
   return color.test(value) ? value : "#ffffff"
 }
 

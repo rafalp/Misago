@@ -73,6 +73,14 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
             response.json(), {"new_email": ["This e-mail address is not available."]}
         )
 
+    @override_dynamic_settings(enable_sso=True)
+    def test_email_change_fails_when_sso_is_enabled(self):
+        response = self.client.post(
+            self.link,
+            data={"new_email": "new@email.com", "password": self.USER_PASSWORD},
+        )
+        self.assertEqual(response.status_code, 403)
+
     @override_dynamic_settings(forum_address="http://test.com/")
     def test_change_email(self):
         """api allows users to change their e-mail addresses"""

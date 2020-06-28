@@ -73,7 +73,7 @@ def test_new_user_can_be_created_with_whitespace_around_password(admin_client):
 
 
 def test_new_user_creation_fails_because_user_was_not_given_authenticated_role(
-    admin_client
+    admin_client,
 ):
     default_rank = Rank.objects.get_default()
     guest_role = Role.objects.get(special_role="anonymous")

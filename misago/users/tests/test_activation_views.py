@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+from ...conf.test import override_dynamic_settings
 from ...core.utils import encode_json_html
 from ..models import Ban
 from ..test import create_test_user
@@ -80,6 +81,19 @@ class ActivationViewsTests(TestCase):
 
         user = User.objects.get(pk=user.pk)
         self.assertEqual(user.requires_activation, 0)
+
+    @override_dynamic_settings(enable_sso=True)
+    def test_account_activation_is_not_avaliable_when_sso_is_enabled(self):
+        user = create_test_user("User", "user@example.com", requires_activation=1)
+        activation_token = make_activation_token(user)
+
+        response = self.client.get(
+            reverse(
+                "misago:activate-by-token",
+                kwargs={"pk": user.pk, "token": activation_token},
+            )
+        )
+        self.assertEqual(response.status_code, 403)
 
     def test_view_activate_inactive(self):
         """activate inactive user passess"""

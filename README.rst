@@ -10,9 +10,9 @@ Misago
    :target: https://coveralls.io/github/rafalp/Misago?branch=master
    :alt: Test Coverage
 
-.. image:: https://img.shields.io/badge/release-0.21-brightgreen.svg
+.. image:: https://img.shields.io/badge/release-0.26.0-brightgreen.svg
    :target: https://pypi.org/project/Misago/
-   :alt: Release 0.21
+   :alt: Release 0.26.0
 
 .. image:: https://img.shields.io/badge/python-3.7-blue.svg
    :target: https://travis-ci.org/rafalp/Misago
@@ -68,23 +68,15 @@ As of now Misago implements all features considered "must have" on live internet
 * Moderation queue for users and categories allowing you to moderate content before it becomes visible to other members of the community.
 * Custom theme developed over bootstrap.
 * Features and settings for achieving GDPR compliance.
+* Integrate forum with your site using implemented Single Sign On client and JSON API.
 
 Even more features will follow in future releases:
 
-* Achievements and awards system.
-* Content reporting for users to report offensive content.
 * Forum-wide JS routing further reducing navigation times.
-* IP search for moderators to find `sock puppets <https://en.wikipedia.org/wiki/Sockpuppet_(Internet)>`_ or bot nets.
-* Notifications for users to notice content and events of concern faster.
-* OAuth2 server for those looking to use Misago as auth provider for other apps.
-* Warning system for easy tracking users history of infractions and offenses.
+* Replacing current API with GraphQL API for easier integrations and extending.
+* Plugin system to extend core package with new features.
 * WYSIWYM content editor for even easier post formatting.
 * Ranking system for forum search results based on post links, likes, author and thread importance.
-* Post reactions in place of likes.
-
-...and more!
-
-If you are looking into using Misago to run live forum, you are absolutely invited to, but please keep in mind that Misago is relatively immature software that may contain serious bugs or issues as well as quirks and lackings thay may take time to resolve, despite best efforts. 
 
 
 Development
@@ -134,7 +126,7 @@ If you have found bug, please report it on `issue tracker <https://github.com/ra
 
 For feature or support requests as well as general feedback please use `official forum <http://misago-project.org>`_ instead. Your feedback means much to the project so please do share your thoughts!
 
-There's also Gitter for those looking for intant-messaging approach for discussing Misago development.
+There's also Gitter for those looking for instant-messaging approach for discussing Misago development.
 
 
 Contributing
@@ -161,7 +153,7 @@ English sentences used within ``misago.faker.phrases`` were extracted from `Nati
 Copyright and license
 =====================
 
-**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/ralfp>`_
+**Misago** - Copyright © 2018 `Rafał Pitoń <http://github.com/rafalp>`_
 This program comes with ABSOLUTELY NO WARRANTY.
 
 This is free software and you are welcome to modify and redistribute it under the conditions described in the license.

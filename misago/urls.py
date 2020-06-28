@@ -1,13 +1,14 @@
 from django.conf.urls import include, url
 from django.views.generic import TemplateView
 
+from . import hooks
 from .conf import settings
 from .core.views import forum_index
 
 app_name = "misago"
 
 # Register Misago Apps
-urlpatterns = [
+urlpatterns = hooks.urlpatterns + [
     url(r"^", include("misago.analytics.urls")),
     url(r"^", include("misago.legal.urls")),
     url(r"^", include("misago.users.urls")),
@@ -32,7 +33,7 @@ urlpatterns = [
 
 
 # Register API
-apipatterns = [
+apipatterns = hooks.apipatterns + [
     url(r"^", include("misago.categories.urls.api")),
     url(r"^", include("misago.legal.urls.api")),
     url(r"^", include("misago.markup.urls")),

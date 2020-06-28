@@ -26,26 +26,31 @@ const getAnalytics = gql`
   query getAnalytics($span: Int!) {
     analytics(span: $span) {
       users {
-        current
-        previous
+        ...data
+      }
+      userDeletions {
+        ...data
       }
       threads {
-        current
-        previous
+        ...data
       }
       posts {
-        current
-        previous
+        ...data
       }
       attachments {
-        current
-        previous
+        ...data
       }
       dataDownloads {
-        current
-        previous
+        ...data
       }
     }
+  }
+
+  fragment data on AnalyticsData {
+    current
+    currentCumulative
+    previous
+    previousCumulative
   }
 `
 
@@ -82,11 +87,6 @@ class Analytics extends React.Component {
             return (
               <>
                 <AnalyticsItem
-                  data={analytics.users}
-                  name={labels.users}
-                  span={span}
-                />
-                <AnalyticsItem
                   data={analytics.threads}
                   name={labels.threads}
                   span={span}
@@ -99,6 +99,17 @@ class Analytics extends React.Component {
                 <AnalyticsItem
                   data={analytics.attachments}
                   name={labels.attachments}
+                  span={span}
+                />
+                <AnalyticsItem
+                  data={analytics.users}
+                  name={labels.users}
+                  span={span}
+                />
+                <AnalyticsItem
+                  data={analytics.userDeletions}
+                  name={labels.userDeletions}
+                  negative={true}
                   span={span}
                 />
                 <AnalyticsItem
@@ -152,8 +163,9 @@ const Error = ({ message }) => (
 
 const CURRENT = "C"
 const PREVIOUS = "P"
+const CURRENT_SERIES = 0
 
-const AnalyticsItem = ({ data, legend, name, span }) => {
+const AnalyticsItem = ({ data, legend, name, negative, span }) => {
   const options = {
     legend: {
       show: false
@@ -188,6 +200,12 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
             now.subtract(span - dataPointIndex - 1, "days")
             return now.format("ll")
           }
+        },
+        formatter: function(value, { dataPointIndex, seriesIndex }) {
+          if (seriesIndex === CURRENT_SERIES) {
+            return data.current[dataPointIndex]
+          }
+          return data.previous[dataPointIndex]
         }
       }
     },
@@ -214,8 +232,8 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
   }
 
   const series = [
-    { name: CURRENT, data: data.current },
-    { name: PREVIOUS, data: data.previous }
+    { name: CURRENT, data: data.currentCumulative },
+    { name: PREVIOUS, data: data.previousCumulative }
   ]
 
   return (
@@ -223,7 +241,7 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
       <h5 className="m-0">{name}</h5>
       <div className="row align-items-center">
         <div className="col-auto">
-          <Summary data={data} />
+          <Summary data={data} negative={negative} />
         </div>
         <div className="col">
           <ChartContainer>
@@ -245,19 +263,26 @@ const AnalyticsItem = ({ data, legend, name, span }) => {
   )
 }
 
-const Summary = ({ data }) => {
+const Summary = ({ data, negative }) => {
   const current = data.current.reduce((a, b) => a + b)
   const previous = data.previous.reduce((a, b) => a + b)
   const diff = current - previous
 
   let color = "text-light"
   let icon = "fas fa-equals"
+
+  if (negative) {
+    if (diff > 0) color = "text-danger"
+    if (diff < 0) color = "text-success"
+  } else {
+    if (diff > 0) color = "text-success"
+    if (diff < 0) color = "text-danger"
+  }
+
   if (diff > 0) {
-    color = "text-success"
     icon = "fas fa-chevron-up"
   }
   if (diff < 0) {
-    color = "text-danger"
     icon = "fas fa-chevron-down"
   }
 

@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from ....conf.shortcuts import get_dynamic_settings
 from ....core.pgutils import chunk_queryset
+from ...deletesrecord import record_user_deleted_by_system
 
 User = get_user_model()
 
@@ -33,6 +34,7 @@ class Command(BaseCommand):
 
         for user in chunk_queryset(queryset):
             user.delete(anonymous_username=settings.anonymous_username)
+            record_user_deleted_by_system()
             users_deleted += 1
 
         self.stdout.write("Deleted inactive user accounts: %s" % users_deleted)

@@ -17,6 +17,7 @@ from ...core.shortcuts import get_int_or_404
 from ...threads.moderation import hide_post, hide_thread
 from ..bans import get_user_ban
 from ..datadownloads import request_user_data_download, user_has_data_download_request
+from ..deletesrecord import record_user_deleted_by_staff
 from ..online.utils import get_user_status
 from ..permissions import (
     allow_browse_users_list,
@@ -85,6 +86,9 @@ class UserViewSet(viewsets.GenericViewSet):
         return list_endpoint(request)
 
     def create(self, request):
+        if request.settings.enable_sso:
+            raise PermissionDenied(_("Please use the 3rd party site to register."))
+
         return create_endpoint(request)
 
     def retrieve(self, request, pk=None):
@@ -128,6 +132,11 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @action(methods=["get", "post"], detail=True)
     def username(self, request, pk=None):
+        if request.settings.enable_sso:
+            raise PermissionDenied(
+                _("Please use the 3rd party site to change your username.")
+            )
+
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users names."))
 
@@ -147,6 +156,11 @@ class UserViewSet(viewsets.GenericViewSet):
         url_name="change-password",
     )
     def change_password(self, request, pk=None):
+        if request.settings.enable_sso:
+            raise PermissionDenied(
+                _("Please use the 3rd party site to change your password.")
+            )
+
         get_int_or_404(pk)
         allow_self_only(request.user, pk, _("You can't change other users passwords."))
 
@@ -156,6 +170,11 @@ class UserViewSet(viewsets.GenericViewSet):
         methods=["post"], detail=True, url_path="change-email", url_name="change-email"
     )
     def change_email(self, request, pk=None):
+        if request.settings.enable_sso:
+            raise PermissionDenied(
+                _("Please use the 3rd party site to change your e-mail.")
+            )
+
         get_int_or_404(pk)
         allow_self_only(
             request.user, pk, _("You can't change other users e-mail addresses.")
@@ -187,6 +206,11 @@ class UserViewSet(viewsets.GenericViewSet):
         url_name="delete-own-account",
     )
     def delete_own_account(self, request, pk=None):
+        if request.settings.enable_sso:
+            raise PermissionDenied(
+                _("Please use the 3rd party site to delete account.")
+            )
+
         serializer = DeleteOwnAccountSerializer(
             data=request.data, context={"user": request.user}
         )
@@ -318,6 +342,7 @@ class UserViewSet(viewsets.GenericViewSet):
                         category.save()
 
                 profile.delete(anonymous_username=request.settings.anonymous_username)
+                record_user_deleted_by_staff()
 
         return Response({})
 
