@@ -1,15 +1,26 @@
 import React from "react"
-import { Paginator, Toolbar, ToolbarItem } from "../../../UI"
+import {
+  Paginator,
+  ResetScrollOnNav,
+  Toolbar,
+  ToolbarItem,
+  ToolbarSeparator,
+} from "../../../UI"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
 
 const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
   pagination,
 }) => (
-  <Toolbar>
-    <ToolbarItem>
-      <Paginator {...pagination} />
-    </ToolbarItem>
-  </Toolbar>
+  <ResetScrollOnNav selector=".paginator">
+    <Toolbar>
+      {pagination.pages > 1 && (
+        <ToolbarItem>
+          <Paginator {...pagination} />
+        </ToolbarItem>
+      )}
+      <ToolbarSeparator />
+    </Toolbar>
+  </ResetScrollOnNav>
 )
 
 export default ThreadToolbarBottom

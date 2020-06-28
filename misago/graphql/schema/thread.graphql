@@ -21,3 +21,15 @@ type ThreadsFeed {
     items: [Thread!]!
     nextCursor: ID
 }
+
+type ThreadPosts {
+    page(page: Int): ThreadPostsPage
+    pagination: Pagination!
+}
+
+type ThreadPostsPage {
+    items: [Post!]!
+    number: Int
+    start: Int
+    stop: Int
+}

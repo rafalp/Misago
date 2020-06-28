@@ -85,7 +85,8 @@ import {
   useModal,
 } from "./Modal"
 import PageTitle from "./PageTitle"
-import { Paginator } from "./Paginator"
+import Paginator from "./Paginator"
+import ResetScrollOnNav from "./ResetScrollOnNav"
 import Responsive from "./Responsive"
 import RootError from "./RootError"
 import RouteContainer from "./RouteContainer"
@@ -210,6 +211,7 @@ export {
   PageTitle,
   Paginator,
   PasswordValidationError,
+  ResetScrollOnNav,
   Responsive,
   RootError,
   RouteContainer,

@@ -1,6 +1,6 @@
 import React from "react"
 import { ButtonSecondary } from "../Button"
-import { Paginator } from "../Paginator"
+import Paginator from "../Paginator"
 import { RootContainer } from "../Storybook"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "."
 
