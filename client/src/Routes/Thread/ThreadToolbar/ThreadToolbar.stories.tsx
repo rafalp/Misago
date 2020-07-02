@@ -29,3 +29,21 @@ export const Default = () => {
     </RootContainer>
   )
 }
+
+export const WithPages = () => {
+  const props = {
+    pagination: {
+      url,
+      page: 7,
+      pages: 21,
+    },
+  }
+
+  return (
+    <RootContainer padding>
+      <ThreadToolbarTop {...props} />
+      <hr />
+      <ThreadToolbarBottom {...props} />
+    </RootContainer>
+  )
+}

@@ -7,23 +7,31 @@ interface IResponsiveProps {
   desktop?: boolean
   tablet?: boolean
   mobile?: boolean
+  landscape?: boolean
+  portrait?: boolean
 }
 
 const Responsive: React.FC<IResponsiveProps> = ({
   children,
   className,
-  desktop,
-  tablet,
-  mobile,
+  desktop: lg,
+  tablet: md,
+  mobile: sm,
+  landscape: s,
+  portrait: xs,
 }) => (
   <div
     className={classNames(className, {
-      "d-none d-md-block": !mobile && tablet && desktop,
-      "d-md-none d-lg-block": mobile && !tablet && desktop,
-      "d-lg-none": mobile && tablet && !desktop,
-      "d-md-none": mobile && !tablet && !desktop,
-      "d-none d-lg-block": !mobile && !tablet && desktop,
-      "d-none d-md-block d-lg-none": !mobile && tablet && !desktop,
+      "d-none": !xs && (s || sm || md || lg),
+
+      "d-sm-none": xs && !(s || sm),
+      "d-sm-block": !xs && (s || sm),
+
+      "d-md-block": !(s || sm) && md,
+      "d-md-none": (s || sm) && !md,
+
+      "d-lg-block": !md && lg,
+      "d-lg-none": md && !lg,
     })}
   >
     {children}
