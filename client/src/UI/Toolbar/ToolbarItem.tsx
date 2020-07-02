@@ -8,6 +8,8 @@ interface IToolbarItemProps {
   desktop?: boolean
   tablet?: boolean
   mobile?: boolean
+  landscape?: boolean
+  portrait?: boolean
 }
 
 const ToolbarItem: React.FC<IToolbarItemProps> = ({
@@ -16,12 +18,16 @@ const ToolbarItem: React.FC<IToolbarItemProps> = ({
   desktop,
   tablet,
   mobile,
+  landscape,
+  portrait,
 }) => (
   <Responsive
     className={classNames("toolbar-item", fill ? "col" : "col-auto")}
     desktop={desktop}
     tablet={tablet}
     mobile={mobile}
+    landscape={landscape}
+    portrait={portrait}
   >
     {children}
   </Responsive>
