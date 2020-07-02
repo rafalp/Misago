@@ -1,3 +1,4 @@
 import Paginator from "./Paginator"
+import PaginatorCompact from "./PaginatorCompact"
 
-export default Paginator
+export { Paginator, PaginatorCompact }

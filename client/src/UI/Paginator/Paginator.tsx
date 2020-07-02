@@ -6,14 +6,7 @@ import PaginatorDropdown from "./PaginatorDropdown"
 import getPaginatorPagesList from "./getPaginatorPagesList"
 
 const Paginator: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
-  <div className="paginator">
-    <PaginatorButton
-      className="btn-paginator-start"
-      page={page > 1 && 1}
-      url={url}
-    >
-      <Icon icon="angle-double-left" solid fixedWidth />
-    </PaginatorButton>
+  <div className="paginator paginator-full">
     <PaginatorButton
       className="btn-paginator-prev"
       page={page > 1 && page - 1}
@@ -38,20 +31,12 @@ const Paginator: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
         </PaginatorButton>
       )
     )}
-    <PaginatorDropdown page={page} pages={pages} url={url} compact />
     <PaginatorButton
       className="btn-paginator-next"
       page={page < pages && page + 1}
       url={url}
     >
       <Icon icon="angle-right" solid fixedWidth />
-    </PaginatorButton>
-    <PaginatorButton
-      className="btn-paginator-last"
-      page={page < pages && pages}
-      url={url}
-    >
-      <Icon icon="angle-double-right" solid fixedWidth />
     </PaginatorButton>
     <PaginatorDropdown page={page} pages={pages} url={url} />
   </div>

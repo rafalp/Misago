@@ -18,18 +18,9 @@
   font-weight: bold;
 }
 
-// On mobile devices (tablet and down) make paginator compact
-@include media-breakpoint-down(md) {
-  .btn-paginator-page,
-  .btn-paginator-ellipsis,
-  .btn-paginator-toggle-full {
-    display: none;
-  }
-}
-
-// On very small devices make paginator full-width
+// On very small devices make compact paginator full-width
 @include media-breakpoint-down(sm) {
-  .paginator {
+  .paginator-compact {
     display: flex;
     width: 100%;
 
@@ -46,14 +37,5 @@
     align-items: center;
     font-size: $font-size-base * 0.8;
     font-weight: bold;
-  }
-}
-
-// On large screens hide compat-only items
-@include media-breakpoint-up(lg) {
-  .btn-paginator-start,
-  .btn-paginator-last,
-  .btn-paginator-toggle-compact {
-    display: none;
   }
 }

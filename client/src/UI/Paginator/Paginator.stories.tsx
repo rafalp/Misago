@@ -2,6 +2,7 @@ import { number, withKnobs } from "@storybook/addon-knobs"
 import React from "react"
 import { RootContainer } from "../Storybook"
 import Paginator from "./Paginator"
+import PaginatorCompact from "./PaginatorCompact"
 
 export default {
   title: "UI/Paginator",
@@ -16,24 +17,32 @@ const url = (page: number) => {
 export const FirstPage = () => (
   <RootContainer padding>
     <Paginator page={1} pages={10} url={url} />
+    <hr />
+    <PaginatorCompact page={1} pages={10} url={url} />
   </RootContainer>
 )
 
 export const MiddlePage = () => (
   <RootContainer padding>
     <Paginator page={5} pages={10} url={url} />
+    <hr />
+    <PaginatorCompact page={5} pages={10} url={url} />
   </RootContainer>
 )
 
 export const LastPage = () => (
   <RootContainer padding>
     <Paginator page={10} pages={10} url={url} />
+    <hr />
+    <PaginatorCompact page={10} pages={10} url={url} />
   </RootContainer>
 )
 
 export const OnlyPage = () => (
   <RootContainer padding>
     <Paginator page={1} pages={1} url={url} />
+    <hr />
+    <PaginatorCompact page={1} pages={1} url={url} />
   </RootContainer>
 )
 
@@ -47,6 +56,8 @@ export const Configurable = () => {
   return (
     <RootContainer padding>
       <Paginator page={page} pages={pages} url={url} />
+      <hr />
+      <PaginatorCompact page={page} pages={pages} url={url} />
     </RootContainer>
   )
 }
