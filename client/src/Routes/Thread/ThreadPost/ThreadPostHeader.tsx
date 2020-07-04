@@ -10,6 +10,7 @@ interface IThreadPostHeaderProps {
 
 const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({ post }) => (
   <div className="card-header thread-post-header">
+    {"#" + post.id + " - "}
     {post.poster ? (
       <Link className="thread-post-poster" to={urls.user(post.poster)}>
         {post.poster.name}

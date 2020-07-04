@@ -15,11 +15,9 @@ const ResetScrollOnNav: React.FC<IResetScrollOnNavProps> = ({
       if (selector) {
         const element = document.querySelector(selector)
         if (element) {
-          const offset =
-            element.getBoundingClientRect().top +
-            document.documentElement.scrollTop
-          console.log(offset)
-          window.scrollTo(0, offset - 10)
+          const top = element.getBoundingClientRect().top
+          const scroll = document.documentElement.scrollTop
+          window.scrollTo(0, top + scroll - 10)
         } else {
           window.scrollTo(0, 0)
         }

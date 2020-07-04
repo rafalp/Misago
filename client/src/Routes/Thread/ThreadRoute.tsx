@@ -7,6 +7,7 @@ import {
   RouteNotFound,
   WindowTitle,
 } from "../../UI"
+import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
@@ -62,11 +63,11 @@ const ThreadRoute: React.FC = () => {
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadHeader thread={thread} />
       <ThreadToolbarTop {...toolbarProps} />
-      {loading && <RouteLoader />}
-      {!loading &&
-        posts.page.items.map((post) => (
+      <SectionLoader loading={loading}>
+        {posts.page.items.map((post) => (
           <ThreadPost key={post.id} post={post} />
         ))}
+      </SectionLoader>
       <ThreadToolbarBottom {...toolbarProps} />
     </RouteContainer>
   )

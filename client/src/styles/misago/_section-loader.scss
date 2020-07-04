@@ -1,0 +1,43 @@
+// Section loader
+.section-loader {
+  position: relative;
+}
+
+.section-loader.active {
+  .section-loader-content {
+    opacity: 0.25;
+  }
+
+  .section-loader-backtrop {
+    display: flex;
+    background-color: transparent;
+  }
+}
+
+.section-loader-backtrop {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.section-loader-overlay {
+  position: sticky;
+  bottom: 0;
+  align-self: flex-end;
+  width: 100%;
+}
+
+.section-loader-spinner-body {
+  display: flex;
+  justify-content: center;
+  padding: $spacer 0;
+}
+
+.section-loader-spinner {
+  background-color: $body-bg;
+  border-radius: $border-radius;
+  padding: $spacer / 2;
+}

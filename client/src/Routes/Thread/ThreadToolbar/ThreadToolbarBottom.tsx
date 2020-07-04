@@ -13,7 +13,7 @@ import { IThreadToolbarProps } from "./ThreadToolbar.types"
 const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
   pagination,
 }) => (
-  <ResetScrollOnNav selector=".paginator">
+  <ResetScrollOnNav selector=".toolbar">
     {pagination.pages > 1 && (
       <Toolbar portrait>
         <ToolbarItem fill>
