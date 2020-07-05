@@ -1,5 +1,5 @@
 from hashlib import md5
-from typing import Any, Dict, Iterable
+from typing import Any, Dict, Iterable, Optional
 
 from ariadne import ObjectType
 
@@ -22,3 +22,14 @@ def resolve_avatars(user: User, _) -> Iterable[Dict[str, Any]]:
             "size": size,
             "url": f"https://www.gravatar.com/avatar/{avatar_hash}?s={size}&d=identicon",
         }
+
+
+@user_type.field("avatar")
+def resolve_avatar(user: User, _, size: Optional[int] = None) -> Dict[str, Any]:
+    avatar_hash = md5(user.email.encode("utf-8")).hexdigest()
+    resolved_size = size or max(settings.avatar_sizes)
+
+    return {
+        "size": resolved_size,
+        "url": f"https://www.gravatar.com/avatar/{avatar_hash}?s={resolved_size}&d=identicon",
+    }
