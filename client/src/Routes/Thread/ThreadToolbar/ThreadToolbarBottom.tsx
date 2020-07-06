@@ -23,14 +23,14 @@ const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
     )}
     <Toolbar>
       {pagination.pages > 1 && (
-        <ToolbarItem>
-          <Responsive landscape tablet>
+        <>
+          <ToolbarItem landscape tablet>
             <PaginatorCompact {...pagination} />
-          </Responsive>
-          <Responsive desktop>
+          </ToolbarItem>
+          <ToolbarItem desktop>
             <Paginator {...pagination} />
-          </Responsive>
-        </ToolbarItem>
+          </ToolbarItem>
+        </>
       )}
       <ToolbarSeparator />
     </Toolbar>

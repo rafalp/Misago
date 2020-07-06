@@ -3,8 +3,14 @@
   margin-bottom: $spacer;
 }
 
-// Insert some spacing between toolbar items
-.toolbar-item + .toolbar-item,
-.toolbar-item + .toolbar-separator {
-  margin-left: $spacer;
+.toolbar .row {
+  margin: 0 $spacer / -2;
+}
+
+.toolbar .row > .toolbar-item {
+  padding: 0 $spacer / 2;
+}
+
+.toolbar .row > .toolbar-spacer {
+  padding: 0;
 }

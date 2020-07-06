@@ -1,0 +1,12 @@
+// Absolutely positioned container always sticky to bottom
+.absolute-container {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.absolute-container.show {
+  display: block;
+}

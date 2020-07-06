@@ -26,7 +26,7 @@ const Toolbar: React.FC<IToolbarProps> = ({
     landscape={landscape}
     portrait={portrait}
   >
-    <div className="row align-items-center no-gutters">{children}</div>
+    <div className="row align-items-center">{children}</div>
   </Responsive>
 )
 

@@ -3,7 +3,6 @@ import {
   ButtonPrimary,
   Paginator,
   PaginatorCompact,
-  Responsive,
   Toolbar,
   ToolbarItem,
   ToolbarSeparator,
@@ -14,14 +13,14 @@ const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({ pagination }) => (
   <>
     <Toolbar>
       {pagination.pages > 1 && (
-        <ToolbarItem>
-          <Responsive landscape tablet>
+        <>
+          <ToolbarItem landscape tablet>
             <PaginatorCompact {...pagination} />
-          </Responsive>
-          <Responsive desktop>
+          </ToolbarItem>
+          <ToolbarItem desktop>
             <Paginator {...pagination} />
-          </Responsive>
-        </ToolbarItem>
+          </ToolbarItem>
+        </>
       )}
       <ToolbarSeparator />
       <ToolbarItem>
