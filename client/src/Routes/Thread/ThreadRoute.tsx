@@ -46,14 +46,15 @@ const ThreadRoute: React.FC = () => {
     )
   }
 
-  const toolbarProps = {
-    pagination: {
-      page: page || 1,
-      pages: posts.pagination.pages,
-      url: (page: number) => {
-        return urls.thread({ ...thread, page })
-      },
+  const pagination = {
+    page: page || 1,
+    pages: posts.pagination.pages,
+    url: (page: number) => {
+      return urls.thread({ ...thread, page })
     },
+  }
+  const toolbarProps = {
+    pagination,
   }
 
   return (
@@ -63,7 +64,9 @@ const ThreadRoute: React.FC = () => {
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadHeader thread={thread} />
       <ThreadToolbarTop {...toolbarProps} />
-      <SectionLoader loading={loading}>
+      <SectionLoader
+        loading={loading || posts.page.number !== pagination.page}
+      >
         {posts.page.items.map((post) => (
           <ThreadPost key={post.id} post={post} />
         ))}
