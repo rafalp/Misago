@@ -6,12 +6,15 @@ import { useForumStatsContext, useSettingsContext } from "../../Context"
 import { ThreadsHeaderAll } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
-import { useThreadsModeration } from "./ThreadsModeration"
+import {
+  ThreadsModerationControls,
+  useThreadsModeration,
+} from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import { useThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
-const ThreadsRoute: React.FC = () => {
+const ThreadsAll: React.FC = () => {
   const forumStats = useForumStatsContext()
   const settings = useSettingsContext()
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
@@ -36,7 +39,7 @@ const ThreadsRoute: React.FC = () => {
         )}
       </I18n>
       <ThreadsHeaderAll settings={settings} stats={forumStats} />
-      <ThreadsToolbar moderation={moderation} selection={selection} />
+      <ThreadsToolbar />
       <ThreadsList
         error={error}
         loading={loading}
@@ -50,8 +53,12 @@ const ThreadsRoute: React.FC = () => {
         loading={loading}
         onEvent={fetchMoreThreads}
       />
+      <ThreadsModerationControls
+        moderation={moderation}
+        selection={selection}
+      />
     </ThreadsLayout>
   )
 }
 
-export default ThreadsRoute
+export default ThreadsAll

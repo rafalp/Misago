@@ -3,7 +3,6 @@ import {
   Paginator,
   PaginatorCompact,
   ResetScrollOnNav,
-  Responsive,
   Toolbar,
   ToolbarItem,
   ToolbarSeparator,

@@ -5,19 +5,22 @@ import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
 import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
-import { useThreadsModeration } from "./ThreadsModeration"
+import {
+  ThreadsModerationControls,
+  useThreadsModeration,
+} from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
-interface IThreadsCategoryRouteParams {
+interface IThreadsCategoryParams {
   id: string
   slug: string
 }
 
-const ThreadsCategoryRoute: React.FC = () => {
-  const { id } = useParams<IThreadsCategoryRouteParams>()
+const ThreadsCategory: React.FC = () => {
+  const { id } = useParams<IThreadsCategoryParams>()
   const activeCategory = useActiveCategory(id)
   const {
     data,
@@ -54,11 +57,7 @@ const ThreadsCategoryRoute: React.FC = () => {
         <>
           <WindowTitle title={category.name} alerts={update.threads} />
           <ThreadsHeaderCategory category={category} />
-          <ThreadsToolbar
-            category={category}
-            moderation={moderation}
-            selection={selection}
-          />
+          <ThreadsToolbar category={category} />
         </>
       )}
       <ThreadsList
@@ -75,8 +74,12 @@ const ThreadsCategoryRoute: React.FC = () => {
         loading={loading}
         onEvent={fetchMoreThreads}
       />
+      <ThreadsModerationControls
+        moderation={moderation}
+        selection={selection}
+      />
     </ThreadsLayout>
   )
 }
 
-export default ThreadsCategoryRoute
+export default ThreadsCategory

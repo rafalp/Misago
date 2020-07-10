@@ -1,0 +1,12 @@
+// Fixed container always sticky to bottom
+.fixed-container {
+  display: none;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.fixed-container.show {
+  display: block;
+}

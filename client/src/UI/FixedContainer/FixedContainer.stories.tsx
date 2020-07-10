@@ -1,20 +1,20 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
-import AbsoluteContainer from "./AbsoluteContainer"
+import FixedContainer from "./FixedContainer"
 
 export default {
-  title: "UI/AbsoluteContainer",
+  title: "UI/FixedContainer",
   decorators: [withKnobs],
 }
 
 export const Visible = () => (
-  <AbsoluteContainer show>
+  <FixedContainer show>
     <p>Lorem ipsum dolor met.</p>
-  </AbsoluteContainer>
+  </FixedContainer>
 )
 
 export const Interactive = () => (
-  <AbsoluteContainer show={boolean("Show", false)}>
+  <FixedContainer show={boolean("Show", false)}>
     <p>Lorem ipsum dolor met.</p>
-  </AbsoluteContainer>
+  </FixedContainer>
 )

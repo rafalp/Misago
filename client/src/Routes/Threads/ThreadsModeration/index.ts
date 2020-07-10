@@ -1,3 +1,4 @@
+import ThreadsModerationControls from "./ThreadsModerationControls"
 import ThreadsModerationModalClose from "./ThreadsModerationModalClose"
 import { ThreadsModerationModalContextProvider } from "./ThreadsModerationModalContext"
 import ThreadsModerationModalDelete from "./ThreadsModerationModalDelete"
@@ -6,6 +7,7 @@ import ThreadsModerationModalOpen from "./ThreadsModerationModalOpen"
 import useThreadsModeration from "./useThreadsModeration"
 
 export {
+  ThreadsModerationControls,
   ThreadsModerationModalClose,
   ThreadsModerationModalContextProvider,
   ThreadsModerationModalDelete,

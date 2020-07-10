@@ -66,12 +66,13 @@
 @import "./misago/toasts";
 @import "./misago/threads-list";
 @import "./misago/section-loader";
-@import "./misago/absolute-container";
+@import "./misago/fixed-container";
 @import "./misago/utils";
 
 // Theme components
 
 @import "./theme/mixins";
+@import "./theme/containers";
 @import "./theme/navbar";
 @import "./theme/card";
 @import "./theme/paginator";

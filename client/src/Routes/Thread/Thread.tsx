@@ -8,7 +8,7 @@ import {
   ThreadModerationModalMove,
   ThreadModerationModalOpen,
 } from "./ThreadModeration"
-import ThreadRoute from "./ThreadRoute"
+import ThreadPosts from "./ThreadPosts"
 
 const Thread: React.FC = () => (
   <ThreadModerationModalContextProvider>
@@ -19,7 +19,7 @@ const Thread: React.FC = () => (
     <Switch>
       <Route
         path={urls.thread({ id: ":id", slug: ":slug" })}
-        component={ThreadRoute}
+        component={ThreadPosts}
         exact
       />
       <Route
@@ -38,7 +38,7 @@ const Thread: React.FC = () => (
       />
       <Route
         path={urls.thread({ id: ":id", slug: ":slug" }) + ":page/"}
-        component={ThreadRoute}
+        component={ThreadPosts}
         exact
       />
     </Switch>

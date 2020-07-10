@@ -7,7 +7,7 @@ import {
   ThreadsCategoriesModal,
   ThreadsCategoriesModalContextProvider,
 } from "./ThreadsCategoriesModal"
-import ThreadsCategoryRoute from "./ThreadsCategoryRoute"
+import ThreadsCategory from "./ThreadsCategory"
 import {
   ThreadsModerationModalClose,
   ThreadsModerationModalContextProvider,
@@ -15,7 +15,7 @@ import {
   ThreadsModerationModalMove,
   ThreadsModerationModalOpen,
 } from "./ThreadsModeration"
-import ThreadsRoute from "./ThreadsRoute"
+import ThreadsAll from "./ThreadsAll"
 
 const Threads: React.FC = () => {
   const settings = useSettingsContext()
@@ -33,7 +33,7 @@ const Threads: React.FC = () => {
             path={urls.category({ id: ":id", slug: ":slug" })}
             render={() => (
               <RouteErrorBoundary>
-                <ThreadsCategoryRoute />
+                <ThreadsCategory />
               </RouteErrorBoundary>
             )}
             exact
@@ -42,7 +42,7 @@ const Threads: React.FC = () => {
             path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
             render={() => (
               <RouteErrorBoundary>
-                <ThreadsRoute />
+                <ThreadsAll />
               </RouteErrorBoundary>
             )}
             exact
