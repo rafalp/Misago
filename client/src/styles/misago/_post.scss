@@ -1,0 +1,44 @@
+// Hide post sidebit on small displays
+@include media-breakpoint-down(sm) {
+  .post-sidebit {
+    display: none;
+  }
+}
+
+// Hide post small avatar on large displays {
+@include media-breakpoint-up(sm) {
+  .post-avatar-sm {
+    display: none;
+  }
+}
+
+// Style header items
+.post-avatar-sm {
+  margin-right: $spacer;
+}
+
+.post-poster {
+  font-weight: bold;
+}
+
+.post-header-dash {
+  margin: 0 $spacer / 2;
+}
+
+.post-header-compact {
+  font-size: $font-size-sm;
+}
+
+// Hide full header on mobile
+@include media-breakpoint-down(sm) {
+  .post-header-full {
+    display: none;
+  }
+}
+
+// Hide compact header on desktop {
+@include media-breakpoint-up(sm) {
+  .post-header-compact {
+    display: none;
+  }
+}

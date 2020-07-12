@@ -15,7 +15,7 @@ import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
 import { useThreadQuery } from "./useThreadQuery"
 
-const ThreadRoute: React.FC = () => {
+const ThreadPosts: React.FC = () => {
   const { id, slug, page } = useThreadParams()
   const { data, loading, error } = useThreadQuery({ id, page })
   const { thread } = data || { thread: null }
@@ -76,4 +76,4 @@ const ThreadRoute: React.FC = () => {
   )
 }
 
-export default ThreadRoute
+export default ThreadPosts

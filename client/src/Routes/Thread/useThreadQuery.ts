@@ -70,11 +70,11 @@ const THREAD_QUERY = gql`
           number
           items {
             id
-            posterName
             body
             edits
             postedAt
             extra
+            posterName
             poster {
               ...ThreadPoster
               extra

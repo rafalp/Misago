@@ -9,16 +9,16 @@ interface IThreadPostProps {
 }
 
 const ThreadPost: React.FC<IThreadPostProps> = ({ post }) => (
-  <div className="thread-post">
+  <div className="post">
     <div className="row">
-      <div className="col-auto">
+      <div className="col-auto post-sidebit">
         <ThreadPostPostbit post={post} />
       </div>
       <div className="col">
-        <Card className="thread-post-card">
+        <Card className="post-card">
           <ThreadPostHeader post={post} />
-          <CardBody className="thread-post-body">{post.body.text}</CardBody>
-          <CardFooter className="thread-post-footer">post footer</CardFooter>
+          <CardBody className="post-body">{post.body.text}</CardBody>
+          <CardFooter className="post-footer">post footer</CardFooter>
         </Card>
       </div>
     </div>

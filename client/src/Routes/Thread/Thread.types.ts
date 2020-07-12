@@ -53,10 +53,10 @@ export interface IThreadModerationAction {
 
 export interface IPost {
   id: string
-  poster: IPoster
+  poster: IPoster | null
   posterName: string
   body: { text: string }
-  edits: string
+  edits: number
   postedAt: string
   extra: Record<string, any>
 }
