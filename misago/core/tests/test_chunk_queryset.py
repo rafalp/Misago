@@ -1,5 +1,4 @@
 from django.test import TestCase
-
 from ...cache.models import CacheVersion
 
 
