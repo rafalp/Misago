@@ -238,7 +238,7 @@ class Command(BaseCommand):
         self.stdout.write("\nSynchronizing threads...")
         start_time = time.time()
 
-        for thread in Thread.objects.all().iterator(chunk_size=20)):
+        for thread in Thread.objects.all().iterator(chunk_size=20):
             thread.synchronize()
             thread.save()
 
