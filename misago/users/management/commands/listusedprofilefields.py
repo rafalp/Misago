@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from ....core.pgutils import chunk_queryset
 
 User = get_user_model()
 
@@ -12,7 +11,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         keys = {}
 
-        for user in chunk_queryset(User.objects.all()):
+        for user in User.objects.all().iterator(chunk_size=20):
             for key in user.profile_fields:
                 keys.setdefault(key, 0)
                 keys[key] += 1

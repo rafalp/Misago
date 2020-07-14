@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 
-from ....core.pgutils import chunk_queryset
 
 User = get_user_model()
 
@@ -22,7 +21,7 @@ class Command(BaseCommand):
 
         queryset = User.objects.filter(profile_fields__has_keys=[fieldname])
 
-        for user in chunk_queryset(queryset):
+        for user in queryset.iterator(chunk_size=20):
             if fieldname in user.profile_fields.keys():
                 user.profile_fields.pop(fieldname)
                 user.save(update_fields=["profile_fields"])
