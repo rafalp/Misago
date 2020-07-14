@@ -1,7 +1,6 @@
 from django.test import TestCase
 from ...cache.models import CacheVersion
 
-
 class ChunkQuerysetTest(TestCase):
     def setUp(self):
         # clear table

@@ -7,7 +7,6 @@ from faker import Factory
 
 from ....categories.models import Category
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 from ....threads.models import Thread
 from ...posts import get_fake_hidden_post, get_fake_post, get_fake_unapproved_post
 
@@ -62,7 +61,7 @@ class Command(BaseCommand):
             created_posts += 1
             show_progress(self, created_posts, items_to_create, start_time)
 
-        for thread in chunk_queryset(Thread.objects.all()):
+        for thread in Thread.objects.all().iterator(chunk_size=20):
             thread.synchronize()
             thread.save()
 
