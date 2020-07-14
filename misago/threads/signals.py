@@ -8,7 +8,6 @@ from django.utils.translation import gettext as _
 
 from ..categories.models import Category
 from ..categories.signals import delete_category_content, move_category_content
-from ..core.pgutils import chunk_queryset
 from ..users.signals import (
     anonymize_user_data,
     archive_user_data,
@@ -86,18 +85,18 @@ def delete_user_threads(sender, **kwargs):
     recount_categories = set()
     recount_threads = set()
 
-    for post in chunk_queryset(sender.liked_post_set):
+    for post in sender.liked_post_set.iterator(chunk_size=20):
         cleaned_likes = list(filter(lambda i: i["id"] != sender.id, post.last_likes))
         if cleaned_likes != post.last_likes:
             post.last_likes = cleaned_likes
             post.save(update_fields=["last_likes"])
 
-    for thread in chunk_queryset(sender.thread_set):
+    for thread in sender.thread_set.iterator(chunk_size=20):
         recount_categories.add(thread.category_id)
         with transaction.atomic():
             thread.delete()
 
-    for post in chunk_queryset(sender.post_set):
+    for post in sender.post_set.iterator(chunk_size=20):
         recount_categories.add(post.category_id)
         recount_threads.add(post.thread_id)
         with transaction.atomic():
@@ -105,7 +104,7 @@ def delete_user_threads(sender, **kwargs):
 
     if recount_threads:
         changed_threads_qs = Thread.objects.filter(id__in=recount_threads)
-        for thread in chunk_queryset(changed_threads_qs):
+        for thread in changed_threads_qs.iterator(chunk_size=20):
             thread.synchronize()
             thread.save()
 
@@ -118,7 +117,7 @@ def delete_user_threads(sender, **kwargs):
 @receiver(archive_user_data)
 def archive_user_attachments(sender, archive=None, **kwargs):
     queryset = sender.attachment_set.order_by("id")
-    for attachment in chunk_queryset(queryset):
+    for attachment in queryset.iterator(chunk_size=20):
         archive.add_model_file(
             attachment.file,
             prefix=attachment.uploaded_on.strftime("%H%M%S-file"),
@@ -139,7 +138,7 @@ def archive_user_attachments(sender, archive=None, **kwargs):
 @receiver(archive_user_data)
 def archive_user_posts(sender, archive=None, **kwargs):
     queryset = sender.post_set.order_by("id")
-    for post in chunk_queryset(queryset):
+    for post in queryset.iterator(chunk_size=20):
         item_name = post.posted_on.strftime("%H%M%S-post")
         archive.add_text(item_name, post.parsed, date=post.posted_on)
 
@@ -147,11 +146,11 @@ def archive_user_posts(sender, archive=None, **kwargs):
 @receiver(archive_user_data)
 def archive_user_posts_edits(sender, archive=None, **kwargs):
     queryset = PostEdit.objects.filter(post__poster=sender).order_by("id")
-    for post_edit in chunk_queryset(queryset):
+    for post_edit in queryset.iterator(chunk_size=20):
         item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
     queryset = sender.postedit_set.exclude(id__in=queryset.values("id")).order_by("id")
-    for post_edit in chunk_queryset(queryset):
+    for post_edit in queryset.iterator(chunk_size=20):
         item_name = post_edit.edited_on.strftime("%H%M%S-post-edit")
         archive.add_text(item_name, post_edit.edited_from, date=post_edit.edited_on)
 
@@ -159,7 +158,7 @@ def archive_user_posts_edits(sender, archive=None, **kwargs):
 @receiver(archive_user_data)
 def archive_user_polls(sender, archive=None, **kwargs):
     queryset = sender.poll_set.order_by("id")
-    for poll in chunk_queryset(queryset):
+    for poll in queryset.iterator(chunk_size=20):
         item_name = poll.posted_on.strftime("%H%M%S-poll")
         archive.add_dict(
             item_name,
@@ -181,13 +180,13 @@ def anonymize_user_in_events(sender, **kwargs):
         event_context__user__id=sender.id,
     )
 
-    for event in chunk_queryset(queryset):
+    for event in queryset.iterator(chunk_size=20):
         anonymize_event(sender, event)
 
 
 @receiver([anonymize_user_data])
 def anonymize_user_in_likes(sender, **kwargs):
-    for post in chunk_queryset(sender.liked_post_set):
+    for post in sender.liked_post_set.iterator(chunk_size=20):
         anonymize_post_last_likes(sender, post)
 
 
@@ -236,7 +235,7 @@ def update_usernames(sender, **kwargs):
 @receiver(pre_delete, sender=get_user_model())
 def remove_unparticipated_private_threads(sender, **kwargs):
     threads_qs = kwargs["instance"].privatethread_set.all()
-    for thread in chunk_queryset(threads_qs):
+    for thread in threads_qs.iterator(chunk_size=20):
         if thread.participants.count() == 1:
             with transaction.atomic():
                 thread.delete()

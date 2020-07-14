@@ -3,7 +3,6 @@ import time
 from django.core.management.base import BaseCommand
 
 from ....core.management.progressbar import show_progress
-from ....core.pgutils import chunk_queryset
 from ...models import Thread
 
 
@@ -25,7 +24,7 @@ class Command(BaseCommand):
         show_progress(self, synchronized_count, threads_to_sync)
         start_time = time.time()
 
-        for thread in chunk_queryset(Thread.objects.all()):
+        for thread in Thread.objects.all().iterator(chunk_size=20):
             thread.synchronize()
             thread.save()
 
