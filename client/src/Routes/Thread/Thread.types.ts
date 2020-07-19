@@ -82,3 +82,17 @@ export interface IThreadPostsPage {
   start: number
   stop: number
 }
+
+export interface IPostsModeration {
+  actions: Array<IPostsModerationAction>
+  disabled: boolean
+  loading: boolean
+  deletePosts: () => void
+}
+
+export interface IPostsModerationAction {
+  name: React.ReactNode
+  icon: string
+  iconSolid?: boolean
+  action: () => Promise<void> | void
+}

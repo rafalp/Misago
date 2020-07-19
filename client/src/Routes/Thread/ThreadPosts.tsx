@@ -13,12 +13,17 @@ import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
 import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
+import usePostsSelection from "./usePostsSelection"
 import { useThreadQuery } from "./useThreadQuery"
 
 const ThreadPosts: React.FC = () => {
   const { id, slug, page } = useThreadParams()
   const { data, loading, error } = useThreadQuery({ id, page })
   const { thread } = data || { thread: null }
+
+  const selection = usePostsSelection(
+    thread && thread.posts.page ? thread.posts.page.items : []
+  )
 
   if (!data) {
     if (error) return <RouteGraphQLError error={error} />

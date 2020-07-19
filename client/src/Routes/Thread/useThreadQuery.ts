@@ -31,7 +31,7 @@ const THREAD_FRAGMENTS = `
   }
 `
 
-const THREAD_QUERY = gql`
+export const THREAD_QUERY = gql`
   ${THREAD_FRAGMENTS}
 
   query Thread($id: ID!, $page: Int) {
@@ -94,7 +94,7 @@ interface IThreadVariables {
   page?: number
 }
 
-interface IThreadData {
+export interface IThreadData {
   thread: IThread | null
 }
 

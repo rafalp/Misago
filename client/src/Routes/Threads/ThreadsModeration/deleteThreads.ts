@@ -74,7 +74,7 @@ const useDeleteThreadsMutation = () => {
           const query = cache.readQuery<IThreadsData>(queryID)
           if (!query) return null
 
-          cache.writeQuery({
+          cache.writeQuery<IThreadsData>({
             ...queryID,
             data: {
               ...query,

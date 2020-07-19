@@ -8,9 +8,12 @@ import {
   ThreadModerationModalMove,
   ThreadModerationModalOpen,
 } from "./ThreadModeration"
+import {ThreadPostsModerationModalContextProvider
+} from "./ThreadPostsModeration"
 import ThreadPosts from "./ThreadPosts"
 
 const Thread: React.FC = () => (
+  <ThreadPostsModerationModalContextProvider>
   <ThreadModerationModalContextProvider>
     <ThreadModerationModalClose />
     <ThreadModerationModalOpen />
@@ -43,6 +46,7 @@ const Thread: React.FC = () => (
       />
     </Switch>
   </ThreadModerationModalContextProvider>
+  </ThreadPostsModerationModalContextProvider>
 )
 
 export default Thread
