@@ -31,6 +31,35 @@ def test_new_user_is_created_if_user_with_given_sso_id_doesnt_exist(dynamic_sett
     assert user.is_active is False
 
 
+def test_new_user_is_created_with_changed_username(dynamic_settings, sso_user):
+    user = get_or_create_user(
+        Mock(settings=dynamic_settings),
+        {
+            "id": 5,
+            "username": "User",
+            "email": "ssouser@example.com",
+            "is_active": False,
+        },
+    )
+
+    assert user.sso_id == 5
+    assert user.username != "User"
+    assert user.username.startswith("User")
+    assert len(user.username) == 12
+
+
+def test_join_sso_user_with_existing_user_by_email(dynamic_settings, sso_user):
+    user = get_or_create_user(
+        Mock(settings=dynamic_settings),
+        {"id": 5, "username": "Smith", "email": "user@example.com", "is_active": False},
+    )
+
+    assert user.sso_id == SSO_ID
+    assert user.username == "User"
+    assert user.email == "user@example.com"
+    assert user.is_active is True
+
+
 def test_user_with_sso_id_is_returned_if_they_exist(dynamic_settings, sso_user):
     user = get_or_create_user(
         Mock(settings=dynamic_settings),

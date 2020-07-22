@@ -8,19 +8,24 @@ User = get_user_model()
 def get_or_create_user(request, user_data):
     try:
         user = User.objects.get(sso_id=user_data["id"])
-        if user_needs_updating(user, user_data):
-            update_user(user, user_data)
+        # if user_needs_updating(user, user_data):
+        #     update_user(user, user_data)
         return user
     except User.DoesNotExist:
-        user = User.objects.create_user(
-            user_data["username"],
-            user_data["email"],
-            is_active=user_data.get("is_active", True),
-            sso_id=user_data["id"],
-        )
-        user.update_acl_key()
-        setup_new_user(request.settings, user)
-        return user
+        try:
+            user = User.objects.get(email=user_data["email"])
+            return user
+        except User.DoesNotExist:
+            username = User.objects.prepare_new_username(user_data["username"])
+            user = User.objects.create_user(
+                username,
+                user_data["email"],
+                is_active=user_data.get("is_active", True),
+                sso_id=user_data["id"],
+            )
+            user.update_acl_key()
+            setup_new_user(request.settings, user)
+            return user
 
 
 def user_needs_updating(user, user_data):

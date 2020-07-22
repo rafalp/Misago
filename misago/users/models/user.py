@@ -17,9 +17,11 @@ from ...conf import settings
 from ...core.utils import slugify
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
-from ..utils import hash_email
+from ..utils import hash_email, gen_suffix_username
 from .online import Online
 from .rank import Rank
+
+BASE_USERNAME_CHARS_LIMIT = 22
 
 
 class UserManager(BaseUserManager):
@@ -90,6 +92,14 @@ class UserManager(BaseUserManager):
         if "@" in login:
             return self.get(email_hash=hash_email(login))
         return self.get(slug=slugify(login))
+
+    def prepare_new_username(self, username):
+        new_username = username
+        while self.filter(username=new_username).exists():
+            suffix = gen_suffix_username()
+            base_username = username[:BASE_USERNAME_CHARS_LIMIT]
+            new_username = f"{base_username}{suffix}"
+        return new_username
 
 
 class User(AbstractBaseUser, PermissionsMixin):

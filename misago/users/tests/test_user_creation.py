@@ -92,3 +92,14 @@ def test_creating_superuser_without_staff_status_raises_value_error(db):
 def test_creating_superuser_without_superuser_status_raises_value_error(db):
     with pytest.raises(ValueError):
         User.objects.create_superuser("User", "test@example.com", is_superuser=False)
+
+
+def test_prepare_new_username(db):
+    assert User.objects.prepare_new_username("jkowalski") == "jkowalski"
+
+
+def test_prepare_new_username_for_conflicted_username(db):
+    user = User.objects.create_user("jkowalski", "jkowalski@example.com")
+    new_username = User.objects.prepare_new_username("jkowalski")
+    assert new_username != user.username
+    assert new_username.startswith(user.username)
