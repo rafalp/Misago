@@ -11,6 +11,10 @@ import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
+import {
+  ThreadPostsModeration,
+  useThreadPostsModeration,
+} from "./ThreadPostsModeration"
 import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
 import usePostsSelection from "./usePostsSelection"
@@ -24,6 +28,9 @@ const ThreadPosts: React.FC = () => {
   const selection = usePostsSelection(
     thread && thread.posts.page ? thread.posts.page.items : []
   )
+  const moderation = {
+    posts: useThreadPostsModeration(thread, selection.selected, page),
+  }
 
   if (!data) {
     if (error) return <RouteGraphQLError error={error} />
@@ -73,10 +80,19 @@ const ThreadPosts: React.FC = () => {
         loading={loading || posts.page.number !== pagination.page}
       >
         {posts.page.items.map((post) => (
-          <ThreadPost key={post.id} post={post} />
+          <ThreadPost
+            key={post.id}
+            post={post}
+            isSelected={selection.selection[post.id]}
+            toggleSelection={moderation ? selection.toggle : null}
+          />
         ))}
       </SectionLoader>
       <ThreadToolbarBottom {...toolbarProps} />
+      <ThreadPostsModeration
+        moderation={moderation.posts}
+        selection={selection}
+      />
     </RouteContainer>
   )
 }

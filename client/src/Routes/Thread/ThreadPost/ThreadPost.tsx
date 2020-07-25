@@ -6,9 +6,15 @@ import ThreadPostPostbit from "./ThreadPostPostbit"
 
 interface IThreadPostProps {
   post: IPost
+  isSelected?: boolean
+  toggleSelection?: ((id: string) => void) | null
 }
 
-const ThreadPost: React.FC<IThreadPostProps> = ({ post }) => (
+const ThreadPost: React.FC<IThreadPostProps> = ({
+  post,
+  isSelected,
+  toggleSelection,
+}) => (
   <div className="post">
     <div className="row">
       <div className="col-auto post-sidebit">
@@ -16,7 +22,11 @@ const ThreadPost: React.FC<IThreadPostProps> = ({ post }) => (
       </div>
       <div className="col">
         <Card className="post-card">
-          <ThreadPostHeader post={post} />
+          <ThreadPostHeader
+            post={post}
+            isSelected={isSelected}
+            toggleSelection={toggleSelection}
+          />
           <CardBody className="post-body">{post.body.text}</CardBody>
           <CardFooter className="post-footer">post footer</CardFooter>
         </Card>

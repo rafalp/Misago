@@ -25,6 +25,19 @@
   margin: 0 $spacer / 2;
 }
 
+.post-header-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: $spacer / 2;
+  width: $custom-control-indicator-size * 2;
+  height: $custom-control-indicator-size;
+
+  .form-check-input {
+    margin: 0;
+  }
+}
+
 .post-header-compact {
   font-size: $font-size-sm;
 }

@@ -10,6 +10,7 @@ import {
   useCategoriesContext,
   useCategoriesListContext,
 } from "./CategoriesContext"
+import { ModalContext, ModalConsumer, ModalProvider, useModalContext } from "./ModalContext"
 import {
   ToastsContext,
   ToastsContextProvider,
@@ -33,17 +34,21 @@ export {
   AuthContext,
   AuthModalContext,
   AuthModalProvider,
-  useBulkActionLimit,
   CategoriesContext,
   ForumStatsContext,
+  ModalConsumer,
+  ModalContext,
+  ModalProvider,
   SettingsContext,
   ToastsContext,
   ToastsContextProvider,
   useAuthContext,
   useAuthModalContext,
+  useBulkActionLimit,
   useCategoriesListContext,
   useCategoriesContext,
   useForumStatsContext,
+  useModalContext,
   useSettingsContext,
   useToastsContext,
 }

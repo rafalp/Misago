@@ -1,14 +1,25 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { Avatar, ButtonSecondary, Timestamp } from "../../../UI"
+import {
+  Avatar,
+  ButtonSecondary,
+  Checkbox,
+  Timestamp,
+} from "../../../UI"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 
 interface IThreadPostHeaderProps {
   post: IPost
+  isSelected?: boolean
+  toggleSelection?: ((id: string) => void) | null
 }
 
-const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({ post }) => (
+const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
+  post,
+  isSelected,
+  toggleSelection,
+}) => (
   <div className="card-header post-header">
     <div className="row align-items-center no-gutters">
       <div className="col-auto post-avatar-sm">
@@ -61,6 +72,14 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({ post }) => (
           onClick={() => {}}
         />
       </div>
+      {toggleSelection && (
+        <div className="col-auto post-header-select">
+          <Checkbox
+            checked={isSelected}
+            onChange={() => toggleSelection(post.id)}
+          />
+        </div>
+      )}
     </div>
   </div>
 )

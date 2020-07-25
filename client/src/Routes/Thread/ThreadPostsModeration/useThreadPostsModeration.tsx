@@ -1,18 +1,26 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { useAuthContext } from "../../../Context"
-import { IPost, IPostsModeration, IThread} from "../Thread.types"
+import { useAuthContext, useModalContext } from "../../../Context"
+import { IPost, IThread } from "../Thread.types"
+import { IPostsModeration } from "./ThreadPostsModeration.types"
+import ThreadPostsModerationDelete from "./ThreadPostsModerationDelete"
 
 const useThreadPostsModeration = (
-  thread: IThread, posts: Array<IPost>
+  thread: IThread | null,
+  posts: Array<IPost>,
+  page: number | undefined
 ): IPostsModeration | null => {
   const user = useAuthContext()
+  const { openModal } = useModalContext()
 
-  const deletePosts = () => {}
+  if (!thread || !user || !user.isModerator) return null
 
-  const moderation = {
+  const deletePosts = () => {
+    openModal(<ThreadPostsModerationDelete thread={thread} posts={posts} page={page} />)
+  }
+
+  return {
     loading: false,
-    disabled: posts.length === 0,
     deletePosts,
     actions: [
       {
@@ -23,9 +31,6 @@ const useThreadPostsModeration = (
       },
     ],
   }
-
-  if (user && user.isModerator) return moderation
-  return null
 }
 
 export default useThreadPostsModeration

@@ -79,7 +79,7 @@ async def resolve_delete_thread_replies(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread}
+        return {"errors": errors, "thread": thread, "deleted": False}
 
     if cleaned_data.get("thread"):
         replies_validators: Dict[str, List[AsyncValidator]] = {
@@ -101,13 +101,13 @@ async def resolve_delete_thread_replies(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread}
+        return {"errors": errors, "thread": thread, "deleted": False}
 
     thread = await delete_thread_replies_hook.call_action(
         delete_thread_replies_action, info.context, cleaned_data
     )
 
-    return {"thread": thread}
+    return {"thread": thread, "deleted": True}
 
 
 async def create_input_model(context: GraphQLContext) -> DeleteThreadRepliesInputModel:

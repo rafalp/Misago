@@ -17,7 +17,7 @@ const Checkbox: React.FC<ICheckboxProps> = ({
     <input
       id={id}
       type="checkbox"
-      checked={checked}
+      checked={checked || false}
       disabled={disabled}
       onChange={onChange}
     />

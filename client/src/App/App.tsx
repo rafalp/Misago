@@ -5,6 +5,8 @@ import {
   AuthModalProvider,
   CategoriesContext,
   ForumStatsContext,
+  ModalConsumer,
+  ModalProvider,
   SettingsContext,
   ToastsContextProvider,
 } from "../Context"
@@ -32,19 +34,22 @@ const App: React.FC = () => {
                     <ToastsContextProvider>
                       <ForumStatsContext.Provider value={forumStats}>
                         <AuthModalProvider>
-                          <React.Suspense fallback={<div />}>
-                            <AuthChangedAlert user={auth} />
-                          </React.Suspense>
-                          <React.Suspense fallback={<div />}>
-                            <Navbar settings={settings} user={auth} />
-                            <Toasts />
-                          </React.Suspense>
-                          <RouteErrorBoundary>
-                            <Routes />
-                          </RouteErrorBoundary>
-                          <React.Suspense fallback={<div />}>
-                            <AuthModal settings={settings} />
-                          </React.Suspense>
+                          <ModalProvider>
+                            <React.Suspense fallback={<div />}>
+                              <AuthChangedAlert user={auth} />
+                            </React.Suspense>
+                            <React.Suspense fallback={<div />}>
+                              <Navbar settings={settings} user={auth} />
+                              <Toasts />
+                            </React.Suspense>
+                            <RouteErrorBoundary>
+                              <Routes />
+                            </RouteErrorBoundary>
+                            <React.Suspense fallback={<div />}>
+                              <AuthModal settings={settings} />
+                            </React.Suspense>
+                            <ModalConsumer />
+                          </ModalProvider>
                         </AuthModalProvider>
                       </ForumStatsContext.Provider>
                     </ToastsContextProvider>

@@ -1,14 +1,14 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { getSelectionErrors } from "../../../UI"
-import { ICategory, IMutationError } from "../../../types"
+import { IMutationError } from "../../../types"
 import { IPost, IThread } from "../Thread.types"
 import { THREAD_QUERY, IThreadData } from "../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
 
 const DELETE_THREAD_POSTS = gql`
-  mutation DeleteThreadReplies($input: BulkDeletePostsInput!) {
+  mutation DeleteThreadReplies($input: BulkDeleteThreadRepliesInput!) {
     deleteThreadReplies(input: $input) {
       errors {
         message
@@ -47,7 +47,7 @@ const useDeleteThreadPostsMutation = () => {
     deletePosts: (
       thread: IThread,
       posts: Array<IPost>,
-      page?: number | null
+      page: number | undefined
     ) => {
       const deletedPosts = posts.map((posts) => posts.id)
 
@@ -67,11 +67,11 @@ const useDeleteThreadPostsMutation = () => {
           const queryID = page
             ? {
                 query: THREAD_QUERY,
-                variables: { page, thread: thread.id },
+                variables: { page, id: thread.id },
               }
             : {
                 query: THREAD_QUERY,
-                variables: { thread: thread.id },
+                variables: { id: thread.id },
               }
 
           const query = cache.readQuery<IThreadData>(queryID)

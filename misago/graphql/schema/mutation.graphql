@@ -138,4 +138,5 @@ input BulkDeleteThreadRepliesInput {
 type BulkDeleteThreadRepliesMutationResult {
     errors: [Error!]
     thread: Thread
+    deleted: Boolean!
 }
