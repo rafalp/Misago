@@ -1,0 +1,14 @@
+// Selected items component
+// Used on bulk moderation for threads and posts
+
+.selected-items {
+  padding: 0;
+}
+
+.selected-item {
+  list-style: none;
+}
+
+.selected-item-error {
+  color: theme-color("danger");
+}

@@ -7,7 +7,7 @@ import { THREAD_QUERY, IThreadData } from "../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
 
-const DELETE_THREAD_POSTS = gql`
+const DELETE_THREAD_REPLIES = gql`
   mutation DeleteThreadReplies($input: BulkDeleteThreadRepliesInput!) {
     deleteThreadReplies(input: $input) {
       errors {
@@ -20,40 +20,40 @@ const DELETE_THREAD_POSTS = gql`
   }
 `
 
-interface IDeleteThreadPostsMutationData {
+interface IDeleteThreadRepliesMutationData {
   deleteThreadReplies: {
     errors: Array<IMutationError> | null
     deleted: boolean
   }
 }
 
-interface IDeleteThreadPostsMutationVariables {
+interface IDeleteThreadRepliesMutationVariables {
   input: {
     thread: string
     replies: Array<string>
   }
 }
 
-const useDeleteThreadPostsMutation = () => {
+const useDeleteThreadRepliesMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadPostsMutationData,
-    IDeleteThreadPostsMutationVariables
-  >(DELETE_THREAD_POSTS)
+    IDeleteThreadRepliesMutationData,
+    IDeleteThreadRepliesMutationVariables
+  >(DELETE_THREAD_REPLIES)
 
   return {
     data,
     error,
     loading,
-    deletePosts: (
+    deleteReplies: (
       thread: IThread,
       posts: Array<IPost>,
       page: number | undefined
     ) => {
-      const deletedPosts = posts.map((posts) => posts.id)
+      const deletedReplies = posts.map((posts) => posts.id)
 
       return mutation({
         variables: {
-          input: { thread: thread.id, replies: deletedPosts },
+          input: { thread: thread.id, replies: deletedReplies },
         },
         update: (cache, { data }) => {
           if (!data || !data.deleteThreadReplies) return
@@ -95,7 +95,7 @@ const useDeleteThreadPostsMutation = () => {
                         return true
                       }
 
-                      return deletedPosts.indexOf(post.id) < 0
+                      return deletedReplies.indexOf(post.id) < 0
                     }),
                   },
                 },
@@ -108,4 +108,4 @@ const useDeleteThreadPostsMutation = () => {
   }
 }
 
-export default useDeleteThreadPostsMutation
+export default useDeleteThreadRepliesMutation

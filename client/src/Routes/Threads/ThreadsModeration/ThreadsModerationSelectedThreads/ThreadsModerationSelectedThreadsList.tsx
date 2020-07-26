@@ -37,7 +37,7 @@ const ThreadsModerationSelectedThreadsList: React.FC<IThreadsModerationSelectedT
   }, [name, setValue, selected])
 
   return (
-    <ul className="list-unstyled selected-threads">
+    <ul className="selected-items selected-threads">
       {threads.map((thread) => (
         <ThreadsModerationSelectedThreadsListItem
           disabled={context && context.disabled}

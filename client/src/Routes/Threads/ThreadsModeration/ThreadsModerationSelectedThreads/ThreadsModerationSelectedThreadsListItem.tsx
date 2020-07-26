@@ -2,7 +2,6 @@ import classNames from "classnames"
 import React from "react"
 import {
   Checkbox,
-  FieldError,
   ThreadValidationError,
   TidbitCategory,
   TidbitReplies,
@@ -32,28 +31,23 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
 
   return (
     <li
-      className={classNames("selected-threads-thread", {
+      className={classNames("selected-item selected-threads-thread", {
         "is-invalid": !!error,
       })}
     >
-      <div className="form-check">
-        <Checkbox
-          checked={selected}
-          disabled={disabled}
-          id={itemId}
-          onChange={(event) => {
-            changeSelection(thread.id, event.target.checked)
-          }}
-        />
-        <div>
+      {error && (
+        <ThreadValidationError error={error}>
+          {({ message }) => (
+            <div className="selected-item-error">{message}</div>
+          )}
+        </ThreadValidationError>
+      )}
+      <div className="row row-nogutters">
+        <div className="col selected-item-body">
           <label className="selected-threads-thread-title" htmlFor={itemId}>
             {thread.title}
           </label>
-          {error ? (
-            <ThreadValidationError error={error}>
-              {({ message }) => <FieldError>{message}</FieldError>}
-            </ThreadValidationError>
-          ) : (
+          <div className="selected-threads-thread-tidbits">
             <Tidbits small>
               {thread.category.parent && (
                 <TidbitCategory
@@ -65,7 +59,17 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
               <TidbitCategory category={thread.category} disabled />
               {thread.replies > 0 && <TidbitReplies value={thread.replies} />}
             </Tidbits>
-          )}
+          </div>
+        </div>
+        <div className="col-auto selected-item-checkbox">
+          <Checkbox
+            checked={selected}
+            disabled={disabled}
+            id={itemId}
+            onChange={(event) => {
+              changeSelection(thread.id, event.target.checked)
+            }}
+          />
         </div>
       </div>
     </li>

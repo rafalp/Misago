@@ -3,11 +3,11 @@ import React from "react"
 import ThreadPostsModeration from "./ThreadPostsModeration"
 
 export default {
-  title: "Route/Thread/PostsModeration",
+  title: "Route/Thread/Moderation",
   decorators: [withKnobs],
 }
 
-export const Menu = () => (
+export const PostsModeration = () => (
   <ThreadPostsModeration
     moderation={{
       loading: boolean("Loading", false),

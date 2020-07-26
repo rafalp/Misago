@@ -3,7 +3,7 @@ import React from "react"
 export interface IPostsModeration {
   actions: Array<IPostsModerationAction>
   loading: boolean
-  deletePosts: () => void
+  deleteReplies: () => void
 }
 
 export interface IPostsModerationAction {

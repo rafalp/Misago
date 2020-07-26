@@ -15,7 +15,7 @@ const useThreadPostsModeration = (
 
   if (!thread || !user || !user.isModerator) return null
 
-  const deletePosts = () => {
+  const deleteReplies = () => {
     openModal(
       <ThreadPostsModerationDelete thread={thread} posts={posts} page={page} />
     )
@@ -23,13 +23,13 @@ const useThreadPostsModeration = (
 
   return {
     loading: false,
-    deletePosts,
+    deleteReplies,
     actions: [
       {
         name: <Trans id="moderation.delete">Delete</Trans>,
         icon: "times",
         iconSolid: true,
-        action: deletePosts,
+        action: deleteReplies,
       },
     ],
   }

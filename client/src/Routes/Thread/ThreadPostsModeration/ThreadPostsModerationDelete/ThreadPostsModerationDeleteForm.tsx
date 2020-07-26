@@ -4,7 +4,7 @@ import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
 import { Form, FormFooter, ModalBody, ModalFooter } from "../../../../UI"
 import { IPost, IThread } from "../../Thread.types"
-import useDeletePostsMutation from "../deleteThreadPosts"
+import useDeleteRepliesMutation from "../deleteThreadReplies"
 
 interface IThreadPostsModerationDeleteProps {
   thread: IThread
@@ -27,9 +27,9 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   const {
     data,
     loading,
-    deletePosts,
+    deleteReplies,
     error: graphqlError,
-  } = useDeletePostsMutation()
+  } = useDeleteRepliesMutation()
 
   const bulkActionLimit = useBulkActionLimit()
   const DeleteThreadsSchema = Yup.object().shape({
@@ -48,7 +48,7 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
         clearError()
 
         try {
-          const result = await deletePosts(thread, posts, page)
+          const result = await deleteReplies(thread, posts, page)
           const { errors } = result.data?.deleteThreadReplies || {}
 
           if (errors) {

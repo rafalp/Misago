@@ -1,0 +1,3 @@
+import ThreadPostsModerationSelectedPosts from "./ThreadPostsModerationSelectedPosts"
+
+export default ThreadPostsModerationSelectedPosts
