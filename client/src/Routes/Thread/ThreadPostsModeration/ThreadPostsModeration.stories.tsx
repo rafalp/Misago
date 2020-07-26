@@ -4,7 +4,7 @@ import ThreadPostsModeration from "./ThreadPostsModeration"
 
 export default {
   title: "Route/Thread/PostsModeration",
-  decorators: [withKnobs]
+  decorators: [withKnobs],
 }
 
 export const Menu = () => (

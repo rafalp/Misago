@@ -16,7 +16,9 @@ const useThreadPostsModeration = (
   if (!thread || !user || !user.isModerator) return null
 
   const deletePosts = () => {
-    openModal(<ThreadPostsModerationDelete thread={thread} posts={posts} page={page} />)
+    openModal(
+      <ThreadPostsModerationDelete thread={thread} posts={posts} page={page} />
+    )
   }
 
   return {

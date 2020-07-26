@@ -14,6 +14,7 @@ interface IThreadPostsModerationDeleteProps {
 }
 
 interface IFormValues {
+  thread: IThread
   posts: Array<IPost>
 }
 
@@ -23,11 +24,11 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   page,
   close,
 }) => {
-  const { 
+  const {
     data,
     loading,
     deletePosts,
-    error: graphqlError
+    error: graphqlError,
   } = useDeletePostsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
@@ -41,18 +42,16 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
     <Form<IFormValues>
       id="delete_threads_form"
       disabled={loading}
-      defaultValues={{ threads }}
+      defaultValues={{ thread, posts }}
       validationSchema={DeleteThreadsSchema}
-      onSubmit={async ({ clearError, setError, data: { threads } }) => {
+      onSubmit={async ({ clearError, setError, data: { thread, posts } }) => {
         clearError()
-        clearThreadsErrors()
 
         try {
           const result = await deletePosts(thread, posts, page)
           const { errors } = result.data?.deleteThreadReplies || {}
 
           if (errors) {
-            setThreadsErrors(threads, errors)
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".")
               setError(field, type, message)

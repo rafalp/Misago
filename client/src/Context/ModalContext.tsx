@@ -32,7 +32,7 @@ const ModalProvider: React.FC<IModalProviderProps> = ({ children }) => {
         openModal: (component: React.ReactNode) => {
           setComponent(component)
           window.setTimeout(openModal, 0)
-        }
+        },
       }}
     >
       {children}

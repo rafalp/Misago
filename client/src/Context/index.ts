@@ -10,7 +10,12 @@ import {
   useCategoriesContext,
   useCategoriesListContext,
 } from "./CategoriesContext"
-import { ModalContext, ModalConsumer, ModalProvider, useModalContext } from "./ModalContext"
+import {
+  ModalContext,
+  ModalConsumer,
+  ModalProvider,
+  useModalContext,
+} from "./ModalContext"
 import {
   ToastsContext,
   ToastsContextProvider,

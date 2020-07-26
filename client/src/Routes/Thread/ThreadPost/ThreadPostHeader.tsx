@@ -1,11 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import {
-  Avatar,
-  ButtonSecondary,
-  Checkbox,
-  Timestamp,
-} from "../../../UI"
+import { Avatar, ButtonSecondary, Checkbox, Timestamp } from "../../../UI"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 

@@ -67,6 +67,7 @@ async def resolve_delete_thread_replies(
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
+
         (
             cleaned_data,
             errors,
@@ -89,6 +90,7 @@ async def resolve_delete_thread_replies(
                 )
             ],
         }
+
         (
             cleaned_data,
             errors,

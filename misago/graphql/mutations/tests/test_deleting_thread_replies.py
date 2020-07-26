@@ -15,8 +15,9 @@ async def test_delete_thread_replies_mutation_deletes_thread_reply(
         input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
     )
 
-    assert data.get("thread")
-    assert not data.get("errors")
+    assert "errors" not in data
+    assert data["thread"]
+    assert data["deleted"]
     assert await get_post_by_id(thread_reply.id) is None
 
 
@@ -30,13 +31,14 @@ async def test_delete_thread_replies_mutation_fails_if_user_is_not_authorized(
         input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread", ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == [
         "auth_error.not_moderator",
         "auth_error.not_authorized",
     ]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -49,12 +51,13 @@ async def test_delete_thread_replies_mutation_fails_if_user_is_not_moderator(
         input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == [
         "auth_error.not_moderator",
     ]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -67,10 +70,11 @@ async def test_delete_thread_replies_mutation_fails_if_thread_id_is_invalid(
         input={"thread": "invalid", "replies": [str(thread_reply.id)]},
     )
 
-    assert not data.get("thread")
-    assert data.get("errors")
+    assert data["thread"] is None
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -83,10 +87,11 @@ async def test_delete_thread_replies_mutation_fails_if_thread_doesnt_exist(
         input={"thread": "1000", "replies": [str(thread_reply.id)]},
     )
 
-    assert not data.get("thread")
-    assert data.get("errors")
+    assert data["thread"] is None
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -99,10 +104,11 @@ async def test_delete_thread_replies_mutation_fails_if_reply_id_is_invalid(
         input={"thread": str(thread_with_reply.id), "replies": ["invalid"]},
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["replies.0"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -118,10 +124,11 @@ async def test_delete_thread_replies_mutation_fails_if_reply_doesnt_exist(
         },
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["replies.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -134,10 +141,11 @@ async def test_delete_thread_replies_mutation_fails_if_reply_is_threads_first_po
         input={"thread": str(thread.id), "replies": [str(post.id)]},
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["replies.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.thread_start"]
+    assert not data["deleted"]
 
 
 @pytest.mark.asyncio
@@ -153,7 +161,8 @@ async def test_delete_thread_replies_mutation_fails_if_reply_is_in_other_thread(
         },
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
+    assert data["thread"]
+    assert data["errors"]
     assert data["errors"].get_errors_locations() == ["replies.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
+    assert not data["deleted"]
