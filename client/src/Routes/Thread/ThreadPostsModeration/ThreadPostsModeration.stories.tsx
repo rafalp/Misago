@@ -11,7 +11,7 @@ export const PostsModeration = () => (
   <ThreadPostsModeration
     moderation={{
       loading: boolean("Loading", false),
-      deleteReplies: () => {},
+      deletePosts: () => {},
       actions: [
         {
           name: "Delete posts",

@@ -8,47 +8,47 @@ from .graphqlcontext import GraphQLContext
 from .thread import Thread
 
 
-DeleteThreadRepliesInput = Dict[str, Any]
-DeleteThreadRepliesInputThreadAction = Callable[
+DeleteThreadPostsInput = Dict[str, Any]
+DeleteThreadPostsInputThreadAction = Callable[
     [
         GraphQLContext,
         Dict[str, List[AsyncValidator]],
-        DeleteThreadRepliesInput,
+        DeleteThreadPostsInput,
         ErrorsList,
     ],
-    Awaitable[Tuple[DeleteThreadRepliesInput, ErrorsList]],
+    Awaitable[Tuple[DeleteThreadPostsInput, ErrorsList]],
 ]
-DeleteThreadRepliesInputThreadFilter = Callable[
-    [DeleteThreadRepliesInputThreadAction, GraphQLContext, DeleteThreadRepliesInput],
-    Awaitable[Tuple[DeleteThreadRepliesInput, ErrorsList]],
+DeleteThreadPostsInputThreadFilter = Callable[
+    [DeleteThreadPostsInputThreadAction, GraphQLContext, DeleteThreadPostsInput],
+    Awaitable[Tuple[DeleteThreadPostsInput, ErrorsList]],
 ]
-DeleteThreadRepliesInputRepliesAction = Callable[
+DeleteThreadPostsInputPostsAction = Callable[
     [
         GraphQLContext,
         Dict[str, List[AsyncValidator]],
-        DeleteThreadRepliesInput,
+        DeleteThreadPostsInput,
         ErrorsList,
     ],
-    Awaitable[Tuple[DeleteThreadRepliesInput, ErrorsList]],
+    Awaitable[Tuple[DeleteThreadPostsInput, ErrorsList]],
 ]
-DeleteThreadRepliesInputRepliesFilter = Callable[
-    [DeleteThreadRepliesInputRepliesAction, GraphQLContext, DeleteThreadRepliesInput],
-    Awaitable[Tuple[DeleteThreadRepliesInput, ErrorsList]],
-]
-
-DeleteThreadRepliesInputModel = Type[BaseModel]
-DeleteThreadRepliesInputModelAction = Callable[
-    [GraphQLContext], Awaitable[DeleteThreadRepliesInputModel]
-]
-DeleteThreadRepliesInputModelFilter = Callable[
-    [DeleteThreadRepliesInputModelAction, GraphQLContext],
-    Awaitable[DeleteThreadRepliesInputModel],
+DeleteThreadPostsInputPostsFilter = Callable[
+    [DeleteThreadPostsInputPostsAction, GraphQLContext, DeleteThreadPostsInput],
+    Awaitable[Tuple[DeleteThreadPostsInput, ErrorsList]],
 ]
 
-DeleteThreadRepliesAction = Callable[
-    [GraphQLContext, DeleteThreadRepliesInput], Awaitable[Thread]
+DeleteThreadPostsInputModel = Type[BaseModel]
+DeleteThreadPostsInputModelAction = Callable[
+    [GraphQLContext], Awaitable[DeleteThreadPostsInputModel]
 ]
-DeleteThreadRepliesFilter = Callable[
-    [DeleteThreadRepliesAction, GraphQLContext, DeleteThreadRepliesInput],
+DeleteThreadPostsInputModelFilter = Callable[
+    [DeleteThreadPostsInputModelAction, GraphQLContext],
+    Awaitable[DeleteThreadPostsInputModel],
+]
+
+DeleteThreadPostsAction = Callable[
+    [GraphQLContext, DeleteThreadPostsInput], Awaitable[Thread]
+]
+DeleteThreadPostsFilter = Callable[
+    [DeleteThreadPostsAction, GraphQLContext, DeleteThreadPostsInput],
     Awaitable[Thread],
 ]

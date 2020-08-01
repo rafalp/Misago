@@ -14,7 +14,7 @@ import {
 import { IPost, IThread } from "../../Thread.types"
 import ThreadPostsModerationError from "../ThreadPostsModerationError"
 import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"
-import useDeleteRepliesMutation from "../deleteThreadReplies"
+import useDeletePostsMutation from "../deleteThreadPosts"
 
 interface IThreadPostsModerationDeleteProps {
   thread: IThread
@@ -36,28 +36,28 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   const {
     errors: selectionErrors,
     setErrors: setSelectionErrors,
-  } = useSelectionErrors<IPost>("replies")
+  } = useSelectionErrors<IPost>("posts")
 
   const {
     data,
     loading,
-    deleteReplies,
+    deletePosts,
     error: graphqlError,
-  } = useDeleteRepliesMutation()
+  } = useDeletePostsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeleteRepliesSchema = Yup.object().shape({
+  const DeletePostsSchema = Yup.object().shape({
     posts: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
   })
   console.log(selectionErrors)
-  if (data?.deleteThreadReplies.errors) {
+  if (data?.deleteThreadPosts.errors) {
     return (
       <ThreadPostsModerationError
         posts={posts}
         selectionErrors={selectionErrors}
-        errors={data.deleteThreadReplies.errors}
+        errors={data.deleteThreadPosts.errors}
         forDelete
       />
     )
@@ -65,21 +65,21 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
 
   return (
     <Form<IFormValues>
-      id="delete_replies_form"
+      id="delete_posts_form"
       disabled={loading}
       defaultValues={{ posts }}
-      validationSchema={DeleteRepliesSchema}
+      validationSchema={DeletePostsSchema}
       onSubmit={async ({ data: { posts } }) => {
         try {
-          const result = await deleteReplies(thread, posts, page)
-          if (result.data?.deleteThreadReplies.errors) {
-            console.log(posts, result.data?.deleteThreadReplies.errors)
-            setSelectionErrors(posts, result.data.deleteThreadReplies.errors)
+          const result = await deletePosts(thread, posts, page)
+          if (result.data?.deleteThreadPosts.errors) {
+            console.log(posts, result.data?.deleteThreadPosts.errors)
+            setSelectionErrors(posts, result.data.deleteThreadPosts.errors)
           } else {
             close()
           }
         } catch (error) {
-          // do nothing when deleteReplies throws
+          // do nothing when deletePosts throws
           return
         }
       }}

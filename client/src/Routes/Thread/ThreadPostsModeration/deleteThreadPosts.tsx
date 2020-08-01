@@ -7,9 +7,9 @@ import { THREAD_QUERY, IThreadData } from "../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
 
-const DELETE_THREAD_REPLIES = gql`
-  mutation DeleteThreadReplies($input: BulkDeleteThreadRepliesInput!) {
-    deleteThreadReplies(input: $input) {
+const DELETE_THREAD_POSTS = gql`
+  mutation DeleteThreadPosts($input: BulkDeleteThreadPostsInput!) {
+    deleteThreadPosts(input: $input) {
       errors {
         message
         location
@@ -27,48 +27,48 @@ const DELETE_THREAD_REPLIES = gql`
   }
 `
 
-interface IDeleteThreadRepliesMutationData {
-  deleteThreadReplies: {
+interface IDeleteThreadPostsMutationData {
+  deleteThreadPosts: {
     errors: Array<IMutationError> | null
-    deleted: boolean
+    deleted: Array<string>
   }
 }
 
-interface IDeleteThreadRepliesMutationVariables {
+interface IDeleteThreadPostsMutationVariables {
   input: {
     thread: string
-    replies: Array<string>
+    posts: Array<string>
   }
 }
 
-const useDeleteThreadRepliesMutation = () => {
+const useDeleteThreadPostsMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadRepliesMutationData,
-    IDeleteThreadRepliesMutationVariables
-  >(DELETE_THREAD_REPLIES)
+    IDeleteThreadPostsMutationData,
+    IDeleteThreadPostsMutationVariables
+  >(DELETE_THREAD_POSTS)
 
   return {
     data,
     error,
     loading,
-    deleteReplies: (
+    deletePosts: (
       thread: IThread,
       posts: Array<IPost>,
       page: number | undefined
     ) => {
-      const deletedReplies = posts.map((posts) => posts.id)
+      const deletedPosts = posts.map((posts) => posts.id)
 
       return mutation({
         variables: {
-          input: { thread: thread.id, replies: deletedReplies },
+          input: { thread: thread.id, posts: deletedPosts },
         },
         update: (cache, { data }) => {
-          if (!data || !data.deleteThreadReplies) return
+          if (!data || !data.deleteThreadPosts) return
 
           const errors = getSelectionErrors<IPost>(
-            "replies",
+            "posts",
             posts,
-            data.deleteThreadReplies.errors || []
+            data.deleteThreadPosts.errors || []
           )
 
           const queryID = page
@@ -102,7 +102,9 @@ const useDeleteThreadRepliesMutation = () => {
                         return true
                       }
 
-                      return deletedReplies.indexOf(post.id) < 0
+                      return (
+                        data.deleteThreadPosts.deleted.indexOf(post.id) < 0
+                      )
                     }),
                   },
                 },
@@ -115,4 +117,4 @@ const useDeleteThreadRepliesMutation = () => {
   }
 }
 
-export default useDeleteThreadRepliesMutation
+export default useDeleteThreadPostsMutation

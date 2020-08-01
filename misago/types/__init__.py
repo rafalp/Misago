@@ -58,16 +58,16 @@ from .deletethread import (
     DeleteThreadInputModelFilter,
 )
 from .deletethreadreplies import (
-    DeleteThreadRepliesAction,
-    DeleteThreadRepliesFilter,
-    DeleteThreadRepliesInput,
-    DeleteThreadRepliesInputModel,
-    DeleteThreadRepliesInputModelAction,
-    DeleteThreadRepliesInputModelFilter,
-    DeleteThreadRepliesInputRepliesAction,
-    DeleteThreadRepliesInputRepliesFilter,
-    DeleteThreadRepliesInputThreadAction,
-    DeleteThreadRepliesInputThreadFilter,
+    DeleteThreadPostsAction,
+    DeleteThreadPostsFilter,
+    DeleteThreadPostsInput,
+    DeleteThreadPostsInputModel,
+    DeleteThreadPostsInputModelAction,
+    DeleteThreadPostsInputModelFilter,
+    DeleteThreadPostsInputPostsAction,
+    DeleteThreadPostsInputPostsFilter,
+    DeleteThreadPostsInputThreadAction,
+    DeleteThreadPostsInputThreadFilter,
 )
 from .deletethreadreply import (
     DeleteThreadReplyAction,

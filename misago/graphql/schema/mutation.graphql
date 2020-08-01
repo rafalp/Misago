@@ -117,7 +117,7 @@ type BulkDeleteThreadsMutationResult {
 
 extend type Mutation {
     deleteThreadReply(input: DeleteThreadReplyInput!): DeleteThreadReplyMutationResult!
-    deleteThreadReplies(input: BulkDeleteThreadRepliesInput!): BulkDeleteThreadRepliesMutationResult!
+    deleteThreadPosts(input: BulkDeleteThreadPostsInput!): BulkDeleteThreadPostsMutationResult!
 }
 
 input DeleteThreadReplyInput {
@@ -130,13 +130,13 @@ type DeleteThreadReplyMutationResult {
     thread: Thread
 }
 
-input BulkDeleteThreadRepliesInput {
+input BulkDeleteThreadPostsInput {
     thread: ID!
-    replies: [ID!]!
+    posts: [ID!]!
 }
 
-type BulkDeleteThreadRepliesMutationResult {
+type BulkDeleteThreadPostsMutationResult {
     errors: [Error!]
     thread: Thread
-    deleted: Boolean!
+    deleted: [ID!]!
 }

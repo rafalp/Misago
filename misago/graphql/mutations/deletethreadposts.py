@@ -6,18 +6,18 @@ from pydantic import PositiveInt, create_model
 
 from ...errors import ErrorsList
 from ...hooks import (
-    delete_thread_replies_hook,
-    delete_thread_replies_input_model_hook,
-    delete_thread_replies_input_replies_hook,
-    delete_thread_replies_input_thread_hook,
+    delete_thread_posts_hook,
+    delete_thread_posts_input_model_hook,
+    delete_thread_posts_input_posts_hook,
+    delete_thread_posts_input_thread_hook,
 )
 from ...loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ...threads.delete import delete_thread_posts
 from ...types import (
     AsyncValidator,
     GraphQLContext,
-    DeleteThreadRepliesInput,
-    DeleteThreadRepliesInputModel,
+    DeleteThreadPostsInput,
+    DeleteThreadPostsInputModel,
     Thread,
 )
 from ...validation import (
@@ -34,16 +34,16 @@ from ...validation import (
 from ..errorhandler import error_handler
 
 
-delete_thread_replies_mutation = MutationType()
+delete_thread_posts_mutation = MutationType()
 
 
-@delete_thread_replies_mutation.field("deleteThreadReplies")
+@delete_thread_posts_mutation.field("deleteThreadPosts")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_delete_thread_replies(
+async def resolve_delete_thread_posts(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await delete_thread_replies_input_model_hook.call_action(
+    input_model = await delete_thread_posts_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -53,9 +53,9 @@ async def resolve_delete_thread_replies(
     else:
         thread = None
 
-    if thread and cleaned_data.get("replies"):
+    if thread and cleaned_data.get("posts"):
         # prime posts cache for bulk action
-        await load_posts(info.context, cleaned_data["replies"])
+        await load_posts(info.context, cleaned_data["posts"])
 
     if cleaned_data:
         thread_validators: Dict[str, List[AsyncValidator]] = {
@@ -71,7 +71,7 @@ async def resolve_delete_thread_replies(
         (
             cleaned_data,
             errors,
-        ) = await delete_thread_replies_input_thread_hook.call_action(
+        ) = await delete_thread_posts_input_thread_hook.call_action(
             validate_input_thread_data,
             info.context,
             thread_validators,
@@ -79,12 +79,18 @@ async def resolve_delete_thread_replies(
             errors,
         )
 
+    deleted = []
+
     if errors:
-        return {"errors": errors, "thread": thread, "deleted": False}
+        return {
+            "errors": errors,
+            "thread": cleaned_data.get("thread"),
+            "deleted": deleted,
+        }
 
     if cleaned_data.get("thread"):
-        replies_validators: Dict[str, List[AsyncValidator]] = {
-            "replies": [
+        posts_validators: Dict[str, List[AsyncValidator]] = {
+            "posts": [
                 PostsBulkValidator(
                     [ThreadReplyExistsValidator(info.context, cleaned_data["thread"]),]
                 )
@@ -94,56 +100,62 @@ async def resolve_delete_thread_replies(
         (
             cleaned_data,
             errors,
-        ) = await delete_thread_replies_input_replies_hook.call_action(
-            validate_input_replies_data,
+        ) = await delete_thread_posts_input_posts_hook.call_action(
+            validate_input_posts_data,
             info.context,
-            replies_validators,
+            posts_validators,
             cleaned_data,
             errors,
         )
 
+    if cleaned_data.get("posts"):
+        deleted = [i.id for i in cleaned_data.get("posts")]
+        thread = await delete_thread_posts_hook.call_action(
+            delete_thread_posts_action, info.context, cleaned_data
+        )
+
     if errors:
-        return {"errors": errors, "thread": thread, "deleted": False}
+        return {
+            "errors": errors,
+            "thread": thread,
+            "deleted": deleted,
+        }
 
-    thread = await delete_thread_replies_hook.call_action(
-        delete_thread_replies_action, info.context, cleaned_data
-    )
-
-    return {"thread": thread, "deleted": True}
+    return {"thread": thread, "deleted": deleted}
 
 
-async def create_input_model(context: GraphQLContext) -> DeleteThreadRepliesInputModel:
+async def create_input_model(context: GraphQLContext) -> DeleteThreadPostsInputModel:
     return create_model(
-        "DeleteThreadRepliesInputModel",
+        "DeleteThreadPostsInputModel",
         thread=(PositiveInt, ...),
-        replies=(bulkactionidslist(PositiveInt, context["settings"]), ...),
+        posts=(bulkactionidslist(PositiveInt, context["settings"]), ...),
     )
 
 
-async def validate_input_replies_data(
+async def validate_input_posts_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadRepliesInput,
+    data: DeleteThreadPostsInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadRepliesInput, ErrorsList]:
+) -> Tuple[DeleteThreadPostsInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
 async def validate_input_thread_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadRepliesInput,
+    data: DeleteThreadPostsInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadRepliesInput, ErrorsList]:
+) -> Tuple[DeleteThreadPostsInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def delete_thread_replies_action(
-    context: GraphQLContext, cleaned_data: DeleteThreadRepliesInput
+async def delete_thread_posts_action(
+    context: GraphQLContext, cleaned_data: DeleteThreadPostsInput
 ) -> Thread:
     thread = cleaned_data["thread"]
-    thread, last_post = await delete_thread_posts(thread, cleaned_data["replies"])
-    clear_posts(context, cleaned_data["replies"])
+    thread, last_post = await delete_thread_posts(thread, cleaned_data["posts"])
+    clear_posts(context, cleaned_data["posts"])
     store_post(context, last_post)
     store_thread(context, thread)
     return thread

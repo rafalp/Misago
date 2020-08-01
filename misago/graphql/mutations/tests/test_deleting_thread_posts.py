@@ -2,36 +2,36 @@ import pytest
 
 from ....errors import ErrorsList
 from ....threads.get import get_post_by_id
-from ..deletethreadreplies import resolve_delete_thread_replies
+from ..deletethreadposts import resolve_delete_thread_posts
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_deletes_thread_reply(
+async def test_delete_thread_posts_mutation_deletes_thread_reply(
     moderator_graphql_info, thread_with_reply, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
-        input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
+        input={"thread": str(thread_with_reply.id), "posts": [str(thread_reply.id)]},
     )
 
     assert "errors" not in data
     assert data["thread"]
-    assert data["deleted"]
+    assert data["deleted"] == [thread_reply.id]
     assert await get_post_by_id(thread_reply.id) is None
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_user_is_not_authorized(
+async def test_delete_thread_posts_mutation_fails_if_user_is_not_authorized(
     graphql_info, thread_with_reply, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         graphql_info,
-        input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
+        input={"thread": str(thread_with_reply.id), "posts": [str(thread_reply.id)]},
     )
 
-    assert data["thread"]
+    assert data["thread"] is None
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread", ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == [
@@ -42,16 +42,16 @@ async def test_delete_thread_replies_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_user_is_not_moderator(
+async def test_delete_thread_posts_mutation_fails_if_user_is_not_moderator(
     user_graphql_info, thread_with_reply, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         user_graphql_info,
-        input={"thread": str(thread_with_reply.id), "replies": [str(thread_reply.id)]},
+        input={"thread": str(thread_with_reply.id), "posts": [str(thread_reply.id)]},
     )
 
-    assert data["thread"]
+    assert data["thread"] is None
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == [
@@ -61,13 +61,13 @@ async def test_delete_thread_replies_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_thread_id_is_invalid(
+async def test_delete_thread_posts_mutation_fails_if_thread_id_is_invalid(
     moderator_graphql_info, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
-        input={"thread": "invalid", "replies": [str(thread_reply.id)]},
+        input={"thread": "invalid", "posts": [str(thread_reply.id)]},
     )
 
     assert data["thread"] is None
@@ -78,13 +78,13 @@ async def test_delete_thread_replies_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_thread_doesnt_exist(
+async def test_delete_thread_posts_mutation_fails_if_thread_doesnt_exist(
     moderator_graphql_info, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
-        input={"thread": "1000", "replies": [str(thread_reply.id)]},
+        input={"thread": "1000", "posts": [str(thread_reply.id)]},
     )
 
     assert data["thread"] is None
@@ -95,74 +95,96 @@ async def test_delete_thread_replies_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_reply_id_is_invalid(
+async def test_delete_thread_posts_mutation_fails_if_post_id_is_invalid(
     moderator_graphql_info, thread_with_reply, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
-        input={"thread": str(thread_with_reply.id), "replies": ["invalid"]},
+        input={"thread": str(thread_with_reply.id), "posts": ["invalid"]},
     )
 
     assert data["thread"]
     assert data["errors"]
-    assert data["errors"].get_errors_locations() == ["replies.0"]
+    assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
     assert not data["deleted"]
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_reply_doesnt_exist(
+async def test_delete_thread_posts_mutation_fails_if_post_doesnt_exist(
     moderator_graphql_info, thread_with_reply, thread_reply
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
         input={
             "thread": str(thread_with_reply.id),
-            "replies": [str(thread_reply.id + 1)],
+            "posts": [str(thread_reply.id + 1)],
         },
     )
 
     assert data["thread"]
     assert data["errors"]
-    assert data["errors"].get_errors_locations() == ["replies.0"]
+    assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
     assert not data["deleted"]
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_reply_is_threads_first_post(
+async def test_delete_thread_posts_mutation_fails_if_post_is_threads_first_post(
     moderator_graphql_info, thread, post
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
-        input={"thread": str(thread.id), "replies": [str(post.id)]},
+        input={"thread": str(thread.id), "posts": [str(post.id)]},
     )
 
     assert data["thread"]
     assert data["errors"]
-    assert data["errors"].get_errors_locations() == ["replies.0"]
+    assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.thread_start"]
     assert not data["deleted"]
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_replies_mutation_fails_if_reply_is_in_other_thread(
+async def test_delete_thread_posts_mutation_fails_if_post_is_in_other_thread(
     moderator_graphql_info, thread_with_reply, other_user_post
 ):
-    data = await resolve_delete_thread_replies(
+    data = await resolve_delete_thread_posts(
         None,
         moderator_graphql_info,
         input={
             "thread": str(thread_with_reply.id),
-            "replies": [str(other_user_post.id)],
+            "posts": [str(other_user_post.id)],
         },
     )
 
     assert data["thread"]
     assert data["errors"]
-    assert data["errors"].get_errors_locations() == ["replies.0"]
+    assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
     assert not data["deleted"]
+
+
+@pytest.mark.asyncio
+async def test_delete_thread_posts_mutation_with_posts_errors_still_deletes_valid_posts(
+    moderator_graphql_info, thread_with_reply, thread_reply, other_user_post
+):
+    data = await resolve_delete_thread_posts(
+        None,
+        moderator_graphql_info,
+        input={
+            "thread": str(thread_with_reply.id),
+            "posts": [str(thread_reply.id), str(other_user_post.id)],
+        },
+    )
+
+    assert data["thread"]
+    assert data["errors"]
+    assert data["errors"].get_errors_locations() == ["posts.1"]
+    assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
+    assert data["deleted"] == [thread_reply.id]
+    assert await get_post_by_id(thread_reply.id) is None
+    assert await get_post_by_id(other_user_post.id) is not None
