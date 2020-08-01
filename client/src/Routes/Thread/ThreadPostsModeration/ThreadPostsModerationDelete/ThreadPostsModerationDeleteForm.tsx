@@ -1,9 +1,19 @@
-import { Plural } from "@lingui/macro"
+import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import { Form, FormFooter, ModalBody, ModalFooter } from "../../../../UI"
+import {
+  Form,
+  FormFooter,
+  ModalAlert,
+  ModalFormBody,
+  ModalFooter,
+  RootError,
+  useSelectionErrors,
+} from "../../../../UI"
 import { IPost, IThread } from "../../Thread.types"
+import ThreadPostsModerationError from "../ThreadPostsModerationError"
+import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"
 import useDeleteRepliesMutation from "../deleteThreadReplies"
 
 interface IThreadPostsModerationDeleteProps {
@@ -14,7 +24,6 @@ interface IThreadPostsModerationDeleteProps {
 }
 
 interface IFormValues {
-  thread: IThread
   posts: Array<IPost>
 }
 
@@ -25,6 +34,11 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   close,
 }) => {
   const {
+    errors: selectionErrors,
+    setErrors: setSelectionErrors,
+  } = useSelectionErrors<IPost>("replies")
+
+  const {
     data,
     loading,
     deleteReplies,
@@ -32,53 +46,57 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   } = useDeleteRepliesMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeleteThreadsSchema = Yup.object().shape({
-    threads: Yup.array()
+  const DeleteRepliesSchema = Yup.object().shape({
+    posts: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
   })
+  console.log(selectionErrors)
+  if (data?.deleteThreadReplies.errors) {
+    return (
+      <ThreadPostsModerationError
+        posts={posts}
+        selectionErrors={selectionErrors}
+        errors={data.deleteThreadReplies.errors}
+        forDelete
+      />
+    )
+  }
 
   return (
     <Form<IFormValues>
-      id="delete_threads_form"
+      id="delete_replies_form"
       disabled={loading}
-      defaultValues={{ thread, posts }}
-      validationSchema={DeleteThreadsSchema}
-      onSubmit={async ({ clearError, setError, data: { thread, posts } }) => {
-        clearError()
-
+      defaultValues={{ posts }}
+      validationSchema={DeleteRepliesSchema}
+      onSubmit={async ({ data: { posts } }) => {
         try {
           const result = await deleteReplies(thread, posts, page)
-          const { errors } = result.data?.deleteThreadReplies || {}
-
-          if (errors) {
-            errors?.forEach(({ location, type, message }) => {
-              const field = location.join(".")
-              setError(field, type, message)
-            })
+          if (result.data?.deleteThreadReplies.errors) {
+            console.log(posts, result.data?.deleteThreadReplies.errors)
+            setSelectionErrors(posts, result.data.deleteThreadReplies.errors)
           } else {
             close()
           }
         } catch (error) {
-          // do nothing when deleteThreads throws
+          // do nothing when deleteReplies throws
           return
         }
       }}
     >
-      <ModalBody>
-        <p>Delete selected posts?.</p>
-        {data && <pre>{JSON.stringify(data)}</pre>}
-      </ModalBody>
+      <RootError graphqlError={graphqlError}>
+        {({ message }) => <ModalAlert>{message}</ModalAlert>}
+      </RootError>
+      <ModalFormBody>
+        <ThreadPostsModerationSelectedPosts
+          max={bulkActionLimit}
+          min={1}
+          posts={posts}
+        />
+      </ModalFormBody>
       <ModalFooter>
         <FormFooter
-          submitText={
-            <Plural
-              id="moderation.delete_[posts].submit"
-              value={posts.length}
-              one="Delete # post"
-              other="Delete # posts"
-            />
-          }
+          submitText={<Trans id="moderation.delete">Delete</Trans>}
           loading={loading}
           danger
           onCancel={close}

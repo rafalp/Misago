@@ -38,7 +38,7 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
             <span className="post-poster">{post.posterName}</span>
           )}
           <span className="post-header-dash">&ndash;</span>
-          <Link className="post-timestamp" to={"/"}>
+          <Link className="post-timestamp" to={"/" + post.id + "/"}>
             <Timestamp date={new Date(post.postedAt)} />
           </Link>
         </div>

@@ -10,9 +10,6 @@ interface IThreadPostsModerationSelectedThreadListItemProps {
   id?: string
   selected?: boolean
   post: IPost
-  messages?: {
-    [type: string]: React.ReactNode
-  } | null
   changeSelection: (id: string, selected: boolean) => void
 }
 
@@ -22,19 +19,18 @@ const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerati
   id,
   selected,
   post,
-  messages,
   changeSelection,
 }) => {
   const itemId = id ? id + "_" + post.id : undefined
 
   return (
     <li
-      className={classNames("selected-item selected-posts-post", {
+      className={classNames("selected-item selected-post", {
         "is-invalid": !!error,
       })}
     >
       {error && (
-        <PostValidationError error={error} messages={messages}>
+        <PostValidationError error={error}>
           {({ message }) => (
             <div className="selected-item-error">{message}</div>
           )}
@@ -42,15 +38,15 @@ const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerati
       )}
       <div className="row row-nogutters">
         <div className="col selected-item-body">
-          <label className="selected-posts-post-header" htmlFor={itemId}>
-            <span className="selected-posts-post-poster">
+          <label className="selected-post-header" htmlFor={itemId}>
+            <span className="selected-post-poster">
               {post.poster ? post.poster.name : post.posterName}
             </span>
-            <span className="selected-posts-post-posted-at">
+            <span className="selected-post-timestamp">
               <Timestamp date={new Date(post.postedAt)} />
             </span>
           </label>
-          <div className="selected-posts-post-body">{post.body.text}</div>
+          <div className="selected-post-body">{post.body.text}</div>
         </div>
         <div className="col-auto selected-item-checkbox">
           <Checkbox

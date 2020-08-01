@@ -15,6 +15,13 @@ const DELETE_THREAD_REPLIES = gql`
         location
         type
       }
+      thread {
+        posts {
+          pagination {
+            pages
+          }
+        }
+      }
       deleted
     }
   }

@@ -8,15 +8,11 @@ import ThreadPostsModerationSelectedPostsListItem from "./ThreadPostsModerationS
 interface IThreadPostsModerationSelectedPostsListProps {
   errors?: Record<string, IMutationError>
   posts: Array<IPost>
-  messages?: {
-    [type: string]: React.ReactNode
-  } | null
 }
 
 const ThreadPostsModerationSelectedPostsList: React.FC<IThreadPostsModerationSelectedPostsListProps> = ({
   errors,
   posts,
-  messages,
 }) => {
   const context = useFieldContext()
   const name = context ? context.name : undefined
@@ -47,7 +43,6 @@ const ThreadPostsModerationSelectedPostsList: React.FC<IThreadPostsModerationSel
           key={post.id}
           selected={selection[post.id]}
           post={post}
-          messages={messages}
           changeSelection={change}
         />
       ))}

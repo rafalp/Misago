@@ -129,6 +129,7 @@ import {
 import ViewportEvent from "./ViewportEvent"
 import WindowTitle from "./WindowTitle"
 import portal from "./portal"
+import useLocationError from "./useLocationError"
 import useRootError from "./useRootError"
 import useSelection from "./useSelection"
 import { getSelectionErrors, useSelectionErrors } from "./useSelectionErrors"
@@ -259,6 +260,7 @@ export {
   portal,
   useFieldContext,
   useFormContext,
+  useLocationError,
   useModal,
   useRootError,
   useSelection,

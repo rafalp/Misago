@@ -71,7 +71,7 @@ const PostValidationError: React.FC<IValidationErrorProps> = ({
               message: i18n._(
                 t(
                   "value_error.post.thread_start"
-                )`This post is thread's original post. It can't be moved or deleted.`
+                )`This post is thread's original post.`
               ),
             })
 

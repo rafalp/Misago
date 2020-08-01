@@ -47,17 +47,25 @@
   margin-top: $spacer;
 }
 
-/* Threads errors list */
+/* Threads and posts errors list */
+.posts-errors,
 .threads-errors {
   margin: 0;
-}
+  padding: 0;
 
-.threads-errors-thread {
+  list-style: none;
+
   font-size: $font-size-sm;
 }
 
+.post-errors-post + .post-errors-post,
 .threads-errors-thread + .threads-errors-thread {
   margin-top: $spacer;
+}
+
+.posts-errors-post-error,
+.threads-errors-thread-error {
+  color: theme-color("danger");
 }
 
 .threads-errors-thread-title {
@@ -65,6 +73,23 @@
   word-break: break-word;
 }
 
-.threads-errors-thread-error {
-  color: theme-color("danger");
+.posts-errors {
+  margin: 0;
+}
+
+.posts-errors-post-header {
+  margin-bottom: 0;
+}
+
+.posts-errors-post-poster {
+  font-weight: bold;
+}
+
+.posts-errors-post-timestamp {
+  margin-left: $spacer / 2;
+}
+
+.posts-errors-post-body {
+  max-height: 40px;
+  overflow: hidden;
 }

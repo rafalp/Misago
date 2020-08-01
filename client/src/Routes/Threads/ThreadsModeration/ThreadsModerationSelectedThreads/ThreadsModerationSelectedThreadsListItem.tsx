@@ -31,7 +31,7 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
 
   return (
     <li
-      className={classNames("selected-item selected-threads-thread", {
+      className={classNames("selected-item selected-thread", {
         "is-invalid": !!error,
       })}
     >
@@ -44,10 +44,10 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
       )}
       <div className="row row-nogutters">
         <div className="col selected-item-body">
-          <label className="selected-threads-thread-title" htmlFor={itemId}>
+          <label className="selected-thread-title" htmlFor={itemId}>
             {thread.title}
           </label>
-          <div className="selected-threads-thread-tidbits">
+          <div className="selected-thread-tidbits">
             <Tidbits small>
               {thread.category.parent && (
                 <TidbitCategory
