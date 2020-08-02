@@ -3,13 +3,11 @@ import React from "react"
 import { ButtonSecondary, Dropdown, DropdownButton } from "../../../UI"
 import { IThreadModeration } from "../Thread.types"
 
-interface IThreadHeaderModerationProps {
-  editThread: () => void
+interface IThreadModerationProps {
   moderation: IThreadModeration
 }
 
-const ThreadHeaderModeration: React.FC<IThreadHeaderModerationProps> = ({
-  editThread,
+const ThreadModeration: React.FC<IThreadModerationProps> = ({
   moderation,
 }) => (
   <Dropdown
@@ -17,20 +15,15 @@ const ThreadHeaderModeration: React.FC<IThreadHeaderModerationProps> = ({
       <ButtonSecondary
         elementRef={ref}
         loading={moderation.loading}
+        text={<Trans id="moderation.thread">Moderate thread</Trans>}
         icon="shield-alt"
         iconSolid
-        small
+        responsive
         onClick={toggle}
       />
     )}
     menu={() => (
       <>
-        <DropdownButton
-          text={<Trans id="moderation.edit">Edit</Trans>}
-          icon="pencil-alt"
-          iconSolid
-          onClick={editThread}
-        />
         {moderation.actions.map((action) => (
           <DropdownButton
             key={action.icon}
@@ -46,4 +39,4 @@ const ThreadHeaderModeration: React.FC<IThreadHeaderModerationProps> = ({
   />
 )
 
-export default ThreadHeaderModeration
+export default ThreadModeration

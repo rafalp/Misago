@@ -1,9 +1,12 @@
 import { MutationResult } from "@apollo/react-common"
 import { useMutation } from "@apollo/react-hooks"
+import React from "react"
 import gql from "graphql-tag"
+import { useModalContext } from "../../../Context"
 import { IMutationError } from "../../../types"
 import { IThread } from "../Thread.types"
-import { useThreadModerationModalContext } from "./ThreadModerationModalContext"
+import ThreadModerationClose from "./ThreadModerationClose"
+import ThreadModerationOpen from "./ThreadModerationOpen"
 
 const CLOSE_THREAD = gql`
   mutation CloseThread($input: CloseThreadInput!) {
@@ -39,42 +42,45 @@ interface ICloseThreadMutationVariables {
 }
 
 const useCloseThreadMutation = (
-  thread: IThread,
+  thread: IThread | null,
   isClosed: boolean
 ): [() => Promise<void>, MutationResult<ICloseThreadMutationData>] => {
   const [mutation, state] = useMutation<
     ICloseThreadMutationData,
     ICloseThreadMutationVariables
-  >(CLOSE_THREAD, {
-    variables: {
-      input: {
-        isClosed,
-        thread: thread.id,
-      },
-    },
-  })
+  >(CLOSE_THREAD)
 
-  const { closeThread, openThread } = useThreadModerationModalContext(thread)
+  const { openModal } = useModalContext()
 
   const runMutation = async () => {
-    const openErrorsModal = isClosed ? closeThread : openThread
+    if (!thread) return
+
+    const ErrorModal = isClosed ? ThreadModerationClose : ThreadModerationOpen
+
     try {
-      const { data } = await mutation()
+      const { data } = await mutation({
+        variables: {
+          input: {
+            isClosed,
+            thread: thread.id,
+          },
+        },
+      })
       const { errors } = data?.closeThread || { errors: null }
-      if (errors) openErrorsModal({ errors })
+      if (errors) openModal(<ErrorModal errors={errors} />)
     } catch (graphqlError) {
-      openErrorsModal({ graphqlError })
+      openModal(<ErrorModal graphqlError={graphqlError} />)
     }
   }
 
   return [runMutation, state]
 }
 
-const useCloseThread = (thread: IThread) => {
+const useCloseThread = (thread: IThread | null) => {
   return useCloseThreadMutation(thread, true)
 }
 
-const useOpenThread = (thread: IThread) => {
+const useOpenThread = (thread: IThread | null) => {
   return useCloseThreadMutation(thread, false)
 }
 

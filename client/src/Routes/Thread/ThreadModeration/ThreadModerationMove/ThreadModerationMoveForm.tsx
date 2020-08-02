@@ -16,7 +16,7 @@ import { IThread } from "../../Thread.types"
 import ThreadRootError from "../../ThreadRootError"
 import useMoveThreadMutation from "../moveThread"
 
-interface IThreadModerationModalMoveFormProps {
+interface IThreadModerationMoveFormProps {
   thread: IThread
   close: () => void
 }
@@ -25,7 +25,7 @@ interface IFormValues {
   category: string
 }
 
-const ThreadModerationModalMoveForm: React.FC<IThreadModerationModalMoveFormProps> = ({
+const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
   thread,
   close,
 }) => {
@@ -98,4 +98,4 @@ const ThreadModerationModalMoveForm: React.FC<IThreadModerationModalMoveFormProp
   )
 }
 
-export default ThreadModerationModalMoveForm
+export default ThreadModerationMoveForm

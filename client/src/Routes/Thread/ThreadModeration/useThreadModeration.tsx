@@ -1,18 +1,24 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { useAuthContext } from "../../../Context"
+import { useAuthContext, useModalContext } from "../../../Context"
 import { IThread, IThreadModeration } from "../Thread.types"
-import { useThreadModerationModalContext } from "./ThreadModerationModalContext"
+import ThreadModerationDelete from "./ThreadModerationDelete"
+import ThreadModerationMove from "./ThreadModerationMove"
 import { useCloseThread, useOpenThread } from "./closeThread"
 
-const useThreadModeration = (thread: IThread): IThreadModeration | null => {
+const useThreadModeration = (thread: IThread | null): IThreadModeration | null => {
   const user = useAuthContext()
+  const { openModal } = useModalContext()
 
   const [closeThread, { loading: closingThread }] = useCloseThread(thread)
   const [openThread, { loading: openingThread }] = useOpenThread(thread)
-  const { moveThread, deleteThread } = useThreadModerationModalContext(thread)
 
-  const moderation = {
+  if (!thread || !user || !user.isModerator) return null
+
+  const moveThread = () => openModal(<ThreadModerationMove thread={thread} />)
+  const deleteThread = () => openModal(<ThreadModerationDelete thread={thread} />)
+
+  return {
     loading: closingThread || openingThread,
     closeThread,
     openThread,
@@ -47,9 +53,6 @@ const useThreadModeration = (thread: IThread): IThreadModeration | null => {
       },
     ],
   }
-
-  if (user && user.isModerator) return moderation
-  return null
 }
 
 export default useThreadModeration

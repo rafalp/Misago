@@ -14,14 +14,14 @@ import { IThread } from "../../Thread.types"
 import ThreadRootError from "../../ThreadRootError"
 import useDeleteThreadMutation from "../deleteThread"
 
-interface IThreadModerationModalDeleteFormProps {
+interface IThreadModerationDeleteFormProps {
   thread: IThread
   close: () => void
 }
 
 interface IFormValues {}
 
-const ThreadModerationModalDeleteForm: React.FC<IThreadModerationModalDeleteFormProps> = ({
+const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = ({
   thread,
   close,
 }) => {
@@ -92,4 +92,4 @@ const ThreadModerationModalDeleteForm: React.FC<IThreadModerationModalDeleteForm
   )
 }
 
-export default ThreadModerationModalDeleteForm
+export default ThreadModerationDeleteForm

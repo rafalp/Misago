@@ -11,6 +11,7 @@ import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
+import { useThreadModeration } from "./ThreadModeration"
 import {
   ThreadPostsModeration,
   useThreadPostsModeration,
@@ -29,6 +30,7 @@ const ThreadPosts: React.FC = () => {
     thread && thread.posts.page ? thread.posts.page.items : []
   )
   const moderation = {
+    thread: useThreadModeration(thread),
     posts: useThreadPostsModeration(thread, selection.selected, page),
   }
 
@@ -67,6 +69,7 @@ const ThreadPosts: React.FC = () => {
   }
   const toolbarProps = {
     pagination,
+    moderation: moderation.thread
   }
 
   return (

@@ -110,37 +110,3 @@ export const ThreadEditable = () => (
     </MockedProvider>
   </AuthContext.Provider>
 )
-
-export const ThreadWithModeration = () => (
-  <AuthContext.Provider value={userFactory({ isModerator: true })}>
-    <MockedProvider>
-      <RootContainer padding>
-        <ThreadHeader
-          thread={{
-            posts,
-            id: "1",
-            title: text(
-              "Title",
-              "First observed by the astronomer Galileo Galilei!"
-            ),
-            slug: "test-slug",
-            replies: number("Replies", 5192),
-            isClosed: boolean("Closed", false),
-            startedAt: "2020-05-01T10:49:02.159Z",
-            lastPostedAt: "2020-05-02T12:38:41.159Z",
-            starterName: "LoremIpsum",
-            lastPosterName: "DolorMet",
-            extra: {},
-            starter: userFactory({ username: "DolorMet" }),
-            lastPoster: userFactory({ username: "DolorMet" }),
-            category: Object.assign({}, categories[0], {
-              parent: boolean("In child category", true)
-                ? categories[1]
-                : null,
-            }),
-          }}
-        />
-      </RootContainer>
-    </MockedProvider>
-  </AuthContext.Provider>
-)

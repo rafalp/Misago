@@ -7,9 +7,13 @@ import {
   ToolbarItem,
   ToolbarSeparator,
 } from "../../../UI"
+import { ThreadModeration } from "../ThreadModeration"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
 
-const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({ pagination }) => (
+const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
+  moderation,
+  pagination,
+}) => (
   <>
     <Toolbar>
       {pagination.pages > 1 && (
@@ -23,6 +27,11 @@ const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({ pagination }) => (
         </>
       )}
       <ToolbarSeparator />
+      {moderation && (
+        <ToolbarItem>
+          <ThreadModeration moderation={moderation} />
+        </ToolbarItem>
+      )}
       <ToolbarItem>
         <ButtonPrimary
           text="Reply"

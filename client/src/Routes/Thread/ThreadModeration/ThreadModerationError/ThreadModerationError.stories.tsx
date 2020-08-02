@@ -3,7 +3,7 @@ import { withKnobs, boolean } from "@storybook/addon-knobs"
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { ModalContainer } from "../../../../UI/Storybook"
-import ThreadModerationModalError from "./ThreadModerationModalError"
+import ThreadModerationError from "./ThreadModerationError"
 
 export default {
   title: "Route/Thread/ThreadModerationErrorModal",
@@ -14,7 +14,7 @@ const close = action("close modal")
 
 export const AuthError = () => (
   <ModalContainer>
-    <ThreadModerationModalError
+    <ThreadModerationError
       errors={[
         {
           location: ["thread"],
@@ -35,7 +35,7 @@ export const AuthError = () => (
 
 export const ThreadError = () => (
   <ModalContainer>
-    <ThreadModerationModalError
+    <ThreadModerationError
       errors={[
         {
           location: ["thread"],
@@ -51,7 +51,7 @@ export const ThreadError = () => (
 
 export const QueryError = () => (
   <ModalContainer>
-    <ThreadModerationModalError
+    <ThreadModerationError
       graphqlError={new ApolloError({})}
       forDelete={boolean("For delete", false)}
       close={close}
@@ -61,7 +61,7 @@ export const QueryError = () => (
 
 export const NetworkError = () => (
   <ModalContainer>
-    <ThreadModerationModalError
+    <ThreadModerationError
       graphqlError={new ApolloError({ networkError: new Error() })}
       forDelete={boolean("For delete", false)}
       close={close}

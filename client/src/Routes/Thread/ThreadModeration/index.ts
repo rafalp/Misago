@@ -1,15 +1,4 @@
-import ThreadModerationModalClose from "./ThreadModerationModalClose"
-import { ThreadModerationModalContextProvider } from "./ThreadModerationModalContext"
-import ThreadModerationModalDelete from "./ThreadModerationModalDelete"
-import ThreadModerationModalMove from "./ThreadModerationModalMove"
-import ThreadModerationModalOpen from "./ThreadModerationModalOpen"
+import ThreadModeration from "./ThreadModeration"
 import useThreadModeration from "./useThreadModeration"
 
-export {
-  ThreadModerationModalClose,
-  ThreadModerationModalContextProvider,
-  ThreadModerationModalDelete,
-  ThreadModerationModalMove,
-  ThreadModerationModalOpen,
-  useThreadModeration,
-}
+export { ThreadModeration, useThreadModeration }

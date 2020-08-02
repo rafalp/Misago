@@ -7,9 +7,11 @@ import {
   ToolbarItem,
   ToolbarSeparator,
 } from "../../../UI"
+import { ThreadModeration } from "../ThreadModeration"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
 
 const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
+  moderation,
   pagination,
 }) => (
   <ResetScrollOnNav selector=".toolbar">
@@ -32,6 +34,11 @@ const ThreadToolbarBottom: React.FC<IThreadToolbarProps> = ({
         </>
       )}
       <ToolbarSeparator />
+      {moderation && (
+        <ToolbarItem>
+          <ThreadModeration moderation={moderation} />
+        </ToolbarItem>
+      )}
     </Toolbar>
   </ResetScrollOnNav>
 )
