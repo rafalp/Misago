@@ -12,7 +12,7 @@ delete_thread_post_input_post_hook.call_action(
 
 A filter for the function used to validate data for `DeleteThreadPostInputModel` GraphQL input type after thread data was validated by [`delete_thread_post_input_thread_hook`](./delete-thread-post-input-thread-hook.md).
 
-Returns a tuple of `data` that should be used to delete the thread reply and validation `errors`.
+Returns a tuple of `data` that should be used to delete the thread post and validation `errors`.
 
 
 ## Required arguments
