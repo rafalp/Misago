@@ -1,4 +1,4 @@
-import { useAuthContext } from "./Context"
+import { useAuthContext } from "../../../Context"
 
 interface IThread {
   isClosed: boolean
@@ -6,26 +6,23 @@ interface IThread {
   category: { id: string; isClosed: boolean }
 }
 
-export const useThreadACL = (thread?: IThread | null) => {
+export const useThreadAcl = (thread?: IThread | null) => {
   const user = useAuthContext()
 
   if (!thread || !user) {
     return {
       edit: false,
-      moderate: false,
     }
   }
 
   if (user.isModerator) {
     return {
       edit: true,
-      moderate: true,
     }
   }
 
   const isClosed = thread.isClosed || thread.category.isClosed
   return {
     edit: user.id === thread.starter?.id && !isClosed,
-    moderate: false,
   }
 }

@@ -1,16 +1,16 @@
 import React from "react"
 import { Card, CardBanner, CardColorBand } from "../../../UI"
-import { useThreadACL } from "../../../acl"
 import { IThread } from "../Thread.types"
 import ThreadHeaderBody from "./ThreadHeaderBody"
 import ThreadHeaderTitleEditForm from "./ThreadHeaderTitleEditForm"
+import { useThreadAcl } from "./useThreadAcl"
 
 interface IThreadHeaderProps {
   thread: IThread
 }
 
 const ThreadHeader: React.FC<IThreadHeaderProps> = ({ thread }) => {
-  const acl = useThreadACL(thread)
+  const acl = useThreadAcl(thread)
 
   const [edit, setEdit] = React.useState(false)
   const editThread = () => setEdit(true)
