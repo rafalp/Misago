@@ -11,9 +11,11 @@ import {
   ModalAlert,
   ModalFormBody,
   ModalFooter,
+  RootError,
+  useLocationError,
 } from "../../../../UI"
 import { IThread } from "../../Thread.types"
-import ThreadRootError from "../../ThreadRootError"
+import ThreadModerationError from "../ThreadModerationError"
 import useMoveThreadMutation from "../moveThread"
 
 interface IThreadModerationMoveFormProps {
@@ -35,6 +37,14 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
     moveThread,
     error: graphqlError,
   } = useMoveThreadMutation()
+
+  const threadError = useLocationError("thread", data?.moveThread.errors)
+
+  if (data?.moveThread.errors && threadError) {
+    return (
+      <ThreadModerationError errors={data.moveThread.errors} close={close} />
+    )
+  }
 
   const MoveThreadSchema = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
@@ -67,12 +77,9 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
         }
       }}
     >
-      <ThreadRootError
-        graphqlError={graphqlError}
-        dataErrors={data?.moveThread.errors}
-      >
+      <RootError graphqlError={graphqlError}>
         {({ message }) => <ModalAlert>{message}</ModalAlert>}
-      </ThreadRootError>
+      </RootError>
       <ModalFormBody>
         <Field
           label={<Trans id="moderation.new_category">New category</Trans>}

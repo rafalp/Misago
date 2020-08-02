@@ -8,10 +8,11 @@ import {
   ModalAlert,
   ModalMessageBody,
   ModalFooter,
+  RootError,
 } from "../../../../UI"
 import * as urls from "../../../../urls"
 import { IThread } from "../../Thread.types"
-import ThreadRootError from "../../ThreadRootError"
+import ThreadModerationError from "../ThreadModerationError"
 import useDeleteThreadMutation from "../deleteThread"
 
 interface IThreadModerationDeleteFormProps {
@@ -34,6 +35,16 @@ const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = (
     deleteThread,
     error: graphqlError,
   } = useDeleteThreadMutation()
+
+  if (data?.deleteThread.errors) {
+    return (
+      <ThreadModerationError
+        errors={data.deleteThread.errors}
+        close={close}
+        forDelete
+      />
+    )
+  }
 
   return (
     <Form<IFormValues>
@@ -61,12 +72,9 @@ const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = (
         }
       }}
     >
-      <ThreadRootError
-        graphqlError={graphqlError}
-        dataErrors={data?.deleteThread.errors}
-      >
+      <RootError graphqlError={graphqlError}>
         {({ message }) => <ModalAlert>{message}</ModalAlert>}
-      </ThreadRootError>
+      </RootError>
       <ModalMessageBody
         header={
           <Trans id="moderation.delete_thread_prompt">

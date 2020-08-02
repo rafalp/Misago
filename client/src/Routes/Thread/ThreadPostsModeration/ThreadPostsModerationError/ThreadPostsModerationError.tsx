@@ -1,13 +1,7 @@
 import React from "react"
-import {
-  ModalAlert,
-  ModalErrorBody,
-  RootError,
-  ThreadValidationError,
-  useLocationError,
-  useRootError,
-} from "../../../../UI"
+import { ModalAlert, ModalErrorBody } from "../../../../UI"
 import { IMutationError } from "../../../../types"
+import ThreadRootError from "../../ThreadRootError"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationErrorHeader from "./ThreadPostsModerationErrorHeader"
 import ThreadPostsModerationErrorPosts from "./ThreadPostsModerationErrorPosts"
@@ -25,47 +19,6 @@ const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = (
   errors,
   selectionErrors,
 }) => {
-  const threadError = useLocationError("thread", errors)
-  const rootError = useRootError(errors)
-
-  if (rootError) {
-    return (
-      <RootError dataErrors={[rootError]}>
-        {({ message }) => (
-          <ModalErrorBody
-            header={
-              <ThreadPostsModerationErrorHeader
-                forDelete={forDelete}
-                posts={posts}
-                postsErrors={selectionErrors}
-              />
-            }
-            message={message}
-          />
-        )}
-      </RootError>
-    )
-  }
-
-  if (threadError) {
-    return (
-      <ThreadValidationError error={threadError}>
-        {({ message }) => (
-          <ModalErrorBody
-            header={
-              <ThreadPostsModerationErrorHeader
-                forDelete={forDelete}
-                posts={posts}
-                postsErrors={selectionErrors}
-              />
-            }
-            message={message}
-          />
-        )}
-      </ThreadValidationError>
-    )
-  }
-
   if (selectionErrors) {
     return (
       <>
@@ -84,7 +37,22 @@ const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = (
     )
   }
 
-  return null
+  return (
+    <ThreadRootError dataErrors={errors}>
+      {({ message }) => (
+        <ModalErrorBody
+          header={
+            <ThreadPostsModerationErrorHeader
+              forDelete={forDelete}
+              posts={posts}
+              postsErrors={selectionErrors}
+            />
+          }
+          message={message}
+        />
+      )}
+    </ThreadRootError>
+  )
 }
 
 export default ThreadPostsModerationError
