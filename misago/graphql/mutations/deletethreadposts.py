@@ -79,7 +79,7 @@ async def resolve_delete_thread_posts(
             errors,
         )
 
-    deleted = []
+    deleted: List[str] = []
 
     if errors:
         return {
@@ -109,7 +109,7 @@ async def resolve_delete_thread_posts(
         )
 
     if cleaned_data.get("posts"):
-        deleted = [i.id for i in cleaned_data.get("posts")]
+        deleted = [i.id for i in cleaned_data["posts"]]
         thread = await delete_thread_posts_hook.call_action(
             delete_thread_posts_action, info.context, cleaned_data
         )
