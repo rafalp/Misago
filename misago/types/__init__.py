@@ -57,7 +57,19 @@ from .deletethread import (
     DeleteThreadInputModelAction,
     DeleteThreadInputModelFilter,
 )
-from .deletethreadreplies import (
+from .deletethreadpost import (
+    DeleteThreadPostAction,
+    DeleteThreadPostFilter,
+    DeleteThreadPostInput,
+    DeleteThreadPostInputModel,
+    DeleteThreadPostInputModelAction,
+    DeleteThreadPostInputModelFilter,
+    DeleteThreadPostInputPostAction,
+    DeleteThreadPostInputPostFilter,
+    DeleteThreadPostInputThreadAction,
+    DeleteThreadPostInputThreadFilter,
+)
+from .deletethreadposts import (
     DeleteThreadPostsAction,
     DeleteThreadPostsFilter,
     DeleteThreadPostsInput,
@@ -68,18 +80,6 @@ from .deletethreadreplies import (
     DeleteThreadPostsInputPostsFilter,
     DeleteThreadPostsInputThreadAction,
     DeleteThreadPostsInputThreadFilter,
-)
-from .deletethreadreply import (
-    DeleteThreadReplyAction,
-    DeleteThreadReplyFilter,
-    DeleteThreadReplyInput,
-    DeleteThreadReplyInputModel,
-    DeleteThreadReplyInputModelAction,
-    DeleteThreadReplyInputModelFilter,
-    DeleteThreadReplyInputReplyAction,
-    DeleteThreadReplyInputReplyFilter,
-    DeleteThreadReplyInputThreadAction,
-    DeleteThreadReplyInputThreadFilter,
 )
 from .deletethreads import (
     DeleteThreadsAction,

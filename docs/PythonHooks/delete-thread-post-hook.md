@@ -1,10 +1,10 @@
-# `delete_thread_reply_hook`
+# `delete_thread_post_hook`
 
 ```python
-delete_thread_reply_hook.call_action(
-    action: DeleteThreadReplyAction,
+delete_thread_post_hook.call_action(
+    action: DeleteThreadPostAction,
     context: GraphQLContext,
-    cleaned_data: DeleteThreadReplyInput,
+    cleaned_data: DeleteThreadPostInput,
 )
 ```
 
@@ -18,8 +18,8 @@ Returns `Thread` with updated thread data.
 ### `action`
 
 ```python
-async def delete_thread_reply(
-    context: GraphQLContext, cleaned_data: DeleteThreadReplyInput
+async def delete_thread_post(
+    context: GraphQLContext, cleaned_data: DeleteThreadPostInput
 ) -> Thread:
     ...
 ```
@@ -42,10 +42,10 @@ A dict with GraphQL query context.
 Dict[str, Any]
 ```
 
-A dict with already validated and cleaned input data. Will contain `thread` and `reply` keys:
+A dict with already validated and cleaned input data. Will contain `thread` and `post` keys:
 
 ```python
-class DeleteThreadReplyInput(TypedDict):
+class DeleteThreadPostInput(TypedDict):
     thread: Thread
-    reply: Post
+    post: Post
 ```

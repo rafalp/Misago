@@ -1,16 +1,16 @@
-# `delete_thread_reply_input_thread_hook`
+# `delete_thread_post_input_thread_hook`
 
 ```python
-delete_thread_reply_input_thread_hook.call_action(
-    action: DeleteThreadReplyInputThreadAction,
+delete_thread_post_input_thread_hook.call_action(
+    action: DeleteThreadPostInputThreadAction,
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadReplyInput,
+    data: DeleteThreadPostInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `DeleteThreadReplyInputModel` GraphQL input type after before data was validated by [`delete_thread_reply_input_reply_hook`](./delete-thread-reply-input-reply-hook.md).
+A filter for the function used to validate data for `DeleteThreadPostInputModel` GraphQL input type after before data was validated by [`delete_thread_post_input_post_hook`](./delete-thread-posts-input-post-hook.md).
 
 Returns a tuple of `data` that should be used to validate if thread reply can be deleted and validation `errors`.
 
@@ -23,9 +23,9 @@ Returns a tuple of `data` that should be used to validate if thread reply can be
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadReplyInput,
+    data: DeleteThreadPostInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadReplyInput, ErrorsList]:
+) -> Tuple[DeleteThreadPostInput, ErrorsList]:
     ...
 ```
 

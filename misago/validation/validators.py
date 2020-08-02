@@ -283,7 +283,7 @@ class ThreadIsOpenValidator(AsyncValidator):
         return thread
 
 
-class ThreadReplyExistsValidator(AsyncValidator):
+class ThreadPostExistsValidator(AsyncValidator):
     _context: GraphQLContext
     _thread: Thread
 
@@ -295,7 +295,17 @@ class ThreadReplyExistsValidator(AsyncValidator):
         post = await load_post(self._context, post_id)
         if not post or post.thread_id != self._thread.id:
             raise PostDoesNotExistError(post_id=post_id)
-        if post.id == self._thread.first_post_id:
+        return post
+
+
+class ThreadPostIsReplyValidator(AsyncValidator):
+    _thread: Thread
+
+    def __init__(self, thread: Thread):
+        self._thread = thread
+
+    async def __call__(self, post: Post, *_) -> Post:
+        if post and post.id == self._thread.first_post_id:
             raise ThreadFirstPostError(post_id=post.id)
         return post
 

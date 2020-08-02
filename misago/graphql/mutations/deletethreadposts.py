@@ -25,7 +25,8 @@ from ...validation import (
     PostsBulkValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
-    ThreadReplyExistsValidator,
+    ThreadPostExistsValidator,
+    ThreadPostIsReplyValidator,
     UserIsAuthorizedRootValidator,
     bulkactionidslist,
     validate_data,
@@ -92,7 +93,10 @@ async def resolve_delete_thread_posts(
         posts_validators: Dict[str, List[AsyncValidator]] = {
             "posts": [
                 PostsBulkValidator(
-                    [ThreadReplyExistsValidator(info.context, cleaned_data["thread"]),]
+                    [
+                        ThreadPostExistsValidator(info.context, cleaned_data["thread"]),
+                        ThreadPostIsReplyValidator(cleaned_data["thread"]),
+                    ]
                 )
             ],
         }

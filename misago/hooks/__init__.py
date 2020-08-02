@@ -23,17 +23,17 @@ from .deletethread import (
     DeleteThreadInputHook,
     DeleteThreadInputModelHook,
 )
+from .deletethreadpost import (
+    DeleteThreadPostHook,
+    DeleteThreadPostInputModelHook,
+    DeleteThreadPostInputPostHook,
+    DeleteThreadPostInputThreadHook,
+)
 from .deletethreadposts import (
     DeleteThreadPostsHook,
     DeleteThreadPostsInputModelHook,
     DeleteThreadPostsInputPostsHook,
     DeleteThreadPostsInputThreadHook,
-)
-from .deletethreadreply import (
-    DeleteThreadReplyHook,
-    DeleteThreadReplyInputModelHook,
-    DeleteThreadReplyInputReplyHook,
-    DeleteThreadReplyInputThreadHook,
 )
 from .deletethreads import (
     DeleteThreadsHook,
@@ -85,14 +85,14 @@ create_user_token_payload_hook = CreateUserTokenPayloadHook()
 delete_thread_hook = DeleteThreadHook()
 delete_thread_input_hook = DeleteThreadInputHook()
 delete_thread_input_model_hook = DeleteThreadInputModelHook()
+delete_thread_post_hook = DeleteThreadPostHook()
+delete_thread_post_input_model_hook = DeleteThreadPostInputModelHook()
+delete_thread_post_input_post_hook = DeleteThreadPostInputPostHook()
+delete_thread_post_input_thread_hook = DeleteThreadPostInputThreadHook()
 delete_thread_posts_hook = DeleteThreadPostsHook()
 delete_thread_posts_input_model_hook = DeleteThreadPostsInputModelHook()
 delete_thread_posts_input_posts_hook = DeleteThreadPostsInputPostsHook()
 delete_thread_posts_input_thread_hook = DeleteThreadPostsInputThreadHook()
-delete_thread_reply_hook = DeleteThreadReplyHook()
-delete_thread_reply_input_model_hook = DeleteThreadReplyInputModelHook()
-delete_thread_reply_input_reply_hook = DeleteThreadReplyInputReplyHook()
-delete_thread_reply_input_thread_hook = DeleteThreadReplyInputThreadHook()
 delete_threads_hook = DeleteThreadsHook()
 delete_threads_input_hook = DeleteThreadsInputHook()
 delete_threads_input_model_hook = DeleteThreadsInputModelHook()

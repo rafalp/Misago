@@ -16,6 +16,19 @@ const DELETE_THREAD_POSTS = gql`
         type
       }
       thread {
+        lastPostedAt
+        replies
+        lastPosterName
+        lastPoster {
+          id
+          name
+          slug
+          extra
+          avatars {
+            size
+            url
+          }
+        }
         posts {
           pagination {
             pages

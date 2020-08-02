@@ -6,25 +6,26 @@ from pydantic import PositiveInt, create_model
 
 from ...errors import ErrorsList
 from ...hooks import (
-    delete_thread_reply_hook,
-    delete_thread_reply_input_model_hook,
-    delete_thread_reply_input_reply_hook,
-    delete_thread_reply_input_thread_hook,
+    delete_thread_post_hook,
+    delete_thread_post_input_model_hook,
+    delete_thread_post_input_post_hook,
+    delete_thread_post_input_thread_hook,
 )
 from ...loaders import clear_post, load_thread, store_post, store_thread
 from ...threads.delete import delete_thread_post
 from ...types import (
     AsyncValidator,
     GraphQLContext,
-    DeleteThreadReplyInput,
-    DeleteThreadReplyInputModel,
+    DeleteThreadPostInput,
+    DeleteThreadPostInputModel,
     Thread,
 )
 from ...validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
-    ThreadReplyExistsValidator,
+    ThreadPostExistsValidator,
+    ThreadPostIsReplyValidator,
     UserIsAuthorizedRootValidator,
     validate_data,
     validate_model,
@@ -32,16 +33,16 @@ from ...validation import (
 from ..errorhandler import error_handler
 
 
-delete_thread_reply_mutation = MutationType()
+delete_thread_post_mutation = MutationType()
 
 
-@delete_thread_reply_mutation.field("deleteThreadReply")
+@delete_thread_post_mutation.field("deleteThreadPost")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_delete_thread_reply(
+async def resolve_delete_thread_post(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await delete_thread_reply_input_model_hook.call_action(
+    input_model = await delete_thread_post_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -61,7 +62,7 @@ async def resolve_delete_thread_reply(
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
-        cleaned_data, errors = await delete_thread_reply_input_thread_hook.call_action(
+        cleaned_data, errors = await delete_thread_post_input_thread_hook.call_action(
             validate_input_thread_data,
             info.context,
             thread_validators,
@@ -70,64 +71,65 @@ async def resolve_delete_thread_reply(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread}
+        return {"errors": errors, "thread": thread, "deleted": []}
 
     if cleaned_data.get("thread"):
-        reply_validators: Dict[str, List[AsyncValidator]] = {
-            "reply": [
-                ThreadReplyExistsValidator(info.context, cleaned_data["thread"]),
+        post_validators: Dict[str, List[AsyncValidator]] = {
+            "post": [
+                ThreadPostExistsValidator(info.context, cleaned_data["thread"]),
+                ThreadPostIsReplyValidator(cleaned_data["thread"]),
             ],
         }
-        cleaned_data, errors = await delete_thread_reply_input_reply_hook.call_action(
-            validate_input_reply_data,
+        cleaned_data, errors = await delete_thread_post_input_post_hook.call_action(
+            validate_input_post_data,
             info.context,
-            reply_validators,
+            post_validators,
             cleaned_data,
             errors,
         )
 
     if errors:
-        return {"errors": errors, "thread": thread}
+        return {"errors": errors, "thread": thread, "deleted": []}
 
-    thread = await delete_thread_reply_hook.call_action(
-        delete_thread_reply_action, info.context, cleaned_data
+    thread = await delete_thread_post_hook.call_action(
+        delete_thread_post_action, info.context, cleaned_data
     )
 
-    return {"thread": thread}
+    return {"thread": thread, "deleted": [cleaned_data["post"].id]}
 
 
-async def create_input_model(context: GraphQLContext) -> DeleteThreadReplyInputModel:
+async def create_input_model(context: GraphQLContext) -> DeleteThreadPostInputModel:
     return create_model(
-        "DeleteThreadReplyInputModel",
+        "DeleteThreadPostInputModel",
         thread=(PositiveInt, ...),
-        reply=(PositiveInt, ...),
+        post=(PositiveInt, ...),
     )
 
 
-async def validate_input_reply_data(
+async def validate_input_post_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadReplyInput,
+    data: DeleteThreadPostInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadReplyInput, ErrorsList]:
+) -> Tuple[DeleteThreadPostInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
 async def validate_input_thread_data(
     context: GraphQLContext,
     validators: Dict[str, List[AsyncValidator]],
-    data: DeleteThreadReplyInput,
+    data: DeleteThreadPostInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadReplyInput, ErrorsList]:
+) -> Tuple[DeleteThreadPostInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def delete_thread_reply_action(
-    context: GraphQLContext, cleaned_data: DeleteThreadReplyInput
+async def delete_thread_post_action(
+    context: GraphQLContext, cleaned_data: DeleteThreadPostInput
 ) -> Thread:
     thread = cleaned_data["thread"]
-    thread, last_post = await delete_thread_post(thread, cleaned_data["reply"])
-    clear_post(context, cleaned_data["reply"])
+    thread, last_post = await delete_thread_post(thread, cleaned_data["post"])
+    clear_post(context, cleaned_data["post"])
     store_post(context, last_post)
     store_thread(context, thread)
     return thread
