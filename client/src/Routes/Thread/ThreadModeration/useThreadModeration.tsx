@@ -6,7 +6,9 @@ import ThreadModerationDelete from "./ThreadModerationDelete"
 import ThreadModerationMove from "./ThreadModerationMove"
 import { useCloseThread, useOpenThread } from "./closeThread"
 
-const useThreadModeration = (thread: IThread | null): IThreadModeration | null => {
+const useThreadModeration = (
+  thread: IThread | null
+): IThreadModeration | null => {
   const user = useAuthContext()
   const { openModal } = useModalContext()
 
@@ -16,7 +18,8 @@ const useThreadModeration = (thread: IThread | null): IThreadModeration | null =
   if (!thread || !user || !user.isModerator) return null
 
   const moveThread = () => openModal(<ThreadModerationMove thread={thread} />)
-  const deleteThread = () => openModal(<ThreadModerationDelete thread={thread} />)
+  const deleteThread = () =>
+    openModal(<ThreadModerationDelete thread={thread} />)
 
   return {
     loading: closingThread || openingThread,

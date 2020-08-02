@@ -52,6 +52,7 @@ const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = (
               )
               history.push(urls.category(thread.category))
             }, 0)
+
             close()
           }
         } catch (error) {

@@ -1,7 +1,7 @@
 import { action } from "@storybook/addon-actions"
 import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
-import { ButtonPrimary, Form } from "../../../../UI"
+import { Form } from "../../../../UI"
 import { ModalFormContainer, userFactory } from "../../../../UI/Storybook"
 import { IPost } from "../../Thread.types"
 import ThreadsModerationSelectedPosts from "./"
@@ -34,9 +34,8 @@ export const SinglePost = () => {
 
   return (
     <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
-      <ModalFormContainer title="Posts moderation">
+      <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
-        <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
   )
@@ -71,9 +70,8 @@ export const FewPosts = () => {
 
   return (
     <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
-      <ModalFormContainer title="Posts moderation">
+      <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
-        <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
   )
@@ -120,9 +118,8 @@ export const ManyPosts = () => {
 
   return (
     <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
-      <ModalFormContainer title="Posts moderation">
+      <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
-        <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
   )
@@ -170,14 +167,13 @@ export const WithErrors = () => {
 
   return (
     <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
-      <ModalFormContainer title="Posts moderation">
+      <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts
           max={10}
           min={1}
           posts={posts}
           errors={errors}
         />
-        <ButtonPrimary text="Submit" block />
       </ModalFormContainer>
     </Form>
   )

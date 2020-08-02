@@ -32,11 +32,7 @@ const ThreadHeader: React.FC<IThreadHeaderProps> = ({ thread }) => {
           close={() => setEdit(false)}
         />
       ) : (
-        <ThreadHeaderBody
-          acl={acl}
-          editThread={editThread}
-          thread={thread}
-        />
+        <ThreadHeaderBody acl={acl} editThread={editThread} thread={thread} />
       )}
     </Card>
   )

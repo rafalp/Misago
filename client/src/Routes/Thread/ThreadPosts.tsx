@@ -69,7 +69,7 @@ const ThreadPosts: React.FC = () => {
   }
   const toolbarProps = {
     pagination,
-    moderation: moderation.thread
+    moderation: moderation.thread,
   }
 
   return (

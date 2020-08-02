@@ -106,3 +106,47 @@ export const PostsErrors = () => {
     </ModalContainer>
   )
 }
+
+export const SomePostsErrors = () => {
+  const username = text("Username", "JohnSmit")
+
+  return (
+    <ModalContainer>
+      <ThreadPostsModerationError
+        errors={[]}
+        selectionErrors={{
+          "1": {
+            location: ["posts", "0"],
+            message: "moderator permission is required",
+            type: "auth_error.not_moderator",
+          },
+        }}
+        posts={[
+          {
+            id: "1",
+            body: { text: "Lorem ipsum dolor met sit amet elit." },
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: username,
+            poster: userFactory({ name: username }),
+            extra: {},
+          },
+          {
+            id: "2",
+            body: {
+              text:
+                "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+            },
+            edits: 0,
+            postedAt: "2020-04-02T11:16:51Z",
+            posterName: "Lorem",
+            poster: userFactory({ name: "Lorem" }),
+            extra: {},
+          },
+        ]}
+        forDelete={boolean("For delete", false)}
+      />
+      <ModalCloseFooter close={close} />
+    </ModalContainer>
+  )
+}

@@ -6,7 +6,7 @@ import { ModalContainer } from "../../../../UI/Storybook"
 import ThreadModerationError from "./ThreadModerationError"
 
 export default {
-  title: "Route/Thread/ThreadModerationErrorModal",
+  title: "Route/Thread/Moderation/Thread Error",
   decorators: [withKnobs],
 }
 
