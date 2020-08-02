@@ -94,11 +94,11 @@ def test_creating_superuser_without_superuser_status_raises_value_error(db):
         User.objects.create_superuser("User", "test@example.com", is_superuser=False)
 
 
-def test_prepare_new_username(db):
+def test_sso_username_is_used_if_its_available(db):
     assert User.objects.prepare_new_username("jkowalski") == "jkowalski"
 
 
-def test_prepare_new_username_for_conflicted_username(db):
+def test_sso_username_is_suffixed_if_its_not_available(db):
     user = User.objects.create_user("jkowalski", "jkowalski@example.com")
     new_username = User.objects.prepare_new_username("jkowalski")
     assert new_username != user.username

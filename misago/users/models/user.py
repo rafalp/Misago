@@ -17,7 +17,7 @@ from ...conf import settings
 from ...core.utils import slugify
 from ..avatars import store as avatars_store, delete_avatar
 from ..signatures import is_user_signature_valid
-from ..utils import hash_email, gen_suffix_username
+from ..utils import hash_email, suffix_taken_username
 from .online import Online
 from .rank import Rank
 
@@ -96,7 +96,7 @@ class UserManager(BaseUserManager):
     def prepare_new_username(self, username):
         new_username = username
         while self.filter(username=new_username).exists():
-            suffix = gen_suffix_username()
+            suffix = suffix_taken_username()
             base_username = username[:BASE_USERNAME_CHARS_LIMIT]
             new_username = f"{base_username}{suffix}"
         return new_username

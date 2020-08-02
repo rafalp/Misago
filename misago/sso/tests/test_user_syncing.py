@@ -48,7 +48,7 @@ def test_new_user_is_created_with_changed_username(dynamic_settings, sso_user):
     assert len(user.username) == 12
 
 
-def test_join_sso_user_with_existing_user_by_email(dynamic_settings, sso_user):
+def test_merge_sso_user_with_existing_user_by_email(dynamic_settings, sso_user):
     user = get_or_create_user(
         Mock(settings=dynamic_settings),
         {"id": 5, "username": "Smith", "email": "user@example.com", "is_active": False},
@@ -67,23 +67,6 @@ def test_user_with_sso_id_is_returned_if_they_exist(dynamic_settings, sso_user):
     )
 
     assert user == sso_user
-
-
-def test_user_with_sso_id_is_updated_using_provider_data(dynamic_settings, sso_user):
-    user = get_or_create_user(
-        Mock(settings=dynamic_settings),
-        {
-            "id": SSO_ID,
-            "username": "SsoUser",
-            "email": "ssouser@example.com",
-            "is_active": False,
-        },
-    )
-
-    sso_user.refresh_from_db()
-    assert sso_user.username == "SsoUser"
-    assert sso_user.email == "ssouser@example.com"
-    assert sso_user.is_active is False
 
 
 def test_user_needs_updating_if_their_username_changed(user):

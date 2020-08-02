@@ -171,31 +171,6 @@ def test_sso_auth_view_authenticates_existing_user(user, client):
 
 
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, client):
-    user.sso_id = SSO_USER_ID
-    user.is_active = False
-    user.save()
-
-    url_to_authenticate = reverse("simple-sso-authenticate")
-    assert url_to_authenticate == "/sso/client/authenticate/"
-
-    query = (
-        "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
-        "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
-    )
-    url_to_authenticate += "?" + query
-
-    with ConnectionMock():
-        with TimestampSignerMock():
-            client.get(url_to_authenticate)
-
-    user.refresh_from_db()
-    assert user.username == "jkowalski"
-    assert user.email == "jkowalski@example.com"
-    assert user.is_active is True
-
-
-@override_dynamic_settings(**TEST_SSO_SETTINGS)
 def test_sso_auth_view_returns_bad_request_error_for_invalid_user_data(db, client):
 
     url_to_authenticate = reverse("simple-sso-authenticate")
