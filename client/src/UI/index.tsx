@@ -96,6 +96,7 @@ import { RouteLoader, RouteLoaderSpinner } from "./RouteLoader"
 import Select from "./Select"
 import { SideNav, SideNavItem } from "./SideNav"
 import Spinner from "./Spinner"
+import Textarea from "./Textarea"
 import {
   TidbitActivityLastReply,
   TidbitActivityStart,
@@ -231,6 +232,7 @@ export {
   SideNav,
   SideNavItem,
   Spinner,
+  Textarea,
   ThreadsValidationError,
   ThreadTitleValidationError,
   ThreadValidationError,

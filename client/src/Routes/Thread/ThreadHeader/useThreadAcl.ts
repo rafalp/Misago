@@ -6,7 +6,7 @@ interface IThread {
   category: { id: string; isClosed: boolean }
 }
 
-export const useThreadAcl = (thread?: IThread | null) => {
+const useThreadAcl = (thread?: IThread | null) => {
   const user = useAuthContext()
 
   if (!thread || !user) {
@@ -26,3 +26,5 @@ export const useThreadAcl = (thread?: IThread | null) => {
     edit: user.id === thread.starter?.id && !isClosed,
   }
 }
+
+export default useThreadAcl

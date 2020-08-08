@@ -3,7 +3,7 @@ import { Card, CardBanner, CardColorBand } from "../../../UI"
 import { IThread } from "../Thread.types"
 import ThreadHeaderBody from "./ThreadHeaderBody"
 import ThreadHeaderTitleEditForm from "./ThreadHeaderTitleEditForm"
-import { useThreadAcl } from "./useThreadAcl"
+import useThreadAcl from "./useThreadAcl"
 
 interface IThreadHeaderProps {
   thread: IThread

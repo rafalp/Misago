@@ -86,6 +86,7 @@ const ThreadPosts: React.FC = () => {
           <ThreadPost
             key={post.id}
             post={post}
+            isClosed={thread.isClosed || thread.category.isClosed}
             isSelected={selection.selection[post.id]}
             toggleSelection={moderation ? selection.toggle : null}
           />

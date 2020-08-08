@@ -1,18 +1,24 @@
+import { Plural } from "@lingui/macro"
 import React from "react"
 import { Link } from "react-router-dom"
-import { Avatar, ButtonSecondary, Checkbox, Timestamp } from "../../../UI"
+import { Avatar, Checkbox, Timestamp } from "../../../UI"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
+import ThreadPostOptions from "./ThreadPostOptions"
 
 interface IThreadPostHeaderProps {
+  acl: { edit: boolean }
   post: IPost
   isSelected?: boolean
+  editPost: () => void
   toggleSelection?: ((id: string) => void) | null
 }
 
 const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
+  acl,
   post,
   isSelected,
+  editPost,
   toggleSelection,
 }) => (
   <div className="card-header post-header">
@@ -41,6 +47,19 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
           <Link className="post-timestamp" to={"/" + post.id + "/"}>
             <Timestamp date={new Date(post.postedAt)} />
           </Link>
+          {post.edits > 0 && (
+            <>
+              <span className="post-header-dash">&ndash;</span>
+              <span className="post-header-edits">
+                <Plural
+                  id="edits"
+                  value={post.edits}
+                  one="# edit"
+                  other="# edits"
+                />
+              </span>
+            </>
+          )}
         </div>
         <div className="post-header-compact">
           <div className="post-header-first-row">
@@ -60,12 +79,7 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
         </div>
       </div>
       <div className="col-auto">
-        <ButtonSecondary
-          icon="ellipsis-h"
-          iconSolid
-          small
-          onClick={() => {}}
-        />
+        <ThreadPostOptions acl={acl} post={post} editPost={editPost} />
       </div>
       {toggleSelection && (
         <div className="col-auto post-header-select">

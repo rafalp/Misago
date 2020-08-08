@@ -55,3 +55,24 @@
     display: none;
   }
 }
+
+// Make textarea fill entire post edit body
+.post-edit-form-body {
+  padding: 0;
+
+  textarea.form-control {
+    border: none;
+    border-radius: 0;
+
+    padding: $card-spacer-x;
+  }
+}
+
+// Align post edit footer contents to right
+.post-edit-form-footer {
+  text-align: right;
+
+  .btn {
+    margin-left: $spacer;
+  }
+}
