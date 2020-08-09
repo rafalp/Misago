@@ -1,15 +1,12 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { getSelectionErrors } from "../../../UI"
-import { IMutationError } from "../../../types"
-import { IPost, IThread } from "../Thread.types"
-import { THREAD_QUERY, IThreadData } from "../useThreadQuery"
+import { IMutationError } from "../../../../../types"
+import { IPost } from "../../../Thread.types"
+import { THREAD_QUERY, IThreadData } from "../../../useThreadQuery"
 
-const POST_NOT_EXISTS = "value_error.post.not_exists"
-
-const DELETE_THREAD_POSTS = gql`
-  mutation DeleteThreadPosts($input: BulkDeleteThreadPostsInput!) {
-    deleteThreadPosts(input: $input) {
+const DELETE_THREAD_POST = gql`
+  mutation DeleteThreadPost($input: DeleteThreadPostInput!) {
+    deleteThreadPost(input: $input) {
       errors {
         message
         location
@@ -41,58 +38,46 @@ const DELETE_THREAD_POSTS = gql`
   }
 `
 
-interface IDeleteThreadPostsMutationData {
-  deleteThreadPosts: {
+interface IDeleteThreadPostMutationData {
+  deleteThreadPost: {
     errors: Array<IMutationError> | null
     deleted: Array<string>
   }
 }
 
-interface IDeleteThreadPostsMutationVariables {
+interface IDeleteThreadPostMutationVariables {
   input: {
     thread: string
-    posts: Array<string>
+    post: string
   }
 }
 
-const useDeleteThreadPostsMutation = () => {
+const useDeleteThreadPostMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadPostsMutationData,
-    IDeleteThreadPostsMutationVariables
-  >(DELETE_THREAD_POSTS)
+    IDeleteThreadPostMutationData,
+    IDeleteThreadPostMutationVariables
+  >(DELETE_THREAD_POST)
 
   return {
     data,
     error,
     loading,
-    deletePosts: (
-      thread: IThread,
-      posts: Array<IPost>,
-      page: number | undefined
-    ) => {
-      const deletedPosts = posts.map((posts) => posts.id)
-
+    deletePost: (threadId: string, post: IPost, page: number | undefined) => {
       return mutation({
         variables: {
-          input: { thread: thread.id, posts: deletedPosts },
+          input: { thread: threadId, post: post.id },
         },
         update: (cache, { data }) => {
-          if (!data || !data.deleteThreadPosts) return
-
-          const errors = getSelectionErrors<IPost>(
-            "posts",
-            posts,
-            data.deleteThreadPosts.errors || []
-          )
+          if (!data || !data.deleteThreadPost) return
 
           const queryID = page
             ? {
                 query: THREAD_QUERY,
-                variables: { page, id: thread.id },
+                variables: { page, id: threadId },
               }
             : {
                 query: THREAD_QUERY,
-                variables: { id: thread.id },
+                variables: { id: threadId },
               }
 
           const query = cache.readQuery<IThreadData>(queryID)
@@ -109,16 +94,7 @@ const useDeleteThreadPostsMutation = () => {
                   page: {
                     ...query.thread.posts.page,
                     items: query.thread.posts.page.items.filter((post) => {
-                      if (
-                        errors[post.id] &&
-                        errors[post.id].type !== POST_NOT_EXISTS
-                      ) {
-                        return true
-                      }
-
-                      return (
-                        data.deleteThreadPosts.deleted.indexOf(post.id) < 0
-                      )
+                      return data.deleteThreadPost.deleted.indexOf(post.id) < 0
                     }),
                   },
                 },
@@ -131,4 +107,4 @@ const useDeleteThreadPostsMutation = () => {
   }
 }
 
-export default useDeleteThreadPostsMutation
+export default useDeleteThreadPostMutation

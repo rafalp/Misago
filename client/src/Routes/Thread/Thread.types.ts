@@ -35,7 +35,7 @@ export interface IThreadPoster {
 }
 
 export interface IThreadModeration {
-  actions: Array<IThreadModerationAction>
+  actions: Array<IModerationAction>
   loading: boolean
   closeThread: () => void
   openThread: () => void
@@ -43,7 +43,7 @@ export interface IThreadModeration {
   deleteThread: () => void
 }
 
-export interface IThreadModerationAction {
+export interface IModerationAction {
   name: React.ReactNode
   icon: string
   iconSolid?: boolean

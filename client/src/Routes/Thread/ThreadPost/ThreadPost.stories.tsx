@@ -1,3 +1,4 @@
+import { MockedProvider } from "@apollo/react-testing"
 import { action } from "@storybook/addon-actions"
 import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
@@ -24,6 +25,7 @@ export const PostByUser = () => {
           poster: userFactory({ name: username }),
           extra: {},
         }}
+        threadId="1"
       />
     </RootContainer>
   )
@@ -44,6 +46,7 @@ export const PostSelectable = () => {
           poster: userFactory({ name: username }),
           extra: {},
         }}
+        threadId="1"
         isSelected={false}
         toggleSelection={action("Toggle selection")}
       />
@@ -66,6 +69,7 @@ export const PostByDeletedUser = () => {
           poster: null,
           extra: {},
         }}
+        threadId="1"
       />
     </RootContainer>
   )
@@ -83,6 +87,7 @@ export const PostAfterAnother = () => (
         poster: null,
         extra: {},
       }}
+      threadId="1"
     />
     <ThreadPost
       post={{
@@ -94,6 +99,27 @@ export const PostAfterAnother = () => (
         poster: null,
         extra: {},
       }}
+      threadId="1"
     />
+  </RootContainer>
+)
+
+export const PostEditor = () => (
+  <RootContainer padding>
+    <MockedProvider>
+      <ThreadPost
+        post={{
+          id: "1",
+          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          edits: 0,
+          postedAt: "2020-04-01T21:42:51Z",
+          posterName: "John",
+          poster: null,
+          extra: {},
+        }}
+        threadId="1"
+        isEdited
+      />
+    </MockedProvider>
   </RootContainer>
 )

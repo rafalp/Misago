@@ -82,7 +82,7 @@ const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = (
           </Trans>
         }
         message={
-          <Trans id="moderation.delete_thread_message">
+          <Trans id="moderation.delete_message">
             This action is not reversible!
           </Trans>
         }

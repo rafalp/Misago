@@ -9,12 +9,10 @@ import {
   CardBody,
   CardFooter,
   Form,
-  PostValidationError,
-  RootError,
   Textarea,
 } from "../../../UI"
 import { IPost } from "../Thread.types"
-import ThreadRootError from "../ThreadRootError"
+import ThreadPostRootError from "./ThreadPostRootError"
 import useEditPostMutation from "./useEditPostMutation"
 
 interface IThreadPostEditFormProps {
@@ -68,19 +66,12 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
         }
       }}
     >
-      <ThreadRootError
+      <ThreadPostRootError
         graphqlError={graphqlError}
         dataErrors={data?.editPost.errors}
       >
         {({ message }) => <CardAlert>{message}</CardAlert>}
-      </ThreadRootError>
-      <RootError dataErrors={data?.editPost.errors} locations={["post"]}>
-        {(error) => (
-          <PostValidationError error={error}>
-            {({ message }) => <CardAlert>{message}</CardAlert>}
-          </PostValidationError>
-        )}
-      </RootError>
+      </ThreadPostRootError>
       <CardBody className="post-edit-form-body">
         <Textarea name="body" rows={7} />
       </CardBody>

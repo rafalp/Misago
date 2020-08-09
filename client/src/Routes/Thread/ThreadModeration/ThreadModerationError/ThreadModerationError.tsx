@@ -28,7 +28,7 @@ const ThreadModerationError: React.FC<IThreadModerationErrorProps> = ({
                 Thread could not be deleted.
               </Trans>
             ) : (
-              <Trans id="moderation.thread_error">
+              <Trans id="moderation.thread_update_error">
                 Thread could not be updated.
               </Trans>
             )

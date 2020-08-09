@@ -1,17 +1,43 @@
 import { withKnobs, select } from "@storybook/addon-knobs"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { RootContainer } from "../../../UI/Storybook"
-import ThreadRootError from "./ThreadRootError"
+import { RootContainer } from "../../../../UI/Storybook"
+import ThreadPostRootError from "./ThreadPostRootError"
 
 export default {
-  title: "Route/Thread/Thread RootError",
+  title: "Route/Thread/Post RootError",
   decorators: [withKnobs],
 }
 
+export const PostError = () => (
+  <RootContainer padding>
+    <ThreadPostRootError
+      dataErrors={[
+        {
+          location: ["post"],
+          message: "moderator permission is required",
+          type: select(
+            "Error",
+            {
+              "Not moderator": "auth_error.not_moderator",
+              "Category is closed": "auth_error.category.closed",
+              "Thread is closed": "auth_error.thread.closed",
+              "Post not author": "auth_error.post.not_author",
+              "Post not found": "value_error.post.not_exists",
+            },
+            "auth_error.not_moderator"
+          ),
+        },
+      ]}
+    >
+      {({ message }) => <p>{message}</p>}
+    </ThreadPostRootError>
+  </RootContainer>
+)
+
 export const ThreadError = () => (
   <RootContainer padding>
-    <ThreadRootError
+    <ThreadPostRootError
       dataErrors={[
         {
           location: ["thread"],
@@ -31,24 +57,24 @@ export const ThreadError = () => (
       ]}
     >
       {({ message }) => <p>{message}</p>}
-    </ThreadRootError>
+    </ThreadPostRootError>
   </RootContainer>
 )
 
 export const QueryError = () => (
   <RootContainer padding>
-    <ThreadRootError graphqlError={new ApolloError({})}>
+    <ThreadPostRootError graphqlError={new ApolloError({})}>
       {({ message }) => <p>{message}</p>}
-    </ThreadRootError>
+    </ThreadPostRootError>
   </RootContainer>
 )
 
 export const NetworkError = () => (
   <RootContainer padding>
-    <ThreadRootError
+    <ThreadPostRootError
       graphqlError={new ApolloError({ networkError: new Error() })}
     >
       {({ message }) => <p>{message}</p>}
-    </ThreadRootError>
+    </ThreadPostRootError>
   </RootContainer>
 )

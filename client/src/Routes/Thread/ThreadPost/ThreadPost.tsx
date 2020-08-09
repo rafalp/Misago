@@ -8,19 +8,25 @@ import usePostAcl from "./usePostAcl"
 
 interface IThreadPostProps {
   post: IPost
+  threadId: string
+  page?: number
   isClosed?: boolean
+  isEdited?: boolean
   isSelected?: boolean
   toggleSelection?: ((id: string) => void) | null
 }
 
 const ThreadPost: React.FC<IThreadPostProps> = ({
   post,
+  threadId,
+  page,
   isClosed,
+  isEdited,
   isSelected,
   toggleSelection,
 }) => {
   const acl = usePostAcl(post, isClosed)
-  const [edit, setEdit] = React.useState(false)
+  const [edit, setEdit] = React.useState(isEdited || false)
   const editPost = () => setEdit(true)
 
   return (
@@ -34,6 +40,8 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
             <ThreadPostHeader
               acl={acl}
               post={post}
+              threadId={threadId}
+              page={page}
               isSelected={isSelected}
               editPost={editPost}
               toggleSelection={toggleSelection}
