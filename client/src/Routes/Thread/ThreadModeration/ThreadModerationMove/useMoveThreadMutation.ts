@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../types"
-import { IThread, IThreadCategory } from "../Thread.types"
+import { IMutationError } from "../../../../types"
+import { IThread, IThreadCategory } from "../../Thread.types"
 
 const MOVE_THREADS = gql`
   mutation MoveThread($input: MoveThreadInput!) {

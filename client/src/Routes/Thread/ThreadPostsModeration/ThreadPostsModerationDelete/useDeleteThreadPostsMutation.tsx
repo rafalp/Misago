@@ -1,9 +1,9 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { getSelectionErrors } from "../../../UI"
-import { IMutationError } from "../../../types"
-import { IPost, IThread } from "../Thread.types"
-import { THREAD_QUERY, IThreadData } from "../useThreadQuery"
+import { getSelectionErrors } from "../../../../UI"
+import { IMutationError } from "../../../../types"
+import { IPost, IThread } from "../../Thread.types"
+import { THREAD_QUERY, IThreadData } from "../../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
 

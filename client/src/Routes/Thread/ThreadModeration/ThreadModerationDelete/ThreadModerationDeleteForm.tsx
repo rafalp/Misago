@@ -13,7 +13,7 @@ import {
 import * as urls from "../../../../urls"
 import { IThread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
-import useDeleteThreadMutation from "../deleteThread"
+import useDeleteThreadMutation from "./useDeleteThreadMutation"
 
 interface IThreadModerationDeleteFormProps {
   thread: IThread

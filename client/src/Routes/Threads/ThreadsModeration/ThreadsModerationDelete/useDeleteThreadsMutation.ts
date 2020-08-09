@@ -1,13 +1,13 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { getSelectionErrors } from "../../../UI"
-import { ICategory, IMutationError } from "../../../types"
-import { IThread } from "../Threads.types"
+import { getSelectionErrors } from "../../../../UI"
+import { ICategory, IMutationError } from "../../../../types"
+import { IThread } from "../../Threads.types"
 import {
   CATEGORY_THREADS_QUERY,
   THREADS_QUERY,
   IThreadsData,
-} from "../useThreadsQuery"
+} from "../../useThreadsQuery"
 
 const THREAD_NOT_EXISTS = "value_error.thread.not_exists"
 

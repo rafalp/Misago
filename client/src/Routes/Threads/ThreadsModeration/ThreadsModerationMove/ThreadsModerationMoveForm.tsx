@@ -18,7 +18,7 @@ import {
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
-import useMoveThreadsMutation from "../moveThreads"
+import useMoveThreadsMutation from "./useMoveThreadsMutation"
 
 interface IThreadsModerationMoveFormProps {
   threads: Array<IThread>

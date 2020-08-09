@@ -15,7 +15,7 @@ import { ICategory } from "../../../../types"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
-import useDeleteThreadsMutation from "../deleteThreads"
+import useDeleteThreadsMutation from "./useDeleteThreadsMutation"
 
 interface IThreadsModerationDeleteFormProps {
   category?: ICategory | null

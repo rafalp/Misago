@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../types"
-import { IThread } from "../Thread.types"
+import { IMutationError } from "../../../../types"
+import { IThread } from "../../Thread.types"
 
 const DELETE_THREAD = gql`
   mutation DeleteThread($input: DeleteThreadInput!) {

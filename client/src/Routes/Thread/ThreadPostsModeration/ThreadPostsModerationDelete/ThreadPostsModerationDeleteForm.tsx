@@ -14,7 +14,7 @@ import {
 import { IPost, IThread } from "../../Thread.types"
 import ThreadPostsModerationError from "../ThreadPostsModerationError"
 import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"
-import useDeletePostsMutation from "../deleteThreadPosts"
+import useDeleteThreadPostsMutation from "./useDeleteThreadPostsMutation"
 
 interface IThreadPostsModerationDeleteProps {
   thread: IThread
@@ -43,7 +43,7 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
     loading,
     deletePosts,
     error: graphqlError,
-  } = useDeletePostsMutation()
+  } = useDeleteThreadPostsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
   const DeletePostsSchema = Yup.object().shape({

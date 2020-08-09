@@ -5,7 +5,7 @@ import { ICategory } from "../../../types"
 import { IThread, IThreadsModeration } from "../Threads.types"
 import ThreadsModerationDelete from "./ThreadsModerationDelete"
 import ThreadsModerationMove from "./ThreadsModerationMove"
-import { useCloseThreads, useOpenThreads } from "./closeThreads"
+import { useCloseThreads, useOpenThreads } from "./useCloseThreadsMutation"
 
 const useThreadsModeration = (
   threads: Array<IThread>,

@@ -16,7 +16,7 @@ import {
 } from "../../../../UI"
 import { IThread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
-import useMoveThreadMutation from "../moveThread"
+import useMoveThreadMutation from "./useMoveThreadMutation"
 
 interface IThreadModerationMoveFormProps {
   thread: IThread
