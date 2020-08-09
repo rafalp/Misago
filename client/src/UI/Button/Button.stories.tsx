@@ -4,6 +4,7 @@ import { CardContainer, Matrix, RootContainer } from "../Storybook"
 import {
   Button,
   ButtonDanger,
+  ButtonDark,
   ButtonPrimary,
   ButtonLink,
   ButtonSecondary,
@@ -33,6 +34,7 @@ const buttons: Array<[string, React.FC<IButtonProps>]> = [
   ["Success", ButtonSuccess],
   ["Warning", ButtonWarning],
   ["Danger", ButtonDanger],
+  ["Dark", ButtonDark],
 ]
 
 const outlineButtons: Array<[string, React.FC<IButtonProps>]> = [

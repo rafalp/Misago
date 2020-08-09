@@ -2,6 +2,7 @@ import Avatar from "./Avatar"
 import {
   Button,
   ButtonDanger,
+  ButtonDark,
   ButtonPrimary,
   ButtonJustified,
   ButtonLink,
@@ -139,6 +140,7 @@ export {
   Avatar,
   Button,
   ButtonDanger,
+  ButtonDark,
   ButtonPrimary,
   ButtonJustified,
   ButtonLink,

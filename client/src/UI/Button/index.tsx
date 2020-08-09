@@ -4,6 +4,7 @@ import ButtonSpinner from "./ButtonSpinner"
 import {
   ButtonPrimary,
   ButtonDanger,
+  ButtonDark,
   ButtonLink,
   ButtonSecondary,
   ButtonSuccess,
@@ -18,6 +19,7 @@ import {
 export {
   Button,
   ButtonDanger,
+  ButtonDark,
   ButtonPrimary,
   ButtonJustified,
   ButtonLink,

@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import {
-  ButtonSecondary,
+  ButtonDark,
   Dropdown,
   DropdownButton,
   DropdownDivider,
@@ -33,7 +33,7 @@ const ThreadsModerationControls: React.FC<IThreadsModerationControlsProps> = ({
         <ToolbarItem>
           <Dropdown
             toggle={({ ref, toggle }) => (
-              <ButtonSecondary
+              <ButtonDark
                 elementRef={ref}
                 loading={moderation.loading}
                 text={
