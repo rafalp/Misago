@@ -8,11 +8,11 @@ import {
   Toolbar,
   ToolbarItem,
   ToolbarSeparator,
-} from "../../../../UI"
-import FixedContainer from "../../../../UI/FixedContainer"
-import { IThreadsModeration } from "../../Threads.types"
+} from "../../../UI"
+import FixedContainer from "../../../UI/FixedContainer"
+import { IThreadsModeration } from "../Threads.types"
 
-interface IThreadsModerationControlsProps {
+interface IThreadsModerationProps {
   moderation?: IThreadsModeration | null
   selection: {
     selected: Array<any>
@@ -20,7 +20,7 @@ interface IThreadsModerationControlsProps {
   }
 }
 
-const ThreadsModerationControls: React.FC<IThreadsModerationControlsProps> = ({
+const ThreadsModeration: React.FC<IThreadsModerationProps> = ({
   moderation,
   selection,
 }) => {
@@ -75,4 +75,4 @@ const ThreadsModerationControls: React.FC<IThreadsModerationControlsProps> = ({
   )
 }
 
-export default ThreadsModerationControls
+export default ThreadsModeration

@@ -5,10 +5,7 @@ import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
 import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
-import {
-  ThreadsModerationControls,
-  useThreadsModeration,
-} from "./ThreadsModeration"
+import { ThreadsModeration, useThreadsModeration } from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
@@ -74,10 +71,7 @@ const ThreadsCategory: React.FC = () => {
         loading={loading}
         onEvent={fetchMoreThreads}
       />
-      <ThreadsModerationControls
-        moderation={moderation}
-        selection={selection}
-      />
+      <ThreadsModeration moderation={moderation} selection={selection} />
     </ThreadsLayout>
   )
 }

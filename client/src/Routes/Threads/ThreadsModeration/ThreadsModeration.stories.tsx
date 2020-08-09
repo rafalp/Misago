@@ -1,14 +1,14 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
-import ThreadsModerationControls from "./ThreadsModerationControls"
+import ThreadsModeration from "./ThreadsModeration"
 
 export default {
-  title: "Route/Threads/Moderation/Controls",
+  title: "Route/Threads/Moderation",
   decorators: [withKnobs],
 }
 
-export const ModerationControls = () => (
-  <ThreadsModerationControls
+export const Options = () => (
+  <ThreadsModeration
     moderation={{
       actions: [
         {

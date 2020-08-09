@@ -7,7 +7,7 @@ export default {
   decorators: [withKnobs],
 }
 
-export const PostsModeration = () => (
+export const PostsOptions = () => (
   <ThreadPostsModeration
     moderation={{
       loading: boolean("Loading", false),

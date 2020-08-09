@@ -6,10 +6,7 @@ import { useForumStatsContext, useSettingsContext } from "../../Context"
 import { ThreadsHeaderAll } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
-import {
-  ThreadsModerationControls,
-  useThreadsModeration,
-} from "./ThreadsModeration"
+import { ThreadsModeration, useThreadsModeration } from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import { useThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
@@ -53,10 +50,7 @@ const ThreadsAll: React.FC = () => {
         loading={loading}
         onEvent={fetchMoreThreads}
       />
-      <ThreadsModerationControls
-        moderation={moderation}
-        selection={selection}
-      />
+      <ThreadsModeration moderation={moderation} selection={selection} />
     </ThreadsLayout>
   )
 }
