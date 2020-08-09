@@ -1,6 +1,7 @@
 import React from "react"
 import {
   ModalAlert,
+  ModalCloseFooter,
   ModalErrorBody,
   RootError,
   ThreadValidationError,
@@ -17,6 +18,7 @@ interface IThreadPostsModerationErrorProps {
   posts: Array<IPost>
   errors: Array<IMutationError>
   selectionErrors: Record<string, IMutationError>
+  close: () => void
 }
 
 const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = ({
@@ -24,45 +26,52 @@ const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = (
   posts,
   errors,
   selectionErrors,
+  close,
 }) => {
   const rootError = useRootError(errors)
   const threadError = useLocationError("thread", errors)
 
   if (rootError) {
     return (
-      <RootError dataErrors={[rootError]}>
-        {({ message }) => (
-          <ModalErrorBody
-            header={
-              <ThreadPostsModerationErrorHeader
-                forDelete={forDelete}
-                posts={posts}
-                postsErrors={selectionErrors}
-              />
-            }
-            message={message}
-          />
-        )}
-      </RootError>
+      <>
+        <RootError dataErrors={[rootError]}>
+          {({ message }) => (
+            <ModalErrorBody
+              header={
+                <ThreadPostsModerationErrorHeader
+                  forDelete={forDelete}
+                  posts={posts}
+                  postsErrors={selectionErrors}
+                />
+              }
+              message={message}
+            />
+          )}
+        </RootError>
+        <ModalCloseFooter close={close} />
+      </>
     )
   }
 
   if (threadError) {
     return (
-      <ThreadValidationError error={threadError}>
-        {({ message }) => (
-          <ModalErrorBody
-            header={
-              <ThreadPostsModerationErrorHeader
-                forDelete={forDelete}
-                posts={posts}
-                postsErrors={selectionErrors}
-              />
-            }
-            message={message}
-          />
-        )}
-      </ThreadValidationError>
+      <>
+        <ThreadValidationError error={threadError}>
+          {({ message }) => (
+            <ModalErrorBody
+              header={
+                <ThreadPostsModerationErrorHeader
+                  forDelete={forDelete}
+                  posts={posts}
+                  postsErrors={selectionErrors}
+                />
+              }
+              message={message}
+            />
+          )}
+        </ThreadValidationError>
+        <ModalCloseFooter close={close} />
+      </>
     )
   }
 
@@ -80,6 +89,7 @@ const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = (
           posts={posts}
           errors={selectionErrors}
         />
+        <ModalCloseFooter close={close} />
       </>
     )
   }

@@ -58,6 +58,7 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
         posts={posts}
         selectionErrors={selectionErrors}
         errors={data.deleteThreadPosts.errors}
+        close={close}
         forDelete
       />
     )

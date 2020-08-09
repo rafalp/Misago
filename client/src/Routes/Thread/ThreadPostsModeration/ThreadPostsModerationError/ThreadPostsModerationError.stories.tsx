@@ -1,7 +1,6 @@
 import { action } from "@storybook/addon-actions"
 import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
-import { ModalCloseFooter } from "../../../../UI"
 import { ModalContainer, userFactory } from "../../../../UI/Storybook"
 import ThreadPostsModerationError from "./ThreadPostsModerationError"
 
@@ -35,8 +34,8 @@ export const AuthError = () => (
       selectionErrors={{}}
       posts={[]}
       forDelete={boolean("For delete", false)}
+      close={close}
     />
-    <ModalCloseFooter close={close} />
   </ModalContainer>
 )
 
@@ -53,8 +52,8 @@ export const ThreadError = () => (
       selectionErrors={{}}
       posts={[]}
       forDelete={boolean("For delete", false)}
+      close={close}
     />
-    <ModalCloseFooter close={close} />
   </ModalContainer>
 )
 
@@ -101,8 +100,8 @@ export const PostsErrors = () => {
           },
         ]}
         forDelete={boolean("For delete", false)}
+        close={close}
       />
-      <ModalCloseFooter close={close} />
     </ModalContainer>
   )
 }
@@ -145,8 +144,8 @@ export const SomePostsErrors = () => {
           },
         ]}
         forDelete={boolean("For delete", false)}
+        close={close}
       />
-      <ModalCloseFooter close={close} />
     </ModalContainer>
   )
 }
