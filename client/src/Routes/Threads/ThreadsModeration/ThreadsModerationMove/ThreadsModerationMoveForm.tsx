@@ -1,34 +1,36 @@
-import { Plural } from "@lingui/macro"
+import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
 import {
+  CategorySelect,
+  Field,
+  FieldError,
   Form,
   FormFooter,
   ModalAlert,
   ModalFormBody,
   ModalFooter,
   RootError,
+  CategoryValidationError,
   useSelectionErrors,
 } from "../../../../UI"
-import { ICategory } from "../../../../types"
 import { IThread } from "../../Threads.types"
-import ThreadsModerationModalError from "../ThreadsModerationModalError"
+import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
-import useDeleteThreadsMutation from "../deleteThreads"
+import useMoveThreadsMutation from "../moveThreads"
 
-interface IThreadsModerationModalDeleteFormProps {
-  category?: ICategory | null
+interface IThreadsModerationMoveFormProps {
   threads: Array<IThread>
   close: () => void
 }
 
 interface IFormValues {
+  category: string
   threads: Array<IThread>
 }
 
-const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFormProps> = ({
-  category,
+const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
   threads,
   close,
 }) => {
@@ -41,41 +43,45 @@ const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFo
   const {
     data,
     loading,
-    deleteThreads,
+    moveThreads,
     error: graphqlError,
-  } = useDeleteThreadsMutation()
+  } = useMoveThreadsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeleteThreadsSchema = Yup.object().shape({
+  const MoveThreadsSchema = Yup.object().shape({
+    category: Yup.string().required("value_error.missing"),
     threads: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
   })
 
-  if (data?.deleteThreads.errors) {
+  if (data && data.moveThreads.errors && data.moveThreads.updated) {
     return (
-      <ThreadsModerationModalError
-        errors={data.deleteThreads.errors}
+      <ThreadsModerationError
+        errors={data.moveThreads.errors}
         threads={threads}
         close={close}
-        forDelete
       />
     )
   }
 
   return (
     <Form<IFormValues>
-      id="delete_threads_form"
+      id="move_threads_form"
       disabled={loading}
-      defaultValues={{ threads }}
-      validationSchema={DeleteThreadsSchema}
-      onSubmit={async ({ clearError, setError, data: { threads } }) => {
+      defaultValues={{ threads, category: "" }}
+      validationSchema={MoveThreadsSchema}
+      onSubmit={async ({
+        clearError,
+        setError,
+        data: { category, threads },
+      }) => {
         clearError()
         clearThreadsErrors()
 
         try {
-          const result = await deleteThreads(threads, category)
-          const { errors } = result.data?.deleteThreads || {}
+          const result = await moveThreads(threads, category)
+          const { errors } = result.data?.moveThreads || {}
 
           if (errors) {
             setThreadsErrors(threads, errors)
@@ -87,14 +93,14 @@ const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFo
             close()
           }
         } catch (error) {
-          // do nothing when deleteThreads throws
+          // do nothing when moveThreads throws
           return
         }
       }}
     >
       <RootError
         graphqlError={graphqlError}
-        dataErrors={data?.deleteThreads.errors}
+        dataErrors={data?.moveThreads.errors}
       >
         {({ message }) => <ModalAlert>{message}</ModalAlert>}
       </RootError>
@@ -105,19 +111,28 @@ const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFo
           min={1}
           threads={threads}
         />
+        <Field
+          label={<Trans id="moderation.new_category">New category</Trans>}
+          name="category"
+          input={<CategorySelect />}
+          error={(error, value) => (
+            <CategoryValidationError error={error} value={value}>
+              {({ message }) => <FieldError>{message}</FieldError>}
+            </CategoryValidationError>
+          )}
+        />
       </ModalFormBody>
       <ModalFooter>
         <FormFooter
           submitText={
             <Plural
-              id="moderation.delete_threads.submit"
+              id="moderation.move_threads.submit"
               value={threads.length}
-              one="Delete # thread"
-              other="Delete # threads"
+              one="Move # thread"
+              other="Move # threads"
             />
           }
           loading={loading}
-          danger
           onCancel={close}
         />
       </ModalFooter>
@@ -125,4 +140,4 @@ const ThreadsModerationModalDeleteForm: React.FC<IThreadsModerationModalDeleteFo
   )
 }
 
-export default ThreadsModerationModalDeleteForm
+export default ThreadsModerationMoveForm

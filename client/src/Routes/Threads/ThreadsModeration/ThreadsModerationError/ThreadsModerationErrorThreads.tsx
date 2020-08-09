@@ -9,12 +9,12 @@ import {
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
-interface IThreadsModerationModalErrorThreadsProps {
+interface IThreadsModerationErrorThreadsProps {
   errors: Record<string, IMutationError>
   threads: Array<ISelectedThread>
 }
 
-const ThreadsModerationModalErrorThreads: React.FC<IThreadsModerationModalErrorThreadsProps> = ({
+const ThreadsModerationErrorThreads: React.FC<IThreadsModerationErrorThreadsProps> = ({
   errors,
   threads,
 }) => (
@@ -53,4 +53,4 @@ const ThreadsModerationModalErrorThreads: React.FC<IThreadsModerationModalErrorT
   </ModalBody>
 )
 
-export default ThreadsModerationModalErrorThreads
+export default ThreadsModerationErrorThreads

@@ -3,10 +3,10 @@ import { withKnobs, boolean } from "@storybook/addon-knobs"
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { ModalContainer, categories } from "../../../../UI/Storybook"
-import ThreadsModerationModalError from "./ThreadsModerationModalError"
+import ThreadsModerationError from "./ThreadsModerationError"
 
 export default {
-  title: "Route/Threads/Moderation/ErrorModal",
+  title: "Route/Threads/Moderation/Error",
   decorators: [withKnobs],
 }
 
@@ -31,7 +31,7 @@ const threads = [
 
 export const AuthError = () => (
   <ModalContainer>
-    <ThreadsModerationModalError
+    <ThreadsModerationError
       errors={[
         {
           location: ["threads", "0"],
@@ -58,7 +58,7 @@ export const AuthError = () => (
 
 export const ThreadsErrors = () => (
   <ModalContainer>
-    <ThreadsModerationModalError
+    <ThreadsModerationError
       errors={[
         {
           location: ["threads", "0"],
@@ -80,7 +80,7 @@ export const ThreadsErrors = () => (
 
 export const SomeThreadsErrors = () => (
   <ModalContainer>
-    <ThreadsModerationModalError
+    <ThreadsModerationError
       errors={[
         {
           location: ["threads", "1"],
@@ -97,7 +97,7 @@ export const SomeThreadsErrors = () => (
 
 export const QueryError = () => (
   <ModalContainer>
-    <ThreadsModerationModalError
+    <ThreadsModerationError
       graphqlError={new ApolloError({})}
       forDelete={boolean("For delete", false)}
       close={close}
@@ -107,7 +107,7 @@ export const QueryError = () => (
 
 export const NetworkError = () => (
   <ModalContainer>
-    <ThreadsModerationModalError
+    <ThreadsModerationError
       graphqlError={new ApolloError({ networkError: new Error() })}
       forDelete={boolean("For delete", false)}
       close={close}

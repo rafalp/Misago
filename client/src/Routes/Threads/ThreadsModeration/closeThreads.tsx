@@ -1,9 +1,12 @@
 import { MutationResult } from "@apollo/react-common"
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
+import React from "react"
+import { useModalContext } from "../../../Context"
 import { IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
-import { useThreadsModerationModalContext } from "./ThreadsModerationModalContext"
+import ThreadsModerationClose from "./ThreadsModerationClose"
+import ThreadsModerationOpen from "./ThreadsModerationOpen"
 
 const CLOSE_THREADS = gql`
   mutation CloseThreads($input: BulkCloseThreadsInput!) {
@@ -56,18 +59,21 @@ const useCloseThreadsMutation = (
     },
   })
 
-  const { closeThreads, openThreads } = useThreadsModerationModalContext(
-    threads
-  )
+  const { openModal } = useModalContext()
 
   const runMutation = async () => {
-    const openErrorsModal = isClosed ? closeThreads : openThreads
+    const ErrorModal = isClosed
+      ? ThreadsModerationClose
+      : ThreadsModerationOpen
+
     try {
       const { data } = await mutation()
-      const { errors } = data?.closeThreads || { errors: null }
-      if (errors) openErrorsModal({ errors })
+      const errors = data?.closeThreads.errors
+      if (errors) {
+        openModal(<ErrorModal threads={threads} errors={errors} />)
+      }
     } catch (graphqlError) {
-      openErrorsModal({ graphqlError })
+      openModal(<ErrorModal threads={threads} graphqlError={graphqlError} />)
     }
   }
 

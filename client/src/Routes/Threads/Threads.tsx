@@ -8,52 +8,39 @@ import {
   ThreadsCategoriesModalContextProvider,
 } from "./ThreadsCategoriesModal"
 import ThreadsCategory from "./ThreadsCategory"
-import {
-  ThreadsModerationModalClose,
-  ThreadsModerationModalContextProvider,
-  ThreadsModerationModalDelete,
-  ThreadsModerationModalMove,
-  ThreadsModerationModalOpen,
-} from "./ThreadsModeration"
 import ThreadsAll from "./ThreadsAll"
 
 const Threads: React.FC = () => {
   const settings = useSettingsContext()
 
   return (
-    <ThreadsModerationModalContextProvider>
-      <ThreadsModerationModalOpen />
-      <ThreadsModerationModalClose />
-      <ThreadsModerationModalDelete />
-      <ThreadsModerationModalMove />
-      <ThreadsCategoriesModalContextProvider>
-        <ThreadsCategoriesModal />
-        <Switch>
-          <Route
-            path={urls.category({ id: ":id", slug: ":slug" })}
-            render={() => (
-              <RouteErrorBoundary>
-                <ThreadsCategory />
-              </RouteErrorBoundary>
-            )}
-            exact
-          />
-          <Route
-            path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
-            render={() => (
-              <RouteErrorBoundary>
-                <ThreadsAll />
-              </RouteErrorBoundary>
-            )}
-            exact
-          />
-          <Route
-            path={urls.index()}
-            render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
-          />
-        </Switch>
-      </ThreadsCategoriesModalContextProvider>
-    </ThreadsModerationModalContextProvider>
+    <ThreadsCategoriesModalContextProvider>
+      <ThreadsCategoriesModal />
+      <Switch>
+        <Route
+          path={urls.category({ id: ":id", slug: ":slug" })}
+          render={() => (
+            <RouteErrorBoundary>
+              <ThreadsCategory />
+            </RouteErrorBoundary>
+          )}
+          exact
+        />
+        <Route
+          path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+          render={() => (
+            <RouteErrorBoundary>
+              <ThreadsAll />
+            </RouteErrorBoundary>
+          )}
+          exact
+        />
+        <Route
+          path={urls.index()}
+          render={() => (settings ? <RouteNotFound /> : <RouteLoader />)}
+        />
+      </Switch>
+    </ThreadsCategoriesModalContextProvider>
   )
 }
 

@@ -3,20 +3,20 @@ import React from "react"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
-interface IThreadsModerationModalErrorHeaderProps {
+interface IThreadsModerationErrorHeaderProps {
   forDelete?: boolean
   threads?: Array<ISelectedThread>
   threadsErrors?: Record<string, IMutationError>
 }
 
-const ThreadsModerationModalErrorHeader: React.FC<IThreadsModerationModalErrorHeaderProps> = ({
+const ThreadsModerationErrorHeader: React.FC<IThreadsModerationErrorHeaderProps> = ({
   forDelete,
   threads,
   threadsErrors,
 }) => {
   if (forDelete) {
     return (
-      <ThreadsModerationModalErrorHeaderForDelete
+      <ThreadsModerationErrorHeaderForDelete
         threads={threads}
         threadsErrors={threadsErrors}
       />
@@ -24,14 +24,14 @@ const ThreadsModerationModalErrorHeader: React.FC<IThreadsModerationModalErrorHe
   }
 
   return (
-    <ThreadsModerationModalErrorHeaderForUpdate
+    <ThreadsModerationErrorHeaderForUpdate
       threads={threads}
       threadsErrors={threadsErrors}
     />
   )
 }
 
-const ThreadsModerationModalErrorHeaderForDelete: React.FC<IThreadsModerationModalErrorHeaderProps> = ({
+const ThreadsModerationErrorHeaderForDelete: React.FC<IThreadsModerationErrorHeaderProps> = ({
   threads,
   threadsErrors,
 }) => {
@@ -60,7 +60,7 @@ const ThreadsModerationModalErrorHeaderForDelete: React.FC<IThreadsModerationMod
   )
 }
 
-const ThreadsModerationModalErrorHeaderForUpdate: React.FC<IThreadsModerationModalErrorHeaderProps> = ({
+const ThreadsModerationErrorHeaderForUpdate: React.FC<IThreadsModerationErrorHeaderProps> = ({
   threads,
   threadsErrors,
 }) => {
@@ -89,4 +89,4 @@ const ThreadsModerationModalErrorHeaderForUpdate: React.FC<IThreadsModerationMod
   )
 }
 
-export default ThreadsModerationModalErrorHeader
+export default ThreadsModerationErrorHeader

@@ -10,6 +10,8 @@ export default {
 export const Options = () => (
   <ThreadsModeration
     moderation={{
+      disabled: boolean("Moderation disabled", false),
+      loading: boolean("Moderation loading", false),
       actions: [
         {
           name: "Open",
@@ -36,8 +38,6 @@ export const Options = () => (
           action: () => {},
         },
       ],
-      disabled: boolean("Moderation disabled", false),
-      loading: boolean("Moderation loading", false),
       closeThreads: () => {},
       openThreads: () => {},
       moveThreads: () => {},

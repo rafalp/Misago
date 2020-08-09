@@ -13,10 +13,10 @@ import {
 } from "../../../../UI"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
-import ThreadsModerationModalErrorHeader from "./ThreadsModerationModalErrorHeader"
-import ThreadsModerationModalErrorThreads from "./ThreadsModerationModalErrorThreads"
+import ThreadsModerationErrorHeader from "./ThreadsModerationErrorHeader"
+import ThreadsModerationErrorThreads from "./ThreadsModerationErrorThreads"
 
-interface IThreadsModerationModalErrorProps {
+interface IThreadsModerationErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<IMutationError> | null
   forDelete?: boolean
@@ -24,7 +24,7 @@ interface IThreadsModerationModalErrorProps {
   close: () => void
 }
 
-const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> = ({
+const ThreadsModerationError: React.FC<IThreadsModerationErrorProps> = ({
   graphqlError,
   errors,
   forDelete,
@@ -44,9 +44,7 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
         {({ message }) => (
           <>
             <ModalErrorBody
-              header={
-                <ThreadsModerationModalErrorHeader forDelete={forDelete} />
-              }
+              header={<ThreadsModerationErrorHeader forDelete={forDelete} />}
               message={message}
             />
             <ModalCloseFooter close={close} />
@@ -60,7 +58,7 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
     return (
       <>
         <ModalErrorBody
-          header={<ThreadsModerationModalErrorHeader forDelete={forDelete} />}
+          header={<ThreadsModerationErrorHeader forDelete={forDelete} />}
           message={
             <GraphQLErrorRenderer
               error={graphqlError}
@@ -78,13 +76,13 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
     return (
       <>
         <ModalAlert>
-          <ThreadsModerationModalErrorHeader
+          <ThreadsModerationErrorHeader
             forDelete={forDelete}
             threads={threads}
             threadsErrors={threadsErrors}
           />
         </ModalAlert>
-        <ThreadsModerationModalErrorThreads
+        <ThreadsModerationErrorThreads
           errors={threadsErrors}
           threads={threads}
         />
@@ -96,4 +94,4 @@ const ThreadsModerationModalError: React.FC<IThreadsModerationModalErrorProps> =
   return null
 }
 
-export default ThreadsModerationModalError
+export default ThreadsModerationError

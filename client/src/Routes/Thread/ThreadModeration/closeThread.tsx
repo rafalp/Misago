@@ -66,8 +66,10 @@ const useCloseThreadMutation = (
           },
         },
       })
-      const { errors } = data?.closeThread || { errors: null }
-      if (errors) openModal(<ErrorModal errors={errors} />)
+      const errors = data?.closeThread.errors
+      if (errors) {
+        openModal(<ErrorModal errors={errors} />)
+      }
     } catch (graphqlError) {
       openModal(<ErrorModal graphqlError={graphqlError} />)
     }
