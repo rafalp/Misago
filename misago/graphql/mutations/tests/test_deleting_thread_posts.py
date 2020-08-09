@@ -38,7 +38,7 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_authorized(
         "auth_error.not_moderator",
         "auth_error.not_authorized",
     ]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -57,7 +57,7 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_moderator(
     assert data["errors"].get_errors_types() == [
         "auth_error.not_moderator",
     ]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -74,7 +74,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_id_is_invalid(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -91,7 +91,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_doesnt_exist(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -108,7 +108,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_id_is_invalid(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -128,7 +128,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_doesnt_exist(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -145,7 +145,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_threads_first_post(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.thread_start"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio
@@ -165,7 +165,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_in_other_thread(
     assert data["errors"]
     assert data["errors"].get_errors_locations() == ["posts.0"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
-    assert not data["deleted"]
+    assert data["deleted"] == []
 
 
 @pytest.mark.asyncio

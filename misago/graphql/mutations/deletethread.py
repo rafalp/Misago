@@ -58,13 +58,13 @@ async def resolve_delete_thread(
         )
 
     if errors:
-        return {"errors": errors}
+        return {"errors": errors, "deleted": []}
 
     await delete_thread_hook.call_action(
         delete_thread_action, info.context, cleaned_data
     )
 
-    return {}
+    return {"deleted": [cleaned_data["thread"].id]}
 
 
 async def create_input_model(context: GraphQLContext) -> DeleteThreadInputModel:

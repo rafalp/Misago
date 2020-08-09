@@ -82,6 +82,7 @@ input DeleteThreadInput {
 
 type DeleteThreadMutationResult {
     errors: [Error!]
+    deleted: [ID!]!
 }
 
 extend type Mutation {
@@ -112,7 +113,7 @@ input BulkDeleteThreadsInput {
 
 type BulkDeleteThreadsMutationResult {
     errors: [Error!]
-    deleted: Boolean!
+    deleted: [ID!]!
 }
 
 extend type Mutation {

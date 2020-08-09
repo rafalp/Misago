@@ -67,15 +67,13 @@ async def resolve_delete_threads(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
-    result: Dict[str, Any] = {}
+    result: Dict[str, Any] = {"deleted": []}
 
     if is_valid(cleaned_data, errors):
         await delete_threads_hook.call_action(
             delete_threads_action, info.context, cleaned_data
         )
-        result["deleted"] = True
-    else:
-        result["deleted"] = False
+        result["deleted"] = [i.id for i in cleaned_data["threads"]]
 
     if errors:
         result["errors"] = errors
