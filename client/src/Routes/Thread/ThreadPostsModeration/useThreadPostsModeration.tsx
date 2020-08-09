@@ -23,7 +23,6 @@ const useThreadPostsModeration = (
 
   return {
     loading: false,
-    deletePosts,
     actions: [
       {
         name: <Trans id="moderation.delete">Delete</Trans>,

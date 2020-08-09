@@ -13,10 +13,6 @@ export const ThreadOptions = () => (
     <ThreadModeration
       moderation={{
         loading: boolean("Loading", false),
-        closeThread: () => {},
-        openThread: () => {},
-        moveThread: () => {},
-        deleteThread: () => {},
         actions: [
           {
             name: "Delete thread",

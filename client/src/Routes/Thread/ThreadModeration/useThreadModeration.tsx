@@ -23,10 +23,6 @@ const useThreadModeration = (
 
   return {
     loading: closingThread || openingThread,
-    closeThread,
-    openThread,
-    moveThread,
-    deleteThread,
     actions: [
       {
         name: <Trans id="moderation.open">Open</Trans>,

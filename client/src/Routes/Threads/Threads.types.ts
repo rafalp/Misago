@@ -40,10 +40,6 @@ export interface IThreadsModeration {
   actions: Array<IThreadsModerationAction>
   disabled: boolean
   loading: boolean
-  closeThreads: () => void
-  openThreads: () => void
-  moveThreads: () => void
-  deleteThreads: () => void
 }
 
 export interface IThreadsModerationAction {

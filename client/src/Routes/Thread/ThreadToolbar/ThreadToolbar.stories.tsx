@@ -54,10 +54,6 @@ export const WithModeration = () => {
   const props = {
     moderation: {
       loading: boolean("Loading", false),
-      closeThread: () => {},
-      openThread: () => {},
-      moveThread: () => {},
-      deleteThread: () => {},
       actions: [],
     },
     pagination: {
@@ -80,10 +76,6 @@ export const WithModerationAndPages = () => {
   const props = {
     moderation: {
       loading: boolean("Loading", false),
-      closeThread: () => {},
-      openThread: () => {},
-      moveThread: () => {},
-      deleteThread: () => {},
       actions: [],
     },
     pagination: {

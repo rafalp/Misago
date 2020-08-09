@@ -38,10 +38,6 @@ export const Options = () => (
           action: () => {},
         },
       ],
-      closeThreads: () => {},
-      openThreads: () => {},
-      moveThreads: () => {},
-      deleteThreads: () => {},
     }}
     selection={{
       selected: [1, 2, 3],

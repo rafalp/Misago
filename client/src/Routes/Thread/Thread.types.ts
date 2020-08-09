@@ -37,10 +37,6 @@ export interface IThreadPoster {
 export interface IThreadModeration {
   actions: Array<IModerationAction>
   loading: boolean
-  closeThread: () => void
-  openThread: () => void
-  moveThread: () => void
-  deleteThread: () => void
 }
 
 export interface IModerationAction {

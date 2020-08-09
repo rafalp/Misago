@@ -30,10 +30,6 @@ const useThreadsModeration = (
   const moderation = {
     loading: closingThreads || openingThreads,
     disabled: threads.length === 0,
-    closeThreads,
-    openThreads,
-    moveThreads,
-    deleteThreads,
     actions: [
       {
         name: <Trans id="moderation.open">Open</Trans>,
