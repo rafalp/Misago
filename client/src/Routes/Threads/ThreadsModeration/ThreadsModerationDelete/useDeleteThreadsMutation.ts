@@ -27,7 +27,7 @@ const DELETE_THREADS = gql`
 interface IDeleteThreadsMutationData {
   deleteThreads: {
     errors: Array<IMutationError> | null
-    deleted: boolean
+    deleted: Array<string>
   }
 }
 
@@ -48,10 +48,10 @@ const useDeleteThreadsMutation = () => {
     error,
     loading,
     deleteThreads: (threads: Array<IThread>, category?: ICategory | null) => {
-      const deletedThreads = threads.map((thread) => thread.id)
+      const deletedThreadsIds = threads.map((thread) => thread.id)
       return mutation({
         variables: {
-          input: { threads: deletedThreads },
+          input: { threads: deletedThreadsIds },
         },
         update: (cache, { data }) => {
           if (!data || !data.deleteThreads) return
@@ -88,7 +88,7 @@ const useDeleteThreadsMutation = () => {
                     return true
                   }
 
-                  return deletedThreads.indexOf(thread.id) < 0
+                  return data.deleteThreads.deleted.indexOf(thread.id) < 0
                 }),
               },
             },
