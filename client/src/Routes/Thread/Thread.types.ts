@@ -23,6 +23,7 @@ export interface IThreadCategory {
   slug: string
   parent: IThreadCategory | null
   color: string | null
+  icon: string | null
   isClosed: boolean
   banner: { full: ICategoryBanner; half: ICategoryBanner } | null
 }

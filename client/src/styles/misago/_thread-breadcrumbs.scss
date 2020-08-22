@@ -1,0 +1,28 @@
+// Add bottom margin to breadcrumbs
+// Reduce gutter between items
+.thread-breadcrumbs {
+  margin-bottom: $spacer;
+
+  .col-6:first-child {
+    padding-right: $spacer / 4;
+  }
+
+  .col-6:last-child {
+    padding-left: $spacer / 4;
+  }
+}
+
+// Make breadcrumb buttons full width with ellipsis
+.thread-breadcrumb {
+  display: block;
+  text-align: left;
+
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// Add spacing to their icon
+.thread-breadcrumb-icon {
+  margin-right: $spacer / 4;
+}

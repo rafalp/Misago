@@ -9,6 +9,7 @@ import {
 } from "../../UI"
 import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
+import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
 import ThreadHeader from "./ThreadHeader"
 import ThreadPost from "./ThreadPost"
 import { useThreadModeration } from "./ThreadModeration"
@@ -77,6 +78,7 @@ const ThreadPosts: React.FC = () => {
       className={`route-thread route-thread-${thread.category.id}`}
     >
       <WindowTitle title={thread.title} parent={thread.category.name} />
+      <ThreadBreadcrumbs category={thread.category} />
       <ThreadHeader thread={thread} />
       <ThreadToolbarTop {...toolbarProps} />
       <SectionLoader
