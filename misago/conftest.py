@@ -152,7 +152,7 @@ async def admin(db, user_password):
     )
 
 
-request_mock = Mock(headers={}, base_url="http://test.com")
+request_mock = Mock(headers={}, base_url="http://test.com/")
 
 
 @pytest.fixture
