@@ -40,7 +40,7 @@ async def delete_many(table: TableClause, rows_ids=Sequence[Any]):
 def get_table_pk(table: TableClause) -> ColumnElement:
     if not len(table.primary_key.columns) == 1:
         raise ValueError(
-            "queery shortcuts can't be used for tables with composite primary key"
+            "query shortcuts can't be used for tables with composite primary key"
         )
 
     return list(table.primary_key.columns)[0]
