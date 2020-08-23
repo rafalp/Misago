@@ -22,7 +22,11 @@ async def fetch_all(table: TableClause) -> List[Mapping]:
 
 
 async def count(clause: ClauseElement) -> int:
-    return await database.fetch_val(select([func.count()]).select_from(clause))
+    if isinstance(clause, TableClause):
+        clause = select([func.count()]).select_from(clause)
+    else:
+        clause = clause.with_only_columns([func.count()])
+    return await database.fetch_val(clause)
 
 
 async def delete(table: TableClause, row_id=Any):

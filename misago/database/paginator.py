@@ -1,9 +1,8 @@
 import math
 
-from sqlalchemy import func
 from sqlalchemy.sql import Select
 
-from ..database import database
+from ..database.queries import count
 
 
 class PageDoesNotExist(ValueError):
@@ -45,9 +44,7 @@ class Paginator:
 
     async def count_pages(self):
         self._counted = True
-        self._count = await database.fetch_val(
-            self._query.with_only_columns([func.count()])
-        )
+        self._count = await count(self._query)
 
         if self.overlap_pages:
             self._pages = count_pages_with_overlaps(

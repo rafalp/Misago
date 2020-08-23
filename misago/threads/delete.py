@@ -4,7 +4,7 @@ from typing import Sequence, Tuple, cast
 from sqlalchemy import and_, desc, func, not_, select
 
 from ..database import database
-from ..database.queries import delete, delete_many
+from ..database.queries import count, delete, delete_many
 from ..tables import posts as posts_table, threads as threads_table
 from ..types import Post, Thread
 from .update import update_thread
@@ -26,10 +26,8 @@ async def delete_thread_posts(
     thread: Thread, posts: Sequence[Post]
 ) -> Tuple[Thread, Post]:
     posts_ids = [i.id for i in posts]
-    posts_count_query = (
-        select([func.count()])
-        .select_from(posts_table)
-        .where(
+    posts_count_query = count(
+        posts_table.select(None).where(
             and_(
                 posts_table.c.thread_id == thread.id,
                 not_(posts_table.c.id.in_(posts_ids)),
@@ -48,7 +46,7 @@ async def delete_thread_posts(
         .limit(1)
     )
     posts_count, last_post_data = await gather(
-        database.fetch_val(posts_count_query), database.fetch_one(last_reply_query),
+        posts_count_query, database.fetch_one(last_reply_query),
     )
 
     last_post = Post(**cast(dict, last_post_data))
