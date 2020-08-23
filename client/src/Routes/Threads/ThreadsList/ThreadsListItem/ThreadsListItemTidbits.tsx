@@ -30,7 +30,7 @@ const ThreadsListItemTidbits: React.FC<IThreadsListItemTidbitsProps> = ({
     />
     <TidbitActivityLastReply
       date={new Date(thread.lastPostedAt)}
-      url={urls.threadLastReply(thread)}
+      url={urls.threadLastPost(thread)}
       user={thread.lastPoster}
       userName={thread.lastPosterName}
     />

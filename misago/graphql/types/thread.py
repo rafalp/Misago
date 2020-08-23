@@ -72,11 +72,13 @@ def resolve_last_poster(
 
 
 @thread_type.field("lastPostUrl")
-async def resolve_last_post_url(obj: Thread, info: GraphQLResolveInfo) -> Optional[str]:
+async def resolve_last_post_url(
+    obj: Thread, info: GraphQLResolveInfo, *, absolute: bool = False,
+) -> Optional[str]:
     if obj.last_post_id:
         post = await load_post(info.context, obj.last_post_id)
         if post:
-            return await get_absolute_post_url(info, obj, post)
+            return await get_post_url(info, obj, post, absolute)
     return None
 
 
@@ -85,17 +87,20 @@ async def resolve_post_url(
     obj: Thread,
     info: GraphQLResolveInfo,
     *,
-    id: str  # pylint: disable=redefined-builtin
+    id: str,  # pylint: disable=redefined-builtin
+    absolute: bool = False,
 ) -> Optional[str]:
     if obj.last_post_id:
         post = await load_post(info.context, id)
         if post and post.thread_id == obj.id:
-            return await get_absolute_post_url(info, obj, post)
+            return await get_post_url(info, obj, post, absolute)
     return None
 
 
-async def get_absolute_post_url(
-    info: GraphQLResolveInfo, thread: Thread, post: Post
+async def get_post_url(
+    info: GraphQLResolveInfo, thread: Thread, post: Post, absolute: bool
 ) -> str:
     url = await load_thread_post_url(info.context, thread, post)
-    return get_absolute_url(info.context["request"], url)
+    if absolute:
+        return get_absolute_url(info.context["request"], url)
+    return url

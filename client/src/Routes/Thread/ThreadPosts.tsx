@@ -92,7 +92,7 @@ const ThreadPosts: React.FC = () => {
             page={page}
             isClosed={thread.isClosed || thread.category.isClosed}
             isSelected={selection.selection[post.id]}
-            toggleSelection={moderation ? selection.toggle : null}
+            toggleSelection={moderation.posts ? selection.toggle : null}
           />
         ))}
       </SectionLoader>

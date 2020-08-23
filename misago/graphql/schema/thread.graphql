@@ -13,8 +13,8 @@ type Thread {
     startedAt: DateTime!
     lastPostedAt: DateTime!
     replies: Int!
-    postUrl(id: ID!): String
-    lastPostUrl: String
+    postUrl(id: ID!, absolute: Boolean): String
+    lastPostUrl(absolute: Boolean): String
     isClosed: Boolean!
     extra: Generic!
 }

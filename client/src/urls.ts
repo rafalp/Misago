@@ -24,6 +24,10 @@ export const thread = (thread: IThreadParams) => {
   }
   return `/t/${thread.slug}/${thread.id}/`
 }
-export const threadLastReply = (thread: ISluggable) =>
-  `/t/${thread.slug}/${thread.id}/last/`
+export const threadLastPost = (thread: ISluggable) => {
+  return `/t/${thread.slug}/${thread.id}/last/`
+}
+export const threadPost = (thread: ISluggable, post: { id: string }) => {
+  return `/t/${thread.slug}/${thread.id}/post/${post.id}/`
+}
 export const user = (user: ISluggable) => `/u/${user.slug}/${user.id}/`

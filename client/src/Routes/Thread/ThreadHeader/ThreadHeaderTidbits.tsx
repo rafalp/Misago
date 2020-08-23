@@ -42,7 +42,7 @@ const ThreadHeaderTidbits: React.FC<IThreadHeaderTidbitsProps> = ({
           date={new Date(thread.lastPostedAt)}
           userName={thread.lastPosterName}
           user={thread.lastPoster}
-          url={urls.threadLastReply(thread)}
+          url={urls.threadLastPost(thread)}
         />
       </Tidbits>
     </div>

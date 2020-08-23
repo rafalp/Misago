@@ -74,6 +74,14 @@ async def test_last_post_url_resolver_returns_url_to_thread_last_post(
     graphql_info, thread, post
 ):
     value = await resolve_last_post_url(thread, graphql_info)
+    assert value == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
+
+
+@pytest.mark.asyncio
+async def test_last_post_url_resolver_returns_absolute_url_to_thread_last_post(
+    graphql_info, thread, post
+):
+    value = await resolve_last_post_url(thread, graphql_info, absolute=True)
     assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
 
 
@@ -82,6 +90,14 @@ async def test_post_url_resolver_returns_url_to_specified_thread_post(
     graphql_info, thread, post
 ):
     value = await resolve_post_url(thread, graphql_info, id=post.id)
+    assert value == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
+
+
+@pytest.mark.asyncio
+async def test_post_url_resolver_returns_absolute_url_to_specified_thread_post(
+    graphql_info, thread, post
+):
+    value = await resolve_post_url(thread, graphql_info, id=post.id, absolute=True)
     assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
 
 

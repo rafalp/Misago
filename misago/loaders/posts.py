@@ -90,7 +90,7 @@ THREAD_POST_URL_CONTEXT_KEY = get_loader_context_key("thread_post_url")
 
 async def load_thread_post_url(
     context: GraphQLContext, thread: Thread, post: Post
-) -> Optional[str]:
+) -> str:
     context_key = THREAD_POST_URL_CONTEXT_KEY
     if context_key not in context:
         context[context_key] = {}

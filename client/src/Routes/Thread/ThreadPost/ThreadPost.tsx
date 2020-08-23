@@ -5,6 +5,7 @@ import ThreadPostEditForm from "./ThreadPostEditForm"
 import ThreadPostHeader from "./ThreadPostHeader"
 import ThreadPostPostbit from "./ThreadPostPostbit"
 import usePostAcl from "./usePostAcl"
+import useScrollPostIntoView from "./useScrollPostIntoView"
 
 interface IThreadPostProps {
   post: IPost
@@ -25,12 +26,13 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
   isSelected,
   toggleSelection,
 }) => {
+  const scrollIntoView = useScrollPostIntoView()
   const acl = usePostAcl(post, isClosed)
   const [edit, setEdit] = React.useState(isEdited || false)
   const editPost = () => setEdit(true)
 
   return (
-    <div className="post">
+    <div className="post" id={"post-" + post.id} ref={scrollIntoView}>
       <div className="row">
         <div className="col-auto post-sidebit">
           <ThreadPostPostbit post={post} />

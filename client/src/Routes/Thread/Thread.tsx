@@ -1,6 +1,8 @@
 import React from "react"
 import { Redirect, Route, Switch } from "react-router-dom"
 import * as urls from "../../urls"
+import ThreadRedirectToLastPost from "./ThreadRedirectToLastPost"
+import ThreadRedirectToPost from "./ThreadRedirectToPost"
 import ThreadPosts from "./ThreadPosts"
 
 const Thread: React.FC = () => (
@@ -11,8 +13,13 @@ const Thread: React.FC = () => (
       exact
     />
     <Route
-      path={urls.threadLastReply({ id: ":id", slug: ":slug" })}
-      render={() => <div>Thread last reply</div>}
+      path={urls.threadLastPost({ id: ":id", slug: ":slug" })}
+      component={ThreadRedirectToLastPost}
+      exact
+    />
+    <Route
+      path={urls.threadPost({ id: ":id", slug: ":slug" }, { id: ":postId" })}
+      component={ThreadRedirectToPost}
       exact
     />
     <Route
