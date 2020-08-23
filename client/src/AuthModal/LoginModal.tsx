@@ -86,6 +86,8 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
             return
           }
 
+          setError(null)
+
           const result = await authenticate({ variables })
           const { user, token } = result.data?.login || {}
           if (token && user) {
