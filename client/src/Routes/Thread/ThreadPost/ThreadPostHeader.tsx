@@ -11,6 +11,7 @@ interface IThreadPostHeaderProps {
   acl: { edit: boolean }
   post: IPost
   threadId: string
+  threadSlug: string
   page?: number
   isSelected?: boolean
   editPost: () => void
@@ -21,6 +22,7 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
   acl,
   post,
   threadId,
+  threadSlug,
   page,
   isSelected,
   editPost,
@@ -52,7 +54,10 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
               <span className="post-poster">{post.posterName}</span>
             )}
             <span className="post-header-dash">&ndash;</span>
-            <Link className="post-timestamp" to={"/" + post.id + "/"}>
+            <Link
+              className="post-timestamp"
+              to={urls.threadPost({ id: threadId, slug: threadSlug }, post)}
+            >
               <Timestamp date={new Date(post.postedAt)} />
             </Link>
             {post.edits > 0 && (

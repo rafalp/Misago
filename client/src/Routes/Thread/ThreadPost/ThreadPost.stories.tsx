@@ -26,6 +26,7 @@ export const PostByUser = () => {
           extra: {},
         }}
         threadId="1"
+        threadSlug="test-thread"
       />
     </RootContainer>
   )
@@ -47,6 +48,7 @@ export const PostSelectable = () => {
           extra: {},
         }}
         threadId="1"
+        threadSlug="test-thread"
         isSelected={false}
         toggleSelection={action("Toggle selection")}
       />
@@ -70,6 +72,7 @@ export const PostByDeletedUser = () => {
           extra: {},
         }}
         threadId="1"
+        threadSlug="test-thread"
       />
     </RootContainer>
   )
@@ -88,6 +91,7 @@ export const PostAfterAnother = () => (
         extra: {},
       }}
       threadId="1"
+      threadSlug="test-thread"
     />
     <ThreadPost
       post={{
@@ -100,6 +104,7 @@ export const PostAfterAnother = () => (
         extra: {},
       }}
       threadId="1"
+      threadSlug="test-thread"
     />
   </RootContainer>
 )
@@ -118,6 +123,7 @@ export const PostEditor = () => (
           extra: {},
         }}
         threadId="1"
+        threadSlug="test-thread"
         isEdited
       />
     </MockedProvider>

@@ -10,6 +10,7 @@ import useScrollPostIntoView from "./useScrollPostIntoView"
 interface IThreadPostProps {
   post: IPost
   threadId: string
+  threadSlug: string
   page?: number
   isClosed?: boolean
   isEdited?: boolean
@@ -20,6 +21,7 @@ interface IThreadPostProps {
 const ThreadPost: React.FC<IThreadPostProps> = ({
   post,
   threadId,
+  threadSlug,
   page,
   isClosed,
   isEdited,
@@ -43,6 +45,7 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
               acl={acl}
               post={post}
               threadId={threadId}
+              threadSlug={threadSlug}
               page={page}
               isSelected={isSelected}
               editPost={editPost}

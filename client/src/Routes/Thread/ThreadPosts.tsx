@@ -89,6 +89,7 @@ const ThreadPosts: React.FC = () => {
             key={post.id}
             post={post}
             threadId={thread.id}
+            threadSlug={thread.slug}
             page={page}
             isClosed={thread.isClosed || thread.category.isClosed}
             isSelected={selection.selection[post.id]}
