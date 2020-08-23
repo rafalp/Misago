@@ -4,7 +4,9 @@ from ..thread import (
     resolve_category,
     resolve_first_post,
     resolve_last_post,
+    resolve_last_post_url,
     resolve_last_poster,
+    resolve_post_url,
     resolve_posts,
     resolve_starter,
 )
@@ -64,4 +66,36 @@ def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
     graphql_info, thread
 ):
     value = resolve_last_poster(thread, graphql_info)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_last_post_url_resolver_returns_url_to_thread_last_post(
+    graphql_info, thread, post
+):
+    value = await resolve_last_post_url(thread, graphql_info)
+    assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
+
+
+@pytest.mark.asyncio
+async def test_post_url_resolver_returns_url_to_specified_thread_post(
+    graphql_info, thread, post
+):
+    value = await resolve_post_url(thread, graphql_info, id=post.id)
+    assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
+
+
+@pytest.mark.asyncio
+async def test_post_url_resolver_returns_none_if_post_is_not_found(
+    graphql_info, thread, post
+):
+    value = await resolve_post_url(thread, graphql_info, id=post.id * 10)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_post_url_resolver_returns_none_if_post_belongs_to_other_thread(
+    graphql_info, thread, post, closed_thread_post
+):
+    value = await resolve_post_url(thread, graphql_info, id=closed_thread_post.id)
     assert value is None

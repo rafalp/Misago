@@ -152,10 +152,13 @@ async def admin(db, user_password):
     )
 
 
+request_mock = Mock(headers={}, base_url="http://test.com")
+
+
 @pytest.fixture
 def graphql_context(cache_versions, dynamic_settings):
     return {
-        "request": Mock(headers={}),
+        "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
     }
@@ -169,7 +172,7 @@ def graphql_info(graphql_context):
 @pytest.fixture
 def user_graphql_context(cache_versions, dynamic_settings, user):
     return {
-        "request": Mock(headers={}),
+        "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "user": user,
@@ -184,7 +187,7 @@ def user_graphql_info(user_graphql_context):
 @pytest.fixture
 def moderator_graphql_context(cache_versions, dynamic_settings, moderator):
     return {
-        "request": Mock(headers={}),
+        "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "user": moderator,
@@ -199,7 +202,7 @@ def moderator_graphql_info(moderator_graphql_context):
 @pytest.fixture
 def admin_graphql_context(cache_versions, dynamic_settings, admin):
     return {
-        "request": Mock(headers={}),
+        "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "checked_admin_auth": True,
