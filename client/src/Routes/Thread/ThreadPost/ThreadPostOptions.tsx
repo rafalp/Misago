@@ -2,10 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { ButtonSecondary, Dropdown, DropdownButton } from "../../../UI"
 import { IModerationAction, IPost } from "../Thread.types"
+import ThreadPostPermalink from "./ThreadPostPermalink"
 
 interface IThreadPostOptionsProps {
   acl: { edit: boolean }
   post: IPost
+  threadId: string
+  threadSlug: string
   moderation: {
     actions: Array<IModerationAction>
   } | null
@@ -15,6 +18,8 @@ interface IThreadPostOptionsProps {
 const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
   acl,
   post,
+  threadId,
+  threadSlug,
   moderation,
   editPost,
 }) => (
@@ -30,11 +35,10 @@ const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
     )}
     menu={() => (
       <>
-        <DropdownButton
-          text={<Trans id="post.permalink">Permalink</Trans>}
-          icon="link"
-          iconSolid
-          onClick={() => {}}
+        <ThreadPostPermalink
+          post={post}
+          threadId={threadId}
+          threadSlug={threadSlug}
         />
         {acl.edit && (
           <DropdownButton

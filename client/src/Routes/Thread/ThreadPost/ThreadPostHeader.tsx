@@ -95,6 +95,8 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
           <ThreadPostOptions
             acl={acl}
             post={post}
+            threadId={threadId}
+            threadSlug={threadSlug}
             moderation={moderation}
             editPost={editPost}
           />
