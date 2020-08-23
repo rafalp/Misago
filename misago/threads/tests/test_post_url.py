@@ -1,17 +1,7 @@
 import pytest
 
 from ..create import create_post
-from ..goto import get_thread_last_post_url, get_thread_post_page, get_thread_post_url
-
-
-@pytest.mark.asyncio
-async def test_url_to_thread_last_post_is_returned(
-    dynamic_settings, thread_with_reply, thread_reply
-):
-    thread = thread_with_reply
-
-    url = await get_thread_last_post_url(dynamic_settings, thread)
-    assert url == f"/t/{thread.slug}/{thread.id}/#post-{thread_reply.id}"
+from ..post_url import get_thread_post_page, get_thread_post_url
 
 
 @pytest.mark.asyncio

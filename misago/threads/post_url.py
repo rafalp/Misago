@@ -7,18 +7,6 @@ from sqlalchemy import and_
 from ..database.queries import count
 from ..tables import posts
 from ..types import Post, Settings, Thread
-from .get import get_post_by_id
-
-
-async def get_thread_last_post_url(settings: Settings, thread: Thread) -> Optional[str]:
-    if not thread.last_post_id:
-        return None
-
-    post = await get_post_by_id(thread.last_post_id)
-    if not post:
-        return None
-
-    return await get_thread_post_url(settings, thread, post)
 
 
 async def get_thread_post_url(settings: Settings, thread: Thread, post: Post) -> str:

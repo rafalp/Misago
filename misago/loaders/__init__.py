@@ -9,10 +9,13 @@ from .categories import (
 from .forumstats import load_forum_stats
 from .posts import (
     clear_all_posts,
+    clear_all_posts_urls,
     clear_post,
+    clear_post_url,
     clear_posts,
     load_post,
     load_posts,
+    load_thread_post_url,
     load_thread_posts_page,
     load_thread_posts_paginator,
     store_post,

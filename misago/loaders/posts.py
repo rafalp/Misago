@@ -7,6 +7,7 @@ from ..threads.get import (
     get_thread_posts_page,
     get_thread_posts_paginator,
 )
+from ..threads.post_url import get_thread_post_url
 from .loader import get_loader, get_loader_context_key
 
 
@@ -68,13 +69,46 @@ def clear_post(context: GraphQLContext, post: Post):
     loader = get_loader(context, "post", get_posts_by_id)
     loader.clear(post.id)
 
+    clear_post_url(context, post)
+
 
 def clear_posts(context: GraphQLContext, posts: Iterable[Post]):
     loader = get_loader(context, "post", get_posts_by_id)
     for post in posts:
         loader.clear(post.id)
+        clear_post_url(context, post)
 
 
 def clear_all_posts(context: GraphQLContext):
     loader = get_loader(context, "post", get_posts_by_id)
     loader.clear_all()
+    clear_all_posts_urls(context)
+
+
+THREAD_POST_URL_CONTEXT_KEY = get_loader_context_key("thread_post_url")
+
+
+async def load_thread_post_url(
+    context: GraphQLContext, thread: Thread, post: Post
+) -> Optional[str]:
+    context_key = THREAD_POST_URL_CONTEXT_KEY
+    if context_key not in context:
+        context[context_key] = {}
+
+    if post.id not in context[context_key]:
+        context[context_key][post.id] = await get_thread_post_url(
+            context["settings"], thread, post
+        )
+
+    return context[context_key][post.id]
+
+
+def clear_post_url(context: GraphQLContext, post: Post):
+    context_key = THREAD_POST_URL_CONTEXT_KEY
+    if context_key in context:
+        context[context_key].pop(post.id, None)
+
+
+def clear_all_posts_urls(context: GraphQLContext):
+    context_key = THREAD_POST_URL_CONTEXT_KEY
+    context[context_key] = {}
