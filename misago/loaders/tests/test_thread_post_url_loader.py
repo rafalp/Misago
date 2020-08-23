@@ -11,7 +11,7 @@ from ..posts import (
 @pytest.mark.asyncio
 async def test_thread_post_url_loader_returns_post_url(graphql_context, thread, post):
     post_url = await load_thread_post_url(graphql_context, thread, post)
-    assert post_url.endswith(f"/t/{thread.slug}/{thread.id}/#post-{post.id}")
+    assert post_url == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
 
 
 @pytest.mark.asyncio

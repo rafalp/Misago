@@ -1,6 +1,6 @@
 from asyncio import gather
 from math import ceil
-from typing import Optional, cast
+from typing import cast
 
 from sqlalchemy import and_
 
