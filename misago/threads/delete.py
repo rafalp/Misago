@@ -1,7 +1,7 @@
 from asyncio import gather
 from typing import Sequence, Tuple, cast
 
-from sqlalchemy import and_, desc, func, not_, select
+from sqlalchemy import and_, desc, not_
 
 from ..database import database
 from ..database.queries import count, delete, delete_many
