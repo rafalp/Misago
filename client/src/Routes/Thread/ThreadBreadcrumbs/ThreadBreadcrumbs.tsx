@@ -19,11 +19,10 @@ interface IThreadBreadcrumbsProps {
   }
 }
 
-// TODO: should be visible on mobile, not just portrait
 const ThreadBreadcrumbs: React.FC<IThreadBreadcrumbsProps> = ({
   category,
 }) => (
-  <Responsive className="thread-breadcrumbs" portrait>
+  <Responsive className="thread-breadcrumbs" mobile>
     <div className="row">
       {category.parent && (
         <div className="col-6">

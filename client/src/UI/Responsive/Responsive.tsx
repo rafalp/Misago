@@ -22,7 +22,7 @@ const Responsive: React.FC<IResponsiveProps> = ({
 }) => (
   <div
     className={classNames(className, {
-      "d-none": !xs && (s || sm || md || lg),
+      "d-none": !xs && (s || md || lg),
 
       "d-sm-none": xs && !(s || sm),
       "d-sm-block": !xs && (s || sm),
