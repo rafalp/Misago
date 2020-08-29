@@ -43,7 +43,6 @@ export interface IThreadModeration {
 export interface IModerationAction {
   name: React.ReactNode
   icon: string
-  iconSolid?: boolean
   disabled?: boolean
   action: () => Promise<void> | void
 }
