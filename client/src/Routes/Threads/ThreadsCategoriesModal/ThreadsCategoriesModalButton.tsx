@@ -38,7 +38,7 @@ const ThreadsCategoriesModalButton: React.FC<IThreadsCategoriesModalButtonProps>
           }
           right={
             <span className="btn-more-icon">
-              <Icon icon="ellipsis-v" fixedWidth solid />
+              <Icon icon="fas fa-ellipsis-v" fixedWidth />
             </span>
           }
           onClick={() => open(active)}

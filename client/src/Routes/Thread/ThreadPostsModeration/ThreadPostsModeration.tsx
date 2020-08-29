@@ -40,8 +40,7 @@ const ThreadPostsModeration: React.FC<IThreadPostsModerationProps> = ({
                     Moderate posts ({selection.selected.length})
                   </Trans>
                 }
-                icon="shield-alt"
-                iconSolid
+                icon="fas fa-shield-alt"
                 small
                 onClick={toggle}
               />

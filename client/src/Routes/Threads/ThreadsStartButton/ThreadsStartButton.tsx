@@ -19,7 +19,7 @@ const ThreadsStartButton: React.FC<IThreadsStartButtonProps> = ({
     className={classNames("btn btn-primary btn-responsive")}
     to={urls.startThread(category)}
   >
-    <Icon icon="edit" fixedWidth />
+    <Icon icon="far fa-edit" fixedWidth />
     <span>
       <Trans id="btn.new-thread">New thread</Trans>
     </span>

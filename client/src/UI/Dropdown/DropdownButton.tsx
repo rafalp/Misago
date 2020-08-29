@@ -7,7 +7,6 @@ interface IDropdownButtonProps {
   className?: string | null
   disabled?: boolean
   icon?: string
-  iconSolid?: boolean
   loading?: boolean
   text: React.ReactNode
   onClick?: () => void
@@ -17,7 +16,6 @@ const DropdownButton: React.FC<IDropdownButtonProps> = ({
   className,
   disabled,
   icon,
-  iconSolid,
   loading,
   text,
   onClick,
@@ -28,7 +26,7 @@ const DropdownButton: React.FC<IDropdownButtonProps> = ({
     type="button"
     onClick={onClick}
   >
-    {icon && !loading && <Icon icon={icon} solid={iconSolid} fixedWidth />}
+    {icon && !loading && <Icon icon={icon} fixedWidth />}
     {loading && <ButtonSpinner />}
     <span>{text}</span>
   </button>

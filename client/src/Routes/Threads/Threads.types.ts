@@ -45,7 +45,6 @@ export interface IThreadsModeration {
 export interface IThreadsModerationAction {
   name: React.ReactNode
   icon: string
-  iconSolid?: boolean
   action: () => Promise<void> | void
 }
 

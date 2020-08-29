@@ -25,9 +25,10 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
     menu={() => (
       <>
         <h6 className="dropdown-header">{user.name}</h6>
-        <DropdownLink to={urls.user(user)}>
-          <Trans id="navbar.profile">See your profile</Trans>
-        </DropdownLink>
+        <DropdownLink
+          text={<Trans id="navbar.profile">See your profile</Trans>}
+          to={urls.user(user)}
+        />
         <DropdownButton
           className="dropdown-item-logout"
           text={<Trans id="navbar.logout">Log out</Trans>}

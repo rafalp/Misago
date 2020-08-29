@@ -15,26 +15,22 @@ export const Options = () => (
       actions: [
         {
           name: "Open",
-          icon: "unlock",
-          iconSolid: true,
+          icon: "fas fa-unlock",
           action: () => {},
         },
         {
           name: "Close",
-          icon: "lock",
-          iconSolid: true,
+          icon: "fas fa-lock",
           action: () => {},
         },
         {
           name: "Move",
-          icon: "arrow-right",
-          iconSolid: true,
+          icon: "fas fa-arrow-right",
           action: () => {},
         },
         {
           name: "Delete",
-          icon: "times",
-          iconSolid: true,
+          icon: "fas fa-times",
           action: () => {},
         },
       ],

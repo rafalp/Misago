@@ -14,8 +14,7 @@ export const PostsOptions = () => (
       actions: [
         {
           name: "Delete posts",
-          icon: "times",
-          iconSolid: true,
+          icon: "fas fa-times",
           action: () => {},
         },
       ],

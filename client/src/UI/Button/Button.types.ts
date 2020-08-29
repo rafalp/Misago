@@ -4,7 +4,6 @@ export interface IButtonProps {
   disabled?: boolean
   elementRef?: React.MutableRefObject<HTMLButtonElement | null>
   icon?: string
-  iconSolid?: boolean
   image?: React.ReactNode
   loading?: boolean
   responsive?: boolean

@@ -21,8 +21,8 @@ const ThreadPostPermalink: React.FC<IThreadPostPermalinkProps> = ({
   return (
     <DropdownLink
       to={urls.threadPost({ id: threadId, slug: threadSlug }, post)}
-      icon="link"
-      iconSolid
+      text={<Trans id="post.permalink">Permalink</Trans>}
+      icon="fas fa-link"
       onClick={(event) => {
         if (navigator?.clipboard?.writeText && window.URL) {
           navigator.clipboard.writeText(
@@ -39,9 +39,7 @@ const ThreadPostPermalink: React.FC<IThreadPostPermalinkProps> = ({
           event.preventDefault()
         }
       }}
-    >
-      <Trans id="post.permalink">Permalink</Trans>
-    </DropdownLink>
+    />
   )
 }
 

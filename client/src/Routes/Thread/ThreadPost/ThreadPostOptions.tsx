@@ -27,8 +27,7 @@ const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
     toggle={({ ref, toggle }) => (
       <ButtonSecondary
         elementRef={ref}
-        icon="ellipsis-h"
-        iconSolid
+        icon="fas fa-ellipsis-h"
         small
         onClick={toggle}
       />
@@ -43,8 +42,7 @@ const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
         {acl.edit && (
           <DropdownButton
             text={<Trans id="post.edit">Edit</Trans>}
-            icon="edit"
-            iconSolid
+            icon="fas fa-edit"
             onClick={editPost}
           />
         )}
@@ -54,7 +52,6 @@ const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
               key={action.icon}
               text={action.name}
               icon={action.icon}
-              iconSolid={action.iconSolid}
               disabled={action.disabled}
               onClick={action.action}
             />

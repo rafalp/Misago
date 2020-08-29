@@ -40,14 +40,13 @@ export const MenuItems = () => (
   <RootContainer padding>
     <div className="dropdown-menu d-block position-static">
       <DropdownHeader text="Example menu" />
-      <DropdownLink to="/">Private messages</DropdownLink>
+      <DropdownLink text="Private messages" to="/" />
       <DropdownButton
-        icon="sign-in-alt"
+        icon="far fa-sign-in-alt"
         text="Log in"
         onClick={click}
-        iconSolid
       />
-      <DropdownButton icon="key" text="Sign up" onClick={click} iconSolid />
+      <DropdownButton icon="key" text="Sign up" onClick={click} />
       <DropdownButton text="Subscribe" onClick={click} loading />
       <DropdownDivider />
       <DropdownButton text="Plain item" onClick={click} />

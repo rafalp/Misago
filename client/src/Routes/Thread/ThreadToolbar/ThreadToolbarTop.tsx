@@ -33,13 +33,7 @@ const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
         </ToolbarItem>
       )}
       <ToolbarItem>
-        <ButtonPrimary
-          text="Reply"
-          icon="edit"
-          iconSolid
-          responsive
-          disabled
-        />
+        <ButtonPrimary text="Reply" icon="fas fa-edit" responsive disabled />
       </ToolbarItem>
     </Toolbar>
     {pagination.pages > 1 && (

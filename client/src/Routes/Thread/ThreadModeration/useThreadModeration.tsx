@@ -27,28 +27,24 @@ const useThreadModeration = (
     actions: [
       {
         name: <Trans id="moderation.open">Open</Trans>,
-        icon: "unlock",
-        iconSolid: true,
+        icon: "fas fa-unlock",
         disabled: !thread.isClosed,
         action: openThread,
       },
       {
         name: <Trans id="moderation.close">Close</Trans>,
-        icon: "lock",
-        iconSolid: true,
+        icon: "fas fa-lock",
         disabled: thread.isClosed,
         action: closeThread,
       },
       {
         name: <Trans id="moderation.move">Move</Trans>,
-        icon: "arrow-right",
-        iconSolid: true,
+        icon: "fas fa-arrow-right",
         action: moveThread,
       },
       {
         name: <Trans id="moderation.delete">Delete</Trans>,
-        icon: "times",
-        iconSolid: true,
+        icon: "fas fa-times",
         action: deleteThread,
       },
     ],

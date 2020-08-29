@@ -16,8 +16,7 @@ const ThreadModeration: React.FC<IThreadModerationProps> = ({
         elementRef={ref}
         loading={moderation.loading}
         text={<Trans id="moderation.thread">Moderate thread</Trans>}
-        icon="shield-alt"
-        iconSolid
+        icon="fas fa-shield-alt"
         responsive
         onClick={toggle}
       />
@@ -29,7 +28,6 @@ const ThreadModeration: React.FC<IThreadModerationProps> = ({
             key={action.icon}
             text={action.name}
             icon={action.icon}
-            iconSolid={action.iconSolid}
             disabled={action.disabled}
             onClick={action.action}
           />

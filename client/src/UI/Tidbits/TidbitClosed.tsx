@@ -5,7 +5,7 @@ import TidbitItem from "./TidbitItem"
 
 const TidbitClosed: React.FC = () => (
   <TidbitItem className="tidbit-closed">
-    <TidbitIcon icon="lock" solid />
+    <TidbitIcon icon="fas fa-lock" />
     <Trans id="tidbit.closed">Closed</Trans>
   </TidbitItem>
 )

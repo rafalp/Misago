@@ -37,8 +37,7 @@ const PaginatorDropdown: React.FC<IPaginatorDropdownProps> = ({
             </Trans>
           )
         }
-        icon={!compact ? "ellipsis-v" : undefined}
-        iconSolid
+        icon={!compact ? "fas fa-ellipsis-v" : undefined}
         responsive
         onClick={toggle}
       />

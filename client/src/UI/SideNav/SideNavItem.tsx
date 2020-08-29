@@ -44,7 +44,7 @@ const SideNavItem: React.FC<ISideNavItemProps> = ({
 
 const HasChildrenIcon: React.FC = () => (
   <span className="has-children-icon">
-    <Icon icon="plus-square" />
+    <Icon icon="far fa-plus-square" />
   </span>
 )
 

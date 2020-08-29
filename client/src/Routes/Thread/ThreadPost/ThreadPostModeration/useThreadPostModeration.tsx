@@ -28,8 +28,7 @@ const useThreadPostModeration = (
     actions: [
       {
         name: <Trans id="moderation.delete">Delete</Trans>,
-        icon: "times",
-        iconSolid: true,
+        icon: "fas fa-times",
         action: deletePost,
       },
     ],

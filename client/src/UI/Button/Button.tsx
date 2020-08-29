@@ -10,7 +10,6 @@ const Button: React.FC<IButtonProps> = ({
   disabled,
   elementRef,
   icon,
-  iconSolid,
   image,
   loading,
   responsive,
@@ -36,7 +35,7 @@ const Button: React.FC<IButtonProps> = ({
       disabled={disabled || loading}
       onClick={onClick}
     >
-      {icon && !loading && <Icon icon={icon} solid={iconSolid} fixedWidth />}
+      {icon && !loading && <Icon icon={icon} fixedWidth />}
       {!loading && image}
       {loading && <ButtonSpinner />}
       {text && <span>{text}</span>}

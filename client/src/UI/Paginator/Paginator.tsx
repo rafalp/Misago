@@ -12,7 +12,7 @@ const Paginator: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
       page={page > 1 && page - 1}
       url={url}
     >
-      <Icon icon="angle-left" solid fixedWidth />
+      <Icon icon="fas fa-angle-left" fixedWidth />
     </PaginatorButton>
     {getPaginatorPagesList(page, pages).map((i, key) =>
       i ? (
@@ -36,7 +36,7 @@ const Paginator: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
       page={page < pages && page + 1}
       url={url}
     >
-      <Icon icon="angle-right" solid fixedWidth />
+      <Icon icon="fas fa-angle-right" fixedWidth />
     </PaginatorButton>
     <PaginatorDropdown page={page} pages={pages} url={url} />
   </div>

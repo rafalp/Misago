@@ -4,19 +4,17 @@ import Icon from "../Icon"
 import { Link } from "react-router-dom"
 
 interface IDropdownLinkProps {
-  children: React.ReactNode
   className?: string | null
   icon?: string
-  iconSolid?: boolean
+  text: React.ReactNode
   to: string
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
 const DropdownLink: React.FC<IDropdownLinkProps> = ({
-  children,
   className,
   icon,
-  iconSolid,
+  text,
   to,
   onClick,
 }) => (
@@ -25,8 +23,8 @@ const DropdownLink: React.FC<IDropdownLinkProps> = ({
     to={to}
     onClick={onClick}
   >
-    {icon && <Icon icon={icon} solid={iconSolid} fixedWidth />}
-    <span>{children}</span>
+    {icon && <Icon icon={icon} fixedWidth />}
+    <span>{text}</span>
   </Link>
 )
 

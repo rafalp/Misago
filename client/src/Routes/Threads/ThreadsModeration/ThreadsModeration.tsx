@@ -41,8 +41,7 @@ const ThreadsModeration: React.FC<IThreadsModerationProps> = ({
                     Moderate threads ({selection.selected.length})
                   </Trans>
                 }
-                icon="shield-alt"
-                iconSolid
+                icon="fas fa-shield-alt"
                 responsive
                 onClick={toggle}
               />
@@ -54,7 +53,6 @@ const ThreadsModeration: React.FC<IThreadsModerationProps> = ({
                     key={action.icon}
                     text={action.name}
                     icon={action.icon}
-                    iconSolid={action.iconSolid}
                     onClick={action.action}
                   />
                 ))}
@@ -62,7 +60,7 @@ const ThreadsModeration: React.FC<IThreadsModerationProps> = ({
                 {selection && (
                   <DropdownButton
                     text={<Trans id="clear_selection">Clear selection</Trans>}
-                    icon="square"
+                    icon="far fa-square"
                     onClick={selection.clear}
                   />
                 )}

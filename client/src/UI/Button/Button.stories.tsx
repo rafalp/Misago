@@ -123,19 +123,29 @@ export const IconOnly = () => {
     {
       name,
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} />
+        <Component block={block} icon="far fa-comment-alt" small={small} />
       ),
     },
     {
       name: name + " loading",
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} loading />
+        <Component
+          block={block}
+          icon="far fa-comment-alt"
+          small={small}
+          loading
+        />
       ),
     },
     {
       name: name + " disabled",
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} disabled />
+        <Component
+          block={block}
+          icon="far fa-comment-alt"
+          small={small}
+          disabled
+        />
       ),
     },
   ])
@@ -160,19 +170,29 @@ export const OutlineIconOnly = () => {
     {
       name,
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} />
+        <Component block={block} icon="far fa-comment-alt" small={small} />
       ),
     },
     {
       name: name + " loading",
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} loading />
+        <Component
+          block={block}
+          icon="far fa-comment-alt"
+          small={small}
+          loading
+        />
       ),
     },
     {
       name: name + " disabled",
       component: (
-        <Component block={block} icon={"comment-alt"} small={small} disabled />
+        <Component
+          block={block}
+          icon="far fa-comment-alt"
+          small={small}
+          disabled
+        />
       ),
     },
   ])
@@ -199,7 +219,7 @@ export const IconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
         />
@@ -210,7 +230,7 @@ export const IconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
           loading
@@ -222,7 +242,7 @@ export const IconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
           disabled
@@ -253,7 +273,7 @@ export const OutlineIconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
         />
@@ -264,7 +284,7 @@ export const OutlineIconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
           loading
@@ -276,7 +296,7 @@ export const OutlineIconAndText = () => {
       component: (
         <Component
           block={block}
-          icon={"comment-alt"}
+          icon="far fa-comment-alt"
           text="Start thread"
           small={small}
           disabled

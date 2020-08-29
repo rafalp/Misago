@@ -16,8 +16,7 @@ export const ThreadOptions = () => (
         actions: [
           {
             name: "Delete thread",
-            icon: "times",
-            iconSolid: true,
+            icon: "fas fa-times",
             action: () => {},
           },
         ],

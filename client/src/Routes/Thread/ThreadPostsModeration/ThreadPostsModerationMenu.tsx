@@ -21,7 +21,6 @@ const ThreadPostsModerationMenu: React.FC<IThreadPostsModerationMenuProps> = ({
         key={action.icon}
         text={action.name}
         icon={action.icon}
-        iconSolid={action.iconSolid}
         onClick={action.action}
       />
     ))}
@@ -29,7 +28,7 @@ const ThreadPostsModerationMenu: React.FC<IThreadPostsModerationMenuProps> = ({
     {selection && (
       <DropdownButton
         text={<Trans id="clear_selection">Clear selection</Trans>}
-        icon="square"
+        icon="far fa-square"
         onClick={selection.clear}
       />
     )}

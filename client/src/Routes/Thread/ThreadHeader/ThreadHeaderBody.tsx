@@ -25,10 +25,9 @@ const ThreadHeaderBody: React.FC<IThreadHeaderBodyProps> = ({
         <div className="col-auto">
           {acl.edit && (
             <ButtonSecondary
-              icon="pencil-alt"
-              onClick={editThread}
-              iconSolid
+              icon="fas fa-pencil-alt"
               small
+              onClick={editThread}
             />
           )}
         </div>

@@ -11,14 +11,14 @@ const PaginatorCompact: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
       page={page > 1 && 1}
       url={url}
     >
-      <Icon icon="angle-double-left" solid fixedWidth />
+      <Icon icon="fas fa-angle-double-left" fixedWidth />
     </PaginatorButton>
     <PaginatorButton
       className="btn-paginator-prev"
       page={page > 1 && page - 1}
       url={url}
     >
-      <Icon icon="angle-left" solid fixedWidth />
+      <Icon icon="fas fa-angle-left" fixedWidth />
     </PaginatorButton>
     <PaginatorDropdown page={page} pages={pages} url={url} compact />
     <PaginatorButton
@@ -26,14 +26,14 @@ const PaginatorCompact: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
       page={page < pages && page + 1}
       url={url}
     >
-      <Icon icon="angle-right" solid fixedWidth />
+      <Icon icon="fas fa-angle-right" fixedWidth />
     </PaginatorButton>
     <PaginatorButton
       className="btn-paginator-last"
       page={page < pages && pages}
       url={url}
     >
-      <Icon icon="angle-double-right" solid fixedWidth />
+      <Icon icon="fas fa-angle-double-right" fixedWidth />
     </PaginatorButton>
   </div>
 )

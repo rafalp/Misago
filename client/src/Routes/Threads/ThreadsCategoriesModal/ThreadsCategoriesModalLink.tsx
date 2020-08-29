@@ -41,7 +41,7 @@ const ThreadsCategoriesModalLink: React.FC<IThreadsCategoriesModalLinkProps> = (
     </Link>
     {hasChildren && (
       <ButtonLink
-        icon={isOpen ? "minus-square" : "plus-square"}
+        icon={isOpen ? "far fa-minus-square" : "far fa-plus-square"}
         onClick={toggle}
       />
     )}

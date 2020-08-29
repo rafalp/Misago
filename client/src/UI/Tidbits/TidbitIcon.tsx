@@ -3,12 +3,11 @@ import Icon from "../Icon"
 
 interface ITibitIconProps {
   icon: string
-  solid?: boolean
 }
 
-const TidbitIcon: React.FC<ITibitIconProps> = ({ icon, solid }) => (
+const TidbitIcon: React.FC<ITibitIconProps> = ({ icon }) => (
   <span className="tidbit-icon">
-    <Icon icon={icon} solid={solid} fixedWidth />
+    <Icon icon={icon} fixedWidth />
   </span>
 )
 

@@ -6,10 +6,8 @@ export default {
   title: "UI/Icon",
 }
 
-const iconName = "comment-alt"
-
 export const Regular = () => {
-  const icon = <Icon icon={iconName} />
+  const icon = <Icon icon="far fa-comment-alt" />
 
   return (
     <>
@@ -20,7 +18,7 @@ export const Regular = () => {
 }
 
 export const Solid = () => {
-  const icon = <Icon icon={iconName} solid />
+  const icon = <Icon icon="fas fa-comment-alt" />
 
   return (
     <>
@@ -31,7 +29,7 @@ export const Solid = () => {
 }
 
 export const FixedWidth = () => {
-  const icon = <Icon icon={iconName} fixedWidth />
+  const icon = <Icon icon="far fa-comment-alt" fixedWidth />
 
   return (
     <>
