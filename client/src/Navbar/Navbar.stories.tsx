@@ -15,6 +15,7 @@ const navbarActions = actions({
 
 const settings = {
   forumName: "Misago",
+  forumIndexThreads: false,
 }
 
 export const Anonymous = () => (

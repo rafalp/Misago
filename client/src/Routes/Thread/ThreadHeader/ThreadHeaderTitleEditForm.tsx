@@ -29,10 +29,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
   close,
   thread,
 }) => {
-  const settings = useSettingsContext() || {
-    threadTitleMinLength: 5,
-    threadTitleMaxLength: 1000,
-  }
+  const { threadTitleMaxLength, threadTitleMinLength } = useSettingsContext()
 
   const {
     data,
@@ -44,8 +41,8 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
   const EditThreadTitleSchema = Yup.object().shape({
     title: Yup.string()
       .required("value_error.missing")
-      .min(settings.threadTitleMinLength, "value_error.any_str.min_length")
-      .max(settings.threadTitleMaxLength, "value_error.any_str.max_length")
+      .min(threadTitleMinLength, "value_error.any_str.min_length")
+      .max(threadTitleMaxLength, "value_error.any_str.max_length")
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
   })
 
@@ -90,8 +87,8 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
             <ThreadTitleValidationError
               error={error}
               value={value.trim().length}
-              min={settings.threadTitleMinLength}
-              max={settings.threadTitleMaxLength}
+              min={threadTitleMinLength}
+              max={threadTitleMaxLength}
             >
               {({ message }) => <FieldError>{message}</FieldError>}
             </ThreadTitleValidationError>

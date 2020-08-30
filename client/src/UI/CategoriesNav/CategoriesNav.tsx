@@ -19,7 +19,7 @@ const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
     <SideNav className="categories-nav">
       <SideNavItem
         icon={<CategoryIcon className="nav-link-icon" />}
-        to={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+        to={settings.forumIndexThreads ? urls.index() : urls.threads()}
         isActive={!active}
       >
         <Trans id="threads.header">All threads</Trans>

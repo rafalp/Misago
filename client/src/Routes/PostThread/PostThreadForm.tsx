@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
-import { useToastsContext } from "../../Context"
+import { useSettingsContext, useToastsContext } from "../../Context"
 import {
   Card,
   CardAlert,
@@ -36,6 +36,7 @@ interface IPostThreadFormValues {
 
 const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
   const { showToast } = useToastsContext()
+  const { threadTitleMaxLength, threadTitleMinLength } = useSettingsContext()
   const [
     postThread,
     { data, loading, error: graphqlError },
@@ -45,8 +46,8 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
     category: Yup.string().required("value_error.missing"),
     title: Yup.string()
       .required("value_error.thread_title.missing")
-      .min(2, "value_error.any_str.min_length")
-      .max(200, "value_error.any_str.max_length")
+      .min(threadTitleMinLength, "value_error.any_str.min_length")
+      .max(threadTitleMaxLength, "value_error.any_str.max_length")
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
     body: Yup.string()
       .required("value_error.missing")
@@ -117,8 +118,8 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
               <ThreadTitleValidationError
                 error={error}
                 value={value.trim().length}
-                min={2}
-                max={6}
+                min={threadTitleMinLength}
+                max={threadTitleMaxLength}
               >
                 {({ message }) => <FieldError>{message}</FieldError>}
               </ThreadTitleValidationError>

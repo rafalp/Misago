@@ -55,7 +55,7 @@ const Routes: React.FC = () => {
           />
           <Route
             path={
-              settings?.forumIndexThreads ? urls.categories() : urls.index()
+              settings.forumIndexThreads ? urls.categories() : urls.index()
             }
             render={() => (
               <RouteErrorBoundary>

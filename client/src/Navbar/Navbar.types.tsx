@@ -7,6 +7,7 @@ export interface INavbarProps {
 
 export interface INavbarSettingsProp {
   forumName: string
+  forumIndexThreads: boolean
 }
 
 export interface INavbarUserProp {

@@ -33,7 +33,7 @@ const ThreadsCategoriesModal: React.FC = () => {
           <ClickTrap className="category-picker" onClick={close}>
             <ThreadsCategoriesModalLink
               text={<Trans id="threads.header">All threads</Trans>}
-              to={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+              to={settings.forumIndexThreads ? urls.index() : urls.threads()}
             />
             {active && <ThreadsCategoriesModalActiveItem active={active} />}
             {categories.map(

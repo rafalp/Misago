@@ -13,7 +13,7 @@ const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
         {settings.forumName}
       </Link>
       <NavbarCollapse user={user}>
-        <NavbarNav user={user} />
+        <NavbarNav settings={settings} user={user} />
       </NavbarCollapse>
     </nav>
   )

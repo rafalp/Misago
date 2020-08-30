@@ -27,7 +27,7 @@ const Threads: React.FC = () => {
           exact
         />
         <Route
-          path={settings?.forumIndexThreads ? urls.index() : urls.threads()}
+          path={settings.forumIndexThreads ? urls.index() : urls.threads()}
           render={() => (
             <RouteErrorBoundary>
               <ThreadsAll />

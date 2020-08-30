@@ -1,27 +1,27 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { Link } from "react-router-dom"
-import { useAuthModalContext, useSettingsContext } from "../Context"
+import { useAuthModalContext } from "../Context"
 import { Button } from "../UI"
 import { useAuth } from "../auth"
 import * as urls from "../urls"
-import { INavbarUserProp } from "./Navbar.types"
+import { INavbarSettingsProp, INavbarUserProp } from "./Navbar.types"
 import UserDropdown from "./NavbarUserDropdown"
 
 interface INavbarNavProps {
+  settings: INavbarSettingsProp
   user?: INavbarUserProp | null
 }
 
-const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
+const NavbarNav: React.FC<INavbarNavProps> = ({ settings, user }) => {
   const { logout } = useAuth()
-  const settings = useSettingsContext()
   const { openLoginModal, openRegisterModal } = useAuthModalContext()
 
   return (
     <ul className="navbar-nav ml-auto">
       <li className="nav-item">
         <Link className="nav-link" to="/">
-          {settings?.forumIndexThreads ? (
+          {settings.forumIndexThreads ? (
             <Trans id="navbar.threads">Threads</Trans>
           ) : (
             <Trans id="navbar.categories">Categories</Trans>
@@ -29,7 +29,7 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
         </Link>
       </li>
       <li className="nav-item">
-        {settings?.forumIndexThreads ? (
+        {settings.forumIndexThreads ? (
           <Link className="nav-link" to={urls.categories()}>
             <Trans id="navbar.categories">Categories</Trans>
           </Link>
