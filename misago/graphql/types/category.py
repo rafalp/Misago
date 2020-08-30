@@ -64,9 +64,7 @@ def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
 
 
 @category_type.field("extra")
-def resolve_extra(
-    category: Category, info: GraphQLResolveInfo
-) -> dict:
+def resolve_extra(category: Category, info: GraphQLResolveInfo) -> dict:
     return {}
 
 

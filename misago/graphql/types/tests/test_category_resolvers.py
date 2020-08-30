@@ -33,9 +33,7 @@ def test_category_color_resolver_returns_string_with_category_color(
     assert value == "#FF7452"
 
 
-def test_category_extra_resolver_returns_dict_with_extra(
-    category, graphql_info
-):
+def test_category_extra_resolver_returns_dict_with_extra(category, graphql_info):
     value = resolve_extra(category, graphql_info)
     assert value == {}
 
