@@ -1,5 +1,6 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
+import { ButtonPrimary } from "../Button"
 import { RootContainer } from "../Storybook"
 import BaseError from "./Error"
 import GraphQLError from "./GraphQLError"
@@ -32,6 +33,17 @@ export const NetworkError = () => (
     <GraphQLError
       className="test"
       error={new ApolloError({ networkError: new Error() })}
+    />
+  </RootContainer>
+)
+
+export const WithAction = () => (
+  <RootContainer padding>
+    <BaseError
+      className="test"
+      action={
+        <ButtonPrimary text="Do something" responsive onClick={() => {}} />
+      }
     />
   </RootContainer>
 )

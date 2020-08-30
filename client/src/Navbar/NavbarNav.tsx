@@ -55,14 +55,14 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ user }) => {
           <li className="nav-item d-sm-block">
             <Button
               className="btn-login"
-              text={<Trans id="navbar.login">Log in</Trans>}
+              text={<Trans id="login">Log in</Trans>}
               onClick={openLoginModal}
             />
           </li>
           <li className="nav-item d-sm-block">
             <Button
               className="btn-register"
-              text={<Trans id="navbar.register">Sign up</Trans>}
+              text={<Trans id="register">Sign up</Trans>}
               onClick={openRegisterModal}
             />
           </li>

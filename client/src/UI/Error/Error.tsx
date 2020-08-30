@@ -4,11 +4,17 @@ import ErrorMessage from "./ErrorMessage"
 
 interface IErrorProps {
   className: string
-  header?: React.ReactNode | null
-  message?: React.ReactNode | null
+  header?: React.ReactNode
+  message?: React.ReactNode
+  action?: React.ReactNode
 }
 
-const Error: React.FC<IErrorProps> = ({ className, header, message }) => (
+const Error: React.FC<IErrorProps> = ({
+  action,
+  className,
+  header,
+  message,
+}) => (
   <div className={className + "-error"}>
     <div className={className + "-error-body"}>
       <div className={className + "-error-icon"} />
@@ -21,6 +27,7 @@ const Error: React.FC<IErrorProps> = ({ className, header, message }) => (
           )}
         </p>
         <p>{message || <ErrorMessage />}</p>
+        {action && <div className={className + "-error-action"}>{action}</div>}
       </div>
     </div>
   </div>

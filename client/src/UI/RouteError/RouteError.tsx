@@ -6,18 +6,25 @@ import WindowTitle from "../WindowTitle"
 
 interface IRouteErrorProps {
   className?: string | null
-  header?: React.ReactNode | null
-  message?: React.ReactNode | null
+  header?: React.ReactNode
+  message?: React.ReactNode
+  action?: React.ReactNode
 }
 
 const RouteError: React.FC<IRouteErrorProps> = ({
   className,
   header,
   message,
+  action,
 }) => (
   <RouteContainer className={classNames("route-error-container", className)}>
     <WindowTitle />
-    <Error className="route" header={header} message={message} />
+    <Error
+      className="route"
+      header={header}
+      message={message}
+      action={action}
+    />
   </RouteContainer>
 )
 

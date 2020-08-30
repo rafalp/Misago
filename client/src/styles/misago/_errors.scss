@@ -10,7 +10,8 @@
   text-align: center;
 }
 
-.route-error {
+.route-error,
+.route-auth-error {
   padding: 4rem 0;
 
   p.lead {
@@ -20,8 +21,14 @@
   }
 }
 
-.route-error-body {
+.route-error-body,
+.route-auth-error-body {
   text-align: center;
+}
+
+.route-error-action .btn + .btn,
+.route-auth-error-action .btn + .btn {
+  margin-left: $spacer;
 }
 
 /* Card and modal errors */

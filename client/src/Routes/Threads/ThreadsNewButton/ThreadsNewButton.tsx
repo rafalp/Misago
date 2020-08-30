@@ -12,9 +12,7 @@ interface IThreadsNewButtonProps {
   } | null
 }
 
-const ThreadsNewButton: React.FC<IThreadsNewButtonProps> = ({
-  category,
-}) => (
+const ThreadsNewButton: React.FC<IThreadsNewButtonProps> = ({ category }) => (
   <Link
     className={classNames("btn btn-primary btn-responsive")}
     to={urls.postThread(category)}

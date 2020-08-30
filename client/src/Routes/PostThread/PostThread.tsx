@@ -1,9 +1,9 @@
-import { t } from "@lingui/macro"
+import { Trans, t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import { useAuthContext } from "../../Context"
 import RouteContainer from "../../UI/RouteContainer"
-import { RouteGraphQLError } from "../../UI/RouteError"
+import { RouteAuthRequiredError, RouteGraphQLError } from "../../UI/RouteError"
 import RouteLoader from "../../UI/RouteLoader"
 import WindowTitle from "../../UI/WindowTitle"
 import PostThreadForm from "./PostThreadForm"
@@ -19,7 +19,17 @@ const PostThread: React.FC = () => {
   // todo: display error if url category can't be posted in
   // todo: display error if url category couldn't be found
 
-  if (!user) return <div>LOGIN REQUIRED</div>
+  if (!user) {
+    return (
+      <RouteAuthRequiredError
+        header={
+          <Trans id="post_thread.auth_error">
+            You must be logged in to post a new thread.
+          </Trans>
+        }
+      />
+    )
+  }
 
   if (!data) {
     if (error) return <RouteGraphQLError error={error} />
