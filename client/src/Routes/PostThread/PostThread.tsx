@@ -1,6 +1,6 @@
 import { Trans, t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
-import React from "react"
+import React, { Suspense } from "react"
 import { useAuthContext } from "../../Context"
 import RouteContainer from "../../UI/RouteContainer"
 import { RouteAuthRequiredError, RouteGraphQLError } from "../../UI/RouteError"
@@ -14,7 +14,6 @@ const PostThread: React.FC = () => {
   const { data, error, loading } = useCategoriesQuery()
   const categories = data ? data.categories : []
 
-  // todo: display auth wall
   // todo: filter unavailable categories
   // todo: display error if url category can't be posted in
   // todo: display error if url category couldn't be found
@@ -37,14 +36,16 @@ const PostThread: React.FC = () => {
   }
 
   return (
-    <RouteContainer>
-      <I18n>
-        {({ i18n }) => (
-          <WindowTitle title={i18n._(t("post_thread.title")`Post thread`)} />
-        )}
-      </I18n>
-      <PostThreadForm categories={categories} />
-    </RouteContainer>
+    <Suspense fallback={<RouteLoader />}>
+      <RouteContainer>
+        <I18n>
+          {({ i18n }) => (
+            <WindowTitle title={i18n._(t("post_thread.title")`Post thread`)} />
+          )}
+        </I18n>
+        <PostThreadForm categories={categories} />
+      </RouteContainer>
+    </Suspense>
   )
 }
 

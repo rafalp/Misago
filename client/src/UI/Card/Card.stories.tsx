@@ -1,7 +1,9 @@
-import { withKnobs, boolean } from "@storybook/addon-knobs"
+import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
 import { RootContainer } from "../Storybook"
 import { ButtonPrimary } from "../Button"
+import { Field, Form, FormFooter } from "../Form"
+import Input from "../Input"
 import {
   Card,
   CardAlert,
@@ -11,6 +13,7 @@ import {
   CardColorBand,
   CardError,
   CardFooter,
+  CardFormBody,
   CardHeader,
   CardList,
   CardListItem,
@@ -111,6 +114,54 @@ export const WithColorBandBanner = () => {
           mobile
         />
         <CardBody>Lorem ipsum dolor met</CardBody>
+      </Card>
+    </RootContainer>
+  )
+}
+
+interface IFormValues {
+  username: string
+  password: string
+}
+
+export const WithForm = () => {
+  const title = text("Title", "Form card")
+  const btnText = text("Button text", "Submit")
+  const alert = boolean("Alert", false)
+  const loading = boolean("Loading", false)
+
+  return (
+    <RootContainer padding>
+      <Card>
+        <CardHeader title={title} />
+        <Form<IFormValues>
+          id="modal_form"
+          defaultValues={{ username: "Bob", password: "" }}
+          onSubmit={async () => {}}
+        >
+          {alert && (
+            <CardAlert>Ut malesuada interdum massa in ultrices.</CardAlert>
+          )}
+          <CardFormBody>
+            <Field
+              label="User name or e-mail"
+              name="username"
+              input={<Input disabled={loading} />}
+            />
+            <Field
+              label="Password"
+              name="password"
+              input={<Input disabled={loading} type="password" />}
+            />
+          </CardFormBody>
+          <CardFooter>
+            <FormFooter
+              submitText={btnText}
+              loading={loading}
+              onCancel={() => {}}
+            />
+          </CardFooter>
+        </Form>
       </Card>
     </RootContainer>
   )

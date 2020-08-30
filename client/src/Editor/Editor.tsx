@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../UI/Form"
 
 interface IEditorProps {
-  name: string
+  name?: string
   disabled?: boolean
 }
 

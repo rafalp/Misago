@@ -6,6 +6,7 @@ import CardBody from "./CardBody"
 import CardColorBand from "./CardColorBand"
 import CardError from "./CardError"
 import CardFooter from "./CardFooter"
+import CardFormBody from "./CardFormBody"
 import CardHeader from "./CardHeader"
 import CardList from "./CardList"
 import CardListItem from "./CardListItem"
@@ -20,6 +21,7 @@ export {
   CardColorBand,
   CardError,
   CardFooter,
+  CardFormBody,
   CardHeader,
   CardList,
   CardListItem,
