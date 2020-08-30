@@ -1,6 +1,6 @@
 import React from "react"
 import { RootContainer, categories } from "../../../UI/Storybook"
-import ThreadsStartButton from "./ThreadsStartButton"
+import ThreadsNewButton from "./ThreadsNewButton"
 
 export default {
   title: "Route/Threads/New Thread Button",
@@ -8,12 +8,12 @@ export default {
 
 export const Default = () => (
   <RootContainer padding>
-    <ThreadsStartButton />
+    <ThreadsNewButton />
   </RootContainer>
 )
 
 export const Category = () => (
   <RootContainer padding>
-    <ThreadsStartButton category={categories[0]} />
+    <ThreadsNewButton category={categories[0]} />
   </RootContainer>
 )

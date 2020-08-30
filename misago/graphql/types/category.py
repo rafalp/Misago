@@ -63,6 +63,13 @@ def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
     }
 
 
+@category_type.field("extra")
+def resolve_extra(
+    category: Category, info: GraphQLResolveInfo
+) -> dict:
+    return {}
+
+
 COLOR_PALETTE = (
     "#FF5630",
     "#36B37E",

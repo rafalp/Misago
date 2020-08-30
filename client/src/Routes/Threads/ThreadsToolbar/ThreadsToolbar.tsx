@@ -1,6 +1,6 @@
 import React from "react"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI"
-import ThreadsStartButton from "../ThreadsStartButton"
+import ThreadsNewButton from "../ThreadsNewButton"
 
 interface IThreadsToolbarProps {
   category?: {
@@ -13,7 +13,7 @@ const ThreadsToolbar: React.FC<IThreadsToolbarProps> = ({ category }) => (
   <Toolbar>
     <ToolbarSeparator />
     <ToolbarItem>
-      <ThreadsStartButton category={category} />
+      <ThreadsNewButton category={category} />
     </ToolbarItem>
   </Toolbar>
 )

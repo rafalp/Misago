@@ -1,7 +1,7 @@
 import React from "react"
 
 interface ICardHeaderProps {
-  title: string
+  title: React.ReactNode
 }
 
 const CardHeader: React.FC<ICardHeaderProps> = ({ title }) => (

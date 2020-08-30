@@ -4,6 +4,7 @@ from ..category import (
     resolve_children,
     resolve_banner,
     resolve_color,
+    resolve_extra,
     resolve_icon,
     resolve_parent,
 )
@@ -30,6 +31,13 @@ def test_category_color_resolver_returns_string_with_category_color(
 ):
     value = resolve_color(category, graphql_info)
     assert value == "#FF7452"
+
+
+def test_category_extra_resolver_returns_dict_with_extra(
+    category, graphql_info
+):
+    value = resolve_extra(category, graphql_info)
+    assert value == {}
 
 
 def test_category_icon_resolver_returns_string_with_category_color(

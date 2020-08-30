@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { CardBlankslate } from "../../../UI"
-import ThreadsStartButton from "../ThreadsStartButton"
+import ThreadsNewButton from "../ThreadsNewButton"
 
 interface IThreadsListBlankslateProps {
   category?: {
@@ -24,7 +24,7 @@ const ThreadsListBlankslate: React.FC<IThreadsListBlankslateProps> = ({
         Why not start one yourself and get the discussion going?
       </Trans>
     }
-    actions={<ThreadsStartButton category={category} />}
+    actions={<ThreadsNewButton category={category} />}
   />
 )
 

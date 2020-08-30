@@ -13,9 +13,9 @@ export const categories = () => `/categories/`
 export const category = (category: ISluggable) => {
   return `/c/${category.slug}/${category.id}/`
 }
-export const startThread = (category?: ISluggable | null) => {
-  if (category) return `/start-thread/${category.slug}/${category.id}/`
-  return `/start-thread/`
+export const postThread = (category?: ISluggable | null) => {
+  if (category) return `/c/${category.slug}/${category.id}/post-thread/`
+  return `/post-thread/`
 }
 export const threads = () => `/threads/`
 export const thread = (thread: IThreadParams) => {

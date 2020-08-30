@@ -11,6 +11,7 @@ type Category {
     threads: Int!
     posts: Int!
     isClosed: Boolean!
+    extra: Generic!
 }
 
 type CategoryBannerSize {

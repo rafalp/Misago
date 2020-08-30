@@ -5,19 +5,19 @@ import { Link } from "react-router-dom"
 import { Icon } from "../../../UI"
 import * as urls from "../../../urls"
 
-interface IThreadsStartButtonProps {
+interface IThreadsNewButtonProps {
   category?: {
     id: string
     slug: string
   } | null
 }
 
-const ThreadsStartButton: React.FC<IThreadsStartButtonProps> = ({
+const ThreadsNewButton: React.FC<IThreadsNewButtonProps> = ({
   category,
 }) => (
   <Link
     className={classNames("btn btn-primary btn-responsive")}
-    to={urls.startThread(category)}
+    to={urls.postThread(category)}
   >
     <Icon icon="far fa-edit" fixedWidth />
     <span>
@@ -26,4 +26,4 @@ const ThreadsStartButton: React.FC<IThreadsStartButtonProps> = ({
   </Link>
 )
 
-export default ThreadsStartButton
+export default ThreadsNewButton

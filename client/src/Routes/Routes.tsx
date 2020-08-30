@@ -5,9 +5,9 @@ import { RouteErrorBoundary, RouteLoader } from "../UI"
 import * as urls from "../urls"
 
 const Categories = lazy(() => import("./Categories"))
+const PostThread = lazy(() => import("./PostThread"))
 const Threads = lazy(() => import("./Threads"))
 const Thread = lazy(() => import("./Thread"))
-const StartThread = lazy(() => import("./StartThread"))
 const User = lazy(() => import("./User"))
 
 const sluggable = { id: ":id", slug: ":slug" }
@@ -20,12 +20,22 @@ const Routes: React.FC = () => {
       <Suspense fallback={<RouteLoader />}>
         <Switch>
           <Route
-            path={urls.startThread()}
+            path={urls.postThread()}
             render={() => (
               <RouteErrorBoundary>
-                <StartThread />
+                <PostThread />
               </RouteErrorBoundary>
             )}
+            exact
+          />
+          <Route
+            path={urls.postThread(sluggable)}
+            render={() => (
+              <RouteErrorBoundary>
+                <PostThread />
+              </RouteErrorBoundary>
+            )}
+            exact
           />
           <Route
             path={urls.thread(sluggable)}
