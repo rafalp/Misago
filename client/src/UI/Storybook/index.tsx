@@ -5,6 +5,7 @@ import ModalContainer from "./ModalContainer"
 import ModalFormContainer from "./ModalFormContainer"
 import Placeholder from "./Placeholder"
 import RootContainer from "./RootContainer"
+import { SettingsContextFactory } from "./context"
 import { avatarFactory, settingsFactory, userFactory } from "./factories"
 import { categories, colors, icons } from "./fixtures"
 
@@ -16,6 +17,7 @@ export {
   ModalFormContainer,
   Placeholder,
   RootContainer,
+  SettingsContextFactory,
   avatarFactory,
   categories,
   colors,

@@ -100,92 +100,108 @@ export const Threads = () => {
   )
 }
 
-export const WithUpdate = () => (
-  <Container>
-    <h5>Update available</h5>
-    <ThreadsList
-      selection={useThreadsSelection()}
-      threads={threads([thread()])}
-      loading={false}
-      update={{
-        fetch,
-        threads: 7,
-        loading: false,
-      }}
-    />
-    <h5>Update loading</h5>
-    <ThreadsList
-      selection={useThreadsSelection()}
-      threads={threads([thread()])}
-      loading={false}
-      update={{
-        fetch,
-        threads: 7,
-        loading: true,
-      }}
-    />
-    <h5>Update disabled</h5>
-    <ThreadsList
-      selection={useThreadsSelection()}
-      threads={threads([thread()])}
-      loading={true}
-      update={{
-        fetch,
-        threads: 7,
-        loading: false,
-      }}
-    />
-  </Container>
-)
+export const WithUpdate = () => {
+  const selection = useThreadsSelection()
 
-export const Loading = () => (
-  <Container>
-    <ThreadsList
-      threads={null}
-      selection={useThreadsSelection()}
-      loading={true}
-    />
-  </Container>
-)
+  return (
+    <Container>
+      <h5>Update available</h5>
+      <ThreadsList
+        selection={selection}
+        threads={threads([thread()])}
+        loading={false}
+        update={{
+          fetch,
+          threads: 7,
+          loading: false,
+        }}
+      />
+      <h5>Update loading</h5>
+      <ThreadsList
+        selection={selection}
+        threads={threads([thread()])}
+        loading={false}
+        update={{
+          fetch,
+          threads: 7,
+          loading: true,
+        }}
+      />
+      <h5>Update disabled</h5>
+      <ThreadsList
+        selection={selection}
+        threads={threads([thread()])}
+        loading={true}
+        update={{
+          fetch,
+          threads: 7,
+          loading: false,
+        }}
+      />
+    </Container>
+  )
+}
 
-export const LoadingMore = () => (
-  <Container>
-    <ThreadsList
-      threads={threads([thread()])}
-      selection={useThreadsSelection()}
-      loading={true}
-    />
-  </Container>
-)
+export const Loading = () => {
+  const selection = useThreadsSelection()
 
-export const Empty = () => (
-  <Container>
-    <ThreadsList
-      threads={threads()}
-      selection={useThreadsSelection()}
-      loading={false}
-    />
-  </Container>
-)
+  return (
+    <Container>
+      <ThreadsList threads={null} selection={selection} loading={true} />
+    </Container>
+  )
+}
 
-export const QueryError = () => (
-  <Container>
-    <ThreadsList
-      error={new ApolloError({})}
-      threads={null}
-      selection={useThreadsSelection()}
-      loading={false}
-    />
-  </Container>
-)
+export const LoadingMore = () => {
+  const selection = useThreadsSelection()
 
-export const NetworkError = () => (
-  <Container>
-    <ThreadsList
-      error={new ApolloError({ networkError: new Error() })}
-      threads={null}
-      selection={useThreadsSelection()}
-      loading={false}
-    />
-  </Container>
-)
+  return (
+    <Container>
+      <ThreadsList
+        threads={threads([thread()])}
+        selection={selection}
+        loading={true}
+      />
+    </Container>
+  )
+}
+
+export const Empty = () => {
+  const selection = useThreadsSelection()
+
+  return (
+    <Container>
+      <ThreadsList threads={threads()} selection={selection} loading={false} />
+    </Container>
+  )
+}
+
+export const QueryError = () => {
+  const selection = useThreadsSelection()
+
+  return (
+    <Container>
+      <ThreadsList
+        error={new ApolloError({})}
+        threads={null}
+        selection={selection}
+        loading={false}
+      />
+    </Container>
+  )
+}
+
+export const NetworkError = () => {
+  const selection = useThreadsSelection()
+
+  return (
+    <Container>
+      <ThreadsList
+        error={new ApolloError({ networkError: new Error() })}
+        threads={null}
+        selection={selection}
+        loading={false}
+      />
+    </Container>
+  )
+}

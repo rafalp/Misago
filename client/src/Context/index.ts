@@ -28,7 +28,12 @@ const SettingsContext = React.createContext<ISettings | null>(null)
 
 const useAuthContext = () => React.useContext(AuthContext)
 const useForumStatsContext = () => React.useContext(ForumStatsContext)
-const useSettingsContext = () => React.useContext(SettingsContext) as ISettings
+const useSettingsContext = () => {
+  const settings = React.useContext(SettingsContext)
+  if (settings === null)
+    throw "useSettingsContext() used outside of settings provider!"
+  return settings
+}
 const useBulkActionLimit = () => {
   const settings = React.useContext(SettingsContext)
   if (settings) return settings.bulkActionLimit

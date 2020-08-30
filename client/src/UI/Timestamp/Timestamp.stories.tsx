@@ -7,7 +7,7 @@ export default {
   title: "UI/Timestamp",
 }
 
-export const Timestamps = () => {
+export const TimestampsNoSnapshot = () => {
   const date = new Date()
 
   return (

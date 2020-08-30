@@ -1,7 +1,11 @@
 import { actions } from "@storybook/addon-actions"
 import React from "react"
 import { CategoriesContext } from "../../../Context"
-import { RootContainer, categories } from "../../../UI/Storybook"
+import {
+  RootContainer,
+  SettingsContextFactory,
+  categories,
+} from "../../../UI/Storybook"
 import ThreadsCategoriesModal from "./ThreadsCategoriesModal"
 import ThreadsCategoriesModalButton from "./ThreadsCategoriesModalButton"
 import { ThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
@@ -39,50 +43,56 @@ export const ButtonWithCategory = () => (
 )
 
 export const Modal = () => (
-  <CategoriesContext.Provider value={categories}>
-    <ThreadsCategoriesModalContext.Provider
-      value={{ open, close, isOpen: true }}
-    >
-      <RootContainer>
-        <ThreadsCategoriesModal />
-      </RootContainer>
-    </ThreadsCategoriesModalContext.Provider>
-  </CategoriesContext.Provider>
+  <SettingsContextFactory>
+    <CategoriesContext.Provider value={categories}>
+      <ThreadsCategoriesModalContext.Provider
+        value={{ open, close, isOpen: true }}
+      >
+        <RootContainer>
+          <ThreadsCategoriesModal />
+        </RootContainer>
+      </ThreadsCategoriesModalContext.Provider>
+    </CategoriesContext.Provider>
+  </SettingsContextFactory>
 )
 
 export const ModalWithActiveCategory = () => (
-  <CategoriesContext.Provider value={categories}>
-    <ThreadsCategoriesModalContext.Provider
-      value={{
-        open,
-        close,
-        active: { category: categories[0], parent: categories[0] },
-        isOpen: true,
-      }}
-    >
-      <RootContainer>
-        <ThreadsCategoriesModal />
-      </RootContainer>
-    </ThreadsCategoriesModalContext.Provider>
-  </CategoriesContext.Provider>
+  <SettingsContextFactory>
+    <CategoriesContext.Provider value={categories}>
+      <ThreadsCategoriesModalContext.Provider
+        value={{
+          open,
+          close,
+          active: { category: categories[0], parent: categories[0] },
+          isOpen: true,
+        }}
+      >
+        <RootContainer>
+          <ThreadsCategoriesModal />
+        </RootContainer>
+      </ThreadsCategoriesModalContext.Provider>
+    </CategoriesContext.Provider>
+  </SettingsContextFactory>
 )
 
 export const ModalWithActiveChildCategory = () => (
-  <CategoriesContext.Provider value={categories}>
-    <ThreadsCategoriesModalContext.Provider
-      value={{
-        open,
-        close,
-        active: {
-          category: categories[0].children[1],
-          parent: categories[0],
-        },
-        isOpen: true,
-      }}
-    >
-      <RootContainer>
-        <ThreadsCategoriesModal />
-      </RootContainer>
-    </ThreadsCategoriesModalContext.Provider>
-  </CategoriesContext.Provider>
+  <SettingsContextFactory>
+    <CategoriesContext.Provider value={categories}>
+      <ThreadsCategoriesModalContext.Provider
+        value={{
+          open,
+          close,
+          active: {
+            category: categories[0].children[1],
+            parent: categories[0],
+          },
+          isOpen: true,
+        }}
+      >
+        <RootContainer>
+          <ThreadsCategoriesModal />
+        </RootContainer>
+      </ThreadsCategoriesModalContext.Provider>
+    </CategoriesContext.Provider>
+  </SettingsContextFactory>
 )

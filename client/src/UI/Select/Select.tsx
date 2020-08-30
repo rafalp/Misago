@@ -36,7 +36,7 @@ const Select: React.FC<ISelectProps> = ({
   onChange,
 }) => {
   const context = useFieldContext()
-  const hookContext = useFormContext()
+  const hookContext = useFormContext() || {}
 
   return (
     <select
