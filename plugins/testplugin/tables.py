@@ -1,6 +1,6 @@
-import sqlalchemy
+# import sqlalchemy
 
-from misago.tables import metadata
+# from misago.tables import metadata
 
 
 # likes = sqlalchemy.Table(

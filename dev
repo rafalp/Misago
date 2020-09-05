@@ -75,6 +75,7 @@ intro() {
     echo "    ${BOLD}test${NORMAL}              run tests suite using pytest."
     echo "    ${BOLD}lint${NORMAL}              run linters."
     echo "    ${BOLD}mypy${NORMAL}              run mypy linter."
+    echo "    ${BOLD}pylint${NORMAL}            run pylint linter."
     echo
     echo "Translations:"
     echo
@@ -297,9 +298,11 @@ if [[ $1 ]]; then
         test $@
     elif [[ $1 = "lint" ]]; then
         mypy misago --ignore-missing-imports
-        pylint misago --extension-pkg-whitelist=pydantic
+        pylint misago plugins --extension-pkg-whitelist=pydantic
     elif [[ $1 = "mypy" ]]; then
         mypy misago --ignore-missing-imports
+    elif [[ $1 = "pylint" ]]; then
+        pylint misago plugins --extension-pkg-whitelist=pydantic
     elif [[ $1 = "makemessages" ]]; then
         makemessages ${2:-en}
     elif [[ $1 = "makemessages_in_docker" ]]; then
