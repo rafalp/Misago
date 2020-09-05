@@ -127,7 +127,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           const { errors, token, user } = result.data?.register || {}
 
           errors?.forEach(({ location, type, message }) => {
-            const field = location.join(".")
+            const field = location.join(".") as "name" | "email" | "password"
             setError(field, type, message)
           })
 

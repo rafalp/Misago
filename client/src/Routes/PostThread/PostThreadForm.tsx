@@ -1,4 +1,5 @@
-import { Trans } from "@lingui/macro"
+import { Trans, t } from "@lingui/macro"
+import { I18n } from "@lingui/react"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
@@ -20,6 +21,7 @@ import {
 } from "../../UI/ValidationError"
 import * as urls from "../../urls"
 import { ICategoryChoice } from "./PostThread.types"
+import PostThreadCategoryInput from "./PostThreadCategoryInput"
 import usePostThreadMutation from "./usePostThreadMutation"
 
 const Editor = React.lazy(() => import("../../Editor"))
@@ -79,8 +81,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
           const { errors, thread } = result.data?.postThread || {}
 
           errors?.forEach(({ location, type, message }) => {
-            const field = location.join(".")
-            console.log(field)
+            const field = location.join(".") as "body" | "title" | "category"
             setError(field, type, message)
           })
 
@@ -100,31 +101,51 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
           {({ message }) => <CardAlert>{message}</CardAlert>}
         </RootError>
         <CardFormBody>
-          <Field
-            label={<Trans id="post_thread.category">Select a category</Trans>}
-            name="category"
-            input={<Input />}
-            error={(error) => (
-              <CategoryValidationError error={error}>
-                {({ message }) => <FieldError>{message}</FieldError>}
-              </CategoryValidationError>
-            )}
-          />
-          <Field
-            label={<Trans id="post_thread.thread_title">Thread title</Trans>}
-            name="title"
-            input={<Input />}
-            error={(error, value) => (
-              <ThreadTitleValidationError
-                error={error}
-                value={value.trim().length}
-                min={threadTitleMinLength}
-                max={threadTitleMaxLength}
-              >
-                {({ message }) => <FieldError>{message}</FieldError>}
-              </ThreadTitleValidationError>
-            )}
-          />
+          <div className="row">
+            <div className="col-12 col-md-auto">
+              <Field
+                label={
+                  <Trans id="post_thread.category">Select a category</Trans>
+                }
+                name="category"
+                input={<PostThreadCategoryInput />}
+                error={(error) => (
+                  <CategoryValidationError error={error}>
+                    {({ message }) => <FieldError>{message}</FieldError>}
+                  </CategoryValidationError>
+                )}
+              />
+            </div>
+            <div className="col-12 col-md">
+              <Field
+                label={
+                  <Trans id="post_thread.thread_title">Thread title</Trans>
+                }
+                name="title"
+                input={
+                  <I18n>
+                    {({ i18n }) => (
+                      <Input
+                        placeholder={i18n._(
+                          t("post_thread.thread_title")`Thread title`
+                        )}
+                      />
+                    )}
+                  </I18n>
+                }
+                error={(error, value) => (
+                  <ThreadTitleValidationError
+                    error={error}
+                    value={value.trim().length}
+                    min={threadTitleMinLength}
+                    max={threadTitleMaxLength}
+                  >
+                    {({ message }) => <FieldError>{message}</FieldError>}
+                  </ThreadTitleValidationError>
+                )}
+              />
+            </div>
+          </div>
           <Field
             label={
               <Trans id="post_thread.thread_message">Message contents</Trans>

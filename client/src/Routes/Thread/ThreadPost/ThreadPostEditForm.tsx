@@ -54,7 +54,7 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
 
           if (errors) {
             errors?.forEach(({ location, type, message }) => {
-              const field = location.join(".")
+              const field = location.join(".") as "body"
               setError(field, type, message)
             })
           } else {

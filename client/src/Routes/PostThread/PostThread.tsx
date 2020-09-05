@@ -1,6 +1,7 @@
 import { Trans, t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React, { Suspense } from "react"
+import { useParams } from "react-router-dom"
 import { useAuthContext } from "../../Context"
 import RouteContainer from "../../UI/RouteContainer"
 import { RouteAuthRequiredError, RouteGraphQLError } from "../../UI/RouteError"
@@ -9,7 +10,12 @@ import WindowTitle from "../../UI/WindowTitle"
 import PostThreadForm from "./PostThreadForm"
 import useCategoriesQuery from "./useCategoriesQuery"
 
+interface IPostThreadRouteParams {
+  id?: string
+}
+
 const PostThread: React.FC = () => {
+  const params = useParams<IPostThreadRouteParams>()
   const user = useAuthContext()
   const { data, error, loading } = useCategoriesQuery()
   const categories = data ? data.categories : []

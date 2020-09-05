@@ -2,15 +2,40 @@ import React from "react"
 import {
   FieldValues,
   FormContext as HookFormContext,
+  IsFlatObject,
+  ManualFieldError,
+  Message,
+  MultipleFieldErrors,
   useForm,
 } from "react-hook-form"
 import { FormContext } from "./FormContext"
 
-interface IOnSubmit<FormValues> {
+interface IOnSubmit<FormValues extends FieldValues = FieldValues> {
   data: FormValues
   event?: React.BaseSyntheticEvent<object, any, any>
-  clearError: (name?: string | string[]) => void
-  setError: (name: string, type: string, message?: string) => void
+  clearError: (
+    name?:
+      | (IsFlatObject<FormValues> extends true
+          ? Extract<keyof FormValues, string>
+          : string)
+      | (IsFlatObject<FormValues> extends true
+          ? Extract<keyof FormValues, string>
+          : string)[]
+  ) => void
+  setError(
+    name: IsFlatObject<FormValues> extends true
+      ? Extract<keyof FormValues, string>
+      : string,
+    type: MultipleFieldErrors
+  ): void
+  setError(
+    name: IsFlatObject<FormValues> extends true
+      ? Extract<keyof FormValues, string>
+      : string,
+    type: string,
+    message?: Message
+  ): void
+  setError(name: ManualFieldError<FormValues>[]): void
 }
 
 interface IFormProps<FormValues> {
@@ -61,8 +86,7 @@ const Form = <
                 data,
                 event,
                 clearError: methods.clearError,
-                setError: (name: string, type: string, message?: string) =>
-                  methods.setError(name, type, message),
+                setError: methods.setError,
               })
             })
           }

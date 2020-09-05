@@ -30,8 +30,9 @@ const useAuthContext = () => React.useContext(AuthContext)
 const useForumStatsContext = () => React.useContext(ForumStatsContext)
 const useSettingsContext = () => {
   const settings = React.useContext(SettingsContext)
-  if (settings === null)
-    throw "useSettingsContext() used outside of settings provider!"
+  if (settings === null) {
+    throw new Error("useSettingsContext() used outside of settings provider!")
+  }
   return settings
 }
 const useBulkActionLimit = () => {
