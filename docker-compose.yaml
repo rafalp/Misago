@@ -39,6 +39,21 @@ services:
       - redis
     tty: true
     volumes:
-      # Map in the entire project into the container
+      # Map in the project files into the container
       # This makes sure files in the container updates on the fly as we were working locally
-      - .:/app/:Z
+      - ./dev:/app/dev:Z
+      - ./media:/app/media:Z
+      - ./misago:/app/misago:Z
+      - ./misagocli.py:/app/misagocli.py:Z
+      - ./mypy.ini:/app/mypy.ini:Z
+      - ./plugins:/app/plugins:Z
+      - ./plugins.txt:/app/plugins.txt:Z
+      - ./pytest.ini:/app/pytest.ini:Z
+      - ./requirements-dev.in:/app/requirements-dev.in:Z
+      - ./requirements-dev.txt:/app/requirements-dev.txt:Z
+      - ./requirements-plugins.in:/app/requirements-plugins.in:Z
+      - ./requirements-plugins.txt:/app/requirements-plugins.txt:Z
+      - ./requirements.in:/app/requirements.in:Z
+      - ./requirements.txt:/app/requirements.txt:Z
+      - ./setup.py:/app/setup.py:Z
+      - ./static:/app/static:Z

@@ -9,6 +9,6 @@
 #
 # To enable multiple plugins, list their names in separate lines.
 
-testplugin
+testplugin@/app/plugins
 datafaker@/app/plugins
 otherplugin@/app/plugins
