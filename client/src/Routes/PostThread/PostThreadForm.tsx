@@ -101,51 +101,45 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
           {({ message }) => <CardAlert>{message}</CardAlert>}
         </RootError>
         <CardFormBody>
-          <div className="row">
-            <div className="col-12 col-md-auto">
-              <Field
-                label={
-                  <Trans id="post_thread.category">Select a category</Trans>
-                }
-                name="category"
-                input={<PostThreadCategoryInput />}
-                error={(error) => (
-                  <CategoryValidationError error={error}>
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </CategoryValidationError>
-                )}
-              />
-            </div>
-            <div className="col-12 col-md">
-              <Field
-                label={
-                  <Trans id="post_thread.thread_title">Thread title</Trans>
-                }
-                name="title"
-                input={
-                  <I18n>
-                    {({ i18n }) => (
-                      <Input
-                        placeholder={i18n._(
-                          t("post_thread.thread_title")`Thread title`
-                        )}
-                      />
+          <Field
+            label={<Trans id="post_thread.thread_title">Thread title</Trans>}
+            name="title"
+            input={
+              <I18n>
+                {({ i18n }) => (
+                  <Input
+                    placeholder={i18n._(
+                      t("post_thread.thread_title")`Thread title`
                     )}
-                  </I18n>
-                }
-                error={(error, value) => (
-                  <ThreadTitleValidationError
-                    error={error}
-                    value={value.trim().length}
-                    min={threadTitleMinLength}
-                    max={threadTitleMaxLength}
-                  >
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </ThreadTitleValidationError>
+                  />
                 )}
-              />
-            </div>
-          </div>
+              </I18n>
+            }
+            error={(error, value) => (
+              <ThreadTitleValidationError
+                error={error}
+                value={value.trim().length}
+                min={threadTitleMinLength}
+                max={threadTitleMaxLength}
+              >
+                {({ message }) => <FieldError>{message}</FieldError>}
+              </ThreadTitleValidationError>
+            )}
+            labelReaderOnly
+          />
+          <Field
+            label={
+              <Trans id="post_thread.thread_category">Thread category</Trans>
+            }
+            name="category"
+            input={<PostThreadCategoryInput choices={categories} />}
+            error={(error) => (
+              <CategoryValidationError error={error}>
+                {({ message }) => <FieldError>{message}</FieldError>}
+              </CategoryValidationError>
+            )}
+            labelReaderOnly
+          />
           <Field
             label={
               <Trans id="post_thread.thread_message">Message contents</Trans>
@@ -162,6 +156,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
                 {({ message }) => <FieldError>{message}</FieldError>}
               </ValidationError>
             )}
+            labelReaderOnly
           />
         </CardFormBody>
         <CardFooter>

@@ -15,6 +15,7 @@ interface IFieldProps {
   id?: string
   input?: React.ReactNode
   label?: React.ReactNode
+  labelReaderOnly?: React.ReactNode
   name?: string
   required?: boolean
 }
@@ -26,6 +27,7 @@ const Field: React.FC<IFieldProps> = ({
   id,
   input,
   label,
+  labelReaderOnly,
   name,
   required,
 }) => {
@@ -48,7 +50,7 @@ const Field: React.FC<IFieldProps> = ({
     >
       <div className={classNames("form-group", className)}>
         {label && (
-          <FieldLabel htmlFor={fieldId} required={required}>
+          <FieldLabel htmlFor={fieldId} readerOnly={labelReaderOnly} required={required}>
             {label}
           </FieldLabel>
         )}

@@ -19,7 +19,6 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled }) => {
       name={name || context.name}
       ref={hookContext.register}
       rows={5}
-      required
     />
   )
 }

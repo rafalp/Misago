@@ -53,3 +53,8 @@
     );
   }
 }
+
+// Add right-margin to category icon
+.btn .category-icon {
+  margin-right: $spacer / 4;
+}

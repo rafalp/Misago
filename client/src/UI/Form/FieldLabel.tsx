@@ -3,15 +3,17 @@ import React from "react"
 interface IFieldLabelProps {
   children?: React.ReactNode
   htmlFor?: string
+  readerOnly?: React.ReactNode
   required?: boolean
 }
 
 const FieldLabel: React.FC<IFieldLabelProps> = ({
   children,
   htmlFor,
+  readerOnly,
   required,
 }) => (
-  <label htmlFor={htmlFor}>
+  <label className={readerOnly ? "sr-only" : undefined} htmlFor={htmlFor}>
     {children}
     {required && <FieldRequired />}
   </label>

@@ -27,6 +27,16 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
     <I18n>
       {({ i18n }) => {
         switch (errorType) {
+          case "value_error.missing":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "value_error.category.missing"
+                )`Thread category can't be empty.`
+              ),
+            })
+
           case "auth_error.not_moderator":
             return children({
               type: errorType,

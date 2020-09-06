@@ -11,6 +11,14 @@ const CATEGORIES_QUERY = gql`
       color
       isClosed
       extra
+      children {
+        id
+        name
+        icon
+        color
+        isClosed
+        extra
+      }
     }
   }
 `
