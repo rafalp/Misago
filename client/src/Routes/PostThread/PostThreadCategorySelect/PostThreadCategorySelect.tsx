@@ -1,6 +1,10 @@
-import { Trans } from "@lingui/macro"
+import { Trans, t } from "@lingui/macro"
+import { I18n } from "@lingui/react"
 import React from "react"
 import { useModalContext } from "../../../Context"
+import { ButtonSecondary } from "../../../UI/Button"
+import CategoryIcon from "../../../UI/CategoryIcon"
+import Input from "../../../UI/Input"
 import { Modal, ModalBody, ModalDialog } from "../../../UI/Modal"
 import { ICategoryChoice } from "../PostThread.types"
 
@@ -13,7 +17,40 @@ const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
   choices,
   setValue,
 }) => {
-  const { isOpen, closeModal } = useModalContext()
+  const { closeModal, isOpen } = useModalContext()
+  const [search, setSearch] = React.useState<string>("")
+  const [visibleChoices, setVisibleChoices] = React.useState<
+    Array<ICategoryChoice>
+  >(choices)
+
+  React.useEffect(() => {
+    if (search.trim().length === 0) {
+      setVisibleChoices(choices)
+    } else {
+      const s = search.toLowerCase()
+      const results = choices.map((category) => {
+        const foundChildren = category.children.filter((child) => {
+          return child.name.toLowerCase().indexOf(s) >= 0
+        })
+
+        if (
+          category.name.toLowerCase().indexOf(s) >= 0 ||
+          foundChildren.length
+        ) {
+          return Object.assign({}, category, { children: foundChildren })
+        }
+
+        return null
+      })
+
+      setVisibleChoices(
+        results.filter((result) => {
+          return result !== null
+        }) as Array<ICategoryChoice>
+      )
+    }
+  }, [choices, search, setVisibleChoices])
+
   return (
     <Modal isOpen={isOpen} close={closeModal}>
       <ModalDialog
@@ -22,35 +59,60 @@ const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
         }
         close={closeModal}
       >
-        <ModalBody>
-          {choices.map((category) => (
-            <React.Fragment key={category.id}>
-              <div className="mb-3">
-                <button
-                  className="btn btn-secondary w-100 text-left mb-3"
-                  type="button"
-                  onClick={() => {
-                    setValue(category.id)
-                    closeModal()
-                  }}
-                >
-                  {category.name}
-                </button>
-                {category.children.map((child) => (
-                  <div className="pl-3 mb-3" key={child.id}>
-                    <button
-                      className="btn btn-secondary w-100 text-left"
-                      type="button"
-                      onClick={() => {
-                        setValue(child.id)
-                        closeModal()
-                      }}
-                    >
-                      {child.name}
-                    </button>
-                  </div>
-                ))}
+        <ModalBody className="category-select-search">
+          <div className="row no-gutters">
+            <div className="col">
+              <I18n>
+                {({ i18n }) => (
+                  <Input
+                    placeholder={i18n._(
+                      t("post_thread.search_category")`Search categories`
+                    )}
+                    value={search}
+                    onChange={({ target }) => setSearch(target.value)}
+                  />
+                )}
+              </I18n>
+            </div>
+            {search.trim().length > 0 && (
+              <div className="col-auto pl-3">
+                <ButtonSecondary
+                  icon="fas fa-times"
+                  onClick={() => setSearch("")}
+                />
               </div>
+            )}
+          </div>
+        </ModalBody>
+        <ModalBody className="category-select">
+          {visibleChoices.map((category) => (
+            <React.Fragment key={category.id}>
+              <button
+                className="btn btn-secondary btn-sm w-100 text-left mb-2"
+                type="button"
+                onClick={() => {
+                  setValue(category.id)
+                  closeModal()
+                }}
+              >
+                <CategoryIcon category={category} />
+                <span>{category.name}</span>
+              </button>
+              {category.children.map((child) => (
+                <div className="pl-3 mb-2" key={child.id}>
+                  <button
+                    className="btn btn-secondary btn-sm w-100 text-left"
+                    type="button"
+                    onClick={() => {
+                      setValue(child.id)
+                      closeModal()
+                    }}
+                  >
+                    <CategoryIcon category={child} />
+                    <span>{child.name}</span>
+                  </button>
+                </div>
+              ))}
             </React.Fragment>
           ))}
         </ModalBody>

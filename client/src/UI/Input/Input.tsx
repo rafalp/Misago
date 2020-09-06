@@ -13,6 +13,7 @@ interface IInputProps {
   placeholder?: string
   required?: boolean
   type?: "text" | "email" | "password"
+  value?: string
   onBlur?: (event: React.BaseSyntheticEvent<object, any, any>) => void
   onChange?: (event: React.BaseSyntheticEvent<object, any, any>) => void
 }
@@ -27,6 +28,7 @@ const Input: React.FC<IInputProps> = ({
   placeholder,
   required,
   type,
+  value,
   onBlur,
   onChange,
 }) => {
@@ -48,6 +50,7 @@ const Input: React.FC<IInputProps> = ({
       ref={hookContext.register}
       required={required || context.required}
       type={type || "text"}
+      value={value}
       onBlur={onBlur}
       onChange={onChange}
     />

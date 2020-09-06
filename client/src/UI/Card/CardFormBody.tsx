@@ -10,7 +10,7 @@ const CardFormBody: React.FC<ICardFormBodyProps> = ({
   children,
   className,
 }) => (
-  <div className={classNames("modal-body", "modal-form-body", className)}>
+  <div className={classNames("card-body", "card-form-body", className)}>
     {children}
   </div>
 )

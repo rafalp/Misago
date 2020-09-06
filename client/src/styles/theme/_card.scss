@@ -18,3 +18,8 @@
     border-radius: 0;
   }
 }
+
+/* Remove bottom 1rem padding from forms */
+.card-form-body {
+  padding-bottom: 0;
+}
