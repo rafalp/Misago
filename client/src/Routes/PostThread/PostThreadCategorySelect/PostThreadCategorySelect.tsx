@@ -7,6 +7,7 @@ import CategoryIcon from "../../../UI/CategoryIcon"
 import Input from "../../../UI/Input"
 import { Modal, ModalBody, ModalDialog } from "../../../UI/Modal"
 import { ICategoryChoice } from "../PostThread.types"
+import useFilteredChoices from "./useFilteredChoices"
 
 interface IPostThreadCategorySelectProps {
   choices: Array<ICategoryChoice>
@@ -19,37 +20,7 @@ const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
 }) => {
   const { closeModal, isOpen } = useModalContext()
   const [search, setSearch] = React.useState<string>("")
-  const [visibleChoices, setVisibleChoices] = React.useState<
-    Array<ICategoryChoice>
-  >(choices)
-
-  React.useEffect(() => {
-    if (search.trim().length === 0) {
-      setVisibleChoices(choices)
-    } else {
-      const s = search.toLowerCase()
-      const results = choices.map((category) => {
-        const foundChildren = category.children.filter((child) => {
-          return child.name.toLowerCase().indexOf(s) >= 0
-        })
-
-        if (
-          category.name.toLowerCase().indexOf(s) >= 0 ||
-          foundChildren.length
-        ) {
-          return Object.assign({}, category, { children: foundChildren })
-        }
-
-        return null
-      })
-
-      setVisibleChoices(
-        results.filter((result) => {
-          return result !== null
-        }) as Array<ICategoryChoice>
-      )
-    }
-  }, [choices, search, setVisibleChoices])
+  const filteredChoices = useFilteredChoices(choices, search)
 
   return (
     <Modal isOpen={isOpen} close={closeModal}>
@@ -85,7 +56,7 @@ const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
           </div>
         </ModalBody>
         <ModalBody className="category-select">
-          {visibleChoices.map((category) => (
+          {filteredChoices.map((category) => (
             <React.Fragment key={category.id}>
               <button
                 className="btn btn-secondary btn-sm w-100 text-left mb-2"
