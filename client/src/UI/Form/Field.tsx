@@ -50,7 +50,11 @@ const Field: React.FC<IFieldProps> = ({
     >
       <div className={classNames("form-group", className)}>
         {label && (
-          <FieldLabel htmlFor={fieldId} readerOnly={labelReaderOnly} required={required}>
+          <FieldLabel
+            htmlFor={fieldId}
+            readerOnly={labelReaderOnly}
+            required={required}
+          >
             {label}
           </FieldLabel>
         )}
