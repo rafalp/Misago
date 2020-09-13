@@ -1,5 +1,5 @@
 import React from "react"
-import CategoryIcon from "../../../UI/CategoryIcon"
+import CategoryButton from "../../../UI/CategoryButton"
 import { ICategoryChoiceChild } from "../PostThread.types"
 
 interface IPostThreadCategoryInputSelectedProps {
@@ -14,15 +14,12 @@ const PostThreadCategoryInputSelected: React.FC<IPostThreadCategoryInputSelected
   onClick,
 }) => (
   <div className="form-control-category">
-    <button
-      className="btn btn-secondary btn-responsive"
-      type="button"
+    <CategoryButton
+      category={category}
       disabled={disabled}
+      nowrap
       onClick={onClick}
-    >
-      <CategoryIcon category={category} />
-      <span>{category.name}</span>
-    </button>
+    />
   </div>
 )
 

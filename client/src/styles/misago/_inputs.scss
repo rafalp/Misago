@@ -59,7 +59,7 @@
   }
 }
 
-// Align categories
+// Align categories in category input next to each other
 .form-control-select-category {
   display: flex;
 }
@@ -68,12 +68,6 @@
   overflow: hidden;
   white-space: nowrap;
   width: auto;
-}
-
-.form-control-category .btn {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .form-control-category + .form-control-category {

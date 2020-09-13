@@ -15,7 +15,7 @@ const useSearchQuery = (search: string, delay: number = 700) => {
     } else {
       setFilter("")
     }
-  }, [s, timeout, setFilter])
+  }, [s, delay, timeout, setFilter])
 
   return filter
 }

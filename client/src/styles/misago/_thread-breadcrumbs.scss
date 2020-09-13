@@ -11,13 +11,3 @@
     padding-left: $spacer / 4;
   }
 }
-
-// Make breadcrumb buttons full width with ellipsis
-.thread-breadcrumb {
-  display: block;
-  text-align: left;
-
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}

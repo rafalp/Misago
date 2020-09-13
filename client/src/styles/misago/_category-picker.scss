@@ -1,22 +1,9 @@
-.category-picker .btn-group {
-  display: flex;
-  width: 100%;
+// Remove bottom padding from modal body with category selection
+.category-select-items {
+  padding-bottom: 0;
 }
 
-.category-picker .btn-category,
-.category-picker .btn-subcategory {
-  display: flex;
-  width: 100%;
-
-  align-items: center;
-  text-align: left;
-}
-
-.category-picker .btn-category-icon {
-  margin-right: $spacer;
-}
-
-.category-picker .btn-text {
-  flex: 1;
-  word-break: break-word;
+// Add space between categories search and cancel button
+.category-select-search .col-auto {
+  padding-left: $spacer;
 }

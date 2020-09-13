@@ -54,7 +54,25 @@
   }
 }
 
+// Hide overflow in no-wrap buttons
+.btn-nowrap {
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Add styles for category buttons
+.btn-category {
+  text-align: left;
+}
+
 // Add right-margin to category icon
 .btn .category-icon {
-  margin-right: $spacer / 4;
+  margin-right: $spacer / 2;
+}
+
+// Float right icon to the right
+.btn-icon-right {
+  float: right;
 }
