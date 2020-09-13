@@ -5,6 +5,7 @@ import RouteAuthRequiredError from "./RouteAuthRequiredError"
 import RouteError from "./RouteError"
 import RouteGraphQLError from "./RouteGraphQLError"
 import RouteNotFound from "./RouteNotFound"
+import RoutePermissionDeniedError from "./RoutePermissionDeniedError"
 
 export default {
   title: "Route/Error",
@@ -25,6 +26,12 @@ export const NotFound = () => (
 export const AuthRequired = () => (
   <SettingsContextFactory>
     <RouteAuthRequiredError />
+  </SettingsContextFactory>
+)
+
+export const PermissionDenied = () => (
+  <SettingsContextFactory>
+    <RoutePermissionDeniedError />
   </SettingsContextFactory>
 )
 

@@ -10,11 +10,13 @@ import useFilteredChoices from "./useFilteredChoices"
 
 interface IPostThreadCategorySelectProps {
   choices: Array<ICategoryChoice>
+  validChoices: Array<string>
   setValue: (value: string) => void
 }
 
 const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
   choices,
+  validChoices,
   setValue,
 }) => {
   const { closeModal, isOpen } = useModalContext()
@@ -36,6 +38,7 @@ const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
         {filteredChoices.length > 0 ? (
           <PostThreadCategorySelectItems
             choices={filteredChoices}
+            validChoices={validChoices}
             setValue={(category: string) => {
               setValue(category)
               closeModal()

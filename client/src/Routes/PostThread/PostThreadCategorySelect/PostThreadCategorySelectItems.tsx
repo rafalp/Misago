@@ -9,11 +9,13 @@ import { ICategoryChoice } from "../PostThread.types"
 
 interface IPostThreadCategorySelectItemsProps {
   choices: Array<ICategoryChoice>
+  validChoices: Array<string>
   setValue: (value: string) => void
 }
 
 const PostThreadCategorySelectItems: React.FC<IPostThreadCategorySelectItemsProps> = ({
   choices,
+  validChoices,
   setValue,
 }) => (
   <ModalBody className="category-select-items">
@@ -22,6 +24,7 @@ const PostThreadCategorySelectItems: React.FC<IPostThreadCategorySelectItemsProp
         <CategoriesListGroupItem key={category.id}>
           <CategoryButton
             category={category}
+            disabled={validChoices.indexOf(category.id) < 0}
             responsive
             onClick={() => setValue(category.id)}
           />
@@ -31,6 +34,7 @@ const PostThreadCategorySelectItems: React.FC<IPostThreadCategorySelectItemsProp
                 <CategoriesListGroupItem key={child.id}>
                   <CategoryButton
                     category={child}
+                    disabled={validChoices.indexOf(child.id) < 0}
                     responsive
                     onClick={() => setValue(child.id)}
                   />

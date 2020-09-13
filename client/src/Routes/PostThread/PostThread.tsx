@@ -1,14 +1,17 @@
-import { Trans, t } from "@lingui/macro"
+import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React, { Suspense } from "react"
 import { useParams } from "react-router-dom"
 import { useAuthContext } from "../../Context"
 import RouteContainer from "../../UI/RouteContainer"
-import { RouteAuthRequiredError, RouteGraphQLError } from "../../UI/RouteError"
+import { RouteGraphQLError } from "../../UI/RouteError"
 import RouteLoader from "../../UI/RouteLoader"
 import WindowTitle from "../../UI/WindowTitle"
+import PostThreadAuthRequiredError from "./PostThreadAuthRequiredError"
 import PostThreadForm from "./PostThreadForm"
+import PostThreadPermissionDeniedError from "./PostThreadPermissionDeniedError"
 import useCategoriesQuery from "./useCategoriesQuery"
+import useValidCategories from "./useValidCategories"
 
 interface IPostThreadRouteParams {
   id?: string
@@ -19,27 +22,14 @@ const PostThread: React.FC = () => {
   const user = useAuthContext()
   const { data, error, loading } = useCategoriesQuery()
   const categories = data ? data.categories : []
+  const validCategories = useValidCategories(user, categories)
 
-  // todo: filter unavailable categories
-  // todo: display error if url category can't be posted in
-  // todo: display error if url category couldn't be found
-
-  if (!user) {
-    return (
-      <RouteAuthRequiredError
-        header={
-          <Trans id="post_thread.auth_error">
-            You must be logged in to post a new thread.
-          </Trans>
-        }
-      />
-    )
-  }
-
+  if (!user) return <PostThreadAuthRequiredError />
   if (!data) {
     if (error) return <RouteGraphQLError error={error} />
     if (loading) return <RouteLoader />
   }
+  if (!validCategories.length) return <PostThreadPermissionDeniedError />
 
   return (
     <Suspense fallback={<RouteLoader />}>
@@ -49,7 +39,11 @@ const PostThread: React.FC = () => {
             <WindowTitle title={i18n._(t("post_thread.title")`Post thread`)} />
           )}
         </I18n>
-        <PostThreadForm categories={categories} />
+        <PostThreadForm
+          category={params && params.id}
+          categories={categories}
+          validCategories={validCategories}
+        />
       </RouteContainer>
     </Suspense>
   )

@@ -22,6 +22,7 @@ export const SelectModal = () => {
       <PostThreadCategorySelectSearch search={search} setSearch={setSearch} />
       <PostThreadCategorySelectItems
         choices={filteredChoices}
+        validChoices={filteredChoices.map((choice) => choice.id)}
         setValue={setValue}
       />
     </ModalContainer>
@@ -34,7 +35,11 @@ export const SelectModalWithoutResults = () => {
   return (
     <ModalContainer title="Select a category">
       <PostThreadCategorySelectSearch search={search} setSearch={setSearch} />
-      <PostThreadCategorySelectItems choices={[]} setValue={setValue} />
+      <PostThreadCategorySelectItems
+        choices={[]}
+        validChoices={[]}
+        setValue={setValue}
+      />
     </ModalContainer>
   )
 }

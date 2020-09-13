@@ -27,7 +27,9 @@ import usePostThreadMutation from "./usePostThreadMutation"
 const Editor = React.lazy(() => import("../../Editor"))
 
 interface IPostThreadFormProps {
+  category?: string
   categories: Array<ICategoryChoice>
+  validCategories: Array<string>
 }
 
 interface IPostThreadFormValues {
@@ -36,7 +38,11 @@ interface IPostThreadFormValues {
   body: string
 }
 
-const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
+const PostThreadForm: React.FC<IPostThreadFormProps> = ({
+  category,
+  categories,
+  validCategories,
+}) => {
   const { showToast } = useToastsContext()
   const { threadTitleMaxLength, threadTitleMinLength } = useSettingsContext()
   const [
@@ -68,7 +74,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
       />
       <Form<IPostThreadFormValues>
         defaultValues={{
-          category: "",
+          category: category || "",
           title: "",
           body: "",
         }}
@@ -132,7 +138,12 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({ categories }) => {
               <Trans id="post_thread.thread_category">Thread category</Trans>
             }
             name="category"
-            input={<PostThreadCategoryInput choices={categories} />}
+            input={
+              <PostThreadCategoryInput
+                choices={categories}
+                validChoices={validCategories}
+              />
+            }
             error={(error) => (
               <CategoryValidationError error={error}>
                 {({ message }) => <FieldError>{message}</FieldError>}
