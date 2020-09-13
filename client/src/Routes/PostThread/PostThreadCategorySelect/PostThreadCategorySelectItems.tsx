@@ -32,7 +32,7 @@ const PostThreadCategorySelectItems: React.FC<IPostThreadCategorySelectItemsProp
                   <CategoryButton
                     category={child}
                     responsive
-                    onClick={() => setValue(category.id)}
+                    onClick={() => setValue(child.id)}
                   />
                 </CategoriesListGroupItem>
               ))}

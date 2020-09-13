@@ -1,4 +1,4 @@
-import { Trans, t } from "@lingui/macro"
+import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../Context"
 import { Modal, ModalDialog } from "../../../UI/Modal"
