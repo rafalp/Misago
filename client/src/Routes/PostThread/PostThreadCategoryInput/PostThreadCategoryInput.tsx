@@ -5,8 +5,8 @@ import { useFieldContext } from "../../../UI/Form"
 import { ICategoryChoice } from "../PostThread.types"
 import PostThreadCategorySelect from "../PostThreadCategorySelect"
 import PostThreadCategoryInputBody from "./PostThreadCategoryInputBody"
-import PostThreadCategoryInputEmpty from "./PostThreadCategoryInputEmpty"
-import PostThreadCategoryInputSelected from "./PostThreadCategoryInputSelected"
+import PostThreadCategoryInputPlaceholder from "./PostThreadCategoryInputPlaceholder"
+import PostThreadCategoryInputValue from "./PostThreadCategoryInputValue"
 import useCategoryChoice from "./useCategoryChoice"
 
 interface IPostThreadCategoryInputProps {
@@ -43,31 +43,16 @@ const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
     )
   }
 
-  if (choice.parent) {
-    return (
-      <PostThreadCategoryInputBody>
-        <PostThreadCategoryInputSelected
-          category={choice.parent}
-          disabled={context && context.disabled}
-          onClick={openPicker}
-        />
-        {choice.child && (
-          <PostThreadCategoryInputSelected
-            category={choice.child}
-            disabled={context && context.disabled}
-            onClick={openPicker}
-          />
-        )}
-      </PostThreadCategoryInputBody>
-    )
-  }
-
   return (
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputEmpty
-        disabled={context && context.disabled}
-        onClick={openPicker}
-      />
+    <PostThreadCategoryInputBody
+      disabled={context && context.disabled}
+      onClick={openPicker}
+    >
+      {choice.parent ? (
+        <PostThreadCategoryInputValue value={choice} />
+      ) : (
+        <PostThreadCategoryInputPlaceholder />
+      )}
     </PostThreadCategoryInputBody>
   )
 }

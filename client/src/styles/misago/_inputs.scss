@@ -59,38 +59,57 @@
   }
 }
 
-// Align categories in category input next to each other
-.form-control-select-category {
+// Spread items in category select
+.form-control-category-select {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.form-control-category {
+// Make category select placeholder and icons faded
+.form-control-category-select-placeholder,
+.form-control-category-select-separator,
+.form-control-category-select-caret {
+  color: $input-placeholder-color;
+  opacity: 1;
+}
+
+// Add left margin to caret
+.form-control-category-select-caret {
+  margin-left: $spacer / 2;
+}
+
+// Add margin to category icon
+.form-control-category-select-item .category-icon {
+  margin-right: $spacer / 4;
+}
+
+// Add ellipsis to placeholder and value
+.form-control-category-select-placeholder,
+.form-control-category-select-value {
+  width: 100%;
   overflow: hidden;
   white-space: nowrap;
-  width: auto;
+  text-overflow: ellipsis;
+  text-align: left;
 }
 
-.form-control-category + .form-control-category {
-  padding-left: $spacer / 2;
+// Add space between selected categories
+.form-control-category-select-separator {
+  margin: 0 $spacer / 2;
 }
 
-@media (max-width: 400px) {
-  .form-control-category .btn {
-    width: 100%;
-  }
+// Limit max length of first selected category on very small displays
+@media only screen and (max-width: 400px) {
+  .form-control-category-select-value-complex {
+    display: flex;
 
-  .form-control-category {
-    max-width: 50%;
-    padding-right: $spacer / 4;
-  }
-
-  .form-control-category + .form-control-category {
-    padding-left: $spacer / 4;
-    padding-right: 0;
-  }
-
-  .form-control-category:only-child {
-    max-width: 100%;
-    padding: 0;
+    .form-control-category-select-item:first-child {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: left;
+      max-width: 45%;
+    }
   }
 }

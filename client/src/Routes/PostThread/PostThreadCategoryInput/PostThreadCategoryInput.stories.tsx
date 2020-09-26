@@ -2,8 +2,8 @@ import { action } from "@storybook/addon-actions"
 import React from "react"
 import { RootContainer, categories } from "../../../UI/Storybook"
 import PostThreadCategoryInputBody from "./PostThreadCategoryInputBody"
-import PostThreadCategoryInputEmpty from "./PostThreadCategoryInputEmpty"
-import PostThreadCategoryInputSelected from "./PostThreadCategoryInputSelected"
+import PostThreadCategoryInputPlaceholder from "./PostThreadCategoryInputPlaceholder"
+import PostThreadCategoryInputValue from "./PostThreadCategoryInputValue"
 
 const openPicker = action("open modal with categories")
 
@@ -13,53 +13,41 @@ export default {
 
 export const Empty = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputEmpty onClick={openPicker} />
+    <PostThreadCategoryInputBody onClick={openPicker}>
+      <PostThreadCategoryInputPlaceholder />
     </PostThreadCategoryInputBody>
   </RootContainer>
 )
 
 export const EmptyDisabled = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputEmpty onClick={openPicker} disabled />
+    <PostThreadCategoryInputBody onClick={openPicker} disabled>
+      <PostThreadCategoryInputPlaceholder />
     </PostThreadCategoryInputBody>
   </RootContainer>
 )
 
 export const Category = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputSelected
-        category={categories[0]}
-        onClick={openPicker}
-      />
+    <PostThreadCategoryInputBody onClick={openPicker}>
+      <PostThreadCategoryInputValue value={{ parent: categories[0] }} />
     </PostThreadCategoryInputBody>
   </RootContainer>
 )
 
 export const CategoryDisabled = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputSelected
-        category={categories[0]}
-        onClick={openPicker}
-        disabled
-      />
+    <PostThreadCategoryInputBody onClick={openPicker} disabled>
+      <PostThreadCategoryInputValue value={{ parent: categories[0] }} />
     </PostThreadCategoryInputBody>
   </RootContainer>
 )
 
 export const ChildCategory = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputSelected
-        category={categories[0]}
-        onClick={openPicker}
-      />
-      <PostThreadCategoryInputSelected
-        category={categories[3]}
-        onClick={openPicker}
+    <PostThreadCategoryInputBody onClick={openPicker}>
+      <PostThreadCategoryInputValue
+        value={{ parent: categories[0], child: categories[3] }}
       />
     </PostThreadCategoryInputBody>
   </RootContainer>
@@ -67,16 +55,9 @@ export const ChildCategory = () => (
 
 export const ChildCategoryDisabled = () => (
   <RootContainer padding>
-    <PostThreadCategoryInputBody>
-      <PostThreadCategoryInputSelected
-        category={categories[0]}
-        onClick={openPicker}
-        disabled
-      />
-      <PostThreadCategoryInputSelected
-        category={categories[3]}
-        onClick={openPicker}
-        disabled
+    <PostThreadCategoryInputBody onClick={openPicker} disabled>
+      <PostThreadCategoryInputValue
+        value={{ parent: categories[0], child: categories[3] }}
       />
     </PostThreadCategoryInputBody>
   </RootContainer>
