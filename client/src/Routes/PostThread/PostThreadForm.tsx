@@ -44,7 +44,11 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
   validCategories,
 }) => {
   const { showToast } = useToastsContext()
-  const { threadTitleMaxLength, threadTitleMinLength } = useSettingsContext()
+  const {
+    postBodyMinLength,
+    threadTitleMaxLength,
+    threadTitleMinLength,
+  } = useSettingsContext()
   const [
     postThread,
     { data, loading, error: graphqlError },
@@ -59,8 +63,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
     body: Yup.string()
       .required("value_error.missing")
-      .min(1, "value_error.any_str.min_length")
-      .max(2000, "value_error.any_str.max_length"),
+      .min(postBodyMinLength, "value_error.any_str.min_length"),
   })
 
   if (data?.postThread.thread) {

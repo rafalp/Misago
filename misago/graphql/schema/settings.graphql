@@ -6,6 +6,7 @@ type Settings {
     forumName: String
     passwordMinLength: Int
     passwordMaxLength: Int
+    postBodyMinLength: Int
     threadTitleMinLength: Int
     threadTitleMaxLength: Int
     usernameMinLength: Int
