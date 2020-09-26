@@ -3,7 +3,7 @@ from ..utils.strings import get_random_string
 
 
 def parse_markup(markup: str) -> RichText:
-    richtext = []
+    richtext: RichText = []
     for block in markup.splitlines():
         clean_text = block.strip()
         if clean_text:
