@@ -165,6 +165,7 @@ from .registeruser import (
     RegisterUserInputModelAction,
     RegisterUserInputModelFilter,
 )
+from .richtext import RichText
 from .settings import Setting, SettingImage, Settings
 from .templatecontext import (
     TemplateContext,

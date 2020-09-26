@@ -4,7 +4,7 @@ type Post {
     thread: Thread!
     poster: User
     posterName: String!
-    body: Generic!
+    body: RichText!
     edits: Int!
     postedAt: DateTime!
     extra: Generic!

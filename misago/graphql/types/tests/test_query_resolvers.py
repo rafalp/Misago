@@ -5,6 +5,7 @@ from ..query import (
     resolve_categories,
     resolve_category,
     resolve_forum_stats,
+    resolve_rich_text,
     resolve_settings,
     resolve_thread,
     resolve_threads,
@@ -115,3 +116,7 @@ def test_settings_resolver_returns_settings_from_context(
 ):
     value = resolve_settings(None, graphql_info)
     assert value is dynamic_settings
+
+
+def test_rich_text_resolver_returns_parsed_body(graphql_info):
+    assert resolve_rich_text(None, graphql_info, markup="Hello world!")

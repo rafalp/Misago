@@ -78,3 +78,13 @@ export interface IAuthModalContext {
   openLoginModal: () => void
   openRegisterModal: () => void
 }
+
+export type RichTextParagraph = {
+  id: string
+  type: "p"
+  text: string
+}
+
+export type RichTextNode = RichTextParagraph
+
+export type RichText = Array<RichTextNode>

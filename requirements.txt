@@ -26,6 +26,7 @@ idna==2.9                 # via email-validator
 jinja2==2.11.2            # via -r requirements.in
 mako==1.1.2               # via alembic
 markupsafe==1.1.1         # via jinja2, mako
+mistune==2.0.0a5          # via -r requirements.in
 passlib==1.7.2            # via -r requirements.in
 psycopg2-binary==2.8.5    # via databases
 pydantic[email,typing_extensions]==1.5.1  # via -r requirements.in

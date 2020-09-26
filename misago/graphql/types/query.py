@@ -14,7 +14,8 @@ from ...loaders import (
     load_threads_feed,
     load_user,
 )
-from ...types import Category, Settings, Thread, ThreadsFeed, User
+from ...richtext import parse_markup
+from ...types import Category, RichText, Settings, Thread, ThreadsFeed, User
 
 
 query_type = QueryType()
@@ -78,3 +79,8 @@ def resolve_forum_stats(_, info: GraphQLResolveInfo) -> Awaitable[dict]:
 @query_type.field("settings")
 def resolve_settings(_, info: GraphQLResolveInfo) -> Settings:
     return info.context["settings"]
+
+
+@query_type.field("richText")
+def resolve_rich_text(_, info: GraphQLResolveInfo, *, markup: str) -> RichText:
+    return parse_markup(markup)

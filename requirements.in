@@ -7,6 +7,7 @@ broadcaster[redis]
 click
 databases[postgresql]
 jinja2
+mistune==2.0.0a5
 passlib
 pydantic[email,typing_extensions]
 pyjwt
