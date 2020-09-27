@@ -6,9 +6,9 @@ import {
   categories,
   userFactory,
 } from "../../UI/Storybook"
+import PostThread from "./PostThread"
 import PostThreadAuthRequiredError from "./PostThreadAuthRequiredError"
 import PostThreadPermissionDeniedError from "./PostThreadPermissionDeniedError"
-import PostThread from "./PostThread"
 import { CATEGORIES_QUERY } from "./useCategoriesQuery"
 
 export default {
