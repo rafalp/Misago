@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/macro"
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { useAuthModalContext } from "../../Context"
 import { ButtonPrimary } from "../Button"
@@ -22,7 +22,7 @@ const RouteAuthRequiredError: React.FC<IRouteErrorProps> = ({
 
   return (
     <RouteContainer
-      className={classNames("route-auth-error-container", className)}
+      className={classnames("route-auth-error-container", className)}
     >
       <WindowTitle />
       <Error

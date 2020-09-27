@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalFooterProps {
@@ -7,7 +7,7 @@ interface IModalFooterProps {
 }
 
 const ModalFooter: React.FC<IModalFooterProps> = ({ children, className }) => (
-  <div className={classNames("modal-footer", className)}>{children}</div>
+  <div className={classnames("modal-footer", className)}>{children}</div>
 )
 
 export default ModalFooter

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import Icon from "../Icon"
@@ -25,7 +25,7 @@ const SideNavItem: React.FC<ISideNavItemProps> = ({
   <li className="nav-item">
     <Link
       aria-selected={isActive ? "true" : "false"}
-      className={classNames(
+      className={classnames(
         "nav-link",
         {
           "nav-link-child": isChild,

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ITidbitsProps {
@@ -9,7 +9,7 @@ interface ITidbitsProps {
 
 const Tidbits: React.FC<ITidbitsProps> = ({ children, small, vertical }) => (
   <ul
-    className={classNames(
+    className={classnames(
       "tidbits",
       vertical ? "list-unstyled" : "list-inline",
       {

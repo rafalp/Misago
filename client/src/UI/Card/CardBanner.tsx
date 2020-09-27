@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardBannerProps {
@@ -21,7 +21,7 @@ const CardBanner: React.FC<ICardBannerProps> = ({
   desktop,
 }) => (
   <div
-    className={classNames(
+    className={classnames(
       "card-banner",
       { "d-md-none": mobile, "d-none d-md-block": desktop },
       className

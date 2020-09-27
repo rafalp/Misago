@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import Icon from "../Icon"
 import { Link } from "react-router-dom"
@@ -19,7 +19,7 @@ const DropdownLink: React.FC<IDropdownLinkProps> = ({
   onClick,
 }) => (
   <Link
-    className={classNames("dropdown-item", className)}
+    className={classnames("dropdown-item", className)}
     to={to}
     onClick={onClick}
   >

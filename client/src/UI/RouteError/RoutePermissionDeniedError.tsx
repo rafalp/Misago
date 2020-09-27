@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Error } from "../Error"
 import RouteContainer from "../RouteContainer"
@@ -18,7 +18,7 @@ const RoutePermissionDeniedError: React.FC<IRoutePermissionDeniedErrorProps> = (
   action,
 }) => (
   <RouteContainer
-    className={classNames("route-permission-denied-container", className)}
+    className={classnames("route-permission-denied-container", className)}
   >
     <WindowTitle />
     <Error

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import Icon from "../Icon"
 import { ButtonSpinner } from "../Button"
@@ -21,7 +21,7 @@ const DropdownButton: React.FC<IDropdownButtonProps> = ({
   onClick,
 }) => (
   <button
-    className={classNames("dropdown-item", className)}
+    className={classnames("dropdown-item", className)}
     disabled={disabled || loading}
     type="button"
     onClick={onClick}

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import ModalBacktrop from "./ModalBacktrop"
 import useTransition from "./useTransition"
@@ -22,7 +22,7 @@ const Modal: React.FC<IModalProps> = ({
   return (
     <div onClick={resistant ? undefined : close}>
       <div
-        className={classNames("modal", "d-block", "fade", { show: fade })}
+        className={classnames("modal", "d-block", "fade", { show: fade })}
         tabIndex={-1}
         role="dialog"
         aria-hidden={fade ? "false" : "true"}

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardListItemProps {
@@ -9,6 +9,6 @@ interface ICardListItemProps {
 const CardListItem: React.FC<ICardListItemProps> = ({
   children,
   className,
-}) => <li className={classNames("list-group-item", className)}>{children}</li>
+}) => <li className={classnames("list-group-item", className)}>{children}</li>
 
 export default CardListItem

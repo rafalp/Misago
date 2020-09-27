@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardProps {
@@ -7,7 +7,7 @@ interface ICardProps {
 }
 
 const Card: React.FC<ICardProps> = ({ children, className }) => (
-  <div className={classNames("card-wrapper", className)}>
+  <div className={classnames("card-wrapper", className)}>
     <div className="card">{children}</div>
   </div>
 )

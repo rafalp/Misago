@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardErrorProps {
@@ -12,7 +12,7 @@ const CardError: React.FC<ICardErrorProps> = ({
   header,
   message,
 }) => (
-  <div className={classNames("card-body card-error", className)}>
+  <div className={classnames("card-body card-error", className)}>
     <div className="card-error-body">
       <div className="card-error-icon" />
       <div className="card-error-message">

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ILayoutSideProps {
@@ -7,7 +7,7 @@ interface ILayoutSideProps {
 }
 
 const LayoutSide: React.FC<ILayoutSideProps> = ({ className, children }) => (
-  <div className={classNames("col col-side", className)}>{children}</div>
+  <div className={classnames("col col-side", className)}>{children}</div>
 )
 
 export default LayoutSide

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import { Avatar } from "../../../../UI"
@@ -17,7 +17,7 @@ const ThreadsListItemLastPoster: React.FC<IThreadsListItemLastPosterProps> = ({
   thread: { lastPoster },
 }) => (
   <div
-    className={classNames("col-auto", className || "threads-list-last-poster")}
+    className={classnames("col-auto", className || "threads-list-last-poster")}
   >
     {lastPoster ? (
       <Link to={urls.user(lastPoster)}>

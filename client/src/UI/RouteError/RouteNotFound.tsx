@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { NotFoundError } from "../Error"
 import RouteContainer from "../RouteContainer"
@@ -16,7 +16,7 @@ const RouteNotFound: React.FC<IRouteNotFoundProps> = ({
   message,
 }) => (
   <RouteContainer
-    className={classNames("route-not-found-container", className)}
+    className={classnames("route-not-found-container", className)}
   >
     <WindowTitle />
     <NotFoundError className="route" header={header} message={message} />

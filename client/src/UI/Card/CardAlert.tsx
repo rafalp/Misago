@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardAlertProps {
@@ -19,14 +19,14 @@ const CardAlert: React.FC<ICardAlertProps> = ({
   className,
 }) => (
   <div
-    className={classNames(
+    className={classnames(
       "modal-alert",
       `modal-alert-${appearance}`,
       className
     )}
   >
     <div
-      className={classNames("alert", `alert-${appearance}`, className)}
+      className={classnames("alert", `alert-${appearance}`, className)}
       role="alert"
     >
       {children}

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardFooterProps {
@@ -7,7 +7,7 @@ interface ICardFooterProps {
 }
 
 const CardFooter: React.FC<ICardFooterProps> = ({ className, children }) => (
-  <div className={classNames("card-footer", className)}>{children}</div>
+  <div className={classnames("card-footer", className)}>{children}</div>
 )
 
 export default CardFooter

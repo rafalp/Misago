@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { useParams } from "react-router-dom"
 import { LoadMoreButton, RouteNotFound, WindowTitle } from "../../UI"
@@ -43,7 +43,7 @@ const ThreadsCategory: React.FC = () => {
       activeCategory={activeCategory}
       className={
         category
-          ? classNames(
+          ? classnames(
               "route-category",
               category && `route-category-${category.id}`
             )

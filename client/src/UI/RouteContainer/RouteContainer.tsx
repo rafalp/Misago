@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IRouteContainerProps {
@@ -10,7 +10,7 @@ const RouteContainer: React.FC<IRouteContainerProps> = ({
   children,
   className,
 }) => (
-  <div className={classNames("route-container", className)}>
+  <div className={classnames("route-container", className)}>
     <div className="container-fluid">{children}</div>
   </div>
 )

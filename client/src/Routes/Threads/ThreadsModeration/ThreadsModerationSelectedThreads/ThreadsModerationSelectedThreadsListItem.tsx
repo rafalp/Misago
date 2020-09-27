@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import {
   Checkbox,
@@ -31,7 +31,7 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
 
   return (
     <li
-      className={classNames("selected-item selected-thread", {
+      className={classnames("selected-item selected-thread", {
         "is-invalid": !!error,
       })}
     >

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { ModalSize } from "./Modal.types"
 import ModalHeader from "./ModalHeader"
@@ -22,7 +22,7 @@ const ModalDialog: React.FC<IModalDialogProps> = ({
   close,
 }) => (
   <div
-    className={classNames(
+    className={classnames(
       "modal-dialog",
       {
         "modal-dialog-centered": centered,

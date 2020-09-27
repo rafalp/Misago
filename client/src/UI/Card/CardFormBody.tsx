@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardFormBodyProps {
@@ -10,7 +10,7 @@ const CardFormBody: React.FC<ICardFormBodyProps> = ({
   children,
   className,
 }) => (
-  <div className={classNames("card-body", "card-form-body", className)}>
+  <div className={classnames("card-body", "card-form-body", className)}>
     {children}
   </div>
 )

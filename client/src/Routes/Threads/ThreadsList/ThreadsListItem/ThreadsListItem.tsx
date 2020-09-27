@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import * as urls from "../../../../urls"
@@ -23,7 +23,7 @@ const ThreadsListItem: React.FC<IThreadsListItemProps> = ({
   thread,
 }) => (
   <li
-    className={classNames("list-group-item threads-list-item", {
+    className={classnames("list-group-item threads-list-item", {
       "threads-list-item-with-replies": thread.replies > 0,
       "threads-list-item-without-replies": thread.replies === 0,
     })}

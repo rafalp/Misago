@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IButtonJustifiedProps {
@@ -23,7 +23,7 @@ const ButtonJustified: React.FC<IButtonJustifiedProps> = ({
   onClick,
 }) => (
   <button
-    className={classNames(
+    className={classnames(
       "btn btn-secondary btn-block btn-justified",
       className,
       {

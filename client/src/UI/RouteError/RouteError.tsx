@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Error } from "../Error"
 import RouteContainer from "../RouteContainer"
@@ -17,7 +17,7 @@ const RouteError: React.FC<IRouteErrorProps> = ({
   message,
   action,
 }) => (
-  <RouteContainer className={classNames("route-error-container", className)}>
+  <RouteContainer className={classnames("route-error-container", className)}>
     <WindowTitle />
     <Error
       className="route"

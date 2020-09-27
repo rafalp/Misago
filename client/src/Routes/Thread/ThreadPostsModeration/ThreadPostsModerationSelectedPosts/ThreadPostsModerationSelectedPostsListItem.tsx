@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Checkbox, PostValidationError, Timestamp } from "../../../../UI"
 import { IMutationError } from "../../../../types"
@@ -25,7 +25,7 @@ const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerati
 
   return (
     <li
-      className={classNames("selected-item selected-post", {
+      className={classnames("selected-item selected-post", {
         "is-invalid": !!error,
       })}
     >

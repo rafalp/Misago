@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardBodyProps {
@@ -7,7 +7,7 @@ interface ICardBodyProps {
 }
 
 const CardBody: React.FC<ICardBodyProps> = ({ children, className }) => (
-  <div className={classNames("card-body", className)}>{children}</div>
+  <div className={classnames("card-body", className)}>{children}</div>
 )
 
 export default CardBody

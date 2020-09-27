@@ -1,6 +1,6 @@
 import { I18n } from "@lingui/react"
 import { t } from "@lingui/macro"
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import ModalTitle from "./ModalTitle"
 
@@ -19,7 +19,7 @@ const ModalHeader: React.FC<IModalHeaderProps> = ({
 }) => (
   <I18n>
     {({ i18n }) => (
-      <div className={classNames("modal-header", className)}>
+      <div className={classnames("modal-header", className)}>
         {title && <ModalTitle text={title} />}
         {children}
         {close && (

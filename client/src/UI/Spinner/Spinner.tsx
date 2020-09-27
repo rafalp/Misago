@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ISpinnerProps {
@@ -7,7 +7,7 @@ interface ISpinnerProps {
 
 const Spinner: React.FC<ISpinnerProps> = ({ small }) => (
   <div
-    className={classNames("spinner-border", { "spinner-border-sm": small })}
+    className={classnames("spinner-border", { "spinner-border-sm": small })}
     role="status"
   />
 )

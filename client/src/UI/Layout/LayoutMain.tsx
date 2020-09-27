@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ILayoutMainProps {
@@ -7,7 +7,7 @@ interface ILayoutMainProps {
 }
 
 const LayoutMain: React.FC<ILayoutMainProps> = ({ className, children }) => (
-  <div className={classNames("col col-main", className)}>{children}</div>
+  <div className={classnames("col col-main", className)}>{children}</div>
 )
 
 export default LayoutMain

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalBacktropProps {
@@ -8,7 +8,7 @@ interface IModalBacktropProps {
 
 const ModalBacktrop: React.FC<IModalBacktropProps> = ({ fade, onClick }) => (
   <div
-    className={classNames("modal-backdrop", "fade", { show: fade })}
+    className={classnames("modal-backdrop", "fade", { show: fade })}
     onClick={onClick || undefined}
   />
 )

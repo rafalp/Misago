@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ICardColorBand {
@@ -8,7 +8,7 @@ interface ICardColorBand {
 
 const CardColorBand: React.FC<ICardColorBand> = ({ className, color }) => (
   <div
-    className={classNames("card-color-band", className)}
+    className={classnames("card-color-band", className)}
     style={{ background: color }}
   />
 )

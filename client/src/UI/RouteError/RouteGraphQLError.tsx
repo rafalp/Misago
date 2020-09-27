@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-client"
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { GraphQLError } from "../Error"
 import RouteContainer from "../RouteContainer"
@@ -15,7 +15,7 @@ const RouteGraphQLError: React.FC<IRouteGraphQLErrorProps> = ({
   error,
 }) => (
   <RouteContainer
-    className={classNames("route-api-error-container", className)}
+    className={classnames("route-api-error-container", className)}
   >
     <WindowTitle />
     <GraphQLError className="route" error={error} />

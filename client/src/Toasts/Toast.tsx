@@ -1,6 +1,6 @@
 import { t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IToastProps {
@@ -39,7 +39,7 @@ const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
 
   return (
     <div
-      className={classNames("toast", {
+      className={classnames("toast", {
         fade: state !== ToastState.NEW,
         show: state === ToastState.SHOW,
       })}

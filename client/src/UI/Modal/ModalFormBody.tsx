@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalFormBodyProps {
@@ -10,7 +10,7 @@ const ModalFormBody: React.FC<IModalFormBodyProps> = ({
   children,
   className,
 }) => (
-  <div className={classNames("modal-body", "modal-form-body", className)}>
+  <div className={classnames("modal-body", "modal-form-body", className)}>
     {children}
   </div>
 )

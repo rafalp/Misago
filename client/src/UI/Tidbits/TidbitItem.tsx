@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ITidbitItemProps {
@@ -13,7 +13,7 @@ const TidbitItem: React.FC<ITidbitItemProps> = ({
   title,
 }) => (
   <li
-    className={classNames("list-inline-item tidbit-item", className)}
+    className={classnames("list-inline-item tidbit-item", className)}
     title={title}
   >
     {children}

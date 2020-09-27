@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import { Link } from "react-router-dom"
 import React from "react"
 import * as urls from "../../urls"
@@ -21,7 +21,7 @@ const TidbitCategory: React.FC<ITidbitCategoryProps> = ({
   parent,
 }) => (
   <TidbitItem
-    className={classNames("tidbit-category", {
+    className={classnames("tidbit-category", {
       "tidbit-parent-category": parent,
     })}
   >

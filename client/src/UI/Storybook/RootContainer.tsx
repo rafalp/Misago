@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IRootContainerProps {
@@ -13,7 +13,7 @@ const RootContainer: React.FC<IRootContainerProps> = ({
   padding,
 }) => (
   <div
-    className={classNames({
+    className={classnames({
       "d-flex justify-content-center": center,
       "px-3 py-4": padding,
     })}

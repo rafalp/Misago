@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface ISideNavProps {
@@ -7,7 +7,7 @@ interface ISideNavProps {
 }
 
 const SideNav: React.FC<ISideNavProps> = ({ className, children }) => (
-  <ul className={classNames("nav nav-side flex-column", className)}>
+  <ul className={classnames("nav nav-side flex-column", className)}>
     {children}
   </ul>
 )

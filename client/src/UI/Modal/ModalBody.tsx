@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalBodyProps {
@@ -7,7 +7,7 @@ interface IModalBodyProps {
 }
 
 const ModalBody: React.FC<IModalBodyProps> = ({ children, className }) => (
-  <div className={classNames("modal-body", className)}>{children}</div>
+  <div className={classnames("modal-body", className)}>{children}</div>
 )
 
 export default ModalBody

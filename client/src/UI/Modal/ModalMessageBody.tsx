@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalMessageBodyProps {
@@ -14,7 +14,7 @@ const ModalMessageBody: React.FC<IModalMessageBodyProps> = ({
   header,
   message,
 }) => (
-  <div className={classNames("modal-body", "modal-message", className)}>
+  <div className={classnames("modal-body", "modal-message", className)}>
     <div className="modal-message-body">
       <div className="modal-message-icon" />
       <div className="modal-message-message">

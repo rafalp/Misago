@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IIconProps {
@@ -7,7 +7,7 @@ interface IIconProps {
 }
 
 const Icon: React.FC<IIconProps> = ({ fixedWidth, icon }) => (
-  <i className={classNames(icon, { "fa-fw": fixedWidth })} />
+  <i className={classnames(icon, { "fa-fw": fixedWidth })} />
 )
 
 export default Icon

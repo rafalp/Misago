@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IResponsiveProps {
@@ -21,7 +21,7 @@ const Responsive: React.FC<IResponsiveProps> = ({
   portrait: xs,
 }) => (
   <div
-    className={classNames(className, {
+    className={classnames(className, {
       "d-none": !xs && (s || md || lg),
 
       "d-sm-none": xs && !(s || sm),

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import Icon from "../Icon"
 import { IButtonProps } from "./Button.types"
@@ -19,7 +19,7 @@ const Button: React.FC<IButtonProps> = ({
 }) => {
   return (
     <button
-      className={classNames(
+      className={classnames(
         "btn",
         {
           "btn-block": block,

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 
 interface IModalErrorBodyProps {
@@ -12,7 +12,7 @@ const ModalErrorBody: React.FC<IModalErrorBodyProps> = ({
   header,
   message,
 }) => (
-  <div className={classNames("modal-body", "modal-error", className)}>
+  <div className={classnames("modal-body", "modal-error", className)}>
     <div className="modal-error-body">
       <div className="modal-error-icon" />
       <div className="modal-error-message">

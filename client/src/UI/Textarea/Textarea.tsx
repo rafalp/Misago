@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../Form"
@@ -35,7 +35,7 @@ const Textarea: React.FC<ITextareaProps> = ({
 
   return (
     <textarea
-      className={classNames(
+      className={classnames(
         "form-control",
         { "is-invalid": invalid || context.invalid },
         className

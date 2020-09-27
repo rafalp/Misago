@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import { ButtonLink, CategoryIcon } from "../../../UI"
@@ -29,7 +29,7 @@ const ThreadsCategoriesModalLink: React.FC<IThreadsCategoriesModalLinkProps> = (
 }) => (
   <>
     <Link
-      className={classNames(
+      className={classnames(
         "btn btn-link",
         isChild ? "btn-subcategory" : "btn-category",
         { active: isActive }

@@ -1,4 +1,4 @@
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import Responsive from "../Responsive"
 
@@ -22,7 +22,7 @@ const ToolbarItem: React.FC<IToolbarItemProps> = ({
   portrait,
 }) => (
   <Responsive
-    className={classNames("toolbar-item", fill ? "col" : "col-auto")}
+    className={classnames("toolbar-item", fill ? "col" : "col-auto")}
     desktop={desktop}
     tablet={tablet}
     mobile={mobile}

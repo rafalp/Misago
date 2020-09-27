@@ -1,6 +1,6 @@
 import React from "react"
 import { useFormContext } from "react-hook-form"
-import classNames from "classnames"
+import classnames from "classnames"
 import { FieldContext } from "./FieldContext"
 import { FieldLabel } from "./FieldLabel"
 import { FormContext } from "./FormContext"
@@ -50,7 +50,7 @@ const Field: React.FC<IFieldProps> = ({
         required: required,
       }}
     >
-      <div className={classNames("form-group", className)}>
+      <div className={classnames("form-group", className)}>
         {checkbox ? (
           <div className="form-check">
             <span className="form-check-input">

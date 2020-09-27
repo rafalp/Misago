@@ -1,5 +1,5 @@
 import { Instance, createPopper } from "@popperjs/core"
-import classNames from "classnames"
+import classnames from "classnames"
 import React from "react"
 import portal from "../portal"
 
@@ -83,7 +83,7 @@ const Dropdown: React.FC<IDropdownProps> = ({
       {isOpen &&
         portal(
           <div
-            className={classNames("dropdown-menu show", className)}
+            className={classnames("dropdown-menu show", className)}
             ref={dropdown}
           >
             {menu({ close: () => updateOpen(false) })}
