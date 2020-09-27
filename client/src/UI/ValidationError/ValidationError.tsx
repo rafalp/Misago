@@ -28,6 +28,16 @@ const ValidationError: React.FC<IValidationErrorProps> = ({
     <I18n>
       {({ i18n }) => {
         switch (errorType) {
+          case "auth_error.not_moderator":
+            return children({
+              type: errorType,
+              message: i18n._(
+                t(
+                  "auth_error.not_moderator"
+                )`You need to be a moderator to perform this action.`
+              ),
+            })
+
           case "value_error.missing":
             return children({
               type: errorType,

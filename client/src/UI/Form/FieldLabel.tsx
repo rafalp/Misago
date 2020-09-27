@@ -1,7 +1,9 @@
+import classnames from "classnames"
 import React from "react"
 
 interface IFieldLabelProps {
   children?: React.ReactNode
+  className?: string
   htmlFor?: string
   readerOnly?: React.ReactNode
   required?: boolean
@@ -9,11 +11,15 @@ interface IFieldLabelProps {
 
 const FieldLabel: React.FC<IFieldLabelProps> = ({
   children,
+  className,
   htmlFor,
   readerOnly,
   required,
 }) => (
-  <label className={readerOnly ? "sr-only" : undefined} htmlFor={htmlFor}>
+  <label
+    className={classnames(className, { "sr-only": readerOnly })}
+    htmlFor={htmlFor}
+  >
     {children}
     {required && <FieldRequired />}
   </label>

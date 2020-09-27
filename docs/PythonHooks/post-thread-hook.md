@@ -43,11 +43,12 @@ A dict with GraphQL query context.
 Dict[str, Any]
 ```
 
-A dict with already validated and cleaned input data. Will contain at least `category`, `title` and `body` keys:
+A dict with already validated and cleaned input data. Will contain at least `category`, `title` and `markup` keys and optionally `is_closed` key:
 
 ```python
 class PostThreadInput(TypedDict):
     category: Category
     title: str
-    body: str
+    markup: str
+    is_closed: Optional[bool]
 ```

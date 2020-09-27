@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
@@ -31,6 +31,7 @@ from ...types import (
 from ...validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
+    NewThreadIsClosedValidator,
     UserIsAuthorizedRootValidator,
     threadtitlestr,
     validate_data,
@@ -61,6 +62,12 @@ async def resolve_post_thread(
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
         }
+
+        if cleaned_data.get("is_closed") and cleaned_data.get("category"):
+            validators["is_closed"] = [
+                NewThreadIsClosedValidator(info.context, cleaned_data["category"])
+            ]
+
         cleaned_data, errors = await post_thread_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
@@ -80,7 +87,8 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
         "PostThreadInputModel",
         category=(PositiveInt, ...),
         title=(threadtitlestr(context["settings"]), ...),
-        body=(constr(strip_whitespace=True), ...),
+        markup=(constr(strip_whitespace=True), ...),
+        is_closed=(Optional[bool], False),
     )
 
 
@@ -103,12 +111,13 @@ async def post_thread(
             cleaned_data["category"],
             cleaned_data["title"],
             starter=user,
+            is_closed=cleaned_data.get("is_closed") or False,
             context=context,
         )
         post = await create_post_hook.call_action(
             create_post,
             thread,
-            {"text": cleaned_data["body"]},
+            {"text": cleaned_data["markup"]},
             poster=user,
             context=context,
         )

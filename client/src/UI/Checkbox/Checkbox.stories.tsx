@@ -4,7 +4,7 @@ import { FormCheckbox } from "../Form"
 import { Checkbox, CheckboxLabel } from "."
 
 export default {
-  title: "UI/Checkbox",
+  title: "UI/Controls/Checkbox",
 }
 
 export const Default = () => (

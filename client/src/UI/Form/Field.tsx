@@ -6,6 +6,7 @@ import { FieldLabel } from "./FieldLabel"
 import { FormContext } from "./FormContext"
 
 interface IFieldProps {
+  checkbox?: boolean
   className?: string
   disabled?: boolean
   error?: (
@@ -21,6 +22,7 @@ interface IFieldProps {
 }
 
 const Field: React.FC<IFieldProps> = ({
+  checkbox,
   className,
   disabled,
   error,
@@ -34,7 +36,7 @@ const Field: React.FC<IFieldProps> = ({
   const { disabled: formDisabled, id: formId } = React.useContext(FormContext)
   const fieldId = getFieldId(formId, id, name)
 
-  const { errors, getValues } = useFormContext()
+  const { errors, getValues, register } = useFormContext()
   const fieldError = name ? errors[name] : undefined
   const fieldValue = name ? getValues()[name] : undefined
 
@@ -49,16 +51,41 @@ const Field: React.FC<IFieldProps> = ({
       }}
     >
       <div className={classNames("form-group", className)}>
-        {label && (
-          <FieldLabel
-            htmlFor={fieldId}
-            readerOnly={labelReaderOnly}
-            required={required}
-          >
-            {label}
-          </FieldLabel>
+        {checkbox ? (
+          <div className="form-check">
+            <span className="form-check-input">
+              <input
+                id={fieldId}
+                disabled={disabled || formDisabled}
+                name={name}
+                ref={register}
+                type="checkbox"
+              />
+            </span>
+            {label && (
+              <FieldLabel
+                className="form-check-label"
+                htmlFor={fieldId}
+                required={required}
+              >
+                {label}
+              </FieldLabel>
+            )}
+          </div>
+        ) : (
+          <>
+            {label && (
+              <FieldLabel
+                htmlFor={fieldId}
+                readerOnly={labelReaderOnly}
+                required={required}
+              >
+                {label}
+              </FieldLabel>
+            )}
+            {input}
+          </>
         )}
-        {input}
         {error && fieldError && error(fieldError, fieldValue)}
       </div>
     </FieldContext.Provider>

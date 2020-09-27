@@ -133,6 +133,32 @@ class EmailIsAvailableValidator(AsyncValidator):
         return email
 
 
+class NewThreadIsClosedValidator(AsyncValidator):
+    _context: GraphQLContext
+    _category: Union[str, int, Category]
+
+    def __init__(self, context: GraphQLContext, category: Union[str, int, Category]):
+        self._context = context
+        self._category = category
+
+    async def __call__(self, is_closed: bool, *_) -> bool:
+        if not is_closed:
+            return is_closed
+
+        category: Optional[Category] = None
+        if isinstance(self._category, Category):
+            category = self._category
+        else:
+            category = await load_category(self._context, self._category)
+
+        user = await get_authenticated_user(self._context)
+
+        if not category or not user or not user.is_moderator:
+            raise NotModeratorError()
+
+        return is_closed
+
+
 class PostAuthorValidator(AsyncValidator):
     _context: GraphQLContext
 

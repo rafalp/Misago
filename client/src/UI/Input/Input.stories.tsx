@@ -5,7 +5,7 @@ import { CardContainer, RootContainer } from "../Storybook"
 import Input from "."
 
 export default {
-  title: "UI/Input",
+  title: "UI/Controls/Input",
   decorators: [withKnobs],
 }
 

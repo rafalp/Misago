@@ -19,7 +19,7 @@ async def test_post_thread_mutation_creates_new_thread(
         input={
             "category": str(category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -45,7 +45,7 @@ async def test_post_thread_mutation_creates_new_post(
         input={
             "category": str(category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -72,7 +72,7 @@ async def test_post_thread_mutation_publishes_thread_updated_event(
         input={
             "category": str(category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -89,7 +89,7 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
         input={
             "category": str(category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -108,7 +108,7 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(user_graphql
         input={
             "category": "invalid",
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -127,7 +127,7 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_
         input={
             "category": "4000",
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -149,7 +149,7 @@ async def test_post_thread_mutation_validates_min_title_length(
         input={
             "category": str(category.id),
             "title": "Test",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -171,7 +171,7 @@ async def test_post_thread_mutation_validates_max_title_length(
         input={
             "category": str(category.id),
             "title": "a" * 11,
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -192,7 +192,7 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
         input={
             "category": str(category.id),
             "title": "!" * 10,
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -213,7 +213,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
         input={
             "category": str(closed_category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
@@ -234,10 +234,74 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
         input={
             "category": str(closed_category.id),
             "title": "Hello world!",
-            "body": "This is test post!",
+            "markup": "This is test post!",
         },
     )
 
     assert not data.get("errors")
     assert data.get("thread")
     assert data.get("post")
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_creates_open_thread(
+    publish, user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "Hello world!",
+            "markup": "This is test post!",
+            "is_closed": False,
+        },
+    )
+
+    assert not data.get("errors")
+    assert data.get("thread")
+    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert not data["thread"].is_closed
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
+    publish, moderator_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        moderator_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "Hello world!",
+            "markup": "This is test post!",
+            "is_closed": True,
+        },
+    )
+
+    assert not data.get("errors")
+    assert data.get("thread")
+    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"].is_closed
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
+    publish, user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={
+            "category": str(category.id),
+            "title": "Hello world!",
+            "markup": "This is test post!",
+            "is_closed": True,
+        },
+    )
+
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["isClosed"]
+    assert data["errors"].get_errors_types() == ["auth_error.not_moderator"]

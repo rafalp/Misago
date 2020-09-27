@@ -59,6 +59,26 @@
   }
 }
 
+// Left-align toggle button, make it ellipsis
+.form-control-toggle {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+// Add extra spacing between icon and text
+.form-control-toggle-text {
+  margin-left: $spacer / 4;
+}
+
+// Hide text on small viewports for compact toggle
+@include media-breakpoint-down(lg) {
+  .form-control-toggle-compact .form-control-toggle-text {
+    display: none;
+  }
+}
+
 // Spread items in category select
 .form-control-category-select {
   display: flex;
@@ -100,16 +120,16 @@
 }
 
 // Limit max length of first selected category on very small displays
-@media only screen and (max-width: 400px) {
+@include media-breakpoint-down(sm) {
   .form-control-category-select-value-complex {
     display: flex;
 
-    .form-control-category-select-item:first-child {
+    .form-control-category-select-item {
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
       text-align: left;
-      max-width: 45%;
+      max-width: 50%;
     }
   }
 }

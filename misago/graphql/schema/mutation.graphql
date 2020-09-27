@@ -30,7 +30,8 @@ extend type Mutation {
 input PostThreadInput {
     category: ID!
     title: String!
-    body: String!
+    markup: String!
+    isClosed: Boolean
 }
 
 input PostReplyInput {

@@ -3,7 +3,11 @@ import { I18n } from "@lingui/react"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
-import { useSettingsContext, useToastsContext } from "../../Context"
+import {
+  useAuthContext,
+  useSettingsContext,
+  useToastsContext,
+} from "../../Context"
 import {
   Card,
   CardAlert,
@@ -35,7 +39,8 @@ interface IPostThreadFormProps {
 interface IPostThreadFormValues {
   category: string
   title: string
-  body: string
+  markup: string
+  isClosed: boolean
 }
 
 const PostThreadForm: React.FC<IPostThreadFormProps> = ({
@@ -43,6 +48,9 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
   categories,
   validCategories,
 }) => {
+  const user = useAuthContext()
+  const isModerator = user ? user.isModerator : false
+
   const { showToast } = useToastsContext()
   const {
     postBodyMinLength,
@@ -61,7 +69,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
       .min(threadTitleMinLength, "value_error.any_str.min_length")
       .max(threadTitleMaxLength, "value_error.any_str.max_length")
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
-    body: Yup.string()
+    markup: Yup.string()
       .required("value_error.missing")
       .min(postBodyMinLength, "value_error.any_str.min_length"),
   })
@@ -79,7 +87,8 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
         defaultValues={{
           category: category || "",
           title: "",
-          body: "",
+          markup: "",
+          isClosed: false,
         }}
         disabled={loading}
         validationSchema={PostThreadSchema}
@@ -90,7 +99,11 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
           const { errors, thread } = result.data?.postThread || {}
 
           errors?.forEach(({ location, type, message }) => {
-            const field = location.join(".") as "body" | "title" | "category"
+            const field = location.join(".") as
+              | "markup"
+              | "title"
+              | "category"
+              | "isClosed"
             setError(field, type, message)
           })
 
@@ -158,7 +171,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             label={
               <Trans id="post_thread.thread_message">Message contents</Trans>
             }
-            name="body"
+            name="markup"
             input={<Editor />}
             error={(error, value) => (
               <ValidationError
@@ -172,6 +185,22 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             )}
             labelReaderOnly
           />
+          {isModerator && (
+            <Field
+              label={
+                <Trans id="post_thread.close_thread">
+                  Post thread as closed
+                </Trans>
+              }
+              name="isClosed"
+              error={(error, value) => (
+                <ValidationError error={error}>
+                  {({ message }) => <FieldError>{message}</FieldError>}
+                </ValidationError>
+              )}
+              checkbox
+            />
+          )}
         </CardFormBody>
         <CardFooter>
           <FormFooter

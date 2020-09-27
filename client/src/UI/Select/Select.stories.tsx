@@ -5,7 +5,7 @@ import { CardContainer, RootContainer } from "../Storybook"
 import Select from "."
 
 export default {
-  title: "UI/Select",
+  title: "UI/Controls/Select",
   decorators: [withKnobs],
 }
 

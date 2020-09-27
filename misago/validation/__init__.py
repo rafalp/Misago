@@ -8,6 +8,7 @@ from .types import (
 )
 from .validation import validate_data, validate_model
 from .validators import (
+    NewThreadIsClosedValidator,
     CategoryExistsValidator,
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
@@ -35,6 +36,7 @@ __all__ = [
     "CategoryIsOpenValidator",
     "CategoryModeratorValidator",
     "EmailIsAvailableValidator",
+    "NewThreadIsClosedValidator",
     "PostAuthorValidator",
     "PostCategoryValidator",
     "PostExistsValidator",

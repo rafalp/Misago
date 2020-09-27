@@ -34,7 +34,8 @@ interface IPostThreadMutationValues {
   input: {
     category: string
     title: string
-    body: string
+    markup: string
+    isClosed?: boolean
   }
 }
 
