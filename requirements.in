@@ -14,4 +14,4 @@ pyjwt
 pytz
 starlette
 unidecode
-uvicorn[watchgodreload]
+uvicorn[standard]
