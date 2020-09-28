@@ -15,6 +15,7 @@ import {
   CardFormBody,
   CardHeader,
 } from "../../UI/Card"
+import { Checkbox } from "../../UI/Checkbox"
 import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
 import Input from "../../UI/Input"
 import RootError from "../../UI/RootError"
@@ -193,12 +194,13 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
                 </Trans>
               }
               name="isClosed"
-              error={(error, value) => (
+              input={<Checkbox />}
+              error={(error) => (
                 <ValidationError error={error}>
                   {({ message }) => <FieldError>{message}</FieldError>}
                 </ValidationError>
               )}
-              checkbox
+              check
             />
           )}
         </CardFormBody>

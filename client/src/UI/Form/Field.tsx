@@ -6,7 +6,7 @@ import { FieldLabel } from "./FieldLabel"
 import { FormContext } from "./FormContext"
 
 interface IFieldProps {
-  checkbox?: boolean
+  check?: boolean
   className?: string
   disabled?: boolean
   error?: (
@@ -22,7 +22,7 @@ interface IFieldProps {
 }
 
 const Field: React.FC<IFieldProps> = ({
-  checkbox,
+  check,
   className,
   disabled,
   error,
@@ -36,7 +36,7 @@ const Field: React.FC<IFieldProps> = ({
   const { disabled: formDisabled, id: formId } = React.useContext(FormContext)
   const fieldId = getFieldId(formId, id, name)
 
-  const { errors, getValues, register } = useFormContext()
+  const { errors, getValues } = useFormContext()
   const fieldError = name ? errors[name] : undefined
   const fieldValue = name ? getValues()[name] : undefined
 
@@ -51,17 +51,9 @@ const Field: React.FC<IFieldProps> = ({
       }}
     >
       <div className={classnames("form-group", className)}>
-        {checkbox ? (
+        {check ? (
           <div className="form-check">
-            <span className="form-check-input">
-              <input
-                id={fieldId}
-                disabled={disabled || formDisabled}
-                name={name}
-                ref={register}
-                type="checkbox"
-              />
-            </span>
+            {input}
             {label && (
               <FieldLabel
                 className="form-check-label"
