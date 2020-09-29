@@ -10,7 +10,7 @@ async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
     data = await resolve_edit_post(
         None,
         user_graphql_info,
-        input={"post": str(user_post.id), "body": "Edited post"},
+        input={"post": str(user_post.id), "markup": "Edited post"},
     )
 
     assert not data.get("errors")
@@ -24,7 +24,7 @@ async def test_edit_post_mutation_fails_if_user_is_not_authorized(
     graphql_info, user_post
 ):
     data = await resolve_edit_post(
-        None, graphql_info, input={"post": str(user_post.id), "body": "Edited post"},
+        None, graphql_info, input={"post": str(user_post.id), "markup": "Edited post"},
     )
 
     assert data.get("thread")
@@ -42,7 +42,7 @@ async def test_edit_post_mutation_fails_if_post_id_is_invalid(user_graphql_info)
     data = await resolve_edit_post(
         None,
         user_graphql_info,
-        input={"post": "invalid", "body": "This is test post!"},
+        input={"post": "invalid", "markup": "This is test post!"},
     )
 
     assert not data.get("thread")
@@ -55,7 +55,7 @@ async def test_edit_post_mutation_fails_if_post_id_is_invalid(user_graphql_info)
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_post_doesnt_exist(user_graphql_info):
     data = await resolve_edit_post(
-        None, user_graphql_info, input={"post": "4000", "body": "This is test post!"},
+        None, user_graphql_info, input={"post": "4000", "markup": "This is test post!"},
     )
 
     assert not data.get("thread")
@@ -72,7 +72,7 @@ async def test_edit_post_mutation_fails_if_post_author_is_other_user(
     data = await resolve_edit_post(
         None,
         user_graphql_info,
-        input={"post": str(other_user_post.id), "body": "This is test post!"},
+        input={"post": str(other_user_post.id), "markup": "This is test post!"},
     )
 
     assert data.get("thread")
@@ -89,7 +89,7 @@ async def test_edit_post_mutation_allowss_moderator_to_edit_other_user_post(
     data = await resolve_edit_post(
         None,
         moderator_graphql_info,
-        input={"post": str(other_user_post.id), "body": "This is test post!"},
+        input={"post": str(other_user_post.id), "markup": "This is test post!"},
     )
 
     assert data.get("thread")
@@ -104,7 +104,7 @@ async def test_edit_post_mutation_fails_if_thread_is_closed(
     data = await resolve_edit_post(
         None,
         user_graphql_info,
-        input={"post": str(closed_user_thread_post.id), "body": "This is test post!"},
+        input={"post": str(closed_user_thread_post.id), "markup": "This is test post!"},
     )
 
     assert data.get("thread")
@@ -121,7 +121,7 @@ async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_thread
     data = await resolve_edit_post(
         None,
         moderator_graphql_info,
-        input={"post": str(closed_user_thread_post.id), "body": "This is test post!"},
+        input={"post": str(closed_user_thread_post.id), "markup": "This is test post!"},
     )
 
     assert data.get("thread")
@@ -136,7 +136,10 @@ async def test_edit_post_mutation_fails_if_category_is_closed(
     data = await resolve_edit_post(
         None,
         user_graphql_info,
-        input={"post": str(closed_category_user_post.id), "body": "This is test post!"},
+        input={
+            "post": str(closed_category_user_post.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert data.get("thread")
@@ -153,7 +156,10 @@ async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_catego
     data = await resolve_edit_post(
         None,
         moderator_graphql_info,
-        input={"post": str(closed_category_user_post.id), "body": "This is test post!"},
+        input={
+            "post": str(closed_category_user_post.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert data.get("thread")

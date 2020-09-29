@@ -2,6 +2,7 @@ import { Trans, t } from "@lingui/macro"
 import { I18n } from "@lingui/react"
 import React from "react"
 import * as Yup from "yup"
+import { useSettingsContext } from "../../../Context"
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -22,7 +23,7 @@ interface IThreadPostEditFormProps {
 }
 
 interface IFormValues {
-  body: string
+  markup: string
 }
 
 const Editor = React.lazy(() => import("../../../Editor"))
@@ -32,11 +33,12 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
   post,
   close,
 }) => {
+  const { postBodyMinLength } = useSettingsContext()
+
   const EditThreadPostSchema = Yup.object().shape({
-    body: Yup.string()
+    markup: Yup.string()
       .required("value_error.missing")
-      .min(2, "value_error.any_str.min_length")
-      .max(10000, "value_error.any_str.max_length"),
+      .min(postBodyMinLength, "value_error.any_str.min_length"),
   })
 
   const { data, loading, editPost, error: graphqlError } = useEditPostMutation(
@@ -50,19 +52,19 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
       <Form<IFormValues>
         className="post-edit-form"
         id={"thread_post_edit_form_" + post.id}
-        defaultValues={{ body: post.body.text }}
+        defaultValues={{ markup: post.body.text }}
         disabled={loading}
         validationSchema={EditThreadPostSchema}
-        onSubmit={async ({ clearError, setError, data: { body } }) => {
+        onSubmit={async ({ clearError, setError, data: { markup } }) => {
           clearError()
 
           try {
-            const result = await editPost(body)
+            const result = await editPost(markup)
             const { errors } = result.data?.editPost || {}
 
             if (errors) {
               errors?.forEach(({ location, type, message }) => {
-                const field = location.join(".") as "body"
+                const field = location.join(".") as "markup"
                 setError(field, type, message)
               })
             } else {
@@ -81,7 +83,7 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
           {({ message }) => <CardAlert>{message}</CardAlert>}
         </ThreadPostRootError>
         <CardBody className="post-edit-form-body">
-          <Editor name="body" disabled={loading} />
+          <Editor name="markup" disabled={loading} />
         </CardBody>
         <CardFooter className="post-edit-form-footer">
           <I18n>

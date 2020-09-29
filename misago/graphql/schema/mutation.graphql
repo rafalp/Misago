@@ -41,7 +41,7 @@ input PostReplyInput {
 
 input EditPostInput {
     post: ID!
-    body: String!
+    markup: String!
 }
 
 type PostMutationResult {

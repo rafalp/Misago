@@ -40,10 +40,10 @@ A dict with GraphQL query context.
 Dict[str, Any]
 ```
 
-A dict with already validated and cleaned input data. Will contain at least `post` and `body` keys:
+A dict with already validated and cleaned input data. Will contain at least `post` and `markup` keys:
 
 ```python
 class EditPostInput(TypedDict):
     post: Post
-    body: str
+    markup: str
 ```

@@ -34,7 +34,7 @@ interface IEditPostMutationData {
 interface IEditPostMutationVariables {
   input: {
     post: string
-    body: string
+    markup: string
   }
 }
 
@@ -48,10 +48,10 @@ const useEditPostMutation = (post: IPost) => {
     data,
     error,
     loading,
-    editPost: (body: string) => {
+    editPost: (markup: string) => {
       return mutation({
         variables: {
-          input: { body, post: post.id },
+          input: { markup, post: post.id },
         },
       })
     },

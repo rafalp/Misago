@@ -86,7 +86,7 @@ async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
     return create_model(
         "EditPostInputModel",
         post=(PositiveInt, ...),
-        body=(constr(strip_whitespace=True), ...),
+        markup=(constr(strip_whitespace=True), ...),
     )
 
 
@@ -103,7 +103,7 @@ async def edit_post(
     context: GraphQLContext, cleaned_data: EditPostInput
 ) -> Tuple[Thread, Post]:
     post = await update_post(
-        cleaned_data["post"], body={"text": cleaned_data["body"]}, increment_edits=True
+        cleaned_data["post"], body={"text": cleaned_data["markup"]}, increment_edits=True
     )
 
     store_post(context, post)
