@@ -56,15 +56,29 @@
   }
 }
 
-// Make textarea fill entire post edit body
+// Center post loader
+.post-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacer * 5 0;
+}
+
+// Make post editor fill entire post's body
 .post-edit-form-body {
   padding: 0;
 
-  textarea.form-control {
-    border: none;
+  .form-editor-toolbar {
     border-radius: 0;
+    border: 0;
+  }
 
-    padding: $card-spacer-x;
+  .form-editor-textarea,
+  .form-editor-preview {
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-radius: 0;
   }
 }
 

@@ -40,6 +40,7 @@ interface IOnSubmit<FormValues extends FieldValues = FieldValues> {
 
 interface IFormProps<FormValues> {
   children?: React.ReactNode
+  className?: string
   defaultValues?: FormValues
   disabled?: boolean
   id?: string
@@ -56,6 +57,7 @@ const Form = <
 ): JSX.Element => {
   const {
     children,
+    className,
     defaultValues,
     disabled,
     id,
@@ -73,6 +75,7 @@ const Form = <
     <HookFormContext {...methods}>
       <FormContext.Provider value={{ disabled, id }}>
         <form
+          className={className}
           id={id}
           onSubmit={
             onSubmit &&

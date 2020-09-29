@@ -13,8 +13,9 @@ interface IThreadPostProps {
   threadSlug: string
   page?: number
   isClosed?: boolean
-  isEdited?: boolean
   isSelected?: boolean
+  testEditing?: boolean
+  testLoading?: boolean
   toggleSelection?: ((id: string) => void) | null
 }
 
@@ -24,13 +25,14 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
   threadSlug,
   page,
   isClosed,
-  isEdited,
   isSelected,
+  testEditing,
+  testLoading,
   toggleSelection,
 }) => {
   const scrollIntoView = useScrollPostIntoView()
   const acl = usePostAcl(post, isClosed)
-  const [edit, setEdit] = React.useState(isEdited || false)
+  const [edit, setEdit] = React.useState(testEditing || false)
   const editPost = () => setEdit(true)
 
   return (
@@ -52,7 +54,11 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
               toggleSelection={toggleSelection}
             />
             {edit ? (
-              <ThreadPostEditForm post={post} close={() => setEdit(false)} />
+              <ThreadPostEditForm
+                post={post}
+                close={() => setEdit(false)}
+                testLoading={testLoading}
+              />
             ) : (
               <>
                 <CardBody className="post-body">{post.body.text}</CardBody>

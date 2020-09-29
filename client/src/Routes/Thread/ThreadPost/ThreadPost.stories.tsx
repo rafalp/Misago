@@ -124,7 +124,29 @@ export const PostEditor = () => (
         }}
         threadId="1"
         threadSlug="test-thread"
-        isEdited
+        testEditing
+      />
+    </MockedProvider>
+  </RootContainer>
+)
+
+export const PostLoader = () => (
+  <RootContainer padding>
+    <MockedProvider>
+      <ThreadPost
+        post={{
+          id: "1",
+          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          edits: 0,
+          postedAt: "2020-04-01T21:42:51Z",
+          posterName: "John",
+          poster: null,
+          extra: {},
+        }}
+        threadId="1"
+        threadSlug="test-thread"
+        testEditing
+        testLoading
       />
     </MockedProvider>
   </RootContainer>
