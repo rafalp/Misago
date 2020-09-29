@@ -103,7 +103,9 @@ async def edit_post(
     context: GraphQLContext, cleaned_data: EditPostInput
 ) -> Tuple[Thread, Post]:
     post = await update_post(
-        cleaned_data["post"], body={"text": cleaned_data["markup"]}, increment_edits=True
+        cleaned_data["post"],
+        body={"text": cleaned_data["markup"]},
+        increment_edits=True,
     )
 
     store_post(context, post)
