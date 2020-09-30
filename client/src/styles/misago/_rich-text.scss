@@ -1,4 +1,4 @@
 // Remove bottom margins from last child of rich text block:
-.misago-richtext *:last-child {
+.misago-richtext > *:last-child {
   margin-bottom: 0;
 }
