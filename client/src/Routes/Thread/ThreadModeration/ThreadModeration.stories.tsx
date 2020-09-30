@@ -9,7 +9,7 @@ export default {
 }
 
 export const ThreadOptions = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadModeration
       moderation={{
         loading: boolean("Loading", false),

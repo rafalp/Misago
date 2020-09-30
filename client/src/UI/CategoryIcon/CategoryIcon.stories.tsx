@@ -7,25 +7,25 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryIcon />
   </RootContainer>
 )
 
 export const CustomColor = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryIcon category={{ color: colors[0], icon: null }} />
   </RootContainer>
 )
 
 export const CustomIcon = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryIcon category={{ color: null, icon: icons[0] }} />
   </RootContainer>
 )
 
 export const CustomColorAndIcon = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryIcon category={{ color: colors[0], icon: icons[0] }} />
   </RootContainer>
 )

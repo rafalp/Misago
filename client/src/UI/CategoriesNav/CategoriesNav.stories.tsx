@@ -15,7 +15,7 @@ export default {
 export const Default = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav />
@@ -29,7 +29,7 @@ export const Default = () => (
 export const SelectedCategory = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav
@@ -45,7 +45,7 @@ export const SelectedCategory = () => (
 export const SelectedParent = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav
@@ -61,7 +61,7 @@ export const SelectedParent = () => (
 export const SelectedFirstChild = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav
@@ -77,7 +77,7 @@ export const SelectedFirstChild = () => (
 export const SelectedChild = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav
@@ -93,7 +93,7 @@ export const SelectedChild = () => (
 export const SelectedLastParent = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav
@@ -108,7 +108,7 @@ export const SelectedLastParent = () => (
 export const SelectedLastChild = () => (
   <SettingsContextFactory>
     <CategoriesContext.Provider value={categories}>
-      <RootContainer padding>
+      <RootContainer>
         <Layout>
           <LayoutSide>
             <CategoriesNav

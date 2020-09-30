@@ -19,7 +19,7 @@ const posts = {
 
 export const ThreadByUser = () => (
   <MockedProvider>
-    <RootContainer padding>
+    <RootContainer>
       <ThreadHeader
         thread={{
           posts,
@@ -49,7 +49,7 @@ export const ThreadByUser = () => (
 
 export const ThreadByAnonymous = () => (
   <MockedProvider>
-    <RootContainer padding>
+    <RootContainer>
       <ThreadHeader
         thread={{
           posts,
@@ -80,7 +80,7 @@ export const ThreadByAnonymous = () => (
 export const ThreadEditable = () => (
   <AuthContext.Provider value={userFactory()}>
     <MockedProvider>
-      <RootContainer padding>
+      <RootContainer>
         <ThreadHeader
           thread={{
             posts,

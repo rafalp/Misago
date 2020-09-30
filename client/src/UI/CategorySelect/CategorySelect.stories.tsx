@@ -15,7 +15,7 @@ interface IFormValues {
 export const CategorySelectInput = () => (
   <CategoriesContext.Provider value={categories}>
     <Form<IFormValues> id="category_select_field" onSubmit={() => {}}>
-      <CardContainer padding>
+      <CardContainer>
         <Field
           label="Select category"
           name="category"

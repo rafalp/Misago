@@ -41,8 +41,8 @@ export const TextInput = () => {
 
   return (
     <>
-      <RootContainer padding>{field}</RootContainer>
-      <CardContainer padding>{field}</CardContainer>
+      <RootContainer>{field}</RootContainer>
+      <CardContainer>{field}</CardContainer>
     </>
   )
 }

@@ -24,7 +24,7 @@ export const Default = () => {
   }
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadToolbarTop {...props} />
       <hr />
       <ThreadToolbarBottom {...props} />
@@ -42,7 +42,7 @@ export const WithPages = () => {
   }
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadToolbarTop {...props} />
       <hr />
       <ThreadToolbarBottom {...props} />
@@ -64,7 +64,7 @@ export const WithModeration = () => {
   }
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadToolbarTop {...props} />
       <hr />
       <ThreadToolbarBottom {...props} />
@@ -86,7 +86,7 @@ export const WithModerationAndPages = () => {
   }
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadToolbarTop {...props} />
       <hr />
       <ThreadToolbarBottom {...props} />

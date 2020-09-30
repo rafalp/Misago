@@ -25,7 +25,7 @@ export default {
 const verticalKnob = () => boolean("Vertical", false)
 
 export const Item = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitItem>Lorem ipsum</TidbitItem>
       <TidbitItem>Dolor met</TidbitItem>
@@ -34,7 +34,7 @@ export const Item = () => (
 )
 
 export const Numerical = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitPosts value={142567} />
       <TidbitReplies value={431413} />
@@ -45,7 +45,7 @@ export const Numerical = () => (
 )
 
 export const Categories = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitCategory category={categories[0]} parent />
       <TidbitCategory category={categories[2]} />
@@ -54,7 +54,7 @@ export const Categories = () => (
 )
 
 export const CategoriesDisabled = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitCategory category={categories[0]} disabled parent />
       <TidbitCategory category={categories[2]} disabled />
@@ -63,7 +63,7 @@ export const CategoriesDisabled = () => (
 )
 
 export const Timestamps = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitTimestamp date={new Date("2020-05-02T12:10:41.159Z")} />
       <TidbitTimestamp date={new Date("2020-05-02T12:10:41.159Z")} url="#" />
@@ -75,7 +75,7 @@ export const User = () => {
   const user = userFactory({ slug: "aerith", name: "Aerith" })
 
   return (
-    <CardContainer padding>
+    <CardContainer>
       <Tidbits vertical={verticalKnob()}>
         <TidbitAvatar user={user} />
         <TidbitUser user={user} />
@@ -85,7 +85,7 @@ export const User = () => {
 }
 
 export const UserAnonymous = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitAvatar />
       <TidbitUser name="Aerith" />
@@ -94,7 +94,7 @@ export const UserAnonymous = () => (
 )
 
 export const Closed = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitClosed />
     </Tidbits>
@@ -102,7 +102,7 @@ export const Closed = () => (
 )
 
 export const Activity = () => (
-  <CardContainer padding>
+  <CardContainer>
     <Tidbits vertical={verticalKnob()}>
       <TidbitActivityStart
         userName="Aerith"

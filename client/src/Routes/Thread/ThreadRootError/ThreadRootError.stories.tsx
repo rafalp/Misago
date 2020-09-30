@@ -10,7 +10,7 @@ export default {
 }
 
 export const ThreadError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadRootError
       dataErrors={[
         {
@@ -36,7 +36,7 @@ export const ThreadError = () => (
 )
 
 export const QueryError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadRootError graphqlError={new ApolloError({})}>
       {({ message }) => <p>{message}</p>}
     </ThreadRootError>
@@ -44,7 +44,7 @@ export const QueryError = () => (
 )
 
 export const NetworkError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadRootError
       graphqlError={new ApolloError({ networkError: new Error() })}
     >

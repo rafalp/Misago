@@ -7,13 +7,13 @@ export default {
 }
 
 export const Category = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadBreadcrumbs category={categories[0]} />
   </RootContainer>
 )
 
 export const ChildCategory = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadBreadcrumbs
       category={Object.assign({}, categories[0].children[0], {
         parent: categories[0],

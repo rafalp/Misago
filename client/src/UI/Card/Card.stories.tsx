@@ -27,7 +27,7 @@ export default {
 
 export const Basic = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBody>Lorem ipsum dolor met</CardBody>
       </Card>
@@ -37,7 +37,7 @@ export const Basic = () => {
 
 export const HeaderAndFooter = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardHeader title="Hello world" />
         <CardBody>Lorem ipsum dolor met</CardBody>
@@ -49,7 +49,7 @@ export const HeaderAndFooter = () => {
 
 export const WithAlert = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardAlert>Ut malesuada interdum massa in ultrices.</CardAlert>
         <CardBody>Lorem ipsum dolor met</CardBody>
@@ -60,7 +60,7 @@ export const WithAlert = () => {
 
 export const WithBanner = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBanner
           align="center"
@@ -86,7 +86,7 @@ export const WithBanner = () => {
 
 export const WithColorBand = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardColorBand color="#ff5630" />
         <CardBody>Lorem ipsum dolor met</CardBody>
@@ -97,7 +97,7 @@ export const WithColorBand = () => {
 
 export const WithColorBandBanner = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardColorBand color="#ff5630" />
         <CardBanner
@@ -131,7 +131,7 @@ export const WithForm = () => {
   const loading = boolean("Loading", false)
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardHeader title={title} />
         <Form<IFormValues>
@@ -169,7 +169,7 @@ export const WithForm = () => {
 
 export const List = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardList>
           <CardListItem>
@@ -187,7 +187,7 @@ export const List = () => {
 
 export const ListWithLoader = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardList>
           <CardListItem>
@@ -206,7 +206,7 @@ export const ListWithLoader = () => {
 
 export const Loader = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardLoader />
       </Card>
@@ -216,7 +216,7 @@ export const Loader = () => {
 
 export const Blankslate = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBlankslate header="JohnDoe has no threads." />
       </Card>
@@ -226,7 +226,7 @@ export const Blankslate = () => {
 
 export const BlankslateWithMessage = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBlankslate
           header="There are no threads in this category."
@@ -239,7 +239,7 @@ export const BlankslateWithMessage = () => {
 
 export const BlankslateWithMessageAction = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBlankslate
           header="There are no threads in this category."
@@ -253,7 +253,7 @@ export const BlankslateWithMessageAction = () => {
 
 export const BlankslateWithAction = () => {
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardBlankslate
           header="There are no threads in this category."
@@ -265,7 +265,7 @@ export const BlankslateWithAction = () => {
 }
 
 export const Error = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Card>
       <CardError header="This content is not available at the moment" />
     </Card>
@@ -273,7 +273,7 @@ export const Error = () => (
 )
 
 export const ErrorWithMessage = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Card>
       <CardError
         header="This content is not available."

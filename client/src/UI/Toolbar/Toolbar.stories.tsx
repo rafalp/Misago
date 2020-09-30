@@ -9,7 +9,7 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Toolbar>
       <ToolbarItem>
         <Paginator page={2} pages={4} url={() => "/"} />
@@ -29,7 +29,7 @@ export const Default = () => (
 )
 
 export const Mobile = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Toolbar mobile>
       <ToolbarItem>
         <ButtonSecondary text={"Lorem ipsum"} block disabled />
@@ -43,7 +43,7 @@ export const Mobile = () => (
 )
 
 export const MobileEven = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Toolbar mobile>
       <ToolbarItem fill>
         <ButtonSecondary text={"Lorem ipsum"} block disabled small />
@@ -59,7 +59,7 @@ export const MobileEven = () => (
 )
 
 export const Tablet = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Toolbar tablet>
       <ToolbarItem>
         <ButtonSecondary text={"Lorem ipsum"} block disabled small />
@@ -73,7 +73,7 @@ export const Tablet = () => (
 )
 
 export const Desktop = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Toolbar desktop>
       <ToolbarItem>
         <ButtonSecondary text={"Lorem ipsum"} disabled />

@@ -8,19 +8,19 @@ export default {
 }
 
 export const Button = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryButton category={categories[0]} />
   </RootContainer>
 )
 
 export const Link = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryButton category={categories[0]} link="/" />
   </RootContainer>
 )
 
 export const NoWrapExtraIcon = () => (
-  <RootContainer padding>
+  <RootContainer>
     <CategoryButton
       category={categories[0]}
       icon={<Icon icon="far fa-plus-square" />}

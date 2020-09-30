@@ -12,7 +12,7 @@ export default {
 }
 
 export const Empty = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker}>
       <PostThreadCategoryInputPlaceholder />
     </PostThreadCategoryInputBody>
@@ -20,7 +20,7 @@ export const Empty = () => (
 )
 
 export const EmptyDisabled = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker} disabled>
       <PostThreadCategoryInputPlaceholder />
     </PostThreadCategoryInputBody>
@@ -28,7 +28,7 @@ export const EmptyDisabled = () => (
 )
 
 export const Category = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker}>
       <PostThreadCategoryInputValue value={{ parent: categories[0] }} />
     </PostThreadCategoryInputBody>
@@ -36,7 +36,7 @@ export const Category = () => (
 )
 
 export const CategoryDisabled = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker} disabled>
       <PostThreadCategoryInputValue value={{ parent: categories[0] }} />
     </PostThreadCategoryInputBody>
@@ -44,7 +44,7 @@ export const CategoryDisabled = () => (
 )
 
 export const ChildCategory = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker}>
       <PostThreadCategoryInputValue
         value={{ parent: categories[0], child: categories[3] }}
@@ -54,7 +54,7 @@ export const ChildCategory = () => (
 )
 
 export const ChildCategoryDisabled = () => (
-  <RootContainer padding>
+  <RootContainer>
     <PostThreadCategoryInputBody onClick={openPicker} disabled>
       <PostThreadCategoryInputValue
         value={{ parent: categories[0], child: categories[3] }}

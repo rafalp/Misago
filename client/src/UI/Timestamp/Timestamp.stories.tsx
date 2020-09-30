@@ -11,7 +11,7 @@ export const TimestampsNoSnapshot = () => {
   const date = new Date()
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <p>Datetime: {formatDate(date, "en")}</p>
 
       <p>

@@ -11,19 +11,19 @@ const event = action("load more")
 const data = { nextCursor: "next" }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <LoadMoreButton data={data} loading={false} onEvent={event} />
   </RootContainer>
 )
 
 export const Loading = () => (
-  <RootContainer padding>
+  <RootContainer>
     <LoadMoreButton data={data} loading={true} onEvent={event} />
   </RootContainer>
 )
 
 export const NoCursor = () => (
-  <RootContainer padding>
+  <RootContainer>
     <LoadMoreButton
       data={{ nextCursor: null }}
       loading={false}
@@ -33,7 +33,7 @@ export const NoCursor = () => (
 )
 
 export const NoData = () => (
-  <RootContainer padding>
+  <RootContainer>
     <LoadMoreButton data={null} loading={false} onEvent={event} />
   </RootContainer>
 )

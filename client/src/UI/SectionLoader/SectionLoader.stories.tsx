@@ -11,7 +11,7 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <SectionLoader>
       <p>
         Lorem ipsum dolor met <a href="/">sit amet</a> elit.
@@ -24,7 +24,7 @@ export const Default = () => (
 )
 
 export const Loading = () => (
-  <RootContainer padding>
+  <RootContainer>
     <SectionLoader loading={true}>
       <p>
         Lorem ipsum dolor met <a href="/">sit amet</a> elit.
@@ -37,7 +37,7 @@ export const Loading = () => (
 )
 
 export const Interactive = () => (
-  <RootContainer padding>
+  <RootContainer>
     <SectionLoader loading={boolean("Loading", false)}>
       <p>Lorem ipsum dolor met sit amet elit.</p>
       <p>Lorem ipsum dolor met sit amet elit.</p>

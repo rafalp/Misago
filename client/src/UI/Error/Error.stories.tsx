@@ -11,25 +11,25 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <BaseError className="test" />
   </RootContainer>
 )
 
 export const NotFound = () => (
-  <RootContainer padding>
+  <RootContainer>
     <NotFoundError className="test" />
   </RootContainer>
 )
 
 export const QueryError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <GraphQLError className="test" error={new ApolloError({})} />
   </RootContainer>
 )
 
 export const NetworkError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <GraphQLError
       className="test"
       error={new ApolloError({ networkError: new Error() })}
@@ -38,7 +38,7 @@ export const NetworkError = () => (
 )
 
 export const WithAction = () => (
-  <RootContainer padding>
+  <RootContainer>
     <BaseError
       className="test"
       action={

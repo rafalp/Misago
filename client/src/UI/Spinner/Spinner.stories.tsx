@@ -9,10 +9,10 @@ export default {
 export const Default = () => {
   return (
     <>
-      <RootContainer padding>
+      <RootContainer>
         <Spinner />
       </RootContainer>
-      <CardContainer padding>
+      <CardContainer>
         <Spinner />
       </CardContainer>
     </>
@@ -22,10 +22,10 @@ export const Default = () => {
 export const Small = () => {
   return (
     <>
-      <RootContainer padding>
+      <RootContainer>
         <Spinner small />
       </RootContainer>
-      <CardContainer padding>
+      <CardContainer>
         <Spinner small />
       </CardContainer>
     </>

@@ -10,13 +10,13 @@ export default {
 const forumStats = { threads: 142567, posts: 1089524, users: 25663 }
 
 export const Category = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadsHeaderCategory category={categories[0]} />
   </RootContainer>
 )
 
 export const ForumIndex = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadsHeaderAll
       settings={{
         forumIndexThreads: true,
@@ -29,7 +29,7 @@ export const ForumIndex = () => (
 )
 
 export const AllThreads = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadsHeaderAll
       settings={{
         forumIndexThreads: false,

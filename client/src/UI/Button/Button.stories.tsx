@@ -70,10 +70,10 @@ export const TextOnly = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>
@@ -105,10 +105,10 @@ export const OutlineTextOnly = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>
@@ -152,10 +152,10 @@ export const IconOnly = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>
@@ -199,10 +199,10 @@ export const OutlineIconOnly = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>
@@ -253,10 +253,10 @@ export const IconAndText = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>
@@ -307,10 +307,10 @@ export const OutlineIconAndText = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Matrix items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Matrix items={items} />
       </CardContainer>
     </>

@@ -9,7 +9,7 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Responsive>Always visible</Responsive>
     <Responsive mobile>Mobile</Responsive>
     <Responsive mobile tablet>
@@ -27,7 +27,7 @@ export const Default = () => (
 )
 
 export const Configurable = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Responsive
       desktop={boolean("desktop", false)}
       tablet={boolean("tablet", false)}

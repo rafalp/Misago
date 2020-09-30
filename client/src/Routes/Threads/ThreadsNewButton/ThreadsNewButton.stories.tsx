@@ -7,13 +7,13 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadsNewButton />
   </RootContainer>
 )
 
 export const Category = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadsNewButton category={categories[0]} />
   </RootContainer>
 )

@@ -35,7 +35,7 @@ interface IFormValues {
 export const Dynamic = () => (
   <ToastsContextProvider>
     <Toasts />
-    <RootContainer padding>
+    <RootContainer>
       <ToastsContext.Consumer>
         {({ showToast }) => (
           <Form<IFormValues>

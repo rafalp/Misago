@@ -9,7 +9,7 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide>
         <SideNav>
@@ -25,7 +25,7 @@ export const Default = () => (
 )
 
 export const ActiveItem = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide>
         <SideNav>
@@ -41,7 +41,7 @@ export const ActiveItem = () => (
 )
 
 export const ActiveItemWithChild = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide>
         <SideNav>
@@ -60,7 +60,7 @@ export const ActiveItemWithChild = () => (
 )
 
 export const ItemWithActiveChild = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide>
         <SideNav>

@@ -38,7 +38,7 @@ const Container: React.FC<IContainerProps> = ({ children, value }) => {
   })
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <CardHeader title="Editor example" />
         <Form<IEditorFormValues>

@@ -8,7 +8,7 @@ export default {
 }
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <FormCheckbox>
       <Checkbox />
     </FormCheckbox>
@@ -16,7 +16,7 @@ export const Default = () => (
 )
 
 export const Checked = () => (
-  <RootContainer padding>
+  <RootContainer>
     <FormCheckbox>
       <Checkbox checked />
     </FormCheckbox>
@@ -24,7 +24,7 @@ export const Checked = () => (
 )
 
 export const Disabled = () => (
-  <RootContainer padding>
+  <RootContainer>
     <FormCheckbox>
       <Checkbox disabled />
     </FormCheckbox>
@@ -32,7 +32,7 @@ export const Disabled = () => (
 )
 
 export const DisabledAndChecked = () => (
-  <RootContainer padding>
+  <RootContainer>
     <FormCheckbox>
       <Checkbox checked disabled />
     </FormCheckbox>
@@ -40,7 +40,7 @@ export const DisabledAndChecked = () => (
 )
 
 export const WithLabel = () => (
-  <RootContainer padding>
+  <RootContainer>
     <FormCheckbox>
       <Checkbox id="test-checkbox" />
       <CheckboxLabel htmlFor="test-checkbox">Lorem ipsum dolor</CheckboxLabel>

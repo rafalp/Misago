@@ -20,10 +20,10 @@ export const UserAvatar = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Gallery items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Gallery items={items} />
       </CardContainer>
     </>
@@ -38,10 +38,10 @@ export const BlankAvatar = () => {
 
   return (
     <>
-      <RootContainer>
+      <RootContainer nopadding>
         <Gallery items={items} />
       </RootContainer>
-      <CardContainer>
+      <CardContainer nopadding>
         <Gallery items={items} />
       </CardContainer>
     </>

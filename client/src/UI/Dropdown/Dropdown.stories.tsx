@@ -17,7 +17,7 @@ const click = action("button click")
 
 export const Default = () => (
   <>
-    <RootContainer center padding>
+    <RootContainer center>
       <Dropdown
         toggle={({ ref, toggle }) => (
           <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
@@ -25,7 +25,7 @@ export const Default = () => (
         menu={() => <Menu />}
       />
     </RootContainer>
-    <CardContainer center padding>
+    <CardContainer center>
       <Dropdown
         toggle={({ ref, toggle }) => (
           <ButtonPrimary elementRef={ref} text="Toggle" onClick={toggle} />
@@ -37,7 +37,7 @@ export const Default = () => (
 )
 
 export const MenuItems = () => (
-  <RootContainer padding>
+  <RootContainer>
     <div className="dropdown-menu d-block position-static">
       <DropdownHeader text="Example menu" />
       <DropdownLink text="Private messages" to="/" />

@@ -13,7 +13,7 @@ export default {
 }
 
 export const TwoColumn = () => (
-  <RootContainer padding>
+  <RootContainer>
     <RouteContainer>
       <Layout>
         <LayoutSide>
@@ -28,7 +28,7 @@ export const TwoColumn = () => (
 )
 
 export const MainLoading = () => (
-  <RootContainer padding>
+  <RootContainer>
     <RouteContainer>
       <Layout>
         <LayoutSide>
@@ -43,7 +43,7 @@ export const MainLoading = () => (
 )
 
 export const MainError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <RouteContainer>
       <Layout>
         <LayoutSide>
@@ -58,7 +58,7 @@ export const MainError = () => (
 )
 
 export const MainNotFound = () => (
-  <RootContainer padding>
+  <RootContainer>
     <RouteContainer>
       <Layout>
         <LayoutSide>
@@ -73,7 +73,7 @@ export const MainNotFound = () => (
 )
 
 export const MainNetworkError = () => (
-  <RootContainer padding>
+  <RootContainer>
     <RouteContainer>
       <Layout>
         <LayoutSide>

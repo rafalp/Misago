@@ -21,7 +21,7 @@ export const Button = () => (
     <ThreadsCategoriesModalContext.Provider
       value={{ open, close, isOpen: false }}
     >
-      <RootContainer padding>
+      <RootContainer>
         <ThreadsCategoriesModalButton />
       </RootContainer>
     </ThreadsCategoriesModalContext.Provider>
@@ -33,7 +33,7 @@ export const ButtonWithCategory = () => (
     <ThreadsCategoriesModalContext.Provider
       value={{ open, close, isOpen: false }}
     >
-      <RootContainer padding>
+      <RootContainer>
         <ThreadsCategoriesModalButton
           active={{ category: categories[0], parent: categories[0] }}
         />

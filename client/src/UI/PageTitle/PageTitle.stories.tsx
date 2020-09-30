@@ -7,7 +7,7 @@ export default {
 }
 
 export const Title = () => (
-  <CardContainer padding>
+  <CardContainer>
     <PageTitle text="Misago forums" />
   </CardContainer>
 )

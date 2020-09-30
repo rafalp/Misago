@@ -69,8 +69,8 @@ export const FormField = () => {
 
   return (
     <>
-      <RootContainer padding>{field}</RootContainer>
-      <CardContainer padding>{field}</CardContainer>
+      <RootContainer>{field}</RootContainer>
+      <CardContainer>{field}</CardContainer>
     </>
   )
 }
@@ -86,7 +86,7 @@ export const Footer = () => {
   const loading = boolean("Loading", false)
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Card>
         <form
           onSubmit={(event) => {

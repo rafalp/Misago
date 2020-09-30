@@ -10,13 +10,13 @@ export default {
 const enteredViewport = action("entered viewport!")
 
 export const Default = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ViewportEvent onEnter={enteredViewport}>Hello world!</ViewportEvent>
   </RootContainer>
 )
 
 export const OutsideViewport = () => (
-  <RootContainer padding>
+  <RootContainer>
     <div style={{ paddingTop: "100vh" }}>
       <ViewportEvent onEnter={enteredViewport}>Hello world!</ViewportEvent>
     </div>
@@ -24,7 +24,7 @@ export const OutsideViewport = () => (
 )
 
 export const DesktopOnly = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ViewportEvent onEnter={enteredViewport} desktopOnly>
       Hello world!
     </ViewportEvent>
@@ -32,7 +32,7 @@ export const DesktopOnly = () => (
 )
 
 export const OneTime = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ViewportEvent onEnter={enteredViewport} oneTime>
       Hello world!
     </ViewportEvent>
@@ -40,7 +40,7 @@ export const OneTime = () => (
 )
 
 export const Disabled = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ViewportEvent onEnter={enteredViewport} disabled>
       Hello world!
     </ViewportEvent>

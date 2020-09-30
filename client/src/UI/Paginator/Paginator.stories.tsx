@@ -15,7 +15,7 @@ const url = (page: number) => {
 }
 
 export const FirstPage = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Paginator page={1} pages={10} url={url} />
     <hr />
     <PaginatorCompact page={1} pages={10} url={url} />
@@ -23,7 +23,7 @@ export const FirstPage = () => (
 )
 
 export const MiddlePage = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Paginator page={5} pages={10} url={url} />
     <hr />
     <PaginatorCompact page={5} pages={10} url={url} />
@@ -31,7 +31,7 @@ export const MiddlePage = () => (
 )
 
 export const LastPage = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Paginator page={10} pages={10} url={url} />
     <hr />
     <PaginatorCompact page={10} pages={10} url={url} />
@@ -39,7 +39,7 @@ export const LastPage = () => (
 )
 
 export const OnlyPage = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Paginator page={1} pages={1} url={url} />
     <hr />
     <PaginatorCompact page={1} pages={1} url={url} />
@@ -54,7 +54,7 @@ export const Configurable = () => {
   if (pages < page) pages = page
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <Paginator page={page} pages={pages} url={url} />
       <hr />
       <PaginatorCompact page={page} pages={pages} url={url} />

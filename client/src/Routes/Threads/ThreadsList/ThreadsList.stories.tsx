@@ -54,7 +54,7 @@ const thread = (data?: {
 }
 
 const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide />
       <LayoutMain>{children}</LayoutMain>

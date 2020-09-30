@@ -4,18 +4,18 @@ import React from "react"
 interface IRootContainerProps {
   children: React.ReactNode
   center?: boolean
-  padding?: boolean
+  nopadding?: boolean
 }
 
 const RootContainer: React.FC<IRootContainerProps> = ({
   children,
   center,
-  padding,
+  nopadding,
 }) => (
   <div
     className={classnames({
       "d-flex justify-content-center": center,
-      "px-3 py-4": padding,
+      "px-3 py-4": !nopadding,
     })}
   >
     {children}

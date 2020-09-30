@@ -11,7 +11,7 @@ export default {
 }
 
 export const SideNav = () => (
-  <RootContainer padding>
+  <RootContainer>
     <Layout>
       <LayoutSide>
         <CategoriesListGroup>

@@ -11,8 +11,8 @@ export const Regular = () => {
 
   return (
     <>
-      <RootContainer padding>{icon}</RootContainer>
-      <CardContainer padding>{icon}</CardContainer>
+      <RootContainer>{icon}</RootContainer>
+      <CardContainer>{icon}</CardContainer>
     </>
   )
 }
@@ -22,8 +22,8 @@ export const Solid = () => {
 
   return (
     <>
-      <RootContainer padding>{icon}</RootContainer>
-      <CardContainer padding>{icon}</CardContainer>
+      <RootContainer>{icon}</RootContainer>
+      <CardContainer>{icon}</CardContainer>
     </>
   )
 }
@@ -33,8 +33,8 @@ export const FixedWidth = () => {
 
   return (
     <>
-      <RootContainer padding>{icon}</RootContainer>
-      <CardContainer padding>{icon}</CardContainer>
+      <RootContainer>{icon}</RootContainer>
+      <CardContainer>{icon}</CardContainer>
     </>
   )
 }

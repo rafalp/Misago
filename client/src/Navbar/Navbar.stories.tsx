@@ -20,7 +20,7 @@ const settings = {
 
 export const Anonymous = () => (
   <MockedProvider>
-    <RootContainer>
+    <RootContainer nopadding>
       <Navbar settings={settings} user={null} {...navbarActions} />
     </RootContainer>
   </MockedProvider>
@@ -28,7 +28,7 @@ export const Anonymous = () => (
 
 export const Authenticated = () => (
   <MockedProvider>
-    <RootContainer>
+    <RootContainer nopadding>
       <Navbar settings={settings} user={userFactory()} {...navbarActions} />
     </RootContainer>
   </MockedProvider>

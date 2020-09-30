@@ -14,7 +14,7 @@ export const PostByUser = () => {
   const username = text("Poster name", "John")
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadPost
         post={{
           id: "1",
@@ -36,7 +36,7 @@ export const PostSelectable = () => {
   const username = text("Poster name", "John")
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadPost
         post={{
           id: "1",
@@ -60,7 +60,7 @@ export const PostByDeletedUser = () => {
   const username = text("Poster name", "John")
 
   return (
-    <RootContainer padding>
+    <RootContainer>
       <ThreadPost
         post={{
           id: "1",
@@ -79,7 +79,7 @@ export const PostByDeletedUser = () => {
 }
 
 export const PostAfterAnother = () => (
-  <RootContainer padding>
+  <RootContainer>
     <ThreadPost
       post={{
         id: "1",
@@ -110,7 +110,7 @@ export const PostAfterAnother = () => (
 )
 
 export const PostEditor = () => (
-  <RootContainer padding>
+  <RootContainer>
     <MockedProvider>
       <ThreadPost
         post={{
@@ -131,7 +131,7 @@ export const PostEditor = () => (
 )
 
 export const PostLoader = () => (
-  <RootContainer padding>
+  <RootContainer>
     <MockedProvider>
       <ThreadPost
         post={{
