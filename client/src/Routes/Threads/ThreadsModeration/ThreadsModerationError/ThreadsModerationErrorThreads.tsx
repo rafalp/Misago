@@ -32,7 +32,7 @@ const ThreadsModerationErrorThreads: React.FC<IThreadsModerationErrorThreadsProp
             </ThreadValidationError>
             <div className="threads-errors-thread-title">{thread.title}</div>
             <div className="threads-errors-thread-tidbits">
-              <Tidbits small>
+              <Tidbits>
                 {thread.category.parent && (
                   <TidbitCategory
                     category={thread.category.parent}

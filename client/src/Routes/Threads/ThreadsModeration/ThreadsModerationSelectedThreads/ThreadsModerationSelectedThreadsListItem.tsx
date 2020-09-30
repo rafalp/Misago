@@ -48,7 +48,7 @@ const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelec
             {thread.title}
           </label>
           <div className="selected-thread-tidbits">
-            <Tidbits small>
+            <Tidbits>
               {thread.category.parent && (
                 <TidbitCategory
                   category={thread.category.parent}

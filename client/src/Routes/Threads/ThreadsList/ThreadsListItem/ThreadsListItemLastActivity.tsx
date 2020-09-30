@@ -11,7 +11,7 @@ const ThreadsListItemLastActivity: React.FC<IThreadsListItemLastActivityProps> =
   thread,
 }) => (
   <div className="col-auto threads-list-activity">
-    <Tidbits small vertical>
+    <Tidbits vertical>
       <TidbitUser name={thread.lastPosterName} user={thread.lastPoster} />
       <TidbitTimestamp
         date={new Date(thread.lastPostedAt)}

@@ -22,12 +22,11 @@ export default {
   decorators: [withKnobs],
 }
 
-const smallKnob = () => boolean("Small", false)
 const verticalKnob = () => boolean("Vertical", false)
 
 export const Item = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitItem>Lorem ipsum</TidbitItem>
       <TidbitItem>Dolor met</TidbitItem>
     </Tidbits>
@@ -36,7 +35,7 @@ export const Item = () => (
 
 export const Numerical = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitPosts value={142567} />
       <TidbitReplies value={431413} />
       <TidbitThreads value={1089524} />
@@ -47,7 +46,7 @@ export const Numerical = () => (
 
 export const Categories = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitCategory category={categories[0]} parent />
       <TidbitCategory category={categories[2]} />
     </Tidbits>
@@ -56,7 +55,7 @@ export const Categories = () => (
 
 export const CategoriesDisabled = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitCategory category={categories[0]} disabled parent />
       <TidbitCategory category={categories[2]} disabled />
     </Tidbits>
@@ -65,7 +64,7 @@ export const CategoriesDisabled = () => (
 
 export const Timestamps = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitTimestamp date={new Date("2020-05-02T12:10:41.159Z")} />
       <TidbitTimestamp date={new Date("2020-05-02T12:10:41.159Z")} url="#" />
     </Tidbits>
@@ -73,12 +72,11 @@ export const Timestamps = () => (
 )
 
 export const User = () => {
-  const small = smallKnob()
   const user = userFactory({ slug: "aerith", name: "Aerith" })
 
   return (
     <CardContainer padding>
-      <Tidbits small={small} vertical={verticalKnob()}>
+      <Tidbits vertical={verticalKnob()}>
         <TidbitAvatar user={user} />
         <TidbitUser user={user} />
       </Tidbits>
@@ -86,22 +84,18 @@ export const User = () => {
   )
 }
 
-export const UserAnonymous = () => {
-  const small = smallKnob()
-
-  return (
-    <CardContainer padding>
-      <Tidbits small={small} vertical={verticalKnob()}>
-        <TidbitAvatar />
-        <TidbitUser name="Aerith" />
-      </Tidbits>
-    </CardContainer>
-  )
-}
+export const UserAnonymous = () => (
+  <CardContainer padding>
+    <Tidbits vertical={verticalKnob()}>
+      <TidbitAvatar />
+      <TidbitUser name="Aerith" />
+    </Tidbits>
+  </CardContainer>
+)
 
 export const Closed = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitClosed />
     </Tidbits>
   </CardContainer>
@@ -109,7 +103,7 @@ export const Closed = () => (
 
 export const Activity = () => (
   <CardContainer padding>
-    <Tidbits small={smallKnob()} vertical={verticalKnob()}>
+    <Tidbits vertical={verticalKnob()}>
       <TidbitActivityStart
         userName="Aerith"
         date={new Date("2020-05-02T12:10:41.159Z")}

@@ -1,16 +1,13 @@
-// Remove margin from tidbits component
+// Remove margin from tidbits component, make text size small
 .tidbits {
   margin: 0;
+
+  font-size: $font-size-sm;
 }
 
 // Force inline items to stack on vertical tidbots
 .tidbits.list-unstyled > .list-inline-item {
   display: block;
-}
-
-// Make tidbits font size small
-.tidbits-small {
-  font-size: $font-size-sm;
 }
 
 // Category tidbit

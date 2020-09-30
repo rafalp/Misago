@@ -3,18 +3,14 @@ import React from "react"
 
 interface ITidbitsProps {
   children?: React.ReactNode
-  small?: boolean
   vertical?: boolean
 }
 
-const Tidbits: React.FC<ITidbitsProps> = ({ children, small, vertical }) => (
+const Tidbits: React.FC<ITidbitsProps> = ({ children, vertical }) => (
   <ul
     className={classnames(
       "tidbits",
-      vertical ? "list-unstyled" : "list-inline",
-      {
-        "tidbits-small": small,
-      }
+      vertical ? "list-unstyled" : "list-inline"
     )}
   >
     {children}

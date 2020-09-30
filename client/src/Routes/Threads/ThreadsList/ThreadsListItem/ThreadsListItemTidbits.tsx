@@ -17,7 +17,7 @@ interface IThreadsListItemTidbitsProps {
 const ThreadsListItemTidbits: React.FC<IThreadsListItemTidbitsProps> = ({
   thread,
 }) => (
-  <Tidbits small>
+  <Tidbits>
     {thread.category.parent && (
       <TidbitCategory category={thread.category.parent} parent />
     )}
