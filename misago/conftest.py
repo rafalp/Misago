@@ -218,7 +218,7 @@ def admin_graphql_info(admin_graphql_context):
 @pytest.fixture
 async def thread_and_post(category):
     thread = await create_thread(category, "Thread", starter_name="Guest")
-    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -237,14 +237,14 @@ def post(thread_and_post):
 
 @pytest.fixture
 async def reply(thread):
-    reply = await create_post(thread, {"test": "reply"}, poster_name="Guest")
+    reply = await create_post(thread, poster_name="Guest")
     await update_thread(thread, replies=1, last_post=reply)
     return reply
 
 
 @pytest.fixture
 async def thread_and_reply(thread):
-    reply = await create_post(thread, {"test": "reply"}, poster_name="Guest")
+    reply = await create_post(thread, poster_name="Guest")
     thread = await update_thread(thread, replies=1, last_post=reply)
     return thread, reply
 
@@ -264,7 +264,7 @@ async def thread_reply(thread_and_reply):
 @pytest.fixture
 async def user_thread_and_post(category, user):
     thread = await create_thread(category, "Thread", starter_name="Guest")
-    post = await create_post(thread, {"test": "yes"}, poster=user)
+    post = await create_post(thread, poster=user)
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -284,7 +284,7 @@ def user_post(user_thread_and_post):
 @pytest.fixture
 async def other_user_thread_and_post(category, other_user):
     thread = await create_thread(category, "Thread", starter_name="Guest")
-    post = await create_post(thread, {"test": "yes"}, poster=other_user)
+    post = await create_post(thread, poster=other_user)
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -306,7 +306,7 @@ async def closed_thread_and_post(category):
     thread = await create_thread(
         category, "Thread", starter_name="Guest", is_closed=True
     )
-    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -326,7 +326,7 @@ def closed_thread_post(closed_thread_and_post):
 @pytest.fixture
 async def closed_category_thread_and_post(closed_category):
     thread = await create_thread(closed_category, "Thread", starter_name="Guest")
-    post = await create_post(thread, {"test": "yes"}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -348,7 +348,7 @@ async def closed_user_thread_and_post(category, user):
     thread = await create_thread(
         category, "Thread", starter_name="Guest", is_closed=True
     )
-    post = await create_post(thread, {"test": "yes"}, poster=user)
+    post = await create_post(thread, poster=user)
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 
@@ -368,7 +368,7 @@ def closed_user_thread_post(closed_user_thread_and_post):
 @pytest.fixture
 async def closed_category_user_thread_and_post(closed_category, user):
     thread = await create_thread(closed_category, "Thread", starter_name="Guest")
-    post = await create_post(thread, {"test": "yes"}, poster=user)
+    post = await create_post(thread, poster=user)
     thread = await update_thread(thread, first_post=post, last_post=post)
     return thread, post
 

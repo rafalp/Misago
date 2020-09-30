@@ -59,7 +59,10 @@ async def test_post_thread_mutation_creates_new_post(
     assert data["post"].poster_name == user.name
     assert data["post"].posted_at == data["thread"].started_at
     assert data["post"].posted_at == data["thread"].last_posted_at
-    assert data["post"].body == {"text": "This is test post!"}
+    assert data["post"].markup == "This is test post!"
+    assert data["post"].rich_text[0]["type"] == "p"
+    assert data["post"].rich_text[0]["text"] == "This is test post!"
+    assert data["post"].html == "This is test post!"
 
 
 @pytest.mark.asyncio
@@ -305,3 +308,20 @@ async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["isClosed"]
     assert data["errors"].get_errors_types() == ["auth_error.not_moderator"]
+
+
+@pytest.mark.asyncio
+async def test_post_thread_mutation_fails_if_markup_is_too_short(
+    publish, user_graphql_info, category
+):
+    data = await resolve_post_thread(
+        None,
+        user_graphql_info,
+        input={"category": str(category.id), "title": "Hello world!", "markup": " ",},
+    )
+
+    assert not data.get("thread")
+    assert not data.get("post")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["markup"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]

@@ -21,7 +21,7 @@ async def test_thread_category_can_be_updated(thread, child_category):
 
 @pytest.mark.asyncio
 async def test_thread_first_post_can_be_updated(thread):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     updated_thread = await update_thread(thread, first_post=post)
     assert updated_thread.first_post_id == post.id
 
@@ -52,7 +52,7 @@ async def test_thread_starter_id_can_be_removed(thread, user):
 
 @pytest.mark.asyncio
 async def test_thread_last_post_can_be_updated(thread):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     updated_thread = await update_thread(thread, last_post=post)
     assert updated_thread.last_post_id == post.id
 
@@ -145,7 +145,7 @@ async def test_thread_extra_can_be_updated(thread):
 
 @pytest.mark.asyncio
 async def test_updating_thread_first_post_and_starter_raises_value_error(thread, user):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, first_post=post, starter=user)
 
@@ -160,7 +160,7 @@ async def test_updating_thread_starter_and_starter_name_raises_value_error(
 
 @pytest.mark.asyncio
 async def test_updating_thread_first_post_and_starter_name_raises_value_error(thread):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, first_post=post, starter_name="User")
 
@@ -170,7 +170,7 @@ async def test_updating_thread_first_post_and_start_date_raises_value_error(
     thread, user
 ):
     started_at = timezone.now()
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, first_post=post, started_at=started_at)
 
@@ -179,7 +179,7 @@ async def test_updating_thread_first_post_and_start_date_raises_value_error(
 async def test_updating_thread_last_post_and_last_poster_raises_value_error(
     thread, user
 ):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, last_post=post, last_poster=user)
 
@@ -196,7 +196,7 @@ async def test_updating_thread_last_poster_and_last_poster_name_raises_value_err
 async def test_updating_thread_last_post_and_last_poster_name_raises_value_error(
     thread,
 ):
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, last_post=post, last_poster_name="User")
 
@@ -206,6 +206,6 @@ async def test_updating_thread_last_post_and_last_post_date_raises_value_error(
     thread, user
 ):
     started_at = timezone.now()
-    post = await create_post(thread, {}, poster_name="Guest")
+    post = await create_post(thread, poster_name="Guest")
     with pytest.raises(ValueError):
         await update_thread(thread, last_post=post, last_posted_at=started_at)

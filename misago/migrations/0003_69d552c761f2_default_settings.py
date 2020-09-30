@@ -33,7 +33,7 @@ settings = [
     {"name": "jwt_exp", "value": int(timedelta(days=90).total_seconds())},
     {"name": "jwt_secret", "value": get_random_string(64)},
     {"name": "password_min_length", "value": 8},
-    {"name": "post_body_min_length", "value": 3},
+    {"name": "post_min_length", "value": 3},
     {"name": "posts_per_page", "value": 18},
     {"name": "posts_per_page_orphans", "value": 6},
     {"name": "thread_title_min_length", "value": 5},

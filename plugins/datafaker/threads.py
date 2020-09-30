@@ -5,6 +5,7 @@ from typing import Optional
 from misago.types import Category, Post, Thread, User
 from misago.threads.create import create_post, create_thread
 from misago.threads.update import update_thread
+from misago.utils.strings import get_random_string
 
 from .sentences import Sentences
 
@@ -19,9 +20,20 @@ async def create_fake_post(
     poster_name: Optional[str] = None,
     posted_at: Optional[datetime] = None,
 ) -> Post:
+    texts = [sentences.get_random_sentence() for _ in range(random.randint(1, 15))]
+
+    markup = "\n\n".join(texts)
+    html = "<p>%s</p>" % "</p>\n\n<p>".join(texts)
+
+    rich_text = [
+        {"id": get_random_string(6), "type": "p", "text": text} for text in texts
+    ]
+
     return await create_post(
         thread,
-        body={"text": sentences.get_random_sentence()},
+        markup,
+        rich_text,
+        html,
         poster=poster,
         poster_name=poster_name,
         posted_at=posted_at,

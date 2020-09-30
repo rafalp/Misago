@@ -82,6 +82,19 @@ async def resolve_last_post_url(
     return None
 
 
+@thread_type.field("post")
+async def resolve_post(
+    obj: Thread,
+    info: GraphQLResolveInfo,
+    *,
+    id: str,  # pylint: disable=redefined-builtin
+) -> Awaitable[Optional[Post]]:
+    post = await load_post(info.context, id)
+    if post and post.thread_id == obj.id:
+        return post
+    return None
+
+
 @thread_type.field("postUrl")
 async def resolve_post_url(
     obj: Thread,

@@ -15,6 +15,7 @@ import { IPost } from "../Thread.types"
 import ThreadPostLoader from "./ThreadPostLoader"
 import ThreadPostRootError from "./ThreadPostRootError"
 import useEditPostMutation from "./useEditPostMutation"
+import usePostMarkupQuery from "./usePostMarkupQuery"
 
 interface IThreadPostEditFormProps {
   post: IPost
@@ -33,33 +34,39 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
   post,
   close,
 }) => {
-  const { postBodyMinLength } = useSettingsContext()
+  const { postMinLength } = useSettingsContext()
 
   const EditThreadPostSchema = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
-      .min(postBodyMinLength, "value_error.any_str.min_length"),
+      .min(postMinLength, "value_error.any_str.min_length"),
   })
 
-  const { data, loading, editPost, error: graphqlError } = useEditPostMutation(
-    post
-  )
+  const query = usePostMarkupQuery({ id: post.id })
+  const mutation = useEditPostMutation(post)
 
   if (testLoading) return <ThreadPostLoader />
+  if (query.error || !query.data?.post) return <div>ERROR</div>
 
   return (
     <React.Suspense fallback={<ThreadPostLoader />}>
+      {query.loading && (
+        <>
+          <ThreadPostLoader />
+          <Editor name="markup" disabled={true} />
+        </>
+      )}
       <Form<IFormValues>
         className="post-edit-form"
         id={"thread_post_edit_form_" + post.id}
-        defaultValues={{ markup: post.body.text }}
-        disabled={loading}
+        defaultValues={{ markup: query.data.post.markup }}
+        disabled={mutation.loading}
         validationSchema={EditThreadPostSchema}
         onSubmit={async ({ clearError, setError, data: { markup } }) => {
           clearError()
 
           try {
-            const result = await editPost(markup)
+            const result = await mutation.editPost(markup)
             const { errors } = result.data?.editPost || {}
 
             if (errors) {
@@ -77,20 +84,20 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
         }}
       >
         <ThreadPostRootError
-          graphqlError={graphqlError}
-          dataErrors={data?.editPost.errors}
+          graphqlError={mutation.error}
+          dataErrors={mutation.data?.editPost.errors}
         >
           {({ message }) => <CardAlert>{message}</CardAlert>}
         </ThreadPostRootError>
         <CardBody className="post-edit-form-body">
-          <Editor name="markup" disabled={loading} />
+          <Editor name="markup" disabled={mutation.loading} />
         </CardBody>
         <CardFooter className="post-edit-form-footer">
           <I18n>
             {({ i18n }) => (
               <ButtonSecondary
                 text={<Trans id="cancel">Cancel</Trans>}
-                disabled={loading}
+                disabled={mutation.loading}
                 onClick={() => {
                   const confirm = window.confirm(
                     i18n._(
@@ -107,7 +114,7 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
           </I18n>
           <ButtonPrimary
             text={<Trans id="moderation.edit_post">Save changes</Trans>}
-            loading={loading}
+            loading={mutation.loading}
             small
           />
         </CardFooter>

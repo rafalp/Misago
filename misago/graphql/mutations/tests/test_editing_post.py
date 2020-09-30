@@ -16,7 +16,10 @@ async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
     assert not data.get("errors")
     assert data.get("post")
     assert data["post"] == await get_post_by_id(data["post"].id)
-    assert data["post"].body == {"text": "Edited post"}
+    assert data["post"].markup == "Edited post"
+    assert data["post"].rich_text[0]["type"] == "p"
+    assert data["post"].rich_text[0]["text"] == "Edited post"
+    assert data["post"].html == "Edited post"
 
 
 @pytest.mark.asyncio
@@ -165,3 +168,18 @@ async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_catego
     assert data.get("thread")
     assert data.get("post")
     assert not data.get("errors")
+
+
+@pytest.mark.asyncio
+async def test_edit_post_mutation_fails_if_markup_is_too_short(
+    user_graphql_info, user_post
+):
+    data = await resolve_edit_post(
+        None, user_graphql_info, input={"post": str(user_post.id), "markup": " ",},
+    )
+
+    assert data.get("thread")
+    assert data.get("post")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["markup"]
+    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]

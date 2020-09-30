@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Protocol
 
 from .graphqlcontext import GraphQLContext
 from .post import Post
+from .richtext import RichText
 from .thread import Thread
 from .user import User
 
@@ -11,7 +12,9 @@ class CreatePostAction(Protocol):
     async def __call__(
         self,
         thread: Thread,
-        body: dict,
+        markup: str,
+        rich_text: RichText,
+        html: str,
         *,
         poster: Optional[User] = None,
         poster_name: Optional[str] = None,
@@ -28,7 +31,9 @@ class CreatePostFilter(Protocol):
         self,
         action: CreatePostAction,
         thread: Thread,
-        body: dict,
+        markup: str,
+        rich_text: RichText,
+        html: str,
         *,
         poster: Optional[User] = None,
         poster_name: Optional[str] = None,

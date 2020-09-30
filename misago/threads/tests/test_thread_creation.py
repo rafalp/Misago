@@ -113,7 +113,7 @@ async def test_creating_thread_with_first_post_and_started_at_raises_value_error
 @pytest.mark.asyncio
 async def test_thread_is_created_with_first_id(category):
     other_thread = await create_thread(category, "Other thread", starter_name="User")
-    post = await create_post(other_thread, {}, poster_name="User")
+    post = await create_post(other_thread, poster_name="User")
     thread = await create_thread(category, "Test thread", first_post=post)
     assert thread.first_post_id == post.id
     assert thread.last_post_id == post.id

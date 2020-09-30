@@ -11,6 +11,7 @@ post_type = ObjectType("Post")
 
 post_type.set_alias("posterName", "poster_name")
 post_type.set_alias("postedAt", "posted_at")
+post_type.set_alias("richText", "rich_text")
 
 
 @post_type.field("category")

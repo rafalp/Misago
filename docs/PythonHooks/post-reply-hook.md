@@ -43,10 +43,10 @@ A dict with GraphQL query context.
 Dict[str, Any]
 ```
 
-A dict with already validated and cleaned input data. Will contain at least `thread` and `body` keys:
+A dict with already validated and cleaned input data. Will contain at least `thread` and `markup` keys:
 
 ```python
 class PostReplyInput(TypedDict):
     thread: Thread
-    body: str
+    markup: str
 ```

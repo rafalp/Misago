@@ -18,6 +18,7 @@ from ...hooks import (
 )
 from ...loaders import store_category, store_post, store_thread
 from ...pubsub.threads import publish_thread_update
+from ...richtext import parse_markup
 from ...threads.create import create_post, create_thread
 from ...threads.update import update_thread
 from ...types import (
@@ -87,7 +88,12 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
         "PostThreadInputModel",
         category=(PositiveInt, ...),
         title=(threadtitlestr(context["settings"]), ...),
-        markup=(constr(strip_whitespace=True), ...),
+        markup=(
+            constr(
+                strip_whitespace=True, min_length=context["settings"]["post_min_length"]
+            ),
+            ...,
+        ),
         is_closed=(Optional[bool], False),
     )
 
@@ -117,7 +123,9 @@ async def post_thread(
         post = await create_post_hook.call_action(
             create_post,
             thread,
-            {"text": cleaned_data["markup"]},
+            cleaned_data["markup"],
+            parse_markup(cleaned_data["markup"]),
+            cleaned_data["markup"],
             poster=user,
             context=context,
         )

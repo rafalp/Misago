@@ -1,5 +1,6 @@
 import React from "react"
 import { ModalBody, PostValidationError, Timestamp } from "../../../../UI"
+import RichText from "../../../../UI/RichText"
 import { IMutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
@@ -32,7 +33,9 @@ const ThreadPostsModerationErrorPosts: React.FC<IThreadPostsModerationErrorPosts
                 <Timestamp date={new Date(post.postedAt)} />
               </span>
             </div>
-            <div className="posts-errors-post-body">{post.body.text}</div>
+            <div className="posts-errors-post-body">
+              <RichText richText={post.richText} />
+            </div>
           </li>
         )
       })}

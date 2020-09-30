@@ -70,7 +70,7 @@ export const THREAD_QUERY = gql`
           number
           items {
             id
-            body
+            richText
             edits
             postedAt
             extra

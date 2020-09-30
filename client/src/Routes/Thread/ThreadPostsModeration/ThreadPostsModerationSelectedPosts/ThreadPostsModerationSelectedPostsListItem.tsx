@@ -1,6 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 import { Checkbox, PostValidationError, Timestamp } from "../../../../UI"
+import RichText from "../../../../UI/RichText"
 import { IMutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
@@ -46,7 +47,10 @@ const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerati
               <Timestamp date={new Date(post.postedAt)} />
             </span>
           </label>
-          <div className="selected-post-body">{post.body.text}</div>
+          <div className="selected-post-body">
+            s
+            <RichText richText={post.richText} />
+          </div>
         </div>
         <div className="col-auto selected-item-checkbox">
           <Checkbox

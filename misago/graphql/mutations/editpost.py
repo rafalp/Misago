@@ -11,6 +11,7 @@ from ...hooks import (
     edit_post_input_model_hook,
 )
 from ...loaders import load_post, load_thread, store_post
+from ...richtext.parser import parse_markup
 from ...threads.update import update_post
 from ...types import (
     AsyncValidator,
@@ -86,7 +87,12 @@ async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
     return create_model(
         "EditPostInputModel",
         post=(PositiveInt, ...),
-        markup=(constr(strip_whitespace=True), ...),
+        markup=(
+            constr(
+                strip_whitespace=True, min_length=context["settings"]["post_min_length"]
+            ),
+            ...,
+        ),
     )
 
 
@@ -104,7 +110,9 @@ async def edit_post(
 ) -> Tuple[Thread, Post]:
     post = await update_post(
         cleaned_data["post"],
-        body={"text": cleaned_data["markup"]},
+        markup=cleaned_data["markup"],
+        rich_text=parse_markup(cleaned_data["markup"]),
+        html=cleaned_data["markup"],
         increment_edits=True,
     )
 

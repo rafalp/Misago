@@ -1,5 +1,6 @@
 import React from "react"
-import { Card, CardBody, CardFooter } from "../../../UI"
+import { Card, CardBody, CardFooter } from "../../../UI/Card"
+import RichText from "../../../UI/RichText"
 import { IPost } from "../Thread.types"
 import ThreadPostEditForm from "./ThreadPostEditForm"
 import ThreadPostHeader from "./ThreadPostHeader"
@@ -61,7 +62,9 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
               />
             ) : (
               <>
-                <CardBody className="post-body">{post.body.text}</CardBody>
+                <CardBody className="post-body">
+                  <RichText richText={post.richText} />
+                </CardBody>
                 <CardFooter className="post-footer">post footer</CardFooter>
               </>
             )}

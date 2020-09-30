@@ -6,6 +6,7 @@ from ..thread import (
     resolve_last_post,
     resolve_last_post_url,
     resolve_last_poster,
+    resolve_post,
     resolve_post_url,
     resolve_posts,
     resolve_starter,
@@ -66,6 +67,28 @@ def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
     graphql_info, thread
 ):
     value = resolve_last_poster(thread, graphql_info)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_post_resolver_returns_thread_post(graphql_info, thread, post):
+    value = await resolve_post(thread, graphql_info, id=post.id)
+    assert value == post
+
+
+@pytest.mark.asyncio
+async def test_post_resolver_returns_none_if_post_is_in_other_thread(
+    graphql_info, thread, closed_thread_post
+):
+    value = await resolve_post(thread, graphql_info, id=closed_thread_post.id)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_post_resolver_returns_none_if_post_doesnt_exist(
+    graphql_info, thread, post
+):
+    value = await resolve_post(thread, graphql_info, id=post.id + 1)
     assert value is None
 
 

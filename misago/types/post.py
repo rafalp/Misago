@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
+from .richtext import RichText
+
 
 @dataclass
 class Post:
@@ -9,7 +11,9 @@ class Post:
     category_id: int
     thread_id: int
     poster_name: str
-    body: dict
+    markup: str
+    rich_text: RichText
+    html: str
     edits: int
     posted_at: datetime
     extra: dict

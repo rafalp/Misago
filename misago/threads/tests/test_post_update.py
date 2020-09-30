@@ -13,7 +13,7 @@ async def thread(category):
 
 @pytest.fixture
 async def post(thread):
-    return await create_post(thread, {}, poster_name="Guest")
+    return await create_post(thread, poster_name="Guest")
 
 
 @pytest.mark.asyncio
@@ -44,10 +44,24 @@ async def test_updating_post_thread_and_category_raises_value_error(
 
 
 @pytest.mark.asyncio
-async def test_post_body_can_be_updated(post, user):
-    new_body = {"new": True}
-    updated_post = await update_post(post, body=new_body)
-    assert updated_post.body == new_body
+async def test_post_markup_can_be_updated(post):
+    new_markup = "Hello"
+    updated_post = await update_post(post, markup=new_markup)
+    assert updated_post.markup == new_markup
+
+
+@pytest.mark.asyncio
+async def test_post_rich_text_can_be_updated(post):
+    new_rich_text = {"new": True}
+    updated_post = await update_post(post, rich_text=new_rich_text)
+    assert updated_post.rich_text == new_rich_text
+
+
+@pytest.mark.asyncio
+async def test_post_html_can_be_updated(post):
+    new_html = "<strong>Hello</strong>"
+    updated_post = await update_post(post, html=new_html)
+    assert updated_post.html == new_html
 
 
 @pytest.mark.asyncio

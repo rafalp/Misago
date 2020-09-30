@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 from ..database.queries import update
 from ..tables import posts, threads
-from ..types import Category, Post, Thread, User
+from ..types import Category, Post, RichText, Thread, User
 from ..utils.strings import slugify
 
 
@@ -13,7 +13,9 @@ async def update_post(
     *,
     category: Optional[Category] = None,
     thread: Optional[Thread] = None,
-    body: Optional[dict] = None,
+    markup: Optional[str] = None,
+    rich_text: Optional[RichText] = None,
+    html: Optional[str] = None,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
     edits: Optional[int] = None,
@@ -32,8 +34,12 @@ async def update_post(
     if thread and thread.category_id != post.category_id:
         changes["category_id"] = thread.category_id
 
-    if body is not None and body != post.body:
-        changes["body"] = body
+    if markup is not None and markup != post.markup:
+        changes["markup"] = markup
+    if rich_text is not None and rich_text != post.rich_text:
+        changes["rich_text"] = rich_text
+    if html is not None and html != post.html:
+        changes["html"] = html
 
     if poster:
         if poster_name:

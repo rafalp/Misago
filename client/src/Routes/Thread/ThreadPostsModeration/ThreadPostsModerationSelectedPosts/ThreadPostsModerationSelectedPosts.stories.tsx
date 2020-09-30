@@ -23,7 +23,13 @@ export const SinglePost = () => {
   const posts = [
     {
       id: "1",
-      body: { text: "Lorem ipsum dolor met sit amet elit." },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text: "Lorem ipsum dolor met sit amet elit.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -47,7 +53,13 @@ export const FewPosts = () => {
   const posts = [
     {
       id: "1",
-      body: { text: "Lorem ipsum dolor met sit amet elit." },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text: "Lorem ipsum dolor met sit amet elit.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -56,10 +68,14 @@ export const FewPosts = () => {
     },
     {
       id: "2",
-      body: {
-        text:
-          "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
-      },
+      richText: [
+        {
+          id: "bbbb",
+          type: "p",
+          text:
+            "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",
@@ -83,7 +99,13 @@ export const ManyPosts = () => {
   const posts = [
     {
       id: "1",
-      body: { text: "Lorem ipsum dolor met sit amet elit." },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text: "Lorem ipsum dolor met sit amet elit.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -92,10 +114,14 @@ export const ManyPosts = () => {
     },
     {
       id: "2",
-      body: {
-        text:
-          "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
-      },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text:
+            "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",
@@ -104,10 +130,14 @@ export const ManyPosts = () => {
     },
     {
       id: "3",
-      body: {
-        text:
-          "Proin lacinia leo vitae mauris tempor, nec elementum quam eleifend.",
-      },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text:
+            "Proin lacinia leo vitae mauris tempor, nec elementum quam eleifend.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-02T13:52:05Z",
       posterName: "Aenean",
@@ -131,7 +161,13 @@ export const WithErrors = () => {
   const posts = [
     {
       id: "1",
-      body: { text: "Lorem ipsum dolor met sit amet elit." },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text: "Lorem ipsum dolor met sit amet elit.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -140,10 +176,14 @@ export const WithErrors = () => {
     },
     {
       id: "2",
-      body: {
-        text:
-          "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
-      },
+      richText: [
+        {
+          id: "aaaa",
+          type: "p",
+          text:
+            "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+        },
+      ],
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",

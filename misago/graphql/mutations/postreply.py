@@ -22,6 +22,7 @@ from ...loaders import (
     store_thread,
 )
 from ...pubsub.threads import publish_thread_update
+from ...richtext import parse_markup
 from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
@@ -93,7 +94,12 @@ async def create_input_model(context: GraphQLContext) -> PostReplyInputModel:
     return create_model(
         "PostReplyInputModel",
         thread=(PositiveInt, ...),
-        body=(constr(strip_whitespace=True), ...),
+        markup=(
+            constr(
+                strip_whitespace=True, min_length=context["settings"]["post_min_length"]
+            ),
+            ...,
+        ),
     )
 
 
@@ -114,7 +120,9 @@ async def post_reply(
     reply = await create_post_hook.call_action(
         create_post,
         thread,
-        {"text": cleaned_data["body"]},
+        cleaned_data["markup"],
+        parse_markup(cleaned_data["markup"]),
+        cleaned_data["markup"],
         poster=user,
         context=context,
     )

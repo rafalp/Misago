@@ -8,7 +8,7 @@ const defaultSettings = {
   forumName: "Misago",
   passwordMinLength: 1,
   passwordMaxLength: 200,
-  postBodyMinLength: 3,
+  postMinLength: 3,
   threadTitleMinLength: 5,
   threadTitleMaxLength: 40,
   usernameMinLength: 1,

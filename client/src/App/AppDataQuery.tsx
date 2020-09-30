@@ -61,7 +61,7 @@ const INITIAL_DATA_QUERY = gql`
       forumName
       passwordMinLength
       passwordMaxLength
-      postBodyMinLength
+      postMinLength
       threadTitleMinLength
       threadTitleMaxLength
       usernameMinLength

@@ -18,7 +18,13 @@ export const PostByUser = () => {
       <ThreadPost
         post={{
           id: "1",
-          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          richText: [
+            {
+              id: "aaaa",
+              type: "p",
+              text: "Lorem ipsum dolor met sit amet elit.",
+            },
+          ],
           edits: 0,
           postedAt: "2020-04-01T21:42:51Z",
           posterName: username,
@@ -40,7 +46,13 @@ export const PostSelectable = () => {
       <ThreadPost
         post={{
           id: "1",
-          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          richText: [
+            {
+              id: "aaaa",
+              type: "p",
+              text: "Lorem ipsum dolor met sit amet elit.",
+            },
+          ],
           edits: 0,
           postedAt: "2020-04-01T21:42:51Z",
           posterName: username,
@@ -64,7 +76,13 @@ export const PostByDeletedUser = () => {
       <ThreadPost
         post={{
           id: "1",
-          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          richText: [
+            {
+              id: "aaaa",
+              type: "p",
+              text: "Lorem ipsum dolor met sit amet elit.",
+            },
+          ],
           edits: 0,
           postedAt: "2020-04-01T21:42:51Z",
           posterName: username,
@@ -83,7 +101,13 @@ export const PostAfterAnother = () => (
     <ThreadPost
       post={{
         id: "1",
-        body: { text: "Lorem ipsum dolor met sit amet elit." },
+        richText: [
+          {
+            id: "aaaa",
+            type: "p",
+            text: "Lorem ipsum dolor met sit amet elit.",
+          },
+        ],
         edits: 0,
         postedAt: "2020-04-01T21:42:51Z",
         posterName: "John",
@@ -96,7 +120,13 @@ export const PostAfterAnother = () => (
     <ThreadPost
       post={{
         id: "2",
-        body: { text: "Lorem ipsum dolor met sit amet elit." },
+        richText: [
+          {
+            id: "bbbb",
+            type: "p",
+            text: "Lorem ipsum dolor met sit amet elit.",
+          },
+        ],
         edits: 0,
         postedAt: "2020-04-03T15:22:11Z",
         posterName: "Doe",
@@ -115,7 +145,13 @@ export const PostEditor = () => (
       <ThreadPost
         post={{
           id: "1",
-          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          richText: [
+            {
+              id: "aaaa",
+              type: "p",
+              text: "Lorem ipsum dolor met sit amet elit.",
+            },
+          ],
           edits: 0,
           postedAt: "2020-04-01T21:42:51Z",
           posterName: "John",
@@ -136,7 +172,13 @@ export const PostLoader = () => (
       <ThreadPost
         post={{
           id: "1",
-          body: { text: "Lorem ipsum dolor met sit amet elit." },
+          richText: [
+            {
+              id: "aaaa",
+              type: "p",
+              text: "Lorem ipsum dolor met sit amet elit.",
+            },
+          ],
           edits: 0,
           postedAt: "2020-04-01T21:42:51Z",
           posterName: "John",

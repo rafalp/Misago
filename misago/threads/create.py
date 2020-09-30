@@ -3,14 +3,16 @@ from typing import Any, Dict, Optional
 
 from ..database import queries
 from ..tables import posts, threads
-from ..types import Category, GraphQLContext, Post, Thread, User
+from ..types import Category, GraphQLContext, Post, RichText, Thread, User
 from ..utils import timezone
 from ..utils.strings import slugify
 
 
 async def create_post(
     thread: Thread,
-    body: dict,
+    markup: str = None,
+    rich_text: RichText = None,
+    html: str = None,
     *,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
@@ -27,7 +29,9 @@ async def create_post(
         "thread_id": thread.id,
         "poster_id": poster.id if poster else None,
         "poster_name": poster.name if poster else poster_name,
-        "body": body,
+        "markup": markup or "",
+        "rich_text": rich_text or [],
+        "html": html or "",
         "edits": edits,
         "posted_at": posted_at or timezone.now(),
         "extra": extra or {},

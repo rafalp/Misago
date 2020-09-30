@@ -5,6 +5,7 @@ from ..query import (
     resolve_categories,
     resolve_category,
     resolve_forum_stats,
+    resolve_post,
     resolve_rich_text,
     resolve_settings,
     resolve_thread,
@@ -88,6 +89,20 @@ async def test_threads_resolver_returns_threads_feed_for_user(
 ):
     value = await resolve_threads(None, graphql_info, user=str(user.id))
     assert value.items == [user_thread]
+
+
+@pytest.mark.asyncio
+async def test_post_resolver_returns_post(graphql_info, post):
+    value = await resolve_post(None, graphql_info, id=post.id)
+    assert value == post
+
+
+@pytest.mark.asyncio
+async def test_post_resolver_returns_none_if_post_doesnt_exist(
+    graphql_info, thread, post
+):
+    value = await resolve_post(None, graphql_info, id=post.id + 1)
+    assert value is None
 
 
 @pytest.mark.asyncio

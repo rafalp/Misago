@@ -79,7 +79,13 @@ export const PostsErrors = () => {
         posts={[
           {
             id: "1",
-            body: { text: "Lorem ipsum dolor met sit amet elit." },
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
             edits: 0,
             postedAt: "2020-04-01T21:42:51Z",
             posterName: username,
@@ -88,10 +94,14 @@ export const PostsErrors = () => {
           },
           {
             id: "2",
-            body: {
-              text:
-                "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
-            },
+            richText: [
+              {
+                id: "bbbb",
+                type: "p",
+                text:
+                  "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+              },
+            ],
             edits: 0,
             postedAt: "2020-04-02T11:16:51Z",
             posterName: "Lorem",
@@ -123,7 +133,13 @@ export const SomePostsErrors = () => {
         posts={[
           {
             id: "1",
-            body: { text: "Lorem ipsum dolor met sit amet elit." },
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
             edits: 0,
             postedAt: "2020-04-01T21:42:51Z",
             posterName: username,
@@ -132,10 +148,14 @@ export const SomePostsErrors = () => {
           },
           {
             id: "2",
-            body: {
-              text:
-                "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
-            },
+            richText: [
+              {
+                id: "bbbb",
+                type: "p",
+                text:
+                  "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
+              },
+            ],
             edits: 0,
             postedAt: "2020-04-02T11:16:51Z",
             posterName: "Lorem",

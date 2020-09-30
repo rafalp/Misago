@@ -1,4 +1,4 @@
-import { IAvatar, ICategoryBanner } from "../../types"
+import { IAvatar, ICategoryBanner, RichText } from "../../types"
 
 export interface IThread {
   id: string
@@ -51,7 +51,7 @@ export interface IPost {
   id: string
   poster: IPoster | null
   posterName: string
-  body: { text: string }
+  richText: RichText
   edits: number
   postedAt: string
   extra: Record<string, any>

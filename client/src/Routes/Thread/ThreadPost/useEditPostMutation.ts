@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../types"
+import { IMutationError, RichText } from "../../../types"
 import { IPost } from "../Thread.types"
 
 const EDIT_POST = gql`
@@ -13,7 +13,7 @@ const EDIT_POST = gql`
       }
       post {
         id
-        body
+        richText
         edits
       }
     }
@@ -25,7 +25,7 @@ interface IEditPostMutationData {
     errors: Array<IMutationError> | null
     post: {
       id: string
-      body: { text: string }
+      richText: RichText
       edits: number
     } | null
   }

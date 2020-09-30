@@ -9,13 +9,14 @@ from ...loaders import (
     load_category,
     load_category_with_children,
     load_forum_stats,
+    load_post,
     load_root_categories,
     load_thread,
     load_threads_feed,
     load_user,
 )
 from ...richtext import parse_markup
-from ...types import Category, RichText, Settings, Thread, ThreadsFeed, User
+from ...types import Category, Post, RichText, Settings, Thread, ThreadsFeed, User
 
 
 query_type = QueryType()
@@ -43,6 +44,13 @@ def resolve_thread(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Thread]]:
     return load_thread(info.context, id)
+
+
+@query_type.field("post")
+def resolve_post(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Awaitable[Optional[Post]]:
+    return load_post(info.context, id)
 
 
 @query_type.field("threads")

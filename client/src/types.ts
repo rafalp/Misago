@@ -51,7 +51,7 @@ export interface ISettings {
   forumName: string
   passwordMinLength: number
   passwordMaxLength: number
-  postBodyMinLength: number
+  postMinLength: number
   threadTitleMinLength: number
   threadTitleMaxLength: number
   usernameMinLength: number
@@ -82,7 +82,7 @@ export interface IAuthModalContext {
 
 export type RichTextParagraph = {
   id: string
-  type: "p"
+  type: string
   text: string
 }
 

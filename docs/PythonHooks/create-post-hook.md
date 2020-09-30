@@ -4,7 +4,9 @@
 create_post_hook.call_action(
     action: CreatePostAction,
     thread: Thread,
-    body: dict,
+    markup: str,
+    rich_text: RichText,
+    html: str
     *,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
@@ -27,7 +29,9 @@ Returns `Post` dataclass with newly created post data.
 ```python
 async def create_post(
     thread: Thread,
-    body: dict,
+    markup: str,
+    rich_text: RichText,
+    html: str,
     *,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
@@ -51,13 +55,31 @@ Thread
 `Thread` dataclass for thread in which thread will be created.
 
 
-### `body`
+### `markup`
 
 ```python
-dict
+str
 ```
 
-`dict` containing JSON with [ProseMirror](https://prosemirror.net) document representing post body.
+Python string with raw unprocessed markup submitted by post's author.
+
+
+### `rich_text`
+
+```python
+RichText
+```
+
+List of `dict` containing JSON with rich text document representing post body.
+
+
+### `html`
+
+```python
+str
+```
+
+Python string containing HTML with result of parsing markup string.
 
 
 ## Optional arguments

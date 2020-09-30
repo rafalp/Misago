@@ -54,7 +54,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
 
   const { showToast } = useToastsContext()
   const {
-    postBodyMinLength,
+    postMinLength,
     threadTitleMaxLength,
     threadTitleMinLength,
   } = useSettingsContext()
@@ -72,7 +72,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
     markup: Yup.string()
       .required("value_error.missing")
-      .min(postBodyMinLength, "value_error.any_str.min_length"),
+      .min(postMinLength, "value_error.any_str.min_length"),
   })
 
   if (data?.postThread.thread) {

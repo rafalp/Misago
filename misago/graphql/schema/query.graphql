@@ -4,6 +4,7 @@ type Query {
     category(id: ID!): Category
     thread(id: ID!): Thread
     threads(cursor: ID, category: ID, user: ID): ThreadsFeed
+    post(id: ID!): Post
     user(id: ID!): User
     forumStats: ForumStats!
     settings: Settings
