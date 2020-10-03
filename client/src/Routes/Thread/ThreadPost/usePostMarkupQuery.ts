@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { RichText } from "../../../types"
 
-const POST_MARKUP_QUERY = gql`
+export const POST_MARKUP_QUERY = gql`
   query PostMarkup($id: ID!) {
     post(id: $id) {
       id

@@ -2,8 +2,13 @@ import { MockedProvider } from "@apollo/react-testing"
 import { action } from "@storybook/addon-actions"
 import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
-import { RootContainer, userFactory } from "../../../UI/Storybook"
+import {
+  RootContainer,
+  SettingsContextFactory,
+  userFactory,
+} from "../../../UI/Storybook"
 import ThreadPost from "./ThreadPost"
+import { POST_MARKUP_QUERY } from "./usePostMarkupQuery"
 
 export default {
   title: "Route/Thread/Post",
@@ -140,56 +145,155 @@ export const PostAfterAnother = () => (
 )
 
 export const PostEditor = () => (
-  <RootContainer>
-    <MockedProvider>
-      <ThreadPost
-        post={{
-          id: "1",
-          richText: [
-            {
-              id: "aaaa",
-              type: "p",
-              text: "Lorem ipsum dolor met sit amet elit.",
+  <SettingsContextFactory>
+    <MockedProvider
+      mocks={[
+        {
+          request: {
+            query: POST_MARKUP_QUERY,
+            variables: {
+              id: "1",
             },
-          ],
-          edits: 0,
-          postedAt: "2020-04-01T21:42:51Z",
-          posterName: "John",
-          poster: null,
-          extra: {},
-        }}
-        threadId="1"
-        threadSlug="test-thread"
-        testEditing
-      />
+          },
+          result: {
+            data: {
+              post: {
+                __typename: "Post",
+                id: "1",
+                markup: "Hello world!",
+                richText: [],
+              },
+            },
+          },
+        },
+      ]}
+    >
+      <RootContainer>
+        <ThreadPost
+          post={{
+            id: "1",
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: "John",
+            poster: null,
+            extra: {},
+          }}
+          threadId="1"
+          threadSlug="test-thread"
+          testEditing
+        />
+      </RootContainer>
     </MockedProvider>
-  </RootContainer>
+  </SettingsContextFactory>
 )
 
 export const PostLoader = () => (
-  <RootContainer>
+  <SettingsContextFactory>
     <MockedProvider>
-      <ThreadPost
-        post={{
-          id: "1",
-          richText: [
-            {
-              id: "aaaa",
-              type: "p",
-              text: "Lorem ipsum dolor met sit amet elit.",
-            },
-          ],
-          edits: 0,
-          postedAt: "2020-04-01T21:42:51Z",
-          posterName: "John",
-          poster: null,
-          extra: {},
-        }}
-        threadId="1"
-        threadSlug="test-thread"
-        testEditing
-        testLoading
-      />
+      <RootContainer>
+        <ThreadPost
+          post={{
+            id: "1",
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: "John",
+            poster: null,
+            extra: {},
+          }}
+          threadId="1"
+          threadSlug="test-thread"
+          testEditing
+          testLoading
+        />
+      </RootContainer>
     </MockedProvider>
-  </RootContainer>
+  </SettingsContextFactory>
+)
+
+export const PostGraphQLError = () => (
+  <SettingsContextFactory>
+    <MockedProvider>
+      <RootContainer>
+        <ThreadPost
+          post={{
+            id: "1",
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: "John",
+            poster: null,
+            extra: {},
+          }}
+          threadId="1"
+          threadSlug="test-thread"
+          testEditing
+        />
+      </RootContainer>
+    </MockedProvider>
+  </SettingsContextFactory>
+)
+
+export const PostNotFoundError = () => (
+  <SettingsContextFactory>
+    <MockedProvider
+      mocks={[
+        {
+          request: {
+            query: POST_MARKUP_QUERY,
+            variables: {
+              id: "1",
+            },
+          },
+          result: {
+            data: {
+              post: null,
+            },
+          },
+        },
+      ]}
+    >
+      <RootContainer>
+        <ThreadPost
+          post={{
+            id: "1",
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "Lorem ipsum dolor met sit amet elit.",
+              },
+            ],
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: "John",
+            poster: null,
+            extra: {},
+          }}
+          threadId="1"
+          threadSlug="test-thread"
+          testEditing
+        />
+      </RootContainer>
+    </MockedProvider>
+  </SettingsContextFactory>
 )

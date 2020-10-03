@@ -12,6 +12,7 @@ import {
   Form,
 } from "../../../UI"
 import { IPost } from "../Thread.types"
+import ThreadPostError from "./ThreadPostError"
 import ThreadPostLoader from "./ThreadPostLoader"
 import ThreadPostRootError from "./ThreadPostRootError"
 import useEditPostMutation from "./useEditPostMutation"
@@ -46,79 +47,81 @@ const ThreadPostEditForm: React.FC<IThreadPostEditFormProps> = ({
   const mutation = useEditPostMutation(post)
 
   if (testLoading) return <ThreadPostLoader />
-  if (query.error || !query.data?.post) return <div>ERROR</div>
+  if (query.error) return <ThreadPostError error={query.error} />
+  if (!query.data?.post) return <ThreadPostError notfound />
 
   return (
     <React.Suspense fallback={<ThreadPostLoader />}>
-      {query.loading && (
+      {query.loading ? (
         <>
           <ThreadPostLoader />
           <Editor name="markup" disabled={true} />
         </>
-      )}
-      <Form<IFormValues>
-        className="post-edit-form"
-        id={"thread_post_edit_form_" + post.id}
-        defaultValues={{ markup: query.data.post.markup }}
-        disabled={mutation.loading}
-        validationSchema={EditThreadPostSchema}
-        onSubmit={async ({ clearError, setError, data: { markup } }) => {
-          clearError()
+      ) : (
+        <Form<IFormValues>
+          className="post-edit-form"
+          id={"thread_post_edit_form_" + post.id}
+          defaultValues={{ markup: query.data.post.markup }}
+          disabled={mutation.loading}
+          validationSchema={EditThreadPostSchema}
+          onSubmit={async ({ clearError, setError, data: { markup } }) => {
+            clearError()
 
-          try {
-            const result = await mutation.editPost(markup)
-            const { errors } = result.data?.editPost || {}
+            try {
+              const result = await mutation.editPost(markup)
+              const { errors } = result.data?.editPost || {}
 
-            if (errors) {
-              errors?.forEach(({ location, type, message }) => {
-                const field = location.join(".") as "markup"
-                setError(field, type, message)
-              })
-            } else {
-              close()
+              if (errors) {
+                errors?.forEach(({ location, type, message }) => {
+                  const field = location.join(".") as "markup"
+                  setError(field, type, message)
+                })
+              } else {
+                close()
+              }
+            } catch (error) {
+              // do nothing when editPost throws
+              return
             }
-          } catch (error) {
-            // do nothing when editPost throws
-            return
-          }
-        }}
-      >
-        <ThreadPostRootError
-          graphqlError={mutation.error}
-          dataErrors={mutation.data?.editPost.errors}
+          }}
         >
-          {({ message }) => <CardAlert>{message}</CardAlert>}
-        </ThreadPostRootError>
-        <CardBody className="post-edit-form-body">
-          <Editor name="markup" disabled={mutation.loading} />
-        </CardBody>
-        <CardFooter className="post-edit-form-footer">
-          <I18n>
-            {({ i18n }) => (
-              <ButtonSecondary
-                text={<Trans id="cancel">Cancel</Trans>}
-                disabled={mutation.loading}
-                onClick={() => {
-                  const confirm = window.confirm(
-                    i18n._(
-                      t(
-                        "moderation.edit_post_cancel_prompt"
-                      )`Are you sure you want to abandon changes?`
+          <ThreadPostRootError
+            graphqlError={mutation.error}
+            dataErrors={mutation.data?.editPost.errors}
+          >
+            {({ message }) => <CardAlert>{message}</CardAlert>}
+          </ThreadPostRootError>
+          <CardBody className="post-edit-form-body">
+            <Editor name="markup" disabled={mutation.loading} />
+          </CardBody>
+          <CardFooter className="post-edit-form-footer">
+            <I18n>
+              {({ i18n }) => (
+                <ButtonSecondary
+                  text={<Trans id="cancel">Cancel</Trans>}
+                  disabled={mutation.loading}
+                  onClick={() => {
+                    const confirm = window.confirm(
+                      i18n._(
+                        t(
+                          "moderation.edit_post_cancel_prompt"
+                        )`Are you sure you want to abandon changes?`
+                      )
                     )
-                  )
-                  if (confirm) close()
-                }}
-                small
-              />
-            )}
-          </I18n>
-          <ButtonPrimary
-            text={<Trans id="moderation.edit_post">Save changes</Trans>}
-            loading={mutation.loading}
-            small
-          />
-        </CardFooter>
-      </Form>
+                    if (confirm) close()
+                  }}
+                  small
+                />
+              )}
+            </I18n>
+            <ButtonPrimary
+              text={<Trans id="moderation.edit_post">Save changes</Trans>}
+              loading={mutation.loading}
+              small
+            />
+          </CardFooter>
+        </Form>
+      )}
     </React.Suspense>
   )
 }

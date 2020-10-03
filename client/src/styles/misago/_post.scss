@@ -90,3 +90,8 @@
     margin-left: $spacer;
   }
 }
+
+// Remove bottom margin from post error
+.post-error p + p {
+  margin: 0;
+}
