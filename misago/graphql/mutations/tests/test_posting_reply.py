@@ -31,6 +31,7 @@ async def test_post_reply_mutation_creates_new_reply(
     assert data["post"].rich_text[0]["type"] == "p"
     assert data["post"].rich_text[0]["text"] == "This is test post!"
     assert data["post"].html == "This is test post!"
+    assert data["postUrl"]
 
 
 @pytest.mark.asyncio
@@ -82,6 +83,7 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
 
     assert data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
     assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
@@ -97,6 +99,7 @@ async def test_post_reply_mutation_fails_if_thread_id_is_invalid(user_graphql_in
 
     assert not data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["type_error.integer"]
@@ -112,6 +115,7 @@ async def test_post_reply_mutation_fails_if_thread_doesnt_exist(user_graphql_inf
 
     assert not data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
@@ -129,6 +133,7 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
 
     assert data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["auth_error.thread.closed"]
@@ -146,6 +151,7 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thre
 
     assert data.get("thread")
     assert data.get("post")
+    assert data.get("postUrl")
     assert not data.get("errors")
 
 
@@ -164,6 +170,7 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
 
     assert data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["thread"]
     assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
@@ -184,6 +191,7 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_cate
 
     assert data.get("thread")
     assert data.get("post")
+    assert data.get("postUrl")
     assert not data.get("errors")
 
 
@@ -197,6 +205,7 @@ async def test_post_reply_mutation_fails_if_markup_is_too_short(
 
     assert data.get("thread")
     assert not data.get("post")
+    assert not data.get("postUrl")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["markup"]
     assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]

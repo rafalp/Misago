@@ -4,6 +4,7 @@ import gql from "graphql-tag"
 const THREAD_LAST_POST_URL_QUERY = gql`
   query ThreadLastPostUrl($id: ID!) {
     thread(id: $id) {
+      id
       lastPostUrl
     }
   }

@@ -11,12 +11,13 @@ import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
 import ThreadHeader from "./ThreadHeader"
-import ThreadPost from "./ThreadPost"
 import { useThreadModeration } from "./ThreadModeration"
 import {
   ThreadPostsModeration,
   useThreadPostsModeration,
 } from "./ThreadPostsModeration"
+import ThreadPost from "./ThreadPost"
+import { ThreadReply, ThreadReplyProvider } from "./ThreadReply"
 import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
 import usePostsSelection from "./usePostsSelection"
@@ -81,23 +82,31 @@ const ThreadPosts: React.FC = () => {
       <ThreadBreadcrumbs category={thread.category} />
       <ThreadHeader thread={thread} />
       <ThreadToolbarTop {...toolbarProps} />
-      <SectionLoader
-        loading={loading || posts.page.number !== pagination.page}
-      >
-        {posts.page.items.map((post) => (
-          <ThreadPost
-            key={post.id}
-            post={post}
-            threadId={thread.id}
-            threadSlug={thread.slug}
-            page={page}
-            isClosed={thread.isClosed || thread.category.isClosed}
-            isSelected={selection.selection[post.id]}
-            toggleSelection={moderation.posts ? selection.toggle : null}
-          />
-        ))}
-      </SectionLoader>
-      <ThreadToolbarBottom {...toolbarProps} />
+      <ThreadReplyProvider>
+        <SectionLoader
+          loading={loading || posts.page.number !== pagination.page}
+        >
+          {posts.page.items.map((post) => (
+            <ThreadPost
+              key={post.id}
+              post={post}
+              threadId={thread.id}
+              threadSlug={thread.slug}
+              page={page}
+              isClosed={thread.isClosed || thread.category.isClosed}
+              isSelected={selection.selection[post.id]}
+              toggleSelection={moderation.posts ? selection.toggle : null}
+            />
+          ))}
+        </SectionLoader>
+        <ThreadToolbarBottom {...toolbarProps} />
+        <ThreadReply
+          categoryId={thread.category.id}
+          categoryIsClosed={thread.category.isClosed}
+          threadId={thread.id}
+          threadIsClosed={thread.isClosed}
+        />
+      </ThreadReplyProvider>
       <ThreadPostsModeration
         moderation={moderation.posts}
         selection={selection}

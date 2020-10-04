@@ -36,7 +36,7 @@ input PostThreadInput {
 
 input PostReplyInput {
     thread: ID!
-    body: String!
+    markup: String!
 }
 
 input EditPostInput {

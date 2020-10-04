@@ -4,6 +4,7 @@ import gql from "graphql-tag"
 const THREAD_POST_URL_QUERY = gql`
   query ThreadPostUrl($id: ID!, $postId: ID!) {
     thread(id: $id) {
+      id
       postUrl(id: $postId)
     }
   }
