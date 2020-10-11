@@ -32,7 +32,7 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
       <PostingForm
         fullscreen={fullscreen}
         minimized={minimized}
-        element={element}
+        ref={element}
         show={isActive}
       >
         <ThreadReplyForm threadId={threadId} />

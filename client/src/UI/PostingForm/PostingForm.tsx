@@ -6,27 +6,22 @@ interface IPostingFormProps {
   fullscreen?: boolean
   minimized?: boolean
   show?: boolean
-  element?: React.RefObject<HTMLDivElement>
 }
 
-const PostingForm: React.FC<IPostingFormProps> = ({
-  children,
-  fullscreen,
-  minimized,
-  show,
-  element,
-}) => (
-  <div
-    className={classnames("posting-form", {
-      show,
-      "posting-form-fullscreen": show && fullscreen,
-      "posting-form-minimized": show && minimized,
-      "posting-form-overlaid": show && !fullscreen,
-    })}
-    ref={element}
-  >
-    <div className="container">{children}</div>
-  </div>
+const PostingForm = React.forwardRef<HTMLDivElement, IPostingFormProps>(
+  ({ children, fullscreen, minimized, show }, ref) => (
+    <div
+      className={classnames("posting-form", {
+        show,
+        "posting-form-fullscreen": show && fullscreen,
+        "posting-form-minimized": show && minimized,
+        "posting-form-overlaid": show && !fullscreen,
+      })}
+      ref={ref}
+    >
+      <div className="container">{children}</div>
+    </div>
+  )
 )
 
 export default PostingForm
