@@ -1,0 +1,182 @@
+// Default variables
+$posting-form-inner-padding: 1rem !default;
+
+// Margin between elements in header and footer, must be lower than or equal to 2 * $posting-form-inner-padding
+$posting-form-margin-between: 0.5rem !default;
+
+$posting-form-title-line-height: $line-height-base !default;
+
+$posting-form-color: null !default;
+$posting-form-bg: $white !default;
+$posting-form-border-color: rgba($black, 0.2) !default;
+$posting-form-border-width: $border-width !default;
+$posting-form-border-radius: $border-radius-lg !default;
+$posting-form-inner-border-radius: subtract(
+  $posting-form-border-radius,
+  $posting-form-border-width
+) !default;
+$posting-form-box-shadow-xs: 0 0.25rem 0.5rem rgba($black, 0.5) !default;
+$posting-form-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
+
+$posting-form-header-border-color: $border-color !default;
+$posting-form-footer-border-color: $posting-form-header-border-color !default;
+$posting-form-header-border-width: $posting-form-border-width !default;
+$posting-form-footer-border-width: $posting-form-header-border-width !default;
+$posting-form-header-padding-y: 1rem !default;
+$posting-form-header-padding-x: 1rem !default;
+$posting-form-header-padding: $posting-form-header-padding-y
+  $posting-form-header-padding-x !default; // Keep this for backwards compatibility
+$posting-form-footer-padding: $posting-form-header-padding !default;
+
+$posting-form-transition: transform 0.3s ease-out !default;
+
+// Posting form fixed to bottom of viewport and used for posting content
+.posting-form {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  transition: $posting-form-transition;
+
+  &.show {
+    height: auto;
+  }
+}
+
+// Default styles for form dialog
+.posting-form-dialog {
+  background-clip: padding-box;
+  border: $posting-form-border-width solid $posting-form-border-color;
+  border-bottom: 0;
+  @include border-radius(
+    $posting-form-border-radius $posting-form-border-radius 0 0
+  );
+  @include box-shadow($posting-form-box-shadow-xs);
+  overflow: hidden;
+}
+
+@include media-breakpoint-up(sm) {
+  .posting-form-dialog {
+    @include box-shadow($posting-form-box-shadow-sm-up);
+  }
+}
+
+// Default styles for header
+.posting-form-header {
+  display: flex;
+  align-items: center;
+  padding: $posting-form-header-padding;
+  background-color: $posting-form-bg;
+  border-bottom: $posting-form-header-border-width
+    $posting-form-header-border-color solid;
+}
+
+.posting-form-title {
+  margin: 0;
+  width: 100%;
+  line-height: $posting-form-title-line-height;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-posting-form-header {
+  margin-left: $posting-form-margin-between;
+}
+
+// Default body and footer
+.posting-form-body {
+  background-color: $posting-form-bg;
+  padding: $posting-form-inner-padding;
+
+  .form-group:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.posting-form-footer {
+  background-color: $posting-form-bg;
+  padding: $posting-form-footer-padding;
+
+  border-top: $posting-form-footer-border-width
+    $posting-form-footer-border-color solid;
+  text-align: right;
+
+  .btn {
+    margin-left: $posting-form-margin-between;
+  }
+}
+
+// Make posting form full-screen
+.posting-form-fullscreen {
+  top: 0;
+  bottom: auto;
+  height: 100vh !important;
+
+  background-color: $posting-form-bg;
+
+  // Make container take all available space
+  .container {
+    height: 100%;
+    padding: 0;
+  }
+
+  .posting-form-dialog {
+    border: none;
+    height: 100%;
+    @include border-radius(0);
+    @include box-shadow(none);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  // Remove borders from header and footer
+  .posting-form-header,
+  .posting-form-footer {
+    border: none;
+  }
+
+  // Make body fill all screen space
+  .posting-form-body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // Scale its editor control to fill content
+  .form-group-editor,
+  .form-editor {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    // Make preview take all available space
+    // And scroll vertically
+    .form-editor-preview,
+    .form-editor-textarea {
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    // Make preview loader and error take all available space
+    .form-editor-preview-loader,
+    .form-editor-preview-error {
+      height: 100%;
+    }
+  }
+}
+
+// Hide alert/body/footer when minimized
+.posting-form-minimized {
+  .posting-form-alert,
+  .posting-form-body,
+  .posting-form-footer {
+    display: none;
+  }
+}

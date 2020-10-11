@@ -1,40 +1,43 @@
 import React from "react"
-import { useAuthContext } from "../../../Context"
+import { PostingForm } from "../../../UI/PostingForm"
 import ThreadReplyForm from "./ThreadReplyForm"
+import { useThreadReplyContext } from "./ThreadReplyContext"
+import ThreadReplySpacer from "./ThreadReplySpacer"
 
 interface IThreadReplyProps {
-  categoryId: string
-  categoryIsClosed: boolean
   threadId: string
-  threadIsClosed: boolean
 }
 
-const ThreadReply: React.FC<IThreadReplyProps> = ({
-  categoryId,
-  categoryIsClosed,
-  threadId,
-  threadIsClosed,
-}) => {
-  const user = useAuthContext()
+const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
+  const context = useThreadReplyContext()
+  const [height, setHeight] = React.useState(0)
+  const element = React.useRef<HTMLDivElement | null>(null)
+  const { isActive, fullscreen, minimized } = context || {}
 
-  if (user && !user.isModerator) {
-    if (categoryIsClosed) {
-      return <div id="thread-reply">CATEGORY IS CLOSED</div>
-    }
+  React.useLayoutEffect(() => {
+    const interval = window.setInterval(() => {
+      if (isActive && element.current) {
+        setHeight(element.current.offsetHeight || 0)
+      }
+    }, 750)
 
-    if (threadIsClosed) {
-      return <div id="thread-reply">THREAD IS CLOSED</div>
-    }
-  }
-
-  if (!user) {
-    return <div id="thread-reply">LOGIN TO REPLY THREADS</div>
-  }
+    return () => window.clearInterval(interval)
+  }, [setHeight, isActive, element])
 
   return (
-    <div id="thread-reply">
-      <ThreadReplyForm threadId={threadId} />
-    </div>
+    <>
+      <ThreadReplySpacer
+        height={isActive && !fullscreen && !minimized ? height : 0}
+      />
+      <PostingForm
+        fullscreen={fullscreen}
+        minimized={minimized}
+        element={element}
+        show={isActive}
+      >
+        <ThreadReplyForm threadId={threadId} />
+      </PostingForm>
+    </>
   )
 }
 

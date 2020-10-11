@@ -88,7 +88,7 @@ async def resolve_post(
     info: GraphQLResolveInfo,
     *,
     id: str,  # pylint: disable=redefined-builtin
-) -> Awaitable[Optional[Post]]:
+) -> Optional[Post]:
     post = await load_post(info.context, id)
     if post and post.thread_id == obj.id:
         return post

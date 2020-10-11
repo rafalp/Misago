@@ -1,6 +1,7 @@
 // Remove editor's textarea top border, make font monospaced for markdown
 .form-editor-textarea {
   padding: $input-padding-x;
+  min-height: $editor-min-height;
 
   border-radius: 0 0 $input-border-radius $input-border-radius;
   font-family: $font-family-monospace;
@@ -26,7 +27,7 @@
 // Set preview's min height
 .form-editor-preview {
   padding: $input-padding-x;
-  min-height: $font-size-base * $line-height-base * 6;
+  min-height: $editor-min-height;
 
   background-color: $input-bg;
   border: $input-border-width solid $input-border-color;
@@ -39,6 +40,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  min-height: $editor-min-height;
 }
 
 // Style error message

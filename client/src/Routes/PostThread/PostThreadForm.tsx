@@ -81,9 +81,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
 
   return (
     <Card>
-      <CardHeader
-        title={<Trans id="post_thread.form">Post a new thread</Trans>}
-      />
+      <CardHeader title={<Trans id="posting.form">Post a new thread</Trans>} />
       <Form<IPostThreadFormValues>
         defaultValues={{
           category: category || "",
@@ -110,9 +108,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
 
           if (thread) {
             showToast(
-              <Trans id="post_thread.message">
-                New thread has been posted.
-              </Trans>
+              <Trans id="posting.message">New thread has been posted.</Trans>
             )
           }
         }}
@@ -125,14 +121,14 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
         </RootError>
         <CardFormBody>
           <Field
-            label={<Trans id="post_thread.thread_title">Thread title</Trans>}
+            label={<Trans id="posting.thread_title">Thread title</Trans>}
             name="title"
             input={
               <I18n>
                 {({ i18n }) => (
                   <Input
                     placeholder={i18n._(
-                      t("post_thread.thread_title")`Thread title`
+                      t("posting.thread_title")`Thread title`
                     )}
                   />
                 )}
@@ -151,9 +147,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             labelReaderOnly
           />
           <Field
-            label={
-              <Trans id="post_thread.thread_category">Thread category</Trans>
-            }
+            label={<Trans id="posting.thread_category">Thread category</Trans>}
             name="category"
             input={
               <PostThreadCategoryInput
@@ -169,17 +163,14 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             labelReaderOnly
           />
           <Field
-            label={
-              <Trans id="post_thread.thread_message">Message contents</Trans>
-            }
+            label={<Trans id="posting.message">Message contents</Trans>}
             name="markup"
             input={<Editor />}
             error={(error, value) => (
               <ValidationError
                 error={error}
                 value={value.trim().length}
-                min={2}
-                max={200}
+                min={postMinLength}
               >
                 {({ message }) => <FieldError>{message}</FieldError>}
               </ValidationError>
@@ -189,9 +180,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
           {isModerator && (
             <Field
               label={
-                <Trans id="post_thread.close_thread">
-                  Post thread as closed
-                </Trans>
+                <Trans id="posting.close_thread">Post thread as closed</Trans>
               }
               name="isClosed"
               input={<Checkbox />}
@@ -206,7 +195,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
         </CardFormBody>
         <CardFooter>
           <FormFooter
-            submitText={<Trans id="post_thread.submit">Post thread</Trans>}
+            submitText={<Trans id="posting.submit">Post thread</Trans>}
           />
         </CardFooter>
       </Form>

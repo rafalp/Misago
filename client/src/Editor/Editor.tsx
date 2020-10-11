@@ -50,17 +50,15 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled }) => {
         )}
       </EditorToolbar>
       {preview && <EditorPreview markup={preview} />}
-      <div className={classnames({ "d-none": preview })}>
-        <textarea
-          className={classnames("form-control form-editor-textarea", {
-            "is-invalid": context.invalid,
-          })}
-          disabled={disabled || context.disabled}
-          name={name || context.name}
-          ref={hookContext.register}
-          rows={5}
-        />
-      </div>
+      <textarea
+        className={classnames("form-control form-editor-textarea", {
+          "d-none": preview,
+          "is-invalid": context.invalid,
+        })}
+        disabled={disabled || context.disabled}
+        name={name || context.name}
+        ref={hookContext.register}
+      />
     </EditorBody>
   )
 }

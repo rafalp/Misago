@@ -6,26 +6,61 @@ interface IThreadReplyFormValues {
 }
 
 interface IThreadReplyContext {
-  active: boolean
+  isActive: boolean
+  fullscreen: boolean
+  minimized: boolean
+  mode: string
   form: FormContextValues<IThreadReplyFormValues>
-  activate: () => void
+  startReply: () => void
+  deactivate: () => void
+  setFullscreen: (state: boolean) => void
+  setMinimized: (state: boolean) => void
 }
 
 const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
   null
 )
 
-const ThreadReplyProvider: React.FC = ({ children }) => {
-  const [active, setActive] = React.useState(false)
-  const activate = () => setActive(true)
+interface IThreadReplyProviderProps {
+  active?: boolean
+  mode?: string
+  children: React.ReactNode
+}
+
+const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
+  const [isActive, setActive] = React.useState(props.active || false)
+  const [mode, setMode] = React.useState(props.mode || "")
+  const [fullscreen, setFullscreen] = React.useState(false)
+  const [minimized, setMinimized] = React.useState(false)
 
   const form = useForm<IThreadReplyFormValues>({
     defaultValues: { markup: "" },
   })
 
+  const startReply = () => {
+    setActive(true)
+    setMode("reply")
+    setFullscreen(false)
+    setMinimized(false)
+  }
+
+  const deactivate = () => setActive(false)
+
   return (
-    <ThreadReplyContext.Provider value={{ active, form, activate }}>
-      {children}
+    <ThreadReplyContext.Provider
+      value={{
+        isActive,
+        form,
+        fullscreen,
+        minimized,
+        mode,
+        setFullscreen,
+        setMinimized,
+        startReply,
+        deactivate,
+      }}
+    >
+      {props.children}
     </ThreadReplyContext.Provider>
   )
 }

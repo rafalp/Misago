@@ -1,6 +1,5 @@
 import React from "react"
 import {
-  ButtonPrimary,
   Paginator,
   PaginatorCompact,
   Toolbar,
@@ -9,8 +8,10 @@ import {
 } from "../../../UI"
 import { ThreadModeration } from "../ThreadModeration"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
+import ThreadToolbarReplyButton from "./ThreadToolbarReplyButton"
 
 const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
+  isClosed,
   moderation,
   pagination,
 }) => (
@@ -33,7 +34,7 @@ const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
         </ToolbarItem>
       )}
       <ToolbarItem>
-        <ButtonPrimary text="Reply" icon="fas fa-edit" responsive disabled />
+        <ThreadToolbarReplyButton isClosed={isClosed} />
       </ToolbarItem>
     </Toolbar>
     {pagination.pages > 1 && (

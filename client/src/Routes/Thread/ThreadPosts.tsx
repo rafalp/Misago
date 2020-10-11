@@ -10,6 +10,7 @@ import {
 import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
+import ThreadCTA from "./ThreadCTA"
 import ThreadHeader from "./ThreadHeader"
 import { useThreadModeration } from "./ThreadModeration"
 import {
@@ -62,6 +63,8 @@ const ThreadPosts: React.FC = () => {
     )
   }
 
+  const isClosed = thread.isClosed || thread.category.isClosed
+
   const pagination = {
     page: page || 1,
     pages: posts.pagination.pages,
@@ -70,6 +73,7 @@ const ThreadPosts: React.FC = () => {
     },
   }
   const toolbarProps = {
+    isClosed,
     pagination,
     moderation: moderation.thread,
   }
@@ -81,8 +85,8 @@ const ThreadPosts: React.FC = () => {
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadBreadcrumbs category={thread.category} />
       <ThreadHeader thread={thread} />
-      <ThreadToolbarTop {...toolbarProps} />
       <ThreadReplyProvider>
+        <ThreadToolbarTop {...toolbarProps} />
         <SectionLoader
           loading={loading || posts.page.number !== pagination.page}
         >
@@ -93,19 +97,15 @@ const ThreadPosts: React.FC = () => {
               threadId={thread.id}
               threadSlug={thread.slug}
               page={page}
-              isClosed={thread.isClosed || thread.category.isClosed}
+              isClosed={isClosed}
               isSelected={selection.selection[post.id]}
               toggleSelection={moderation.posts ? selection.toggle : null}
             />
           ))}
         </SectionLoader>
         <ThreadToolbarBottom {...toolbarProps} />
-        <ThreadReply
-          categoryId={thread.category.id}
-          categoryIsClosed={thread.category.isClosed}
-          threadId={thread.id}
-          threadIsClosed={thread.isClosed}
-        />
+        <ThreadReply threadId={thread.id} />
+        <ThreadCTA thread={thread} />
       </ThreadReplyProvider>
       <ThreadPostsModeration
         moderation={moderation.posts}
