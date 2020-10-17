@@ -17,15 +17,13 @@ const ToastsContext = React.createContext<IToastsContext>({
   removeToast: () => {},
 })
 
-interface IToastsContextProviderProps {
+interface IToastsProviderProps {
   children: React.ReactNode
 }
 
 const TOASTS_LIMIT = 5
 
-const ToastsContextProvider: React.FC<IToastsContextProviderProps> = ({
-  children,
-}) => {
+const ToastsProvider: React.FC<IToastsProviderProps> = ({ children }) => {
   const [state, setState] = React.useState<Array<IToast>>([])
 
   return (
@@ -57,4 +55,4 @@ const ToastsContextProvider: React.FC<IToastsContextProviderProps> = ({
 
 const useToastsContext = () => React.useContext(ToastsContext)
 
-export { ToastsContext, ToastsContextProvider, useToastsContext }
+export { ToastsContext, ToastsProvider, useToastsContext }

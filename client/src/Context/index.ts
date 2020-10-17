@@ -6,6 +6,11 @@ import {
   useAuthModalContext,
 } from "./AuthModalContext"
 import {
+  BodyScrollLockContext,
+  BodyScrollLockProvider,
+  useBodyScrollLockContext,
+} from "./BodyScrollLockContext"
+import {
   CategoriesContext,
   useCategoriesContext,
   useCategoriesListContext,
@@ -18,7 +23,7 @@ import {
 } from "./ModalContext"
 import {
   ToastsContext,
-  ToastsContextProvider,
+  ToastsProvider,
   useToastsContext,
 } from "./ToastsContext"
 
@@ -45,6 +50,8 @@ export {
   AuthContext,
   AuthModalContext,
   AuthModalProvider,
+  BodyScrollLockContext,
+  BodyScrollLockProvider,
   CategoriesContext,
   ForumStatsContext,
   ModalConsumer,
@@ -52,9 +59,10 @@ export {
   ModalProvider,
   SettingsContext,
   ToastsContext,
-  ToastsContextProvider,
+  ToastsProvider,
   useAuthContext,
   useAuthModalContext,
+  useBodyScrollLockContext,
   useBulkActionLimit,
   useCategoriesListContext,
   useCategoriesContext,

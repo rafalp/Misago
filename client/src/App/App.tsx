@@ -1,14 +1,16 @@
 import React from "react"
 import { BrowserRouter as Router } from "react-router-dom"
+import { BodyScroll } from "../BodyScroll"
 import {
   AuthContext,
   AuthModalProvider,
+  BodyScrollLockProvider,
   CategoriesContext,
   ForumStatsContext,
   ModalConsumer,
   ModalProvider,
   SettingsContext,
-  ToastsContextProvider,
+  ToastsProvider,
 } from "../Context"
 import Routes from "../Routes"
 import { RouteErrorBoundary } from "../UI"
@@ -25,40 +27,43 @@ const App: React.FC = () => {
   return (
     <AppErrorBoundary>
       <Router>
-        <AppDataQuery>
-          {({ data: { auth, categories, forumStats, settings } }) => (
-            <AppLanguageLoader language="en">
-              <AuthContext.Provider value={auth}>
-                <CategoriesContext.Provider value={categories}>
-                  <SettingsContext.Provider value={settings}>
-                    <ToastsContextProvider>
-                      <ForumStatsContext.Provider value={forumStats}>
-                        <AuthModalProvider>
-                          <ModalProvider>
-                            <React.Suspense fallback={<div />}>
-                              <AuthChangedAlert user={auth} />
-                            </React.Suspense>
-                            <React.Suspense fallback={<div />}>
-                              <Navbar settings={settings} user={auth} />
-                              <Toasts />
-                            </React.Suspense>
-                            <RouteErrorBoundary>
-                              <Routes />
-                            </RouteErrorBoundary>
-                            <React.Suspense fallback={<div />}>
-                              <AuthModal settings={settings} />
-                            </React.Suspense>
-                            <ModalConsumer />
-                          </ModalProvider>
-                        </AuthModalProvider>
-                      </ForumStatsContext.Provider>
-                    </ToastsContextProvider>
-                  </SettingsContext.Provider>
-                </CategoriesContext.Provider>
-              </AuthContext.Provider>
-            </AppLanguageLoader>
-          )}
-        </AppDataQuery>
+        <BodyScrollLockProvider>
+          <BodyScroll />
+          <AppDataQuery>
+            {({ data: { auth, categories, forumStats, settings } }) => (
+              <AppLanguageLoader language="en">
+                <AuthContext.Provider value={auth}>
+                  <CategoriesContext.Provider value={categories}>
+                    <SettingsContext.Provider value={settings}>
+                      <ToastsProvider>
+                        <ForumStatsContext.Provider value={forumStats}>
+                          <AuthModalProvider>
+                            <ModalProvider>
+                              <React.Suspense fallback={<div />}>
+                                <AuthChangedAlert user={auth} />
+                              </React.Suspense>
+                              <React.Suspense fallback={<div />}>
+                                <Navbar settings={settings} user={auth} />
+                                <Toasts />
+                              </React.Suspense>
+                              <RouteErrorBoundary>
+                                <Routes />
+                              </RouteErrorBoundary>
+                              <React.Suspense fallback={<div />}>
+                                <AuthModal settings={settings} />
+                              </React.Suspense>
+                              <ModalConsumer />
+                            </ModalProvider>
+                          </AuthModalProvider>
+                        </ForumStatsContext.Provider>
+                      </ToastsProvider>
+                    </SettingsContext.Provider>
+                  </CategoriesContext.Provider>
+                </AuthContext.Provider>
+              </AppLanguageLoader>
+            )}
+          </AppDataQuery>
+        </BodyScrollLockProvider>
       </Router>
     </AppErrorBoundary>
   )

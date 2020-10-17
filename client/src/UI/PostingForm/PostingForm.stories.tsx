@@ -2,6 +2,7 @@ import { MockedProvider } from "@apollo/react-testing"
 import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
 import * as Yup from "yup"
+import { BodyScrollLockProvider } from "../../Context"
 import { ButtonPrimary } from "../Button"
 import Editor from "../../Editor"
 import { Field, FieldError, Form } from "../Form"
@@ -43,43 +44,45 @@ const Boilerplate: React.FC = ({ children }) => {
   })
 
   return (
-    <MockedProvider>
-      <PostingForm
-        fullscreen={fullscreen}
-        minimized={minimized}
-        show={boolean("Show", true)}
-      >
-        <PostingFormDialog>
-          <Form<IPostingFormValues>
-            defaultValues={{
-              title: "",
-              markup: "",
-            }}
-            disabled={boolean("Loading", false)}
-            validationSchema={PostingFormSchema}
-            onSubmit={async ({ clearError }) => {
-              clearError()
-            }}
-          >
-            <PostingFormHeader
-              fullscreen={fullscreen}
-              minimized={minimized}
-              setFullscreen={setFullscreen}
-              setMinimized={setMinimized}
+    <BodyScrollLockProvider>
+      <MockedProvider>
+        <PostingForm
+          fullscreen={fullscreen}
+          minimized={minimized}
+          show={boolean("Show", true)}
+        >
+          <PostingFormDialog>
+            <Form<IPostingFormValues>
+              defaultValues={{
+                title: "",
+                markup: "",
+              }}
+              disabled={boolean("Loading", false)}
+              validationSchema={PostingFormSchema}
+              onSubmit={async ({ clearError }) => {
+                clearError()
+              }}
             >
-              {text("Title", "Posting form")}
-            </PostingFormHeader>
-            {boolean("Alert", false) && (
-              <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
-            )}
-            <PostingFormBody>{children}</PostingFormBody>
-            <PostingFormFooter>
-              <ButtonPrimary text="Submit" small />
-            </PostingFormFooter>
-          </Form>
-        </PostingFormDialog>
-      </PostingForm>
-    </MockedProvider>
+              <PostingFormHeader
+                fullscreen={fullscreen}
+                minimized={minimized}
+                setFullscreen={setFullscreen}
+                setMinimized={setMinimized}
+              >
+                {text("Title", "Posting form")}
+              </PostingFormHeader>
+              {boolean("Alert", false) && (
+                <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
+              )}
+              <PostingFormBody>{children}</PostingFormBody>
+              <PostingFormFooter>
+                <ButtonPrimary text="Submit" small />
+              </PostingFormFooter>
+            </Form>
+          </PostingFormDialog>
+        </PostingForm>
+      </MockedProvider>
+    </BodyScrollLockProvider>
   )
 }
 

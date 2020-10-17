@@ -70,16 +70,6 @@ export enum AuthModalMode {
   REGISTER,
 }
 
-export interface IAuthModalContext {
-  isOpen: boolean
-  mode: AuthModalMode
-  closeModal: () => void
-  showLoginForm: () => void
-  showRegisterForm: () => void
-  openLoginModal: () => void
-  openRegisterModal: () => void
-}
-
 export type RichTextParagraph = {
   id: string
   type: string

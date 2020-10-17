@@ -1,5 +1,6 @@
 import classnames from "classnames"
 import React from "react"
+import { BodyScrollLock } from "../../BodyScroll"
 
 interface IPostingFormProps {
   children: React.ReactNode
@@ -15,10 +16,11 @@ const PostingForm = React.forwardRef<HTMLDivElement, IPostingFormProps>(
         show,
         "posting-form-fullscreen": show && fullscreen,
         "posting-form-minimized": show && minimized,
-        "posting-form-overlaid": show && !fullscreen,
+        "posting-form-fixed": show && !fullscreen,
       })}
       ref={ref}
     >
+      <BodyScrollLock locked={fullscreen} />
       <div className="container">{children}</div>
     </div>
   )

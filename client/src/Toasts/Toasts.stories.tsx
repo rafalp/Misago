@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions"
 import React from "react"
-import { ToastsContext, ToastsContextProvider } from "../Context"
+import { ToastsContext, ToastsProvider } from "../Context"
 import { ButtonPrimary, Form, Field, Input } from "../UI"
 import { RootContainer } from "../UI/Storybook"
 import Toast from "./Toast"
@@ -33,7 +33,7 @@ interface IFormValues {
 }
 
 export const Dynamic = () => (
-  <ToastsContextProvider>
+  <ToastsProvider>
     <Toasts />
     <RootContainer>
       <ToastsContext.Consumer>
@@ -51,5 +51,5 @@ export const Dynamic = () => (
         )}
       </ToastsContext.Consumer>
     </RootContainer>
-  </ToastsContextProvider>
+  </ToastsProvider>
 )

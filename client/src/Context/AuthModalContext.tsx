@@ -1,6 +1,16 @@
 import React from "react"
 import { useModal } from "../UI"
-import { IAuthModalContext, AuthModalMode } from "../types"
+import { AuthModalMode } from "../types"
+
+export interface IAuthModalContext {
+  isOpen: boolean
+  mode: AuthModalMode
+  closeModal: () => void
+  showLoginForm: () => void
+  showRegisterForm: () => void
+  openLoginModal: () => void
+  openRegisterModal: () => void
+}
 
 const AuthModalContext = React.createContext<IAuthModalContext>({
   isOpen: false,
