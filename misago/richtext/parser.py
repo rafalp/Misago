@@ -62,7 +62,11 @@ def create_markdown(context: GraphQLContext) -> Markdown:
         context,
         BlockParser(),
         InlineParser(AstRenderer()),
+<<<<<<< HEAD
         [plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
+=======
+        default_plugins,
+>>>>>>> Specified default_plugins according author's suggestion
     )
 
 
