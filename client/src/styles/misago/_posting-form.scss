@@ -19,14 +19,11 @@ $posting-form-box-shadow-xs: 0 0.25rem 0.5rem rgba($black, 0.5) !default;
 $posting-form-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
 
 $posting-form-header-border-color: $border-color !default;
-$posting-form-footer-border-color: $posting-form-header-border-color !default;
 $posting-form-header-border-width: $posting-form-border-width !default;
-$posting-form-footer-border-width: $posting-form-header-border-width !default;
 $posting-form-header-padding-y: 1rem !default;
 $posting-form-header-padding-x: 1rem !default;
 $posting-form-header-padding: $posting-form-header-padding-y
   $posting-form-header-padding-x !default; // Keep this for backwards compatibility
-$posting-form-footer-padding: $posting-form-header-padding !default;
 
 $posting-form-transition: transform 0.3s ease-out !default;
 
@@ -48,6 +45,7 @@ $posting-form-transition: transform 0.3s ease-out !default;
 // Default styles for form dialog
 .posting-form-dialog {
   background-clip: padding-box;
+  background-color: $posting-form-bg;
   border: $posting-form-border-width solid $posting-form-border-color;
   border-bottom: 0;
   @include border-radius(
@@ -67,10 +65,7 @@ $posting-form-transition: transform 0.3s ease-out !default;
 .posting-form-header {
   display: flex;
   align-items: center;
-  padding: $posting-form-header-padding;
-  background-color: $posting-form-bg;
-  border-bottom: $posting-form-header-border-width
-    $posting-form-header-border-color solid;
+  margin-bottom: $spacer;
 }
 
 .posting-form-title {
@@ -88,24 +83,10 @@ $posting-form-transition: transform 0.3s ease-out !default;
 
 // Default body and footer
 .posting-form-body {
-  background-color: $posting-form-bg;
   padding: $posting-form-inner-padding;
 
   .form-group:last-child {
     margin-bottom: 0;
-  }
-}
-
-.posting-form-footer {
-  background-color: $posting-form-bg;
-  padding: $posting-form-footer-padding;
-
-  border-top: $posting-form-footer-border-width
-    $posting-form-footer-border-color solid;
-  text-align: right;
-
-  .btn {
-    margin-left: $posting-form-margin-between;
   }
 }
 
@@ -134,12 +115,6 @@ $posting-form-transition: transform 0.3s ease-out !default;
     display: flex;
     flex-direction: column;
     height: 100%;
-  }
-
-  // Remove borders from header and footer
-  .posting-form-header,
-  .posting-form-footer {
-    border: none;
   }
 
   // Make body fill all screen space

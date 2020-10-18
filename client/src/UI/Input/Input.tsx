@@ -12,6 +12,7 @@ interface IInputProps {
   name?: string
   placeholder?: string
   required?: boolean
+  responsive?: boolean
   type?: "text" | "email" | "password"
   value?: string
   onBlur?: (event: React.BaseSyntheticEvent<object, any, any>) => void
@@ -27,6 +28,7 @@ const Input: React.FC<IInputProps> = ({
   name,
   placeholder,
   required,
+  responsive,
   type,
   value,
   onBlur,
@@ -39,7 +41,10 @@ const Input: React.FC<IInputProps> = ({
     <input
       className={classnames(
         "form-control",
-        { "is-invalid": invalid || context.invalid },
+        {
+          "form-control-responsive": responsive,
+          "is-invalid": invalid || context.invalid,
+        },
         className
       )}
       disabled={disabled || context.disabled}

@@ -15,7 +15,6 @@ import PostingForm from "./PostingForm"
 import PostingFormAlert from "./PostingFormAlert"
 import PostingFormBody from "./PostingFormBody"
 import PostingFormDialog from "./PostingFormDialog"
-import PostingFormFooter from "./PostingFormFooter"
 import PostingFormHeader from "./PostingFormHeader"
 
 export default {
@@ -63,21 +62,20 @@ const Boilerplate: React.FC = ({ children }) => {
                 clearError()
               }}
             >
-              <PostingFormHeader
-                fullscreen={fullscreen}
-                minimized={minimized}
-                setFullscreen={setFullscreen}
-                setMinimized={setMinimized}
-              >
-                {text("Title", "Posting form")}
-              </PostingFormHeader>
-              {boolean("Alert", false) && (
-                <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
-              )}
-              <PostingFormBody>{children}</PostingFormBody>
-              <PostingFormFooter>
-                <ButtonPrimary text="Submit" small />
-              </PostingFormFooter>
+              <PostingFormBody>
+                <PostingFormHeader
+                  fullscreen={fullscreen}
+                  minimized={minimized}
+                  setFullscreen={setFullscreen}
+                  setMinimized={setMinimized}
+                >
+                  {text("Title", "Posting form")}
+                </PostingFormHeader>
+                {boolean("Alert", false) && (
+                  <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
+                )}
+                {children}
+              </PostingFormBody>
             </Form>
           </PostingFormDialog>
         </PostingForm>
@@ -91,7 +89,7 @@ export const StartThreadForm = () => (
     <Field
       label="Thread title"
       name="title"
-      input={<Input placeholder="Thread title" />}
+      input={<Input placeholder="Thread title" responsive />}
       error={(error, value) => (
         <ThreadTitleValidationError
           error={error}
@@ -108,7 +106,7 @@ export const StartThreadForm = () => (
       label="Message contents"
       name="markup"
       className="form-group-editor"
-      input={<Editor />}
+      input={<Editor extra={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
           error={error}
@@ -130,7 +128,7 @@ export const ReplyForm = () => (
       label="Message contents"
       name="markup"
       className="form-group-editor"
-      input={<Editor />}
+      input={<Editor extra={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
           error={error}

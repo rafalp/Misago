@@ -59,6 +59,17 @@
   }
 }
 
+// Responsive input: small on <sm
+@include media-breakpoint-down(sm) {
+  .form-control-responsive {
+    height: $input-height-sm;
+    padding: $input-padding-y-sm $input-padding-x-sm;
+    @include font-size($input-font-size-sm);
+    line-height: $input-line-height-sm;
+    @include border-radius($input-border-radius-sm);
+  }
+}
+
 // Left-align toggle button, make it ellipsis
 .form-control-toggle {
   overflow: hidden;

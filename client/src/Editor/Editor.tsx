@@ -11,9 +11,10 @@ import EditorToolbar from "./EditorToolbar"
 interface IEditorProps {
   name?: string
   disabled?: boolean
+  extra?: React.ReactNode
 }
 
-const Editor: React.FC<IEditorProps> = ({ name, disabled }) => {
+const Editor: React.FC<IEditorProps> = ({ name, disabled, extra }) => {
   const context = useFieldContext()
   const hookContext = useFormContext() || {}
   const [preview, setPreview] = React.useState<string | null>(null)
@@ -32,6 +33,19 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled }) => {
 
   return (
     <EditorBody disabled={disabled || context.disabled}>
+      {preview && <EditorPreview markup={preview} />}
+      <textarea
+        className={classnames(
+          "form-control form-control-responsive form-editor-textarea",
+          {
+            "d-none": preview,
+            "is-invalid": context.invalid,
+          }
+        )}
+        disabled={disabled || context.disabled}
+        name={name || context.name}
+        ref={hookContext.register}
+      />
       <EditorToolbar>
         {preview ? (
           <EditorButton
@@ -48,17 +62,8 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled }) => {
             <Trans id="editor.preview">Preview</Trans>
           </EditorButton>
         )}
+        {extra}
       </EditorToolbar>
-      {preview && <EditorPreview markup={preview} />}
-      <textarea
-        className={classnames("form-control form-editor-textarea", {
-          "d-none": preview,
-          "is-invalid": context.invalid,
-        })}
-        disabled={disabled || context.disabled}
-        name={name || context.name}
-        ref={hookContext.register}
-      />
     </EditorBody>
   )
 }
