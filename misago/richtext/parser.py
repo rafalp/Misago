@@ -1,5 +1,5 @@
 import json
-import mistune
+from ..markdown import markdown
 from ..types import RichText
 from ..utils.strings import get_random_string
 
@@ -16,8 +16,13 @@ def parse_markup(markup: str) -> RichText:
     return richtext
 
 
-def make_html(markup: str) -> str:
-    return mistune.html(markup)
+def render_richtext_as_html(richtext: RichText) -> str:
+    html_list = []
+    for row in richtext:
+        if row["type"] == "p":
+            html_list.append(markdown(row['text']))
+
+    return ''.join(html_list)
 
 
 def make_json(markup: str) -> str:

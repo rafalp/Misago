@@ -22,7 +22,7 @@ from ...loaders import (
     store_thread,
 )
 from ...pubsub.threads import publish_thread_update
-from ...richtext import parse_markup
+from ...richtext import parse_markup, render_richtext_as_html
 from ...threads.create import create_post
 from ...threads.update import update_thread
 from ...types import (
@@ -122,7 +122,7 @@ async def post_reply(
         thread,
         cleaned_data["markup"],
         parse_markup(cleaned_data["markup"]),
-        cleaned_data["markup"],
+        render_richtext_as_html(parse_markup(cleaned_data["markup"])),
         poster=user,
         context=context,
     )

@@ -11,7 +11,7 @@ from ...hooks import (
     edit_post_input_model_hook,
 )
 from ...loaders import load_post, load_thread, store_post
-from ...richtext.parser import parse_markup, make_html
+from ...richtext.parser import parse_markup, render_richtext_as_html
 from ...threads.update import update_post
 from ...types import (
     AsyncValidator,
@@ -112,7 +112,7 @@ async def edit_post(
         cleaned_data["post"],
         markup=cleaned_data["markup"],
         rich_text=parse_markup(cleaned_data["markup"]),
-        html=make_html(cleaned_data["markup"]),
+        html=render_richtext_as_html(parse_markup(cleaned_data["markup"])),
         increment_edits=True,
     )
 
