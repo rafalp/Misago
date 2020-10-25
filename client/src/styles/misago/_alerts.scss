@@ -1,3 +1,10 @@
+// Make block alert visually blend with rest of modal/card blocks */
+.alert-block {
+  border: none;
+  border-radius: 0;
+  margin: 0;
+}
+
 // Responsive alert: small on <md
 @include media-breakpoint-down(md) {
   .alert-responsive {

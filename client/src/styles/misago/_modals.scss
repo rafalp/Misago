@@ -3,13 +3,6 @@
   overflow: auto;
 }
 
-/* Make modal alert visually blend with rest of modal blocks */
-.modal-alert .alert {
-  border: none;
-  border-radius: 0;
-  margin: 0;
-}
-
 /* Include border between stacked modal bodies */
 .modal-body + .modal-body {
   border-top: $modal-header-border-width solid $modal-header-border-color;
