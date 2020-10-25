@@ -16,6 +16,10 @@
   border: $input-border-width solid $input-border-color;
   border-radius: 0 0 $input-border-radius $input-border-radius;
   border-top: none;
+
+  .btn + .btn {
+    margin-left: $spacer / 2;
+  }
 }
 
 // Style editor button to fit the toolbar

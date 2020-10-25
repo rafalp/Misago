@@ -59,12 +59,13 @@
   }
 }
 
-// Responsive input: small on <sm
-@include media-breakpoint-down(sm) {
+// Responsive input: small on <md
+@include media-breakpoint-down(md) {
   .form-control-responsive {
+    // Note: keep 16px font size so small input doesn't cause mobile browser
+    // to auto-zoom on input's focus
     height: $input-height-sm;
     padding: $input-padding-y-sm $input-padding-x-sm;
-    @include font-size($input-font-size-sm);
     line-height: $input-line-height-sm;
     @include border-radius($input-border-radius-sm);
   }
@@ -130,17 +131,15 @@
   margin: 0 $spacer / 2;
 }
 
-// Limit max length of first selected category on very small displays
-@include media-breakpoint-down(sm) {
-  .form-control-category-select-value-complex {
-    display: flex;
+// Limit max length of first selected category
+.form-control-category-select-value-complex {
+  display: flex;
 
-    .form-control-category-select-item {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      text-align: left;
-      max-width: 50%;
-    }
+  .form-control-category-select-item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    max-width: 50%;
   }
 }

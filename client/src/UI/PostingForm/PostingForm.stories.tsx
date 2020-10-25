@@ -3,17 +3,21 @@ import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
 import * as Yup from "yup"
 import { BodyScrollLockProvider } from "../../Context"
-import { ButtonPrimary } from "../Button"
 import Editor from "../../Editor"
+import PostThreadCategoryInput from "../../Routes/PostThread/PostThreadCategoryInput"
+import { ButtonPrimary } from "../Button"
 import { Field, FieldError, Form } from "../Form"
 import Input from "../Input"
+import { categories } from "../Storybook"
 import {
+  CategoryValidationError,
   ThreadTitleValidationError,
   ValidationError,
 } from "../ValidationError"
 import PostingForm from "./PostingForm"
 import PostingFormAlert from "./PostingFormAlert"
 import PostingFormBody from "./PostingFormBody"
+import PostingFormCollapsible from "./PostingFormCollapsible"
 import PostingFormDialog from "./PostingFormDialog"
 import PostingFormHeader from "./PostingFormHeader"
 
@@ -24,6 +28,7 @@ export default {
 
 interface IPostingFormValues {
   title: string
+  category: string
   markup: string
 }
 
@@ -37,6 +42,7 @@ const Boilerplate: React.FC = ({ children }) => {
       .min(5, "value_error.any_str.min_length")
       .max(100, "value_error.any_str.max_length")
       .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
+    category: Yup.string().required("value_error.missing"),
     markup: Yup.string()
       .required("value_error.missing")
       .min(5, "value_error.any_str.min_length"),
@@ -54,6 +60,7 @@ const Boilerplate: React.FC = ({ children }) => {
             <Form<IPostingFormValues>
               defaultValues={{
                 title: "",
+                category: categories[0].children[0].id,
                 markup: "",
               }}
               disabled={boolean("Loading", false)}
@@ -71,10 +78,12 @@ const Boilerplate: React.FC = ({ children }) => {
                 >
                   {text("Title", "Posting form")}
                 </PostingFormHeader>
-                {boolean("Alert", false) && (
-                  <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
-                )}
-                {children}
+                <PostingFormCollapsible>
+                  {boolean("Alert", false) && (
+                    <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
+                  )}
+                  {children}
+                </PostingFormCollapsible>
               </PostingFormBody>
             </Form>
           </PostingFormDialog>
@@ -86,27 +95,50 @@ const Boilerplate: React.FC = ({ children }) => {
 
 export const StartThreadForm = () => (
   <Boilerplate>
-    <Field
-      label="Thread title"
-      name="title"
-      input={<Input placeholder="Thread title" responsive />}
-      error={(error, value) => (
-        <ThreadTitleValidationError
-          error={error}
-          value={value.trim().length}
-          min={5}
-          max={100}
-        >
-          {({ message }) => <FieldError>{message}</FieldError>}
-        </ThreadTitleValidationError>
-      )}
-      labelReaderOnly
-    />
+    <div className="row">
+      <div className="col-12 col-sm-6 col-md-7 mb-3">
+        <Field
+          label="Thread title"
+          name="title"
+          input={<Input placeholder="Thread title" responsive />}
+          error={(error, value) => (
+            <ThreadTitleValidationError
+              error={error}
+              value={value.trim().length}
+              min={5}
+              max={100}
+            >
+              {({ message }) => <FieldError>{message}</FieldError>}
+            </ThreadTitleValidationError>
+          )}
+          labelReaderOnly
+        />
+      </div>
+      <div className="col-12 col-sm-6 col-md-5 mb-3">
+        <Field
+          label="Thread category"
+          name="category"
+          input={
+            <PostThreadCategoryInput
+              choices={categories}
+              validChoices={categories.map((category) => category.id)}
+              responsive
+            />
+          }
+          error={(error, value) => (
+            <CategoryValidationError error={error}>
+              {({ message }) => <FieldError>{message}</FieldError>}
+            </CategoryValidationError>
+          )}
+          labelReaderOnly
+        />
+      </div>
+    </div>
     <Field
       label="Message contents"
       name="markup"
       className="form-group-editor"
-      input={<Editor extra={<ButtonPrimary text="Submit" small />} />}
+      input={<Editor submit={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
           error={error}
@@ -128,7 +160,7 @@ export const ReplyForm = () => (
       label="Message contents"
       name="markup"
       className="form-group-editor"
-      input={<Editor extra={<ButtonPrimary text="Submit" small />} />}
+      input={<Editor submit={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
           error={error}

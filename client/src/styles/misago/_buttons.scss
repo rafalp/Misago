@@ -41,8 +41,8 @@
   text-overflow: ellipsis;
 }
 
-// Responsive button: small on <sm
-@include media-breakpoint-down(sm) {
+// Responsive button: small on <md
+@include media-breakpoint-down(md) {
   .btn.btn-responsive {
     @include button-size(
       $btn-padding-y-sm,

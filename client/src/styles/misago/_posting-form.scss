@@ -4,6 +4,8 @@ $posting-form-inner-padding: 1rem !default;
 // Margin between elements in header and footer, must be lower than or equal to 2 * $posting-form-inner-padding
 $posting-form-margin-between: 0.5rem !default;
 
+$posting-form-title-font-size-xs: $font-size-base !default;
+$posting-form-title-font-size-sm-up: $font-size-lg !default;
 $posting-form-title-line-height: $line-height-base !default;
 
 $posting-form-color: null !default;
@@ -18,8 +20,6 @@ $posting-form-inner-border-radius: subtract(
 $posting-form-box-shadow-xs: 0 0.25rem 0.5rem rgba($black, 0.5) !default;
 $posting-form-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
 
-$posting-form-header-border-color: $border-color !default;
-$posting-form-header-border-width: $posting-form-border-width !default;
 $posting-form-header-padding-y: 1rem !default;
 $posting-form-header-padding-x: 1rem !default;
 $posting-form-header-padding: $posting-form-header-padding-y
@@ -40,23 +40,31 @@ $posting-form-transition: transform 0.3s ease-out !default;
   &.show {
     height: auto;
   }
+
+  @include media-breakpoint-down(sm) {
+    .container {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
 }
 
 // Default styles for form dialog
 .posting-form-dialog {
   background-clip: padding-box;
   background-color: $posting-form-bg;
-  border: $posting-form-border-width solid $posting-form-border-color;
-  border-bottom: 0;
-  @include border-radius(
-    $posting-form-border-radius $posting-form-border-radius 0 0
-  );
+  border-top: $posting-form-border-width solid $posting-form-border-color;
   @include box-shadow($posting-form-box-shadow-xs);
   overflow: hidden;
 }
 
 @include media-breakpoint-up(sm) {
   .posting-form-dialog {
+    border: $posting-form-border-width solid $posting-form-border-color;
+    border-bottom: 0;
+    @include border-radius(
+      $posting-form-border-radius $posting-form-border-radius 0 0
+    );
     @include box-shadow($posting-form-box-shadow-sm-up);
   }
 }
@@ -75,6 +83,14 @@ $posting-form-transition: transform 0.3s ease-out !default;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  font-size: $posting-form-title-font-size-xs;
+}
+
+@include media-breakpoint-up(sm) {
+  .posting-form-title {
+    font-size: $posting-form-title-font-size-sm-up;
+  }
 }
 
 .btn-posting-form-header {
@@ -117,8 +133,9 @@ $posting-form-transition: transform 0.3s ease-out !default;
     height: 100%;
   }
 
-  // Make body fill all screen space
-  .posting-form-body {
+  // Make body and collapsible fill all available vertical space
+  .posting-form-body,
+  .posting-form-collapsible {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -147,11 +164,13 @@ $posting-form-transition: transform 0.3s ease-out !default;
   }
 }
 
-// Hide alert/body/footer when minimized
+// Hide collapsible part when minimized, remove header's margin
 .posting-form-minimized {
-  .posting-form-alert,
-  .posting-form-body,
-  .posting-form-footer {
+  .posting-form-collapsible {
     display: none;
+  }
+
+  .posting-form-header {
+    margin-bottom: 0;
   }
 }

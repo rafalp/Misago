@@ -9,8 +9,8 @@ import { Field, FieldError, FormContext } from "../../../UI/Form"
 import {
   PostingFormAlert,
   PostingFormBody,
+  PostingFormCollapsible,
   PostingFormDialog,
-  PostingFormFooter,
   PostingFormHeader,
 } from "../../../UI/PostingForm"
 import RootError from "../../../UI/RootError"
@@ -90,55 +90,66 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
               }
             })}
           >
-            <PostingFormHeader
-              fullscreen={fullscreen}
-              minimized={minimized}
-              setFullscreen={setFullscreen}
-              setMinimized={setMinimized}
-            >
-              {isEditing ? (
-                <Trans id="posting.edit">Edit post</Trans>
-              ) : (
-                <Trans id="posting.reply">Reply thread</Trans>
-              )}
-            </PostingFormHeader>
-            <RootError
-              graphqlError={graphqlError}
-              dataErrors={data?.postReply.errors}
-            >
-              {({ message }) => <PostingFormAlert>{message}</PostingFormAlert>}
-            </RootError>
             <PostingFormBody>
-              <Field
-                label={<Trans id="posting.message">Message contents</Trans>}
-                name="markup"
-                className="form-group-editor"
-                input={<Editor />}
-                error={(error, value) => (
-                  <ValidationError
-                    error={error}
-                    value={value.trim().length}
-                    min={postMinLength}
-                  >
-                    {({ message }) => <FieldError>{message}</FieldError>}
-                  </ValidationError>
+              <PostingFormHeader
+                fullscreen={fullscreen}
+                minimized={minimized}
+                setFullscreen={setFullscreen}
+                setMinimized={setMinimized}
+              >
+                {isEditing ? (
+                  <Trans id="posting.edit">Edit post</Trans>
+                ) : (
+                  <Trans id="posting.reply">Reply thread</Trans>
                 )}
-                labelReaderOnly
-              />
+              </PostingFormHeader>
+              <PostingFormCollapsible>
+                <RootError
+                  graphqlError={graphqlError}
+                  dataErrors={data?.postReply.errors}
+                >
+                  {({ message }) => (
+                    <PostingFormAlert>{message}</PostingFormAlert>
+                  )}
+                </RootError>
+                <Field
+                  label={<Trans id="posting.message">Message contents</Trans>}
+                  name="markup"
+                  className="form-group-editor"
+                  input={
+                    <Editor
+                      submit={
+                        <ButtonPrimary
+                          text={
+                            isEditing ? (
+                              <Trans id="posting.submit_edit">
+                                Save changes
+                              </Trans>
+                            ) : (
+                              <Trans id="posting.submit_reply">
+                                Post reply
+                              </Trans>
+                            )
+                          }
+                          loading={loading}
+                          small
+                        />
+                      }
+                    />
+                  }
+                  error={(error, value) => (
+                    <ValidationError
+                      error={error}
+                      value={value.trim().length}
+                      min={postMinLength}
+                    >
+                      {({ message }) => <FieldError>{message}</FieldError>}
+                    </ValidationError>
+                  )}
+                  labelReaderOnly
+                />
+              </PostingFormCollapsible>
             </PostingFormBody>
-            <PostingFormFooter>
-              <ButtonPrimary
-                text={
-                  isEditing ? (
-                    <Trans id="posting.submit_edit">Save changes</Trans>
-                  ) : (
-                    <Trans id="posting.submit_reply">Post reply</Trans>
-                  )
-                }
-                loading={loading}
-                small
-              />
-            </PostingFormFooter>
           </form>
         </PostingFormDialog>
       </FormContext.Provider>

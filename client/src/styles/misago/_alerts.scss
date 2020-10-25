@@ -1,0 +1,8 @@
+// Responsive alert: small on <md
+@include media-breakpoint-down(md) {
+  .alert-responsive {
+    padding: $alert-padding-y * 0.5 $alert-padding-x * 0.5;
+
+    font-size: $font-size-sm;
+  }
+}

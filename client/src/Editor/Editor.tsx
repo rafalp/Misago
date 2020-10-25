@@ -11,10 +11,10 @@ import EditorToolbar from "./EditorToolbar"
 interface IEditorProps {
   name?: string
   disabled?: boolean
-  extra?: React.ReactNode
+  submit?: React.ReactNode
 }
 
-const Editor: React.FC<IEditorProps> = ({ name, disabled, extra }) => {
+const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   const context = useFieldContext()
   const hookContext = useFormContext() || {}
   const [preview, setPreview] = React.useState<string | null>(null)
@@ -47,22 +47,27 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, extra }) => {
         ref={hookContext.register}
       />
       <EditorToolbar>
-        {preview ? (
-          <EditorButton
-            disabled={disabled || context.disabled}
-            onClick={closePreview}
-          >
-            <Trans id="editor.write">Write</Trans>
-          </EditorButton>
-        ) : (
-          <EditorButton
-            disabled={disabled || context.disabled}
-            onClick={openPreview}
-          >
-            <Trans id="editor.preview">Preview</Trans>
-          </EditorButton>
-        )}
-        {extra}
+        <div className="row">
+          <div className="col" />
+          <div className="col-auto">
+            {preview ? (
+              <EditorButton
+                disabled={disabled || context.disabled}
+                onClick={closePreview}
+              >
+                <Trans id="editor.write">Write</Trans>
+              </EditorButton>
+            ) : (
+              <EditorButton
+                disabled={disabled || context.disabled}
+                onClick={openPreview}
+              >
+                <Trans id="editor.preview">Preview</Trans>
+              </EditorButton>
+            )}
+            {submit}
+          </div>
+        </div>
       </EditorToolbar>
     </EditorBody>
   )

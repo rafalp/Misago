@@ -26,7 +26,12 @@ const CardAlert: React.FC<ICardAlertProps> = ({
     )}
   >
     <div
-      className={classnames("alert", `alert-${appearance}`, className)}
+      className={classnames(
+        "alert",
+        "alert-responsive",
+        `alert-${appearance}`,
+        className
+      )}
       role="alert"
     >
       {children}

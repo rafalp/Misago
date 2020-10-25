@@ -19,7 +19,7 @@
 }
 
 // On very small devices make compact paginator full-width
-@include media-breakpoint-down(sm) {
+@include media-breakpoint-down(md) {
   .paginator-compact {
     display: flex;
     width: 100%;
