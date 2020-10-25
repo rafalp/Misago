@@ -13,4 +13,4 @@ def test_sentences_list_instance_returns_random_sentences():
 
 def test_max_len_of_sentence_returned_can_be_specified():
     sentences = Sentences(max_length=100)
-    assert len(sentences.get_random_sentence()) < 100
+    assert len(sentences.get_random_sentence()) <= 100
