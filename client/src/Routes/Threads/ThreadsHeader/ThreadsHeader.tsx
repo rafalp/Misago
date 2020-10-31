@@ -1,15 +1,12 @@
 import React from "react"
+import { Card, CardBanner, CardBody, CardColorBand } from "../../../UI/Card"
+import { GridPageHeader } from "../../../UI/Grid"
 import {
-  Card,
-  CardBanner,
-  CardBody,
-  CardColorBand,
-  GridPageHeader,
   TidbitMembers,
   TidbitPosts,
   TidbitThreads,
   Tidbits,
-} from "../../../UI"
+} from "../../../UI/Tidbits"
 import { ICategoryBanner } from "../../../types"
 
 interface IThreadsHeaderProps {

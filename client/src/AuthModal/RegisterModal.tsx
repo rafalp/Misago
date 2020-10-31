@@ -3,24 +3,23 @@ import { Trans } from "@lingui/macro"
 import gql from "graphql-tag"
 import React from "react"
 import * as Yup from "yup"
+import { ButtonLink, ButtonPrimary } from "../UI/Button"
+import { Field, FieldError, Form } from "../UI/Form"
+import Input from "../UI/Input"
 import {
-  ButtonLink,
-  ButtonPrimary,
-  EmailValidationError,
-  Field,
-  FieldError,
-  Form,
-  Input,
   ModalAlert,
   ModalDialog,
   ModalFooter,
   ModalFormBody,
   ModalHeader,
   ModalSize,
+} from "../UI/Modal"
+import RootError from "../UI/RootError"
+import {
+  EmailValidationError,
   PasswordValidationError,
-  RootError,
   UsernameValidationError,
-} from "../UI"
+} from "../UI/ValidationError"
 import { useAuth } from "../auth"
 import { IMutationError } from "../types"
 

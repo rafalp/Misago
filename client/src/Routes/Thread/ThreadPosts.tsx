@@ -1,13 +1,10 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
-import {
-  RouteContainer,
-  RouteGraphQLError,
-  RouteLoader,
-  RouteNotFound,
-  WindowTitle,
-} from "../../UI"
+import RouteContainer from "../../UI/RouteContainer"
+import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 import SectionLoader from "../../UI/SectionLoader"
+import WindowTitle from "../../UI/WindowTitle"
 import * as urls from "../../urls"
 import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
 import ThreadHeader from "./ThreadHeader"

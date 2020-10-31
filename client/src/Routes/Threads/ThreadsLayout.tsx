@@ -1,11 +1,7 @@
 import React from "react"
-import {
-  CategoriesNav,
-  Layout,
-  LayoutMain,
-  LayoutSide,
-  RouteContainer,
-} from "../../UI"
+import CategoriesNav from "../../UI/CategoriesNav"
+import { Layout, LayoutMain, LayoutSide } from "../../UI/Layout"
+import RouteContainer from "../../UI/RouteContainer"
 import { IActiveCategory } from "./Threads.types"
 import { ThreadsCategoriesModalButton } from "./ThreadsCategoriesModal"
 

@@ -1,15 +1,10 @@
 import { actions } from "@storybook/addon-actions"
 import { withKnobs, boolean, select, text } from "@storybook/addon-knobs"
 import React from "react"
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  Field,
-  Form,
-  FormFooter,
-  Input,
-  Spinner,
-} from ".."
+import { ButtonPrimary, ButtonSecondary } from "../Button"
+import { Field, Form, FormFooter } from "../Form"
+import Input from "../Input"
+import Spinner from "../Spinner"
 import { RootContainer } from "../Storybook"
 import {
   Modal,

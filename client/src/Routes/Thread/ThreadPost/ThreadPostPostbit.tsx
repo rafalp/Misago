@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { Avatar } from "../../../UI"
+import Avatar from "../../../UI/Avatar"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 

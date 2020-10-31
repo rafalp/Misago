@@ -1,12 +1,8 @@
 import classnames from "classnames"
 import React from "react"
-import {
-  Checkbox,
-  ThreadValidationError,
-  TidbitCategory,
-  TidbitReplies,
-  Tidbits,
-} from "../../../../UI"
+import { Checkbox } from "../../../../UI/Checkbox"
+import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI/Tidbits"
+import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 

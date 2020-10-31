@@ -2,20 +2,18 @@ import { useMutation } from "@apollo/react-hooks"
 import { Trans } from "@lingui/macro"
 import gql from "graphql-tag"
 import React from "react"
+import { ButtonLink, ButtonPrimary } from "../UI/Button"
+import { Field, Form } from "../UI/Form"
+import Input from "../UI/Input"
 import {
-  ButtonLink,
-  ButtonPrimary,
-  Field,
-  Form,
-  Input,
   ModalAlert,
   ModalDialog,
   ModalFooter,
   ModalFormBody,
   ModalHeader,
   ModalSize,
-  RootError,
-} from "../UI"
+} from "../UI/Modal"
+import RootError from "../UI/RootError"
 import { useAuth } from "../auth"
 import { IMutationError } from "../types"
 

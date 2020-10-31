@@ -1,19 +1,12 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
-import {
-  CategorySelect,
-  CategoryValidationError,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  useLocationError,
-} from "../../../../UI"
+import CategorySelect from "../../../../UI/CategorySelect"
+import { Field, FieldError, Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { CategoryValidationError } from "../../../../UI/ValidationError"
+import useLocationError from "../../../../UI/useLocationError"
 import { IThread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
 import useMoveThreadMutation from "./useMoveThreadMutation"

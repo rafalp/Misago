@@ -2,7 +2,7 @@ import { I18n } from "@lingui/react"
 import { t } from "@lingui/macro"
 import className from "classnames"
 import React from "react"
-import { Avatar } from "../UI"
+import Avatar from "../UI/Avatar"
 import { INavbarUserProp } from "./Navbar.types"
 
 interface INavbarCollapseProps {

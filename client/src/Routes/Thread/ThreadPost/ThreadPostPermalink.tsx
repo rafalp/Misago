@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useToastsContext } from "../../../Context"
-import { DropdownLink } from "../../../UI"
+import { DropdownLink } from "../../../UI/Dropdown"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 

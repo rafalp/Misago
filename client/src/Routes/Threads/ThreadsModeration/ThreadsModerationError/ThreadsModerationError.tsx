@@ -1,16 +1,15 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
+import { ErrorMessage, GraphQLErrorMessage } from "../../../../UI/Error"
+import GraphQLErrorRenderer from "../../../../UI/GraphQLErrorRenderer"
 import {
-  ErrorMessage,
-  GraphQLErrorMessage,
-  GraphQLErrorRenderer,
   ModalAlert,
   ModalCloseFooter,
   ModalErrorBody,
-  RootError,
-  useRootError,
-  useSelectionErrors,
-} from "../../../../UI"
+} from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import useRootError from "../../../../UI/useRootError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationErrorHeader from "./ThreadsModerationErrorHeader"

@@ -1,14 +1,9 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useCategoriesContext, useSettingsContext } from "../../../Context"
-import {
-  ClickTrap,
-  Modal,
-  ModalBody,
-  ModalDialog,
-  ModalSize,
-  portal,
-} from "../../../UI"
+import ClickTrap from "../../../UI/ClickTrap"
+import { Modal, ModalBody, ModalDialog, ModalSize } from "../../../UI/Modal"
+import portal from "../../../UI/portal"
 import * as urls from "../../../urls"
 import ThreadsCategoriesModalActiveItem from "./ThreadsCategoriesModalActiveItem"
 import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"

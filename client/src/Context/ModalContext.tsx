@@ -1,5 +1,6 @@
 import React from "react"
-import { portal, useModal } from "../UI"
+import { useModal } from "../UI/Modal"
+import portal from "../UI/portal"
 
 interface IModalContext {
   isOpen: boolean

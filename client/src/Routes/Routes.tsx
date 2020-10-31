@@ -1,7 +1,8 @@
 import React, { Suspense, lazy } from "react"
 import { Route, Switch } from "react-router-dom"
 import { useSettingsContext } from "../Context"
-import { RouteErrorBoundary, RouteLoader } from "../UI"
+import RouteErrorBoundary from "../UI/RouteErrorBoundary"
+import RouteLoader from "../UI/RouteLoader"
 import * as urls from "../urls"
 
 const Categories = lazy(() => import("./Categories"))

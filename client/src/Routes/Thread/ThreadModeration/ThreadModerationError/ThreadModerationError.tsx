@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { ModalCloseFooter, ModalErrorBody } from "../../../../UI"
+import { ModalCloseFooter, ModalErrorBody } from "../../../../UI/Modal"
 import { IMutationError } from "../../../../types"
 import ThreadRootError from "../../ThreadRootError"
 

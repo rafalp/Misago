@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
-
-import { RouteGraphQLError, RouteLoader } from "../../UI"
+import { RouteGraphQLError } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 import * as urls from "../../urls"
 import useCategoriesQuery from "./useCategoriesQuery"
 

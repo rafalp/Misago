@@ -1,12 +1,9 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import {
-  ButtonJustified,
-  CategoryIcon,
-  Icon,
-  Toolbar,
-  ToolbarItem,
-} from "../../../UI"
+import { ButtonJustified } from "../../../UI/Button"
+import CategoryIcon from "../../../UI/CategoryIcon"
+import Icon from "../../../UI/Icon"
+import { Toolbar, ToolbarItem } from "../../../UI/Toolbar"
 import { IActiveCategory } from "../Threads.types"
 import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 

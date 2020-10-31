@@ -2,7 +2,8 @@ import { useQuery } from "@apollo/react-hooks"
 import { ApolloError } from "apollo-client"
 import gql from "graphql-tag"
 import React from "react"
-import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../../UI"
+import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 
 const POLL_INTERVAL = 50 * 1000 // 50s
 

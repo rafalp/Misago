@@ -1,4 +1,4 @@
-import { useSelection } from "../../UI"
+import useSelection from "../../UI/useSelection"
 import { IThread } from "./Threads.types"
 
 const useThreadsSelection = (items?: Array<IThread>) =>

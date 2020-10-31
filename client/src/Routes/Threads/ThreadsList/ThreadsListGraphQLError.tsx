@@ -1,12 +1,9 @@
 import { Trans } from "@lingui/macro"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import {
-  CardError,
-  ErrorMessage,
-  GraphQLErrorMessage,
-  GraphQLErrorRenderer,
-} from "../../../UI"
+import { CardError } from "../../../UI/Card"
+import { ErrorMessage, GraphQLErrorMessage } from "../../../UI/Error"
+import GraphQLErrorRenderer from "../../../UI/GraphQLErrorRenderer"
 
 interface IThreadsListGraphQLErrorProps {
   error: ApolloError

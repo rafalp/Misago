@@ -1,6 +1,6 @@
 import { Plural } from "@lingui/macro"
 import React from "react"
-import { ButtonSecondary } from "../../../../UI"
+import { ButtonSecondary } from "../../../../UI/Button"
 
 interface IThreadsModerationSelectedThreadsButtonProps {
   threadsCount: number

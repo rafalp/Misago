@@ -1,5 +1,5 @@
 import React from "react"
-import { Card } from "../../../UI"
+import { Card } from "../../../UI/Card"
 
 interface IThreadsListCardProps {
   children: React.ReactNode

@@ -1,7 +1,9 @@
 import React from "react"
 import { Route, Switch } from "react-router-dom"
 import { useSettingsContext } from "../../Context"
-import { RouteErrorBoundary, RouteLoader, RouteNotFound } from "../../UI"
+import RouteErrorBoundary from "../../UI/RouteErrorBoundary"
+import { RouteNotFound } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 import * as urls from "../../urls"
 import {
   ThreadsCategoriesModal,

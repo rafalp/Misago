@@ -2,19 +2,12 @@ import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import {
-  CategorySelect,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  CategoryValidationError,
-  useSelectionErrors,
-} from "../../../../UI"
+import CategorySelect from "../../../../UI/CategorySelect"
+import { Field, FieldError, Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { CategoryValidationError } from "../../../../UI/ValidationError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"

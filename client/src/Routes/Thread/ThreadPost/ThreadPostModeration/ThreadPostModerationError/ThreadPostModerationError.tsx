@@ -1,6 +1,6 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { ModalCloseFooter, ModalErrorBody } from "../../../../../UI"
+import { ModalCloseFooter, ModalErrorBody } from "../../../../../UI/Modal"
 import { IMutationError } from "../../../../../types"
 import ThreadPostRootError from "../../ThreadPostRootError"
 import ThreadPostModerationErrorHeader from "./ThreadPostModerationErrorHeader"

@@ -1,5 +1,7 @@
 import React from "react"
-import { ModalBody, PostValidationError, Timestamp } from "../../../../UI"
+import { ModalBody } from "../../../../UI/Modal"
+import Timestamp from "../../../../UI/Timestamp"
+import { PostValidationError } from "../../../../UI/ValidationError"
 import RichText from "../../../../UI/RichText"
 import { IMutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"

@@ -1,5 +1,5 @@
 import React from "react"
-import { TidbitTimestamp, TidbitUser, Tidbits } from "../../../../UI"
+import { TidbitTimestamp, TidbitUser, Tidbits } from "../../../../UI/Tidbits"
 import * as urls from "../../../../urls"
 import { IThread } from "../../Threads.types"
 

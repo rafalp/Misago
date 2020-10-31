@@ -2,15 +2,10 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import {
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  useSelectionErrors,
-} from "../../../../UI"
+import { Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IPost, IThread } from "../../Thread.types"
 import ThreadPostsModerationError from "../ThreadPostsModerationError"
 import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"

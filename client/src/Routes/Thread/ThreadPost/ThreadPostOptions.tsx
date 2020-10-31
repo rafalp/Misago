@@ -1,6 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { ButtonSecondary, Dropdown, DropdownButton } from "../../../UI"
+import { ButtonSecondary } from "../../../UI/Button"
+import { Dropdown, DropdownButton } from "../../../UI/Dropdown"
 import { IModerationAction, IPost } from "../Thread.types"
 import ThreadPostPermalink from "./ThreadPostPermalink"
 

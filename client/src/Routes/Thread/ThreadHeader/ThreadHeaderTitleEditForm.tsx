@@ -2,16 +2,10 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
-import {
-  CardAlert,
-  CardBody,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  Input,
-  ThreadTitleValidationError,
-} from "../../../UI"
+import { CardAlert, CardBody } from "../../../UI/Card"
+import { Field, FieldError, Form, FormFooter } from "../../../UI/Form"
+import Input from "../../../UI/Input"
+import { ThreadTitleValidationError } from "../../../UI/ValidationError"
 import { IThread } from "../Thread.types"
 import ThreadRootError from "../ThreadRootError"
 import useEditThreadTitleMutation from "./useEditThreadTitleMutation"

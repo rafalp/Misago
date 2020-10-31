@@ -3,14 +3,9 @@ import { I18n } from "@lingui/react"
 import React from "react"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  CardAlert,
-  CardBody,
-  CardFooter,
-  Form,
-} from "../../../UI"
+import { ButtonPrimary, ButtonSecondary } from "../../../UI/Button"
+import { CardAlert, CardBody, CardFooter } from "../../../UI/Card"
+import { Form } from "../../../UI/Form"
 import { IPost } from "../Thread.types"
 import ThreadPostError from "./ThreadPostError"
 import ThreadPostLoader from "./ThreadPostLoader"

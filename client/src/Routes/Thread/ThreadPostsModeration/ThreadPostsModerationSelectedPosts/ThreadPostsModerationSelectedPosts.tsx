@@ -1,6 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { Field, FieldError, PostsValidationError } from "../../../../UI"
+import { Field, FieldError } from "../../../../UI/Form"
+import { PostsValidationError } from "../../../../UI/ValidationError"
 import { IMutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationSelectedPostsButton from "./ThreadPostsModerationSelectedPostsButton"

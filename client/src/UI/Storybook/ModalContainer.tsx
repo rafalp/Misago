@@ -1,5 +1,5 @@
 import React from "react"
-import { Modal, ModalDialog } from "../"
+import { Modal, ModalDialog } from "../Modal"
 import RootContainer from "./RootContainer"
 
 interface ModalContainerProps {

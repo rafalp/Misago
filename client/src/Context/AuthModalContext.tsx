@@ -1,5 +1,5 @@
 import React from "react"
-import { useModal } from "../UI"
+import { useModal } from "../UI/Modal"
 import { AuthModalMode } from "../types"
 
 export interface IAuthModalContext {
