@@ -10,7 +10,6 @@ import {
 import SectionLoader from "../../UI/SectionLoader"
 import * as urls from "../../urls"
 import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
-import ThreadCTA from "./ThreadCTA"
 import ThreadHeader from "./ThreadHeader"
 import { useThreadModeration } from "./ThreadModeration"
 import {
@@ -105,7 +104,6 @@ const ThreadPosts: React.FC = () => {
         </SectionLoader>
         <ThreadToolbarBottom {...toolbarProps} />
         <ThreadReply threadId={thread.id} />
-        <ThreadCTA thread={thread} />
       </ThreadReplyProvider>
       <ThreadPostsModeration
         moderation={moderation.posts}

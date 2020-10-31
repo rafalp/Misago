@@ -97,6 +97,13 @@ $posting-form-transition: transform 0.3s ease-out !default;
   margin-left: $posting-form-margin-between;
 }
 
+// Hide fullscreen toggle on small displays
+@include media-breakpoint-down(sm) {
+  .btn-posting-form-maximize {
+    display: none;
+  }
+}
+
 // Default body and footer
 .posting-form-body {
   padding: $posting-form-inner-padding;
@@ -133,9 +140,10 @@ $posting-form-transition: transform 0.3s ease-out !default;
     height: 100%;
   }
 
-  // Make body and collapsible fill all available vertical space
+  // Make body, collapsible and loader fill all available vertical space
   .posting-form-body,
-  .posting-form-collapsible {
+  .posting-form-collapsible,
+  .posting-form-loader {
     height: 100%;
     display: flex;
     flex-direction: column;

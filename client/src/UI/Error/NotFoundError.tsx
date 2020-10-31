@@ -4,8 +4,8 @@ import Error from "./Error"
 
 interface INotFoundErrorProps {
   className: string
-  header?: React.ReactNode | null
-  message?: React.ReactNode | null
+  header?: React.ReactNode
+  message?: React.ReactNode
 }
 
 const NotFoundError: React.FC<INotFoundErrorProps> = ({

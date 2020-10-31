@@ -4,22 +4,18 @@ import React from "react"
 import * as Yup from "yup"
 import { BodyScrollLockProvider } from "../../Context"
 import Editor from "../../Editor"
-import PostThreadCategoryInput from "../../Routes/PostThread/PostThreadCategoryInput"
 import { ButtonPrimary } from "../Button"
 import { Field, FieldError, Form } from "../Form"
-import Input from "../Input"
 import { categories } from "../Storybook"
-import {
-  CategoryValidationError,
-  ThreadTitleValidationError,
-  ValidationError,
-} from "../ValidationError"
+import { ValidationError } from "../ValidationError"
 import PostingForm from "./PostingForm"
 import PostingFormAlert from "./PostingFormAlert"
 import PostingFormBody from "./PostingFormBody"
 import PostingFormCollapsible from "./PostingFormCollapsible"
 import PostingFormDialog from "./PostingFormDialog"
+import PostingFormError from "./PostingFormError"
 import PostingFormHeader from "./PostingFormHeader"
+import PostingFormLoader from "./PostingFormLoader"
 
 export default {
   title: "UI/PostingForm",
@@ -37,12 +33,6 @@ const Boilerplate: React.FC = ({ children }) => {
   const [minimized, setMinimized] = React.useState(false)
 
   const PostingFormSchema = Yup.object().shape({
-    title: Yup.string()
-      .required("value_error.thread_title.missing")
-      .min(5, "value_error.any_str.min_length")
-      .max(100, "value_error.any_str.max_length")
-      .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
-    category: Yup.string().required("value_error.missing"),
     markup: Yup.string()
       .required("value_error.missing")
       .min(5, "value_error.any_str.min_length"),
@@ -93,47 +83,8 @@ const Boilerplate: React.FC = ({ children }) => {
   )
 }
 
-export const StartThreadForm = () => (
+export const Reply = () => (
   <Boilerplate>
-    <div className="row">
-      <div className="col-12 col-sm-6 col-md-7 mb-3">
-        <Field
-          label="Thread title"
-          name="title"
-          input={<Input placeholder="Thread title" responsive />}
-          error={(error, value) => (
-            <ThreadTitleValidationError
-              error={error}
-              value={value.trim().length}
-              min={5}
-              max={100}
-            >
-              {({ message }) => <FieldError>{message}</FieldError>}
-            </ThreadTitleValidationError>
-          )}
-          labelReaderOnly
-        />
-      </div>
-      <div className="col-12 col-sm-6 col-md-5 mb-3">
-        <Field
-          label="Thread category"
-          name="category"
-          input={
-            <PostThreadCategoryInput
-              choices={categories}
-              validChoices={categories.map((category) => category.id)}
-              responsive
-            />
-          }
-          error={(error, value) => (
-            <CategoryValidationError error={error}>
-              {({ message }) => <FieldError>{message}</FieldError>}
-            </CategoryValidationError>
-          )}
-          labelReaderOnly
-        />
-      </div>
-    </div>
     <Field
       label="Message contents"
       name="markup"
@@ -154,24 +105,17 @@ export const StartThreadForm = () => (
   </Boilerplate>
 )
 
-export const ReplyForm = () => (
+export const Loading = () => (
   <Boilerplate>
-    <Field
-      label="Message contents"
-      name="markup"
-      className="form-group-editor"
-      input={<Editor submit={<ButtonPrimary text="Submit" small />} />}
-      error={(error, value) => (
-        <ValidationError
-          error={error}
-          value={value.trim().length}
-          min={2}
-          max={200}
-        >
-          {({ message }) => <FieldError>{message}</FieldError>}
-        </ValidationError>
-      )}
-      labelReaderOnly
+    <PostingFormLoader />
+  </Boilerplate>
+)
+
+export const Error = () => (
+  <Boilerplate>
+    <PostingFormError
+      error="Reply form could not be loaded at this time."
+      detail="An unexpected error has occurred."
     />
   </Boilerplate>
 )

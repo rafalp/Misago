@@ -2,7 +2,6 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { FormContext as HookFormContext } from "react-hook-form"
 import { Redirect } from "react-router-dom"
-import Editor from "../../../Editor"
 import { useSettingsContext, useToastsContext } from "../../../Context"
 import { ButtonPrimary } from "../../../UI/Button"
 import { Field, FieldError, FormContext } from "../../../UI/Form"
@@ -12,12 +11,15 @@ import {
   PostingFormCollapsible,
   PostingFormDialog,
   PostingFormHeader,
+  PostingFormLoader,
 } from "../../../UI/PostingForm"
 import RootError from "../../../UI/RootError"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
 import { useThreadReplyContext } from "./ThreadReplyContext"
 import usePostReplyMutation from "./usePostReplyMutation"
+
+const Editor = React.lazy(() => import("../../../Editor"))
 
 interface IThreadReplyFormProps {
   threadId: string
@@ -112,42 +114,46 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
                     <PostingFormAlert>{message}</PostingFormAlert>
                   )}
                 </RootError>
-                <Field
-                  label={<Trans id="posting.message">Message contents</Trans>}
-                  name="markup"
-                  className="form-group-editor"
-                  input={
-                    <Editor
-                      submit={
-                        <ButtonPrimary
-                          text={
-                            isEditing ? (
-                              <Trans id="posting.submit_edit">
-                                Save changes
-                              </Trans>
-                            ) : (
-                              <Trans id="posting.submit_reply">
-                                Post reply
-                              </Trans>
-                            )
-                          }
-                          loading={loading}
-                          small
-                        />
-                      }
-                    />
-                  }
-                  error={(error, value) => (
-                    <ValidationError
-                      error={error}
-                      value={value.trim().length}
-                      min={postMinLength}
-                    >
-                      {({ message }) => <FieldError>{message}</FieldError>}
-                    </ValidationError>
-                  )}
-                  labelReaderOnly
-                />
+                <React.Suspense fallback={<PostingFormLoader />}>
+                  <Field
+                    label={
+                      <Trans id="posting.message">Message contents</Trans>
+                    }
+                    name="markup"
+                    className="form-group-editor"
+                    input={
+                      <Editor
+                        submit={
+                          <ButtonPrimary
+                            text={
+                              isEditing ? (
+                                <Trans id="posting.submit_edit">
+                                  Save changes
+                                </Trans>
+                              ) : (
+                                <Trans id="posting.submit_reply">
+                                  Post reply
+                                </Trans>
+                              )
+                            }
+                            loading={loading}
+                            small
+                          />
+                        }
+                      />
+                    }
+                    error={(error, value) => (
+                      <ValidationError
+                        error={error}
+                        value={value.trim().length}
+                        min={postMinLength}
+                      >
+                        {({ message }) => <FieldError>{message}</FieldError>}
+                      </ValidationError>
+                    )}
+                    labelReaderOnly
+                  />
+                </React.Suspense>
               </PostingFormCollapsible>
             </PostingFormBody>
           </form>

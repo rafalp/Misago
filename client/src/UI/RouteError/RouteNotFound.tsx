@@ -6,8 +6,8 @@ import WindowTitle from "../WindowTitle"
 
 interface IRouteNotFoundProps {
   className?: string | null
-  header?: React.ReactNode | null
-  message?: React.ReactNode | null
+  header?: React.ReactNode
+  message?: React.ReactNode
 }
 
 const RouteNotFound: React.FC<IRouteNotFoundProps> = ({

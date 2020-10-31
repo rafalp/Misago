@@ -6,6 +6,7 @@ import { useFieldContext } from "../UI/Form"
 import EditorBody from "./EditorBody"
 import EditorButton from "./EditorButton"
 import EditorPreview from "./EditorPreview"
+import EditorPreviewButton from "./EditorPreviewButton"
 import EditorToolbar from "./EditorToolbar"
 
 interface IEditorProps {
@@ -16,14 +17,16 @@ interface IEditorProps {
 
 const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   const context = useFieldContext()
-  const hookContext = useFormContext() || {}
+  const hookContext = useFormContext()
   const [preview, setPreview] = React.useState<string | null>(null)
 
+  const finName = name || context.name
+
   if (!hookContext) return null
-  if (!name && !context.name) return null
+  if (!finName) return null
 
   const openPreview = () => {
-    const value = hookContext.getValues(name || context.name || "") || ""
+    const value = hookContext.getValues(finName) || ""
     if (value.trim().length > 0) {
       setPreview(value.trim())
     }
@@ -58,12 +61,11 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
                 <Trans id="editor.write">Write</Trans>
               </EditorButton>
             ) : (
-              <EditorButton
+              <EditorPreviewButton
                 disabled={disabled || context.disabled}
+                name={finName}
                 onClick={openPreview}
-              >
-                <Trans id="editor.preview">Preview</Trans>
-              </EditorButton>
+              />
             )}
             {submit}
           </div>

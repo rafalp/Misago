@@ -19,6 +19,7 @@ const PostingFormHeader: React.FC<IPostingFormHeaderProps> = ({
   <div className="posting-form-header">
     <h5 className="posting-form-title">{children}</h5>
     <PostingFormHeaderButton
+      className="btn-posting-form-minimize"
       icon={minimized ? "far fa-window-maximize" : "fas fa-window-minimize"}
       onClick={() => {
         setFullscreen(false)
@@ -26,6 +27,7 @@ const PostingFormHeader: React.FC<IPostingFormHeaderProps> = ({
       }}
     />
     <PostingFormHeaderButton
+      className="btn-posting-form-maximize"
       icon={fullscreen && !minimized ? "fas fa-compress" : "fas fa-expand"}
       onClick={() => {
         setMinimized(false)

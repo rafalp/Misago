@@ -130,6 +130,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
                     placeholder={i18n._(
                       t("posting.thread_title")`Thread title`
                     )}
+                    responsive
                   />
                 )}
               </I18n>
@@ -153,6 +154,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
               <PostThreadCategoryInput
                 choices={categories}
                 validChoices={validCategories}
+                responsive
               />
             }
             error={(error) => (

@@ -2,10 +2,10 @@ import classnames from "classnames"
 import React from "react"
 
 interface IModalMessageBodyProps {
-  actions?: React.ReactNode | null
+  actions?: React.ReactNode
   className?: string | null
-  header: React.ReactNode | null
-  message?: React.ReactNode | null
+  header: React.ReactNode
+  message?: React.ReactNode
 }
 
 const ModalMessageBody: React.FC<IModalMessageBodyProps> = ({
