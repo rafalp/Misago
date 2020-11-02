@@ -1,5 +1,5 @@
 import json
-from ..markdown import markdown
+from .markdown import markdown
 from ..types import RichText
 from ..utils.strings import get_random_string
 
@@ -10,7 +10,7 @@ def parse_markup(markup: str) -> RichText:
         clean_text = block.strip()
         if clean_text:
             richtext.append(
-                {"id": get_random_string(6), "type": "p", "text": block.strip()}
+                {"id": get_random_string(6), "type": "p", "text": markdown(block)}
             )
 
     return richtext
