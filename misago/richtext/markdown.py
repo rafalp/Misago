@@ -1,6 +1,13 @@
 import mistune
 
-PLUGINS = ['url', 'strikethrough', 'footnotes', 'table', 'task_lists']
+PLUGINS = [
+    'url',
+    'strikethrough',
+    'footnotes',
+    'table',
+    'task_lists',
+    'simple_linebreak',
+]
 
 
 def asr_markdown(text, escape=True):
