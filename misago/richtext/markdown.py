@@ -1,11 +1,13 @@
 import mistune
 
-
-class Renderer(mistune.HTMLRenderer):
-    pass
+PLUGINS = ['url', 'strikethrough', 'footnotes', 'table', 'task_lists']
 
 
-def markdown(text, escape=True):
-    plugins = ['url', 'strikethrough', 'footnotes', 'table', 'task_lists']
-    md = mistune.create_markdown(escape, Renderer(), plugins)
+def asr_markdown(text, escape=True):
+    md = mistune.create_markdown(escape, mistune.AstRenderer(), PLUGINS)
+    return md(text)
+
+
+def html_markdown(text, escape=True):
+    md = mistune.create_markdown(escape, mistune.HTMLRenderer(), PLUGINS)
     return md(text)

@@ -1,29 +1,10 @@
-import json
-from .markdown import markdown
+from .markdown import asr_markdown, html_markdown
 from ..types import RichText
-from ..utils.strings import get_random_string
 
 
 def parse_markup(markup: str) -> RichText:
-    richtext: RichText = []
-    for block in markup.splitlines():
-        clean_text = block.strip()
-        if clean_text:
-            richtext.append(
-                {"id": get_random_string(6), "type": "p", "text": markdown(block)}
-            )
-
-    return richtext
+    return asr_markdown(markup)
 
 
-def render_richtext_as_html(richtext: RichText) -> str:
-    html_list = []
-    for row in richtext:
-        if row["type"] == "p":
-            html_list.append(markdown(row['text']))
-
-    return ''.join(html_list)
-
-
-def make_json(markup: str) -> str:
-    return json.dumps(markup)
+def markup_as_html(markup: str) -> str:
+    return html_markdown(markup)
