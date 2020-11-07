@@ -21,11 +21,13 @@ import usePostReplyMutation from "./usePostReplyMutation"
 
 const Editor = React.lazy(() => import("../../../Editor"))
 
-interface IThreadReplyFormProps {
+interface IThreadReplyNewFormProps {
   threadId: string
 }
 
-const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
+const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
+  threadId,
+}) => {
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
   const context = useThreadReplyContext()
@@ -44,16 +46,7 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
 
   if (!context) return null
 
-  const {
-    form,
-    fullscreen,
-    minimized,
-    mode,
-    setFullscreen,
-    setMinimized,
-  } = context
-
-  const isEditing = mode === "edit"
+  const { form, fullscreen, minimized, setFullscreen, setMinimized } = context
 
   return (
     <HookFormContext {...form}>
@@ -99,11 +92,7 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
                 setFullscreen={setFullscreen}
                 setMinimized={setMinimized}
               >
-                {isEditing ? (
-                  <Trans id="posting.edit">Edit post</Trans>
-                ) : (
-                  <Trans id="posting.reply">Reply thread</Trans>
-                )}
+                <Trans id="posting.reply">Reply thread</Trans>
               </PostingFormHeader>
               <PostingFormCollapsible>
                 <RootError
@@ -126,15 +115,9 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
                         submit={
                           <ButtonPrimary
                             text={
-                              isEditing ? (
-                                <Trans id="posting.submit_edit">
-                                  Save changes
-                                </Trans>
-                              ) : (
-                                <Trans id="posting.submit_reply">
-                                  Post reply
-                                </Trans>
-                              )
+                              <Trans id="posting.submit_reply">
+                                Post reply
+                              </Trans>
                             }
                             loading={loading}
                             small
@@ -163,4 +146,4 @@ const ThreadReplyForm: React.FC<IThreadReplyFormProps> = ({ threadId }) => {
   )
 }
 
-export default ThreadReplyForm
+export default ThreadReplyNewForm

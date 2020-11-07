@@ -14,10 +14,12 @@
 .route-auth-error {
   padding: 4rem 0;
 
+  font-size: $font-size-lg;
+
   p.lead {
     margin: 0;
 
-    font-size: $font-size-base * 1.5;
+    font-weight: bold;
   }
 }
 
@@ -44,7 +46,8 @@
   p.lead {
     margin: 0;
 
-    font-size: $font-size-lg;
+    font-size: $font-size-base;
+    font-weight: bold;
   }
 }
 
@@ -55,7 +58,7 @@
 .modal-message p + p,
 .posting-form-error p + p {
   margin: 0;
-  margin-top: $spacer;
+  margin-top: $spacer / 2;
 }
 
 /* Threads and posts errors list */
