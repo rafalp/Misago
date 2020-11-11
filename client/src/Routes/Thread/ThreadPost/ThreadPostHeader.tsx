@@ -16,7 +16,6 @@ interface IThreadPostHeaderProps {
   threadSlug: string
   page?: number
   isSelected?: boolean
-  editPost: () => void
   toggleSelection?: ((id: string) => void) | null
 }
 
@@ -27,7 +26,6 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
   threadSlug,
   page,
   isSelected,
-  editPost,
   toggleSelection,
 }) => {
   const moderation = useThreadPostModeration(threadId, post, page)
@@ -100,7 +98,6 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
             threadId={threadId}
             threadSlug={threadSlug}
             moderation={moderation}
-            editPost={editPost}
           />
         </div>
         {toggleSelection && (

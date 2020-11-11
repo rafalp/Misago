@@ -14,7 +14,7 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
   const context = useThreadReplyContext()
   const [height, setHeight] = React.useState(0)
   const element = React.useRef<HTMLDivElement | null>(null)
-  const { isActive, fullscreen, minimized, mode } = context || {}
+  const { isActive, fullscreen, minimized, mode, post } = context || {}
 
   React.useLayoutEffect(() => {
     const interval = window.setInterval(() => {
@@ -25,6 +25,8 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
 
     return () => window.clearInterval(interval)
   }, [setHeight, isActive, element])
+
+  if (!context) return null
 
   return (
     <>
@@ -38,10 +40,10 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
         show={isActive}
       >
         <ThreadReplyErrorBoundary>
-          {mode === "edit" ? (
-            <ThreadReplyEditForm />
+          {mode === "edit" && post ? (
+            <ThreadReplyEditForm context={context} post={post} />
           ) : (
-            <ThreadReplyNewForm threadId={threadId} />
+            <ThreadReplyNewForm context={context} threadId={threadId} />
           )}
         </ThreadReplyErrorBoundary>
       </PostingForm>

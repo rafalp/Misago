@@ -5,7 +5,7 @@ import * as Yup from "yup"
 import { BodyScrollLockProvider } from "../../Context"
 import Editor from "../../Editor"
 import { ButtonPrimary } from "../Button"
-import { Field, FieldError, Form } from "../Form"
+import { Field, FieldErrorFloating, Form } from "../Form"
 import { categories } from "../Storybook"
 import { ValidationError } from "../ValidationError"
 import PostingForm from "./PostingForm"
@@ -88,7 +88,7 @@ export const Reply = () => (
     <Field
       label="Message contents"
       name="markup"
-      className="form-group-editor"
+      className="form-group-editor form-group-with-floating-error"
       input={<Editor submit={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
@@ -97,7 +97,9 @@ export const Reply = () => (
           min={2}
           max={200}
         >
-          {({ message }) => <FieldError>{message}</FieldError>}
+          {({ type, message }) => (
+            <FieldErrorFloating type={type}>{message}</FieldErrorFloating>
+          )}
         </ValidationError>
       )}
       labelReaderOnly

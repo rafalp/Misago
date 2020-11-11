@@ -8,7 +8,7 @@ import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
 import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
-import { useThreadReplyContext } from "./ThreadReplyContext"
+import { IThreadReplyContext } from "./ThreadReplyContext"
 import ThreadReplyDialog from "./ThreadReplyDialog"
 import ThreadReplyRootError from "./ThreadReplyRootError"
 import usePostReplyMutation from "./usePostReplyMutation"
@@ -16,15 +16,18 @@ import usePostReplyMutation from "./usePostReplyMutation"
 const Editor = React.lazy(() => import("../../../Editor"))
 
 interface IThreadReplyNewFormProps {
+  context: IThreadReplyContext
   threadId: string
 }
 
 const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
+  context,
   threadId,
 }) => {
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
-  const context = useThreadReplyContext()
+  const { form } = context
+
   const [
     postReply,
     { data, loading, error: graphqlError },
@@ -37,10 +40,6 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
       />
     )
   }
-
-  if (!context) return null
-
-  const { form } = context
 
   return (
     <ThreadReplyDialog>
@@ -89,7 +88,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
               <Field
                 label={<Trans id="posting.message">Message contents</Trans>}
                 name="markup"
-                className="form-group-editor form-control-with-floating-error"
+                className="form-group-editor form-group-with-floating-error"
                 input={
                   <Editor
                     submit={

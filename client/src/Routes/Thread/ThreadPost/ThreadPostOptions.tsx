@@ -3,6 +3,7 @@ import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import { Dropdown, DropdownButton } from "../../../UI/Dropdown"
 import { IModerationAction, IPost } from "../Thread.types"
+import { useThreadReplyContext } from "../ThreadReply"
 import ThreadPostPermalink from "./ThreadPostPermalink"
 
 interface IThreadPostOptionsProps {
@@ -13,7 +14,6 @@ interface IThreadPostOptionsProps {
   moderation: {
     actions: Array<IModerationAction>
   } | null
-  editPost: () => void
 }
 
 const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
@@ -22,44 +22,49 @@ const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
   threadId,
   threadSlug,
   moderation,
-  editPost,
-}) => (
-  <Dropdown
-    toggle={({ ref, toggle }) => (
-      <ButtonSecondary
-        elementRef={ref}
-        icon="fas fa-ellipsis-h"
-        small
-        onClick={toggle}
-      />
-    )}
-    menu={() => (
-      <>
-        <ThreadPostPermalink
-          post={post}
-          threadId={threadId}
-          threadSlug={threadSlug}
+}) => {
+  const context = useThreadReplyContext()
+
+  return (
+    <Dropdown
+      toggle={({ ref, toggle }) => (
+        <ButtonSecondary
+          elementRef={ref}
+          icon="fas fa-ellipsis-h"
+          small
+          onClick={toggle}
         />
-        {acl.edit && (
-          <DropdownButton
-            text={<Trans id="post.edit">Edit</Trans>}
-            icon="fas fa-edit"
-            onClick={editPost}
+      )}
+      menu={() => (
+        <>
+          <ThreadPostPermalink
+            post={post}
+            threadId={threadId}
+            threadSlug={threadSlug}
           />
-        )}
-        {moderation &&
-          moderation.actions.map((action) => (
+          {acl.edit && (
             <DropdownButton
-              key={action.icon}
-              text={action.name}
-              icon={action.icon}
-              disabled={action.disabled}
-              onClick={action.action}
+              text={<Trans id="post.edit">Edit</Trans>}
+              icon="fas fa-edit"
+              onClick={() => {
+                if (context) context.editReply(post)
+              }}
             />
-          ))}
-      </>
-    )}
-  />
-)
+          )}
+          {moderation &&
+            moderation.actions.map((action) => (
+              <DropdownButton
+                key={action.icon}
+                text={action.name}
+                icon={action.icon}
+                disabled={action.disabled}
+                onClick={action.action}
+              />
+            ))}
+        </>
+      )}
+    />
+  )
+}
 
 export default ThreadPostOptions
