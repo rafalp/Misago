@@ -28,118 +28,136 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
   const { cancelReply, form } = context
-  const { setValue } = form
 
   const query = usePostMarkupQuery({ id: post.id })
   const mutation = useEditPostMutation(post)
 
   const defaultValue = query.data?.post?.markup || ""
-  React.useEffect(() => {
-    if (defaultValue.length) {
-      console.log("SET VALUE!", defaultValue)
-      setValue("markup", defaultValue)
-    }
-  }, [defaultValue])
+  React.useEffect(
+    () => {
+      if (defaultValue.length) {
+        form.setValue("markup", defaultValue)
+      }
+    },
+    // eslint-disable-next-line
+    [defaultValue]
+  )
+
+  if (query.loading) {
+    return (
+      <ThreadReplyDialog>
+        <React.Suspense fallback={<PostingFormLoader />}>
+          <PostingFormLoader />
+          <Editor />
+        </React.Suspense>
+      </ThreadReplyDialog>
+    )
+  }
+
+  if (query.error) {
+    return (
+      <ThreadReplyDialog>
+        <div>ERROR</div>
+      </ThreadReplyDialog>
+    )
+  }
+
+  if (!query.data?.post) {
+    return (
+      <ThreadReplyDialog>
+        <div>POST NOT FOUND ERROR</div>
+      </ThreadReplyDialog>
+    )
+  }
 
   return (
     <ThreadReplyDialog>
       <React.Suspense fallback={<PostingFormLoader />}>
-        {query.loading && (
-          <>
-            <PostingFormLoader />
-            <Editor />
-          </>
-        )}
-        {query.error && <div>ERROR</div>}
-        {query.data?.post ? (
-          <HookFormContext {...form}>
-            <FormContext.Provider
-              value={{ disabled: mutation.loading, id: "thread_post_edit" }}
+        <HookFormContext {...form}>
+          <FormContext.Provider
+            value={{ disabled: mutation.loading, id: "thread_post_edit" }}
+          >
+            <form
+              onSubmit={form.handleSubmit(async (data, event) => {
+                if (mutation.loading) {
+                  event?.preventDefault()
+                  return
+                }
+
+                form.clearError()
+
+                try {
+                  const result = await mutation.editPost(data.markup)
+                  const { errors } = result.data?.editPost || {}
+
+                  if (errors) {
+                    errors?.forEach(({ location, type, message }) => {
+                      const field = location.join(".") as "markup"
+                      form.setError(field, type, message)
+                    })
+                  } else {
+                    showToast(
+                      <Trans id="edit_reply.message">
+                        Reply has been edited.
+                      </Trans>
+                    )
+
+                    cancelReply()
+                  }
+                } catch (error) {
+                  // do nothing when editPost throws
+                  return
+                }
+              })}
             >
-              <form
-                onSubmit={form.handleSubmit(async (data, event) => {
-                  if (mutation.loading) {
-                    event?.preventDefault()
-                    return
-                  }
-
-                  form.clearError()
-
-                  try {
-                    const result = await mutation.editPost(data.markup)
-                    const { errors } = result.data?.editPost || {}
-
-                    if (errors) {
-                      errors?.forEach(({ location, type, message }) => {
-                        const field = location.join(".") as "markup"
-                        form.setError(field, type, message)
-                      })
-                    } else {
-                      showToast(
-                        <Trans id="edit_reply.message">
-                          Reply has been edited.
-                        </Trans>
-                      )
-
-                      cancelReply()
-                    }
-                  } catch (error) {
-                    // do nothing when editPost throws
-                    return
-                  }
-                })}
+              <ThreadReplyRootError
+                graphqlError={mutation.error}
+                dataErrors={mutation.data?.editPost.errors}
               >
-                <ThreadReplyRootError
-                  graphqlError={mutation.error}
-                  dataErrors={mutation.data?.editPost.errors}
-                >
-                  {({ message }) => (
-                    <PostingFormAlert>{message}</PostingFormAlert>
-                  )}
-                </ThreadReplyRootError>
-                <Field
-                  label={<Trans id="posting.message">Message contents</Trans>}
-                  name="markup"
-                  className="form-group-editor form-group-with-floating-error"
-                  input={
-                    <Editor
-                      submit={
-                        <ButtonPrimary
-                          text={
-                            <Trans id="posting.submit_changes">
-                              Save changes
-                            </Trans>
-                          }
-                          loading={mutation.loading}
-                          small
-                        />
-                      }
-                    />
-                  }
-                  error={(error, value) => (
-                    <ValidationError
-                      error={error}
-                      value={value.trim().length}
-                      min={postMinLength}
-                    >
-                      {({ type, message }) => (
-                        <FieldErrorFloating
-                          key={context.form.formState.submitCount}
-                          type={type}
-                        >
-                          {message}
-                        </FieldErrorFloating>
-                      )}
-                    </ValidationError>
-                  )}
-                  labelReaderOnly
-                />
-              </form>
-            </FormContext.Provider>
-          </HookFormContext>
-        ) : (
-          <p>POST NOT FOUND</p>
-        )}
+                {({ message }) => (
+                  <PostingFormAlert>{message}</PostingFormAlert>
+                )}
+              </ThreadReplyRootError>
+              <Field
+                label={<Trans id="posting.message">Message contents</Trans>}
+                name="markup"
+                className="form-group-editor form-group-with-floating-error"
+                input={
+                  <Editor
+                    submit={
+                      <ButtonPrimary
+                        text={
+                          <Trans id="posting.submit_changes">
+                            Save changes
+                          </Trans>
+                        }
+                        loading={mutation.loading}
+                        small
+                      />
+                    }
+                  />
+                }
+                error={(error, value) => (
+                  <ValidationError
+                    error={error}
+                    value={value.trim().length}
+                    min={postMinLength}
+                  >
+                    {({ type, message }) => (
+                      <FieldErrorFloating
+                        key={context.form.formState.submitCount}
+                        type={type}
+                      >
+                        {message}
+                      </FieldErrorFloating>
+                    )}
+                  </ValidationError>
+                )}
+                labelReaderOnly
+              />
+            </form>
+          </FormContext.Provider>
+        </HookFormContext>
       </React.Suspense>
     </ThreadReplyDialog>
   )
