@@ -55,7 +55,8 @@
   p.lead {
     margin: 0;
 
-    font-size: $font-size-lg;
+    font-size: $font-size-base;
+    font-weight: bold;
   }
 
   p + p {

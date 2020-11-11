@@ -97,6 +97,17 @@ $posting-form-transition: transform 0.3s ease-out !default;
   margin-left: $posting-form-margin-between;
 }
 
+// Freeze posting form's editor height
+.posting-form {
+  .form-editor-preview,
+  .form-editor-textarea {
+    height: 30vh;
+    max-height: 250px;
+    overflow-y: auto;
+    resize: none;
+  }
+}
+
 // Hide fullscreen toggle on small displays
 @include media-breakpoint-down(sm) {
   .btn-posting-form-maximize {
@@ -161,6 +172,7 @@ $posting-form-transition: transform 0.3s ease-out !default;
     .form-editor-preview,
     .form-editor-textarea {
       height: 100%;
+      max-height: 100%;
       overflow-y: auto;
     }
 

@@ -1,5 +1,7 @@
 import React from "react"
 import { FormContextValues, useForm } from "react-hook-form"
+import * as Yup from "yup"
+import { useSettingsContext } from "../../../Context"
 
 interface IThreadReplyFormValues {
   markup: string
@@ -28,13 +30,21 @@ interface IThreadReplyProviderProps {
 }
 
 const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
+  const { postMinLength } = useSettingsContext()
   const [isActive, setActive] = React.useState(props.active || false)
   const [mode, setMode] = React.useState(props.mode || "")
   const [fullscreen, setFullscreen] = React.useState(false)
   const [minimized, setMinimized] = React.useState(false)
 
+  const ThreadReplySchema = Yup.object().shape({
+    markup: Yup.string()
+      .required("value_error.missing")
+      .min(postMinLength, "value_error.any_str.min_length"),
+  })
+
   const form = useForm<IThreadReplyFormValues>({
     defaultValues: { markup: "" },
+    validationSchema: ThreadReplySchema,
   })
 
   const startReply = () => {

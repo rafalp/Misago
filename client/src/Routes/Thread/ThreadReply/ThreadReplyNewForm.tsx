@@ -4,19 +4,13 @@ import { FormContext as HookFormContext } from "react-hook-form"
 import { Redirect } from "react-router-dom"
 import { useSettingsContext, useToastsContext } from "../../../Context"
 import { ButtonPrimary } from "../../../UI/Button"
-import { Field, FieldError, FormContext } from "../../../UI/Form"
-import {
-  PostingFormAlert,
-  PostingFormBody,
-  PostingFormCollapsible,
-  PostingFormDialog,
-  PostingFormHeader,
-  PostingFormLoader,
-} from "../../../UI/PostingForm"
-import RootError from "../../../UI/RootError"
+import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
+import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
 import { useThreadReplyContext } from "./ThreadReplyContext"
+import ThreadReplyDialog from "./ThreadReplyDialog"
+import ThreadReplyRootError from "./ThreadReplyRootError"
 import usePostReplyMutation from "./usePostReplyMutation"
 
 const Editor = React.lazy(() => import("../../../Editor"))
@@ -46,14 +40,14 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
 
   if (!context) return null
 
-  const { form, fullscreen, minimized, setFullscreen, setMinimized } = context
+  const { form } = context
 
   return (
-    <HookFormContext {...form}>
-      <FormContext.Provider
-        value={{ disabled: loading, id: "thread_post_reply" }}
-      >
-        <PostingFormDialog>
+    <ThreadReplyDialog>
+      <HookFormContext {...form}>
+        <FormContext.Provider
+          value={{ disabled: loading, id: "thread_post_reply" }}
+        >
           <form
             onSubmit={form.handleSubmit(async (data, event) => {
               if (loading) {
@@ -85,64 +79,53 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
               }
             })}
           >
-            <PostingFormBody>
-              <PostingFormHeader
-                fullscreen={fullscreen}
-                minimized={minimized}
-                setFullscreen={setFullscreen}
-                setMinimized={setMinimized}
-              >
-                <Trans id="posting.reply">Reply thread</Trans>
-              </PostingFormHeader>
-              <PostingFormCollapsible>
-                <RootError
-                  graphqlError={graphqlError}
-                  dataErrors={data?.postReply.errors}
-                >
-                  {({ message }) => (
-                    <PostingFormAlert>{message}</PostingFormAlert>
-                  )}
-                </RootError>
-                <React.Suspense fallback={<PostingFormLoader />}>
-                  <Field
-                    label={
-                      <Trans id="posting.message">Message contents</Trans>
-                    }
-                    name="markup"
-                    className="form-group-editor"
-                    input={
-                      <Editor
-                        submit={
-                          <ButtonPrimary
-                            text={
-                              <Trans id="posting.submit_reply">
-                                Post reply
-                              </Trans>
-                            }
-                            loading={loading}
-                            small
-                          />
+            <ThreadReplyRootError
+              graphqlError={graphqlError}
+              dataErrors={data?.postReply.errors}
+            >
+              {({ message }) => <PostingFormAlert>{message}</PostingFormAlert>}
+            </ThreadReplyRootError>
+            <React.Suspense fallback={<PostingFormLoader />}>
+              <Field
+                label={<Trans id="posting.message">Message contents</Trans>}
+                name="markup"
+                className="form-group-editor form-control-with-floating-error"
+                input={
+                  <Editor
+                    submit={
+                      <ButtonPrimary
+                        text={
+                          <Trans id="posting.submit_reply">Post reply</Trans>
                         }
+                        loading={loading}
+                        small
                       />
                     }
-                    error={(error, value) => (
-                      <ValidationError
-                        error={error}
-                        value={value.trim().length}
-                        min={postMinLength}
-                      >
-                        {({ message }) => <FieldError>{message}</FieldError>}
-                      </ValidationError>
-                    )}
-                    labelReaderOnly
                   />
-                </React.Suspense>
-              </PostingFormCollapsible>
-            </PostingFormBody>
+                }
+                error={(error, value) => (
+                  <ValidationError
+                    error={error}
+                    value={value.trim().length}
+                    min={postMinLength}
+                  >
+                    {({ type, message }) => (
+                      <FieldErrorFloating
+                        key={context.form.formState.submitCount}
+                        type={type}
+                      >
+                        {message}
+                      </FieldErrorFloating>
+                    )}
+                  </ValidationError>
+                )}
+                labelReaderOnly
+              />
+            </React.Suspense>
           </form>
-        </PostingFormDialog>
-      </FormContext.Provider>
-    </HookFormContext>
+        </FormContext.Provider>
+      </HookFormContext>
+    </ThreadReplyDialog>
   )
 }
 

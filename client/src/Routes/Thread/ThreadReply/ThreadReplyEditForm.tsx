@@ -7,6 +7,7 @@ import {
   PostingFormHeader,
 } from "../../../UI/PostingForm"
 import { useThreadReplyContext } from "./ThreadReplyContext"
+import ThreadReplyDialog from "./ThreadReplyDialog"
 
 const Editor = React.lazy(() => import("../../../Editor"))
 
@@ -21,24 +22,10 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
 
   if (!context) return null
 
-  const { fullscreen, minimized, setFullscreen, setMinimized } = context
-
   return (
-    <PostingFormDialog>
-      <PostingFormBody>
-        <PostingFormHeader
-          fullscreen={fullscreen}
-          minimized={minimized}
-          setFullscreen={setFullscreen}
-          setMinimized={setMinimized}
-        >
-          <Trans id="posting.edit">Edit post</Trans>
-        </PostingFormHeader>
-        <PostingFormCollapsible>
-          <Editor />
-        </PostingFormCollapsible>
-      </PostingFormBody>
-    </PostingFormDialog>
+    <ThreadReplyDialog>
+      <Editor />
+    </ThreadReplyDialog>
   )
 }
 

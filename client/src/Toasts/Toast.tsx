@@ -56,9 +56,7 @@ const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
               className="ml-2 close"
               data-dismiss="toast"
               aria-label={i18n._(t("close")`Close`)}
-              onClick={() => {
-                setState(ToastState.HIDE)
-              }}
+              onClick={() => setState(ToastState.HIDE)}
             >
               <span aria-hidden="true">&times;</span>
             </button>
