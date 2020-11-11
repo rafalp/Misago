@@ -23,7 +23,7 @@ $posting-form-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
 $posting-form-header-padding-y: 1rem !default;
 $posting-form-header-padding-x: 1rem !default;
 $posting-form-header-padding: $posting-form-header-padding-y
-  $posting-form-header-padding-x !default; // Keep this for backwards compatibility
+  $posting-form-header-padding-x !default;
 
 $posting-form-transition: transform 0.3s ease-out !default;
 

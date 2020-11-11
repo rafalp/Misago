@@ -144,33 +144,48 @@
   }
 }
 
-// Form control with floating error
+// Form control with dismissible floating error
 .form-control-with-floating-error {
   position: relative;
 }
 
+// Floating error
+$floating-error-font-size: $font-size-sm !default;
+$floating-error-bg: $form-feedback-invalid-color !default;
+$floating-error-color: #fff !default;
+
+$floating-error-offset: 6px !default;
+
+$floating-error-border-radius: $border-radius-sm !default;
+$floating-error-padding-y: 0.25rem !default;
+$floating-error-padding-x: 0.5rem !default;
+$floating-error-padding: $floating-error-padding-y $floating-error-padding-x !default;
+$floating-error-cancel-offset: 2px !default;
+
 .invalid-feedback-floating {
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: $floating-error-offset;
+  right: $floating-error-offset;
+  margin-left: $floating-error-offset;
 
   display: none;
 
-  background-color: $form-feedback-invalid-color;
-  border-radius: $border-radius-sm;
-  color: #fff;
-  padding: .25rem .5rem;
+  font-size: $floating-error-font-size;
 
-  &.visible {
+  background-color: $floating-error-bg;
+  border-radius: $floating-error-border-radius;
+  color: $floating-error-color;
+  padding: $floating-error-padding;
+
+  &.show {
     display: flex;
     align-items: center;
   }
 
   .close {
-    padding: 0;
+    position: relative;
+    bottom: $floating-error-cancel-offset;
 
-    background: transparent;
-    border: none;
-    color: #fff;
+    color: $floating-error-color;
   }
 }

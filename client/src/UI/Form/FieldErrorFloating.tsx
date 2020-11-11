@@ -9,16 +9,17 @@ interface IFieldErrorFloatingProps {
 }
 
 const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
-  type, children,
+  type,
+  children,
 }) => {
-  const [visible, setVisible] = React.useState(true)
+  const [show, setShow] = React.useState(true)
 
   React.useEffect(() => {
-    setVisible(true)
-  }, [type, setVisible])
+    setShow(true)
+  }, [type, setShow])
 
   return (
-    <div className={classnames("invalid-feedback-floating", { visible })}>
+    <div className={classnames("invalid-feedback-floating", { show })}>
       <div>{children}</div>
       <I18n>
         {({ i18n }) => (
@@ -26,7 +27,7 @@ const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
             type="button"
             className="ml-2 close"
             aria-label={i18n._(t("close")`Close`)}
-            onClick={() => setVisible(false)}
+            onClick={() => setShow(false)}
           >
             <span aria-hidden="true">&times;</span>
           </button>
