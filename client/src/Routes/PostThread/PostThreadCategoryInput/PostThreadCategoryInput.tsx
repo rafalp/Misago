@@ -39,7 +39,7 @@ const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
         choices={choices}
         validChoices={validChoices}
         setValue={(value: string) => {
-          if (name) setValue(name, value, true)
+          if (name) setValue(name, value)
         }}
       />
     )

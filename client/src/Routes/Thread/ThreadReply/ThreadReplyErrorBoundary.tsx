@@ -1,5 +1,5 @@
 import React from "react"
-import ThreadReplyErrorMessage from "./ThreadReplyErrorMessage"
+import ThreadReplyError from "./ThreadReplyError"
 
 interface IThreadReplyErrorBoundaryProps {
   children: React.ReactNode
@@ -15,7 +15,7 @@ class ThreadReplyErrorBoundary extends React.Component<
   }
 
   render() {
-    if (this.state.hasError) return <ThreadReplyErrorMessage />
+    if (this.state.hasError) return <ThreadReplyError />
     return this.props.children
   }
 }

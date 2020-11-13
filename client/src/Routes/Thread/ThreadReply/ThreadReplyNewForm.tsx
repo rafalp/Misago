@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { FormContext as HookFormContext } from "react-hook-form"
+import { FormProvider as HookFormProvider } from "react-hook-form"
 import { Redirect } from "react-router-dom"
 import { useSettingsContext, useToastsContext } from "../../../Context"
 import { ButtonPrimary } from "../../../UI/Button"
@@ -8,9 +8,9 @@ import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
 import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
+import ThreadPostRootError from "../ThreadPostRootError"
 import { IThreadReplyContext } from "./ThreadReplyContext"
 import ThreadReplyDialog from "./ThreadReplyDialog"
-import ThreadReplyRootError from "./ThreadReplyRootError"
 import usePostReplyMutation from "./usePostReplyMutation"
 
 const Editor = React.lazy(() => import("../../../Editor"))
@@ -43,7 +43,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
 
   return (
     <ThreadReplyDialog>
-      <HookFormContext {...form}>
+      <HookFormProvider {...form}>
         <FormContext.Provider
           value={{ disabled: loading, id: "thread_post_reply" }}
         >
@@ -54,7 +54,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
                 return
               }
 
-              form.clearError()
+              form.clearErrors()
 
               const result = await postReply({
                 variables: {
@@ -68,7 +68,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
 
               errors?.forEach(({ location, type, message }) => {
                 const field = location.join(".") as "markup"
-                form.setError(field, type, message)
+                form.setError(field, { type, message })
               })
 
               if (post) {
@@ -78,12 +78,12 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
               }
             })}
           >
-            <ThreadReplyRootError
+            <ThreadPostRootError
               graphqlError={graphqlError}
               dataErrors={data?.postReply.errors}
             >
               {({ message }) => <PostingFormAlert>{message}</PostingFormAlert>}
-            </ThreadReplyRootError>
+            </ThreadPostRootError>
             <React.Suspense fallback={<PostingFormLoader />}>
               <Field
                 label={<Trans id="posting.message">Message contents</Trans>}
@@ -123,7 +123,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
             </React.Suspense>
           </form>
         </FormContext.Provider>
-      </HookFormContext>
+      </HookFormProvider>
     </ThreadReplyDialog>
   )
 }

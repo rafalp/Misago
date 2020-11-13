@@ -118,16 +118,16 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           password: "",
         }}
         disabled={loading || disabled}
-        validationSchema={RegisterSchema}
-        onSubmit={async ({ clearError, setError, data: input }) => {
-          clearError()
+        validators={RegisterSchema}
+        onSubmit={async ({ clearErrors, setError, data: input }) => {
+          clearErrors()
 
           const result = await register({ variables: { input } })
           const { errors, token, user } = result.data?.register || {}
 
           errors?.forEach(({ location, type, message }) => {
             const field = location.join(".") as "name" | "email" | "password"
-            setError(field, type, message)
+            setError(field, { type, message })
           })
 
           if (token && user) {

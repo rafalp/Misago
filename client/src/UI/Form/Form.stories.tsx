@@ -36,7 +36,7 @@ export const FormField = () => {
         color: "blue",
       }}
       disabled={boolean("Disabled", false)}
-      validationSchema={FormSchema}
+      validators={FormSchema}
     >
       <Field label="Name" name="name" input={<Input />} required={required} />
       <Field

@@ -1,7 +1,7 @@
 import { withKnobs, select } from "@storybook/addon-knobs"
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { RootContainer } from "../../../../UI/Storybook"
+import { RootContainer } from "../../../UI/Storybook"
 import ThreadPostRootError from "./ThreadPostRootError"
 
 export default {

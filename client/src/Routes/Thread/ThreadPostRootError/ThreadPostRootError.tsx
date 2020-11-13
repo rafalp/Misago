@@ -1,26 +1,26 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
-import RootError from "../../../../UI/RootError"
+import RootError from "../../../UI/RootError"
 import {
   PostValidationError,
   ThreadValidationError,
-} from "../../../../UI/ValidationError"
-import useLocationError from "../../../../UI/useLocationError"
-import useRootError from "../../../../UI/useRootError"
-import { IMutationError } from "../../../../types"
+} from "../../../UI/ValidationError"
+import useLocationError from "../../../UI/useLocationError"
+import useRootError from "../../../UI/useRootError"
+import { IMutationError } from "../../../types"
 
 interface IRootError {
   message: React.ReactNode
   type: string
 }
 
-interface IThreadReplyRootErrorProps {
+interface IThreadPostRootErrorProps {
   children: (error: IRootError) => React.ReactElement
   dataErrors?: Array<IMutationError> | null
   graphqlError?: ApolloError | null
 }
 
-const ThreadReplyRootError: React.FC<IThreadReplyRootErrorProps> = ({
+const ThreadPostRootError: React.FC<IThreadPostRootErrorProps> = ({
   children,
   dataErrors,
   graphqlError,
@@ -54,4 +54,4 @@ const ThreadReplyRootError: React.FC<IThreadReplyRootErrorProps> = ({
   return null
 }
 
-export default ThreadReplyRootError
+export default ThreadPostRootError

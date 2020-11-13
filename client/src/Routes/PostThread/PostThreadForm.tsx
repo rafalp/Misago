@@ -90,9 +90,9 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
           isClosed: false,
         }}
         disabled={loading}
-        validationSchema={PostThreadSchema}
-        onSubmit={async ({ clearError, setError, data: input }) => {
-          clearError()
+        validators={PostThreadSchema}
+        onSubmit={async ({ clearErrors, setError, data: input }) => {
+          clearErrors()
 
           const result = await postThread({ variables: { input } })
           const { errors, thread } = result.data?.postThread || {}
@@ -103,7 +103,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
               | "title"
               | "category"
               | "isClosed"
-            setError(field, type, message)
+            setError(field, { type, message })
           })
 
           if (thread) {

@@ -48,9 +48,9 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
       id="move_thread_form"
       disabled={loading}
       defaultValues={{ category: "" }}
-      validationSchema={MoveThreadSchema}
-      onSubmit={async ({ clearError, setError, data: { category } }) => {
-        clearError()
+      validators={MoveThreadSchema}
+      onSubmit={async ({ clearErrors, setError, data: { category } }) => {
+        clearErrors()
 
         try {
           const result = await moveThread(thread, category)
@@ -59,7 +59,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
           if (errors) {
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "category"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

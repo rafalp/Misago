@@ -1,5 +1,6 @@
+import { yupResolver } from "@hookform/resolvers/yup"
 import React from "react"
-import { FormContextValues, useForm } from "react-hook-form"
+import { UseFormMethods, useForm } from "react-hook-form"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
 
@@ -17,12 +18,13 @@ export interface IThreadReplyContext {
   minimized: boolean
   mode: string
   post: IThreadReplyPost | null
-  form: FormContextValues<IThreadReplyFormValues>
+  form: UseFormMethods<IThreadReplyFormValues>
   startReply: () => void
   editReply: (post: IThreadReplyPost) => void
   cancelReply: () => void
   setFullscreen: (state: boolean) => void
   setMinimized: (state: boolean) => void
+  setValue: (value: string) => void
 }
 
 const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
@@ -32,6 +34,7 @@ const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
 interface IThreadReplyProviderProps {
   active?: boolean
   mode?: string
+  post?: IThreadReplyPost
   children: React.ReactNode
 }
 
@@ -39,11 +42,13 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   const { postMinLength } = useSettingsContext()
   const [isActive, setActive] = React.useState(props.active || false)
   const [mode, setMode] = React.useState(props.mode || "")
-  const [post, setPost] = React.useState<IThreadReplyPost | null>(null)
+  const [post, setPost] = React.useState<IThreadReplyPost | null>(
+    props.post || null
+  )
   const [fullscreen, setFullscreen] = React.useState(false)
   const [minimized, setMinimized] = React.useState(false)
 
-  const ThreadReplySchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
       .min(postMinLength, "value_error.any_str.min_length"),
@@ -51,8 +56,16 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
 
   const form = useForm<IThreadReplyFormValues>({
     defaultValues: { markup: "" },
-    validationSchema: ThreadReplySchema,
+    resolver: yupResolver(validators),
   })
+
+  const formSetValue = form.setValue
+  const setValue = React.useCallback(
+    (value: string) => {
+      formSetValue("markup", value)
+    },
+    [formSetValue]
+  )
 
   const startReply = React.useCallback(() => {
     setActive(true)
@@ -73,13 +86,14 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
     [setActive, setMode, setPost, setFullscreen, setMinimized]
   )
 
+  const { clearErrors } = form
   const cancelReply = React.useCallback(() => {
     setActive(false)
     setMode("reply")
     setPost(null)
-    form.clearError("markup")
-    form.setValue("markup", "")
-  }, [setActive, setMode, setPost, form])
+    clearErrors("markup")
+    setValue("")
+  }, [setActive, setMode, setPost, setValue, clearErrors])
 
   return (
     <ThreadReplyContext.Provider
@@ -92,6 +106,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
         post,
         setFullscreen,
         setMinimized,
+        setValue,
         startReply,
         editReply,
         cancelReply,

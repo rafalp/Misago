@@ -64,7 +64,7 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
       id="delete_posts_form"
       disabled={loading}
       defaultValues={{ posts }}
-      validationSchema={DeletePostsSchema}
+      validators={DeletePostsSchema}
       onSubmit={async ({ data: { posts } }) => {
         try {
           const result = await deletePosts(thread, posts, page)

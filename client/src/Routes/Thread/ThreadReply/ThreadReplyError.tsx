@@ -3,7 +3,7 @@ import React from "react"
 import { PostingFormError } from "../../../UI/PostingForm"
 import ThreadReplyDialog from "./ThreadReplyDialog"
 
-const ThreadReplyErrorMessage: React.FC = () => (
+const ThreadReplyError: React.FC = () => (
   <ThreadReplyDialog>
     <PostingFormError
       error={
@@ -21,4 +21,4 @@ const ThreadReplyErrorMessage: React.FC = () => (
   </ThreadReplyDialog>
 )
 
-export default ThreadReplyErrorMessage
+export default ThreadReplyError

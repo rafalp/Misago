@@ -45,9 +45,9 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
       id="thread_header_edit_form"
       defaultValues={{ title: thread.title }}
       disabled={loading}
-      validationSchema={EditThreadTitleSchema}
-      onSubmit={async ({ clearError, setError, data: { title } }) => {
-        clearError()
+      validators={EditThreadTitleSchema}
+      onSubmit={async ({ clearErrors, setError, data: { title } }) => {
+        clearErrors()
 
         try {
           const result = await editThreadTitle(title)
@@ -56,7 +56,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
           if (errors) {
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "title"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

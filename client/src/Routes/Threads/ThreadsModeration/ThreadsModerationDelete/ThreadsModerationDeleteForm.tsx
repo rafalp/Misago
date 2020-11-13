@@ -63,9 +63,9 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
       id="delete_threads_form"
       disabled={loading}
       defaultValues={{ threads }}
-      validationSchema={DeleteThreadsSchema}
-      onSubmit={async ({ clearError, setError, data: { threads } }) => {
-        clearError()
+      validators={DeleteThreadsSchema}
+      onSubmit={async ({ clearErrors, setError, data: { threads } }) => {
+        clearErrors()
         clearThreadsErrors()
 
         try {
@@ -76,7 +76,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
             setThreadsErrors(threads, errors)
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".")
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

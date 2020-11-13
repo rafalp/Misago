@@ -1,14 +1,15 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { FormContext as HookFormContext } from "react-hook-form"
+import { FormProvider as HookFormProvider } from "react-hook-form"
 import { useSettingsContext, useToastsContext } from "../../../Context"
 import { ButtonPrimary } from "../../../UI/Button"
 import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
 import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
+import ThreadPostRootError from "../ThreadPostRootError"
 import { IThreadReplyContext } from "./ThreadReplyContext"
 import ThreadReplyDialog from "./ThreadReplyDialog"
-import ThreadReplyRootError from "./ThreadReplyRootError"
+import ThreadReplyEditError from "./ThreadReplyEditError"
 import useEditPostMutation from "./useEditPostMutation"
 import usePostMarkupQuery from "./usePostMarkupQuery"
 
@@ -27,21 +28,17 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
 }) => {
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
-  const { cancelReply, form } = context
+  const { cancelReply, form, setValue } = context
 
   const query = usePostMarkupQuery({ id: post.id })
   const mutation = useEditPostMutation(post)
 
   const defaultValue = query.data?.post?.markup || ""
-  React.useEffect(
-    () => {
-      if (defaultValue.length) {
-        form.setValue("markup", defaultValue)
-      }
-    },
-    // eslint-disable-next-line
-    [defaultValue]
-  )
+  React.useEffect(() => {
+    if (defaultValue.length) {
+      setValue(defaultValue)
+    }
+  }, [setValue, defaultValue])
 
   if (query.loading) {
     return (
@@ -55,25 +52,17 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
   }
 
   if (query.error) {
-    return (
-      <ThreadReplyDialog>
-        <div>ERROR</div>
-      </ThreadReplyDialog>
-    )
+    return <ThreadReplyEditError error={query.error} />
   }
 
   if (!query.data?.post) {
-    return (
-      <ThreadReplyDialog>
-        <div>POST NOT FOUND ERROR</div>
-      </ThreadReplyDialog>
-    )
+    return <ThreadReplyEditError />
   }
 
   return (
     <ThreadReplyDialog>
       <React.Suspense fallback={<PostingFormLoader />}>
-        <HookFormContext {...form}>
+        <HookFormProvider {...form}>
           <FormContext.Provider
             value={{ disabled: mutation.loading, id: "thread_post_edit" }}
           >
@@ -84,7 +73,7 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
                   return
                 }
 
-                form.clearError()
+                form.clearErrors()
 
                 try {
                   const result = await mutation.editPost(data.markup)
@@ -93,7 +82,7 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
                   if (errors) {
                     errors?.forEach(({ location, type, message }) => {
                       const field = location.join(".") as "markup"
-                      form.setError(field, type, message)
+                      form.setError(field, { type, message })
                     })
                   } else {
                     showToast(
@@ -110,14 +99,14 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
                 }
               })}
             >
-              <ThreadReplyRootError
+              <ThreadPostRootError
                 graphqlError={mutation.error}
                 dataErrors={mutation.data?.editPost.errors}
               >
                 {({ message }) => (
                   <PostingFormAlert>{message}</PostingFormAlert>
                 )}
-              </ThreadReplyRootError>
+              </ThreadPostRootError>
               <Field
                 label={<Trans id="posting.message">Message contents</Trans>}
                 name="markup"
@@ -157,7 +146,7 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
               />
             </form>
           </FormContext.Provider>
-        </HookFormContext>
+        </HookFormProvider>
       </React.Suspense>
     </ThreadReplyDialog>
   )

@@ -63,13 +63,13 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
       id="move_threads_form"
       disabled={loading}
       defaultValues={{ threads, category: "" }}
-      validationSchema={MoveThreadsSchema}
+      validators={MoveThreadsSchema}
       onSubmit={async ({
-        clearError,
+        clearErrors,
         setError,
         data: { category, threads },
       }) => {
-        clearError()
+        clearErrors()
         clearThreadsErrors()
 
         try {
@@ -80,7 +80,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
             setThreadsErrors(threads, errors)
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "category"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

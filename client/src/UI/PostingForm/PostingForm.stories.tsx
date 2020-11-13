@@ -54,9 +54,9 @@ const Boilerplate: React.FC = ({ children }) => {
                 markup: "",
               }}
               disabled={boolean("Loading", false)}
-              validationSchema={PostingFormSchema}
-              onSubmit={async ({ clearError }) => {
-                clearError()
+              validators={PostingFormSchema}
+              onSubmit={async ({ clearErrors }) => {
+                clearErrors()
               }}
             >
               <PostingFormBody>

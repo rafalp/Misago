@@ -45,9 +45,9 @@ const Container: React.FC<IContainerProps> = ({ children, value }) => {
           defaultValues={{
             markup: value || "",
           }}
-          validationSchema={EditorSchema}
-          onSubmit={({ clearError, data }) => {
-            clearError()
+          validators={EditorSchema}
+          onSubmit={({ clearErrors, data }) => {
+            clearErrors()
             submit(data.markup)
           }}
         >
