@@ -1,5 +1,5 @@
 import { Trans, t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
@@ -49,6 +49,8 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
   categories,
   validCategories,
 }) => {
+  const { i18n } = useLingui()
+
   const user = useAuthContext()
   const isModerator = user ? user.isModerator : false
 
@@ -124,16 +126,10 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             label={<Trans id="posting.thread_title">Thread title</Trans>}
             name="title"
             input={
-              <I18n>
-                {({ i18n }) => (
-                  <Input
-                    placeholder={i18n._(
-                      t("posting.thread_title")`Thread title`
-                    )}
-                    responsive
-                  />
-                )}
-              </I18n>
+              <Input
+                placeholder={i18n._("posting.thread_title", t`Thread title`)}
+                responsive
+              />
             }
             error={(error, value) => (
               <ThreadTitleValidationError

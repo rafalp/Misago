@@ -1,7 +1,7 @@
 {
-  "localeDir": "src/locale/",
-  "srcPathDirs": ["src/"],
+  "locales": ["en", "pl"],
+  "rootDir": "./src/",
   "format": "po",
   "sourceLocale": "en",
-  "compileNamespace": "es"
+  "compileNamespace": "cjs"
 }

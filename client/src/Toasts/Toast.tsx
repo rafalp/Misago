@@ -1,5 +1,5 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import classnames from "classnames"
 import React from "react"
 
@@ -19,6 +19,8 @@ const TOAST_LIFETIME = 7000
 const TOAST_REMOVE_DELAY = 300
 
 const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
+  const { i18n } = useLingui()
+
   const [state, setState] = React.useState<ToastState>(
     show ? ToastState.SHOW : ToastState.NEW
   )
@@ -49,19 +51,15 @@ const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
     >
       <div className="toast-body">
         <div>{text}</div>
-        <I18n>
-          {({ i18n }) => (
-            <button
-              type="button"
-              className="ml-2 close"
-              data-dismiss="toast"
-              aria-label={i18n._(t("close")`Close`)}
-              onClick={() => setState(ToastState.HIDE)}
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          )}
-        </I18n>
+        <button
+          type="button"
+          className="ml-2 close"
+          data-dismiss="toast"
+          aria-label={i18n._("close", t`Close`)}
+          onClick={() => setState(ToastState.HIDE)}
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     </div>
   )

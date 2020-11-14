@@ -1,5 +1,5 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import classnames from "classnames"
 import React from "react"
 
@@ -12,6 +12,7 @@ const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
   type,
   children,
 }) => {
+  const { i18n } = useLingui()
   const [show, setShow] = React.useState(true)
 
   React.useEffect(() => {
@@ -21,18 +22,14 @@ const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
   return (
     <div className={classnames("invalid-feedback-floating", { show })}>
       <div>{children}</div>
-      <I18n>
-        {({ i18n }) => (
-          <button
-            type="button"
-            className="ml-2 close"
-            aria-label={i18n._(t("close")`Close`)}
-            onClick={() => setShow(false)}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        )}
-      </I18n>
+      <button
+        type="button"
+        className="ml-2 close"
+        aria-label={i18n._("close", t`Close`)}
+        onClick={() => setShow(false)}
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import React from "react"
 import { ApolloError } from "apollo-client"
 import { IMutationError } from "../../types"
@@ -30,62 +30,61 @@ const RootError: React.FC<IRootErrorProps> = ({
   plainError,
   locations,
   messages,
-}) => (
-  <I18n>
-    {({ i18n }) => {
-      if (plainError && messages && messages[plainError]) {
-        return children({ type: plainError, message: messages[plainError] })
+}) => {
+  const { i18n } = useLingui()
+
+  if (plainError && messages && messages[plainError]) {
+    return children({ type: plainError, message: messages[plainError] })
+  }
+
+  const errors: Array<IMutationError> = []
+  if (graphqlError) {
+    const code = getNetworkErrorCode(graphqlError)
+    if (code === 400 || !graphqlError.networkError) {
+      errors.push({
+        location: ["__root__"],
+        type: "client_error.graphql",
+        message: i18n._(
+          "client_error.graphql",
+          t`Unexpected error has occurred.`
+        ),
+      })
+    } else if (graphqlError.networkError) {
+      errors.push({
+        location: ["__root__"],
+        type: "client_error.network",
+        message: i18n._(
+          "client_error.network",
+          t`Site server can't be reached.`
+        ),
+      })
+    }
+  }
+
+  if (dataErrors) errors.push(...dataErrors)
+  if (!errors.length) return null
+
+  const finLocations: Array<string> = locations || ["__root__"]
+  const finMessages: { [type: string]: React.ReactNode } = messages || {}
+
+  if (!finMessages[NOT_AUTHORIZED_ERROR]) {
+    finMessages[NOT_AUTHORIZED_ERROR] = i18n._(
+      "auth_error.not_authorized",
+      t`You need to be signed in to perform this action.`
+    )
+  }
+
+  for (const location of finLocations) {
+    for (const error of errors) {
+      const errorLocation = error.location.join(".")
+      if (errorLocation === location) {
+        const { type, message } = error
+        return children({ type, message: finMessages[type] || message })
       }
+    }
+  }
 
-      const errors: Array<IMutationError> = []
-      if (graphqlError) {
-        const code = getNetworkErrorCode(graphqlError)
-        if (code === 400 || !graphqlError.networkError) {
-          errors.push({
-            location: ["__root__"],
-            type: "client_error.graphql",
-            message: i18n._(
-              t("client_error.graphql")`Unexpected error has occurred.`
-            ),
-          })
-        } else if (graphqlError.networkError) {
-          errors.push({
-            location: ["__root__"],
-            type: "client_error.network",
-            message: i18n._(
-              t("client_error.network")`Site server can't be reached.`
-            ),
-          })
-        }
-      }
-
-      if (dataErrors) errors.push(...dataErrors)
-      if (!errors.length) return null
-
-      const finLocations: Array<string> = locations || ["__root__"]
-      const finMessages: { [type: string]: React.ReactNode } = messages || {}
-
-      if (!finMessages[NOT_AUTHORIZED_ERROR]) {
-        finMessages[NOT_AUTHORIZED_ERROR] = i18n._(
-          t(
-            "auth_error.not_authorized"
-          )`You need to be signed in to perform this action.`
-        )
-      }
-
-      for (const location of finLocations) {
-        for (const error of errors) {
-          const errorLocation = error.location.join(".")
-          if (errorLocation === location) {
-            const { type, message } = error
-            return children({ type, message: finMessages[type] || message })
-          }
-        }
-      }
-
-      return null
-    }}
-  </I18n>
-)
+  return null
+}
 
 export default RootError

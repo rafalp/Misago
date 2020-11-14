@@ -1,5 +1,6 @@
-import { Catalogs } from "@lingui/core"
+import { i18n } from "@lingui/core"
 import { I18nProvider } from "@lingui/react"
+import * as plurals from "make-plural/plurals"
 import React from "react"
 import AppLoader from "./AppLoader"
 
@@ -12,25 +13,23 @@ const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({
   children,
   language,
 }) => {
-  const [catalogs, setCatalogs] = React.useState<Catalogs>({})
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     import(
       /* webpackMode: "lazy", webpackChunkName: "i18n-[index]" */
-      `../locale/${language}/messages`
-    ).then((catalog) => {
-      setCatalogs((c) => {
-        return { ...c, [language]: catalog.default }
-      })
+      `../locale/${language}/messages.js`
+    ).then((messages) => {
+      i18n.loadLocaleData(language, { plurals: (plurals as any)[language] })
+      i18n.load(language, messages)
+      i18n.activate(language)
+      setLoading(false)
     })
   }, [language])
 
-  if (!catalogs[language]) return <AppLoader />
-  return (
-    <I18nProvider language={language} catalogs={catalogs}>
-      {children}
-    </I18nProvider>
-  )
+  if (loading) return <AppLoader />
+
+  return <I18nProvider i18n={i18n}>{children}</I18nProvider>
 }
 
 export default AppLanguageLoader

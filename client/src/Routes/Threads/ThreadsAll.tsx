@@ -1,5 +1,5 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import React from "react"
 import LoadMoreButton from "../../UI/LoadMoreButton"
 import RouteLoader from "../../UI/RouteLoader"
@@ -14,6 +14,8 @@ import { useThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
 const ThreadsAll: React.FC = () => {
+  const { i18n } = useLingui()
+
   const forumStats = useForumStatsContext()
   const settings = useSettingsContext()
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
@@ -28,15 +30,11 @@ const ThreadsAll: React.FC = () => {
 
   return (
     <ThreadsLayout className="route-threads">
-      <I18n>
-        {({ i18n }) => (
-          <WindowTitle
-            index={isIndex}
-            title={i18n._(t("threads.title")`Threads`)}
-            alerts={update.threads}
-          />
-        )}
-      </I18n>
+      <WindowTitle
+        index={isIndex}
+        title={i18n._("threads.title", t`Threads`)}
+        alerts={update.threads}
+      />
       <ThreadsHeaderAll settings={settings} stats={forumStats} />
       <ThreadsToolbar />
       <ThreadsList

@@ -1,5 +1,5 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import Input from "../../../UI/Input"
@@ -13,29 +13,33 @@ interface IPostThreadCategorySelectSearchProps {
 const PostThreadCategorySelectSearch: React.FC<IPostThreadCategorySelectSearchProps> = ({
   search,
   setSearch,
-}) => (
-  <ModalBody className="category-select-search">
-    <div className="row no-gutters">
-      <div className="col">
-        <I18n>
-          {({ i18n }) => (
-            <Input
-              placeholder={i18n._(
-                t("post_thread.search_category")`Search categories`
-              )}
-              value={search}
-              onChange={({ target }) => setSearch(target.value)}
-            />
-          )}
-        </I18n>
-      </div>
-      {search.trim().length > 0 && (
-        <div className="col-auto">
-          <ButtonSecondary icon="fas fa-times" onClick={() => setSearch("")} />
+}) => {
+  const { i18n } = useLingui()
+
+  return (
+    <ModalBody className="category-select-search">
+      <div className="row no-gutters">
+        <div className="col">
+          <Input
+            placeholder={i18n._(
+              "post_thread.search_category",
+              t`Search categories`
+            )}
+            value={search}
+            onChange={({ target }) => setSearch(target.value)}
+          />
         </div>
-      )}
-    </div>
-  </ModalBody>
-)
+        {search.trim().length > 0 && (
+          <div className="col-auto">
+            <ButtonSecondary
+              icon="fas fa-times"
+              onClick={() => setSearch("")}
+            />
+          </div>
+        )}
+      </div>
+    </ModalBody>
+  )
+}
 
 export default PostThreadCategorySelectSearch
