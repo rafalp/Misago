@@ -131,8 +131,8 @@ export const Preview = () => (
   >
     <Container>
       <EditorBody>
-        <EditorToolbar>Toolbar placeholder</EditorToolbar>
         <EditorPreview markup="Test" />
+        <EditorToolbar>Toolbar placeholder</EditorToolbar>
       </EditorBody>
     </Container>
   </MockedProvider>
@@ -141,8 +141,8 @@ export const Preview = () => (
 export const PreviewLoader = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewLoader />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )
@@ -150,8 +150,8 @@ export const PreviewLoader = () => (
 export const PreviewQueryError = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewError error={new ApolloError({})} />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )
@@ -159,10 +159,10 @@ export const PreviewQueryError = () => (
 export const PreviewNetworkError = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewError
         error={new ApolloError({ networkError: new Error() })}
       />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )
