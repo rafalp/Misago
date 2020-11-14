@@ -18,7 +18,14 @@ const ThreadReplyDialog: React.FC<IThreadReplyDialogProps> = ({
   const context = useThreadReplyContext()
   if (!context) return null
 
-  const { fullscreen, minimized, setFullscreen, setMinimized, mode } = context
+  const {
+    fullscreen,
+    minimized,
+    setFullscreen,
+    setMinimized,
+    mode,
+    cancelReply,
+  } = context
 
   return (
     <PostingFormDialog>
@@ -26,6 +33,7 @@ const ThreadReplyDialog: React.FC<IThreadReplyDialogProps> = ({
         <PostingFormHeader
           fullscreen={fullscreen}
           minimized={minimized}
+          cancel={() => cancelReply()}
           setFullscreen={setFullscreen}
           setMinimized={setMinimized}
         >

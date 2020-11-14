@@ -41,7 +41,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
   } = useMoveThreadsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const MoveThreadsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
     threads: Yup.array()
       .min(1, "value_error.list.min_items")
@@ -63,7 +63,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
       id="move_threads_form"
       disabled={loading}
       defaultValues={{ threads, category: "" }}
-      validators={MoveThreadsSchema}
+      validators={validators}
       onSubmit={async ({
         clearErrors,
         setError,

@@ -32,7 +32,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
     error: graphqlError,
   } = useEditThreadTitleMutation(thread)
 
-  const EditThreadTitleSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     title: Yup.string()
       .required("value_error.missing")
       .min(threadTitleMinLength, "value_error.any_str.min_length")
@@ -45,7 +45,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
       id="thread_header_edit_form"
       defaultValues={{ title: thread.title }}
       disabled={loading}
-      validators={EditThreadTitleSchema}
+      validators={validators}
       onSubmit={async ({ clearErrors, setError, data: { title } }) => {
         clearErrors()
 

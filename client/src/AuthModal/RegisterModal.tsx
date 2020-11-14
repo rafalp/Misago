@@ -86,7 +86,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
     IRegisterInput
   >(REGISTER, { errorPolicy: "all" })
 
-  const RegisterSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     name: Yup.string()
       .required("value_error.missing")
       .min(settings.usernameMinLength, "value_error.any_str.min_length")
@@ -118,7 +118,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           password: "",
         }}
         disabled={loading || disabled}
-        validators={RegisterSchema}
+        validators={validators}
         onSubmit={async ({ clearErrors, setError, data: input }) => {
           clearErrors()
 

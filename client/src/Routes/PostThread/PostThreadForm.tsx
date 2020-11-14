@@ -65,7 +65,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
     { data, loading, error: graphqlError },
   ] = usePostThreadMutation()
 
-  const PostThreadSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
     title: Yup.string()
       .required("value_error.thread_title.missing")
@@ -92,7 +92,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
           isClosed: false,
         }}
         disabled={loading}
-        validators={PostThreadSchema}
+        validators={validators}
         onSubmit={async ({ clearErrors, setError, data: input }) => {
           clearErrors()
 

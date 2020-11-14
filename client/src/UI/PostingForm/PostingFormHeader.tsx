@@ -5,6 +5,7 @@ interface IPostingFormHeaderProps {
   children: React.ReactNode
   fullscreen?: boolean
   minimized?: boolean
+  cancel: () => void
   setFullscreen: (state: boolean) => void
   setMinimized: (state: boolean) => void
 }
@@ -13,6 +14,7 @@ const PostingFormHeader: React.FC<IPostingFormHeaderProps> = ({
   children,
   fullscreen,
   minimized,
+  cancel,
   setFullscreen,
   setMinimized,
 }) => (
@@ -37,6 +39,11 @@ const PostingFormHeader: React.FC<IPostingFormHeaderProps> = ({
           setFullscreen(!fullscreen)
         }
       }}
+    />
+    <PostingFormHeaderButton
+      className="btn-posting-form-cancel"
+      icon="fas fa-times"
+      onClick={cancel}
     />
   </div>
 )

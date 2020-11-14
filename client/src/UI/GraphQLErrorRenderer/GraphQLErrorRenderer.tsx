@@ -13,7 +13,6 @@ const GraphQLErrorRenderer: React.FC<IGraphQLErrorRendererProps> = ({
   networkError,
   queryError,
 }) => {
-  console.log(error)
   const code = getNetworkErrorCode(error)
 
   if (error.networkError && code !== 400) {

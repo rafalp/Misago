@@ -41,7 +41,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
   } = useDeleteThreadsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeleteThreadsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     threads: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
@@ -63,7 +63,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
       id="delete_threads_form"
       disabled={loading}
       defaultValues={{ threads }}
-      validators={DeleteThreadsSchema}
+      validators={validators}
       onSubmit={async ({ clearErrors, setError, data: { threads } }) => {
         clearErrors()
         clearThreadsErrors()

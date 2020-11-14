@@ -24,6 +24,7 @@ export interface IThreadReplyContext {
   cancelReply: () => void
   setFullscreen: (state: boolean) => void
   setMinimized: (state: boolean) => void
+  getValue: () => string
   setValue: (value: string) => void
 }
 
@@ -59,6 +60,11 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
     resolver: yupResolver(validators),
   })
 
+  const formGetValue = form.getValues
+  const getValue = React.useCallback(() => formGetValue("markup") || "", [
+    formGetValue,
+  ])
+
   const formSetValue = form.setValue
   const setValue = React.useCallback(
     (value: string) => {
@@ -68,22 +74,47 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   )
 
   const startReply = React.useCallback(() => {
+    if (isActive && mode === "reply") {
+      return // short-circuit new reply
+    }
+
     setActive(true)
     setMode("reply")
     setPost(null)
     setFullscreen(false)
     setMinimized(false)
-  }, [setActive, setMode, setPost, setFullscreen, setMinimized])
+  }, [
+    isActive,
+    mode,
+    setActive,
+    setMode,
+    setPost,
+    setFullscreen,
+    setMinimized,
+  ])
 
   const editReply = React.useCallback(
-    (post: IThreadReplyPost) => {
+    (newPost: IThreadReplyPost) => {
+      if (isActive && mode === "edit" && post?.id === newPost.id) {
+        return // short-circuit edit
+      }
+
       setActive(true)
       setMode("edit")
-      setPost(post)
+      setPost(newPost)
       setFullscreen(false)
       setMinimized(false)
     },
-    [setActive, setMode, setPost, setFullscreen, setMinimized]
+    [
+      isActive,
+      mode,
+      post,
+      setActive,
+      setMode,
+      setPost,
+      setFullscreen,
+      setMinimized,
+    ]
   )
 
   const { clearErrors } = form
@@ -93,7 +124,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
     setPost(null)
     clearErrors("markup")
     setValue("")
-  }, [setActive, setMode, setPost, setValue, clearErrors])
+  }, [clearErrors, setActive, setMode, setPost, setValue])
 
   return (
     <ThreadReplyContext.Provider
@@ -106,10 +137,11 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
         post,
         setFullscreen,
         setMinimized,
-        setValue,
         startReply,
         editReply,
         cancelReply,
+        getValue,
+        setValue,
       }}
     >
       {props.children}

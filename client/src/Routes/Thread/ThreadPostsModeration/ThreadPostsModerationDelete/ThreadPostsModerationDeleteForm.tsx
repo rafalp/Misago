@@ -41,12 +41,12 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   } = useDeleteThreadPostsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeletePostsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     posts: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
   })
-  console.log(selectionErrors)
+
   if (data?.deleteThreadPosts.errors) {
     return (
       <ThreadPostsModerationError
@@ -64,12 +64,11 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
       id="delete_posts_form"
       disabled={loading}
       defaultValues={{ posts }}
-      validators={DeletePostsSchema}
+      validators={validators}
       onSubmit={async ({ data: { posts } }) => {
         try {
           const result = await deletePosts(thread, posts, page)
           if (result.data?.deleteThreadPosts.errors) {
-            console.log(posts, result.data?.deleteThreadPosts.errors)
             setSelectionErrors(posts, result.data.deleteThreadPosts.errors)
           } else {
             close()

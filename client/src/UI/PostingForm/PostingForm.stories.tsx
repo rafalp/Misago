@@ -1,4 +1,5 @@
 import { MockedProvider } from "@apollo/react-testing"
+import { action } from "@storybook/addon-actions"
 import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
 import * as Yup from "yup"
@@ -28,11 +29,13 @@ interface IPostingFormValues {
   markup: string
 }
 
+const cancel = action("cancel form")
+
 const Boilerplate: React.FC = ({ children }) => {
   const [fullscreen, setFullscreen] = React.useState(false)
   const [minimized, setMinimized] = React.useState(false)
 
-  const PostingFormSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
       .min(5, "value_error.any_str.min_length"),
@@ -54,7 +57,7 @@ const Boilerplate: React.FC = ({ children }) => {
                 markup: "",
               }}
               disabled={boolean("Loading", false)}
-              validators={PostingFormSchema}
+              validators={validators}
               onSubmit={async ({ clearErrors }) => {
                 clearErrors()
               }}
@@ -63,6 +66,7 @@ const Boilerplate: React.FC = ({ children }) => {
                 <PostingFormHeader
                   fullscreen={fullscreen}
                   minimized={minimized}
+                  cancel={cancel}
                   setFullscreen={setFullscreen}
                   setMinimized={setMinimized}
                 >

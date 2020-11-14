@@ -39,7 +39,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
     )
   }
 
-  const MoveThreadSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
   })
 
@@ -48,7 +48,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
       id="move_thread_form"
       disabled={loading}
       defaultValues={{ category: "" }}
-      validators={MoveThreadSchema}
+      validators={validators}
       onSubmit={async ({ clearErrors, setError, data: { category } }) => {
         clearErrors()
 

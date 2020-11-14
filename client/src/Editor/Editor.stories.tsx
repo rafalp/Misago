@@ -30,7 +30,7 @@ interface IEditorFormValues {
 const submit = action("submitted")
 
 const Container: React.FC<IContainerProps> = ({ children, value }) => {
-  const EditorSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
       .min(10, "value_error.any_str.min_length")
@@ -45,7 +45,7 @@ const Container: React.FC<IContainerProps> = ({ children, value }) => {
           defaultValues={{
             markup: value || "",
           }}
-          validators={EditorSchema}
+          validators={validators}
           onSubmit={({ clearErrors, data }) => {
             clearErrors()
             submit(data.markup)
