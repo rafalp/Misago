@@ -21,7 +21,7 @@ const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({
       `../locale/${language}/messages.js`
     ).then((messages) => {
       i18n.loadLocaleData(language, { plurals: (plurals as any)[language] })
-      i18n.load(language, messages)
+      i18n.load(language, messages.messages)
       i18n.activate(language)
       setLoading(false)
     })

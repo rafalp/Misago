@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { useLingui } from "@lingui/react"
 import className from "classnames"
 import React from "react"
 import Avatar from "../UI/Avatar"
@@ -14,8 +13,6 @@ const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
   children,
   user,
 }) => {
-  const { i18n } = useLingui()
-
   const [isOpen, updateOpen] = React.useState(false)
   const button = React.useRef<HTMLButtonElement | null>(null)
 
@@ -44,7 +41,7 @@ const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
         type="button"
         aria-controls="navbarToggle"
         aria-expanded={isOpen ? "true" : "false"}
-        aria-label={i18n._("navbar.toggle", t`Toggle navigation`)}
+        aria-label={t({ id: "navbar.toggle", message: "Toggle navigation" })}
         onClick={() => updateOpen((state) => !state)}
       >
         {user ? (

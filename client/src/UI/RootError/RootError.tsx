@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { useLingui } from "@lingui/react"
 import React from "react"
 import { ApolloError } from "apollo-client"
 import { IMutationError } from "../../types"
@@ -31,8 +30,6 @@ const RootError: React.FC<IRootErrorProps> = ({
   locations,
   messages,
 }) => {
-  const { i18n } = useLingui()
-
   if (plainError && messages && messages[plainError]) {
     return children({ type: plainError, message: messages[plainError] })
   }
@@ -44,19 +41,19 @@ const RootError: React.FC<IRootErrorProps> = ({
       errors.push({
         location: ["__root__"],
         type: "client_error.graphql",
-        message: i18n._(
-          "client_error.graphql",
-          t`Unexpected error has occurred.`
-        ),
+        message: t({
+          id: "client_error.graphql",
+          message: "Unexpected error has occurred.",
+        }),
       })
     } else if (graphqlError.networkError) {
       errors.push({
         location: ["__root__"],
         type: "client_error.network",
-        message: i18n._(
-          "client_error.network",
-          t`Site server can't be reached.`
-        ),
+        message: t({
+          id: "client_error.network",
+          message: "Site server can't be reached.",
+        }),
       })
     }
   }
@@ -68,10 +65,10 @@ const RootError: React.FC<IRootErrorProps> = ({
   const finMessages: { [type: string]: React.ReactNode } = messages || {}
 
   if (!finMessages[NOT_AUTHORIZED_ERROR]) {
-    finMessages[NOT_AUTHORIZED_ERROR] = i18n._(
-      "auth_error.not_authorized",
-      t`You need to be signed in to perform this action.`
-    )
+    finMessages[NOT_AUTHORIZED_ERROR] = t({
+      id: "auth_error.not_authorized",
+      message: "You need to be signed in to perform this action.",
+    })
   }
 
   for (const location of finLocations) {

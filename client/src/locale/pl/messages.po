@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2019-12-29 21:59+0100\n"
+"POT-Creation-Date: 2020-11-14 17:34+0100\n"
 "Mime-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,244 +13,1011 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/UI/Error/GraphQLErrorMessage.tsx:3
+#: UI/CategorySelect/CategorySelect.tsx:9
+#~ msgid "- select category -"
+#~ msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:35
+#~ msgid "Category could not be found."
+#~ msgstr ""
+
+#: Toasts/Toast.tsx:35
+#: UI/Form/FieldErrorFloating.tsx:13
+#: UI/Modal/ModalHeader.tsx:11
+#~ msgid "Close"
+#~ msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:21
+#~ msgid "E-mail address can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/PasswordValidationError.tsx:22
+#~ msgid "Password can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:45
+#~ msgid "Post could not be found."
+#~ msgstr ""
+
+#: Routes/PostThread/PostThread.tsx:34
+#~ msgid "Post thread"
+#~ msgstr ""
+
+#: Routes/PostThread/PostThreadCategorySelect/PostThreadCategorySelectSearch.tsx:12
+#~ msgid "Search categories"
+#~ msgstr ""
+
+#: UI/RootError/RootError.tsx:24
+#~ msgid "Site server can't be reached."
+#~ msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:30
+#~ msgid "This category is closed."
+#~ msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:36
+#~ msgid "This e-mail address is not allowed."
+#~ msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:31
+#~ msgid "This e-mail address is not available."
+#~ msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:26
+#~ msgid "This e-mail address is not valid."
+#~ msgstr ""
+
+#: UI/ValidationError/ValidationError.tsx:25
+#~ msgid "This field can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:40
+#~ msgid "This post is thread's original post."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:25
+#~ msgid "This post's category is closed."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:30
+#~ msgid "This post's thread is closed."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:30
+#~ msgid "This thread is closed."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:33
+#~ msgid "This thread title is not allowed."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:25
+#~ msgid "This thread's category is closed."
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:38
+#~ msgid "This user name is not allowed."
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:33
+#~ msgid "This user name is not available."
+#~ msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:20
+#~ msgid "Thread category can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:40
+#~ msgid "Thread could not be found."
+#~ msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:71
+#~ msgid "Thread title"
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:23
+#~ msgid "Thread title can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:28
+#~ msgid "Thread title must contain latin alphabet letters and digits."
+#~ msgstr ""
+
+#: Routes/Threads/ThreadsAll.tsx:27
+#~ msgid "Threads"
+#~ msgstr ""
+
+#: Navbar/NavbarCollapse.tsx:29
+#~ msgid "Toggle navigation"
+#~ msgstr ""
+
+#: UI/RootError/RootError.tsx:17
+#~ msgid "Unexpected error has occurred."
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:28
+#~ msgid "User name can only contain latin alphabet letters and digits."
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:23
+#~ msgid "User name can't be empty."
+#~ msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:25
+#~ msgid "You can't moderate this category."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:20
+#~ msgid "You can't moderate this post."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:20
+#~ msgid "You can't moderate this thread."
+#~ msgstr ""
+
+#: UI/ValidationError/ValidationError.tsx:20
+#~ msgid "You need to be a moderator to perform this action."
+#~ msgstr ""
+
+#: UI/RootError/RootError.tsx:35
+#~ msgid "You need to be signed in to perform this action."
+#~ msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:35
+#~ msgid "You need to be this post's author to perform this action."
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:35
+#~ msgid "You need to be this thread's author to perform this action."
+#~ msgstr ""
+
+#: UI/Error/GraphQLErrorMessage.tsx:3
 msgid "api_error.message"
 msgstr ""
 
-#: src/UI/Error/GraphQLError.tsx:6
+#: UI/Error/GraphQLError.tsx:6
 msgid "api_error.title"
 msgstr ""
 
-#: src/AuthChangedAlert/AuthChangedLoggedInAlert.tsx:13
+#: AuthChangedAlert/AuthChangedLoggedInAlert.tsx:13
 msgid "auth_alert.logged_in.cta"
 msgstr ""
 
-#: src/AuthChangedAlert/AuthChangedLoggedInAlert.tsx:8
+#: AuthChangedAlert/AuthChangedLoggedInAlert.tsx:8
 msgid "auth_alert.logged_in.title"
 msgstr ""
 
-#: src/AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:13
+#: AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:13
 msgid "auth_alert.logged_out.cta"
 msgstr ""
 
-#: src/AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:8
+#: AuthChangedAlert/AuthChangedLoggedOutAlert.tsx:8
 msgid "auth_alert.logged_out.title"
 msgstr ""
 
-#: src/Navbar/Navbar.tsx:19
-#~ msgid "btn.login"
-#~ msgstr "Logowanie"
+#: UI/ValidationError/CategoryValidationError.tsx:34
+msgid "auth_error.category.closed"
+msgstr ""
 
-#: src/Navbar/Navbar.tsx:22
-#~ msgid "btn.register"
-#~ msgstr "Rejestracja"
+#: UI/RouteError/RouteAuthRequiredError.tsx:15
+msgid "auth_error.message"
+msgstr ""
 
-#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavModal.tsx:14
+#: UI/RootError/RootError.tsx:39
+msgid "auth_error.not_authorized"
+msgstr ""
+
+#: UI/ValidationError/ValidationError.tsx:18
+msgid "auth_error.not_moderator"
+msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:26
+msgid "auth_error.not_moderator.category"
+msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:18
+msgid "auth_error.not_moderator.post"
+msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:18
+msgid "auth_error.not_moderator.thread"
+msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:42
+msgid "auth_error.post.not_author"
+msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:26
+msgid "auth_error.post_category.closed"
+msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:34
+#: UI/ValidationError/ThreadValidationError.tsx:34
+msgid "auth_error.thread.closed"
+msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:42
+msgid "auth_error.thread.not_author"
+msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:26
+msgid "auth_error.thread_category.closed"
+msgstr ""
+
+#: UI/RouteError/RouteAuthRequiredError.tsx:13
+msgid "auth_error.title"
+msgstr ""
+
+#: Routes/Threads/ThreadsNewButton/ThreadsNewButton.tsx:10
+msgid "btn.new-thread"
+msgstr ""
+
+#: Routes/Threads/ThreadsList/ThreadsListUpdateButton.tsx:4
+msgid "btn.update-threads-list"
+msgstr ""
+
+#: Routes/Threads/ThreadsList/ThreadsListUpdateButton.tsx:4
+msgid "btn.updating-threads-list"
+msgstr ""
+
+#: UI/Form/FormFooter.tsx:7
+msgid "cancel"
+msgstr ""
+
+#: Routes/Threads/ThreadsCategoriesModal/ThreadsCategoriesModal.tsx:18
 msgid "category_picker.title"
 msgstr ""
 
-#: src/UI/RootError/RootError.tsx:17
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationMenu.tsx:7
+#: Routes/Threads/ThreadsModeration/ThreadsModeration.tsx:19
+msgid "clear_selection"
+msgstr ""
+
+#: UI/RootError/RootError.tsx:15
 msgid "client_error.graphql"
 msgstr ""
 
-#: src/UI/RootError/RootError.tsx:24
+#: UI/RootError/RootError.tsx:25
 msgid "client_error.network"
 msgstr ""
 
-#: src/UI/Error/ErrorMessage.tsx:3
+#: Toasts/Toast.tsx:33
+#: UI/Form/FieldErrorFloating.tsx:11
+#: UI/Modal/ModalCloseFooter.tsx:6
+#: UI/Modal/ModalHeader.tsx:8
+msgid "close"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyEditForm.tsx:72
+msgid "edit_reply.message"
+msgstr ""
+
+#: Editor/EditorPreviewError.tsx:10
+msgid "editor.error_message"
+msgstr ""
+
+#: Editor/EditorPreviewButton.tsx:9
+msgid "editor.preview"
+msgstr ""
+
+#: Editor/Editor.tsx:38
+msgid "editor.write"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostHeader.tsx:33
+msgid "edits"
+msgstr ""
+
+#: UI/Error/ErrorMessage.tsx:3
 msgid "generic_error.message"
 msgstr ""
 
-#: src/UI/Error/Error.tsx:9
+#: UI/Error/Error.tsx:9
 msgid "generic_error.title"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:79
+#: UI/Paginator/PaginatorDropdownMenu.tsx:30
+msgid "go"
+msgstr ""
+
+#: AuthModal/RegisterModal.tsx:84
 msgid "input.email"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:76
+#: AuthModal/RegisterModal.tsx:81
 msgid "input.name"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:82
+#: AuthModal/RegisterModal.tsx:87
 msgid "input.password"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:66
+#: UI/LoadMoreButton/LoadMoreButton.tsx:9
+msgid "load-more"
+msgstr ""
+
+#: UI/LoadMoreButton/LoadMoreButton.tsx:9
+msgid "loading-more"
+msgstr ""
+
+#: Navbar/NavbarNav.tsx:32
+#: UI/RouteError/RouteAuthRequiredError.tsx:18
+msgid "login"
+msgstr ""
+
+#: AuthModal/LoginModal.tsx:71
 msgid "login.input.password"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:65
+#: AuthModal/LoginModal.tsx:70
 msgid "login.input.username"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:70
+#: AuthModal/LoginModal.tsx:75
 msgid "login.register"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:69
+#: AuthModal/LoginModal.tsx:74
 msgid "login.submit"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:69
+#: AuthModal/LoginModal.tsx:74
 msgid "login.submitting"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:38
+#: AuthModal/LoginModal.tsx:42
 msgid "login.title"
 msgstr ""
 
-#: src/UI/Modal/ModalHeader.tsx:10
-msgid "modal.close"
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModeration.tsx:15
+msgid "moderate_posts"
 msgstr ""
 
-#: src/Navbar/NavbarNav.tsx:16
-#: src/Navbar/NavbarNav.tsx:21
+#: Routes/Threads/ThreadsModeration/ThreadsModeration.tsx:14
+msgid "moderate_threads"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/useThreadModeration.tsx:28
+#: Routes/Threads/ThreadsModeration/useThreadsModeration.tsx:28
+msgid "moderation.close"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationClose.tsx:9
+msgid "moderation.close_thread"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationClose.tsx:9
+msgid "moderation.close_threads"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/useThreadModeration.tsx:39
+#: Routes/Thread/ThreadPost/ThreadPostModeration/useThreadPostModeration.tsx:15
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationDelete/ThreadPostsModerationDeleteForm.tsx:56
+#: Routes/Thread/ThreadPostsModeration/useThreadPostsModeration.tsx:17
+#: Routes/Threads/ThreadsModeration/useThreadsModeration.tsx:38
+msgid "moderation.delete"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationDelete/ThreadModerationDeleteForm.tsx:51
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationDelete/ThreadPostModerationDeleteForm.tsx:40
+msgid "moderation.delete_message"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationDelete/ThreadPostModerationDelete.tsx:9
+msgid "moderation.delete_post"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationDelete/ThreadPostModerationDeleteForm.tsx:44
+msgid "moderation.delete_post.submit"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationDelete/ThreadPostModerationDeleteForm.tsx:38
+msgid "moderation.delete_post_prompt"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationDelete/ThreadPostsModerationDelete.tsx:9
+msgid "moderation.delete_posts"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationDelete/ThreadModerationDelete.tsx:9
+#: Routes/Thread/ThreadModeration/ThreadModerationMove/ThreadModerationMove.tsx:9
+msgid "moderation.delete_thread"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationDelete/ThreadModerationDeleteForm.tsx:55
+msgid "moderation.delete_thread.submit"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationDelete/ThreadModerationDeleteForm.tsx:49
+msgid "moderation.delete_thread_prompt"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationDelete/ThreadsModerationDeleteForm.tsx:63
+msgid "moderation.delete_threads.submit"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/useThreadModeration.tsx:34
+#: Routes/Threads/ThreadsModeration/useThreadsModeration.tsx:33
+msgid "moderation.move"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationMove/ThreadModerationMoveForm.tsx:60
+msgid "moderation.move_thread.submit"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationDelete/ThreadsModerationDelete.tsx:9
+#: Routes/Threads/ThreadsModeration/ThreadsModerationMove/ThreadsModerationMove.tsx:9
+msgid "moderation.move_threads"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationMove/ThreadsModerationMoveForm.tsx:69
+msgid "moderation.move_threads.submit"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationMove/ThreadModerationMoveForm.tsx:55
+#: Routes/Threads/ThreadsModeration/ThreadsModerationMove/ThreadsModerationMoveForm.tsx:64
+msgid "moderation.new_category"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/useThreadModeration.tsx:22
+#: Routes/Threads/ThreadsModeration/useThreadsModeration.tsx:23
+msgid "moderation.open"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationOpen.tsx:9
+msgid "moderation.open_thread"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationOpen.tsx:9
+msgid "moderation.open_threads"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationError/ThreadPostModerationErrorHeader.tsx:3
+msgid "moderation.post_delete_error"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostModeration/ThreadPostModerationError/ThreadPostModerationErrorHeader.tsx:3
+msgid "moderation.post_update_error"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationSelectedPosts/ThreadPostsModerationSelectedPostsButton.tsx:4
+msgid "moderation.see_selected_posts"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationSelectedThreads/ThreadsModerationSelectedThreadsButton.tsx:4
+msgid "moderation.see_selected_threads"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:31
+msgid "moderation.selected_post_delete"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:13
+msgid "moderation.selected_post_delete_error"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationSelectedPosts/ThreadPostsModerationSelectedPosts.tsx:9
+msgid "moderation.selected_posts"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:23
+msgid "moderation.selected_posts_delete_error"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:18
+msgid "moderation.selected_posts_delete_error_some"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:41
+msgid "moderation.selected_posts_error"
+msgstr ""
+
+#: Routes/Thread/ThreadPostsModeration/ThreadPostsModerationError/ThreadPostsModerationErrorHeader.tsx:36
+msgid "moderation.selected_posts_error_some"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:31
+msgid "moderation.selected_thread_delete"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:13
+msgid "moderation.selected_thread_delete_error"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationSelectedThreads/ThreadsModerationSelectedThreads.tsx:9
+msgid "moderation.selected_threads"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:23
+msgid "moderation.selected_threads_delete_error"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:18
+msgid "moderation.selected_threads_delete_error_some"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:41
+msgid "moderation.selected_threads_error"
+msgstr ""
+
+#: Routes/Threads/ThreadsModeration/ThreadsModerationError/ThreadsModerationErrorHeader.tsx:36
+msgid "moderation.selected_threads_error_some"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModeration.tsx:5
+msgid "moderation.thread"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationError/ThreadModerationError.tsx:7
+msgid "moderation.thread_delete_error"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationDelete/ThreadModerationDeleteForm.tsx:33
+msgid "moderation.thread_deleted"
+msgstr ""
+
+#: Routes/Thread/ThreadModeration/ThreadModerationError/ThreadModerationError.tsx:9
+msgid "moderation.thread_update_error"
+msgstr ""
+
+#: Navbar/NavbarNav.tsx:15
+#: Navbar/NavbarNav.tsx:20
 msgid "navbar.categories"
 msgstr ""
 
-#: src/Navbar/NavbarNav.tsx:33
-msgid "navbar.login"
-msgstr "Logowanie"
-
-#: src/Navbar/NavbarNav.tsx:29
-#: src/Navbar/NavbarUserDropdown.tsx:12
+#: Navbar/NavbarNav.tsx:28
+#: Navbar/NavbarUserDropdown.tsx:12
 msgid "navbar.logout"
 msgstr ""
 
-#: src/Navbar/NavbarUserDropdown.tsx:10
+#: Navbar/NavbarUserDropdown.tsx:11
 msgid "navbar.profile"
 msgstr ""
 
-#: src/Navbar/NavbarNav.tsx:36
-msgid "navbar.register"
-msgstr "Rejestracja"
-
-#: src/Navbar/NavbarNav.tsx:16
-#: src/Navbar/NavbarNav.tsx:23
+#: Navbar/NavbarNav.tsx:15
+#: Navbar/NavbarNav.tsx:22
 msgid "navbar.threads"
 msgstr ""
 
-#: src/Navbar/NavbarCollapse.tsx:29
+#: Navbar/NavbarCollapse.tsx:27
 msgid "navbar.toggle"
 msgstr ""
 
-#: src/UI/Error/NotFoundError.tsx:6
+#: UI/Error/NotFoundError.tsx:6
 msgid "not_found_error.message"
 msgstr ""
 
-#: src/UI/Error/NotFoundError.tsx:4
+#: UI/Error/NotFoundError.tsx:4
 msgid "not_found_error.title"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:88
+#: UI/Paginator/PaginatorDropdown.tsx:12
+msgid "paginator"
+msgstr ""
+
+#: UI/Paginator/PaginatorDropdownMenu.tsx:25
+msgid "paginator.goto"
+msgstr ""
+
+#: UI/Paginator/PaginatorDropdown.tsx:10
+msgid "paginator_compact"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostOptions.tsx:11
+msgid "post.edit"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostPermalink.tsx:8
+msgid "post.permalink"
+msgstr ""
+
+#: Routes/Thread/ThreadPost/ThreadPostPermalink.tsx:12
+msgid "post.permalink_copied"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyNewForm.tsx:56
+msgid "post_reply.message"
+msgstr ""
+
+#: Routes/PostThread/PostThreadAuthRequiredError.tsx:4
+msgid "post_thread.auth_error"
+msgstr ""
+
+#: Routes/PostThread/PostThreadCategorySelect/PostThreadCategorySelectNoResults.tsx:7
+msgid "post_thread.category_search_clear"
+msgstr ""
+
+#: Routes/PostThread/PostThreadCategorySelect/PostThreadCategorySelectNoResults.tsx:5
+msgid "post_thread.category_search_empty"
+msgstr ""
+
+#: Routes/PostThread/PostThreadPermissionDeniedError.tsx:4
+msgid "post_thread.no_valid_categories_error"
+msgstr ""
+
+#: Routes/PostThread/PostThreadPermissionDeniedError.tsx:6
+msgid "post_thread.no_valid_categories_error_message"
+msgstr ""
+
+#: Routes/PostThread/PostThreadCategorySelect/PostThreadCategorySelectSearch.tsx:9
+msgid "post_thread.search_category"
+msgstr ""
+
+#: Routes/PostThread/PostThreadCategoryInput/PostThreadCategoryInputPlaceholder.tsx:4
+#: Routes/PostThread/PostThreadCategorySelect/PostThreadCategorySelect.tsx:14
+msgid "post_thread.select_category"
+msgstr ""
+
+#: Routes/PostThread/PostThread.tsx:32
+msgid "post_thread.title"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:81
+msgid "posting.close_thread"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyContext.tsx:35
+msgid "posting.confirm_cancel_edit_to_reply"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyDialog.tsx:13
+msgid "posting.edit"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyEditError.tsx:8
+#: Routes/Thread/ThreadReply/ThreadReplyError.tsx:6
+msgid "posting.error"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyError.tsx:8
+msgid "posting.error_detail"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:46
+msgid "posting.form"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:62
+msgid "posting.message"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:78
+#: Routes/Thread/ThreadReply/ThreadReplyEditForm.tsx:86
+#: Routes/Thread/ThreadReply/ThreadReplyNewForm.tsx:63
+msgid "posting.placeholder"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyEditError.tsx:10
+msgid "posting.post_not_found"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyDialog.tsx:13
+msgid "posting.reply"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:86
+msgid "posting.submit"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyEditForm.tsx:86
+msgid "posting.submit_changes"
+msgstr ""
+
+#: Routes/Thread/ThreadReply/ThreadReplyNewForm.tsx:63
+msgid "posting.submit_reply"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:75
+msgid "posting.thread_category"
+msgstr ""
+
+#: Routes/PostThread/PostThreadForm.tsx:69
+#: Routes/PostThread/PostThreadForm.tsx:69
+msgid "posting.thread_title"
+msgstr ""
+
+#: Navbar/NavbarNav.tsx:35
+#: UI/RouteError/RouteAuthRequiredError.tsx:19
+msgid "register"
+msgstr ""
+
+#: AuthModal/RegisterModal.tsx:93
 msgid "register.login"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:87
+#: AuthModal/RegisterModal.tsx:92
 msgid "register.submit"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:87
+#: AuthModal/RegisterModal.tsx:92
 msgid "register.submitting"
 msgstr ""
 
-#: src/AuthModal/RegisterModal.tsx:52
+#: AuthModal/RegisterModal.tsx:57
 msgid "register.title"
 msgstr ""
 
-#: src/Routes/Threads/ThreadsList/ThreadsListGraphQLError.tsx:5
+#: Routes/Thread/ThreadHeader/ThreadHeaderTitleEditForm.tsx:58
+msgid "save"
+msgstr ""
+
+#: UI/CategorySelect/CategorySelect.tsx:7
+msgid "select_category.placeholder"
+msgstr ""
+
+#: Routes/Thread/ThreadToolbar/ThreadToolbarReplyButton.tsx:10
+msgid "thread.closed"
+msgstr ""
+
+#: Routes/Thread/ThreadToolbar/ThreadToolbarReplyButton.tsx:10
+msgid "thread.new_reply"
+msgstr ""
+
+#: Routes/Threads/ThreadsList/ThreadsListBlankslate.tsx:5
+msgid "threads.blankslate.header"
+msgstr ""
+
+#: Routes/Threads/ThreadsList/ThreadsListBlankslate.tsx:7
+msgid "threads.blankslate.message"
+msgstr ""
+
+#: Routes/Threads/ThreadsList/ThreadsListGraphQLError.tsx:7
 msgid "threads.graphql_error_header"
 msgstr ""
 
-#: src/Routes/Threads/Header/HeaderAllThreads.tsx:4
-#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavButton.tsx:5
-#: src/Routes/Threads/MobileCategoryNav/MobileCategoryNavModal.tsx:17
-#: src/UI/CategoriesNav/CategoriesNav.tsx:13
+#: Routes/Threads/ThreadsCategoriesModal/ThreadsCategoriesModal.tsx:21
+#: Routes/Threads/ThreadsCategoriesModal/ThreadsCategoriesModalButton.tsx:12
+#: Routes/Threads/ThreadsHeader/ThreadsHeaderAll.tsx:4
+#: UI/CategoriesNav/CategoriesNav.tsx:13
 msgid "threads.header"
 msgstr ""
 
-#: src/Routes/Threads/ThreadsAll.tsx:22
+#: Routes/Threads/ThreadsAll.tsx:25
 msgid "threads.title"
 msgstr ""
 
-#: src/UI/Tidbits/TidbitMembers.tsx:6
+#: UI/Tidbits/TidbitActivity.tsx:28
+#: UI/Tidbits/TidbitActivity.tsx:37
+msgid "tidbit.activity"
+msgstr ""
+
+#: UI/Tidbits/TidbitClosed.tsx:7
+msgid "tidbit.closed"
+msgstr ""
+
+#: UI/Tidbits/TidbitMembers.tsx:6
 msgid "tidbit.members"
 msgstr ""
 
-#: src/UI/Tidbits/TidbitPosts.tsx:6
+#: UI/Tidbits/TidbitPosts.tsx:6
 msgid "tidbit.posts"
-msgstr "{value, plural, one {<0>#</0> post} few {<0>#</0> posty} many {<0>#</0> postów}}"
+msgstr ""
 
-#: src/UI/Tidbits/TidbitThreads.tsx:6
+#: UI/Tidbits/TidbitReplies.tsx:6
+msgid "tidbit.replies"
+msgstr ""
+
+#: UI/Tidbits/TidbitThreads.tsx:6
 msgid "tidbit.threads"
-msgstr "{value, plural, one {<0>#</0> temat} few {<0>#</0> tematy} many {<0>#</0> tematów}}"
+msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:55
+#: UI/Timestamp/Timestamp.tsx:51
+msgid "time.days_ago"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:38
+msgid "time.hours_ago"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:65
+msgid "time.in_days"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:62
+msgid "time.in_hours"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:59
+msgid "time.in_minutes"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:56
+msgid "time.in_moment"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:35
+msgid "time.minutes_ago"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:32
+msgid "time.moment_ago"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:70
+#: UI/Timestamp/Timestamp.tsx:72
+msgid "time.on"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:42
+msgid "time.today"
+msgstr ""
+
+#: UI/Timestamp/Timestamp.tsx:46
+msgid "time.yesterday"
+msgstr ""
+
+#: AuthModal/LoginModal.tsx:60
 msgid "value_error.all_fields_are_required"
 msgstr ""
 
-#: src/UI/ValidationError/ValidationError.tsx:36
+#: UI/ValidationError/ValidationError.tsx:45
 msgid "value_error.any_str.max_length"
 msgstr ""
 
-#: src/UI/ValidationError/ValidationError.tsx:27
+#: UI/ValidationError/ValidationError.tsx:34
 msgid "value_error.any_str.min_length"
 msgstr ""
 
-#: src/UI/ValidationError/EmailValidationError.tsx:27
+#: UI/ValidationError/CategoryValidationError.tsx:18
+msgid "value_error.category.missing"
+msgstr ""
+
+#: UI/ValidationError/CategoryValidationError.tsx:42
+msgid "value_error.category.not_exists"
+msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:27
 msgid "value_error.email"
 msgstr ""
 
-#: src/UI/ValidationError/EmailValidationError.tsx:22
+#: UI/ValidationError/EmailValidationError.tsx:19
 msgid "value_error.email.missing"
 msgstr ""
 
-#: src/UI/ValidationError/EmailValidationError.tsx:32
+#: UI/ValidationError/EmailValidationError.tsx:43
+msgid "value_error.email.not_allowed"
+msgstr ""
+
+#: UI/ValidationError/EmailValidationError.tsx:35
 msgid "value_error.email.not_available"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:56
-#~ msgid "value_error.invalid_credentials"
-#~ msgstr ""
-
-#: src/UI/ValidationError/ValidationError.tsx:22
+#: UI/ValidationError/ValidationError.tsx:26
 msgid "value_error.missing"
 msgstr ""
 
-#: src/UI/ValidationError/PasswordValidationError.tsx:38
+#: UI/ValidationError/PasswordValidationError.tsx:39
 msgid "value_error.password.max_length"
 msgstr ""
 
-#: src/UI/ValidationError/PasswordValidationError.tsx:29
+#: UI/ValidationError/PasswordValidationError.tsx:28
 msgid "value_error.password.min_length"
 msgstr ""
 
-#: src/UI/ValidationError/PasswordValidationError.tsx:24
+#: UI/ValidationError/PasswordValidationError.tsx:20
 msgid "value_error.password.missing"
 msgstr ""
 
-#: src/UI/ValidationError/UsernameValidationError.tsx:29
+#: UI/ValidationError/PostValidationError.tsx:58
+msgid "value_error.post.not_exists"
+msgstr ""
+
+#: UI/ValidationError/PostValidationError.tsx:50
+msgid "value_error.post.thread_start"
+msgstr ""
+
+#: UI/ValidationError/PostsValidationError.tsx:31
+msgid "value_error.posts.max_items"
+msgstr ""
+
+#: UI/ValidationError/PostsValidationError.tsx:20
+msgid "value_error.posts.min_items"
+msgstr ""
+
+#: UI/ValidationError/ThreadValidationError.tsx:50
+msgid "value_error.thread.not_exists"
+msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:29
+msgid "value_error.thread_title"
+msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:56
+msgid "value_error.thread_title.max_length"
+msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:45
+msgid "value_error.thread_title.min_length"
+msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:21
+msgid "value_error.thread_title.missing"
+msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:37
+msgid "value_error.thread_title.not_allowed"
+msgstr ""
+
+#: UI/ValidationError/ThreadsValidationError.tsx:31
+msgid "value_error.threads.max_items"
+msgstr ""
+
+#: UI/ValidationError/ThreadsValidationError.tsx:20
+msgid "value_error.threads.min_items"
+msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:29
 msgid "value_error.username"
 msgstr ""
 
-#: src/UI/ValidationError/UsernameValidationError.tsx:48
+#: UI/ValidationError/UsernameValidationError.tsx:64
 msgid "value_error.username.max_length"
 msgstr ""
 
-#: src/UI/ValidationError/UsernameValidationError.tsx:39
+#: UI/ValidationError/UsernameValidationError.tsx:53
 msgid "value_error.username.min_length"
 msgstr ""
 
-#: src/UI/ValidationError/UsernameValidationError.tsx:24
+#: UI/ValidationError/UsernameValidationError.tsx:21
 msgid "value_error.username.missing"
 msgstr ""
 
-#: src/UI/ValidationError/UsernameValidationError.tsx:34
+#: UI/ValidationError/UsernameValidationError.tsx:45
+msgid "value_error.username.not_allowed"
+msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:37
 msgid "value_error.username.not_available"
 msgstr ""
 
-#: src/AuthModal/LoginModal.tsx:58
+#: AuthModal/LoginModal.tsx:63
 msgid "value_errosr.invalid_credentials"
 msgstr ""
+
+#: UI/ValidationError/PasswordValidationError.tsx:35
+#~ msgid "{max, plural, one {Password should be no longer than # character (it has {value}).} other {Password should be no longer than # characters (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ValidationError.tsx:38
+#~ msgid "{max, plural, one {This value should be no longer than # character (it has {value}).} other {This value should be no longer than # characters (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:46
+#~ msgid "{max, plural, one {Thread title should be no longer than # character (it has {value}).} other {Thread title should be no longer than # characters (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:51
+#~ msgid "{max, plural, one {User name should be no longer than # character (it has {value}).} other {User name should be no longer than # characters (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/PostsValidationError.tsx:30
+#~ msgid "{max, plural, one {You can't select more than # post (you've selected {value}).} other {You can't select more than # posts (you've selected {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadsValidationError.tsx:30
+#~ msgid "{max, plural, one {You can't select more than # thread (you've selected {value}).} other {You can't select more than # threads (you've selected {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/PasswordValidationError.tsx:27
+#~ msgid "{min, plural, one {Password should be at least # character long (it has {value}).} other {Password should be at least # characters long (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/PostsValidationError.tsx:22
+#~ msgid "{min, plural, one {Select at least # post.} other {Select at least # posts.}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadsValidationError.tsx:22
+#~ msgid "{min, plural, one {Select at least # thread.} other {Select at least # threads.}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ValidationError.tsx:30
+#~ msgid "{min, plural, one {This value should be at least # character long (it has {value}).} other {This value should be at least # characters long (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/ThreadTitleValidationError.tsx:38
+#~ msgid "{min, plural, one {Thread title should be at least # character long (it has {value}).} other {Thread title should be at least # characters long (it has {value}).}}"
+#~ msgstr ""
+
+#: UI/ValidationError/UsernameValidationError.tsx:43
+#~ msgid "{min, plural, one {User name should be at least # character long (it has {value}).} other {User name should be at least # characters long (it has {value}).}}"
+#~ msgstr ""

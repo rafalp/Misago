@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { useLingui } from "@lingui/react"
 import React from "react"
 import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
@@ -16,8 +15,6 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
   min = 0,
   max = 0,
 }) => {
-  const { i18n } = useLingui()
-
   if (!error) return null
 
   const errorType = ERROR_TYPES_MAP[error.type] || error.type
@@ -29,43 +26,47 @@ const ThreadValidationError: React.FC<IValidationErrorProps> = ({
     case "auth_error.not_moderator":
       return children({
         type: errorType,
-        message: i18n._(
-          "auth_error.not_moderator.thread",
-          t`You can't moderate this thread.`
-        ),
+        message: t({
+          id: "auth_error.not_moderator.thread",
+          message: "You can't moderate this thread.",
+        }),
       })
 
     case "auth_error.category.closed":
       return children({
         type: errorType,
-        message: i18n._(
-          "auth_error.thread_category.closed",
-          t`This thread's category is closed.`
-        ),
+        message: t({
+          id: "auth_error.thread_category.closed",
+          message: "This thread's category is closed.",
+        }),
       })
 
     case "auth_error.thread.closed":
       return children({
         type: errorType,
-        message: i18n._("auth_error.thread.closed", t`This thread is closed.`),
+        message: t({
+          id: "auth_error.thread.closed",
+          message: "This thread is closed.",
+        }),
       })
 
     case "auth_error.thread.not_author":
       return children({
         type: errorType,
-        message: i18n._(
-          "auth_error.thread.not_author",
-          t`You need to be this thread's author to perform this action.`
-        ),
+        message: t({
+          id: "auth_error.thread.not_author",
+          message:
+            "You need to be this thread's author to perform this action.",
+        }),
       })
 
     case "value_error.thread.not_exists":
       return children({
         type: errorType,
-        message: i18n._(
-          "value_error.thread.not_exists",
-          t`Thread could not be found.`
-        ),
+        message: t({
+          id: "value_error.thread.not_exists",
+          message: "Thread could not be found.",
+        }),
       })
   }
 

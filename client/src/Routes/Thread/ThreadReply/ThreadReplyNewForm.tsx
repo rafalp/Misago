@@ -86,7 +86,9 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
             </ThreadPostRootError>
             <React.Suspense fallback={<PostingFormLoader />}>
               <Field
-                label={<Trans id="posting.message">Message contents</Trans>}
+                label={
+                  <Trans id="posting.placeholder">Message contents</Trans>
+                }
                 name="markup"
                 className="form-group-editor form-group-with-floating-error"
                 input={

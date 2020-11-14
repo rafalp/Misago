@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup"
+import { t } from "@lingui/macro"
 import React from "react"
 import { UseFormMethods, useForm } from "react-hook-form"
 import * as Yup from "yup"
@@ -21,11 +22,12 @@ export interface IThreadReplyContext {
   form: UseFormMethods<IThreadReplyFormValues>
   startReply: () => void
   editReply: (post: IThreadReplyPost) => void
-  cancelReply: () => void
+  cancelReply: (force?: boolean) => void
   setFullscreen: (state: boolean) => void
   setMinimized: (state: boolean) => void
   getValue: () => string
-  setValue: (value: string) => void
+  setValue: (value: string, dirty?: boolean) => void
+  resetValue: (value?: string) => void
 }
 
 const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
@@ -67,17 +69,39 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
 
   const formSetValue = form.setValue
   const setValue = React.useCallback(
-    (value: string) => {
-      formSetValue("markup", value)
-    },
+    (value: string) => formSetValue("markup", value),
     [formSetValue]
   )
 
+  const formReset = form.reset
+  const resetValue = React.useCallback(
+    (value?: string) => {
+      formReset({ markup: value || "" }, { submitCount: true })
+    },
+    [formReset]
+  )
+
+  const dirtyFields = form.formState.dirtyFields
+  const hasChanges = React.useCallback(() => {
+    if (getValue().length === 0) return false
+    return !!dirtyFields.markup
+  }, [getValue, dirtyFields])
+
   const startReply = React.useCallback(() => {
-    if (isActive && mode === "reply") {
-      return // short-circuit new reply
+    if (isActive && mode === "edit" && hasChanges()) {
+      // ask user to confirm mode change
+      const confirmed = window.confirm(
+        t({
+          id: "posting.confirm_cancel_edit_to_reply",
+          message:
+            "You are currently editing a post. Do you want to abandon your changes and write a new reply instead?",
+        })
+      )
+
+      if (!confirmed) return
     }
 
+    resetValue()
     setActive(true)
     setMode("reply")
     setPost(null)
@@ -86,19 +110,44 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   }, [
     isActive,
     mode,
+    hasChanges,
     setActive,
     setMode,
     setPost,
     setFullscreen,
     setMinimized,
+    resetValue,
   ])
 
   const editReply = React.useCallback(
     (newPost: IThreadReplyPost) => {
-      if (isActive && mode === "edit" && post?.id === newPost.id) {
-        return // short-circuit edit
+      if (isActive && hasChanges()) {
+        if (mode === "reply") {
+          const confirmed = window.confirm(
+            t({
+              id: "posting.confirm_cancel_reply_to_edit",
+              message:
+                "You are currently writing a new reply. Do you want to abandon it and edit this post instead?",
+            })
+          )
+
+          if (!confirmed) return
+        }
+
+        if (mode === "edit" && post?.id !== newPost.id) {
+          const confirmed = window.confirm(
+            t({
+              id: "posting.confirm_cancel_edit_to_edit",
+              message:
+                "You are currently editing other post. Do you want to abandon your changes and edit this post instead?",
+            })
+          )
+
+          if (!confirmed) return
+        }
       }
 
+      resetValue()
       setActive(true)
       setMode("edit")
       setPost(newPost)
@@ -109,22 +158,37 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
       isActive,
       mode,
       post,
+      hasChanges,
       setActive,
       setMode,
       setPost,
       setFullscreen,
       setMinimized,
+      resetValue,
     ]
   )
 
-  const { clearErrors } = form
-  const cancelReply = React.useCallback(() => {
-    setActive(false)
-    setMode("reply")
-    setPost(null)
-    clearErrors("markup")
-    setValue("")
-  }, [clearErrors, setActive, setMode, setPost, setValue])
+  const cancelReply = React.useCallback(
+    (force?: boolean) => {
+      if (!force && isActive && hasChanges()) {
+        // ask user to confirm cancel
+        const confirmed = window.confirm(
+          t({
+            id: "posting.confirm_cancel",
+            message: "Are you sure you want to abandon your post?",
+          })
+        )
+
+        if (!confirmed) return
+      }
+
+      setActive(false)
+      setMode("reply")
+      setPost(null)
+      resetValue()
+    },
+    [isActive, hasChanges, setActive, setMode, setPost, resetValue]
+  )
 
   return (
     <ThreadReplyContext.Provider
@@ -142,6 +206,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
         cancelReply,
         getValue,
         setValue,
+        resetValue,
       }}
     >
       {props.children}

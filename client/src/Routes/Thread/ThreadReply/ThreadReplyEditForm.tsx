@@ -28,17 +28,15 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
 }) => {
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
-  const { cancelReply, form, setValue } = context
+  const { cancelReply, form, resetValue } = context
 
   const query = usePostMarkupQuery({ id: post.id })
   const mutation = useEditPostMutation(post)
 
   const defaultValue = query.data?.post?.markup || ""
   React.useEffect(() => {
-    if (defaultValue.length) {
-      setValue(defaultValue)
-    }
-  }, [setValue, defaultValue])
+    resetValue(defaultValue)
+  }, [resetValue, defaultValue])
 
   if (query.loading) {
     return (
@@ -91,7 +89,7 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
                       </Trans>
                     )
 
-                    cancelReply()
+                    cancelReply(true)
                   }
                 } catch (error) {
                   // do nothing when editPost throws
@@ -108,7 +106,9 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
                 )}
               </ThreadPostRootError>
               <Field
-                label={<Trans id="posting.message">Message contents</Trans>}
+                label={
+                  <Trans id="posting.placeholder">Message contents</Trans>
+                }
                 name="markup"
                 className="form-group-editor form-group-with-floating-error"
                 input={

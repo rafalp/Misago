@@ -1,5 +1,4 @@
 import { Trans, t } from "@lingui/macro"
-import { useLingui } from "@lingui/react"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
@@ -49,8 +48,6 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
   categories,
   validCategories,
 }) => {
-  const { i18n } = useLingui()
-
   const user = useAuthContext()
   const isModerator = user ? user.isModerator : false
 
@@ -127,7 +124,10 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             name="title"
             input={
               <Input
-                placeholder={i18n._("posting.thread_title", t`Thread title`)}
+                placeholder={t({
+                  id: "posting.thread_title",
+                  message: "Thread title",
+                })}
                 responsive
               />
             }
@@ -161,7 +161,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             labelReaderOnly
           />
           <Field
-            label={<Trans id="posting.message">Message contents</Trans>}
+            label={<Trans id="posting.placeholder">Message contents</Trans>}
             name="markup"
             input={<Editor />}
             error={(error, value) => (

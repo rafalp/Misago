@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { useLingui } from "@lingui/react"
 import classnames from "classnames"
 import React from "react"
 
@@ -12,7 +11,6 @@ const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
   type,
   children,
 }) => {
-  const { i18n } = useLingui()
   const [show, setShow] = React.useState(true)
 
   React.useEffect(() => {
@@ -25,7 +23,7 @@ const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
       <button
         type="button"
         className="ml-2 close"
-        aria-label={i18n._("close", t`Close`)}
+        aria-label={t({ id: "close", message: "Close" })}
         onClick={() => setShow(false)}
       >
         <span aria-hidden="true">&times;</span>
