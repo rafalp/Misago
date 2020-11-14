@@ -39,6 +39,11 @@ $posting-form-transition: transform 0.3s ease-out !default;
 
   &.show {
     height: auto;
+    pointer-events: none;
+  }
+
+  .container {
+    pointer-events: auto;
   }
 
   @include media-breakpoint-down(sm) {
