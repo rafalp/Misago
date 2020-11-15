@@ -15,7 +15,13 @@ import {
   CardHeader,
 } from "../../UI/Card"
 import { Checkbox } from "../../UI/Checkbox"
-import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
+import {
+  Field,
+  FieldError,
+  FieldWatcher,
+  Form,
+  FormFooter,
+} from "../../UI/Form"
 import Input from "../../UI/Input"
 import RootError from "../../UI/RootError"
 import {
@@ -27,6 +33,7 @@ import * as urls from "../../urls"
 import { ICategoryChoice } from "./PostThread.types"
 import PostThreadCategoryInput from "./PostThreadCategoryInput"
 import usePostThreadMutation from "./usePostThreadMutation"
+import useThreadDraft from "./useThreadDraft"
 
 const Editor = React.lazy(() => import("../../Editor"))
 
@@ -61,6 +68,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
     postThread,
     { data, loading, error: graphqlError },
   ] = usePostThreadMutation()
+  const draft = useThreadDraft()
 
   const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
@@ -83,9 +91,9 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
       <CardHeader title={<Trans id="posting.form">Post a new thread</Trans>} />
       <Form<IPostThreadFormValues>
         defaultValues={{
-          category: category || "",
-          title: "",
-          markup: "",
+          category: category || draft.category || "",
+          title: draft.title || "",
+          markup: draft.markup || "",
           isClosed: false,
         }}
         disabled={loading}
@@ -106,12 +114,17 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
           })
 
           if (thread) {
+            draft.remove()
+
             showToast(
               <Trans id="posting.message">New thread has been posted.</Trans>
             )
           }
         }}
       >
+        <FieldWatcher name="title" onChange={draft.setTitle} />
+        <FieldWatcher name="category" onChange={draft.setCategory} />
+        <FieldWatcher name="markup" onChange={draft.setMarkup} />
         <RootError
           graphqlError={graphqlError}
           dataErrors={data?.postThread.errors}
