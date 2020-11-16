@@ -14,7 +14,6 @@ services:
     command: /opt/bh/webapp/src/manage.py runserver 0.0.0.0:8200
     volumes:
       - ./:/opt/bh
-      - ./webapp/src/community_app/static/:/opt/bh/misago/static/misago/
     tty: true
     depends_on:
       - postgres
@@ -30,19 +29,10 @@ services:
       DD_ENV: "${DD_ENV:-local}"
       DD_TRACE_AGENT_URL: http://datadog:8126
       DD_TRACE_ENABLED: "${DD_TRACE_ENABLED:-False}"
-      LOCAL_PORT: 8200
     networks:
       default:
         aliases:
           - community_app_web
-
-  # community_app_frontend:
-  #   image: community_app_frontend
-  #   build: docker/client
-  #   volumes:
-  #     - ./docker/client/task:/var/task
-  #   ports:
-  #     - "3100:3100"
 
   community_app_web-test:
     build:
@@ -50,7 +40,6 @@ services:
       args:
         GIT_TOKEN: ${GIT_TOKEN}
         PIP_REQUIREMENTS: requirements-test.txt
-    entrypoint: ""
     command: bash -c "python -m pytest --cov --cov-report html:htmlcov --cov-report term -s && flake8 . && mypy src --show-error-codes"
     volumes:
       - ./:/opt/bh

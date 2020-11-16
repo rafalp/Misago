@@ -9,7 +9,7 @@ ARG PIP_REQUIREMENTS
 
 # install Python modules needed by the Python app
 RUN sudo pip install --upgrade pip
-RUN pip install --no-cache-dir --no-warn-script-location -r /opt/bh/webapp/$PIP_REQUIREMENTS --user
+RUN pip install --no-warn-script-location -r /opt/bh/webapp/$PIP_REQUIREMENTS --user
 
 COPY . /opt/bh/
 
@@ -28,17 +28,10 @@ USER root
 RUN npm install
 RUN npm install gulp
 
-# Build FE app
-RUN npx gulp build
-WORKDIR /opt/bh
-RUN ls -l
-# RUN rsync -q -rv misago/static/misago/ webapp/src/community_app/static/
-
 # tell the port number the container should expose
 EXPOSE 8200
 
-# run the application
+# finish up
 USER circleci
-RUN ls /opt/bh/misago/static/misago/
-ENTRYPOINT ["python3"]
-CMD /opt/bh/webapp/src/manage.py runserver 0.0.0.0:8200
+WORKDIR /opt/bh
+ENV PYTHONPATH=$PYTHONPATH:/opt/bh/webapp/src/

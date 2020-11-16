@@ -113,6 +113,3 @@ data/*
 # tests
 .pytest_cache/
 cov_html
-
-# Frontend: built on deploy
-webapp/src/community_app/static/

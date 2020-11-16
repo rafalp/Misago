@@ -20,7 +20,8 @@ var fs = require('fs');
 var glob = require('glob');
 var del = require('del');
 
-var misago = '../misago/static/misago/';
+var misago = '../webapp/src/misago/static/misago/';
+
 
 // Source tasks
 
@@ -29,7 +30,7 @@ function getSources() {
 
   function include(pattern) {
     var paths = glob.sync(pattern);
-    paths.forEach(function(path) {
+    paths.forEach(function (path) {
       sources.push(path);
     });
   };
@@ -37,7 +38,7 @@ function getSources() {
   include('src/initializers/*.js');
   include('src/initializers/**/*.js');
 
-  return sources.map(function(path) {
+  return sources.map(function (path) {
     return path;
   });
 };
@@ -45,32 +46,32 @@ function getSources() {
 function lintjsapp() {
   return gulp.src('src/**/*.js')
     .pipe(eslint({
-        'parser': 'babel-eslint',
-        'parserOptions': {
-            'ecmaVersion': 7,
-            'sourceType': 'module',
-            'ecmaFeatures': {
-                'jsx': true
-            }
-        },
-        rules: {
-          "semi": ["error", "never"],
-          "no-undef": "error",
-          "strict": 2
-        },
-        globals: [
-          "gettext",
-          "ngettext",
-          "interpolate",
-          "misago",
-          "hljs"
-        ],
-        envs: [
-            "browser",
-            "jquery",
-            "node",
-            "es6"
-        ]
+      'parser': 'babel-eslint',
+      'parserOptions': {
+        'ecmaVersion': 7,
+        'sourceType': 'module',
+        'ecmaFeatures': {
+          'jsx': true
+        }
+      },
+      rules: {
+        "semi": ["error", "never"],
+        "no-undef": "error",
+        "strict": 2
+      },
+      globals: [
+        "gettext",
+        "ngettext",
+        "interpolate",
+        "misago",
+        "hljs"
+      ],
+      envs: [
+        "browser",
+        "jquery",
+        "node",
+        "es6"
+      ]
     }))
     .pipe(eslint.format());
 };
@@ -79,9 +80,9 @@ function fastsource() {
   process.env.NODE_ENV = 'development';
 
   return browserify({
-      entries: getSources(),
-      debug: true,
-    })
+    entries: getSources(),
+    debug: true,
+  })
     .external('moment')
     .external('cropit')
     .external('react')
@@ -100,11 +101,11 @@ function watchifybuild() {
   process.env.NODE_ENV = 'development';
 
   var b = browserify({
-      entries: getSources(),
-      debug: true,
-      cache: {},
-      packageCache: {}
-    })
+    entries: getSources(),
+    debug: true,
+    cache: {},
+    packageCache: {}
+  })
     .plugin(watchify, {
       delay: 100,
       poll: true
@@ -117,35 +118,35 @@ function watchifybuild() {
     .external('redux')
     .external('react-redux')
     .transform(babelify)
-    .on('error', function(err) {
+    .on('error', function (err) {
       gutil.log(gutil.colors.red(err.toString() + '\n' + err.codeFrame));
       this.emit('end');
     });
 
-    function bundle() {
-      b.bundle()
-        .on('error', function(err) {
-          gutil.log(gutil.colors.red(err.toString() + '\n' + err.codeFrame));
-          this.emit('end');
-        })
-        .pipe(fs.createWriteStream(misago + 'js/misago.js'));
-    }
+  function bundle() {
+    b.bundle()
+      .on('error', function (err) {
+        gutil.log(gutil.colors.red(err.toString() + '\n' + err.codeFrame));
+        this.emit('end');
+      })
+      .pipe(fs.createWriteStream(misago + 'js/misago.js'));
+  }
 
-    b.on('update', bundle);
-    bundle();
+  b.on('update', bundle);
+  bundle();
 
-    b.on('log', function (msg) {
-      gutil.log(gutil.colors.cyan('watchify:'), msg);
-    });
+  b.on('log', function (msg) {
+    gutil.log(gutil.colors.cyan('watchify:'), msg);
+  });
 }
 
 function jsapp() {
   process.env.NODE_ENV = 'production';
 
   return browserify({
-      entries: getSources(),
-      debug: false
-    })
+    entries: getSources(),
+    debug: false
+  })
     .external('moment')
     .external('cropit')
     .external('react')
@@ -166,15 +167,15 @@ function jsapp() {
 // Styles tasks
 
 function cleanstyle() {
-  return del(misago + 'css', {force: true});
+  return del(misago + 'css', { force: true });
 };
 
 function faststyle() {
   return gulp.src('style/index.less')
-    .pipe(less().on('error', function(err) {
-        gutil.log(gutil.colors.red(err.toString()));
-        this.emit('end');
-      }))
+    .pipe(less().on('error', function (err) {
+      gutil.log(gutil.colors.red(err.toString()));
+      this.emit('end');
+    }))
     .pipe(rename('misago.css'))
     .pipe(gulp.dest(misago + 'css'));
 };
@@ -182,7 +183,7 @@ function faststyle() {
 function style() {
   return gulp.src('style/index.less')
     .pipe(less())
-    .pipe(cleanCss({compatibility: 'ie11'}))
+    .pipe(cleanCss({ compatibility: 'ie11' }))
     .pipe(rename('misago.css'))
     .pipe(gulp.dest(misago + 'css'));
 };
@@ -207,9 +208,9 @@ function vendors() {
   process.env.NODE_ENV = 'production';
 
   return browserify({
-      entries: 'src/vendor.js',
-      debug: false
-    })
+    entries: 'src/vendor.js',
+    debug: false
+  })
     .transform('browserify-shim')
     .require('moment')
     .require('cropit')

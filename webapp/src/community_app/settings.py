@@ -126,17 +126,17 @@ AWS_S3_OBJECT_PARAMETERS = {
     "GrantRead": "uri=http://acs.amazonaws.com/groups/global/AllUsers",
 }
 
-STATICFILES_DIRS = [
-    os.path.abspath(os.path.join(BASE_DIR, "community_app", "static")),
-]
-
 STATICFILES_LOCATION = "static"  # used in url
 
 if STATICFILES_STORAGE == "storages.backends.s3boto3.S3Boto3Storage":
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/"
+    # TODO collectstatic config
+    # STATICFILES_DIRS = [
+    #     os.path.abspath(os.path.join(BASE_DIR, "misago", "static")),
+    # ]
 else:
-    STATIC_URL = f'localhost:{get_settings("LOCAL_PORT")}/{STATICFILES_LOCATION}/'
-    # STATIC_ROOT = f''
+    STATIC_URL = f"/{STATICFILES_LOCATION}/"
+    STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "misago", "static"))
 
 
 # User uploads (Avatars, Attachments, files uploaded in other Django apps, ect.)
