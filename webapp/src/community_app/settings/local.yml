@@ -1,0 +1,14 @@
+use_remote_dynamic_settings: false
+
+DEBUG: true
+
+django_file_storage: django.core.files.storage.FileSystemStorage
+django_staticfile_storage: django.contrib.staticfiles.storage.StaticFilesStorage
+
+db:
+  host: community-postgres
+  name: community
+  password: community
+  port: 5432
+  engine: django.db.backends.postgresql
+  user: community

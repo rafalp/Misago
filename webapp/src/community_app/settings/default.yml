@@ -1,0 +1,4 @@
+project_name: community-app-web
+
+django_file_storage: storages.backends.s3boto3.S3Boto3Storage
+django_staticfile_storage: storages.backends.s3boto3.S3Boto3Storage

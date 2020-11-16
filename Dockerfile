@@ -1,34 +1,44 @@
-# This dockerfile is only meant for local development of Misago
-# If you are looking for a proper docker setup for running Misago in production,
-# please use misago-docker instead
-FROM python:3.7
+FROM circleci/python:3.6.8
 
-ENV PYTHONUNBUFFERED 1
-ENV IN_MISAGO_DOCKER 1
+COPY webapp/requirements*.txt /opt/bh/webapp/
 
-# Install dependencies in one single command/layer
-RUN apt-get update && apt-get install -y \
-    vim \
-    libffi-dev \
-    libssl-dev \
-    sqlite3 \
-    libjpeg-dev \
-    libopenjp2-7-dev \
-    locales \
-    cron \
-    postgresql-client \
-    gettext
+WORKDIR /opt/bh
 
-# Add requirements and install them. We do this unnecessasy rebuilding.
-ADD requirements.txt /
-ADD requirements-plugins.txt /
+ARG GIT_TOKEN
+ARG PIP_REQUIREMENTS
 
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    pip install -r requirements-plugins.txt
+# install Python modules needed by the Python app
+RUN sudo pip install --upgrade pip
+RUN pip install --no-cache-dir --no-warn-script-location -r /opt/bh/webapp/$PIP_REQUIREMENTS --user
 
-WORKDIR /srv/misago
+COPY . /opt/bh/
 
-EXPOSE 8000
+# install node (for tests)
+RUN curl -sL https://deb.nodesource.com/setup_12.x | sudo bash
+# and install node
+RUN sudo apt-get install nodejs
+# confirm that it was successful
+RUN node -v
+# npm installs automatically
+RUN npm -v
 
-CMD python manage.py runserver 0.0.0.0:8000
+# Install FE dependencies
+WORKDIR /opt/bh/frontend
+USER root
+RUN npm install
+RUN npm install gulp
+
+# Build FE app
+RUN npx gulp build
+WORKDIR /opt/bh
+RUN ls -l
+# RUN rsync -q -rv misago/static/misago/ webapp/src/community_app/static/
+
+# tell the port number the container should expose
+EXPOSE 8200
+
+# run the application
+USER circleci
+RUN ls /opt/bh/misago/static/misago/
+ENTRYPOINT ["python3"]
+CMD /opt/bh/webapp/src/manage.py runserver 0.0.0.0:8200

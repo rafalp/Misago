@@ -1,0 +1,6 @@
+use_remote_dynamic_settings: true
+
+DEBUG: true
+
+# TODO Fix after infra ticket PG-914
+aws_storage_bucket_name: avi-community-app-web-testing

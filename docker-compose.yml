@@ -1,0 +1,85 @@
+version: "3"
+
+services:
+  community_app_web:
+    image: community_app_web
+    build:
+      context: .
+      args:
+        GIT_TOKEN: ${GIT_TOKEN}
+        PIP_REQUIREMENTS: requirements.txt
+    ports:
+      - "8200:8200"
+    entrypoint: python3
+    command: /opt/bh/webapp/src/manage.py runserver 0.0.0.0:8200
+    volumes:
+      - ./:/opt/bh
+      - ./webapp/src/community_app/static/:/opt/bh/misago/static/misago/
+    tty: true
+    depends_on:
+      - postgres
+    environment:
+      stage: local
+      project_config_dir: /opt/bh/webapp/src/community_app/settings/
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      GIT_TOKEN: ${GIT_TOKEN}
+      SERVICE_CLUSTER_NAME: community_app_web
+      DD_ENV: "${DD_ENV:-local}"
+      DD_TRACE_AGENT_URL: http://datadog:8126
+      DD_TRACE_ENABLED: "${DD_TRACE_ENABLED:-False}"
+      LOCAL_PORT: 8200
+    networks:
+      default:
+        aliases:
+          - community_app_web
+
+  # community_app_frontend:
+  #   image: community_app_frontend
+  #   build: docker/client
+  #   volumes:
+  #     - ./docker/client/task:/var/task
+  #   ports:
+  #     - "3100:3100"
+
+  community_app_web-test:
+    build:
+      context: .
+      args:
+        GIT_TOKEN: ${GIT_TOKEN}
+        PIP_REQUIREMENTS: requirements-test.txt
+    entrypoint: ""
+    command: bash -c "python -m pytest --cov --cov-report html:htmlcov --cov-report term -s && flake8 . && mypy src --show-error-codes"
+    volumes:
+      - ./:/opt/bh
+    environment:
+      stage: test
+      project_config_dir: /opt/bh/webapp/src/community_app/settings/
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+      GIT_TOKEN: ${GIT_TOKEN}
+
+  postgres:
+    build: docker/postgres
+    volumes:
+      - postgres:/data/postgres
+    environment:
+      POSTGRES_DB: community
+      POSTGRES_USER: community
+      POSTGRES_PASSWORD: community
+    networks:
+      default:
+        aliases:
+          - community-postgres
+
+volumes:
+  postgres:
+
+networks:
+  default:
+    external:
+      name: platform_default

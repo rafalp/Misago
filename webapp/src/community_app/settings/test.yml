@@ -1,0 +1,10 @@
+use_remote_dynamic_settings: false
+
+DEBUG: true
+# db:
+#   host: community-test-postgres
+#   name: community
+#   password: community
+#   port: 5432
+#   engine: django.db.backends.postgresql
+#   user: community
