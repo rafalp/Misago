@@ -1,0 +1,31 @@
+{
+    "dev": {
+        "aws_region": "us-west-2",
+        "django_settings": "community_app.settings",
+        "project_name": "community-app-web",
+        "runtime": "python3.6",
+        "s3_bucket": "bhdevacct-dev-build-artifacts-us-west-2",
+        "aws_environment_variables": {
+            "stage": "dev",
+            "core_cache": "dev_core_cache"
+        },
+        "slim_handler": true,
+        "keep_warm": true,
+        "timeout_seconds": 30,
+        "vpc_config": {
+            "SubnetIds": [
+                "dev_VPC_SUBNET_IDS"
+            ],
+            "SecurityGroupIds": [
+                "dev_VPC_SECURITY_GROUP_ID"
+            ]
+        },
+        "log_level": "DEBUG",
+        "exclude": [
+            "venv",
+            ".git",
+            "docker"
+        ],
+        "include": []
+    }
+}

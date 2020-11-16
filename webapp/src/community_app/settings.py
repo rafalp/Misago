@@ -130,10 +130,9 @@ STATICFILES_LOCATION = "static"  # used in url
 
 if STATICFILES_STORAGE == "storages.backends.s3boto3.S3Boto3Storage":
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/"
-    # TODO collectstatic config
-    # STATICFILES_DIRS = [
-    #     os.path.abspath(os.path.join(BASE_DIR, "misago", "static")),
-    # ]
+    STATICFILES_DIRS = [
+        os.path.abspath(os.path.join(BASE_DIR, "misago", "static")),
+    ]
 else:
     STATIC_URL = f"/{STATICFILES_LOCATION}/"
     STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "misago", "static"))

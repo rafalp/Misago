@@ -1,0 +1,40 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+      python: 3.7
+
+  build:
+    commands:
+      - export tmp_core_cache="$(aws ssm get-parameter --name /$STAGE/global/core_cache --with-decryption --output text --query Parameter.Value)"
+      - core_cache=$(python3 -c 'import os; print(os.environ["tmp_core_cache"].replace("\"", "\\\"").replace("\"", "\\\""), end="")')
+      - export core_cache
+
+      - export build_artifacts_bucket="$(aws ssm get-parameter --name /$STAGE/s3/build_artifacts/id --output text --query Parameter.Value)"
+
+      - python3 -m venv venv
+      - . venv/bin/activate
+      - pip install -r webapp/requirements.txt --no-cache-dir
+
+      - sed -i "s/'docutils\*',//g" 'venv/lib/python3.7/site-packages/zappa/core.py'
+      - sed -i '/profile_name/d' webapp/src/zappa_settings.json
+      - sed -i "s/${STAGE}_VPC_SECURITY_GROUP_ID/${VPC_SECURITY_GROUP_ID}/" webapp/src/zappa_settings.json
+      - sed -i "s/${STAGE}_core_cache/${core_cache}/" webapp/src/zappa_settings.json
+      - sed -i "s/${STAGE}_VPC_SUBNET_IDS/$(echo $VPC_SUBNET_IDS | sed 's/\,/\"\,\"/g')/" webapp/src/zappa_settings.json
+
+      - cd frontend
+      - npm install
+      - npm install -g gulp
+      - npx gulp build
+      - rm -r node_modules # decrease size of upload package
+
+      - cd ../webapp/src
+      - python3 zappa_deploy.py $STAGE
+      - zappa manage $STAGE migrate
+      - zappa update $STAGE
+
+      # Collectstatic times out for some reason but seems to work
+      # Run twice to be safe, and escape to mark build as succeeded
+      - zappa manage $STAGE "collectstatic --no-input" || true
+      - zappa manage $STAGE "collectstatic --no-input" || true
