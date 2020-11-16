@@ -16,7 +16,7 @@ export default {
 export const NewReplyForm = () => (
   <SettingsContextFactory>
     <MockedProvider>
-      <ThreadReplyProvider active>
+      <ThreadReplyProvider threadId="1" active>
         <ThreadReply threadId="1" />
       </ThreadReplyProvider>
     </MockedProvider>
@@ -47,7 +47,7 @@ export const EditReplyForm = () => (
         },
       ]}
     >
-      <ThreadReplyProvider active mode="edit" post={{ id: "1" }}>
+      <ThreadReplyProvider threadId="1" mode="edit" post={{ id: "1" }} active>
         <ThreadReply threadId="1" />
       </ThreadReplyProvider>
     </MockedProvider>
@@ -73,7 +73,7 @@ export const EditReplyNotFoundError = () => (
         },
       ]}
     >
-      <ThreadReplyProvider active mode="edit" post={{ id: "1" }}>
+      <ThreadReplyProvider threadId="1" mode="edit" post={{ id: "1" }} active>
         <ThreadReply threadId="1" />
       </ThreadReplyProvider>
     </MockedProvider>
@@ -95,7 +95,7 @@ export const EditReplyNetworkError = () => (
         },
       ]}
     >
-      <ThreadReplyProvider active mode="edit" post={{ id: "1" }}>
+      <ThreadReplyProvider threadId="1" mode="edit" post={{ id: "1" }} active>
         <ThreadReply threadId="1" />
       </ThreadReplyProvider>
     </MockedProvider>
@@ -119,7 +119,7 @@ export const EditReplyGraphQLError = () => (
         },
       ]}
     >
-      <ThreadReplyProvider active mode="edit" post={{ id: "1" }}>
+      <ThreadReplyProvider threadId="1" mode="edit" post={{ id: "1" }} active>
         <ThreadReply threadId="1" />
       </ThreadReplyProvider>
     </MockedProvider>
@@ -129,7 +129,7 @@ export const EditReplyGraphQLError = () => (
 export const HiddenForm = () => (
   <SettingsContextFactory>
     <MockedProvider>
-      <ThreadReplyProvider>
+      <ThreadReplyProvider threadId="1">
         <RootContainer>
           <ThreadReplyContext.Consumer>
             {(value) =>
@@ -159,7 +159,7 @@ export const HiddenForm = () => (
 export const ReplyFormError = () => (
   <SettingsContextFactory>
     <MockedProvider>
-      <ThreadReplyProvider active>
+      <ThreadReplyProvider threadId="1" active>
         <ThreadReplyContext.Consumer>
           {(value) => (
             <PostingForm

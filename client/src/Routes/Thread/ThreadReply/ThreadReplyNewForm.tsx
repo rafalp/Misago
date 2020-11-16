@@ -4,7 +4,12 @@ import { FormProvider as HookFormProvider } from "react-hook-form"
 import { Redirect } from "react-router-dom"
 import { useSettingsContext, useToastsContext } from "../../../Context"
 import { ButtonPrimary } from "../../../UI/Button"
-import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
+import {
+  Field,
+  FieldErrorFloating,
+  FieldWatcher,
+  FormContext,
+} from "../../../UI/Form"
 import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
@@ -26,7 +31,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
 }) => {
   const { postMinLength } = useSettingsContext()
   const { showToast } = useToastsContext()
-  const { form } = context
+  const { form, setDraft, removeDraft } = context
 
   const [
     postReply,
@@ -72,12 +77,15 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
               })
 
               if (post) {
+                removeDraft()
+
                 showToast(
                   <Trans id="post_reply.message">Reply has been posted.</Trans>
                 )
               }
             })}
           >
+            <FieldWatcher name="markup" onChange={setDraft} />
             <ThreadPostRootError
               graphqlError={graphqlError}
               dataErrors={data?.postReply.errors}

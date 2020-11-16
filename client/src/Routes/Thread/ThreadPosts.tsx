@@ -81,7 +81,7 @@ const ThreadPosts: React.FC = () => {
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadBreadcrumbs category={thread.category} />
       <ThreadHeader thread={thread} />
-      <ThreadReplyProvider>
+      <ThreadReplyProvider threadId={thread.id}>
         <ThreadToolbarTop {...toolbarProps} />
         <SectionLoader
           loading={loading || posts.page.number !== pagination.page}

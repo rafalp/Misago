@@ -4,6 +4,7 @@ import React from "react"
 import { UseFormMethods, useForm } from "react-hook-form"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
+import useNewReplyDraft from "./useNewReplyDraft"
 
 interface IThreadReplyFormValues {
   markup: string
@@ -27,6 +28,8 @@ export interface IThreadReplyContext {
   setMinimized: (state: boolean) => void
   getValue: () => string
   setValue: (value: string, dirty?: boolean) => void
+  setDraft: (value: string) => void
+  removeDraft: () => void
   resetValue: (value?: string) => void
 }
 
@@ -35,6 +38,7 @@ const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
 )
 
 interface IThreadReplyProviderProps {
+  threadId: string
   active?: boolean
   mode?: string
   post?: IThreadReplyPost
@@ -50,6 +54,8 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   )
   const [fullscreen, setFullscreen] = React.useState(false)
   const [minimized, setMinimized] = React.useState(false)
+
+  const { getDraft, setDraft, removeDraft } = useNewReplyDraft(props.threadId)
 
   const validators = Yup.object().shape({
     markup: Yup.string()
@@ -101,7 +107,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
       if (!confirmed) return
     }
 
-    resetValue()
+    resetValue(getDraft())
     setActive(true)
     setMode("reply")
     setPost(null)
@@ -110,6 +116,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   }, [
     isActive,
     mode,
+    getDraft,
     hasChanges,
     setActive,
     setMode,
@@ -206,6 +213,8 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
         cancelReply,
         getValue,
         setValue,
+        setDraft,
+        removeDraft,
         resetValue,
       }}
     >
