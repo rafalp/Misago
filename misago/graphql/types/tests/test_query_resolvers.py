@@ -7,6 +7,7 @@ from ..query import (
     resolve_forum_stats,
     resolve_post,
     resolve_rich_text,
+    resolve_search,
     resolve_settings,
     resolve_thread,
     resolve_threads,
@@ -135,3 +136,7 @@ def test_settings_resolver_returns_settings_from_context(
 
 def test_rich_text_resolver_returns_parsed_body(graphql_info):
     assert resolve_rich_text(None, graphql_info, markup="Hello world!")
+
+
+def test_search_resolver_returns_search_query_for_child_resolvers(graphql_info):
+    assert resolve_search(None, graphql_info, query="Search") == "Search"

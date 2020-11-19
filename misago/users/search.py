@@ -8,11 +8,15 @@ from ..tables import users
 from ..types import User
 
 
-USERS_SUGGESTIONS_LIMIT = 10
+RESULTS_MAX_LIMIT = 50
 
 
-async def find_users_suggestions(search: str) -> List[User]:
+async def search_users(search: str, *, limit: int = 10) -> List[User]:
     search_lowercased = search.lower()
+    safe_limit = limit if limit <= RESULTS_MAX_LIMIT else RESULTS_MAX_LIMIT
+
+    if safe_limit < 1:
+        return []
 
     query = (
         users.select(None)
@@ -23,7 +27,7 @@ async def find_users_suggestions(search: str) -> List[User]:
             )
         )
         .order_by(asc(users.c.slug))
-        .limit(USERS_SUGGESTIONS_LIMIT)
+        .limit(safe_limit)
     )
 
     rows = await database.fetch_all(query)
