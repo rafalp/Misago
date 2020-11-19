@@ -30,6 +30,7 @@ users = sqlalchemy.Table(
     sqlalchemy.Column(
         "email_hash", sqlalchemy.String(length=255), nullable=False, unique=True
     ),
+    sqlalchemy.Column("full_name", sqlalchemy.String(length=150), nullable=True),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("is_deactivated", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
@@ -52,6 +53,23 @@ sqlalchemy.Index(
     "misago_users_admins",
     users.c.is_administrator,
     postgresql_where=users.c.is_administrator == True,  # pylint: disable=C0121
+)
+sqlalchemy.Index(
+    "misago_users_without_full_names",
+    users.c.full_name,
+    postgresql_where=users.c.full_name == None,  # pylint: disable=C0121
+)
+sqlalchemy.Index(
+    "misago_users_slugs_search",
+    users.c.slug,
+    postgresql_ops={"slug": "gin_trgm_ops"},
+    postgresql_using="gin",
+)
+sqlalchemy.Index(
+    "misago_users_full_names_search",
+    users.c.full_name,
+    postgresql_ops={"full_name": "gin_trgm_ops"},
+    postgresql_using="gin",
 )
 
 categories = sqlalchemy.Table(
