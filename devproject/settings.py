@@ -180,7 +180,6 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "ariadne.contrib.django",
     "celery",
     "django_extensions",
-    "debug_toolbar",
     "mptt",
     "rest_framework",
     "social_django",
@@ -207,6 +206,11 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.plugins",
 ]
 
+if DEBUG:
+    INSTALLED_APPS += [
+     "debug_toolbar",   
+    ]
+
 INTERNAL_IPS = ["127.0.0.1"]
 
 LOGIN_REDIRECT_URL = "misago:index"
@@ -216,7 +220,6 @@ LOGIN_URL = "misago:login"
 LOGOUT_URL = "misago:logout"
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "misago.users.middleware.RealIPMiddleware",
     "misago.core.middleware.FrontendContextMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -236,6 +239,11 @@ MIDDLEWARE = [
     "misago.admin.middleware.AdminAuthMiddleware",
     "misago.threads.middleware.UnreadThreadsCountMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE = [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ] + MIDDLEWARE
 
 ROOT_URLCONF = "devproject.urls"
 
@@ -319,20 +327,21 @@ WSGI_APPLICATION = "devproject.wsgi.application"
 # Django Debug Toolbar
 # http://django-debug-toolbar.readthedocs.io/en/stable/configuration.html
 
-DEBUG_TOOLBAR_PANELS = [
-    "debug_toolbar.panels.versions.VersionsPanel",
-    "debug_toolbar.panels.timer.TimerPanel",
-    "debug_toolbar.panels.settings.SettingsPanel",
-    "debug_toolbar.panels.headers.HeadersPanel",
-    "debug_toolbar.panels.request.RequestPanel",
-    "debug_toolbar.panels.sql.SQLPanel",
-    "misago.acl.panels.MisagoACLPanel",
-    "debug_toolbar.panels.staticfiles.StaticFilesPanel",
-    "debug_toolbar.panels.templates.TemplatesPanel",
-    "debug_toolbar.panels.cache.CachePanel",
-    "debug_toolbar.panels.signals.SignalsPanel",
-    "debug_toolbar.panels.logging.LoggingPanel",
-]
+if DEBUG:
+    DEBUG_TOOLBAR_PANELS = [
+        "debug_toolbar.panels.versions.VersionsPanel",
+        "debug_toolbar.panels.timer.TimerPanel",
+        "debug_toolbar.panels.settings.SettingsPanel",
+        "debug_toolbar.panels.headers.HeadersPanel",
+        "debug_toolbar.panels.request.RequestPanel",
+        "debug_toolbar.panels.sql.SQLPanel",
+        "misago.acl.panels.MisagoACLPanel",
+        "debug_toolbar.panels.staticfiles.StaticFilesPanel",
+        "debug_toolbar.panels.templates.TemplatesPanel",
+        "debug_toolbar.panels.cache.CachePanel",
+        "debug_toolbar.panels.signals.SignalsPanel",
+        "debug_toolbar.panels.logging.LoggingPanel",
+    ]
 
 
 # Django Rest Framework
@@ -426,10 +435,10 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
-
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
-}
+if DEBUG:
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
+    }
 
 
 LOGGERS = {
