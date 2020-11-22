@@ -68,6 +68,15 @@ services:
       - media:/var/www/media
       - logs:/var/log
 
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - 8025:8025
+      # - 1025:1025
+    networks:
+    - misago
+
+
   celery:
     build: .
     command: celery -A devproject worker --loglevel=info

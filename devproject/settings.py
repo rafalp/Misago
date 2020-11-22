@@ -431,8 +431,10 @@ MISAGO_PROFILE_FIELDS = [
 
 # Set dev instance to send e-mails to console
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+# EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailhog'
+EMAIL_PORT = 1025
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 if DEBUG:
