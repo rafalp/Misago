@@ -1,22 +1,32 @@
 # This compose setup is only meant for local development of Misago itself
 # This is not for running your Misago site in docker
 version: "3.0"
+
 services:
+
   postgres:
     image: postgres:10
     restart: unless-stopped
     environment:
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
-    ports:
-      - '127.0.0.1:5432:5432'
+    # ports:
+    #   - '5432:5432'
+    networks:
+    - misago
+
   redis:
     image: redis:5
     restart: unless-stopped
+    networks:
+    - misago
+
   misago:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    #command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn devproject.wsgi:application -b 0.0.0.0:8000
     environment:
+      - DEBUG=False
       # Postgres
       - POSTGRES_USER=misago
       - POSTGRES_PASSWORD=misago
@@ -35,10 +45,29 @@ services:
       - postgres
       - redis
     tty: true
+    networks:
+    - misago
     volumes:
       # Map in the entire project into the container
+      - static:/srv/misago/devproject/static
+      - media:/srv/misago/devproject/media
       # This makes sure files in the container updates on the fly as we were working locally
       - .:/srv/misago:Z
+
+  caddy:
+    image: lgatica/django-caddy:latest
+    environment:
+      - PORT=8000
+    ports:
+      - 8001:80
+    networks:
+    - misago
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile:ro
+      - static:/var/www/static
+      - media:/var/www/media
+      - logs:/var/log
+
   celery:
     build: .
     command: celery -A devproject worker --loglevel=info
@@ -53,8 +82,17 @@ services:
       - postgres
       - redis
     tty: true
+    networks:
+    - misago
     volumes:
       # Map in the entire project into the container
       # This makes sure files in the container updates on the fly as we were working locally
       - .:/srv/misago:Z
   
+volumes:
+  static:
+  media:
+  logs:
+
+networks:
+  misago:

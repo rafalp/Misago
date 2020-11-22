@@ -5,6 +5,8 @@ __pycache__/
 # C extensions
 *.so
 
+devproject/static/*
+
 # Distribution / packaging
 build/
 develop-eggs/

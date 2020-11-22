@@ -328,7 +328,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def get_real_name(self):
-        return self.profile_fields.get("real_name")
+        if self.profile_fields:
+            return self.profile_fields.get("real_name")
+        else:
+            return 'Unknown'
 
     def set_username(self, new_username, changed_by=None):
         new_username = self.normalize_username(new_username)

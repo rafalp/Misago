@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from jslog4kube import LOGGING
+from logging.config import dictConfig
 
 from misago import load_plugin_list_if_exists
 
@@ -33,13 +35,13 @@ _ = lambda s: s
 SECRET_KEY = "1znyfpwp*_#!r0#l248lht*6)_0b+504n*2-8cxf(2u)fhi0f^"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', True) in ('True', 'true', 'yes')
 
 
 # A list of strings representing the host/domain names that this Django site can serve.
 # If you are unsure, just enter here your domain name, eg. ['mysite.com', 'www.mysite.com']
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "*"]
 
 
 # Database
@@ -177,6 +179,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     # 3rd party apps used by Misago
     "ariadne.contrib.django",
     "celery",
+    "django_extensions",
     "debug_toolbar",
     "mptt",
     "rest_framework",
@@ -427,3 +430,17 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"
 }
+
+
+LOGGERS = {
+    "pagesnap": {
+        "handlers": ["json-stdout"],
+        "formatters": ["json"],
+        "propagate": True,
+        "level": "DEBUG",
+    }
+}
+
+LOGGING["loggers"].update(LOGGERS)
+
+dictConfig(LOGGING)

@@ -28,6 +28,7 @@ RUN pip install --upgrade pip && \
     pip install -r requirements-plugins.txt
 
 WORKDIR /srv/misago
+#COPY . .
 
 EXPOSE 8000
 
