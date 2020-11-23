@@ -1,0 +1,41 @@
+{
+  "{{ env['STAGE'] }}": {
+    "aws_region": "{{ env['AWS_REGION'] }}",
+    "django_settings": "community_app.settings",
+    "manage_roles": {{ env['MANAGE_ROLES'] }},
+    "role_name": "{{ env['IAM_ROLE_NAME'] }}",
+    "project_name": "{{ env['IMAGE_REPO_NAME'] }}",
+    "s3_bucket": "{{ env['BUILD_ARTIFACTS_S3_BUCKET'] }}",
+    "runtime": "{{ env['PYTHON_RUNTIME'] }}",
+    "exclude": [
+      "venv",
+      ".git",
+      "docker"
+    ],
+    "include": [],
+    "slim_handler": true,
+    "log_level": "{{ env['LOG_LEVEL'] }}",
+    "keep_warm": true,
+    "timeout_seconds": 30,
+    "vpc_config": {
+      "SubnetIds": [
+        {% for item in env['VPC_SUBNET_IDS'].split(",") %}
+          "{{ item }}"
+          {% if not loop.last %}
+            ,
+          {% endif %}
+        {% endfor %}
+      ],
+      "SecurityGroupIds": ["{{ env['VPC_SECURITY_GROUP_ID'] }}"]
+    },
+    "environment_variables": {
+      "stage": "{{ env['STAGE'] }}"
+    },
+    "aws_environment_variables": {
+      "stage": "{{ env['STAGE'] }}",
+      "core_cache": "{{ env['CORE_CACHE'] | replace('\"', '\\"')}}"
+    },
+    "certificate_arn": "{{ env['ACM_CERTIFICATE_ARN'] }}",
+    "domain": "{{ env['DOMAIN'] }}"
+  }
+}

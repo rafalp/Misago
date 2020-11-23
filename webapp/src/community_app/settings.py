@@ -14,9 +14,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 import logging
 
-from misago import load_plugin_list_if_exists
-import sentry_sdk
+from ddtrace import config as dd_config
+from ddtrace import patch_all
 from sentry_sdk.integrations.django import DjangoIntegration
+
+from misago import load_plugin_list_if_exists
 
 
 logger = logging.getLogger("DJANGO SETTINGS")
@@ -25,10 +27,12 @@ logger.setLevel(0)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 os.environ["project_config_dir"] = os.path.abspath(os.path.join(BASE_DIR, "community_app", "settings"))
 
+
 from bh_settings import get_settings
+from bh.core_utils.sentry import init_sentry
+from bh.services.factory import Factory
 
 
 # Define placeholder gettext function
@@ -36,6 +40,14 @@ from bh_settings import get_settings
 # without need for Django's i18n features be initialized first.
 _ = lambda s: s
 
+
+# Enable Datadog (do this before setting DEBUG)
+dd_config.service = get_settings("project_name", get_settings("SERVICE_CLUSTER_NAME", None))
+patch_all()
+
+
+# Initialize Sentry
+init_sentry([DjangoIntegration()])
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -46,6 +58,7 @@ SECRET_KEY = get_settings("django_secret_key", "1znyfpwp*_#!r0#l248lht*6)_0b+504
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = get_settings("DEBUG", False)
 
+Factory.load_by_package_names(get_settings("base_service_packages", []) + get_settings("service_packages", []))
 
 # A list of strings representing the host/domain names that this Django site can serve.
 # If you are unsure, just enter here your domain name, eg. ['mysite.com', 'www.mysite.com']
@@ -60,12 +73,12 @@ db_config = get_settings("db")
 DATABASES = {
     "default": {
         # Misago requires PostgreSQL to run
-        "ENGINE": db_config.get("engine"),
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": db_config.get("name"),
-        "USER": db_config.get("user"),
+        "USER": db_config.get("username"),
         "PASSWORD": db_config.get("password"),
-        "HOST": db_config.get("host"),
-        "PORT": db_config.get("port"),
+        "HOST": db_config.get("hostname"),
+        "PORT": int(db_config.get("port")),
     }
 }
 
@@ -435,9 +448,3 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"}
-
-sentry_dsn = get_settings("sentry_dsn")
-if sentry_dsn:
-    sentry_sdk.init(dsn=sentry_dsn, integrations=[DjangoIntegration()])
-else:
-    logger.warning("Sentry DSN not found.")
