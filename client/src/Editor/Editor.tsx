@@ -1,5 +1,4 @@
 import { Trans } from "@lingui/macro"
-import classnames from "classnames"
 import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../UI/Form"
@@ -7,7 +6,9 @@ import EditorBody from "./EditorBody"
 import EditorButton from "./EditorButton"
 import EditorPreview from "./EditorPreview"
 import EditorPreviewButton from "./EditorPreviewButton"
+import EditorTextarea from "./EditorTextarea"
 import EditorToolbar from "./EditorToolbar"
+import useSearchUsersQuery from "./useSearchUsersQuery"
 
 interface IEditorProps {
   name?: string
@@ -19,6 +20,7 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   const context = useFieldContext()
   const hookContext = useFormContext()
   const [preview, setPreview] = React.useState<string | null>(null)
+  const searchUsers = useSearchUsersQuery()
 
   const finName = name || context.name
 
@@ -37,17 +39,12 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   return (
     <EditorBody disabled={disabled || context.disabled}>
       {preview && <EditorPreview markup={preview} />}
-      <textarea
-        className={classnames(
-          "form-control form-control-responsive form-editor-textarea",
-          {
-            "d-none": preview,
-            "is-invalid": context.invalid,
-          }
-        )}
+      <EditorTextarea
         disabled={disabled || context.disabled}
-        name={name || context.name}
-        ref={hookContext.register}
+        hidden={!!preview}
+        invalid={context.invalid}
+        name={finName}
+        register={hookContext.register}
       />
       <EditorToolbar>
         <div className="row">
