@@ -1,32 +1,13 @@
-import classnames from "classnames"
 import React from "react"
 
 interface ICardAlertProps {
-  appearance?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-  className?: string
   children: React.ReactNode
 }
 
-const CardAlert: React.FC<ICardAlertProps> = ({
-  appearance = "danger",
-  children,
-  className,
-}) => (
-  <div
-    className={classnames(
-      "modal-alert",
-      `modal-alert-${appearance}`,
-      className
-    )}
-  >
+const CardAlert: React.FC<ICardAlertProps> = ({ children }) => (
+  <div className="card-alert">
     <div
-      className={classnames("alert", `alert-${appearance}`, className)}
+      className="alert alert-block alert-responsive alert-danger"
       role="alert"
     >
       {children}

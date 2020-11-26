@@ -1,6 +1,7 @@
 import React from "react"
 import { ApolloError } from "apollo-client"
-import { RootError, ThreadValidationError } from "../../../UI"
+import RootError from "../../../UI/RootError"
+import { ThreadValidationError } from "../../../UI/ValidationError"
 import { IMutationError } from "../../../types"
 
 interface IThreadRootError {

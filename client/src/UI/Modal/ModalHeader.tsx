@@ -1,4 +1,3 @@
-import { I18n } from "@lingui/react"
 import { t } from "@lingui/macro"
 import classnames from "classnames"
 import React from "react"
@@ -17,25 +16,21 @@ const ModalHeader: React.FC<IModalHeaderProps> = ({
   close,
   title,
 }) => (
-  <I18n>
-    {({ i18n }) => (
-      <div className={classnames("modal-header", className)}>
-        {title && <ModalTitle text={title} />}
-        {children}
-        {close && (
-          <button
-            className="close"
-            data-dismiss="modal"
-            type="button"
-            aria-label={i18n._(t("modal.close")`Close`)}
-            onClick={close}
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        )}
-      </div>
+  <div className={classnames("modal-header", className)}>
+    {title && <ModalTitle text={title} />}
+    {children}
+    {close && (
+      <button
+        className="close"
+        data-dismiss="modal"
+        type="button"
+        aria-label={t({ id: "close", message: "Close" })}
+        onClick={close}
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
     )}
-  </I18n>
+  </div>
 )
 
 export default ModalHeader

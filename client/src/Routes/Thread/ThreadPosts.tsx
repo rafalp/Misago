@@ -1,16 +1,12 @@
 import React from "react"
 import { Redirect } from "react-router-dom"
-import {
-  RouteContainer,
-  RouteGraphQLError,
-  RouteLoader,
-  RouteNotFound,
-  WindowTitle,
-} from "../../UI"
+import RouteContainer from "../../UI/RouteContainer"
+import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 import SectionLoader from "../../UI/SectionLoader"
+import WindowTitle from "../../UI/WindowTitle"
 import * as urls from "../../urls"
 import ThreadBreadcrumbs from "./ThreadBreadcrumbs"
-import ThreadCTA from "./ThreadCTA"
 import ThreadHeader from "./ThreadHeader"
 import { useThreadModeration } from "./ThreadModeration"
 import {
@@ -85,7 +81,7 @@ const ThreadPosts: React.FC = () => {
       <WindowTitle title={thread.title} parent={thread.category.name} />
       <ThreadBreadcrumbs category={thread.category} />
       <ThreadHeader thread={thread} />
-      <ThreadReplyProvider>
+      <ThreadReplyProvider threadId={thread.id}>
         <ThreadToolbarTop {...toolbarProps} />
         <SectionLoader
           loading={loading || posts.page.number !== pagination.page}
@@ -105,7 +101,6 @@ const ThreadPosts: React.FC = () => {
         </SectionLoader>
         <ThreadToolbarBottom {...toolbarProps} />
         <ThreadReply threadId={thread.id} />
-        <ThreadCTA thread={thread} />
       </ThreadReplyProvider>
       <ThreadPostsModeration
         moderation={moderation.posts}

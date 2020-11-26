@@ -1,5 +1,4 @@
 import { Trans, t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React from "react"
 import { Redirect } from "react-router-dom"
 import * as Yup from "yup"
@@ -16,7 +15,13 @@ import {
   CardHeader,
 } from "../../UI/Card"
 import { Checkbox } from "../../UI/Checkbox"
-import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
+import {
+  Field,
+  FieldError,
+  FieldWatcher,
+  Form,
+  FormFooter,
+} from "../../UI/Form"
 import Input from "../../UI/Input"
 import RootError from "../../UI/RootError"
 import {
@@ -28,6 +33,7 @@ import * as urls from "../../urls"
 import { ICategoryChoice } from "./PostThread.types"
 import PostThreadCategoryInput from "./PostThreadCategoryInput"
 import usePostThreadMutation from "./usePostThreadMutation"
+import useThreadDraft from "./useThreadDraft"
 
 const Editor = React.lazy(() => import("../../Editor"))
 
@@ -62,8 +68,9 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
     postThread,
     { data, loading, error: graphqlError },
   ] = usePostThreadMutation()
+  const draft = useThreadDraft()
 
-  const PostThreadSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
     title: Yup.string()
       .required("value_error.thread_title.missing")
@@ -84,15 +91,15 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
       <CardHeader title={<Trans id="posting.form">Post a new thread</Trans>} />
       <Form<IPostThreadFormValues>
         defaultValues={{
-          category: category || "",
-          title: "",
-          markup: "",
+          category: category || draft.category || "",
+          title: draft.title || "",
+          markup: draft.markup || "",
           isClosed: false,
         }}
         disabled={loading}
-        validationSchema={PostThreadSchema}
-        onSubmit={async ({ clearError, setError, data: input }) => {
-          clearError()
+        validators={validators}
+        onSubmit={async ({ clearErrors, setError, data: input }) => {
+          clearErrors()
 
           const result = await postThread({ variables: { input } })
           const { errors, thread } = result.data?.postThread || {}
@@ -103,16 +110,21 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
               | "title"
               | "category"
               | "isClosed"
-            setError(field, type, message)
+            setError(field, { type, message })
           })
 
           if (thread) {
+            draft.remove()
+
             showToast(
               <Trans id="posting.message">New thread has been posted.</Trans>
             )
           }
         }}
       >
+        <FieldWatcher name="title" onChange={draft.setTitle} />
+        <FieldWatcher name="category" onChange={draft.setCategory} />
+        <FieldWatcher name="markup" onChange={draft.setMarkup} />
         <RootError
           graphqlError={graphqlError}
           dataErrors={data?.postThread.errors}
@@ -124,15 +136,13 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             label={<Trans id="posting.thread_title">Thread title</Trans>}
             name="title"
             input={
-              <I18n>
-                {({ i18n }) => (
-                  <Input
-                    placeholder={i18n._(
-                      t("posting.thread_title")`Thread title`
-                    )}
-                  />
-                )}
-              </I18n>
+              <Input
+                placeholder={t({
+                  id: "posting.thread_title",
+                  message: "Thread title",
+                })}
+                responsive
+              />
             }
             error={(error, value) => (
               <ThreadTitleValidationError
@@ -153,6 +163,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
               <PostThreadCategoryInput
                 choices={categories}
                 validChoices={validCategories}
+                responsive
               />
             }
             error={(error) => (
@@ -163,7 +174,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
             labelReaderOnly
           />
           <Field
-            label={<Trans id="posting.message">Message contents</Trans>}
+            label={<Trans id="posting.placeholder">Message contents</Trans>}
             name="markup"
             input={<Editor />}
             error={(error, value) => (

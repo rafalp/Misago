@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React from "react"
 import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
@@ -24,55 +23,48 @@ const EmailValidationError: React.FC<IValidationErrorProps> = ({
     return children({ type: errorType, message: messages[errorType] })
   }
 
+  switch (errorType) {
+    case "value_error.missing":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.email.missing",
+          message: "E-mail address can't be empty.",
+        }),
+      })
+
+    case "value_error.email":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.email",
+          message: "This e-mail address is not valid.",
+        }),
+      })
+
+    case "value_error.email.not_available":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.email.not_available",
+          message: "This e-mail address is not available.",
+        }),
+      })
+
+    case "value_error.email.not_allowed":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.email.not_allowed",
+          message: "This e-mail address is not allowed.",
+        }),
+      })
+  }
+
   return (
-    <I18n>
-      {({ i18n }) => {
-        switch (errorType) {
-          case "value_error.missing":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t("value_error.email.missing")`E-mail address can't be empty.`
-              ),
-            })
-
-          case "value_error.email":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t("value_error.email")`This e-mail address is not valid.`
-              ),
-            })
-
-          case "value_error.email.not_available":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t(
-                  "value_error.email.not_available"
-                )`This e-mail address is not available.`
-              ),
-            })
-
-          case "value_error.email.not_allowed":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t(
-                  "value_error.email.not_allowed"
-                )`This e-mail address is not allowed.`
-              ),
-            })
-
-          default:
-            return (
-              <ValidationError error={error} value={value} min={min} max={max}>
-                {children}
-              </ValidationError>
-            )
-        }
-      }}
-    </I18n>
+    <ValidationError error={error} value={value} min={min} max={max}>
+      {children}
+    </ValidationError>
   )
 }
 

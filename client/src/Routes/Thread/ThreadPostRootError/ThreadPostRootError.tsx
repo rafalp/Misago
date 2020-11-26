@@ -1,13 +1,13 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
+import RootError from "../../../UI/RootError"
 import {
   PostValidationError,
-  RootError,
   ThreadValidationError,
-  useLocationError,
-  useRootError,
-} from "../../../../UI"
-import { IMutationError } from "../../../../types"
+} from "../../../UI/ValidationError"
+import useLocationError from "../../../UI/useLocationError"
+import useRootError from "../../../UI/useRootError"
+import { IMutationError } from "../../../types"
 
 interface IRootError {
   message: React.ReactNode

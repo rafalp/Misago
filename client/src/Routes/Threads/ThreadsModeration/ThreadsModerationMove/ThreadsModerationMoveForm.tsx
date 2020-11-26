@@ -2,19 +2,12 @@ import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import {
-  CategorySelect,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  CategoryValidationError,
-  useSelectionErrors,
-} from "../../../../UI"
+import CategorySelect from "../../../../UI/CategorySelect"
+import { Field, FieldError, Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { CategoryValidationError } from "../../../../UI/ValidationError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
@@ -48,7 +41,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
   } = useMoveThreadsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const MoveThreadsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
     threads: Yup.array()
       .min(1, "value_error.list.min_items")
@@ -70,13 +63,13 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
       id="move_threads_form"
       disabled={loading}
       defaultValues={{ threads, category: "" }}
-      validationSchema={MoveThreadsSchema}
+      validators={validators}
       onSubmit={async ({
-        clearError,
+        clearErrors,
         setError,
         data: { category, threads },
       }) => {
-        clearError()
+        clearErrors()
         clearThreadsErrors()
 
         try {
@@ -87,7 +80,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
             setThreadsErrors(threads, errors)
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "category"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

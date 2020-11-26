@@ -13,7 +13,7 @@ import {
   ToastsProvider,
 } from "../Context"
 import Routes from "../Routes"
-import { RouteErrorBoundary } from "../UI"
+import RouteErrorBoundary from "../UI/RouteErrorBoundary"
 import AppDataQuery from "./AppDataQuery"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"

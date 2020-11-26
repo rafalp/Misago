@@ -1,7 +1,8 @@
 import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
-import { ButtonLink, CategoryIcon } from "../../../UI"
+import { ButtonLink } from "../../../UI/Button"
+import CategoryIcon from "../../../UI/CategoryIcon"
 
 interface IThreadsCategoriesModalLinkProps {
   category?: {

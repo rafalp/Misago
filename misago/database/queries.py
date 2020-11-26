@@ -48,3 +48,8 @@ def get_table_pk(table: TableClause) -> ColumnElement:
         )
 
     return list(table.primary_key.columns)[0]
+
+
+def istartswith(column, value):
+    escaped_value = value.replace("\\", "\\\\").replace(r"%", r"\%")
+    return column.ilike(f"{escaped_value}%", escape="\\")

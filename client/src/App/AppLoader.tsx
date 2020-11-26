@@ -1,5 +1,5 @@
 import React from "react"
-import { Spinner } from "../UI"
+import Spinner from "../UI/Spinner"
 
 const AppLoader = () => (
   <div className="app-loader">

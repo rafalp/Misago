@@ -30,7 +30,7 @@ interface IEditorFormValues {
 const submit = action("submitted")
 
 const Container: React.FC<IContainerProps> = ({ children, value }) => {
-  const EditorSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
       .min(10, "value_error.any_str.min_length")
@@ -45,9 +45,9 @@ const Container: React.FC<IContainerProps> = ({ children, value }) => {
           defaultValues={{
             markup: value || "",
           }}
-          validationSchema={EditorSchema}
-          onSubmit={({ clearError, data }) => {
-            clearError()
+          validators={validators}
+          onSubmit={({ clearErrors, data }) => {
+            clearErrors()
             submit(data.markup)
           }}
         >
@@ -131,8 +131,8 @@ export const Preview = () => (
   >
     <Container>
       <EditorBody>
-        <EditorToolbar>Toolbar placeholder</EditorToolbar>
         <EditorPreview markup="Test" />
+        <EditorToolbar>Toolbar placeholder</EditorToolbar>
       </EditorBody>
     </Container>
   </MockedProvider>
@@ -141,8 +141,8 @@ export const Preview = () => (
 export const PreviewLoader = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewLoader />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )
@@ -150,8 +150,8 @@ export const PreviewLoader = () => (
 export const PreviewQueryError = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewError error={new ApolloError({})} />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )
@@ -159,10 +159,10 @@ export const PreviewQueryError = () => (
 export const PreviewNetworkError = () => (
   <Container>
     <EditorBody>
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
       <EditorPreviewError
         error={new ApolloError({ networkError: new Error() })}
       />
+      <EditorToolbar>Toolbar placeholder</EditorToolbar>
     </EditorBody>
   </Container>
 )

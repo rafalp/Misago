@@ -1,11 +1,6 @@
 import React from "react"
-import {
-  ButtonPrimary,
-  Modal,
-  ModalDialog,
-  ModalFormBody,
-  ModalFooter,
-} from "../"
+import { ButtonPrimary } from "../Button"
+import { Modal, ModalDialog, ModalFormBody, ModalFooter } from "../Modal"
 import RootContainer from "./RootContainer"
 
 interface ModalFormContainerProps {

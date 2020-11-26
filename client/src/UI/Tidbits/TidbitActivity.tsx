@@ -1,5 +1,5 @@
 import { Trans } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import { Link } from "react-router-dom"
 import React from "react"
 import * as urls from "../../urls"
@@ -28,28 +28,31 @@ interface ITidbitActivityProps
 const TidbitActivityTimestamp: React.FC<ITidbitActivityTimestampProps> = ({
   date,
   url,
-}) => (
-  <I18n>
-    {({ i18n: { language } }) =>
-      url ? (
-        <Link
-          className="tidbit-activity-timestamp"
-          to={url}
-          title={formatDate(date, language)}
-        >
-          <Timestamp date={date} language={language} prefixed />
-        </Link>
-      ) : (
-        <span
-          className="tidbit-activity-timestamp"
-          title={formatDate(date, language)}
-        >
-          <Timestamp date={date} language={language} prefixed />
-        </span>
-      )
-    }
-  </I18n>
-)
+}) => {
+  const { i18n } = useLingui()
+  const locale = i18n.locale
+
+  if (url) {
+    return (
+      <Link
+        className="tidbit-activity-timestamp"
+        to={url}
+        title={formatDate(date, locale)}
+      >
+        <Timestamp date={date} locale={locale} prefixed />
+      </Link>
+    )
+  }
+
+  return (
+    <span
+      className="tidbit-activity-timestamp"
+      title={formatDate(date, locale)}
+    >
+      <Timestamp date={date} locale={locale} prefixed />
+    </span>
+  )
+}
 
 const TidbitActivityUser: React.FC<ITidbitActivityUserProps> = ({
   user,

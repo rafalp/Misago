@@ -1,6 +1,8 @@
 import React from "react"
 import { PostingForm } from "../../../UI/PostingForm"
-import ThreadReplyForm from "./ThreadReplyForm"
+import ThreadReplyEditForm from "./ThreadReplyEditForm"
+import ThreadReplyErrorBoundary from "./ThreadReplyErrorBoundary"
+import ThreadReplyNewForm from "./ThreadReplyNewForm"
 import { useThreadReplyContext } from "./ThreadReplyContext"
 import ThreadReplySpacer from "./ThreadReplySpacer"
 
@@ -12,7 +14,7 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
   const context = useThreadReplyContext()
   const [height, setHeight] = React.useState(0)
   const element = React.useRef<HTMLDivElement | null>(null)
-  const { isActive, fullscreen, minimized } = context || {}
+  const { isActive, fullscreen, minimized, mode, post } = context || {}
 
   React.useLayoutEffect(() => {
     const interval = window.setInterval(() => {
@@ -23,6 +25,8 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
 
     return () => window.clearInterval(interval)
   }, [setHeight, isActive, element])
+
+  if (!context) return null
 
   return (
     <>
@@ -35,7 +39,13 @@ const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
         ref={element}
         show={isActive}
       >
-        <ThreadReplyForm threadId={threadId} />
+        <ThreadReplyErrorBoundary>
+          {mode === "edit" && post ? (
+            <ThreadReplyEditForm context={context} post={post} />
+          ) : (
+            <ThreadReplyNewForm context={context} threadId={threadId} />
+          )}
+        </ThreadReplyErrorBoundary>
       </PostingForm>
     </>
   )

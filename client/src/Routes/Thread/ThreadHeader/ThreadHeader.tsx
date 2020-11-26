@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, CardBanner, CardColorBand } from "../../../UI"
+import { Card, CardBanner, CardColorBand } from "../../../UI/Card"
 import { IThread } from "../Thread.types"
 import ThreadHeaderBody from "./ThreadHeaderBody"
 import ThreadHeaderTitleEditForm from "./ThreadHeaderTitleEditForm"

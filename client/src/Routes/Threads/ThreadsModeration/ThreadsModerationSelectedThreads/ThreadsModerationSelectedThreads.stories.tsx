@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions"
 import React from "react"
-import { Form } from "../../../../UI"
+import { Form } from "../../../../UI/Form"
 import { ModalFormContainer, categories } from "../../../../UI/Storybook"
 import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreads from "./"

@@ -1,13 +1,12 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
+import { Form, FormFooter } from "../../../../../UI/Form"
 import {
-  Form,
-  FormFooter,
   ModalAlert,
   ModalMessageBody,
   ModalFooter,
-  RootError,
-} from "../../../../../UI"
+} from "../../../../../UI/Modal"
+import RootError from "../../../../../UI/RootError"
 import { IPost } from "../../../Thread.types"
 import ThreadPostModerationError from "../ThreadPostModerationError"
 import useDeleteThreadPostMutation from "./useDeleteThreadPostMutation"

@@ -4,6 +4,8 @@ $posting-form-inner-padding: 1rem !default;
 // Margin between elements in header and footer, must be lower than or equal to 2 * $posting-form-inner-padding
 $posting-form-margin-between: 0.5rem !default;
 
+$posting-form-title-font-size-xs: $font-size-base !default;
+$posting-form-title-font-size-sm-up: $font-size-lg !default;
 $posting-form-title-line-height: $line-height-base !default;
 
 $posting-form-color: null !default;
@@ -18,15 +20,10 @@ $posting-form-inner-border-radius: subtract(
 $posting-form-box-shadow-xs: 0 0.25rem 0.5rem rgba($black, 0.5) !default;
 $posting-form-box-shadow-sm-up: 0 0.5rem 1rem rgba($black, 0.5) !default;
 
-$posting-form-header-border-color: $border-color !default;
-$posting-form-footer-border-color: $posting-form-header-border-color !default;
-$posting-form-header-border-width: $posting-form-border-width !default;
-$posting-form-footer-border-width: $posting-form-header-border-width !default;
 $posting-form-header-padding-y: 1rem !default;
 $posting-form-header-padding-x: 1rem !default;
 $posting-form-header-padding: $posting-form-header-padding-y
-  $posting-form-header-padding-x !default; // Keep this for backwards compatibility
-$posting-form-footer-padding: $posting-form-header-padding !default;
+  $posting-form-header-padding-x !default;
 
 $posting-form-transition: transform 0.3s ease-out !default;
 
@@ -42,23 +39,37 @@ $posting-form-transition: transform 0.3s ease-out !default;
 
   &.show {
     height: auto;
+    pointer-events: none;
+  }
+
+  .container {
+    pointer-events: auto;
+  }
+
+  @include media-breakpoint-down(sm) {
+    .container {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 }
 
 // Default styles for form dialog
 .posting-form-dialog {
   background-clip: padding-box;
-  border: $posting-form-border-width solid $posting-form-border-color;
-  border-bottom: 0;
-  @include border-radius(
-    $posting-form-border-radius $posting-form-border-radius 0 0
-  );
+  background-color: $posting-form-bg;
+  border-top: $posting-form-border-width solid $posting-form-border-color;
   @include box-shadow($posting-form-box-shadow-xs);
   overflow: hidden;
 }
 
 @include media-breakpoint-up(sm) {
   .posting-form-dialog {
+    border: $posting-form-border-width solid $posting-form-border-color;
+    border-bottom: 0;
+    @include border-radius(
+      $posting-form-border-radius $posting-form-border-radius 0 0
+    );
     @include box-shadow($posting-form-box-shadow-sm-up);
   }
 }
@@ -67,10 +78,7 @@ $posting-form-transition: transform 0.3s ease-out !default;
 .posting-form-header {
   display: flex;
   align-items: center;
-  padding: $posting-form-header-padding;
-  background-color: $posting-form-bg;
-  border-bottom: $posting-form-header-border-width
-    $posting-form-header-border-color solid;
+  margin-bottom: $spacer;
 }
 
 .posting-form-title {
@@ -80,32 +88,44 @@ $posting-form-transition: transform 0.3s ease-out !default;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  font-size: $posting-form-title-font-size-xs;
+}
+
+@include media-breakpoint-up(sm) {
+  .posting-form-title {
+    font-size: $posting-form-title-font-size-sm-up;
+  }
 }
 
 .btn-posting-form-header {
   margin-left: $posting-form-margin-between;
 }
 
+// Freeze posting form's editor height
+.posting-form {
+  .form-editor-preview,
+  .form-editor-textarea {
+    height: 30vh;
+    max-height: 250px;
+    overflow-y: auto;
+    resize: none;
+  }
+}
+
+// Hide fullscreen toggle on small displays
+@include media-breakpoint-down(sm) {
+  .btn-posting-form-maximize {
+    display: none;
+  }
+}
+
 // Default body and footer
 .posting-form-body {
-  background-color: $posting-form-bg;
   padding: $posting-form-inner-padding;
 
   .form-group:last-child {
     margin-bottom: 0;
-  }
-}
-
-.posting-form-footer {
-  background-color: $posting-form-bg;
-  padding: $posting-form-footer-padding;
-
-  border-top: $posting-form-footer-border-width
-    $posting-form-footer-border-color solid;
-  text-align: right;
-
-  .btn {
-    margin-left: $posting-form-margin-between;
   }
 }
 
@@ -136,14 +156,10 @@ $posting-form-transition: transform 0.3s ease-out !default;
     height: 100%;
   }
 
-  // Remove borders from header and footer
-  .posting-form-header,
-  .posting-form-footer {
-    border: none;
-  }
-
-  // Make body fill all screen space
-  .posting-form-body {
+  // Make body, collapsible and loader fill all available vertical space
+  .posting-form-body,
+  .posting-form-collapsible,
+  .posting-form-loader {
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -161,6 +177,7 @@ $posting-form-transition: transform 0.3s ease-out !default;
     .form-editor-preview,
     .form-editor-textarea {
       height: 100%;
+      max-height: 100%;
       overflow-y: auto;
     }
 
@@ -172,11 +189,13 @@ $posting-form-transition: transform 0.3s ease-out !default;
   }
 }
 
-// Hide alert/body/footer when minimized
+// Hide collapsible part when minimized, remove header's margin
 .posting-form-minimized {
-  .posting-form-alert,
-  .posting-form-body,
-  .posting-form-footer {
+  .posting-form-collapsible {
     display: none;
+  }
+
+  .posting-form-header {
+    margin-bottom: 0;
   }
 }

@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import Input from "../../../UI/Input"
@@ -17,17 +16,14 @@ const PostThreadCategorySelectSearch: React.FC<IPostThreadCategorySelectSearchPr
   <ModalBody className="category-select-search">
     <div className="row no-gutters">
       <div className="col">
-        <I18n>
-          {({ i18n }) => (
-            <Input
-              placeholder={i18n._(
-                t("post_thread.search_category")`Search categories`
-              )}
-              value={search}
-              onChange={({ target }) => setSearch(target.value)}
-            />
-          )}
-        </I18n>
+        <Input
+          placeholder={t({
+            id: "post_thread.search_category",
+            message: "Search categories",
+          })}
+          value={search}
+          onChange={({ target }) => setSearch(target.value)}
+        />
       </div>
       {search.trim().length > 0 && (
         <div className="col-auto">

@@ -7,6 +7,7 @@ type Query {
     post(id: ID!): Post
     user(id: ID!): User
     forumStats: ForumStats!
+    search(query: String): SearchResults!
     settings: Settings
     richText(markup: String!): RichText!
 }

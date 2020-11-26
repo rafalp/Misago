@@ -7,7 +7,7 @@ import {
   TidbitCategory,
   TidbitClosed,
   TidbitReplies,
-} from "../../../UI"
+} from "../../../UI/Tidbits"
 import * as urls from "../../../urls"
 import { IThread } from "../Thread.types"
 

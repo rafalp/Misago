@@ -1,32 +1,13 @@
-import classnames from "classnames"
 import React from "react"
 
 interface IModalAlertProps {
-  appearance?:
-    | "primary"
-    | "secondary"
-    | "success"
-    | "danger"
-    | "warning"
-    | "info"
-  className?: string
   children: React.ReactNode
 }
 
-const ModalAlert: React.FC<IModalAlertProps> = ({
-  appearance = "danger",
-  children,
-  className,
-}) => (
-  <div
-    className={classnames(
-      "modal-alert",
-      `modal-alert-${appearance}`,
-      className
-    )}
-  >
+const ModalAlert: React.FC<IModalAlertProps> = ({ children }) => (
+  <div className="modal-alert">
     <div
-      className={classnames("alert", `alert-${appearance}`, className)}
+      className="alert alert-block alert-responsive alert-danger"
       role="alert"
     >
       {children}

@@ -1,5 +1,4 @@
-import { plural } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { plural, t } from "@lingui/macro"
 import React from "react"
 import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
@@ -25,43 +24,36 @@ const ThreadsValidationError: React.FC<IValidationErrorProps> = ({
     return children({ type: errorType, message: messages[errorType] })
   }
 
+  switch (errorType) {
+    case "value_error.list.min_items":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.threads.min_items",
+          message: plural(min, {
+            one: "Select at least # thread.",
+            other: "Select at least # threads.",
+          }),
+        }),
+      })
+
+    case "value_error.list.max_items":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.threads.max_items",
+          message: plural(max, {
+            one: `You can't select more than # thread (you've selected ${value}).`,
+            other: `You can't select more than # threads (you've selected ${value}).`,
+          }),
+        }),
+      })
+  }
+
   return (
-    <I18n>
-      {({ i18n }) => {
-        switch (errorType) {
-          case "value_error.list.min_items":
-            return children({
-              type: errorType,
-              message: i18n._(
-                plural("value_error.threads.min_items", {
-                  value: min,
-                  one: `Select at least # thread.`,
-                  other: `Select at least # threads.`,
-                })
-              ),
-            })
-
-          case "value_error.list.max_items":
-            return children({
-              type: errorType,
-              message: i18n._(
-                plural("value_error.threads.max_items", {
-                  value: max,
-                  one: `You can't select more than # thread (you've selected ${value}).`,
-                  other: `You can't select more than # threads (you've selected ${value}).`,
-                })
-              ),
-            })
-
-          default:
-            return (
-              <ValidationError error={error} value={value} min={min} max={max}>
-                {children}
-              </ValidationError>
-            )
-        }
-      }}
-    </I18n>
+    <ValidationError error={error} value={value} min={min} max={max}>
+      {children}
+    </ValidationError>
   )
 }
 

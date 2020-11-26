@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
-import { Icon } from "../../../UI"
+import Icon from "../../../UI/Icon"
 import * as urls from "../../../urls"
 
 interface IThreadsNewButtonProps {

@@ -79,6 +79,13 @@ def resolve_user(
     return load_user(info.context, id)
 
 
+@query_type.field("search")
+def resolve_search(
+    _, info: GraphQLResolveInfo, *, query: str  # pylint: disable=redefined-builtin
+) -> str:
+    return query.strip()
+
+
 @query_type.field("forumStats")
 def resolve_forum_stats(_, info: GraphQLResolveInfo) -> Awaitable[dict]:
     return load_forum_stats(info.context)

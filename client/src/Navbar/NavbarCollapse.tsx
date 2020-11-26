@@ -1,8 +1,7 @@
-import { I18n } from "@lingui/react"
 import { t } from "@lingui/macro"
 import className from "classnames"
 import React from "react"
-import { Avatar } from "../UI"
+import Avatar from "../UI/Avatar"
 import { INavbarUserProp } from "./Navbar.types"
 
 interface INavbarCollapseProps {
@@ -33,37 +32,33 @@ const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
   }, [isOpen])
 
   return (
-    <I18n>
-      {({ i18n }) => (
-        <>
-          <button
-            className={className("navbar-toggler", {
-              "navbar-toggler-user": user,
-            })}
-            ref={button}
-            type="button"
-            aria-controls="navbarToggle"
-            aria-expanded={isOpen ? "true" : "false"}
-            aria-label={i18n._(t("navbar.toggle")`Toggle navigation`)}
-            onClick={() => updateOpen((state) => !state)}
-          >
-            {user ? (
-              <Avatar size={30} user={user} />
-            ) : (
-              <span className="navbar-toggler-icon"></span>
-            )}
-          </button>
-          <div
-            className={className("collapse", "navbar-collapse", {
-              show: isOpen,
-            })}
-            id="navbarToggle"
-          >
-            {children}
-          </div>
-        </>
-      )}
-    </I18n>
+    <>
+      <button
+        className={className("navbar-toggler", {
+          "navbar-toggler-user": user,
+        })}
+        ref={button}
+        type="button"
+        aria-controls="navbarToggle"
+        aria-expanded={isOpen ? "true" : "false"}
+        aria-label={t({ id: "navbar.toggle", message: "Toggle navigation" })}
+        onClick={() => updateOpen((state) => !state)}
+      >
+        {user ? (
+          <Avatar size={30} user={user} />
+        ) : (
+          <span className="navbar-toggler-icon"></span>
+        )}
+      </button>
+      <div
+        className={className("collapse", "navbar-collapse", {
+          show: isOpen,
+        })}
+        id="navbarToggle"
+      >
+        {children}
+      </div>
+    </>
   )
 }
 

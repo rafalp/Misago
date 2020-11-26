@@ -1,11 +1,6 @@
 import React from "react"
-import {
-  Paginator,
-  PaginatorCompact,
-  Toolbar,
-  ToolbarItem,
-  ToolbarSeparator,
-} from "../../../UI"
+import { Paginator, PaginatorCompact } from "../../../UI/Paginator"
+import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
 import { ThreadModeration } from "../ThreadModeration"
 import { IThreadToolbarProps } from "./ThreadToolbar.types"
 import ThreadToolbarReplyButton from "./ThreadToolbarReplyButton"

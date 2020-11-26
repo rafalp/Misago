@@ -3,6 +3,7 @@ type User {
     name: String!
     slug: String!
     email: String!
+    fullName: String
     isModerator: Boolean!
     isAdministrator: Boolean!
     joinedAt: DateTime!

@@ -1,5 +1,7 @@
 import React from "react"
-import { ButtonSecondary, CardBody, PageTitle } from "../../../UI"
+import { ButtonSecondary } from "../../../UI/Button"
+import { CardBody } from "../../../UI/Card"
+import PageTitle from "../../../UI/PageTitle"
 import { IThread } from "../Thread.types"
 import ThreadHeaderStarterAvatar from "./ThreadHeaderStarterAvatar"
 import ThreadHeaderTidbits from "./ThreadHeaderTidbits"

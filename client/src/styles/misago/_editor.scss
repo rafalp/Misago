@@ -3,7 +3,7 @@
   padding: $input-padding-x;
   min-height: $editor-min-height;
 
-  border-radius: 0 0 $input-border-radius $input-border-radius;
+  border-radius: $input-border-radius $input-border-radius 0 0;
   font-family: $font-family-monospace;
 }
 
@@ -14,8 +14,12 @@
   background-color: $input-bg;
   background-clip: padding-box;
   border: $input-border-width solid $input-border-color;
-  border-radius: $input-border-radius $input-border-radius 0 0;
-  border-bottom: none;
+  border-radius: 0 0 $input-border-radius $input-border-radius;
+  border-top: none;
+
+  .btn + .btn {
+    margin-left: $spacer / 2;
+  }
 }
 
 // Style editor button to fit the toolbar
@@ -31,7 +35,7 @@
 
   background-color: $input-bg;
   border: $input-border-width solid $input-border-color;
-  border-radius: 0 0 $input-border-radius $input-border-radius;
+  border-radius: $input-border-radius $input-border-radius 0 0;
 }
 
 // Center the loader and errors
@@ -51,7 +55,8 @@
   p.lead {
     margin: 0;
 
-    font-size: $font-size-lg;
+    font-size: $font-size-base;
+    font-weight: bold;
   }
 
   p + p {

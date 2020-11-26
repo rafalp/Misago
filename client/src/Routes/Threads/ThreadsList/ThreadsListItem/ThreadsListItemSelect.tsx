@@ -1,5 +1,6 @@
 import React from "react"
-import { Checkbox, FormCheckbox } from "../../../../UI"
+import { Checkbox } from "../../../../UI/Checkbox"
+import { FormCheckbox } from "../../../../UI/Form"
 
 interface IThreadsListItemSelectProps {
   selected: boolean

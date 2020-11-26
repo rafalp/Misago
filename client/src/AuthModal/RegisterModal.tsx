@@ -3,24 +3,23 @@ import { Trans } from "@lingui/macro"
 import gql from "graphql-tag"
 import React from "react"
 import * as Yup from "yup"
+import { ButtonLink, ButtonPrimary } from "../UI/Button"
+import { Field, FieldError, Form } from "../UI/Form"
+import Input from "../UI/Input"
 import {
-  ButtonLink,
-  ButtonPrimary,
-  EmailValidationError,
-  Field,
-  FieldError,
-  Form,
-  Input,
   ModalAlert,
   ModalDialog,
   ModalFooter,
   ModalFormBody,
   ModalHeader,
   ModalSize,
+} from "../UI/Modal"
+import RootError from "../UI/RootError"
+import {
+  EmailValidationError,
   PasswordValidationError,
-  RootError,
   UsernameValidationError,
-} from "../UI"
+} from "../UI/ValidationError"
 import { useAuth } from "../auth"
 import { IMutationError } from "../types"
 
@@ -87,7 +86,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
     IRegisterInput
   >(REGISTER, { errorPolicy: "all" })
 
-  const RegisterSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     name: Yup.string()
       .required("value_error.missing")
       .min(settings.usernameMinLength, "value_error.any_str.min_length")
@@ -119,16 +118,16 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
           password: "",
         }}
         disabled={loading || disabled}
-        validationSchema={RegisterSchema}
-        onSubmit={async ({ clearError, setError, data: input }) => {
-          clearError()
+        validators={validators}
+        onSubmit={async ({ clearErrors, setError, data: input }) => {
+          clearErrors()
 
           const result = await register({ variables: { input } })
           const { errors, token, user } = result.data?.register || {}
 
           errors?.forEach(({ location, type, message }) => {
             const field = location.join(".") as "name" | "email" | "password"
-            setError(field, type, message)
+            setError(field, { type, message })
           })
 
           if (token && user) {

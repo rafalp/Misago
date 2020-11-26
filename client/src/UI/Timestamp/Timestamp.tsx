@@ -1,19 +1,17 @@
 import { Plural, Trans } from "@lingui/macro"
-import { I18n } from "@lingui/react"
+import { useLingui } from "@lingui/react"
 import React from "react"
 import { formatDateShort, formatTime } from "../formats"
 
 interface ITimestampProps {
   date: Date
-  language?: string
+  locale?: string
   prefixed?: boolean
 }
 
-const Timestamp: React.FC<ITimestampProps> = ({
-  date,
-  language,
-  prefixed,
-}) => {
+const Timestamp: React.FC<ITimestampProps> = ({ date, locale, prefixed }) => {
+  const { i18n } = useLingui()
+
   const now = new Date()
   const diff = (now.getTime() - date.getTime()) / 1000
 
@@ -72,24 +70,16 @@ const Timestamp: React.FC<ITimestampProps> = ({
     if (diff < 3600 * 48) {
       if (now.getDay() === date.getDay()) {
         return (
-          <I18n>
-            {({ i18n: { language } }) => (
-              <Trans id="time.today">
-                today at {formatTime(date, language)}
-              </Trans>
-            )}
-          </I18n>
+          <Trans id="time.today">
+            today at {formatTime(date, locale || i18n.locale)}
+          </Trans>
         )
       }
 
       return (
-        <I18n>
-          {({ i18n: { language } }) => (
-            <Trans id="time.yesterday">
-              yesterday at {formatTime(date, language)}
-            </Trans>
-          )}
-        </I18n>
+        <Trans id="time.yesterday">
+          yesterday at {formatTime(date, locale || i18n.locale)}
+        </Trans>
       )
     }
 
@@ -143,26 +133,22 @@ const Timestamp: React.FC<ITimestampProps> = ({
   }
 
   if (prefixed) {
-    if (language) {
-      return <Trans id="time.on">on {formatDateShort(date, language)}</Trans>
+    if (locale) {
+      return <Trans id="time.on">on {formatDateShort(date, locale)}</Trans>
     }
 
     return (
-      <I18n>
-        {({ i18n: { language } }) => (
-          <Trans id="time.on">on {formatDateShort(date, language)}</Trans>
-        )}
-      </I18n>
+      <Trans id="time.on">
+        on {formatDateShort(date, locale || i18n.locale)}
+      </Trans>
     )
   }
 
-  if (language) {
-    return <>{formatDateShort(date, language)}</>
+  if (locale) {
+    return <>{formatDateShort(date, locale)}</>
   }
 
-  return (
-    <I18n>{({ i18n: { language } }) => formatDateShort(date, language)}</I18n>
-  )
+  return <>{formatDateShort(date, locale || i18n.locale)}</>
 }
 
 export default Timestamp

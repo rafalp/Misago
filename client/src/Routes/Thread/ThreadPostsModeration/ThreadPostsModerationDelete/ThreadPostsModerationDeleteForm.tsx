@@ -2,15 +2,10 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import {
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  useSelectionErrors,
-} from "../../../../UI"
+import { Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IPost, IThread } from "../../Thread.types"
 import ThreadPostsModerationError from "../ThreadPostsModerationError"
 import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"
@@ -46,12 +41,12 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   } = useDeleteThreadPostsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeletePostsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     posts: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
   })
-  console.log(selectionErrors)
+
   if (data?.deleteThreadPosts.errors) {
     return (
       <ThreadPostsModerationError
@@ -69,12 +64,11 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
       id="delete_posts_form"
       disabled={loading}
       defaultValues={{ posts }}
-      validationSchema={DeletePostsSchema}
+      validators={validators}
       onSubmit={async ({ data: { posts } }) => {
         try {
           const result = await deletePosts(thread, posts, page)
           if (result.data?.deleteThreadPosts.errors) {
-            console.log(posts, result.data?.deleteThreadPosts.errors)
             setSelectionErrors(posts, result.data.deleteThreadPosts.errors)
           } else {
             close()

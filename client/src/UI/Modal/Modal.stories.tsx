@@ -1,15 +1,10 @@
 import { actions } from "@storybook/addon-actions"
 import { withKnobs, boolean, select, text } from "@storybook/addon-knobs"
 import React from "react"
-import {
-  ButtonPrimary,
-  ButtonSecondary,
-  Field,
-  Form,
-  FormFooter,
-  Input,
-  Spinner,
-} from ".."
+import { ButtonPrimary, ButtonSecondary } from "../Button"
+import { Field, Form, FormFooter } from "../Form"
+import Input from "../Input"
+import Spinner from "../Spinner"
 import { RootContainer } from "../Storybook"
 import {
   Modal,
@@ -46,19 +41,6 @@ const size = () =>
     ModalSize.DEFAULT
   )
 const alert = () => boolean("Display alert", false)
-const alertAppearance = () =>
-  select(
-    "Alert appearance",
-    {
-      Primary: "primary",
-      Secondary: "secondary",
-      Success: "success",
-      Danger: "danger",
-      Warning: "warning",
-      Info: "info",
-    },
-    "danger"
-  )
 const resistant = () => boolean("Resistant", false)
 
 export const Basic = () => {
@@ -69,9 +51,7 @@ export const Basic = () => {
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
           {alert() && (
-            <ModalAlert appearance={alertAppearance()}>
-              Ut malesuada interdum massa in ultrices.
-            </ModalAlert>
+            <ModalAlert>Ut malesuada interdum massa in ultrices.</ModalAlert>
           )}
           <ModalBody>
             <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
@@ -143,9 +123,7 @@ export const Complex = () => {
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
           {alert() && (
-            <ModalAlert appearance={alertAppearance()}>
-              Ut malesuada interdum massa in ultrices.
-            </ModalAlert>
+            <ModalAlert>Ut malesuada interdum massa in ultrices.</ModalAlert>
           )}
           <ModalBody>
             <p className="m-0">Lorem ipsum dolor met sit amet elit.</p>
@@ -181,9 +159,7 @@ export const WithForm = () => {
             onSubmit={async () => {}}
           >
             {alert() && (
-              <ModalAlert appearance={alertAppearance()}>
-                Ut malesuada interdum massa in ultrices.
-              </ModalAlert>
+              <ModalAlert>Ut malesuada interdum massa in ultrices.</ModalAlert>
             )}
             <ModalFormBody>
               <Field
@@ -226,9 +202,7 @@ export const WithFormAlt = () => {
             onSubmit={async () => {}}
           >
             {alert() && (
-              <ModalAlert appearance={alertAppearance()}>
-                Ut malesuada interdum massa in ultrices.
-              </ModalAlert>
+              <ModalAlert>Ut malesuada interdum massa in ultrices.</ModalAlert>
             )}
             <ModalFormBody>
               <Field

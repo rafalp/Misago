@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { getSelectionErrors } from "../../../../UI"
+import { getSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { IMutationError } from "../../../../types"
 import { IPost, IThread } from "../../Thread.types"
 import { THREAD_QUERY, IThreadData } from "../../useThreadQuery"

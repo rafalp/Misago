@@ -1,19 +1,12 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
-import {
-  CategorySelect,
-  CategoryValidationError,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  useLocationError,
-} from "../../../../UI"
+import CategorySelect from "../../../../UI/CategorySelect"
+import { Field, FieldError, Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { CategoryValidationError } from "../../../../UI/ValidationError"
+import useLocationError from "../../../../UI/useLocationError"
 import { IThread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
 import useMoveThreadMutation from "./useMoveThreadMutation"
@@ -46,7 +39,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
     )
   }
 
-  const MoveThreadSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     category: Yup.string().required("value_error.missing"),
   })
 
@@ -55,9 +48,9 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
       id="move_thread_form"
       disabled={loading}
       defaultValues={{ category: "" }}
-      validationSchema={MoveThreadSchema}
-      onSubmit={async ({ clearError, setError, data: { category } }) => {
-        clearError()
+      validators={validators}
+      onSubmit={async ({ clearErrors, setError, data: { category } }) => {
+        clearErrors()
 
         try {
           const result = await moveThread(thread, category)
@@ -66,7 +59,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
           if (errors) {
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "category"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

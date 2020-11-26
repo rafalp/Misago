@@ -4,7 +4,7 @@ import PageTitle from "../PageTitle"
 interface IGridPageHeaderProps {
   actions?: Array<React.ReactNode>
   title: React.ReactNode
-  tidbits?: React.ReactNode | null
+  tidbits?: React.ReactNode
 }
 
 const GridPageHeader: React.FC<IGridPageHeaderProps> = ({

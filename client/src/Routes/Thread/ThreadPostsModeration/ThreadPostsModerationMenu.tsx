@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { DropdownButton, DropdownDivider } from "../../../UI"
+import { DropdownButton, DropdownDivider } from "../../../UI/Dropdown"
 import { IPostsModeration } from "./ThreadPostsModeration.types"
 
 interface IThreadPostsModerationMenuProps {

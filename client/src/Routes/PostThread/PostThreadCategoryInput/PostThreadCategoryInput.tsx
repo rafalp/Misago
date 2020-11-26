@@ -12,11 +12,13 @@ import useCategoryChoice from "./useCategoryChoice"
 interface IPostThreadCategoryInputProps {
   choices: Array<ICategoryChoice>
   validChoices: Array<string>
+  responsive?: boolean
 }
 
 const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
   choices,
   validChoices,
+  responsive,
 }) => {
   const context = useFieldContext()
   const { getValues, register, setValue, watch } = useFormContext()
@@ -37,7 +39,7 @@ const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
         choices={choices}
         validChoices={validChoices}
         setValue={(value: string) => {
-          if (name) setValue(name, value, true)
+          if (name) setValue(name, value)
         }}
       />
     )
@@ -46,6 +48,7 @@ const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
   return (
     <PostThreadCategoryInputBody
       disabled={context && context.disabled}
+      responsive={responsive}
       onClick={openPicker}
     >
       {choice.parent ? (

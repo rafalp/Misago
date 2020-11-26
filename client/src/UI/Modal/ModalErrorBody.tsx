@@ -3,8 +3,8 @@ import React from "react"
 
 interface IModalErrorBodyProps {
   className?: string | null
-  header: React.ReactNode | null
-  message?: React.ReactNode | null
+  header: React.ReactNode
+  message?: React.ReactNode
 }
 
 const ModalErrorBody: React.FC<IModalErrorBodyProps> = ({

@@ -1,6 +1,6 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
-import { CardLoader } from "../../../UI"
+import { CardLoader } from "../../../UI/Card"
 import { IThread } from "../Threads.types"
 import ThreadsListBlankslate from "./ThreadsListBlankslate"
 import ThreadsListCard from "./ThreadsListCard"

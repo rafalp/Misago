@@ -1,6 +1,6 @@
 import { Plural, Trans } from "@lingui/macro"
 import React from "react"
-import { Button } from "../../../UI"
+import { Button } from "../../../UI/Button"
 
 interface IThreadsListUpdateButtonProps {
   threads: number

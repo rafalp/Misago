@@ -1,6 +1,6 @@
 import React from "react"
 import { useParams } from "react-router-dom"
-import { WindowTitle } from "../../UI"
+import WindowTitle from "../../UI/WindowTitle"
 import UserQuery from "./UserQuery"
 
 interface IUserParams {

@@ -1,7 +1,8 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React from "react"
-import { LoadMoreButton, RouteLoader, WindowTitle } from "../../UI"
+import LoadMoreButton from "../../UI/LoadMoreButton"
+import RouteLoader from "../../UI/RouteLoader"
+import WindowTitle from "../../UI/WindowTitle"
 import { useForumStatsContext, useSettingsContext } from "../../Context"
 import { ThreadsHeaderAll } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
@@ -26,15 +27,11 @@ const ThreadsAll: React.FC = () => {
 
   return (
     <ThreadsLayout className="route-threads">
-      <I18n>
-        {({ i18n }) => (
-          <WindowTitle
-            index={isIndex}
-            title={i18n._(t("threads.title")`Threads`)}
-            alerts={update.threads}
-          />
-        )}
-      </I18n>
+      <WindowTitle
+        index={isIndex}
+        title={t({ id: "threads.title", message: "Threads" })}
+        alerts={update.threads}
+      />
       <ThreadsHeaderAll settings={settings} stats={forumStats} />
       <ThreadsToolbar />
       <ThreadsList

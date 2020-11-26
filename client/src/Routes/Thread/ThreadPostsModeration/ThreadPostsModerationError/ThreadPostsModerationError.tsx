@@ -3,11 +3,11 @@ import {
   ModalAlert,
   ModalCloseFooter,
   ModalErrorBody,
-  RootError,
-  ThreadValidationError,
-  useLocationError,
-  useRootError,
-} from "../../../../UI"
+} from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { ThreadValidationError } from "../../../../UI/ValidationError"
+import useLocationError from "../../../../UI/useLocationError"
+import useRootError from "../../../../UI/useRootError"
 import { IMutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationErrorHeader from "./ThreadPostsModerationErrorHeader"

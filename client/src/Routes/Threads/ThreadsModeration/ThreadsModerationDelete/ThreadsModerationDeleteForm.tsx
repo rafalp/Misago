@@ -2,15 +2,10 @@ import { Plural } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useBulkActionLimit } from "../../../../Context"
-import {
-  Form,
-  FormFooter,
-  ModalAlert,
-  ModalFormBody,
-  ModalFooter,
-  RootError,
-  useSelectionErrors,
-} from "../../../../UI"
+import { Form, FormFooter } from "../../../../UI/Form"
+import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
+import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { ICategory } from "../../../../types"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
@@ -46,7 +41,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
   } = useDeleteThreadsMutation()
 
   const bulkActionLimit = useBulkActionLimit()
-  const DeleteThreadsSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     threads: Yup.array()
       .min(1, "value_error.list.min_items")
       .max(bulkActionLimit, "value_error.list.max_items"),
@@ -68,9 +63,9 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
       id="delete_threads_form"
       disabled={loading}
       defaultValues={{ threads }}
-      validationSchema={DeleteThreadsSchema}
-      onSubmit={async ({ clearError, setError, data: { threads } }) => {
-        clearError()
+      validators={validators}
+      onSubmit={async ({ clearErrors, setError, data: { threads } }) => {
+        clearErrors()
         clearThreadsErrors()
 
         try {
@@ -81,7 +76,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
             setThreadsErrors(threads, errors)
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".")
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

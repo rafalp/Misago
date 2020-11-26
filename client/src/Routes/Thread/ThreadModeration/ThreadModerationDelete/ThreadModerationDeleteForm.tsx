@@ -2,14 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { useToastsContext } from "../../../../Context"
+import { Form, FormFooter } from "../../../../UI/Form"
 import {
-  Form,
-  FormFooter,
   ModalAlert,
   ModalMessageBody,
   ModalFooter,
-  RootError,
-} from "../../../../UI"
+} from "../../../../UI/Modal"
+import RootError from "../../../../UI/RootError"
 import * as urls from "../../../../urls"
 import { IThread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"

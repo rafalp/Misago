@@ -14,10 +14,12 @@
 .route-auth-error {
   padding: 4rem 0;
 
+  font-size: $font-size-lg;
+
   p.lead {
     margin: 0;
 
-    font-size: $font-size-base * 1.5;
+    font-weight: bold;
   }
 }
 
@@ -34,24 +36,29 @@
 /* Card and modal errors */
 .card-error,
 .card-blank-slate,
-.modal-error {
-  padding: $spacer * 2.5 $spacer;
+.modal-error,
+.modal-message,
+.posting-form-error {
+  padding: $spacer * 2 $spacer;
 
   text-align: center;
 
   p.lead {
     margin: 0;
 
-    font-size: $font-size-lg;
+    font-size: $font-size-base;
+    font-weight: bold;
   }
 }
 
 .card-error p + p,
 .card-blank-slate p + p,
 .card-blank-slate-actions,
-.modal-error p + p {
+.modal-error p + p,
+.modal-message p + p,
+.posting-form-error p + p {
   margin: 0;
-  margin-top: $spacer;
+  margin-top: $spacer / 2;
 }
 
 /* Threads and posts errors list */

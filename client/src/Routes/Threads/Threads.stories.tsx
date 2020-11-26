@@ -1,7 +1,7 @@
 import { action } from "@storybook/addon-actions"
 import React from "react"
 import { CategoriesContext } from "../../Context"
-import { LoadMoreButton } from "../../UI"
+import LoadMoreButton from "../../UI/LoadMoreButton"
 import { categories, settingsFactory } from "../../UI/Storybook"
 import { ThreadsHeaderAll, ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"

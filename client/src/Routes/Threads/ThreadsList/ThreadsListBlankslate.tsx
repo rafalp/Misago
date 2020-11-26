@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { CardBlankslate } from "../../../UI"
+import { CardBlankslate } from "../../../UI/Card"
 import ThreadsNewButton from "../ThreadsNewButton"
 
 interface IThreadsListBlankslateProps {

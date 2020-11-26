@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React, { Suspense } from "react"
 import { useParams } from "react-router-dom"
 import { useAuthContext } from "../../Context"
@@ -34,11 +33,9 @@ const PostThread: React.FC = () => {
   return (
     <Suspense fallback={<RouteLoader />}>
       <RouteContainer>
-        <I18n>
-          {({ i18n }) => (
-            <WindowTitle title={i18n._(t("post_thread.title")`Post thread`)} />
-          )}
-        </I18n>
+        <WindowTitle
+          title={t({ id: "post_thread.title", message: "Post thread" })}
+        />
         <PostThreadForm
           category={params && params.id}
           categories={categories}

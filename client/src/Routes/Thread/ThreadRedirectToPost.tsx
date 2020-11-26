@@ -1,6 +1,7 @@
 import React from "react"
 import { Redirect, useParams } from "react-router-dom"
-import { RouteGraphQLError, RouteLoader, RouteNotFound } from "../../UI"
+import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
+import RouteLoader from "../../UI/RouteLoader"
 import useThreadPostUrlQuery from "./useThreadPostUrlQuery"
 
 interface IThreadPostRouteParams {

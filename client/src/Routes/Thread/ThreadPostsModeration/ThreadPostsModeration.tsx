@@ -1,12 +1,8 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import {
-  ButtonDark,
-  Dropdown,
-  Toolbar,
-  ToolbarItem,
-  ToolbarSeparator,
-} from "../../../UI"
+import { ButtonDark } from "../../../UI/Button"
+import { Dropdown } from "../../../UI/Dropdown"
+import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
 import FixedContainer from "../../../UI/FixedContainer"
 import { IPostsModeration } from "./ThreadPostsModeration.types"
 import ThreadPostsModerationMenu from "./ThreadPostsModerationMenu"

@@ -2,16 +2,10 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
-import {
-  CardAlert,
-  CardBody,
-  Field,
-  FieldError,
-  Form,
-  FormFooter,
-  Input,
-  ThreadTitleValidationError,
-} from "../../../UI"
+import { CardAlert, CardBody } from "../../../UI/Card"
+import { Field, FieldError, Form, FormFooter } from "../../../UI/Form"
+import Input from "../../../UI/Input"
+import { ThreadTitleValidationError } from "../../../UI/ValidationError"
 import { IThread } from "../Thread.types"
 import ThreadRootError from "../ThreadRootError"
 import useEditThreadTitleMutation from "./useEditThreadTitleMutation"
@@ -38,7 +32,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
     error: graphqlError,
   } = useEditThreadTitleMutation(thread)
 
-  const EditThreadTitleSchema = Yup.object().shape({
+  const validators = Yup.object().shape({
     title: Yup.string()
       .required("value_error.missing")
       .min(threadTitleMinLength, "value_error.any_str.min_length")
@@ -51,9 +45,9 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
       id="thread_header_edit_form"
       defaultValues={{ title: thread.title }}
       disabled={loading}
-      validationSchema={EditThreadTitleSchema}
-      onSubmit={async ({ clearError, setError, data: { title } }) => {
-        clearError()
+      validators={validators}
+      onSubmit={async ({ clearErrors, setError, data: { title } }) => {
+        clearErrors()
 
         try {
           const result = await editThreadTitle(title)
@@ -62,7 +56,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
           if (errors) {
             errors?.forEach(({ location, type, message }) => {
               const field = location.join(".") as "title"
-              setError(field, type, message)
+              setError(field, { type, message })
             })
           } else {
             close()

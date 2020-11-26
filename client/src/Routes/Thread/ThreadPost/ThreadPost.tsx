@@ -2,7 +2,6 @@ import React from "react"
 import { Card, CardBody, CardFooter } from "../../../UI/Card"
 import RichText from "../../../UI/RichText"
 import { IPost } from "../Thread.types"
-import ThreadPostEditForm from "./ThreadPostEditForm"
 import ThreadPostHeader from "./ThreadPostHeader"
 import ThreadPostPostbit from "./ThreadPostPostbit"
 import usePostAcl from "./usePostAcl"
@@ -15,8 +14,6 @@ interface IThreadPostProps {
   page?: number
   isClosed?: boolean
   isSelected?: boolean
-  testEditing?: boolean
-  testLoading?: boolean
   toggleSelection?: ((id: string) => void) | null
 }
 
@@ -27,14 +24,10 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
   page,
   isClosed,
   isSelected,
-  testEditing,
-  testLoading,
   toggleSelection,
 }) => {
   const scrollIntoView = useScrollPostIntoView()
   const acl = usePostAcl(post, isClosed)
-  const [edit, setEdit] = React.useState(testEditing || false)
-  const editPost = () => setEdit(true)
 
   return (
     <div className="post" id={"post-" + post.id} ref={scrollIntoView}>
@@ -51,23 +44,12 @@ const ThreadPost: React.FC<IThreadPostProps> = ({
               threadSlug={threadSlug}
               page={page}
               isSelected={isSelected}
-              editPost={editPost}
               toggleSelection={toggleSelection}
             />
-            {edit ? (
-              <ThreadPostEditForm
-                post={post}
-                close={() => setEdit(false)}
-                testLoading={testLoading}
-              />
-            ) : (
-              <>
-                <CardBody className="post-body">
-                  <RichText richText={post.richText} />
-                </CardBody>
-                <CardFooter className="post-footer">post footer</CardFooter>
-              </>
-            )}
+            <CardBody className="post-body">
+              <RichText richText={post.richText} />
+            </CardBody>
+            <CardFooter className="post-footer">post footer</CardFooter>
           </Card>
         </div>
       </div>

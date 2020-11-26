@@ -3,8 +3,8 @@ import React from "react"
 
 interface ICardErrorProps {
   className?: string | null
-  header: React.ReactNode | null
-  message?: React.ReactNode | null
+  header: React.ReactNode
+  message?: React.ReactNode
 }
 
 const CardError: React.FC<ICardErrorProps> = ({

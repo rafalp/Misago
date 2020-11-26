@@ -25,6 +25,7 @@ def upgrade():
         sa.Column("slug", sa.String(length=50), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("email_hash", sa.String(length=255), nullable=False),
+        sa.Column("full_name", sa.String(length=150), nullable=True),
         sa.Column("password", sa.String(length=255), nullable=True),
         sa.Column("is_deactivated", sa.Boolean(), nullable=False),
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
@@ -57,6 +58,30 @@ def upgrade():
         unique=False,
         postgresql_where=sa.text("is_moderator = true"),
     )
+    op.create_index(
+        "misago_users_without_full_names",
+        "misago_users",
+        ["full_name"],
+        unique=False,
+        postgresql_where=sa.text("full_name IS NULL"),
+    )
+    op.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm")
+    op.create_index(
+        "misago_users_full_names_search",
+        "misago_users",
+        ["full_name"],
+        unique=False,
+        postgresql_ops={"full_name": "gin_trgm_ops"},
+        postgresql_using="gin",
+    )
+    op.create_index(
+        "misago_users_slugs_search",
+        "misago_users",
+        ["slug"],
+        unique=False,
+        postgresql_ops={"slug": "gin_trgm_ops"},
+        postgresql_using="gin",
+    )
     # ### end Alembic commands ###
 
 
@@ -65,5 +90,7 @@ def downgrade():
     op.drop_index("misago_users_moderators", table_name="misago_users")
     op.drop_index("misago_users_deactivated", table_name="misago_users")
     op.drop_index("misago_users_admins", table_name="misago_users")
+    op.drop_index("misago_users_slugs_search", table_name="misago_users")
+    op.drop_index("misago_users_full_names_search", table_name="misago_users")
     op.drop_table("misago_users")
     # ### end Alembic commands ###

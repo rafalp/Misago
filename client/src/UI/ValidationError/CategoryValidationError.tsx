@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import { I18n } from "@lingui/react"
 import React from "react"
 import ValidationError from "./ValidationError"
 import { IValidationErrorProps } from "./ValidationError.types"
@@ -23,57 +22,48 @@ const CategoryValidationError: React.FC<IValidationErrorProps> = ({
     return children({ type: errorType, message: messages[errorType] })
   }
 
+  switch (errorType) {
+    case "value_error.missing":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.category.missing",
+          message: "Thread category can't be empty.",
+        }),
+      })
+
+    case "auth_error.not_moderator":
+      return children({
+        type: errorType,
+        message: t({
+          id: "auth_error.not_moderator.category",
+          message: "You can't moderate this category.",
+        }),
+      })
+
+    case "auth_error.category.closed":
+      return children({
+        type: errorType,
+        message: t({
+          id: "auth_error.category.closed",
+          message: "This category is closed.",
+        }),
+      })
+
+    case "value_error.category.not_exists":
+      return children({
+        type: errorType,
+        message: t({
+          id: "value_error.category.not_exists",
+          message: "Category could not be found.",
+        }),
+      })
+  }
+
   return (
-    <I18n>
-      {({ i18n }) => {
-        switch (errorType) {
-          case "value_error.missing":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t(
-                  "value_error.category.missing"
-                )`Thread category can't be empty.`
-              ),
-            })
-
-          case "auth_error.not_moderator":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t(
-                  "auth_error.not_moderator.category"
-                )`You can't moderate this category.`
-              ),
-            })
-
-          case "auth_error.category.closed":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t("auth_error.category.closed")`This category is closed.`
-              ),
-            })
-
-          case "value_error.category.not_exists":
-            return children({
-              type: errorType,
-              message: i18n._(
-                t(
-                  "value_error.category.not_exists"
-                )`Category could not be found.`
-              ),
-            })
-
-          default:
-            return (
-              <ValidationError error={error} value={value} min={min} max={max}>
-                {children}
-              </ValidationError>
-            )
-        }
-      }}
-    </I18n>
+    <ValidationError error={error} value={value} min={min} max={max}>
+      {children}
+    </ValidationError>
   )
 }
 

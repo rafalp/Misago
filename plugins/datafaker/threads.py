@@ -2,7 +2,7 @@ import random
 from datetime import datetime
 from typing import Optional
 
-from misago.types import Category, Post, Thread, User
+from misago.types import Category, Post,  RichText, Thread, User
 from misago.threads.create import create_post, create_thread
 from misago.threads.update import update_thread
 from misago.utils.strings import get_random_string
@@ -25,7 +25,7 @@ async def create_fake_post(
     markup = "\n\n".join(texts)
     html = "<p>%s</p>" % "</p>\n\n<p>".join(texts)
 
-    rich_text = [
+    rich_text: RichText = [
         {"id": get_random_string(6), "type": "p", "text": text} for text in texts
     ]
 

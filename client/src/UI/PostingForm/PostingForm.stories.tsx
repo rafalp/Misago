@@ -1,22 +1,22 @@
 import { MockedProvider } from "@apollo/react-testing"
+import { action } from "@storybook/addon-actions"
 import { withKnobs, boolean, text } from "@storybook/addon-knobs"
 import React from "react"
 import * as Yup from "yup"
 import { BodyScrollLockProvider } from "../../Context"
-import { ButtonPrimary } from "../Button"
 import Editor from "../../Editor"
-import { Field, FieldError, Form } from "../Form"
-import Input from "../Input"
-import {
-  ThreadTitleValidationError,
-  ValidationError,
-} from "../ValidationError"
+import { ButtonPrimary } from "../Button"
+import { Field, FieldErrorFloating, Form } from "../Form"
+import { categories } from "../Storybook"
+import { ValidationError } from "../ValidationError"
 import PostingForm from "./PostingForm"
 import PostingFormAlert from "./PostingFormAlert"
 import PostingFormBody from "./PostingFormBody"
+import PostingFormCollapsible from "./PostingFormCollapsible"
 import PostingFormDialog from "./PostingFormDialog"
-import PostingFormFooter from "./PostingFormFooter"
+import PostingFormError from "./PostingFormError"
 import PostingFormHeader from "./PostingFormHeader"
+import PostingFormLoader from "./PostingFormLoader"
 
 export default {
   title: "UI/PostingForm",
@@ -25,19 +25,17 @@ export default {
 
 interface IPostingFormValues {
   title: string
+  category: string
   markup: string
 }
+
+const cancel = action("cancel form")
 
 const Boilerplate: React.FC = ({ children }) => {
   const [fullscreen, setFullscreen] = React.useState(false)
   const [minimized, setMinimized] = React.useState(false)
 
-  const PostingFormSchema = Yup.object().shape({
-    title: Yup.string()
-      .required("value_error.thread_title.missing")
-      .min(5, "value_error.any_str.min_length")
-      .max(100, "value_error.any_str.max_length")
-      .matches(/[a-zA-Z0-9]/, "value_error.thread_title"),
+  const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
       .min(5, "value_error.any_str.min_length"),
@@ -55,29 +53,32 @@ const Boilerplate: React.FC = ({ children }) => {
             <Form<IPostingFormValues>
               defaultValues={{
                 title: "",
+                category: categories[0].children[0].id,
                 markup: "",
               }}
               disabled={boolean("Loading", false)}
-              validationSchema={PostingFormSchema}
-              onSubmit={async ({ clearError }) => {
-                clearError()
+              validators={validators}
+              onSubmit={async ({ clearErrors }) => {
+                clearErrors()
               }}
             >
-              <PostingFormHeader
-                fullscreen={fullscreen}
-                minimized={minimized}
-                setFullscreen={setFullscreen}
-                setMinimized={setMinimized}
-              >
-                {text("Title", "Posting form")}
-              </PostingFormHeader>
-              {boolean("Alert", false) && (
-                <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
-              )}
-              <PostingFormBody>{children}</PostingFormBody>
-              <PostingFormFooter>
-                <ButtonPrimary text="Submit" small />
-              </PostingFormFooter>
+              <PostingFormBody>
+                <PostingFormHeader
+                  fullscreen={fullscreen}
+                  minimized={minimized}
+                  cancel={cancel}
+                  setFullscreen={setFullscreen}
+                  setMinimized={setMinimized}
+                >
+                  {text("Title", "Posting form")}
+                </PostingFormHeader>
+                <PostingFormCollapsible>
+                  {boolean("Alert", false) && (
+                    <PostingFormAlert>Lorem ipsum dolor met.</PostingFormAlert>
+                  )}
+                  {children}
+                </PostingFormCollapsible>
+              </PostingFormBody>
             </Form>
           </PostingFormDialog>
         </PostingForm>
@@ -86,29 +87,13 @@ const Boilerplate: React.FC = ({ children }) => {
   )
 }
 
-export const StartThreadForm = () => (
+export const Reply = () => (
   <Boilerplate>
-    <Field
-      label="Thread title"
-      name="title"
-      input={<Input placeholder="Thread title" />}
-      error={(error, value) => (
-        <ThreadTitleValidationError
-          error={error}
-          value={value.trim().length}
-          min={5}
-          max={100}
-        >
-          {({ message }) => <FieldError>{message}</FieldError>}
-        </ThreadTitleValidationError>
-      )}
-      labelReaderOnly
-    />
     <Field
       label="Message contents"
       name="markup"
-      className="form-group-editor"
-      input={<Editor />}
+      className="form-group-editor form-group-with-floating-error"
+      input={<Editor submit={<ButtonPrimary text="Submit" small />} />}
       error={(error, value) => (
         <ValidationError
           error={error}
@@ -116,7 +101,9 @@ export const StartThreadForm = () => (
           min={2}
           max={200}
         >
-          {({ message }) => <FieldError>{message}</FieldError>}
+          {({ type, message }) => (
+            <FieldErrorFloating type={type}>{message}</FieldErrorFloating>
+          )}
         </ValidationError>
       )}
       labelReaderOnly
@@ -124,24 +111,17 @@ export const StartThreadForm = () => (
   </Boilerplate>
 )
 
-export const ReplyForm = () => (
+export const Loading = () => (
   <Boilerplate>
-    <Field
-      label="Message contents"
-      name="markup"
-      className="form-group-editor"
-      input={<Editor />}
-      error={(error, value) => (
-        <ValidationError
-          error={error}
-          value={value.trim().length}
-          min={2}
-          max={200}
-        >
-          {({ message }) => <FieldError>{message}</FieldError>}
-        </ValidationError>
-      )}
-      labelReaderOnly
+    <PostingFormLoader />
+  </Boilerplate>
+)
+
+export const Error = () => (
+  <Boilerplate>
+    <PostingFormError
+      error="Reply form could not be loaded at this time."
+      detail="An unexpected error has occurred."
     />
   </Boilerplate>
 )

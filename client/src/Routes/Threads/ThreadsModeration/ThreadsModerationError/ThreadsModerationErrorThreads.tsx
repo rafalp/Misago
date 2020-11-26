@@ -1,11 +1,7 @@
 import React from "react"
-import {
-  ModalBody,
-  ThreadValidationError,
-  TidbitCategory,
-  TidbitReplies,
-  Tidbits,
-} from "../../../../UI"
+import { ModalBody } from "../../../../UI/Modal"
+import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI/Tidbits"
+import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 

@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../../Context"
-import { Modal, ModalDialog } from "../../../../UI"
+import { Modal, ModalDialog } from "../../../../UI/Modal"
 import { IThread } from "../../Thread.types"
 import ThreadModerationMoveForm from "./ThreadModerationMoveForm"
 

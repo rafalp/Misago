@@ -1,7 +1,9 @@
 import { Plural } from "@lingui/macro"
 import React from "react"
 import { Link } from "react-router-dom"
-import { Avatar, Checkbox, Timestamp } from "../../../UI"
+import Avatar from "../../../UI/Avatar"
+import { Checkbox } from "../../../UI/Checkbox"
+import Timestamp from "../../../UI/Timestamp"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 import ThreadPostOptions from "./ThreadPostOptions"
@@ -14,7 +16,6 @@ interface IThreadPostHeaderProps {
   threadSlug: string
   page?: number
   isSelected?: boolean
-  editPost: () => void
   toggleSelection?: ((id: string) => void) | null
 }
 
@@ -25,7 +26,6 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
   threadSlug,
   page,
   isSelected,
-  editPost,
   toggleSelection,
 }) => {
   const moderation = useThreadPostModeration(threadId, post, page)
@@ -98,7 +98,6 @@ const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
             threadId={threadId}
             threadSlug={threadSlug}
             moderation={moderation}
-            editPost={editPost}
           />
         </div>
         {toggleSelection && (
