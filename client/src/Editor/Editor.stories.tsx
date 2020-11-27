@@ -9,9 +9,11 @@ import { RootContainer } from "../UI/Storybook"
 import { ValidationError } from "../UI/ValidationError"
 import Editor from "./Editor"
 import EditorBody from "./EditorBody"
+import EditorMentions from "./EditorMentions"
 import EditorPreview from "./EditorPreview"
 import EditorPreviewError from "./EditorPreviewError"
 import EditorPreviewLoader from "./EditorPreviewLoader"
+import EditorTextarea from "./EditorTextarea"
 import EditorToolbar from "./EditorToolbar"
 import { RICH_TEXT_PREVIEW_QUERY } from "./useRichTextPreviewQuery"
 
@@ -95,9 +97,11 @@ export const WithValue = () => (
 )
 
 export const Disabled = () => (
-  <Container>
-    <Editor disabled={true} />
-  </Container>
+  <MockedProvider mocks={[]}>
+    <Container>
+      <Editor disabled={true} />
+    </Container>
+  </MockedProvider>
 )
 
 export const Preview = () => (
@@ -138,31 +142,64 @@ export const Preview = () => (
   </MockedProvider>
 )
 
+export const Mentions = () => (
+  <MockedProvider>
+    <Container>
+      <p>
+        Try mentioning <strong>@test</strong> or <strong>@bob</strong>
+      </p>
+
+      <EditorBody>
+        <EditorMentions
+          mocks={[
+            {
+              key: "test",
+              value: "Test",
+            },
+            {
+              key: "Bob Bobertson @BobBobertson",
+              value: "BobBobertson",
+            },
+          ]}
+        >
+          <EditorTextarea name="markup" />
+        </EditorMentions>
+      </EditorBody>
+    </Container>
+  </MockedProvider>
+)
+
 export const PreviewLoader = () => (
-  <Container>
-    <EditorBody>
-      <EditorPreviewLoader />
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
-    </EditorBody>
-  </Container>
+  <MockedProvider mocks={[]}>
+    <Container>
+      <EditorBody>
+        <EditorPreviewLoader />
+        <EditorToolbar>Toolbar placeholder</EditorToolbar>
+      </EditorBody>
+    </Container>
+  </MockedProvider>
 )
 
 export const PreviewQueryError = () => (
-  <Container>
-    <EditorBody>
-      <EditorPreviewError error={new ApolloError({})} />
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
-    </EditorBody>
-  </Container>
+  <MockedProvider mocks={[]}>
+    <Container>
+      <EditorBody>
+        <EditorPreviewError error={new ApolloError({})} />
+        <EditorToolbar>Toolbar placeholder</EditorToolbar>
+      </EditorBody>
+    </Container>
+  </MockedProvider>
 )
 
 export const PreviewNetworkError = () => (
-  <Container>
-    <EditorBody>
-      <EditorPreviewError
-        error={new ApolloError({ networkError: new Error() })}
-      />
-      <EditorToolbar>Toolbar placeholder</EditorToolbar>
-    </EditorBody>
-  </Container>
+  <MockedProvider mocks={[]}>
+    <Container>
+      <EditorBody>
+        <EditorPreviewError
+          error={new ApolloError({ networkError: new Error() })}
+        />
+        <EditorToolbar>Toolbar placeholder</EditorToolbar>
+      </EditorBody>
+    </Container>
+  </MockedProvider>
 )

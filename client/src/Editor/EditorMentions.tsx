@@ -4,28 +4,33 @@ import useSearchUsersQuery from "./useSearchUsersQuery"
 
 interface IEditorMentionsProps {
   children: React.ReactNode
-  name: string
+  mocks?: Array<{
+    key: string
+    value: string
+  }>
 }
 
 const EditorMentions: React.FC<IEditorMentionsProps> = ({
   children,
-  name,
+  mocks,
 }) => {
-  const container = React.useRef<HTMLDivElement>(null)
-  const element = container.current
+  const [initialized, setInitialized] = React.useState(false)
+  const container = React.useRef<HTMLDivElement | null>(null)
   const tribute = React.useRef<Tribute<any> | null>(null)
 
   const searchUsers = useSearchUsersQuery()
+  const element = container.current
 
   React.useEffect(() => {
-    if (!element || tribute.current) return
+    if (!initialized || !element || tribute.current) return
 
     const textarea = element.querySelector("textarea")
     if (!textarea) return
 
     tribute.current = new Tribute({
-      collection: [
-        {
+      values: mocks,
+      collection: mocks ? [] : [
+        mocks || {
           values: (text, cb) => {
             searchUsers(text)
               .then((results) =>
@@ -45,6 +50,7 @@ const EditorMentions: React.FC<IEditorMentionsProps> = ({
       noMatchTemplate: function () {
         return '<span style:"visibility: hidden;"></span>'
       },
+      requireLeadingSpace: false,
     })
 
     tribute.current.attach(textarea)
@@ -52,9 +58,20 @@ const EditorMentions: React.FC<IEditorMentionsProps> = ({
     return () => {
       if (tribute.current) tribute.current.detach(textarea)
     }
-  }, [element, name, searchUsers])
+  }, [initialized, element, mocks, searchUsers])
 
-  return <div ref={container}>{children}</div>
+  return (
+    <div
+      ref={(element) => {
+        if (element) {
+          container.current = element
+          setInitialized(true)
+        }
+      }}
+    >
+      {children}
+    </div>
+  )
 }
 
 export default EditorMentions

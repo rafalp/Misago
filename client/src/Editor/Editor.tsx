@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../UI/Form"
 import EditorBody from "./EditorBody"
 import EditorButton from "./EditorButton"
+import EditorMentions from "./EditorMentions"
 import EditorPreview from "./EditorPreview"
 import EditorPreviewButton from "./EditorPreviewButton"
 import EditorTextarea from "./EditorTextarea"
@@ -39,13 +40,15 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   return (
     <EditorBody disabled={disabled || context.disabled}>
       {preview && <EditorPreview markup={preview} />}
-      <EditorTextarea
-        disabled={disabled || context.disabled}
-        hidden={!!preview}
-        invalid={context.invalid}
-        name={finName}
-        register={hookContext.register}
-      />
+      <EditorMentions>
+        <EditorTextarea
+          disabled={disabled || context.disabled}
+          hidden={!!preview}
+          invalid={context.invalid}
+          name={finName}
+          register={hookContext.register}
+        />
+      </EditorMentions>
       <EditorToolbar>
         <div className="row">
           <div className="col" />
