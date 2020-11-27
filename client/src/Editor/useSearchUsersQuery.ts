@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { useCallback } from "react"
+import { IAvatar } from "../types"
 
 const SEARCH_USERS_QUERY = gql`
   query SearchUsersForMention($query: String!) {
@@ -8,6 +9,10 @@ const SEARCH_USERS_QUERY = gql`
       users {
         name
         fullName
+        avatar(size: 32) {
+          size
+          url
+        }
       }
     }
   }
@@ -15,8 +20,14 @@ const SEARCH_USERS_QUERY = gql`
 
 interface ISearchUsersQueryData {
   search: {
-    users: Array<{ name: string; fullName: string | null }>
+    users: Array<IUserSearchResult>
   }
+}
+
+export interface IUserSearchResult {
+  name: string
+  fullName: string | null
+  avatar: IAvatar
 }
 
 interface ISearchUsersQueryVariables {

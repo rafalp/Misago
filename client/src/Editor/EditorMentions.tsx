@@ -1,13 +1,11 @@
 import React from "react"
 import Tribute from "tributejs"
+import { IUserSearchResult } from "./useSearchUsersQuery"
 import useSearchUsersQuery from "./useSearchUsersQuery"
 
 interface IEditorMentionsProps {
   children: React.ReactNode
-  mocks?: Array<{
-    key: string
-    value: string
-  }>
+  mocks?: Array<IUserSearchResult>
 }
 
 const EditorMentions: React.FC<IEditorMentionsProps> = ({
@@ -27,30 +25,37 @@ const EditorMentions: React.FC<IEditorMentionsProps> = ({
     const textarea = element.querySelector("textarea")
     if (!textarea) return
 
-    tribute.current = new Tribute({
-      values: mocks,
-      collection: mocks ? [] : [
-        mocks || {
-          values: (text, cb) => {
-            searchUsers(text)
-              .then((results) =>
-                results.map((user) => {
-                  return {
-                    key: user.fullName
-                      ? `${user.fullName} (${user.name})`
-                      : user.name,
-                    value: user.name,
-                  }
-                })
-              )
-              .then(cb)
+    tribute.current = new Tribute<IUserSearchResult>({
+      values: mocks
+        ? mocks
+        : (text, cb) => {
+            searchUsers(text).then(cb)
           },
-        },
-      ],
+      selectTemplate: function (item) {
+        return "@" + item.original.name
+      },
+      menuItemTemplate: function ({ original }) {
+        const name = escapeHtml(original.name)
+        const fullName = escapeHtml(original.fullName || "")
+        const url = escapeHtml(original.avatar.url)
+
+        const avatar = `<img class="user-avatar" src="${url}" alt=""/>`
+        if (fullName.length) {
+          return `${avatar} <span class="tribute-main">${fullName}</span><span class="tribute-sub">@${name}</span>`
+        }
+
+        return `${avatar} <span class="tribute-main">${name}</span>`
+      },
       noMatchTemplate: function () {
         return '<span style:"visibility: hidden;"></span>'
       },
-      requireLeadingSpace: false,
+      searchOpts: {
+        pre: "",
+        post: "",
+        skip: true,
+      },
+      itemClass: "dropdown-item",
+      selectClass: "active",
     })
 
     tribute.current.attach(textarea)
@@ -72,6 +77,15 @@ const EditorMentions: React.FC<IEditorMentionsProps> = ({
       {children}
     </div>
   )
+}
+
+const escapeHtml = (value: string) => {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;")
 }
 
 export default EditorMentions

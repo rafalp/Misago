@@ -146,19 +146,36 @@ export const Mentions = () => (
   <MockedProvider>
     <Container>
       <p>
-        Try mentioning <strong>@test</strong> or <strong>@bob</strong>
+        Try mentioning <strong>@test</strong>, <strong>@bob</strong> or{" "}
+        <strong>@Danger</strong>
       </p>
 
       <EditorBody>
         <EditorMentions
           mocks={[
             {
-              key: "test",
-              value: "Test",
+              name: "Test",
+              fullName: null,
+              avatar: {
+                size: 32,
+                url: "https://placekitten.com/32/32",
+              },
             },
             {
-              key: "Bob Bobertson @BobBobertson",
-              value: "BobBobertson",
+              name: "Bob",
+              fullName: "Bob Bobertson",
+              avatar: {
+                size: 32,
+                url: "https://placekitten.com/32/32",
+              },
+            },
+            {
+              name: "Danger",
+              fullName: "Dangerous <u>Dave</u>",
+              avatar: {
+                size: 32,
+                url: "https://placekitten.com/32/32",
+              },
             },
           ]}
         >
