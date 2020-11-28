@@ -9,7 +9,6 @@ import EditorPreview from "./EditorPreview"
 import EditorPreviewButton from "./EditorPreviewButton"
 import EditorTextarea from "./EditorTextarea"
 import EditorToolbar from "./EditorToolbar"
-import useSearchUsersQuery from "./useSearchUsersQuery"
 
 interface IEditorProps {
   name?: string
@@ -21,7 +20,6 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
   const context = useFieldContext()
   const hookContext = useFormContext()
   const [preview, setPreview] = React.useState<string | null>(null)
-  const searchUsers = useSearchUsersQuery()
 
   const finName = name || context.name
 

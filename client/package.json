@@ -79,7 +79,17 @@
     "require-context.macro": "^1.2.2"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "overrides": [
+      {
+        "files": [
+          "src/**/*.stories.tsx"
+        ],
+        "rules": {
+          "import/no-anonymous-default-export": "off"
+        }
+      }
+    ]
   },
   "prettier": {
     "printWidth": 79,
