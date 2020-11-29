@@ -27,7 +27,7 @@ const Checkbox: React.FC<ICheckboxProps> = ({
       <input
         id={id || context.id}
         type="checkbox"
-        checked={hookContext.register ? undefined : checked}
+        checked={!!hookContext.register ? undefined : checked}
         disabled={disabled || context.disabled}
         name={name || context.name}
         ref={hookContext.register}
