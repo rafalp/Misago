@@ -1,12 +1,12 @@
 import mistune
 
 PLUGINS = [
-    'url',
-    'strikethrough',
-    'footnotes',
-    'table',
-    'task_lists',
-    'simple_linebreak',
+    "url",
+    "strikethrough",
+    "footnotes",
+    "table",
+    "task_lists",
+    "simple_linebreak",
 ]
 
 
