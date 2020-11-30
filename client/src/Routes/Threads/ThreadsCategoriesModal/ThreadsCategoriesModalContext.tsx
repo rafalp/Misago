@@ -9,9 +9,9 @@ interface IThreadsCategoriesModalContext {
   close: () => void
 }
 
-const ThreadsCategoriesModalContext = React.createContext<
-  IThreadsCategoriesModalContext
->({ isOpen: false, active: null, open: () => {}, close: () => {} })
+const ThreadsCategoriesModalContext = React.createContext<IThreadsCategoriesModalContext>(
+  { isOpen: false, active: null, open: () => {}, close: () => {} }
+)
 
 interface IThreadsCategoriesModalContextProviderProps {
   children: React.ReactNode

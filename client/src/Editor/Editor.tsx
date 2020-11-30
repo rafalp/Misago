@@ -4,6 +4,7 @@ import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../UI/Form"
 import EditorBody from "./EditorBody"
 import EditorButton from "./EditorButton"
+import EditorControls from "./EditorControls"
 import EditorMentions from "./EditorMentions"
 import EditorPreview from "./EditorPreview"
 import EditorPreviewButton from "./EditorPreviewButton"
@@ -49,6 +50,9 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
       </EditorMentions>
       <EditorToolbar>
         <div className="row">
+          <EditorControls
+            disabled={disabled || context.disabled || !!preview}
+          />
           <div className="col" />
           <div className="col-auto">
             {preview ? (

@@ -5,9 +5,7 @@ interface IThreadReplyErrorBoundaryProps {
   children: React.ReactNode
 }
 
-class ThreadReplyErrorBoundary extends React.Component<
-  IThreadReplyErrorBoundaryProps
-> {
+class ThreadReplyErrorBoundary extends React.Component<IThreadReplyErrorBoundaryProps> {
   state = { hasError: false }
 
   static getDerivedStateFromError() {
