@@ -3,7 +3,7 @@ import React from "react"
 import ThreadPostsModeration from "./ThreadPostsModeration"
 
 export default {
-  title: "Route/Thread/Moderation",
+  title: "Route/Thread/Moderation/Post Options",
   decorators: [withKnobs],
 }
 

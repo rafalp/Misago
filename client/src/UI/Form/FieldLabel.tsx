@@ -17,7 +17,7 @@ const FieldLabel: React.FC<IFieldLabelProps> = ({
   required,
 }) => (
   <label
-    className={classnames(className, { "sr-only": readerOnly })}
+    className={classnames(className, { "sr-only": readerOnly }) || undefined}
     htmlFor={htmlFor}
   >
     {children}

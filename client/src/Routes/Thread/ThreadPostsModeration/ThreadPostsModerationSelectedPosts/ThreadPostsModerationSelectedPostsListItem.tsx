@@ -50,7 +50,6 @@ const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerati
             </span>
           </label>
           <div className="selected-post-body">
-            s
             <RichText richText={post.richText} />
           </div>
         </div>
