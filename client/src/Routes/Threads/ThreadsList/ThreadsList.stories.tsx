@@ -77,7 +77,6 @@ export const Threads = () => {
       title:
         "Instead, in 2006, the International Astronomical Union created a new class of objects called dwarf planets, and placed Pluto, Eris and the asteroid Ceres in this category.",
       lastPosterName: "LoremIpsumDolorMet",
-      lastPostedAt: new Date(now.getTime() - 36 * 3600 * 1000).toUTCString(),
     }),
     thread({
       id: "3",

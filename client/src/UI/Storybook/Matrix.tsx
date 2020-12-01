@@ -14,7 +14,7 @@ const Matrix: React.FC<IMatrixProps> = ({ items }) => (
     {items.map((cols, i) => (
       <div className="row m-4" key={i}>
         {cols.map(({ name, component }, l) => (
-          <div className="col">
+          <div className="col" key={l}>
             <div className="pb-2">
               <strong>{`${name}:`}</strong>
             </div>
