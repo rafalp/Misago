@@ -1,19 +1,19 @@
 import pytest
 
-from ..markdown import asr_markdown, html_markdown
+from ..markdown import ast_markdown, html_markdown
 
 MARKDOWN_VALUES = (
     (
         "Lorem ipsum",
         "<p>Lorem ipsum</p>\n",
-        [{"type": "paragraph", "children": [{"type": "text", "text": "Lorem ipsum"}]}],
+        [{"type": "p", "children": [{"type": "text", "text": "Lorem ipsum"}]}],
     ),
     (
         "**Lorem ipsum**",
         "<p><strong>Lorem ipsum</strong></p>\n",
         [
             {
-                "type": "paragraph",
+                "type": "p",
                 "children": [
                     {
                         "type": "strong",
@@ -28,7 +28,7 @@ MARKDOWN_VALUES = (
         '<p><a href="https://www.misago.pl">https://www.misago.pl</a></p>\n',
         [
             {
-                "type": "paragraph",
+                "type": "p",
                 "children": [
                     {
                         "type": "link",
@@ -45,7 +45,7 @@ MARKDOWN_VALUES = (
         "<p>Lorem &lt;h1&gt;ipsum&lt;/h1&gt;</p>\n",
         [
             {
-                "type": "paragraph",
+                "type": "p",
                 "children": [
                     {"type": "text", "text": "Lorem "},
                     {"type": "inline_html", "text": "<h1>"},
@@ -60,7 +60,7 @@ MARKDOWN_VALUES = (
         "<p><strong>Lorem ipsum</strong></p>\n",
         [
             {
-                "type": "paragraph",
+                "type": "p",
                 "children": [
                     {
                         "type": "strong",
@@ -89,7 +89,7 @@ MARKDOWN_VALUES = (
                 "type": "block_quote",
                 "children": [
                     {
-                        "type": "paragraph",
+                        "type": "p",
                         "children": [{"type": "text", "text": "Lorem ipsum"}],
                     }
                 ],
@@ -101,7 +101,7 @@ MARKDOWN_VALUES = (
         "<p>Lorem ipsum<br />\ndolor sit amet,</p>\n",
         [
             {
-                "type": "paragraph",
+                "type": "p",
                 "children": [
                     {"type": "text", "text": "Lorem ipsum"},
                     {"type": "linebreak"},
@@ -113,13 +113,13 @@ MARKDOWN_VALUES = (
 )
 
 
-@pytest.mark.parametrize("text, html, asr", MARKDOWN_VALUES)
+@pytest.mark.parametrize("text, html, ast", MARKDOWN_VALUES)
 @pytest.mark.asyncio
-async def test_asr_markdown_text(text, html, asr):
-    assert asr == asr_markdown(text)
+async def test_asr_markdown_text(text, html, ast):
+    assert ast == ast_markdown(text)
 
 
-@pytest.mark.parametrize("text, html, asr", MARKDOWN_VALUES)
+@pytest.mark.parametrize("text, html, ast", MARKDOWN_VALUES)
 @pytest.mark.asyncio
-async def test_html_markdown_text(text, html, asr):
+async def test_html_markdown_text(text, html, ast):
     assert html == html_markdown(text)

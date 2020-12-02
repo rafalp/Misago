@@ -1,5 +1,7 @@
 import mistune
 
+from .ast_renderer import MisagoAstRenderer
+
 PLUGINS = [
     "url",
     "strikethrough",
@@ -10,8 +12,8 @@ PLUGINS = [
 ]
 
 
-def asr_markdown(text, escape=True):
-    md = mistune.create_markdown(escape, mistune.AstRenderer(), PLUGINS)
+def ast_markdown(text, escape=True):
+    md = mistune.create_markdown(escape, MisagoAstRenderer(), PLUGINS)
     return md(text)
 
 
