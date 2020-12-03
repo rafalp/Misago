@@ -24,6 +24,14 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
 
   const finName = name || context.name
 
+  const setValueInState = hookContext.setValue
+  const setValue = React.useCallback(
+    (value: string) => {
+      if (finName && setValueInState) setValueInState(finName, value)
+    },
+    [finName, setValueInState]
+  )
+
   if (!hookContext) return null
   if (!finName) return null
 
@@ -52,6 +60,7 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
         <div className="row">
           <EditorControls
             disabled={disabled || context.disabled || !!preview}
+            setValue={setValue}
           />
           <div className="col" />
           <div className="col-auto">
