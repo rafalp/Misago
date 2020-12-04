@@ -19,8 +19,12 @@ export const EditorContext = React.createContext<IEditorContextValues>({
 
 interface IReplaceSelectionOptions {
   replace?: string
+  default?: string
   prefix?: string
   suffix?: string
+  trim?: boolean
+  lstrip?: RegExp
+  rstrip?: RegExp
 }
 
 interface IEditorContextProviderProps {

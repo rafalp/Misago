@@ -38,7 +38,17 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       }),
       icon: "fas fa-bold",
       onClick: (context: IEditorContextValues) => {
-        context.replaceSelection({ prefix: "**", suffix: "**" })
+        context.replaceSelection({
+          prefix: "**",
+          suffix: "**",
+          default: t({
+            id: "editor.bold_default",
+            message: "strong text",
+          }),
+          trim: true,
+          lstrip: /(\*|_)+$/,
+          rstrip: /^(\*|_)+/,
+        })
       },
     },
     {
@@ -49,7 +59,17 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       }),
       icon: "fas fa-italic",
       onClick: (context: IEditorContextValues) => {
-        context.replaceSelection({ prefix: "_", suffix: "_" })
+        context.replaceSelection({
+          prefix: "*",
+          suffix: "*",
+          default: t({
+            id: "editor.emphasis_default",
+            message: "emphasized text",
+          }),
+          trim: true,
+          lstrip: /(\*|_)+$/,
+          rstrip: /^(\*|_)+/,
+        })
       },
     },
     {
@@ -60,7 +80,17 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       }),
       icon: "fas fa-strikethrough",
       onClick: (context: IEditorContextValues) => {
-        context.replaceSelection({ prefix: "~~", suffix: "~~" })
+        context.replaceSelection({
+          prefix: "~~",
+          suffix: "~~",
+          default: t({
+            id: "editor.strikethrough_default",
+            message: "removed text",
+          }),
+          trim: true,
+          lstrip: /~+$/,
+          rstrip: /^~+/,
+        })
       },
     },
     {
@@ -75,6 +105,8 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
           prefix: "\n\n",
           suffix: "\n\n",
           replace: "- - -",
+          lstrip: /\s+$/,
+          rstrip: /^\s+/,
         })
       },
     },
