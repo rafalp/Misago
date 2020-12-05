@@ -7,7 +7,7 @@ interface IEditorButtonProps {
   disabled?: boolean
   icon?: boolean
   title?: string
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const EditorButton: React.FC<IEditorButtonProps> = ({

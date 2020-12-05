@@ -63,7 +63,6 @@ const Container: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 )
 
 export const Threads = () => {
-  const now = new Date()
   const items = threads([
     thread({
       id: "1",
