@@ -7,7 +7,7 @@ import { ModalFormBody, ModalFooter } from "../../UI/Modal"
 import { LinkValidationError } from "../../UI/ValidationError"
 import { IEditorContextValues } from "../EditorContext"
 
-interface IEditorControlLinkFormProps {
+interface IEditorControlImageFormProps {
   context: IEditorContextValues
   close: () => void
 }
@@ -17,7 +17,7 @@ interface IFormValues {
   label: string
 }
 
-const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
+const EditorControlImageForm: React.FC<IEditorControlImageFormProps> = ({
   context,
   close,
 }) => {
@@ -28,21 +28,21 @@ const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
 
   return (
     <Form<IFormValues>
-      id="editor_link_form"
+      id="editor_image_form"
       defaultValues={{ link: "", label: "" }}
       validators={validators}
       onSubmit={({ data: { link, label } }) => {
         context.replaceSelection({
           replace: label.trim()
             ? `![${label.trim()}](${link.trim()})`
-            : link.trim(),
+            : `!(${link.trim()})`,
         })
         close()
       }}
     >
       <ModalFormBody>
         <Field
-          label={<Trans id="editor.link_modal.link">Link</Trans>}
+          label={<Trans id="editor.image_modal.link">Link to image</Trans>}
           name="link"
           input={<Input />}
           error={(error, value) => (
@@ -52,7 +52,9 @@ const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
           )}
         />
         <Field
-          label={<Trans id="editor.link_modal.label">Label (optional)</Trans>}
+          label={
+            <Trans id="editor.image_modal.label">Image label (optional)</Trans>
+          }
           name="label"
           input={<Input />}
         />
@@ -64,4 +66,4 @@ const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
   )
 }
 
-export default EditorControlLinkForm
+export default EditorControlImageForm

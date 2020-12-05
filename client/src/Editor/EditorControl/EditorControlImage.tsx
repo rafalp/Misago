@@ -2,9 +2,9 @@ import React from "react"
 import Icon from "../../UI/Icon"
 import { IEditorControlProps } from "./EditorControl.types"
 import EditorButton from "../EditorButton"
-import EditorControlLinkModal from "./EditorControlLinkModal"
+import EditorControlImageModal from "./EditorControlImageModal"
 
-const EditorControlLink: React.FC<IEditorControlProps> = ({
+const EditorControlImage: React.FC<IEditorControlProps> = ({
   title,
   icon,
   context,
@@ -15,7 +15,7 @@ const EditorControlLink: React.FC<IEditorControlProps> = ({
   return (
     <>
       <EditorButton
-        className="btn-editor-link"
+        className="btn-editor-image"
         disabled={disabled}
         title={title}
         icon
@@ -23,7 +23,7 @@ const EditorControlLink: React.FC<IEditorControlProps> = ({
       >
         <Icon icon={icon} fixedWidth />
       </EditorButton>
-      <EditorControlLinkModal
+      <EditorControlImageModal
         context={context}
         isOpen={isOpen}
         close={() => setOpen(false)}
@@ -32,4 +32,4 @@ const EditorControlLink: React.FC<IEditorControlProps> = ({
   )
 }
 
-export default EditorControlLink
+export default EditorControlImage

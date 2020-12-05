@@ -9,6 +9,7 @@ import {
 } from "./EditorContext"
 import {
   EditorControlEmoji,
+  EditorControlImage,
   EditorControlLink,
   IEditorControlProps,
 } from "./EditorControl"
@@ -130,6 +131,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
         message: "Image",
       }),
       icon: "far fa-image",
+      component: EditorControlImage,
     },
     {
       key: "emoji",
@@ -139,6 +141,14 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       }),
       icon: "far fa-smile",
       component: EditorControlEmoji,
+    },
+    {
+      key: "list",
+      title: t({
+        id: "editor.list",
+        message: "List",
+      }),
+      icon: "fas fa-list-ul",
     },
     {
       key: "quote",
