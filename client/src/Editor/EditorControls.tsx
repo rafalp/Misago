@@ -7,7 +7,11 @@ import {
   EditorContextProvider,
   IEditorContextValues,
 } from "./EditorContext"
-import { EditorControlEmoji, IEditorControlProps } from "./EditorControl"
+import {
+  EditorControlEmoji,
+  EditorControlLink,
+  IEditorControlProps,
+} from "./EditorControl"
 
 export interface IEditorControl {
   key: string
@@ -117,6 +121,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
         message: "Link",
       }),
       icon: "fas fa-link",
+      component: EditorControlLink,
     },
     {
       key: "image",
