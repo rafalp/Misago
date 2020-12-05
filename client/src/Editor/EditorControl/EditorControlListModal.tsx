@@ -3,15 +3,15 @@ import React from "react"
 import { Modal, ModalDialog } from "../../UI/Modal"
 import portal from "../../UI/portal"
 import { IEditorContextValues } from "../EditorContext"
-import EditorControlLinkForm from "./EditorControlLinkForm"
+import EditorControlListForm from "./EditorControlListForm"
 
-interface IEditorControlLinkModalProps {
+interface IEditorControlListModalProps {
   context: IEditorContextValues
   isOpen: boolean
   close: () => void
 }
 
-const EditorControlLinkModal: React.FC<IEditorControlLinkModalProps> = ({
+const EditorControlListModal: React.FC<IEditorControlListModalProps> = ({
   context,
   isOpen,
   close,
@@ -19,13 +19,13 @@ const EditorControlLinkModal: React.FC<IEditorControlLinkModalProps> = ({
   return portal(
     <Modal isOpen={isOpen} close={close}>
       <ModalDialog
-        title={<Trans id="editor.link">Insert link</Trans>}
+        title={<Trans id="editor.list">Insert list</Trans>}
         close={close}
       >
-        <EditorControlLinkForm context={context} close={close} />
+        <EditorControlListForm context={context} close={close} />
       </ModalDialog>
     </Modal>
   )
 }
 
-export default EditorControlLinkModal
+export default EditorControlListModal

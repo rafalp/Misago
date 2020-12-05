@@ -8,9 +8,11 @@ import {
   IEditorContextValues,
 } from "./EditorContext"
 import {
+  EditorControlCode,
   EditorControlEmoji,
   EditorControlImage,
   EditorControlLink,
+  EditorControlList,
   IEditorControlProps,
 } from "./EditorControl"
 
@@ -102,7 +104,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       key: "hr",
       title: t({
         id: "editor.hr",
-        message: "Horizontal ruler",
+        message: "Insert horizontal ruler",
       }),
       icon: "fas fa-minus",
       onClick: (context: IEditorContextValues) => {
@@ -119,7 +121,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       key: "link",
       title: t({
         id: "editor.link",
-        message: "Link",
+        message: "Insert link",
       }),
       icon: "fas fa-link",
       component: EditorControlLink,
@@ -128,7 +130,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       key: "image",
       title: t({
         id: "editor.image",
-        message: "Image",
+        message: "Insert image",
       }),
       icon: "far fa-image",
       component: EditorControlImage,
@@ -146,9 +148,10 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       key: "list",
       title: t({
         id: "editor.list",
-        message: "List",
+        message: "Insert list",
       }),
       icon: "fas fa-list-ul",
+      component: EditorControlList,
     },
     {
       key: "quote",
@@ -157,6 +160,19 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
         message: "Quote",
       }),
       icon: "fas fa-quote-right",
+      onClick: (context: IEditorContextValues) => {
+        context.replaceSelection({
+          prefix: "\n\n[quote]\n",
+          suffix: "\n[/quote]\n\n",
+          default: t({
+            id: "editor.quote_default",
+            message: "quoted text",
+          }),
+          trim: true,
+          lstrip: /\s+$/,
+          rstrip: /^\s+/,
+        })
+      },
     },
     {
       key: "spoiler",
@@ -165,14 +181,28 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
         message: "Spoiler",
       }),
       icon: "far fa-eye-slash",
+      onClick: (context: IEditorContextValues) => {
+        context.replaceSelection({
+          prefix: "\n\n[spoiler]\n",
+          suffix: "\n[/spoiler]\n\n",
+          default: t({
+            id: "editor.spoiler_default",
+            message: "hidden text",
+          }),
+          trim: true,
+          lstrip: /\s+$/,
+          rstrip: /^\s+/,
+        })
+      },
     },
     {
       key: "code",
       title: t({
         id: "editor.code",
-        message: "Code",
+        message: "Insert code",
       }),
       icon: "fas fa-code",
+      component: EditorControlCode,
     },
   ]
 
@@ -204,7 +234,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
               return (
                 <EditorContext.Consumer key={key}>
                   {(context) => (
-                    <Component context={context} icon={icon} title={icon} />
+                    <Component context={context} icon={icon} title={title} />
                   )}
                 </EditorContext.Consumer>
               )
