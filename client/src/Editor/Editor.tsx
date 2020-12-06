@@ -24,7 +24,7 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
 
   const finName = name || context.name
 
-  const setValueInState = hookContext.setValue
+  const setValueInState = hookContext?.setValue
   const setValue = React.useCallback(
     (value: string) => {
       if (finName && setValueInState) setValueInState(finName, value)
