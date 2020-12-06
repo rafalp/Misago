@@ -60,7 +60,7 @@ const Form = <
           onSubmit={
             onSubmit &&
             methods.handleSubmit(async (data, event) => {
-              if (disabled) {
+              if (disabled || event?.isPropagationStopped()) {
                 event?.preventDefault()
                 return
               }
