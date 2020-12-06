@@ -57,7 +57,7 @@ const replaceSelection = (options: IReplaceOptions): State => {
     state = suffix(state, options.suffix)
   }
 
-  return state
+  return ltrim(state, true)
 }
 
 export default replaceSelection
@@ -185,4 +185,24 @@ export const suffix: Mutation = ({ selection, value }, arg: string): State => {
     selection,
     value: value.substr(0, start + length) + arg + value.substr(end),
   }
+}
+
+export const ltrim: Mutation<boolean> = (
+  { selection, value },
+  arg: boolean
+): State => {
+  if (!arg) return { selection, value }
+
+  const prefix = value.match(/^\s+/)?.[0] || ""
+
+  const { start, end, length, text } = selection
+
+  const newSelection = {
+    start: start - prefix.length,
+    end: end - prefix.length,
+    length: length,
+    text: text,
+  }
+
+  return { selection: newSelection, value: value.substr(prefix.length) }
 }

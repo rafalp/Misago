@@ -19,7 +19,7 @@ const EditorControlImageModal: React.FC<IEditorControlImageModalProps> = ({
   return portal(
     <Modal isOpen={isOpen} close={close}>
       <ModalDialog
-        title={<Trans id="editor.link_modal.title">Insert link</Trans>}
+        title={<Trans id="editor.image">Insert image</Trans>}
         close={close}
       >
         <EditorControlImageForm context={context} close={close} />
