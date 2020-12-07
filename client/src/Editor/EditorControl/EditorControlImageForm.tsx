@@ -31,14 +31,13 @@ const EditorControlImageForm: React.FC<IEditorControlImageFormProps> = ({
       id="editor_image_form"
       defaultValues={{ link: "", label: "" }}
       validators={validators}
-      onSubmit={({ data: { link, label }, event }) => {
+      onSubmit={({ data: { link, label } }) => {
         context.replaceSelection({
           replace: label.trim()
             ? `![${label.trim()}](${link.trim()})`
             : `!(${link.trim()})`,
         })
 
-        event?.stopPropagation()
         close()
       }}
     >

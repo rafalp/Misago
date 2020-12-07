@@ -66,7 +66,7 @@ const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
           >
             <form
               onSubmit={form.handleSubmit(async (data, event) => {
-                if (mutation.loading || event?.isPropagationStopped()) {
+                if (mutation.loading) {
                   event?.preventDefault()
                   return
                 }

@@ -54,7 +54,7 @@ const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
         >
           <form
             onSubmit={form.handleSubmit(async (data, event) => {
-              if (loading || event?.isPropagationStopped()) {
+              if (loading) {
                 event?.preventDefault()
                 return
               }
