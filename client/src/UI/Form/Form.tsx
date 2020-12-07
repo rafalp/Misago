@@ -57,22 +57,21 @@ const Form = <
         <form
           className={className}
           id={id}
-          onSubmit={
-            onSubmit &&
-            methods.handleSubmit(async (data, event) => {
-              if (disabled || event?.isPropagationStopped()) {
-                event?.preventDefault()
-                return
-              }
+          onSubmit={methods.handleSubmit((data, event) => {
+            if (disabled) {
+              event?.preventDefault()
+              return
+            }
 
-              return await onSubmit({
+            if (onSubmit) {
+              onSubmit({
                 data,
                 event,
                 clearErrors: methods.clearErrors,
                 setError: methods.setError,
               })
-            })
-          }
+            }
+          })}
         >
           {children}
         </form>

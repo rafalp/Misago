@@ -32,7 +32,7 @@ const EditorControlListForm: React.FC<IEditorControlListFormProps> = ({
       id="editor_list_form"
       defaultValues={{ list: [""], type: "ol" }}
       validators={validators}
-      onSubmit={({ data: { list, type }, event }) => {
+      onSubmit={({ data: { list, type } }) => {
         const items = list
           .filter((item) => item.trim().length)
           .map((item, index) => {
@@ -53,7 +53,6 @@ const EditorControlListForm: React.FC<IEditorControlListFormProps> = ({
           })
         }
 
-        event?.stopPropagation()
         close()
       }}
     >

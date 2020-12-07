@@ -77,7 +77,7 @@ const EditorControlCodeForm: React.FC<IEditorControlCodeFormProps> = ({
       id="editor_code_form"
       defaultValues={{ syntax: "" }}
       validators={validators}
-      onSubmit={({ data: { syntax }, event }) => {
+      onSubmit={({ data: { syntax } }) => {
         context.replaceSelection({
           prefix: "\n\n```" + syntax + "\n",
           suffix: "\n```\n\n",
@@ -90,7 +90,6 @@ const EditorControlCodeForm: React.FC<IEditorControlCodeFormProps> = ({
           rstrip: /^\s+/,
         })
 
-        event?.stopPropagation()
         close()
       }}
     >

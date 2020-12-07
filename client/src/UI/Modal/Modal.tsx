@@ -29,6 +29,11 @@ const Modal: React.FC<IModalProps> = ({
         onKeyDown={({ keyCode }) => {
           if (keyCode === 27) close()
         }}
+        onSubmit={(event) => {
+          // Prevent form submit events from propagating from modals
+          // Used when form opens modals containing forms
+          event.stopPropagation()
+        }}
       >
         {children}
       </div>

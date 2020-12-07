@@ -31,14 +31,13 @@ const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
       id="editor_link_form"
       defaultValues={{ link: "", label: "" }}
       validators={validators}
-      onSubmit={({ data: { link, label }, event }) => {
+      onSubmit={({ data: { link, label } }) => {
         context.replaceSelection({
           replace: label.trim()
             ? `![${label.trim()}](${link.trim()})`
             : link.trim(),
         })
 
-        event?.stopPropagation()
         close()
       }}
     >
