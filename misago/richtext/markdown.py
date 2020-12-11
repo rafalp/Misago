@@ -1,8 +1,11 @@
 import mistune
 
 from .ast_renderer import MisagoAstRenderer
+from .html_renderer import MisagoHTMLRenderer
+
 
 PLUGINS = [
+    "bbcode",
     "url",
     "strikethrough",
     "footnotes",
@@ -18,5 +21,5 @@ def ast_markdown(text, escape=True):
 
 
 def html_markdown(text, escape=True):
-    md = mistune.create_markdown(escape, mistune.HTMLRenderer(), PLUGINS)
+    md = mistune.create_markdown(escape, MisagoHTMLRenderer(), PLUGINS)
     return md(text)

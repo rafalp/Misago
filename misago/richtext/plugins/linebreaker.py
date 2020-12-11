@@ -6,7 +6,7 @@ __all__ = [
 LINEBREAK = r"\n(?!\s*$)"
 
 
-def break_line(self, m, state):
+def break_line(inline_parser, m, state):
     return ("linebreak",)
 
 
