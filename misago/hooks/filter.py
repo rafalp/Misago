@@ -7,6 +7,8 @@ Filter = TypeVar("Filter")
 
 
 class FilterHook(Generic[Action, Filter]):
+    is_async = True
+
     _cache: Dict[Action, Action]
     _filters: List[Filter]
 
@@ -25,7 +27,7 @@ class FilterHook(Generic[Action, Filter]):
     def invalidate_cache(self):
         self._cache = {}
 
-    def wrap_action(self, action: Action) -> Action:
+    def async_wrap_action(self, action: Action) -> Action:
         def reduce_filter(action: Action, next_filter: Filter) -> Action:
             async def reduced_filter(*args, **kwargs):
                 return await next_filter(action, *args, **kwargs)
@@ -34,7 +36,20 @@ class FilterHook(Generic[Action, Filter]):
 
         return reduce(reduce_filter, self._filters, action)
 
-    async def filter(self, action: Action, *args, **kwargs):
+    def sync_wrap_action(self, action: Action) -> Action:
+        def reduce_filter(action: Action, next_filter: Filter) -> Action:
+            def reduced_filter(*args, **kwargs):
+                return next_filter(action, *args, **kwargs)
+
+            return cast(Action, reduced_filter)
+
+        return reduce(reduce_filter, self._filters, action)
+
+    def filter(self, action: Action, *args, **kwargs):
         if action not in self._cache:
-            self._cache[action] = self.wrap_action(action)
-        return await self._cache[action](*args, **kwargs)  # type: ignore
+            if self.is_async:
+                self._cache[action] = self.async_wrap_action(action)
+            else:
+                self._cache[action] = self.sync_wrap_action(action)
+
+        return self._cache[action](*args, **kwargs)  # type: ignore

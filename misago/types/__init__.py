@@ -38,6 +38,7 @@ from .closethreads import (
     CloseThreadsInputModelAction,
     CloseThreadsInputModelFilter,
 )
+from .createmarkdown import CreateMarkdownAction, CreateMarkdownFilter, MarkdownPlugin
 from .createpost import CreatePostAction, CreatePostFilter
 from .createthread import CreateThreadAction, CreateThreadFilter
 from .createuser import CreateUserAction, CreateUserFilter

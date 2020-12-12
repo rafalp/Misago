@@ -14,6 +14,7 @@ from .closethreads import (
     CloseThreadsInputHook,
     CloseThreadsInputModelHook,
 )
+from .createmarkdown import CreateMarkdownHook
 from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
@@ -78,6 +79,7 @@ close_thread_input_model_hook = CloseThreadInputModelHook()
 close_threads_hook = CloseThreadsHook()
 close_threads_input_hook = CloseThreadsInputHook()
 close_threads_input_model_hook = CloseThreadsInputModelHook()
+create_markdown_hook = CreateMarkdownHook()
 create_post_hook = CreatePostHook()
 create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()

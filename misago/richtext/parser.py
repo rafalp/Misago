@@ -1,15 +1,82 @@
-from mistune import Markdown
+from html import escape
+from typing import Any, List
 
-from ..types import RichText, GraphQLContext
+from mistune import AstRenderer, BlockParser, InlineParser, Markdown
+
+from ..hooks import create_markdown_hook
+from ..types import GraphQLContext, MarkdownPlugin, RichText
+from ..utils.strings import get_random_string
 from .markdown import ast_markdown, html_markdown
 
 
 async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
-    return ast_markdown(markup)
+    markdown = create_markdown(context)
+    ast = markdown(markup)
+
+    return convert_ast_to_richtext(context, ast)
 
 
 def create_markdown(context: GraphQLContext) -> Markdown:
-    pass
+    return create_markdown_hook.call_action(
+        create_markdown_action, BlockParser(), InlineParser(AstRenderer()), [], context,
+    )
+
+
+def create_markdown_action(
+    block: BlockParser,
+    inline: InlineParser,
+    plugins: List[MarkdownPlugin],
+    context: GraphQLContext,
+) -> Markdown:
+    return Markdown(None, block, inline, plugins)
+
+
+def convert_ast_to_richtext(context: GraphQLContext, ast: Any) -> RichText:
+    if isinstance(ast, list):
+        rich_text = []
+        for node in ast:
+            rich_text.append(convert_ast_to_richtext(context, node))
+        return rich_text
+
+    if ast["type"] == "paragraph":
+        return {
+            "id": get_block_id(),
+            "type": "p",
+            "text": convert_inline_ast_to_text(context, ast["children"]),
+        }
+
+
+def convert_inline_ast_to_text(context: GraphQLContext, ast: Any) -> str:
+    nodes = []
+    for node in ast:
+        if node["type"] in ("text", "inline_html"):
+            nodes.append(escape(node["text"]))
+
+        if node["type"] == "link":
+            nodes.append(
+                '<a href="%s" rel="nofollow">%s</a>'
+                % (
+                    escape(node["link"]),
+                    convert_inline_ast_to_text(context, node["children"]),
+                )
+            )
+
+        if node["type"] == "emphasis":
+            nodes.append(
+                "<em>%s</em>" % convert_inline_ast_to_text(context, node["children"])
+            )
+
+        if node["type"] == "strong":
+            nodes.append(
+                "<strong>%s</strong>"
+                % convert_inline_ast_to_text(context, node["children"])
+            )
+
+    return "".join(nodes)
+
+
+def get_block_id() -> str:
+    return get_random_string(6)
 
 
 def markup_as_html(markup: str) -> str:

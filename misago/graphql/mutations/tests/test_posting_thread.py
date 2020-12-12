@@ -35,7 +35,6 @@ async def test_post_thread_mutation_creates_new_thread(
     assert data["thread"].first_post_id == data["thread"].last_post_id
 
 
-@pytest.mark.xfail(reason="Parser result is WIP")
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_new_post(
     publish, user_graphql_info, user, category
