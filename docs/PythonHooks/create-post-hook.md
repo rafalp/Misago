@@ -52,7 +52,7 @@ Next filter or built-in function used to create new post in the database.
 Thread
 ```
 
-`Thread` dataclass for thread in which thread will be created.
+`Thread` dataclass for thread in which post will be created.
 
 
 ### `markup`
@@ -93,7 +93,7 @@ Optional[User] = None
 `User` dataclass with post creator.
 
 
-### `starter_name`
+### `poster_name`
 
 ```python
 Optional[str] = None
@@ -105,7 +105,7 @@ Optional[str] = None
 ### `edits`
 
 ```python
-int = False
+Optional[int] = 0
 ```
 
 Initial count of number of times that post has been edited.

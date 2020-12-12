@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 
 from ..database.queries import update
 from ..tables import posts, threads
-from ..types import Category, Post, RichText, Thread, User
+from ..types import Category, GraphQLContext, Post, RichText, Thread, User
 from ..utils.strings import slugify
 
 
@@ -22,6 +22,7 @@ async def update_post(
     increment_edits: Optional[bool] = False,
     posted_at: Optional[datetime] = None,
     extra: Optional[dict] = None,
+    context: Optional[GraphQLContext] = None,
 ) -> Post:
     changes: Dict[str, Any] = {}
 

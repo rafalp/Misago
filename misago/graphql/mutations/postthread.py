@@ -124,7 +124,7 @@ async def post_thread(
             create_post,
             thread,
             cleaned_data["markup"],
-            parse_markup(cleaned_data["markup"]),
+            await parse_markup(context, cleaned_data["markup"]),
             cleaned_data["markup"],
             poster=user,
             context=context,
