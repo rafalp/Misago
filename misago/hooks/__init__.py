@@ -62,6 +62,7 @@ from .registeruser import (
     RegisterUserInputModelHook,
 )
 from .templatecontext import TemplateContextHook
+from .updatepost import UpdatePostHook
 from .userauth import (
     GetAuthUserHook,
     GetUserFromContextHook,
@@ -131,3 +132,4 @@ register_user_hook = RegisterUserHook()
 register_user_input_hook = RegisterUserInputHook()
 register_user_input_model_hook = RegisterUserInputModelHook()
 template_context_hook = TemplateContextHook()
+update_post_hook = UpdatePostHook()

@@ -134,8 +134,9 @@ def test_settings_resolver_returns_settings_from_context(
     assert value is dynamic_settings
 
 
-def test_rich_text_resolver_returns_parsed_body(graphql_info):
-    assert resolve_rich_text(None, graphql_info, markup="Hello world!")
+@pytest.mark.asyncio
+async def test_rich_text_resolver_returns_parsed_body(graphql_info):
+    assert await resolve_rich_text(None, graphql_info, markup="Hello world!")
 
 
 def test_search_resolver_returns_search_query_for_child_resolvers(graphql_info):

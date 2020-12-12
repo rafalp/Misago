@@ -9,6 +9,7 @@ from ...hooks import (
     edit_post_hook,
     edit_post_input_hook,
     edit_post_input_model_hook,
+    update_post_hook,
 )
 from ...loaders import load_post, load_thread, store_post
 from ...richtext.parser import parse_markup
@@ -108,7 +109,8 @@ async def validate_input_data(
 async def edit_post(
     context: GraphQLContext, cleaned_data: EditPostInput
 ) -> Tuple[Thread, Post]:
-    post = await update_post(
+    post = await update_post_hook.call_action(
+        update_post,
         cleaned_data["post"],
         markup=cleaned_data["markup"],
         rich_text=await parse_markup(context, cleaned_data["markup"]),
