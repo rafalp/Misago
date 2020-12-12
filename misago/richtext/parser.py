@@ -1,12 +1,12 @@
 from html import escape
-from typing import Any, List
+from typing import Any, List, Optional, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 
 from ..hooks import create_markdown_hook
-from ..types import GraphQLContext, MarkdownPlugin, RichText
+from ..types import GraphQLContext, MarkdownPlugin, RichText, RichTextBlock
 from ..utils.strings import get_random_string
-from .markdown import ast_markdown, html_markdown
+from .markdown import html_markdown
 
 
 async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
@@ -31,19 +31,27 @@ def create_markdown_action(
     return Markdown(None, block, inline, plugins)
 
 
-def convert_ast_to_richtext(context: GraphQLContext, ast: Any) -> RichText:
-    if isinstance(ast, list):
-        rich_text = []
-        for node in ast:
-            rich_text.append(convert_ast_to_richtext(context, node))
-        return rich_text
+def convert_ast_to_richtext(context: GraphQLContext, ast: List[dict]) -> RichText:
+    rich_text = []
+    for node in ast:
+        richtext_block = convert_block_ast_to_richtext(context, node)
+        if richtext_block:
+            rich_text.append(richtext_block)
 
+    return cast(RichText, rich_text)
+
+
+def convert_block_ast_to_richtext(
+    context: GraphQLContext, ast: dict
+) -> Optional[RichTextBlock]:
     if ast["type"] == "paragraph":
         return {
             "id": get_block_id(),
             "type": "p",
             "text": convert_inline_ast_to_text(context, ast["children"]),
         }
+
+    return None
 
 
 def convert_inline_ast_to_text(context: GraphQLContext, ast: Any) -> str:

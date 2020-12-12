@@ -7,4 +7,5 @@ class RichTextParagraph(TypedDict):
     text: str
 
 
-RichText = List[RichTextParagraph]
+RichTextBlock = RichTextParagraph
+RichText = List[RichTextBlock]
