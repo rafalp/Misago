@@ -98,4 +98,4 @@ def resolve_settings(_, info: GraphQLResolveInfo) -> Settings:
 
 @query_type.field("richText")
 def resolve_rich_text(_, info: GraphQLResolveInfo, *, markup: str) -> RichText:
-    return parse_markup(markup)
+    return parse_markup(info.context, markup)

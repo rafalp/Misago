@@ -1,9 +1,15 @@
+from mistune import Markdown
+
+from ..types import RichText, GraphQLContext
 from .markdown import ast_markdown, html_markdown
-from ..types import RichText
 
 
-def parse_markup(markup: str) -> RichText:
+async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
     return ast_markdown(markup)
+
+
+def create_markdown(context: GraphQLContext) -> Markdown:
+    pass
 
 
 def markup_as_html(markup: str) -> str:
