@@ -38,6 +38,15 @@ from .closethreads import (
     CloseThreadsInputModelAction,
     CloseThreadsInputModelFilter,
 )
+from .convertblockasttorichtext import (
+    ConvertBlockAstToRichTextAction,
+    ConvertBlockAstToRichTextFilter,
+)
+from .convertinlineasttotext import (
+    ConvertInlineAstToTextAction,
+    ConvertInlineAstToTextFilter,
+)
+from .createmarkdown import CreateMarkdownAction, CreateMarkdownFilter, MarkdownPlugin
 from .createpost import CreatePostAction, CreatePostFilter
 from .createthread import CreateThreadAction, CreateThreadFilter
 from .createuser import CreateUserAction, CreateUserFilter
@@ -165,7 +174,7 @@ from .registeruser import (
     RegisterUserInputModelAction,
     RegisterUserInputModelFilter,
 )
-from .richtext import RichText
+from .richtext import RichText, RichTextBlock
 from .settings import Setting, SettingImage, Settings
 from .templatecontext import (
     TemplateContext,

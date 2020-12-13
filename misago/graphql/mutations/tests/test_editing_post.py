@@ -5,7 +5,6 @@ from ....threads.get import get_post_by_id
 from ..editpost import resolve_edit_post
 
 
-@pytest.mark.xfail(reason="Parser result is WIP")
 @pytest.mark.asyncio
 async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
     data = await resolve_edit_post(
