@@ -9,8 +9,6 @@ LINE_THROUGH = r"\[s\](.*)\[\/s\]"
 CENTER = r"\[center\](.*)\[\/center\]"
 QUOTE = r'\[quote(="((\w)*)")?\](.*)\[\/quote\]'
 BLOCK_CODE = r"\[code\](.*)\[\/code\]"
-COLOR = r'\[color="((\w)*)"\](.*)\[\/color\]'
-SIZE = r"\[size=((\d)*)\](.*)\[\/size\]"
 LINK = r"\[url=(.*)\](.*)\[\/url\]"
 LIST_START = r"\[(\/)?list\]"
 LIST_ITEM = r"\[\*\](.*)\n"
@@ -49,18 +47,6 @@ def quote(parser, m, state):
 
 def block_code(parser, m, state):
     return "block_code", parser(m.group(1), state)
-
-
-def color(parser, m, state):
-    text_color = m.group(1)
-    children = parser(m.group(3), state)
-    return "color", {"children": children, "color": text_color}
-
-
-def size(parser, m, state):
-    text_size = m.group(1)
-    children = parser(m.group(3), state)
-    return "size", {"children": children, "size": text_size}
 
 
 def link_parser(parser, m, state):
@@ -103,12 +89,6 @@ def bbcode(md):
 
     md.inline.register_rule("bbcode_block_code", BLOCK_CODE, block_code)
     md.inline.rules.insert(8, "bbcode_block_code")
-
-    md.inline.register_rule("bbcode_color", COLOR, color)
-    md.inline.rules.insert(9, "bbcode_color")
-
-    md.inline.register_rule("bbcode_size", SIZE, size)
-    md.inline.rules.insert(10, "bbcode_size")
 
     md.inline.register_rule("bbcode_link2", LINK, link_parser)
     md.inline.rules.insert(11, "bbcode_link2")

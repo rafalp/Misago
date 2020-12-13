@@ -203,38 +203,6 @@ MARKDOWN_VALUES = (
         ],
     ),
     (
-        '[color="blue"]Lorem ipsum[/color]',
-        '<p><span style="color: blue">Lorem ipsum</span></p>\n',
-        [
-            {
-                "type": "p",
-                "children": [
-                    {
-                        "type": "color",
-                        "children": [{"type": "text", "text": "Lorem ipsum"}],
-                        "color": "blue",
-                    }
-                ],
-            }
-        ],
-    ),
-    (
-        "[size=9]Lorem ipsum[/size]",
-        '<p><span style="font-size: 9px">Lorem ipsum</span></p>\n',
-        [
-            {
-                "type": "p",
-                "children": [
-                    {
-                        "type": "size",
-                        "children": [{"type": "text", "text": "Lorem ipsum"}],
-                        "size": "9",
-                    }
-                ],
-            }
-        ],
-    ),
-    (
         "[list]\n[*]punkt jeden\n[*]punkt dwa\n[/list]",
         "<p><ul><li>punkt jeden</li><li>punkt dwa</li><ul><p>\n",
         [
