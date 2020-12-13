@@ -38,6 +38,14 @@ from .closethreads import (
     CloseThreadsInputModelAction,
     CloseThreadsInputModelFilter,
 )
+from .convertblockasttorichtext import (
+    ConvertBlockAstToRichTextAction,
+    ConvertBlockAstToRichTextFilter,
+)
+from .convertinlineasttotext import (
+    ConvertInlineAstToTextAction,
+    ConvertInlineAstToTextFilter,
+)
 from .createmarkdown import CreateMarkdownAction, CreateMarkdownFilter, MarkdownPlugin
 from .createpost import CreatePostAction, CreatePostFilter
 from .createthread import CreateThreadAction, CreateThreadFilter

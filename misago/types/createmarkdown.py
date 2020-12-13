@@ -11,10 +11,10 @@ MarkdownPlugin = Callable[[Markdown], None]
 class CreateMarkdownAction(Protocol):
     def __call__(
         self,
+        context: GraphQLContext,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],
-        context: GraphQLContext,
     ) -> Markdown:
         ...
 
@@ -23,9 +23,9 @@ class CreateMarkdownFilter(Protocol):
     def __call__(
         self,
         action: CreateMarkdownAction,
+        context: GraphQLContext,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],
-        context: GraphQLContext,
     ) -> Markdown:
         ...

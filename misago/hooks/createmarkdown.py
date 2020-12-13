@@ -17,9 +17,9 @@ class CreateMarkdownHook(FilterHook[CreateMarkdownAction, CreateMarkdownFilter])
     def call_action(
         self,
         action: CreateMarkdownAction,
+        context: GraphQLContext,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],
-        context: GraphQLContext,
     ) -> Markdown:
-        return self.filter(action, block, inline, plugins, context,)
+        return self.filter(action, context, block, inline, plugins)

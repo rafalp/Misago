@@ -44,6 +44,7 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`close_threads_hook`](./close-threads-hook.md)
 - [`close_threads_input_hook`](./close-threads-input-hook.md)
 - [`close_threads_input_model_hook`](./close-threads-input-model-hook.md)
+- [`create_markdown_hook`](./create-markdown-hook.md)
 - [`create_post_hook`](./create-post-hook.md)
 - [`create_thread_hook`](./create-thread-hook.md)
 - [`create_user_hook`](./create-user-hook.md)
@@ -138,9 +139,25 @@ Filter = Callable[[Action, Any], Coroutine[Any, Any, ...]]
 
 
 class MyFilterHook(FilterHook[Action, Filter]):
-    async def call_action(self, action: Action, arg: Any) -> Any:
-        return await self.filter(action, request, context)
+    def call_action(self, action: Action, arg: Any) -> Any:
+        return self.filter(action, request, context)
 
 
 my_hook = MyFilterHook()
 ```
+
+
+### Making filters synchronous
+
+If filter hook is not intended to perform any IO, you can declare it as synchronous by defining `is_async = False` on it:
+
+
+```python
+class MyFilterHook(FilterHook[Action, Filter]):
+    is_async = False
+
+    def call_action(self, action: Action, arg: Any) -> Any:
+        return self.filter(action, request, context)
+```
+
+This hook will no longer return awaitable from `self.filter`.

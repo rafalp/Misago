@@ -1,9 +1,13 @@
 from html import escape
-from typing import Any, List, Optional, cast
+from typing import List, Optional, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 
-from ..hooks import create_markdown_hook
+from ..hooks import (
+    convert_block_ast_to_rich_text_hook,
+    convert_inline_ast_to_text_hook,
+    create_markdown_hook,
+)
 from ..types import GraphQLContext, MarkdownPlugin, RichText, RichTextBlock
 from ..utils.strings import get_random_string
 from .markdown import html_markdown
@@ -18,15 +22,15 @@ async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
 
 def create_markdown(context: GraphQLContext) -> Markdown:
     return create_markdown_hook.call_action(
-        create_markdown_action, BlockParser(), InlineParser(AstRenderer()), [], context,
+        create_markdown_action, context, BlockParser(), InlineParser(AstRenderer()), []
     )
 
 
 def create_markdown_action(
+    context: GraphQLContext,
     block: BlockParser,
     inline: InlineParser,
     plugins: List[MarkdownPlugin],
-    context: GraphQLContext,
 ) -> Markdown:
     return Markdown(None, block, inline, plugins)
 
@@ -44,47 +48,65 @@ def convert_ast_to_richtext(context: GraphQLContext, ast: List[dict]) -> RichTex
 def convert_block_ast_to_richtext(
     context: GraphQLContext, ast: dict
 ) -> Optional[RichTextBlock]:
+    return convert_block_ast_to_rich_text_hook.call_action(
+        convert_block_ast_to_richtext_action, context, ast,
+    )
+
+
+def convert_block_ast_to_richtext_action(
+    context: GraphQLContext, ast: dict
+) -> Optional[RichTextBlock]:
     if ast["type"] == "paragraph":
         return {
             "id": get_block_id(),
             "type": "p",
-            "text": convert_inline_ast_to_text(context, ast["children"]),
+            "text": convert_children_ast_to_text(context, ast["children"]),
         }
 
     return None
 
 
-def convert_inline_ast_to_text(context: GraphQLContext, ast: Any) -> str:
+def get_block_id() -> str:
+    return get_random_string(6)
+
+
+def convert_children_ast_to_text(context: GraphQLContext, ast: List[dict]) -> str:
     nodes = []
     for node in ast:
-        if node["type"] in ("text", "inline_html"):
-            nodes.append(escape(node["text"]))
-
-        if node["type"] == "link":
-            nodes.append(
-                '<a href="%s" rel="nofollow">%s</a>'
-                % (
-                    escape(node["link"]),
-                    convert_inline_ast_to_text(context, node["children"]),
-                )
-            )
-
-        if node["type"] == "emphasis":
-            nodes.append(
-                "<em>%s</em>" % convert_inline_ast_to_text(context, node["children"])
-            )
-
-        if node["type"] == "strong":
-            nodes.append(
-                "<strong>%s</strong>"
-                % convert_inline_ast_to_text(context, node["children"])
-            )
+        text = convert_inline_ast_to_text(context, node)
+        if text is not None:
+            nodes.append(text)
 
     return "".join(nodes)
 
 
-def get_block_id() -> str:
-    return get_random_string(6)
+def convert_inline_ast_to_text(context: GraphQLContext, ast: dict) -> Optional[str]:
+    return convert_inline_ast_to_text_hook.call_action(
+        convert_inline_ast_to_text_action, context, ast
+    )
+
+
+def convert_inline_ast_to_text_action(
+    context: GraphQLContext, ast: dict
+) -> Optional[str]:
+    if ast["type"] in ("text", "inline_html"):
+        return escape(ast["text"])
+
+    if ast["type"] == "link":
+        return '<a href="%s" rel="nofollow">%s</a>' % (
+            escape(ast["link"]),
+            convert_children_ast_to_text(context, ast["children"]),
+        )
+
+    if ast["type"] == "emphasis":
+        return "<em>%s</em>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "strong":
+        return "<strong>%s</strong>" % convert_children_ast_to_text(
+            context, ast["children"]
+        )
+
+    return None
 
 
 def markup_as_html(markup: str) -> str:
