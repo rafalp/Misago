@@ -1,7 +1,7 @@
 # `create_markdown_hook`
 
 ```python
-create_post_hook.call_action(
+create_markdown_hook.call_action(
     action: CreateMarkdownAction,
     context: GraphQLContext,
     block: BlockParser,
@@ -48,6 +48,14 @@ BlockParser
 ```
 
 An instance of `BlockParser` to use. Defaults to `mistune.BlockParser`.
+
+### `inline`
+
+```python
+InlineParser
+```
+
+An instance of `InlineParser` to use. Defaults to `mistune.InlineParser(mistune.AstRenderer())`.
 
 
 ### `plugins`
