@@ -7,15 +7,25 @@ from ..hooks import (
     convert_block_ast_to_rich_text_hook,
     convert_inline_ast_to_text_hook,
     create_markdown_hook,
+    parse_markup_hook,
 )
 from ..types import GraphQLContext, MarkdownPlugin, RichText, RichTextBlock
 from ..utils.strings import get_random_string
 from .markdown import html_markdown
 
 
+# cache parsed markup on context
 async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
+    return await parse_markup_hook.call_action(parse_markup_action, context, markup)
+
+
+async def parse_markup_action(context: GraphQLContext, markup: str) -> RichText:
     markdown = create_markdown(context)
+
+    # TODO: add markdown_hook
     ast = markdown(markup)
+
+    # TODO: add update_context_from_ast_hook
 
     return convert_ast_to_richtext(context, ast)
 
