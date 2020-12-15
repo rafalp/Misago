@@ -1,6 +1,5 @@
 import mistune
 
-from .ast_renderer import MisagoAstRenderer
 from .html_renderer import MisagoHTMLRenderer
 
 
@@ -16,7 +15,7 @@ PLUGINS = [
 
 
 def ast_markdown(text, escape=True):
-    md = mistune.create_markdown(escape, MisagoAstRenderer(), PLUGINS)
+    md = mistune.create_markdown(escape, mistune.AstRenderer(), PLUGINS)
     return md(text)
 
 

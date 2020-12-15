@@ -6,14 +6,14 @@ MARKDOWN_VALUES = (
     (
         "Lorem ipsum",
         "<p>Lorem ipsum</p>\n",
-        [{"type": "p", "children": [{"type": "text", "text": "Lorem ipsum"}]}],
+        [{"type": "paragraph", "children": [{"type": "text", "text": "Lorem ipsum"}]}],
     ),
     (
         "**Lorem ipsum**",
         "<p><strong>Lorem ipsum</strong></p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "strong",
@@ -28,7 +28,7 @@ MARKDOWN_VALUES = (
         '<p><a href="https://www.misago.pl">https://www.misago.pl</a></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "link",
@@ -45,7 +45,7 @@ MARKDOWN_VALUES = (
         "<p>Lorem &lt;h1&gt;ipsum&lt;/h1&gt;</p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {"type": "text", "text": "Lorem "},
                     {"type": "inline_html", "text": "<h1>"},
@@ -74,7 +74,7 @@ MARKDOWN_VALUES = (
                 "type": "block_quote",
                 "children": [
                     {
-                        "type": "p",
+                        "type": "paragraph",
                         "children": [{"type": "text", "text": "Lorem ipsum"}],
                     }
                 ],
@@ -86,7 +86,7 @@ MARKDOWN_VALUES = (
         "<p>Lorem ipsum<br />\ndolor sit amet,</p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {"type": "text", "text": "Lorem ipsum"},
                     {"type": "linebreak"},
@@ -100,7 +100,7 @@ MARKDOWN_VALUES = (
         "<p><strong>Lorem ipsum</strong></p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "strong",
@@ -115,7 +115,7 @@ MARKDOWN_VALUES = (
         "<p><em>Lorem ipsum</em></p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "emphasis",
@@ -130,7 +130,7 @@ MARKDOWN_VALUES = (
         '<p><span style="text-decoration: underline">Lorem ipsum</span></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "underline",
@@ -145,7 +145,7 @@ MARKDOWN_VALUES = (
         '<p><span style="text-decoration: line-through">Lorem ipsum</span></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "line_through",
@@ -160,7 +160,7 @@ MARKDOWN_VALUES = (
         "<p><center>Lorem ipsum</center></p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "center",
@@ -175,12 +175,14 @@ MARKDOWN_VALUES = (
         '<p><quote author="Cyceron">Lorem ipsum</quote></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "quote",
-                        "author": "Cyceron",
-                        "children": [{"type": "text", "text": "Lorem ipsum"}],
+                        "children": {
+                            "author": "Cyceron",
+                            "children": [{"type": "text", "text": "Lorem ipsum"}],
+                        },
                     }
                 ],
             }
@@ -191,7 +193,7 @@ MARKDOWN_VALUES = (
         "<p><pre><code>assert 1 == 1</code></pre>\n</p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "block_code",
@@ -204,39 +206,39 @@ MARKDOWN_VALUES = (
     ),
     (
         "[list]\n[*]punkt jeden\n[*]punkt dwa\n[/list]",
-        "<p><ul><li>punkt jeden</li><li>punkt dwa</li><ul><p>\n",
+        "<p><ul><br />\n<li>punkt jeden</li>\n<li>punkt dwa</li>\n</ul></p>\n",
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
-                    {
-                        "type": "list",
-                        "children": [
-                            {
-                                "type": "list_element",
-                                "children": [{"type": "text", "text": "punkt jeden"},],
-                            },
-                            {
-                                "type": "list_element",
-                                "children": [{"type": "text", "text": "punkt dwa"},],
-                            },
-                        ],
-                    },
+                    {"type": "list_start", "children": None},
                     {"type": "linebreak"},
+                    {
+                        "type": "list_item",
+                        "children": [{"type": "text", "text": "punkt jeden"}],
+                        "level": 0,
+                    },
+                    {
+                        "type": "list_item",
+                        "children": [{"type": "text", "text": "punkt dwa"}],
+                        "level": 0,
+                    },
+                    {"type": "list_end", "children": None},
                 ],
             }
         ],
     ),
     (
         "[url=https://pl.wikipedia.org]Polska Wikipedia[/url]",
-        '<p><a href="https://pl.wikipedia.org" title="Polska Wikipedia">Polska Wikipedia</a></p>\n',
+        '<p><a href="https://pl.wikipedia.org" title="Polska Wikipedia">https://pl.wikipedia.org</a></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "link",
                         "link": "https://pl.wikipedia.org",
+                        "children": None,
                         "title": "Polska Wikipedia",
                     }
                 ],
@@ -245,16 +247,16 @@ MARKDOWN_VALUES = (
     ),
     (
         "[img]https://misago.pl/logo.png[/img]",
-        '<p><img src="https://misago.pl/logo.png" alt="" title=""></p>\n',
+        '<p><img src="https://misago.pl/logo.png" alt="" /></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "image",
                         "src": "https://misago.pl/logo.png",
                         "alt": "",
-                        "title": "",
+                        "title": None,
                     }
                 ],
             }
@@ -262,31 +264,16 @@ MARKDOWN_VALUES = (
     ),
     (
         "[img=https://misago.pl/logo.png]",
-        '<p><img src="https://misago.pl/logo.png" alt="" title=""></p>\n',
+        '<p><img src="https://misago.pl/logo.png" alt="" /></p>\n',
         [
             {
-                "type": "p",
+                "type": "paragraph",
                 "children": [
                     {
                         "type": "image",
                         "src": "https://misago.pl/logo.png",
                         "alt": "",
-                        "title": "",
-                    }
-                ],
-            }
-        ],
-    ),
-    (
-        "[table][tr][td]dane tabeli[/td][/tr][/table]",
-        "<table><tr><td>dane tabeli</td></tr></table>\n",
-        [
-            {
-                "type": "table",
-                "children": [
-                    {
-                        "type": "row",
-                        "children": [{"type": "cell", "text": "dane tabeli"},],
+                        "title": None,
                     }
                 ],
             }
@@ -295,18 +282,12 @@ MARKDOWN_VALUES = (
 )
 
 
-@pytest.mark.xfail(reason="WIP")
 @pytest.mark.parametrize("text, html, ast", MARKDOWN_VALUES)
 @pytest.mark.asyncio
 async def test_ast_markdown_text(text, html, ast):
-    result = ast_markdown(text)
-    first_row = result[0]
-    if "id" in first_row:
-        del first_row["id"]
-    assert ast == result
+    assert ast == ast_markdown(text)
 
 
-@pytest.mark.xfail(reason="WIP")
 @pytest.mark.parametrize("text, html, ast", MARKDOWN_VALUES)
 @pytest.mark.asyncio
 async def test_html_markdown_text(text, html, ast):

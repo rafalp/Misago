@@ -40,9 +40,7 @@ def center(parser, m, state):
 
 
 def quote(parser, m, state):
-    author = m.group(2)
-    children = parser(m.group(4), state)
-    return "quote", {"children": children, "author": author}
+    return "quote", {"author": m.group(2), "children": parser(m.group(4), state)}
 
 
 def block_code(parser, m, state):
@@ -50,22 +48,22 @@ def block_code(parser, m, state):
 
 
 def link_parser(parser, m, state):
-    return "link2", {"link": m.group(1), "title": m.group(2)}
+    return "link", m.group(1), None, m.group(2)
 
 
 def list_parser(parser, m, state):
     if m.group(1):
         # found [/list] - tag end of list
-        return "list_end", ""
-    return "list_start", ""
+        return "list_end", None
+    return "list_start", None
 
 
 def list_item(parser, m, state):
-    return "list2_item", parser(m.group(1), state)
+    return "list_item", parser(m.group(1), state), 0
 
 
 def img_both(parser, m, state):
-    return "image2", {"src": m.group(1), "title": "", "alt": ""}
+    return "image", m.group(1)
 
 
 def bbcode(md):
