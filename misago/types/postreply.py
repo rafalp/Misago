@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from ..errors import ErrorsList
 from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
+from .parsemarkup import ParsedMarkupMetadata
 from .post import Post
 from .thread import Thread
 
@@ -26,8 +27,10 @@ PostReplyInputModelFilter = Callable[
 ]
 
 PostReplyAction = Callable[
-    [GraphQLContext, PostReplyInput], Awaitable[Tuple[Thread, Post]]
+    [GraphQLContext, PostReplyInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 PostReplyFilter = Callable[
-    [PostReplyAction, GraphQLContext, PostReplyInput], Awaitable[Tuple[Thread, Post]],
+    [PostReplyAction, GraphQLContext, PostReplyInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]

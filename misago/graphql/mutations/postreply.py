@@ -29,6 +29,7 @@ from ...types import (
     AsyncValidator,
     Category,
     GraphQLContext,
+    ParsedMarkupMetadata,
     Post,
     PostReplyInput,
     PostReplyInputModel,
@@ -83,7 +84,7 @@ async def resolve_post_reply(
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread, post = await post_reply_hook.call_action(
+    thread, post, _ = await post_reply_hook.call_action(
         post_reply, info.context, cleaned_data
     )
 
@@ -114,14 +115,16 @@ async def validate_input_data(
 
 async def post_reply(
     context: GraphQLContext, cleaned_data: PostReplyInput
-) -> Tuple[Thread, Post]:
+) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     thread = cleaned_data["thread"]
     user = await get_authenticated_user(context)
+    rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
+
     reply = await create_post_hook.call_action(
         create_post,
         thread,
         cleaned_data["markup"],
-        await parse_markup(context, cleaned_data["markup"]),
+        rich_text,
         cleaned_data["markup"],
         poster=user,
         context=context,
@@ -139,4 +142,4 @@ async def post_reply(
 
     await publish_thread_update(thread)
 
-    return thread, reply
+    return thread, reply, metadata

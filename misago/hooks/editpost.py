@@ -12,6 +12,7 @@ from ..types import (
     EditPostInputModelAction,
     EditPostInputModelFilter,
     GraphQLContext,
+    ParsedMarkupMetadata,
     Post,
     Thread,
 )
@@ -24,7 +25,7 @@ class EditPostHook(FilterHook[EditPostAction, EditPostFilter]):
         action: EditPostAction,
         context: GraphQLContext,
         cleaned_data: EditPostInput,
-    ) -> Tuple[Thread, Post]:
+    ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
         return await self.filter(action, context, cleaned_data)
 
 

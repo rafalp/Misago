@@ -10,7 +10,7 @@ post_reply_hook.call_action(
 
 A filter for the function used by GraphQL mutation creating new reply to create new reply in the database.
 
-Returns tuple of `Thread` and `Post` dataclasses with newly created reply data.
+Returns tuple of `Thread`, `Post` dataclasses with newly created reply data and `ParsedMarkupMetadata` being Python `dict` with metadata for parsed message.
 
 
 ## Required arguments
@@ -21,7 +21,7 @@ Returns tuple of `Thread` and `Post` dataclasses with newly created reply data.
 async def post_reply(
     context: GraphQLContext,
     cleaned_data: PostReplyInput,
-) -> Tuple[Thread, Post]:
+) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     ...
 ```
 

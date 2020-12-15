@@ -143,7 +143,7 @@ from .movethreads import (
 )
 from .mptt import MPTT, MPTTNode
 from .pagination import Pagination, PaginationPage
-from .parsemarkup import ParseMarkupAction, ParseMarkupFilter
+from .parsemarkup import ParsedMarkupMetadata, ParseMarkupAction, ParseMarkupFilter
 from .post import Post
 from .postreply import (
     PostReplyAction,

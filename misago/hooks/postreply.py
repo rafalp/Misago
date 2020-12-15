@@ -4,6 +4,7 @@ from ..errors import ErrorsList
 from ..types import (
     AsyncValidator,
     GraphQLContext,
+    ParsedMarkupMetadata,
     Post,
     PostReplyAction,
     PostReplyFilter,
@@ -24,7 +25,7 @@ class PostReplyHook(FilterHook[PostReplyAction, PostReplyFilter]):
         action: PostReplyAction,
         context: GraphQLContext,
         cleaned_data: PostReplyInput,
-    ) -> Tuple[Thread, Post]:
+    ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
         return await self.filter(action, context, cleaned_data)
 
 

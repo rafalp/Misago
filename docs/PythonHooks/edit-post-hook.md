@@ -10,7 +10,7 @@ edit_post_hook.call_action(
 
 A filter for the function used by GraphQL mutation editing post to update the post in the database.
 
-Returns `Post` dataclass with updated post data.
+Returns tuple with `Post` dataclass with updated post data and `ParsedMarkupMetadata` being Python `dict` with metadata for parsed message.
 
 
 ## Required arguments
@@ -18,7 +18,9 @@ Returns `Post` dataclass with updated post data.
 ### `action`
 
 ```python
-async def edit_post(context: GraphQLContext, cleaned_data: EditPostInput) -> Post:
+async def edit_post(
+    context: GraphQLContext, cleaned_data: EditPostInput
+) -> Tuple[Post, ParsedMarkupMetadata]:
     ...
 ```
 

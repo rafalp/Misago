@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from ..errors import ErrorsList
 from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
+from .parsemarkup import ParsedMarkupMetadata
 from .post import Post
 from .thread import Thread
 
@@ -26,8 +27,10 @@ EditPostInputModelFilter = Callable[
 ]
 
 EditPostAction = Callable[
-    [GraphQLContext, EditPostInput], Awaitable[Tuple[Thread, Post]]
+    [GraphQLContext, EditPostInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 EditPostFilter = Callable[
-    [EditPostAction, GraphQLContext, EditPostInput], Awaitable[Tuple[Thread, Post]],
+    [EditPostAction, GraphQLContext, EditPostInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
