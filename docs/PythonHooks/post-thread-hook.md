@@ -10,7 +10,7 @@ post_thread_hook.call_action(
 
 A filter for the function used by GraphQL mutation creating new thread to create new thread in the database.
 
-Returns tuple of `Thread` and `Post` dataclasses with newly created thread data.
+Returns tuple of `Thread` and `Post` dataclasses with newly created thread data and `ParsedMarkupMetadata` being Python `dict` with metadata for parsed message.
 
 
 ## Required arguments
@@ -21,7 +21,7 @@ Returns tuple of `Thread` and `Post` dataclasses with newly created thread data.
 async def post_thread(
     context: GraphQLContext,
     cleaned_data: PostThreadInput,
-) -> Tuple[Thread, Post]:
+) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     ...
 ```
 

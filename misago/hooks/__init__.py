@@ -57,6 +57,7 @@ from .movethreads import (
     MoveThreadsInputHook,
     MoveThreadsInputModelHook,
 )
+from .parsemarkup import ParseMarkupHook
 from .postreply import PostReplyHook, PostReplyInputHook, PostReplyInputModelHook
 from .postthread import PostThreadHook, PostThreadInputHook, PostThreadInputModelHook
 from .registeruser import (
@@ -128,6 +129,7 @@ move_thread_input_model_hook = MoveThreadInputModelHook()
 move_threads_hook = MoveThreadsHook()
 move_threads_input_hook = MoveThreadsInputHook()
 move_threads_input_model_hook = MoveThreadsInputModelHook()
+parse_markup_hook = ParseMarkupHook()
 post_reply_hook = PostReplyHook()
 post_reply_input_hook = PostReplyInputHook()
 post_reply_input_model_hook = PostReplyInputModelHook()

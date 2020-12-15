@@ -1,5 +1,5 @@
 from html import escape
-from typing import List, Optional, cast
+from typing import List, Optional, Tuple, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 
@@ -7,17 +7,40 @@ from ..hooks import (
     convert_block_ast_to_rich_text_hook,
     convert_inline_ast_to_text_hook,
     create_markdown_hook,
+    parse_markup_hook,
 )
-from ..types import GraphQLContext, MarkdownPlugin, RichText, RichTextBlock
+from ..types import (
+    GraphQLContext,
+    ParsedMarkupMetadata,
+    MarkdownPlugin,
+    RichText,
+    RichTextBlock,
+)
 from ..utils.strings import get_random_string
 from .markdown import html_markdown
 
 
-async def parse_markup(context: GraphQLContext, markup: str) -> RichText:
+# cache parsed markup on context
+async def parse_markup(
+    context: GraphQLContext, markup: str
+) -> Tuple[RichText, ParsedMarkupMetadata]:
+    metadata: ParsedMarkupMetadata = {}
+    return await parse_markup_hook.call_action(
+        parse_markup_action, context, markup, metadata
+    )
+
+
+async def parse_markup_action(
+    context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
+) -> Tuple[RichText, ParsedMarkupMetadata]:
     markdown = create_markdown(context)
+
+    # TODO: add markdown_hook
     ast = markdown(markup)
 
-    return convert_ast_to_richtext(context, ast)
+    # TODO: add update_context_from_ast_hook
+
+    return convert_ast_to_richtext(context, ast), metadata
 
 
 def create_markdown(context: GraphQLContext) -> Markdown:

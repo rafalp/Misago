@@ -97,7 +97,6 @@ def resolve_settings(_, info: GraphQLResolveInfo) -> Settings:
 
 
 @query_type.field("richText")
-def resolve_rich_text(
-    _, info: GraphQLResolveInfo, *, markup: str
-) -> Awaitable[RichText]:
-    return parse_markup(info.context, markup)
+async def resolve_rich_text(_, info: GraphQLResolveInfo, *, markup: str) -> RichText:
+    rich_text, _ = await parse_markup(info.context, markup)
+    return rich_text

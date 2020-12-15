@@ -24,6 +24,7 @@ from ...threads.update import update_thread
 from ...types import (
     AsyncValidator,
     GraphQLContext,
+    ParsedMarkupMetadata,
     Post,
     PostThreadInput,
     PostThreadInputModel,
@@ -76,7 +77,7 @@ async def resolve_post_thread(
     if errors:
         return {"errors": errors}
 
-    thread, post = await post_thread_hook.call_action(
+    thread, post, _ = await post_thread_hook.call_action(
         post_thread, info.context, cleaned_data
     )
 
@@ -109,8 +110,10 @@ async def validate_input_data(
 
 async def post_thread(
     context: GraphQLContext, cleaned_data: PostThreadInput
-) -> Tuple[Thread, Post]:
+) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     user = await get_authenticated_user(context)
+    rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
+
     async with database.transaction():
         thread = await create_thread_hook.call_action(
             create_thread,
@@ -124,7 +127,7 @@ async def post_thread(
             create_post,
             thread,
             cleaned_data["markup"],
-            await parse_markup(context, cleaned_data["markup"]),
+            rich_text,
             cleaned_data["markup"],
             poster=user,
             context=context,
@@ -141,4 +144,4 @@ async def post_thread(
 
     await publish_thread_update(thread)
 
-    return thread, post
+    return thread, post, metadata

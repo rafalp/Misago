@@ -17,9 +17,10 @@ from ...threads.update import update_post
 from ...types import (
     AsyncValidator,
     GraphQLContext,
-    Post,
     EditPostInput,
     EditPostInputModel,
+    ParsedMarkupMetadata,
+    Post,
     Thread,
 )
 from ...validation import (
@@ -77,7 +78,7 @@ async def resolve_edit_post(
     if errors:
         return {"errors": errors, "thread": thread, "post": post}
 
-    thread, post = await edit_post_hook.call_action(
+    thread, post, _ = await edit_post_hook.call_action(
         edit_post, info.context, cleaned_data
     )
 
@@ -108,12 +109,14 @@ async def validate_input_data(
 
 async def edit_post(
     context: GraphQLContext, cleaned_data: EditPostInput
-) -> Tuple[Thread, Post]:
+) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
+    rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
+
     post = await update_post_hook.call_action(
         update_post,
         cleaned_data["post"],
         markup=cleaned_data["markup"],
-        rich_text=await parse_markup(context, cleaned_data["markup"]),
+        rich_text=rich_text,
         html=cleaned_data["markup"],
         increment_edits=True,
     )
@@ -123,4 +126,4 @@ async def edit_post(
     thread = await load_thread(context, post.thread_id)
     thread = cast(Thread, thread)
 
-    return thread, post
+    return thread, post, metadata
