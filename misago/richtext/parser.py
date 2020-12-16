@@ -2,7 +2,7 @@ from html import escape
 from typing import List, Optional, Tuple, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
-from .plugins import PLUGINS
+from .plugins import default_plugins
 
 from ..hooks import (
     convert_block_ast_to_rich_text_hook,
@@ -50,7 +50,7 @@ def create_markdown(context: GraphQLContext) -> Markdown:
         context,
         BlockParser(),
         InlineParser(AstRenderer()),
-        PLUGINS.values(),
+        default_plugins,
     )
 
 
