@@ -7,7 +7,7 @@ ITALIC = r"\[i\](.*)\[\/i\]"
 UNDERLINE = r"\[u\](.*)\[\/u\]"
 LINE_THROUGH = r"\[s\](.*)\[\/s\]"
 CENTER = r"\[center\](.*)\[\/center\]"
-QUOTE = r'\[quote(="((\w)*)")?\](.*)\[\/quote\]'
+QUOTE = r'\[quote(="(([\w ]*))")?\](.*)\[\/quote\]'
 BLOCK_CODE = r"\[code\](.*)\[\/code\]"
 LINK = r"\[url=(.*)\](.*)\[\/url\]"
 LIST_START = r"\[(\/)?list\]"
@@ -48,7 +48,8 @@ def block_code(parser, m, state):
 
 
 def link_parser(parser, m, state):
-    return "link", m.group(1), None, m.group(2)
+    title = m.group(2)
+    return "link", m.group(1), parser(title, state), title
 
 
 def list_parser(parser, m, state):
@@ -89,16 +90,16 @@ def bbcode(md):
     md.inline.rules.insert(8, "bbcode_block_code")
 
     md.inline.register_rule("bbcode_link2", LINK, link_parser)
-    md.inline.rules.insert(11, "bbcode_link2")
+    md.inline.rules.insert(9, "bbcode_link2")
 
     md.inline.register_rule("bbcode_list2", LIST_START, list_parser)
-    md.inline.rules.insert(12, "bbcode_list2")
+    md.inline.rules.insert(10, "bbcode_list2")
 
     md.inline.register_rule("bbcode_list2_item", LIST_ITEM, list_item)
-    md.inline.rules.insert(14, "bbcode_list2_item")
+    md.inline.rules.insert(11, "bbcode_list2_item")
 
     md.inline.register_rule("bbcode_img_long", IMG_LONG, img_both)
-    md.inline.rules.insert(15, "bbcode_img_long")
+    md.inline.rules.insert(12, "bbcode_img_long")
 
     md.inline.register_rule("bbcode_img_short", IMG_SHORT, img_both)
-    md.inline.rules.insert(15, "bbcode_img_short")
+    md.inline.rules.insert(13, "bbcode_img_short")

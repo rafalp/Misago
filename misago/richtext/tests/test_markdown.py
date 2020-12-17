@@ -229,8 +229,8 @@ MARKDOWN_VALUES = (
         ],
     ),
     (
-        "[url=https://pl.wikipedia.org]Polska Wikipedia[/url]",
-        '<p><a href="https://pl.wikipedia.org" title="Polska Wikipedia">https://pl.wikipedia.org</a></p>\n',
+        "[url=https://pl.wikipedia.org]Wikipedia[/url]",
+        '<p><a href="https://pl.wikipedia.org" title="Wikipedia">Wikipedia</a></p>\n',
         [
             {
                 "type": "paragraph",
@@ -238,8 +238,8 @@ MARKDOWN_VALUES = (
                     {
                         "type": "link",
                         "link": "https://pl.wikipedia.org",
-                        "children": None,
-                        "title": "Polska Wikipedia",
+                        "children": [{"text": "Wikipedia", "type": "text"}],
+                        "title": "Wikipedia",
                     }
                 ],
             }
