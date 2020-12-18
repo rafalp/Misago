@@ -6,7 +6,7 @@ django_file_storage: django.core.files.storage.FileSystemStorage
 django_staticfile_storage: django.contrib.staticfiles.storage.StaticFilesStorage
 
 db:
-  host: community-postgres
+  hostname: community-postgres
   name: community
   password: community
   port: 5432

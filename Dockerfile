@@ -8,7 +8,7 @@ ARG GIT_TOKEN
 ARG PIP_REQUIREMENTS
 
 # install Python modules needed by the Python app
-RUN sudo pip install --upgrade pip
+RUN sudo pip install --upgrade pip==20.2.2
 RUN pip install --no-warn-script-location -r /opt/bh/webapp/$PIP_REQUIREMENTS --user
 
 COPY . /opt/bh/
