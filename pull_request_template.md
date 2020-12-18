@@ -1,3 +1,6 @@
+<!-- DELETE THIS BELOW -->
+**Reminder to create the PR against this repository, and not the base fork of `rafalp/Misago`.**
+
 ### JIRA Ticket
 <!--- Link the JIRA ticket here -->
 
