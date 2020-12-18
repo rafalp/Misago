@@ -1,3 +1,4 @@
+from hashlib import md5
 from html import escape
 from typing import List, Optional, Tuple, cast
 
@@ -8,6 +9,7 @@ from ..hooks import (
     convert_inline_ast_to_text_hook,
     create_markdown_hook,
     parse_markup_hook,
+    update_markup_metadata_hook,
 )
 from ..types import (
     GraphQLContext,
@@ -20,14 +22,23 @@ from ..utils.strings import get_random_string
 from .markdown import html_markdown
 
 
-# cache parsed markup on context
 async def parse_markup(
     context: GraphQLContext, markup: str
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
-    metadata: ParsedMarkupMetadata = {}
-    return await parse_markup_hook.call_action(
-        parse_markup_action, context, markup, metadata
-    )
+    cache_key = get_markup_cache_key(markup)
+    if cache_key not in context:
+        metadata: ParsedMarkupMetadata = {}
+        context[cache_key] = await parse_markup_hook.call_action(
+            parse_markup_action, context, markup, metadata
+        )
+
+    return context[cache_key]
+
+
+def get_markup_cache_key(markup: str) -> str:
+    markup_clean = markup.strip().encode("utf-8")
+    markup_hash = md5(markup_clean).hexdigest()
+    return f"markup_{markup_hash}"
 
 
 async def parse_markup_action(
@@ -38,7 +49,7 @@ async def parse_markup_action(
     # TODO: add markdown_hook
     ast = markdown(markup)
 
-    # TODO: add update_context_from_ast_hook
+    update_markup_metadata_hook.call_action(context, ast, metadata)
 
     return convert_ast_to_richtext(context, ast), metadata
 

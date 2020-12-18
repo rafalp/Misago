@@ -36,3 +36,11 @@ async def test_parser_escapes_html(graphql_context):
     assert result == [
         {"id": ANY, "type": "p", "text": "Hello &lt;b&gt;world&lt;/b&gt;!"}
     ]
+
+
+@pytest.mark.asyncio
+async def test_parser_handles_diacritics(graphql_context):
+    result, _ = await parse_markup(graphql_context, "**Cześć**, opie!")
+    assert result == [
+        {"id": ANY, "type": "p", "text": "<strong>Cześć</strong>, opie!",}
+    ]

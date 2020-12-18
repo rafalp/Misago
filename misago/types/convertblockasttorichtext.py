@@ -5,7 +5,7 @@ from .richtext import RichTextBlock
 
 
 class ConvertBlockAstToRichTextAction(Protocol):
-    def __call__(self, context: GraphQLContext, ast: dict,) -> Optional[RichTextBlock]:
+    def __call__(self, context: GraphQLContext, ast: dict) -> Optional[RichTextBlock]:
         ...
 
 

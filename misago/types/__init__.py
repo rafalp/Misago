@@ -185,6 +185,7 @@ from .templatecontext import (
 from .thread import Thread
 from .threadpostspage import ThreadPostsPage
 from .threadsfeed import ThreadsFeed
+from .updatemarkupmetadata import UpdateMarkupMetadataAction
 from .updatepost import UpdatePostAction, UpdatePostFilter
 from .user import User
 from .userauth import (

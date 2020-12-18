@@ -66,6 +66,7 @@ from .registeruser import (
     RegisterUserInputModelHook,
 )
 from .templatecontext import TemplateContextHook
+from .updatemarkupmetadata import UpdateMarkupMetadataHook
 from .updatepost import UpdatePostHook
 from .userauth import (
     GetAuthUserHook,
@@ -140,4 +141,5 @@ register_user_hook = RegisterUserHook()
 register_user_input_hook = RegisterUserInputHook()
 register_user_input_model_hook = RegisterUserInputModelHook()
 template_context_hook = TemplateContextHook()
+update_markup_metadata_hook = UpdateMarkupMetadataHook()
 update_post_hook = UpdatePostHook()

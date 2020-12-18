@@ -102,6 +102,7 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`register_user_input_hook`](./register-user-input-hook.md)
 - [`register_user_input_model_hook`](./register-user-input-model-hook.md)
 - [`template_context_hook`](./template-context-hook.md)
+- [`update_markup_metadata_hook`](./update-markup-metadata-hook.md)
 - [`update_post_hook`](./update-post-hook.md)
 
 
