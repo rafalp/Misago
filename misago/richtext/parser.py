@@ -56,17 +56,18 @@ def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
     return markdown(markup)
 
 
+def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
+    markdown = create_markdown(context)
+    return markdown(markup)
+
+
 def create_markdown(context: GraphQLContext) -> Markdown:
     return create_markdown_hook.call_action(
         create_markdown_action,
         context,
         BlockParser(),
         InlineParser(AstRenderer()),
-<<<<<<< HEAD
         [plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
-=======
-        default_plugins,
->>>>>>> Specified default_plugins according author's suggestion
     )
 
 
