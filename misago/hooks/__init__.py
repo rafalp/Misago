@@ -51,6 +51,7 @@ from .editthreadtitle import (
 )
 from .filter import FilterHook
 from .graphqlcontext import GraphQLContextHook
+from .markdown import MarkdownHook
 from .movethread import MoveThreadHook, MoveThreadInputHook, MoveThreadInputModelHook
 from .movethreads import (
     MoveThreadsHook,
@@ -124,6 +125,7 @@ graphql_type_defs_hook: List[str] = []
 graphql_types_hook: List[SchemaBindable] = []
 jinja2_extensions_hook: List[Any] = []
 jinja2_filters_hook: Dict[str, Any] = {}
+markdown_hook = MarkdownHook()
 move_thread_hook = MoveThreadHook()
 move_thread_input_hook = MoveThreadInputHook()
 move_thread_input_model_hook = MoveThreadInputModelHook()

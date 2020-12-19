@@ -1,4 +1,4 @@
-from typing import Protocol
+from typing import List, Protocol
 
 from .graphqlcontext import GraphQLContext
 from .parsemarkup import ParsedMarkupMetadata
@@ -6,6 +6,6 @@ from .parsemarkup import ParsedMarkupMetadata
 
 class UpdateMarkupMetadataAction(Protocol):
     async def __call__(
-        self, context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+        self, context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
     ):
         ...

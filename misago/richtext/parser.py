@@ -8,6 +8,7 @@ from ..hooks import (
     convert_block_ast_to_rich_text_hook,
     convert_inline_ast_to_text_hook,
     create_markdown_hook,
+    markdown_hook,
     parse_markup_hook,
     update_markup_metadata_hook,
 )
@@ -44,14 +45,14 @@ def get_markup_cache_key(markup: str) -> str:
 async def parse_markup_action(
     context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
-    markdown = create_markdown(context)
-
-    # TODO: add markdown_hook
-    ast = markdown(markup)
-
+    ast = markdown_hook.call_action(markdown_action, context, markup)
     update_markup_metadata_hook.call_action(context, ast, metadata)
-
     return convert_ast_to_richtext(context, ast), metadata
+
+
+def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
+    markdown = create_markdown(context)
+    return markdown(markup)
 
 
 def create_markdown(context: GraphQLContext) -> Markdown:

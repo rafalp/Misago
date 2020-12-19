@@ -121,6 +121,7 @@ from .editthreadtitle import (
     EditThreadTitleInputModelFilter,
 )
 from .graphqlcontext import GraphQLContext, GraphQLContextAction, GraphQLContextFilter
+from .markdown import MarkdownAction, MarkdownFilter
 from .movethread import (
     MoveThreadAction,
     MoveThreadFilter,
