@@ -85,7 +85,7 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`graphql_types_hook`](./graphql-types-hook.md)
 - [`jinja2_extensions_hook`](./jinja2-extensions-hook.md)
 - [`jinja2_filters_hook`](./jinja2-filters-hook.md)
-- [`markdown`](./markdown.md)
+- [`markdown_hook`](./markdown-hook.md)
 - [`move_thread_hook`](./move-thread-hook.md)
 - [`move_thread_input_hook`](./move-thread-input-hook.md)
 - [`move_thread_input_model_hook`](./move-thread-input-model-hook.md)

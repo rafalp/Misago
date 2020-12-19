@@ -1,14 +1,14 @@
 # `parse_markup_hook`
 
 ```python
-markdown.call_action(
+markdown_hook.call_action(
     action: MarkdownAction,
     context: GraphQLContext,
     markup: str,
 )
 ```
 
-A filter for the function used to parse str with markup into abstract syntax tree.
+A synchronous filter for the function used to parse str with markup into abstract syntax tree.
 
 Returns list containing abstract syntax tree nodes for parsed markup.
 
