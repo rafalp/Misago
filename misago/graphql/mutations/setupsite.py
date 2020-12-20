@@ -5,6 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, constr
 
 from ...auth import create_user_token
+from ...conf.cache import clear_settings_cache
 from ...conf.update import update_settings
 from ...errors import SiteWizardDisabledError
 from ...hooks import create_user_hook, create_user_token_hook
@@ -51,6 +52,7 @@ async def resolve_setup_site(
             "forum_index_threads": cleaned_data["forum_index_threads"],
         }
     )
+    await clear_settings_cache()
 
     user = await create_user_hook.call_action(
         create_user,
