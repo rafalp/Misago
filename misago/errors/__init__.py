@@ -83,6 +83,11 @@ class PostDoesNotExistError(PydanticValueError):
         super().__init__(id=post_id)
 
 
+class SiteWizardDisabledError(PydanticValueError):
+    code = "site_wizard.disabled"
+    msg_template = "site wizard is disabled"
+
+
 class ThreadDoesNotExistError(PydanticValueError):
     code = "thread.not_exists"
     msg_template = "thread with id '{id}' does not exist"

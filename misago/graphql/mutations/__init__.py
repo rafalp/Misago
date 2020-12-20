@@ -12,6 +12,7 @@ from .movethreads import move_threads_mutation
 from .postreply import post_reply_mutation
 from .postthread import post_thread_mutation
 from .register import register_mutation
+from .setupsite import setup_site_mutation
 
 
 mutations = [
@@ -29,4 +30,5 @@ mutations = [
     post_reply_mutation,
     post_thread_mutation,
     register_mutation,
+    setup_site_mutation,
 ]

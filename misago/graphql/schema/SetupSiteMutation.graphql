@@ -1,0 +1,16 @@
+type Mutation {
+    setupSite(input: SetupSiteInput!): SetupSiteMutationResult!
+}
+
+input SetupSiteInput {
+    forumName: String!
+    forumIndexThreads: Boolean!
+    name: String!
+    email: String!
+    password: String!
+}
+
+type SetupSiteMutationResult {
+    errors: [Error!]
+    token: String
+}

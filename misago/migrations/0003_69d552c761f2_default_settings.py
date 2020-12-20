@@ -25,7 +25,7 @@ table = table("misago_settings", column("name", String), column("value", JSON),)
 
 settings = [
     {"name": "bulk_action_limit", "value": 30},
-    {"name": "enable_wizard", "value": True},
+    {"name": "enable_site_wizard", "value": True},
     {"name": "forum_index_header", "value": ""},
     {"name": "forum_index_threads", "value": True},
     {"name": "forum_index_title", "value": ""},
