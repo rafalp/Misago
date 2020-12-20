@@ -46,8 +46,8 @@ async def parse_markup_action(
     context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
     ast = markdown_hook.call_action(markdown_action, context, markup)
-    update_markup_metadata_hook.call_action(context, ast, metadata)
-    return convert_ast_to_richtext(context, ast), metadata
+    await update_markup_metadata_hook.call_action(context, ast, metadata)
+    return convert_ast_to_rich_text(context, ast), metadata
 
 
 def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
@@ -70,25 +70,25 @@ def create_markdown_action(
     return Markdown(None, block, inline, plugins)
 
 
-def convert_ast_to_richtext(context: GraphQLContext, ast: List[dict]) -> RichText:
+def convert_ast_to_rich_text(context: GraphQLContext, ast: List[dict]) -> RichText:
     rich_text = []
     for node in ast:
-        richtext_block = convert_block_ast_to_richtext(context, node)
+        richtext_block = convert_block_ast_to_rich_text(context, node)
         if richtext_block:
             rich_text.append(richtext_block)
 
     return cast(RichText, rich_text)
 
 
-def convert_block_ast_to_richtext(
+def convert_block_ast_to_rich_text(
     context: GraphQLContext, ast: dict
 ) -> Optional[RichTextBlock]:
     return convert_block_ast_to_rich_text_hook.call_action(
-        convert_block_ast_to_richtext_action, context, ast,
+        convert_block_ast_to_rich_text_action, context, ast,
     )
 
 
-def convert_block_ast_to_richtext_action(
+def convert_block_ast_to_rich_text_action(
     context: GraphQLContext, ast: dict
 ) -> Optional[RichTextBlock]:
     if ast["type"] == "paragraph":

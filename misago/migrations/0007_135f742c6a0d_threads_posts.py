@@ -59,7 +59,6 @@ def upgrade():
         sa.Column("poster_name", sa.String(length=255), nullable=False),
         sa.Column("markup", sa.Text(), nullable=False),
         sa.Column("rich_text", sa.JSON(), nullable=False),
-        sa.Column("html", sa.Text(), nullable=False),
         sa.Column("edits", sa.Integer(), nullable=False),
         sa.Column("posted_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),

@@ -9,7 +9,6 @@ update_post_hook.call_action(
     thread: Optional[Thread] = None,
     markup: Optional[str] = None,
     rich_text: Optional[RichText] = None,
-    html: Optional[str] = None,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
     edits: Optional[int] = None,
@@ -37,7 +36,6 @@ async def update_post(
     thread: Optional[Thread] = None,
     markup: Optional[str] = None,
     rich_text: Optional[RichText] = None,
-    html: Optional[str] = None,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
     edits: Optional[int] = None,
@@ -98,15 +96,6 @@ Optional[RichText]
 ```
 
 List of `dict` containing new JSON with rich text document representing parsed post body.
-
-
-### `html`
-
-```python
-Optional[str]
-```
-
-Python string containing new HTML with result of parsing markup string.
 
 
 ### `poster`

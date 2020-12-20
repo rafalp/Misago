@@ -16,6 +16,8 @@ from .closethreads import (
 )
 from .convertblockasttorichtext import ConvertBlockAstToRichTextHook
 from .convertinlineasttotext import ConvertInlineAstToTextHook
+from .convertrichtextblocktohtml import ConvertRichTextBlockToHTMLHook
+from .convertrichtexttohtml import ConvertRichTextToHTMLHook
 from .createmarkdown import CreateMarkdownHook
 from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
@@ -86,6 +88,8 @@ close_threads_input_hook = CloseThreadsInputHook()
 close_threads_input_model_hook = CloseThreadsInputModelHook()
 convert_block_ast_to_rich_text_hook = ConvertBlockAstToRichTextHook()
 convert_inline_ast_to_text_hook = ConvertInlineAstToTextHook()
+convert_rich_text_block_to_html_hook = ConvertRichTextBlockToHTMLHook()
+convert_rich_text_to_html_hook = ConvertRichTextToHTMLHook()
 create_markdown_hook = CreateMarkdownHook()
 create_post_hook = CreatePostHook()
 create_thread_hook = CreateThreadHook()

@@ -1,7 +1,7 @@
-# `convert_block_ast_to_richtext_hook`
+# `convert_block_ast_to_rich_text_hook`
 
 ```python
-convert_block_ast_to_richtext_hook.call_action(
+convert_block_ast_to_rich_text_hook.call_action(
     action: ConvertBlockAstToRichTextAction, context: GraphQLContext, ast: dict
 )
 ```
@@ -16,7 +16,7 @@ Returns JSON-serializable `dict` if block's AST is valid or `None`.
 ### `action`
 
 ```python
-def convert_block_ast_to_richtext(
+def convert_block_ast_to_rich_text(
     context: GraphQLContext, act: dict
 ) -> Optional[RichTextBlock]:
     ...

@@ -58,13 +58,6 @@ async def test_post_rich_text_can_be_updated(post):
 
 
 @pytest.mark.asyncio
-async def test_post_html_can_be_updated(post):
-    new_html = "<strong>Hello</strong>"
-    updated_post = await update_post(post, html=new_html)
-    assert updated_post.html == new_html
-
-
-@pytest.mark.asyncio
 async def test_post_poster_can_be_updated(post, user):
     updated_post = await update_post(post, poster=user)
     assert updated_post.poster_id == user.id

@@ -19,7 +19,6 @@ async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
     assert data["post"].markup == "Edited post"
     assert data["post"].rich_text[0]["type"] == "p"
     assert data["post"].rich_text[0]["text"] == "Edited post"
-    assert data["post"].html == "Edited post"
 
 
 @pytest.mark.asyncio

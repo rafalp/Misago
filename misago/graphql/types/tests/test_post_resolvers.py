@@ -1,6 +1,6 @@
 import pytest
 
-from ..post import resolve_category, resolve_poster, resolve_thread
+from ..post import resolve_category, resolve_html, resolve_poster, resolve_thread
 
 
 @pytest.mark.asyncio
@@ -24,3 +24,9 @@ def test_post_resolver_returns_none_if_poster_is_empty(graphql_info, post):
 async def test_post_resolver_returns_post_thread(graphql_info, post, thread):
     value = await resolve_thread(post, graphql_info)
     assert value == thread
+
+
+def test_post_resolver_returns_post_html(graphql_info, post):
+    post.rich_text = [{"id": "t3st", "type": "p", "text": "Hello world!"}]
+    value = resolve_html(post, graphql_info)
+    assert value == "<p>Hello world!</p>"

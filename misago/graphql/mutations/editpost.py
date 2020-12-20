@@ -117,7 +117,6 @@ async def edit_post(
         cleaned_data["post"],
         markup=cleaned_data["markup"],
         rich_text=rich_text,
-        html=cleaned_data["markup"],
         increment_edits=True,
     )
 

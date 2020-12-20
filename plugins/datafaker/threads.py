@@ -23,7 +23,6 @@ async def create_fake_post(
     texts = [sentences.get_random_sentence() for _ in range(random.randint(1, 15))]
 
     markup = "\n\n".join(texts)
-    html = "<p>%s</p>" % "</p>\n\n<p>".join(texts)
 
     rich_text: RichText = [
         {"id": get_random_string(6), "type": "p", "text": text} for text in texts
@@ -33,7 +32,6 @@ async def create_fake_post(
         thread,
         markup,
         rich_text,
-        html,
         poster=poster,
         poster_name=poster_name,
         posted_at=posted_at,

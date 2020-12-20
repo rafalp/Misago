@@ -176,7 +176,6 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column("poster_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("markup", sqlalchemy.Text, nullable=False),
     sqlalchemy.Column("rich_text", sqlalchemy.JSON, nullable=False),
-    sqlalchemy.Column("html", sqlalchemy.Text, nullable=False),
     sqlalchemy.Column("edits", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("posted_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),

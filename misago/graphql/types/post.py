@@ -4,6 +4,7 @@ from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
 from ...loaders import load_category, load_thread, load_user
+from ...richtext.html import convert_rich_text_to_html
 from ...types import Category, Post, Thread, User
 
 
@@ -33,3 +34,8 @@ def resolve_poster(
     if obj.poster_id:
         return load_user(info.context, obj.poster_id)
     return None
+
+
+@post_type.field("html")
+def resolve_html(obj: Post, info: GraphQLResolveInfo):
+    return convert_rich_text_to_html(info.context, obj.rich_text)

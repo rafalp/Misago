@@ -15,7 +15,6 @@ async def update_post(
     thread: Optional[Thread] = None,
     markup: Optional[str] = None,
     rich_text: Optional[RichText] = None,
-    html: Optional[str] = None,
     poster: Optional[User] = None,
     poster_name: Optional[str] = None,
     edits: Optional[int] = None,
@@ -39,8 +38,6 @@ async def update_post(
         changes["markup"] = markup
     if rich_text is not None and rich_text != post.rich_text:
         changes["rich_text"] = rich_text
-    if html is not None and html != post.html:
-        changes["html"] = html
 
     if poster:
         if poster_name:

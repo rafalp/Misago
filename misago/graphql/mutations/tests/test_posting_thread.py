@@ -62,7 +62,6 @@ async def test_post_thread_mutation_creates_new_post(
     assert data["post"].markup == "This is test post!"
     assert data["post"].rich_text[0]["type"] == "p"
     assert data["post"].rich_text[0]["text"] == "This is test post!"
-    assert data["post"].html == "This is test post!"
 
 
 @pytest.mark.asyncio

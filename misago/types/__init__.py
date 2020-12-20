@@ -46,6 +46,14 @@ from .convertinlineasttotext import (
     ConvertInlineAstToTextAction,
     ConvertInlineAstToTextFilter,
 )
+from .convertrichtexttohtml import (
+    ConvertRichTextToHTMLAction,
+    ConvertRichTextToHTMLFilter,
+)
+from .convertrichtextblocktohtml import (
+    ConvertRichTextBlockToHTMLAction,
+    ConvertRichTextBlockToHTMLFilter,
+)
 from .createmarkdown import CreateMarkdownAction, CreateMarkdownFilter, MarkdownPlugin
 from .createpost import CreatePostAction, CreatePostFilter
 from .createthread import CreateThreadAction, CreateThreadFilter

@@ -13,7 +13,6 @@ class Post:
     poster_name: str
     markup: str
     rich_text: RichText
-    html: str
     edits: int
     posted_at: datetime
     extra: dict

@@ -128,7 +128,6 @@ async def post_thread(
             thread,
             cleaned_data["markup"],
             rich_text,
-            cleaned_data["markup"],
             poster=user,
             context=context,
         )

@@ -6,6 +6,7 @@ type Post {
     posterName: String!
     markup: String!
     richText: RichText!
+    html: String!
     edits: Int!
     postedAt: DateTime!
     extra: Generic!
