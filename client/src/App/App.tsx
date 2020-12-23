@@ -13,12 +13,14 @@ import {
   ToastsProvider,
 } from "../Context"
 import Routes from "../Routes"
+import RouteLoader from "../UI/RouteLoader"
 import RouteErrorBoundary from "../UI/RouteErrorBoundary"
 import AppDataQuery from "./AppDataQuery"
 import AppErrorBoundary from "./AppErrorBoundary"
 import AppLanguageLoader from "./AppLanguageLoader"
 
 const Navbar = React.lazy(() => import("../Navbar"))
+const SiteWizard = React.lazy(() => import("../SiteWizard"))
 const Toasts = React.lazy(() => import("../Toasts"))
 const AuthChangedAlert = React.lazy(() => import("../AuthChangedAlert"))
 const AuthModal = React.lazy(() => import("../AuthModal"))
@@ -39,19 +41,27 @@ const App: React.FC = () => {
                         <ForumStatsContext.Provider value={forumStats}>
                           <AuthModalProvider>
                             <ModalProvider>
-                              <React.Suspense fallback={<div />}>
-                                <AuthChangedAlert user={auth} />
-                              </React.Suspense>
-                              <React.Suspense fallback={<div />}>
-                                <Navbar settings={settings} user={auth} />
-                                <Toasts />
-                              </React.Suspense>
-                              <RouteErrorBoundary>
-                                <Routes />
-                              </RouteErrorBoundary>
-                              <React.Suspense fallback={<div />}>
-                                <AuthModal settings={settings} />
-                              </React.Suspense>
+                              {settings && settings.enableSiteWizard ? (
+                                <React.Suspense fallback={<RouteLoader />}>
+                                  <SiteWizard />
+                                </React.Suspense>
+                              ) : (
+                                <>
+                                  <React.Suspense fallback={<div />}>
+                                    <AuthChangedAlert user={auth} />
+                                  </React.Suspense>
+                                  <React.Suspense fallback={<div />}>
+                                    <Navbar settings={settings} user={auth} />
+                                    <Toasts />
+                                  </React.Suspense>
+                                  <RouteErrorBoundary>
+                                    <Routes />
+                                  </RouteErrorBoundary>
+                                  <React.Suspense fallback={<div />}>
+                                    <AuthModal settings={settings} />
+                                  </React.Suspense>
+                                </>
+                              )}
                               <ModalConsumer />
                             </ModalProvider>
                           </AuthModalProvider>

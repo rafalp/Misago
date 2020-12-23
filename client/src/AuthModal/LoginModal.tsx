@@ -90,7 +90,7 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
           const { user, token } = result.data?.login || {}
           if (token && user) {
             setDisabled(true)
-            login(token, user)
+            login({ token, user })
             close()
           }
         }}

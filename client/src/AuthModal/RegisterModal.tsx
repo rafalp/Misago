@@ -132,7 +132,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
 
           if (token && user) {
             setDisabled(true)
-            login(token, user)
+            login({ token, user })
             close()
           }
         }}

@@ -11,6 +11,7 @@ import CardHeader from "./CardHeader"
 import CardList from "./CardList"
 import CardListItem from "./CardListItem"
 import CardLoader from "./CardLoader"
+import CardMessage from "./CardMessage"
 
 export {
   Card,
@@ -26,4 +27,5 @@ export {
   CardList,
   CardListItem,
   CardLoader,
+  CardMessage,
 }

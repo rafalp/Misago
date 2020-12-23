@@ -33,10 +33,10 @@
   margin-left: $spacer;
 }
 
-/* Card and modal errors */
-.card-error,
+/* Card and modal errors/messages */
 .card-blank-slate,
-.modal-error,
+.card-error,
+.card-message .modal-error,
 .modal-message,
 .posting-form-error {
   padding: $spacer * 2 $spacer;
@@ -51,9 +51,10 @@
   }
 }
 
-.card-error p + p,
 .card-blank-slate p + p,
 .card-blank-slate-actions,
+.card-error p + p,
+.card-message p + p,
 .modal-error p + p,
 .modal-message p + p,
 .posting-form-error p + p {

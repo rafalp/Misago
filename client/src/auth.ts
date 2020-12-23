@@ -6,14 +6,23 @@ const AUTH_USER = "user"
 
 const getAuthToken = () => getItem(AUTH_TOKEN)
 
+interface AuthOptions {
+  token: string
+  user: { id: string; name: string }
+  preserveStore?: boolean
+}
+
 const useAuth = () => {
   const client = useApolloClient()
 
   return {
-    login: (token: string, user: { id: string; name: string }) => {
-      setItem(AUTH_TOKEN, token)
-      setItem(AUTH_USER, JSON.stringify({ id: user.id, name: user.name }))
-      client.resetStore()
+    login: (auth: AuthOptions) => {
+      setItem(AUTH_TOKEN, auth.token)
+      setItem(
+        AUTH_USER,
+        JSON.stringify({ id: auth.user.id, name: auth.user.name })
+      )
+      if (!auth.preserveStore) client.resetStore()
     },
     logout: () => {
       removeItem(AUTH_TOKEN)

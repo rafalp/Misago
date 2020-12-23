@@ -6,7 +6,7 @@ import { ICategory, IForumStats, ISettings, IUser } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
 
-const POLL_INTERVAL = 50 * 1000 // 50s
+const POLL_INTERVAL = 5 * 1000 // 50s
 
 const INITIAL_DATA_QUERY = gql`
   fragment CategoryBanner on CategoryBanner {
@@ -55,6 +55,7 @@ const INITIAL_DATA_QUERY = gql`
     }
     settings {
       bulkActionLimit
+      enableSiteWizard
       forumIndexHeader
       forumIndexThreads
       forumIndexTitle
@@ -100,9 +101,22 @@ const defaultData = {
 }
 
 const AppDataQuery: React.FC<IAppDataProps> = ({ children }) => {
-  const { data, error, loading } = useQuery<IInitialData>(INITIAL_DATA_QUERY, {
-    pollInterval: POLL_INTERVAL,
-  })
+  const { data, error, loading, stopPolling } = useQuery<IInitialData>(
+    INITIAL_DATA_QUERY,
+    {
+      pollInterval: POLL_INTERVAL,
+    }
+  )
+
+  const enableSiteWizard = React.useMemo(() => {
+    return data?.settings?.enableSiteWizard || false
+  }, [data])
+
+  React.useEffect(() => {
+    if (enableSiteWizard) {
+      stopPolling() // Prevent updated settings kicking users off the wizard
+    }
+  }, [enableSiteWizard, stopPolling])
 
   if (!data) {
     if (loading) return <AppLoader />

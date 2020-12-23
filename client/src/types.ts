@@ -45,6 +45,7 @@ export interface ICategoryBanner {
 
 export interface ISettings {
   bulkActionLimit: number
+  enableSiteWizard: boolean
   forumIndexHeader: string
   forumIndexThreads: boolean
   forumIndexTitle: string

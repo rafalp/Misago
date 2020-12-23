@@ -18,6 +18,7 @@ import {
   CardList,
   CardListItem,
   CardLoader,
+  CardMessage,
 } from "."
 
 export default {
@@ -284,3 +285,28 @@ export const ErrorWithMessage = () => (
     </Card>
   </RootContainer>
 )
+
+export const Message = () => {
+  return (
+    <RootContainer>
+      <Card>
+        <CardMessage>
+          <p>Lorem ipsum dolor met sit amet elit.</p>
+        </CardMessage>
+      </Card>
+    </RootContainer>
+  )
+}
+
+export const MessageWithLead = () => {
+  return (
+    <RootContainer>
+      <Card>
+        <CardMessage>
+          <p className="lead">Hello world, how is it going?</p>
+          <p>Lorem ipsum dolor met sit amet elit.</p>
+        </CardMessage>
+      </Card>
+    </RootContainer>
+  )
+}

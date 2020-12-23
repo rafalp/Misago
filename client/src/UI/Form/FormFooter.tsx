@@ -4,14 +4,16 @@ import { ButtonPrimary, ButtonDanger, ButtonSecondary } from "../Button"
 import Spinner from "../Spinner"
 
 interface IFormFooterProps {
+  children?: React.ReactNode
   danger?: boolean
-  submitText: React.ReactNode
+  submitText?: React.ReactNode
   disabled?: boolean
   loading?: boolean
   onCancel?: () => void
 }
 
 const FormFooter: React.FC<IFormFooterProps> = ({
+  children,
   danger,
   submitText,
   disabled,
@@ -28,18 +30,23 @@ const FormFooter: React.FC<IFormFooterProps> = ({
         onClick={onCancel}
       />
     )}
-    {danger ? (
-      <ButtonDanger
-        text={submitText}
-        disabled={disabled || loading}
-        responsive
-      />
-    ) : (
-      <ButtonPrimary
-        text={submitText}
-        disabled={disabled || loading}
-        responsive
-      />
+    {children}
+    {submitText && (
+      <>
+        {danger ? (
+          <ButtonDanger
+            text={submitText}
+            disabled={disabled || loading}
+            responsive
+          />
+        ) : (
+          <ButtonPrimary
+            text={submitText}
+            disabled={disabled || loading}
+            responsive
+          />
+        )}
+      </>
     )}
   </div>
 )

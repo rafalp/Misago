@@ -6,7 +6,7 @@ from ....auth import get_user_from_token
 from ....conf.dynamicsettings import get_settings_from_db
 from ....passwords import verify_password
 from ....testing import override_dynamic_settings
-from ....users.get import get_user_by_email
+from ....users.get import get_user_by_email, get_user_by_id
 from ..setupsite import resolve_setup_site
 
 
@@ -67,11 +67,8 @@ async def test_setup_site_mutation_creates_admin_account(db, graphql_info):
 
     assert not "errors" in data
 
-    user = await get_user_by_email("john@example.com")
-    assert user.name == "John"
-    assert user.is_administrator
-    assert user.is_moderator
-    assert await verify_password(" password123 ", user.password)
+    assert data["user"] == await get_user_by_id(data["user"].id)
+    assert await verify_password(" password123 ", data["user"].password)
 
 
 @pytest.mark.asyncio
@@ -91,9 +88,8 @@ async def test_setup_site_mutation_returns_admin_token(db, graphql_info):
     assert not "errors" in data
     assert "token" in data
 
-    user = await get_user_by_email("john@example.com")
     user_from_token = await get_user_from_token(graphql_info.context, data["token"])
-    assert user.id == user_from_token.id
+    assert user_from_token.id == data["user"].id
 
 
 @pytest.mark.asyncio

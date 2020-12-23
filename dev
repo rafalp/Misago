@@ -9,10 +9,10 @@ NORMAL=$(tput sgr0)
 
 # Required ports
 # Some tasks test for those ports before continuing
-port_django=${MISAGO_DEVSERVER_PORT:-8000}
+port_api=${MISAGO_DEVSERVER_PORT:-8000}
 port_postgresql=5432
 
-required_ports=($port_postgresql $port_django)
+required_ports=($port_postgresql $port_api)
 
 # Default superuser
 username="Admin"
@@ -110,8 +110,8 @@ init() {
     for port in "${required_ports[@]}"; do
         nc "127.0.0.1" "$port" < /dev/null
         if [[ $? = "0" ]]; then
-            if [[ $port = $port_django ]]; then
-                error "Other application appears to already be running on http://127.0.0.1:${port_django}"
+            if [[ $port = $port_api ]]; then
+                error "Other application appears to already be running on http://127.0.0.1:${port_api}"
             elif [[ $port = $port_postgresql ]]; then
                 error "PostgreSQL appears to already be running on the port $port."
                 echo
@@ -150,12 +150,7 @@ after_init_message() {
     echo
     echo "    docker-compose up"
     echo
-    echo "Running server will be available in the browser under the http://127.0.0.1:${port_django} address."
-    echo
-    echo "Default superuser has been created with this username and password:"
-    echo
-    echo "Username:    $username"
-    echo "Password:    $password"
+    echo "Running server will be available in the browser under the http://127.0.0.1:${port_api} address."
     echo
     echo "To connect to development database use following credentials:"
     echo
