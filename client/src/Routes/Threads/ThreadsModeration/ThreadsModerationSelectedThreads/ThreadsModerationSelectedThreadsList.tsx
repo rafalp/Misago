@@ -2,12 +2,12 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../../../../UI/Form"
 import useSelection from "../../../../UI/useSelection"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsListItem from "./ThreadsModerationSelectedThreadsListItem"
 
 interface IThreadsModerationSelectedThreadsListProps {
-  errors?: Record<string, IMutationError>
+  errors?: Record<string, MutationError>
   threads: Array<ISelectedThread>
 }
 

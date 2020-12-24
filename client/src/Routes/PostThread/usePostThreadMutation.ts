@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../types"
+import { MutationError } from "../../types"
 
 const POST_THREAD = gql`
   mutation PostThread($input: PostThreadInput!) {
@@ -21,7 +21,7 @@ const POST_THREAD = gql`
 
 interface IPostThreadMutationData {
   postThread: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     thread: {
       id: string
       title: string

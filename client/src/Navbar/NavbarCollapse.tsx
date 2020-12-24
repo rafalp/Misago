@@ -2,14 +2,14 @@ import { t } from "@lingui/macro"
 import className from "classnames"
 import React from "react"
 import Avatar from "../UI/Avatar"
-import { INavbarUserProp } from "./Navbar.types"
+import { User } from "./Navbar.types"
 
-interface INavbarCollapseProps {
+interface NavbarCollapseProps {
   children: React.ReactNode
-  user?: INavbarUserProp | null
+  user?: User | null
 }
 
-const NavbarCollapse: React.FC<INavbarCollapseProps> = ({
+const NavbarCollapse: React.FC<NavbarCollapseProps> = ({
   children,
   user,
 }) => {

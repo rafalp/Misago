@@ -1,4 +1,4 @@
-export interface IReplaceOptions {
+export interface ReplaceOptions {
   textarea: HTMLTextAreaElement
   replace?: string
   default?: string
@@ -23,7 +23,7 @@ type Selection = {
   text: string
 }
 
-const replaceSelection = (options: IReplaceOptions): State => {
+const replaceSelection = (options: ReplaceOptions): State => {
   let state: State = {
     selection: getSelection(options.textarea),
     value: options.textarea.value,

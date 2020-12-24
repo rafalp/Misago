@@ -1,4 +1,4 @@
-import { IAvatar, ICategory } from "../../types"
+import { AvatarData, ICategory } from "../../types"
 
 export interface IActiveCategory {
   category: ICategory
@@ -33,7 +33,7 @@ export interface IThreadPoster {
   id: string
   name: string
   slug: string
-  avatars: Array<IAvatar>
+  avatars: Array<AvatarData>
 }
 
 export interface IThreadsModeration {

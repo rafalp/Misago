@@ -3,12 +3,12 @@ import React from "react"
 import { Checkbox } from "../../../../UI/Checkbox"
 import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI/Tidbits"
 import { ThreadValidationError } from "../../../../UI/ValidationError"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
 interface IThreadsModerationSelectedThreadsListItemProps {
   disabled?: boolean
-  error?: IMutationError
+  error?: MutationError
   id?: string
   selected?: boolean
   thread: ISelectedThread

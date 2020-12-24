@@ -1,13 +1,13 @@
 import { t } from "@lingui/macro"
 import React from "react"
 import ValidationError from "./ValidationError"
-import { IValidationErrorProps } from "./ValidationError.types"
+import { ValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
   required: "value_error.missing",
 }
 
-const CategoryValidationError: React.FC<IValidationErrorProps> = ({
+const CategoryValidationError: React.FC<ValidationErrorProps> = ({
   children,
   error,
   messages,

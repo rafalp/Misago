@@ -2,13 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Field, FieldError } from "../../../../UI/Form"
 import { PostsValidationError } from "../../../../UI/ValidationError"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationSelectedPostsButton from "./ThreadPostsModerationSelectedPostsButton"
 import ThreadPostsModerationSelectedPostsList from "./ThreadPostsModerationSelectedPostsList"
 
 interface IThreadPostsModerationSelectedPostsProps {
-  errors?: Record<string, IMutationError>
+  errors?: Record<string, MutationError>
   posts: Array<IPost>
   min: number
   max: number

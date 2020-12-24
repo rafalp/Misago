@@ -2,13 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Field, FieldError } from "../../../../UI/Form"
 import { ThreadsValidationError } from "../../../../UI/ValidationError"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsButton from "./ThreadsModerationSelectedThreadsButton"
 import ThreadsModerationSelectedThreadsList from "./ThreadsModerationSelectedThreadsList"
 
 interface IThreadsModerationSelectedThreadsProps {
-  errors?: Record<string, IMutationError>
+  errors?: Record<string, MutationError>
   threads: Array<ISelectedThread>
   min: number
   max: number

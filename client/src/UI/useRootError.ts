@@ -1,7 +1,7 @@
 import React from "react"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
-const useRootError = (errors?: Array<IMutationError> | null) => {
+const useRootError = (errors?: Array<MutationError> | null) => {
   return React.useMemo(() => {
     for (const error of errors || []) {
       const errorLocation = error.location.join(".")

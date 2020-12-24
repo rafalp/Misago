@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { getSelectionErrors } from "../../../../UI/useSelectionErrors"
-import { ICategory, IMutationError } from "../../../../types"
+import { ICategory, MutationError } from "../../../../types"
 import { IThread } from "../../Threads.types"
 import {
   CATEGORY_THREADS_QUERY,
@@ -26,7 +26,7 @@ const DELETE_THREADS = gql`
 
 interface IDeleteThreadsMutationData {
   deleteThreads: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     deleted: Array<string>
   }
 }

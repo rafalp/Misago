@@ -3,12 +3,12 @@ import { ApolloError } from "apollo-client"
 import React from "react"
 import { useModalContext } from "../../../Context"
 import { Modal, ModalDialog } from "../../../UI/Modal"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 import ThreadModerationError from "./ThreadModerationError"
 
 interface IThreadModerationCloseProps {
   graphqlError?: ApolloError | null
-  errors?: Array<IMutationError> | null
+  errors?: Array<MutationError> | null
 }
 
 const ThreadModerationClose: React.FC<IThreadModerationCloseProps> = ({

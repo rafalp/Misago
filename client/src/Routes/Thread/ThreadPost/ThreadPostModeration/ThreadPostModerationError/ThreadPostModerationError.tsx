@@ -1,13 +1,13 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { ModalCloseFooter, ModalErrorBody } from "../../../../../UI/Modal"
-import { IMutationError } from "../../../../../types"
+import { MutationError } from "../../../../../types"
 import ThreadPostRootError from "../../../ThreadPostRootError"
 import ThreadPostModerationErrorHeader from "./ThreadPostModerationErrorHeader"
 
 interface IThreadPostModerationErrorProps {
   graphqlError?: ApolloError | null
-  errors?: Array<IMutationError> | null
+  errors?: Array<MutationError> | null
   forDelete?: boolean
   close: () => void
 }

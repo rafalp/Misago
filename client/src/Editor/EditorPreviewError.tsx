@@ -4,11 +4,11 @@ import React from "react"
 import { ErrorMessage, GraphQLErrorMessage } from "../UI/Error"
 import GraphQLErrorRenderer from "../UI/GraphQLErrorRenderer"
 
-interface IEditorPreviewErrorProps {
+interface EditorPreviewErrorProps {
   error: ApolloError
 }
 
-const EditorPreviewError: React.FC<IEditorPreviewErrorProps> = ({ error }) => (
+const EditorPreviewError: React.FC<EditorPreviewErrorProps> = ({ error }) => (
   <div className="form-editor-preview form-editor-preview-error">
     <div className="form-editor-preview-error-body">
       <div className="form-editor-preview-error-icon" />

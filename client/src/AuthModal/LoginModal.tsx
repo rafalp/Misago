@@ -15,7 +15,7 @@ import {
 } from "../UI/Modal"
 import RootError from "../UI/RootError"
 import { useAuth } from "../auth"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
 const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
@@ -36,7 +36,7 @@ const LOGIN = gql`
 
 interface LoginData {
   login: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     user: {
       id: string
       name: string

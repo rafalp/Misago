@@ -2,7 +2,7 @@ import React from "react"
 import { ApolloError } from "apollo-client"
 import RootError from "../../../UI/RootError"
 import { ThreadValidationError } from "../../../UI/ValidationError"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 
 interface IThreadRootError {
   message: React.ReactNode
@@ -11,7 +11,7 @@ interface IThreadRootError {
 
 interface IThreadRootErrorProps {
   children: (error: IThreadRootError) => React.ReactElement
-  dataErrors?: Array<IMutationError> | null
+  dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
 }
 

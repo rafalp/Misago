@@ -8,7 +8,7 @@ import RootError from "../../../../UI/RootError"
 import { ThreadValidationError } from "../../../../UI/ValidationError"
 import useLocationError from "../../../../UI/useLocationError"
 import useRootError from "../../../../UI/useRootError"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationErrorHeader from "./ThreadPostsModerationErrorHeader"
 import ThreadPostsModerationErrorPosts from "./ThreadPostsModerationErrorPosts"
@@ -16,8 +16,8 @@ import ThreadPostsModerationErrorPosts from "./ThreadPostsModerationErrorPosts"
 interface IThreadPostsModerationErrorProps {
   forDelete?: boolean
   posts: Array<IPost>
-  errors: Array<IMutationError>
-  selectionErrors: Record<string, IMutationError>
+  errors: Array<MutationError>
+  selectionErrors: Record<string, MutationError>
   close: () => void
 }
 

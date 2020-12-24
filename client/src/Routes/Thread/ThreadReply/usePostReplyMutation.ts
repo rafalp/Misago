@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 
 const POST_REPLY = gql`
   mutation PostReply($input: PostReplyInput!) {
@@ -24,7 +24,7 @@ const POST_REPLY = gql`
 
 interface IPostReplyMutationData {
   postReply: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     thread: {
       id: string
       slug: string

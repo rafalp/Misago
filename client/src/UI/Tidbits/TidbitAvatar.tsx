@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "react-router-dom"
 import * as urls from "../../urls"
-import { IAvatar } from "../../types"
+import { AvatarData } from "../../types"
 import Avatar from "../Avatar"
 import TidbitItem from "./TidbitItem"
 
@@ -10,7 +10,7 @@ interface TidbitAvatarProps {
     id: string
     slug: string
     name: string
-    avatars: Array<IAvatar>
+    avatars: Array<AvatarData>
   } | null
   size?: number
 }

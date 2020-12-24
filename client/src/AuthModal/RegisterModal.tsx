@@ -21,7 +21,7 @@ import {
   UsernameValidationError,
 } from "../UI/ValidationError"
 import { useAuth } from "../auth"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
 const REGISTER = gql`
   mutation Register($input: RegisterInput!) {
@@ -40,9 +40,9 @@ const REGISTER = gql`
   }
 `
 
-interface IRegisterData {
+interface RegisterData {
   register: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     user: {
       id: string
       name: string
@@ -51,30 +51,28 @@ interface IRegisterData {
   }
 }
 
-interface IRegisterValues {
+interface FormValues {
   name: string
   email: string
   password: string
 }
 
-interface IRegisterInput {
-  input: IRegisterValues
+interface RegisterInput {
+  input: FormValues
 }
 
-interface ISettings {
-  passwordMinLength: number
-  passwordMaxLength: number
-  usernameMinLength: number
-  usernameMaxLength: number
-}
-
-interface IRegisterModalProps {
-  settings: ISettings
+interface RegisterModalProps {
+  settings: {
+    passwordMinLength: number
+    passwordMaxLength: number
+    usernameMinLength: number
+    usernameMaxLength: number
+  }
   close: () => void
   showLogin: () => void
 }
 
-const RegisterModal: React.FC<IRegisterModalProps> = ({
+const RegisterModal: React.FC<RegisterModalProps> = ({
   settings,
   close,
   showLogin,
@@ -82,8 +80,8 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
   const { login } = useAuth()
   const [disabled, setDisabled] = React.useState<boolean>(false)
   const [register, { data, loading, error: graphqlError }] = useMutation<
-    IRegisterData,
-    IRegisterInput
+    RegisterData,
+    RegisterInput
   >(REGISTER, { errorPolicy: "all" })
 
   const validators = Yup.object().shape({
@@ -110,7 +108,7 @@ const RegisterModal: React.FC<IRegisterModalProps> = ({
         title={<Trans id="register.title">Sign up</Trans>}
         close={close}
       />
-      <Form<IRegisterValues>
+      <Form<FormValues>
         id="register_form"
         defaultValues={{
           name: "",

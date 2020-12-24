@@ -2,13 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useFormContext } from "react-hook-form"
 
-interface IEditorPreviewButtonProps {
+interface EditorPreviewButtonProps {
   disabled?: boolean
   name: string
   onClick?: () => void
 }
 
-const EditorPreviewButton: React.FC<IEditorPreviewButtonProps> = ({
+const EditorPreviewButton: React.FC<EditorPreviewButtonProps> = ({
   disabled,
   name,
   onClick,

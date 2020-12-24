@@ -2,16 +2,16 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { Modal, ModalDialog } from "../../UI/Modal"
 import portal from "../../UI/portal"
-import { IEditorContextValues } from "../EditorContext"
+import { EditorContextData } from "../EditorContext"
 import EditorControlListForm from "./EditorControlListForm"
 
-interface IEditorControlListModalProps {
-  context: IEditorContextValues
+interface EditorControlListModalProps {
+  context: EditorContextData
   isOpen: boolean
   close: () => void
 }
 
-const EditorControlListModal: React.FC<IEditorControlListModalProps> = ({
+const EditorControlListModal: React.FC<EditorControlListModalProps> = ({
   context,
   isOpen,
   close,

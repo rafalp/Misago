@@ -1,12 +1,12 @@
 import React from "react"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
 const useSelectionErrors = <TSelectable extends { id: string }>(
   location: string,
   selection?: Array<TSelectable>,
-  errors?: Array<IMutationError>
+  errors?: Array<MutationError>
 ) => {
-  const [state, setState] = React.useState<Record<string, IMutationError>>(
+  const [state, setState] = React.useState<Record<string, MutationError>>(
     () => {
       if (!selection || !errors) return {}
       return getSelectionErrors(location, selection, errors)
@@ -24,7 +24,7 @@ const useSelectionErrors = <TSelectable extends { id: string }>(
     clearErrors: () => setState({}),
     setErrors: (
       selection: Array<TSelectable>,
-      errors: Array<IMutationError>
+      errors: Array<MutationError>
     ) => {
       const newErrors = getSelectionErrors(location, selection, errors)
       setState(newErrors)
@@ -35,9 +35,9 @@ const useSelectionErrors = <TSelectable extends { id: string }>(
 const getSelectionErrors = <TSelectable extends { id: string }>(
   location: string,
   selection: Array<TSelectable>,
-  errors: Array<IMutationError>
+  errors: Array<MutationError>
 ) => {
-  const newErrors: Record<string, IMutationError> = {}
+  const newErrors: Record<string, MutationError> = {}
   const indexToId: Record<string, string> = {}
 
   selection.forEach((item, i) => {

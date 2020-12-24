@@ -1,12 +1,12 @@
 import React from "react"
-import { IAvatar } from "../../types"
+import { AvatarData } from "../../types"
 import blankAvatar from "./blank-avatar.png"
 
 interface AvatarProps {
   alt?: string
   size?: number
   user?: {
-    avatars: Array<IAvatar>
+    avatars: Array<AvatarData>
   } | null
 }
 
@@ -41,7 +41,7 @@ const Avatar: React.FC<AvatarProps> = ({ alt, size = 100, user = null }) => {
   )
 }
 
-const findAvatarSrc = (avatars: Array<IAvatar>, size: number): AvatarSrc => {
+const findAvatarSrc = (avatars: Array<AvatarData>, size: number): AvatarSrc => {
   let src = avatars[0].url
   let srcSet: string = src
 

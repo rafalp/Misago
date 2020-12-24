@@ -11,13 +11,13 @@ import EditorPreviewButton from "./EditorPreviewButton"
 import EditorTextarea from "./EditorTextarea"
 import EditorToolbar from "./EditorToolbar"
 
-interface IEditorProps {
+interface EditorProps {
   name?: string
   disabled?: boolean
   submit?: React.ReactNode
 }
 
-const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
+const Editor: React.FC<EditorProps> = ({ name, disabled, submit }) => {
   const context = useFieldContext()
   const hookContext = useFormContext()
   const [preview, setPreview] = React.useState<string | null>(null)

@@ -3,11 +3,11 @@ import { ModalBody } from "../../../../UI/Modal"
 import Timestamp from "../../../../UI/Timestamp"
 import { PostValidationError } from "../../../../UI/ValidationError"
 import RichText from "../../../../UI/RichText"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
 interface IThreadPostsModerationErrorPostsProps {
-  errors: Record<string, IMutationError>
+  errors: Record<string, MutationError>
   posts: Array<IPost>
 }
 

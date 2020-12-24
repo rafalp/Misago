@@ -5,14 +5,14 @@ import { Button } from "../UI/Button"
 import { Dropdown, DropdownButton, DropdownLink } from "../UI/Dropdown"
 import * as urls from "../urls"
 
-import { INavbarUserProp } from "./Navbar.types"
+import { User } from "./Navbar.types"
 
-interface IUserDropdownProps {
+interface NavbarUserDropdownProps {
   logout: () => void
-  user: INavbarUserProp
+  user: User
 }
 
-const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
+const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({ logout, user }) => (
   <Dropdown
     className="dropdown-menu-user"
     toggle={({ ref, toggle }) => (
@@ -41,4 +41,4 @@ const UserDropdown: React.FC<IUserDropdownProps> = ({ logout, user }) => (
   />
 )
 
-export default UserDropdown
+export default NavbarUserDropdown

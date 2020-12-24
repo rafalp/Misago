@@ -4,11 +4,11 @@ import EditorPreviewError from "./EditorPreviewError"
 import EditorPreviewLoader from "./EditorPreviewLoader"
 import useRichTextPreviewQuery from "./useRichTextPreviewQuery"
 
-interface IEditorPreviewProps {
+interface EditorPreviewProps {
   markup: string
 }
 
-const EditorPreview: React.FC<IEditorPreviewProps> = ({ markup }) => {
+const EditorPreview: React.FC<EditorPreviewProps> = ({ markup }) => {
   const { data, loading, error } = useRichTextPreviewQuery(markup)
 
   if (loading) return <EditorPreviewLoader />

@@ -22,7 +22,7 @@ const CATEGORIES_QUERY = gql`
   }
 `
 
-interface ICategoriesData {
+interface CategoriesData {
   categories: Array<Category>
 }
 
@@ -44,7 +44,7 @@ interface ChildCategory {
 }
 
 const useCategoriesQuery = () => {
-  return useQuery<ICategoriesData>(CATEGORIES_QUERY, {
+  return useQuery<CategoriesData>(CATEGORIES_QUERY, {
     pollInterval: POLL_INTERVAL,
   })
 }

@@ -5,10 +5,10 @@ import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
 import Input from "../../UI/Input"
 import { ModalFormBody, ModalFooter } from "../../UI/Modal"
 import { LinkValidationError } from "../../UI/ValidationError"
-import { IEditorContextValues } from "../EditorContext"
+import { EditorContextData } from "../EditorContext"
 
-interface IEditorControlLinkFormProps {
-  context: IEditorContextValues
+interface EditorControlLinkFormProps {
+  context: EditorContextData
   close: () => void
 }
 
@@ -17,7 +17,7 @@ interface FormValues {
   label: string
 }
 
-const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
+const EditorControlLinkForm: React.FC<EditorControlLinkFormProps> = ({
   context,
   close,
 }) => {

@@ -1,14 +1,14 @@
 import { t } from "@lingui/macro"
 import React from "react"
 import ValidationError from "./ValidationError"
-import { IValidationErrorProps } from "./ValidationError.types"
+import { ValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
   required: "value_error.missing",
   email: "value_error.email",
 }
 
-const EmailValidationError: React.FC<IValidationErrorProps> = ({
+const EmailValidationError: React.FC<ValidationErrorProps> = ({
   children,
   error,
   messages,

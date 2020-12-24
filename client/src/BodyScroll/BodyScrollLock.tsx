@@ -1,11 +1,11 @@
 import React from "react"
 import { useBodyScrollLockContext } from "../Context"
 
-interface IBodyScrollLockProps {
+interface BodyScrollLockProps {
   locked?: boolean
 }
 
-const BodyScrollLock: React.FC<IBodyScrollLockProps> = ({ locked }) => {
+const BodyScrollLock: React.FC<BodyScrollLockProps> = ({ locked }) => {
   const { increaseStack, decreaseStack } = useBodyScrollLockContext()
   React.useEffect(() => {
     if (locked) {

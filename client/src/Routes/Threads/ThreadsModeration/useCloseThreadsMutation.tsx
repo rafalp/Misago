@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import React from "react"
 import { useModalContext } from "../../../Context"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 import ThreadsModerationClose from "./ThreadsModerationClose"
 import ThreadsModerationOpen from "./ThreadsModerationOpen"
@@ -27,7 +27,7 @@ const CLOSE_THREADS = gql`
 
 interface ICloseThreadsMutationData {
   closeThreads: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     threads: Array<{
       id: string
       isClosed: boolean

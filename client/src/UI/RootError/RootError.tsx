@@ -1,7 +1,7 @@
 import { t } from "@lingui/macro"
 import React from "react"
 import { ApolloError } from "apollo-client"
-import { IMutationError } from "../../types"
+import { MutationError } from "../../types"
 import getNetworkErrorCode from "../getNetworkErrorCode"
 
 interface Error {
@@ -11,7 +11,7 @@ interface Error {
 
 interface RootErrorProps {
   children: (error: Error) => React.ReactElement
-  dataErrors?: Array<IMutationError> | null
+  dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
   plainError?: string | null
   locations?: Array<string> | null
@@ -34,7 +34,7 @@ const RootError: React.FC<RootErrorProps> = ({
     return children({ type: plainError, message: messages[plainError] })
   }
 
-  const errors: Array<IMutationError> = []
+  const errors: Array<MutationError> = []
   if (graphqlError) {
     const code = getNetworkErrorCode(graphqlError)
     if (code === 400 || !graphqlError.networkError) {

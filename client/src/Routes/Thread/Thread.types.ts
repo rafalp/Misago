@@ -1,4 +1,4 @@
-import { IAvatar, ICategoryBanner, RichText } from "../../types"
+import { AvatarData, ICategoryBanner, RichText } from "../../types"
 
 export interface IThread {
   id: string
@@ -32,7 +32,7 @@ export interface IThreadPoster {
   id: string
   name: string
   slug: string
-  avatars: Array<IAvatar>
+  avatars: Array<AvatarData>
 }
 
 export interface IThreadModeration {
@@ -61,7 +61,7 @@ export interface IPoster {
   id: string
   name: string
   slug: string
-  avatars: Array<IAvatar>
+  avatars: Array<AvatarData>
   extra: Record<string, any>
 }
 

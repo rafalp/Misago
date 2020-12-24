@@ -2,14 +2,14 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import ErrorMessage from "./ErrorMessage"
 
-interface IErrorProps {
+interface ErrorProps {
   className: string
   header?: React.ReactNode
   message?: React.ReactNode
   action?: React.ReactNode
 }
 
-const Error: React.FC<IErrorProps> = ({
+const Error: React.FC<ErrorProps> = ({
   action,
   className,
   header,

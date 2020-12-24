@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { IThread, IThreadCategory } from "../../Threads.types"
 
 const MOVE_THREADS = gql`
@@ -35,7 +35,7 @@ const MOVE_THREADS = gql`
 
 interface IMoveThreadsMutationData {
   moveThreads: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     threads: Array<{
       id: string
       category: IThreadCategory

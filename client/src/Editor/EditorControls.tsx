@@ -3,7 +3,7 @@ import classnames from "classnames"
 import React from "react"
 import { Dropdown } from "../UI/Dropdown"
 import EditorButton from "./EditorButton"
-import { EditorContextProvider, IEditorContextValues } from "./EditorContext"
+import { EditorContextData, EditorContextProvider } from "./EditorContext"
 import {
   EditorControl,
   EditorControlCode,
@@ -39,7 +39,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Bolder",
       }),
       icon: "fas fa-bold",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "**",
           suffix: "**",
@@ -60,7 +60,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Emphasize",
       }),
       icon: "fas fa-italic",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "*",
           suffix: "*",
@@ -81,7 +81,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Strikethrough",
       }),
       icon: "fas fa-strikethrough",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "~~",
           suffix: "~~",
@@ -102,7 +102,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Insert horizontal ruler",
       }),
       icon: "fas fa-minus",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "\n\n",
           suffix: "\n\n",
@@ -155,7 +155,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Quote",
       }),
       icon: "fas fa-quote-right",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "\n\n[quote]\n",
           suffix: "\n[/quote]\n\n",
@@ -176,7 +176,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         message: "Spoiler",
       }),
       icon: "far fa-eye-slash",
-      onClick: (context: IEditorContextValues) => {
+      onClick: (context: EditorContextData) => {
         context.replaceSelection({
           prefix: "\n\n[spoiler]\n",
           suffix: "\n[/spoiler]\n\n",

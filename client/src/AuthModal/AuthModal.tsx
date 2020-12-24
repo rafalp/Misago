@@ -2,12 +2,12 @@ import React from "react"
 import { useAuthModalContext } from "../Context"
 import { Modal } from "../UI/Modal"
 import portal from "../UI/portal"
-import { AuthModalMode, ISettings } from "../types"
+import { AuthModalMode, Settings } from "../types"
 import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"
 
 interface AuthModalProps {
-  settings?: ISettings | null
+  settings?: Settings | null
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ settings }) => {

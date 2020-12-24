@@ -1,7 +1,7 @@
 import { plural, t } from "@lingui/macro"
 import React from "react"
 import ValidationError from "./ValidationError"
-import { IValidationErrorProps } from "./ValidationError.types"
+import { ValidationErrorProps } from "./ValidationError.types"
 
 const ERROR_TYPES_MAP: Record<string, string> = {
   required: "value_error.missing",
@@ -9,7 +9,7 @@ const ERROR_TYPES_MAP: Record<string, string> = {
   max: "value_error.any_str.max_length",
 }
 
-const PasswordValidationError: React.FC<IValidationErrorProps> = ({
+const PasswordValidationError: React.FC<ValidationErrorProps> = ({
   children,
   error,
   messages,

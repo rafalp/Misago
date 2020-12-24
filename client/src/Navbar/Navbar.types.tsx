@@ -1,18 +1,18 @@
-import { IAvatar } from "../types"
+import { AvatarData } from "../types"
 
-export interface INavbarProps {
-  settings?: INavbarSettingsProp | null
-  user?: INavbarUserProp | null
+export interface NavbarProps {
+  settings?: Settings | null
+  user?: User | null
 }
 
-export interface INavbarSettingsProp {
+export interface Settings {
   forumName: string
   forumIndexThreads: boolean
 }
 
-export interface INavbarUserProp {
+export interface User {
   id: string
   name: string
   slug: string
-  avatars: Array<IAvatar>
+  avatars: Array<AvatarData>
 }

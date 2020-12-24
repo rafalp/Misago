@@ -1,12 +1,12 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
 interface ThreadsModerationErrorHeaderProps {
   forDelete?: boolean
   threads?: Array<ISelectedThread>
-  threadsErrors?: Record<string, IMutationError>
+  threadsErrors?: Record<string, MutationError>
 }
 
 const ThreadsModerationErrorHeader: React.FC<ThreadsModerationErrorHeaderProps> = ({

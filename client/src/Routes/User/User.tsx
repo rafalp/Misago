@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom"
 import WindowTitle from "../../UI/WindowTitle"
 import UserQuery from "./UserQuery"
 
-interface IUserParams {
+interface AuthUserParams {
   id: string
 }
 
 const User: React.FC = () => {
-  const { id } = useParams<IUserParams>()
+  const { id } = useParams<AuthUserParams>()
 
   return (
     <UserQuery id={id}>

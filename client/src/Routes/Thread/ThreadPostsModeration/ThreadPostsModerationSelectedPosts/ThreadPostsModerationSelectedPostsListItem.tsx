@@ -4,12 +4,12 @@ import { Checkbox } from "../../../../UI/Checkbox"
 import Timestamp from "../../../../UI/Timestamp"
 import { PostValidationError } from "../../../../UI/ValidationError"
 import RichText from "../../../../UI/RichText"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
 interface IThreadPostsModerationSelectedThreadListItemProps {
   disabled?: boolean
-  error?: IMutationError
+  error?: MutationError
   id?: string
   selected?: boolean
   post: IPost

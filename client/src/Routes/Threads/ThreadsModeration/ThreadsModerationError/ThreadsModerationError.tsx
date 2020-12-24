@@ -10,14 +10,14 @@ import {
 import RootError from "../../../../UI/RootError"
 import useRootError from "../../../../UI/useRootError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
-import { IMutationError } from "../../../../types"
+import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationErrorHeader from "./ThreadsModerationErrorHeader"
 import ThreadsModerationErrorThreads from "./ThreadsModerationErrorThreads"
 
 interface IThreadsModerationErrorProps {
   graphqlError?: ApolloError | null
-  errors?: Array<IMutationError> | null
+  errors?: Array<MutationError> | null
   forDelete?: boolean
   threads?: Array<ISelectedThread>
   close: () => void

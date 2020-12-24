@@ -1,14 +1,14 @@
 import React from "react"
 import Tribute from "tributejs"
-import { IUserSearchResult } from "./useSearchUsersQuery"
+import { UserSearchResult } from "./useSearchUsersQuery"
 import useSearchUsersQuery from "./useSearchUsersQuery"
 
-interface IEditorMentionsProps {
+interface EditorMentionsProps {
   children: React.ReactNode
-  mocks?: Array<IUserSearchResult>
+  mocks?: Array<UserSearchResult>
 }
 
-const EditorMentions: React.FC<IEditorMentionsProps> = ({
+const EditorMentions: React.FC<EditorMentionsProps> = ({
   children,
   mocks,
 }) => {
@@ -25,7 +25,7 @@ const EditorMentions: React.FC<IEditorMentionsProps> = ({
     const textarea = element.querySelector("textarea")
     if (!textarea) return
 
-    tribute.current = new Tribute<IUserSearchResult>({
+    tribute.current = new Tribute<UserSearchResult>({
       values: mocks
         ? mocks
         : (text, cb) => {

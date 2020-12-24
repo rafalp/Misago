@@ -17,29 +17,29 @@ const USER_QUERY = gql`
   }
 `
 
-interface IUserProfile {
+interface UserProfile {
   id: string
   slug: string
   name: string
 }
 
-interface IUserQueryData {
-  user: IUserProfile | null
+interface UserQueryData {
+  user: UserProfile | null
 }
 
-interface IUserQueryProps {
+interface UserQueryProps {
   id: string
-  children: (props: IUserQueryChildrenProps) => React.ReactElement
+  children: (props: UserQueryChildrenProps) => React.ReactElement
 }
 
-interface IUserQueryChildrenProps {
-  data: { user: IUserProfile }
+interface UserQueryChildrenProps {
+  data: { user: UserProfile }
   error: ApolloError | undefined
   loading: boolean
 }
 
-const UserQuery: React.FC<IUserQueryProps> = ({ children, id }) => {
-  const { data, error, loading } = useQuery<IUserQueryData>(USER_QUERY, {
+const UserQuery: React.FC<UserQueryProps> = ({ children, id }) => {
+  const { data, error, loading } = useQuery<UserQueryData>(USER_QUERY, {
     pollInterval: POLL_INTERVAL,
     variables: { id },
   })

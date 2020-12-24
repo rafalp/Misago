@@ -1,10 +1,10 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { INavbarProps } from "./Navbar.types"
+import { NavbarProps } from "./Navbar.types"
 import NavbarCollapse from "./NavbarCollapse"
 import NavbarNav from "./NavbarNav"
 
-const Navbar: React.FC<INavbarProps> = ({ settings, user }) => {
+const Navbar: React.FC<NavbarProps> = ({ settings, user }) => {
   if (!settings) return null
 
   return (

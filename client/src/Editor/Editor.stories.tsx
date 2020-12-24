@@ -21,17 +21,17 @@ export default {
   title: "Editor",
 }
 
-interface IContainerProps {
+interface ContainerProps {
   value?: string
 }
 
-interface IEditorFormValues {
+interface EditorFormValues {
   markup: string
 }
 
 const submit = action("submitted")
 
-const Container: React.FC<IContainerProps> = ({ children, value }) => {
+const Container: React.FC<ContainerProps> = ({ children, value }) => {
   const validators = Yup.object().shape({
     markup: Yup.string()
       .required("value_error.missing")
@@ -43,7 +43,7 @@ const Container: React.FC<IContainerProps> = ({ children, value }) => {
     <RootContainer>
       <Card>
         <CardHeader title="Editor example" />
-        <Form<IEditorFormValues>
+        <Form<EditorFormValues>
           defaultValues={{
             markup: value || "",
           }}

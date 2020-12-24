@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
 const SETUP_SITE = gql`
   mutation SetupSite($input: SetupSiteInput!) {
@@ -21,7 +21,7 @@ const SETUP_SITE = gql`
 
 interface SetupSiteMutationData {
   setupSite: {
-    errors: Array<IMutationError> | null
+    errors: Array<MutationError> | null
     user: { id: string; name: string } | null
     token: string | null
   }

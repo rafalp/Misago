@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IEditorTextareaProps {
+interface EditorTextareaProps {
   disabled?: boolean
   hidden?: boolean
   invalid?: boolean
@@ -9,7 +9,7 @@ interface IEditorTextareaProps {
   register?: (instance: HTMLTextAreaElement | undefined | null) => void
 }
 
-const EditorTextarea: React.FC<IEditorTextareaProps> = ({
+const EditorTextarea: React.FC<EditorTextareaProps> = ({
   disabled,
   hidden,
   invalid,

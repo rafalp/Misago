@@ -5,10 +5,10 @@ import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
 import Select from "../../UI/Select"
 import { ModalFormBody, ModalFooter } from "../../UI/Modal"
 import { ValidationError } from "../../UI/ValidationError"
-import { IEditorContextValues } from "../EditorContext"
+import { EditorContextData } from "../EditorContext"
 
-interface IEditorControlCodeFormProps {
-  context: IEditorContextValues
+interface EditorControlCodeFormProps {
+  context: EditorContextData
   close: () => void
 }
 
@@ -43,7 +43,7 @@ const AVAILABLE_SYNTAX = [
   "TypeScript",
 ]
 
-const EditorControlCodeForm: React.FC<IEditorControlCodeFormProps> = ({
+const EditorControlCodeForm: React.FC<EditorControlCodeFormProps> = ({
   context,
   close,
 }) => {

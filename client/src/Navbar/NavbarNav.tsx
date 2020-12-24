@@ -5,15 +5,15 @@ import { useAuthModalContext } from "../Context"
 import { Button } from "../UI/Button"
 import { useAuth } from "../auth"
 import * as urls from "../urls"
-import { INavbarSettingsProp, INavbarUserProp } from "./Navbar.types"
-import UserDropdown from "./NavbarUserDropdown"
+import { Settings, User } from "./Navbar.types"
+import NavbarUserDropdown from "./NavbarUserDropdown"
 
-interface INavbarNavProps {
-  settings: INavbarSettingsProp
-  user?: INavbarUserProp | null
+interface NavbarNavProps {
+  settings: Settings
+  user?: User | null
 }
 
-const NavbarNav: React.FC<INavbarNavProps> = ({ settings, user }) => {
+const NavbarNav: React.FC<NavbarNavProps> = ({ settings, user }) => {
   const { logout } = useAuth()
   const { openLoginModal, openRegisterModal } = useAuthModalContext()
 
@@ -41,7 +41,7 @@ const NavbarNav: React.FC<INavbarNavProps> = ({ settings, user }) => {
       </li>
       {user ? (
         <>
-          <UserDropdown logout={logout} user={user} />
+          <NavbarUserDropdown logout={logout} user={user} />
           <li className="nav-item d-sm-none">
             <Button
               className="btn-logout"

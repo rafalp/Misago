@@ -2,7 +2,7 @@ import { t } from "@lingui/macro"
 import classnames from "classnames"
 import React from "react"
 
-interface IToastProps {
+interface ToastProps {
   text: React.ReactNode
   show?: boolean
   remove: () => void
@@ -17,7 +17,7 @@ enum ToastState {
 const TOAST_LIFETIME = 7000
 const TOAST_REMOVE_DELAY = 300
 
-const Toast: React.FC<IToastProps> = ({ show, text, remove }) => {
+const Toast: React.FC<ToastProps> = ({ show, text, remove }) => {
   const [state, setState] = React.useState<ToastState>(
     show ? ToastState.SHOW : ToastState.NEW
   )

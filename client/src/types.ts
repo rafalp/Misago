@@ -1,15 +1,16 @@
-export interface IMutationError {
+// Frequently used types and types for data loaded on app's start
+export type MutationError = {
   location: Array<string>
   message: string
   type: string
 }
 
-export interface IAvatar {
+export type AvatarData = {
   size: number
   url: string
 }
 
-export interface IUser {
+export interface AuthUser {
   id: string
   name: string
   slug: string
@@ -17,7 +18,7 @@ export interface IUser {
   isModerator: boolean
   isAdministrator: boolean
   joinedAt: string
-  avatars: Array<IAvatar>
+  avatars: Array<AvatarData>
   extra: any
 }
 
@@ -43,7 +44,7 @@ export interface ICategoryBanner {
   url: string
 }
 
-export interface ISettings {
+export type Settings = {
   bulkActionLimit: number
   enableSiteWizard: boolean
   forumIndexHeader: string
@@ -59,7 +60,7 @@ export interface ISettings {
   usernameMaxLength: number
 }
 
-export interface IForumStats {
+export interface ForumStats {
   id: string
   threads: number
   posts: number

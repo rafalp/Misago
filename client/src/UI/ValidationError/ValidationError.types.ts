@@ -1,13 +1,13 @@
 import React from "react"
 
-export interface IValidationError {
+type Error = {
   message: React.ReactNode
   type: string
 }
 
-export interface IValidationErrorProps {
-  children: (error: IValidationError) => React.ReactElement
-  error?: IValidationError | null
+export interface ValidationErrorProps {
+  children: (error: Error) => React.ReactElement
+  error?: Error | null
   value?: number
   max?: number
   min?: number

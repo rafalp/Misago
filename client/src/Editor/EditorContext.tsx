@@ -1,23 +1,23 @@
 import React from "react"
 import replaceSelection from "./replaceSelection"
 
-export interface IEditorContextValues {
+export interface EditorContextData {
   disabled: boolean
   textarea: HTMLTextAreaElement | null
   getSelection: () => string
   getValue: () => string
-  replaceSelection: (options: IReplaceSelectionOptions) => void
+  replaceSelection: (options: ReplaceSelectionOptions) => void
 }
 
-export const EditorContext = React.createContext<IEditorContextValues>({
+export const EditorContext = React.createContext<EditorContextData>({
   disabled: true,
   textarea: null,
   getSelection: () => "",
   getValue: () => "",
-  replaceSelection: (options: IReplaceSelectionOptions) => {},
+  replaceSelection: (options: ReplaceSelectionOptions) => {},
 })
 
-interface IReplaceSelectionOptions {
+interface ReplaceSelectionOptions {
   replace?: string
   default?: string
   prefix?: string
@@ -27,14 +27,14 @@ interface IReplaceSelectionOptions {
   rstrip?: RegExp
 }
 
-interface IEditorContextProviderProps {
+interface EditorContextProviderProps {
   disabled: boolean
   textarea: HTMLTextAreaElement | null
   children: React.ReactNode
   setValue: (value: string) => void
 }
 
-export const EditorContextProvider: React.FC<IEditorContextProviderProps> = ({
+export const EditorContextProvider: React.FC<EditorContextProviderProps> = ({
   children,
   disabled,
   textarea,
@@ -53,7 +53,7 @@ export const EditorContextProvider: React.FC<IEditorContextProviderProps> = ({
   }, [textarea])
 
   const replaceSelectionMemo = React.useCallback(
-    (options: IReplaceSelectionOptions) => {
+    (options: ReplaceSelectionOptions) => {
       if (!textarea) return
 
       const { selection, value } = replaceSelection({ textarea, ...options })

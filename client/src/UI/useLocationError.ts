@@ -1,9 +1,9 @@
 import React from "react"
-import { IMutationError } from "../types"
+import { MutationError } from "../types"
 
 const useLocationError = (
   location: string,
-  errors?: Array<IMutationError> | null
+  errors?: Array<MutationError> | null
 ) => {
   return React.useMemo(() => {
     for (const error of errors || []) {

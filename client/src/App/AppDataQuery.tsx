@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/react-hooks"
 import { ApolloError } from "apollo-client"
 import gql from "graphql-tag"
 import React from "react"
-import { ICategory, IForumStats, ISettings, IUser } from "../types"
+import { AuthUser, ForumStats, ICategory, Settings } from "../types"
 import AppError from "./AppError"
 import AppLoader from "./AppLoader"
 
@@ -77,10 +77,10 @@ const INITIAL_DATA_QUERY = gql`
 `
 
 interface InitialData {
-  auth: IUser | null
+  auth: AuthUser | null
   categories: Array<ICategory>
-  settings: ISettings | null
-  forumStats: IForumStats | null
+  settings: Settings | null
+  forumStats: ForumStats | null
 }
 
 interface AppDataProps {

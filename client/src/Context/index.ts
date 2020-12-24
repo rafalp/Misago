@@ -1,5 +1,5 @@
 import React from "react"
-import { IForumStats, ISettings, IUser } from "../types"
+import { AuthUser, ForumStats, Settings } from "../types"
 import {
   AuthModalContext,
   AuthModalProvider,
@@ -27,9 +27,9 @@ import {
   useToastsContext,
 } from "./ToastsContext"
 
-const AuthContext = React.createContext<IUser | null>(null)
-const ForumStatsContext = React.createContext<IForumStats | null>(null)
-const SettingsContext = React.createContext<ISettings | null>(null)
+const AuthContext = React.createContext<AuthUser | null>(null)
+const ForumStatsContext = React.createContext<ForumStats | null>(null)
+const SettingsContext = React.createContext<Settings | null>(null)
 
 const useAuthContext = () => React.useContext(AuthContext)
 const useForumStatsContext = () => React.useContext(ForumStatsContext)

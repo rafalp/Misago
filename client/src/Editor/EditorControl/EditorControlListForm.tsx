@@ -5,11 +5,11 @@ import { Field, FieldError, Form, FormFooter } from "../../UI/Form"
 import { ModalFormBody, ModalFooter } from "../../UI/Modal"
 import Select from "../../UI/Select"
 import { ValidationError } from "../../UI/ValidationError"
-import { IEditorContextValues } from "../EditorContext"
+import { EditorContextData } from "../EditorContext"
 import EditorControlListInput from "./EditorControlListInput"
 
-interface IEditorControlListFormProps {
-  context: IEditorContextValues
+interface EditorControlListFormProps {
+  context: EditorContextData
   close: () => void
 }
 
@@ -18,7 +18,7 @@ interface FormValues {
   type: string
 }
 
-const EditorControlListForm: React.FC<IEditorControlListFormProps> = ({
+const EditorControlListForm: React.FC<EditorControlListFormProps> = ({
   context,
   close,
 }) => {

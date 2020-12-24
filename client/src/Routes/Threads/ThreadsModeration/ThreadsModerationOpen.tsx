@@ -3,14 +3,14 @@ import { ApolloError } from "apollo-client"
 import React from "react"
 import { useModalContext } from "../../../Context"
 import { Modal, ModalDialog } from "../../../UI/Modal"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 import ThreadsModerationError from "./ThreadsModerationError"
 
 interface IThreadsModerationOpenProps {
   threads: Array<IThread>
   graphqlError?: ApolloError | null
-  errors?: Array<IMutationError> | null
+  errors?: Array<MutationError> | null
 }
 
 const ThreadsModerationOpen: React.FC<IThreadsModerationOpenProps> = ({

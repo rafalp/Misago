@@ -1,9 +1,9 @@
 import React from "react"
-import { IUser } from "../../types"
+import { AuthUser } from "../../types"
 import { ICategoryChoice } from "./PostThread.types"
 
 const useValidCategories = (
-  user: IUser | null,
+  user: AuthUser | null,
   choices: Array<ICategoryChoice>
 ) => {
   const isModerator = user ? user.isModerator : false

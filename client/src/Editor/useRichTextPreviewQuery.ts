@@ -8,12 +8,12 @@ export const RICH_TEXT_PREVIEW_QUERY = gql`
   }
 `
 
-interface IRichTextPreviewQueryData {
+interface RichTextPreviewQueryData {
   richText: RichText
 }
 
 const useRichTextPreviewQuery = (markup: string) => {
-  return useQuery<IRichTextPreviewQueryData>(RICH_TEXT_PREVIEW_QUERY, {
+  return useQuery<RichTextPreviewQueryData>(RICH_TEXT_PREVIEW_QUERY, {
     fetchPolicy: "network-only",
     variables: { markup },
   })

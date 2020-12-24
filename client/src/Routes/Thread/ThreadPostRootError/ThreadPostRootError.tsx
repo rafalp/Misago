@@ -7,7 +7,7 @@ import {
 } from "../../../UI/ValidationError"
 import useLocationError from "../../../UI/useLocationError"
 import useRootError from "../../../UI/useRootError"
-import { IMutationError } from "../../../types"
+import { MutationError } from "../../../types"
 
 interface IRootError {
   message: React.ReactNode
@@ -16,7 +16,7 @@ interface IRootError {
 
 interface IThreadPostRootErrorProps {
   children: (error: IRootError) => React.ReactElement
-  dataErrors?: Array<IMutationError> | null
+  dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
 }
 

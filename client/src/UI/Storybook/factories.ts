@@ -1,4 +1,4 @@
-import { IAvatar, ISettings, IUser } from "../../types"
+import { AvatarData, Settings, AuthUser } from "../../types"
 
 const defaultSettings = {
   bulkActionLimit: 30,
@@ -16,14 +16,14 @@ const defaultSettings = {
   usernameMaxLength: 10,
 }
 
-export const settingsFactory = (overrides = {}): ISettings => {
+export const settingsFactory = (overrides = {}): Settings => {
   return Object.assign({}, defaultSettings, overrides)
 }
 
 const avatarSizes: Array<number> = [400, 200, 150, 100, 64, 50, 30]
 
-export const avatarFactory = (): Array<IAvatar> => {
-  let avatars: Array<IAvatar> = []
+export const avatarFactory = (): Array<AvatarData> => {
+  let avatars: Array<AvatarData> = []
   avatarSizes.forEach((size) => {
     avatars.push({
       size,
@@ -45,7 +45,7 @@ const defaultUser = {
   extra: {},
 }
 
-export const userFactory = (overrides = {}): IUser => {
+export const userFactory = (overrides = {}): AuthUser => {
   return Object.assign(
     {},
     defaultUser,
