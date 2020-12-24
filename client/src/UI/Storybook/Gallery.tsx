@@ -1,13 +1,13 @@
 import React from "react"
 
-interface IGalleryProps {
+interface GalleryProps {
   items: Array<{
     name: string
     component: React.ReactElement
   }>
 }
 
-const Gallery: React.FC<IGalleryProps> = ({ items }) => (
+const Gallery: React.FC<GalleryProps> = ({ items }) => (
   <div className="row m-0 p-1">
     {items.map(({ name, component }, i) => (
       <div className="col-3 p-3" key={i}>

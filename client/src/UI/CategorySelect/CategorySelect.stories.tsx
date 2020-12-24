@@ -8,13 +8,13 @@ export default {
   title: "UI/CategorySelect",
 }
 
-interface IFormValues {
+interface FormValues {
   category?: string
 }
 
 export const CategorySelectInput = () => (
   <CategoriesContext.Provider value={categories}>
-    <Form<IFormValues> id="category_select_field" onSubmit={() => {}}>
+    <Form<FormValues> id="category_select_field" onSubmit={() => {}}>
       <CardContainer>
         <Field
           label="Select category"

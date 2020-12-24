@@ -12,7 +12,7 @@ interface IEditorControlImageFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   link: string
   label: string
 }
@@ -27,7 +27,7 @@ const EditorControlImageForm: React.FC<IEditorControlImageFormProps> = ({
   })
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="editor_image_form"
       defaultValues={{ link: "", label: "" }}
       validators={validators}

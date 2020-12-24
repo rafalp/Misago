@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ICardContainerProps {
+interface CardContainerProps {
   children: React.ReactNode
   center?: boolean
   nopadding?: boolean
 }
 
-const CardContainer: React.FC<ICardContainerProps> = ({
+const CardContainer: React.FC<CardContainerProps> = ({
   children,
   center,
   nopadding,

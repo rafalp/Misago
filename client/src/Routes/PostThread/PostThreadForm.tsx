@@ -37,20 +37,20 @@ import useThreadDraft from "./useThreadDraft"
 
 const Editor = React.lazy(() => import("../../Editor"))
 
-interface IPostThreadFormProps {
+interface PostThreadFormProps {
   category?: string
   categories: Array<ICategoryChoice>
   validCategories: Array<string>
 }
 
-interface IPostThreadFormValues {
+interface PostThreadFormValues {
   category: string
   title: string
   markup: string
   isClosed: boolean
 }
 
-const PostThreadForm: React.FC<IPostThreadFormProps> = ({
+const PostThreadForm: React.FC<PostThreadFormProps> = ({
   category,
   categories,
   validCategories,
@@ -89,7 +89,7 @@ const PostThreadForm: React.FC<IPostThreadFormProps> = ({
   return (
     <Card>
       <CardHeader title={<Trans id="posting.form">Post a new thread</Trans>} />
-      <Form<IPostThreadFormValues>
+      <Form<PostThreadFormValues>
         defaultValues={{
           category: category || draft.category || "",
           title: draft.title || "",

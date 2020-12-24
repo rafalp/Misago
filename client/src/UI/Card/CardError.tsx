@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ICardErrorProps {
+interface CardErrorProps {
   className?: string | null
   header: React.ReactNode
   message?: React.ReactNode
 }
 
-const CardError: React.FC<ICardErrorProps> = ({
+const CardError: React.FC<CardErrorProps> = ({
   className,
   header,
   message,

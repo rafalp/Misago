@@ -3,7 +3,7 @@ import React from "react"
 import { ButtonPrimary, ButtonDanger, ButtonSecondary } from "../Button"
 import Spinner from "../Spinner"
 
-interface IFormFooterProps {
+interface FormFooterProps {
   children?: React.ReactNode
   danger?: boolean
   submitText?: React.ReactNode
@@ -12,7 +12,7 @@ interface IFormFooterProps {
   onCancel?: () => void
 }
 
-const FormFooter: React.FC<IFormFooterProps> = ({
+const FormFooter: React.FC<FormFooterProps> = ({
   children,
   danger,
   submitText,

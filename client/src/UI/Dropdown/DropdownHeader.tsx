@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IDropdownHeaderProps {
+interface DropdownHeaderProps {
   text: React.ReactNode
 }
 
-const DropdownHeader: React.FC<IDropdownHeaderProps> = ({ text }) => (
+const DropdownHeader: React.FC<DropdownHeaderProps> = ({ text }) => (
   <h6 className="dropdown-header">{text}</h6>
 )
 

@@ -2,7 +2,7 @@ import React from "react"
 import { IAvatar } from "../../types"
 import blankAvatar from "./blank-avatar.png"
 
-interface IAvatarProps {
+interface AvatarProps {
   alt?: string
   size?: number
   user?: {
@@ -10,12 +10,12 @@ interface IAvatarProps {
   } | null
 }
 
-interface IAvatarSrc {
+interface AvatarSrc {
   src: string
   srcSet?: string
 }
 
-const Avatar: React.FC<IAvatarProps> = ({ alt, size = 100, user = null }) => {
+const Avatar: React.FC<AvatarProps> = ({ alt, size = 100, user = null }) => {
   if (!user) {
     return (
       <img
@@ -41,7 +41,7 @@ const Avatar: React.FC<IAvatarProps> = ({ alt, size = 100, user = null }) => {
   )
 }
 
-const findAvatarSrc = (avatars: Array<IAvatar>, size: number): IAvatarSrc => {
+const findAvatarSrc = (avatars: Array<IAvatar>, size: number): AvatarSrc => {
   let src = avatars[0].url
   let srcSet: string = src
 

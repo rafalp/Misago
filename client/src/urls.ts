@@ -1,33 +1,33 @@
 export const index = () => "/"
 
-interface ISluggable {
+interface Sluggable {
   id: string
   slug: string
 }
 
-interface IThreadParams extends ISluggable {
+interface ThreadParams extends Sluggable {
   page?: number
 }
 
 export const categories = () => `/categories/`
-export const category = (category: ISluggable) => {
+export const category = (category: Sluggable) => {
   return `/c/${category.slug}/${category.id}/`
 }
-export const postThread = (category?: ISluggable | null) => {
+export const postThread = (category?: Sluggable | null) => {
   if (category) return `/c/${category.slug}/${category.id}/post-thread/`
   return `/post-thread/`
 }
 export const threads = () => `/threads/`
-export const thread = (thread: IThreadParams) => {
+export const thread = (thread: ThreadParams) => {
   if (thread.page && thread.page > 1) {
     return `/t/${thread.slug}/${thread.id}/${thread.page}/`
   }
   return `/t/${thread.slug}/${thread.id}/`
 }
-export const threadLastPost = (thread: ISluggable) => {
+export const threadLastPost = (thread: Sluggable) => {
   return `/t/${thread.slug}/${thread.id}/last/`
 }
-export const threadPost = (thread: ISluggable, post: { id: string }) => {
+export const threadPost = (thread: Sluggable, post: { id: string }) => {
   return `/t/${thread.slug}/${thread.id}/post/${post.id}/`
 }
-export const user = (user: ISluggable) => `/u/${user.slug}/${user.id}/`
+export const user = (user: Sluggable) => `/u/${user.slug}/${user.id}/`

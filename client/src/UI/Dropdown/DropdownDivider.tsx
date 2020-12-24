@@ -1,11 +1,11 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IDropdownDividerProps {
+interface DropdownDividerProps {
   className?: string | null
 }
 
-const DropdownDivider: React.FC<IDropdownDividerProps> = ({ className }) => (
+const DropdownDivider: React.FC<DropdownDividerProps> = ({ className }) => (
   <div className={classnames("dropdown-divider", className)} />
 )
 

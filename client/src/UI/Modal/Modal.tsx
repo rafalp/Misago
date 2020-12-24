@@ -3,14 +3,14 @@ import React from "react"
 import ModalBacktrop from "./ModalBacktrop"
 import useTransition from "./useTransition"
 
-interface IModalProps {
+interface ModalProps {
   children: React.ReactNode
   isOpen: boolean
   resistant?: boolean
   close: () => void
 }
 
-const Modal: React.FC<IModalProps> = ({
+const Modal: React.FC<ModalProps> = ({
   children,
   isOpen,
   resistant = false,

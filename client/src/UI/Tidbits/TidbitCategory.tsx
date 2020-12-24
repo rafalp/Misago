@@ -4,7 +4,7 @@ import React from "react"
 import * as urls from "../../urls"
 import TidbitItem from "./TidbitItem"
 
-interface ITidbitCategoryProps {
+interface TidbitCategoryProps {
   category: {
     id: string
     slug: string
@@ -15,7 +15,7 @@ interface ITidbitCategoryProps {
   parent?: boolean
 }
 
-const TidbitCategory: React.FC<ITidbitCategoryProps> = ({
+const TidbitCategory: React.FC<TidbitCategoryProps> = ({
   category,
   disabled,
   parent,
@@ -35,7 +35,7 @@ const TidbitCategory: React.FC<ITidbitCategoryProps> = ({
   </TidbitItem>
 )
 
-interface ITidbitCategoryContentProps {
+interface TidbitCategoryContentProps {
   category: {
     id: string
     slug: string
@@ -44,7 +44,7 @@ interface ITidbitCategoryContentProps {
   }
 }
 
-const TidbitCategoryContent: React.FC<ITidbitCategoryContentProps> = ({
+const TidbitCategoryContent: React.FC<TidbitCategoryContentProps> = ({
   category,
 }) => (
   <>

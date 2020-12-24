@@ -30,7 +30,7 @@ export const Static = () => (
   </ToastsContainer>
 )
 
-interface IFormValues {
+interface FormValues {
   text: string
 }
 
@@ -40,7 +40,7 @@ export const Dynamic = () => (
     <RootContainer>
       <ToastsContext.Consumer>
         {({ showToast }) => (
-          <Form<IFormValues>
+          <Form<FormValues>
             id="toasts_test_form"
             defaultValues={{ text: "Hello world!" }}
             onSubmit={({ data: { text } }) => {

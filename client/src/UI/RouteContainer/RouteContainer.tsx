@@ -1,12 +1,12 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IRouteContainerProps {
+interface RouteContainerProps {
   children: React.ReactNode
   className?: string | null
 }
 
-const RouteContainer: React.FC<IRouteContainerProps> = ({
+const RouteContainer: React.FC<RouteContainerProps> = ({
   children,
   className,
 }) => (

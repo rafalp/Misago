@@ -5,7 +5,7 @@ import { IAvatar } from "../../types"
 import Avatar from "../Avatar"
 import TidbitItem from "./TidbitItem"
 
-interface ITidbitAvatarProps {
+interface TidbitAvatarProps {
   user?: {
     id: string
     slug: string
@@ -17,7 +17,7 @@ interface ITidbitAvatarProps {
 
 const DEFAULT_SIZE = 24
 
-const TidbitAvatar: React.FC<ITidbitAvatarProps> = ({ user, size }) => (
+const TidbitAvatar: React.FC<TidbitAvatarProps> = ({ user, size }) => (
   <TidbitItem className="tidbit-avatar">
     {user ? (
       <Link to={urls.user(user)}>

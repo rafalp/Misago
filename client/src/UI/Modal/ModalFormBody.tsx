@@ -1,12 +1,12 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IModalFormBodyProps {
+interface ModalFormBodyProps {
   className?: string
   children: React.ReactNode
 }
 
-const ModalFormBody: React.FC<IModalFormBodyProps> = ({
+const ModalFormBody: React.FC<ModalFormBodyProps> = ({
   children,
   className,
 }) => (

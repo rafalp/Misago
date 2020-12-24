@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ICardHeaderProps {
+interface CardHeaderProps {
   title: React.ReactNode
 }
 
-const CardHeader: React.FC<ICardHeaderProps> = ({ title }) => (
+const CardHeader: React.FC<CardHeaderProps> = ({ title }) => (
   <h5 className="card-header">{title}</h5>
 )
 

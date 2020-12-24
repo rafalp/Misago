@@ -3,12 +3,12 @@ import React from "react"
 import { ButtonPrimary } from "../Button"
 import ModalFooter from "./ModalFooter"
 
-interface IModalFooterProps {
+interface ModalFooterProps {
   className?: string
   close: () => void
 }
 
-const ModalCloseFooter: React.FC<IModalFooterProps> = ({
+const ModalCloseFooter: React.FC<ModalFooterProps> = ({
   className,
   close,
 }) => (

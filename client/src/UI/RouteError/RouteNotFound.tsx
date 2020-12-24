@@ -4,13 +4,13 @@ import { NotFoundError } from "../Error"
 import RouteContainer from "../RouteContainer"
 import WindowTitle from "../WindowTitle"
 
-interface IRouteNotFoundProps {
+interface RouteNotFoundProps {
   className?: string | null
   header?: React.ReactNode
   message?: React.ReactNode
 }
 
-const RouteNotFound: React.FC<IRouteNotFoundProps> = ({
+const RouteNotFound: React.FC<RouteNotFoundProps> = ({
   className,
   header,
   message,

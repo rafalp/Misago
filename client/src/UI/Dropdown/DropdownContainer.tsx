@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IDropdownContainerProps {
+interface DropdownContainerProps {
   children: React.ReactNode
 }
 
-const DropdownContainer: React.FC<IDropdownContainerProps> = ({
+const DropdownContainer: React.FC<DropdownContainerProps> = ({
   children,
 }) => <div className="dropdown-container">{children}</div>
 

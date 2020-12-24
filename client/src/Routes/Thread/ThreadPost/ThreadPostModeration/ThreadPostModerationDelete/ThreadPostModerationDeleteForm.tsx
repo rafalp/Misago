@@ -18,7 +18,7 @@ interface IThreadPostModerationDeleteFormProps {
   close: () => void
 }
 
-interface IFormValues {}
+interface FormValues {}
 
 const ThreadPostModerationDeleteForm: React.FC<IThreadPostModerationDeleteFormProps> = ({
   threadId,
@@ -44,7 +44,7 @@ const ThreadPostModerationDeleteForm: React.FC<IThreadPostModerationDeleteFormPr
   }
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="delete_post_form"
       disabled={loading}
       onSubmit={async () => {

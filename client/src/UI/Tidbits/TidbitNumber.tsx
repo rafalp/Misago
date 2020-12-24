@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ITidbitNumberProps {
+interface TidbitNumberProps {
   children: React.ReactNode
 }
 
-const TidbitNumber: React.FC<ITidbitNumberProps> = ({ children }) => (
+const TidbitNumber: React.FC<TidbitNumberProps> = ({ children }) => (
   <span className="tidbit-number">{children}</span>
 )
 

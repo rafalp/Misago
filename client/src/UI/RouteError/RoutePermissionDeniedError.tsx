@@ -4,14 +4,14 @@ import { Error } from "../Error"
 import RouteContainer from "../RouteContainer"
 import WindowTitle from "../WindowTitle"
 
-interface IRoutePermissionDeniedErrorProps {
+interface RoutePermissionDeniedErrorProps {
   className?: string | null
   header?: React.ReactNode
   message?: React.ReactNode
   action?: React.ReactNode
 }
 
-const RoutePermissionDeniedError: React.FC<IRoutePermissionDeniedErrorProps> = ({
+const RoutePermissionDeniedError: React.FC<RoutePermissionDeniedErrorProps> = ({
   className,
   header,
   message,

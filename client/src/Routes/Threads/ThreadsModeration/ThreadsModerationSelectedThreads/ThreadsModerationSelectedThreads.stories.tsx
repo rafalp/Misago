@@ -9,7 +9,7 @@ export default {
   title: "Route/Threads/Moderation/SelectedThreads",
 }
 
-interface IFormValues {
+interface FormValues {
   threads: Array<ISelectedThread>
 }
 
@@ -28,7 +28,7 @@ export const SingleThread = () => {
   ]
 
   return (
-    <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
+    <Form<FormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation" footer>
         <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
       </ModalFormContainer>
@@ -55,7 +55,7 @@ export const FewThreads = () => {
   ]
 
   return (
-    <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
+    <Form<FormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation" footer>
         <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
       </ModalFormContainer>
@@ -90,7 +90,7 @@ export const ManyThreads = () => {
   ]
 
   return (
-    <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
+    <Form<FormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation" footer>
         <ThreadsModerationSelectedThreads max={10} min={1} threads={threads} />
       </ModalFormContainer>
@@ -125,7 +125,7 @@ export const WithThreadError = () => {
   }
 
   return (
-    <Form<IFormValues> id="threads-select-test" onSubmit={submit}>
+    <Form<FormValues> id="threads-select-test" onSubmit={submit}>
       <ModalFormContainer title="Threads moderation" footer>
         <ThreadsModerationSelectedThreads
           errors={errors}

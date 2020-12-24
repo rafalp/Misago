@@ -1,11 +1,11 @@
 import React from "react"
 import { RouteError } from "../RouteError"
 
-interface IRouteErrorBoundaryProps {
+interface RouteErrorBoundaryProps {
   children: React.ReactNode
 }
 
-class RouteErrorBoundary extends React.Component<IRouteErrorBoundaryProps> {
+class RouteErrorBoundary extends React.Component<RouteErrorBoundaryProps> {
   state = { hasError: false }
 
   static getDerivedStateFromError() {

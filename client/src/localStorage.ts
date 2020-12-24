@@ -22,13 +22,13 @@ const removeItem = (key: string) => {
   window.localStorage.removeItem(prefix + key)
 }
 
-interface IStorageEventData {
+interface StorageEventData {
   newValue: string | null
   oldValue: string | null
 }
 
-const useStorageEvent = (key: string): IStorageEventData | undefined => {
-  const [state, updateState] = React.useState<IStorageEventData | undefined>(
+const useStorageEvent = (key: string): StorageEventData | undefined => {
+  const [state, updateState] = React.useState<StorageEventData | undefined>(
     undefined
   )
   React.useEffect(() => {

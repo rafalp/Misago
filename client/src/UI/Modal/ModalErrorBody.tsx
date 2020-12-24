@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IModalErrorBodyProps {
+interface ModalErrorBodyProps {
   className?: string | null
   header: React.ReactNode
   message?: React.ReactNode
 }
 
-const ModalErrorBody: React.FC<IModalErrorBodyProps> = ({
+const ModalErrorBody: React.FC<ModalErrorBodyProps> = ({
   className,
   header,
   message,

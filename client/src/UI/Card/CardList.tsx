@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ICardListProps {
+interface CardListProps {
   children: React.ReactNode
 }
 
-const CardList: React.FC<ICardListProps> = ({ children }) => (
+const CardList: React.FC<CardListProps> = ({ children }) => (
   <ul className="list-group list-group-flush">{children}</ul>
 )
 

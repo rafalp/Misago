@@ -5,27 +5,27 @@ import { useStorageEvent } from "../localStorage"
 import AuthChangedLoggedInAlert from "./AuthChangedLoggedInAlert"
 import AuthChangedLoggedOutAlert from "./AuthChangedLoggedOutAlert"
 
-interface IUser {
+interface User {
   id: string
   name: string
 }
 
-interface IUserUpdate {
-  newValue: IUser | null
-  oldValue: IUser | null
+interface UserUpdate {
+  newValue: User | null
+  oldValue: User | null
 }
 
-interface IAuthChangedAlertProps {
-  user: IUser | null
+interface AuthChangedAlertProps {
+  user: User | null
 }
 
-const AuthChangedAlert: React.FC<IAuthChangedAlertProps> = ({ user }) => {
+const AuthChangedAlert: React.FC<AuthChangedAlertProps> = ({ user }) => {
   const client = useApolloClient()
 
   const [initialUser, setInitialUser] = React.useState(user)
 
   const userUpdateJson = useStorageEvent(AUTH_USER)
-  const [userUpdate, setUserUpdate] = React.useState<IUserUpdate | undefined>(
+  const [userUpdate, setUserUpdate] = React.useState<UserUpdate | undefined>(
     undefined
   )
 
@@ -71,7 +71,7 @@ const AuthChangedAlert: React.FC<IAuthChangedAlertProps> = ({ user }) => {
   return null
 }
 
-const parseUserJSON = (data: string | null): IUser | null => {
+const parseUserJSON = (data: string | null): User | null => {
   if (!data) return null
   try {
     const parsedData = JSON.parse(data)

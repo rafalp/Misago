@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ITidbitItemProps {
+interface TidbitItemProps {
   className?: string | null
   children?: React.ReactNode
   title?: string
 }
 
-const TidbitItem: React.FC<ITidbitItemProps> = ({
+const TidbitItem: React.FC<TidbitItemProps> = ({
   className,
   children,
   title,

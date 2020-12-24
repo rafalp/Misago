@@ -14,7 +14,7 @@ export default {
   decorators: [withKnobs],
 }
 
-interface IFormValues {
+interface FormValues {
   name: string
   email: string
   color: string
@@ -28,7 +28,7 @@ export const FormField = () => {
   const required = boolean("Required", false)
 
   const field = (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="test_form"
       defaultValues={{
         name: "User",

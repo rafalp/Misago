@@ -12,7 +12,7 @@ interface IEditorControlLinkFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   link: string
   label: string
 }
@@ -27,7 +27,7 @@ const EditorControlLinkForm: React.FC<IEditorControlLinkFormProps> = ({
   })
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="editor_link_form"
       defaultValues={{ link: "", label: "" }}
       validators={validators}

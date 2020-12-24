@@ -4,7 +4,7 @@ const INTERVAL = 2000
 const INTERVAL_DESKTOP = 1000
 const BREAKPOINT = 768
 
-interface IViewportEventProps {
+interface ViewportEventProps {
   children?: React.ReactNode
   className?: string
   desktopOnly?: boolean
@@ -13,7 +13,7 @@ interface IViewportEventProps {
   onEnter?: () => void
 }
 
-const ViewportEvent: React.FC<IViewportEventProps> = ({
+const ViewportEvent: React.FC<ViewportEventProps> = ({
   children,
   className,
   desktopOnly,

@@ -3,14 +3,14 @@ import classnames from "classnames"
 import React from "react"
 import ModalTitle from "./ModalTitle"
 
-interface IModalHeaderProps {
+interface ModalHeaderProps {
   children?: React.ReactNode
   className?: string
   title?: React.ReactNode
   close?: () => void
 }
 
-const ModalHeader: React.FC<IModalHeaderProps> = ({
+const ModalHeader: React.FC<ModalHeaderProps> = ({
   children,
   className,
   close,

@@ -18,7 +18,7 @@ interface IOnSubmit<FormValues extends FieldValues = FieldValues> {
   setError(name: FieldName<FieldValues>, error: ErrorOption): void
 }
 
-interface IFormProps<FormValues> {
+interface FormProps<FormValues> {
   children?: React.ReactNode
   className?: string
   defaultValues?: UnpackNestedValue<DeepPartial<FormValues>>
@@ -33,7 +33,7 @@ const Form = <
   FormValues extends FieldValues = FieldValues,
   ValidationContext extends object = object
 >(
-  props: IFormProps<FormValues>
+  props: FormProps<FormValues>
 ): JSX.Element => {
   const {
     children,

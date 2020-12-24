@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ICardBannerProps {
+interface CardBannerProps {
   align: string
   background: string
   className?: string | null
@@ -11,7 +11,7 @@ interface ICardBannerProps {
   desktop?: boolean
 }
 
-const CardBanner: React.FC<ICardBannerProps> = ({
+const CardBanner: React.FC<CardBannerProps> = ({
   align,
   background,
   className,

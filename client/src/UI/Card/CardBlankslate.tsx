@@ -1,12 +1,12 @@
 import React from "react"
 
-interface ICardBlankslateProps {
+interface CardBlankslateProps {
   header: React.ReactNode
   message?: React.ReactNode
   actions?: React.ReactNode
 }
 
-const CardBlankslate: React.FC<ICardBlankslateProps> = ({
+const CardBlankslate: React.FC<CardBlankslateProps> = ({
   actions,
   header,
   message,

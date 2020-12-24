@@ -3,13 +3,13 @@ import React from "react"
 import { IMutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
-interface IThreadsModerationErrorHeaderProps {
+interface ThreadsModerationErrorHeaderProps {
   forDelete?: boolean
   threads?: Array<ISelectedThread>
   threadsErrors?: Record<string, IMutationError>
 }
 
-const ThreadsModerationErrorHeader: React.FC<IThreadsModerationErrorHeaderProps> = ({
+const ThreadsModerationErrorHeader: React.FC<ThreadsModerationErrorHeaderProps> = ({
   forDelete,
   threads,
   threadsErrors,
@@ -31,7 +31,7 @@ const ThreadsModerationErrorHeader: React.FC<IThreadsModerationErrorHeaderProps>
   )
 }
 
-const ThreadsModerationErrorHeaderForDelete: React.FC<IThreadsModerationErrorHeaderProps> = ({
+const ThreadsModerationErrorHeaderForDelete: React.FC<ThreadsModerationErrorHeaderProps> = ({
   threads,
   threadsErrors,
 }) => {
@@ -60,7 +60,7 @@ const ThreadsModerationErrorHeaderForDelete: React.FC<IThreadsModerationErrorHea
   )
 }
 
-const ThreadsModerationErrorHeaderForUpdate: React.FC<IThreadsModerationErrorHeaderProps> = ({
+const ThreadsModerationErrorHeaderForUpdate: React.FC<ThreadsModerationErrorHeaderProps> = ({
   threads,
   threadsErrors,
 }) => {

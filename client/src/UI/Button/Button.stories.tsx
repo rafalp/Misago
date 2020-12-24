@@ -16,7 +16,7 @@ import {
   ButtonOutlineSuccess,
   ButtonOutlineWarning,
 } from "."
-import { IButtonProps } from "./Button.types"
+import { ButtonProps } from "./Button.types"
 
 export default {
   title: "UI/Button",
@@ -26,7 +26,7 @@ export default {
 const blockKnob = () => boolean("Block", false)
 const smallKnob = () => boolean("Small", false)
 
-const buttons: Array<[string, React.FC<IButtonProps>]> = [
+const buttons: Array<[string, React.FC<ButtonProps>]> = [
   ["Default", Button],
   ["Link", ButtonLink],
   ["Primary", ButtonPrimary],
@@ -37,7 +37,7 @@ const buttons: Array<[string, React.FC<IButtonProps>]> = [
   ["Dark", ButtonDark],
 ]
 
-const outlineButtons: Array<[string, React.FC<IButtonProps>]> = [
+const outlineButtons: Array<[string, React.FC<ButtonProps>]> = [
   ["Outline Primary", ButtonOutlinePrimary],
   ["Outline Secondary", ButtonOutlineSecondary],
   ["Outline Success", ButtonOutlineSuccess],

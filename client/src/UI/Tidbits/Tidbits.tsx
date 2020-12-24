@@ -1,12 +1,12 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ITidbitsProps {
+interface TidbitsProps {
   children?: React.ReactNode
   vertical?: boolean
 }
 
-const Tidbits: React.FC<ITidbitsProps> = ({ children, vertical }) => (
+const Tidbits: React.FC<TidbitsProps> = ({ children, vertical }) => (
   <ul
     className={classnames(
       "tidbits",

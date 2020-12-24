@@ -17,7 +17,7 @@ import SiteWizardContainer from "./SiteWizardContainer"
 import { useAuth } from "../auth"
 import useSetupSiteMutation from "./useSetupSiteMutation"
 
-interface IFormValues {
+interface FormValues {
   forumName: string
   forumIndexThreads: string
   name: string
@@ -57,7 +57,7 @@ const SiteWizardForm: React.FC<SiteWizardFormProps> = ({ complete }) => {
 
   return (
     <SiteWizardContainer>
-      <Form<IFormValues>
+      <Form<FormValues>
         id="setup_site_form"
         disabled={loading}
         defaultValues={{

@@ -1,12 +1,12 @@
 import classnames from "classnames"
 import React from "react"
 
-interface ICardFormBodyProps {
+interface CardFormBodyProps {
   className?: string
   children: React.ReactNode
 }
 
-const CardFormBody: React.FC<ICardFormBodyProps> = ({
+const CardFormBody: React.FC<CardFormBodyProps> = ({
   children,
   className,
 }) => (

@@ -15,7 +15,7 @@ interface IThreadHeaderTitleEditFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   title: string
 }
 
@@ -41,7 +41,7 @@ const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
   })
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="thread_header_edit_form"
       defaultValues={{ title: thread.title }}
       disabled={loading}

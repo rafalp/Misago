@@ -3,7 +3,7 @@ import React from "react"
 import Icon from "../Icon"
 import { Link } from "react-router-dom"
 
-interface IDropdownLinkProps {
+interface DropdownLinkProps {
   className?: string | null
   icon?: string
   text: React.ReactNode
@@ -11,7 +11,7 @@ interface IDropdownLinkProps {
   onClick?: (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void
 }
 
-const DropdownLink: React.FC<IDropdownLinkProps> = ({
+const DropdownLink: React.FC<DropdownLinkProps> = ({
   className,
   icon,
   text,

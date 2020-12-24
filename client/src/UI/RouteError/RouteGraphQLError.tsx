@@ -5,12 +5,12 @@ import { GraphQLError } from "../Error"
 import RouteContainer from "../RouteContainer"
 import WindowTitle from "../WindowTitle"
 
-interface IRouteGraphQLErrorProps {
+interface RouteGraphQLErrorProps {
   className?: string | null
   error: ApolloError
 }
 
-const RouteGraphQLError: React.FC<IRouteGraphQLErrorProps> = ({
+const RouteGraphQLError: React.FC<RouteGraphQLErrorProps> = ({
   className,
   error,
 }) => (

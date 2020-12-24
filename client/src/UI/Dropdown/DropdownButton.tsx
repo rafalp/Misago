@@ -3,7 +3,7 @@ import React from "react"
 import Icon from "../Icon"
 import { ButtonSpinner } from "../Button"
 
-interface IDropdownButtonProps {
+interface DropdownButtonProps {
   className?: string | null
   disabled?: boolean
   icon?: string
@@ -12,7 +12,7 @@ interface IDropdownButtonProps {
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const DropdownButton: React.FC<IDropdownButtonProps> = ({
+const DropdownButton: React.FC<DropdownButtonProps> = ({
   className,
   disabled,
   icon,

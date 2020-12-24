@@ -4,12 +4,12 @@ import * as plurals from "make-plural/plurals"
 import React from "react"
 import AppLoader from "./AppLoader"
 
-interface IAppLanguageLoaderProps {
+interface AppLanguageLoaderProps {
   children: React.ReactNode
   language: string
 }
 
-const AppLanguageLoader: React.FC<IAppLanguageLoaderProps> = ({
+const AppLanguageLoader: React.FC<AppLanguageLoaderProps> = ({
   children,
   language,
 }) => {

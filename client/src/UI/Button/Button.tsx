@@ -1,10 +1,10 @@
 import classnames from "classnames"
 import React from "react"
 import Icon from "../Icon"
-import { IButtonProps } from "./Button.types"
+import { ButtonProps } from "./Button.types"
 import ButtonSpinner from "./ButtonSpinner"
 
-const Button: React.FC<IButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
   block,
   className,
   disabled,

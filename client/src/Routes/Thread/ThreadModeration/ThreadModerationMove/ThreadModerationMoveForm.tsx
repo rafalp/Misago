@@ -16,7 +16,7 @@ interface IThreadModerationMoveFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   category: string
 }
 
@@ -44,7 +44,7 @@ const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
   })
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="move_thread_form"
       disabled={loading}
       defaultValues={{ category: "" }}

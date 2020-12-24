@@ -1,11 +1,11 @@
 import React from "react"
 
-interface IFormContext {
+interface FormContext {
   id?: string
   disabled?: boolean
 }
 
-const FormContext = React.createContext<IFormContext>({})
+const FormContext = React.createContext<FormContext>({})
 
 const useFormContext = () => React.useContext(FormContext)
 

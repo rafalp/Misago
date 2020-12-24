@@ -18,7 +18,7 @@ interface IThreadPostsModerationDeleteProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   posts: Array<IPost>
 }
 
@@ -60,7 +60,7 @@ const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> =
   }
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="delete_posts_form"
       disabled={loading}
       defaultValues={{ posts }}

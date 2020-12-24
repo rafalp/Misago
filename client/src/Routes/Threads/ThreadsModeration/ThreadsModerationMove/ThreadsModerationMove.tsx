@@ -5,11 +5,11 @@ import { Modal, ModalDialog } from "../../../../UI/Modal"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationMoveForm from "./ThreadsModerationMoveForm"
 
-interface IThreadsModerationMoveProps {
+interface ThreadsModerationMoveProps {
   threads: Array<IThread>
 }
 
-const ThreadsModerationMove: React.FC<IThreadsModerationMoveProps> = ({
+const ThreadsModerationMove: React.FC<ThreadsModerationMoveProps> = ({
   threads,
 }) => {
   const { isOpen, closeModal } = useModalContext()

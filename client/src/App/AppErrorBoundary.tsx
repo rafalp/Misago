@@ -1,11 +1,11 @@
 import React from "react"
 import AppError from "./AppError"
 
-interface IAppErrorBoundaryProps {
+interface AppErrorBoundaryProps {
   children: React.ReactNode
 }
 
-class AppErrorBoundary extends React.Component<IAppErrorBoundaryProps> {
+class AppErrorBoundary extends React.Component<AppErrorBoundaryProps> {
   state = { hasError: false }
 
   static getDerivedStateFromError() {

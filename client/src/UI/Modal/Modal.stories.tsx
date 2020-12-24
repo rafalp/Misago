@@ -139,7 +139,7 @@ export const Complex = () => {
   )
 }
 
-interface IFormValues {
+interface FormValues {
   username: string
   password: string
 }
@@ -153,7 +153,7 @@ export const WithForm = () => {
     <RootContainer>
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
-          <Form<IFormValues>
+          <Form<FormValues>
             id="modal_form"
             defaultValues={{ username: "Bob", password: "" }}
             onSubmit={async () => {}}
@@ -196,7 +196,7 @@ export const WithFormAlt = () => {
     <RootContainer>
       <Modal close={close} isOpen={true} resistant={resistant()}>
         <ModalDialog close={close} size={size()} title={title}>
-          <Form<IFormValues>
+          <Form<FormValues>
             id="modal_form"
             defaultValues={{ username: "Bob", password: "" }}
             onSubmit={async () => {}}

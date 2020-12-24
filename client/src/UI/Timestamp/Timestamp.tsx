@@ -3,13 +3,13 @@ import { useLingui } from "@lingui/react"
 import React from "react"
 import { formatDateShort, formatTime } from "../formats"
 
-interface ITimestampProps {
+interface TimestampProps {
   date: Date
   locale?: string
   prefixed?: boolean
 }
 
-const Timestamp: React.FC<ITimestampProps> = ({ date, locale, prefixed }) => {
+const Timestamp: React.FC<TimestampProps> = ({ date, locale, prefixed }) => {
   const { i18n } = useLingui()
 
   const now = new Date()

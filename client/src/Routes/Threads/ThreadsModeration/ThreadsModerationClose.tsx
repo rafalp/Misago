@@ -7,13 +7,13 @@ import { IMutationError } from "../../../types"
 import { IThread } from "../Threads.types"
 import ThreadsModerationError from "./ThreadsModerationError"
 
-interface IThreadsModerationCloseProps {
+interface ThreadsModerationCloseProps {
   threads: Array<IThread>
   graphqlError?: ApolloError | null
   errors?: Array<IMutationError> | null
 }
 
-const ThreadsModerationClose: React.FC<IThreadsModerationCloseProps> = ({
+const ThreadsModerationClose: React.FC<ThreadsModerationCloseProps> = ({
   threads,
   graphqlError,
   errors,

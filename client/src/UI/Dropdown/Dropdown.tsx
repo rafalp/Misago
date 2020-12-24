@@ -13,7 +13,7 @@ interface IMenuArgs {
   close: () => void
 }
 
-interface IDropdownProps {
+interface DropdownProps {
   className?: string | null
   resistant?: boolean
   placement?:
@@ -29,7 +29,7 @@ interface IDropdownProps {
   menu: (args: IMenuArgs) => React.ReactNode
 }
 
-const Dropdown: React.FC<IDropdownProps> = ({
+const Dropdown: React.FC<DropdownProps> = ({
   className,
   menu,
   placement,

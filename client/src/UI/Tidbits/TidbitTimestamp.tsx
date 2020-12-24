@@ -5,12 +5,12 @@ import Timestamp from "../Timestamp"
 import { formatDate } from "../formats"
 import TidbitItem from "./TidbitItem"
 
-interface ITidbitTimestampProps {
+interface TidbitTimestampProps {
   date: Date
   url?: string
 }
 
-const TidbitTimestamp: React.FC<ITidbitTimestampProps> = ({ date, url }) => {
+const TidbitTimestamp: React.FC<TidbitTimestampProps> = ({ date, url }) => {
   const { i18n } = useLingui()
   const locale = i18n.locale
 

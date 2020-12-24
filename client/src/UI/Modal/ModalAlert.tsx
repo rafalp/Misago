@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IModalAlertProps {
+interface ModalAlertProps {
   children: React.ReactNode
 }
 
-const ModalAlert: React.FC<IModalAlertProps> = ({ children }) => (
+const ModalAlert: React.FC<ModalAlertProps> = ({ children }) => (
   <div className="modal-alert">
     <div
       className="alert alert-block alert-responsive alert-danger"

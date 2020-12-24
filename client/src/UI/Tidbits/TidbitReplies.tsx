@@ -3,11 +3,11 @@ import React from "react"
 import TidbitItem from "./TidbitItem"
 import TidbitNumber from "./TidbitNumber"
 
-interface ITidbitRepliesProps {
+interface TidbitRepliesProps {
   value: number
 }
 
-const TidbitReplies: React.FC<ITidbitRepliesProps> = ({ value }) => (
+const TidbitReplies: React.FC<TidbitRepliesProps> = ({ value }) => (
   <TidbitItem className="tidbit-replies">
     <Plural
       id="tidbit.replies"

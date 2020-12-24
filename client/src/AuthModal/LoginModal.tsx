@@ -34,7 +34,7 @@ const LOGIN = gql`
   }
 `
 
-interface ILoginData {
+interface LoginData {
   login: {
     errors: Array<IMutationError> | null
     user: {
@@ -45,23 +45,23 @@ interface ILoginData {
   }
 }
 
-interface ILoginValues {
+interface LoginValues {
   username: string
   password: string
 }
 
-interface ILoginModalProps {
+interface LoginModalProps {
   close: () => void
   showRegister: () => void
 }
 
-const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ close, showRegister }) => {
   const { login } = useAuth()
   const [disabled, setDisabled] = React.useState<boolean>(false)
   const [error, setError] = React.useState<string | null>(null)
   const [authenticate, { data, loading, error: graphqlError }] = useMutation<
-    ILoginData,
-    ILoginValues
+    LoginData,
+    LoginValues
   >(LOGIN, { errorPolicy: "all" })
 
   return (
@@ -73,7 +73,7 @@ const LoginModal: React.FC<ILoginModalProps> = ({ close, showRegister }) => {
         title={<Trans id="login.title">Log in</Trans>}
         close={close}
       />
-      <Form<ILoginValues>
+      <Form<LoginValues>
         id="login_form"
         defaultValues={{ username: "", password: "" }}
         disabled={loading || disabled}

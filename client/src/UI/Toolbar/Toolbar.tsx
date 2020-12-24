@@ -1,7 +1,7 @@
 import React from "react"
 import Responsive from "../Responsive"
 
-interface IToolbarProps {
+interface ToolbarProps {
   children: React.ReactNode
   desktop?: boolean
   tablet?: boolean
@@ -10,7 +10,7 @@ interface IToolbarProps {
   portrait?: boolean
 }
 
-const Toolbar: React.FC<IToolbarProps> = ({
+const Toolbar: React.FC<ToolbarProps> = ({
   children,
   desktop,
   tablet,

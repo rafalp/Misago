@@ -76,19 +76,19 @@ const INITIAL_DATA_QUERY = gql`
   }
 `
 
-interface IInitialData {
+interface InitialData {
   auth: IUser | null
   categories: Array<ICategory>
   settings: ISettings | null
   forumStats: IForumStats | null
 }
 
-interface IAppDataProps {
-  children: (props: IAppDataChildrenProps) => React.ReactElement
+interface AppDataProps {
+  children: (props: AppDataChildrenProps) => React.ReactElement
 }
 
-interface IAppDataChildrenProps {
-  data: IInitialData
+interface AppDataChildrenProps {
+  data: InitialData
   error: ApolloError | undefined
   loading: boolean
 }
@@ -100,8 +100,8 @@ const defaultData = {
   forumStats: null,
 }
 
-const AppDataQuery: React.FC<IAppDataProps> = ({ children }) => {
-  const { data, error, loading, stopPolling } = useQuery<IInitialData>(
+const AppDataQuery: React.FC<AppDataProps> = ({ children }) => {
+  const { data, error, loading, stopPolling } = useQuery<InitialData>(
     INITIAL_DATA_QUERY,
     {
       pollInterval: POLL_INTERVAL,

@@ -1,4 +1,4 @@
-export interface IButtonProps {
+export interface ButtonProps {
   block?: boolean
   className?: string | null
   disabled?: boolean

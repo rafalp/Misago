@@ -2,12 +2,12 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { ButtonLink } from "../UI/Button"
 
-interface IAuthChangedLoggedOutAlertProps {
+interface AuthChangedLoggedOutAlertProps {
   username: string
   reload: () => void
 }
 
-const AuthChangedLoggedOutAlert: React.FC<IAuthChangedLoggedOutAlertProps> = ({
+const AuthChangedLoggedOutAlert: React.FC<AuthChangedLoggedOutAlertProps> = ({
   username,
   reload,
 }) => (

@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IFormCheckboxProps {
+interface FormCheckboxProps {
   children: React.ReactNode
 }
 
-const FormCheckbox: React.FC<IFormCheckboxProps> = ({ children }) => (
+const FormCheckbox: React.FC<FormCheckboxProps> = ({ children }) => (
   <div className="form-check">{children}</div>
 )
 

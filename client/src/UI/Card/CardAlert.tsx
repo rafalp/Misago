@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ICardAlertProps {
+interface CardAlertProps {
   children: React.ReactNode
 }
 
-const CardAlert: React.FC<ICardAlertProps> = ({ children }) => (
+const CardAlert: React.FC<CardAlertProps> = ({ children }) => (
   <div className="card-alert">
     <div
       className="alert alert-block alert-responsive alert-danger"

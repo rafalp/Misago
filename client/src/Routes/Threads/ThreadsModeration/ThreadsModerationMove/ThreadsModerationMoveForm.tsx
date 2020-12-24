@@ -13,17 +13,17 @@ import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
 import useMoveThreadsMutation from "./useMoveThreadsMutation"
 
-interface IThreadsModerationMoveFormProps {
+interface ThreadsModerationMoveFormProps {
   threads: Array<IThread>
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   category: string
   threads: Array<IThread>
 }
 
-const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
+const ThreadsModerationMoveForm: React.FC<ThreadsModerationMoveFormProps> = ({
   threads,
   close,
 }) => {
@@ -59,7 +59,7 @@ const ThreadsModerationMoveForm: React.FC<IThreadsModerationMoveFormProps> = ({
   }
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="move_threads_form"
       disabled={loading}
       defaultValues={{ threads, category: "" }}

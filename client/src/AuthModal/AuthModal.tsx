@@ -6,11 +6,11 @@ import { AuthModalMode, ISettings } from "../types"
 import LoginModal from "./LoginModal"
 import RegisterModal from "./RegisterModal"
 
-interface IAuthModalProps {
+interface AuthModalProps {
   settings?: ISettings | null
 }
 
-const AuthModal: React.FC<IAuthModalProps> = ({ settings }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ settings }) => {
   const {
     isOpen,
     mode,

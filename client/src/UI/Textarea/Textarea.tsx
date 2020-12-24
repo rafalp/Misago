@@ -3,7 +3,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../Form"
 
-interface ITextareaProps {
+interface TextareaProps {
   className?: string
   disabled?: boolean
   id?: string
@@ -17,7 +17,7 @@ interface ITextareaProps {
   onChange?: (event: React.BaseSyntheticEvent<object, any, any>) => void
 }
 
-const Textarea: React.FC<ITextareaProps> = ({
+const Textarea: React.FC<TextareaProps> = ({
   className,
   disabled,
   id,

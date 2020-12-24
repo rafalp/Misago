@@ -2,25 +2,25 @@ import React from "react"
 import { useModal } from "../UI/Modal"
 import portal from "../UI/portal"
 
-interface IModalContext {
+interface ModalContext {
   isOpen: boolean
   component: React.ReactNode
   openModal: (component: React.ReactNode) => void
   closeModal: () => void
 }
 
-const ModalContext = React.createContext<IModalContext>({
+const ModalContext = React.createContext<ModalContext>({
   isOpen: false,
   component: null,
   openModal: () => {},
   closeModal: () => {},
 })
 
-interface IModalProviderProps {
+interface ModalProviderProps {
   children: React.ReactNode
 }
 
-const ModalProvider: React.FC<IModalProviderProps> = ({ children }) => {
+const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
   const [component, setComponent] = React.useState<React.ReactNode>()
   const { isOpen, closeModal, openModal } = useModal()
 

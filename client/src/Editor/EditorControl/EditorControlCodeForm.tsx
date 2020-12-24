@@ -12,7 +12,7 @@ interface IEditorControlCodeFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   syntax: string
 }
 
@@ -73,7 +73,7 @@ const EditorControlCodeForm: React.FC<IEditorControlCodeFormProps> = ({
   }, [])
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="editor_code_form"
       defaultValues={{ syntax: "" }}
       validators={validators}

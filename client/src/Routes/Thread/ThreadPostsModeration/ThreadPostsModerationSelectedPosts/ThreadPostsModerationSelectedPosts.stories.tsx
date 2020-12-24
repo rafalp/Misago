@@ -11,7 +11,7 @@ export default {
   decorators: [withKnobs],
 }
 
-interface IFormValues {
+interface FormValues {
   posts: Array<IPost>
 }
 
@@ -39,7 +39,7 @@ export const SinglePost = () => {
   ]
 
   return (
-    <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
+    <Form<FormValues> id="posts-select-test" onSubmit={submit}>
       <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
       </ModalFormContainer>
@@ -85,7 +85,7 @@ export const FewPosts = () => {
   ]
 
   return (
-    <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
+    <Form<FormValues> id="posts-select-test" onSubmit={submit}>
       <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
       </ModalFormContainer>
@@ -147,7 +147,7 @@ export const ManyPosts = () => {
   ]
 
   return (
-    <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
+    <Form<FormValues> id="posts-select-test" onSubmit={submit}>
       <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts max={10} min={1} posts={posts} />
       </ModalFormContainer>
@@ -206,7 +206,7 @@ export const WithErrors = () => {
   }
 
   return (
-    <Form<IFormValues> id="posts-select-test" onSubmit={submit}>
+    <Form<FormValues> id="posts-select-test" onSubmit={submit}>
       <ModalFormContainer title="Posts moderation" footer>
         <ThreadsModerationSelectedPosts
           max={10}

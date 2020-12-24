@@ -2,7 +2,7 @@ import classnames from "classnames"
 import React from "react"
 import Responsive from "../Responsive"
 
-interface IToolbarItemProps {
+interface ToolbarItemProps {
   children: React.ReactNode
   fill?: boolean
   desktop?: boolean
@@ -12,7 +12,7 @@ interface IToolbarItemProps {
   portrait?: boolean
 }
 
-const ToolbarItem: React.FC<IToolbarItemProps> = ({
+const ToolbarItem: React.FC<ToolbarItemProps> = ({
   children,
   fill,
   desktop,

@@ -13,7 +13,7 @@ interface IEditorControlListFormProps {
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   list: Array<string>
   type: string
 }
@@ -28,7 +28,7 @@ const EditorControlListForm: React.FC<IEditorControlListFormProps> = ({
   })
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="editor_list_form"
       defaultValues={{ list: [""], type: "ol" }}
       validators={validators}

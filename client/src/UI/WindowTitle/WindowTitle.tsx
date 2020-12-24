@@ -1,14 +1,14 @@
 import React from "react"
 import { useSettingsContext } from "../../Context"
 
-interface IWindowTitleProps {
+interface WindowTitleProps {
   alerts?: number
   index?: boolean
   title?: string | null
   parent?: string | null
 }
 
-const WindowTitle: React.FC<IWindowTitleProps> = ({
+const WindowTitle: React.FC<WindowTitleProps> = ({
   alerts,
   index,
   title,

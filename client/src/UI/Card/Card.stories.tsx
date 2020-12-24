@@ -120,7 +120,7 @@ export const WithColorBandBanner = () => {
   )
 }
 
-interface IFormValues {
+interface FormValues {
   username: string
   password: string
 }
@@ -135,7 +135,7 @@ export const WithForm = () => {
     <RootContainer>
       <Card>
         <CardHeader title={title} />
-        <Form<IFormValues>
+        <Form<FormValues>
           id="modal_form"
           defaultValues={{ username: "Bob", password: "" }}
           onSubmit={async () => {}}

@@ -7,13 +7,13 @@ import { Error } from "../Error"
 import RouteContainer from "../RouteContainer"
 import WindowTitle from "../WindowTitle"
 
-interface IRouteErrorProps {
+interface RouteErrorProps {
   className?: string | null
   header?: React.ReactNode
   message?: React.ReactNode
 }
 
-const RouteAuthRequiredError: React.FC<IRouteErrorProps> = ({
+const RouteAuthRequiredError: React.FC<RouteErrorProps> = ({
   className,
   header,
   message,

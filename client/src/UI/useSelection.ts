@@ -1,6 +1,6 @@
 import React from "react"
 
-interface ISelection<TSelectable extends { id: string }> {
+interface Selection<TSelectable extends { id: string }> {
   selection: Record<string, boolean>
   selected: Array<TSelectable>
   change: (id: string, selected: boolean) => void
@@ -11,7 +11,7 @@ interface ISelection<TSelectable extends { id: string }> {
 const useSelection = <TSelectable extends { id: string }>(
   items?: Array<TSelectable>,
   initial?: Array<TSelectable>
-): ISelection<TSelectable> => {
+): Selection<TSelectable> => {
   const [selection, setState] = React.useState<Record<string, boolean>>(
     initial && initial.length
       ? initial.reduce((obj, item) => ({ ...obj, [item.id]: true }), {})

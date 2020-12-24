@@ -3,7 +3,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../Form"
 
-interface ISelectProps {
+interface SelectProps {
   className?: string
   disabled?: boolean
   emptyLabel?: string
@@ -11,18 +11,18 @@ interface ISelectProps {
   id?: string
   invalid?: boolean
   name?: string
-  options: Array<ISelectOption>
+  options: Array<SelectOption>
   required?: boolean
   onBlur?: (event: React.BaseSyntheticEvent<object, any, any>) => void
   onChange?: (event: React.BaseSyntheticEvent<object, any, any>) => void
 }
 
-interface ISelectOption {
+interface SelectOption {
   name: React.ReactNode
   value: string | number
 }
 
-const Select: React.FC<ISelectProps> = ({
+const Select: React.FC<SelectProps> = ({
   className,
   disabled,
   emptyLabel,

@@ -7,12 +7,12 @@ import Timestamp from "../Timestamp"
 import { formatDate } from "../formats"
 import TidbitItem from "./TidbitItem"
 
-interface ITidbitActivityTimestampProps {
+interface TidbitActivityTimestampProps {
   date: Date
   url?: string
 }
 
-interface ITidbitActivityUserProps {
+interface TidbitActivityUserProps {
   user?: {
     id: string
     slug: string
@@ -21,11 +21,11 @@ interface ITidbitActivityUserProps {
   userName: string
 }
 
-interface ITidbitActivityProps
-  extends ITidbitActivityTimestampProps,
-    ITidbitActivityUserProps {}
+interface TidbitActivityProps
+  extends TidbitActivityTimestampProps,
+    TidbitActivityUserProps {}
 
-const TidbitActivityTimestamp: React.FC<ITidbitActivityTimestampProps> = ({
+const TidbitActivityTimestamp: React.FC<TidbitActivityTimestampProps> = ({
   date,
   url,
 }) => {
@@ -54,7 +54,7 @@ const TidbitActivityTimestamp: React.FC<ITidbitActivityTimestampProps> = ({
   )
 }
 
-const TidbitActivityUser: React.FC<ITidbitActivityUserProps> = ({
+const TidbitActivityUser: React.FC<TidbitActivityUserProps> = ({
   user,
   userName,
 }) =>
@@ -66,7 +66,7 @@ const TidbitActivityUser: React.FC<ITidbitActivityUserProps> = ({
     <span className="tidbit-activity-user">{userName}</span>
   )
 
-const TidbitActivityLastReply: React.FC<ITidbitActivityProps> = ({
+const TidbitActivityLastReply: React.FC<TidbitActivityProps> = ({
   date,
   url,
   user,
@@ -84,7 +84,7 @@ const TidbitActivityLastReply: React.FC<ITidbitActivityProps> = ({
   )
 }
 
-const TidbitActivityStart: React.FC<ITidbitActivityProps> = ({
+const TidbitActivityStart: React.FC<TidbitActivityProps> = ({
   date,
   url,
   user,

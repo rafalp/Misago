@@ -4,7 +4,7 @@ import { ModalSize } from "./Modal.types"
 import ModalHeader from "./ModalHeader"
 import ModalTitle from "./ModalTitle"
 
-interface IModalDialogProps {
+interface ModalDialogProps {
   centered?: boolean
   children: React.ReactNode
   className?: string
@@ -13,7 +13,7 @@ interface IModalDialogProps {
   close?: () => void
 }
 
-const ModalDialog: React.FC<IModalDialogProps> = ({
+const ModalDialog: React.FC<ModalDialogProps> = ({
   centered,
   children,
   className,

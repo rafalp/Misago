@@ -12,17 +12,17 @@ import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
 import useDeleteThreadsMutation from "./useDeleteThreadsMutation"
 
-interface IThreadsModerationDeleteFormProps {
+interface ThreadsModerationDeleteFormProps {
   category?: ICategory | null
   threads: Array<IThread>
   close: () => void
 }
 
-interface IFormValues {
+interface FormValues {
   threads: Array<IThread>
 }
 
-const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> = ({
+const ThreadsModerationDeleteForm: React.FC<ThreadsModerationDeleteFormProps> = ({
   category,
   threads,
   close,
@@ -59,7 +59,7 @@ const ThreadsModerationDeleteForm: React.FC<IThreadsModerationDeleteFormProps> =
   }
 
   return (
-    <Form<IFormValues>
+    <Form<FormValues>
       id="delete_threads_form"
       disabled={loading}
       defaultValues={{ threads }}

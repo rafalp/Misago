@@ -10,11 +10,11 @@ import {
 import * as urls from "../../../../urls"
 import { IThread } from "../../Threads.types"
 
-interface IThreadsListItemTidbitsProps {
+interface ThreadsListItemTidbitsProps {
   thread: IThread
 }
 
-const ThreadsListItemTidbits: React.FC<IThreadsListItemTidbitsProps> = ({
+const ThreadsListItemTidbits: React.FC<ThreadsListItemTidbitsProps> = ({
   thread,
 }) => (
   <Tidbits>
