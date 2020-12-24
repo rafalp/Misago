@@ -1,8 +1,8 @@
-import { AvatarData, ICategory } from "../../types"
+import { AvatarData, Category } from "../../types"
 
 export interface IActiveCategory {
-  category: ICategory
-  parent: ICategory
+  category: Category
+  parent: Category
 }
 
 export interface IThread {

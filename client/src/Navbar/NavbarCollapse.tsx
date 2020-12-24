@@ -9,10 +9,7 @@ interface NavbarCollapseProps {
   user?: User | null
 }
 
-const NavbarCollapse: React.FC<NavbarCollapseProps> = ({
-  children,
-  user,
-}) => {
+const NavbarCollapse: React.FC<NavbarCollapseProps> = ({ children, user }) => {
   const [isOpen, updateOpen] = React.useState(false)
   const button = React.useRef<HTMLButtonElement | null>(null)
 

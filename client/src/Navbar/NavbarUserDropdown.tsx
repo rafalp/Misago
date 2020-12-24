@@ -12,7 +12,10 @@ interface NavbarUserDropdownProps {
   user: User
 }
 
-const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({ logout, user }) => (
+const NavbarUserDropdown: React.FC<NavbarUserDropdownProps> = ({
+  logout,
+  user,
+}) => (
   <Dropdown
     className="dropdown-menu-user"
     toggle={({ ref, toggle }) => (

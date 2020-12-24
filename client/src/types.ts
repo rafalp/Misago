@@ -1,11 +1,11 @@
-// Frequently used types and types for data loaded on app's start
-export type MutationError = {
+// Frequently used interfaces and interfaces for data loaded on app's start
+export interface MutationError {
   location: Array<string>
   message: string
   type: string
 }
 
-export type AvatarData = {
+export interface AvatarData {
   size: number
   url: string
 }
@@ -22,29 +22,29 @@ export interface AuthUser {
   extra: any
 }
 
-export interface ICategory {
+export interface Category {
   id: string
-  parent: ICategory | null
-  children: Array<ICategory>
+  parent: Category | null
+  children: Array<Category>
   depth: number
   name: string
   slug: string
   color: string | null
   icon: string | null
-  banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+  banner: { full: CategoryBanner; half: CategoryBanner } | null
   threads: number
   posts: number
   isClosed: boolean
 }
 
-export interface ICategoryBanner {
+export interface CategoryBanner {
   align: string
   background: string
   height: number
   url: string
 }
 
-export type Settings = {
+export interface Settings {
   bulkActionLimit: number
   enableSiteWizard: boolean
   forumIndexHeader: string
@@ -72,7 +72,7 @@ export enum AuthModalMode {
   REGISTER,
 }
 
-export type RichTextParagraph = {
+export interface RichTextParagraph {
   id: string
   type: string
   text: string

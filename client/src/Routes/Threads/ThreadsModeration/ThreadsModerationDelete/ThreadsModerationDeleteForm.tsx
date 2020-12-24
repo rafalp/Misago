@@ -6,14 +6,14 @@ import { Form, FormFooter } from "../../../../UI/Form"
 import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
-import { ICategory } from "../../../../types"
+import { Category } from "../../../../types"
 import { IThread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
 import useDeleteThreadsMutation from "./useDeleteThreadsMutation"
 
 interface ThreadsModerationDeleteFormProps {
-  category?: ICategory | null
+  category?: Category | null
   threads: Array<IThread>
   close: () => void
 }

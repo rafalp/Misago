@@ -7,12 +7,12 @@ import {
   TidbitThreads,
   Tidbits,
 } from "../../../UI/Tidbits"
-import { ICategoryBanner } from "../../../types"
+import { CategoryBanner } from "../../../types"
 
 interface IThreadsHeaderProps {
   banner?: {
-    full: ICategoryBanner
-    half: ICategoryBanner
+    full: CategoryBanner
+    half: CategoryBanner
   } | null
   color?: string | null
   text: React.ReactNode

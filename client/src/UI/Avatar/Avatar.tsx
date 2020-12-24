@@ -41,7 +41,10 @@ const Avatar: React.FC<AvatarProps> = ({ alt, size = 100, user = null }) => {
   )
 }
 
-const findAvatarSrc = (avatars: Array<AvatarData>, size: number): AvatarSrc => {
+const findAvatarSrc = (
+  avatars: Array<AvatarData>,
+  size: number
+): AvatarSrc => {
   let src = avatars[0].url
   let srcSet: string = src
 

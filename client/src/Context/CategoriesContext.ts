@@ -1,7 +1,7 @@
 import React from "react"
-import { ICategory } from "../types"
+import { Category } from "../types"
 
-const CategoriesContext = React.createContext<Array<ICategory>>([])
+const CategoriesContext = React.createContext<Array<Category>>([])
 
 const useCategoriesContext = () => React.useContext(CategoriesContext)
 
@@ -9,8 +9,8 @@ const useCategoriesListContext = () => {
   const categories = useCategoriesContext()
   return React.useMemo(() => {
     const choices: Array<{
-      category: ICategory
-      parent?: ICategory
+      category: Category
+      parent?: Category
       depth: number
     }> = []
     categories.forEach((category) => {

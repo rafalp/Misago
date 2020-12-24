@@ -1,12 +1,12 @@
 import React from "react"
 import ThreadsHeader from "./ThreadsHeader"
-import { ICategoryBanner } from "../../../types"
+import { CategoryBanner } from "../../../types"
 
 interface IThreadsHeaderCategoryProps {
   category: {
     name: string
     color: string | null
-    banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+    banner: { full: CategoryBanner; half: CategoryBanner } | null
     threads: number
     posts: number
   }

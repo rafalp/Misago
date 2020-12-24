@@ -1,4 +1,4 @@
-import { AvatarData, ICategoryBanner, RichText } from "../../types"
+import { AvatarData, CategoryBanner, RichText } from "../../types"
 
 export interface IThread {
   id: string
@@ -25,7 +25,7 @@ export interface IThreadCategory {
   color: string | null
   icon: string | null
   isClosed: boolean
-  banner: { full: ICategoryBanner; half: ICategoryBanner } | null
+  banner: { full: CategoryBanner; half: CategoryBanner } | null
 }
 
 export interface IThreadPoster {
