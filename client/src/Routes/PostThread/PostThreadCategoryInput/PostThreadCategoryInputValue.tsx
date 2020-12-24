@@ -2,12 +2,12 @@ import classnames from "classnames"
 import React from "react"
 import CategoryIcon from "../../../UI/CategoryIcon"
 import Icon from "../../../UI/Icon"
-import { ICategoryChoiceChild } from "../PostThread.types"
+import { CategoryChoiceChild } from "../PostThread.types"
 
 interface IPostThreadCategoryInputValueProps {
   value: {
-    parent?: ICategoryChoiceChild | null
-    child?: ICategoryChoiceChild | null
+    parent?: CategoryChoiceChild | null
+    child?: CategoryChoiceChild | null
   }
 }
 

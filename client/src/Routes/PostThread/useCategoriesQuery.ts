@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { ICategoryChoice } from "./PostThread.types"
+import { CategoryChoice } from "./PostThread.types"
 
 export const CATEGORIES_QUERY = gql`
   query CategoryChoices {
@@ -24,7 +24,7 @@ export const CATEGORIES_QUERY = gql`
 `
 
 interface ICategoriesQueryData {
-  categories: Array<ICategoryChoice>
+  categories: Array<CategoryChoice>
 }
 
 const useCategoriesQuery = () => {

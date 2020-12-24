@@ -5,10 +5,10 @@ import {
   CategoriesListGroupItem,
 } from "../../../UI/CategoriesListGroup"
 import { ModalBody } from "../../../UI/Modal"
-import { ICategoryChoice } from "../PostThread.types"
+import { CategoryChoice } from "../PostThread.types"
 
 interface IPostThreadCategorySelectItemsProps {
-  choices: Array<ICategoryChoice>
+  choices: Array<CategoryChoice>
   validChoices: Array<string>
   setValue: (value: string) => void
 }

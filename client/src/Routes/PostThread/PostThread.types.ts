@@ -1,4 +1,4 @@
-export interface ICategoryChoiceChild {
+export interface CategoryChoiceChild {
   id: string
   name: string
   icon: string
@@ -7,6 +7,6 @@ export interface ICategoryChoiceChild {
   extra: Record<string, any>
 }
 
-export interface ICategoryChoice extends ICategoryChoiceChild {
-  children: Array<ICategoryChoiceChild>
+export interface CategoryChoice extends CategoryChoiceChild {
+  children: Array<CategoryChoiceChild>
 }

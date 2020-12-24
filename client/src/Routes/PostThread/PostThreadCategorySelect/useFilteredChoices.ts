@@ -1,9 +1,9 @@
 import React from "react"
 import useSearchQuery from "../../../UI/useSearchQuery"
-import { ICategoryChoice } from "../PostThread.types"
+import { CategoryChoice } from "../PostThread.types"
 
 const useFilteredChoices = (
-  choices: Array<ICategoryChoice>,
+  choices: Array<CategoryChoice>,
   search: string
 ) => {
   const query = useSearchQuery(search)
@@ -30,7 +30,7 @@ const useFilteredChoices = (
 
     return results.filter((result) => {
       return result !== null
-    }) as Array<ICategoryChoice>
+    }) as Array<CategoryChoice>
   }, [choices, query])
 }
 

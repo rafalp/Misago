@@ -1,10 +1,10 @@
 import React from "react"
 import { AuthUser } from "../../types"
-import { ICategoryChoice } from "./PostThread.types"
+import { CategoryChoice } from "./PostThread.types"
 
 const useValidCategories = (
   user: AuthUser | null,
-  choices: Array<ICategoryChoice>
+  choices: Array<CategoryChoice>
 ) => {
   const isModerator = user ? user.isModerator : false
   return React.useMemo(() => {

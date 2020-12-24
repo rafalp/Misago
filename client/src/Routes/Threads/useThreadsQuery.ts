@@ -214,7 +214,7 @@ export const useThreadsQuery = () => {
   return useBaseThreadsQuery<IThreadsData>(THREADS_QUERY)
 }
 
-interface ICategoryQueryParams {
+interface CategoryQueryParams {
   id: string
 }
 
@@ -242,7 +242,7 @@ export const CATEGORY_THREADS_QUERY = gql`
   }
 `
 
-interface ICategoryThreadsData extends IThreadsData {
+interface CategoryThreadsData extends IThreadsData {
   category: {
     id: string
     name: string
@@ -257,8 +257,8 @@ interface ICategoryThreadsData extends IThreadsData {
   }
 }
 
-export const useCategoryThreadsQuery = (variables: ICategoryQueryParams) => {
-  return useBaseThreadsQuery<ICategoryThreadsData>(CATEGORY_THREADS_QUERY, {
+export const useCategoryThreadsQuery = (variables: CategoryQueryParams) => {
+  return useBaseThreadsQuery<CategoryThreadsData>(CATEGORY_THREADS_QUERY, {
     category: variables.id,
   })
 }

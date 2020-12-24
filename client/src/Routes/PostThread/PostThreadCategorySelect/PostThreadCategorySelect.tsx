@@ -2,14 +2,14 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../Context"
 import { Modal, ModalDialog } from "../../../UI/Modal"
-import { ICategoryChoice } from "../PostThread.types"
+import { CategoryChoice } from "../PostThread.types"
 import PostThreadCategorySelectItems from "./PostThreadCategorySelectItems"
 import PostThreadCategorySelectNoResults from "./PostThreadCategorySelectNoResults"
 import PostThreadCategorySelectSearch from "./PostThreadCategorySelectSearch"
 import useFilteredChoices from "./useFilteredChoices"
 
 interface IPostThreadCategorySelectProps {
-  choices: Array<ICategoryChoice>
+  choices: Array<CategoryChoice>
   validChoices: Array<string>
   setValue: (value: string) => void
 }

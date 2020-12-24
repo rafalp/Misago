@@ -2,7 +2,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useModalContext } from "../../../Context"
 import { useFieldContext } from "../../../UI/Form"
-import { ICategoryChoice } from "../PostThread.types"
+import { CategoryChoice } from "../PostThread.types"
 import PostThreadCategorySelect from "../PostThreadCategorySelect"
 import PostThreadCategoryInputBody from "./PostThreadCategoryInputBody"
 import PostThreadCategoryInputPlaceholder from "./PostThreadCategoryInputPlaceholder"
@@ -10,7 +10,7 @@ import PostThreadCategoryInputValue from "./PostThreadCategoryInputValue"
 import useCategoryChoice from "./useCategoryChoice"
 
 interface IPostThreadCategoryInputProps {
-  choices: Array<ICategoryChoice>
+  choices: Array<CategoryChoice>
   validChoices: Array<string>
   responsive?: boolean
 }

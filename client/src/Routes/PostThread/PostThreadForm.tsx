@@ -30,7 +30,7 @@ import {
   ValidationError,
 } from "../../UI/ValidationError"
 import * as urls from "../../urls"
-import { ICategoryChoice } from "./PostThread.types"
+import { CategoryChoice } from "./PostThread.types"
 import PostThreadCategoryInput from "./PostThreadCategoryInput"
 import usePostThreadMutation from "./usePostThreadMutation"
 import useThreadDraft from "./useThreadDraft"
@@ -39,7 +39,7 @@ const Editor = React.lazy(() => import("../../Editor"))
 
 interface PostThreadFormProps {
   category?: string
-  categories: Array<ICategoryChoice>
+  categories: Array<CategoryChoice>
   validCategories: Array<string>
 }
 

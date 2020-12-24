@@ -1,8 +1,8 @@
 import React from "react"
-import { ICategoryChoice, ICategoryChoiceChild } from "../PostThread.types"
+import { CategoryChoice, CategoryChoiceChild } from "../PostThread.types"
 
-const useCategoryChoice = (value: string, choices: Array<ICategoryChoice>) => {
-  const parent = React.useMemo<ICategoryChoice | null>(() => {
+const useCategoryChoice = (value: string, choices: Array<CategoryChoice>) => {
+  const parent = React.useMemo<CategoryChoice | null>(() => {
     return (
       choices.find((category) => {
         if (category.id === value) return true
@@ -14,7 +14,7 @@ const useCategoryChoice = (value: string, choices: Array<ICategoryChoice>) => {
     )
   }, [value, choices])
 
-  const child = React.useMemo<ICategoryChoiceChild | null>(() => {
+  const child = React.useMemo<CategoryChoiceChild | null>(() => {
     if (!parent) return null
 
     return (
