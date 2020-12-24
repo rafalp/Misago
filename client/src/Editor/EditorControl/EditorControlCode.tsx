@@ -1,12 +1,12 @@
 import React from "react"
-import Icon from "../../UI/Icon"
-import { IEditorControlProps } from "./EditorControl.types"
-import EditorButton from "../EditorButton"
+import { EditorControlProps } from "./EditorControl.types"
+import EditorControlButton from "./EditorControlButton"
 import EditorControlCodeModal from "./EditorControlCodeModal"
 
-const EditorControlCode: React.FC<IEditorControlProps> = ({
-  title,
+const EditorControlCode: React.FC<EditorControlProps> = ({
+  name,
   icon,
+  title,
   context,
 }) => {
   const { disabled } = context
@@ -14,15 +14,13 @@ const EditorControlCode: React.FC<IEditorControlProps> = ({
 
   return (
     <>
-      <EditorButton
-        className="btn-editor-code"
+      <EditorControlButton
+        name={name}
         disabled={disabled}
+        icon={icon}
         title={title}
-        icon
         onClick={() => setOpen(true)}
-      >
-        <Icon icon={icon} fixedWidth />
-      </EditorButton>
+      />
       <EditorControlCodeModal
         context={context}
         isOpen={isOpen}

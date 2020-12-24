@@ -1,44 +1,39 @@
 import { t } from "@lingui/macro"
+import classnames from "classnames"
 import React from "react"
-import Icon from "../UI/Icon"
+import { Dropdown } from "../UI/Dropdown"
 import EditorButton from "./EditorButton"
+import { EditorContextProvider, IEditorContextValues } from "./EditorContext"
 import {
-  EditorContext,
-  EditorContextProvider,
-  IEditorContextValues,
-} from "./EditorContext"
-import {
+  EditorControl,
   EditorControlCode,
   EditorControlEmoji,
   EditorControlImage,
   EditorControlLink,
   EditorControlList,
-  IEditorControlProps,
 } from "./EditorControl"
+import EditorControlsItem from "./EditorControlsItem"
 
-export interface IEditorControl {
-  key: string
-  title: string
-  icon: string
-  component?: React.ComponentType<IEditorControlProps>
-  onClick?: (context: IEditorContextValues) => void
-}
-
-interface IEditorControlsProps {
+interface EditorControlsProps {
+  children?: React.ReactNode
   disabled?: boolean
   setValue: (value: string) => void
 }
 
-const EditorControls: React.FC<IEditorControlsProps> = ({
+const EditorControls: React.FC<EditorControlsProps> = ({
+  children,
   disabled,
   setValue,
 }) => {
   const [initialized, setInitialized] = React.useState(false)
   const textarea = React.useRef<HTMLTextAreaElement | null>(null)
+  const touchEnabled = React.useMemo(() => {
+    return "ontouchstart" in window
+  }, [])
 
-  const controls: Array<IEditorControl> = [
+  const controls: Array<EditorControl> = [
     {
-      key: "bold",
+      name: "bold",
       title: t({
         id: "editor.bold",
         message: "Bolder",
@@ -59,7 +54,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "emphasis",
+      name: "emphasis",
       title: t({
         id: "editor.emphasis",
         message: "Emphasize",
@@ -80,7 +75,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "strikethrough",
+      name: "strikethrough",
       title: t({
         id: "editor.strikethrough",
         message: "Strikethrough",
@@ -101,7 +96,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "hr",
+      name: "hr",
       title: t({
         id: "editor.hr",
         message: "Insert horizontal ruler",
@@ -118,7 +113,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "link",
+      name: "link",
       title: t({
         id: "editor.link",
         message: "Insert link",
@@ -127,7 +122,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       component: EditorControlLink,
     },
     {
-      key: "image",
+      name: "image",
       title: t({
         id: "editor.image",
         message: "Insert image",
@@ -136,7 +131,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       component: EditorControlImage,
     },
     {
-      key: "emoji",
+      name: "emoji",
       title: t({
         id: "editor.emoji",
         message: "Insert emoji",
@@ -145,7 +140,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       component: EditorControlEmoji,
     },
     {
-      key: "list",
+      name: "list",
       title: t({
         id: "editor.list",
         message: "Insert list",
@@ -154,7 +149,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       component: EditorControlList,
     },
     {
-      key: "quote",
+      name: "quote",
       title: t({
         id: "editor.quote",
         message: "Quote",
@@ -175,7 +170,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "spoiler",
+      name: "spoiler",
       title: t({
         id: "editor.spoiler",
         message: "Spoiler",
@@ -196,7 +191,7 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       },
     },
     {
-      key: "code",
+      name: "code",
       title: t({
         id: "editor.code",
         message: "Insert code",
@@ -210,7 +205,9 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
 
   return (
     <div
-      className="col-auto editor-controls"
+      className={classnames("col-auto editor-controls", {
+        "editor-controls-touch": touchEnabled,
+      })}
       ref={(element) => {
         if (element) {
           const editor = element.closest(".form-editor")
@@ -224,42 +221,38 @@ const EditorControls: React.FC<IEditorControlsProps> = ({
       }}
     >
       <EditorContextProvider
-        disabled={disabled || false}
+        disabled={isDisabled}
         textarea={textarea.current}
         setValue={setValue}
       >
-        {controls.map(
-          ({ key, title, icon, component: Component, onClick }) => {
-            if (Component) {
-              return (
-                <EditorContext.Consumer key={key}>
-                  {(context) => (
-                    <Component context={context} icon={icon} title={title} />
-                  )}
-                </EditorContext.Consumer>
-              )
-            }
-
-            return (
-              <EditorContext.Consumer key={key}>
-                {(context) => (
-                  <EditorButton
-                    className={"btn-editor-" + key}
-                    disabled={isDisabled}
-                    title={title}
-                    icon
-                    onClick={() => {
-                      if (onClick && !context.disabled) onClick(context)
-                    }}
-                  >
-                    <Icon icon={icon} fixedWidth />
-                  </EditorButton>
-                )}
-              </EditorContext.Consumer>
-            )
-          }
-        )}
+        <Dropdown
+          className="editor-controls-dropdown"
+          placement="top-start"
+          toggle={({ ref, toggle }) => (
+            <span ref={ref}>
+              <EditorButton
+                className={"btn-editor-dropdown-toggle"}
+                disabled={isDisabled}
+                icon="fas fa-ellipsis-h"
+                onClick={toggle}
+              />
+            </span>
+          )}
+          menu={() => (
+            <>
+              {controls.map((control) => (
+                <EditorControlsItem key={control.name} {...control} />
+              ))}
+            </>
+          )}
+        />
+        <span className="editor-controls-list">
+          {controls.map((control) => (
+            <EditorControlsItem key={control.name} {...control} />
+          ))}
+        </span>
       </EditorContextProvider>
+      {children}
     </div>
   )
 }

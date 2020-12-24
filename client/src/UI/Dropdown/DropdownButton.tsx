@@ -9,7 +9,7 @@ interface IDropdownButtonProps {
   icon?: string
   loading?: boolean
   text: React.ReactNode
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const DropdownButton: React.FC<IDropdownButtonProps> = ({

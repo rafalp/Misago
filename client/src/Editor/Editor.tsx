@@ -61,9 +61,7 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
           <EditorControls
             disabled={disabled || context.disabled || !!preview}
             setValue={setValue}
-          />
-          <div className="col" />
-          <div className="col-auto">
+          >
             {preview ? (
               <EditorButton
                 disabled={disabled || context.disabled}
@@ -78,8 +76,9 @@ const Editor: React.FC<IEditorProps> = ({ name, disabled, submit }) => {
                 onClick={openPreview}
               />
             )}
-            {submit}
-          </div>
+          </EditorControls>
+          <div className="col" />
+          {submit && <div className="col-auto">{submit}</div>}
         </div>
       </EditorToolbar>
     </EditorBody>

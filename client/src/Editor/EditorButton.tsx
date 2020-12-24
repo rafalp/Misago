@@ -1,16 +1,17 @@
 import classnames from "classnames"
 import React from "react"
+import Icon from "../UI/Icon"
 
-interface IEditorButtonProps {
-  children: React.ReactNode
+interface EditorButtonProps {
+  children?: React.ReactNode
   className?: string
   disabled?: boolean
-  icon?: boolean
+  icon?: string
   title?: string
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
-const EditorButton: React.FC<IEditorButtonProps> = ({
+const EditorButton: React.FC<EditorButtonProps> = ({
   children,
   className,
   disabled,
@@ -31,6 +32,7 @@ const EditorButton: React.FC<IEditorButtonProps> = ({
     disabled={disabled}
     onClick={onClick}
   >
+    {icon && <Icon icon={icon} fixedWidth />}
     {children}
   </button>
 )

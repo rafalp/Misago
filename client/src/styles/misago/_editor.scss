@@ -28,6 +28,25 @@
   color: $input-color;
 }
 
+// Hide emoji control from editor on touch devices
+.editor-controls-touch .btn-editor-emoji {
+  display: none;
+}
+
+// Hide editor controls dropdown on large displays
+@include media-breakpoint-up(md) {
+  .btn-editor-dropdown-toggle {
+    display: none;
+  }
+}
+
+// Hide editor controls buttons on small displays
+@include media-breakpoint-down(sm) {
+  .editor-controls-list {
+    display: none;
+  }
+}
+
 // Set preview's min height
 .form-editor-preview {
   padding: $input-padding-x;

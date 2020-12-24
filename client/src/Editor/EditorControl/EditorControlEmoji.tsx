@@ -1,13 +1,13 @@
 import { EmojiButton } from "@joeattardi/emoji-button"
 import { t } from "@lingui/macro"
 import React from "react"
-import Icon from "../../UI/Icon"
-import { IEditorControlProps } from "./EditorControl.types"
-import EditorButton from "../EditorButton"
+import { EditorControlProps } from "./EditorControl.types"
+import EditorControlButton from "./EditorControlButton"
 
-const EditorControlEmoji: React.FC<IEditorControlProps> = ({
-  title,
+const EditorControlEmoji: React.FC<EditorControlProps> = ({
+  name,
   icon,
+  title,
   context,
 }) => {
   const picker = React.useRef<EmojiButton | null>(null)
@@ -84,19 +84,17 @@ const EditorControlEmoji: React.FC<IEditorControlProps> = ({
   }, [picker, textarea, disabled, replaceSelection])
 
   return (
-    <EditorButton
-      className="btn-editor-emoji"
+    <EditorControlButton
+      name={name}
       disabled={disabled}
+      icon={icon}
       title={title}
-      icon
       onClick={(event) => {
         if (picker.current) {
           picker.current.togglePicker(event.currentTarget)
         }
       }}
-    >
-      <Icon icon={icon} fixedWidth />
-    </EditorButton>
+    />
   )
 }
 
