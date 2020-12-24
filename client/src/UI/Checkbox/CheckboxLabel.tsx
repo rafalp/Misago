@@ -1,13 +1,13 @@
 import React from "react"
 import { FieldRequired } from "../Form"
 
-interface ICheckboxLabelProps {
+interface CheckboxLabelProps {
   children?: React.ReactNode
   htmlFor?: string
   required?: boolean
 }
 
-const CheckboxLabel: React.FC<ICheckboxLabelProps> = ({
+const CheckboxLabel: React.FC<CheckboxLabelProps> = ({
   children,
   htmlFor,
   required,

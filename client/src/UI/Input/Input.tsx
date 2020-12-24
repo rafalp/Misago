@@ -3,7 +3,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../Form"
 
-interface IInputProps {
+interface InputProps {
   className?: string
   disabled?: boolean
   id?: string
@@ -19,7 +19,7 @@ interface IInputProps {
   onChange?: (event: React.BaseSyntheticEvent<object, any, any>) => void
 }
 
-const Input: React.FC<IInputProps> = ({
+const Input: React.FC<InputProps> = ({
   className,
   disabled,
   id,

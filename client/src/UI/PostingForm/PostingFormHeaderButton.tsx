@@ -2,13 +2,13 @@ import classnames from "classnames"
 import React from "react"
 import Icon from "../Icon"
 
-interface IPostingFormHeaderButtonProps {
+interface PostingFormHeaderButtonProps {
   className?: string
   icon: string
   onClick?: () => void
 }
 
-const PostingFormHeaderButton: React.FC<IPostingFormHeaderButtonProps> = ({
+const PostingFormHeaderButton: React.FC<PostingFormHeaderButtonProps> = ({
   className,
   icon,
   onClick,

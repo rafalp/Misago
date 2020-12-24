@@ -1,13 +1,13 @@
 import React from "react"
 import PageTitle from "../PageTitle"
 
-interface IGridPageHeaderProps {
+interface GridPageHeaderProps {
   actions?: Array<React.ReactNode>
   title: React.ReactNode
   tidbits?: React.ReactNode
 }
 
-const GridPageHeader: React.FC<IGridPageHeaderProps> = ({
+const GridPageHeader: React.FC<GridPageHeaderProps> = ({
   actions,
   title,
   tidbits,

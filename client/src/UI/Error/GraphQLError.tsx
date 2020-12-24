@@ -5,12 +5,12 @@ import GraphQLErrorRenderer from "../GraphQLErrorRenderer"
 import Error from "./Error"
 import GraphQLErrorMessage from "./GraphQLErrorMessage"
 
-interface IGraphQLErrorProps {
+interface GrapQLErrorProps {
   className: string
   error: ApolloError
 }
 
-const GraphQLError: React.FC<IGraphQLErrorProps> = ({ className, error }) => (
+const GraphQLError: React.FC<GrapQLErrorProps> = ({ className, error }) => (
   <GraphQLErrorRenderer
     error={error}
     networkError={

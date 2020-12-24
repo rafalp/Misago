@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IResponsiveProps {
+interface ResponsiveProps {
   children: React.ReactNode
   className?: string | null
   desktop?: boolean
@@ -11,7 +11,7 @@ interface IResponsiveProps {
   portrait?: boolean
 }
 
-const Responsive: React.FC<IResponsiveProps> = ({
+const Responsive: React.FC<ResponsiveProps> = ({
   children,
   className,
   desktop: lg,

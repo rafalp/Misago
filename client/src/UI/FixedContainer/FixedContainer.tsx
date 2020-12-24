@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IFixedContainerProps {
+interface FixedContainerProps {
   children: React.ReactNode
   className?: string
   show?: boolean
 }
 
-const FixedContainer: React.FC<IFixedContainerProps> = ({
+const FixedContainer: React.FC<FixedContainerProps> = ({
   children,
   className,
   show,

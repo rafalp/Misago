@@ -2,12 +2,12 @@ import { t } from "@lingui/macro"
 import classnames from "classnames"
 import React from "react"
 
-interface IFieldErrorFloatingProps {
+interface FieldErrorFloatingProps {
   type: string
   children: React.ReactNode
 }
 
-const FieldErrorFloating: React.FC<IFieldErrorFloatingProps> = ({
+const FieldErrorFloating: React.FC<FieldErrorFloatingProps> = ({
   type,
   children,
 }) => {

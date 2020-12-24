@@ -2,7 +2,7 @@ import React from "react"
 import { useModal } from "../UI/Modal"
 import { AuthModalMode } from "../types"
 
-export interface IAuthModalContext {
+export interface AuthModalContextData {
   isOpen: boolean
   mode: AuthModalMode
   closeModal: () => void
@@ -12,7 +12,7 @@ export interface IAuthModalContext {
   openRegisterModal: () => void
 }
 
-const AuthModalContext = React.createContext<IAuthModalContext>({
+const AuthModalContext = React.createContext<AuthModalContextData>({
   isOpen: false,
   mode: AuthModalMode.REGISTER,
   closeModal: () => {},
@@ -22,11 +22,11 @@ const AuthModalContext = React.createContext<IAuthModalContext>({
   showRegisterForm: () => {},
 })
 
-interface IAuthModalProviderProps {
+interface AuthModalProviderProps {
   children: React.ReactNode
 }
 
-const AuthModalProvider: React.FC<IAuthModalProviderProps> = ({
+const AuthModalProvider: React.FC<AuthModalProviderProps> = ({
   children,
 }) => {
   const [mode, setMode] = React.useState<AuthModalMode>(AuthModalMode.REGISTER)

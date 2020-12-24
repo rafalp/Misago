@@ -3,13 +3,13 @@ import React from "react"
 import { ButtonSecondary } from "../Button"
 import ViewportEvent from "../ViewportEvent"
 
-interface ILoadMoreProps {
+interface LoadMoreProps {
   data: { nextCursor: string | null } | null
   loading: boolean
   onEvent: () => void
 }
 
-const LoadMore: React.FC<ILoadMoreProps> = ({ loading, data, onEvent }) => {
+const LoadMore: React.FC<LoadMoreProps> = ({ loading, data, onEvent }) => {
   if (!data || !data.nextCursor) return null
 
   return (

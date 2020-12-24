@@ -1,12 +1,12 @@
 import React from "react"
 import ClickTrap from "../ClickTrap"
 
-interface IResetScrollOnNavProps {
+interface ResetScrollOnNavProps {
   children: React.ReactNode
   selector?: string
 }
 
-const ResetScrollOnNav: React.FC<IResetScrollOnNavProps> = ({
+const ResetScrollOnNav: React.FC<ResetScrollOnNavProps> = ({
   children,
   selector,
 }) => (

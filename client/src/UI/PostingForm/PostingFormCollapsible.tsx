@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IPostingFormCollapsibleProps {
+interface PostingFormCollapsibleProps {
   children: React.ReactNode
 }
 
-const PostingFormCollapsible: React.FC<IPostingFormCollapsibleProps> = ({
+const PostingFormCollapsible: React.FC<PostingFormCollapsibleProps> = ({
   children,
 }) => <div className="posting-form-collapsible">{children}</div>
 

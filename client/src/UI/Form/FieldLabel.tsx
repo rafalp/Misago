@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IFieldLabelProps {
+interface FieldLabelProps {
   children?: React.ReactNode
   className?: string
   htmlFor?: string
@@ -9,7 +9,7 @@ interface IFieldLabelProps {
   required?: boolean
 }
 
-const FieldLabel: React.FC<IFieldLabelProps> = ({
+const FieldLabel: React.FC<FieldLabelProps> = ({
   children,
   className,
   htmlFor,

@@ -1,7 +1,7 @@
 import React from "react"
 import Icon from "../Icon"
 
-interface ICategoryIconProps {
+interface CategoryIconProps {
   className?: string
   category?: {
     color: string | null
@@ -9,7 +9,7 @@ interface ICategoryIconProps {
   } | null
 }
 
-const CategoryIcon: React.FC<ICategoryIconProps> = ({
+const CategoryIcon: React.FC<CategoryIconProps> = ({
   className,
   category,
 }) => (

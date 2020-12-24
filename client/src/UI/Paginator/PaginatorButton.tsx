@@ -2,7 +2,7 @@ import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 
-interface IPaginatorButtonProps {
+interface PaginatorButtonProps {
   className?: string
   children: React.ReactNode
   page?: number | null | false
@@ -11,7 +11,7 @@ interface IPaginatorButtonProps {
   url?: (page: number) => string
 }
 
-const PaginatorButton: React.FC<IPaginatorButtonProps> = ({
+const PaginatorButton: React.FC<PaginatorButtonProps> = ({
   className,
   children,
   page,

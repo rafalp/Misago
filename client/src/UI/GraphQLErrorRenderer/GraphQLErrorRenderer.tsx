@@ -2,13 +2,13 @@ import { ApolloError } from "apollo-client"
 import React from "react"
 import getNetworkErrorCode from "../getNetworkErrorCode"
 
-interface IGraphQLErrorRendererProps {
+interface GrapQLErrorRendererProps {
   error: ApolloError
   networkError: React.ReactElement
   queryError: React.ReactElement
 }
 
-const GraphQLErrorRenderer: React.FC<IGraphQLErrorRendererProps> = ({
+const GraphQLErrorRenderer: React.FC<GrapQLErrorRendererProps> = ({
   error,
   networkError,
   queryError,

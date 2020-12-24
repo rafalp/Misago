@@ -2,14 +2,14 @@ import classnames from "classnames"
 import React from "react"
 import { BodyScrollLock } from "../../BodyScroll"
 
-interface IPostingFormProps {
+interface PostingFormProps {
   children: React.ReactNode
   fullscreen?: boolean
   minimized?: boolean
   show?: boolean
 }
 
-const PostingForm = React.forwardRef<HTMLDivElement, IPostingFormProps>(
+const PostingForm = React.forwardRef<HTMLDivElement, PostingFormProps>(
   ({ children, fullscreen, minimized, show }, ref) => (
     <div
       className={classnames("posting-form", {

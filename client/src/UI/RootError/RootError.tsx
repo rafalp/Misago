@@ -4,13 +4,13 @@ import { ApolloError } from "apollo-client"
 import { IMutationError } from "../../types"
 import getNetworkErrorCode from "../getNetworkErrorCode"
 
-interface IRootError {
+interface Error {
   message: React.ReactNode
   type: string
 }
 
-interface IRootErrorProps {
-  children: (error: IRootError) => React.ReactElement
+interface RootErrorProps {
+  children: (error: Error) => React.ReactElement
   dataErrors?: Array<IMutationError> | null
   graphqlError?: ApolloError | null
   plainError?: string | null
@@ -22,7 +22,7 @@ interface IRootErrorProps {
 
 const NOT_AUTHORIZED_ERROR = "auth_error.not_authorized"
 
-const RootError: React.FC<IRootErrorProps> = ({
+const RootError: React.FC<RootErrorProps> = ({
   children,
   dataErrors,
   graphqlError,

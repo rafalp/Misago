@@ -1,13 +1,13 @@
-export interface ICategory {
+export interface Category {
   id: string
   name: string
   slug: string
   color: string | null
   icon: string | null
-  children: Array<IChild>
+  children: Array<ChildCategory>
 }
 
-export interface IChild {
+export interface ChildCategory {
   id: string
   name: string
   slug: string
@@ -15,7 +15,7 @@ export interface IChild {
   icon: string | null
 }
 
-export interface IActiveCategory {
+export interface ActiveCategory {
   category: { id: string }
   parent: { id: string }
 }

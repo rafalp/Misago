@@ -1,7 +1,7 @@
 import React from "react"
 import PostingFormHeaderButton from "./PostingFormHeaderButton"
 
-interface IPostingFormHeaderProps {
+interface PostingFormHeaderProps {
   children: React.ReactNode
   fullscreen?: boolean
   minimized?: boolean
@@ -10,7 +10,7 @@ interface IPostingFormHeaderProps {
   setMinimized: (state: boolean) => void
 }
 
-const PostingFormHeader: React.FC<IPostingFormHeaderProps> = ({
+const PostingFormHeader: React.FC<PostingFormHeaderProps> = ({
   children,
   fullscreen,
   minimized,

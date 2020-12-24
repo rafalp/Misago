@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IFieldErrorProps {
+interface FieldErrorProps {
   children?: React.ReactNode
 }
 
-const FieldError: React.FC<IFieldErrorProps> = ({ children }) => (
+const FieldError: React.FC<FieldErrorProps> = ({ children }) => (
   <div className="invalid-feedback">{children}</div>
 )
 

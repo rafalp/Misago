@@ -2,7 +2,7 @@ import React from "react"
 import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../Form"
 
-interface ICheckboxProps {
+interface CheckboxProps {
   checked?: boolean
   disabled?: boolean
   id?: string
@@ -11,7 +11,7 @@ interface ICheckboxProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const Checkbox: React.FC<ICheckboxProps> = ({
+const Checkbox: React.FC<CheckboxProps> = ({
   checked,
   disabled,
   id,

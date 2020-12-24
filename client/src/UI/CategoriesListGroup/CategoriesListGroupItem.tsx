@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ICategoriesListGroupItemProps {
+interface CategoriesListGroupItemProps {
   children: React.ReactNode
 }
 
-const CategoriesListGroupItem: React.FC<ICategoriesListGroupItemProps> = ({
+const CategoriesListGroupItem: React.FC<CategoriesListGroupItemProps> = ({
   children,
 }) => <li className="categories-list-group-item">{children}</li>
 

@@ -2,14 +2,14 @@ import React from "react"
 import { useModal } from "../UI/Modal"
 import portal from "../UI/portal"
 
-interface ModalContext {
+interface ModalContextData {
   isOpen: boolean
   component: React.ReactNode
   openModal: (component: React.ReactNode) => void
   closeModal: () => void
 }
 
-const ModalContext = React.createContext<ModalContext>({
+const ModalContext = React.createContext<ModalContextData>({
   isOpen: false,
   component: null,
   openModal: () => {},

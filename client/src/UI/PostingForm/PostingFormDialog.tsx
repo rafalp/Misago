@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IPostingFormDialogProps {
+interface PostingFormDialogProps {
   children: React.ReactNode
 }
 
-const PostingFormDialog: React.FC<IPostingFormDialogProps> = ({
+const PostingFormDialog: React.FC<PostingFormDialogProps> = ({
   children,
 }) => <div className="posting-form-dialog">{children}</div>
 

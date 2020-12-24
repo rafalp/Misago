@@ -2,13 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useHistory } from "react-router-dom"
 import { DropdownContainer, DropdownHeader } from "../Dropdown"
-import { IPaginatorProps } from "./Paginator.types"
+import { PaginatorProps } from "./Paginator.types"
 
-interface IPaginatorDropdownMenuProps extends IPaginatorProps {
+interface PaginatorDropdownMenuProps extends PaginatorProps {
   close: () => void
 }
 
-const PaginatorDropdownMenuProps: React.FC<IPaginatorDropdownMenuProps> = ({
+const PaginatorDropdownMenu: React.FC<PaginatorDropdownMenuProps> = ({
   close,
   page,
   pages,
@@ -57,4 +57,4 @@ const PaginatorDropdownMenuProps: React.FC<IPaginatorDropdownMenuProps> = ({
   )
 }
 
-export default PaginatorDropdownMenuProps
+export default PaginatorDropdownMenu

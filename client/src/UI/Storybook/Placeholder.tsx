@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IPlaceholderProps {
+interface PlaceholderProps {
   text: string
 }
 
-const Placeholder: React.FC<IPlaceholderProps> = ({ text }) => (
+const Placeholder: React.FC<PlaceholderProps> = ({ text }) => (
   <div
     style={{
       color: "#8993a4",

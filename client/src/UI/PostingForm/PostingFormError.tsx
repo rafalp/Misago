@@ -1,11 +1,11 @@
 import React from "react"
 
-interface IPostingFormErrorProps {
+interface PostingFormErrorProps {
   detail?: React.ReactNode
   error: React.ReactNode
 }
 
-const PostingFormError: React.FC<IPostingFormErrorProps> = ({
+const PostingFormError: React.FC<PostingFormErrorProps> = ({
   detail,
   error,
 }) => (

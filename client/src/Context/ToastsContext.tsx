@@ -1,30 +1,30 @@
 import React from "react"
 
-interface IToast {
+interface Toast {
   id: string
   text: React.ReactNode
 }
 
-interface IToastsContext {
-  toasts: Array<IToast>
+interface ToastsContextData {
+  toasts: Array<Toast>
   showToast: (text: React.ReactNode) => string
   removeToast: (id: string) => void
 }
 
-const ToastsContext = React.createContext<IToastsContext>({
+const ToastsContext = React.createContext<ToastsContextData>({
   toasts: [],
   showToast: () => "null",
   removeToast: () => {},
 })
 
-interface IToastsProviderProps {
+interface ToastsProviderProps {
   children: React.ReactNode
 }
 
 const TOASTS_LIMIT = 5
 
-const ToastsProvider: React.FC<IToastsProviderProps> = ({ children }) => {
-  const [state, setState] = React.useState<Array<IToast>>([])
+const ToastsProvider: React.FC<ToastsProviderProps> = ({ children }) => {
+  const [state, setState] = React.useState<Array<Toast>>([])
 
   return (
     <ToastsContext.Provider

@@ -2,12 +2,18 @@ import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import CategoryIcon from "../CategoryIcon"
-import { ICategory } from "./CategoryButton.types"
 
-interface ICategoryButtonProps {
+interface Category {
+  id: string
+  name: string
+  color: string | null
+  icon: string | null
+}
+
+interface CategoryButtonProps {
   active?: boolean
   block?: boolean
-  category: ICategory
+  category: Category
   disabled?: boolean
   icon?: React.ReactNode
   link?: string | null
@@ -17,7 +23,7 @@ interface ICategoryButtonProps {
   onClick?: () => void
 }
 
-const CategoryButton: React.FC<ICategoryButtonProps> = ({
+const CategoryButton: React.FC<CategoryButtonProps> = ({
   active,
   block,
   category,

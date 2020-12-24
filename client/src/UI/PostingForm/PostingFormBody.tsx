@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IPostingFormBodyProps {
+interface PostingFormBodyProps {
   children: React.ReactNode
 }
 
-const PostingFormBody: React.FC<IPostingFormBodyProps> = ({ children }) => (
+const PostingFormBody: React.FC<PostingFormBodyProps> = ({ children }) => (
   <div className="posting-form-body">{children}</div>
 )
 

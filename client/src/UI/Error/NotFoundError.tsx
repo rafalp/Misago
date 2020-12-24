@@ -2,13 +2,13 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import Error from "./Error"
 
-interface INotFoundErrorProps {
+interface NotFoundErrorProps {
   className: string
   header?: React.ReactNode
   message?: React.ReactNode
 }
 
-const NotFoundError: React.FC<INotFoundErrorProps> = ({
+const NotFoundError: React.FC<NotFoundErrorProps> = ({
   className,
   header,
   message,

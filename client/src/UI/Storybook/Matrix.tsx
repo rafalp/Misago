@@ -1,6 +1,6 @@
 import React from "react"
 
-interface IMatrixProps {
+interface MatrixProps {
   items: Array<
     Array<{
       name: string
@@ -9,7 +9,7 @@ interface IMatrixProps {
   >
 }
 
-const Matrix: React.FC<IMatrixProps> = ({ items }) => (
+const Matrix: React.FC<MatrixProps> = ({ items }) => (
   <>
     {items.map((cols, i) => (
       <div className="row m-4" key={i}>

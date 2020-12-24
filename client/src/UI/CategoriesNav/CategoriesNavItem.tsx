@@ -2,14 +2,14 @@ import React from "react"
 import * as urls from "../../urls"
 import CategoryIcon from "../CategoryIcon"
 import { SideNavItem } from "../SideNav"
-import { IActiveCategory, ICategory } from "./CategoriesNav.types"
+import { ActiveCategory, Category } from "./CategoriesNav.types"
 
-interface ICategoriesNavItemProps {
-  category: ICategory
-  active?: IActiveCategory | null
+interface CategoriesNavItemProps {
+  category: Category
+  active?: ActiveCategory | null
 }
 
-const CategoriesNavItem: React.FC<ICategoriesNavItemProps> = ({
+const CategoriesNavItem: React.FC<CategoriesNavItemProps> = ({
   category,
   active,
 }) => {

@@ -23,7 +23,7 @@ export default {
   decorators: [withKnobs],
 }
 
-interface IPostingFormValues {
+interface PostingFormValues {
   title: string
   category: string
   markup: string
@@ -50,7 +50,7 @@ const Boilerplate: React.FC = ({ children }) => {
           show={boolean("Show", true)}
         >
           <PostingFormDialog>
-            <Form<IPostingFormValues>
+            <Form<PostingFormValues>
               defaultValues={{
                 title: "",
                 category: categories[0].children[0].id,

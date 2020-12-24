@@ -1,7 +1,7 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IButtonJustifiedProps {
+interface ButtonJustifiedProps {
   className?: string | null
   disabled?: boolean
   left?: React.ReactNode
@@ -12,7 +12,7 @@ interface IButtonJustifiedProps {
   onClick?: () => void
 }
 
-const ButtonJustified: React.FC<IButtonJustifiedProps> = ({
+const ButtonJustified: React.FC<ButtonJustifiedProps> = ({
   className,
   disabled,
   left,

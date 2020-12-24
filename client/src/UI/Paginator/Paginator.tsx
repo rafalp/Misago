@@ -1,11 +1,11 @@
 import React from "react"
 import Icon from "../Icon"
-import { IPaginatorProps } from "./Paginator.types"
+import { PaginatorProps } from "./Paginator.types"
 import PaginatorButton from "./PaginatorButton"
 import PaginatorDropdown from "./PaginatorDropdown"
 import getPaginatorPagesList from "./getPaginatorPagesList"
 
-const Paginator: React.FC<IPaginatorProps> = ({ page, pages, url }) => (
+const Paginator: React.FC<PaginatorProps> = ({ page, pages, url }) => (
   <div className="paginator paginator-full">
     <PaginatorButton
       className="btn-paginator-prev"

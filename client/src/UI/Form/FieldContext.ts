@@ -1,6 +1,6 @@
 import React from "react"
 
-interface IFieldContext {
+interface FieldContextData {
   disabled?: boolean
   id?: string
   invalid?: boolean
@@ -8,7 +8,7 @@ interface IFieldContext {
   required?: boolean
 }
 
-const FieldContext = React.createContext<IFieldContext>({})
+const FieldContext = React.createContext<FieldContextData>({})
 
 const useFieldContext = () => React.useContext(FieldContext)
 

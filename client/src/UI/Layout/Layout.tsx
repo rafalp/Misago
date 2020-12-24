@@ -1,10 +1,10 @@
 import React from "react"
 
-interface ILayoutProps {
+interface LayoutProps {
   children?: React.ReactNode
 }
 
-const Layout: React.FC<ILayoutProps> = ({ children }) => (
+const Layout: React.FC<LayoutProps> = ({ children }) => (
   <div className="row">{children}</div>
 )
 

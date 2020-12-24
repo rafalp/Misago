@@ -3,7 +3,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 import Icon from "../Icon"
 
-interface ISideNavItemProps {
+interface SideNavItemProps {
   className?: string | null
   children: React.ReactNode
   hasChildren?: boolean
@@ -13,7 +13,7 @@ interface ISideNavItemProps {
   to: string
 }
 
-const SideNavItem: React.FC<ISideNavItemProps> = ({
+const SideNavItem: React.FC<SideNavItemProps> = ({
   className,
   children,
   hasChildren,

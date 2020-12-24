@@ -2,12 +2,12 @@ import classnames from "classnames"
 import React from "react"
 import Spinner from "../Spinner"
 
-interface ISectionLoaderProps {
+interface SectionLoaderProps {
   loading?: boolean
   children: React.ReactNode
 }
 
-const SectionLoader: React.FC<ISectionLoaderProps> = ({
+const SectionLoader: React.FC<SectionLoaderProps> = ({
   children,
   loading,
 }) => (

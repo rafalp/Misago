@@ -3,13 +3,13 @@ import classnames from "classnames"
 import React from "react"
 import portal from "../portal"
 
-interface IToggleArgs {
+interface ToggleArgs {
   ref: React.MutableRefObject<HTMLButtonElement | null>
   close: () => void
   toggle: () => void
 }
 
-interface IMenuArgs {
+interface MenuArgs {
   close: () => void
 }
 
@@ -25,8 +25,8 @@ interface DropdownProps {
     | "top-end"
     | "left"
     | "right"
-  toggle: (args: IToggleArgs) => React.ReactNode
-  menu: (args: IMenuArgs) => React.ReactNode
+  toggle: (args: ToggleArgs) => React.ReactNode
+  menu: (args: MenuArgs) => React.ReactNode
 }
 
 const Dropdown: React.FC<DropdownProps> = ({

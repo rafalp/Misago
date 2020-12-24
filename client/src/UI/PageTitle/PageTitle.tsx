@@ -1,10 +1,10 @@
 import React from "react"
 
-interface IPageTitleProps {
+interface PageTitleProps {
   text: React.ReactNode
 }
 
-const PageTitle: React.FC<IPageTitleProps> = ({ text }) => (
+const PageTitle: React.FC<PageTitleProps> = ({ text }) => (
   <h1 className="page-title">{text}</h1>
 )
 

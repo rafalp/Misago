@@ -1,11 +1,11 @@
 import React from "react"
 import { RichText as RichTextType } from "../../types"
 
-interface IRichTextProps {
+interface RichTextProps {
   richText: RichTextType
 }
 
-const RichText: React.FC<IRichTextProps> = ({ richText }) => (
+const RichText: React.FC<RichTextProps> = ({ richText }) => (
   <article className="misago-richtext">
     {richText.map((block) => {
       if (block.type === "p") {

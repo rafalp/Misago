@@ -1,12 +1,12 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IIconProps {
+interface IconProps {
   fixedWidth?: boolean
   icon: string
 }
 
-const Icon: React.FC<IIconProps> = ({ fixedWidth, icon }) => (
+const Icon: React.FC<IconProps> = ({ fixedWidth, icon }) => (
   <i className={classnames(icon, { "fa-fw": fixedWidth })} />
 )
 

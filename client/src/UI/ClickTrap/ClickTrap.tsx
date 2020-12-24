@@ -1,12 +1,12 @@
 import React from "react"
 
-interface IClickTrapProps {
+interface ClickTrapProps {
   className?: string
   children?: React.ReactNode
   onClick: () => void
 }
 
-const ClickTrap: React.FC<IClickTrapProps> = ({
+const ClickTrap: React.FC<ClickTrapProps> = ({
   className,
   children,
   onClick,

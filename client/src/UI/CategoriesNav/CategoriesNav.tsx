@@ -4,14 +4,14 @@ import { useCategoriesContext, useSettingsContext } from "../../Context"
 import * as urls from "../../urls"
 import CategoryIcon from "../CategoryIcon"
 import { SideNav, SideNavItem } from "../SideNav"
-import { IActiveCategory } from "./CategoriesNav.types"
+import { ActiveCategory } from "./CategoriesNav.types"
 import CategoriesNavItem from "./CategoriesNavItem"
 
-interface ICategoriesNavProps {
-  active?: IActiveCategory | null
+interface CategoriesNavProps {
+  active?: ActiveCategory | null
 }
 
-const CategoriesNav: React.FC<ICategoriesNavProps> = ({ active }) => {
+const CategoriesNav: React.FC<CategoriesNavProps> = ({ active }) => {
   const categories = useCategoriesContext()
   const settings = useSettingsContext()
 

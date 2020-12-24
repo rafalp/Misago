@@ -11,7 +11,7 @@ import {
 } from "react-hook-form"
 import { FormContext } from "./FormContext"
 
-interface IOnSubmit<FormValues extends FieldValues = FieldValues> {
+interface OnSubmit<FormValues extends FieldValues = FieldValues> {
   data: FormValues
   event?: React.BaseSyntheticEvent<object, any, any>
   clearErrors(name?: FieldName<FieldValues> | FieldName<FieldValues>[]): void
@@ -24,7 +24,7 @@ interface FormProps<FormValues> {
   defaultValues?: UnpackNestedValue<DeepPartial<FormValues>>
   disabled?: boolean
   id?: string
-  onSubmit?: (args: IOnSubmit<FormValues>) => void | Promise<void>
+  onSubmit?: (args: OnSubmit<FormValues>) => void | Promise<void>
   validationMode?: "onSubmit" | "onBlur" | "onChange"
   validators?: any
 }

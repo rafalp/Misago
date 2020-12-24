@@ -1,22 +1,22 @@
 import React from "react"
 
-interface IBodyScrollLockContext {
+interface BodyScrollLockContextData {
   stack: number
   increaseStack: () => void
   decreaseStack: () => void
 }
 
-const BodyScrollLockContext = React.createContext<IBodyScrollLockContext>({
+const BodyScrollLockContext = React.createContext<BodyScrollLockContextData>({
   stack: 0,
   increaseStack: () => {},
   decreaseStack: () => {},
 })
 
-interface IBodyScrollLockProviderProps {
+interface BodyScrollLockProviderProps {
   children?: React.ReactNode
 }
 
-const BodyScrollLockProvider: React.FC<IBodyScrollLockProviderProps> = ({
+const BodyScrollLockProvider: React.FC<BodyScrollLockProviderProps> = ({
   children,
 }) => {
   const [stack, setStack] = React.useState(0)

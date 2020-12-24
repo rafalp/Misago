@@ -3,14 +3,14 @@ import classnames from "classnames"
 import React from "react"
 import { ButtonSecondary } from "../Button"
 import { Dropdown } from "../Dropdown"
-import { IPaginatorProps } from "./Paginator.types"
+import { PaginatorProps } from "./Paginator.types"
 import PaginatorDropdownMenu from "./PaginatorDropdownMenu"
 
-interface IPaginatorDropdownProps extends IPaginatorProps {
+interface PaginatorDropdownProps extends PaginatorProps {
   compact?: boolean
 }
 
-const PaginatorDropdown: React.FC<IPaginatorDropdownProps> = ({
+const PaginatorDropdown: React.FC<PaginatorDropdownProps> = ({
   compact,
   page,
   pages,

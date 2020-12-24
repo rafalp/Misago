@@ -5,7 +5,7 @@ import { FieldContext } from "./FieldContext"
 import { FieldLabel } from "./FieldLabel"
 import { FormContext } from "./FormContext"
 
-interface IFieldProps {
+interface FieldProps {
   check?: boolean
   className?: string
   disabled?: boolean
@@ -21,7 +21,7 @@ interface IFieldProps {
   required?: boolean
 }
 
-const Field: React.FC<IFieldProps> = ({
+const Field: React.FC<FieldProps> = ({
   check,
   className,
   disabled,

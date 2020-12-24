@@ -1,13 +1,13 @@
 import classnames from "classnames"
 import React from "react"
 
-interface IRootContainerProps {
+interface RootContainerProps {
   children: React.ReactNode
   center?: boolean
   nopadding?: boolean
 }
 
-const RootContainer: React.FC<IRootContainerProps> = ({
+const RootContainer: React.FC<RootContainerProps> = ({
   children,
   center,
   nopadding,
