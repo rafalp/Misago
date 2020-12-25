@@ -3,12 +3,12 @@ import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../../../../UI/Form"
 import useSelection from "../../../../UI/useSelection"
 import { MutationError } from "../../../../types"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 import ThreadPostsModerationSelectedPostsListItem from "./ThreadPostsModerationSelectedPostsListItem"
 
 interface ThreadPostsModerationSelectedPostsListProps {
   errors?: Record<string, MutationError>
-  posts: Array<IPost>
+  posts: Array<Post>
 }
 
 const ThreadPostsModerationSelectedPostsList: React.FC<ThreadPostsModerationSelectedPostsListProps> = ({
@@ -19,7 +19,7 @@ const ThreadPostsModerationSelectedPostsList: React.FC<ThreadPostsModerationSele
   const name = context ? context.name : undefined
 
   const { register, unregister, setValue } = useFormContext() || {}
-  const { change, selection, selected } = useSelection<IPost>(posts, posts)
+  const { change, selection, selected } = useSelection<Post>(posts, posts)
 
   React.useEffect(() => {
     if (register && unregister) {

@@ -19,7 +19,7 @@ const POST_THREAD = gql`
   }
 `
 
-interface IPostThreadMutationData {
+interface PostThreadMutationData {
   postThread: {
     errors: Array<MutationError> | null
     thread: {
@@ -30,7 +30,7 @@ interface IPostThreadMutationData {
   }
 }
 
-interface IPostThreadMutationValues {
+interface PostThreadMutationValues {
   input: {
     category: string
     title: string
@@ -40,7 +40,7 @@ interface IPostThreadMutationValues {
 }
 
 const usePostThreadMutation = () => {
-  return useMutation<IPostThreadMutationData, IPostThreadMutationValues>(
+  return useMutation<PostThreadMutationData, PostThreadMutationValues>(
     POST_THREAD
   )
 }

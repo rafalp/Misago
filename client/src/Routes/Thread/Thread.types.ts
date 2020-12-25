@@ -47,9 +47,9 @@ export interface ModerationAction {
   action: () => Promise<void> | void
 }
 
-export interface IPost {
+export interface Post {
   id: string
-  poster: IPoster | null
+  poster: Poster | null
   posterName: string
   richText: RichText
   edits: number
@@ -57,7 +57,7 @@ export interface IPost {
   extra: Record<string, any>
 }
 
-export interface IPoster {
+export interface Poster {
   id: string
   name: string
   slug: string
@@ -73,7 +73,7 @@ export interface ThreadPosts {
 }
 
 export interface ThreadPostsPage {
-  items: Array<IPost>
+  items: Array<Post>
   number: number
   start: number
   stop: number

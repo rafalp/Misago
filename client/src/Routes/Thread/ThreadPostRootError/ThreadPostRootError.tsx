@@ -9,13 +9,13 @@ import useLocationError from "../../../UI/useLocationError"
 import useRootError from "../../../UI/useRootError"
 import { MutationError } from "../../../types"
 
-interface IRootError {
+interface Error {
   message: React.ReactNode
   type: string
 }
 
 interface ThreadPostRootErrorProps {
-  children: (error: IRootError) => React.ReactElement
+  children: (error: Error) => React.ReactElement
   dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
 }

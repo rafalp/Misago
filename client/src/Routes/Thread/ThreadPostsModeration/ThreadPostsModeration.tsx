@@ -4,11 +4,11 @@ import { ButtonDark } from "../../../UI/Button"
 import { Dropdown } from "../../../UI/Dropdown"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
 import FixedContainer from "../../../UI/FixedContainer"
-import { IPostsModeration } from "./ThreadPostsModeration.types"
+import { PostsModeration } from "./ThreadPostsModeration.types"
 import ThreadPostsModerationMenu from "./ThreadPostsModerationMenu"
 
 interface ThreadPostsModerationProps {
-  moderation?: IPostsModeration | null
+  moderation?: PostsModeration | null
   selection: {
     selected: Array<any>
     clear: () => void

@@ -3,11 +3,11 @@ import { ModalBody } from "../../../../UI/Modal"
 import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI/Tidbits"
 import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { MutationError } from "../../../../types"
-import { ISelectedThread } from "../../Threads.types"
+import { SelectedThread } from "../../Threads.types"
 
 interface ThreadsModerationErrorThreadsProps {
   errors: Record<string, MutationError>
-  threads: Array<ISelectedThread>
+  threads: Array<SelectedThread>
 }
 
 const ThreadsModerationErrorThreads: React.FC<ThreadsModerationErrorThreadsProps> = ({

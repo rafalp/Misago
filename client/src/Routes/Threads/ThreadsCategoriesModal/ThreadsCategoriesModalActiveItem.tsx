@@ -1,10 +1,10 @@
 import React from "react"
 import * as urls from "../../../urls"
-import { IActiveCategory } from "../Threads.types"
+import { ActiveCategory } from "../Threads.types"
 import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
 interface ThreadsCategoriesModalActiveItemProps {
-  active: IActiveCategory
+  active: ActiveCategory
 }
 
 const ThreadsCategoriesModalActiveItem: React.FC<ThreadsCategoriesModalActiveItemProps> = ({

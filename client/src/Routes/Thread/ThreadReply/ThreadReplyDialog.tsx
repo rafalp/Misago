@@ -12,9 +12,7 @@ interface ThreadReplyDialogProps {
   children: React.ReactNode
 }
 
-const ThreadReplyDialog: React.FC<ThreadReplyDialogProps> = ({
-  children,
-}) => {
+const ThreadReplyDialog: React.FC<ThreadReplyDialogProps> = ({ children }) => {
   const context = useThreadReplyContext()
   if (!context) return null
 

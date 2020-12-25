@@ -3,11 +3,11 @@ import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import { ModalMessageBody } from "../../../UI/Modal"
 
-interface IPostThreadCategorySelectNoResultsProps {
+interface PostThreadCategorySelectNoResultsProps {
   setSearch: (value: string) => void
 }
 
-const PostThreadCategorySelectNoResults: React.FC<IPostThreadCategorySelectNoResultsProps> = ({
+const PostThreadCategorySelectNoResults: React.FC<PostThreadCategorySelectNoResultsProps> = ({
   setSearch,
 }) => (
   <ModalMessageBody

@@ -1,15 +1,15 @@
 import React from "react"
 import { useModal } from "../../../UI/Modal"
-import { IActiveCategory } from "../Threads.types"
+import { ActiveCategory } from "../Threads.types"
 
-interface ThreadsCategoriesModalContext {
+interface ThreadsCategoriesModalContextData {
   isOpen: boolean
-  active?: IActiveCategory | null
-  open: (active?: IActiveCategory | null) => void
+  active?: ActiveCategory | null
+  open: (active?: ActiveCategory | null) => void
   close: () => void
 }
 
-const ThreadsCategoriesModalContext = React.createContext<ThreadsCategoriesModalContext>(
+const ThreadsCategoriesModalContext = React.createContext<ThreadsCategoriesModalContextData>(
   { isOpen: false, active: null, open: () => {}, close: () => {} }
 )
 
@@ -20,7 +20,7 @@ interface ThreadsCategoriesModalContextProviderProps {
 const ThreadsCategoriesModalContextProvider: React.FC<ThreadsCategoriesModalContextProviderProps> = ({
   children,
 }) => {
-  const [active, setActive] = React.useState<IActiveCategory | null>(null)
+  const [active, setActive] = React.useState<ActiveCategory | null>(null)
   const { isOpen, closeModal, openModal } = useModal()
 
   return (
@@ -28,7 +28,7 @@ const ThreadsCategoriesModalContextProvider: React.FC<ThreadsCategoriesModalCont
       value={{
         isOpen,
         active,
-        open: (active?: IActiveCategory | null) => {
+        open: (active?: ActiveCategory | null) => {
           setActive(active || null)
           openModal()
         },

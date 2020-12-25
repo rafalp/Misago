@@ -1,15 +1,15 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useAuthContext, useModalContext } from "../../../Context"
-import { IPost, Thread } from "../Thread.types"
-import { IPostsModeration } from "./ThreadPostsModeration.types"
+import { Post, Thread } from "../Thread.types"
+import { PostsModeration } from "./ThreadPostsModeration.types"
 import ThreadPostsModerationDelete from "./ThreadPostsModerationDelete"
 
 const useThreadPostsModeration = (
   thread: Thread | null,
-  posts: Array<IPost>,
+  posts: Array<Post>,
   page: number | undefined
-): IPostsModeration | null => {
+): PostsModeration | null => {
   const user = useAuthContext()
   const { openModal } = useModalContext()
 

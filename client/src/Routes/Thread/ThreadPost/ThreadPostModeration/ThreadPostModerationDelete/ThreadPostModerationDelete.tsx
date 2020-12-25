@@ -2,12 +2,12 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../../../Context"
 import { Modal, ModalDialog } from "../../../../../UI/Modal"
-import { IPost } from "../../../Thread.types"
+import { Post } from "../../../Thread.types"
 import ThreadPostModerationDeleteForm from "./ThreadPostModerationDeleteForm"
 
 interface ThreadPostModerationDeleteProps {
   threadId: string
-  post: IPost
+  post: Post
   page?: number
 }
 

@@ -19,9 +19,7 @@ interface ThreadBreadcrumbsProps {
   }
 }
 
-const ThreadBreadcrumbs: React.FC<ThreadBreadcrumbsProps> = ({
-  category,
-}) => (
+const ThreadBreadcrumbs: React.FC<ThreadBreadcrumbsProps> = ({ category }) => (
   <Responsive className="thread-breadcrumbs" mobile>
     <div className="row">
       {category.parent && (

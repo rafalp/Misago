@@ -4,11 +4,11 @@ import { ButtonJustified } from "../../../UI/Button"
 import CategoryIcon from "../../../UI/CategoryIcon"
 import Icon from "../../../UI/Icon"
 import { Toolbar, ToolbarItem } from "../../../UI/Toolbar"
-import { IActiveCategory } from "../Threads.types"
+import { ActiveCategory } from "../Threads.types"
 import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 
 interface ThreadsCategoriesModalButtonProps {
-  active?: IActiveCategory | null
+  active?: ActiveCategory | null
 }
 
 const ThreadsCategoriesModalButton: React.FC<ThreadsCategoriesModalButtonProps> = ({

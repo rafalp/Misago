@@ -15,13 +15,13 @@ const DELETE_THREAD = gql`
   }
 `
 
-interface IDeleteThreadMutationData {
+interface DeleteThreadMutationData {
   deleteThread: {
     errors: Array<MutationError> | null
   }
 }
 
-interface IDeleteThreadMutationVariables {
+interface DeleteThreadMutationVariables {
   input: {
     thread: string
   }
@@ -29,8 +29,8 @@ interface IDeleteThreadMutationVariables {
 
 const useDeleteThreadMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadMutationData,
-    IDeleteThreadMutationVariables
+    DeleteThreadMutationData,
+    DeleteThreadMutationVariables
   >(DELETE_THREAD)
 
   return {

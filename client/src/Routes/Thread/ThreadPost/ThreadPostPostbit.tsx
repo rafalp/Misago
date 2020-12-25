@@ -2,10 +2,10 @@ import React from "react"
 import { Link } from "react-router-dom"
 import Avatar from "../../../UI/Avatar"
 import * as urls from "../../../urls"
-import { IPost } from "../Thread.types"
+import { Post } from "../Thread.types"
 
 interface ThreadPostPostbitProps {
-  post: IPost
+  post: Post
 }
 
 const AVATAR_SIZE = 100

@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { MutationError } from "../../../../../types"
-import { IPost } from "../../../Thread.types"
+import { Post } from "../../../Thread.types"
 import { THREAD_QUERY, ThreadData } from "../../../useThreadQuery"
 
 const DELETE_THREAD_POST = gql`
@@ -38,14 +38,14 @@ const DELETE_THREAD_POST = gql`
   }
 `
 
-interface IDeleteThreadPostMutationData {
+interface DeleteThreadPostMutationData {
   deleteThreadPost: {
     errors: Array<MutationError> | null
     deleted: Array<string>
   }
 }
 
-interface IDeleteThreadPostMutationVariables {
+interface DeleteThreadPostMutationVariables {
   input: {
     thread: string
     post: string
@@ -54,15 +54,15 @@ interface IDeleteThreadPostMutationVariables {
 
 const useDeleteThreadPostMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadPostMutationData,
-    IDeleteThreadPostMutationVariables
+    DeleteThreadPostMutationData,
+    DeleteThreadPostMutationVariables
   >(DELETE_THREAD_POST)
 
   return {
     data,
     error,
     loading,
-    deletePost: (threadId: string, post: IPost, page: number | undefined) => {
+    deletePost: (threadId: string, post: Post, page: number | undefined) => {
       return mutation({
         variables: {
           input: { thread: threadId, post: post.id },

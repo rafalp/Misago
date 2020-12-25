@@ -12,11 +12,11 @@ export const POST_MARKUP_QUERY = gql`
   }
 `
 
-interface IPostMarkupVariables {
+interface PostMarkupVariables {
   id: string
 }
 
-interface IPostMarkupData {
+interface PostMarkupData {
   post: {
     id: string
     markup: string
@@ -24,8 +24,8 @@ interface IPostMarkupData {
   } | null
 }
 
-const usePostMarkupQuery = (variables: IPostMarkupVariables) => {
-  return useQuery<IPostMarkupData, IPostMarkupVariables>(POST_MARKUP_QUERY, {
+const usePostMarkupQuery = (variables: PostMarkupVariables) => {
+  return useQuery<PostMarkupData, PostMarkupVariables>(POST_MARKUP_QUERY, {
     variables,
     fetchPolicy: "network-only",
   })

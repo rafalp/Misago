@@ -12,12 +12,12 @@ import PostThreadPermissionDeniedError from "./PostThreadPermissionDeniedError"
 import useCategoriesQuery from "./useCategoriesQuery"
 import useValidCategories from "./useValidCategories"
 
-interface IPostThreadRouteParams {
+interface PostThreadRouteParams {
   id?: string
 }
 
 const PostThread: React.FC = () => {
-  const params = useParams<IPostThreadRouteParams>()
+  const params = useParams<PostThreadRouteParams>()
   const user = useAuthContext()
   const { data, error, loading } = useCategoriesQuery()
   const categories = data ? data.categories : []

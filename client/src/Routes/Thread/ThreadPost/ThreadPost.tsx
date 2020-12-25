@@ -1,14 +1,14 @@
 import React from "react"
 import { Card, CardBody, CardFooter } from "../../../UI/Card"
 import RichText from "../../../UI/RichText"
-import { IPost } from "../Thread.types"
+import { Post } from "../Thread.types"
 import ThreadPostHeader from "./ThreadPostHeader"
 import ThreadPostPostbit from "./ThreadPostPostbit"
 import usePostAcl from "./usePostAcl"
 import useScrollPostIntoView from "./useScrollPostIntoView"
 
 interface ThreadPostProps {
-  post: IPost
+  post: Post
   threadId: string
   threadSlug: string
   page?: number

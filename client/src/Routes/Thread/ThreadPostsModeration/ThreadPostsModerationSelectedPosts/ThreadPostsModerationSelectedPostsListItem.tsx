@@ -5,14 +5,14 @@ import Timestamp from "../../../../UI/Timestamp"
 import { PostValidationError } from "../../../../UI/ValidationError"
 import RichText from "../../../../UI/RichText"
 import { MutationError } from "../../../../types"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 
 interface ThreadPostsModerationSelectedThreadListItemProps {
   disabled?: boolean
   error?: MutationError
   id?: string
   selected?: boolean
-  post: IPost
+  post: Post
   changeSelection: (id: string, selected: boolean) => void
 }
 

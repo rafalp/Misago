@@ -2,14 +2,14 @@ import classnames from "classnames"
 import React from "react"
 import Icon from "../../../UI/Icon"
 
-interface IPostThreadCategoryInputBodyProps {
+interface PostThreadCategoryInputBodyProps {
   children: React.ReactNode
   disabled?: boolean
   responsive?: boolean
   onClick: () => void
 }
 
-const PostThreadCategoryInputBody: React.FC<IPostThreadCategoryInputBodyProps> = ({
+const PostThreadCategoryInputBody: React.FC<PostThreadCategoryInputBodyProps> = ({
   children,
   disabled,
   responsive,

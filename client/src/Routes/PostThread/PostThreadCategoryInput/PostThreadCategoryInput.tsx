@@ -9,13 +9,13 @@ import PostThreadCategoryInputPlaceholder from "./PostThreadCategoryInputPlaceho
 import PostThreadCategoryInputValue from "./PostThreadCategoryInputValue"
 import useCategoryChoice from "./useCategoryChoice"
 
-interface IPostThreadCategoryInputProps {
+interface PostThreadCategoryInputProps {
   choices: Array<CategoryChoice>
   validChoices: Array<string>
   responsive?: boolean
 }
 
-const PostThreadCategoryInput: React.FC<IPostThreadCategoryInputProps> = ({
+const PostThreadCategoryInput: React.FC<PostThreadCategoryInputProps> = ({
   choices,
   validChoices,
   responsive,

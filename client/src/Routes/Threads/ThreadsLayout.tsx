@@ -2,11 +2,11 @@ import React from "react"
 import CategoriesNav from "../../UI/CategoriesNav"
 import { Layout, LayoutMain, LayoutSide } from "../../UI/Layout"
 import RouteContainer from "../../UI/RouteContainer"
-import { IActiveCategory } from "./Threads.types"
+import { ActiveCategory } from "./Threads.types"
 import { ThreadsCategoriesModalButton } from "./ThreadsCategoriesModal"
 
 interface ThreadsLayoutProps {
-  activeCategory?: IActiveCategory | null
+  activeCategory?: ActiveCategory | null
   className?: string
   children: React.ReactNode
 }

@@ -19,7 +19,7 @@ const EDIT_THREAD_TITLE = gql`
   }
 `
 
-interface IEditThreadTitleMutationData {
+interface EditThreadTitleMutationData {
   editThreadTitle: {
     errors: Array<MutationError> | null
     thread: {
@@ -29,7 +29,7 @@ interface IEditThreadTitleMutationData {
   }
 }
 
-interface IEditThreadTitleMutationVariables {
+interface EditThreadTitleMutationVariables {
   input: {
     thread: string
     title: string
@@ -38,8 +38,8 @@ interface IEditThreadTitleMutationVariables {
 
 const useEditThreadTitleMutation = (thread: Thread) => {
   const [mutation, { data, error, loading }] = useMutation<
-    IEditThreadTitleMutationData,
-    IEditThreadTitleMutationVariables
+    EditThreadTitleMutationData,
+    EditThreadTitleMutationVariables
   >(EDIT_THREAD_TITLE)
 
   return {

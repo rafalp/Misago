@@ -25,7 +25,7 @@ const CLOSE_THREADS = gql`
   }
 `
 
-interface ICloseThreadsMutationData {
+interface CloseThreadsMutationData {
   closeThreads: {
     errors: Array<MutationError> | null
     threads: Array<{
@@ -36,7 +36,7 @@ interface ICloseThreadsMutationData {
   }
 }
 
-interface ICloseThreadsMutationVariables {
+interface CloseThreadsMutationVariables {
   input: {
     threads: Array<string>
     isClosed: boolean
@@ -46,10 +46,10 @@ interface ICloseThreadsMutationVariables {
 const useCloseThreadsMutation = (
   threads: Array<Thread>,
   isClosed: boolean
-): [() => Promise<void>, MutationResult<ICloseThreadsMutationData>] => {
+): [() => Promise<void>, MutationResult<CloseThreadsMutationData>] => {
   const [mutation, state] = useMutation<
-    ICloseThreadsMutationData,
-    ICloseThreadsMutationVariables
+    CloseThreadsMutationData,
+    CloseThreadsMutationVariables
   >(CLOSE_THREADS, {
     variables: {
       input: {

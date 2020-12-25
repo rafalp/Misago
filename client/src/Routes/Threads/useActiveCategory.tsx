@@ -1,14 +1,14 @@
 import React from "react"
 import { useCategoriesContext } from "../../Context"
-import { IActiveCategory } from "./Threads.types"
+import { ActiveCategory } from "./Threads.types"
 
 const useActiveCategory = (id?: string | null) => {
   const categories = useCategoriesContext()
 
-  return React.useMemo<IActiveCategory | null>(() => {
+  return React.useMemo<ActiveCategory | null>(() => {
     if (!id) return null
 
-    let category: IActiveCategory | null = null
+    let category: ActiveCategory | null = null
     categories.find((item) => {
       if (item.id === id) {
         category = { category: item, parent: item }

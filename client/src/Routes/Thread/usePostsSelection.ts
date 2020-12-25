@@ -1,6 +1,6 @@
 import useSelection from "../../UI/useSelection"
-import { IPost } from "./Thread.types"
+import { Post } from "./Thread.types"
 
-const usePostsSelection = (items?: Array<IPost>) => useSelection<IPost>(items)
+const usePostsSelection = (items?: Array<Post>) => useSelection<Post>(items)
 
 export default usePostsSelection

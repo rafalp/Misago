@@ -3,13 +3,13 @@ import React from "react"
 import { Field, FieldError } from "../../../../UI/Form"
 import { ThreadsValidationError } from "../../../../UI/ValidationError"
 import { MutationError } from "../../../../types"
-import { ISelectedThread } from "../../Threads.types"
+import { SelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsButton from "./ThreadsModerationSelectedThreadsButton"
 import ThreadsModerationSelectedThreadsList from "./ThreadsModerationSelectedThreadsList"
 
 interface ThreadsModerationSelectedThreadsProps {
   errors?: Record<string, MutationError>
-  threads: Array<ISelectedThread>
+  threads: Array<SelectedThread>
   min: number
   max: number
 }

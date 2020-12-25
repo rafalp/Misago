@@ -4,13 +4,13 @@ import RootError from "../../../UI/RootError"
 import { ThreadValidationError } from "../../../UI/ValidationError"
 import { MutationError } from "../../../types"
 
-interface ThreadRootError {
+interface Error {
   message: React.ReactNode
   type: string
 }
 
 interface ThreadRootErrorProps {
-  children: (error: ThreadRootError) => React.ReactElement
+  children: (error: Error) => React.ReactElement
   dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
 }

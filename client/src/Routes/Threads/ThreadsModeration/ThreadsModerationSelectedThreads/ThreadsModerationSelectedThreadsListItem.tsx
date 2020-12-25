@@ -4,14 +4,14 @@ import { Checkbox } from "../../../../UI/Checkbox"
 import { TidbitCategory, TidbitReplies, Tidbits } from "../../../../UI/Tidbits"
 import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { MutationError } from "../../../../types"
-import { ISelectedThread } from "../../Threads.types"
+import { SelectedThread } from "../../Threads.types"
 
 interface ThreadsModerationSelectedThreadsListItemProps {
   disabled?: boolean
   error?: MutationError
   id?: string
   selected?: boolean
-  thread: ISelectedThread
+  thread: SelectedThread
   changeSelection: (id: string, selected: boolean) => void
 }
 

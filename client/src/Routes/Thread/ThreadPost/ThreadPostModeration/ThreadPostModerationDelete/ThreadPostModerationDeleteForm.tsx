@@ -7,13 +7,13 @@ import {
   ModalFooter,
 } from "../../../../../UI/Modal"
 import RootError from "../../../../../UI/RootError"
-import { IPost } from "../../../Thread.types"
+import { Post } from "../../../Thread.types"
 import ThreadPostModerationError from "../ThreadPostModerationError"
 import useDeleteThreadPostMutation from "./useDeleteThreadPostMutation"
 
 interface ThreadPostModerationDeleteFormProps {
   threadId: string
-  post: IPost
+  post: Post
   page?: number
   close: () => void
 }

@@ -47,7 +47,7 @@ const MOVE_THREADS = gql`
   }
 `
 
-interface IMoveThreadMutationData {
+interface MoveThreadMutationData {
   moveThread: {
     errors: Array<MutationError> | null
     thread: {
@@ -57,7 +57,7 @@ interface IMoveThreadMutationData {
   }
 }
 
-interface IMoveThreadMutationVariables {
+interface MoveThreadMutationVariables {
   input: {
     thread: string
     category: string
@@ -66,8 +66,8 @@ interface IMoveThreadMutationVariables {
 
 const useMoveThreadMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IMoveThreadMutationData,
-    IMoveThreadMutationVariables
+    MoveThreadMutationData,
+    MoveThreadMutationVariables
   >(MOVE_THREADS)
 
   return {

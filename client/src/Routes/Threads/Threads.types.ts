@@ -1,6 +1,6 @@
 import { AvatarData, Category } from "../../types"
 
-export interface IActiveCategory {
+export interface ActiveCategory {
   category: Category
   parent: Category
 }
@@ -48,7 +48,7 @@ export interface ThreadsModerationAction {
   action: () => Promise<void> | void
 }
 
-export interface ISelectedThread {
+export interface SelectedThread {
   id: string
   title: string
   replies: number

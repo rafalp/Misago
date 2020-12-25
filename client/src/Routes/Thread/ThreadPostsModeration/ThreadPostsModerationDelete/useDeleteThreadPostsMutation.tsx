@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { getSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { MutationError } from "../../../../types"
-import { IPost, Thread } from "../../Thread.types"
+import { Post, Thread } from "../../Thread.types"
 import { THREAD_QUERY, ThreadData } from "../../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
@@ -41,14 +41,14 @@ const DELETE_THREAD_POSTS = gql`
   }
 `
 
-interface IDeleteThreadPostsMutationData {
+interface DeleteThreadPostsMutationData {
   deleteThreadPosts: {
     errors: Array<MutationError> | null
     deleted: Array<string>
   }
 }
 
-interface IDeleteThreadPostsMutationVariables {
+interface DeleteThreadPostsMutationVariables {
   input: {
     thread: string
     posts: Array<string>
@@ -57,8 +57,8 @@ interface IDeleteThreadPostsMutationVariables {
 
 const useDeleteThreadPostsMutation = () => {
   const [mutation, { data, error, loading }] = useMutation<
-    IDeleteThreadPostsMutationData,
-    IDeleteThreadPostsMutationVariables
+    DeleteThreadPostsMutationData,
+    DeleteThreadPostsMutationVariables
   >(DELETE_THREAD_POSTS)
 
   return {
@@ -67,7 +67,7 @@ const useDeleteThreadPostsMutation = () => {
     loading,
     deletePosts: (
       thread: Thread,
-      posts: Array<IPost>,
+      posts: Array<Post>,
       page: number | undefined
     ) => {
       const deletedPosts = posts.map((posts) => posts.id)
@@ -79,7 +79,7 @@ const useDeleteThreadPostsMutation = () => {
         update: (cache, { data }) => {
           if (!data || !data.deleteThreadPosts) return
 
-          const errors = getSelectionErrors<IPost>(
+          const errors = getSelectionErrors<Post>(
             "posts",
             posts,
             data.deleteThreadPosts.errors || []

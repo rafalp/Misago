@@ -11,7 +11,7 @@ import RootError from "../../../../UI/RootError"
 import useRootError from "../../../../UI/useRootError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { MutationError } from "../../../../types"
-import { ISelectedThread } from "../../Threads.types"
+import { SelectedThread } from "../../Threads.types"
 import ThreadsModerationErrorHeader from "./ThreadsModerationErrorHeader"
 import ThreadsModerationErrorThreads from "./ThreadsModerationErrorThreads"
 
@@ -19,7 +19,7 @@ interface ThreadsModerationErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
   forDelete?: boolean
-  threads?: Array<ISelectedThread>
+  threads?: Array<SelectedThread>
   close: () => void
 }
 
@@ -31,7 +31,7 @@ const ThreadsModerationError: React.FC<ThreadsModerationErrorProps> = ({
   close,
 }) => {
   const hasRootError = !!useRootError(errors)
-  const { errors: threadsErrors } = useSelectionErrors<ISelectedThread>(
+  const { errors: threadsErrors } = useSelectionErrors<SelectedThread>(
     "threads",
     threads,
     errors || []

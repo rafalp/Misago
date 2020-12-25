@@ -3,10 +3,10 @@ import React from "react"
 import { useToastsContext } from "../../../Context"
 import { DropdownLink } from "../../../UI/Dropdown"
 import * as urls from "../../../urls"
-import { IPost } from "../Thread.types"
+import { Post } from "../Thread.types"
 
 interface ThreadPostPermalinkProps {
-  post: IPost
+  post: Post
   threadId: string
   threadSlug: string
 }

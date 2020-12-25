@@ -4,11 +4,11 @@ import Timestamp from "../../../../UI/Timestamp"
 import { PostValidationError } from "../../../../UI/ValidationError"
 import RichText from "../../../../UI/RichText"
 import { MutationError } from "../../../../types"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 
 interface ThreadPostsModerationErrorPostsProps {
   errors: Record<string, MutationError>
-  posts: Array<IPost>
+  posts: Array<Post>
 }
 
 const ThreadPostsModerationErrorPosts: React.FC<ThreadPostsModerationErrorPostsProps> = ({

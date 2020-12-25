@@ -4,14 +4,14 @@ import CategoryIcon from "../../../UI/CategoryIcon"
 import Icon from "../../../UI/Icon"
 import { CategoryChoiceChild } from "../PostThread.types"
 
-interface IPostThreadCategoryInputValueProps {
+interface PostThreadCategoryInputValueProps {
   value: {
     parent?: CategoryChoiceChild | null
     child?: CategoryChoiceChild | null
   }
 }
 
-const PostThreadCategoryInputValue: React.FC<IPostThreadCategoryInputValueProps> = ({
+const PostThreadCategoryInputValue: React.FC<PostThreadCategoryInputValueProps> = ({
   value,
 }) => (
   <span

@@ -1,11 +1,11 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { MutationError } from "../../../../types"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 
 interface ThreadPostsModerationErrorHeaderProps {
   forDelete?: boolean
-  posts?: Array<IPost>
+  posts?: Array<Post>
   postsErrors?: Record<string, MutationError>
 }
 

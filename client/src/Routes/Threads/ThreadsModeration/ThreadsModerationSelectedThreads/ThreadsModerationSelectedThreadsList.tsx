@@ -3,12 +3,12 @@ import { useFormContext } from "react-hook-form"
 import { useFieldContext } from "../../../../UI/Form"
 import useSelection from "../../../../UI/useSelection"
 import { MutationError } from "../../../../types"
-import { ISelectedThread } from "../../Threads.types"
+import { SelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsListItem from "./ThreadsModerationSelectedThreadsListItem"
 
 interface ThreadsModerationSelectedThreadsListProps {
   errors?: Record<string, MutationError>
-  threads: Array<ISelectedThread>
+  threads: Array<SelectedThread>
 }
 
 const ThreadsModerationSelectedThreadsList: React.FC<ThreadsModerationSelectedThreadsListProps> = ({
@@ -19,7 +19,7 @@ const ThreadsModerationSelectedThreadsList: React.FC<ThreadsModerationSelectedTh
   const name = context ? context.name : undefined
 
   const { register, unregister, setValue } = useFormContext() || {}
-  const { change, selection, selected } = useSelection<ISelectedThread>(
+  const { change, selection, selected } = useSelection<SelectedThread>(
     threads,
     threads
   )

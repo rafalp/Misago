@@ -6,20 +6,20 @@ import { Form, FormFooter } from "../../../../UI/Form"
 import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
-import { IPost, Thread } from "../../Thread.types"
+import { Post, Thread } from "../../Thread.types"
 import ThreadPostsModerationError from "../ThreadPostsModerationError"
 import ThreadPostsModerationSelectedPosts from "../ThreadPostsModerationSelectedPosts"
 import useDeleteThreadPostsMutation from "./useDeleteThreadPostsMutation"
 
 interface ThreadPostsModerationDeleteProps {
   thread: Thread
-  posts: Array<IPost>
+  posts: Array<Post>
   page: number | undefined
   close: () => void
 }
 
 interface FormValues {
-  posts: Array<IPost>
+  posts: Array<Post>
 }
 
 const ThreadPostsModerationDelete: React.FC<ThreadPostsModerationDeleteProps> = ({
@@ -31,7 +31,7 @@ const ThreadPostsModerationDelete: React.FC<ThreadPostsModerationDeleteProps> = 
   const {
     errors: selectionErrors,
     setErrors: setSelectionErrors,
-  } = useSelectionErrors<IPost>("posts")
+  } = useSelectionErrors<Post>("posts")
 
   const {
     data,

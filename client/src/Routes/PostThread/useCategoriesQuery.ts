@@ -23,12 +23,12 @@ export const CATEGORIES_QUERY = gql`
   }
 `
 
-interface ICategoriesQueryData {
+interface CategoriesQueryData {
   categories: Array<CategoryChoice>
 }
 
 const useCategoriesQuery = () => {
-  return useQuery<ICategoriesQueryData>(CATEGORIES_QUERY)
+  return useQuery<CategoriesQueryData>(CATEGORIES_QUERY)
 }
 
 export default useCategoriesQuery

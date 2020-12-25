@@ -1,12 +1,12 @@
 import { useAuthContext } from "../../../Context"
 
-interface IPost {
+interface Post {
   poster: {
     id: string
   } | null
 }
 
-const usePostAcl = (post: IPost, isClosed?: boolean) => {
+const usePostAcl = (post: Post, isClosed?: boolean) => {
   const user = useAuthContext()
 
   if (user) {

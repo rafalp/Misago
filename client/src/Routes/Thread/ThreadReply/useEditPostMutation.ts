@@ -19,7 +19,7 @@ const EDIT_POST = gql`
   }
 `
 
-interface IEditPostMutationData {
+interface EditPostMutationData {
   editPost: {
     errors: Array<MutationError> | null
     post: {
@@ -30,7 +30,7 @@ interface IEditPostMutationData {
   }
 }
 
-interface IEditPostMutationVariables {
+interface EditPostMutationVariables {
   input: {
     post: string
     markup: string
@@ -39,8 +39,8 @@ interface IEditPostMutationVariables {
 
 const useEditPostMutation = (post: { id: string }) => {
   const [mutation, { data, error, loading }] = useMutation<
-    IEditPostMutationData,
-    IEditPostMutationVariables
+    EditPostMutationData,
+    EditPostMutationVariables
   >(EDIT_POST)
 
   return {

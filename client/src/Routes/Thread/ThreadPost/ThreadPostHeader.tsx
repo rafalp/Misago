@@ -5,13 +5,13 @@ import Avatar from "../../../UI/Avatar"
 import { Checkbox } from "../../../UI/Checkbox"
 import Timestamp from "../../../UI/Timestamp"
 import * as urls from "../../../urls"
-import { IPost } from "../Thread.types"
+import { Post } from "../Thread.types"
 import ThreadPostOptions from "./ThreadPostOptions"
 import { useThreadPostModeration } from "./ThreadPostModeration"
 
 interface ThreadPostHeaderProps {
   acl: { edit: boolean }
-  post: IPost
+  post: Post
   threadId: string
   threadSlug: string
   page?: number

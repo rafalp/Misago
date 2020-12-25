@@ -8,13 +8,13 @@ import PostThreadCategorySelectNoResults from "./PostThreadCategorySelectNoResul
 import PostThreadCategorySelectSearch from "./PostThreadCategorySelectSearch"
 import useFilteredChoices from "./useFilteredChoices"
 
-interface IPostThreadCategorySelectProps {
+interface PostThreadCategorySelectProps {
   choices: Array<CategoryChoice>
   validChoices: Array<string>
   setValue: (value: string) => void
 }
 
-const PostThreadCategorySelect: React.FC<IPostThreadCategorySelectProps> = ({
+const PostThreadCategorySelect: React.FC<PostThreadCategorySelectProps> = ({
   choices,
   validChoices,
   setValue,

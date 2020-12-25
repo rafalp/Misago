@@ -1,12 +1,12 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useAuthContext, useModalContext } from "../../../../Context"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 import ThreadPostModerationDelete from "./ThreadPostModerationDelete"
 
 const useThreadPostModeration = (
   threadId: string,
-  post: IPost,
+  post: Post,
   page: number | undefined
 ) => {
   const user = useAuthContext()

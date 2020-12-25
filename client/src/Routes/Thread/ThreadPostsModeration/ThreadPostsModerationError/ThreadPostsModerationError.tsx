@@ -9,13 +9,13 @@ import { ThreadValidationError } from "../../../../UI/ValidationError"
 import useLocationError from "../../../../UI/useLocationError"
 import useRootError from "../../../../UI/useRootError"
 import { MutationError } from "../../../../types"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 import ThreadPostsModerationErrorHeader from "./ThreadPostsModerationErrorHeader"
 import ThreadPostsModerationErrorPosts from "./ThreadPostsModerationErrorPosts"
 
 interface ThreadPostsModerationErrorProps {
   forDelete?: boolean
-  posts: Array<IPost>
+  posts: Array<Post>
   errors: Array<MutationError>
   selectionErrors: Record<string, MutationError>
   close: () => void

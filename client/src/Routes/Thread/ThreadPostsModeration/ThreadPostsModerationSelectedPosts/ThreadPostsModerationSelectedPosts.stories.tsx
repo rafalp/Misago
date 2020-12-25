@@ -3,7 +3,7 @@ import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
 import { Form } from "../../../../UI/Form"
 import { ModalFormContainer, userFactory } from "../../../../UI/Storybook"
-import { IPost } from "../../Thread.types"
+import { Post } from "../../Thread.types"
 import ThreadsModerationSelectedPosts from "./"
 
 export default {
@@ -12,7 +12,7 @@ export default {
 }
 
 interface FormValues {
-  posts: Array<IPost>
+  posts: Array<Post>
 }
 
 const submit = action("submit form")

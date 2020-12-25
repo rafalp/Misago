@@ -22,7 +22,7 @@ const POST_REPLY = gql`
   }
 `
 
-interface IPostReplyMutationData {
+interface PostReplyMutationData {
   postReply: {
     errors: Array<MutationError> | null
     thread: {
@@ -35,7 +35,7 @@ interface IPostReplyMutationData {
   }
 }
 
-interface IPostReplyMutationValues {
+interface PostReplyMutationValues {
   input: {
     thread: string
     markup: string
@@ -43,7 +43,7 @@ interface IPostReplyMutationValues {
 }
 
 const usePostReplyMutation = () => {
-  return useMutation<IPostReplyMutationData, IPostReplyMutationValues>(
+  return useMutation<PostReplyMutationData, PostReplyMutationValues>(
     POST_REPLY
   )
 }

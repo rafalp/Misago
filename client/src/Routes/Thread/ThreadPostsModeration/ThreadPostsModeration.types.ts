@@ -1,11 +1,11 @@
 import React from "react"
 
-export interface IPostsModeration {
-  actions: Array<IPostsModerationAction>
+export interface PostsModeration {
+  actions: Array<PostsModerationAction>
   loading: boolean
 }
 
-export interface IPostsModerationAction {
+export interface PostsModerationAction {
   name: React.ReactNode
   icon: string
   action: () => Promise<void> | void

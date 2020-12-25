@@ -7,13 +7,13 @@ import {
 import { ModalBody } from "../../../UI/Modal"
 import { CategoryChoice } from "../PostThread.types"
 
-interface IPostThreadCategorySelectItemsProps {
+interface PostThreadCategorySelectItemsProps {
   choices: Array<CategoryChoice>
   validChoices: Array<string>
   setValue: (value: string) => void
 }
 
-const PostThreadCategorySelectItems: React.FC<IPostThreadCategorySelectItemsProps> = ({
+const PostThreadCategorySelectItems: React.FC<PostThreadCategorySelectItemsProps> = ({
   choices,
   validChoices,
   setValue,

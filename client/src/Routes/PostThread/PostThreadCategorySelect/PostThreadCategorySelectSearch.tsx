@@ -4,12 +4,12 @@ import { ButtonSecondary } from "../../../UI/Button"
 import Input from "../../../UI/Input"
 import { ModalBody } from "../../../UI/Modal"
 
-interface IPostThreadCategorySelectSearchProps {
+interface PostThreadCategorySelectSearchProps {
   search: string
   setSearch: (value: string) => void
 }
 
-const PostThreadCategorySelectSearch: React.FC<IPostThreadCategorySelectSearchProps> = ({
+const PostThreadCategorySelectSearch: React.FC<PostThreadCategorySelectSearchProps> = ({
   search,
   setSearch,
 }) => (
