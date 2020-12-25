@@ -4,11 +4,11 @@ import { useAuthContext } from "../../../Context"
 import { ButtonPrimary, ButtonSecondary } from "../../../UI/Button"
 import { useThreadReplyContext } from "../ThreadReply"
 
-interface IThreadToolbarReplyButtonProps {
+interface ThreadToolbarReplyButtonProps {
   isClosed?: boolean
 }
 
-const ThreadToolbarReplyButton: React.FC<IThreadToolbarReplyButtonProps> = ({
+const ThreadToolbarReplyButton: React.FC<ThreadToolbarReplyButtonProps> = ({
   isClosed,
 }) => {
   const { startReply } = useThreadReplyContext() || {}

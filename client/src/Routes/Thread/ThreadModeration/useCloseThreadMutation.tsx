@@ -4,7 +4,7 @@ import React from "react"
 import gql from "graphql-tag"
 import { useModalContext } from "../../../Context"
 import { MutationError } from "../../../types"
-import { IThread } from "../Thread.types"
+import { Thread } from "../Thread.types"
 import ThreadModerationClose from "./ThreadModerationClose"
 import ThreadModerationOpen from "./ThreadModerationOpen"
 
@@ -42,7 +42,7 @@ interface ICloseThreadMutationVariables {
 }
 
 const useCloseThreadMutation = (
-  thread: IThread | null,
+  thread: Thread | null,
   isClosed: boolean
 ): [() => Promise<void>, MutationResult<ICloseThreadMutationData>] => {
   const [mutation, state] = useMutation<
@@ -78,11 +78,11 @@ const useCloseThreadMutation = (
   return [runMutation, state]
 }
 
-const useCloseThread = (thread: IThread | null) => {
+const useCloseThread = (thread: Thread | null) => {
   return useCloseThreadMutation(thread, true)
 }
 
-const useOpenThread = (thread: IThread | null) => {
+const useOpenThread = (thread: Thread | null) => {
   return useCloseThreadMutation(thread, false)
 }
 

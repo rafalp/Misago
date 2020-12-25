@@ -1,11 +1,11 @@
 import React from "react"
 import { Paginator, PaginatorCompact } from "../../../UI/Paginator"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
-import { ThreadModeration } from "../ThreadModeration"
-import { IThreadToolbarProps } from "./ThreadToolbar.types"
+import { ThreadModerationMenu } from "../ThreadModeration"
+import { ThreadToolbarProps } from "./ThreadToolbar.types"
 import ThreadToolbarReplyButton from "./ThreadToolbarReplyButton"
 
-const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
+const ThreadToolbarTop: React.FC<ThreadToolbarProps> = ({
   isClosed,
   moderation,
   pagination,
@@ -25,7 +25,7 @@ const ThreadToolbarTop: React.FC<IThreadToolbarProps> = ({
       <ToolbarSeparator />
       {moderation && (
         <ToolbarItem>
-          <ThreadModeration moderation={moderation} />
+          <ThreadModerationMenu moderation={moderation} />
         </ToolbarItem>
       )}
       <ToolbarItem>

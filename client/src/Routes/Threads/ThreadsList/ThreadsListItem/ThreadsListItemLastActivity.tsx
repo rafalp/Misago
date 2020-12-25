@@ -1,13 +1,13 @@
 import React from "react"
 import { TidbitTimestamp, TidbitUser, Tidbits } from "../../../../UI/Tidbits"
 import * as urls from "../../../../urls"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 
-interface IThreadsListItemLastActivityProps {
-  thread: IThread
+interface ThreadsListItemLastActivityProps {
+  thread: Thread
 }
 
-const ThreadsListItemLastActivity: React.FC<IThreadsListItemLastActivityProps> = ({
+const ThreadsListItemLastActivity: React.FC<ThreadsListItemLastActivityProps> = ({
   thread,
 }) => (
   <div className="col-auto threads-list-activity">

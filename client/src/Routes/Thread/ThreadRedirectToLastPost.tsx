@@ -4,13 +4,13 @@ import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
 import RouteLoader from "../../UI/RouteLoader"
 import useThreadLastPostUrlQuery from "./useThreadLastPostUrlQuery"
 
-interface IThreadLastPostRouteParams {
+interface ThreadLastPostRouteParams {
   id: string
   slug: string
 }
 
 const ThreadRedirectToLastPost: React.FC = () => {
-  const { id } = useParams<IThreadLastPostRouteParams>()
+  const { id } = useParams<ThreadLastPostRouteParams>()
   const { data, loading, error } = useThreadLastPostUrlQuery({ id })
 
   if (!data) {

@@ -2,7 +2,7 @@ import React from "react"
 import ThreadsHeader from "./ThreadsHeader"
 import { CategoryBanner } from "../../../types"
 
-interface IThreadsHeaderCategoryProps {
+interface ThreadsHeaderCategoryProps {
   category: {
     name: string
     color: string | null
@@ -12,7 +12,7 @@ interface IThreadsHeaderCategoryProps {
   }
 }
 
-const ThreadsHeaderCategory: React.FC<IThreadsHeaderCategoryProps> = ({
+const ThreadsHeaderCategory: React.FC<ThreadsHeaderCategoryProps> = ({
   category,
 }) => (
   <ThreadsHeader

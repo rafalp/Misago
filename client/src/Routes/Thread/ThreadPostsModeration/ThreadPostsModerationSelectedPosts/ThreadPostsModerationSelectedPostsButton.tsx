@@ -2,12 +2,12 @@ import { Plural } from "@lingui/macro"
 import React from "react"
 import { ButtonSecondary } from "../../../../UI/Button"
 
-interface IThreadPostsModerationSelectedPostsButtonProps {
+interface ThreadPostsModerationSelectedPostsButtonProps {
   postsCount: number
   onClick: () => void
 }
 
-const ThreadPostsModerationSelectedPostsButton: React.FC<IThreadPostsModerationSelectedPostsButtonProps> = ({
+const ThreadPostsModerationSelectedPostsButton: React.FC<ThreadPostsModerationSelectedPostsButtonProps> = ({
   postsCount,
   onClick,
 }) => (

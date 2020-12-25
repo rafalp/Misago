@@ -3,15 +3,15 @@ import React from "react"
 import { useModalContext } from "../../../../Context"
 import { Modal, ModalDialog } from "../../../../UI/Modal"
 import { Category } from "../../../../types"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 import ThreadsModerationDeleteForm from "./ThreadsModerationDeleteForm"
 
-interface IThreadsModerationDeleteProps {
+interface ThreadsModerationDeleteProps {
   category?: Category | null
-  threads: Array<IThread>
+  threads: Array<Thread>
 }
 
-const ThreadsModerationDelete: React.FC<IThreadsModerationDeleteProps> = ({
+const ThreadsModerationDelete: React.FC<ThreadsModerationDeleteProps> = ({
   category,
   threads,
 }) => {

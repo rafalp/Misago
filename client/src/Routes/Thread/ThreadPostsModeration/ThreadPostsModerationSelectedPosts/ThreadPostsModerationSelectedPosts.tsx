@@ -7,14 +7,14 @@ import { IPost } from "../../Thread.types"
 import ThreadPostsModerationSelectedPostsButton from "./ThreadPostsModerationSelectedPostsButton"
 import ThreadPostsModerationSelectedPostsList from "./ThreadPostsModerationSelectedPostsList"
 
-interface IThreadPostsModerationSelectedPostsProps {
+interface ThreadPostsModerationSelectedPostsProps {
   errors?: Record<string, MutationError>
   posts: Array<IPost>
   min: number
   max: number
 }
 
-const ThreadPostsModerationSelectedPosts: React.FC<IThreadPostsModerationSelectedPostsProps> = ({
+const ThreadPostsModerationSelectedPosts: React.FC<ThreadPostsModerationSelectedPostsProps> = ({
   errors,
   posts,
   min,

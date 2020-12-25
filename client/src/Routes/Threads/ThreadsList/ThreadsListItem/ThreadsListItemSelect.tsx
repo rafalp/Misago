@@ -2,12 +2,12 @@ import React from "react"
 import { Checkbox } from "../../../../UI/Checkbox"
 import { FormCheckbox } from "../../../../UI/Form"
 
-interface IThreadsListItemSelectProps {
+interface ThreadsListItemSelectProps {
   selected: boolean
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const ThreadsListItemSelect: React.FC<IThreadsListItemSelectProps> = ({
+const ThreadsListItemSelect: React.FC<ThreadsListItemSelectProps> = ({
   selected,
   onChange,
 }) => (

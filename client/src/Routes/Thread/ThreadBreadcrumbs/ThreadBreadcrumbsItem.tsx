@@ -2,7 +2,7 @@ import React from "react"
 import CategoryButton from "../../../UI/CategoryButton"
 import * as urls from "../../../urls"
 
-interface IThreadBreadcrumbsItemProps {
+interface ThreadBreadcrumbsItemProps {
   category: {
     id: string
     name: string
@@ -12,7 +12,7 @@ interface IThreadBreadcrumbsItemProps {
   }
 }
 
-const ThreadBreadcrumbsItem: React.FC<IThreadBreadcrumbsItemProps> = ({
+const ThreadBreadcrumbsItem: React.FC<ThreadBreadcrumbsItemProps> = ({
   category,
 }) => (
   <CategoryButton

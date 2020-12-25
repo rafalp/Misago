@@ -2,11 +2,11 @@ import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { getSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { Category, MutationError } from "../../../../types"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 import {
   CATEGORY_THREADS_QUERY,
   THREADS_QUERY,
-  IThreadsData,
+  ThreadsData,
 } from "../../useThreadsQuery"
 
 const THREAD_NOT_EXISTS = "value_error.thread.not_exists"
@@ -47,7 +47,7 @@ const useDeleteThreadsMutation = () => {
     data,
     error,
     loading,
-    deleteThreads: (threads: Array<IThread>, category?: Category | null) => {
+    deleteThreads: (threads: Array<Thread>, category?: Category | null) => {
       const deletedThreadsIds = threads.map((thread) => thread.id)
       return mutation({
         variables: {
@@ -56,7 +56,7 @@ const useDeleteThreadsMutation = () => {
         update: (cache, { data }) => {
           if (!data || !data.deleteThreads) return
 
-          const errors = getSelectionErrors<IThread>(
+          const errors = getSelectionErrors<Thread>(
             "threads",
             threads,
             data.deleteThreads.errors || []
@@ -71,10 +71,10 @@ const useDeleteThreadsMutation = () => {
                 query: THREADS_QUERY,
               }
 
-          const query = cache.readQuery<IThreadsData>(queryID)
+          const query = cache.readQuery<ThreadsData>(queryID)
           if (!query) return null
 
-          cache.writeQuery<IThreadsData>({
+          cache.writeQuery<ThreadsData>({
             ...queryID,
             data: {
               ...query,

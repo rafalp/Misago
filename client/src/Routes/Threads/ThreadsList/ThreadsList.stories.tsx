@@ -4,7 +4,7 @@ import { ApolloError } from "apollo-client"
 import React from "react"
 import { Layout, LayoutMain, LayoutSide } from "../../../UI/Layout"
 import { RootContainer, categories } from "../../../UI/Storybook"
-import { IThread, IThreadPoster, IThreadCategory } from "../Threads.types"
+import { Thread, ThreadPoster, ThreadCategory } from "../Threads.types"
 import ThreadsList from "./ThreadsList"
 import useThreadsSelection from "../useThreadsSelection"
 
@@ -15,7 +15,7 @@ export default {
 
 const fetch = action("fetch")
 
-const threads = (items?: Array<IThread> | null) => {
+const threads = (items?: Array<Thread> | null) => {
   if (items) return { items, nextCursor: null }
   return { items: [], nextCursor: null }
 }
@@ -24,16 +24,16 @@ const thread = (data?: {
   id: string
   title?: string
   slug?: string
-  category?: IThreadCategory
-  starter?: IThreadPoster | null
+  category?: ThreadCategory
+  starter?: ThreadPoster | null
   starterName?: string
-  lastPoster?: IThreadPoster | null
+  lastPoster?: ThreadPoster | null
   lastPosterName?: string
   startedAt?: string
   lastPostedAt?: string
   replies?: number
   isClosed?: boolean
-}): IThread => {
+}): Thread => {
   return Object.assign(
     {
       id: "1",

@@ -2,8 +2,8 @@ import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { getSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { MutationError } from "../../../../types"
-import { IPost, IThread } from "../../Thread.types"
-import { THREAD_QUERY, IThreadData } from "../../useThreadQuery"
+import { IPost, Thread } from "../../Thread.types"
+import { THREAD_QUERY, ThreadData } from "../../useThreadQuery"
 
 const POST_NOT_EXISTS = "value_error.post.not_exists"
 
@@ -66,7 +66,7 @@ const useDeleteThreadPostsMutation = () => {
     error,
     loading,
     deletePosts: (
-      thread: IThread,
+      thread: Thread,
       posts: Array<IPost>,
       page: number | undefined
     ) => {
@@ -95,10 +95,10 @@ const useDeleteThreadPostsMutation = () => {
                 variables: { id: thread.id },
               }
 
-          const query = cache.readQuery<IThreadData>(queryID)
+          const query = cache.readQuery<ThreadData>(queryID)
           if (!query?.thread?.posts.page?.items.length) return null
 
-          cache.writeQuery<IThreadData>({
+          cache.writeQuery<ThreadData>({
             ...queryID,
             data: {
               ...query,

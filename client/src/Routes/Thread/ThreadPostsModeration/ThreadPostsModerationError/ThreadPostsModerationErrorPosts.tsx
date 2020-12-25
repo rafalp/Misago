@@ -6,12 +6,12 @@ import RichText from "../../../../UI/RichText"
 import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
-interface IThreadPostsModerationErrorPostsProps {
+interface ThreadPostsModerationErrorPostsProps {
   errors: Record<string, MutationError>
   posts: Array<IPost>
 }
 
-const ThreadPostsModerationErrorPosts: React.FC<IThreadPostsModerationErrorPostsProps> = ({
+const ThreadPostsModerationErrorPosts: React.FC<ThreadPostsModerationErrorPostsProps> = ({
   posts,
   errors,
 }) => (

@@ -9,7 +9,7 @@ import { IPost } from "../Thread.types"
 import ThreadPostOptions from "./ThreadPostOptions"
 import { useThreadPostModeration } from "./ThreadPostModeration"
 
-interface IThreadPostHeaderProps {
+interface ThreadPostHeaderProps {
   acl: { edit: boolean }
   post: IPost
   threadId: string
@@ -19,7 +19,7 @@ interface IThreadPostHeaderProps {
   toggleSelection?: ((id: string) => void) | null
 }
 
-const ThreadPostHeader: React.FC<IThreadPostHeaderProps> = ({
+const ThreadPostHeader: React.FC<ThreadPostHeaderProps> = ({
   acl,
   post,
   threadId,

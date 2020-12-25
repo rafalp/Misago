@@ -10,18 +10,18 @@ const THREAD_LAST_POST_URL_QUERY = gql`
   }
 `
 
-interface IThreadLastPostUrlVariables {
+interface ThreadLastPostUrlVariables {
   id: string
 }
 
-interface IThreadLastPostUrlData {
+interface ThreadLastPostUrlData {
   thread: {
     lastPostUrl: string | null
   } | null
 }
 
-const useThreadLastPostUrlQuery = (variables: IThreadLastPostUrlVariables) => {
-  return useQuery<IThreadLastPostUrlData, IThreadLastPostUrlVariables>(
+const useThreadLastPostUrlQuery = (variables: ThreadLastPostUrlVariables) => {
+  return useQuery<ThreadLastPostUrlData, ThreadLastPostUrlVariables>(
     THREAD_LAST_POST_URL_QUERY,
     {
       variables,

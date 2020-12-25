@@ -7,12 +7,12 @@ import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import { CategoryValidationError } from "../../../../UI/ValidationError"
 import useLocationError from "../../../../UI/useLocationError"
-import { IThread } from "../../Thread.types"
+import { Thread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
 import useMoveThreadMutation from "./useMoveThreadMutation"
 
-interface IThreadModerationMoveFormProps {
-  thread: IThread
+interface ThreadModerationMoveFormProps {
+  thread: Thread
   close: () => void
 }
 
@@ -20,7 +20,7 @@ interface FormValues {
   category: string
 }
 
-const ThreadModerationMoveForm: React.FC<IThreadModerationMoveFormProps> = ({
+const ThreadModerationMoveForm: React.FC<ThreadModerationMoveFormProps> = ({
   thread,
   close,
 }) => {

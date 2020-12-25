@@ -5,13 +5,13 @@ import RouteContainer from "../../UI/RouteContainer"
 import { IActiveCategory } from "./Threads.types"
 import { ThreadsCategoriesModalButton } from "./ThreadsCategoriesModal"
 
-interface IThreadsLayoutProps {
+interface ThreadsLayoutProps {
   activeCategory?: IActiveCategory | null
   className?: string
   children: React.ReactNode
 }
 
-const ThreadsLayout: React.FC<IThreadsLayoutProps> = ({
+const ThreadsLayout: React.FC<ThreadsLayoutProps> = ({
   activeCategory,
   className,
   children,

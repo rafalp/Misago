@@ -2,17 +2,17 @@ import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import { CardBody } from "../../../UI/Card"
 import PageTitle from "../../../UI/PageTitle"
-import { IThread } from "../Thread.types"
+import { Thread } from "../Thread.types"
 import ThreadHeaderStarterAvatar from "./ThreadHeaderStarterAvatar"
 import ThreadHeaderTidbits from "./ThreadHeaderTidbits"
 
-interface IThreadHeaderBodyProps {
+interface ThreadHeaderBodyProps {
   acl: { edit: boolean }
   editThread: () => void
-  thread: IThread
+  thread: Thread
 }
 
-const ThreadHeaderBody: React.FC<IThreadHeaderBodyProps> = ({
+const ThreadHeaderBody: React.FC<ThreadHeaderBodyProps> = ({
   acl,
   editThread,
   thread,

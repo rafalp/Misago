@@ -1,7 +1,7 @@
 import useSelection from "../../UI/useSelection"
-import { IThread } from "./Threads.types"
+import { Thread } from "./Threads.types"
 
-const useThreadsSelection = (items?: Array<IThread>) =>
-  useSelection<IThread>(items)
+const useThreadsSelection = (items?: Array<Thread>) =>
+  useSelection<Thread>(items)
 
 export default useThreadsSelection

@@ -6,23 +6,23 @@ import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
 import useNewReplyDraft from "./useNewReplyDraft"
 
-interface IThreadReplyFormValues {
+interface ThreadReplyFormValues {
   markup: string
 }
 
-interface IThreadReplyPost {
+interface ThreadReplyPost {
   id: string
 }
 
-export interface IThreadReplyContext {
+export interface ThreadReplyContextData {
   isActive: boolean
   fullscreen: boolean
   minimized: boolean
   mode: string
-  post: IThreadReplyPost | null
-  form: UseFormMethods<IThreadReplyFormValues>
+  post: ThreadReplyPost | null
+  form: UseFormMethods<ThreadReplyFormValues>
   startReply: () => void
-  editReply: (post: IThreadReplyPost) => void
+  editReply: (post: ThreadReplyPost) => void
   cancelReply: (force?: boolean) => void
   setFullscreen: (state: boolean) => void
   setMinimized: (state: boolean) => void
@@ -33,23 +33,23 @@ export interface IThreadReplyContext {
   resetValue: (value?: string) => void
 }
 
-const ThreadReplyContext = React.createContext<IThreadReplyContext | null>(
+const ThreadReplyContext = React.createContext<ThreadReplyContextData | null>(
   null
 )
 
-interface IThreadReplyProviderProps {
+interface ThreadReplyProviderProps {
   threadId: string
   active?: boolean
   mode?: string
-  post?: IThreadReplyPost
+  post?: ThreadReplyPost
   children: React.ReactNode
 }
 
-const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
+const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
   const { postMinLength } = useSettingsContext()
   const [isActive, setActive] = React.useState(props.active || false)
   const [mode, setMode] = React.useState(props.mode || "")
-  const [post, setPost] = React.useState<IThreadReplyPost | null>(
+  const [post, setPost] = React.useState<ThreadReplyPost | null>(
     props.post || null
   )
   const [fullscreen, setFullscreen] = React.useState(false)
@@ -63,7 +63,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
       .min(postMinLength, "value_error.any_str.min_length"),
   })
 
-  const form = useForm<IThreadReplyFormValues>({
+  const form = useForm<ThreadReplyFormValues>({
     defaultValues: { markup: "" },
     resolver: yupResolver(validators),
   })
@@ -127,7 +127,7 @@ const ThreadReplyProvider: React.FC<IThreadReplyProviderProps> = (props) => {
   ])
 
   const editReply = React.useCallback(
-    (newPost: IThreadReplyPost) => {
+    (newPost: ThreadReplyPost) => {
       if (isActive && hasChanges()) {
         if (mode === "reply") {
           const confirmed = window.confirm(

@@ -2,15 +2,15 @@ import React from "react"
 import { Link } from "react-router-dom"
 import Avatar from "../../../UI/Avatar"
 import * as urls from "../../../urls"
-import { IThreadPoster } from "../Thread.types"
+import { ThreadPoster } from "../Thread.types"
 
-interface IThreadHeaderStarterAvatarProps {
-  starter: IThreadPoster | null
+interface ThreadHeaderStarterAvatarProps {
+  starter: ThreadPoster | null
 }
 
 const AVATAR_SIZE = 64
 
-const ThreadHeaderStarterAvatar: React.FC<IThreadHeaderStarterAvatarProps> = ({
+const ThreadHeaderStarterAvatar: React.FC<ThreadHeaderStarterAvatarProps> = ({
   starter,
 }) => (
   <div className="thread-header-starter-avatar">

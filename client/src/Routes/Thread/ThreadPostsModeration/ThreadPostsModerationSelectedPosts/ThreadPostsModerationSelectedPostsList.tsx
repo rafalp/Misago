@@ -6,12 +6,12 @@ import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 import ThreadPostsModerationSelectedPostsListItem from "./ThreadPostsModerationSelectedPostsListItem"
 
-interface IThreadPostsModerationSelectedPostsListProps {
+interface ThreadPostsModerationSelectedPostsListProps {
   errors?: Record<string, MutationError>
   posts: Array<IPost>
 }
 
-const ThreadPostsModerationSelectedPostsList: React.FC<IThreadPostsModerationSelectedPostsListProps> = ({
+const ThreadPostsModerationSelectedPostsList: React.FC<ThreadPostsModerationSelectedPostsListProps> = ({
   errors,
   posts,
 }) => {

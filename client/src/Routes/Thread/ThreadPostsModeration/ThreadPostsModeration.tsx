@@ -7,7 +7,7 @@ import FixedContainer from "../../../UI/FixedContainer"
 import { IPostsModeration } from "./ThreadPostsModeration.types"
 import ThreadPostsModerationMenu from "./ThreadPostsModerationMenu"
 
-interface IThreadPostsModerationProps {
+interface ThreadPostsModerationProps {
   moderation?: IPostsModeration | null
   selection: {
     selected: Array<any>
@@ -15,7 +15,7 @@ interface IThreadPostsModerationProps {
   }
 }
 
-const ThreadPostsModeration: React.FC<IThreadPostsModerationProps> = ({
+const ThreadPostsModeration: React.FC<ThreadPostsModerationProps> = ({
   moderation,
   selection,
 }) => {

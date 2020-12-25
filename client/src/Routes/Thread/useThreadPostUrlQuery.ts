@@ -10,19 +10,19 @@ const THREAD_POST_URL_QUERY = gql`
   }
 `
 
-interface IThreadPostUrlVariables {
+interface ThreadPostUrlVariables {
   id: string
   postId: string
 }
 
-interface IThreadPostUrlData {
+interface ThreadPostUrlData {
   thread: {
     postUrl: string | null
   } | null
 }
 
-const useThreadPostUrlQuery = (variables: IThreadPostUrlVariables) => {
-  return useQuery<IThreadPostUrlData, IThreadPostUrlVariables>(
+const useThreadPostUrlQuery = (variables: ThreadPostUrlVariables) => {
+  return useQuery<ThreadPostUrlData, ThreadPostUrlVariables>(
     THREAD_POST_URL_QUERY,
     {
       variables,

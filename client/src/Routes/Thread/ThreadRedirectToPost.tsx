@@ -4,14 +4,14 @@ import { RouteGraphQLError, RouteNotFound } from "../../UI/RouteError"
 import RouteLoader from "../../UI/RouteLoader"
 import useThreadPostUrlQuery from "./useThreadPostUrlQuery"
 
-interface IThreadPostRouteParams {
+interface ThreadPostRouteParams {
   id: string
   slug: string
   postId: string
 }
 
 const ThreadRedirectToPost: React.FC = () => {
-  const { id, postId } = useParams<IThreadPostRouteParams>()
+  const { id, postId } = useParams<ThreadPostRouteParams>()
   const { data, loading, error } = useThreadPostUrlQuery({ id, postId })
 
   if (!data) {

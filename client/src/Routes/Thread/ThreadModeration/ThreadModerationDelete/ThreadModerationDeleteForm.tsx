@@ -10,18 +10,18 @@ import {
 } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import * as urls from "../../../../urls"
-import { IThread } from "../../Thread.types"
+import { Thread } from "../../Thread.types"
 import ThreadModerationError from "../ThreadModerationError"
 import useDeleteThreadMutation from "./useDeleteThreadMutation"
 
-interface IThreadModerationDeleteFormProps {
-  thread: IThread
+interface ThreadModerationDeleteFormProps {
+  thread: Thread
   close: () => void
 }
 
 interface FormValues {}
 
-const ThreadModerationDeleteForm: React.FC<IThreadModerationDeleteFormProps> = ({
+const ThreadModerationDeleteForm: React.FC<ThreadModerationDeleteFormProps> = ({
   thread,
   close,
 }) => {

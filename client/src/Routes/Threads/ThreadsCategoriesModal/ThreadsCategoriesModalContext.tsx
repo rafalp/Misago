@@ -2,22 +2,22 @@ import React from "react"
 import { useModal } from "../../../UI/Modal"
 import { IActiveCategory } from "../Threads.types"
 
-interface IThreadsCategoriesModalContext {
+interface ThreadsCategoriesModalContext {
   isOpen: boolean
   active?: IActiveCategory | null
   open: (active?: IActiveCategory | null) => void
   close: () => void
 }
 
-const ThreadsCategoriesModalContext = React.createContext<IThreadsCategoriesModalContext>(
+const ThreadsCategoriesModalContext = React.createContext<ThreadsCategoriesModalContext>(
   { isOpen: false, active: null, open: () => {}, close: () => {} }
 )
 
-interface IThreadsCategoriesModalContextProviderProps {
+interface ThreadsCategoriesModalContextProviderProps {
   children: React.ReactNode
 }
 
-const ThreadsCategoriesModalContextProvider: React.FC<IThreadsCategoriesModalContextProviderProps> = ({
+const ThreadsCategoriesModalContextProvider: React.FC<ThreadsCategoriesModalContextProviderProps> = ({
   children,
 }) => {
   const [active, setActive] = React.useState<IActiveCategory | null>(null)

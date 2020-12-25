@@ -2,14 +2,14 @@ import { Plural, Trans } from "@lingui/macro"
 import React from "react"
 import { Button } from "../../../UI/Button"
 
-interface IThreadsListUpdateButtonProps {
+interface ThreadsListUpdateButtonProps {
   threads: number
   disabled?: boolean
   loading?: boolean
   onClick: () => void
 }
 
-const ThreadsListUpdateButton: React.FC<IThreadsListUpdateButtonProps> = ({
+const ThreadsListUpdateButton: React.FC<ThreadsListUpdateButtonProps> = ({
   threads,
   loading,
   disabled,

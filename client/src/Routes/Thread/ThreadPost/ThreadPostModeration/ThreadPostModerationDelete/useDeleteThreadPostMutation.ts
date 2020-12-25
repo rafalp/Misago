@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { MutationError } from "../../../../../types"
 import { IPost } from "../../../Thread.types"
-import { THREAD_QUERY, IThreadData } from "../../../useThreadQuery"
+import { THREAD_QUERY, ThreadData } from "../../../useThreadQuery"
 
 const DELETE_THREAD_POST = gql`
   mutation DeleteThreadPost($input: DeleteThreadPostInput!) {
@@ -80,10 +80,10 @@ const useDeleteThreadPostMutation = () => {
                 variables: { id: threadId },
               }
 
-          const query = cache.readQuery<IThreadData>(queryID)
+          const query = cache.readQuery<ThreadData>(queryID)
           if (!query?.thread?.posts.page?.items.length) return null
 
-          cache.writeQuery<IThreadData>({
+          cache.writeQuery<ThreadData>({
             ...queryID,
             data: {
               ...query,

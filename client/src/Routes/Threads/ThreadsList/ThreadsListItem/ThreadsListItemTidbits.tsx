@@ -8,10 +8,10 @@ import {
   Tidbits,
 } from "../../../../UI/Tidbits"
 import * as urls from "../../../../urls"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 
 interface ThreadsListItemTidbitsProps {
-  thread: IThread
+  thread: Thread
 }
 
 const ThreadsListItemTidbits: React.FC<ThreadsListItemTidbitsProps> = ({

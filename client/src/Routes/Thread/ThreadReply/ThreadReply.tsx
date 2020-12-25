@@ -6,11 +6,11 @@ import ThreadReplyNewForm from "./ThreadReplyNewForm"
 import { useThreadReplyContext } from "./ThreadReplyContext"
 import ThreadReplySpacer from "./ThreadReplySpacer"
 
-interface IThreadReplyProps {
+interface ThreadReplyProps {
   threadId: string
 }
 
-const ThreadReply: React.FC<IThreadReplyProps> = ({ threadId }) => {
+const ThreadReply: React.FC<ThreadReplyProps> = ({ threadId }) => {
   const context = useThreadReplyContext()
   const [height, setHeight] = React.useState(0)
   const element = React.useRef<HTMLDivElement | null>(null)

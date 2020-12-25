@@ -6,7 +6,7 @@ import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
-interface IThreadsModerationSelectedThreadsListItemProps {
+interface ThreadsModerationSelectedThreadsListItemProps {
   disabled?: boolean
   error?: MutationError
   id?: string
@@ -15,7 +15,7 @@ interface IThreadsModerationSelectedThreadsListItemProps {
   changeSelection: (id: string, selected: boolean) => void
 }
 
-const ThreadsModerationSelectedThreadsListItem: React.FC<IThreadsModerationSelectedThreadsListItemProps> = ({
+const ThreadsModerationSelectedThreadsListItem: React.FC<ThreadsModerationSelectedThreadsListItemProps> = ({
   disabled,
   error,
   id,

@@ -3,15 +3,15 @@ import React from "react"
 import { Link } from "react-router-dom"
 import Avatar from "../../../../UI/Avatar"
 import * as urls from "../../../../urls"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 
-interface IThreadsListItemLastPosterProps {
+interface ThreadsListItemLastPosterProps {
   avatarSize?: number
   className?: string
-  thread: IThread
+  thread: Thread
 }
 
-const ThreadsListItemLastPoster: React.FC<IThreadsListItemLastPosterProps> = ({
+const ThreadsListItemLastPoster: React.FC<ThreadsListItemLastPosterProps> = ({
   avatarSize,
   className,
   thread: { lastPoster },

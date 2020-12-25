@@ -7,7 +7,7 @@ import ThreadPostPostbit from "./ThreadPostPostbit"
 import usePostAcl from "./usePostAcl"
 import useScrollPostIntoView from "./useScrollPostIntoView"
 
-interface IThreadPostProps {
+interface ThreadPostProps {
   post: IPost
   threadId: string
   threadSlug: string
@@ -17,7 +17,7 @@ interface IThreadPostProps {
   toggleSelection?: ((id: string) => void) | null
 }
 
-const ThreadPost: React.FC<IThreadPostProps> = ({
+const ThreadPost: React.FC<ThreadPostProps> = ({
   post,
   threadId,
   threadSlug,

@@ -5,14 +5,14 @@ import { MutationError } from "../../../../../types"
 import ThreadPostRootError from "../../../ThreadPostRootError"
 import ThreadPostModerationErrorHeader from "./ThreadPostModerationErrorHeader"
 
-interface IThreadPostModerationErrorProps {
+interface ThreadPostModerationErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
   forDelete?: boolean
   close: () => void
 }
 
-const ThreadPostModerationError: React.FC<IThreadPostModerationErrorProps> = ({
+const ThreadPostModerationError: React.FC<ThreadPostModerationErrorProps> = ({
   graphqlError,
   errors,
   forDelete,

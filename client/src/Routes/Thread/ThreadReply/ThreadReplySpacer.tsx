@@ -1,11 +1,11 @@
 import React from "react"
 import portal from "../../../UI/portal"
 
-interface IThreadReplySpacerProps {
+interface ThreadReplySpacerProps {
   height: number
 }
 
-const ThreadReplySpacer: React.FC<IThreadReplySpacerProps> = ({ height }) => {
+const ThreadReplySpacer: React.FC<ThreadReplySpacerProps> = ({ height }) => {
   return portal(<div style={{ height }} />)
 }
 

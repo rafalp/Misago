@@ -11,7 +11,7 @@ import { IPost } from "../../../Thread.types"
 import ThreadPostModerationError from "../ThreadPostModerationError"
 import useDeleteThreadPostMutation from "./useDeleteThreadPostMutation"
 
-interface IThreadPostModerationDeleteFormProps {
+interface ThreadPostModerationDeleteFormProps {
   threadId: string
   post: IPost
   page?: number
@@ -20,7 +20,7 @@ interface IThreadPostModerationDeleteFormProps {
 
 interface FormValues {}
 
-const ThreadPostModerationDeleteForm: React.FC<IThreadPostModerationDeleteFormProps> = ({
+const ThreadPostModerationDeleteForm: React.FC<ThreadPostModerationDeleteFormProps> = ({
   threadId,
   post,
   page,

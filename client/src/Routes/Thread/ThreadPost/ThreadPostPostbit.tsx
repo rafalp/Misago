@@ -4,13 +4,13 @@ import Avatar from "../../../UI/Avatar"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 
-interface IThreadPostPostbitProps {
+interface ThreadPostPostbitProps {
   post: IPost
 }
 
 const AVATAR_SIZE = 100
 
-const ThreadPostPostbit: React.FC<IThreadPostPostbitProps> = ({ post }) => (
+const ThreadPostPostbit: React.FC<ThreadPostPostbitProps> = ({ post }) => (
   <div className="thread-post-postbit">
     {post.poster ? (
       <Link to={urls.user(post.poster)}>

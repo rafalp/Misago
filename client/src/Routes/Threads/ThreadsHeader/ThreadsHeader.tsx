@@ -9,7 +9,7 @@ import {
 } from "../../../UI/Tidbits"
 import { CategoryBanner } from "../../../types"
 
-interface IThreadsHeaderProps {
+interface ThreadsHeaderProps {
   banner?: {
     full: CategoryBanner
     half: CategoryBanner
@@ -23,7 +23,7 @@ interface IThreadsHeaderProps {
   }
 }
 
-const ThreadsHeader: React.FC<IThreadsHeaderProps> = ({
+const ThreadsHeader: React.FC<ThreadsHeaderProps> = ({
   banner,
   color,
   text,

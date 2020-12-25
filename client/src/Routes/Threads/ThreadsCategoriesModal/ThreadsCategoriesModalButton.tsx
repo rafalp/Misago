@@ -7,11 +7,11 @@ import { Toolbar, ToolbarItem } from "../../../UI/Toolbar"
 import { IActiveCategory } from "../Threads.types"
 import { useThreadsCategoriesModalContext } from "./ThreadsCategoriesModalContext"
 
-interface IThreadsCategoriesModalButtonProps {
+interface ThreadsCategoriesModalButtonProps {
   active?: IActiveCategory | null
 }
 
-const ThreadsCategoriesModalButton: React.FC<IThreadsCategoriesModalButtonProps> = ({
+const ThreadsCategoriesModalButton: React.FC<ThreadsCategoriesModalButtonProps> = ({
   active,
 }) => {
   const { open } = useThreadsCategoriesModalContext()

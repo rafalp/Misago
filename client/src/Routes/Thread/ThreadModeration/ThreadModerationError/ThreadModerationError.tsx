@@ -5,14 +5,14 @@ import { ModalCloseFooter, ModalErrorBody } from "../../../../UI/Modal"
 import { MutationError } from "../../../../types"
 import ThreadRootError from "../../ThreadRootError"
 
-interface IThreadModerationErrorProps {
+interface ThreadModerationErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
   forDelete?: boolean
   close: () => void
 }
 
-const ThreadModerationError: React.FC<IThreadModerationErrorProps> = ({
+const ThreadModerationError: React.FC<ThreadModerationErrorProps> = ({
   graphqlError,
   errors,
   forDelete,

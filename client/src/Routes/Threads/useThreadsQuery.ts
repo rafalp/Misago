@@ -2,7 +2,7 @@ import { useLazyQuery, useQuery, useSubscription } from "@apollo/react-hooks"
 import { DocumentNode } from "graphql"
 import gql from "graphql-tag"
 import React from "react"
-import { IThread } from "./Threads.types"
+import { Thread } from "./Threads.types"
 
 const THREADS_FRAGMENTS = `
   fragment ThreadsListThreadPoster on User {
@@ -67,32 +67,32 @@ const THREADS_UPDATES_SUBSCRIPTION = gql`
   }
 `
 
-export interface IThreadsData {
+export interface ThreadsData {
   threads: {
-    items: Array<IThread>
+    items: Array<Thread>
     nextCursor: string | null
     __typename: string
   }
 }
 
-interface IThreadsVariables {
+interface ThreadsVariables {
   category?: string | null
   cursor?: string | null
 }
 
-interface IThreadsUpdatesData {
+interface ThreadsUpdatesData {
   threads: string
 }
 
-interface IThreadsUpdatesVariables {
+interface ThreadsUpdatesVariables {
   category?: string | null
 }
 
-export const useBaseThreadsQuery = <TData extends IThreadsData>(
+export const useBaseThreadsQuery = <TData extends ThreadsData>(
   query: DocumentNode,
-  variables?: IThreadsVariables
+  variables?: ThreadsVariables
 ) => {
-  const result = useQuery<TData, IThreadsVariables>(query, {
+  const result = useQuery<TData, ThreadsVariables>(query, {
     variables,
     fetchPolicy: "network-only",
     notifyOnNetworkStatusChange: true,
@@ -116,7 +116,7 @@ export const useBaseThreadsQuery = <TData extends IThreadsData>(
     length: number
   }>({ ids: [], length: 0 })
 
-  useSubscription<IThreadsUpdatesData, IThreadsUpdatesVariables>(
+  useSubscription<ThreadsUpdatesData, ThreadsUpdatesVariables>(
     THREADS_UPDATES_SUBSCRIPTION,
     {
       shouldResubscribe: !!result.data?.threads,
@@ -138,7 +138,7 @@ export const useBaseThreadsQuery = <TData extends IThreadsData>(
 
   const [fetchUpdatedThreads, updateResult] = useLazyQuery<
     TData,
-    IThreadsVariables
+    ThreadsVariables
   >(query, {
     fetchPolicy: "no-cache",
     notifyOnNetworkStatusChange: true,
@@ -169,7 +169,7 @@ export const useBaseThreadsQuery = <TData extends IThreadsData>(
   }
 }
 
-const mergeMergeThreadsResults = <TData extends IThreadsData>(
+const mergeMergeThreadsResults = <TData extends ThreadsData>(
   previousResult: TData,
   fetchMoreResult?: TData
 ) => {
@@ -188,7 +188,7 @@ const mergeMergeThreadsResults = <TData extends IThreadsData>(
   }
 }
 
-const mergeUpdatedThreadsResults = <TData extends IThreadsData>(
+const mergeUpdatedThreadsResults = <TData extends ThreadsData>(
   previousResult: TData,
   updatedResult: TData
 ) => {
@@ -211,7 +211,7 @@ const mergeUpdatedThreadsResults = <TData extends IThreadsData>(
 }
 
 export const useThreadsQuery = () => {
-  return useBaseThreadsQuery<IThreadsData>(THREADS_QUERY)
+  return useBaseThreadsQuery<ThreadsData>(THREADS_QUERY)
 }
 
 interface CategoryQueryParams {
@@ -242,7 +242,7 @@ export const CATEGORY_THREADS_QUERY = gql`
   }
 `
 
-interface CategoryThreadsData extends IThreadsData {
+interface CategoryThreadsData extends ThreadsData {
   category: {
     id: string
     name: string

@@ -2,7 +2,7 @@ import React from "react"
 import * as urls from "../../../urls"
 import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
-interface IThreadsCategoriesModalItemProps {
+interface ThreadsCategoriesModalItemProps {
   category: {
     id: string
     name: string
@@ -19,7 +19,7 @@ interface IThreadsCategoriesModalItemProps {
   }
 }
 
-const ThreadsCategoriesModalItem: React.FC<IThreadsCategoriesModalItemProps> = ({
+const ThreadsCategoriesModalItem: React.FC<ThreadsCategoriesModalItemProps> = ({
   category,
 }) => {
   const [isOpen, setOpen] = React.useState<boolean>(false)

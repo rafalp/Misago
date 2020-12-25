@@ -7,14 +7,14 @@ import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationSelectedThreadsButton from "./ThreadsModerationSelectedThreadsButton"
 import ThreadsModerationSelectedThreadsList from "./ThreadsModerationSelectedThreadsList"
 
-interface IThreadsModerationSelectedThreadsProps {
+interface ThreadsModerationSelectedThreadsProps {
   errors?: Record<string, MutationError>
   threads: Array<ISelectedThread>
   min: number
   max: number
 }
 
-const ThreadsModerationSelectedThreads: React.FC<IThreadsModerationSelectedThreadsProps> = ({
+const ThreadsModerationSelectedThreads: React.FC<ThreadsModerationSelectedThreadsProps> = ({
   errors,
   threads,
   min,

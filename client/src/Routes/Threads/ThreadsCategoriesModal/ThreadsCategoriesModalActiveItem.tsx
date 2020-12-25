@@ -3,11 +3,11 @@ import * as urls from "../../../urls"
 import { IActiveCategory } from "../Threads.types"
 import ThreadsCategoriesModalLink from "./ThreadsCategoriesModalLink"
 
-interface IThreadsCategoriesModalActiveItemProps {
+interface ThreadsCategoriesModalActiveItemProps {
   active: IActiveCategory
 }
 
-const ThreadsCategoriesModalActiveItem: React.FC<IThreadsCategoriesModalActiveItemProps> = ({
+const ThreadsCategoriesModalActiveItem: React.FC<ThreadsCategoriesModalActiveItemProps> = ({
   active,
 }) => {
   const { category, parent } = active

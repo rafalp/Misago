@@ -4,16 +4,16 @@ import React from "react"
 import { useModalContext } from "../../../Context"
 import { Modal, ModalDialog } from "../../../UI/Modal"
 import { MutationError } from "../../../types"
-import { IThread } from "../Threads.types"
+import { Thread } from "../Threads.types"
 import ThreadsModerationError from "./ThreadsModerationError"
 
-interface IThreadsModerationOpenProps {
-  threads: Array<IThread>
+interface ThreadsModerationOpenProps {
+  threads: Array<Thread>
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
 }
 
-const ThreadsModerationOpen: React.FC<IThreadsModerationOpenProps> = ({
+const ThreadsModerationOpen: React.FC<ThreadsModerationOpenProps> = ({
   threads,
   graphqlError,
   errors,

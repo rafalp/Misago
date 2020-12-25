@@ -1,11 +1,11 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 
-interface IThreadPostModerationErrorHeaderProps {
+interface ThreadPostModerationErrorHeaderProps {
   forDelete?: boolean
 }
 
-const ThreadPostModerationErrorHeader: React.FC<IThreadPostModerationErrorHeaderProps> = ({
+const ThreadPostModerationErrorHeader: React.FC<ThreadPostModerationErrorHeaderProps> = ({
   forDelete,
 }) =>
   forDelete ? (

@@ -2,16 +2,16 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../../Context"
 import { Modal, ModalDialog } from "../../../../UI/Modal"
-import { IPost, IThread } from "../../Thread.types"
+import { IPost, Thread } from "../../Thread.types"
 import ThreadPostsModerationDeleteForm from "./ThreadPostsModerationDeleteForm"
 
-interface IThreadPostsModerationDeleteProps {
-  thread: IThread
+interface ThreadPostsModerationDeleteProps {
+  thread: Thread
   posts: Array<IPost>
   page: number | undefined
 }
 
-const ThreadPostsModerationDelete: React.FC<IThreadPostsModerationDeleteProps> = ({
+const ThreadPostsModerationDelete: React.FC<ThreadPostsModerationDeleteProps> = ({
   thread,
   posts,
   page,

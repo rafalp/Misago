@@ -2,7 +2,7 @@ import React from "react"
 import Responsive from "../../../UI/Responsive"
 import ThreadBreadcrumbsItem from "./ThreadBreadcrumbsItem"
 
-interface IThreadBreadcrumbsProps {
+interface ThreadBreadcrumbsProps {
   category: {
     id: string
     name: string
@@ -19,7 +19,7 @@ interface IThreadBreadcrumbsProps {
   }
 }
 
-const ThreadBreadcrumbs: React.FC<IThreadBreadcrumbsProps> = ({
+const ThreadBreadcrumbs: React.FC<ThreadBreadcrumbsProps> = ({
   category,
 }) => (
   <Responsive className="thread-breadcrumbs" mobile>

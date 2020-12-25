@@ -1,11 +1,11 @@
 import React from "react"
 import ThreadReplyError from "./ThreadReplyError"
 
-interface IThreadReplyErrorBoundaryProps {
+interface ThreadReplyErrorBoundaryProps {
   children: React.ReactNode
 }
 
-class ThreadReplyErrorBoundary extends React.Component<IThreadReplyErrorBoundaryProps> {
+class ThreadReplyErrorBoundary extends React.Component<ThreadReplyErrorBoundaryProps> {
   state = { hasError: false }
 
   static getDerivedStateFromError() {

@@ -7,7 +7,7 @@ import { Field, FieldErrorFloating, FormContext } from "../../../UI/Form"
 import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import ThreadPostRootError from "../ThreadPostRootError"
-import { IThreadReplyContext } from "./ThreadReplyContext"
+import { ThreadReplyContextData } from "./ThreadReplyContext"
 import ThreadReplyDialog from "./ThreadReplyDialog"
 import ThreadReplyEditError from "./ThreadReplyEditError"
 import useEditPostMutation from "./useEditPostMutation"
@@ -15,14 +15,14 @@ import usePostMarkupQuery from "./usePostMarkupQuery"
 
 const Editor = React.lazy(() => import("../../../Editor"))
 
-interface IThreadReplyEditFormProps {
-  context: IThreadReplyContext
+interface ThreadReplyEditFormProps {
+  context: ThreadReplyContextData
   post: {
     id: string
   }
 }
 
-const ThreadReplyEditForm: React.FC<IThreadReplyEditFormProps> = ({
+const ThreadReplyEditForm: React.FC<ThreadReplyEditFormProps> = ({
   context,
   post,
 }) => {

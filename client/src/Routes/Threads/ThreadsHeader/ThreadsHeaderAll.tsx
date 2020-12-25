@@ -2,7 +2,7 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import ThreadsHeader from "./ThreadsHeader"
 
-interface IThreadsHeaderAllProps {
+interface ThreadsHeaderAllProps {
   settings: {
     forumIndexHeader: string
     forumIndexThreads: boolean
@@ -15,7 +15,7 @@ interface IThreadsHeaderAllProps {
   }
 }
 
-const ThreadsHeaderAll: React.FC<IThreadsHeaderAllProps> = ({
+const ThreadsHeaderAll: React.FC<ThreadsHeaderAllProps> = ({
   settings,
   stats,
 }) => (

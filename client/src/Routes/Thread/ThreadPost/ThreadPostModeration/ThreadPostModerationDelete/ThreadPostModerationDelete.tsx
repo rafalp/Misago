@@ -5,13 +5,13 @@ import { Modal, ModalDialog } from "../../../../../UI/Modal"
 import { IPost } from "../../../Thread.types"
 import ThreadPostModerationDeleteForm from "./ThreadPostModerationDeleteForm"
 
-interface IThreadPostModerationDeleteProps {
+interface ThreadPostModerationDeleteProps {
   threadId: string
   post: IPost
   page?: number
 }
 
-const ThreadPostModerationDelete: React.FC<IThreadPostModerationDeleteProps> = ({
+const ThreadPostModerationDelete: React.FC<ThreadPostModerationDeleteProps> = ({
   threadId,
   post,
   page,

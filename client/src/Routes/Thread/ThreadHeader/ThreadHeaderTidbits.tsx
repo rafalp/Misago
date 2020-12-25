@@ -9,13 +9,13 @@ import {
   TidbitReplies,
 } from "../../../UI/Tidbits"
 import * as urls from "../../../urls"
-import { IThread } from "../Thread.types"
+import { Thread } from "../Thread.types"
 
-interface IThreadHeaderTidbitsProps {
-  thread: IThread
+interface ThreadHeaderTidbitsProps {
+  thread: Thread
 }
 
-const ThreadHeaderTidbits: React.FC<IThreadHeaderTidbitsProps> = ({
+const ThreadHeaderTidbits: React.FC<ThreadHeaderTidbitsProps> = ({
   thread,
 }) => (
   <div className="row align-items-center justify-content-between">

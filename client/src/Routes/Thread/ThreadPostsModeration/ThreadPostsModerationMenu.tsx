@@ -3,7 +3,7 @@ import React from "react"
 import { DropdownButton, DropdownDivider } from "../../../UI/Dropdown"
 import { IPostsModeration } from "./ThreadPostsModeration.types"
 
-interface IThreadPostsModerationMenuProps {
+interface ThreadPostsModerationMenuProps {
   moderation: IPostsModeration
   selection: {
     selected: Array<any>
@@ -11,7 +11,7 @@ interface IThreadPostsModerationMenuProps {
   }
 }
 
-const ThreadPostsModerationMenu: React.FC<IThreadPostsModerationMenuProps> = ({
+const ThreadPostsModerationMenu: React.FC<ThreadPostsModerationMenuProps> = ({
   moderation,
   selection,
 }) => (

@@ -1,6 +1,6 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
-import ThreadsModeration from "./ThreadsModeration"
+import ThreadsModerationMenu from "./ThreadsModerationMenu"
 
 export default {
   title: "Route/Threads/Moderation",
@@ -8,7 +8,7 @@ export default {
 }
 
 export const Options = () => (
-  <ThreadsModeration
+  <ThreadsModerationMenu
     moderation={{
       disabled: boolean("Moderation disabled", false),
       loading: boolean("Moderation loading", false),

@@ -3,14 +3,14 @@ import React from "react"
 import { CardBlankslate } from "../../../UI/Card"
 import ThreadsNewButton from "../ThreadsNewButton"
 
-interface IThreadsListBlankslateProps {
+interface ThreadsListBlankslateProps {
   category?: {
     id: string
     slug: string
   } | null
 }
 
-const ThreadsListBlankslate: React.FC<IThreadsListBlankslateProps> = ({
+const ThreadsListBlankslate: React.FC<ThreadsListBlankslateProps> = ({
   category,
 }) => (
   <CardBlankslate

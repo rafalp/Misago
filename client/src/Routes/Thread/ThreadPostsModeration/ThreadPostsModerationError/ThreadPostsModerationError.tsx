@@ -13,7 +13,7 @@ import { IPost } from "../../Thread.types"
 import ThreadPostsModerationErrorHeader from "./ThreadPostsModerationErrorHeader"
 import ThreadPostsModerationErrorPosts from "./ThreadPostsModerationErrorPosts"
 
-interface IThreadPostsModerationErrorProps {
+interface ThreadPostsModerationErrorProps {
   forDelete?: boolean
   posts: Array<IPost>
   errors: Array<MutationError>
@@ -21,7 +21,7 @@ interface IThreadPostsModerationErrorProps {
   close: () => void
 }
 
-const ThreadPostsModerationError: React.FC<IThreadPostsModerationErrorProps> = ({
+const ThreadPostsModerationError: React.FC<ThreadPostsModerationErrorProps> = ({
   forDelete,
   posts,
   errors,

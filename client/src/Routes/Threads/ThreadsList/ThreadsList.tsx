@@ -1,14 +1,14 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { CardLoader } from "../../../UI/Card"
-import { IThread } from "../Threads.types"
+import { Thread } from "../Threads.types"
 import ThreadsListBlankslate from "./ThreadsListBlankslate"
 import ThreadsListCard from "./ThreadsListCard"
 import ThreadsListGraphQLError from "./ThreadsListGraphQLError"
 import ThreadsListItem from "./ThreadsListItem/ThreadsListItem"
 import ThreadsListUpdateButton from "./ThreadsListUpdateButton"
 
-interface IThreadsListProps {
+interface ThreadsListProps {
   category?: {
     id: string
     slug: string
@@ -21,7 +21,7 @@ interface IThreadsListProps {
     change: (id: string, selected: boolean) => void
   }
   threads: {
-    items: Array<IThread>
+    items: Array<Thread>
     nextCursor: string | null
   } | null
   update?: {
@@ -31,7 +31,7 @@ interface IThreadsListProps {
   } | null
 }
 
-const ThreadsList: React.FC<IThreadsListProps> = ({
+const ThreadsList: React.FC<ThreadsListProps> = ({
   category,
   error,
   loading,

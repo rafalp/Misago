@@ -1,6 +1,6 @@
 import { AvatarData, CategoryBanner, RichText } from "../../types"
 
-export interface IThread {
+export interface Thread {
   id: string
   slug: string
   title: string
@@ -10,37 +10,37 @@ export interface IThread {
   starterName: string
   lastPosterName: string
   isClosed: boolean
-  starter: IThreadPoster | null
-  lastPoster: IThreadPoster | null
-  category: IThreadCategory
-  posts: IThreadPosts
+  starter: ThreadPoster | null
+  lastPoster: ThreadPoster | null
+  category: ThreadCategory
+  posts: ThreadPosts
   extra: Record<string, any>
 }
 
-export interface IThreadCategory {
+export interface ThreadCategory {
   id: string
   name: string
   slug: string
-  parent: IThreadCategory | null
+  parent: ThreadCategory | null
   color: string | null
   icon: string | null
   isClosed: boolean
   banner: { full: CategoryBanner; half: CategoryBanner } | null
 }
 
-export interface IThreadPoster {
+export interface ThreadPoster {
   id: string
   name: string
   slug: string
   avatars: Array<AvatarData>
 }
 
-export interface IThreadModeration {
-  actions: Array<IModerationAction>
+export interface ThreadModeration {
+  actions: Array<ModerationAction>
   loading: boolean
 }
 
-export interface IModerationAction {
+export interface ModerationAction {
   name: React.ReactNode
   icon: string
   disabled?: boolean
@@ -65,14 +65,14 @@ export interface IPoster {
   extra: Record<string, any>
 }
 
-export interface IThreadPosts {
-  page: IThreadPostsPage | null
+export interface ThreadPosts {
+  page: ThreadPostsPage | null
   pagination: {
     pages: number
   }
 }
 
-export interface IThreadPostsPage {
+export interface ThreadPostsPage {
   items: Array<IPost>
   number: number
   start: number

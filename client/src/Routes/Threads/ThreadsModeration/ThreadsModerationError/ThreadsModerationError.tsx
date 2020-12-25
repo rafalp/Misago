@@ -15,7 +15,7 @@ import { ISelectedThread } from "../../Threads.types"
 import ThreadsModerationErrorHeader from "./ThreadsModerationErrorHeader"
 import ThreadsModerationErrorThreads from "./ThreadsModerationErrorThreads"
 
-interface IThreadsModerationErrorProps {
+interface ThreadsModerationErrorProps {
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
   forDelete?: boolean
@@ -23,7 +23,7 @@ interface IThreadsModerationErrorProps {
   close: () => void
 }
 
-const ThreadsModerationError: React.FC<IThreadsModerationErrorProps> = ({
+const ThreadsModerationError: React.FC<ThreadsModerationErrorProps> = ({
   graphqlError,
   errors,
   forDelete,

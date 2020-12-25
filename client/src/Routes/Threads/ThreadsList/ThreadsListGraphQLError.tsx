@@ -5,11 +5,11 @@ import { CardError } from "../../../UI/Card"
 import { ErrorMessage, GraphQLErrorMessage } from "../../../UI/Error"
 import GraphQLErrorRenderer from "../../../UI/GraphQLErrorRenderer"
 
-interface IThreadsListGraphQLErrorProps {
+interface ThreadsListGraphQLErrorProps {
   error: ApolloError
 }
 
-const ThreadsListGraphQLError: React.FC<IThreadsListGraphQLErrorProps> = ({
+const ThreadsListGraphQLError: React.FC<ThreadsListGraphQLErrorProps> = ({
   error,
 }) => (
   <GraphQLErrorRenderer

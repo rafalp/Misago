@@ -8,19 +8,19 @@ import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import { CategoryValidationError } from "../../../../UI/ValidationError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
 import useMoveThreadsMutation from "./useMoveThreadsMutation"
 
 interface ThreadsModerationMoveFormProps {
-  threads: Array<IThread>
+  threads: Array<Thread>
   close: () => void
 }
 
 interface FormValues {
   category: string
-  threads: Array<IThread>
+  threads: Array<Thread>
 }
 
 const ThreadsModerationMoveForm: React.FC<ThreadsModerationMoveFormProps> = ({
@@ -31,7 +31,7 @@ const ThreadsModerationMoveForm: React.FC<ThreadsModerationMoveFormProps> = ({
     errors: threadsErrors,
     clearErrors: clearThreadsErrors,
     setErrors: setThreadsErrors,
-  } = useSelectionErrors<IThread>("threads")
+  } = useSelectionErrors<Thread>("threads")
 
   const {
     data,

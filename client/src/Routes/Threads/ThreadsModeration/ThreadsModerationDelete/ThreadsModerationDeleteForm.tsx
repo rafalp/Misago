@@ -7,19 +7,19 @@ import { ModalAlert, ModalFormBody, ModalFooter } from "../../../../UI/Modal"
 import RootError from "../../../../UI/RootError"
 import { useSelectionErrors } from "../../../../UI/useSelectionErrors"
 import { Category } from "../../../../types"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 import ThreadsModerationError from "../ThreadsModerationError"
 import ThreadsModerationSelectedThreads from "../ThreadsModerationSelectedThreads"
 import useDeleteThreadsMutation from "./useDeleteThreadsMutation"
 
 interface ThreadsModerationDeleteFormProps {
   category?: Category | null
-  threads: Array<IThread>
+  threads: Array<Thread>
   close: () => void
 }
 
 interface FormValues {
-  threads: Array<IThread>
+  threads: Array<Thread>
 }
 
 const ThreadsModerationDeleteForm: React.FC<ThreadsModerationDeleteFormProps> = ({
@@ -31,7 +31,7 @@ const ThreadsModerationDeleteForm: React.FC<ThreadsModerationDeleteFormProps> = 
     errors: threadsErrors,
     clearErrors: clearThreadsErrors,
     setErrors: setThreadsErrors,
-  } = useSelectionErrors<IThread>("threads")
+  } = useSelectionErrors<Thread>("threads")
 
   const {
     data,

@@ -5,13 +5,13 @@ import { DropdownLink } from "../../../UI/Dropdown"
 import * as urls from "../../../urls"
 import { IPost } from "../Thread.types"
 
-interface IThreadPostPermalinkProps {
+interface ThreadPostPermalinkProps {
   post: IPost
   threadId: string
   threadSlug: string
 }
 
-const ThreadPostPermalink: React.FC<IThreadPostPermalinkProps> = ({
+const ThreadPostPermalink: React.FC<ThreadPostPermalinkProps> = ({
   post,
   threadId,
   threadSlug,

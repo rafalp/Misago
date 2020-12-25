@@ -1,8 +1,8 @@
-import { IThreadModeration } from "../Thread.types"
+import { ThreadModeration } from "../Thread.types"
 
-export interface IThreadToolbarProps {
+export interface ThreadToolbarProps {
   isClosed?: boolean
-  moderation?: IThreadModeration | null
+  moderation?: ThreadModeration | null
   pagination: {
     page: number
     pages: number

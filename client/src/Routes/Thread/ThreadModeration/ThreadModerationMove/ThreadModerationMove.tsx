@@ -2,14 +2,14 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../../Context"
 import { Modal, ModalDialog } from "../../../../UI/Modal"
-import { IThread } from "../../Thread.types"
+import { Thread } from "../../Thread.types"
 import ThreadModerationMoveForm from "./ThreadModerationMoveForm"
 
-interface IThreadModerationMoveProps {
-  thread: IThread
+interface ThreadModerationMoveProps {
+  thread: Thread
 }
 
-const ThreadModerationMove: React.FC<IThreadModerationMoveProps> = ({
+const ThreadModerationMove: React.FC<ThreadModerationMoveProps> = ({
   thread,
 }) => {
   const { isOpen, closeModal } = useModalContext()

@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { MutationError } from "../../../../types"
-import { IThread, IThreadCategory } from "../../Threads.types"
+import { Thread, ThreadCategory } from "../../Threads.types"
 
 const MOVE_THREADS = gql`
   mutation MoveThreads($input: BulkMoveThreadsInput!) {
@@ -38,7 +38,7 @@ interface IMoveThreadsMutationData {
     errors: Array<MutationError> | null
     threads: Array<{
       id: string
-      category: IThreadCategory
+      category: ThreadCategory
     }> | null
     updated: boolean
   }
@@ -61,7 +61,7 @@ const useMoveThreadsMutation = () => {
     data,
     error,
     loading,
-    moveThreads: (threads: Array<IThread>, category: string) => {
+    moveThreads: (threads: Array<Thread>, category: string) => {
       return mutation({
         variables: {
           input: { category, threads: threads.map((thread) => thread.id) },

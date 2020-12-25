@@ -5,14 +5,14 @@ import { Link } from "react-router-dom"
 import Icon from "../../../UI/Icon"
 import * as urls from "../../../urls"
 
-interface IThreadsNewButtonProps {
+interface ThreadsNewButtonProps {
   category?: {
     id: string
     slug: string
   } | null
 }
 
-const ThreadsNewButton: React.FC<IThreadsNewButtonProps> = ({ category }) => (
+const ThreadsNewButton: React.FC<ThreadsNewButtonProps> = ({ category }) => (
   <Link
     className={classnames("btn btn-primary btn-responsive")}
     to={urls.postThread(category)}

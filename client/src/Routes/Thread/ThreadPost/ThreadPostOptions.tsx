@@ -2,21 +2,21 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import { Dropdown, DropdownButton } from "../../../UI/Dropdown"
-import { IModerationAction, IPost } from "../Thread.types"
+import { ModerationAction, IPost } from "../Thread.types"
 import { useThreadReplyContext } from "../ThreadReply"
 import ThreadPostPermalink from "./ThreadPostPermalink"
 
-interface IThreadPostOptionsProps {
+interface ThreadPostOptionsProps {
   acl: { edit: boolean }
   post: IPost
   threadId: string
   threadSlug: string
   moderation: {
-    actions: Array<IModerationAction>
+    actions: Array<ModerationAction>
   } | null
 }
 
-const ThreadPostOptions: React.FC<IThreadPostOptionsProps> = ({
+const ThreadPostOptions: React.FC<ThreadPostOptionsProps> = ({
   acl,
   post,
   threadId,

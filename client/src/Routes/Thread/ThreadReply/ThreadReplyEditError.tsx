@@ -6,11 +6,11 @@ import GraphQLErrorRenderer from "../../../UI/GraphQLErrorRenderer"
 import { PostingFormError } from "../../../UI/PostingForm"
 import ThreadReplyDialog from "./ThreadReplyDialog"
 
-interface IThreadReplyEditErrorProps {
+interface ThreadReplyEditErrorProps {
   error?: ApolloError
 }
 
-const ThreadReplyEditError: React.FC<IThreadReplyEditErrorProps> = ({
+const ThreadReplyEditError: React.FC<ThreadReplyEditErrorProps> = ({
   error,
 }) => (
   <ThreadReplyDialog>

@@ -1,7 +1,7 @@
 import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { RootContainer } from "../../../UI/Storybook"
-import ThreadModeration from "./ThreadModeration"
+import ThreadModerationMenu from "./ThreadModerationMenu"
 
 export default {
   title: "Route/Thread/Moderation",
@@ -10,7 +10,7 @@ export default {
 
 export const ThreadOptions = () => (
   <RootContainer>
-    <ThreadModeration
+    <ThreadModerationMenu
       moderation={{
         loading: boolean("Loading", false),
         actions: [

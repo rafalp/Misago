@@ -5,12 +5,12 @@ export interface IActiveCategory {
   parent: Category
 }
 
-export interface IThread {
+export interface Thread {
   id: string
-  category: IThreadCategory
-  starter: IThreadPoster | null
+  category: ThreadCategory
+  starter: ThreadPoster | null
   starterName: string
-  lastPoster: IThreadPoster | null
+  lastPoster: ThreadPoster | null
   lastPosterName: string
   title: string
   slug: string
@@ -20,29 +20,29 @@ export interface IThread {
   isClosed: boolean
 }
 
-export interface IThreadCategory {
+export interface ThreadCategory {
   id: string
   name: string
   slug: string
   color: string | null
   icon: string | null
-  parent: IThreadCategory | null
+  parent: ThreadCategory | null
 }
 
-export interface IThreadPoster {
+export interface ThreadPoster {
   id: string
   name: string
   slug: string
   avatars: Array<AvatarData>
 }
 
-export interface IThreadsModeration {
-  actions: Array<IThreadsModerationAction>
+export interface ThreadsModeration {
+  actions: Array<ThreadsModerationAction>
   disabled: boolean
   loading: boolean
 }
 
-export interface IThreadsModerationAction {
+export interface ThreadsModerationAction {
   name: React.ReactNode
   icon: string
   action: () => Promise<void> | void
@@ -52,5 +52,5 @@ export interface ISelectedThread {
   id: string
   title: string
   replies: number
-  category: IThreadCategory
+  category: ThreadCategory
 }

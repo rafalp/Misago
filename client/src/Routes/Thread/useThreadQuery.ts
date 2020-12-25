@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/react-hooks"
 import gql from "graphql-tag"
-import { IThread } from "./Thread.types"
+import { Thread } from "./Thread.types"
 
 const THREAD_FRAGMENTS = `
   fragment ThreadPoster on User {
@@ -89,17 +89,17 @@ export const THREAD_QUERY = gql`
   }
 `
 
-interface IThreadVariables {
+interface ThreadVariables {
   id: string
   page?: number
 }
 
-export interface IThreadData {
-  thread: IThread | null
+export interface ThreadData {
+  thread: Thread | null
 }
 
-export const useThreadQuery = (variables: IThreadVariables) => {
-  return useQuery<IThreadData, IThreadVariables>(THREAD_QUERY, {
+export const useThreadQuery = (variables: ThreadVariables) => {
+  return useQuery<ThreadData, ThreadVariables>(THREAD_QUERY, {
     variables,
     fetchPolicy: "network-only",
   })

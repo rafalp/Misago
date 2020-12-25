@@ -6,12 +6,12 @@ import { CardAlert, CardBody } from "../../../UI/Card"
 import { Field, FieldError, Form, FormFooter } from "../../../UI/Form"
 import Input from "../../../UI/Input"
 import { ThreadTitleValidationError } from "../../../UI/ValidationError"
-import { IThread } from "../Thread.types"
+import { Thread } from "../Thread.types"
 import ThreadRootError from "../ThreadRootError"
 import useEditThreadTitleMutation from "./useEditThreadTitleMutation"
 
-interface IThreadHeaderTitleEditFormProps {
-  thread: IThread
+interface ThreadHeaderTitleEditFormProps {
+  thread: Thread
   close: () => void
 }
 
@@ -19,7 +19,7 @@ interface FormValues {
   title: string
 }
 
-const ThreadHeaderTitleEditForm: React.FC<IThreadHeaderTitleEditFormProps> = ({
+const ThreadHeaderTitleEditForm: React.FC<ThreadHeaderTitleEditFormProps> = ({
   close,
   thread,
 }) => {

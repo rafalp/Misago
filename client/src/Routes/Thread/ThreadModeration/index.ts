@@ -1,4 +1,4 @@
-import ThreadModeration from "./ThreadModeration"
+import ThreadModerationMenu from "./ThreadModerationMenu"
 import useThreadModeration from "./useThreadModeration"
 
-export { ThreadModeration, useThreadModeration }
+export { ThreadModerationMenu, useThreadModeration }

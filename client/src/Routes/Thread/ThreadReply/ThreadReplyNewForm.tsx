@@ -14,18 +14,18 @@ import { PostingFormAlert, PostingFormLoader } from "../../../UI/PostingForm"
 import { ValidationError } from "../../../UI/ValidationError"
 import * as urls from "../../../urls"
 import ThreadPostRootError from "../ThreadPostRootError"
-import { IThreadReplyContext } from "./ThreadReplyContext"
+import { ThreadReplyContextData } from "./ThreadReplyContext"
 import ThreadReplyDialog from "./ThreadReplyDialog"
 import usePostReplyMutation from "./usePostReplyMutation"
 
 const Editor = React.lazy(() => import("../../../Editor"))
 
-interface IThreadReplyNewFormProps {
-  context: IThreadReplyContext
+interface ThreadReplyNewFormProps {
+  context: ThreadReplyContextData
   threadId: string
 }
 
-const ThreadReplyNewForm: React.FC<IThreadReplyNewFormProps> = ({
+const ThreadReplyNewForm: React.FC<ThreadReplyNewFormProps> = ({
   context,
   threadId,
 }) => {

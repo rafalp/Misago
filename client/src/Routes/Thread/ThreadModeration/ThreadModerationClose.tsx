@@ -6,12 +6,12 @@ import { Modal, ModalDialog } from "../../../UI/Modal"
 import { MutationError } from "../../../types"
 import ThreadModerationError from "./ThreadModerationError"
 
-interface IThreadModerationCloseProps {
+interface ThreadModerationCloseProps {
   graphqlError?: ApolloError | null
   errors?: Array<MutationError> | null
 }
 
-const ThreadModerationClose: React.FC<IThreadModerationCloseProps> = ({
+const ThreadModerationClose: React.FC<ThreadModerationCloseProps> = ({
   graphqlError,
   errors,
 }) => {

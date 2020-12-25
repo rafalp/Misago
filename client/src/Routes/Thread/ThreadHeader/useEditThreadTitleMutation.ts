@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/react-hooks"
 import gql from "graphql-tag"
 import { MutationError } from "../../../types"
-import { IThread } from "../Thread.types"
+import { Thread } from "../Thread.types"
 
 const EDIT_THREAD_TITLE = gql`
   mutation EditThreadTitle($input: EditThreadTitleInput!) {
@@ -36,7 +36,7 @@ interface IEditThreadTitleMutationVariables {
   }
 }
 
-const useEditThreadTitleMutation = (thread: IThread) => {
+const useEditThreadTitleMutation = (thread: Thread) => {
   const [mutation, { data, error, loading }] = useMutation<
     IEditThreadTitleMutationData,
     IEditThreadTitleMutationVariables

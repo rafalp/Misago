@@ -1,12 +1,12 @@
 import { useAuthContext } from "../../../Context"
 
-interface IThread {
+interface Thread {
   isClosed: boolean
   starter: { id: string } | null
   category: { id: string; isClosed: boolean }
 }
 
-const useThreadAcl = (thread?: IThread | null) => {
+const useThreadAcl = (thread?: Thread | null) => {
   const user = useAuthContext()
 
   if (!thread || !user) {

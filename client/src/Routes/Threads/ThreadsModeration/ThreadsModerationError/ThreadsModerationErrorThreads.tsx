@@ -5,12 +5,12 @@ import { ThreadValidationError } from "../../../../UI/ValidationError"
 import { MutationError } from "../../../../types"
 import { ISelectedThread } from "../../Threads.types"
 
-interface IThreadsModerationErrorThreadsProps {
+interface ThreadsModerationErrorThreadsProps {
   errors: Record<string, MutationError>
   threads: Array<ISelectedThread>
 }
 
-const ThreadsModerationErrorThreads: React.FC<IThreadsModerationErrorThreadsProps> = ({
+const ThreadsModerationErrorThreads: React.FC<ThreadsModerationErrorThreadsProps> = ({
   errors,
   threads,
 }) => (

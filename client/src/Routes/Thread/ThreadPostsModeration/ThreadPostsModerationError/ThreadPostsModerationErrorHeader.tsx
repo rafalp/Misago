@@ -3,13 +3,13 @@ import React from "react"
 import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
-interface IThreadPostsModerationErrorHeaderProps {
+interface ThreadPostsModerationErrorHeaderProps {
   forDelete?: boolean
   posts?: Array<IPost>
   postsErrors?: Record<string, MutationError>
 }
 
-const ThreadPostsModerationErrorHeader: React.FC<IThreadPostsModerationErrorHeaderProps> = ({
+const ThreadPostsModerationErrorHeader: React.FC<ThreadPostsModerationErrorHeaderProps> = ({
   forDelete,
   posts,
   postsErrors,
@@ -31,7 +31,7 @@ const ThreadPostsModerationErrorHeader: React.FC<IThreadPostsModerationErrorHead
   )
 }
 
-const ThreadPostsModerationErrorHeaderForDelete: React.FC<IThreadPostsModerationErrorHeaderProps> = ({
+const ThreadPostsModerationErrorHeaderForDelete: React.FC<ThreadPostsModerationErrorHeaderProps> = ({
   posts,
   postsErrors,
 }) => {
@@ -60,7 +60,7 @@ const ThreadPostsModerationErrorHeaderForDelete: React.FC<IThreadPostsModeration
   )
 }
 
-const ThreadPostsModerationErrorHeaderForUpdate: React.FC<IThreadPostsModerationErrorHeaderProps> = ({
+const ThreadPostsModerationErrorHeaderForUpdate: React.FC<ThreadPostsModerationErrorHeaderProps> = ({
   posts,
   postsErrors,
 }) => {

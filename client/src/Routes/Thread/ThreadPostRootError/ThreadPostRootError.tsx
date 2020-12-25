@@ -14,13 +14,13 @@ interface IRootError {
   type: string
 }
 
-interface IThreadPostRootErrorProps {
+interface ThreadPostRootErrorProps {
   children: (error: IRootError) => React.ReactElement
   dataErrors?: Array<MutationError> | null
   graphqlError?: ApolloError | null
 }
 
-const ThreadPostRootError: React.FC<IThreadPostRootErrorProps> = ({
+const ThreadPostRootError: React.FC<ThreadPostRootErrorProps> = ({
   children,
   dataErrors,
   graphqlError,

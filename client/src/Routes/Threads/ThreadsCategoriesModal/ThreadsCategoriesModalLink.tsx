@@ -4,7 +4,7 @@ import { Link } from "react-router-dom"
 import { ButtonLink } from "../../../UI/Button"
 import CategoryIcon from "../../../UI/CategoryIcon"
 
-interface IThreadsCategoriesModalLinkProps {
+interface ThreadsCategoriesModalLinkProps {
   category?: {
     color: string | null
     icon: string | null
@@ -18,7 +18,7 @@ interface IThreadsCategoriesModalLinkProps {
   toggle?: () => void
 }
 
-const ThreadsCategoriesModalLink: React.FC<IThreadsCategoriesModalLinkProps> = ({
+const ThreadsCategoriesModalLink: React.FC<ThreadsCategoriesModalLinkProps> = ({
   category,
   to,
   text,

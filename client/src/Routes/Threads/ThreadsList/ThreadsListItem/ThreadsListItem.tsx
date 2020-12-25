@@ -2,21 +2,21 @@ import classnames from "classnames"
 import React from "react"
 import { Link } from "react-router-dom"
 import * as urls from "../../../../urls"
-import { IThread } from "../../Threads.types"
+import { Thread } from "../../Threads.types"
 import ThreadsListItemLastActivity from "./ThreadsListItemLastActivity"
 import ThreadsListItemLastPoster from "./ThreadsListItemLastPoster"
 import ThreadsListItemSelect from "./ThreadsListItemSelect"
 import ThreadsListItemStarter from "./ThreadsListItemStarter"
 import ThreadsListItemTidbits from "./ThreadsListItemTidbits"
 
-interface IThreadsListItemProps {
+interface ThreadsListItemProps {
   changeSelection: (id: string, selected: boolean) => void
   selectable?: boolean
   selected?: boolean
-  thread: IThread
+  thread: Thread
 }
 
-const ThreadsListItem: React.FC<IThreadsListItemProps> = ({
+const ThreadsListItem: React.FC<ThreadsListItemProps> = ({
   changeSelection,
   selectable,
   selected,

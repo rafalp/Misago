@@ -8,11 +8,11 @@ import {
 } from "../../../UI/PostingForm"
 import { useThreadReplyContext } from "./ThreadReplyContext"
 
-interface IThreadReplyDialogProps {
+interface ThreadReplyDialogProps {
   children: React.ReactNode
 }
 
-const ThreadReplyDialog: React.FC<IThreadReplyDialogProps> = ({
+const ThreadReplyDialog: React.FC<ThreadReplyDialogProps> = ({
   children,
 }) => {
   const context = useThreadReplyContext()

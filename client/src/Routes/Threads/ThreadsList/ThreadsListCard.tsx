@@ -1,11 +1,11 @@
 import React from "react"
 import { Card } from "../../../UI/Card"
 
-interface IThreadsListCardProps {
+interface ThreadsListCardProps {
   children: React.ReactNode
 }
 
-const ThreadsListCard: React.FC<IThreadsListCardProps> = ({ children }) => (
+const ThreadsListCard: React.FC<ThreadsListCardProps> = ({ children }) => (
   <Card className="threads-list">{children}</Card>
 )
 

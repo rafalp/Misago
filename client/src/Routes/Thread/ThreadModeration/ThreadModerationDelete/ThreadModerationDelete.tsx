@@ -2,14 +2,14 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { useModalContext } from "../../../../Context"
 import { Modal, ModalDialog } from "../../../../UI/Modal"
-import { IThread } from "../../Thread.types"
+import { Thread } from "../../Thread.types"
 import ThreadModerationDeleteForm from "./ThreadModerationDeleteForm"
 
-interface IThreadModerationDeleteProps {
-  thread: IThread
+interface ThreadModerationDeleteProps {
+  thread: Thread
 }
 
-const ThreadModerationDelete: React.FC<IThreadModerationDeleteProps> = ({
+const ThreadModerationDelete: React.FC<ThreadModerationDeleteProps> = ({
   thread,
 }) => {
   const { isOpen, closeModal } = useModalContext()

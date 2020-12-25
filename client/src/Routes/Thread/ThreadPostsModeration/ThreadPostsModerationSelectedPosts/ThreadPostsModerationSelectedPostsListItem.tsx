@@ -7,7 +7,7 @@ import RichText from "../../../../UI/RichText"
 import { MutationError } from "../../../../types"
 import { IPost } from "../../Thread.types"
 
-interface IThreadPostsModerationSelectedThreadListItemProps {
+interface ThreadPostsModerationSelectedThreadListItemProps {
   disabled?: boolean
   error?: MutationError
   id?: string
@@ -16,7 +16,7 @@ interface IThreadPostsModerationSelectedThreadListItemProps {
   changeSelection: (id: string, selected: boolean) => void
 }
 
-const ThreadPostsModerationSelectedThreadListItem: React.FC<IThreadPostsModerationSelectedThreadListItemProps> = ({
+const ThreadPostsModerationSelectedThreadListItem: React.FC<ThreadPostsModerationSelectedThreadListItemProps> = ({
   disabled,
   error,
   id,
