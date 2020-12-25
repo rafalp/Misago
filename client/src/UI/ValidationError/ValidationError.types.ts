@@ -1,6 +1,6 @@
 import React from "react"
 
-type Error = {
+interface Error = {
   message: React.ReactNode
   type: string
 }
