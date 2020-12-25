@@ -1,5 +1,4 @@
 import { t } from "@lingui/macro"
-import classnames from "classnames"
 import React from "react"
 import { Dropdown } from "../UI/Dropdown"
 import EditorButton from "./EditorButton"
@@ -7,7 +6,6 @@ import { EditorContextData, EditorContextProvider } from "./EditorContext"
 import {
   EditorControl,
   EditorControlCode,
-  EditorControlEmoji,
   EditorControlImage,
   EditorControlLink,
   EditorControlList,
@@ -27,9 +25,6 @@ const EditorControls: React.FC<EditorControlsProps> = ({
 }) => {
   const [initialized, setInitialized] = React.useState(false)
   const textarea = React.useRef<HTMLTextAreaElement | null>(null)
-  const touchEnabled = React.useMemo(() => {
-    return "ontouchstart" in window
-  }, [])
 
   const controls: Array<EditorControl> = [
     {
@@ -131,15 +126,6 @@ const EditorControls: React.FC<EditorControlsProps> = ({
       component: EditorControlImage,
     },
     {
-      name: "emoji",
-      title: t({
-        id: "editor.emoji",
-        message: "Insert emoji",
-      }),
-      icon: "far fa-smile",
-      component: EditorControlEmoji,
-    },
-    {
       name: "list",
       title: t({
         id: "editor.list",
@@ -205,9 +191,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
 
   return (
     <div
-      className={classnames("col-auto editor-controls", {
-        "editor-controls-touch": touchEnabled,
-      })}
+      className="col-auto editor-controls"
       ref={(element) => {
         if (element) {
           const editor = element.closest(".form-editor")

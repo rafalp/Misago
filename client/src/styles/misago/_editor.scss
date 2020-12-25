@@ -28,11 +28,6 @@
   color: $input-color;
 }
 
-// Hide emoji control from editor on touch devices
-.editor-controls-touch .btn-editor-emoji {
-  display: none;
-}
-
 // Hide editor controls dropdown on large displays
 @include media-breakpoint-up(md) {
   .btn-editor-dropdown-toggle {
