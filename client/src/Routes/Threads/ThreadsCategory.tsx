@@ -7,10 +7,7 @@ import WindowTitle from "../../UI/WindowTitle"
 import { ThreadsHeaderCategory } from "./ThreadsHeader"
 import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
-import {
-  ThreadsModerationMenu,
-  useThreadsModeration,
-} from "./ThreadsModeration"
+import { ThreadsModeration, useThreadsModeration } from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
@@ -76,7 +73,7 @@ const ThreadsCategory: React.FC = () => {
         loading={loading}
         onEvent={fetchMoreThreads}
       />
-      <ThreadsModerationMenu moderation={moderation} selection={selection} />
+      <ThreadsModeration moderation={moderation} selection={selection} />
     </ThreadsLayout>
   )
 }

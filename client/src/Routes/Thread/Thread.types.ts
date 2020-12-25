@@ -35,7 +35,7 @@ export interface ThreadPoster {
   avatars: Array<AvatarData>
 }
 
-export interface ThreadModeration {
+export interface ThreadModerationOptions {
   actions: Array<ModerationAction>
   loading: boolean
 }

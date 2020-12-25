@@ -2,7 +2,7 @@ import React from "react"
 import { Paginator, PaginatorCompact } from "../../../UI/Paginator"
 import ResetScrollOnNav from "../../../UI/ResetScrollOnNav"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
-import { ThreadModerationMenu } from "../ThreadModeration"
+import { ThreadModeration } from "../ThreadModeration"
 import { ThreadToolbarProps } from "./ThreadToolbar.types"
 import ThreadToolbarReplyButton from "./ThreadToolbarReplyButton"
 
@@ -33,7 +33,7 @@ const ThreadToolbarBottom: React.FC<ThreadToolbarProps> = ({
       <ToolbarSeparator />
       {moderation && (
         <ToolbarItem>
-          <ThreadModerationMenu moderation={moderation} />
+          <ThreadModeration {...moderation} />
         </ToolbarItem>
       )}
       <ToolbarItem>

@@ -8,17 +8,17 @@ import {
 } from "../../../UI/Dropdown"
 import FixedContainer from "../../../UI/FixedContainer"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
-import { ThreadsModeration } from "../Threads.types"
+import { ThreadsModerationOptions } from "../Threads.types"
 
-interface ThreadsModerationMenuProps {
-  moderation?: ThreadsModeration | null
+interface ThreadsModerationProps {
+  moderation: ThreadsModerationOptions | null
   selection: {
     selected: Array<any>
     clear: () => void
   }
 }
 
-const ThreadsModerationMenu: React.FC<ThreadsModerationMenuProps> = ({
+const ThreadsModeration: React.FC<ThreadsModerationProps> = ({
   moderation,
   selection,
 }) => {
@@ -71,4 +71,4 @@ const ThreadsModerationMenu: React.FC<ThreadsModerationMenuProps> = ({
   )
 }
 
-export default ThreadsModerationMenu
+export default ThreadsModeration

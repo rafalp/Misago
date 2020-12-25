@@ -1,8 +1,8 @@
-import { ThreadModeration } from "../Thread.types"
+import { ThreadModerationOptions } from "../Thread.types"
 
 export interface ThreadToolbarProps {
   isClosed?: boolean
-  moderation?: ThreadModeration | null
+  moderation?: ThreadModerationOptions | null
   pagination: {
     page: number
     pages: number

@@ -2,20 +2,17 @@ import { Trans } from "@lingui/macro"
 import React from "react"
 import { ButtonSecondary } from "../../../UI/Button"
 import { Dropdown, DropdownButton } from "../../../UI/Dropdown"
-import { ThreadModeration } from "../Thread.types"
+import { ThreadModerationOptions } from "../Thread.types"
 
-interface ThreadModerationMenuProps {
-  moderation: ThreadModeration
-}
-
-const ThreadModerationMenu: React.FC<ThreadModerationMenuProps> = ({
-  moderation,
+const ThreadModeration: React.FC<ThreadModerationOptions> = ({
+  actions,
+  loading,
 }) => (
   <Dropdown
     toggle={({ ref, toggle }) => (
       <ButtonSecondary
         elementRef={ref}
-        loading={moderation.loading}
+        loading={loading}
         text={<Trans id="moderation.thread">Moderate thread</Trans>}
         icon="fas fa-shield-alt"
         responsive
@@ -24,7 +21,7 @@ const ThreadModerationMenu: React.FC<ThreadModerationMenuProps> = ({
     )}
     menu={() => (
       <>
-        {moderation.actions.map((action) => (
+        {actions.map((action) => (
           <DropdownButton
             key={action.icon}
             text={action.name}
@@ -38,4 +35,4 @@ const ThreadModerationMenu: React.FC<ThreadModerationMenuProps> = ({
   />
 )
 
-export default ThreadModerationMenu
+export default ThreadModeration
