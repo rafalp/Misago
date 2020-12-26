@@ -1,4 +1,5 @@
 from unittest.mock import ANY
+
 import pytest
 
 from ..parser import parse_markup
@@ -43,4 +44,13 @@ async def test_parser_handles_diacritics(graphql_context):
     result, _ = await parse_markup(graphql_context, "**Cześć**, opie!")
     assert result == [
         {"id": ANY, "type": "p", "text": "<strong>Cześć</strong>, opie!",}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_parser_parses_multiple_paragraphs(graphql_context):
+    result, _ = await parse_markup(graphql_context, "Hello world!\n\nHow's going?")
+    assert result == [
+        {"id": ANY, "type": "p", "text": "Hello world!"},
+        {"id": ANY, "type": "p", "text": "How&#x27;s going?"},
     ]

@@ -91,11 +91,62 @@ def convert_block_ast_to_rich_text(
 def convert_block_ast_to_rich_text_action(
     context: GraphQLContext, ast: dict
 ) -> Optional[RichTextBlock]:
+    # pylint: disable=too-many-return-statements
+    if ast["type"] == "block_text":
+        return {
+            "id": get_block_id(),
+            "type": "f",
+            "text": convert_children_ast_to_text(context, ast["children"]),
+        }
+
     if ast["type"] == "paragraph":
         return {
             "id": get_block_id(),
             "type": "p",
             "text": convert_children_ast_to_text(context, ast["children"]),
+        }
+
+    if ast["type"] == "heading":
+        return {
+            "id": get_block_id(),
+            "type": "h%s" % ast["level"],
+            "text": convert_children_ast_to_text(context, ast["children"]),
+        }
+
+    if ast["type"] == "block_code":
+        return {
+            "id": get_block_id(),
+            "type": "code",
+            "syntax": ast["info"],
+            "text": escape(ast["text"]),
+        }
+
+    if ast["type"] == "block_quote":
+        return {
+            "id": get_block_id(),
+            "type": "quote",
+            "children": convert_ast_to_rich_text(context, ast["children"]),
+        }
+
+    if ast["type"] == "thematic_break":
+        return {
+            "id": get_block_id(),
+            "type": "hr",
+        }
+
+    if ast["type"] == "list":
+        return {
+            "id": get_block_id(),
+            "type": "list",
+            "ordered": ast["ordered"],
+            "children": convert_ast_to_rich_text(context, ast["children"]),
+        }
+
+    if ast["type"] == "list_item":
+        return {
+            "id": get_block_id(),
+            "type": "li",
+            "children": convert_ast_to_rich_text(context, ast["children"]),
         }
 
     return None

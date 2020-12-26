@@ -32,10 +32,41 @@ def convert_rich_text_block_to_html(
     )
 
 
+HEADINGS = ("h1", "h2", "h3", "h4", "h5", "h6")
+
+
 def convert_rich_text_block_to_html_action(
     context: GraphQLContext, block: RichTextBlock
 ) -> Optional[str]:
+    # pylint: disable=too-many-return-statements
+    if block["type"] == "code":
+        return f"<code><pre>{block['text']}</pre></code>"
+
+    if block["type"] == "f":
+        return block["text"]
+
+    if block["type"] == "hr":
+        return "<hr/>"
+
+    if block["type"] == "li":
+        return "<li>%s</li>" % convert_rich_text_to_html(context, block["children"])
+
+    if block["type"] == "list":
+        element = "ol" if block["ordered"] else "ul"
+        return "<%(element)s>%(children)s</%(element)s>" % {
+            "element": element,
+            "children": convert_rich_text_to_html(context, block["children"]),
+        }
+
     if block["type"] == "p":
         return f"<p>{block['text']}</p>"
+
+    if block["type"] == "quote":
+        return "<blockquote>%s</blockquote>" % convert_rich_text_to_html(
+            context, block["children"]
+        )
+
+    if block["type"] in HEADINGS:
+        return f"<{block['type']}>{block['text']}</{block['type']}>"
 
     return None

@@ -1,11 +1,8 @@
-from typing import List, TypedDict
+from typing import Any, List, Dict
 
+# Mypy bugs are preventing proper typing for richtext:
+# 1. literals are ignored in dict type matching
+# 2. recursive types unsupported
 
-class RichTextParagraph(TypedDict):
-    id: str
-    type: str
-    text: str
-
-
-RichTextBlock = RichTextParagraph
+RichTextBlock = Dict[str, Any]
 RichText = List[RichTextBlock]
