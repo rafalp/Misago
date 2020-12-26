@@ -1,8 +1,2 @@
-from mistune import PLUGINS
-
-from .linebreaker import linebreaker
-
-PLUGINS = PLUGINS.update({"simple_linebreak": linebreaker})
-
-
-__all__ = ["PLUGINS", "linebreaker"]
+from .hardbreak import plugin_hard_break
+from .shortimage import plugin_short_image

@@ -3,6 +3,7 @@ from html import escape
 from typing import List, Optional, Tuple, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
+from mistune.plugins import plugin_strikethrough, plugin_url
 
 from ..hooks import (
     convert_block_ast_to_rich_text_hook,
@@ -20,7 +21,7 @@ from ..types import (
     RichTextBlock,
 )
 from ..utils.strings import get_random_string
-from .markdown import html_markdown
+from .plugins import plugin_hard_break, plugin_short_image
 
 
 async def parse_markup(
@@ -57,7 +58,11 @@ def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
 
 def create_markdown(context: GraphQLContext) -> Markdown:
     return create_markdown_hook.call_action(
-        create_markdown_action, context, BlockParser(), InlineParser(AstRenderer()), []
+        create_markdown_action,
+        context,
+        BlockParser(),
+        InlineParser(AstRenderer()),
+        [plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
     )
 
 
@@ -67,7 +72,10 @@ def create_markdown_action(
     inline: InlineParser,
     plugins: List[MarkdownPlugin],
 ) -> Markdown:
-    return Markdown(None, block, inline, plugins)
+    markdown = Markdown(None, block, inline, plugins)
+    markdown.inline.rules.remove("ref_link")
+    markdown.inline.rules.remove("ref_link2")
+    return markdown
 
 
 def convert_ast_to_rich_text(context: GraphQLContext, ast: List[dict]) -> RichText:
@@ -156,7 +164,17 @@ def get_block_id() -> str:
     return get_random_string(6)
 
 
-def convert_children_ast_to_text(context: GraphQLContext, ast: List[dict]) -> str:
+def convert_children_ast_to_text(
+    context: GraphQLContext, ast: Optional[List[dict]]
+) -> str:
+    # Fail-safe for situations when `ast["children"]` is None
+    if not ast:
+        return ""
+
+    # Fail-safe for situations when `ast["children"]` is str
+    if isinstance(ast, str):
+        return escape(ast)
+
     nodes = []
     for node in ast:
         text = convert_inline_ast_to_text(context, node)
@@ -175,14 +193,31 @@ def convert_inline_ast_to_text(context: GraphQLContext, ast: dict) -> Optional[s
 def convert_inline_ast_to_text_action(
     context: GraphQLContext, ast: dict
 ) -> Optional[str]:
+    # pylint: disable=too-many-return-statements
+    if ast["type"] == "linebreak":
+        return "<br/>"
+
     if ast["type"] in ("text", "inline_html"):
         return escape(ast["text"])
 
-    if ast["type"] == "link":
-        return '<a href="%s" rel="nofollow">%s</a>' % (
-            escape(ast["link"]),
-            convert_children_ast_to_text(context, ast["children"]),
+    if ast["type"] == "codespan":
+        return "<code>%s</code>" % escape(ast["text"])
+
+    if ast["type"] == "image":
+        return '<img src="%s" alt="%s" />' % (
+            escape(ast["src"]),
+            escape(ast["alt"] or ""),
         )
+
+    if ast["type"] == "link":
+        if not ast["children"]:
+            children = ast["link"]
+        elif isinstance(ast["children"], str):
+            children = escape(ast["children"])
+        else:
+            children = convert_children_ast_to_text(context, ast["children"])
+
+        return '<a href="%s" rel="nofollow">%s</a>' % (escape(ast["link"]), children)
 
     if ast["type"] == "emphasis":
         return "<em>%s</em>" % convert_children_ast_to_text(context, ast["children"])
@@ -192,8 +227,7 @@ def convert_inline_ast_to_text_action(
             context, ast["children"]
         )
 
+    if ast["type"] == "strikethrough":
+        return "<del>%s</del>" % convert_children_ast_to_text(context, ast["children"])
+
     return None
-
-
-def markup_as_html(markup: str) -> str:
-    return html_markdown(markup)
