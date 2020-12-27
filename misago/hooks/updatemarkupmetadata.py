@@ -5,7 +5,7 @@ from .action import ActionHook
 
 
 class UpdateMarkupMetadataHook(ActionHook[UpdateMarkupMetadataAction]):
-    async def call_action(
+    def call_action(
         self, context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
     ):
-        return await self.gather(context, ast, metadata)
+        return self.gather(context, ast, metadata)

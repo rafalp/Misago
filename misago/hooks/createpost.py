@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Awaitable, Dict, Optional
 
 from ..types import (
     CreatePostAction,
@@ -14,7 +14,7 @@ from .filter import FilterHook
 
 
 class CreatePostHook(FilterHook[CreatePostAction, CreatePostFilter]):
-    async def call_action(
+    def call_action(
         self,
         action: CreatePostAction,
         thread: Thread,
@@ -27,8 +27,8 @@ class CreatePostHook(FilterHook[CreatePostAction, CreatePostFilter]):
         posted_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> Post:
-        return await self.filter(
+    ) -> Awaitable[Post]:
+        return self.filter(
             action,
             thread,
             markup,

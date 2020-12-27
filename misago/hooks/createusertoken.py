@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Awaitable, Dict
 
 from ..types import (
     CreateUserTokenAction,
@@ -12,24 +12,24 @@ from .filter import FilterHook
 
 
 class CreateUserTokenHook(FilterHook[CreateUserTokenAction, CreateUserTokenFilter]):
-    async def call_action(
+    def call_action(
         self,
         action: CreateUserTokenAction,
         context: GraphQLContext,
         user: User,
         in_admin: bool,
-    ) -> str:
-        return await self.filter(action, context, user, in_admin)
+    ) -> Awaitable[str]:
+        return self.filter(action, context, user, in_admin)
 
 
 class CreateUserTokenPayloadHook(
     FilterHook[CreateUserTokenPayloadAction, CreateUserTokenPayloadFilter]
 ):
-    async def call_action(
+    def call_action(
         self,
         action: CreateUserTokenPayloadAction,
         context: GraphQLContext,
         user: User,
         in_admin: bool,
-    ) -> Dict[str, Any]:
-        return await self.filter(action, context, user, in_admin)
+    ) -> Awaitable[Dict[str, Any]]:
+        return self.filter(action, context, user, in_admin)

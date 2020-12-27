@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Awaitable, Optional
 
 from ..types import (
     UpdatePostAction,
@@ -15,7 +15,7 @@ from .filter import FilterHook
 
 
 class UpdatePostHook(FilterHook[UpdatePostAction, UpdatePostFilter]):
-    async def call_action(
+    def call_action(
         self,
         action: UpdatePostAction,
         post: Post,
@@ -31,8 +31,8 @@ class UpdatePostHook(FilterHook[UpdatePostAction, UpdatePostFilter]):
         posted_at: Optional[datetime] = None,
         extra: Optional[dict] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> Post:
-        return await self.filter(
+    ) -> Awaitable[Post]:
+        return self.filter(
             action,
             post,
             category=category,

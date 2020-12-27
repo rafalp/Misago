@@ -1,12 +1,12 @@
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Awaitable, Dict, Optional
 
 from ..types import CreateUserAction, CreateUserFilter, GraphQLContext, User
 from .filter import FilterHook
 
 
 class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
-    async def call_action(
+    def call_action(
         self,
         action: CreateUserAction,
         name: str,
@@ -19,8 +19,8 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> User:
-        return await self.filter(
+    ) -> Awaitable[User]:
+        return self.filter(
             action,
             name,
             email,
