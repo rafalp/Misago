@@ -72,12 +72,63 @@ export enum AuthModalMode {
   REGISTER,
 }
 
-export interface RichTextParagraph {
+export interface RichTextCode {
   id: string
-  type: string
+  type: "code"
+  syntax: string | null
   text: string
 }
 
-export type RichTextNode = RichTextParagraph
+export interface RichTextFragment {
+  id: string
+  type: "f"
+  text: string
+}
 
-export type RichText = Array<RichTextNode>
+export interface RichTextHeader {
+  id: string
+  type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  text: string
+}
+
+export interface RichTextHorizontalRule {
+  id: string
+  type: "hr"
+}
+
+export interface RichTextList {
+  id: string
+  type: "list"
+  ordered: boolean
+  children: RichText
+}
+
+export interface RichTextListItem {
+  id: string
+  type: "li"
+  children: Array<RichTextFragment | RichTextList>
+}
+
+export interface RichTextParagraph {
+  id: string
+  type: "p"
+  text: string
+}
+
+export interface RichTextQuote {
+  id: string
+  type: "quote"
+  children: RichText
+}
+
+export type RichTextBlock =
+  | RichTextCode
+  | RichTextFragment
+  | RichTextHeader
+  | RichTextHorizontalRule
+  | RichTextList
+  | RichTextListItem
+  | RichTextParagraph
+  | RichTextQuote
+
+export type RichText = Array<RichTextBlock>

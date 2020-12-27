@@ -3,6 +3,7 @@ import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
 import { Form } from "../../../../UI/Form"
 import { ModalFormContainer, userFactory } from "../../../../UI/Storybook"
+import { RichText } from "../../../../types"
 import { Post } from "../../Thread.types"
 import ThreadsModerationSelectedPosts from "./"
 
@@ -29,7 +30,7 @@ export const SinglePost = () => {
           type: "p",
           text: "Lorem ipsum dolor met sit amet elit.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -59,7 +60,7 @@ export const FewPosts = () => {
           type: "p",
           text: "Lorem ipsum dolor met sit amet elit.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -75,7 +76,7 @@ export const FewPosts = () => {
           text:
             "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",
@@ -105,7 +106,7 @@ export const ManyPosts = () => {
           type: "p",
           text: "Lorem ipsum dolor met sit amet elit.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -121,7 +122,7 @@ export const ManyPosts = () => {
           text:
             "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",
@@ -137,7 +138,7 @@ export const ManyPosts = () => {
           text:
             "Proin lacinia leo vitae mauris tempor, nec elementum quam eleifend.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-02T13:52:05Z",
       posterName: "Aenean",
@@ -167,7 +168,7 @@ export const WithErrors = () => {
           type: "p",
           text: "Lorem ipsum dolor met sit amet elit.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-01T21:42:51Z",
       posterName: username,
@@ -183,7 +184,7 @@ export const WithErrors = () => {
           text:
             "Aliquam commodo orci et lacinia placerat. Donec non porttitor metus.",
         },
-      ],
+      ] as RichText,
       edits: 0,
       postedAt: "2020-04-02T11:16:51Z",
       posterName: "Lorem",
