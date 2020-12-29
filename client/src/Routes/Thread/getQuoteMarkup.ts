@@ -62,6 +62,10 @@ const SIMPLE_NODE_MAPPINGS: Record<string, [string, string]> = {
   H6: ["\n\n###### ", ""],
   STRONG: ["**", "**"],
   EM: ["*", "*"],
+  DEL: ["~~", "~~"],
+  B: ["[b]", "[/b]"],
+  U: ["[u]", "[/u]"],
+  I: ["[i]", "[/i]"],
 }
 
 const convertNodeToMarkup = (
