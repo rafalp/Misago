@@ -7,7 +7,7 @@ ITALIC = r"\[i\](.*)\[\/i\]"
 UNDERLINE = r"\[u\](.*)\[\/u\]"
 LINE_THROUGH = r"\[s\](.*)\[\/s\]"
 CENTER = r"\[center\](.*)\[\/center\]"
-QUOTE = r'\[quote(="(([\w ]*))")?\](.*)\[\/quote\]'
+QUOTE = r'\[quote(=(@([\w\-_]*))(:\d+)?)?\](.*)\[\/quote\]'
 BLOCK_CODE = r"\[code\](.*)\[\/code\]"
 LINK = r"\[url=(.*)\](.*)\[\/url\]"
 LIST_START = r"\[(\/)?list\]"
@@ -40,7 +40,7 @@ def center(parser, m, state):
 
 
 def quote(parser, m, state):
-    return "quote", {"author": m.group(2), "children": parser(m.group(4), state)}
+    return "quote", {"author": m.group(3), "id_post": m.group(4), "children": parser(m.group(5), state)}
 
 
 def block_code(parser, m, state):

@@ -21,7 +21,7 @@ from ..types import (
     RichTextBlock,
 )
 from ..utils.strings import get_random_string
-from .plugins import plugin_hard_break, plugin_short_image
+from .plugins import bbcode, plugin_hard_break, linebreaker, plugin_short_image
 
 
 async def parse_markup(
@@ -67,7 +67,7 @@ def create_markdown(context: GraphQLContext) -> Markdown:
         context,
         BlockParser(),
         InlineParser(AstRenderer()),
-        [plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
+        [bbcode, linebreaker, plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
     )
 
 
