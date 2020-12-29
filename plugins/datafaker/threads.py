@@ -2,10 +2,9 @@ import random
 from datetime import datetime
 from typing import Optional
 
-from misago.types import Category, Post, RichText, Thread, User
+from misago.types import Category, Post, Thread, User
 from misago.threads.create import create_post, create_thread
 from misago.threads.update import update_thread
-from misago.utils.strings import get_random_string
 
 from .richtext import create_fake_rich_text
 from .sentences import Sentences
