@@ -34,8 +34,8 @@ const EditorControlLinkForm: React.FC<EditorControlLinkFormProps> = ({
       onSubmit={({ data: { link, label } }) => {
         context.replaceSelection({
           replace: label.trim()
-            ? `![${label.trim()}](${link.trim()})`
-            : link.trim(),
+            ? `[${label.trim()}](${link.trim()})`
+            : `<${link.trim()}>`,
         })
 
         close()

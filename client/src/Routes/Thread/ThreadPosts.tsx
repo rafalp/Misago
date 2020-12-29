@@ -14,6 +14,8 @@ import {
   useThreadPostsModeration,
 } from "./ThreadPostsModeration"
 import ThreadPost from "./ThreadPost"
+import ThreadPostsList from "./ThreadPostsList"
+import ThreadQuoteSelection from "./ThreadQuoteSelection"
 import { ThreadReply, ThreadReplyProvider } from "./ThreadReply"
 import { ThreadToolbarBottom, ThreadToolbarTop } from "./ThreadToolbar"
 import useThreadParams from "./useThreadParams"
@@ -83,22 +85,26 @@ const ThreadPosts: React.FC = () => {
       <ThreadHeader thread={thread} />
       <ThreadReplyProvider threadId={thread.id}>
         <ThreadToolbarTop {...toolbarProps} />
-        <SectionLoader
-          loading={loading || posts.page.number !== pagination.page}
-        >
-          {posts.page.items.map((post) => (
-            <ThreadPost
-              key={post.id}
-              post={post}
-              threadId={thread.id}
-              threadSlug={thread.slug}
-              page={page}
-              isClosed={isClosed}
-              isSelected={selection.selection[post.id]}
-              toggleSelection={moderation.posts ? selection.toggle : null}
-            />
-          ))}
-        </SectionLoader>
+        <ThreadQuoteSelection>
+          <SectionLoader
+            loading={loading || posts.page.number !== pagination.page}
+          >
+            <ThreadPostsList>
+              {posts.page.items.map((post) => (
+                <ThreadPost
+                  key={post.id}
+                  post={post}
+                  threadId={thread.id}
+                  threadSlug={thread.slug}
+                  page={page}
+                  isClosed={isClosed}
+                  isSelected={selection.selection[post.id]}
+                  toggleSelection={moderation.posts ? selection.toggle : null}
+                />
+              ))}
+            </ThreadPostsList>
+          </SectionLoader>
+        </ThreadQuoteSelection>
         <ThreadToolbarBottom {...toolbarProps} />
         <ThreadReply threadId={thread.id} />
       </ThreadReplyProvider>

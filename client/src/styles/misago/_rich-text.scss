@@ -1,4 +1,27 @@
+// Style quote blocks
+$quote-background: $gray-100 !default;
+$quote-border: 1px solid $gray-200 !default;
+$quote-border-radius: $border-radius !default;
+
+.rich-text-quote {
+  background: $quote-background;
+  border: $quote-border;
+  border-radius: $quote-border-radius;
+  margin-bottom: $spacer;
+
+  blockquote {
+    margin: 0;
+    padding: $spacer;
+  }
+}
+
 // Remove bottom margins from last child of rich text block:
-.misago-richtext > *:last-child {
+.misago-rich-text > *:last-child,
+.misago-rich-text blockquote > *:last-child {
   margin-bottom: 0;
+}
+
+// Force word wrap in richtext
+.misago-rich-text * {
+  overflow-wrap: break-word;
 }

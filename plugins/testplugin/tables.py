@@ -4,8 +4,8 @@
 
 
 # likes = sqlalchemy.Table(
-    # "likes",
-    # metadata,
-    # sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    # sqlalchemy.Column("name", sqlalchemy.String),
+# "likes",
+# metadata,
+# sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
+# sqlalchemy.Column("name", sqlalchemy.String),
 # )

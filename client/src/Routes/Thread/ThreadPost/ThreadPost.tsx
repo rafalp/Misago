@@ -47,7 +47,11 @@ const ThreadPost: React.FC<ThreadPostProps> = ({
               toggleSelection={toggleSelection}
             />
             <CardBody className="post-body">
-              <RichText richText={post.richText} />
+              <RichText
+                author={post.poster ? post.poster.name : post.posterName}
+                postId={post.id}
+                richText={post.richText}
+              />
             </CardBody>
             <CardFooter className="post-footer">post footer</CardFooter>
           </Card>

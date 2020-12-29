@@ -5,6 +5,7 @@ import { UseFormMethods, useForm } from "react-hook-form"
 import * as Yup from "yup"
 import { useSettingsContext } from "../../../Context"
 import useNewReplyDraft from "./useNewReplyDraft"
+import getQuoteMarkup from "../getQuoteMarkup"
 
 interface ThreadReplyFormValues {
   markup: string
@@ -21,6 +22,7 @@ export interface ThreadReplyContextData {
   mode: string
   post: ThreadReplyPost | null
   form: UseFormMethods<ThreadReplyFormValues>
+  quote: (range: Range) => void
   startReply: () => void
   editReply: (post: ThreadReplyPost) => void
   cancelReply: (force?: boolean) => void
@@ -197,6 +199,23 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
     [isActive, hasChanges, setActive, setMode, setPost, resetValue]
   )
 
+  const quote = React.useCallback(
+    (range: Range) => {
+      const quoteMarkup = getQuoteMarkup(range)
+      const newValue = getValue() + "\n\n" + quoteMarkup
+      setValue(newValue.trim() + "\n\n")
+
+      if (!mode) {
+        setMode("reply")
+      }
+
+      setActive(true)
+      setFullscreen(false)
+      setMinimized(false)
+    },
+    [mode, getValue, setValue, startReply, setActive]
+  )
+
   return (
     <ThreadReplyContext.Provider
       value={{
@@ -206,6 +225,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
         minimized,
         mode,
         post,
+        quote,
         setFullscreen,
         setMinimized,
         startReply,
