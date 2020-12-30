@@ -21,6 +21,7 @@ from ..types import (
     RichTextBlock,
 )
 from ..utils.strings import get_random_string
+from .genericblocks import restructure_generic_blocks
 from .plugins import builtin_plugins
 
 
@@ -53,7 +54,7 @@ async def parse_markup_action(
 
 def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
     markdown = create_markdown(context)
-    return markdown(markup)
+    return restructure_generic_blocks(markdown(markup))
 
 
 def create_markdown(context: GraphQLContext) -> Markdown:

@@ -60,6 +60,8 @@ async def test_quote_markdown_is_supported(graphql_context):
         {
             "id": ANY,
             "type": "quote",
+            "author": None,
+            "post": None,
             "children": [{"id": ANY, "type": "p", "text": "Hello world!",}],
         }
     ]
