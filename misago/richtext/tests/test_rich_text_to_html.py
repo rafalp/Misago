@@ -135,6 +135,25 @@ def test_quote_block_is_converted_to_html(graphql_context):
             {
                 "id": "t3st",
                 "type": "quote",
+                "author": None,
+                "post": None,
+                "children": [
+                    {"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",}
+                ],
+            }
+        ],
+    )
+
+    assert html == "<blockquote><p>Hello <b>world</b>!</p></blockquote>"
+
+
+def test_spoiler_block_is_converted_to_html(graphql_context):
+    html = convert_rich_text_to_html(
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "spoiler",
                 "children": [
                     {"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",}
                 ],

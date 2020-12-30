@@ -89,7 +89,7 @@ def find_blocks_pairs(ast: List[dict]):
                     if opening_node["block_type"] == node["block_type"]:
                         node["block_id"] = opening_node["block_id"]
                         break
-                    
+
                     opening_node["block_id"] = None
             else:
                 node["block_id"] = None

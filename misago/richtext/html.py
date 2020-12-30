@@ -1,3 +1,4 @@
+from html import escape
 from typing import Optional
 
 from ..hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
@@ -62,6 +63,11 @@ def convert_rich_text_block_to_html_action(
         return f"<p>{block['text']}</p>"
 
     if block["type"] == "quote":
+        return "<blockquote>%s</blockquote>" % convert_rich_text_to_html(
+            context, block["children"]
+        )
+
+    if block["type"] == "spoiler":
         return "<blockquote>%s</blockquote>" % convert_rich_text_to_html(
             context, block["children"]
         )

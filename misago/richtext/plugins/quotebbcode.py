@@ -16,7 +16,7 @@ def parse_quote_open_bbcode(parser, m, state):
 
     return {
         "type": "quote_bbcode",
-        "author": author or None,
+        "author": author.strip() or None,
         "post": post if post and post > 0 else None,
     }
 

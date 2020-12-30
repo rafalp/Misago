@@ -148,6 +148,13 @@ def convert_block_ast_to_rich_text_action(
             "children": convert_ast_to_rich_text(context, ast["children"]),
         }
 
+    if ast["type"] == "spoiler_bbcode":
+        return {
+            "id": get_block_id(),
+            "type": "spoiler",
+            "children": convert_ast_to_rich_text(context, ast["children"]),
+        }
+
     if ast["type"] == "thematic_break":
         return {
             "id": get_block_id(),

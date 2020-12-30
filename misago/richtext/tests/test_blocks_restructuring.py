@@ -119,3 +119,25 @@ async def test_extra_closing_blocks_are_kept(graphql_context):
         {"id": ANY, "type": "p", "text": "world!"},
         {"id": ANY, "type": "p", "text": "[/quote]"},
     ]
+
+
+@pytest.mark.asyncio
+async def test_interlocking_blocks_are_kept(graphql_context):
+    result, _ = await parse_markup(
+        graphql_context, "[quote]Lorem[spoiler]Ipsum[/quote]Dolor[/spoiler]"
+    )
+    assert result == [
+        {
+            "id": ANY,
+            "type": "quote",
+            "author": None,
+            "post": None,
+            "children": [
+                {"id": ANY, "type": "p", "text": "Lorem"},
+                {"id": ANY, "type": "p", "text": "[spoiler]"},
+                {"id": ANY, "type": "p", "text": "Ipsum"},
+            ],
+        },
+        {"id": ANY, "type": "p", "text": "Dolor"},
+        {"id": ANY, "type": "p", "text": "[/spoiler]"},
+    ]
