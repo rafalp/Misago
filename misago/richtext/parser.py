@@ -21,7 +21,7 @@ from ..types import (
     RichTextBlock,
 )
 from ..utils.strings import get_random_string
-from .plugins import plugin_hard_break, plugin_short_image
+from .plugins import builtin_plugins
 
 
 async def parse_markup(
@@ -62,7 +62,7 @@ def create_markdown(context: GraphQLContext) -> Markdown:
         context,
         BlockParser(),
         InlineParser(AstRenderer()),
-        [plugin_strikethrough, plugin_url, plugin_hard_break, plugin_short_image],
+        [plugin_strikethrough, plugin_url, *builtin_plugins],
     )
 
 
@@ -133,6 +133,17 @@ def convert_block_ast_to_rich_text_action(
         return {
             "id": get_block_id(),
             "type": "quote",
+            "author": None,
+            "post": None,
+            "children": convert_ast_to_rich_text(context, ast["children"]),
+        }
+
+    if ast["type"] == "quote_bbcode":
+        return {
+            "id": get_block_id(),
+            "type": "quote",
+            "author": ast["author"],
+            "post": ast["post"],
             "children": convert_ast_to_rich_text(context, ast["children"]),
         }
 

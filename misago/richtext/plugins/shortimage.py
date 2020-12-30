@@ -14,6 +14,6 @@ def parse_short_image(self, m, state):
     return "image", escape_url(link), None, None
 
 
-def plugin_short_image(md):
-    md.inline.register_rule("short_image", SHORT_IMAGE_PATTERN, parse_short_image)
-    md.inline.rules.append("short_image")
+def plugin_short_image(markdown):
+    markdown.inline.register_rule("short_image", SHORT_IMAGE_PATTERN, parse_short_image)
+    markdown.inline.rules.append("short_image")
