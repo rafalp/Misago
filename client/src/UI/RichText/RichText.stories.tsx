@@ -90,6 +90,33 @@ export const Quote = () => (
         {
           id: "test",
           type: "quote",
+          author: null,
+          post: null,
+          children: [
+            {
+              id: "test1",
+              type: "p",
+              text: "Lorem <strong>ipsum</strong> dolor met.",
+            },
+            {
+              id: "test2",
+              type: "p",
+              text: "Sit <em>amet</em> elit.",
+            },
+          ],
+        },
+      ]}
+    />
+  </RootContainer>
+)
+
+export const Spoiler = () => (
+  <RootContainer>
+    <RichText
+      richText={[
+        {
+          id: "test",
+          type: "spoiler",
           children: [
             {
               id: "test1",

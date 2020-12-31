@@ -9,6 +9,7 @@ import RichTextListItem from "./RichTextListItem"
 import RichTextParagraph from "./RichTextParagraph"
 import RichTextQuote from "./RichTextQuote"
 import RichTextRenderer from "./RichTextRenderer"
+import RichTextSpoiler from "./RichTextSpoiler"
 
 export default RichText
 export {
@@ -22,4 +23,5 @@ export {
   RichTextParagraph,
   RichTextQuote,
   RichTextRenderer,
+  RichTextSpoiler,
 }

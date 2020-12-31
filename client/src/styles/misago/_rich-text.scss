@@ -15,6 +15,43 @@ $quote-border-radius: $border-radius !default;
   }
 }
 
+// Style spoilers
+$spoiler-background: $gray-100 !default;
+$spoiler-border: 1px solid $gray-200 !default;
+$spoiler-border-radius: $border-radius !default;
+
+.rich-text-spoiler {
+  background: $spoiler-background;
+  border: $spoiler-border;
+  border-radius: $spoiler-border-radius;
+  margin-bottom: $spacer;
+
+  blockquote {
+    margin: 0;
+    padding: $spacer;
+  }
+}
+
+.rich-text-spoiler-hidden blockquote {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+}
+
+$spoiler-header-background: $gray-200 !default;
+$spoiler-header-border: 1px solid $gray-200 !default;
+
+.rich-text-spoiler-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacer / 2 $spacer;
+
+  background-color: $spoiler-header-background;
+  border-bottom: $spoiler-header-border;
+
+  font-weight: bold;
+}
+
 // Remove bottom margins from last child of rich text block:
 .misago-rich-text > *:last-child,
 .misago-rich-text blockquote > *:last-child {

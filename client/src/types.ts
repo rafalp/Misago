@@ -118,6 +118,14 @@ export interface RichTextParagraph {
 export interface RichTextQuote {
   id: string
   type: "quote"
+  author: string | null
+  post: number | null
+  children: RichText
+}
+
+export interface RichTextSpoiler {
+  id: string
+  type: "spoiler"
   children: RichText
 }
 
@@ -130,5 +138,6 @@ export type RichTextBlock =
   | RichTextListItem
   | RichTextParagraph
   | RichTextQuote
+  | RichTextSpoiler
 
 export type RichText = Array<RichTextBlock>

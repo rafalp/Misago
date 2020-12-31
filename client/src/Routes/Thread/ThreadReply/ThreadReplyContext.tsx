@@ -213,7 +213,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
       setFullscreen(false)
       setMinimized(false)
     },
-    [mode, getValue, setValue, startReply, setActive]
+    [mode, getValue, setValue, setActive]
   )
 
   return (

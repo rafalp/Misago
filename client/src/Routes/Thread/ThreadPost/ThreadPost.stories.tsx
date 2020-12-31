@@ -77,6 +77,8 @@ export const PostWithComplexMarkup = () => {
             {
               id: "70DhUN9iVC",
               type: "quote",
+              author: null,
+              post: null,
               children: [
                 {
                   id: "ATKzQGt5MK",
@@ -92,6 +94,8 @@ export const PostWithComplexMarkup = () => {
                 {
                   id: "9KgFC4x11w",
                   type: "quote",
+                  author: null,
+                  post: null,
                   children: [
                     {
                       id: "mvpcGyQI9B",

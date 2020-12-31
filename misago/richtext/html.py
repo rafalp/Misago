@@ -1,4 +1,3 @@
-from html import escape
 from typing import Optional
 
 from ..hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook

@@ -51,6 +51,8 @@ def create_fake_rich_text_quote(depth: int = 0) -> RichTextBlock:
     return {
         "id": get_block_id(),
         "type": "quote",
+        "author": None,
+        "post": None,
         "children": create_fake_rich_text(depth),
     }
 

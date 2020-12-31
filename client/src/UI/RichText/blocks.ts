@@ -7,6 +7,7 @@ import RichTextList from "./RichTextList"
 import RichTextListItem from "./RichTextListItem"
 import RichTextParagraph from "./RichTextParagraph"
 import RichTextQuote from "./RichTextQuote"
+import RichTextSpoiler from "./RichTextSpoiler"
 
 const RICH_TEXT_BLOCKS: Record<string, React.ComponentType<any>> = {
   code: RichTextCode,
@@ -22,6 +23,7 @@ const RICH_TEXT_BLOCKS: Record<string, React.ComponentType<any>> = {
   list: RichTextList,
   p: RichTextParagraph,
   quote: RichTextQuote,
+  spoiler: RichTextSpoiler,
 }
 
 export default RICH_TEXT_BLOCKS

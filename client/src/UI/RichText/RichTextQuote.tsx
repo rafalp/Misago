@@ -8,7 +8,7 @@ interface RichTextQuoteProps {
 
 const RichTextQuote: React.FC<RichTextQuoteProps> = ({ block }) => (
   <div className="rich-text-quote">
-    <blockquote>
+    <blockquote data-block="quote">
       <RichTextRenderer richText={block.children} />
     </blockquote>
   </div>
