@@ -1,16 +1,16 @@
 from .genericblock import parse_generic_block_close, parse_generic_block_open
 
 
-QUOTE_OPEN_PATTERN = r"(\s+)?\[quote(=([\w\-_]*)(:\d+)?)?\](\s+)?"
+QUOTE_OPEN_PATTERN = r"(\s+)?\[quote(=(\"|')?([\w\-_]*)(:(\d+))?)?(\"|')?\](\s+)?"
 QUOTE_CLOSE_PATTERN = r"(\s+)?\[\/quote\](\s+)?"
 
 
 @parse_generic_block_open
 def parse_quote_open_bbcode(parser, m, state):
-    author = m.group(3) or ""
+    author = m.group(4) or ""
 
     try:
-        post = int((m.group(4) or "").lstrip(":").strip())
+        post = int((m.group(6) or "").strip())
     except (TypeError, ValueError):
         post = None
 

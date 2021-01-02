@@ -54,3 +54,25 @@ async def test_parser_parses_multiple_paragraphs(graphql_context):
         {"id": ANY, "type": "p", "text": "Hello world!"},
         {"id": ANY, "type": "p", "text": "How&#x27;s going?"},
     ]
+
+
+@pytest.mark.asyncio
+async def test_parser_blocks_are_case_insensitive(graphql_context):
+    result, _ = await parse_markup(graphql_context, "[coDE]Hello world![/COde]")
+    assert result == [
+        {"id": ANY, "type": "code", "syntax": None, "text": "Hello world!",}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_parser_inline_items_are_case_insensitive(graphql_context):
+    result, _ = await parse_markup(
+        graphql_context, "[uRl=http://misago-project.org]Test[/UrL]"
+    )
+    assert result == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": '<a href="http://misago-project.org" rel="nofollow">Test</a>',
+        }
+    ]

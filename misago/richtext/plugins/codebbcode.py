@@ -2,18 +2,20 @@ import re
 from typing import Optional
 
 
-CODE_BBCODE_PATTERN = re.compile(r"\[code(=[a-zA-Z0-9]+)?\](.*?)\[\/code\]")
+CODE_BBCODE_PATTERN = re.compile(
+    r"\[code(=(\"|')?([a-zA-Z0-9]+)(\"|')?)?\](.*?)\[\/code\]", re.IGNORECASE
+)
 
 
 def parse_code_bbcode(parser, m, state):
-    info = m.group(1)
+    info = m.group(3)
     if info:
-        info = info[1:].strip()
+        info = info.strip()
 
     return {
         "type": "code_bbcode",
         "text": "",
-        "params": (info or None, m.group(2)),
+        "params": (info or None, m.group(5)),
     }
 
 

@@ -82,13 +82,13 @@ async def test_code_markdown_is_supported(graphql_context):
 
 @pytest.mark.asyncio
 async def test_code_markdown_with_syntax_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "```python\nprint('test')\n```")
+    result, _ = await parse_markup(graphql_context, "```python\nlog('test')\n```")
     assert result == [
         {
             "id": ANY,
             "type": "code",
             "syntax": "python",
-            "text": "print(&#x27;test&#x27;)\n",
+            "text": "log(&#x27;test&#x27;)\n",
         }
     ]
 

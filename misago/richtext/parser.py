@@ -3,7 +3,7 @@ from html import escape
 from typing import List, Optional, Tuple, cast
 
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
-from mistune.plugins import plugin_strikethrough, plugin_url
+from mistune.plugins import plugin_strikethrough
 
 from ..hooks import (
     convert_block_ast_to_rich_text_hook,
@@ -23,6 +23,7 @@ from ..types import (
 from ..utils.strings import get_random_string
 from .genericblocks import restructure_generic_blocks
 from .plugins import builtin_plugins
+from .scanner import MisagoScanner
 
 
 async def parse_markup(
@@ -62,9 +63,19 @@ def create_markdown(context: GraphQLContext) -> Markdown:
         create_markdown_action,
         context,
         BlockParser(),
-        InlineParser(AstRenderer()),
-        [plugin_strikethrough, plugin_url, *builtin_plugins],
+        MisagoInlineParser(AstRenderer()),
+        [plugin_strikethrough, *builtin_plugins],
     )
+
+
+class MisagoInlineParser(InlineParser):
+    scanner_cls = MisagoScanner
+
+    def parse_std_link(self, m, state):
+        if state.get("_in_link"):
+            return "text", m.group(0)
+
+        return super().parse_std_link(m, state)
 
 
 def create_markdown_action(
@@ -248,5 +259,20 @@ def convert_inline_ast_to_text_action(
 
     if ast["type"] == "strikethrough":
         return "<del>%s</del>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "bold":
+        return "<b>%s</b>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "italic":
+        return "<i>%s</i>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "underline":
+        return "<u>%s</u>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "subscript":
+        return "<sub>%s</sub>" % convert_children_ast_to_text(context, ast["children"])
+
+    if ast["type"] == "superscript":
+        return "<sup>%s</sup>" % convert_children_ast_to_text(context, ast["children"])
 
     return None
