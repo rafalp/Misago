@@ -1,11 +1,22 @@
 from typing import List
 
-from ..types import GraphQLContext, ParsedMarkupMetadata, UpdateMarkupMetadataAction
-from .action import ActionHook
+from ..types import (
+    GraphQLContext,
+    ParsedMarkupMetadata,
+    UpdateMarkupMetadataAction,
+    UpdateMarkupMetadataFilter,
+)
+from .filter import FilterHook
 
 
-class UpdateMarkupMetadataHook(ActionHook[UpdateMarkupMetadataAction]):
+class UpdateMarkupMetadataHook(
+    FilterHook[UpdateMarkupMetadataAction, UpdateMarkupMetadataFilter]
+):
     def call_action(
-        self, context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+        self,
+        action: UpdateMarkupMetadataAction,
+        context: GraphQLContext,
+        ast: List[dict],
+        metadata: ParsedMarkupMetadata,
     ):
-        return self.gather(context, ast, metadata)
+        return self.filter(action, context, ast, metadata)

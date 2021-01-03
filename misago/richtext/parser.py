@@ -22,6 +22,7 @@ from ..types import (
 )
 from ..utils.strings import get_random_string
 from .genericblocks import restructure_generic_blocks
+from .mentions import clean_mention, find_user_mentions, update_metadata_from_mentions
 from .plugins import builtin_plugins
 from .scanner import MisagoScanner
 
@@ -31,7 +32,7 @@ async def parse_markup(
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
     cache_key = get_markup_cache_key(markup)
     if cache_key not in context:
-        metadata: ParsedMarkupMetadata = {}
+        metadata: ParsedMarkupMetadata = {"mentions": [], "users": {}}
         context[cache_key] = await parse_markup_hook.call_action(
             parse_markup_action, context, markup, metadata
         )
@@ -48,14 +49,20 @@ def get_markup_cache_key(markup: str) -> str:
 async def parse_markup_action(
     context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
-    ast = markdown_hook.call_action(markdown_action, context, markup)
-    await update_markup_metadata_hook.call_action(context, ast, metadata)
-    return convert_ast_to_rich_text(context, ast), metadata
+    ast = markdown_hook.call_action(markdown_action, context, markup, metadata)
+    await update_markup_metadata_hook.call_action(
+        update_markup_metadata_action, context, ast, metadata
+    )
+    return convert_ast_to_rich_text(context, ast, metadata), metadata
 
 
-def markdown_action(context: GraphQLContext, markup: str) -> List[dict]:
+def markdown_action(
+    context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
+) -> List[dict]:
     markdown = create_markdown(context)
-    return restructure_generic_blocks(markdown(markup))
+    markdown = restructure_generic_blocks(markdown(markup))
+    find_user_mentions(markdown, metadata)
+    return markdown
 
 
 def create_markdown(context: GraphQLContext) -> Markdown:
@@ -90,10 +97,18 @@ def create_markdown_action(
     return markdown
 
 
-def convert_ast_to_rich_text(context: GraphQLContext, ast: List[dict]) -> RichText:
+async def update_markup_metadata_action(
+    context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+):
+    await update_metadata_from_mentions(metadata)
+
+
+def convert_ast_to_rich_text(
+    context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+) -> RichText:
     rich_text = []
     for node in ast:
-        richtext_block = convert_block_ast_to_rich_text(context, node)
+        richtext_block = convert_block_ast_to_rich_text(context, node, metadata)
         if richtext_block:
             rich_text.append(richtext_block)
 
@@ -101,36 +116,36 @@ def convert_ast_to_rich_text(context: GraphQLContext, ast: List[dict]) -> RichTe
 
 
 def convert_block_ast_to_rich_text(
-    context: GraphQLContext, ast: dict
+    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[RichTextBlock]:
     return convert_block_ast_to_rich_text_hook.call_action(
-        convert_block_ast_to_rich_text_action, context, ast,
+        convert_block_ast_to_rich_text_action, context, ast, metadata
     )
 
 
 def convert_block_ast_to_rich_text_action(
-    context: GraphQLContext, ast: dict
+    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[RichTextBlock]:
     # pylint: disable=too-many-return-statements
     if ast["type"] == "block_text":
         return {
             "id": get_block_id(),
             "type": "f",
-            "text": convert_children_ast_to_text(context, ast["children"]),
+            "text": convert_children_ast_to_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "paragraph":
         return {
             "id": get_block_id(),
             "type": "p",
-            "text": convert_children_ast_to_text(context, ast["children"]),
+            "text": convert_children_ast_to_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "heading":
         return {
             "id": get_block_id(),
             "type": "h%s" % ast["level"],
-            "text": convert_children_ast_to_text(context, ast["children"]),
+            "text": convert_children_ast_to_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "block_code":
@@ -147,23 +162,39 @@ def convert_block_ast_to_rich_text_action(
             "type": "quote",
             "author": None,
             "post": None,
-            "children": convert_ast_to_rich_text(context, ast["children"]),
+            "children": convert_ast_to_rich_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "quote_bbcode":
+        if ast["author"]:
+            author = clean_mention(ast["author"])
+            if author in metadata["users"]:
+                user = metadata["users"][author]
+                ast["author"] = {
+                    "id": user.id,
+                    "name": user.name,
+                    "slug": user.slug,
+                }
+            else:
+                ast["author"] = {
+                    "id": None,
+                    "name": ast["author"],
+                    "slug": None,
+                }
+
         return {
             "id": get_block_id(),
             "type": "quote",
             "author": ast["author"],
             "post": ast["post"],
-            "children": convert_ast_to_rich_text(context, ast["children"]),
+            "children": convert_ast_to_rich_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "spoiler_bbcode":
         return {
             "id": get_block_id(),
             "type": "spoiler",
-            "children": convert_ast_to_rich_text(context, ast["children"]),
+            "children": convert_ast_to_rich_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "thematic_break":
@@ -177,14 +208,14 @@ def convert_block_ast_to_rich_text_action(
             "id": get_block_id(),
             "type": "list",
             "ordered": ast["ordered"],
-            "children": convert_ast_to_rich_text(context, ast["children"]),
+            "children": convert_ast_to_rich_text(context, ast["children"], metadata),
         }
 
     if ast["type"] == "list_item":
         return {
             "id": get_block_id(),
             "type": "li",
-            "children": convert_ast_to_rich_text(context, ast["children"]),
+            "children": convert_ast_to_rich_text(context, ast["children"], metadata),
         }
 
     return None
@@ -195,7 +226,7 @@ def get_block_id() -> str:
 
 
 def convert_children_ast_to_text(
-    context: GraphQLContext, ast: Optional[List[dict]]
+    context: GraphQLContext, ast: Optional[List[dict]], metadata: ParsedMarkupMetadata
 ) -> str:
     # Fail-safe for situations when `ast["children"]` is None
     if not ast:
@@ -207,21 +238,23 @@ def convert_children_ast_to_text(
 
     nodes = []
     for node in ast:
-        text = convert_inline_ast_to_text(context, node)
+        text = convert_inline_ast_to_text(context, node, metadata)
         if text is not None:
             nodes.append(text)
 
     return "".join(nodes)
 
 
-def convert_inline_ast_to_text(context: GraphQLContext, ast: dict) -> Optional[str]:
+def convert_inline_ast_to_text(
+    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+) -> Optional[str]:
     return convert_inline_ast_to_text_hook.call_action(
-        convert_inline_ast_to_text_action, context, ast
+        convert_inline_ast_to_text_action, context, ast, metadata
     )
 
 
 def convert_inline_ast_to_text_action(
-    context: GraphQLContext, ast: dict
+    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[str]:
     # pylint: disable=too-many-return-statements
     if ast["type"] == "linebreak":
@@ -239,40 +272,66 @@ def convert_inline_ast_to_text_action(
             escape(ast["alt"] or ""),
         )
 
+    if ast["type"] == "mention":
+        mention = clean_mention(ast["mention"])
+        if mention not in metadata["users"]:
+            return ast["fallback"]
+
+        user = metadata["users"][mention]
+        return '<a href="/u/%s/%s/">@%s</a>' % (
+            escape(user.slug),
+            user.id,
+            escape(user.name),
+        )
+
     if ast["type"] == "link":
         if not ast["children"]:
             children = ast["link"]
         elif isinstance(ast["children"], str):
             children = escape(ast["children"])
         else:
-            children = convert_children_ast_to_text(context, ast["children"])
+            children = convert_children_ast_to_text(context, ast["children"], metadata)
 
         return '<a href="%s" rel="nofollow">%s</a>' % (escape(ast["link"]), children)
 
     if ast["type"] == "emphasis":
-        return "<em>%s</em>" % convert_children_ast_to_text(context, ast["children"])
+        return "<em>%s</em>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "strong":
         return "<strong>%s</strong>" % convert_children_ast_to_text(
-            context, ast["children"]
+            context, ast["children"], metadata
         )
 
     if ast["type"] == "strikethrough":
-        return "<del>%s</del>" % convert_children_ast_to_text(context, ast["children"])
+        return "<del>%s</del>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "bold":
-        return "<b>%s</b>" % convert_children_ast_to_text(context, ast["children"])
+        return "<b>%s</b>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "italic":
-        return "<i>%s</i>" % convert_children_ast_to_text(context, ast["children"])
+        return "<i>%s</i>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "underline":
-        return "<u>%s</u>" % convert_children_ast_to_text(context, ast["children"])
+        return "<u>%s</u>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "subscript":
-        return "<sub>%s</sub>" % convert_children_ast_to_text(context, ast["children"])
+        return "<sub>%s</sub>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     if ast["type"] == "superscript":
-        return "<sup>%s</sup>" % convert_children_ast_to_text(context, ast["children"])
+        return "<sup>%s</sup>" % convert_children_ast_to_text(
+            context, ast["children"], metadata
+        )
 
     return None

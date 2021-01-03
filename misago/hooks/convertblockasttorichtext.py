@@ -4,6 +4,7 @@ from ..types import (
     ConvertBlockAstToRichTextAction,
     ConvertBlockAstToRichTextFilter,
     GraphQLContext,
+    ParsedMarkupMetadata,
     RichTextBlock,
 )
 from .filter import FilterHook
@@ -19,5 +20,6 @@ class ConvertBlockAstToRichTextHook(
         action: ConvertBlockAstToRichTextAction,
         context: GraphQLContext,
         ast: dict,
+        metadata: ParsedMarkupMetadata,
     ) -> Optional[RichTextBlock]:
-        return self.filter(action, context, ast)
+        return self.filter(action, context, ast, metadata)

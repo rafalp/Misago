@@ -26,7 +26,7 @@ async def test_quote_with_author_bbcode_is_supported(graphql_context):
         {
             "id": ANY,
             "type": "quote",
-            "author": "Bob",
+            "author": {"id": None, "name": "Bob", "slug": None},
             "post": None,
             "children": [{"id": ANY, "type": "p", "text": "Hello world!"}],
         }
@@ -42,7 +42,7 @@ async def test_quote_with_author_and_post_bbcode_is_supported(graphql_context):
         {
             "id": ANY,
             "type": "quote",
-            "author": "Bob",
+            "author": {"id": None, "name": "Bob", "slug": None},
             "post": 1421,
             "children": [{"id": ANY, "type": "p", "text": "Hello world!"}],
         }

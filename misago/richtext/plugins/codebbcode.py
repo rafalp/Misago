@@ -1,13 +1,15 @@
 import re
 from typing import Optional
 
+from mistune import Markdown
+
 
 CODE_BBCODE_PATTERN = re.compile(
     r"\[code(=(\"|')?([a-zA-Z0-9]+)(\"|')?)?\](.*?)\[\/code\]", re.IGNORECASE
 )
 
 
-def parse_code_bbcode(parser, m, state):
+def parse_code_bbcode(parser, m, state: dict):
     info = m.group(3)
     if info:
         info = info.strip()
@@ -27,7 +29,7 @@ def render_ast_code_bbcode(_, info: Optional[str], raw: str):
     }
 
 
-def plugin_code_bbcode(markdown):
+def plugin_code_bbcode(markdown: Markdown):
     markdown.block.register_rule("code_bbcode", CODE_BBCODE_PATTERN, parse_code_bbcode)
     markdown.block.rules.append("code_bbcode")
 

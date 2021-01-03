@@ -5,6 +5,7 @@ markdown_hook.call_action(
     action: MarkdownAction,
     context: GraphQLContext,
     markup: str,
+    metadata: dict,
 )
 ```
 
@@ -43,3 +44,12 @@ str
 ```
 
 Python string containing unparsed markup.
+
+
+### `metadata`
+
+```python
+Dict[str, Any]
+```
+
+A mutable dict with all metadata for parsed markup.

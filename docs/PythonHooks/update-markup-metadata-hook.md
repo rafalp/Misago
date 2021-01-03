@@ -2,16 +2,28 @@
 
 ```python
 update_markup_metadata_hook.call_action(
+    action: UpdateMarkupMetadataAction,
     context: GraphQLContext,
     ast: dict,
     metadata: dict,
 )
 ```
 
-An action enabling markup parser plugins to inspect the abstract syntax tree and asynchronously update the metadata (eg. by loading mentioned users from database).
+An asynchronous filter for the function used to update `dict` parsed markup's metadata with data from database (eg. mentioned users).
 
 
 ## Required arguments
+
+### `action`
+
+```python
+async def update_markup_metadata(
+    context: GraphQLContext, act: dict, metadata: dict
+):
+```
+
+Next filter or built-in function used to update `dict` with parsed markup `metadata`.
+
 
 ### `context`
 
@@ -37,20 +49,4 @@ list
 Dict[str, Any]
 ```
 
-A dict with all metadata for parsed markup. Should be mutated in place by actions.
-
-
-## Action example
-
-Actions are async callables taking three arguments and mutating the `metadata`:
-
-```python
-@update_markup_metadata_hook.append
-async def load_mentioned_users_data(
-    context: GraphQLContext,
-    ast: dict,
-    metadata: dict,
-):
-    usernames = extract_usernames_from_ast(ast)
-    metadata["mentioned_users"] = await load_mentioned_users(context, usernames)
-```
+A dict with all metadata for parsed markup. Should be mutated in place by plugin's filter.

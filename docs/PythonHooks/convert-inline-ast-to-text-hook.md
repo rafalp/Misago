@@ -2,7 +2,10 @@
 
 ```python
 convert_inline_ast_to_text_hook.call_action(
-    action: ConvertInlineAstToTextAction, context: GraphQLContext, ast: dict
+    action: ConvertInlineAstToTextAction,
+    context: GraphQLContext,
+    ast: dict,
+    metadata: dict,
 )
 ```
 
@@ -41,3 +44,12 @@ dict
 ```
 
 `dict` containing abstract syntax tree for inline markup as returned by `mistune.AstRenderer`.
+
+
+### `metadata`
+
+```python
+Dict[str, Any]
+```
+
+A mutable dict with all metadata for parsed markup.

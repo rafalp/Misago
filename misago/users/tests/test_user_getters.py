@@ -3,7 +3,9 @@ import pytest
 from ..get import (
     get_user_by_email,
     get_user_by_id,
+    get_users_by_id,
     get_user_by_name,
+    get_users_by_name,
     get_user_by_name_or_email,
 )
 
@@ -16,6 +18,14 @@ async def test_user_can_be_get_by_id(user):
 @pytest.mark.asyncio
 async def test_getting_user_by_nonexistent_id_returns_none(db):
     assert await get_user_by_id(1) is None
+
+
+@pytest.mark.asyncio
+async def test_multiple_users_can_be_get_by_id(user, other_user):
+    users = await get_users_by_id([user.id, other_user.id, other_user.id + 100])
+    assert len(users) == 2
+    assert user in users
+    assert other_user in users
 
 
 @pytest.mark.asyncio
@@ -36,6 +46,14 @@ async def test_user_can_be_get_by_name(user):
 @pytest.mark.asyncio
 async def test_getting_user_by_nonexistent_name_returns_none(db):
     assert await get_user_by_name("nonexistent") is None
+
+
+@pytest.mark.asyncio
+async def test_multiple_users_can_be_get_by_name(user, other_user):
+    users = await get_users_by_name([user.name, other_user.name, "invalid"])
+    assert len(users) == 2
+    assert user in users
+    assert other_user in users
 
 
 @pytest.mark.asyncio

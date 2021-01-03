@@ -13,7 +13,6 @@ def formatting_plugin(markdown: Markdown, name: str, pattern: str):
     plugin_name = f"{name}_bbcode"
 
     def parse_format(parser, m, state):
-        print(m.groups())
         return name, parser(m.group(1), state)
 
     markdown.inline.register_rule(plugin_name, pattern, parse_format)

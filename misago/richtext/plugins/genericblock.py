@@ -1,5 +1,7 @@
 from functools import wraps
 
+from mistune import Markdown
+
 
 def parse_generic_block_open(f):
     @wraps(f)
@@ -19,7 +21,7 @@ def parse_generic_block_close(f):
     return wrapped_parse_generic_block_close
 
 
-def plugin_generic_block(markdown):
+def plugin_generic_block(markdown: Markdown):
     if markdown.renderer.NAME == "ast":
         markdown.renderer.register("block_open", render_ast_block_open)
         markdown.renderer.register("block_close", render_ast_block_close)

@@ -1,3 +1,4 @@
+from mistune import Markdown
 from mistune.inline_parser import escape_url
 
 
@@ -9,11 +10,11 @@ SHORT_IMAGE_PATTERN = (
 )
 
 
-def parse_short_image(self, m, state):
+def parse_short_image(parser, m, state: dict):
     link = m.group(1)
     return "image", escape_url(link), None, None
 
 
-def plugin_short_image(markdown):
+def plugin_short_image(markdown: Markdown):
     markdown.inline.register_rule("short_image", SHORT_IMAGE_PATTERN, parse_short_image)
     markdown.inline.rules.append("short_image")

@@ -1,10 +1,11 @@
+from mistune import Markdown
 from mistune.inline_parser import escape_url
 
 
 URL_BBCODE_PATTERN = r"\[url(=(\"|')?(.*)(\"|')?)?\](.*)\[\/url\]"
 
 
-def parse_url_bbcode(parser, m, state):
+def parse_url_bbcode(parser, m, state: dict):
     if state.get("_in_link"):
         return "text", m.group(0)
 
@@ -23,6 +24,6 @@ def parse_url_bbcode(parser, m, state):
     return "link", url, text, None
 
 
-def plugin_url_bbcode(markdown):
+def plugin_url_bbcode(markdown: Markdown):
     markdown.inline.register_rule("url_bbcode", URL_BBCODE_PATTERN, parse_url_bbcode)
     markdown.inline.rules.append("url_bbcode")
