@@ -278,9 +278,10 @@ def convert_inline_ast_to_text_action(
             return ast["fallback"]
 
         user = metadata["users"][mention]
-        return '<a href="/u/%s/%s/">@%s</a>' % (
+        return '<a href="/u/%s/%s/" data-quote="@%s">@%s</a>' % (
             escape(user.slug),
             user.id,
+            escape(user.name),
             escape(user.name),
         )
 

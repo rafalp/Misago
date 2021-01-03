@@ -31,7 +31,10 @@ async def test_mentioned_user_is_included_in_mentions(graphql_context, user):
         {
             "id": ANY,
             "type": "p",
-            "text": (f'<a href="/u/{user.slug}/{user.id}/">@{user.name}</a>, wsup?'),
+            "text": (
+                f'<a href="/u/{user.slug}/{user.id}/" data-quote="@{user.name}">'
+                f"@{user.name}</a>, wsup?"
+            ),
         }
     ]
     assert user.slug in metadata["mentions"]
