@@ -118,9 +118,15 @@ export interface RichTextParagraph {
 export interface RichTextQuote {
   id: string
   type: "quote"
-  author: string | null
+  author: RichTextQuoteAuthor | null
   post: number | null
   children: RichText
+}
+
+export interface RichTextQuoteAuthor {
+  id: number | null
+  name: string
+  slug: string | null
 }
 
 export interface RichTextSpoiler {

@@ -4,10 +4,14 @@ import RichTextRenderer from "./RichTextRenderer"
 
 interface RichTextListItemProps {
   block: RichTextListItemType
+  index: number
 }
 
-const RichTextListItem: React.FC<RichTextListItemProps> = ({ block }) => (
-  <li>
+const RichTextListItem: React.FC<RichTextListItemProps> = ({
+  block,
+  index,
+}) => (
+  <li data-index={index}>
     <RichTextRenderer richText={block.children} />
   </li>
 )

@@ -15,6 +15,21 @@ $quote-border-radius: $border-radius !default;
   }
 }
 
+$quote-header-background: $gray-200 !default;
+$quote-header-border: 1px solid $gray-200 !default;
+
+.rich-text-quote-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacer / 2 $spacer;
+
+  background-color: $quote-header-background;
+  border-bottom: $quote-header-border;
+
+  font-weight: bold;
+}
+
 // Style spoilers
 $spoiler-background: $gray-100 !default;
 $spoiler-border: 1px solid $gray-200 !default;
@@ -50,6 +65,32 @@ $spoiler-header-border: 1px solid $gray-200 !default;
   border-bottom: $spoiler-header-border;
 
   font-weight: bold;
+}
+
+// Style code
+$code-background: $gray-100 !default;
+$code-border: 1px solid $gray-200 !default;
+$code-border-radius: $border-radius !default;
+
+.rich-text-code {
+  background: $spoiler-background;
+  border: $spoiler-border;
+  border-radius: $spoiler-border-radius;
+  margin-bottom: $spacer;
+  padding: $spacer;
+  position: relative;
+
+  div {
+    position: absolute;
+    top: $spacer / 2;
+    right: $spacer / 2;
+  }
+
+  code,
+  pre {
+    margin: 0;
+    padding: 0;
+  }
 }
 
 // Remove bottom margins from last child of rich text block:

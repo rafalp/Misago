@@ -143,7 +143,7 @@ export const HiddenForm = () => (
                   <ButtonSecondary
                     text="Close form"
                     disabled={!value.isActive}
-                    onClick={value.cancelReply}
+                    onClick={() => value.cancelReply}
                   />
                 </>
               )

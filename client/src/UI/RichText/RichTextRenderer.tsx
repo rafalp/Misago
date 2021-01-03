@@ -8,10 +8,10 @@ interface RichTextRendererProps {
 
 const RichTextRenderer: React.FC<RichTextRendererProps> = ({ richText }) => (
   <>
-    {richText.map((block) => {
+    {richText.map((block, index) => {
       if (RICH_TEXT_BLOCKS[block.type]) {
         const Component = RICH_TEXT_BLOCKS[block.type]
-        return <Component key={block.id} block={block} />
+        return <Component key={block.id} block={block} index={index + 1} />
       }
 
       return null

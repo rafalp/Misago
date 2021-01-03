@@ -40,7 +40,7 @@ def convert_rich_text_block_to_html_action(
 ) -> Optional[str]:
     # pylint: disable=too-many-return-statements
     if block["type"] == "code":
-        return f"<code><pre>{block['text']}</pre></code>"
+        return f"<pre><code>{block['text']}</code></pre>"
 
     if block["type"] == "f":
         return block["text"]

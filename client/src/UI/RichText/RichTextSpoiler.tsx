@@ -20,14 +20,14 @@ const RichTextSpoiler: React.FC<RichTextSpoilerProps> = ({ block }) => {
       })}
     >
       <div className="rich-text-spoiler-header" data-noquote="1">
-        <Trans id="spoiler">Hidden content</Trans>
+        <Trans id="rich_text.spoiler">Hidden content</Trans>
         <ButtonSecondary
           icon={revealed ? "far fa-eye-slash" : "far fa-eye"}
           text={
             revealed ? (
-              <Trans id="spoiler.hide">Hide</Trans>
+              <Trans id="rich_text.spoiler_hide">Hide</Trans>
             ) : (
-              <Trans id="spoiler.reveal">Reveal</Trans>
+              <Trans id="rich_text.spoiler_reveal">Reveal</Trans>
             )
           }
           small

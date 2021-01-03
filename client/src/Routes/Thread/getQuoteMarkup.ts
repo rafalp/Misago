@@ -27,7 +27,13 @@ const getQuoteMetadata = (range: Range): string => {
 
 const isNodeElementWithQuoteMetadata = (node: Node): boolean => {
   if (node.nodeType !== Node.ELEMENT_NODE) return false
-  return node.nodeName === "ARTICLE" || node.nodeName === "BLOCKQUOTE"
+  if (node.nodeName === "ARTICLE") return true
+  if (node.nodeName === "BLOCKQUOTE") {
+    const element = node as HTMLQuoteElement
+    return element.dataset?.block === "quote"
+  }
+
+  return false
 }
 
 const getQuoteMetadataFromNode = (element: HTMLElement): string => {
@@ -48,7 +54,7 @@ const convertNodesToMarkup = (
   let markup = ""
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
-    markup += convertNodeToMarkup(node, [...stack, node.nodeName])
+    markup += convertNodeToMarkup(node, stack)
   }
   return markup
 }
@@ -66,25 +72,35 @@ const SIMPLE_NODE_MAPPINGS: Record<string, [string, string]> = {
   B: ["[b]", "[/b]"],
   U: ["[u]", "[/u]"],
   I: ["[i]", "[/i]"],
+  SUB: ["[sub]", "[/sub]"],
+  SUP: ["[sup]", "[/sup]"],
 }
 
 const convertNodeToMarkup = (
   node: ChildNode,
   stack: Array<string>
 ): string => {
+  console.log(stack)
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent || ""
   }
 
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    if ((node as HTMLElement).dataset?.quote) {
+      return (node as HTMLElement).dataset?.quote || ""
+    }
+    if ((node as HTMLElement).dataset?.noquote === "1") return ""
+  }
+
   if (
     node.nodeType === Node.ELEMENT_NODE &&
-    (node as HTMLElement).dataset?.noquote === "1"
+    (node as HTMLElement).dataset?.quote?.trim()
   ) {
     return ""
   }
 
   if (node.nodeName === "HR") {
-    return "- - -"
+    return "\n\n- - -"
   }
 
   if (node.nodeName === "BR") {
@@ -125,11 +141,74 @@ const convertNodeToMarkup = (
     }
   }
 
+  if (node.nodeName === "DIV") {
+    return convertNodesToMarkup(node.childNodes, stack)
+  }
+
+  if (node.nodeName === "BLOCKQUOTE") {
+    const element = node as HTMLQuoteElement
+    if (element.dataset?.block === "quote") {
+      const metadata = getQuoteMetadataFromNode(element)
+      let markup = metadata ? `\n\n[quote=${metadata}]\n` : "\n\n[quote]\n"
+      markup += convertNodesToMarkup(node.childNodes, [
+        ...stack,
+        "QUOTE",
+      ]).trim()
+      markup += "\n[/quote]"
+      return markup
+    }
+
+    if (element.dataset?.block === "spoiler") {
+      let markup = "\n\n[spoiler]\n"
+      markup += convertNodesToMarkup(node.childNodes, [
+        ...stack,
+        "SPOILER",
+      ]).trim()
+      markup += "\n[/spoiler]"
+      return markup
+    }
+  }
+
+  if (node.nodeName === "UL" || node.nodeName === "OL") {
+    return (
+      "\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+    )
+  }
+
+  if (node.nodeName === "CODE") {
+    return (
+      "`" +
+      convertNodesToMarkup(node.childNodes, [...stack, node.nodeName]) +
+      "`"
+    )
+  }
+
   if (node.nodeName === "P") {
     return (
       "\n\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
     )
   }
+
+  if (node.nodeName === "LI") {
+    const ordered = stack[stack.length - 1] === "OL"
+    let prefix = "- "
+    if (ordered) {
+      const element = node as HTMLLIElement
+      prefix = element.dataset?.index ? element.dataset.index + ". " : "1. "
+    }
+
+    return (
+      "\n" +
+      prefix +
+      convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+    )
+  }
+
+  if (node.nodeName === "SPAN") {
+    return convertNodesToMarkup(node.childNodes, stack)
+  }
+
+  console.log(node.nodeName)
 
   return ""
 }

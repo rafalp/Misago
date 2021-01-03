@@ -1,3 +1,5 @@
+import React from "react"
+
 export interface ButtonProps {
   block?: boolean
   className?: string | null
@@ -10,5 +12,5 @@ export interface ButtonProps {
   small?: boolean
   text?: React.ReactNode
   outline?: boolean
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
