@@ -255,6 +255,12 @@ export const PostWithComplexMarkup = () => {
                       ],
                     },
                     {
+                      id: "FxyQaQ8tGU",
+                      type: "code",
+                      syntax: "php",
+                      text: "$user-&gt;getName();",
+                    },
+                    {
                       id: "CZlWOZ5TUT",
                       type: "p",
                       text:

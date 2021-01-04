@@ -40,7 +40,7 @@ const RichTextCode: React.FC<RichTextCodeProps> = ({ block }) => {
         />
       </div>
       <pre data-syntax={block.syntax || null}>
-        <code>{block.text}</code>
+        <code dangerouslySetInnerHTML={{ __html: block.text }} />
       </pre>
     </div>
   )

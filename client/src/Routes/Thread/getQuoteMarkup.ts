@@ -148,32 +148,44 @@ const convertNodeToMarkup = (
   if (node.nodeName === "BLOCKQUOTE") {
     const element = node as HTMLQuoteElement
     if (element.dataset?.block === "quote") {
-      const metadata = getQuoteMetadataFromNode(element)
-      let markup = metadata ? `\n\n[quote=${metadata}]\n` : "\n\n[quote]\n"
-      markup += convertNodesToMarkup(node.childNodes, [
+      const content = convertNodesToMarkup(node.childNodes, [
         ...stack,
         "QUOTE",
       ]).trim()
+
+      if (!content) return ""
+
+      const metadata = getQuoteMetadataFromNode(element)
+      let markup = metadata ? `\n\n[quote=${metadata}]\n` : "\n\n[quote]\n"
+      markup += content
       markup += "\n[/quote]"
       return markup
     }
 
     if (element.dataset?.block === "spoiler") {
-      let markup = "\n\n[spoiler]\n"
-      markup += convertNodesToMarkup(node.childNodes, [
+      const content = convertNodesToMarkup(node.childNodes, [
         ...stack,
         "SPOILER",
       ]).trim()
+
+      if (!content) return ""
+
+      let markup = "\n\n[spoiler]\n"
+      markup += content
       markup += "\n[/spoiler]"
       return markup
     }
   }
 
-  if (node.nodeName === "UL" || node.nodeName === "OL") {
-    const level = stack.filter((item) => item === "OL" || item === "UL").length
-    const prefix = level === 0 ? "\n" : ""
+  if (node.nodeName === "PRE") {
+    const element = node as HTMLPreElement
+    const syntax = element.dataset?.syntax || null
+    const content = element.querySelector("code")?.innerText || ""
+
+    if (!content.trim()) return ""
+
     return (
-      prefix + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+      "\n\n[code" + (syntax ? "=" + syntax : "") + "]" + content + "[/code]"
     )
   }
 
@@ -188,6 +200,14 @@ const convertNodeToMarkup = (
   if (node.nodeName === "P") {
     return (
       "\n\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+    )
+  }
+
+  if (node.nodeName === "UL" || node.nodeName === "OL") {
+    const level = stack.filter((item) => item === "OL" || item === "UL").length
+    const prefix = level === 0 ? "\n" : ""
+    return (
+      prefix + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
     )
   }
 
@@ -206,18 +226,18 @@ const convertNodeToMarkup = (
       prefix += "- "
     }
 
-    return (
-      "\n" +
-      prefix +
-      convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
-    )
+    const content = convertNodesToMarkup(node.childNodes, [
+      ...stack,
+      node.nodeName,
+    ])
+    if (!content.trim()) return ""
+
+    return "\n" + prefix + content
   }
 
   if (node.nodeName === "SPAN") {
     return convertNodesToMarkup(node.childNodes, stack)
   }
-
-  console.log(node.nodeName)
 
   return ""
 }
