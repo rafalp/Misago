@@ -170,8 +170,10 @@ const convertNodeToMarkup = (
   }
 
   if (node.nodeName === "UL" || node.nodeName === "OL") {
+    const level = stack.filter((item) => item === "OL" || item === "UL").length
+    const prefix = level === 0 ? "\n" : ""
     return (
-      "\n" + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
+      prefix + convertNodesToMarkup(node.childNodes, [...stack, node.nodeName])
     )
   }
 
@@ -190,11 +192,18 @@ const convertNodeToMarkup = (
   }
 
   if (node.nodeName === "LI") {
+    let prefix = ""
+    const level = stack.filter((item) => item === "OL" || item === "UL").length
+    for (let i = 1; i < level; i++) {
+      prefix += "    "
+    }
+
     const ordered = stack[stack.length - 1] === "OL"
-    let prefix = "- "
     if (ordered) {
       const element = node as HTMLLIElement
-      prefix = element.dataset?.index ? element.dataset.index + ". " : "1. "
+      prefix += element.dataset?.index ? element.dataset.index + ". " : "1. "
+    } else {
+      prefix += "- "
     }
 
     return (
