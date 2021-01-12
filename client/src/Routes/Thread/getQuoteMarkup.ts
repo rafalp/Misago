@@ -80,7 +80,6 @@ const convertNodeToMarkup = (
   node: ChildNode,
   stack: Array<string>
 ): string => {
-  console.log(stack)
   if (node.nodeType === Node.TEXT_NODE) {
     return node.textContent || ""
   }
