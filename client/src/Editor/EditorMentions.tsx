@@ -67,6 +67,7 @@ const EditorMentions: React.FC<EditorMentionsProps> = ({
 
   return (
     <div
+      className="form-editor-mentions"
       ref={(element) => {
         if (element) {
           container.current = element

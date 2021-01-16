@@ -225,14 +225,22 @@ const EditorControls: React.FC<EditorControlsProps> = ({
           menu={() => (
             <>
               {controls.map((control) => (
-                <EditorControlsItem key={control.name} {...control} />
+                <EditorControlsItem
+                  disabled={isDisabled}
+                  key={control.name}
+                  {...control}
+                />
               ))}
             </>
           )}
         />
         <span className="editor-controls-list">
           {controls.map((control) => (
-            <EditorControlsItem key={control.name} {...control} />
+            <EditorControlsItem
+              disabled={isDisabled}
+              key={control.name}
+              {...control}
+            />
           ))}
         </span>
       </EditorContextProvider>

@@ -195,6 +195,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
       setMode("reply")
       setPost(null)
       resetValue()
+      removeDraft()
     },
     [isActive, hasChanges, setActive, setMode, setPost, resetValue]
   )

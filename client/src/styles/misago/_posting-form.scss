@@ -172,9 +172,10 @@ $posting-form-transition: transform 0.3s ease-out !default;
     display: flex;
     flex-direction: column;
 
-    // Make preview take all available space
+    // Make preview and editing areas take all available space
     // And scroll vertically
     .form-editor-preview,
+    .form-editor-mentions,
     .form-editor-textarea {
       height: 100%;
       max-height: 100%;
