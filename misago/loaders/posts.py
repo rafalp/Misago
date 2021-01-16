@@ -8,6 +8,7 @@ from ..threads.get import (
     get_thread_posts_paginator,
 )
 from ..threads.post_url import get_thread_post_url
+from ..utils.request import get_absolute_url
 from .loader import get_loader, get_loader_context_key
 
 
@@ -89,7 +90,7 @@ THREAD_POST_URL_CONTEXT_KEY = get_loader_context_key("thread_post_url")
 
 
 async def load_thread_post_url(
-    context: GraphQLContext, thread: Thread, post: Post
+    context: GraphQLContext, thread: Thread, post: Post, absolute: bool = None
 ) -> str:
     context_key = THREAD_POST_URL_CONTEXT_KEY
     if context_key not in context:
@@ -99,6 +100,9 @@ async def load_thread_post_url(
         context[context_key][post.id] = await get_thread_post_url(
             context["settings"], thread, post
         )
+
+    if absolute:
+        return get_absolute_url(context["request"], context[context_key][post.id])
 
     return context[context_key][post.id]
 

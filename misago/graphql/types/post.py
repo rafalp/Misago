@@ -3,7 +3,7 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
-from ...loaders import load_category, load_thread, load_user
+from ...loaders import load_category, load_thread, load_thread_post_url, load_user
 from ...richtext.html import convert_rich_text_to_html
 from ...types import Category, Post, Thread, User
 
@@ -37,5 +37,13 @@ def resolve_poster(
 
 
 @post_type.field("html")
-def resolve_html(obj: Post, info: GraphQLResolveInfo):
+def resolve_html(obj: Post, info: GraphQLResolveInfo) -> str:
     return convert_rich_text_to_html(info.context, obj.rich_text)
+
+
+@post_type.field("url")
+async def resolve_url(
+    obj: Post, info: GraphQLResolveInfo, *, absolute: bool = False
+) -> str:
+    thread = cast(Thread, await load_thread(info.context, obj.thread_id))
+    return await load_thread_post_url(info.context, thread, obj, absolute)

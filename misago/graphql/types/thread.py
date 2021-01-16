@@ -12,7 +12,6 @@ from ...loaders import (
     load_user,
 )
 from ...types import Category, Post, Thread, User
-from ...utils.request import get_absolute_url
 
 
 thread_type = ObjectType("Thread")
@@ -78,7 +77,7 @@ async def resolve_last_post_url(
     if obj.last_post_id:
         post = await load_post(info.context, obj.last_post_id)
         if post:
-            return await get_post_url(info, obj, post, absolute)
+            return await load_thread_post_url(info.context, obj, post, absolute)
     return None
 
 
@@ -106,14 +105,5 @@ async def resolve_post_url(
     if obj.last_post_id:
         post = await load_post(info.context, id)
         if post and post.thread_id == obj.id:
-            return await get_post_url(info, obj, post, absolute)
+            return await load_thread_post_url(info.context, obj, post, absolute)
     return None
-
-
-async def get_post_url(
-    info: GraphQLResolveInfo, thread: Thread, post: Post, absolute: bool
-) -> str:
-    url = await load_thread_post_url(info.context, thread, post)
-    if absolute:
-        return get_absolute_url(info.context["request"], url)
-    return url

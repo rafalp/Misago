@@ -28,7 +28,20 @@ const RichTextQuoteHeader: React.FC<RichTextQuoteHeaderProps> = ({
       </Trans>
     </div>
     {post && (
-      <Link className="btn btn-secondary btn-sm" to={urls.post({ id: post })}>
+      <Link
+        className="btn btn-secondary btn-sm"
+        to={urls.post({ id: post })}
+        onClick={(event) => {
+          const postFragment = "post-" + post
+          const postElement = document.getElementById(postFragment)
+          if (postElement) {
+            window.location.hash = postFragment
+            postElement.scrollIntoView()
+            event.preventDefault()
+            event.stopPropagation()
+          }
+        }}
+      >
         <Icon icon="fas fa-reply" fixedWidth />
       </Link>
     )}

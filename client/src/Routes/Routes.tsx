@@ -6,6 +6,7 @@ import RouteLoader from "../UI/RouteLoader"
 import * as urls from "../urls"
 
 const Categories = lazy(() => import("./Categories"))
+const RedirectToPost = lazy(() => import("./RedirectToPost"))
 const PostThread = lazy(() => import("./PostThread"))
 const Threads = lazy(() => import("./Threads"))
 const Thread = lazy(() => import("./Thread"))
@@ -37,6 +38,14 @@ const Routes: React.FC = () => {
               </RouteErrorBoundary>
             )}
             exact
+          />
+          <Route
+            path={urls.post({ id: ":id" })}
+            render={() => (
+              <RouteErrorBoundary>
+                <RedirectToPost />
+              </RouteErrorBoundary>
+            )}
           />
           <Route
             path={urls.thread(sluggable)}

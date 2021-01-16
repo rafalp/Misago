@@ -41,7 +41,7 @@ const getQuoteMetadataFromNode = (element: HTMLElement): string => {
   if (element.dataset.author) {
     metdata += element.dataset.author
     if (element.dataset.post) {
-      metdata += ";" + element.dataset.post
+      metdata += ":" + element.dataset.post
     }
   }
   return metdata

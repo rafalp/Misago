@@ -9,5 +9,6 @@ type Post {
     html: String!
     edits: Int!
     postedAt: DateTime!
+    url(absolute: Boolean): String!
     extra: Generic!
 }
