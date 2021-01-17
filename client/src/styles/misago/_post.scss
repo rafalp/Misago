@@ -56,42 +56,19 @@
   }
 }
 
-// Center post loader
-.post-loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $spacer * 5 0;
-}
-
-// Make post editor fill entire post's body
-.post-edit-form-body {
-  padding: 0;
-
-  .form-editor-toolbar {
-    border-radius: 0;
-    border: 0;
-  }
-
-  .form-editor-textarea,
-  .form-editor-preview {
-    border-left: none;
-    border-right: none;
-    border-bottom: none;
-    border-radius: 0;
-  }
-}
-
-// Align post edit footer contents to right
-.post-edit-form-footer {
-  text-align: right;
-
-  .btn {
-    margin-left: $spacer;
-  }
-}
-
 // Remove bottom margin from post error
 .post-error p + p {
   margin: 0;
+}
+
+// Add padding to post's footer items
+.post-footer .col-right > * {
+  margin-left: $spacer / 2;
+}
+
+// Hide post edit from footer on smaller displays
+@include media-breakpoint-down(sm) {
+  .post-footer .btn-edit {
+    display: none;
+  }
 }

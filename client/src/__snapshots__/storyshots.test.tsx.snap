@@ -120,6 +120,7 @@ exports[`Storyshots Auth/Modal Login 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -243,6 +244,7 @@ exports[`Storyshots Auth/Modal Register 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -405,7 +407,9 @@ exports[`Storyshots Editor Disabled 1`] = `
             <div
               className="form-editor form-editor-disabled"
             >
-              <div>
+              <div
+                className="form-editor-mentions"
+              >
                 <textarea
                   className="form-control form-control-responsive form-editor-textarea"
                   disabled={true}
@@ -421,123 +425,132 @@ exports[`Storyshots Editor Disabled 1`] = `
                   <div
                     className="col-auto editor-controls"
                   >
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Bolder"
-                      type="button"
+                    <span>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-dropdown-toggle btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-ellipsis-h fa-fw"
+                        />
+                      </button>
+                    </span>
+                    <span
+                      className="editor-controls-list"
                     >
-                      <i
-                        className="fas fa-bold fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Emphasize"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-italic fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Strikethrough"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-strikethrough fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Horizontal ruler"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-minus fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Link"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-link fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Image"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-image fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emoji btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Insert emoji"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-smile fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Quote"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-quote-right fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Spoiler"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-eye-slash fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
-                      disabled={true}
-                      onClick={[Function]}
-                      title="Code"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-code fa-fw"
-                      />
-                    </button>
-                  </div>
-                  <div
-                    className="col"
-                  />
-                  <div
-                    className="col-auto"
-                  >
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Bolder"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-bold fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Emphasize"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-italic fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Strikethrough"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-strikethrough fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Insert horizontal ruler"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-minus fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert link"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-link fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert image"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-image fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-list btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert list"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-list-ul fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Quote"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-quote-right fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Spoiler"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-eye-slash fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert code"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-code fa-fw"
+                        />
+                      </button>
+                    </span>
                     <button
                       className="btn btn-outline-secondary btn-editor btn-sm"
                       disabled={true}
@@ -547,6 +560,9 @@ exports[`Storyshots Editor Disabled 1`] = `
                       Preview
                     </button>
                   </div>
+                  <div
+                    className="col"
+                  />
                 </div>
               </div>
             </div>
@@ -607,7 +623,9 @@ exports[`Storyshots Editor Empty 1`] = `
             <div
               className="form-editor"
             >
-              <div>
+              <div
+                className="form-editor-mentions"
+              >
                 <textarea
                   className="form-control form-control-responsive form-editor-textarea"
                   name="markup"
@@ -622,123 +640,132 @@ exports[`Storyshots Editor Empty 1`] = `
                   <div
                     className="col-auto editor-controls"
                   >
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Bolder"
-                      type="button"
+                    <span>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-dropdown-toggle btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-ellipsis-h fa-fw"
+                        />
+                      </button>
+                    </span>
+                    <span
+                      className="editor-controls-list"
                     >
-                      <i
-                        className="fas fa-bold fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Emphasize"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-italic fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Strikethrough"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-strikethrough fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Horizontal ruler"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-minus fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Link"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-link fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Image"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-image fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emoji btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Insert emoji"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-smile fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Quote"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-quote-right fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Spoiler"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-eye-slash fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Code"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-code fa-fw"
-                      />
-                    </button>
-                  </div>
-                  <div
-                    className="col"
-                  />
-                  <div
-                    className="col-auto"
-                  >
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Bolder"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-bold fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Emphasize"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-italic fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Strikethrough"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-strikethrough fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Insert horizontal ruler"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-minus fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert link"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-link fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert image"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-image fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-list btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert list"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-list-ul fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Quote"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-quote-right fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Spoiler"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-eye-slash fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert code"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-code fa-fw"
+                        />
+                      </button>
+                    </span>
                     <button
                       className="btn btn-outline-secondary btn-editor btn-sm"
                       disabled={true}
@@ -748,6 +775,9 @@ exports[`Storyshots Editor Empty 1`] = `
                       Preview
                     </button>
                   </div>
+                  <div
+                    className="col"
+                  />
                 </div>
               </div>
             </div>
@@ -823,7 +853,9 @@ exports[`Storyshots Editor Mentions 1`] = `
             <div
               className="form-editor"
             >
-              <div>
+              <div
+                className="form-editor-mentions"
+              >
                 <textarea
                   className="form-control form-control-responsive form-editor-textarea"
                   name="markup"
@@ -1209,7 +1241,9 @@ exports[`Storyshots Editor With Value 1`] = `
             <div
               className="form-editor"
             >
-              <div>
+              <div
+                className="form-editor-mentions"
+              >
                 <textarea
                   className="form-control form-control-responsive form-editor-textarea"
                   name="markup"
@@ -1224,123 +1258,132 @@ exports[`Storyshots Editor With Value 1`] = `
                   <div
                     className="col-auto editor-controls"
                   >
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Bolder"
-                      type="button"
+                    <span>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-dropdown-toggle btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-ellipsis-h fa-fw"
+                        />
+                      </button>
+                    </span>
+                    <span
+                      className="editor-controls-list"
                     >
-                      <i
-                        className="fas fa-bold fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Emphasize"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-italic fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Strikethrough"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-strikethrough fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Horizontal ruler"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-minus fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Link"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-link fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Image"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-image fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emoji btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Insert emoji"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-smile fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Quote"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-quote-right fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Spoiler"
-                      type="button"
-                    >
-                      <i
-                        className="far fa-eye-slash fa-fw"
-                      />
-                    </button>
-                    <button
-                      className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
-                      disabled={false}
-                      onClick={[Function]}
-                      title="Code"
-                      type="button"
-                    >
-                      <i
-                        className="fas fa-code fa-fw"
-                      />
-                    </button>
-                  </div>
-                  <div
-                    className="col"
-                  />
-                  <div
-                    className="col-auto"
-                  >
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Bolder"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-bold fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Emphasize"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-italic fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Strikethrough"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-strikethrough fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Insert horizontal ruler"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-minus fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert link"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-link fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert image"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-image fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-list btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert list"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-list-ul fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Quote"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-quote-right fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
+                        disabled={true}
+                        onClick={[Function]}
+                        title="Spoiler"
+                        type="button"
+                      >
+                        <i
+                          className="far fa-eye-slash fa-fw"
+                        />
+                      </button>
+                      <button
+                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
+                        disabled={false}
+                        onClick={[Function]}
+                        title="Insert code"
+                        type="button"
+                      >
+                        <i
+                          className="fas fa-code fa-fw"
+                        />
+                      </button>
+                    </span>
                     <button
                       className="btn btn-outline-secondary btn-editor btn-sm"
                       disabled={false}
@@ -1350,6 +1393,9 @@ exports[`Storyshots Editor With Value 1`] = `
                       Preview
                     </button>
                   </div>
+                  <div
+                    className="col"
+                  />
                 </div>
               </div>
             </div>
@@ -1376,6 +1422,14 @@ exports[`Storyshots Editor With Value 1`] = `
   </div>
 </div>
 `;
+
+exports[`Storyshots Editor/Controls Insert Code Modal 1`] = `null`;
+
+exports[`Storyshots Editor/Controls Insert Image Modal 1`] = `null`;
+
+exports[`Storyshots Editor/Controls Insert Link Modal 1`] = `null`;
+
+exports[`Storyshots Editor/Controls Insert List Modal 1`] = `null`;
 
 exports[`Storyshots Navbar Anonymous 1`] = `
 <div
@@ -2246,6 +2300,7 @@ exports[`Storyshots Route/Post Thread/Category Select Search 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -2312,6 +2367,7 @@ exports[`Storyshots Route/Post Thread/Category Select Search With Value 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -2391,6 +2447,7 @@ exports[`Storyshots Route/Post Thread/Category Select Select Modal 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -2862,6 +2919,7 @@ exports[`Storyshots Route/Post Thread/Category Select Select Modal Without Resul
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -3681,45 +3739,6 @@ exports[`Storyshots Route/Thread/Header Thread Editable 1`] = `
 </div>
 `;
 
-exports[`Storyshots Route/Thread/Moderation Posts Options 1`] = `
-<div
-  className="fixed-container show"
->
-  <div
-    className="container-fluid"
-  >
-    <div
-      className="toolbar"
-    >
-      <div
-        className="row align-items-center"
-      >
-        <div
-          className="col toolbar-separator"
-        />
-        <div
-          className="toolbar-item col-auto"
-        >
-          <button
-            className="btn btn-sm btn-dark"
-            disabled={false}
-            onClick={[Function]}
-            type="button"
-          >
-            <i
-              className="fas fa-shield-alt fa-fw"
-            />
-            <span>
-              Moderate posts (1)
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Storyshots Route/Thread/Moderation Thread Options 1`] = `
 <div
   className="px-3 py-4"
@@ -3751,6 +3770,7 @@ exports[`Storyshots Route/Thread/Moderation/Post Error Auth Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -3829,6 +3849,7 @@ exports[`Storyshots Route/Thread/Moderation/Post Error Network Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -3907,6 +3928,7 @@ exports[`Storyshots Route/Thread/Moderation/Post Error Post Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -3985,6 +4007,7 @@ exports[`Storyshots Route/Thread/Moderation/Post Error Query Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4063,6 +4086,7 @@ exports[`Storyshots Route/Thread/Moderation/Post Error Thread Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4180,6 +4204,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Auth Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4258,6 +4283,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Posts Errors 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4320,7 +4346,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Posts Errors 1`] = `
                   className="posts-errors-post-body"
                 >
                   <article
-                    className="misago-richtext"
+                    className="misago-rich-text"
                   >
                     <p
                       dangerouslySetInnerHTML={
@@ -4358,7 +4384,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Posts Errors 1`] = `
                   className="posts-errors-post-body"
                 >
                   <article
-                    className="misago-richtext"
+                    className="misago-rich-text"
                   >
                     <p
                       dangerouslySetInnerHTML={
@@ -4407,6 +4433,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Some Posts Errors 1`] = 
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4469,7 +4496,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Some Posts Errors 1`] = 
                   className="posts-errors-post-body"
                 >
                   <article
-                    className="misago-richtext"
+                    className="misago-rich-text"
                   >
                     <p
                       dangerouslySetInnerHTML={
@@ -4518,6 +4545,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Thread Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -4585,45 +4613,6 @@ exports[`Storyshots Route/Thread/Moderation/Posts Error Thread Error 1`] = `
 </div>
 `;
 
-exports[`Storyshots Route/Thread/Moderation/Posts Posts Options 1`] = `
-<div
-  className="fixed-container show"
->
-  <div
-    className="container-fluid"
-  >
-    <div
-      className="toolbar"
-    >
-      <div
-        className="row align-items-center"
-      >
-        <div
-          className="col toolbar-separator"
-        />
-        <div
-          className="toolbar-item col-auto"
-        >
-          <button
-            className="btn btn-sm btn-dark"
-            disabled={false}
-            onClick={[Function]}
-            type="button"
-          >
-            <i
-              className="fas fa-shield-alt fa-fw"
-            />
-            <span>
-              Moderate posts (1)
-            </span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-`;
-
 exports[`Storyshots Route/Thread/Moderation/Posts Select Few Posts 1`] = `
 <form
   id="posts-select-test"
@@ -4639,6 +4628,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Few Posts 1`] = `
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -4704,7 +4694,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Few Posts 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -4760,7 +4750,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Few Posts 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -4832,6 +4822,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Many Posts 1`] = `
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -4897,7 +4888,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Many Posts 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -4953,7 +4944,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Many Posts 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -5009,7 +5000,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Many Posts 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -5090,6 +5081,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Single Post 1`] = `
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -5155,7 +5147,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select Single Post 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -5227,6 +5219,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select With Errors 1`] = `
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -5297,7 +5290,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select With Errors 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -5358,7 +5351,7 @@ exports[`Storyshots Route/Thread/Moderation/Posts Select With Errors 1`] = `
                             className="selected-post-body"
                           >
                             <article
-                              className="misago-richtext"
+                              className="misago-rich-text"
                             >
                               <p
                                 dangerouslySetInnerHTML={
@@ -5426,6 +5419,7 @@ exports[`Storyshots Route/Thread/Moderation/Thread Error Auth Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -5504,6 +5498,7 @@ exports[`Storyshots Route/Thread/Moderation/Thread Error Network Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -5582,6 +5577,7 @@ exports[`Storyshots Route/Thread/Moderation/Thread Error Query Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -5660,6 +5656,7 @@ exports[`Storyshots Route/Thread/Moderation/Thread Error Thread Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -5851,7 +5848,9 @@ exports[`Storyshots Route/Thread/Post Post After Another 1`] = `
               className="card-body post-body"
             >
               <article
-                className="misago-richtext"
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
               >
                 <p
                   dangerouslySetInnerHTML={
@@ -5861,11 +5860,6 @@ exports[`Storyshots Route/Thread/Post Post After Another 1`] = `
                   }
                 />
               </article>
-            </div>
-            <div
-              className="card-footer post-footer"
-            >
-              post footer
             </div>
           </div>
         </div>
@@ -5992,7 +5986,9 @@ exports[`Storyshots Route/Thread/Post Post After Another 1`] = `
               className="card-body post-body"
             >
               <article
-                className="misago-richtext"
+                className="misago-rich-text"
+                data-author="Doe"
+                data-post="2"
               >
                 <p
                   dangerouslySetInnerHTML={
@@ -6002,11 +5998,6 @@ exports[`Storyshots Route/Thread/Post Post After Another 1`] = `
                   }
                 />
               </article>
-            </div>
-            <div
-              className="card-footer post-footer"
-            >
-              post footer
             </div>
           </div>
         </div>
@@ -6140,7 +6131,9 @@ exports[`Storyshots Route/Thread/Post Post By Deleted User 1`] = `
               className="card-body post-body"
             >
               <article
-                className="misago-richtext"
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
               >
                 <p
                   dangerouslySetInnerHTML={
@@ -6150,11 +6143,6 @@ exports[`Storyshots Route/Thread/Post Post By Deleted User 1`] = `
                   }
                 />
               </article>
-            </div>
-            <div
-              className="card-footer post-footer"
-            >
-              post footer
             </div>
           </div>
         </div>
@@ -6301,7 +6289,9 @@ exports[`Storyshots Route/Thread/Post Post By User 1`] = `
               className="card-body post-body"
             >
               <article
-                className="misago-richtext"
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
               >
                 <p
                   dangerouslySetInnerHTML={
@@ -6311,11 +6301,6 @@ exports[`Storyshots Route/Thread/Post Post By User 1`] = `
                   }
                 />
               </article>
-            </div>
-            <div
-              className="card-footer post-footer"
-            >
-              post footer
             </div>
           </div>
         </div>
@@ -6475,7 +6460,9 @@ exports[`Storyshots Route/Thread/Post Post Selectable 1`] = `
               className="card-body post-body"
             >
               <article
-                className="misago-richtext"
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
               >
                 <p
                   dangerouslySetInnerHTML={
@@ -6486,10 +6473,1653 @@ exports[`Storyshots Route/Thread/Post Post Selectable 1`] = `
                 />
               </article>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Post Post With Code 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="post"
+    id="post-1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-auto post-sidebit"
+      >
+        <div
+          className="thread-post-postbit"
+        >
+          <a
+            href="/u/john/1/"
+            onClick={[Function]}
+          >
+            <img
+              alt=""
+              className="user-avatar"
+              height={100}
+              src="https://placekitten.com/g/100/100"
+              srcSet="https://placekitten.com/g/200/200 2x"
+              width={100}
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        className="col"
+      >
+        <div
+          className="card-wrapper post-card"
+        >
+          <div
+            className="card"
+          >
             <div
-              className="card-footer post-footer"
+              className="card-header post-header"
             >
-              post footer
+              <div
+                className="row align-items-center no-gutters"
+              >
+                <div
+                  className="col-auto post-avatar-sm"
+                >
+                  <a
+                    className="post-poster-avatar"
+                    href="/u/john/1/"
+                    onClick={[Function]}
+                  >
+                    <img
+                      alt=""
+                      className="user-avatar"
+                      height={32}
+                      src="https://placekitten.com/g/50/50"
+                      srcSet="https://placekitten.com/g/64/64 2x"
+                      width={32}
+                    />
+                  </a>
+                </div>
+                <div
+                  className="col"
+                >
+                  <div
+                    className="post-header-full"
+                  >
+                    <a
+                      className="post-poster"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      John
+                    </a>
+                    <span
+                      className="post-header-dash"
+                    >
+                      –
+                    </span>
+                    <a
+                      className="post-timestamp"
+                      href="/t/test-thread/1/post/1/"
+                      onClick={[Function]}
+                    >
+                      April 1, 2020
+                    </a>
+                  </div>
+                  <div
+                    className="post-header-compact"
+                  >
+                    <div
+                      className="post-header-first-row"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-second-row"
+                    >
+                      <a
+                        className="post-timestamp"
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="col-auto"
+                >
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <i
+                      className="fas fa-ellipsis-h fa-fw"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="card-body post-body"
+            >
+              <article
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
+              >
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Code:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-code"
+                >
+                  <div
+                    data-noquote="1"
+                  >
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="far fa-copy fa-fw"
+                      />
+                      <span>
+                        Copy
+                      </span>
+                    </button>
+                  </div>
+                  <pre
+                    data-syntax={null}
+                  >
+                    <code
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "do_something(user_obj);",
+                        }
+                      }
+                    />
+                  </pre>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Code within quote:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <div
+                    className="rich-text-quote-header"
+                    data-noquote="1"
+                  >
+                    <div
+                      className="rich-text-quote-title"
+                    >
+                      <a
+                        href="/u/alice/1/"
+                        onClick={[Function]}
+                      >
+                        Alice
+                      </a>
+                       said:
+                    </div>
+                  </div>
+                  <blockquote
+                    data-author="Alice"
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <div
+                      className="rich-text-code"
+                    >
+                      <div
+                        data-noquote="1"
+                      >
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          <i
+                            className="far fa-copy fa-fw"
+                          />
+                          <span>
+                            Copy
+                          </span>
+                        </button>
+                      </div>
+                      <pre
+                        data-syntax={null}
+                      >
+                        <code
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "do_something(user_obj);",
+                            }
+                          }
+                        />
+                      </pre>
+                    </div>
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Code within spoiler:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-spoiler rich-text-spoiler-hidden"
+                >
+                  <div
+                    className="rich-text-spoiler-header"
+                    data-noquote="1"
+                  >
+                    Hidden content
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="far fa-eye fa-fw"
+                      />
+                      <span>
+                        Reveal
+                      </span>
+                    </button>
+                  </div>
+                  <blockquote
+                    data-block="spoiler"
+                  >
+                    <div
+                      className="rich-text-code"
+                    >
+                      <div
+                        data-noquote="1"
+                      >
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          <i
+                            className="far fa-copy fa-fw"
+                          />
+                          <span>
+                            Copy
+                          </span>
+                        </button>
+                      </div>
+                      <pre
+                        data-syntax={null}
+                      >
+                        <code
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "do_something(user_obj);",
+                            }
+                          }
+                        />
+                      </pre>
+                    </div>
+                  </blockquote>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Post Post With Complex Markup 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="post"
+    id="post-1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-auto post-sidebit"
+      >
+        <div
+          className="thread-post-postbit"
+        >
+          <a
+            href="/u/john/1/"
+            onClick={[Function]}
+          >
+            <img
+              alt=""
+              className="user-avatar"
+              height={100}
+              src="https://placekitten.com/g/100/100"
+              srcSet="https://placekitten.com/g/200/200 2x"
+              width={100}
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        className="col"
+      >
+        <div
+          className="card-wrapper post-card"
+        >
+          <div
+            className="card"
+          >
+            <div
+              className="card-header post-header"
+            >
+              <div
+                className="row align-items-center no-gutters"
+              >
+                <div
+                  className="col-auto post-avatar-sm"
+                >
+                  <a
+                    className="post-poster-avatar"
+                    href="/u/john/1/"
+                    onClick={[Function]}
+                  >
+                    <img
+                      alt=""
+                      className="user-avatar"
+                      height={32}
+                      src="https://placekitten.com/g/50/50"
+                      srcSet="https://placekitten.com/g/64/64 2x"
+                      width={32}
+                    />
+                  </a>
+                </div>
+                <div
+                  className="col"
+                >
+                  <div
+                    className="post-header-full"
+                  >
+                    <a
+                      className="post-poster"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      John
+                    </a>
+                    <span
+                      className="post-header-dash"
+                    >
+                      –
+                    </span>
+                    <a
+                      className="post-timestamp"
+                      href="/t/test-thread/1/post/1/"
+                      onClick={[Function]}
+                    >
+                      April 1, 2020
+                    </a>
+                  </div>
+                  <div
+                    className="post-header-compact"
+                  >
+                    <div
+                      className="post-header-first-row"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-second-row"
+                    >
+                      <a
+                        className="post-timestamp"
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="col-auto"
+                >
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <i
+                      className="fas fa-ellipsis-h fa-fw"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="card-body post-body"
+            >
+              <article
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
+              >
+                <h1
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+                    }
+                  }
+                />
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Praesent finibus consequat eros. <strong>Phasellus ut eleifend orci.</strong> Aliquam erat volutpat. Vestibulum porttitor, sem quis mattis placerat, <em>enim neque aliquam leo</em>, id porta elit ante ut justo.",
+                    }
+                  }
+                />
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Suspendisse enim massa, rutrum eget bibendum a, <a href=\\"http://misago-project.org\\">porttitor vitae</a> turpis. Aliquam erat volutpat. Duis dapibus sapien nunc.",
+                    }
+                  }
+                />
+                <h2
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Duis dapibus sapien nunc.",
+                    }
+                  }
+                />
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Praesent ultrices, massa eu mollis iaculis, sapien magna fringilla ante, sed tristique neque ipsum quis purus.",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <blockquote
+                    data-author={null}
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, vitae fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "<img src=\\"https://placekitten.com/200/300\\" alt=\\"\\"/>",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <blockquote
+                        data-author={null}
+                        data-block="quote"
+                        data-post={null}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Post Post With Moderation 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="post"
+    id="post-1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-auto post-sidebit"
+      >
+        <div
+          className="thread-post-postbit"
+        >
+          <a
+            href="/u/john/1/"
+            onClick={[Function]}
+          >
+            <img
+              alt=""
+              className="user-avatar"
+              height={100}
+              src="https://placekitten.com/g/100/100"
+              srcSet="https://placekitten.com/g/200/200 2x"
+              width={100}
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        className="col"
+      >
+        <div
+          className="card-wrapper post-card"
+        >
+          <div
+            className="card"
+          >
+            <div
+              className="card-header post-header"
+            >
+              <div
+                className="row align-items-center no-gutters"
+              >
+                <div
+                  className="col-auto post-avatar-sm"
+                >
+                  <a
+                    className="post-poster-avatar"
+                    href="/u/john/1/"
+                    onClick={[Function]}
+                  >
+                    <img
+                      alt=""
+                      className="user-avatar"
+                      height={32}
+                      src="https://placekitten.com/g/50/50"
+                      srcSet="https://placekitten.com/g/64/64 2x"
+                      width={32}
+                    />
+                  </a>
+                </div>
+                <div
+                  className="col"
+                >
+                  <div
+                    className="post-header-full"
+                  >
+                    <a
+                      className="post-poster"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      John
+                    </a>
+                    <span
+                      className="post-header-dash"
+                    >
+                      –
+                    </span>
+                    <a
+                      className="post-timestamp"
+                      href="/t/test-thread/1/post/1/"
+                      onClick={[Function]}
+                    >
+                      April 1, 2020
+                    </a>
+                  </div>
+                  <div
+                    className="post-header-compact"
+                  >
+                    <div
+                      className="post-header-first-row"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-second-row"
+                    >
+                      <a
+                        className="post-timestamp"
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="col-auto"
+                >
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <i
+                      className="fas fa-ellipsis-h fa-fw"
+                    />
+                  </button>
+                </div>
+                <div
+                  className="col-auto post-header-select"
+                >
+                  <span
+                    className="form-check-input"
+                  >
+                    <input
+                      checked={false}
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              className="card-body post-body"
+            >
+              <article
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
+              >
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "This post has moderation options enabled!",
+                    }
+                  }
+                />
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Post Post With Quotes 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="post"
+    id="post-1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-auto post-sidebit"
+      >
+        <div
+          className="thread-post-postbit"
+        >
+          <a
+            href="/u/john/1/"
+            onClick={[Function]}
+          >
+            <img
+              alt=""
+              className="user-avatar"
+              height={100}
+              src="https://placekitten.com/g/100/100"
+              srcSet="https://placekitten.com/g/200/200 2x"
+              width={100}
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        className="col"
+      >
+        <div
+          className="card-wrapper post-card"
+        >
+          <div
+            className="card"
+          >
+            <div
+              className="card-header post-header"
+            >
+              <div
+                className="row align-items-center no-gutters"
+              >
+                <div
+                  className="col-auto post-avatar-sm"
+                >
+                  <a
+                    className="post-poster-avatar"
+                    href="/u/john/1/"
+                    onClick={[Function]}
+                  >
+                    <img
+                      alt=""
+                      className="user-avatar"
+                      height={32}
+                      src="https://placekitten.com/g/50/50"
+                      srcSet="https://placekitten.com/g/64/64 2x"
+                      width={32}
+                    />
+                  </a>
+                </div>
+                <div
+                  className="col"
+                >
+                  <div
+                    className="post-header-full"
+                  >
+                    <a
+                      className="post-poster"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      John
+                    </a>
+                    <span
+                      className="post-header-dash"
+                    >
+                      –
+                    </span>
+                    <a
+                      className="post-timestamp"
+                      href="/t/test-thread/1/post/1/"
+                      onClick={[Function]}
+                    >
+                      April 1, 2020
+                    </a>
+                  </div>
+                  <div
+                    className="post-header-compact"
+                  >
+                    <div
+                      className="post-header-first-row"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-second-row"
+                    >
+                      <a
+                        className="post-timestamp"
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="col-auto"
+                >
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <i
+                      className="fas fa-ellipsis-h fa-fw"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="card-body post-body"
+            >
+              <article
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
+              >
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Quote without author within quote without author:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <blockquote
+                    data-author={null}
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, <a href=\\"http://misago-project.org\\">vitae</a> fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <blockquote
+                        data-author={null}
+                        data-block="quote"
+                        data-post={null}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Quote with existing author within quote with existing author:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <div
+                    className="rich-text-quote-header"
+                    data-noquote="1"
+                  >
+                    <div
+                      className="rich-text-quote-title"
+                    >
+                      <a
+                        href="/u/alice/1/"
+                        onClick={[Function]}
+                      >
+                        Alice
+                      </a>
+                       said:
+                    </div>
+                  </div>
+                  <blockquote
+                    data-author="Alice"
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, <a href=\\"http://misago-project.org\\">vitae</a> fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <div
+                        className="rich-text-quote-header"
+                        data-noquote="1"
+                      >
+                        <div
+                          className="rich-text-quote-title"
+                        >
+                          <a
+                            href="/u/jane/2/"
+                            onClick={[Function]}
+                          >
+                            Jane
+                          </a>
+                           said:
+                        </div>
+                      </div>
+                      <blockquote
+                        data-author="Jane"
+                        data-block="quote"
+                        data-post={null}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Quote with anonymous author within quote with anonymous author:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <div
+                    className="rich-text-quote-header"
+                    data-noquote="1"
+                  >
+                    <div
+                      className="rich-text-quote-title"
+                    >
+                      <span>
+                        Alice
+                      </span>
+                       said:
+                    </div>
+                  </div>
+                  <blockquote
+                    data-author="Alice"
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, <a href=\\"http://misago-project.org\\">vitae</a> fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <div
+                        className="rich-text-quote-header"
+                        data-noquote="1"
+                      >
+                        <div
+                          className="rich-text-quote-title"
+                        >
+                          <span>
+                            Jane
+                          </span>
+                           said:
+                        </div>
+                      </div>
+                      <blockquote
+                        data-author="Jane"
+                        data-block="quote"
+                        data-post={null}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Quote with author and post within quote with author and post:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <div
+                    className="rich-text-quote-header"
+                    data-noquote="1"
+                  >
+                    <div
+                      className="rich-text-quote-title"
+                    >
+                      <span>
+                        Alice
+                      </span>
+                       said:
+                    </div>
+                    <a
+                      className="btn btn-secondary btn-sm"
+                      href="/post/123/"
+                      onClick={[Function]}
+                    >
+                      <i
+                        className="fas fa-reply fa-fw"
+                      />
+                    </a>
+                  </div>
+                  <blockquote
+                    data-author="Alice"
+                    data-block="quote"
+                    data-post={123}
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, <a href=\\"http://misago-project.org\\">vitae</a> fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <div
+                        className="rich-text-quote-header"
+                        data-noquote="1"
+                      >
+                        <div
+                          className="rich-text-quote-title"
+                        >
+                          <span>
+                            Jane
+                          </span>
+                           said:
+                        </div>
+                        <a
+                          className="btn btn-secondary btn-sm"
+                          href="/post/123/"
+                          onClick={[Function]}
+                        >
+                          <i
+                            className="fas fa-reply fa-fw"
+                          />
+                        </a>
+                      </div>
+                      <blockquote
+                        data-author="Jane"
+                        data-block="quote"
+                        data-post={123}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Quote within spoiler block:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-spoiler rich-text-spoiler-hidden"
+                >
+                  <div
+                    className="rich-text-spoiler-header"
+                    data-noquote="1"
+                  >
+                    Hidden content
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="far fa-eye fa-fw"
+                      />
+                      <span>
+                        Reveal
+                      </span>
+                    </button>
+                  </div>
+                  <blockquote
+                    data-block="spoiler"
+                  >
+                    <div
+                      className="rich-text-quote"
+                    >
+                      <div
+                        className="rich-text-quote-header"
+                        data-noquote="1"
+                      >
+                        <div
+                          className="rich-text-quote-title"
+                        >
+                          <span>
+                            Jane
+                          </span>
+                           said:
+                        </div>
+                        <a
+                          className="btn btn-secondary btn-sm"
+                          href="/post/123/"
+                          onClick={[Function]}
+                        >
+                          <i
+                            className="fas fa-reply fa-fw"
+                          />
+                        </a>
+                      </div>
+                      <blockquote
+                        data-author="Jane"
+                        data-block="quote"
+                        data-post={123}
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                  </blockquote>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Post Post With Spoilers 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="post"
+    id="post-1"
+  >
+    <div
+      className="row"
+    >
+      <div
+        className="col-auto post-sidebit"
+      >
+        <div
+          className="thread-post-postbit"
+        >
+          <a
+            href="/u/john/1/"
+            onClick={[Function]}
+          >
+            <img
+              alt=""
+              className="user-avatar"
+              height={100}
+              src="https://placekitten.com/g/100/100"
+              srcSet="https://placekitten.com/g/200/200 2x"
+              width={100}
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        className="col"
+      >
+        <div
+          className="card-wrapper post-card"
+        >
+          <div
+            className="card"
+          >
+            <div
+              className="card-header post-header"
+            >
+              <div
+                className="row align-items-center no-gutters"
+              >
+                <div
+                  className="col-auto post-avatar-sm"
+                >
+                  <a
+                    className="post-poster-avatar"
+                    href="/u/john/1/"
+                    onClick={[Function]}
+                  >
+                    <img
+                      alt=""
+                      className="user-avatar"
+                      height={32}
+                      src="https://placekitten.com/g/50/50"
+                      srcSet="https://placekitten.com/g/64/64 2x"
+                      width={32}
+                    />
+                  </a>
+                </div>
+                <div
+                  className="col"
+                >
+                  <div
+                    className="post-header-full"
+                  >
+                    <a
+                      className="post-poster"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      John
+                    </a>
+                    <span
+                      className="post-header-dash"
+                    >
+                      –
+                    </span>
+                    <a
+                      className="post-timestamp"
+                      href="/t/test-thread/1/post/1/"
+                      onClick={[Function]}
+                    >
+                      April 1, 2020
+                    </a>
+                  </div>
+                  <div
+                    className="post-header-compact"
+                  >
+                    <div
+                      className="post-header-first-row"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-second-row"
+                    >
+                      <a
+                        className="post-timestamp"
+                        href="/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="col-auto"
+                >
+                  <button
+                    className="btn btn-sm btn-secondary"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <i
+                      className="fas fa-ellipsis-h fa-fw"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+              className="card-body post-body"
+            >
+              <article
+                className="misago-rich-text"
+                data-author="John"
+                data-post="1"
+              >
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Spoiler:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-spoiler rich-text-spoiler-hidden"
+                >
+                  <div
+                    className="rich-text-spoiler-header"
+                    data-noquote="1"
+                  >
+                    Hidden content
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="far fa-eye fa-fw"
+                      />
+                      <span>
+                        Reveal
+                      </span>
+                    </button>
+                  </div>
+                  <blockquote
+                    data-block="spoiler"
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                        }
+                      }
+                    />
+                    <hr />
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Spoiler within quote:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-quote"
+                >
+                  <div
+                    className="rich-text-quote-header"
+                    data-noquote="1"
+                  >
+                    <div
+                      className="rich-text-quote-title"
+                    >
+                      <a
+                        href="/u/alice/1/"
+                        onClick={[Function]}
+                      >
+                        Alice
+                      </a>
+                       said:
+                    </div>
+                  </div>
+                  <blockquote
+                    data-author="Alice"
+                    data-block="quote"
+                    data-post={null}
+                  >
+                    <div
+                      className="rich-text-spoiler rich-text-spoiler-hidden"
+                    >
+                      <div
+                        className="rich-text-spoiler-header"
+                        data-noquote="1"
+                      >
+                        Hidden content
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          <i
+                            className="far fa-eye fa-fw"
+                          />
+                          <span>
+                            Reveal
+                          </span>
+                        </button>
+                      </div>
+                      <blockquote
+                        data-block="spoiler"
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                  </blockquote>
+                </div>
+                <p
+                  dangerouslySetInnerHTML={
+                    Object {
+                      "__html": "Spoiler within spoiler:",
+                    }
+                  }
+                />
+                <div
+                  className="rich-text-spoiler rich-text-spoiler-hidden"
+                >
+                  <div
+                    className="rich-text-spoiler-header"
+                    data-noquote="1"
+                  >
+                    Hidden content
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="far fa-eye fa-fw"
+                      />
+                      <span>
+                        Reveal
+                      </span>
+                    </button>
+                  </div>
+                  <blockquote
+                    data-block="spoiler"
+                  >
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Duis commodo purus a tortor accumsan, <a href=\\"http://misago-project.org\\">vitae</a> fermentum sem viverra:",
+                        }
+                      }
+                    />
+                    <div
+                      className="rich-text-spoiler rich-text-spoiler-hidden"
+                    >
+                      <div
+                        className="rich-text-spoiler-header"
+                        data-noquote="1"
+                      >
+                        Hidden content
+                        <button
+                          className="btn btn-sm btn-secondary"
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          <i
+                            className="far fa-eye fa-fw"
+                          />
+                          <span>
+                            Reveal
+                          </span>
+                        </button>
+                      </div>
+                      <blockquote
+                        data-block="spoiler"
+                      >
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
+                            }
+                          }
+                        />
+                        <hr />
+                        <p
+                          dangerouslySetInnerHTML={
+                            Object {
+                              "__html": "Fusce ut ligula nec tortor auctor volutpat. Nam in nibh rutrum ligula tristique vulputate.",
+                            }
+                          }
+                        />
+                      </blockquote>
+                    </div>
+                    <p
+                      dangerouslySetInnerHTML={
+                        Object {
+                          "__html": "Mauris convallis enim lectus, malesuada iaculis nisl iaculis nec. Proin sit amet efficitur dolor. Phasellus sollicitudin nec odio ac posuere!",
+                        }
+                      }
+                    />
+                  </blockquote>
+                </div>
+              </article>
             </div>
           </div>
         </div>
@@ -6536,6 +8166,720 @@ exports[`Storyshots Route/Thread/Post RootError Thread Error 1`] = `
   <p>
     You can't moderate this thread.
   </p>
+</div>
+`;
+
+exports[`Storyshots Route/Thread/Quote Selection Post With Complex Markup 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <p>
+    Text outside of quote selection.
+  </p>
+  <div>
+    <div
+      className="post"
+      id="post-1"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="col-auto post-sidebit"
+        >
+          <div
+            className="thread-post-postbit"
+          >
+            <a
+              href="/u/john/1/"
+              onClick={[Function]}
+            >
+              <img
+                alt=""
+                className="user-avatar"
+                height={100}
+                src="https://placekitten.com/g/100/100"
+                srcSet="https://placekitten.com/g/200/200 2x"
+                width={100}
+              />
+            </a>
+          </div>
+        </div>
+        <div
+          className="col"
+        >
+          <div
+            className="card-wrapper post-card"
+          >
+            <div
+              className="card"
+            >
+              <div
+                className="card-header post-header"
+              >
+                <div
+                  className="row align-items-center no-gutters"
+                >
+                  <div
+                    className="col-auto post-avatar-sm"
+                  >
+                    <a
+                      className="post-poster-avatar"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      <img
+                        alt=""
+                        className="user-avatar"
+                        height={32}
+                        src="https://placekitten.com/g/50/50"
+                        srcSet="https://placekitten.com/g/64/64 2x"
+                        width={32}
+                      />
+                    </a>
+                  </div>
+                  <div
+                    className="col"
+                  >
+                    <div
+                      className="post-header-full"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        John
+                      </a>
+                      <span
+                        className="post-header-dash"
+                      >
+                        –
+                      </span>
+                      <a
+                        className="post-timestamp"
+                        href="/t/test-thread/1/post/1/"
+                        onClick={[Function]}
+                      >
+                        April 1, 2020
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-compact"
+                    >
+                      <div
+                        className="post-header-first-row"
+                      >
+                        <a
+                          className="post-poster"
+                          href="/u/john/1/"
+                          onClick={[Function]}
+                        >
+                          John
+                        </a>
+                      </div>
+                      <div
+                        className="post-header-second-row"
+                      >
+                        <a
+                          className="post-timestamp"
+                          href="/"
+                          onClick={[Function]}
+                        >
+                          April 1, 2020
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="col-auto"
+                  >
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-ellipsis-h fa-fw"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="card-body post-body"
+              >
+                <article
+                  className="misago-rich-text"
+                  data-author="John"
+                  data-post="1"
+                >
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "Lorem ipsum dolor sit amet, <strong><a href=\\"http://misago-project.org\\">http://misago-project.org</a></strong> adipiscing elit.",
+                      }
+                    }
+                  />
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "Praesent finibus consequat eros. <strong>Phasellus ut eleifend orci.</strong> Aliquam erat volutpat.<br />Vestibulum porttitor, sem quis mattis placerat, <em>enim neque aliquam leo</em>, id porta <code>elit ante ut</code> justo.",
+                      }
+                    }
+                  />
+                </article>
+              </div>
+              <div
+                className="card-footer post-footer"
+              >
+                <div
+                  className="row"
+                >
+                  <div
+                    className="col"
+                  />
+                  <div
+                    className="col-auto col-right"
+                  >
+                    <button
+                      className="btn btn-sm btn-edit"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-edit fa-fw"
+                      />
+                      <span>
+                        Edit
+                      </span>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-quote"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-quote-left fa-fw"
+                      />
+                      <span>
+                        Quote
+                      </span>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-reply"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-reply fa-fw"
+                      />
+                      <span>
+                        Reply
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="post"
+      id="post-2"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className="col-auto post-sidebit"
+        >
+          <div
+            className="thread-post-postbit"
+          >
+            <a
+              href="/u/john/1/"
+              onClick={[Function]}
+            >
+              <img
+                alt=""
+                className="user-avatar"
+                height={100}
+                src="https://placekitten.com/g/100/100"
+                srcSet="https://placekitten.com/g/200/200 2x"
+                width={100}
+              />
+            </a>
+          </div>
+        </div>
+        <div
+          className="col"
+        >
+          <div
+            className="card-wrapper post-card"
+          >
+            <div
+              className="card"
+            >
+              <div
+                className="card-header post-header"
+              >
+                <div
+                  className="row align-items-center no-gutters"
+                >
+                  <div
+                    className="col-auto post-avatar-sm"
+                  >
+                    <a
+                      className="post-poster-avatar"
+                      href="/u/john/1/"
+                      onClick={[Function]}
+                    >
+                      <img
+                        alt=""
+                        className="user-avatar"
+                        height={32}
+                        src="https://placekitten.com/g/50/50"
+                        srcSet="https://placekitten.com/g/64/64 2x"
+                        width={32}
+                      />
+                    </a>
+                  </div>
+                  <div
+                    className="col"
+                  >
+                    <div
+                      className="post-header-full"
+                    >
+                      <a
+                        className="post-poster"
+                        href="/u/john/1/"
+                        onClick={[Function]}
+                      >
+                        Aerith
+                      </a>
+                      <span
+                        className="post-header-dash"
+                      >
+                        –
+                      </span>
+                      <a
+                        className="post-timestamp"
+                        href="/t/test-thread/1/post/2/"
+                        onClick={[Function]}
+                      >
+                        April 2, 2020
+                      </a>
+                    </div>
+                    <div
+                      className="post-header-compact"
+                    >
+                      <div
+                        className="post-header-first-row"
+                      >
+                        <a
+                          className="post-poster"
+                          href="/u/john/1/"
+                          onClick={[Function]}
+                        >
+                          Aerith
+                        </a>
+                      </div>
+                      <div
+                        className="post-header-second-row"
+                      >
+                        <a
+                          className="post-timestamp"
+                          href="/"
+                          onClick={[Function]}
+                        >
+                          April 2, 2020
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="col-auto"
+                  >
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-ellipsis-h fa-fw"
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="card-body post-body"
+              >
+                <article
+                  className="misago-rich-text"
+                  data-author="Aerith"
+                  data-post="2"
+                >
+                  <h1
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "Lorem ipsum dolor sit amet, <strong><a href=\\"http://misago-project.org\\">http://misago-project.org</a></strong> adipiscing elit.",
+                      }
+                    }
+                  />
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "Praesent finibus consequat eros. <strong>Phasellus ut eleifend orci.</strong> Aliquam erat volutpat. Vestibulum porttitor, sem quis mattis placerat, <em>enim neque aliquam leo</em>, id porta elit ante ut justo.",
+                      }
+                    }
+                  />
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "<img src=\\"https://placekitten.com/200/300\\" alt=\\"Some kitten!\\" />",
+                      }
+                    }
+                  />
+                  <hr />
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "<a href=\\"/\\" data-quote=\\"@Mention\\">@Mention</a> suspendisse enim massa, rutrum eget bibendum a, <a href=\\"http://misago-project.org\\">porttitor vitae</a> turpis. Aliquam erat volutpat. Duis dapibus sapien nunc.",
+                      }
+                    }
+                  />
+                  <div
+                    className="rich-text-quote"
+                  >
+                    <blockquote
+                      data-author={null}
+                      data-block="quote"
+                      data-post={null}
+                    >
+                      <p
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "Praesent <b>eu mi libero</b>. In ac <u>finibus nunc</u>. Etiam eu <i>mauris velit</i>. Proin cursus<sub>123</sub> sollicitudin<sup>321</sup> pretium.",
+                          }
+                        }
+                      />
+                    </blockquote>
+                  </div>
+                  <div
+                    className="rich-text-spoiler rich-text-spoiler-hidden"
+                  >
+                    <div
+                      className="rich-text-spoiler-header"
+                      data-noquote="1"
+                    >
+                      Hidden content
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        <i
+                          className="far fa-eye fa-fw"
+                        />
+                        <span>
+                          Reveal
+                        </span>
+                      </button>
+                    </div>
+                    <blockquote
+                      data-block="spoiler"
+                    >
+                      <p
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "Spoiler <del>text</del> secret!",
+                          }
+                        }
+                      />
+                    </blockquote>
+                  </div>
+                  <div
+                    className="rich-text-quote"
+                  >
+                    <div
+                      className="rich-text-quote-header"
+                      data-noquote="1"
+                    >
+                      <div
+                        className="rich-text-quote-title"
+                      >
+                        <span>
+                          Alice
+                        </span>
+                         said:
+                      </div>
+                    </div>
+                    <blockquote
+                      data-author="Alice"
+                      data-block="quote"
+                      data-post={null}
+                    >
+                      <p
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "Unordered list:",
+                          }
+                        }
+                      />
+                      <ul>
+                        <li
+                          data-index={1}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Apples",
+                              }
+                            }
+                          />
+                        </li>
+                        <li
+                          data-index={2}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Oranges",
+                              }
+                            }
+                          />
+                        </li>
+                        <li
+                          data-index={3}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Banans",
+                              }
+                            }
+                          />
+                        </li>
+                      </ul>
+                      <p
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "Ordered list:",
+                          }
+                        }
+                      />
+                      <ol>
+                        <li
+                          data-index={1}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Apples",
+                              }
+                            }
+                          />
+                        </li>
+                        <li
+                          data-index={2}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Oranges",
+                              }
+                            }
+                          />
+                        </li>
+                        <li
+                          data-index={3}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Banans",
+                              }
+                            }
+                          />
+                        </li>
+                        <li
+                          data-index={4}
+                        >
+                          <span
+                            dangerouslySetInnerHTML={
+                              Object {
+                                "__html": "Mix",
+                              }
+                            }
+                          />
+                          <ul>
+                            <li
+                              data-index={1}
+                            >
+                              <span
+                                dangerouslySetInnerHTML={
+                                  Object {
+                                    "__html": "Huel",
+                                  }
+                                }
+                              />
+                            </li>
+                            <li
+                              data-index={2}
+                            >
+                              <span
+                                dangerouslySetInnerHTML={
+                                  Object {
+                                    "__html": "Soylent",
+                                  }
+                                }
+                              />
+                            </li>
+                            <li
+                              data-index={3}
+                            >
+                              <span
+                                dangerouslySetInnerHTML={
+                                  Object {
+                                    "__html": "Juicero",
+                                  }
+                                }
+                              />
+                            </li>
+                          </ul>
+                        </li>
+                      </ol>
+                    </blockquote>
+                  </div>
+                  <div
+                    className="rich-text-code rich-text-code-php"
+                  >
+                    <div
+                      data-noquote="1"
+                    >
+                      <button
+                        className="btn btn-sm btn-secondary"
+                        onClick={[Function]}
+                        type="button"
+                      >
+                        <i
+                          className="far fa-copy fa-fw"
+                        />
+                        <span>
+                          Copy
+                        </span>
+                      </button>
+                    </div>
+                    <pre
+                      data-syntax="php"
+                    >
+                      <code
+                        dangerouslySetInnerHTML={
+                          Object {
+                            "__html": "$user-&gt;getName();",
+                          }
+                        }
+                      />
+                    </pre>
+                  </div>
+                  <p
+                    dangerouslySetInnerHTML={
+                      Object {
+                        "__html": "<img src=\\"https://placekitten.com/200/300\\" alt=\\"\\" />",
+                      }
+                    }
+                  />
+                </article>
+              </div>
+              <div
+                className="card-footer post-footer"
+              >
+                <div
+                  className="row"
+                >
+                  <div
+                    className="col"
+                  />
+                  <div
+                    className="col-auto col-right"
+                  >
+                    <button
+                      className="btn btn-sm btn-edit"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-edit fa-fw"
+                      />
+                      <span>
+                        Edit
+                      </span>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-quote"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-quote-left fa-fw"
+                      />
+                      <span>
+                        Quote
+                      </span>
+                    </button>
+                    <button
+                      className="btn btn-sm btn-reply"
+                      onClick={[Function]}
+                      type="button"
+                    >
+                      <i
+                        className="fas fa-reply fa-fw"
+                      />
+                      <span>
+                        Reply
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>
+    Text outside of quote selection.
+  </p>
+  <div
+    style={
+      Object {
+        "border": "2px dashed #CCC",
+        "padding": "1rem",
+        "width": "100%",
+      }
+    }
+  >
+    <code>
+      <pre
+        style={
+          Object {
+            "margin": 0,
+          }
+        }
+      >
+        <em
+          className="text-muted"
+        >
+          empty
+        </em>
+      </pre>
+    </code>
+  </div>
 </div>
 `;
 
@@ -6915,7 +9259,9 @@ Array [
                 <div
                   className="form-editor"
                 >
-                  <div>
+                  <div
+                    className="form-editor-mentions"
+                  >
                     <textarea
                       className="form-control form-control-responsive form-editor-textarea"
                       disabled={false}
@@ -6931,123 +9277,132 @@ Array [
                       <div
                         className="col-auto editor-controls"
                       >
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Bolder"
-                          type="button"
+                        <span>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-dropdown-toggle btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-ellipsis-h fa-fw"
+                            />
+                          </button>
+                        </span>
+                        <span
+                          className="editor-controls-list"
                         >
-                          <i
-                            className="fas fa-bold fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Emphasize"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-italic fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Strikethrough"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-strikethrough fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Horizontal ruler"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-minus fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Link"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-link fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Image"
-                          type="button"
-                        >
-                          <i
-                            className="far fa-image fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emoji btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Insert emoji"
-                          type="button"
-                        >
-                          <i
-                            className="far fa-smile fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Quote"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-quote-right fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Spoiler"
-                          type="button"
-                        >
-                          <i
-                            className="far fa-eye-slash fa-fw"
-                          />
-                        </button>
-                        <button
-                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
-                          disabled={false}
-                          onClick={[Function]}
-                          title="Code"
-                          type="button"
-                        >
-                          <i
-                            className="fas fa-code fa-fw"
-                          />
-                        </button>
-                      </div>
-                      <div
-                        className="col"
-                      />
-                      <div
-                        className="col-auto"
-                      >
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Bolder"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-bold fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Emphasize"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-italic fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Strikethrough"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-strikethrough fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Insert horizontal ruler"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-minus fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
+                            disabled={false}
+                            onClick={[Function]}
+                            title="Insert link"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-link fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
+                            disabled={false}
+                            onClick={[Function]}
+                            title="Insert image"
+                            type="button"
+                          >
+                            <i
+                              className="far fa-image fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-list btn-icon"
+                            disabled={false}
+                            onClick={[Function]}
+                            title="Insert list"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-list-ul fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Quote"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-quote-right fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
+                            disabled={true}
+                            onClick={[Function]}
+                            title="Spoiler"
+                            type="button"
+                          >
+                            <i
+                              className="far fa-eye-slash fa-fw"
+                            />
+                          </button>
+                          <button
+                            className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
+                            disabled={false}
+                            onClick={[Function]}
+                            title="Insert code"
+                            type="button"
+                          >
+                            <i
+                              className="fas fa-code fa-fw"
+                            />
+                          </button>
+                        </span>
                         <button
                           className="btn btn-outline-secondary btn-editor btn-sm"
                           disabled={true}
@@ -7056,6 +9411,13 @@ Array [
                         >
                           Preview
                         </button>
+                      </div>
+                      <div
+                        className="col"
+                      />
+                      <div
+                        className="col-auto"
+                      >
                         <button
                           className="btn btn-sm btn-primary"
                           disabled={false}
@@ -9563,6 +11925,7 @@ exports[`Storyshots Route/Threads/Moderation/Error Auth Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -9641,6 +12004,7 @@ exports[`Storyshots Route/Threads/Moderation/Error Network Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -9719,6 +12083,7 @@ exports[`Storyshots Route/Threads/Moderation/Error Query Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -9797,6 +12162,7 @@ exports[`Storyshots Route/Threads/Moderation/Error Some Threads Errors 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -9909,6 +12275,7 @@ exports[`Storyshots Route/Threads/Moderation/Error Threads Errors 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -10091,6 +12458,7 @@ exports[`Storyshots Route/Threads/Moderation/SelectedThreads Few Threads 1`] = `
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -10313,6 +12681,7 @@ exports[`Storyshots Route/Threads/Moderation/SelectedThreads Many Threads 1`] = 
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -10628,6 +12997,7 @@ exports[`Storyshots Route/Threads/Moderation/SelectedThreads Single Thread 1`] =
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -10793,6 +13163,7 @@ exports[`Storyshots Route/Threads/Moderation/SelectedThreads With Thread Error 1
         aria-hidden="false"
         className="modal d-block fade show"
         onKeyDown={[Function]}
+        onSubmit={[Function]}
         role="dialog"
         tabIndex={-1}
       >
@@ -12799,6 +15170,323 @@ exports[`Storyshots Route/Threads/Toolbar Default 1`] = `
             New thread
           </span>
         </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Site Wizard Completed 1`] = `
+<div
+  className="site-wizard"
+>
+  <div
+    className="route-container"
+  >
+    <div
+      className="container-fluid"
+    >
+      <div
+        className="site-wizard-logo"
+      />
+      <div
+        className="card-wrapper site-wizard-card"
+      >
+        <div
+          className="card"
+        >
+          <div
+            className="card-color-band"
+            style={
+              Object {
+                "background": "#FF5630",
+              }
+            }
+          />
+          <div
+            className="card-body message-card"
+          >
+            <div
+              className="message-card-content"
+            >
+              <div
+                className="message-card-icon"
+              />
+              <div
+                className="message-card-message"
+              >
+                <p
+                  className="lead"
+                >
+                  Basic setup completed!
+                </p>
+                <p>
+                  Your admin account has been created and you have been signed in.
+                </p>
+                <p>
+                  Click "continue" or refresh the page to begin using your site.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="card-footer"
+          >
+            <div
+              className="form-footer"
+            >
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Continue
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Site Wizard Form 1`] = `
+<div
+  className="site-wizard"
+>
+  <div
+    className="route-container"
+  >
+    <div
+      className="container-fluid"
+    >
+      <div
+        className="site-wizard-logo"
+      />
+      <div
+        className="card-wrapper site-wizard-card"
+      >
+        <div
+          className="card"
+        >
+          <div
+            className="card-color-band"
+            style={
+              Object {
+                "background": "#FF5630",
+              }
+            }
+          />
+          <form
+            id="setup_site_form"
+            onSubmit={[Function]}
+          >
+            <div
+              className="card-body card-form-body"
+            >
+              <fieldset>
+                <legend>
+                  Site
+                </legend>
+                <div
+                  className="form-group"
+                >
+                  <label
+                    htmlFor="setup_site_form_forumName"
+                  >
+                    Forum name
+                  </label>
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="setup_site_form_forumName"
+                    maxLength={150}
+                    name="forumName"
+                    type="text"
+                  />
+                </div>
+                <div
+                  className="form-group"
+                >
+                  <label
+                    htmlFor="setup_site_form_forumIndexThreads"
+                  >
+                    Forum index
+                  </label>
+                  <select
+                    className="form-control"
+                    disabled={false}
+                    id="setup_site_form_forumIndexThreads"
+                    name="forumIndexThreads"
+                  >
+                    <option
+                      value="threads"
+                    >
+                      Latest threads
+                    </option>
+                    <option
+                      value="categories"
+                    >
+                      Categories
+                    </option>
+                  </select>
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend>
+                  Admin account
+                </legend>
+                <div
+                  className="form-group"
+                >
+                  <label
+                    htmlFor="setup_site_form_name"
+                  >
+                    User name
+                  </label>
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="setup_site_form_name"
+                    maxLength={10}
+                    name="name"
+                    type="text"
+                  />
+                </div>
+                <div
+                  className="form-group"
+                >
+                  <label
+                    htmlFor="setup_site_form_email"
+                  >
+                    E-mail
+                  </label>
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="setup_site_form_email"
+                    maxLength={100}
+                    name="email"
+                    type="email"
+                  />
+                </div>
+                <div
+                  className="form-group"
+                >
+                  <label
+                    htmlFor="setup_site_form_password"
+                  >
+                    Password
+                  </label>
+                  <input
+                    className="form-control"
+                    disabled={false}
+                    id="setup_site_form_password"
+                    maxLength={200}
+                    name="password"
+                    type="password"
+                  />
+                </div>
+              </fieldset>
+            </div>
+            <div
+              className="card-footer"
+            >
+              <div
+                className="form-footer"
+              >
+                <button
+                  className="btn btn-responsive btn-primary"
+                  type="submit"
+                >
+                  <span>
+                    Continue
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Site Wizard Start 1`] = `
+<div
+  className="site-wizard"
+>
+  <div
+    className="route-container"
+  >
+    <div
+      className="container-fluid"
+    >
+      <div
+        className="site-wizard-logo"
+      />
+      <div
+        className="card-wrapper site-wizard-card"
+      >
+        <div
+          className="card"
+        >
+          <div
+            className="card-color-band"
+            style={
+              Object {
+                "background": "#FF5630",
+              }
+            }
+          />
+          <div
+            className="card-body message-card"
+          >
+            <div
+              className="message-card-content"
+            >
+              <div
+                className="message-card-icon"
+              />
+              <div
+                className="message-card-message"
+              >
+                <p
+                  className="lead"
+                >
+                  Welcome to your Misago site!
+                </p>
+                <p>
+                  Before you will be able to use your site, you will have to setup an admin account and few basic options.
+                </p>
+                <p>
+                  Don't worry about getting something wrong. You can change your choices through the admin panel at any time.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            className="card-footer"
+          >
+            <div
+              className="form-footer"
+            >
+              <button
+                className="btn btn-sm btn-primary"
+                onClick={[Function]}
+                type="button"
+              >
+                <span>
+                  Continue
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -19550,6 +22238,77 @@ exports[`Storyshots UI/Card Loader 1`] = `
 </div>
 `;
 
+exports[`Storyshots UI/Card Message 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="card-wrapper"
+  >
+    <div
+      className="card"
+    >
+      <div
+        className="card-body message-card"
+      >
+        <div
+          className="message-card-content"
+        >
+          <div
+            className="message-card-icon"
+          />
+          <div
+            className="message-card-message"
+          >
+            <p>
+              Lorem ipsum dolor met sit amet elit.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots UI/Card Message With Lead 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <div
+    className="card-wrapper"
+  >
+    <div
+      className="card"
+    >
+      <div
+        className="card-body message-card"
+      >
+        <div
+          className="message-card-content"
+        >
+          <div
+            className="message-card-icon"
+          />
+          <div
+            className="message-card-message"
+          >
+            <p
+              className="lead"
+            >
+              Hello world, how is it going?
+            </p>
+            <p>
+              Lorem ipsum dolor met sit amet elit.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots UI/Card With Alert 1`] = `
 <div
   className="px-3 py-4"
@@ -19803,6 +22562,7 @@ exports[`Storyshots UI/CategoriesListGroup In Modal 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -23632,6 +26392,7 @@ Array [
   >
     <form
       id="test_form"
+      onSubmit={[Function]}
     >
       <div
         className="form-group"
@@ -23712,6 +26473,7 @@ Array [
       >
         <form
           id="test_form"
+          onSubmit={[Function]}
         >
           <div
             className="form-group"
@@ -24229,6 +26991,7 @@ exports[`Storyshots UI/Modal Basic 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24293,6 +27056,7 @@ exports[`Storyshots UI/Modal Complex 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24383,6 +27147,7 @@ exports[`Storyshots UI/Modal Error 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24458,6 +27223,7 @@ exports[`Storyshots UI/Modal Error With Message 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24536,6 +27302,7 @@ exports[`Storyshots UI/Modal Message 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24614,6 +27381,7 @@ exports[`Storyshots UI/Modal With Form 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -24733,6 +27501,7 @@ exports[`Storyshots UI/Modal With Form Alt 1`] = `
       aria-hidden="false"
       className="modal d-block fade show"
       onKeyDown={[Function]}
+      onSubmit={[Function]}
       role="dialog"
       tabIndex={-1}
     >
@@ -25707,7 +28476,9 @@ exports[`Storyshots UI/PostingForm Reply 1`] = `
               <div
                 className="form-editor"
               >
-                <div>
+                <div
+                  className="form-editor-mentions"
+                >
                   <textarea
                     className="form-control form-control-responsive form-editor-textarea"
                     disabled={false}
@@ -25723,123 +28494,132 @@ exports[`Storyshots UI/PostingForm Reply 1`] = `
                     <div
                       className="col-auto editor-controls"
                     >
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Bolder"
-                        type="button"
+                      <span>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-dropdown-toggle btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-ellipsis-h fa-fw"
+                          />
+                        </button>
+                      </span>
+                      <span
+                        className="editor-controls-list"
                       >
-                        <i
-                          className="fas fa-bold fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Emphasize"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-italic fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Strikethrough"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-strikethrough fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Horizontal ruler"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-minus fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Link"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-link fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Image"
-                        type="button"
-                      >
-                        <i
-                          className="far fa-image fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emoji btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Insert emoji"
-                        type="button"
-                      >
-                        <i
-                          className="far fa-smile fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Quote"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-quote-right fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Spoiler"
-                        type="button"
-                      >
-                        <i
-                          className="far fa-eye-slash fa-fw"
-                        />
-                      </button>
-                      <button
-                        className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
-                        disabled={false}
-                        onClick={[Function]}
-                        title="Code"
-                        type="button"
-                      >
-                        <i
-                          className="fas fa-code fa-fw"
-                        />
-                      </button>
-                    </div>
-                    <div
-                      className="col"
-                    />
-                    <div
-                      className="col-auto"
-                    >
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-bold btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Bolder"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-bold fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-emphasis btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Emphasize"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-italic fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-strikethrough btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Strikethrough"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-strikethrough fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-hr btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Insert horizontal ruler"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-minus fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-link btn-icon"
+                          disabled={false}
+                          onClick={[Function]}
+                          title="Insert link"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-link fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-image btn-icon"
+                          disabled={false}
+                          onClick={[Function]}
+                          title="Insert image"
+                          type="button"
+                        >
+                          <i
+                            className="far fa-image fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-list btn-icon"
+                          disabled={false}
+                          onClick={[Function]}
+                          title="Insert list"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-list-ul fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-quote btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Quote"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-quote-right fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-spoiler btn-icon"
+                          disabled={true}
+                          onClick={[Function]}
+                          title="Spoiler"
+                          type="button"
+                        >
+                          <i
+                            className="far fa-eye-slash fa-fw"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-outline-secondary btn-editor btn-sm btn-editor-code btn-icon"
+                          disabled={false}
+                          onClick={[Function]}
+                          title="Insert code"
+                          type="button"
+                        >
+                          <i
+                            className="fas fa-code fa-fw"
+                          />
+                        </button>
+                      </span>
                       <button
                         className="btn btn-outline-secondary btn-editor btn-sm"
                         disabled={true}
@@ -25848,6 +28628,13 @@ exports[`Storyshots UI/PostingForm Reply 1`] = `
                       >
                         Preview
                       </button>
+                    </div>
+                    <div
+                      className="col"
+                    />
+                    <div
+                      className="col-auto"
+                    >
                       <button
                         className="btn btn-sm btn-primary"
                         type="submit"
@@ -25920,6 +28707,366 @@ exports[`Storyshots UI/Responsive Default 1`] = `
   >
     Desktop
   </div>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Code 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <div
+      className="rich-text-code rich-text-code-python"
+    >
+      <div
+        data-noquote="1"
+      >
+        <button
+          className="btn btn-sm btn-secondary"
+          onClick={[Function]}
+          type="button"
+        >
+          <i
+            className="far fa-copy fa-fw"
+          />
+          <span>
+            Copy
+          </span>
+        </button>
+      </div>
+      <pre
+        data-syntax="python"
+      >
+        <code
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "print(hello)",
+            }
+          }
+        />
+      </pre>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Headers 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <h1
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h1. Lorem <strong>ipsum</strong> dolor met.",
+        }
+      }
+    />
+    <h2
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h2. Sit <em>amet</em> elit.",
+        }
+      }
+    />
+    <h3
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h3. Visit <a href=\\"https://misago-project.org\\">Misago</a>!",
+        }
+      }
+    />
+    <h4
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h4. Lorem <strong>ipsum</strong> dolor met.",
+        }
+      }
+    />
+    <h5
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h5. Sit <em>amet</em> elit.",
+        }
+      }
+    />
+    <h6
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "h6. Visit <a href=\\"https://misago-project.org\\">Misago</a>!",
+        }
+      }
+    />
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Nested List 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <ul>
+      <li
+        data-index={1}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Lorem <strong>ipsum</strong> dolor met.",
+            }
+          }
+        />
+        <ul>
+          <li
+            data-index={1}
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "Lorem <strong>ipsum</strong> dolor met.",
+                }
+              }
+            />
+          </li>
+          <li
+            data-index={2}
+          >
+            <span
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "Sit amet elit.",
+                }
+              }
+            />
+          </li>
+        </ul>
+      </li>
+      <li
+        data-index={2}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Sit amet elit.",
+            }
+          }
+        />
+      </li>
+    </ul>
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Ordered List 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <ol>
+      <li
+        data-index={1}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Lorem <strong>ipsum</strong> dolor met.",
+            }
+          }
+        />
+      </li>
+      <li
+        data-index={2}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Sit amet elit.",
+            }
+          }
+        />
+      </li>
+    </ol>
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Paragraph 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <p
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "Lorem <strong>ipsum</strong> dolor met.",
+        }
+      }
+    />
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Paragraphs 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <p
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "Lorem <strong>ipsum</strong> dolor met.",
+        }
+      }
+    />
+    <p
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "Sit <em>amet</em> elit.",
+        }
+      }
+    />
+    <p
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "Visit <a href=\\"https://misago-project.org\\">Misago</a>!",
+        }
+      }
+    />
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Quote 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <div
+      className="rich-text-quote"
+    >
+      <blockquote
+        data-author={null}
+        data-block="quote"
+        data-post={null}
+      >
+        <p
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Lorem <strong>ipsum</strong> dolor met.",
+            }
+          }
+        />
+        <p
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Sit <em>amet</em> elit.",
+            }
+          }
+        />
+      </blockquote>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Spoiler 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <div
+      className="rich-text-spoiler rich-text-spoiler-hidden"
+    >
+      <div
+        className="rich-text-spoiler-header"
+        data-noquote="1"
+      >
+        Hidden content
+        <button
+          className="btn btn-sm btn-secondary"
+          onClick={[Function]}
+          type="button"
+        >
+          <i
+            className="far fa-eye fa-fw"
+          />
+          <span>
+            Reveal
+          </span>
+        </button>
+      </div>
+      <blockquote
+        data-block="spoiler"
+      >
+        <p
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Lorem <strong>ipsum</strong> dolor met.",
+            }
+          }
+        />
+        <p
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Sit <em>amet</em> elit.",
+            }
+          }
+        />
+      </blockquote>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots UI/RichText Unordered List 1`] = `
+<div
+  className="px-3 py-4"
+>
+  <article
+    className="misago-rich-text"
+  >
+    <ul>
+      <li
+        data-index={1}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Lorem <strong>ipsum</strong> dolor met.",
+            }
+          }
+        />
+      </li>
+      <li
+        data-index={2}
+      >
+        <span
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Sit amet elit.",
+            }
+          }
+        />
+      </li>
+    </ul>
+  </article>
 </div>
 `;
 

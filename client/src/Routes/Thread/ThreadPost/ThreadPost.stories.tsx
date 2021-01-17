@@ -1,6 +1,7 @@
 import { action } from "@storybook/addon-actions"
 import { withKnobs, text } from "@storybook/addon-knobs"
 import React from "react"
+import { AuthContext } from "../../../Context"
 import { RootContainer, userFactory } from "../../../UI/Storybook"
 import ThreadPost from "./ThreadPost"
 
@@ -104,7 +105,7 @@ export const PostWithComplexMarkup = () => {
                         "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                     },
                     {
-                      id: "mvpcGyQI9B",
+                      id: "aZKbQlWbHV",
                       type: "hr",
                     },
                     {
@@ -173,7 +174,7 @@ export const PostWithQuotes = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -223,7 +224,7 @@ export const PostWithQuotes = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -273,7 +274,7 @@ export const PostWithQuotes = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -323,7 +324,7 @@ export const PostWithQuotes = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -364,7 +365,7 @@ export const PostWithQuotes = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -412,7 +413,7 @@ export const PostWithSpoilers = () => (
                   "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
               },
               {
-                id: "mvpcGyQI9B",
+                id: "aZKbQlWbHV",
                 type: "hr",
               },
               {
@@ -445,7 +446,7 @@ export const PostWithSpoilers = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -484,7 +485,7 @@ export const PostWithSpoilers = () => (
                       "Sed aliquet tristique sollicitudin. Pellentesque vestibulum porta consequat. Morbi in ante turpis. Maecenas non dui sapien. Sed gravida arcu non enim posuere tristique.",
                   },
                   {
-                    id: "mvpcGyQI9B",
+                    id: "aZKbQlWbHV",
                     type: "hr",
                   },
                   {
@@ -609,6 +610,38 @@ export const PostSelectable = () => {
         toggleSelection={action("Toggle selection")}
       />
     </RootContainer>
+  )
+}
+
+export const PostWithModeration = () => {
+  const username = text("Poster name", "John")
+
+  return (
+    <AuthContext.Provider value={userFactory({ isModerator: true })}>
+      <RootContainer>
+        <ThreadPost
+          post={{
+            id: "1",
+            richText: [
+              {
+                id: "aaaa",
+                type: "p",
+                text: "This post has moderation options enabled!",
+              },
+            ],
+            edits: 0,
+            postedAt: "2020-04-01T21:42:51Z",
+            posterName: username,
+            poster: userFactory({ name: username }),
+            extra: {},
+          }}
+          threadId="1"
+          threadSlug="test-thread"
+          isSelected={false}
+          toggleSelection={action("Toggle selection")}
+        />
+      </RootContainer>
+    </AuthContext.Provider>
   )
 }
 

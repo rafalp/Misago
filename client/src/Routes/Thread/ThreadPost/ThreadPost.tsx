@@ -1,7 +1,8 @@
 import React from "react"
-import { Card, CardBody, CardFooter } from "../../../UI/Card"
+import { Card, CardBody } from "../../../UI/Card"
 import RichText from "../../../UI/RichText"
 import { Post } from "../Thread.types"
+import ThreadPostFooter from "./ThreadPostFooter"
 import ThreadPostHeader from "./ThreadPostHeader"
 import ThreadPostPostbit from "./ThreadPostPostbit"
 import usePostAcl from "./usePostAcl"
@@ -53,7 +54,7 @@ const ThreadPost: React.FC<ThreadPostProps> = ({
                 richText={post.richText}
               />
             </CardBody>
-            <CardFooter className="post-footer">post footer</CardFooter>
+            <ThreadPostFooter acl={acl} post={post} />
           </Card>
         </div>
       </div>

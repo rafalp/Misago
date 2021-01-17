@@ -1,22 +1,27 @@
 import { useAuthContext } from "../../../Context"
 
-interface Post {
+interface IPost {
   poster: {
     id: string
   } | null
 }
 
-const usePostAcl = (post: Post, isClosed?: boolean) => {
-  const user = useAuthContext()
-
-  if (user) {
-    if (user.isModerator) return { edit: true }
-    if (user && post.poster && !isClosed) {
-      return { edit: user.id === post.poster.id }
-    }
+const usePostAcl = (post: IPost, isClosed?: boolean) => {
+  const acl = {
+    edit: false,
+    reply: !isClosed,
   }
 
-  return { edit: false }
+  const user = useAuthContext()
+
+  if (!user) return acl
+  if (user.isModerator) return { edit: true, reply: true }
+
+  if (user && post.poster && !isClosed) {
+    acl.edit = user.id === post.poster.id
+  }
+
+  return acl
 }
 
 export default usePostAcl

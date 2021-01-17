@@ -23,7 +23,7 @@ export interface ThreadReplyContextData {
   post: ThreadReplyPost | null
   form: UseFormMethods<ThreadReplyFormValues>
   quote: (range: Range) => void
-  startReply: () => void
+  startReply: () => boolean
   editReply: (post: ThreadReplyPost) => void
   cancelReply: (force?: boolean) => void
   setFullscreen: (state: boolean) => void
@@ -106,7 +106,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
         })
       )
 
-      if (!confirmed) return
+      if (!confirmed) return false
     }
 
     resetValue(getDraft())
@@ -115,6 +115,8 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
     setPost(null)
     setFullscreen(false)
     setMinimized(false)
+
+    return true
   }, [
     isActive,
     mode,
@@ -179,7 +181,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
 
   const cancelReply = React.useCallback(
     (force?: boolean) => {
-      if (!force && isActive && hasChanges()) {
+      if (!force && isActive && getValue().trim().length > 5) {
         // ask user to confirm cancel
         const confirmed = window.confirm(
           t({
@@ -197,7 +199,7 @@ const ThreadReplyProvider: React.FC<ThreadReplyProviderProps> = (props) => {
       resetValue()
       removeDraft()
     },
-    [isActive, hasChanges, setActive, setMode, setPost, resetValue]
+    [isActive, getValue, setActive, setMode, setPost, removeDraft, resetValue]
   )
 
   const quote = React.useCallback(
