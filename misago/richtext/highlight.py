@@ -1,5 +1,5 @@
 from html import escape
-from typing import Optional
+from typing import List, Optional
 
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
@@ -24,7 +24,7 @@ def highlight_code(code: str, syntax: Optional[str] = None) -> str:
 
 
 def trim_code(code: str) -> str:
-    lines = []
+    lines: List[str] = []
     for line in code.splitlines():
         if lines or line.strip():
             lines.append(line)
@@ -42,7 +42,7 @@ def reset_indentation(code: str) -> str:
     if not min_indent:
         return code
 
-    lines = []
+    lines: List[str] = []
     for line in code.splitlines():
         if line.strip():
             lines.append(line[min_indent:])
