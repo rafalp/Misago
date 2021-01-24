@@ -204,6 +204,7 @@ const EditorControls: React.FC<EditorControlsProps> = ({
         }
       }}
     >
+      {children}
       <EditorContextProvider
         disabled={isDisabled}
         textarea={textarea.current}
@@ -244,7 +245,6 @@ const EditorControls: React.FC<EditorControlsProps> = ({
           ))}
         </span>
       </EditorContextProvider>
-      {children}
     </div>
   )
 }

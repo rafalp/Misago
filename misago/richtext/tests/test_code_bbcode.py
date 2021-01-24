@@ -19,20 +19,31 @@ async def test_code_bbcode_with_syntax_is_supported(graphql_context):
         graphql_context, "[code=python]Hello **world**![/code]"
     )
     assert result == [
-        {"id": ANY, "type": "code", "syntax": "python", "text": "Hello **world**!"}
+        {
+            "id": ANY,
+            "type": "code",
+            "syntax": "python",
+            "text": (
+                '<span class="hl-n">Hello</span> '
+                '<span class="hl-o">**</span>'
+                '<span class="hl-n">world</span>'
+                '<span class="hl-o">**</span>'
+                '<span class="hl-err">!</span>'
+            ),
+        }
     ]
 
 
 @pytest.mark.asyncio
-async def test_code_bbcode_works_for_other_bbcode(graphql_context):
+async def test_code_bbcode_disables_nested_bbcode(graphql_context):
     result, _ = await parse_markup(
-        graphql_context, "[code=python][quote]Hello world![/quote][/code]"
+        graphql_context, "[code][quote]Hello world![/quote][/code]"
     )
     assert result == [
         {
             "id": ANY,
             "type": "code",
-            "syntax": "python",
+            "syntax": None,
             "text": "[quote]Hello world![/quote]",
         }
     ]

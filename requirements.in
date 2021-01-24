@@ -10,6 +10,7 @@ jinja2
 mistune==2.0.0a5
 passlib
 pydantic[email,typing_extensions]
+pygments
 pyjwt
 pytz
 starlette

@@ -2,6 +2,7 @@ from typing import Optional
 
 from ..hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
 from ..types import GraphQLContext, RichText, RichTextBlock
+from .highlight import highlight_code
 
 
 __all__ = ["convert_rich_text_block_to_html", "convert_rich_text_to_html"]
@@ -40,7 +41,9 @@ def convert_rich_text_block_to_html_action(
 ) -> Optional[str]:
     # pylint: disable=too-many-return-statements
     if block["type"] == "code":
-        return f"<pre><code>{block['text']}</code></pre>"
+        return f"<pre><code>%s</code></pre>" % highlight_code(
+            block["text"], block["syntax"]
+        )
 
     if block["type"] == "f":
         return block["text"]

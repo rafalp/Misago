@@ -4,10 +4,17 @@ from ..html import convert_rich_text_to_html
 def test_code_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
         graphql_context,
-        [{"id": "t3st", "type": "code", "text": "Hello <b>world</b>!",}],
+        [
+            {
+                "id": "t3st",
+                "type": "code",
+                "syntax": None,
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
-    assert html == "<pre><code>Hello <b>world</b>!</code></pre>"
+    assert html == "<pre><code>Hello &lt;b&gt;world&lt;/b&gt;!</code></pre>"
 
 
 def test_fragment_block_is_converted_to_html(graphql_context):

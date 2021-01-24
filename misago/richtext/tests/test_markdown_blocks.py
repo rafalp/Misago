@@ -75,7 +75,7 @@ async def test_code_markdown_is_supported(graphql_context):
             "id": ANY,
             "type": "code",
             "syntax": None,
-            "text": "console.log(&#x27;test&#x27;)\n",
+            "text": "console.log(&#x27;test&#x27;)",
         }
     ]
 
@@ -88,7 +88,12 @@ async def test_code_markdown_with_syntax_is_supported(graphql_context):
             "id": ANY,
             "type": "code",
             "syntax": "python",
-            "text": "log(&#x27;test&#x27;)\n",
+            "text": (
+                '<span class="hl-n">log</span>'
+                '<span class="hl-p">(</span>'
+                '<span class="hl-s1">&#39;test&#39;</span>'
+                '<span class="hl-p">)</span>'
+            ),
         }
     ]
 
@@ -97,7 +102,7 @@ async def test_code_markdown_with_syntax_is_supported(graphql_context):
 async def test_code_markdown_escapes_text(graphql_context):
     result, _ = await parse_markup(graphql_context, "```\n<script>\n```")
     assert result == [
-        {"id": ANY, "type": "code", "syntax": None, "text": "&lt;script&gt;\n",}
+        {"id": ANY, "type": "code", "syntax": None, "text": "&lt;script&gt;",}
     ]
 
 

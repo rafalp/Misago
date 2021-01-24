@@ -30,6 +30,7 @@ mistune==2.0.0a5          # via -r requirements.in
 passlib==1.7.2            # via -r requirements.in
 psycopg2-binary==2.8.5    # via databases
 pydantic[email,typing_extensions]==1.5.1  # via -r requirements.in
+pygments==2.7.4           # via -r requirements.in
 pyjwt==1.7.1              # via -r requirements.in
 python-dateutil==2.8.1    # via alembic
 python-dotenv==0.13.0     # via uvicorn

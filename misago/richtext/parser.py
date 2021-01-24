@@ -22,6 +22,7 @@ from ..types import (
 )
 from ..utils.strings import get_random_string
 from .genericblocks import restructure_generic_blocks
+from .highlight import highlight_code
 from .mentions import clean_mention, find_user_mentions, update_metadata_from_mentions
 from .plugins import builtin_plugins
 from .scanner import MisagoScanner
@@ -153,7 +154,7 @@ def convert_block_ast_to_rich_text_action(
             "id": get_block_id(),
             "type": "code",
             "syntax": ast["info"],
-            "text": escape(ast["text"]),
+            "text": highlight_code(ast["text"], ast["info"]),
         }
 
     if ast["type"] == "block_quote":
