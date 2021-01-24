@@ -14,6 +14,24 @@ async def test_code_bbcode_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
+async def test_multiline_code_bbcode_is_supported(graphql_context):
+    result, _ = await parse_markup(graphql_context, "[code]\nHello **world**!\n[/code]")
+    assert result == [
+        {"id": ANY, "type": "code", "syntax": None, "text": "Hello **world**!"}
+    ]
+
+
+@pytest.mark.asyncio
+async def test_code_bbcode_is_parsed_before_indented_code(graphql_context):
+    result, _ = await parse_markup(
+        graphql_context, "[code]\n    Hello **world**!\n[/code]"
+    )
+    assert result == [
+        {"id": ANY, "type": "code", "syntax": None, "text": "Hello **world**!"}
+    ]
+
+
+@pytest.mark.asyncio
 async def test_code_bbcode_with_syntax_is_supported(graphql_context):
     result, _ = await parse_markup(
         graphql_context, "[code=python]Hello **world**![/code]"

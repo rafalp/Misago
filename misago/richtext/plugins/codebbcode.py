@@ -5,7 +5,8 @@ from mistune import Markdown
 
 
 CODE_BBCODE_PATTERN = re.compile(
-    r"\[code(=(\"|')?([a-zA-Z0-9]+)(\"|')?)?\](.*?)\[\/code\]", re.IGNORECASE
+    r"\[code(=(\"|')?([a-zA-Z0-9]+)(\"|')?)?\]((.|\n)*?)\[\/code\]",
+    re.IGNORECASE | re.MULTILINE,
 )
 
 
@@ -31,7 +32,7 @@ def render_ast_code_bbcode(_, info: Optional[str], raw: str):
 
 def plugin_code_bbcode(markdown: Markdown):
     markdown.block.register_rule("code_bbcode", CODE_BBCODE_PATTERN, parse_code_bbcode)
-    print(markdown.block.rules)
+    # markdown.block.rules.insert(0, "code_bbcode")
     markdown.block.rules.append("code_bbcode")
 
     if markdown.renderer.NAME == "ast":
