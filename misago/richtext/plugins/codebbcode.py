@@ -32,7 +32,6 @@ def render_ast_code_bbcode(_, info: Optional[str], raw: str):
 
 def plugin_code_bbcode(markdown: Markdown):
     markdown.block.register_rule("code_bbcode", CODE_BBCODE_PATTERN, parse_code_bbcode)
-    # markdown.block.rules.insert(0, "code_bbcode")
     markdown.block.rules.append("code_bbcode")
 
     if markdown.renderer.NAME == "ast":
