@@ -1,9 +1,22 @@
 const getQuoteMarkup = (range: Range) => {
   const metadata = getQuoteMetadata(range)
-  let markup = metadata ? `[quote=${metadata}]\n` : "[quote]\n"
-  markup += convertNodesToMarkup(range.cloneContents().childNodes, []).trim()
-  markup += "\n[/quote]"
-  return markup
+  let markup = convertNodesToMarkup(range.cloneContents().childNodes, [])
+  let prefix = metadata ? `[quote=${metadata}]\n` : "[quote]\n"
+  let suffix = "\n[/quote]"
+
+  const codeBlock = getQuoteCodeBlock(range)
+  if (codeBlock) {
+    prefix += codeBlock.syntax ? `[code=${codeBlock.syntax}]\n` : "[code]\n"
+    suffix = "\n[/code]" + suffix
+  } else if (isNodeInlineCodeBlock(range)) {
+    markup = markup.trim()
+    prefix += "`"
+    suffix = "`" + suffix
+  } else {
+    markup = markup.trim()
+  }
+
+  return prefix + markup + suffix
 }
 
 export default getQuoteMarkup
@@ -45,6 +58,49 @@ const getQuoteMetadataFromNode = (element: HTMLElement): string => {
     }
   }
   return metdata
+}
+
+const getQuoteCodeBlock = (range: Range): { syntax: string | null } | null => {
+  const node = range.commonAncestorContainer
+  if (isNodeCodeBlock(node)) {
+    return getNodeCodeBlockMeta(node)
+  }
+
+  let p = node.parentNode
+  while (p) {
+    if (isNodeCodeBlock(p)) {
+      return getNodeCodeBlockMeta(p)
+    }
+    p = p.parentNode
+  }
+
+  return null
+}
+
+const isNodeCodeBlock = (node: Node): boolean => {
+  return node.nodeName === "PRE"
+}
+
+const isNodeInlineCodeBlock = (range: Range): boolean => {
+  const node = range.commonAncestorContainer
+  if (node.nodeName === "CODE") {
+    return true
+  }
+
+  let p = node.parentNode
+  while (p) {
+    if (isNodeElementWithQuoteMetadata(p)) {
+      return true
+    }
+    p = p.parentNode
+  }
+
+  return false
+}
+
+const getNodeCodeBlockMeta = (node: Node): { syntax: string | null } => {
+  const element = node as HTMLPreElement
+  return { syntax: element.dataset?.syntax || null }
 }
 
 const convertNodesToMarkup = (
@@ -189,11 +245,7 @@ const convertNodeToMarkup = (
   }
 
   if (node.nodeName === "CODE") {
-    return (
-      "`" +
-      convertNodesToMarkup(node.childNodes, [...stack, node.nodeName]) +
-      "`"
-    )
+    return "`" + (node as HTMLElement).innerText + "`"
   }
 
   if (node.nodeName === "P") {

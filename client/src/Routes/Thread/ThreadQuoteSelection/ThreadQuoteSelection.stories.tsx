@@ -10,10 +10,10 @@ import { ThreadReplyProvider, useThreadReplyContext } from "../ThreadReply"
 import ThreadQuoteSelection from "."
 
 export default {
-  title: "Route/Thread/Quote Selection",
+  title: "Route/Thread",
 }
 
-export const PostWithComplexMarkup = () => {
+export const QuotablePosts = () => {
   return (
     <SettingsContextFactory>
       <AuthContext.Provider value={userFactory()}>
