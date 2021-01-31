@@ -1,6 +1,6 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
-import { ButtonDark } from "../../../UI/Button"
+import { ButtonInverse } from "../../../UI/Button"
 import { Dropdown } from "../../../UI/Dropdown"
 import { Toolbar, ToolbarItem, ToolbarSeparator } from "../../../UI/Toolbar"
 import FixedContainer from "../../../UI/FixedContainer"
@@ -28,7 +28,7 @@ const ThreadPostsModeration: React.FC<ThreadPostsModerationProps> = ({
         <ToolbarItem>
           <Dropdown
             toggle={({ ref, toggle }) => (
-              <ButtonDark
+              <ButtonInverse
                 elementRef={ref}
                 loading={moderation.loading}
                 text={

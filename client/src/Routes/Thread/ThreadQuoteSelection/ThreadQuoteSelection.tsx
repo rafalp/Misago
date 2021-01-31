@@ -1,7 +1,7 @@
 import { Trans } from "@lingui/macro"
 import React from "react"
 import { useAuthContext } from "../../../Context"
-import { ButtonDark } from "../../../UI/Button"
+import { ButtonInverse } from "../../../UI/Button"
 import { useThreadReplyContext } from "../ThreadReply"
 import getQuoteSelection from "./getQuoteSelection"
 
@@ -63,7 +63,7 @@ const ThreadQuoteSelection: React.FC<ThreadQuoteSelectionProps> = ({
             top: rect.bottom + window.scrollY,
           }}
         >
-          <ButtonDark
+          <ButtonInverse
             icon="fas fa-quote-left"
             text={<Trans id="quote_selected">Quote</Trans>}
             small

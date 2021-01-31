@@ -22,7 +22,7 @@ const ButtonDanger: React.FC<ButtonProps> = (props) => (
   <Button className={"btn-danger"} {...props} />
 )
 
-const ButtonDark: React.FC<ButtonProps> = (props) => (
+const ButtonInverse: React.FC<ButtonProps> = (props) => (
   <Button className={"btn-dark"} {...props} />
 )
 
@@ -53,7 +53,7 @@ const ButtonOutlineDanger: React.FC<ButtonProps> = (props) => (
 export {
   ButtonPrimary,
   ButtonDanger,
-  ButtonDark,
+  ButtonInverse,
   ButtonLink,
   ButtonSecondary,
   ButtonSuccess,
