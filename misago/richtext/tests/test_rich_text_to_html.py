@@ -30,7 +30,7 @@ def test_heading_1_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h1", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h1>Hello <b>world</b>!</h1>"
+    assert html == '<div class="h1">Hello <b>world</b>!</div>'
 
 
 def test_heading_2_block_is_converted_to_html(graphql_context):
@@ -38,7 +38,7 @@ def test_heading_2_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h2", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h2>Hello <b>world</b>!</h2>"
+    assert html == '<div class="h2">Hello <b>world</b>!</div>'
 
 
 def test_heading_3_block_is_converted_to_html(graphql_context):
@@ -46,7 +46,7 @@ def test_heading_3_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h3", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h3>Hello <b>world</b>!</h3>"
+    assert html == '<div class="h3">Hello <b>world</b>!</div>'
 
 
 def test_heading_4_block_is_converted_to_html(graphql_context):
@@ -54,7 +54,7 @@ def test_heading_4_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h4", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h4>Hello <b>world</b>!</h4>"
+    assert html == '<div class="h4">Hello <b>world</b>!</div>'
 
 
 def test_heading_5_block_is_converted_to_html(graphql_context):
@@ -62,7 +62,7 @@ def test_heading_5_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h5", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h5>Hello <b>world</b>!</h5>"
+    assert html == '<div class="h5">Hello <b>world</b>!</div>'
 
 
 def test_heading_6_block_is_converted_to_html(graphql_context):
@@ -70,7 +70,7 @@ def test_heading_6_block_is_converted_to_html(graphql_context):
         graphql_context, [{"id": "t3st", "type": "h6", "text": "Hello <b>world</b>!",}],
     )
 
-    assert html == "<h6>Hello <b>world</b>!</h6>"
+    assert html == '<div class="h6">Hello <b>world</b>!</div>'
 
 
 def test_horizontal_rule_block_is_converted_to_html(graphql_context):

@@ -75,6 +75,6 @@ def convert_rich_text_block_to_html_action(
         )
 
     if block["type"] in HEADINGS:
-        return f"<{block['type']}>{block['text']}</{block['type']}>"
+        return f"<div class=\"{block['type']}\">{block['text']}</div>"
 
     return None

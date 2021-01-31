@@ -197,7 +197,17 @@ const convertNodeToMarkup = (
   }
 
   if (node.nodeName === "DIV") {
-    return convertNodesToMarkup(node.childNodes, stack)
+    const block = (node as HTMLElement).dataset.block?.toUpperCase()
+    if (block && SIMPLE_NODE_MAPPINGS[block]) {
+      const [prefix, suffix] = SIMPLE_NODE_MAPPINGS[block]
+      return (
+        prefix +
+        convertNodesToMarkup(node.childNodes, [...stack, block]) +
+        suffix
+      )
+    } else {
+      return convertNodesToMarkup(node.childNodes, stack)
+    }
   }
 
   if (node.nodeName === "BLOCKQUOTE") {
