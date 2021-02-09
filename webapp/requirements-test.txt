@@ -1,4 +1,4 @@
--r requirements.txt
+-r requirements-local.txt
 
 coverage-badge==0.2.0
 coverage==4.5.1

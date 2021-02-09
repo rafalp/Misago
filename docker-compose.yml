@@ -7,9 +7,11 @@ services:
       context: .
       args:
         GIT_TOKEN: ${GIT_TOKEN}
-        PIP_REQUIREMENTS: requirements.txt
+        PIP_REQUIREMENTS: requirements-local.txt
     ports:
       - "8200:8200"
+      # Uncomment to help development by enabling debug ports for debugpy
+      # - "8211:8211"
     entrypoint: python3
     command: /opt/bh/webapp/src/manage.py runserver 0.0.0.0:8200
     volumes:
@@ -40,6 +42,9 @@ services:
       args:
         GIT_TOKEN: ${GIT_TOKEN}
         PIP_REQUIREMENTS: requirements-test.txt
+    # Uncomment to help development by enabling debug ports for debugpy
+    # ports:
+    #   - "8212:8212"
     command: bash -c "python -m pytest --cov --cov-report html:htmlcov --cov-report term -s && flake8 . && mypy src --show-error-codes"
     volumes:
       - ./:/opt/bh
@@ -51,11 +56,16 @@ services:
       AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
       AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
       GIT_TOKEN: ${GIT_TOKEN}
+      DD_ENV: "${DD_ENV:-local}"
+      DD_TRACE_AGENT_URL: http://datadog:8126
+      DD_TRACE_ENABLED: "${DD_TRACE_ENABLED:-False}"
 
   postgres:
     build: docker/postgres
     volumes:
       - postgres:/data/postgres
+    ports:
+      - "8201:5432"
     environment:
       POSTGRES_DB: community
       POSTGRES_USER: community

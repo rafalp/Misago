@@ -180,7 +180,7 @@ DEFAULT_FROM_EMAIL = "Forums <%s>" % EMAIL_HOST_USER
 
 AUTH_USER_MODEL = "misago_users.User"
 
-AUTHENTICATION_BACKENDS = ["misago.users.authbackends.MisagoBackend"]
+AUTHENTICATION_BACKENDS = ["community_app.auth.backend.SleepioAuth", "misago.users.authbackends.MisagoBackend"]
 
 CSRF_FAILURE_VIEW = "misago.core.errorpages.csrf_failure"
 
@@ -255,6 +255,7 @@ MIDDLEWARE = [
     "misago.socialauth.middleware.socialauth_providers_middleware",
     "misago.users.middleware.UserMiddleware",
     "misago.acl.middleware.user_acl_middleware",
+    "community_app.auth.middleware.PlatformTokenMiddleware",
     "misago.core.middleware.ExceptionHandlerMiddleware",
     "misago.users.middleware.OnlineTrackerMiddleware",
     "misago.admin.middleware.AdminAuthMiddleware",
@@ -263,34 +264,38 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "community_app.urls"
 
-SOCIAL_AUTH_STRATEGY = "misago.socialauth.strategy.MisagoStrategy"
+SOCIAL_AUTH_STRATEGY = "social_django.strategy.DjangoStrategy"
 
 SOCIAL_AUTH_PIPELINE = (
+    # Sleepio task to get user information
+    # Middleware task community_app.auth.middleware.PlatformTokenMiddleware is responsible for
+    # authentication, and obtaining the platform user id
+    "community_app.auth.pipeline.fetch_user_account",
+
     # Steps required by social pipeline to work - don't delete those!
-    "social_core.pipeline.social_auth.social_details",
+    "community_app.auth.pipeline.social_details",
     "social_core.pipeline.social_auth.social_uid",
     "social_core.pipeline.social_auth.social_user",
-    # If enabled in admin panel, lets your users to associate their old forum account
-    # with social one, if both have same e-mail address.
-    "misago.socialauth.pipeline.associate_by_email",
+
     # Those steps make sure banned users may not join your site or use banned name or email.
     "misago.socialauth.pipeline.validate_ip_not_banned",
     "misago.socialauth.pipeline.validate_user_not_banned",
+
     # Reads user data received from social site and tries to create valid and available username
     # Required if you want automatic account creation to work. Otherwise optional.
-    "misago.socialauth.pipeline.get_username",
-    # Uncomment next line to enable automatic account creation if data from social site is valid
+    "community_app.auth.pipeline.get_username",
+
+    # Enables automatic account creation if data from social site is valid
     # and get_username found valid name for new user account:
-    # 'misago.socialauth.pipeline.create_user',
-    # This step asks user to complete simple, pre filled registration form containing username,
-    # email, legal note if you remove it without adding custom one, users will have no fallback
-    # for joining your site using their social account.
-    "misago.socialauth.pipeline.create_user_with_form",
+    'misago.socialauth.pipeline.create_user',
+
     # Steps finalizing social authentication flow - don't delete those!
     "social_core.pipeline.social_auth.associate_user",
     "social_core.pipeline.social_auth.load_extra_data",
     "misago.socialauth.pipeline.require_activation",
 )
+
+SOCIAL_AUTH_DISCONNECT_PIPELINE = ()  # Disable disconnection
 
 SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
@@ -329,6 +334,8 @@ TEMPLATES = [
                 "misago.threads.context_processors.preload_threads_urls",
                 "misago.users.context_processors.preload_user_json",
                 "misago.socialauth.context_processors.preload_socialauth_json",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
                 # Note: keep frontend_context processor last for previous processors
                 # to be able to expose data UI app via request.frontend_context
                 "misago.core.context_processors.frontend_context",

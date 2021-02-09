@@ -2,6 +2,8 @@ use_remote_dynamic_settings: false
 
 DEBUG: true
 
+secure_cookies: false  # Enable if using a proxy like ngrok
+
 django_file_storage: django.core.files.storage.FileSystemStorage
 django_staticfile_storage: django.contrib.staticfiles.storage.StaticFilesStorage
 
@@ -11,3 +13,5 @@ db:
   password: community
   port: 5432
   username: community
+
+sleepio_app_url: http://app.sleepio.localhost:8100/

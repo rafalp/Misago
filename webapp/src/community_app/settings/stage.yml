@@ -2,4 +2,4 @@ use_remote_dynamic_settings: true
 
 DEBUG: true
 
-sleepio_app_url: https://app.sleepiodev.com/
+sleepio_app_url: https://app.sleepiostage.com/
