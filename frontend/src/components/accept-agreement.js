@@ -38,14 +38,15 @@ export default class AcceptAgreement extends React.Component {
   render() {
     return (
       <div>
-        <button
+        {/* NOTE(Avi): Removed as part of PG-1428 */}
+        {/* <button
           className="btn btn-default"
           disabled={this.state.submiting}
           type="buton"
           onClick={this.handleDecline}
         >
           {gettext("Decline")}
-        </button>
+        </button> */}
         <button
           className="btn btn-primary"
           disabled={this.state.submiting}
