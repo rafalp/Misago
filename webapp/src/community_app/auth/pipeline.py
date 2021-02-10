@@ -24,4 +24,4 @@ def get_username(details, *args, **kwargs) -> dict:
 
 
 def social_details(backend, user_account, details, *args, **kwargs):
-    return {'details': dict(backend.get_user_details(user_account), **details)}
+    return {"details": dict(backend.get_user_details(user_account), **details)}

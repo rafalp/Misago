@@ -11,7 +11,6 @@ class MissingParameters(BHException):
         return cls(f"Missing parameters in the request. Please specify all these parameters: {params_list}")
 
 
-
 class MissingOptionalParameters(MissingParameters):
     @classmethod
     def from_args(cls, params_list: Sequence[str]) -> Any:

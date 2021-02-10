@@ -3,3 +3,5 @@ use_remote_dynamic_settings: true
 DEBUG: true
 
 sleepio_app_url: https://app.sleepiostage.com/
+
+mailgun_domain: mg.sleepiostage.com

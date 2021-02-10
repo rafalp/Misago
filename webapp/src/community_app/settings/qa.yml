@@ -3,3 +3,5 @@ use_remote_dynamic_settings: true
 DEBUG: true
 
 sleepio_app_url: https://app.sleepioqa.com/
+
+mailgun_domain: mg-qa.sleepio.com

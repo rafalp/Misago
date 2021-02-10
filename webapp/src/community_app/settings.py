@@ -19,6 +19,7 @@ from ddtrace import patch_all
 from sentry_sdk.integrations.django import DjangoIntegration
 
 from misago import load_plugin_list_if_exists
+from misago.conf import settings as misago_settings
 
 
 logger = logging.getLogger("DJANGO SETTINGS")
@@ -173,7 +174,7 @@ EMAIL_HOST_PASSWORD = ""
 
 # Default email address to use for various automated correspondence from the site manager(s).
 
-DEFAULT_FROM_EMAIL = "Forums <%s>" % EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = f"Community <{'communityadmin@sleepio.com'}>"
 
 
 # Application definition
@@ -229,6 +230,8 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "misago.menus",
     "misago.sso",
     "misago.plugins",
+    # Email
+    "anymail",
 ]
 
 INTERNAL_IPS = ["127.0.0.1"]
@@ -287,7 +290,7 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Enables automatic account creation if data from social site is valid
     # and get_username found valid name for new user account:
-    'misago.socialauth.pipeline.create_user',
+    "misago.socialauth.pipeline.create_user",
 
     # Steps finalizing social authentication flow - don't delete those!
     "social_core.pipeline.social_auth.associate_user",
@@ -446,10 +449,13 @@ MISAGO_PROFILE_FIELDS = [
     {"name": _("IP address"), "fields": ["misago.users.profilefields.default.JoinIpField"],},
 ]
 
+MISAGO_POSTING_MIDDLEWARES = misago_settings.MISAGO_POSTING_MIDDLEWARES + ["community_app.posting.middleware.RiskWordsMiddleware"]
+
 
 # Set dev instance to send e-mails to console
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ANYMAIL = {"MAILGUN_API_KEY": get_settings("mailgun_key"), "MAILGUN_SENDER_DOMAIN": get_settings("mailgun_domain")}
+EMAIL_BACKEND = get_settings("email_backend", "anymail.backends.mailgun.EmailBackend")
 
 
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"

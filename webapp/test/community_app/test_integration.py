@@ -10,6 +10,7 @@ from bh.services.factory import Factory
 
 import bh_settings
 
+
 @mock_settings({"hello": "goodbye", "global_instance_warming_default": 10})
 def test_get_setting(_setting_mock):
     # Verify CF defaults are pulled in
@@ -20,6 +21,7 @@ def test_get_setting(_setting_mock):
 
     # Verify mocked overridden settings are pulled in
     assert bh_settings.get_settings("global_instance_warming_default") == 10
+
 
 def test_service_call():
     Factory.initialize(gateway=None)

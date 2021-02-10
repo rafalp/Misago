@@ -105,6 +105,7 @@ settings/staff_web.db
 bh
 bh_settings
 data/*
+avatars/*
 
 # IDE specific
 .idea/

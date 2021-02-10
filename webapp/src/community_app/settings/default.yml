@@ -6,5 +6,9 @@ django_staticfile_storage: storages.backends.s3boto3.S3Boto3Storage
 service_packages:
   - big_health.services.community_app.service.CommunityApp
 
+enable_risk_words_notifications: true
+risk_words_emails:
+  - communityadmin@sleepio.com
+
 access_token_cookie_expiration_seconds: 1000
 refresh_token_cookie_expiration_days: 100
