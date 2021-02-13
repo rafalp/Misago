@@ -1,6 +1,4 @@
-import { useMutation } from "@apollo/react-hooks"
 import { Trans } from "@lingui/macro"
-import gql from "graphql-tag"
 import React from "react"
 import * as Yup from "yup"
 import { ButtonLink, ButtonPrimary } from "../UI/Button"
@@ -21,44 +19,12 @@ import {
   UsernameValidationError,
 } from "../UI/ValidationError"
 import { useAuth } from "../auth"
-import { MutationError } from "../types"
-
-const REGISTER = gql`
-  mutation Register($input: RegisterInput!) {
-    register(input: $input) {
-      errors {
-        location
-        message
-        type
-      }
-      user {
-        id
-        name
-      }
-      token
-    }
-  }
-`
-
-interface RegisterData {
-  register: {
-    errors: Array<MutationError> | null
-    user: {
-      id: string
-      name: string
-    } | null
-    token: string | null
-  }
-}
+import useRegisterMutation from "./useRegisterMutation"
 
 interface FormValues {
   name: string
   email: string
   password: string
-}
-
-interface RegisterInput {
-  input: FormValues
 }
 
 interface RegisterModalProps {
@@ -79,10 +45,10 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
 }) => {
   const { login } = useAuth()
   const [disabled, setDisabled] = React.useState<boolean>(false)
-  const [register, { data, loading, error: graphqlError }] = useMutation<
-    RegisterData,
-    RegisterInput
-  >(REGISTER, { errorPolicy: "all" })
+  const [
+    register,
+    { data, loading, error: graphqlError },
+  ] = useRegisterMutation()
 
   const validators = Yup.object().shape({
     name: Yup.string()

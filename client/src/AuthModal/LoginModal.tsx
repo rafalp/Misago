@@ -1,6 +1,4 @@
-import { useMutation } from "@apollo/react-hooks"
 import { Trans } from "@lingui/macro"
-import gql from "graphql-tag"
 import React from "react"
 import { ButtonLink, ButtonPrimary } from "../UI/Button"
 import { Field, Form } from "../UI/Form"
@@ -15,35 +13,7 @@ import {
 } from "../UI/Modal"
 import RootError from "../UI/RootError"
 import { useAuth } from "../auth"
-import { MutationError } from "../types"
-
-const LOGIN = gql`
-  mutation Login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-      errors {
-        location
-        message
-        type
-      }
-      user {
-        id
-        name
-      }
-      token
-    }
-  }
-`
-
-interface LoginData {
-  login: {
-    errors: Array<MutationError> | null
-    user: {
-      id: string
-      name: string
-    } | null
-    token: string | null
-  }
-}
+import useLoginMutation from "./useLoginMutation"
 
 interface LoginValues {
   username: string
@@ -59,10 +29,10 @@ const LoginModal: React.FC<LoginModalProps> = ({ close, showRegister }) => {
   const { login } = useAuth()
   const [disabled, setDisabled] = React.useState<boolean>(false)
   const [error, setError] = React.useState<string | null>(null)
-  const [authenticate, { data, loading, error: graphqlError }] = useMutation<
-    LoginData,
-    LoginValues
-  >(LOGIN, { errorPolicy: "all" })
+  const [
+    authenticate,
+    { data, loading, error: graphqlError },
+  ] = useLoginMutation()
 
   return (
     <ModalDialog
