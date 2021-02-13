@@ -20,12 +20,15 @@ interface LoginValues {
   password: string
 }
 
-interface LoginModalProps {
+interface AuthModalLoginProps {
   close: () => void
   showRegister: () => void
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ close, showRegister }) => {
+const AuthModalLogin: React.FC<AuthModalLoginProps> = ({
+  close,
+  showRegister,
+}) => {
   const { login } = useAuth()
   const [disabled, setDisabled] = React.useState<boolean>(false)
   const [error, setError] = React.useState<string | null>(null)
@@ -126,4 +129,4 @@ const LoginModal: React.FC<LoginModalProps> = ({ close, showRegister }) => {
   )
 }
 
-export default LoginModal
+export default AuthModalLogin

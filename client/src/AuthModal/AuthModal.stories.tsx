@@ -3,8 +3,8 @@ import { actions } from "@storybook/addon-actions"
 import React from "react"
 import { Modal } from "../UI/Modal"
 import { RootContainer } from "../UI/Storybook"
-import LoginModal from "./LoginModal"
-import RegisterModal from "./RegisterModal"
+import AuthModalLogin from "./AuthModalLogin"
+import AuthModalRegister from "./AuthModalRegister"
 
 export default {
   title: "Auth/Modal",
@@ -27,7 +27,7 @@ export const Login = () => (
   <MockedProvider>
     <RootContainer>
       <Modal isOpen={true} close={close}>
-        <LoginModal close={close} showRegister={showRegister} />
+        <AuthModalLogin close={close} showRegister={showRegister} />
       </Modal>
     </RootContainer>
   </MockedProvider>
@@ -37,7 +37,7 @@ export const Register = () => (
   <MockedProvider>
     <RootContainer>
       <Modal isOpen={true} close={close}>
-        <RegisterModal
+        <AuthModalRegister
           settings={settings}
           close={close}
           showLogin={showLogin}

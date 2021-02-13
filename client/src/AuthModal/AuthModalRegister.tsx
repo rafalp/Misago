@@ -27,7 +27,7 @@ interface FormValues {
   password: string
 }
 
-interface RegisterModalProps {
+interface AuthModalRegisterProps {
   settings: {
     passwordMinLength: number
     passwordMaxLength: number
@@ -38,7 +38,7 @@ interface RegisterModalProps {
   showLogin: () => void
 }
 
-const RegisterModal: React.FC<RegisterModalProps> = ({
+const AuthModalRegister: React.FC<AuthModalRegisterProps> = ({
   settings,
   close,
   showLogin,
@@ -179,4 +179,4 @@ const RegisterModal: React.FC<RegisterModalProps> = ({
   )
 }
 
-export default RegisterModal
+export default AuthModalRegister
