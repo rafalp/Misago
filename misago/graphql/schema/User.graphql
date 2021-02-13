@@ -1,0 +1,18 @@
+type User {
+    id: ID!
+    name: String!
+    slug: String!
+    email: String!
+    fullName: String
+    isModerator: Boolean!
+    isAdministrator: Boolean!
+    joinedAt: DateTime!
+    avatars: [Avatar!]!
+    avatar(size: Int): Avatar!
+    extra: Generic!
+}
+
+type Avatar {
+    size: Int!
+    url: String!
+}

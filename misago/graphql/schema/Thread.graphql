@@ -1,0 +1,38 @@
+type Thread {
+    id: ID!
+    category: Category!
+    posts: ThreadPosts!
+    firstPost: Post
+    starter: User
+    starterName: String!
+    lastPost: Post
+    lastPoster: User
+    lastPosterName: String!
+    title: String!
+    slug: String!
+    startedAt: DateTime!
+    lastPostedAt: DateTime!
+    replies: Int!
+    post(id: ID!): Post
+    postUrl(id: ID!, absolute: Boolean): String
+    lastPostUrl(absolute: Boolean): String
+    isClosed: Boolean!
+    extra: Generic!
+}
+
+type ThreadsFeed {
+    items: [Thread!]!
+    nextCursor: ID
+}
+
+type ThreadPosts {
+    page(page: Int): ThreadPostsPage
+    pagination: Pagination!
+}
+
+type ThreadPostsPage {
+    items: [Post!]!
+    number: Int
+    start: Int
+    stop: Int
+}
