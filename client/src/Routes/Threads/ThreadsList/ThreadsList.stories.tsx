@@ -15,6 +15,8 @@ export default {
 
 const fetch = action("fetch")
 
+const acl = { start: true }
+
 const threads = (items?: Array<Thread> | null) => {
   if (items) return { items, nextCursor: null }
   return { items: [], nextCursor: null }
@@ -89,6 +91,7 @@ export const Threads = () => {
   return (
     <Container>
       <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
         threads={items}
         selectable={boolean("Moderation", false)}
         selection={selection}
@@ -105,6 +108,7 @@ export const WithUpdate = () => {
     <Container>
       <h5>Update available</h5>
       <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
         selection={selection}
         threads={threads([thread()])}
         loading={false}
@@ -116,6 +120,7 @@ export const WithUpdate = () => {
       />
       <h5>Update loading</h5>
       <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
         selection={selection}
         threads={threads([thread()])}
         loading={false}
@@ -127,6 +132,7 @@ export const WithUpdate = () => {
       />
       <h5>Update disabled</h5>
       <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
         selection={selection}
         threads={threads([thread()])}
         loading={true}
@@ -145,7 +151,12 @@ export const Loading = () => {
 
   return (
     <Container>
-      <ThreadsList threads={null} selection={selection} loading={true} />
+      <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
+        threads={null}
+        selection={selection}
+        loading={true}
+      />
     </Container>
   )
 }
@@ -156,6 +167,7 @@ export const LoadingMore = () => {
   return (
     <Container>
       <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
         threads={threads([thread()])}
         selection={selection}
         loading={true}
@@ -169,7 +181,12 @@ export const Empty = () => {
 
   return (
     <Container>
-      <ThreadsList threads={threads()} selection={selection} loading={false} />
+      <ThreadsList
+        acl={{ start: boolean("acl.start", true) }}
+        threads={threads()}
+        selection={selection}
+        loading={false}
+      />
     </Container>
   )
 }
@@ -180,6 +197,7 @@ export const QueryError = () => {
   return (
     <Container>
       <ThreadsList
+        acl={acl}
         error={new ApolloError({})}
         threads={null}
         selection={selection}
@@ -195,6 +213,7 @@ export const NetworkError = () => {
   return (
     <Container>
       <ThreadsList
+        acl={acl}
         error={new ApolloError({ networkError: new Error() })}
         threads={null}
         selection={selection}

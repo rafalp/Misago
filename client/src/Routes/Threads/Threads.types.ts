@@ -5,6 +5,10 @@ export interface ActiveCategory {
   parent: Category
 }
 
+export interface CategoryAcl {
+  start: boolean
+}
+
 export interface Thread {
   id: string
   category: ThreadCategory

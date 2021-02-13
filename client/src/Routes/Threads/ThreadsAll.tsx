@@ -9,6 +9,7 @@ import ThreadsLayout from "./ThreadsLayout"
 import ThreadsList from "./ThreadsList"
 import { ThreadsModeration, useThreadsModeration } from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
+import useCategoryAcl from "./useCategoryAcl"
 import { useThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
@@ -18,6 +19,7 @@ const ThreadsAll: React.FC = () => {
   const { data, error, loading, update, fetchMoreThreads } = useThreadsQuery()
   const { threads } = data || { threads: null }
 
+  const acl = useCategoryAcl()
   const selection = useThreadsSelection(threads?.items || [])
   const moderation = useThreadsModeration(selection.selected)
 
@@ -33,8 +35,9 @@ const ThreadsAll: React.FC = () => {
         alerts={update.threads}
       />
       <ThreadsHeaderAll settings={settings} stats={forumStats} />
-      <ThreadsToolbar />
+      <ThreadsToolbar acl={acl} />
       <ThreadsList
+        acl={acl}
         error={error}
         loading={loading}
         selectable={!!moderation}

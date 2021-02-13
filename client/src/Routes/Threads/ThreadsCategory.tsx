@@ -10,6 +10,7 @@ import ThreadsList from "./ThreadsList"
 import { ThreadsModeration, useThreadsModeration } from "./ThreadsModeration"
 import ThreadsToolbar from "./ThreadsToolbar"
 import useActiveCategory from "./useActiveCategory"
+import useCategoryAcl from "./useCategoryAcl"
 import { useCategoryThreadsQuery } from "./useThreadsQuery"
 import useThreadsSelection from "./useThreadsSelection"
 
@@ -35,6 +36,7 @@ const ThreadsCategory: React.FC = () => {
   const { threads } =
     data && data.category.id === id ? data : { threads: null }
 
+  const acl = useCategoryAcl(category)
   const selection = useThreadsSelection(threads?.items || [])
   const moderation = useThreadsModeration(selection.selected, category)
 
@@ -56,10 +58,11 @@ const ThreadsCategory: React.FC = () => {
         <>
           <WindowTitle title={category.name} alerts={update.threads} />
           <ThreadsHeaderCategory category={category} />
-          <ThreadsToolbar category={category} />
+          <ThreadsToolbar acl={acl} category={category} />
         </>
       )}
       <ThreadsList
+        acl={acl}
         category={category}
         error={error}
         loading={loading}

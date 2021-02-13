@@ -1,7 +1,7 @@
 import { ApolloError } from "apollo-client"
 import React from "react"
 import { CardLoader } from "../../../UI/Card"
-import { Thread } from "../Threads.types"
+import { CategoryAcl, Thread } from "../Threads.types"
 import ThreadsListBlankslate from "./ThreadsListBlankslate"
 import ThreadsListCard from "./ThreadsListCard"
 import ThreadsListGraphQLError from "./ThreadsListGraphQLError"
@@ -9,6 +9,7 @@ import ThreadsListItem from "./ThreadsListItem/ThreadsListItem"
 import ThreadsListUpdateButton from "./ThreadsListUpdateButton"
 
 interface ThreadsListProps {
+  acl: CategoryAcl
   category?: {
     id: string
     slug: string
@@ -32,6 +33,7 @@ interface ThreadsListProps {
 }
 
 const ThreadsList: React.FC<ThreadsListProps> = ({
+  acl,
   category,
   error,
   loading,
@@ -79,7 +81,7 @@ const ThreadsList: React.FC<ThreadsListProps> = ({
           ))}
         </ul>
       ) : (
-        <ThreadsListBlankslate category={category} />
+        <ThreadsListBlankslate acl={acl} category={category} />
       )}
       {loading && <CardLoader />}
     </ThreadsListCard>

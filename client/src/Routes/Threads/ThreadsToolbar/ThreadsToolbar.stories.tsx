@@ -1,19 +1,24 @@
+import { withKnobs, boolean } from "@storybook/addon-knobs"
 import React from "react"
 import { RootContainer, categories } from "../../../UI/Storybook"
 import ThreadsToolbar from "./ThreadsToolbar"
 
 export default {
   title: "Route/Threads/Toolbar",
+  decorators: [withKnobs],
 }
 
 export const Default = () => (
   <RootContainer>
-    <ThreadsToolbar />
+    <ThreadsToolbar acl={{ start: boolean("acl.start", true) }} />
   </RootContainer>
 )
 
 export const Category = () => (
   <RootContainer>
-    <ThreadsToolbar category={categories[0]} />
+    <ThreadsToolbar
+      acl={{ start: boolean("acl.start", true) }}
+      category={categories[0]}
+    />
   </RootContainer>
 )
