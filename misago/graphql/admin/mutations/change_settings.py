@@ -7,7 +7,7 @@ from ....conf.dynamicsettings import get_settings_from_db
 from ....conf.update import update_settings
 from ....validation import validate_model
 from ...errorhandler import error_handler
-from ..requireadmin import require_admin
+from ..decorators import admin_mutation
 
 
 change_settings_mutation = MutationType()
@@ -15,7 +15,7 @@ change_settings_mutation = MutationType()
 
 @change_settings_mutation.field("changeSettings")
 @error_handler
-@require_admin
+@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_change_settings(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
