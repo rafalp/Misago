@@ -16,7 +16,7 @@ from ....loaders import (
     load_user,
 )
 from ....richtext import parse_markup
-from ....types import Category, Post, RichText, Settings, Thread, ThreadsFeed, User
+from ....types import Category, Post, RichText, Thread, ThreadsFeed, User
 
 
 query_type = QueryType()

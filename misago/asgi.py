@@ -45,9 +45,9 @@ async def resolve_graphql_context(request: Request) -> GraphQLContext:
     return await graphql_context_hook.call_action(get_graphql_context, request)
 
 
-graphql = GraphQL(schema, debug=settings.debug, context_value=resolve_graphql_context)
+graphql = GraphQL(public_schema, debug=settings.debug, context_value=resolve_graphql_context)
 
-app.mount("/graphql/", public_schema)
+app.mount("/graphql/", graphql)
 app.add_websocket_route("/graphql/", graphql.websocket_server)
 
 app.mount(
