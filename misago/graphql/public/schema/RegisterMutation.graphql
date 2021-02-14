@@ -1,0 +1,15 @@
+extend type Mutation {
+    register(input: RegisterInput!): RegisterMutationResult!
+}
+
+input RegisterInput {
+    name: String!
+    email: String!
+    password: String!
+}
+
+type RegisterMutationResult {
+    errors: [Error!]
+    token: String
+    user: User
+}

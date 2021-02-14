@@ -10,7 +10,7 @@ from .database import database
 from .hooks import graphql_context_hook
 from .graphql.admin.schema import admin_schema
 from .graphql.context import get_graphql_context
-from .graphql.schema import schema
+from .graphql.public.schema import public_schema
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
@@ -47,7 +47,7 @@ async def resolve_graphql_context(request: Request) -> GraphQLContext:
 
 graphql = GraphQL(schema, debug=settings.debug, context_value=resolve_graphql_context)
 
-app.mount("/graphql/", graphql)
+app.mount("/graphql/", public_schema)
 app.add_websocket_route("/graphql/", graphql.websocket_server)
 
 app.mount(

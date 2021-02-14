@@ -1,3 +1,0 @@
-type Subscription {
-    threads(category: ID): ID
-}

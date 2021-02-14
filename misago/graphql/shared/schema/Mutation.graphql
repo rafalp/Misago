@@ -1,0 +1,9 @@
+type Mutation {
+    login(username: String!, password: String!): LoginMutationResult!
+}
+
+type LoginMutationResult {
+    errors: [Error!]
+    token: String
+    user: User
+}
