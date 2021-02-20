@@ -4,7 +4,7 @@ from .....conf.cache import SETTINGS_CACHE
 from .....conf.dynamicsettings import get_settings_from_db
 from .....errors import ErrorsList
 from .....testing.cacheversions import assert_invalidates_cache
-from ..change_settings import resolve_change_settings
+from ..changesettings import resolve_change_settings
 
 
 @pytest.mark.asyncio

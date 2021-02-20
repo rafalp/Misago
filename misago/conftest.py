@@ -78,13 +78,13 @@ async def dynamic_settings(db, cache_versions):
 
 @pytest.fixture
 async def categories(db):
-    top_category = await create_category(name="Category", left=7, right=10)
+    top_category = await create_category(name="Category", left=3, right=6)
     child_category = await create_category(
-        name="Child Category", parent=top_category, left=8, right=9, depth=1
+        name="Child Category", parent=top_category, left=4, right=5, depth=1
     )
-    sibling_category = await create_category(name="Sibling Category", left=11, right=12)
+    sibling_category = await create_category(name="Sibling Category", left=7, right=8)
     closed_category = await create_category(
-        name="Closed Category", left=13, right=14, is_closed=True
+        name="Closed Category", left=9, right=10, is_closed=True
     )
     return (top_category, child_category, sibling_category, closed_category)
 

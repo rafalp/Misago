@@ -1,0 +1,14 @@
+extend type Mutation {
+    createCategory(input: CategoryInput): CategoryMutationResult!
+}
+
+type CategoryMutationResult {
+    errors: [Error!]
+    category: Category
+}
+
+input CategoryInput {
+    name: String!
+    parent: ID
+    isClosed: Boolean
+}
