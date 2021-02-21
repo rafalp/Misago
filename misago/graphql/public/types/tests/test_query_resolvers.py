@@ -38,6 +38,7 @@ async def test_categories_resolver_returns_list_of_top_categories(
 @pytest.mark.asyncio
 async def test_category_resolver_returns_category_by_id(category, graphql_info):
     value = await resolve_category(None, graphql_info, id=str(category.id))
+    print(value)
     assert value == category
 
 

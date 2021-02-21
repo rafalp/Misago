@@ -8,6 +8,7 @@ from .loader import list_loader
 
 
 CACHE_NAME = "__categories"
+DICT_CACHE_NAME = f"{CACHE_NAME}_dict"
 
 
 @list_loader(CACHE_NAME)
@@ -15,6 +16,7 @@ async def load_categories(context: GraphQLContext) -> List[Category]:
     return await get_all_categories()
 
 
+@list_loader(DICT_CACHE_NAME)
 async def load_categories_dict(context: GraphQLContext) -> Dict[int, Category]:
     return {c.id: c for c in await load_categories(context)}
 
@@ -41,8 +43,8 @@ async def load_category_children(
     if not category:
         return []
 
-    categories = await load_categories_dict(context)
-    return [c for c in categories.values() if c.is_child(category)]
+    categories = await load_categories(context)
+    return [c for c in categories if c.is_child(category)]
 
 
 async def load_category_with_children(
@@ -58,6 +60,8 @@ async def load_category_with_children(
 def store_category(context: GraphQLContext, category: Category):
     if CACHE_NAME not in context or not context[CACHE_NAME].done():
         return
+
+    context.pop(DICT_CACHE_NAME, None)
 
     new_categories = []
     for cached_category in context[CACHE_NAME].result():
