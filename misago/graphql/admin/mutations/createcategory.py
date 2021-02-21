@@ -2,7 +2,7 @@ from typing import Optional
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, PositiveInt, constr
+from pydantic import PositiveInt, constr, create_model
 
 from ....categories.create import create_category
 from ....categories.get import get_all_categories
@@ -24,7 +24,9 @@ create_category_mutation = MutationType()
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case
-async def resolve_create_category(_, info: GraphQLResolveInfo, *, input: dict):
+async def resolve_create_category(
+    _, info: GraphQLResolveInfo, *, input: dict,  # pylint: disable=redefined-builtin
+):
     categories = await get_all_categories()
 
     cleaned_data, errors = validate_model(CategoryInputModel, input)
@@ -54,7 +56,12 @@ async def resolve_create_category(_, info: GraphQLResolveInfo, *, input: dict):
     return {"category": new_category}
 
 
-class CategoryInputModel(BaseModel):
-    name: constr(strip_whitespace=True, min_length=1, max_length=255, regex="\w")
-    parent: Optional[PositiveInt]
-    is_closed: Optional[bool]
+CategoryInputModel = create_model(
+    "CategoryInputModel",
+    name=(
+        constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
+        ...,
+    ),
+    parent=(Optional[PositiveInt], ...),
+    is_closed=(Optional[bool], False),
+)

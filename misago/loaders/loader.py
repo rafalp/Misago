@@ -56,7 +56,7 @@ def list_loader(cache_key: str):
         @functools.wraps(f)
         async def wrapped_list_loader_func(context: GraphQLContext):
             if cache_key not in context:
-                future = Future()
+                future: Future[Any] = Future()
                 context[cache_key] = future
                 try:
                     future.set_result(await f(context))

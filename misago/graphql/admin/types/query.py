@@ -1,4 +1,4 @@
-from typing import List, cast
+from typing import Awaitable, List
 
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
@@ -13,5 +13,5 @@ query_type = QueryType()
 
 @query_type.field("categories")
 @admin_query
-def resolve_categories(_, info: GraphQLResolveInfo) -> List[Category]:
+def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
     return get_all_categories()

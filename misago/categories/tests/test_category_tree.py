@@ -1,13 +1,10 @@
-from dataclasses import dataclass
-from typing import Optional
-
 import pytest
 
 from ...types import Category
 from ..tree import CategoryTree
 
 
-def category_factory(*, id, left=0, right=0):
+def category_factory(*, id, left=0, right=0):  # pylint: disable=redefined-builtin
     return Category(name="T", slug="t", type=0, id=id, left=left, right=right, extra={})
 
 

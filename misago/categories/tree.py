@@ -1,15 +1,15 @@
 from dataclasses import replace
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, cast
 
 from ..types import Category
 from .update import update_category
 
 
 class CategoryTreeNode:
-    _root: Optional[Category] = None
-    _children: List["CategoriesTree"]
+    _root: Category
+    _children: List["CategoryTreeNode"]
 
-    def __init__(self, root: Optional[Category] = None):
+    def __init__(self, root: Category):
         self._root = root
         self._children = []
 
@@ -17,8 +17,8 @@ class CategoryTreeNode:
         node = replace(node, parent_id=self._root.id)
         self._children.append(CategoryTreeNode(node))
 
-    def get_category(self, id: int) -> Optional[Category]:
-        if self._root and self._root.id == id:
+    def get_category(self, category_id: int) -> Optional[Category]:
+        if self._root and self._root.id == category_id:
             return self._root
 
         for node in self._children:
@@ -53,8 +53,7 @@ class CategoryTree(CategoryTreeNode):
     _map: Dict[int, Category]
 
     def __init__(self, categories: Sequence[Category]):
-        super().__init__()
-
+        self._children = []
         self._map = {}
 
         category_map = {c.id: c for c in categories}
@@ -84,8 +83,8 @@ class CategoryTree(CategoryTreeNode):
             left = child_nodes[0].right + 1
         return nodes_list
 
-    def get_category(self, id: int) -> Optional[Category]:
-        return self._map.get(id)
+    def get_category(self, category_id: int) -> Optional[Category]:
+        return self._map.get(category_id)
 
 
 async def insert_category(
@@ -122,4 +121,4 @@ async def insert_category(
         if saved_category.id == category.id:
             result = saved_category
 
-    return result
+    return cast(Category, result)

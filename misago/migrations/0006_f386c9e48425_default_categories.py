@@ -5,6 +5,8 @@ Revises: 05180e3cdd4b
 Create Date: 2019-12-15 21:51:27.434952
 
 """
+from typing import List
+
 from alembic import op
 from sqlalchemy import Boolean, Integer, JSON, String
 from sqlalchemy.sql import table, column
@@ -33,7 +35,7 @@ table = table(
 )
 
 
-categories = [
+categories: List[dict] = [
     {
         # id: 1
         "type": CategoryTypes.PRIVATE_THREADS,

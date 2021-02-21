@@ -20,8 +20,8 @@ class Category:
     def has_children(self) -> bool:
         return (self.left + 1) < self.right
 
-    def is_parent(self, node: "MPTTNode") -> bool:
-        return self.left < node.left and self.right > node.right
+    def is_parent(self, category: "Category") -> bool:
+        return self.left < category.left and self.right > category.right
 
-    def is_child(self, node: "MPTTNode") -> bool:
-        return self.left > node.left and self.right < node.right
+    def is_child(self, category: "Category") -> bool:
+        return self.left > category.left and self.right < category.right
