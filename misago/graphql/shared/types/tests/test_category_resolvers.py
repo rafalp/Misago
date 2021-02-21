@@ -30,7 +30,7 @@ def test_category_color_resolver_returns_string_with_category_color(
     category, graphql_info
 ):
     value = resolve_color(category, graphql_info)
-    assert value == "#FF7452"
+    assert value == "#FFAB00"
 
 
 def test_category_extra_resolver_returns_dict_with_extra(category, graphql_info):
@@ -42,7 +42,7 @@ def test_category_icon_resolver_returns_string_with_category_color(
     category, graphql_info
 ):
     value = resolve_icon(category, graphql_info)
-    assert value == "fas fa-adjust"
+    assert value == "fas fa-heart"
 
 
 def test_category_banner_resolver_returns_dict_with_category_banners(

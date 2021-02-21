@@ -29,6 +29,7 @@ def resolve_auth(_, info: GraphQLResolveInfo) -> Awaitable[Optional[User]]:
 
 @query_type.field("categories")
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
+    # TODO: aggregate loaded categories
     return load_root_categories(info.context)
 
 

@@ -150,7 +150,6 @@ from .movethreads import (
     MoveThreadsInputModelAction,
     MoveThreadsInputModelFilter,
 )
-from .mptt import MPTT, MPTTNode
 from .pagination import Pagination, PaginationPage
 from .parsemarkup import ParsedMarkupMetadata, ParseMarkupAction, ParseMarkupFilter
 from .post import Post

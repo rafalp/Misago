@@ -1,9 +1,18 @@
+from typing import Optional
+
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
+from pydantic import BaseModel, PositiveInt, constr
 
 from ....categories.create import create_category
-from ....categories.update import update_category
-from ....categories.get import get_categories_mptt
+from ....categories.get import get_all_categories
+from ....categories.tree import insert_category
+from ....validation import (
+    CategoryExistsValidator,
+    CategoryMaxDepthValidator,
+    validate_data,
+    validate_model,
+)
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 
@@ -16,35 +25,36 @@ create_category_mutation = MutationType()
 @admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_create_category(_, info: GraphQLResolveInfo, *, input: dict):
-    categories_tree = await get_categories_mptt()
-    categories_map = {c.id: c for c in categories_tree.nodes()}
+    categories = await get_all_categories()
 
-    name = input["name"]
-    parent = input.get("parent")
-    is_closed = input.get("is_closed")
-    parent_category = None
+    cleaned_data, errors = validate_model(CategoryInputModel, input)
+    cleaned_data, errors = await validate_data(
+        cleaned_data,
+        {
+            "parent": [
+                CategoryExistsValidator(info.context),
+                CategoryMaxDepthValidator(info.context, max_depth=0),
+            ]
+        },
+        errors,
+    )
 
-    if parent:
-        parent_id = int(parent)
-        if parent_id in categories_map:
-            parent_category = categories_map[parent_id]
+    if errors:
+        return {"errors": errors}
 
     new_category = await create_category(
-        name=name, parent=parent_category, is_closed=is_closed,
+        name=cleaned_data["name"],
+        parent=cleaned_data.get("parent"),
+        is_closed=cleaned_data.get("is_closed") or False,
     )
-    categories_map[new_category.id] = new_category
-
-    categories_tree.insert_node(new_category, parent_category)
-    for category in categories_tree.nodes():
-        org_category = categories_map[category.id]
-        updated_category = await update_category(
-            org_category,
-            left=category.left,
-            right=category.right,
-            depth=category.depth,
-        )
-
-        if updated_category.id == new_category.id:
-            new_category = updated_category
+    new_category = await insert_category(
+        categories, new_category, cleaned_data.get("parent")
+    )
 
     return {"category": new_category}
+
+
+class CategoryInputModel(BaseModel):
+    name: constr(strip_whitespace=True, min_length=1, max_length=255, regex="\w")
+    parent: Optional[PositiveInt]
+    is_closed: Optional[bool]

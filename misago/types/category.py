@@ -1,11 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from .mptt import MPTTNode
-
 
 @dataclass
-class Category(MPTTNode):
+class Category:
     id: int
     type: int
     name: str
@@ -18,3 +16,12 @@ class Category(MPTTNode):
     posts: int = 0
     parent_id: Optional[int] = None
     is_closed: Optional[bool] = False
+
+    def has_children(self) -> bool:
+        return (self.left + 1) < self.right
+
+    def is_parent(self, node: "MPTTNode") -> bool:
+        return self.left < node.left and self.right > node.right
+
+    def is_child(self, node: "MPTTNode") -> bool:
+        return self.left > node.left and self.right < node.right

@@ -24,8 +24,7 @@ async def create_fake_forum_history(
 ) -> AsyncGenerator[Union[Post, Thread, User], None]:
     await move_existing_users_to_past(days)
 
-    categories_dict = await get_all_categories()
-    categories = list(categories_dict.values())
+    categories = await get_all_categories()
     if not categories:
         raise ValueError("No categories have been found.")
 

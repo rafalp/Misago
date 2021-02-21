@@ -9,8 +9,9 @@ from ..categories import CategoryTypes
 from ..database import database
 from ..errors import (
     AuthError,
-    CategoryDoesNotExistError,
     CategoryClosedError,
+    CategoryDoesNotExistError,
+    CategoryMaxDepthError,
     EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
@@ -87,6 +88,22 @@ class CategoryExistsValidator(AsyncValidator):
         category = await load_category(self._context, category_id)
         if not category or category.type != self._category_type:
             raise CategoryDoesNotExistError(category_id=category_id)
+        return category
+
+
+class CategoryMaxDepthValidator(AsyncValidator):
+    _context: GraphQLContext
+    _max_depth: int
+
+    def __init__(self, context: GraphQLContext, *, max_depth: int):
+        self._context = context
+        self._max_depth = max_depth
+
+    async def __call__(self, category: Category, *_) -> Category:
+        if category.depth > self._max_depth:
+            raise CategoryMaxDepthError(
+                category_id=category.id, max_depth=self._max_depth
+            )
         return category
 
 

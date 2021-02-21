@@ -4,7 +4,7 @@ from sqlalchemy import and_
 
 from ..database import database
 from ..tables import categories
-from ..types import Category, MPTT
+from ..types import Category
 from .categorytypes import CategoryTypes
 
 
@@ -16,11 +16,12 @@ async def get_all_categories(
         .where(categories.c.type == category_type)
         .order_by(categories.c.left)
     )
-    data = [Category(**row) for row in await database.fetch_all(query)]
+    return [Category(**row) for row in await database.fetch_all(query)]
+
+    categories_dict = {c.id: c for c in data}
 
     # Aggregate child categories stats to parent categories, mutating data
-    categories_dict = {}
-    for category in data:
+    for category in reversed(data):
         categories_dict[category.id] = category
         if category.parent_id:
             parent = categories_dict[category.parent_id]
@@ -38,18 +39,3 @@ async def get_category_by_id(
     )
     row = await database.fetch_one(query)
     return Category(**row) if row else None
-
-
-async def get_categories_mptt(category_type: int = CategoryTypes.THREADS,) -> MPTT:
-    mptt = MPTT()
-
-    categories = await get_all_categories(category_type)
-    categories_map = {}
-    for category in categories.values():
-        categories_map[category.id] = category
-        if category.parent_id:
-            mptt.insert_node(category, parent=categories_map[category.parent_id])
-        else:
-            mptt.insert_node(category)
-
-    return mptt

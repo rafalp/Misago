@@ -29,6 +29,14 @@ class CategoryClosedError(AuthError):
         super().__init__(id=category_id)
 
 
+class CategoryMaxDepthError(PydanticValueError):
+    code = "category.max_depth"
+    msg_template = "category with id '{id}' exceeds max depth {limit}"
+
+    def __init__(self, *, category_id: Union[int, str], max_depth: int) -> None:
+        super().__init__(id=category_id, limit=max_depth)
+
+
 class NotAuthorizedError(AuthError):
     code = "not_authorized"
     msg_template = "authorization is required"

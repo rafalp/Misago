@@ -39,7 +39,7 @@ async def validate_data(
     validators_queue = []
     validators_queue_fields = []
     for field_name, field_data in model_data.items():
-        if validators.get(field_name):
+        if validators.get(field_name) and field_data is not None:
             field_validators = validators[field_name]
             validators_queue_fields.append(field_name)
             validators_queue.append(

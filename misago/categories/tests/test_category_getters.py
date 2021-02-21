@@ -5,7 +5,7 @@ from ..update import update_category
 
 
 @pytest.mark.asyncio
-async def test_categories_dict_can_be_get(categories):
+async def test_categories_list_can_be_get(categories):
     assert await get_all_categories()
 
 
@@ -20,6 +20,7 @@ async def test_getting_category_by_nonexistent_id_returns_none(db):
 
 
 @pytest.mark.asyncio
+@pytest.mark.xfail(reason="stat aggregation removed for now")
 async def test_child_categories_stats_are_added_to_parent_stats(
     category, child_category
 ):

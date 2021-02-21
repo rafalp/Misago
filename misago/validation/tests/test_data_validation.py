@@ -121,6 +121,15 @@ async def test_validation_is_interrupted_at_first_validation_error(errors):
 
 
 @pytest.mark.asyncio
+async def test_validation_is_skipped_when_field_value_is_none(errors):
+    cleaned_data, new_errors = await validate_data(
+        {"data": None}, {"data": [validate_value, validate_value_other]}, errors,
+    )
+    assert cleaned_data == {"data": None}
+    assert not new_errors
+
+
+@pytest.mark.asyncio
 async def test_root_validators_are_ran_data(errors):
     _, new_errors = await validate_data(
         {"data": VALID_VALUE}, {ROOT_LOCATION: [validate_root_value]}, errors,

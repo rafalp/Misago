@@ -1,3 +1,5 @@
+import functools
+from asyncio import Future
 from typing import Any, Awaitable, Callable, Dict, List, Sequence
 
 from aiodataloader import DataLoader
@@ -47,3 +49,22 @@ def wrap_loader_function(
         return [data.get(i) for i in graphql_ids]
 
     return wrapped_loader_function
+
+
+def list_loader(cache_key: str):
+    def wrap_list_loader(f):
+        @functools.wraps(f)
+        async def wrapped_list_loader_func(context: GraphQLContext):
+            if cache_key not in context:
+                future = Future()
+                context[cache_key] = future
+                try:
+                    future.set_result(await f(context))
+                except Exception as e:  # pylint: disable=broad-except
+                    future.set_exception(e)
+
+            return await context[cache_key]
+
+        return wrapped_list_loader_func
+
+    return wrap_list_loader
