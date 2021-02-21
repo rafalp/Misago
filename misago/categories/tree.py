@@ -22,7 +22,7 @@ class CategoryTreeNode:
             return self._root
 
         for node in self._children:
-            category = node.get_category(id)
+            category = node.get_category(category_id)
             if category:
                 return category
         return None

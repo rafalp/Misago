@@ -59,8 +59,12 @@ def store_category(context: GraphQLContext, category: Category):
     if CACHE_NAME not in context or not context[CACHE_NAME].done():
         return
 
-    new_categories = context[CACHE_NAME].result()
-    new_categories[category.id] = category
+    new_categories = []
+    for cached_category in context[CACHE_NAME].result():
+        if cached_category.id == category.id:
+            new_categories.append(category)
+        else:
+            new_categories.append(cached_category)
 
     future: Future[List[Category]] = Future()
     future.set_result(new_categories)

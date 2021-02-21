@@ -62,6 +62,6 @@ CategoryInputModel = create_model(
         constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
         ...,
     ),
-    parent=(Optional[PositiveInt], ...),
+    parent=(Optional[PositiveInt], None),
     is_closed=(Optional[bool], False),
 )
