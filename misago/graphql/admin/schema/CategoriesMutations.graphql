@@ -1,5 +1,6 @@
 extend type Mutation {
-    createCategory(input: CategoryInput): CategoryMutationResult!
+    createCategory(input: CategoryInput!): CategoryMutationResult!
+    editCategory(category: ID!, input: CategoryInput!): CategoryMutationResult!
 }
 
 type CategoryMutationResult {
