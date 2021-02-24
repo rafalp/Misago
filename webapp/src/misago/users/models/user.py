@@ -136,7 +136,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         _("joined on"), default=timezone.now, db_index=True
     )
     joined_from_ip = models.GenericIPAddressField(null=True, blank=True)
-    is_hiding_presence = models.BooleanField(default=False)
+    is_hiding_presence = models.BooleanField(default=True)
 
     rank = models.ForeignKey(
         "Rank", null=True, blank=True, on_delete=models.deletion.PROTECT

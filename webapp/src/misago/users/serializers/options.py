@@ -34,6 +34,11 @@ class ForumOptionsSerializer(serializers.ModelSerializer):
             "subscribe_to_replied_threads": {"required": True},
         }
 
+    def validate(self, data):
+        if not data.get("is_hiding_presence", True):
+            raise serializers.ValidationError("Presence must be hidden.")
+
+        return data
 
 class EditSignatureSerializer(serializers.ModelSerializer):
     class Meta:

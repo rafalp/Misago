@@ -15,18 +15,19 @@ export default class extends React.Component {
   }
 
   getUserStatus() {
-    if (this.props.user.status) {
-      return (
-        <Status user={this.props.user} status={this.props.user.status}>
-          <StatusIcon user={this.props.user} status={this.props.user.status} />
-          <StatusLabel
-            user={this.props.user}
-            status={this.props.user.status}
-            className="status-label hidden-xs hidden-sm"
-          />
-        </Status>
-      )
-    }
+    // NOTE(Avi): Removed as part of PG-1313
+    // if (this.props.user.status) {
+    //   return (
+    //     <Status user={this.props.user} status={this.props.user.status}>
+    //       <StatusIcon user={this.props.user} status={this.props.user.status} />
+    //       <StatusLabel
+    //         user={this.props.user}
+    //         status={this.props.user.status}
+    //         className="status-label hidden-xs hidden-sm"
+    //       />
+    //     </Status>
+    //   )
+    // }
 
     return (
       <span className="user-status">

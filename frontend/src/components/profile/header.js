@@ -9,21 +9,23 @@ import Status, { StatusIcon, StatusLabel } from "misago/components/user-status"
 
 export default class extends React.Component {
   getUserStatus() {
-    return (
-      <li className="user-status-display">
-        <Status user={this.props.profile} status={this.props.profile.status}>
-          <StatusIcon
-            user={this.props.profile}
-            status={this.props.profile.status}
-          />
-          <StatusLabel
-            user={this.props.profile}
-            status={this.props.profile.status}
-            className="status-label"
-          />
-        </Status>
-      </li>
-    )
+    // NOTE(Avi): Removed as part of PG-1313
+    // return (
+    //   <li className="user-status-display">
+    //     <Status user={this.props.profile} status={this.props.profile.status}>
+    //       <StatusIcon
+    //         user={this.props.profile}
+    //         status={this.props.profile.status}
+    //       />
+    //       <StatusLabel
+    //         user={this.props.profile}
+    //         status={this.props.profile.status}
+    //         className="status-label"
+    //       />
+    //     </Status>
+    //   </li>
+    // )
+    return
   }
 
   getUserRank() {

@@ -112,7 +112,8 @@ export default class extends Form {
             <fieldset>
               <legend>{gettext("Privacy settings")}</legend>
 
-              <FormGroup
+              {/* NOTE(Avi): Removed as part of PG-1313 */}
+              {/* <FormGroup
                 label={gettext("Hide my presence")}
                 helpText={gettext(
                   "If you hide your presence, only members with permission to see hidden users will see when you are online."
@@ -129,7 +130,7 @@ export default class extends Form {
                   onChange={this.bindInput("is_hiding_presence")}
                   value={this.state.is_hiding_presence}
                 />
-              </FormGroup>
+              </FormGroup> */}
 
               <FormGroup
                 label={gettext("Private thread invitations")}
