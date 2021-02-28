@@ -29,6 +29,24 @@ class CategoryClosedError(AuthError):
         super().__init__(id=category_id)
 
 
+class CategoryInvalidParentError(PydanticValueError):
+    code = "category.invalid_parent"
+    msg_template = "category can't have category '{id}' for parent category"
+
+    def __init__(self, *, category_id: Union[int, str]) -> None:
+        super().__init__(id=category_id)
+
+
+class CategoryInvalidParentOwnChildError(PydanticValueError):
+    code = "category.invalid_parent_child"
+    msg_template = "category {id} can't use child category {child} for parent"
+
+    def __init__(
+        self, *, category_id: Union[int, str], child_id: Union[int, str]
+    ) -> None:
+        super().__init__(id=category_id, child=child_id)
+
+
 class CategoryMaxDepthError(PydanticValueError):
     code = "category.max_depth"
     msg_template = "category with id '{id}' exceeds max depth {limit}"

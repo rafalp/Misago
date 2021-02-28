@@ -178,4 +178,4 @@ async def test_create_category_mutation_fails_if_parent_category_is_child_catego
     assert not data.get("category")
     assert data.get("errors")
     assert data["errors"].get_errors_locations() == ["parent"]
-    assert data["errors"].get_errors_types() == ["value_error.category.max_depth"]
+    assert data["errors"].get_errors_types() == ["value_error.category.invalid_parent"]

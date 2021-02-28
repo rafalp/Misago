@@ -34,8 +34,6 @@ async def update_category(
     if parent and isinstance(parent, Category):
         if parent.id == category.id:
             raise ValueError("'category' can't be its own parent")
-        if parent.parent_id:
-            raise ValueError("'parent' can't be a child category")
         if parent.id != category.parent_id:
             changes["parent_id"] = parent.id
     elif parent is False and category.parent_id:

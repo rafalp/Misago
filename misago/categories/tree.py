@@ -1,5 +1,5 @@
 from dataclasses import replace
-from typing import Dict, List, Optional, Sequence, cast
+from typing import Dict, List, Optional, Sequence, Union
 
 from ..types import Category
 from .update import update_category
@@ -36,14 +36,18 @@ class CategoryTreeNode:
                 return child_node
         return None
 
-    def flatten_node(self, depth: int = 0, left: int = 0) -> List[Category]:
+    def flatten_node(
+        self, depth: int = 0, left: int = 0, parent_id: Optional[int] = None
+    ) -> List[Category]:
         nodes_list: List[Category] = []
-        root_node = replace(self._root, left=left, right=left + 1, depth=depth)
+        root_node = replace(
+            self._root, left=left, right=left + 1, depth=depth, parent_id=parent_id
+        )
         nodes_list.append(root_node)
         if self._children:
             for i, node in enumerate(self._children):
                 nodes_list += node.flatten_node(
-                    depth=depth + 1, left=left + (i * 2) + 1
+                    depth=depth + 1, left=left + (i * 2) + 1, parent_id=root_node.id
                 )
             root_node.right = nodes_list[-1].right + 1
         return nodes_list
@@ -98,19 +102,23 @@ async def insert_category(
     categories_map = {c.id: c for c in categories}
     categories_map[category.id] = category
 
-    result = None
+    validate_categories(categories_map, category, parent=parent)
 
+    if parent and parent.id not in categories_map:
+        raise ValueError(f"Parent category '{parent}' doesn't exist.")
+
+    updated_categories: Dict[int, Category] = {}
     for updated_category in tree.get_list():
         old_category = categories_map[updated_category.id]
         if updated_category == old_category:
+            updated_categories[old_category.id] = old_category
             continue
 
+        parent_category: Union[Category, bool] = False
         if updated_category.parent_id:
-            parent_category = categories_map.get(updated_category.parent_id)
-        else:
-            parent_category = None
+            parent_category = categories_map[updated_category.parent_id]
 
-        saved_category = await update_category(
+        updated_categories[old_category.id] = await update_category(
             old_category,
             parent=parent_category,
             depth=updated_category.depth,
@@ -118,7 +126,98 @@ async def insert_category(
             right=updated_category.right,
         )
 
-        if saved_category.id == category.id:
-            result = saved_category
+    return updated_categories[category.id]
 
-    return cast(Category, result)
+
+async def move_category(
+    categories: Sequence[Category],
+    category: Category,
+    *,
+    parent: Optional[Category] = None,
+    before: Optional[Category] = None,
+) -> Category:
+    categories_map = {c.id: c for c in categories}
+    categories_map[category.id] = category
+
+    category_children = [c for c in categories if c.is_child(category)]
+
+    validate_categories(categories_map, category, parent=parent, before=before)
+
+    tree = CategoryTree([])
+    for c in categories:
+        if before and before.id == c.id:
+            tree.insert_node(category, parent)
+            for child in category_children:
+                tree.insert_node(child, category)
+
+        if c.id != category.id and c.parent_id and not c.is_child(category):
+            tree.insert_node(c, categories_map[c.parent_id])
+
+    if not before:
+        tree.insert_node(category, parent)
+        for child in category_children:
+            tree.insert_node(child, category)
+
+    updated_categories: Dict[int, Category] = {}
+    for updated_category in tree.get_list():
+        old_category = categories_map[updated_category.id]
+        if updated_category == old_category:
+            updated_categories[old_category.id] = old_category
+            continue
+
+        parent_category: Union[Category, bool] = False
+        if updated_category.parent_id:
+            parent_category = categories_map[updated_category.parent_id]
+
+        updated_categories[old_category.id] = await update_category(
+            old_category,
+            parent=parent_category,
+            depth=updated_category.depth,
+            left=updated_category.left,
+            right=updated_category.right,
+        )
+
+    return updated_categories[category.id]
+
+
+class CategoryTreeValidationError(ValueError):
+    pass
+
+
+def validate_categories(
+    categories_map: Dict[int, Category],
+    category: Category,
+    *,
+    parent: Optional[Category] = None,
+    before: Optional[Category] = None,
+):
+    if parent:
+        if parent.id not in categories_map:
+            raise CategoryTreeValidationError(
+                f"Parent category '{parent}' doesn't exist."
+            )
+        if parent.id == category.id:
+            raise CategoryTreeValidationError(
+                f"Category '{category}' can't be its own parent."
+            )
+        if parent.is_child(category):
+            raise CategoryTreeValidationError(
+                f"Category '{category}' can't use its own child as parent."
+            )
+
+    if before:
+        if before.id not in categories_map:
+            raise CategoryTreeValidationError(
+                f"Before category '{before}' doesn't exist."
+            )
+        if before.id == category.id:
+            raise CategoryTreeValidationError(
+                f"Category '{category}' can't be moved before itself."
+            )
+        if (parent and before.parent_id != parent.id) or (
+            not parent and before.parent_id
+        ):
+            raise CategoryTreeValidationError(
+                f"Category '{category}' be moved before {before} "
+                "because both have different parents."
+            )

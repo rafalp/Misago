@@ -2,14 +2,14 @@ from typing import Optional
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, constr, create_model
+from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....categories.create import create_category
 from ....categories.get import get_all_categories
 from ....categories.tree import insert_category
 from ....validation import (
     CategoryExistsValidator,
-    CategoryMaxDepthValidator,
+    CategoryParentValidator,
     validate_data,
     validate_model,
 )
@@ -31,15 +31,15 @@ async def resolve_create_category(
 
     cleaned_data, errors = validate_model(CategoryInputModel, input)
     cleaned_data, errors = await validate_data(
-        cleaned_data,
-        {
-            "parent": [
-                CategoryExistsValidator(info.context),
-                CategoryMaxDepthValidator(info.context, max_depth=0),
-            ]
-        },
-        errors,
+        cleaned_data, {"parent": [CategoryExistsValidator(info.context),]}, errors,
     )
+
+    parent = cleaned_data.get("parent")
+
+    if parent:
+        cleaned_data, errors = await validate_data(
+            cleaned_data, {"parent": [CategoryParentValidator(info.context)]}, errors,
+        )
 
     if errors:
         return {"errors": errors}
@@ -49,9 +49,7 @@ async def resolve_create_category(
         parent=cleaned_data.get("parent"),
         is_closed=cleaned_data.get("is_closed") or False,
     )
-    new_category = await insert_category(
-        categories, new_category, cleaned_data.get("parent")
-    )
+    new_category = await insert_category(categories, new_category, parent)
 
     return {"category": new_category}
 

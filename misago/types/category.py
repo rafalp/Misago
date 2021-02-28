@@ -17,6 +17,9 @@ class Category:
     parent_id: Optional[int] = None
     is_closed: Optional[bool] = False
 
+    def __str__(self):
+        return self.name
+
     def has_children(self) -> bool:
         return (self.left + 1) < self.right
 

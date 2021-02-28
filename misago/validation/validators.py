@@ -11,7 +11,7 @@ from ..errors import (
     AuthError,
     CategoryClosedError,
     CategoryDoesNotExistError,
-    CategoryMaxDepthError,
+    CategoryInvalidParentError,
     EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
@@ -91,20 +91,27 @@ class CategoryExistsValidator(AsyncValidator):
         return category
 
 
-class CategoryMaxDepthValidator(AsyncValidator):
+class CategoryParentValidator(AsyncValidator):
     _context: GraphQLContext
-    _max_depth: int
+    _category: Optional[Category]
 
-    def __init__(self, context: GraphQLContext, *, max_depth: int):
+    def __init__(self, context: GraphQLContext, category: Optional[Category] = None):
         self._context = context
-        self._max_depth = max_depth
+        self._category = category
 
-    async def __call__(self, category: Category, *_) -> Category:
-        if category.depth > self._max_depth:
-            raise CategoryMaxDepthError(
-                category_id=category.id, max_depth=self._max_depth
-            )
-        return category
+    async def __call__(self, parent: Category, *_) -> Category:
+        if parent.parent_id:
+            raise CategoryInvalidParentError(category_id=parent.id)
+
+        if self._category:
+            if self._category.id == parent.id:
+                raise CategoryInvalidParentError(category_id=parent.id)
+            if self._category.is_parent(parent):
+                raise CategoryInvalidParentError(category_id=parent.id)
+            if self._category.has_children():
+                raise CategoryInvalidParentError(category_id=parent.id)
+
+        return parent
 
 
 class CategoryIsOpenValidator(AsyncValidator):

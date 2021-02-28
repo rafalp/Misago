@@ -1,14 +1,16 @@
-from typing import Optional
+from typing import Optional, cast
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, create_model
+from pydantic import PositiveInt
 
 from ....categories.get import get_all_categories
+from ....categories.tree import move_category
 from ....categories.update import update_category
+from ....types import Category
 from ....validation import (
     CategoryExistsValidator,
-    CategoryMaxDepthValidator,
+    CategoryParentValidator,
     validate_data,
     validate_model,
 )
@@ -31,44 +33,51 @@ async def resolve_edit_category(
     category: str,
     input: dict,  # pylint: disable=redefined-builtin
 ):
-    # categories = await get_all_categories()
-
     input["category"] = category
 
     cleaned_data, errors = validate_model(EditCategoryInputModel, input)
     cleaned_data, errors = await validate_data(
         cleaned_data,
         {
-            "category": [CategoryExistsValidator(info.context),],
-            "parent": [
-                CategoryExistsValidator(info.context),
-                CategoryMaxDepthValidator(info.context, max_depth=0),
-            ],
+            "category": [CategoryExistsValidator(info.context)],
+            "parent": [CategoryExistsValidator(info.context),],
         },
         errors,
     )
 
-    category = cleaned_data.get("category")
-    parent = cleaned_data.get("parent")
+    category_obj = cast(Optional[Category], cleaned_data.get("category"))
+    parent = cast(Optional[Category], cleaned_data.get("parent"))
     parent_id = parent.id if parent else None
 
-    if not errors.has_errors_at_location("parent") and category.parent_id != parent_id:
-        pass  # todo: run extra validation for new parent
+    if (
+        not errors.has_errors_at_location("parent")
+        and parent_id
+        and category_obj
+        and category_obj.parent_id != parent_id
+    ):
+        cleaned_data, errors = await validate_data(
+            cleaned_data,
+            {"parent": [CategoryParentValidator(info.context, category_obj)]},
+            errors,
+        )
 
-    if errors:
-        return {"errors": errors, "category": category}
+    if errors or not category_obj:
+        return {"errors": errors, "category": category_obj}
 
     updated_category = await update_category(
-        category,
+        category_obj,
         name=cleaned_data["name"],
         is_closed=cleaned_data.get("is_closed") or False,
     )
 
     if updated_category.parent_id != parent_id:
-        pass
+        categories = await get_all_categories()
+        updated_category = await move_category(
+            categories, updated_category, parent=parent
+        )
 
     return {"category": updated_category}
 
 
-class EditCategoryInputModel(CategoryInputModel):
+class EditCategoryInputModel(CategoryInputModel):  # type: ignore
     category: PositiveInt
