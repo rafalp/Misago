@@ -150,8 +150,11 @@ async def move_category(
             for child in category_children:
                 tree.insert_node(child, category)
 
-        if c.id != category.id and c.parent_id and not c.is_child(category):
-            tree.insert_node(c, categories_map[c.parent_id])
+        if c.id != category.id and not c.is_child(category):
+            if c.parent_id:
+                tree.insert_node(c, categories_map[c.parent_id])
+            else:
+                tree.insert_node(c)
 
     if not before:
         tree.insert_node(category, parent)

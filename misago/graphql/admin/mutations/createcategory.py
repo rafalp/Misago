@@ -2,7 +2,7 @@ from typing import Optional
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, PositiveInt, constr, create_model
+from pydantic import PositiveInt, constr, create_model
 
 from ....categories.create import create_category
 from ....categories.get import get_all_categories

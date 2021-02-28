@@ -25,14 +25,6 @@ async def test_category_parent_can_be_updated(category, sibling_category):
 
 
 @pytest.mark.asyncio
-async def test_changing_parent_category_to_child_category_raises_error(
-    category, child_category
-):
-    with pytest.raises(ValueError):
-        await update_category(category, parent=child_category)
-
-
-@pytest.mark.asyncio
 async def test_category_parent_is_not_removed_if_new_value_is_none(category):
     category = replace(category, parent_id=1)
     updated_category = await update_category(category, parent=None)
