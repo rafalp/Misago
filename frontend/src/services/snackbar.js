@@ -53,6 +53,8 @@ export class Snackbar {
     if (!message) {
       if (rejection.status === 404) {
         message = gettext("Action link is invalid.")
+      } else if (rejection.status === 401) {
+        message = gettext("User is not authenticated, redirecting to Sleepio for login.")
       } else {
         message = gettext("Unknown error has occured.")
       }

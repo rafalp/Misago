@@ -2,6 +2,6 @@ use_remote_dynamic_settings: true
 
 DEBUG: true
 
-sleepio_app_url: https://app.sleepioci.com/
 
 mailgun_domain: mg.sleepioci.com
+sleepio_app_url: https://app.sleepioci.com/sleepio/login/?source=community

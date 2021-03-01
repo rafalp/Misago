@@ -12,3 +12,5 @@ risk_words_emails:
 
 access_token_cookie_expiration_seconds: 1000
 refresh_token_cookie_expiration_days: 100
+
+sleepio_app_url: http://app.sleepio.localhost:8100/sleepio/login/?source=community

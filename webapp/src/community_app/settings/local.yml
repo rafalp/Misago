@@ -17,4 +17,4 @@ db:
 email_backend: django.core.mail.backends.console.EmailBackend
 enable_risk_words_notifications: false
 
-sleepio_app_url: http://app.sleepio.localhost:8100/
+sleepio_app_url: http://app.sleepio.localhost:8100/sleepio/login/?source=community

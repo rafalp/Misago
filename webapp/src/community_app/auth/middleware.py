@@ -5,10 +5,12 @@ from typing import Optional
 from bh.core_utils.bh_exception import BHException
 from bh.services.factory import Factory
 from bh_settings import get_settings
-from django.conf import settings
-from django.contrib.auth import logout
 
-# from django.shortcuts import redirect
+from django.contrib.auth import logout
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.urls import reverse
+
 from misago.users.models import AnonymousUser
 
 from community_app.constants import COOKIE_NAME_ACCESS_TOKEN, COOKIE_NAME_REFRESH_TOKEN
@@ -81,9 +83,15 @@ class PlatformTokenMiddleware:
             authentication_entity = authentication_service.find_with_tokens(access_token=access_token, refresh_token=refresh_token)
 
         if not access_token or not authentication_entity:
-            tokens = authentication_service.refresh_access_token(refresh_token=refresh_token)
+            tokens = {}
+            # If we don't guard our calls to authentication_service services,
+            # we bubble up missing required parameter exceptions to sentry, which is undesired
+            if refresh_token:
+                tokens = authentication_service.refresh_access_token(refresh_token=refresh_token)
             access_token, refresh_token = tokens.get("access_token"), tokens.get("refresh_token")
-            authentication_entity = authentication_service.find_with_tokens(access_token=access_token, refresh_token=refresh_token)
+            authentication_entity = None
+            if access_token or refresh_token:
+                authentication_entity = authentication_service.find_with_tokens(access_token=access_token, refresh_token=refresh_token)
             if not authentication_entity:
                 raise UserNotAuthenticated
             cookies_updated = True
@@ -130,8 +138,10 @@ class PlatformTokenMiddleware:
 
     def __call__(self, request):
         """
-        Here we validate existence of an authentication entity but ONLY for non-admin users.
+        Here we validate existence of an authentication entity but ONLY for non-admin users and
+        NOT for the /admincp (admin login) url root.
         We must support admin users logging in with email, and not using Sleepio auth cookies.
+
         If we don't have an authentication entity, OR we don't have an access_token (e.g. it's expired)
         we attempt to refresh the tokens with refresh_token
 
@@ -157,7 +167,7 @@ class PlatformTokenMiddleware:
         cookies_updated = False
         authentication_entity = None
 
-        if hasattr(request, "user") and not request.user.is_superuser:
+        if "admincp" not in request.path_info and hasattr(request, "user") and not request.user.is_superuser:
             access_token, refresh_token = request.COOKIES.get(COOKIE_NAME_ACCESS_TOKEN), request.COOKIES.get(COOKIE_NAME_REFRESH_TOKEN)
 
             try:
@@ -170,17 +180,53 @@ class PlatformTokenMiddleware:
                 )
             except BHException as e:
                 logger.info(e)
-                if settings.SESSION_COOKIE_NAME in request.COOKIES:
+                if request.user.is_authenticated:
                     logout(request)
                     request.user = AnonymousUser()
-                # TODO enable this when we have sleepio redirect URLS,
-                #   and second level domain cookies working.
-                #   Until then, this will always fire upon landing on the page
-                #   because we won't have the cookies generated
-                # return redirect(get_settings("sleepio_app_url"))
+
+                # We do not use the path alias of "social:begin" here because it results in
+                # an additional redirection, which we have to guard against.
+                # For example:
+                # social:begin resolves to /login/sleepio/ which resolves to the result of get_settings("sleepio_app_url")
+                # from SleepioAuth.auth_url.
+                #
+                # Rather than guard against infinite redirects with social:begin e.g.:
+                # if (...other conditions...) and request.patch_info != reverse("social:begin", args(["sleepio"]),:
+                #   return redirect(reverse("social:begin", args(["sleepio"]))
+                # we redirect directly to get_settings("sleepio_app_url")
+                #
+                # If we're requesting a text/html site, and we cannot authenticate, we redirect
+                # the user to sleepio login from the middleware
+                if "text/html" in request.headers.get("accept"):
+                    return redirect(get_settings("sleepio_app_url"))
+                # Otherwise, we return a 401 to the client, and handle the client-level redirect
+                # from the browser
+                else:
+                    unauthorized = HttpResponse("Platform Authentication Failed", status=401)
+                    unauthorized["redirect_url"] = get_settings("sleepio_app_url")
+                    return unauthorized
 
         if authentication_entity:
-            request._platform_user_id = authentication_entity.get("user_id")
+            platform_user_id = authentication_entity.get("user_id")
+            # social:complete maps to /complete/sleepio which invokes the social auth pipeline
+            if request.path_info == reverse("social:complete", args=(["sleepio"])):
+                # If there is already an active session, and we're currently attempting to authenticate, end the current session before authenticating
+                if request.user.is_authenticated:
+                    logout(request)
+                    request.user = AnonymousUser()
+                request._platform_user_id = platform_user_id
+            # If we're not authenticating, and there is currently no active session
+            # redirect to authenticate the user.
+            # An example of this is hitting the root domain with valid tokens
+            elif not request.user.is_authenticated:
+                return redirect(reverse("social:complete", args=(["sleepio"])))
+            # We're authenticated, make sure uid matches betwen user social auth and platform auth, if not re-login via /complete
+            else:
+                # TODO we're calling UserAccount.read exclusively for its uuid, return this in authentication_entity to minimize IO
+                # We've placed this check in the final conditional block to minimize calls as possible.
+                user_account_entity = Factory.create("UserAccount", "1").read(entity_id=platform_user_id)
+                if request.user.social_auth.values()[0].get("uid") != user_account_entity.get("uuid"):
+                    return redirect(reverse("social:complete", args=(["sleepio"])))
 
         response = self.get_response(request)
 
