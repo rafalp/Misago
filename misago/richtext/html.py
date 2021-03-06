@@ -4,7 +4,6 @@ from ..hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_h
 from ..types import GraphQLContext, RichText, RichTextBlock
 from .highlight import highlight_code
 
-
 __all__ = ["convert_rich_text_block_to_html", "convert_rich_text_to_html"]
 
 

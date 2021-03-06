@@ -4,7 +4,7 @@
 move_threads_input_hook.call_action(
     action: MoveThreadsInputAction,
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: MoveThreadsInput,
     errors_list: ErrorsList,
 )
@@ -22,7 +22,7 @@ Returns a tuple of `data` that should be used to update threads and validation `
 ```python
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: MoveThreadsInput,
     errors: ErrorsList,
 ) -> Tuple[MoveThreadsInput, ErrorsList]:
@@ -44,7 +44,7 @@ A dict with GraphQL query context.
 ### `validators`
 
 ```python
-Dict[str, List[AsyncValidator]]
+Dict[str, List[Validator]]
 ```
 
 A dict of lists of validators that should be used to validate inputs values.

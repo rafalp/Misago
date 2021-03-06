@@ -6,7 +6,6 @@ from .thread import thread_type
 from .threadposts import thread_posts_type
 from .threadsfeed import threads_feed_type
 
-
 types = [
     pagination_type,
     post_type,

@@ -1,6 +1,5 @@
 from ..generic import parse_generic_scalar_literal, serialize_generic_scalar
 
-
 TEST_SCALAR = {"test": True}
 
 

@@ -4,7 +4,8 @@ from pydantic import PydanticTypeError, PydanticValueError
 
 from .autherror import AuthError
 from .errordict import ErrorDict
-from .format import ROOT_LOCATION as DEFAULT_ROOT_LOCATION, get_error_dict
+from .format import ROOT_LOCATION as DEFAULT_ROOT_LOCATION
+from .format import get_error_dict
 
 
 class ErrorsList(List[ErrorDict]):

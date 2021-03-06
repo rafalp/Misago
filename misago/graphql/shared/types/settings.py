@@ -2,7 +2,6 @@ from ariadne import ObjectType
 
 from ....validation import PASSWORD_MAX_LENGTH
 
-
 settings_type = ObjectType("Settings")
 
 settings_type.set_alias("bulkActionLimit", "bulk_action_limit")

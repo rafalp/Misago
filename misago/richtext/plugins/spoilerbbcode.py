@@ -2,7 +2,6 @@ from mistune import Markdown
 
 from .genericblock import parse_generic_block_close, parse_generic_block_open
 
-
 SPOILER_OPEN_PATTERN = r"(\s+)?\[spoiler\](\s+)?"
 SPOILER_CLOSE_PATTERN = r"(\s+)?\[\/spoiler\](\s+)?"
 

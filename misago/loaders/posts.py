@@ -1,13 +1,13 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
 from ..database.paginator import Paginator
-from ..types import GraphQLContext, Post, Thread, ThreadPostsPage
 from ..threads.get import (
     get_posts_by_id,
     get_thread_posts_page,
     get_thread_posts_paginator,
 )
 from ..threads.post_url import get_thread_post_url
+from ..types import GraphQLContext, Post, Thread, ThreadPostsPage
 from ..utils.request import get_absolute_url
 from .loader import get_loader, get_loader_context_key
 

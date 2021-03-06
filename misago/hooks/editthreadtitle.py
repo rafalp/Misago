@@ -2,8 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
-    GraphQLContext,
     EditThreadTitleAction,
     EditThreadTitleFilter,
     EditThreadTitleInput,
@@ -12,7 +10,9 @@ from ..types import (
     EditThreadTitleInputModel,
     EditThreadTitleInputModelAction,
     EditThreadTitleInputModelFilter,
+    GraphQLContext,
     Thread,
+    Validator,
 )
 from .filter import FilterHook
 
@@ -34,7 +34,7 @@ class EditThreadTitleInputHook(
         self,
         action: EditThreadTitleInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: EditThreadTitleInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[EditThreadTitleInput, ErrorsList]]:

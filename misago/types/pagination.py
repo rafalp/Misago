@@ -3,7 +3,6 @@ from typing import Generic, List, TypeVar
 
 from ..database.paginator import Page
 
-
 Item = TypeVar("Item")
 
 

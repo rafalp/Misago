@@ -3,19 +3,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
 from .thread import Thread
-
+from .validator import Validator
 
 DeleteThreadPostInput = Dict[str, Any]
 DeleteThreadPostInputThreadAction = Callable[
-    [
-        GraphQLContext,
-        Dict[str, List[AsyncValidator]],
-        DeleteThreadPostInput,
-        ErrorsList,
-    ],
+    [GraphQLContext, Dict[str, List[Validator]], DeleteThreadPostInput, ErrorsList,],
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputThreadFilter = Callable[
@@ -23,12 +17,7 @@ DeleteThreadPostInputThreadFilter = Callable[
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputPostAction = Callable[
-    [
-        GraphQLContext,
-        Dict[str, List[AsyncValidator]],
-        DeleteThreadPostInput,
-        ErrorsList,
-    ],
+    [GraphQLContext, Dict[str, List[Validator]], DeleteThreadPostInput, ErrorsList,],
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputPostFilter = Callable[

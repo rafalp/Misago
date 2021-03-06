@@ -2,8 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
-    GraphQLContext,
     CloseThreadsAction,
     CloseThreadsFilter,
     CloseThreadsInput,
@@ -12,7 +10,9 @@ from ..types import (
     CloseThreadsInputModel,
     CloseThreadsInputModelAction,
     CloseThreadsInputModelFilter,
+    GraphQLContext,
     Thread,
+    Validator,
 )
 from .filter import FilterHook
 
@@ -34,7 +34,7 @@ class CloseThreadsInputHook(
         self,
         action: CloseThreadsInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: CloseThreadsInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[CloseThreadsInput, ErrorsList]]:

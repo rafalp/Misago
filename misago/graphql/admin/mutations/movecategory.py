@@ -20,7 +20,6 @@ from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 from .editcategory import validate_parent_value
 
-
 move_category_mutation = MutationType()
 
 
@@ -56,7 +55,7 @@ async def resolve_move_category(
 
     category_obj: Optional[Category] = cleaned_data.get("category")
 
-    if errors:
+    if errors or not category_obj:
         return {
             "errors": errors,
             "category": category_obj,

@@ -42,7 +42,6 @@ from .users import (
     store_users,
 )
 
-
 __all__ = [
     "clear_all_posts",
     "clear_all_threads",

@@ -2,23 +2,19 @@ from asyncio import gather
 from inspect import isawaitable
 from typing import Any, Dict, List, Optional, Tuple, Type, cast
 
-from pydantic import (
-    BaseModel,
-    PydanticTypeError,
-    PydanticValueError,
-    validate_model as pydantic_validate_model,
-)
+from pydantic import BaseModel, PydanticTypeError, PydanticValueError
+from pydantic import validate_model as pydantic_validate_model
 
 from ..errors import AuthError, ErrorsList
 from ..types import Validator
 
-
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
 
 
-def validate_model(
-    model: Type[BaseModel], input_data: Dict[str, Any]
-) -> Tuple[Dict[str, Any], ErrorsList]:
+Data = Dict[str, Any]
+
+
+def validate_model(model: Type[BaseModel], input_data: Data) -> Tuple[Data, ErrorsList]:
     """Wrapper for pydantic.validate_model that always returns list for errors."""
     validated_data, _, errors = pydantic_validate_model(model, input_data)
     if not errors:
@@ -27,16 +23,14 @@ def validate_model(
 
 
 async def validate_data(
-    data: Dict[str, Any],
-    validators: Dict[str, List[Validator]],
-    errors: ErrorsList,
-) -> Tuple[Dict[str, Any], ErrorsList]:
+    data: Data, validators: Dict[str, List[Validator]], errors: ErrorsList,
+) -> Tuple[Data, ErrorsList]:
     if not data or not validators:
         return data, errors
 
     new_errors = errors.copy()
 
-    validated_data: Dict[str, Any] = {}
+    validated_data: Data = {}
 
     validators_queue = []
     validators_queue_fields = []
@@ -63,9 +57,9 @@ async def validate_data(
             try:
                 result = root_validator(validated_data, new_errors, ROOT_LOCATION)
                 if isawaitable(result):
-                    validated_data = await result
+                    validated_data = cast(Data, await result)
                 else:
-                    validated_data = result
+                    validated_data = cast(Data, result)
             except (AuthError, PydanticTypeError, PydanticValueError) as error:
                 new_errors.add_root_error(error)
 

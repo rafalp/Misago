@@ -3,7 +3,6 @@ import pytest
 from ...errors import ListRepeatedItemsError
 from ..types import bulkactionidslist
 
-
 settings = {"bulk_action_limit": 5}
 
 

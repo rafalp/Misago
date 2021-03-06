@@ -1,6 +1,5 @@
 from mistune import Markdown
 
-
 MENTION_PATTERN = r"(^|[^\w])@([a-zA-Z0-9]+)"
 
 

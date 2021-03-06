@@ -1,11 +1,10 @@
-from typing import Awaitable, Optional, List
+from typing import Awaitable, List, Optional
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
 from ....loaders import load_category, load_category_children
 from ....types import Category
-
 
 category_type = ObjectType("Category")
 

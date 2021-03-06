@@ -1,5 +1,4 @@
 import pytest
-
 from sqlalchemy import desc
 
 from ...tables import threads

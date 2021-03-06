@@ -1,5 +1,4 @@
 import pytest
-
 from click.testing import CliRunner, Result
 
 from .. import cli

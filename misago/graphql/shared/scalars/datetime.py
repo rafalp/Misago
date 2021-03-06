@@ -2,7 +2,6 @@ from datetime import datetime
 
 from ariadne import ScalarType
 
-
 datetime_scalar = ScalarType("DateTime")
 
 

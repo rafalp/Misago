@@ -3,7 +3,6 @@ from typing import Protocol, Tuple
 from .graphqlcontext import GraphQLContext
 from .richtext import RichText
 
-
 ParsedMarkupMetadata = dict
 
 

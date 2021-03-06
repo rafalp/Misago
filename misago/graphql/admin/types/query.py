@@ -7,7 +7,6 @@ from ....loaders import load_root_categories
 from ....types import Category
 from ..decorators import admin_query
 
-
 query_type = QueryType()
 
 

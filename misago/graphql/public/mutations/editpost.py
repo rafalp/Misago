@@ -15,13 +15,13 @@ from ....loaders import load_post, load_thread, store_post
 from ....richtext.parser import parse_markup
 from ....threads.update import update_post
 from ....types import (
-    AsyncValidator,
-    GraphQLContext,
     EditPostInput,
     EditPostInputModel,
+    GraphQLContext,
     ParsedMarkupMetadata,
     Post,
     Thread,
+    Validator,
 )
 from ....validation import (
     CategoryIsOpenValidator,
@@ -35,7 +35,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 edit_post_mutation = MutationType()
 
@@ -60,7 +59,7 @@ async def resolve_edit_post(
             thread = await load_thread(info.context, post.thread_id)
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "post": [
                 PostExistsValidator(info.context),
                 PostAuthorValidator(info.context),
@@ -100,7 +99,7 @@ async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: EditPostInput,
     errors: ErrorsList,
 ) -> Tuple[EditPostInput, ErrorsList]:

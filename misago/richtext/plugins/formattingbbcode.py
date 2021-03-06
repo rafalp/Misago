@@ -1,6 +1,5 @@
 from mistune import Markdown
 
-
 BOLD_PATTERN = r"\[b\](.*)\[\/b\]"
 ITALIC_PATTERN = r"\[i\](.*)\[\/i\]"
 UNDERLINE_PATTERN = r"\[u\](.*)\[\/u\]"

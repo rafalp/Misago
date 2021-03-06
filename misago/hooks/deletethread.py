@@ -2,8 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
-    GraphQLContext,
     DeleteThreadAction,
     DeleteThreadFilter,
     DeleteThreadInput,
@@ -12,6 +10,8 @@ from ..types import (
     DeleteThreadInputModel,
     DeleteThreadInputModelAction,
     DeleteThreadInputModelFilter,
+    GraphQLContext,
+    Validator,
 )
 from .filter import FilterHook
 
@@ -33,7 +33,7 @@ class DeleteThreadInputHook(
         self,
         action: DeleteThreadInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: DeleteThreadInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[DeleteThreadInput, ErrorsList]]:

@@ -6,7 +6,6 @@ from pydantic import PydanticTypeError, PydanticValueError
 
 from ..errors import AuthError, ErrorDict, ErrorsList, get_error_dict
 
-
 ERRORS = "errors"
 
 

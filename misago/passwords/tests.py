@@ -4,7 +4,6 @@ from passlib.hash import pbkdf2_sha256, plaintext
 from . import password_hasher
 from .hasher import PasswordHasher
 
-
 PASSWORD = "p4ssw0rd"
 
 

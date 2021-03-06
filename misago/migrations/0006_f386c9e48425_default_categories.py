@@ -8,11 +8,10 @@ Create Date: 2019-12-15 21:51:27.434952
 from typing import List
 
 from alembic import op
-from sqlalchemy import Boolean, Integer, JSON, String
-from sqlalchemy.sql import table, column
+from sqlalchemy import JSON, Boolean, Integer, String
+from sqlalchemy.sql import column, table
 
 from misago.categories.categorytypes import CategoryTypes
-
 
 # revision identifiers, used by Alembic.
 revision = "f386c9e48425"

@@ -7,7 +7,6 @@ from ....pubsub.threads import threads_updates
 from ....types import Category
 from ....utils.strings import parse_db_id
 
-
 threads_subscription = SubscriptionType()
 
 

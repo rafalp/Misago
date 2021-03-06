@@ -2,7 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
     GraphQLContext,
     RegisterUserAction,
     RegisterUserFilter,
@@ -13,8 +12,8 @@ from ..types import (
     RegisterUserInputModelAction,
     RegisterUserInputModelFilter,
     User,
+    Validator,
 )
-
 from .filter import FilterHook
 
 
@@ -35,7 +34,7 @@ class RegisterUserInputHook(
         self,
         action: RegisterUserInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: RegisterUserInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[RegisterUserInput, ErrorsList]]:

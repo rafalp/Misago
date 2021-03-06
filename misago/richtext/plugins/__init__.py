@@ -18,7 +18,6 @@ from .spoilerbbcode import plugin_spoiler_bbcode
 from .url import plugin_url
 from .urlbbcode import plugin_url_bbcode
 
-
 builtin_plugins = [
     plugin_bold_bbcode,
     plugin_code_bbcode,

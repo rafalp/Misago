@@ -2,7 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
     GraphQLContext,
     MoveThreadAction,
     MoveThreadFilter,
@@ -13,6 +12,7 @@ from ..types import (
     MoveThreadInputModelAction,
     MoveThreadInputModelFilter,
     Thread,
+    Validator,
 )
 from .filter import FilterHook
 
@@ -32,7 +32,7 @@ class MoveThreadInputHook(FilterHook[MoveThreadInputAction, MoveThreadInputFilte
         self,
         action: MoveThreadInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: MoveThreadInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[MoveThreadInput, ErrorsList]]:

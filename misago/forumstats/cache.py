@@ -2,7 +2,6 @@ from typing import Optional
 
 from ..cache import cache
 
-
 FORUM_STATS_CACHE = "forum_stats"
 
 CACHE_TIMEOUT = 60 * 60  # 1 hour

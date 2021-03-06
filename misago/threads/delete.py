@@ -5,7 +5,8 @@ from sqlalchemy import and_, desc, not_
 
 from ..database import database
 from ..database.queries import count, delete, delete_many
-from ..tables import posts as posts_table, threads as threads_table
+from ..tables import posts as posts_table
+from ..tables import threads as threads_table
 from ..types import Post, Thread
 from .update import update_thread
 

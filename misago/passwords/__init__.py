@@ -3,7 +3,6 @@ from passlib.hash import django_pbkdf2_sha256, pbkdf2_sha256, plaintext
 from ..conf import settings
 from .hasher import PasswordHasher
 
-
 __all__ = [
     "password_hasher",
     "hash_password",

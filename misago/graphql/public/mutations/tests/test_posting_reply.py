@@ -2,8 +2,8 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....pubsub.threads import THREADS_CHANNEL
 from .....errors import ErrorsList
+from .....pubsub.threads import THREADS_CHANNEL
 from .....threads.get import get_post_by_id, get_thread_by_id
 from ..postreply import resolve_post_reply
 

@@ -1,7 +1,6 @@
 from asyncio import gather
 from typing import Generic, List, TypeVar
 
-
 Action = TypeVar("Action")
 
 

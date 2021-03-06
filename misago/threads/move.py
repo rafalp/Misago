@@ -3,7 +3,8 @@ from dataclasses import replace
 from typing import List, Sequence
 
 from ..database import database
-from ..tables import posts, threads as threads_table
+from ..tables import posts
+from ..tables import threads as threads_table
 from ..types import Category, Thread
 from .update import update_thread
 

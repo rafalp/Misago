@@ -7,16 +7,15 @@ from starlette.requests import Request
 from .cache import cache
 from .conf import settings
 from .database import database
-from .hooks import graphql_context_hook
 from .graphql.admin.schema import admin_schema
 from .graphql.context import get_graphql_context
 from .graphql.public.schema import public_schema
+from .hooks import graphql_context_hook
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
-from .types import GraphQLContext
 from .template import render
-
+from .types import GraphQLContext
 
 import_plugins()
 

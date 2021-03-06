@@ -13,10 +13,10 @@ from ....hooks import (
 from ....loaders import clear_all_posts, clear_thread
 from ....threads.delete import delete_thread
 from ....types import (
-    AsyncValidator,
-    GraphQLContext,
     DeleteThreadInput,
     DeleteThreadInputModel,
+    GraphQLContext,
+    Validator,
 )
 from ....validation import (
     CategoryModeratorValidator,
@@ -27,7 +27,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 delete_thread_mutation = MutationType()
 
@@ -44,7 +43,7 @@ async def resolve_delete_thread(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -73,7 +72,7 @@ async def create_input_model(context: GraphQLContext) -> DeleteThreadInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadInput, ErrorsList]:

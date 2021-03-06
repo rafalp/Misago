@@ -1,7 +1,6 @@
 from mistune import Markdown
 from mistune.inline_parser import escape_url
 
-
 URL_BBCODE_PATTERN = r"\[url(=(\"|')?(.*)(\"|')?)?\](.*)\[\/url\]"
 
 

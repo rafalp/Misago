@@ -1,4 +1,4 @@
-from typing import TypedDict, Sequence, Union
+from typing import Sequence, TypedDict, Union
 
 
 class ErrorDict(TypedDict):

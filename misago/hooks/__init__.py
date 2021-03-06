@@ -78,7 +78,6 @@ from .userauth import (
     GetUserFromTokenPayloadHook,
 )
 
-
 authenticate_user_hook = AuthenticateUserHook()
 close_thread_hook = CloseThreadHook()
 close_thread_input_hook = CloseThreadInputHook()

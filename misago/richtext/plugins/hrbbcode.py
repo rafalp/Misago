@@ -2,7 +2,6 @@ import re
 
 from mistune import Markdown
 
-
 HR_BBCODE_PATTERN = re.compile(r"\[hr\]", re.IGNORECASE)
 
 

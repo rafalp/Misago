@@ -4,7 +4,7 @@
 delete_thread_posts_input_posts_hook.call_action(
     action: DeleteThreadPostsInputRepliesAction,
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostsInput,
     errors_list: ErrorsList,
 )
@@ -22,7 +22,7 @@ Returns a tuple of `data` that should be used to delete thread posts and validat
 ```python
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostsInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadPostsInput, ErrorsList]:
@@ -44,7 +44,7 @@ A dict with GraphQL query context.
 ### `validators`
 
 ```python
-Dict[str, List[AsyncValidator]]
+Dict[str, List[Validator]]
 ```
 
 A dict of lists of validators that should be used to validate inputs values.

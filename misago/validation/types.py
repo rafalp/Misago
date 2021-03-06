@@ -7,7 +7,6 @@ from pydantic.validators import list_validator
 from ..errors import ListRepeatedItemsError, UsernameError
 from ..types import Settings
 
-
 CallableGenerator = Generator[Callable[..., Any], None, None]
 
 PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons

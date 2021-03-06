@@ -1,11 +1,6 @@
 from typing import List
 
-from ..types import (
-    GraphQLContext,
-    MarkdownAction,
-    MarkdownFilter,
-    ParsedMarkupMetadata,
-)
+from ..types import GraphQLContext, MarkdownAction, MarkdownFilter, ParsedMarkupMetadata
 from .filter import FilterHook
 
 

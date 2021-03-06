@@ -3,10 +3,10 @@ import pytest
 from ..get import (
     get_user_by_email,
     get_user_by_id,
-    get_users_by_id,
     get_user_by_name,
-    get_users_by_name,
     get_user_by_name_or_email,
+    get_users_by_id,
+    get_users_by_name,
 )
 
 

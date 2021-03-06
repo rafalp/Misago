@@ -5,10 +5,10 @@ Revises:
 Create Date: 2019-11-02 15:16:47.164010
 
 """
-from alembic import op
 import sqlalchemy as sa
-from misago.cacheversions.utils import generate_version_string
+from alembic import op
 
+from misago.cacheversions.utils import generate_version_string
 
 # revision identifiers, used by Alembic.
 revision = "e312cfb04cf7"

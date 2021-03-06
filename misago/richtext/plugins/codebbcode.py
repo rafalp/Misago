@@ -3,7 +3,6 @@ from typing import Optional
 
 from mistune import Markdown
 
-
 CODE_BBCODE_PATTERN = re.compile(
     r"\[code(=(\"|')?([a-zA-Z0-9]+)(\"|')?)?\]((.|\n)*?)\[\/code\]",
     re.IGNORECASE | re.MULTILINE,

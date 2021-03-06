@@ -1,9 +1,7 @@
 import pytest
-
 from pydantic.errors import StrRegexError
 
 from ..types import threadtitlestr
-
 
 settings = {"thread_title_min_length": 2, "thread_title_max_length": 5}
 

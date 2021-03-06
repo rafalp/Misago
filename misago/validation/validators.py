@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Any, Optional, List, Union, cast
+from typing import Any, List, Optional, Union, cast
 
 from pydantic import PydanticTypeError, PydanticValueError
 from sqlalchemy.sql import select
@@ -18,14 +18,14 @@ from ..errors import (
     NotPostAuthorError,
     NotThreadAuthorError,
     PostDoesNotExistError,
+    ThreadClosedError,
     ThreadDoesNotExistError,
     ThreadFirstPostError,
-    ThreadClosedError,
     UsernameNotAvailableError,
 )
 from ..loaders import load_category, load_post, load_thread
 from ..tables import users
-from ..types import AsyncValidator, Category, GraphQLContext, Post, Thread
+from ..types import Category, GraphQLContext, Post, Thread, Validator
 from ..users.email import get_email_hash
 from ..utils.lists import remove_none_items
 
@@ -37,10 +37,10 @@ async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
     return 0
 
 
-class BulkValidator(AsyncValidator):
-    _validators: List[AsyncValidator]
+class BulkValidator:
+    _validators: List[Validator]
 
-    def __init__(self, validators: List[AsyncValidator]):
+    def __init__(self, validators: List[Validator]):
         self._validators = validators
 
     async def __call__(
@@ -62,7 +62,7 @@ class BulkValidator(AsyncValidator):
 
 
 async def _validate_bulk_item(
-    location: List[str], data: Any, validators: List[AsyncValidator], errors: ErrorsList
+    location: List[str], data: Any, validators: List[Validator], errors: ErrorsList
 ) -> Any:
     try:
         for validator in validators:
@@ -73,7 +73,7 @@ async def _validate_bulk_item(
         return None
 
 
-class CategoryExistsValidator(AsyncValidator):
+class CategoryExistsValidator:
     _context: GraphQLContext
     _category_type: int
 
@@ -90,7 +90,7 @@ class CategoryExistsValidator(AsyncValidator):
         return category
 
 
-class CategoryIsOpenValidator(AsyncValidator):
+class CategoryIsOpenValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -104,7 +104,7 @@ class CategoryIsOpenValidator(AsyncValidator):
         return category
 
 
-class CategoryModeratorValidator(AsyncValidator):
+class CategoryModeratorValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -117,7 +117,7 @@ class CategoryModeratorValidator(AsyncValidator):
         return category
 
 
-class EmailIsAvailableValidator(AsyncValidator):
+class EmailIsAvailableValidator:
     _exclude_user: Optional[int]
 
     def __init__(self, exclude_user: Optional[int] = None):
@@ -133,7 +133,7 @@ class EmailIsAvailableValidator(AsyncValidator):
         return email
 
 
-class NewThreadIsClosedValidator(AsyncValidator):
+class NewThreadIsClosedValidator:
     _context: GraphQLContext
     _category: Union[str, int, Category]
 
@@ -159,7 +159,7 @@ class NewThreadIsClosedValidator(AsyncValidator):
         return is_closed
 
 
-class PostAuthorValidator(AsyncValidator):
+class PostAuthorValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -174,16 +174,15 @@ class PostAuthorValidator(AsyncValidator):
         return post
 
 
-class PostCategoryValidator(AsyncValidator):
+class PostCategoryValidator:
     _context: GraphQLContext
-    _validator: AsyncValidator
 
-    def __init__(self, context: GraphQLContext, category_validator: AsyncValidator):
+    def __init__(self, context: GraphQLContext, category_validator: Validator):
         self._context = context
         self._validator = category_validator
 
     @property
-    def category_validator(self) -> AsyncValidator:
+    def category_validator(self) -> Validator:
         return self._validator
 
     async def __call__(self, post: Post, errors: ErrorsList, field_name: str) -> Post:
@@ -193,7 +192,7 @@ class PostCategoryValidator(AsyncValidator):
         return post
 
 
-class PostExistsValidator(AsyncValidator):
+class PostExistsValidator:
     _context: GraphQLContext
     _category_type: int
 
@@ -213,16 +212,15 @@ class PostExistsValidator(AsyncValidator):
         return post
 
 
-class PostThreadValidator(AsyncValidator):
+class PostThreadValidator:
     _context: GraphQLContext
-    _validator: AsyncValidator
 
-    def __init__(self, context: GraphQLContext, thread_validator: AsyncValidator):
+    def __init__(self, context: GraphQLContext, thread_validator: Validator):
         self._context = context
         self._validator = thread_validator
 
     @property
-    def thread_validator(self) -> AsyncValidator:
+    def thread_validator(self) -> Validator:
         return self._validator
 
     async def __call__(self, post: Post, errors: ErrorsList, field_name: str) -> Post:
@@ -239,7 +237,7 @@ class PostsBulkValidator(BulkValidator):
         return await super().__call__(threads, errors, field_name)
 
 
-class ThreadAuthorValidator(AsyncValidator):
+class ThreadAuthorValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -254,16 +252,15 @@ class ThreadAuthorValidator(AsyncValidator):
         return thread
 
 
-class ThreadCategoryValidator(AsyncValidator):
+class ThreadCategoryValidator:
     _context: GraphQLContext
-    _validator: AsyncValidator
 
-    def __init__(self, context: GraphQLContext, category_validator: AsyncValidator):
+    def __init__(self, context: GraphQLContext, category_validator: Validator):
         self._context = context
         self._validator = category_validator
 
     @property
-    def category_validator(self) -> AsyncValidator:
+    def category_validator(self) -> Validator:
         return self._validator
 
     async def __call__(
@@ -275,7 +272,7 @@ class ThreadCategoryValidator(AsyncValidator):
         return thread
 
 
-class ThreadExistsValidator(AsyncValidator):
+class ThreadExistsValidator:
     _context: GraphQLContext
     _category_type: int
 
@@ -295,7 +292,7 @@ class ThreadExistsValidator(AsyncValidator):
         return thread
 
 
-class ThreadIsOpenValidator(AsyncValidator):
+class ThreadIsOpenValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -309,7 +306,7 @@ class ThreadIsOpenValidator(AsyncValidator):
         return thread
 
 
-class ThreadPostExistsValidator(AsyncValidator):
+class ThreadPostExistsValidator:
     _context: GraphQLContext
     _thread: Thread
 
@@ -324,7 +321,7 @@ class ThreadPostExistsValidator(AsyncValidator):
         return post
 
 
-class ThreadPostIsReplyValidator(AsyncValidator):
+class ThreadPostIsReplyValidator:
     _thread: Thread
 
     def __init__(self, thread: Thread):
@@ -343,7 +340,7 @@ class ThreadsBulkValidator(BulkValidator):
         return await super().__call__(threads, errors, field_name)
 
 
-class UserIsAuthorizedRootValidator(AsyncValidator):
+class UserIsAuthorizedRootValidator:
     _context: GraphQLContext
 
     def __init__(self, context: GraphQLContext):
@@ -356,7 +353,7 @@ class UserIsAuthorizedRootValidator(AsyncValidator):
         return data
 
 
-class UsernameIsAvailableValidator(AsyncValidator):
+class UsernameIsAvailableValidator:
     _exclude_user: Optional[int]
 
     def __init__(self, exclude_user: Optional[int] = None):

@@ -7,7 +7,6 @@ from ....loaders import load_category, load_thread, load_thread_post_url, load_u
 from ....richtext.html import convert_rich_text_to_html
 from ....types import Category, Post, Thread, User
 
-
 post_type = ObjectType("Post")
 
 post_type.set_alias("posterName", "poster_name")

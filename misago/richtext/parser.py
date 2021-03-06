@@ -15,8 +15,8 @@ from ..hooks import (
 )
 from ..types import (
     GraphQLContext,
-    ParsedMarkupMetadata,
     MarkdownPlugin,
+    ParsedMarkupMetadata,
     RichText,
     RichTextBlock,
 )

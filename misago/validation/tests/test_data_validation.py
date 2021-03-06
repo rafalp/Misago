@@ -1,10 +1,8 @@
 import pytest
-
 from pydantic import PydanticValueError
 
 from ...errors import ErrorsList
 from ..validation import ROOT_LOCATION, validate_data
-
 
 VALID_VALUE = "ok"
 INVALID_VALUE = "invalid"

@@ -9,14 +9,9 @@ from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.tree import insert_category
 from ....types import Category
-from ....validation import (
-    CategoryExistsValidator,
-    validate_data,
-    validate_model,
-)
+from ....validation import CategoryExistsValidator, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
-
 
 create_category_mutation = MutationType()
 

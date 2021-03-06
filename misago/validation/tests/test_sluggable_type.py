@@ -1,5 +1,4 @@
 import pytest
-
 from pydantic.errors import StrRegexError
 
 from ..types import sluggablestr

@@ -45,13 +45,13 @@ from .convertinlineasttotext import (
     ConvertInlineAstToTextAction,
     ConvertInlineAstToTextFilter,
 )
-from .convertrichtexttohtml import (
-    ConvertRichTextToHTMLAction,
-    ConvertRichTextToHTMLFilter,
-)
 from .convertrichtextblocktohtml import (
     ConvertRichTextBlockToHTMLAction,
     ConvertRichTextBlockToHTMLFilter,
+)
+from .convertrichtexttohtml import (
+    ConvertRichTextToHTMLAction,
+    ConvertRichTextToHTMLFilter,
 )
 from .createmarkdown import CreateMarkdownAction, CreateMarkdownFilter, MarkdownPlugin
 from .createpost import CreatePostAction, CreatePostFilter
@@ -208,6 +208,5 @@ from .userauth import (
     GetUserFromTokenPayloadFilter,
 )
 from .validator import Validator
-
 
 CacheVersions = Dict[str, str]

@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import Awaitable, Optional
 
 from ..types import (
-    UpdatePostAction,
-    UpdatePostFilter,
     Category,
     GraphQLContext,
     Post,
     RichText,
     Thread,
+    UpdatePostAction,
+    UpdatePostFilter,
     User,
 )
 from .filter import FilterHook

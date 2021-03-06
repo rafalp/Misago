@@ -3,16 +3,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
 from .parsemarkup import ParsedMarkupMetadata
 from .post import Post
 from .thread import Thread
-
+from .validator import Validator
 
 PostReplyInput = Dict[str, Any]
 PostReplyInputAction = Callable[
-    [GraphQLContext, Dict[str, List[AsyncValidator]], PostReplyInput, ErrorsList,],
+    [GraphQLContext, Dict[str, List[Validator]], PostReplyInput, ErrorsList,],
     Awaitable[Tuple[PostReplyInput, ErrorsList]],
 ]
 PostReplyInputFilter = Callable[

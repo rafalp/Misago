@@ -1,7 +1,6 @@
 from functools import reduce
 from typing import Dict, Generic, List, TypeVar, cast
 
-
 Action = TypeVar("Action")
 Filter = TypeVar("Filter")
 

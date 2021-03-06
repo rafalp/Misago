@@ -13,7 +13,6 @@ from ..shared.types import shared_types
 from .mutations import mutations
 from .types import types
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SCHEMA_DIR = os.path.join(BASE_DIR, "schema")
 

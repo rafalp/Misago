@@ -1,6 +1,5 @@
 from mistune import Markdown
 
-
 HARD_BREAK_PATTERN = r"(\s+)?\n(\s+)?"
 
 

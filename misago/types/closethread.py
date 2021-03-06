@@ -3,14 +3,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
 from .thread import Thread
-
+from .validator import Validator
 
 CloseThreadInput = Dict[str, Any]
 CloseThreadInputAction = Callable[
-    [GraphQLContext, Dict[str, List[AsyncValidator]], CloseThreadInput, ErrorsList],
+    [GraphQLContext, Dict[str, List[Validator]], CloseThreadInput, ErrorsList],
     Awaitable[Tuple[CloseThreadInput, ErrorsList]],
 ]
 CloseThreadInputFilter = Callable[

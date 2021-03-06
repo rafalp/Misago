@@ -6,7 +6,6 @@ from ariadne import ObjectType
 from ....conf import settings
 from ....types import User
 
-
 user_type = ObjectType("User")
 
 user_type.set_alias("fullName", "full_name")

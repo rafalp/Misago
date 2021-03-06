@@ -1,6 +1,6 @@
 import pytest
 
-from .....categories.get import get_category_by_id, get_all_categories
+from .....categories.get import get_all_categories, get_category_by_id
 from ..createcategory import resolve_create_category
 
 

@@ -3,7 +3,6 @@ from graphql import GraphQLResolveInfo
 
 from ....types import Settings
 
-
 query_type = QueryType()
 
 

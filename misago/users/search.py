@@ -7,7 +7,6 @@ from ..database.queries import istartswith
 from ..tables import users
 from ..types import User
 
-
 RESULTS_MAX_LIMIT = 50
 
 

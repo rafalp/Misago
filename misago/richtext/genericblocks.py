@@ -1,6 +1,5 @@
 from typing import List
 
-
 BLOCK_OPEN = "block_open"
 BLOCK_CLOSE = "block_close"
 BLOCK_NODES = (BLOCK_OPEN, BLOCK_CLOSE)

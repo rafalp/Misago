@@ -3,7 +3,6 @@ from typing import Sequence, Union, cast
 from .autherror import AuthError
 from .errordict import ErrorDict
 
-
 ROOT_LOCATION = "__root__"
 
 

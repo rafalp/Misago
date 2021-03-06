@@ -13,11 +13,11 @@ from ....hooks import (
 from ....loaders import load_thread, store_thread
 from ....threads.move import move_thread
 from ....types import (
-    AsyncValidator,
     GraphQLContext,
     MoveThreadInput,
     MoveThreadInputModel,
     Thread,
+    Validator,
 )
 from ....validation import (
     CategoryExistsValidator,
@@ -30,7 +30,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 move_thread_mutation = MutationType()
 
@@ -52,7 +51,7 @@ async def resolve_move_thread(
         thread = None
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -87,7 +86,7 @@ async def create_input_model(context: GraphQLContext) -> MoveThreadInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: MoveThreadInput,
     errors: ErrorsList,
 ) -> Tuple[MoveThreadInput, ErrorsList]:

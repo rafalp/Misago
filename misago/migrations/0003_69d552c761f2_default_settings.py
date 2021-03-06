@@ -9,10 +9,9 @@ from datetime import timedelta
 
 from alembic import op
 from sqlalchemy import JSON, String
-from sqlalchemy.sql import table, column
+from sqlalchemy.sql import column, table
 
 from misago.utils.strings import get_random_string
-
 
 # revision identifiers, used by Alembic.
 revision = "69d552c761f2"

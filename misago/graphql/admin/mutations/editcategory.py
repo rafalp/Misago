@@ -21,7 +21,6 @@ from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 from .createcategory import CategoryInputModel
 
-
 edit_category_mutation = MutationType()
 
 

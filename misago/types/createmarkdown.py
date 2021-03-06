@@ -4,7 +4,6 @@ from mistune import BlockParser, InlineParser, Markdown
 
 from .graphqlcontext import GraphQLContext
 
-
 MarkdownPlugin = Callable[[Markdown], None]
 
 

@@ -7,7 +7,6 @@ from aiodataloader import DataLoader
 from ..types import GraphQLContext
 from ..utils.strings import parse_db_id
 
-
 LoaderFunction = Callable[[Sequence[Any]], Awaitable[Sequence[Any]]]
 
 

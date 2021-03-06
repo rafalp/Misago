@@ -6,7 +6,6 @@ from ..types import GraphQLContext, User
 from ..users.get import get_user_by_name_or_email
 from .token import get_user_from_token
 
-
 AUTHORIZATION_HEADER = "authorization"
 AUTHORIZATION_TYPE = "bearer"
 

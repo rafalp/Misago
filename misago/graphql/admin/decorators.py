@@ -4,7 +4,6 @@ from inspect import isawaitable
 from ...auth import get_authenticated_admin
 from ...errors import NotAdminError
 
-
 ERRORS = "errors"
 
 

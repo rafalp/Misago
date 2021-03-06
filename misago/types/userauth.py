@@ -3,7 +3,6 @@ from typing import Any, Awaitable, Callable, Dict, Optional
 from .graphqlcontext import GraphQLContext
 from .user import User
 
-
 AuthenticateUserAction = Callable[
     [GraphQLContext, str, str, bool], Awaitable[Optional[User]]
 ]

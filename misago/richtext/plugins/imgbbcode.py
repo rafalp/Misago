@@ -1,7 +1,6 @@
 from mistune import Markdown
 from mistune.inline_parser import escape_url
 
-
 IMG_BBCODE_PATTERN = r"\[img(=(\"|')?(.*)(\"|')?)?\](.*)\[\/img\]"
 
 

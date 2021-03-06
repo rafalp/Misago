@@ -2,7 +2,6 @@ from typing import Any
 
 from ariadne import ScalarType
 
-
 generic_scalar = ScalarType("Generic")
 
 

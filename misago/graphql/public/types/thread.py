@@ -13,7 +13,6 @@ from ....loaders import (
 )
 from ....types import Category, Post, Thread, User
 
-
 thread_type = ObjectType("Thread")
 
 thread_type.set_alias("starterName", "starter_name")

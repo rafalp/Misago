@@ -1,7 +1,6 @@
 from mistune import Markdown
 from mistune.inline_parser import escape_url
 
-
 SHORT_IMAGE_PATTERN = (
     r"!\(([A-Za-z][A-Za-z0-9+.-]{1,31}:"
     r"[^ <>]*?|[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9]"

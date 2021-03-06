@@ -1,4 +1,4 @@
-from typing import Protocol, List
+from typing import List, Protocol
 
 from .graphqlcontext import GraphQLContext
 from .parsemarkup import ParsedMarkupMetadata

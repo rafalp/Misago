@@ -9,7 +9,6 @@ from ....validation import validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 
-
 change_settings_mutation = MutationType()
 
 

@@ -14,11 +14,11 @@ from ....hooks import (
 from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
 from ....types import (
-    AsyncValidator,
-    GraphQLContext,
     DeleteThreadPostInput,
     DeleteThreadPostInputModel,
+    GraphQLContext,
     Thread,
+    Validator,
 )
 from ....validation import (
     CategoryModeratorValidator,
@@ -31,7 +31,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 delete_thread_post_mutation = MutationType()
 
@@ -53,7 +52,7 @@ async def resolve_delete_thread_post(
         thread = None
 
     if cleaned_data:
-        thread_validators: Dict[str, List[AsyncValidator]] = {
+        thread_validators: Dict[str, List[Validator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -74,7 +73,7 @@ async def resolve_delete_thread_post(
         return {"errors": errors, "thread": thread, "deleted": []}
 
     if cleaned_data.get("thread"):
-        post_validators: Dict[str, List[AsyncValidator]] = {
+        post_validators: Dict[str, List[Validator]] = {
             "post": [
                 ThreadPostExistsValidator(info.context, cleaned_data["thread"]),
                 ThreadPostIsReplyValidator(cleaned_data["thread"]),
@@ -108,7 +107,7 @@ async def create_input_model(context: GraphQLContext) -> DeleteThreadPostInputMo
 
 async def validate_input_post_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadPostInput, ErrorsList]:
@@ -117,7 +116,7 @@ async def validate_input_post_data(
 
 async def validate_input_thread_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadPostInput, ErrorsList]:

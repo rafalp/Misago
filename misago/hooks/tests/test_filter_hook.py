@@ -2,7 +2,6 @@ import pytest
 
 from ..filter import FilterHook
 
-
 ACTION = 0
 FIRST_FILTER = 1
 SECOND_FILTER = 2

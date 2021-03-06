@@ -1,11 +1,10 @@
 from asyncio import Future
-from typing import Dict, Optional, List, Union
+from typing import Dict, List, Optional, Union
 
 from ..categories.get import get_all_categories
-from ..types import GraphQLContext, Category
+from ..types import Category, GraphQLContext
 from ..utils.strings import parse_db_id
 from .loader import list_loader
-
 
 CACHE_NAME = "__categories"
 DICT_CACHE_NAME = f"{CACHE_NAME}_dict"

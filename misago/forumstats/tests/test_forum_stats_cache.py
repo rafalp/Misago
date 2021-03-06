@@ -8,7 +8,6 @@ from ..cache import (
     set_forum_stats_cache,
 )
 
-
 value = {"threads": 123}
 
 

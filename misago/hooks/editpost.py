@@ -2,7 +2,6 @@ from typing import Awaitable, Dict, List, Tuple
 
 from ..errors import ErrorsList
 from ..types import (
-    AsyncValidator,
     EditPostAction,
     EditPostFilter,
     EditPostInput,
@@ -15,6 +14,7 @@ from ..types import (
     ParsedMarkupMetadata,
     Post,
     Thread,
+    Validator,
 )
 from .filter import FilterHook
 
@@ -34,7 +34,7 @@ class EditPostInputHook(FilterHook[EditPostInputAction, EditPostInputFilter]):
         self,
         action: EditPostInputAction,
         context: GraphQLContext,
-        validators: Dict[str, List[AsyncValidator]],
+        validators: Dict[str, List[Validator]],
         data: EditPostInput,
         errors_list: ErrorsList,
     ) -> Awaitable[Tuple[EditPostInput, ErrorsList]]:

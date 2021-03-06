@@ -13,9 +13,9 @@ from ....hooks import (
 from ....loaders import load_thread, store_thread
 from ....threads.close import close_thread
 from ....types import (
-    GraphQLContext,
     CloseThreadInput,
     CloseThreadInputModel,
+    GraphQLContext,
     Thread,
     Validator,
 )
@@ -28,7 +28,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 close_thread_mutation = MutationType()
 

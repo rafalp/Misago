@@ -7,7 +7,6 @@ from ....database.paginator import Paginator
 from ....loaders import load_thread_posts_page
 from ....types import ThreadPostsPage
 
-
 thread_posts_type = ObjectType("ThreadPosts")
 
 

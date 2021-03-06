@@ -2,7 +2,6 @@ import pytest
 
 from ..render import render, render_to_string
 
-
 TEST_TEMPLATE = "__test__.html"
 
 

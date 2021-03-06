@@ -2,14 +2,14 @@ from typing import Dict, List, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, EmailStr, create_model, constr
+from pydantic import BaseModel, EmailStr, constr, create_model
 
 from ....auth import create_user_token
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
 from ....hooks import create_user_hook, create_user_token_hook
-from ....types import AsyncValidator, GraphQLContext
+from ....types import GraphQLContext, Validator
 from ....users.create import create_user
 from ....validation import (
     EmailIsAvailableValidator,
@@ -20,7 +20,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 setup_site_mutation = MutationType()
 
@@ -38,7 +37,7 @@ async def resolve_setup_site(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "name": [UsernameIsAvailableValidator(),],
             "email": [EmailIsAvailableValidator(),],
         }

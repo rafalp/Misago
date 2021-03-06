@@ -5,7 +5,6 @@ from ariadne import ObjectType
 from ....types import User
 from ....users.search import search_users
 
-
 search_results_type = ObjectType("SearchResults")
 
 

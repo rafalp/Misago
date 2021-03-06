@@ -3,14 +3,13 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from .asyncvalidator import AsyncValidator
 from .graphqlcontext import GraphQLContext
 from .user import User
-
+from .validator import Validator
 
 RegisterUserInput = Dict[str, Any]
 RegisterUserInputAction = Callable[
-    [GraphQLContext, Dict[str, List[AsyncValidator]], RegisterUserInput, ErrorsList],
+    [GraphQLContext, Dict[str, List[Validator]], RegisterUserInput, ErrorsList],
     Awaitable[Tuple[RegisterUserInput, ErrorsList]],
 ]
 RegisterUserInputFilter = Callable[

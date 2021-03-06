@@ -15,11 +15,11 @@ from ....hooks import (
 )
 from ....loaders import store_user
 from ....types import (
-    AsyncValidator,
     GraphQLContext,
     RegisterUserInput,
     RegisterUserInputModel,
     User,
+    Validator,
 )
 from ....users.create import create_user
 from ....validation import (
@@ -31,7 +31,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 register_mutation = MutationType()
 
@@ -48,7 +47,7 @@ async def resolve_register(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "name": [UsernameIsAvailableValidator(),],
             "email": [EmailIsAvailableValidator(),],
         }
@@ -80,7 +79,7 @@ async def create_input_model(context: GraphQLContext) -> RegisterUserInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: RegisterUserInput,
     errors: ErrorsList,
 ) -> Tuple[RegisterUserInput, ErrorsList]:

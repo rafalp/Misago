@@ -3,7 +3,6 @@ import json
 from ..types import Thread
 from .broadcast import broadcast
 
-
 THREADS_CHANNEL = "threads_updates"
 
 

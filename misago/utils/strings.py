@@ -4,7 +4,6 @@ from typing import Any, Optional
 
 from unidecode import unidecode
 
-
 RANDOM_STRING_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 

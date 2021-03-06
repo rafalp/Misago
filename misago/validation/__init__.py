@@ -8,16 +8,16 @@ from .types import (
 )
 from .validation import ROOT_LOCATION, validate_data, validate_model
 from .validators import (
-    NewThreadIsClosedValidator,
     CategoryExistsValidator,
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
     EmailIsAvailableValidator,
+    NewThreadIsClosedValidator,
     PostAuthorValidator,
     PostCategoryValidator,
     PostExistsValidator,
-    PostThreadValidator,
     PostsBulkValidator,
+    PostThreadValidator,
     ThreadAuthorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
@@ -28,7 +28,6 @@ from .validators import (
     UserIsAuthorizedRootValidator,
     UsernameIsAvailableValidator,
 )
-
 
 __all__ = [
     "ROOT_LOCATION",

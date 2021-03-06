@@ -6,7 +6,6 @@ from ....errors import AllFieldsAreRequiredError, InvalidCredentialsError
 from ....hooks import authenticate_user_hook, create_user_token_hook
 from ...errorhandler import error_handler
 
-
 login_mutation = MutationType()
 
 

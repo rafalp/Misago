@@ -1,8 +1,8 @@
 import pytest
 
 from ..category import (
-    resolve_children,
     resolve_banner,
+    resolve_children,
     resolve_color,
     resolve_extra,
     resolve_icon,

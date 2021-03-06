@@ -7,7 +7,6 @@ from .auth import (
 from .token import create_user_token, get_user_from_token
 from .user import get_user
 
-
 __all__ = [
     "authenticate_user",
     "create_user_token",

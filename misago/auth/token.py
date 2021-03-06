@@ -13,7 +13,6 @@ from ..types import GraphQLContext, User
 from ..utils import timezone
 from .user import get_user
 
-
 JWT_ALGORITHM = "HS256"
 TOKEN_ENCODING = "utf-8"
 

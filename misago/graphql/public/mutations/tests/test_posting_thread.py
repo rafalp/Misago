@@ -2,8 +2,8 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....pubsub.threads import THREADS_CHANNEL
 from .....errors import ErrorsList
+from .....pubsub.threads import THREADS_CHANNEL
 from .....testing import override_dynamic_settings
 from .....threads.get import get_post_by_id, get_thread_by_id
 from ..postthread import resolve_post_thread

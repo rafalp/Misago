@@ -4,7 +4,6 @@ from ..cache import cache
 from ..cacheversions import invalidate_cache
 from ..types import CacheVersions, Settings
 
-
 SETTINGS_CACHE = "settings"
 
 

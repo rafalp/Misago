@@ -22,13 +22,13 @@ from ....richtext import parse_markup
 from ....threads.create import create_post, create_thread
 from ....threads.update import update_thread
 from ....types import (
-    AsyncValidator,
     GraphQLContext,
     ParsedMarkupMetadata,
     Post,
     PostThreadInput,
     PostThreadInputModel,
     Thread,
+    Validator,
 )
 from ....validation import (
     CategoryExistsValidator,
@@ -40,7 +40,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 post_thread_mutation = MutationType()
 
@@ -57,7 +56,7 @@ async def resolve_post_thread(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "category": [
                 CategoryExistsValidator(info.context),
                 CategoryIsOpenValidator(info.context),
@@ -101,7 +100,7 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: PostThreadInput,
     errors: ErrorsList,
 ) -> Tuple[PostThreadInput, ErrorsList]:

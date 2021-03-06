@@ -10,7 +10,6 @@ from .mutations import mutations
 from .subscriptions import subscriptions
 from .types import types
 
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SCHEMA_DIR = os.path.join(BASE_DIR, "schema")
 

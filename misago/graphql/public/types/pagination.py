@@ -2,7 +2,6 @@ from ariadne import ObjectType
 
 from ....database.paginator import Paginator
 
-
 pagination_type = ObjectType("Pagination")
 pagination_type.set_alias("perPage", "per_page")
 

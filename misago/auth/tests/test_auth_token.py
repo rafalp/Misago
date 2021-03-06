@@ -13,7 +13,6 @@ from ..token import (
     get_user_from_token,
 )
 
-
 SECRET = "secret"
 PAYLOAD = {"test": "ok!"}
 

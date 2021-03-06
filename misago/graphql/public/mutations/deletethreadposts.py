@@ -14,11 +14,11 @@ from ....hooks import (
 from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_posts
 from ....types import (
-    AsyncValidator,
-    GraphQLContext,
     DeleteThreadPostsInput,
     DeleteThreadPostsInputModel,
+    GraphQLContext,
     Thread,
+    Validator,
 )
 from ....validation import (
     ROOT_LOCATION,
@@ -34,7 +34,6 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-
 
 delete_thread_posts_mutation = MutationType()
 
@@ -60,7 +59,7 @@ async def resolve_delete_thread_posts(
         await load_posts(info.context, cleaned_data["posts"])
 
     if cleaned_data:
-        thread_validators: Dict[str, List[AsyncValidator]] = {
+        thread_validators: Dict[str, List[Validator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -91,7 +90,7 @@ async def resolve_delete_thread_posts(
         }
 
     if cleaned_data.get("thread"):
-        posts_validators: Dict[str, List[AsyncValidator]] = {
+        posts_validators: Dict[str, List[Validator]] = {
             "posts": [
                 PostsBulkValidator(
                     [
@@ -139,7 +138,7 @@ async def create_input_model(context: GraphQLContext) -> DeleteThreadPostsInputM
 
 async def validate_input_posts_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostsInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadPostsInput, ErrorsList]:
@@ -148,7 +147,7 @@ async def validate_input_posts_data(
 
 async def validate_input_thread_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: DeleteThreadPostsInput,
     errors: ErrorsList,
 ) -> Tuple[DeleteThreadPostsInput, ErrorsList]:
