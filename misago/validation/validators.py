@@ -11,7 +11,6 @@ from ..errors import (
     AuthError,
     CategoryClosedError,
     CategoryDoesNotExistError,
-    CategoryInvalidParentError,
     EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
@@ -89,29 +88,6 @@ class CategoryExistsValidator(AsyncValidator):
         if not category or category.type != self._category_type:
             raise CategoryDoesNotExistError(category_id=category_id)
         return category
-
-
-class CategoryParentValidator(AsyncValidator):
-    _context: GraphQLContext
-    _category: Optional[Category]
-
-    def __init__(self, context: GraphQLContext, category: Optional[Category] = None):
-        self._context = context
-        self._category = category
-
-    async def __call__(self, parent: Category, *_) -> Category:
-        if parent.parent_id:
-            raise CategoryInvalidParentError(category_id=parent.id)
-
-        if self._category:
-            if self._category.id == parent.id:
-                raise CategoryInvalidParentError(category_id=parent.id)
-            if self._category.is_parent(parent):
-                raise CategoryInvalidParentError(category_id=parent.id)
-            if self._category.has_children():
-                raise CategoryInvalidParentError(category_id=parent.id)
-
-        return parent
 
 
 class CategoryIsOpenValidator(AsyncValidator):

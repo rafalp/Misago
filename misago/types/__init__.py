@@ -16,7 +16,6 @@ from typing import (
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 
 from ..errors import ErrorsList
-from .asyncvalidator import AsyncValidator
 from .category import Category
 from .closethread import (
     CloseThreadAction,
@@ -208,6 +207,7 @@ from .userauth import (
     GetUserFromTokenPayloadAction,
     GetUserFromTokenPayloadFilter,
 )
+from .validator import Validator
 
 
 CacheVersions = Dict[str, str]

@@ -21,6 +21,7 @@ from ....types import (
     Thread,
 )
 from ....validation import (
+    ROOT_LOCATION,
     CategoryModeratorValidator,
     PostsBulkValidator,
     ThreadCategoryValidator,
@@ -66,7 +67,7 @@ async def resolve_delete_thread_posts(
                     info.context, CategoryModeratorValidator(info.context)
                 ),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
+            ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
 
         (

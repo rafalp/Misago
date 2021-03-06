@@ -102,7 +102,7 @@ async def insert_category(
     categories_map = {c.id: c for c in categories}
     categories_map[category.id] = category
 
-    validate_categories(categories_map, category, parent=parent)
+    validate_update(categories_map, category, parent=parent)
 
     if parent and parent.id not in categories_map:
         raise ValueError(f"Parent category '{parent}' doesn't exist.")
@@ -141,7 +141,7 @@ async def move_category(
 
     category_children = [c for c in categories if c.is_child(category)]
 
-    validate_categories(categories_map, category, parent=parent, before=before)
+    validate_update(categories_map, category, parent=parent, before=before)
 
     tree = CategoryTree([])
     for c in categories:
@@ -183,11 +183,11 @@ async def move_category(
     return updated_categories[category.id]
 
 
-class CategoryTreeValidationError(ValueError):
+class CategoryTreeUpdateError(ValueError):
     pass
 
 
-def validate_categories(
+def validate_update(
     categories_map: Dict[int, Category],
     category: Category,
     *,
@@ -196,31 +196,27 @@ def validate_categories(
 ):
     if parent:
         if parent.id not in categories_map:
-            raise CategoryTreeValidationError(
-                f"Parent category '{parent}' doesn't exist."
-            )
+            raise CategoryTreeUpdateError(f"Parent category '{parent}' doesn't exist.")
         if parent.id == category.id:
-            raise CategoryTreeValidationError(
+            raise CategoryTreeUpdateError(
                 f"Category '{category}' can't be its own parent."
             )
         if parent.is_child(category):
-            raise CategoryTreeValidationError(
+            raise CategoryTreeUpdateError(
                 f"Category '{category}' can't use its own child as parent."
             )
 
     if before:
         if before.id not in categories_map:
-            raise CategoryTreeValidationError(
-                f"Before category '{before}' doesn't exist."
-            )
+            raise CategoryTreeUpdateError(f"Before category '{before}' doesn't exist.")
         if before.id == category.id:
-            raise CategoryTreeValidationError(
+            raise CategoryTreeUpdateError(
                 f"Category '{category}' can't be moved before itself."
             )
         if (parent and before.parent_id != parent.id) or (
             not parent and before.parent_id
         ):
-            raise CategoryTreeValidationError(
+            raise CategoryTreeUpdateError(
                 f"Category '{category}' be moved before {before} "
                 "because both have different parents."
             )

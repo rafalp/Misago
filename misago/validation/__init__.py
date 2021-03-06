@@ -6,13 +6,12 @@ from .types import (
     threadtitlestr,
     usernamestr,
 )
-from .validation import validate_data, validate_model
+from .validation import ROOT_LOCATION, validate_data, validate_model
 from .validators import (
     NewThreadIsClosedValidator,
     CategoryExistsValidator,
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
-    CategoryParentValidator,
     EmailIsAvailableValidator,
     PostAuthorValidator,
     PostCategoryValidator,
@@ -32,11 +31,11 @@ from .validators import (
 
 
 __all__ = [
+    "ROOT_LOCATION",
     "PASSWORD_MAX_LENGTH",
     "CategoryExistsValidator",
     "CategoryIsOpenValidator",
     "CategoryModeratorValidator",
-    "CategoryParentValidator",
     "EmailIsAvailableValidator",
     "NewThreadIsClosedValidator",
     "PostAuthorValidator",

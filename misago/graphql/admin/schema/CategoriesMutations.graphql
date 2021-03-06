@@ -13,3 +13,14 @@ input CategoryInput {
     parent: ID
     isClosed: Boolean
 }
+
+# Move category
+extend type Mutation {
+    moveCategory(category: ID!, parent: ID, before: ID): MoveCategoryMutationResult!
+}
+
+type MoveCategoryMutationResult {
+    errors: [Error!]
+    category: Category
+    categories: [Category!]!
+}

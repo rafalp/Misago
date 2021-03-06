@@ -1,4 +1,5 @@
 from .categories import (
+    clear_categories,
     load_categories,
     load_category,
     load_category_children,
@@ -46,6 +47,7 @@ __all__ = [
     "clear_all_posts",
     "clear_all_threads",
     "clear_all_users",
+    "clear_categories",
     "clear_post",
     "clear_posts",
     "clear_thread",

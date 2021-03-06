@@ -13,11 +13,11 @@ from ....hooks import (
 from ....loaders import load_thread, store_thread
 from ....threads.close import close_thread
 from ....types import (
-    AsyncValidator,
     GraphQLContext,
     CloseThreadInput,
     CloseThreadInputModel,
     Thread,
+    Validator,
 )
 from ....validation import (
     CategoryModeratorValidator,
@@ -50,7 +50,7 @@ async def resolve_close_thread(
         thread = None
 
     if cleaned_data:
-        validators: Dict[str, List[AsyncValidator]] = {
+        validators: Dict[str, List[Validator]] = {
             "thread": [
                 ThreadExistsValidator(info.context),
                 ThreadCategoryValidator(
@@ -81,7 +81,7 @@ async def create_input_model(context: GraphQLContext) -> CloseThreadInputModel:
 
 async def validate_input_data(
     context: GraphQLContext,
-    validators: Dict[str, List[AsyncValidator]],
+    validators: Dict[str, List[Validator]],
     data: CloseThreadInput,
     errors: ErrorsList,
 ) -> Tuple[CloseThreadInput, ErrorsList]:

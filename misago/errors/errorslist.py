@@ -17,6 +17,9 @@ class ErrorsList(List[ErrorDict]):
                 errors_list.append(error)
         return ErrorsList(errors_list)
 
+    def copy(self):
+        return ErrorsList(self[:])
+
     def add_root_error(
         self, error: Union[AuthError, PydanticTypeError, PydanticValueError]
     ):

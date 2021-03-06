@@ -73,3 +73,11 @@ def store_category(context: GraphQLContext, category: Category):
     future: Future[List[Category]] = Future()
     future.set_result(new_categories)
     context[CACHE_NAME] = future
+
+
+def clear_categories(context: GraphQLContext):
+    if CACHE_NAME not in context or not context[CACHE_NAME].done():
+        return
+
+    context.pop(CACHE_NAME, None)
+    context.pop(DICT_CACHE_NAME, None)

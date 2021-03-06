@@ -2,6 +2,7 @@ from .changesettings import change_settings_mutation
 from .createcategory import create_category_mutation
 from .editcategory import edit_category_mutation
 from .login import login_mutation
+from .movecategory import move_category_mutation
 
 
 mutations = [
@@ -9,4 +10,5 @@ mutations = [
     create_category_mutation,
     edit_category_mutation,
     login_mutation,
+    move_category_mutation,
 ]

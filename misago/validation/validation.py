@@ -1,4 +1,5 @@
 from asyncio import gather
+from inspect import isawaitable
 from typing import Any, Dict, List, Optional, Tuple, Type, cast
 
 from pydantic import (
@@ -9,7 +10,7 @@ from pydantic import (
 )
 
 from ..errors import AuthError, ErrorsList
-from ..types import AsyncValidator
+from ..types import Validator
 
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
@@ -26,19 +27,20 @@ def validate_model(
 
 
 async def validate_data(
-    model_data: Dict[str, Any],
-    validators: Dict[str, List[AsyncValidator]],
+    data: Dict[str, Any],
+    validators: Dict[str, List[Validator]],
     errors: ErrorsList,
 ) -> Tuple[Dict[str, Any], ErrorsList]:
-    if not model_data or not validators:
-        return model_data, errors
+    if not data or not validators:
+        return data, errors
 
-    new_errors = ErrorsList()
+    new_errors = errors.copy()
+
     validated_data: Dict[str, Any] = {}
 
     validators_queue = []
     validators_queue_fields = []
-    for field_name, field_data in model_data.items():
+    for field_name, field_data in data.items():
         if validators.get(field_name) and field_data is not None:
             field_validators = validators[field_name]
             validators_queue_fields.append(field_name)
@@ -59,21 +61,25 @@ async def validate_data(
     if ROOT_LOCATION in validators:
         for root_validator in validators[ROOT_LOCATION]:
             try:
-                validated_data = await root_validator(
-                    validated_data, new_errors, ROOT_LOCATION
-                )
+                result = root_validator(validated_data, new_errors, ROOT_LOCATION)
+                if isawaitable(result):
+                    validated_data = await result
+                else:
+                    validated_data = result
             except (AuthError, PydanticTypeError, PydanticValueError) as error:
                 new_errors.add_root_error(error)
 
-    return validated_data, errors + new_errors
+    return validated_data, new_errors
 
 
 async def validate_field_data(
-    field_name: str, data: Any, validators: List[AsyncValidator], errors: ErrorsList,
+    field_name: str, data: Any, validators: List[Validator], errors: ErrorsList,
 ) -> Optional[Any]:
     try:
         for validator in validators:
-            data = await validator(data, errors, field_name)
+            data = validator(data, errors, field_name)
+            if isawaitable(data):
+                data = await (data)
         return data
     except (AuthError, PydanticTypeError, PydanticValueError) as error:
         errors.add_error(field_name, error)
