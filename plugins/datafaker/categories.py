@@ -16,7 +16,8 @@ async def create_fake_category(
     new_category = await create_category(
         name=get_fake_category_name(fake), parent=parent,
     )
-    return await insert_category(all_categories, new_category, parent)
+    category, _ = await insert_category(all_categories, new_category, parent)
+    return category
 
 
 def get_fake_category_name(fake: Faker) -> str:
