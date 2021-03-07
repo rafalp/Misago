@@ -24,3 +24,14 @@ type MoveCategoryMutationResult {
     category: Category
     categories: [Category!]!
 }
+
+# Delete category
+extend type Mutation {
+    deleteCategory(category: ID!, moveThreadsTo: ID, moveChildrenTo: ID): DeleteCategoryMutationResult!
+}
+
+type DeleteCategoryMutationResult {
+    errors: [Error!]
+    deleted: Boolean!
+    categories: [Category!]!
+}
