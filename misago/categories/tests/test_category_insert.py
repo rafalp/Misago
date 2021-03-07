@@ -12,7 +12,7 @@ async def test_new_top_level_category_is_inserted_at_the_end_of_tree(
     all_categories = await get_all_categories()
 
     new_category = await create_category(name="New category", extra={})
-    inserted_category = await insert_category(all_categories, new_category)
+    inserted_category, categories = await insert_category(all_categories, new_category)
 
     # Category contents are updated
     assert inserted_category.parent_id is None
@@ -23,6 +23,7 @@ async def test_new_top_level_category_is_inserted_at_the_end_of_tree(
     # Category is appended at the end of categories list
     db_categories = await get_all_categories()
     assert db_categories[-1] == inserted_category
+    assert db_categories == categories
 
     # Categories tree is valid
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
@@ -43,7 +44,9 @@ async def test_new_child_category_is_inserted_at_the_end_of_tree(
     all_categories = await get_all_categories()
 
     new_category = await create_category(name="New category", extra={})
-    inserted_category = await insert_category(all_categories, new_category, category)
+    inserted_category, categories = await insert_category(
+        all_categories, new_category, category
+    )
 
     # Category contents are updated
     assert inserted_category.parent_id == category.id
@@ -54,6 +57,7 @@ async def test_new_child_category_is_inserted_at_the_end_of_tree(
     # Category is appended to categories tree
     db_categories = await get_all_categories()
     assert db_categories[3] == inserted_category
+    assert db_categories == categories
 
     # Categories tree is valid
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]

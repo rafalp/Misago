@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Sequence, Tuple, cast
+from typing import Iterable, Sequence, Tuple, cast
 
 from sqlalchemy import and_, desc, not_
 
@@ -7,7 +7,7 @@ from ..database import database
 from ..database.queries import count, delete, delete_many
 from ..tables import posts as posts_table
 from ..tables import threads as threads_table
-from ..types import Post, Thread
+from ..types import Category, Post, Thread
 from .update import update_thread
 
 
@@ -15,7 +15,7 @@ async def delete_thread(thread: Thread):
     await delete(threads_table, thread.id)
 
 
-async def delete_threads(threads: Sequence[Thread]):
+async def delete_threads(threads: Iterable[Thread]):
     await delete_many(threads_table, [i.id for i in threads])
 
 
@@ -61,3 +61,10 @@ async def delete_thread_posts(
     await delete_many(posts_table, posts_ids)
 
     return updated_thread, last_post
+
+
+async def delete_threads_in_categories(categories: Iterable[Category]):
+    query = threads_table.delete(None).where(
+        threads_table.c.category_id.in_([c.id for c in categories])
+    )
+    await database.execute(query)

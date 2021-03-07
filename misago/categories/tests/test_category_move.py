@@ -9,7 +9,7 @@ async def test_sibling_category_is_moved_under_category_at_the_end(
     admin_graphql_info, category, sibling_category
 ):
     all_categories = await get_all_categories()
-    moved_category = await move_category(
+    moved_category, categories = await move_category(
         all_categories, sibling_category, parent=category
     )
 
@@ -21,6 +21,8 @@ async def test_sibling_category_is_moved_under_category_at_the_end(
 
     # Categories tree is valid
     db_categories = await get_all_categories()
+    assert db_categories == categories
+
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
     assert categories_tree == [
         (0, 1, 2),  # Example category
@@ -36,7 +38,7 @@ async def test_sibling_category_is_moved_under_category_before_child(
     admin_graphql_info, category, child_category, sibling_category
 ):
     all_categories = await get_all_categories()
-    moved_category = await move_category(
+    moved_category, categories = await move_category(
         all_categories, sibling_category, parent=category, before=child_category
     )
 
@@ -48,6 +50,8 @@ async def test_sibling_category_is_moved_under_category_before_child(
 
     # Categories tree is valid
     db_categories = await get_all_categories()
+    assert db_categories == categories
+
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
     assert categories_tree == [
         (0, 1, 2),  # Example category
@@ -63,7 +67,7 @@ async def test_sibling_category_is_moved_before_category(
     admin_graphql_info, category, sibling_category
 ):
     all_categories = await get_all_categories()
-    moved_category = await move_category(
+    moved_category, categories = await move_category(
         all_categories, sibling_category, before=category
     )
 
@@ -75,6 +79,8 @@ async def test_sibling_category_is_moved_before_category(
 
     # Categories tree is valid
     db_categories = await get_all_categories()
+    assert db_categories == categories
+
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
     assert categories_tree == [
         (0, 1, 2),  # Example category
@@ -90,7 +96,7 @@ async def test_child_category_is_moved_to_root_at_the_end(
     admin_graphql_info, category, child_category
 ):
     all_categories = await get_all_categories()
-    moved_category = await move_category(all_categories, child_category)
+    moved_category, categories = await move_category(all_categories, child_category)
 
     # Category contents are updated
     assert moved_category.parent_id is None
@@ -100,6 +106,8 @@ async def test_child_category_is_moved_to_root_at_the_end(
 
     # Categories tree is valid
     db_categories = await get_all_categories()
+    assert db_categories == categories
+
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
     assert categories_tree == [
         (0, 1, 2),  # Example category
@@ -115,7 +123,7 @@ async def test_child_category_is_moved_to_root_before_closed_category(
     admin_graphql_info, category, child_category, closed_category
 ):
     all_categories = await get_all_categories()
-    moved_category = await move_category(
+    moved_category, categories = await move_category(
         all_categories, child_category, before=closed_category
     )
 
@@ -127,6 +135,8 @@ async def test_child_category_is_moved_to_root_before_closed_category(
 
     # Categories tree is valid
     db_categories = await get_all_categories()
+    assert db_categories == categories
+
     categories_tree = [(i.depth, i.left, i.right) for i in db_categories]
     assert categories_tree == [
         (0, 1, 2),  # Example category

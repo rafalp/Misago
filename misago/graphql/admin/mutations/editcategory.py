@@ -4,16 +4,15 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt
 
-from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.tree import move_category
 from ....categories.update import update_category
 from ....categories.validators import validate_category_parent
-from ....errors import ErrorsList
 from ....types import Category
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,
+    for_location,
     validate_data,
     validate_model,
 )
@@ -63,7 +62,7 @@ async def resolve_edit_category(
 
     if updated_category.parent_id != parent_id:
         categories = await get_all_categories()
-        updated_category = await move_category(
+        updated_category, _ = await move_category(
             categories, updated_category, parent=parent
         )
 
@@ -74,15 +73,12 @@ class EditCategoryInputModel(CategoryInputModel):  # type: ignore
     category: PositiveInt
 
 
-def validate_parent_value(cleaned_data: dict, errors: ErrorsList, *_) -> dict:
+@for_location("parent")
+def validate_parent_value(cleaned_data: dict, *_) -> dict:
     if "category" not in cleaned_data:
         return cleaned_data
 
     if "parent" in cleaned_data:
-        try:
-            validate_category_parent(cleaned_data["category"], cleaned_data["parent"])
-        except CategoryInvalidParentError as e:
-            cleaned_data.pop("parent")
-            errors.add_error("parent", e)
+        validate_category_parent(cleaned_data["category"], cleaned_data["parent"])
 
     return cleaned_data

@@ -7,12 +7,12 @@ from pydantic import PositiveInt, create_model
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.tree import move_category
-from ....errors import ErrorsList
-from ....loaders import clear_categories, load_root_categories
+from ....loaders import clear_categories
 from ....types import Category
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,
+    for_location,
     validate_data,
     validate_model,
 )
@@ -62,7 +62,7 @@ async def resolve_move_category(
             "categories": root_categories,
         }
 
-    moved_category = await move_category(
+    moved_category, updated_categories = await move_category(
         categories,
         category_obj,
         parent=cleaned_data.get("parent"),
@@ -70,8 +70,8 @@ async def resolve_move_category(
     )
 
     clear_categories(info.context)
-    root_categories = await load_root_categories(info.context)
 
+    root_categories = [c for c in updated_categories if c.depth == 0]
     return {"category": moved_category, "categories": root_categories}
 
 
@@ -83,7 +83,8 @@ MoveCategoryInputModel = create_model(
 )
 
 
-def validate_before_value(cleaned_data: dict, errors: ErrorsList, *_) -> dict:
+@for_location("before")
+def validate_before_value(cleaned_data: dict, *_) -> dict:
     if (
         "category" not in cleaned_data
         or "parent" not in cleaned_data
@@ -95,15 +96,11 @@ def validate_before_value(cleaned_data: dict, errors: ErrorsList, *_) -> dict:
     parent: Optional[Category] = cleaned_data["parent"]
     before: Optional[Category] = cleaned_data["before"]
 
-    try:
-        if before and before.id == category.id:
-            raise CategoryInvalidParentError(category_id=before.id)
+    if before and before.id == category.id:
+        raise CategoryInvalidParentError(category_id=before.id)
 
-        parent_id = parent.id if parent else None
-        if before and before.parent_id != parent_id:
-            raise CategoryInvalidParentError(category_id=before.id)
-    except CategoryInvalidParentError as e:
-        errors.add_error("before", e)
-        cleaned_data.pop("before")
+    parent_id = parent.id if parent else None
+    if before and before.parent_id != parent_id:
+        raise CategoryInvalidParentError(category_id=before.id)
 
     return cleaned_data

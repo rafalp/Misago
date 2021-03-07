@@ -23,6 +23,7 @@ from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
 from .createusertoken import CreateUserTokenHook, CreateUserTokenPayloadHook
+from .deletecategoriescontents import DeleteCategoriesContentsHook
 from .deletethread import (
     DeleteThreadHook,
     DeleteThreadInputHook,
@@ -54,6 +55,7 @@ from .editthreadtitle import (
 from .filter import FilterHook
 from .graphqlcontext import GraphQLContextHook
 from .markdown import MarkdownHook
+from .movecategoriescontents import MoveCategoriesContentsHook
 from .movethread import MoveThreadHook, MoveThreadInputHook, MoveThreadInputModelHook
 from .movethreads import (
     MoveThreadsHook,
@@ -95,6 +97,7 @@ create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
+delete_categories_contents_hook = DeleteCategoriesContentsHook()
 delete_thread_hook = DeleteThreadHook()
 delete_thread_input_hook = DeleteThreadInputHook()
 delete_thread_input_model_hook = DeleteThreadInputModelHook()
@@ -129,6 +132,7 @@ graphql_types_hook: List[SchemaBindable] = []
 jinja2_extensions_hook: List[Any] = []
 jinja2_filters_hook: Dict[str, Any] = {}
 markdown_hook = MarkdownHook()
+move_categories_contents_hook = MoveCategoriesContentsHook()
 move_thread_hook = MoveThreadHook()
 move_thread_input_hook = MoveThreadInputHook()
 move_thread_input_model_hook = MoveThreadInputModelHook()

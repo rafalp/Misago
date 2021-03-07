@@ -1,6 +1,6 @@
 from asyncio import gather
 from dataclasses import replace
-from typing import List, Sequence
+from typing import List, Iterable
 
 from ..database import database
 from ..tables import posts
@@ -28,7 +28,7 @@ async def move_thread(thread: Thread, new_category: Category) -> Thread:
 
 
 async def move_threads(
-    threads: Sequence[Thread], new_category: Category
+    threads: Iterable[Thread], new_category: Category
 ) -> List[Thread]:
     updated_threads: List[Thread] = []
     db_update: List[int] = []
@@ -55,3 +55,23 @@ async def move_threads(
         )
 
     return updated_threads
+
+
+async def move_categories_threads(
+    categories: Iterable[Category], new_category: Category
+):
+    categories_ids = [c.id for c in categories]
+    move_threads_query = (
+        threads_table.update(None)
+        .values(category_id=new_category.id)
+        .where(threads_table.c.category_id.in_(categories_ids))
+    )
+    move_posts_query = (
+        posts.update(None)
+        .values(category_id=new_category.id)
+        .where(posts.c.category_id.in_(categories_ids))
+    )
+
+    await gather(
+        database.execute(move_threads_query), database.execute(move_posts_query)
+    )

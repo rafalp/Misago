@@ -42,7 +42,7 @@ async def resolve_create_category(
         parent=parent_obj,
         is_closed=cleaned_data.get("is_closed") or False,
     )
-    new_category = await insert_category(categories, new_category, parent_obj)
+    new_category, _ = await insert_category(categories, new_category, parent_obj)
 
     return {"category": new_category}
 

@@ -1,5 +1,5 @@
 from dataclasses import replace
-from typing import Dict, List, Optional, Sequence, Union
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 from ..types import Category
 from . import delete
@@ -96,7 +96,7 @@ async def insert_category(
     categories: Sequence[Category],
     category: Category,
     parent: Optional[Category] = None,
-) -> Category:
+) -> Tuple[Category, List[Category]]:
     tree = CategoryTree(categories)
     tree.insert_node(category, parent)
 
@@ -110,7 +110,7 @@ async def insert_category(
 
     updated_categories = await update_categories(categories_map, tree)
 
-    return updated_categories[category.id]
+    return updated_categories[category.id], tree.get_list()
 
 
 async def move_category(
@@ -119,7 +119,7 @@ async def move_category(
     *,
     parent: Optional[Category] = None,
     before: Optional[Category] = None,
-) -> Category:
+) -> Tuple[Category, List[Category]]:
     categories_map = {c.id: c for c in categories}
     categories_map[category.id] = category
 
@@ -147,7 +147,7 @@ async def move_category(
 
     updated_categories = await update_categories(categories_map, tree)
 
-    return updated_categories[category.id]
+    return updated_categories[category.id], tree.get_list()
 
 
 class CategoryTreeUpdateError(ValueError):
@@ -189,7 +189,9 @@ def validate_update(
             )
 
 
-async def delete_category(categories: Sequence[Category], category: Category,) -> None:
+async def delete_category(
+    categories: Sequence[Category], category: Category,
+) -> List[Category]:
     categories_map = {c.id: c for c in categories}
     categories_map[category.id] = category
 
@@ -210,6 +212,8 @@ async def delete_category(categories: Sequence[Category], category: Category,) -
 
     for c in reversed(deleted_categories):
         await delete.delete_category(c)
+
+    return tree.get_list()
 
 
 async def update_categories(

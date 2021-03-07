@@ -63,6 +63,10 @@ from .createusertoken import (
     CreateUserTokenPayloadAction,
     CreateUserTokenPayloadFilter,
 )
+from .deletecategoriescontents import (
+    DeleteCategoriesContentsAction,
+    DeleteCategoriesContentsFilter,
+)
 from .deletethread import (
     DeleteThreadAction,
     DeleteThreadFilter,
@@ -129,6 +133,10 @@ from .editthreadtitle import (
 )
 from .graphqlcontext import GraphQLContext, GraphQLContextAction, GraphQLContextFilter
 from .markdown import MarkdownAction, MarkdownFilter
+from .movecategoriescontents import (
+    MoveCategoriesContentsAction,
+    MoveCategoriesContentsFilter,
+)
 from .movethread import (
     MoveThreadAction,
     MoveThreadFilter,

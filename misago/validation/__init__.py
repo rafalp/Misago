@@ -28,6 +28,7 @@ from .validators import (
     UserIsAuthorizedRootValidator,
     UsernameIsAvailableValidator,
 )
+from .root_validator import for_location
 
 __all__ = [
     "ROOT_LOCATION",
@@ -52,6 +53,7 @@ __all__ = [
     "UserIsAuthorizedRootValidator",
     "UsernameIsAvailableValidator",
     "bulkactionidslist",
+    "for_location",
     "passwordstr",
     "sluggablestr",
     "threadtitlestr",
