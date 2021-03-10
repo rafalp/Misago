@@ -21,7 +21,7 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
 
     def test_index_renders_for_guest(self):
         """categories list renders for guest"""
-        self.logout_user()
+        # self.logout_user()  # logged out user can no longer perform any actions
 
         response = self.client.get(reverse("misago:categories"))
         self.assertContains(response, self.category.name)
@@ -37,7 +37,7 @@ class CategoryViewsTests(AuthenticatedUserTestCase):
     @patch_user_acl({"visible_categories": []})
     def test_index_no_perms_renders_for_guest(self):
         """categories list renders no visible categories for guest"""
-        self.logout_user()
+        # self.logout_user()  # logged out user can no longer perform any actions
 
         response = self.client.get(reverse("misago:categories"))
         self.assertNotContains(response, self.category.name)
@@ -58,7 +58,7 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
 
     def test_list_renders_for_guest(self):
         """api returns categories for guest"""
-        self.logout_user()
+        # self.logout_user()  # logged out user can no longer perform any actions
 
         response = self.client.get(reverse("misago:api:category-list"))
         self.assertContains(response, self.category.name)
@@ -73,7 +73,7 @@ class CategoryAPIViewsTests(AuthenticatedUserTestCase):
     @patch_user_acl({"visible_categories": []})
     def test_list_no_perms_renders_for_guest(self):
         """api returns no categories for guest"""
-        self.logout_user()
+        # self.logout_user()  # logged out user can no longer perform any actions
 
         response = self.client.get(reverse("misago:api:category-list"))
         assert json.loads(response.content) == []

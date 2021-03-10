@@ -29,6 +29,7 @@ class ForumOptionsSerializer(serializers.ModelSerializer):
             "subscribe_to_replied_threads",
         ]
         extra_kwargs = {
+            "is_hiding_presence": {"default": True},  # PG-1313 is_hiding_presence is now defaulted to True
             "limits_private_thread_invites_to": {"required": True},
             "subscribe_to_started_threads": {"required": True},
             "subscribe_to_replied_threads": {"required": True},

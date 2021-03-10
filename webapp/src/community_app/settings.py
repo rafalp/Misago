@@ -87,8 +87,10 @@ DATABASES = {
 # Caching
 # https://docs.djangoproject.com/en/1.11/topics/cache/#setting-up-the-cache
 
-# NOTE (Avi) We may need this, but so far it has not been necessary
-# cache_backend = get_settings('django_cache_backend', 'django.core.cache.backends.locmem.LocMemCache')
+caches_setting = get_settings('django_caches')
+if caches_setting:
+    CACHES = caches_setting
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': cache_backend,
@@ -102,12 +104,12 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS = get_settings("AUTH_PASSWORD_VALIDATORS", [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator", "OPTIONS": {"user_attributes": ["username", "email"]},},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 7},},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
-]
+])
 
 
 # Internationalization
@@ -141,22 +143,22 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 
 STATICFILES_LOCATION = "static"  # used in url
+MEDIAFILES_LOCATION = "media"
 
 if STATICFILES_STORAGE == "storages.backends.s3boto3.S3Boto3Storage":
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/"
     STATICFILES_DIRS = [
         os.path.abspath(os.path.join(BASE_DIR, "misago", "static")),
     ]
+    MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 else:
     STATIC_URL = f"/{STATICFILES_LOCATION}/"
     STATIC_ROOT = os.path.abspath(os.path.join(BASE_DIR, "misago", "static"))
+    MEDIA_URL = "/%s/" % MEDIAFILES_LOCATION
 
 
 # User uploads (Avatars, Attachments, files uploaded in other Django apps, ect.)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
-MEDIAFILES_LOCATION = "media"
-MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 
 
 # Email configuration
@@ -234,7 +236,7 @@ INSTALLED_APPS = INSTALLED_PLUGINS + [
     "anymail",
 ]
 
-INTERNAL_IPS = ["127.0.0.1"]
+INTERNAL_IPS = get_settings("INTERNAL_IPS", ["127.0.0.1"])
 
 LOGIN_REDIRECT_URL = "misago:index"
 
@@ -411,19 +413,19 @@ MISAGO_AVATARS_SIZES = [400, 200, 100]
 # spanish, swedish and turkish
 # Example on adding custom language can be found here: https://github.com/lemonskyjwt/plpstgrssearch
 
-MISAGO_SEARCH_CONFIG = "simple"
+MISAGO_SEARCH_CONFIG = get_settings("MISAGO_SEARCH_CONFIG", "simple")
 
 
 # Path to the directory that Misago should use to prepare user data downloads.
 # Should not be accessible from internet.
 
-MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, "userdata")
+MISAGO_USER_DATA_DOWNLOADS_WORKING_DIR = os.path.join(BASE_DIR, "community_app", "userdata")
 
 
 # Path to directory containing avatar galleries
 # Those galleries can be loaded by running loadavatargallery command
 
-MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, "avatargallery")
+MISAGO_AVATAR_GALLERY = os.path.join(BASE_DIR, "community_app", "avatargallery")
 
 
 # Profile fields
@@ -451,13 +453,27 @@ MISAGO_PROFILE_FIELDS = [
 
 MISAGO_POSTING_MIDDLEWARES = misago_settings.MISAGO_POSTING_MIDDLEWARES + ["community_app.posting.middleware.RiskWordsMiddleware"]
 
+misago_post_validators_setting = get_settings("MISAGO_POST_VALIDATORS")
+if misago_post_validators_setting:
+    MISAGO_POST_VALIDATORS = misago_post_validators_setting
+
+misago_post_search_filters_setting = get_settings("MISAGO_POST_SEARCH_FILTERS")
+if misago_post_search_filters_setting:
+    MISAGO_POST_SEARCH_FILTERS = misago_post_search_filters_setting
 
 # Set dev instance to send e-mails to console
 
 ANYMAIL = {"MAILGUN_API_KEY": get_settings("mailgun_key"), "MAILGUN_SENDER_DOMAIN": get_settings("mailgun_domain")}
 EMAIL_BACKEND = get_settings("email_backend", "anymail.backends.mailgun.EmailBackend")
 
-
 # Display debug toolbar if IN_MISAGO_DOCKER enviroment var is set to "1"
 
-DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"}
+DEBUG_TOOLBAR_CONFIG = get_settings("DEBUG_TOOLBAR_CONFIG", {"SHOW_TOOLBAR_CALLBACK": "misago.conf.debugtoolbar.enable_debug_toolbar"})
+
+password_hashers_setting = get_settings("PASSWORD_HASHERS")
+if password_hashers_setting:
+    PASSWORD_HASHERS = password_hashers_setting
+
+test_name_setting = get_settings("TEST_NAME")
+if test_name_setting:
+    TEST_NAME = test_name_setting

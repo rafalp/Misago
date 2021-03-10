@@ -8,15 +8,16 @@ class UserRequestDataDownload(AuthenticatedUserTestCase):
         super().setUp()
         self.link = "/api/users/%s/request-data-download/" % self.user.pk
 
-    def test_request_other_user_download_anonymous(self):
-        """requests to api fails if user is anonymous"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_request_other_user_download_anonymous(self):
+    #     """requests to api fails if user is anonymous"""
+    #     self.logout_user()
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.post(self.link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     def test_request_other_user_download(self):
         """requests to api fails if user tries to access other user"""

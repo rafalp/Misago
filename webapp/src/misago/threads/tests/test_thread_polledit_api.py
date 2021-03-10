@@ -15,12 +15,13 @@ class ThreadPollEditTests(ThreadPollApiTestCase):
 
         self.mock_poll()
 
-    def test_anonymous(self):
-        """api requires you to sign in to edit poll"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     """api requires you to sign in to edit poll"""
+    #     self.logout_user()
 
-        response = self.put(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.put(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""

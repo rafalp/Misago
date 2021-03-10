@@ -219,22 +219,23 @@ class GotoNewTests(GotoViewTestCase):
             GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
         )
 
-    @override_dynamic_settings(
-        posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
-    )
-    def test_guest_goto_first_new_post_in_thread(self):
-        """guest goto new in read thread points to last post"""
-        for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
-            post = test.reply_thread(self.thread, posted_on=timezone.now())
+    # logged out user can no longer perform any actions
+    # @override_dynamic_settings(
+    #     posts_per_page=POSTS_PER_PAGE, posts_per_page_orphans=POSTS_PER_PAGE_ORPHANS
+    # )
+    # def test_guest_goto_first_new_post_in_thread(self):
+    #     """guest goto new in read thread points to last post"""
+    #     for _ in range(POSTS_PER_PAGE + POSTS_PER_PAGE_ORPHANS):
+    #         post = test.reply_thread(self.thread, posted_on=timezone.now())
 
-        self.logout_user()
+    #     self.logout_user()
 
-        response = self.client.get(self.thread.get_new_post_url())
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(
-            response["location"],
-            GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
-        )
+    #     response = self.client.get(self.thread.get_new_post_url())
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertEqual(
+    #         response["location"],
+    #         GOTO_PAGE_URL % (self.thread.get_absolute_url(), 2, post.pk),
+    #     )
 
 
 class GotoBestAnswerTests(GotoViewTestCase):

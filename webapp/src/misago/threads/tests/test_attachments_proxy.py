@@ -91,35 +91,35 @@ def assert_404(response):
     assert response["location"].endswith(settings.MISAGO_ATTACHMENT_404_IMAGE)
 
 
-def test_proxy_redirects_client_to_attachment_file(client, attachment):
-    response = client.get(attachment.get_absolute_url())
+def test_proxy_redirects_client_to_attachment_file(user_client, attachment):
+    response = user_client.get(attachment.get_absolute_url())
     assert response.status_code == 302
     assert response["location"].endswith("test.txt")
 
 
-def test_proxy_redirects_client_to_attachment_image(client, image):
-    response = client.get(image.get_absolute_url())
+def test_proxy_redirects_client_to_attachment_image(user_client, image):
+    response = user_client.get(image.get_absolute_url())
     assert response.status_code == 302
     assert response["location"].endswith("test.png")
 
 
-def test_proxy_redirects_client_to_attachment_thumbnail(client, image_with_thumbnail):
-    response = client.get(image_with_thumbnail.get_thumbnail_url())
+def test_proxy_redirects_client_to_attachment_thumbnail(user_client, image_with_thumbnail):
+    response = user_client.get(image_with_thumbnail.get_thumbnail_url())
     assert response.status_code == 302
     assert response["location"].endswith("test-thumbnail.png")
 
 
-def test_proxy_redirects_to_404_image_for_nonexistant_attachment(db, client):
-    response = client.get(
+def test_proxy_redirects_to_404_image_for_nonexistant_attachment(db, user_client):
+    response = user_client.get(
         reverse("misago:attachment", kwargs={"pk": 1, "secret": "secret"})
     )
     assert_404(response)
 
 
 def test_proxy_redirects_to_404_image_for_url_with_invalid_attachment_secret(
-    client, attachment
+    user_client, attachment
 ):
-    response = client.get(
+    response = user_client.get(
         reverse("misago:attachment", kwargs={"pk": attachment.id, "secret": "invalid"})
     )
     assert_404(response)
@@ -133,8 +133,8 @@ def test_proxy_redirects_to_403_image_for_user_without_permission_to_see_attachm
     assert_403(response)
 
 
-def test_thumbnail_proxy_redirects_to_404_for_non_image_attachment(client, attachment):
-    response = client.get(
+def test_thumbnail_proxy_redirects_to_404_for_non_image_attachment(user_client, attachment):
+    response = user_client.get(
         reverse(
             "misago:attachment-thumbnail",
             kwargs={"pk": attachment.pk, "secret": attachment.secret},
@@ -144,9 +144,9 @@ def test_thumbnail_proxy_redirects_to_404_for_non_image_attachment(client, attac
 
 
 def test_thumbnail_proxy_redirects_to_regular_image_for_image_without_thumbnail(
-    client, image
+    user_client, image
 ):
-    response = client.get(
+    response = user_client.get(
         reverse(
             "misago:attachment-thumbnail",
             kwargs={"pk": image.pk, "secret": image.secret},
@@ -156,8 +156,8 @@ def test_thumbnail_proxy_redirects_to_regular_image_for_image_without_thumbnail(
     assert response["location"].endswith("test.png")
 
 
-def test_thumbnail_proxy_redirects_to_thumbnail_image(client, image_with_thumbnail):
-    response = client.get(
+def test_thumbnail_proxy_redirects_to_thumbnail_image(user_client, image_with_thumbnail):
+    response = user_client.get(
         reverse(
             "misago:attachment-thumbnail",
             kwargs={
@@ -265,8 +265,8 @@ def test_proxy_uses_custom_permission_denied_image_if_one_is_set(
 
 
 @override_dynamic_settings(attachment_404_image="custom-404-image.png")
-def test_proxy_uses_custom_not_found_image_if_one_is_set(db, client):
-    response = client.get(
+def test_proxy_uses_custom_not_found_image_if_one_is_set(db, user_client):
+    response = user_client.get(
         reverse("misago:attachment", kwargs={"pk": 1, "secret": "secret"})
     )
     assert response.status_code == 302

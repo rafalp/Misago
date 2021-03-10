@@ -62,13 +62,14 @@ class ThreadPostGetEditTests(ThreadPostEditsApiTestCase):
             response.json(), {"detail": "Edits record is unavailable for this post."}
         )
 
-        self.logout_user()
+        # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+        # self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "Edits record is unavailable for this post."}
-        )
+        # response = self.client.get(self.api_link)
+        # self.assertEqual(response.status_code, 403)
+        # self.assertEqual(
+        #     response.json(), {"detail": "Edits record is unavailable for this post."}
+        # )
 
     def test_empty_edit_id(self):
         """api handles empty edit in querystring"""
@@ -148,12 +149,13 @@ class ThreadPostPostEditTests(ThreadPostEditsApiTestCase):
         response = self.client.post("%s?edit=1321" % self.api_link)
         self.assertEqual(response.status_code, 404)
 
-    def test_anonymous(self):
-        """only signed in users can rever ports"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous(self):
+    #     """only signed in users can rever ports"""
+    #     self.logout_user()
 
-        response = self.client.post("%s?edit=%s" % (self.api_link, self.edits[0].id))
-        self.assertEqual(response.status_code, 403)
+    #     response = self.client.post("%s?edit=%s" % (self.api_link, self.edits[0].id))
+    #     self.assertEqual(response.status_code, 403)
 
     @patch_category_acl({"can_edit_posts": 0})
     def test_no_permission(self):

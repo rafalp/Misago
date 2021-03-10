@@ -22,12 +22,13 @@ class StartPrivateThreadTests(AuthenticatedUserTestCase):
 
         self.other_user = create_test_user("OtherUser", "otheruser@example.com")
 
-    def test_cant_start_thread_as_guest(self):
-        """user has to be authenticated to be able to post private thread"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_cant_start_thread_as_guest(self):
+    #     """user has to be authenticated to be able to post private thread"""
+    #     self.logout_user()
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.client.post(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_cant_use_private_threads(self):

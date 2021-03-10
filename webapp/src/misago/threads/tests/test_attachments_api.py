@@ -25,12 +25,13 @@ class AttachmentsApiTestCase(AuthenticatedUserTestCase):
 
         self.api_link = reverse("misago:api:attachment-list")
 
-    def test_anonymous(self):
-        """user has to be authenticated to be able to upload files"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     """user has to be authenticated to be able to upload files"""
+    #     self.logout_user()
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.client.post(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     @patch_user_acl({"max_attachment_size": 0})
     def test_no_permission(self):

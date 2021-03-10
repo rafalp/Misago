@@ -15,7 +15,7 @@ class GetUserStatusTests(AuthenticatedUserTestCase):
             user_acl={"can_see_hidden_users": False},
             cache_versions={"bans": "abcdefgh"},
         )
-        assert get_user_status(request, self.other_user)["is_online"]
+        assert not get_user_status(request, self.other_user)["is_online"]  # PG-1313 a user will not be visible as online
 
     def test_get_hidden_user_status_without_seeing_hidden_permission_returns_offline(
         self,

@@ -56,16 +56,17 @@ class UserThreadsApiTests(ThreadsApiTestCase):
         self.assertEqual(len(response.json()["results"]), 1)
         self.assertEqual(response.json()["results"][0]["id"], thread.first_post_id)
 
-    def test_user_thread_anonymous(self):
-        """user thread shows in feed requested by unauthenticated user"""
-        thread = test.post_thread(category=self.category, poster=self.user)
+    # there are no longer anonymous users
+    # def test_user_thread_anonymous(self):
+    #     """user thread shows in feed requested by unauthenticated user"""
+    #     thread = test.post_thread(category=self.category, poster=self.user)
 
-        self.logout_user()
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()["results"]), 1)
-        self.assertEqual(response.json()["results"][0]["id"], thread.first_post_id)
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.json()["results"]), 1)
+    #     self.assertEqual(response.json()["results"][0]["id"], thread.first_post_id)
 
 
 class UserPostsApiTests(ThreadsApiTestCase):
@@ -138,28 +139,30 @@ class UserPostsApiTests(ThreadsApiTestCase):
         self.assertEqual(response.json()["results"][0]["id"], post.pk)
         self.assertEqual(response.json()["results"][1]["id"], thread.first_post_id)
 
-    def test_user_post_anonymous(self):
-        """user post shows in feed requested by unauthenticated user"""
-        post = test.reply_thread(self.thread, poster=self.user)
-        other_post = test.reply_thread(self.thread, poster=self.user)
+    # there are no longer anonymous users
+    # def test_user_post_anonymous(self):
+    #     """user post shows in feed requested by unauthenticated user"""
+    #     post = test.reply_thread(self.thread, poster=self.user)
+    #     other_post = test.reply_thread(self.thread, poster=self.user)
 
-        self.logout_user()
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()["results"]), 2)
-        self.assertEqual(response.json()["results"][0]["id"], other_post.pk)
-        self.assertEqual(response.json()["results"][1]["id"], post.pk)
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.json()["results"]), 2)
+    #     self.assertEqual(response.json()["results"][0]["id"], other_post.pk)
+    #     self.assertEqual(response.json()["results"][1]["id"], post.pk)
 
-    def test_user_thread_anonymous(self):
-        """user thread shows in feed requested by unauthenticated user"""
-        thread = test.post_thread(category=self.category, poster=self.user)
-        post = test.reply_thread(thread, poster=self.user)
+    # there are no longer anonymous users
+    # def test_user_thread_anonymous(self):
+    #     """user thread shows in feed requested by unauthenticated user"""
+    #     thread = test.post_thread(category=self.category, poster=self.user)
+    #     post = test.reply_thread(thread, poster=self.user)
 
-        self.logout_user()
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.json()["results"]), 2)
-        self.assertEqual(response.json()["results"][0]["id"], post.pk)
-        self.assertEqual(response.json()["results"][1]["id"], thread.first_post_id)
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.json()["results"]), 2)
+    #     self.assertEqual(response.json()["results"][0]["id"], post.pk)
+    #     self.assertEqual(response.json()["results"][1]["id"], thread.first_post_id)

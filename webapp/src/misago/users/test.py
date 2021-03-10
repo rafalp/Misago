@@ -1,12 +1,32 @@
-from django.contrib.auth import get_user_model
+import pytest
+
+from django.contrib.auth import get_user_model, load_backend
 from django.test import TestCase
+
+from bh.core_utils.test_utils import mock_service_calls, ServiceCallMock
+
+from community_app.constants import COOKIE_NAME_ACCESS_TOKEN
 
 from .models import AnonymousUser, Online
 
 User = get_user_model()
 
 
-class UserTestCase(TestCase):
+class PlatformTestCase(TestCase):
+
+    @pytest.fixture
+    def service_mocks(self):
+        with mock_service_calls([
+            ServiceCallMock("UserAccountAuthentication", "1", "find_with_tokens", return_value={"user_id": 123}),
+            ServiceCallMock("UserAccount", "1", "read", return_value={"uuid": "a_user_uuid"}),
+        ]):
+            yield
+
+    def setUp(self):
+        super().setUp()
+        self.client.cookies[COOKIE_NAME_ACCESS_TOKEN] = "at"
+
+class UserTestCase(PlatformTestCase):
     USER_PASSWORD = "Pass.123"
     USER_IP = "127.0.0.1"
 
@@ -33,8 +53,12 @@ class UserTestCase(TestCase):
             joined_from_ip=self.USER_IP,
         )
 
-    def login_user(self, user, password=None):
+    def login_user(self, user, password=None, uid=None):
         self.client.force_login(user)
+
+        # Our middleware requires a social auth
+        backend = load_backend("community_app.auth.backend.SleepioAuth")
+        backend.strategy.storage.user.create_social_auth(user, uid if uid else "a_user_uuid", backend.name)
 
     def logout_user(self):
         if self.user.is_authenticated:
@@ -43,6 +67,7 @@ class UserTestCase(TestCase):
 
 
 class AuthenticatedUserTestCase(UserTestCase):
+
     def get_initial_user(self):
         self.user = self.get_authenticated_user()
         self.login_user(self.user)

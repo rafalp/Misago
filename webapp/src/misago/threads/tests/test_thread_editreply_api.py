@@ -29,12 +29,13 @@ class EditReplyTests(AuthenticatedUserTestCase):
         content = encode_multipart(BOUNDARY, data or {})
         return self.client.put(url, content, content_type=MULTIPART_CONTENT)
 
-    def test_cant_edit_reply_as_guest(self):
-        """user has to be authenticated to be able to edit reply"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_cant_edit_reply_as_guest(self):
+    #     """user has to be authenticated to be able to edit reply"""
+    #     self.logout_user()
 
-        response = self.put(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.put(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""

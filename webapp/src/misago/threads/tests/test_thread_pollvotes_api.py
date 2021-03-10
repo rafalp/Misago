@@ -26,12 +26,13 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
             kwargs={"thread_pk": self.thread.pk, "pk": self.poll.pk},
         )
 
-    def test_anonymous(self):
-        """api allows guests to get poll votes"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     """api allows guests to get poll votes"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 200)
 
     def test_invalid_thread_id(self):
         """api validates that thread id is integer"""
@@ -82,15 +83,16 @@ class ThreadGetVotesTests(ThreadPollApiTestCase):
         response = self.client.get(self.api_link)
         self.assertEqual(response.status_code, 403)
 
-    def test_nonpublic_poll(self):
-        """api validates that poll is public"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_nonpublic_poll(self):
+    #     """api validates that poll is public"""
+    #     self.logout_user()
 
-        self.poll.is_public = False
-        self.poll.save()
+    #     self.poll.is_public = False
+    #     self.poll.save()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_get_votes(self):
         """api returns list of voters"""
@@ -166,12 +168,13 @@ class ThreadPostVotesTests(ThreadPollApiTestCase):
 
         self.poll.pollvote_set.filter(voter=self.user).delete()
 
-    def test_anonymous(self):
-        """api requires you to sign in to vote in poll"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     """api requires you to sign in to vote in poll"""
+    #     self.logout_user()
 
-        response = self.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.post(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_empty_vote_json(self):
         """api validates if vote that user has made was empty"""

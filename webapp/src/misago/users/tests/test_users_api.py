@@ -48,17 +48,18 @@ class ActivePostersListTests(AuthenticatedUserTestCase):
         response = self.client.get(self.link)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.user.username)
-        self.assertContains(response, '"is_online":true')
+        self.assertContains(response, '"is_online":false')  # PG-1313 a user's presence status will not be visible
         self.assertContains(response, '"is_offline":false')
 
-        self.logout_user()
-        build_active_posters_ranking()
+        # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+        # self.logout_user()
+        # build_active_posters_ranking()
 
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, self.user.username)
-        self.assertContains(response, '"is_online":false')
-        self.assertContains(response, '"is_offline":true')
+        # response = self.client.get(self.link)
+        # self.assertEqual(response.status_code, 200)
+        # self.assertContains(response, self.user.username)
+        # self.assertContains(response, '"is_online":false')
+        # self.assertContains(response, '"is_offline":false')  # PG-1313 a user's presence status will not be visible
 
 
 class FollowersListTests(AuthenticatedUserTestCase):
@@ -302,7 +303,7 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
 
         self.reload_user()
 
-        self.assertFalse(self.user.is_hiding_presence)
+        self.assertTrue(self.user.is_hiding_presence)  # PG-1313 is_hiding_presence cannot be false
         self.assertEqual(self.user.limits_private_thread_invites_to, 1)
         self.assertEqual(self.user.subscribe_to_started_threads, 2)
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
@@ -334,11 +335,11 @@ class UserForumOptionsTests(AuthenticatedUserTestCase):
                 "subscribe_to_replied_threads": 1,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)  # PG-1313 is_hiding_presence cannot be made false
 
         self.reload_user()
 
-        self.assertFalse(self.user.is_hiding_presence)
+        self.assertTrue(self.user.is_hiding_presence)  # PG-1313 is_hiding_presence cannot be false
         self.assertEqual(self.user.limits_private_thread_invites_to, 1)
         self.assertEqual(self.user.subscribe_to_started_threads, 2)
         self.assertEqual(self.user.subscribe_to_replied_threads, 1)
@@ -353,15 +354,16 @@ class UserFollowTests(AuthenticatedUserTestCase):
         self.other_user = create_test_user("OtherUser", "otheruser@example.com")
         self.link = "/api/users/%s/follow/" % self.other_user.pk
 
-    def test_follow_unauthenticated(self):
-        """you have to sign in to follow users"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_follow_unauthenticated(self):
+    #     """you have to sign in to follow users"""
+    #     self.logout_user()
 
-        response = self.client.post(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.post(self.link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     def test_follow_myself(self):
         """you can't follow yourself"""

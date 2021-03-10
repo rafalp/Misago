@@ -5,13 +5,16 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import translation
 
+from misago.users.test import AuthenticatedUserTestCase
+
+
 MISAGO_DIR = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 LOCALES_DIR = os.path.join(MISAGO_DIR, "locale")
 
 
-class JsI18nUrlTests(TestCase):
+class JsI18nUrlTests(AuthenticatedUserTestCase):
     def test_url_cache_buster(self):
         """js i18n catalog link has cachebuster with lang code"""
         url = "%s?%s" % (reverse("django-i18n"), settings.LANGUAGE_CODE)

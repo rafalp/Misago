@@ -23,17 +23,18 @@ class ThreadPostMergeApiTestCase(AuthenticatedUserTestCase):
             "misago:api:thread-post-merge", kwargs={"thread_pk": self.thread.pk}
         )
 
-    def test_anonymous_user(self):
-        """you need to authenticate to merge posts"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous_user(self):
+    #     """you need to authenticate to merge posts"""
+    #     self.logout_user()
 
-        response = self.client.post(
-            self.api_link, json.dumps({}), content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.post(
+    #         self.api_link, json.dumps({}), content_type="application/json"
+    #     )
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     @patch_category_acl({"can_merge_posts": False})
     def test_no_permission(self):

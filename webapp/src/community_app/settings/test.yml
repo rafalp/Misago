@@ -1,3 +1,54 @@
 use_remote_dynamic_settings: false
 
+db:
+  hostname: community-postgres-test
+  name: community-test
+  password: community-test
+  port: 5432
+  username: community-test
+
 DEBUG: true
+
+enable_misago_social_urls: true
+
+django_caches:
+  { "default": { "BACKEND": "django.core.cache.backends.dummy.DummyCache" } }
+
+django_file_storage: django.core.files.storage.FileSystemStorage
+django_staticfile_storage: django.contrib.staticfiles.storage.StaticFilesStorage
+
+enable_risk_words_notifications: false
+
+DEBUG_TOOLBAR_CONFIG: {}
+INTERNAL_IPS: []
+
+MISAGO_NEW_REGISTRATIONS_VALIDATORS:
+  - "misago.users.validators.validate_gmail_email"
+
+EMAIL_BACKEND: "django.core.mail.backends.locmem.EmailBackend"
+
+PASSWORD_HASHERS:
+  - "django.contrib.auth.hashers.MD5PasswordHasher"
+
+AUTH_PASSWORD_VALIDATORS:
+  - {
+      "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+      "OPTIONS": { "user_attributes": ["username", "email"] },
+    }
+  - {
+      "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+      "OPTIONS": { "min_length": 7 },
+    }
+  - {
+      "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    }
+
+MISAGO_SEARCH_CONFIG: english
+
+MISAGO_POST_VALIDATORS:
+  - "misago.core.testproject.validators.test_post_validator"
+
+MISAGO_POST_SEARCH_FILTERS:
+  - "misago.core.testproject.searchfilters.test_filter"
+
+TEST_NAME: miasago_test

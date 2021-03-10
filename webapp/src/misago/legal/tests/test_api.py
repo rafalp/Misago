@@ -23,14 +23,15 @@ class SubmitAgreementTests(AuthenticatedUserTestCase):
             self.api_link, json.dumps(data), content_type="application/json"
         )
 
-    def test_anonymous(self):
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     self.logout_user()
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.post(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     def test_get_request(self):
         response = self.client.get(self.api_link)

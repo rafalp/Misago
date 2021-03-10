@@ -7,15 +7,16 @@ class UserDataDownloadsApiTests(AuthenticatedUserTestCase):
         super().setUp()
         self.link = "/api/users/%s/data-downloads/" % self.user.pk
 
-    def test_get_other_user_exports_anonymous(self):
-        """requests to api fails if user is anonymous"""
-        self.logout_user()
+    # there are no longer anonymous users
+    # def test_get_other_user_exports_anonymous(self):
+    #     """requests to api fails if user is anonymous"""
+    #     self.logout_user()
 
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to perform this action."}
-        )
+    #     response = self.client.get(self.link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You have to sign in to perform this action."}
+    #     )
 
     def test_get_other_user_exports(self):
         """requests to api fails if user tries to access other user"""

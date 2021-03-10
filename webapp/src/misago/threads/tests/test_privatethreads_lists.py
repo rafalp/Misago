@@ -12,12 +12,13 @@ class PrivateThreadsListTests(PrivateThreadsTestCase):
 
         self.test_link = reverse("misago:private-threads")
 
-    def test_unauthenticated(self):
-        """view requires user to sign in and be able to access it"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_unauthenticated(self):
+    #     """view requires user to sign in and be able to access it"""
+    #     self.logout_user()
 
-        response = self.client.get(self.test_link)
-        self.assertContains(response, "sign in to use private threads", status_code=403)
+    #     response = self.client.get(self.test_link)
+    #     self.assertContains(response, "sign in to use private threads", status_code=403)
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):

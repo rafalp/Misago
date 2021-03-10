@@ -3,13 +3,17 @@ from django.urls import reverse
 
 from ...conf.test import override_dynamic_settings
 
+from misago.users.test import AuthenticatedUserTestCase
+
+
 test_qa_question = "Do you like pies?"
 test_qa_help_text = 'Type in "yes".'
 
 
-class AuthenticateApiTests(TestCase):
+class AuthenticateApiTests(AuthenticatedUserTestCase):
     def setUp(self):
         self.api_link = reverse("misago:api:captcha-question")
+        super().setUp()
 
     @override_dynamic_settings(qa_question="")
     def test_api_no_qa_is_set(self):

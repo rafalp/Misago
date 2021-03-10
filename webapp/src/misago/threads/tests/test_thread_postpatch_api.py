@@ -858,15 +858,16 @@ class ThreadEventPatchApiTestCase(ThreadPostPatchApiTestCase):
         self.event = self.thread.post_set.get(pk=self.event.pk)
 
 
-class EventAnonPatchApiTests(ThreadEventPatchApiTestCase):
-    def test_anonymous_user(self):
-        """anonymous users can't change event state"""
-        self.logout_user()
+# logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+# class EventAnonPatchApiTests(ThreadEventPatchApiTestCase):
+#     def test_anonymous_user(self):
+#         """anonymous users can't change event state"""
+#         self.logout_user()
 
-        response = self.patch(
-            self.api_link, [{"op": "add", "path": "acl", "value": True}]
-        )
-        self.assertEqual(response.status_code, 403)
+#         response = self.patch(
+#             self.api_link, [{"op": "add", "path": "acl", "value": True}]
+#         )
+#         self.assertEqual(response.status_code, 403)
 
 
 class EventAddAclApiTests(ThreadEventPatchApiTestCase):

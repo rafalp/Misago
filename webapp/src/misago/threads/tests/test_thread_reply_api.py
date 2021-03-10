@@ -19,12 +19,13 @@ class ReplyThreadTests(AuthenticatedUserTestCase):
             "misago:api:thread-post-list", kwargs={"thread_pk": self.thread.pk}
         )
 
-    def test_cant_reply_thread_as_guest(self):
-        """user has to be authenticated to be able to post reply"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_cant_reply_thread_as_guest(self):
+    #     """user has to be authenticated to be able to post reply"""
+    #     self.logout_user()
 
-        response = self.client.post(self.api_link)
-        self.assertEqual(response.status_code, 403)
+    #     response = self.client.post(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""

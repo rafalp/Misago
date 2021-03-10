@@ -108,6 +108,11 @@ bh_settings
 data/*
 node_modules/*
 avatars/*
+themes/*
+icon/*
+attachments/*
+conf/*
+data-downloads/*
 
 # IDE specific
 .idea/

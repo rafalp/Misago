@@ -13,15 +13,16 @@ class PrivateThreadsListApiTests(PrivateThreadsTestCase):
 
         self.api_link = reverse("misago:api:private-thread-list")
 
-    def test_unauthenticated(self):
-        """api requires user to sign in and be able to access it"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_unauthenticated(self):
+    #     """api requires user to sign in and be able to access it"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to use private threads."}
-        )
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You have to sign in to use private threads."}
+    #     )
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):
@@ -78,15 +79,16 @@ class PrivateThreadRetrieveApiTests(PrivateThreadsTestCase):
         self.thread = test.post_thread(self.category, poster=self.user)
         self.api_link = self.thread.get_api_url()
 
-    def test_anonymous(self):
-        """anonymous user can't see private thread"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_anonymous(self):
+    #     """anonymous user can't see private thread"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to use private threads."}
-        )
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You have to sign in to use private threads."}
+    #     )
 
     @patch_user_acl({"can_use_private_threads": False})
     def test_no_permission(self):

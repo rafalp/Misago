@@ -73,10 +73,10 @@ class PlatformTokenMiddleware:
             A dict with keys access_token, refresh_token, authentication_entity, cookies_updated
         """
         cookies_updated = False
-        authentication_service = None
 
         authentication_service = Factory.create("UserAccountAuthentication", "1")
 
+        authentication_entity = None
         if access_token:
             # This works with either token. If we don't have a refresh token, this means we'll be redirected
             # when it times out.
@@ -139,7 +139,7 @@ class PlatformTokenMiddleware:
     def __call__(self, request):
         """
         Here we validate existence of an authentication entity but ONLY for non-admin users and
-        NOT for the /admincp (admin login) url root.
+        NOT for the /admincp (admin login) or the /django-admin (Django admin page) url roots.
         We must support admin users logging in with email, and not using Sleepio auth cookies.
 
         If we don't have an authentication entity, OR we don't have an access_token (e.g. it's expired)
@@ -161,13 +161,12 @@ class PlatformTokenMiddleware:
         Returns:
             response: The response
         """
-
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         cookies_updated = False
         authentication_entity = None
 
-        if "admincp" not in request.path_info and hasattr(request, "user") and not request.user.is_superuser:
+        if "admincp" not in request.path_info and "django-admin" not in request.path_info and hasattr(request, "user") and not request.user.is_superuser and not request.user.is_staff:
             access_token, refresh_token = request.COOKIES.get(COOKIE_NAME_ACCESS_TOKEN), request.COOKIES.get(COOKIE_NAME_REFRESH_TOKEN)
 
             try:
@@ -197,7 +196,7 @@ class PlatformTokenMiddleware:
                 #
                 # If we're requesting a text/html site, and we cannot authenticate, we redirect
                 # the user to sleepio login from the middleware
-                if "text/html" in request.headers.get("accept"):
+                if "text/html" in request.headers.get("accept", ""):
                     return redirect(get_settings("sleepio_app_url"))
                 # Otherwise, we return a 401 to the client, and handle the client-level redirect
                 # from the browser

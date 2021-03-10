@@ -90,21 +90,21 @@ class TimestampSignerMock:
 
 
 @override_dynamic_settings(enable_sso=False)
-def test_sso_login_view_returns_404_if_sso_is_disabled(db, client):
+def test_sso_login_view_returns_404_if_sso_is_disabled(db, user_client):
     url_to_external_logging = reverse("simple-sso-login")
     assert url_to_external_logging == "/sso/client/"
 
-    response = client.get(url_to_external_logging)
+    response = user_client.get(url_to_external_logging)
     assert response.status_code == 404
 
 
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_login_view_initiates_auth_flow(db, client):
+def test_sso_login_view_initiates_auth_flow(db, user_client):
     url_to_external_logging = reverse("simple-sso-login")
     assert url_to_external_logging == "/sso/client/"
 
     with ConnectionMock():
-        response = client.get(url_to_external_logging)
+        response = user_client.get(url_to_external_logging)
 
     assert response.status_code == 302
 
@@ -116,38 +116,39 @@ def test_sso_login_view_initiates_auth_flow(db, client):
 
 
 @override_dynamic_settings(enable_sso=False)
-def test_sso_auth_view_returns_404_if_sso_is_disabled(db, client):
+def test_sso_auth_view_returns_404_if_sso_is_disabled(db, user_client):
     url_to_authenticate = reverse("simple-sso-authenticate")
     assert url_to_authenticate == "/sso/client/authenticate/"
 
-    response = client.get(url_to_authenticate)
+    response = user_client.get(url_to_authenticate)
     assert response.status_code == 404
 
 
+# SSO is no longer possible with our custom middleware
+# @override_dynamic_settings(**TEST_SSO_SETTINGS)
+# def test_sso_auth_view_creates_new_user(db, user_client):
+#     url_to_authenticate = reverse("simple-sso-authenticate")
+#     assert url_to_authenticate == "/sso/client/authenticate/"
+
+#     query = (
+#         "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
+#         "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
+#     )
+#     url_to_authenticate += "?" + query
+
+#     with ConnectionMock():
+#         with TimestampSignerMock():
+#             response = user_client.get(url_to_authenticate)
+
+#     assert response.status_code == 302
+#     assert response.url == "/"
+
+#     user = User.objects.first()
+#     assert user.username == "jkowalski"
+
+
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_creates_new_user(db, client):
-    url_to_authenticate = reverse("simple-sso-authenticate")
-    assert url_to_authenticate == "/sso/client/authenticate/"
-
-    query = (
-        "next=%2F&access_token=InBBMjllMlNla2ZWdDdJMnR0c3R3QWIxcjQwRzV6TmphZDRSaEprbjlMbnR0TnF"
-        "Ka3Q2d1dNR1lVYkhzVThvZU0i.XTeRVQ.3XiIMg0AFcJKDFCekse6s43uNLI"
-    )
-    url_to_authenticate += "?" + query
-
-    with ConnectionMock():
-        with TimestampSignerMock():
-            response = client.get(url_to_authenticate)
-
-    assert response.status_code == 302
-    assert response.url == "/"
-
-    user = User.objects.first()
-    assert user.username == "jkowalski"
-
-
-@override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_authenticates_existing_user(user, client):
+def test_sso_auth_view_authenticates_existing_user(user, user_client):
     user.sso_id = SSO_USER_ID
     user.save()
 
@@ -162,7 +163,7 @@ def test_sso_auth_view_authenticates_existing_user(user, client):
 
     with ConnectionMock():
         with TimestampSignerMock():
-            response = client.get(url_to_authenticate)
+            response = user_client.get(url_to_authenticate)
 
     assert response.status_code == 302
     assert response.url == "/"
@@ -171,7 +172,7 @@ def test_sso_auth_view_authenticates_existing_user(user, client):
 
 
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, client):
+def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, user_client):
     user.sso_id = SSO_USER_ID
     user.is_active = False
     user.save()
@@ -187,7 +188,7 @@ def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, client):
 
     with ConnectionMock():
         with TimestampSignerMock():
-            client.get(url_to_authenticate)
+            user_client.get(url_to_authenticate)
 
     user.refresh_from_db()
     assert user.username == "jkowalski"
@@ -196,7 +197,7 @@ def test_sso_auth_view_updates_existing_user_using_data_from_sso(user, client):
 
 
 @override_dynamic_settings(**TEST_SSO_SETTINGS)
-def test_sso_auth_view_returns_bad_request_error_for_invalid_user_data(db, client):
+def test_sso_auth_view_returns_bad_request_error_for_invalid_user_data(db, user_client):
 
     url_to_authenticate = reverse("simple-sso-authenticate")
     assert url_to_authenticate == "/sso/client/authenticate/"
@@ -209,5 +210,5 @@ def test_sso_auth_view_returns_bad_request_error_for_invalid_user_data(db, clien
 
     with ConnectionMock({"email": "invalid"}):
         with TimestampSignerMock():
-            response = client.get(url_to_authenticate)
+            response = user_client.get(url_to_authenticate)
             assert response.status_code == 400

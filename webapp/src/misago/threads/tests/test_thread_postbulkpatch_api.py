@@ -138,12 +138,13 @@ class BulkPatchSerializerTests(ThreadPostBulkPatchApiTestCase):
             response.json(), [{"id": self.ids[0], "detail": ["undefined op"]}]
         )
 
-    def test_anonymous_user(self):
-        """anonymous users can't use bulk actions"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous_user(self):
+    #     """anonymous users can't use bulk actions"""
+    #     self.logout_user()
 
-        response = self.patch(self.api_link, {"ids": self.ids[:1], "ops": [{}]})
-        self.assertEqual(response.status_code, 403)
+    #     response = self.patch(self.api_link, {"ids": self.ids[:1], "ops": [{}]})
+    #     self.assertEqual(response.status_code, 403)
 
     def test_events(self):
         """cant use bulk actions for events"""

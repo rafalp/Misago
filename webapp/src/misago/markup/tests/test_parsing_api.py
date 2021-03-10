@@ -5,7 +5,7 @@ api_link = reverse("misago:api:parse-markup")
 
 def test_api_rejects_unauthenticated_user(db, client):
     response = client.post(api_link)
-    assert response.status_code == 403
+    assert response.status_code == 302  # changed to 302 to account for our custom middleware
 
 
 def test_api_rejects_request_without_data(user_client):

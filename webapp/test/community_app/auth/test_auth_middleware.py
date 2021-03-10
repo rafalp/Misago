@@ -21,6 +21,7 @@ from community_app.constants import COOKIE_NAME_ACCESS_TOKEN, COOKIE_NAME_REFRES
 class UserMock:
     name = "user mock"
     is_superuser = False
+    is_staff = False
     is_authenticated = True
 
     def __eq__(self, other):

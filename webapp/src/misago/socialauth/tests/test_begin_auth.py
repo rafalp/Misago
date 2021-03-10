@@ -11,22 +11,22 @@ def test_view_begins_social_auth_for_provider(client, provider):
 
 
 @override_dynamic_settings(enable_sso=True)
-def test_view_returns_403_when_sso_is_enabled(client, provider):
-    response = client.get(
+def test_view_returns_403_when_sso_is_enabled(user_client, provider):
+    response = user_client.get(
         reverse("misago:social-begin", kwargs={"backend": provider.pk})
     )
     assert response.status_code == 403
 
 
-def test_view_returns_404_for_disabled_provider(client, disabled_provider):
-    response = client.get(
+def test_view_returns_404_for_disabled_provider(user_client, disabled_provider):
+    response = user_client.get(
         reverse("misago:social-begin", kwargs={"backend": disabled_provider.pk})
     )
     assert response.status_code == 404
 
 
-def test_view_returns_404_for_undefined_provider(db, client):
-    response = client.get(
+def test_view_returns_404_for_undefined_provider(db, user_client):
+    response = user_client.get(
         reverse("misago:social-begin", kwargs={"backend": "undefined"})
     )
     assert response.status_code == 404

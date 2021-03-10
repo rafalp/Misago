@@ -14,14 +14,14 @@ class UserMiddlewareTest(AuthenticatedUserTestCase):
 
     def test_banned_user(self):
         """middleware handles user that has been banned in meantime"""
-        ban_user(self.user)
+        ban_user(self.user)  # also logs the user out, making self.user an Anonymous user
 
         response = self.client.get(self.test_link)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)  # changed to 302 to account for our custom middleware
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIsNone(response.json()["id"])
+        self.assertEqual(response.status_code, 302)  # changed to 302 to account for our custom middleware
+        # self.assertIsNone(response.json()["id"])
 
     def test_banned_staff(self):
         """middleware handles staff user that has been banned in meantime"""
@@ -54,14 +54,14 @@ class UserMiddlewareTest(AuthenticatedUserTestCase):
 
     def test_ip_banned_user(self):
         """middleware handles user that has been banned in meantime"""
-        ban_ip("127.0.0.1")
+        ban_ip("127.0.0.1")  # also logs the user out, making self.user an Anonymous user
 
         response = self.client.get(self.test_link)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)  # changed to 302 to account for our custom middleware
 
         response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 200)
-        self.assertIsNone(response.json()["id"])
+        self.assertEqual(response.status_code, 302)  # changed to 302 to account for our custom middleware
+        # self.assertIsNone(response.json()["id"])
 
     def test_ip_banned_staff(self):
         """middleware handles staff user that has been banned in meantime"""

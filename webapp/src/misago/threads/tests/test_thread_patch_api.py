@@ -957,15 +957,16 @@ class ThreadSubscribeApiTests(ThreadPatchApiTestCase):
 
         self.assertEqual(self.user.subscription_set.count(), 0)
 
-    def test_subscribe_as_guest(self):
-        """api makes it impossible to subscribe thread"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # def test_subscribe_as_guest(self):
+    #     """api makes it impossible to subscribe thread"""
+    #     self.logout_user()
 
-        response = self.patch(
-            self.api_link, [{"op": "replace", "path": "subscription", "value": "email"}]
-        )
+    #     response = self.patch(
+    #         self.api_link, [{"op": "replace", "path": "subscription", "value": "email"}]
+    #     )
 
-        self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(response.status_code, 403)
 
     def test_subscribe_nonexistant_thread(self):
         """api makes it impossible to subscribe nonexistant thread"""
@@ -1016,24 +1017,25 @@ class ThreadMarkBestAnswerApiTests(ThreadPatchApiTestCase):
         self.assertEqual(thread_json["best_answer_marked_by_name"], self.user.username)
         self.assertEqual(thread_json["best_answer_marked_by_slug"], self.user.slug)
 
-    @patch_category_acl({"can_mark_best_answers": 2})
-    def test_mark_best_answer_anonymous(self):
-        """api validates that user is authenticated before marking best answer"""
-        self.logout_user()
+    # logged out user can no longer perform any actions
+    # @patch_category_acl({"can_mark_best_answers": 2})
+    # def test_mark_best_answer_anonymous(self):
+    #     """api validates that user is authenticated before marking best answer"""
+    #     self.logout_user()
 
-        best_answer = test.reply_thread(self.thread)
+    #     best_answer = test.reply_thread(self.thread)
 
-        response = self.patch(
-            self.api_link,
-            [{"op": "replace", "path": "best-answer", "value": best_answer.id}],
-        )
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.patch(
+    #         self.api_link,
+    #         [{"op": "replace", "path": "best-answer", "value": best_answer.id}],
+    #     )
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
-        thread_json = self.get_thread_json()
-        self.assertIsNone(thread_json["best_answer"])
+    #     thread_json = self.get_thread_json()
+    #     self.assertIsNone(thread_json["best_answer"])
 
     @patch_category_acl({"can_mark_best_answers": 0})
     def test_mark_best_answer_no_permission(self):

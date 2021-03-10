@@ -1,4 +1,7 @@
+from django.contrib.auth import load_backend
 import pytest
+
+from bh.core_utils.test_utils import mock_service_calls, ServiceCallMock
 
 from .acl import ACL_CACHE, useracl
 from .admin.auth import authorize_admin
@@ -14,6 +17,8 @@ from .threads.test import post_thread
 from .users import BANS_CACHE
 from .users.models import AnonymousUser
 from .users.test import create_test_superuser, create_test_user
+
+from community_app.constants import COOKIE_NAME_ACCESS_TOKEN
 
 
 def get_cache_versions():
@@ -120,12 +125,28 @@ def other_superuser(db, user_password):
 
 @pytest.fixture
 def client():
-    return MisagoClient()
+    client = MisagoClient()
+    client.cookies[COOKIE_NAME_ACCESS_TOKEN] = "at"
+    return client
+
+
+@pytest.fixture(autouse=True)
+def service_mocks():
+    with mock_service_calls([
+        ServiceCallMock("UserAccountAuthentication", "1", "find_with_tokens", return_value={"user_id": 123}),
+        ServiceCallMock("UserAccount", "1", "read", return_value={"uuid": "a_user_uuid"}),
+    ]):
+        yield
 
 
 @pytest.fixture
 def user_client(mocker, client, user):
     client.force_login(user)
+
+    # Our middleware requires a social auth
+    backend = load_backend("community_app.auth.backend.SleepioAuth")
+    backend.strategy.storage.user.create_social_auth(user, "a_user_uuid", backend.name)
+
     session = client.session
     session.save()
     return client

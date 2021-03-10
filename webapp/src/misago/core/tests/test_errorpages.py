@@ -3,6 +3,7 @@ from django.http import Http404
 from django.test import Client, TestCase, override_settings
 from django.test.client import RequestFactory
 from django.urls import reverse
+import pytest
 
 from ...acl.useracl import get_user_acl
 from ...conf.dynamicsettings import DynamicSettings
@@ -10,19 +11,20 @@ from ...conftest import get_cache_versions
 from ...users.models import AnonymousUser
 from ..testproject.views import mock_custom_403_error_page, mock_custom_404_error_page
 from ..utils import encode_json_html
+from ...users.test import AuthenticatedUserTestCase
 
 
-class CSRFErrorViewTests(TestCase):
+class CSRFErrorViewTests(AuthenticatedUserTestCase):
     def test_csrf_failure_is_handled(self):
         """csrf_failure error page has no show-stoppers"""
-        csrf_client = Client(enforce_csrf_checks=True)
-        response = csrf_client.post(reverse("misago:index"), data={"eric": "fish"})
+        self.client.handler.enforce_csrf_checks = True
+        response = self.client.post(reverse("misago:index"), data={"eric": "fish"})
         self.assertContains(response, "Request blocked", status_code=403)
 
     def test_ajax_csrf_failure_is_handled(self):
         """csrf_failure error ajax response has no show-stoppers"""
-        csrf_client = Client(enforce_csrf_checks=True)
-        response = csrf_client.post(
+        self.client.handler.enforce_csrf_checks = True
+        response = self.client.post(
             reverse("misago:api:auth"),
             data={"eric": "fish"},
             HTTP_X_REQUESTED_WITH="XMLHttpRequest",
@@ -31,7 +33,7 @@ class CSRFErrorViewTests(TestCase):
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
-class ErrorPageViewsTests(TestCase):
+class ErrorPageViewsTests(AuthenticatedUserTestCase):
     def test_banned_returns_403(self):
         """banned error page has no show-stoppers"""
         response = self.client.get(reverse("raise-misago-banned"))
@@ -103,8 +105,9 @@ def create_request(url):
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urlswitherrorhandlers")
-class CustomErrorPagesTests(TestCase):
+class CustomErrorPagesTests(AuthenticatedUserTestCase):
     def setUp(self):
+        super().setUp()
         self.misago_request = create_request(reverse("misago:index"))
         self.site_request = create_request(reverse("raise-403"))
 

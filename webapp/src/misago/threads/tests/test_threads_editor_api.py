@@ -31,15 +31,16 @@ class ThreadPostEditorApiTests(EditorApiTestCase):
 
         self.api_link = reverse("misago:api:thread-editor")
 
-    def test_anonymous_user_request(self):
-        """endpoint validates if user is authenticated"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous_user_request(self):
+    #     """endpoint validates if user is authenticated"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You need to be signed in to start threads."}
-        )
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You need to be signed in to start threads."}
+    #     )
 
     @patch_category_acl({"can_browse": False})
     def test_category_visibility_validation(self):
@@ -221,15 +222,16 @@ class ThreadReplyEditorApiTests(EditorApiTestCase):
             "misago:api:thread-post-editor", kwargs={"thread_pk": self.thread.pk}
         )
 
-    def test_anonymous_user_request(self):
-        """endpoint validates if user is authenticated"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous_user_request(self):
+    #     """endpoint validates if user is authenticated"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to reply threads."}
-        )
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You have to sign in to reply threads."}
+    #     )
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""
@@ -373,15 +375,16 @@ class EditReplyEditorApiTests(EditorApiTestCase):
             kwargs={"thread_pk": self.thread.pk, "pk": self.post.pk},
         )
 
-    def test_anonymous_user_request(self):
-        """endpoint validates if user is authenticated"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_anonymous_user_request(self):
+    #     """endpoint validates if user is authenticated"""
+    #     self.logout_user()
 
-        response = self.client.get(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to edit posts."}
-        )
+    #     response = self.client.get(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "You have to sign in to edit posts."}
+    #     )
 
     def test_thread_visibility(self):
         """thread's visibility is validated"""

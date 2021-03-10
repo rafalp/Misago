@@ -7,6 +7,7 @@ jobs:
   test:
     docker:
       - image: circleci/python:3.6.8
+      - image: circleci/postgres:9.6.5-alpine-ram
 
     environment:
       LOCAL_BIN: /home/circleci/.local/bin
@@ -15,21 +16,33 @@ jobs:
       AWS_ACCESS_KEY_ID: ~
       AWS_SECRET_ACCESS_KEY: ~
       AWS_DEFAULT_REGION: us-east-1
+      POSTGRES_HOST: localhost # Does not set configuration on DB, intended only for reference below
+      POSTGRES_USER: root
+      POSTGRES_DB: circle_test
+      POSTGRES_PORT: 5432
 
     steps:
       - checkout
 
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "requirements-test.txt" }}
+            - v1-dependencies-{{ checksum "webapp/requirements.txt" }}-{{ checksum "webapp/requirements-test.txt" }}
             # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-t
+            - v1-dependencies-
 
       - run:
-          name: install CI dependencies
+          name: Upgrade pip and install dependencies
           command: |
+            pip install --user -U pip==20.2.2
             pip freeze
             pip install --user -r webapp/requirements-test.txt
+
+      - run:
+          name: Install dependencies
+          command: |
+            wget https://github.com/jwilder/dockerize/releases/download/v0.3.0/dockerize-linux-amd64-v0.3.0.tar.gz
+            tar -C $LOCAL_BIN -xzvf dockerize-linux-amd64-v0.3.0.tar.gz
+            rm dockerize-linux-amd64-v0.3.0.tar.gz
 
       - run:
           name: Set python path
@@ -37,9 +50,13 @@ jobs:
             echo 'export PYTHONPATH=$PYTHONPATH:webapp/src/' >> $BASH_ENV
 
       - run:
+          name: Waiting for Postgres to be ready
+          command: $LOCAL_BIN/dockerize -wait tcp://$POSTGRES_HOST:$POSTGRES_PORT -timeout 1m
+
+      - run:
           name: run test
           command: |
-            $LOCAL_BIN/pytest --cov
+            $LOCAL_BIN/pytest -rf --cov
 
       - run:
           name: generate coverage reports
@@ -52,8 +69,8 @@ jobs:
 
       - save_cache:
           paths:
-            - "/home/circleci/.local"
-          key: v1-dependencies-{{ checksum "requirements.txt" }}-{{ checksum "requirements-test.txt" }}
+            - "/root/.local"
+          key: v1-dependencies-{{ checksum "webapp/requirements.txt" }}-{{ checksum "webapp/requirements-test.txt" }}
 
   build:
     docker:

@@ -2,6 +2,10 @@ import json
 import os
 from pathlib import Path
 
+from bh.core_utils.test_utils import mock_service_calls, ServiceCallMock
+
+from community_app.constants import COOKIE_NAME_ACCESS_TOKEN
+
 from ...acl.test import patch_user_acl
 from ...conf import settings
 from ...conf.test import override_dynamic_settings
@@ -86,19 +90,24 @@ class UserAvatarTests(AuthenticatedUserTestCase):
         """requests to api error if user tries to access other user"""
         self.logout_user()
 
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You have to sign in to perform this action."}
-        )
+        # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+        # response = self.client.get(self.link)
+        # self.assertEqual(response.status_code, 403)
+        # self.assertEqual(
+        #     response.json(), {"detail": "You have to sign in to perform this action."}
+        # )
 
-        self.login_user(create_test_user("OtherUser", "otheruser@example.com"))
+        self.login_user(create_test_user("OtherUser", "otheruser@example.com"), uid="other_user_uuid")
+        self.client.cookies[COOKIE_NAME_ACCESS_TOKEN] = "at"  # logout killed cookies, so reattach
 
-        response = self.client.get(self.link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "You can't change other users avatars."}
-        )
+        with mock_service_calls([
+            ServiceCallMock("UserAccount", "1", "read", return_value={"uuid": "other_user_uuid"}),
+        ]):
+            response = self.client.get(self.link)
+            self.assertEqual(response.status_code, 403)
+            self.assertEqual(
+                response.json(), {"detail": "You can't change other users avatars."}
+            )
 
     def test_empty_requests(self):
         """empty request errors with code 400"""

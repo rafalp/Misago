@@ -55,10 +55,7 @@ class UserTestCaseTests(UserTestCase):
         self.logout_user()
 
         response = self.client.get("/api/auth/")
-        self.assertEqual(response.status_code, 200)
-
-        user_json = response.json()
-        self.assertIsNone(user_json["id"])
+        self.assertEqual(response.status_code, 401)  # changed to 401 because auth is no longer allowed
 
     def test_logout_superuser(self):
         """logout_user logs superuser out"""
@@ -67,10 +64,7 @@ class UserTestCaseTests(UserTestCase):
         self.logout_user()
 
         response = self.client.get("/api/auth/")
-        self.assertEqual(response.status_code, 200)
-
-        user_json = response.json()
-        self.assertIsNone(user_json["id"])
+        self.assertEqual(response.status_code, 401)  # changed to 401 because auth is no longer allowed
 
 
 class AuthenticatedUserTestCaseTests(AuthenticatedUserTestCase):

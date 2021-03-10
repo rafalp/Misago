@@ -2,12 +2,11 @@ from django.test import TestCase
 from django.urls import reverse
 
 from ...conf import settings
-from ..test import create_test_user
+
+from misago.users.test import AuthenticatedUserTestCase
 
 
-class AvatarServerTests(TestCase):
-    def setUp(self):
-        self.user = create_test_user("User", "User@example.com")
+class AvatarServerTests(AuthenticatedUserTestCase):
 
     def test_get_user_avatar_exact_size(self):
         """avatar server resolved valid avatar url for user"""

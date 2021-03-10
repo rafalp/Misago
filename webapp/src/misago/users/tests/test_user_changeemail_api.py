@@ -1,6 +1,8 @@
 from django.core import mail
 from django.urls import reverse
 
+from bh.core_utils.test_utils import mock_service_calls, ServiceCallMock
+
 from ...conf.test import override_dynamic_settings
 from ..test import AuthenticatedUserTestCase, create_test_user
 
@@ -117,26 +119,29 @@ class UserChangeEmailTests(AuthenticatedUserTestCase):
         self.user.set_password(user_password)
         self.user.save()
 
-        self.login_user(self.user)
+        self.login_user(self.user, uid="new_user_uuid")
 
-        response = self.client.post(
-            self.link, data={"new_email": new_email, "password": user_password}
-        )
-        self.assertEqual(response.status_code, 200)
+        with mock_service_calls([
+            ServiceCallMock("UserAccount", "1", "read", return_value={"uuid": "new_user_uuid"}),
+        ]):
+            response = self.client.post(
+                self.link, data={"new_email": new_email, "password": user_password}
+            )
+            self.assertEqual(response.status_code, 200)
 
-        self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
-        for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
-            if line.startswith("http://"):
-                token = line.rstrip("/").split("/")[-1]
-                break
-        else:
-            self.fail("E-mail sent didn't contain confirmation url")
+            self.assertIn("Confirm e-mail change", mail.outbox[0].subject)
+            for line in [l.strip() for l in mail.outbox[0].body.splitlines()]:
+                if line.startswith("http://"):
+                    token = line.rstrip("/").split("/")[-1]
+                    break
+            else:
+                self.fail("E-mail sent didn't contain confirmation url")
 
-        response = self.client.get(
-            reverse("misago:options-confirm-email-change", kwargs={"token": token})
-        )
+            response = self.client.get(
+                reverse("misago:options-confirm-email-change", kwargs={"token": token})
+            )
 
-        self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.status_code, 200)
 
-        self.reload_user()
-        self.assertEqual(self.user.email, new_email)
+            self.reload_user()
+            self.assertEqual(self.user.email, new_email)

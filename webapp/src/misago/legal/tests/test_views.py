@@ -3,13 +3,17 @@ from django.urls import reverse
 
 from ..models import Agreement
 
+from misago.users.test import AuthenticatedUserTestCase
 
-class PrivacyPolicyTests(TestCase):
+
+class PrivacyPolicyTests(AuthenticatedUserTestCase):
     def setUp(self):
         Agreement.objects.invalidate_cache()
+        super().setUp()
 
     def tearDown(self):
         Agreement.objects.invalidate_cache()
+        super().tearDown()
 
     def test_404_on_no_policy(self):
         """policy view returns 404 when no policy is set"""
@@ -44,12 +48,14 @@ class PrivacyPolicyTests(TestCase):
         self.assertContains(response, "Lorem ipsum dolor")
 
 
-class TermsOfServiceTests(TestCase):
+class TermsOfServiceTests(AuthenticatedUserTestCase):
     def setUp(self):
         Agreement.objects.invalidate_cache()
+        super().setUp()
 
     def tearDown(self):
         Agreement.objects.invalidate_cache()
+        super().tearDown()
 
     def test_404_on_no_tos(self):
         """TOS view returns 404 when no TOS is set"""

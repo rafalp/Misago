@@ -1,8 +1,10 @@
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from misago.users.test import AuthenticatedUserTestCase
 
-class CoreViewsTests(TestCase):
+
+class CoreViewsTests(AuthenticatedUserTestCase):
     def test_js_catalog_view_returns_200(self):
         """js catalog view has no show-stoppers"""
         response = self.client.get("/django-i18n.js")
@@ -16,7 +18,7 @@ class CoreViewsTests(TestCase):
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
-class RedirectViewTests(TestCase):
+class RedirectViewTests(AuthenticatedUserTestCase):
     def test_redirect_view(self):
         """redirect view always redirects to home page"""
         response = self.client.get(reverse("test-redirect"))

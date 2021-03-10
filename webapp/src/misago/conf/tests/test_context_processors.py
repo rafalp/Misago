@@ -9,7 +9,7 @@ def test_request_settings_are_included_in_template_context(db, dynamic_settings)
     assert context_settings == mock_request.settings
 
 
-def test_settings_are_included_in_frontend_context(db, client):
-    response = client.get("/")
+def test_settings_are_included_in_frontend_context(db, user_client):
+    response = user_client.get("/")
     assert response.status_code == 200
     assert '"SETTINGS": {"' in response.content.decode("utf-8")

@@ -4,9 +4,11 @@ from django.urls import reverse
 
 from ..shortcuts import get_int_or_404
 
+from misago.users.test import AuthenticatedUserTestCase
+
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
-class PaginateTests(TestCase):
+class PaginateTests(AuthenticatedUserTestCase):
     def test_valid_page_handling(self):
         """Valid page number causes no errors"""
         response = self.client.get(reverse("test-pagination", kwargs={"page": 2}))
@@ -30,7 +32,7 @@ class PaginateTests(TestCase):
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
-class ValidateSlugTests(TestCase):
+class ValidateSlugTests(AuthenticatedUserTestCase):
     def test_valid_slug_handling(self):
         """Valid slug causes no interruption in view processing"""
         response = self.client.get(
@@ -48,7 +50,7 @@ class ValidateSlugTests(TestCase):
         self.assertEqual(response["Location"], valid_url)
 
 
-class GetIntOr404Tests(TestCase):
+class GetIntOr404Tests(AuthenticatedUserTestCase):
     def test_valid_inputs(self):
         """get_int_or_404 returns int for valid values"""
         VALID_VALUES = [("0", 0), ("123", 123), ("000123", 123), ("1", 1)]
@@ -76,7 +78,7 @@ class GetIntOr404Tests(TestCase):
 
 
 @override_settings(ROOT_URLCONF="misago.core.testproject.urls")
-class PaginatedResponseTests(TestCase):
+class PaginatedResponseTests(AuthenticatedUserTestCase):
     def test_page_response(self):
         """utility returns response for only page arg"""
         response = self.client.get(reverse("test-paginated-response"))

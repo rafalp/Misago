@@ -48,6 +48,8 @@ services:
     command: bash -c "python -m pytest --cov --cov-report html:htmlcov --cov-report term -s && flake8 . && mypy src --show-error-codes"
     volumes:
       - ./:/opt/bh
+    depends_on:
+      - postgres_test
     environment:
       stage: test
       project_config_dir: /opt/bh/webapp/src/community_app/settings/
@@ -74,6 +76,21 @@ services:
       default:
         aliases:
           - community-postgres
+
+  postgres_test:
+    build: docker/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "8203:5432"
+    environment:
+      POSTGRES_DB: community-test
+      POSTGRES_USER: community-test
+      POSTGRES_PASSWORD: community-test
+    networks:
+      default:
+        aliases:
+          - community-postgres-test
 
 volumes:
   postgres:

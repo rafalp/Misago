@@ -20,15 +20,16 @@ class PostDeleteApiTests(ThreadsApiTestCase):
             kwargs={"thread_pk": self.thread.pk, "pk": self.post.pk},
         )
 
-    def test_delete_anonymous(self):
-        """api validates if deleting user is authenticated"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_delete_anonymous(self):
+    #     """api validates if deleting user is authenticated"""
+    #     self.logout_user()
 
-        response = self.client.delete(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.delete(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     @patch_category_acl({"can_hide_posts": 1, "can_hide_own_posts": 1})
     def test_no_permission(self):
@@ -188,15 +189,16 @@ class EventDeleteApiTests(ThreadsApiTestCase):
             kwargs={"thread_pk": self.thread.pk, "pk": self.event.pk},
         )
 
-    def test_delete_anonymous(self):
-        """api validates if deleting user is authenticated"""
-        self.logout_user()
+    # logged out user now results in a redirect from our middleware, and will not go through to the logic in this endpoint
+    # def test_delete_anonymous(self):
+    #     """api validates if deleting user is authenticated"""
+    #     self.logout_user()
 
-        response = self.client.delete(self.api_link)
-        self.assertEqual(response.status_code, 403)
-        self.assertEqual(
-            response.json(), {"detail": "This action is not available to guests."}
-        )
+    #     response = self.client.delete(self.api_link)
+    #     self.assertEqual(response.status_code, 403)
+    #     self.assertEqual(
+    #         response.json(), {"detail": "This action is not available to guests."}
+    #     )
 
     @patch_category_acl(
         {"can_hide_posts": 2, "can_hide_own_posts": 0, "can_hide_events": 0}

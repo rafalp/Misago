@@ -3,10 +3,13 @@ from django.urls import reverse
 
 from ..test import create_test_user
 
+from misago.users.test import AuthenticatedUserTestCase
 
-class AuthenticateApiTests(TestCase):
+
+class AuthenticateApiTests(AuthenticatedUserTestCase):
     def setUp(self):
         self.api_link = reverse("misago:api:mention-suggestions")
+        super().setUp()
 
     def test_no_query(self):
         """api returns empty result set if no query is given"""
