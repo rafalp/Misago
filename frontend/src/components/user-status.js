@@ -7,8 +7,7 @@ export default class extends React.Component {
 
   render() {
     // NOTE(Avi): Removed as part of PG-1313
-    // return <span className={this.getClass()}>{this.props.children}</span>
-    return
+    return <span className={this.getClass()}>{this.props.children}</span>
   }
 }
 
@@ -31,8 +30,7 @@ export class StatusIcon extends React.Component {
 
   render() {
     // NOTE(Avi): Removed as part of PG-1313
-    // return <span className="material-icon status-icon">{this.getIcon()}</span>
-    return
+    return <span className="material-icon status-icon">{this.getIcon()}</span>
   }
 }
 
@@ -59,15 +57,14 @@ export class StatusLabel extends React.Component {
 
   render() {
     // NOTE(Avi): Removed as part of PG-1313
-    // return (
-    //   <span
-    //     className={this.props.className || "status-label"}
-    //     title={this.getHelp()}
-    //   >
-    //     {this.getLabel()}
-    //   </span>
-    // )
-    return
+    return (
+      <span
+        className={this.props.className || "status-label"}
+        title={this.getHelp()}
+      >
+        {this.getLabel()}
+      </span>
+    )
   }
 }
 
