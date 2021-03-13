@@ -18,18 +18,6 @@ async def get_all_categories(
     )
     return [Category(**row) for row in await database.fetch_all(query)]
 
-    # categories_dict = {c.id: c for c in data}
-
-    # Aggregate child categories stats to parent categories, mutating data
-    # for category in reversed(data):
-    #     categories_dict[category.id] = category
-    #     if category.parent_id:
-    #         parent = categories_dict[category.parent_id]
-    #         parent.threads += category.threads
-    #         parent.posts += category.posts
-
-    # return categories_dict
-
 
 async def get_category_by_id(
     category_id: int, category_type: int = CategoryTypes.THREADS

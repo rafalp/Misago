@@ -12,12 +12,23 @@ DICT_CACHE_NAME = f"{CACHE_NAME}_dict"
 
 @list_loader(CACHE_NAME)
 async def load_categories(context: GraphQLContext) -> List[Category]:
-    return await get_all_categories()
+    categories = await get_all_categories()
+    aggregate_categories_data(categories)
+    return categories
 
 
 @list_loader(DICT_CACHE_NAME)
 async def load_categories_dict(context: GraphQLContext) -> Dict[int, Category]:
     return {c.id: c for c in await load_categories(context)}
+
+
+def aggregate_categories_data(categories: List[Category]):
+    parents = {c.id: c for c in categories if c.has_children()}
+    for category in reversed(categories):
+        if category.parent_id:
+            parent = parents[category.parent_id]
+            parent.threads += category.threads
+            parent.posts += category.posts
 
 
 async def load_category(
