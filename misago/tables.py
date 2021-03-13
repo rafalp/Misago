@@ -32,7 +32,7 @@ users = sqlalchemy.Table(
     ),
     sqlalchemy.Column("full_name", sqlalchemy.String(length=150), nullable=True),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
-    sqlalchemy.Column("is_deactivated", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("is_active", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_administrator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("joined_at", sqlalchemy.DateTime(timezone=True), nullable=False),
@@ -40,9 +40,9 @@ users = sqlalchemy.Table(
 )
 
 sqlalchemy.Index(
-    "misago_users_deactivated",
-    users.c.is_deactivated,
-    postgresql_where=users.c.is_deactivated == True,  # pylint: disable=C0121
+    "misago_users_inactive",
+    users.c.is_active,
+    postgresql_where=users.c.is_active == False,  # pylint: disable=C0121
 )
 sqlalchemy.Index(
     "misago_users_moderators",

@@ -7,7 +7,7 @@ create_user_hook.call_action(
     email: str,
     *,
     password: Optional[str] = None,
-    is_deactivated: bool = False,
+    is_active: bool = True,
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
@@ -31,7 +31,7 @@ async def create_user(
     email: str,
     *,
     password: Optional[str] = None,
-    is_deactivated: bool = False,
+    is_active: bool = True,
     is_moderator: bool = False,
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
@@ -71,6 +71,15 @@ Optional[str] = None
 ```
 
 User password. If not set, user will not be able to log-in to their account using default method.
+
+
+### `is_active`
+
+```python
+bool = True
+```
+
+Controls if user's account is active.
 
 
 ### `is_moderator`

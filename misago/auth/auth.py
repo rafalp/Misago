@@ -15,9 +15,7 @@ async def authenticate_user(
 ) -> Optional[User]:
     user = await get_user_by_name_or_email(username)
 
-    if not user:
-        return None
-    if user.is_deactivated:
+    if not user or not user.is_active:
         return None
     if user.password is None or not await verify_password(password, user.password):
         return None

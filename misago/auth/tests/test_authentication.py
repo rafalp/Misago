@@ -22,10 +22,8 @@ async def test_nonexisting_user_is_not_authenticated(db, user_password):
 
 
 @pytest.mark.asyncio
-async def test_deactivated_user_is_not_authenticated(deactivated_user, user_password):
-    authenticated_user = await authenticate_user(
-        {}, deactivated_user.email, user_password
-    )
+async def test_inactive_user_is_not_authenticated(inactive_user, user_password):
+    authenticated_user = await authenticate_user({}, inactive_user.email, user_password)
     assert authenticated_user is None
 
 

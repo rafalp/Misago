@@ -40,17 +40,22 @@ async def test_user_is_created_with_useable_password(db, user_password):
 
 
 @pytest.mark.asyncio
-async def test_user_statuses_default_to_false(db, user_password):
+async def test_user_is_active_by_default(db, user_password):
     user = await create_user("test", "test@example.com")
-    assert not user.is_deactivated
-    assert not user.is_moderator
-    assert not user.is_administrator
+    assert user.is_active
 
 
 @pytest.mark.asyncio
-async def test_user_is_created_with_deactivated_status(db, user_password):
-    user = await create_user("test", "test@example.com", is_deactivated=True)
-    assert user.is_deactivated
+async def test_user_is_created_with_inactive_status(db, user_password):
+    user = await create_user("test", "test@example.com", is_active=False)
+    assert not user.is_active
+
+
+@pytest.mark.asyncio
+async def test_user_team_statuses_default_to_false(db, user_password):
+    user = await create_user("test", "test@example.com")
+    assert not user.is_moderator
+    assert not user.is_administrator
 
 
 @pytest.mark.asyncio

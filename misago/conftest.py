@@ -127,9 +127,9 @@ async def other_user(db, user_password):
 
 
 @pytest.fixture
-async def deactivated_user(db, user_password):
+async def inactive_user(db, user_password):
     return await create_user(
-        "User", "user@example.com", password=user_password, is_deactivated=True
+        "User", "user@example.com", password=user_password, is_active=False
     )
 
 

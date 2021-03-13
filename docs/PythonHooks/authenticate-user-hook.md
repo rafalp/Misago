@@ -12,7 +12,7 @@ authenticate_user_hook.call_action(
 
 A filter for the function used to authenticate user for given user name/email and password.
 
-Returns `User` dataclass with authenticated user data or `None` if user should not be able to authenticate (eg. deactivated or invalid credentials).
+Returns `User` dataclass with authenticated user data or `None` if user should not be able to authenticate (eg. inactive or invalid credentials).
 
 
 ## Required arguments

@@ -12,7 +12,7 @@ class User:
     email_hash: str
     full_name: Optional[str]
     password: Optional[str]
-    is_deactivated: bool
+    is_active: bool
     is_moderator: bool
     is_administrator: bool
     joined_at: datetime

@@ -10,8 +10,8 @@ async def test_auth_retrieves_user_by_id(user):
 
 
 @pytest.mark.asyncio
-async def test_auth_doesnt_return_deactivated_user(deactivated_user):
-    auth_user = await get_user({}, deactivated_user.id)
+async def test_auth_doesnt_return_inactive_user(inactive_user):
+    auth_user = await get_user({}, inactive_user.id)
     assert auth_user is None
 
 

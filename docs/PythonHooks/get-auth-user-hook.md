@@ -8,7 +8,7 @@ get_auth_user_hook.call_action(
 
 A filter for the function used to get authorized user for given auth credential (eg. token).
 
-Returns `User` dataclass with authorized user data or `None` if user was not found or couldn't be authenticated for other reason (eg. deactivated).
+Returns `User` dataclass with authorized user data or `None` if user was not found or couldn't be authenticated for other reason (eg. inactive).
 
 
 ## Required arguments
