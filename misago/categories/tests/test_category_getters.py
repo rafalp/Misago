@@ -1,7 +1,6 @@
 import pytest
 
 from ..get import get_all_categories, get_category_by_id
-from ..update import update_category
 
 
 @pytest.mark.asyncio
