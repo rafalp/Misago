@@ -3,7 +3,6 @@ import pytest
 from ..category import (
     resolve_banner,
     resolve_children,
-    resolve_color,
     resolve_extra,
     resolve_icon,
     resolve_parent,
@@ -24,13 +23,6 @@ async def test_category_children_resolver_returns_empty_list_for_leaf_category(
 ):
     value = await resolve_children(sibling_category, graphql_info)
     assert value == []
-
-
-def test_category_color_resolver_returns_string_with_category_color(
-    category, graphql_info
-):
-    value = resolve_color(category, graphql_info)
-    assert value == "#FFAB00"
 
 
 def test_category_extra_resolver_returns_dict_with_extra(category, graphql_info):

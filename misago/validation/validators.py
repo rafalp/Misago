@@ -2,6 +2,7 @@ from asyncio import gather
 from typing import Any, List, Optional, Union, cast
 
 from pydantic import PydanticTypeError, PydanticValueError
+from pydantic.color import Color
 from sqlalchemy.sql import select
 
 from ..auth import get_authenticated_user
@@ -366,3 +367,10 @@ class UsernameIsAvailableValidator:
         if await database.fetch_one(query):
             raise UsernameNotAvailableError()
         return username
+
+
+def color_validator(color: Union[Color, str], *_) -> str:
+    if isinstance(color, Color):
+        return color.as_hex().upper()
+    
+    return Color(color).as_hex().upper()

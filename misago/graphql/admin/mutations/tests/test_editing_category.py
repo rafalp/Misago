@@ -10,7 +10,7 @@ async def test_edit_category_mutation_edits_category_name(admin_graphql_info, ca
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category"},
+        input={"name": "Edited category", "color": "#F0F0F0"},
     )
 
     assert not data.get("errors")
@@ -23,12 +23,31 @@ async def test_edit_category_mutation_edits_category_name(admin_graphql_info, ca
 
 
 @pytest.mark.asyncio
+async def test_edit_category_mutation_edits_category_color(
+    admin_graphql_info, category
+):
+    data = await resolve_edit_category(
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "Edited category", "color": "#F0F0F0"},
+    )
+
+    assert not data.get("errors")
+    assert data["category"]
+
+    edited_category = await get_category_by_id(data["category"].id)
+    assert edited_category.id == category.id
+    assert edited_category.color == "#F0F0F0"
+
+
+@pytest.mark.asyncio
 async def test_edit_category_mutation_closes_category(admin_graphql_info, category):
     data = await resolve_edit_category(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category", "isClosed": True},
+        input={"name": "Edited category", "color": "#F0F0F0", "isClosed": True},
     )
 
     assert not data.get("errors")
@@ -47,7 +66,7 @@ async def test_edit_category_mutation_opens_category(
         None,
         admin_graphql_info,
         category=str(closed_category.id),
-        input={"name": "Edited category", "isClosed": False},
+        input={"name": "Edited category", "color": "#F0F0F0", "isClosed": False},
     )
 
     assert not data.get("errors")
@@ -66,7 +85,7 @@ async def test_edit_category_mutation_changes_child_category_to_root_category(
         None,
         admin_graphql_info,
         category=str(child_category.id),
-        input={"name": "Edited category"},
+        input={"name": "Edited category", "color": "#F0F0F0"},
     )
 
     assert not data.get("errors")
@@ -99,7 +118,11 @@ async def test_edit_category_mutation_changes_root_category_to_child_category(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "parent": str(category.id)},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "parent": str(category.id),
+        },
     )
 
     assert not data.get("errors")
@@ -132,7 +155,7 @@ async def test_edit_category_mutation_fails_if_category_doesnt_exist(
         None,
         admin_graphql_info,
         category=str(category.id * 100),
-        input={"name": "Category"},
+        input={"name": "Category", "color": "#F0F0F0"},
     )
 
     assert not data.get("category")
@@ -146,7 +169,10 @@ async def test_edit_category_mutation_fails_if_category_id_is_invalid(
     admin_graphql_info, category
 ):
     data = await resolve_edit_category(
-        None, admin_graphql_info, category="invalid", input={"name": "Category"},
+        None,
+        admin_graphql_info,
+        category="invalid",
+        input={"name": "Category", "color": "#F0F0F0"},
     )
 
     assert not data.get("category")
@@ -160,7 +186,10 @@ async def test_edit_category_mutation_fails_if_category_name_is_too_short(
     admin_graphql_info, category
 ):
     data = await resolve_edit_category(
-        None, admin_graphql_info, category=str(category.id), input={"name": "   "},
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "   ", "color": "#F0F0F0"},
     )
 
     assert data.get("category")
@@ -176,7 +205,10 @@ async def test_edit_category_mutation_fails_if_category_name_is_too_long(
     admin_graphql_info, category
 ):
     data = await resolve_edit_category(
-        None, admin_graphql_info, category=str(category.id), input={"name": "a" * 256},
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "a" * 256, "color": "#F0F0F0"},
     )
 
     assert data.get("category")
@@ -192,7 +224,10 @@ async def test_edit_category_mutation_fails_if_category_name_is_not_sluggable(
     admin_graphql_info, category
 ):
     data = await resolve_edit_category(
-        None, admin_graphql_info, category=str(category.id), input={"name": "!!!!"},
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "!!!!", "color": "#F0F0F0"},
     )
 
     assert data.get("category")
@@ -211,7 +246,7 @@ async def test_edit_category_mutation_fails_if_category_parent_is_invalid(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "parent": "invalid"},
+        input={"name": "Edited category", "color": "#F0F0F0", "parent": "invalid"},
     )
 
     assert data["category"]
@@ -228,7 +263,11 @@ async def test_edit_category_mutation_fails_if_category_parent_doesnt_exist(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "parent": str(sibling_category.id * 100)},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "parent": str(sibling_category.id * 100),
+        },
     )
 
     assert data["category"]
@@ -245,7 +284,11 @@ async def test_edit_category_mutation_fails_if_category_parent_is_category(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "parent": str(sibling_category.id)},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "parent": str(sibling_category.id),
+        },
     )
 
     assert data["category"]
@@ -262,7 +305,11 @@ async def test_edit_category_mutation_fails_if_parent_is_child_category(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "parent": str(child_category.id)},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "parent": str(child_category.id),
+        },
     )
 
     assert data["category"]
@@ -279,7 +326,11 @@ async def test_edit_category_mutation_fails_if_category_has_children(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category", "parent": str(sibling_category.id)},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "parent": str(sibling_category.id),
+        },
     )
 
     assert data["category"]

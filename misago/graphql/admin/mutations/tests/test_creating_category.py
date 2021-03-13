@@ -9,7 +9,7 @@ async def test_create_category_mutation_creates_top_level_category(
     admin_graphql_info, categories
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "New category"},
+        None, admin_graphql_info, input={"name": "New category", "color": "#FF0000"},
     )
 
     assert not data.get("errors")
@@ -19,6 +19,7 @@ async def test_create_category_mutation_creates_top_level_category(
     assert new_category
     assert new_category.name == "New category"
     assert new_category.slug == "new-category"
+    assert new_category.color == "#F00"
     assert new_category.parent_id is None
     assert new_category.depth == 0
     assert new_category.left == 11
@@ -48,7 +49,7 @@ async def test_create_category_mutation_creates_new_child_category(
     data = await resolve_create_category(
         None,
         admin_graphql_info,
-        input={"name": "New category", "parent": str(category.id)},
+        input={"name": "New category", "color": "#FF0000", "parent": str(category.id)},
     )
 
     assert not data.get("errors")
@@ -56,8 +57,6 @@ async def test_create_category_mutation_creates_new_child_category(
 
     new_category = await get_category_by_id(data["category"].id)
     assert new_category
-    assert new_category.name == "New category"
-    assert new_category.slug == "new-category"
     assert new_category.parent_id == category.id
     assert new_category.depth == 1
     assert new_category.left == 6
@@ -84,7 +83,9 @@ async def test_create_category_mutation_creates_closed_category(
     admin_graphql_info, categories
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "New category", "isClosed": True},
+        None,
+        admin_graphql_info,
+        input={"name": "New category", "color": "#FF0000", "isClosed": True},
     )
 
     assert not data.get("errors")
@@ -100,7 +101,7 @@ async def test_create_category_mutation_fails_if_category_name_is_too_short(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "   "},
+        None, admin_graphql_info, input={"name": "   ", "color": "#FF0000"},
     )
 
     assert not data.get("category")
@@ -114,7 +115,7 @@ async def test_create_category_mutation_fails_if_category_name_is_too_long(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "a" * 256},
+        None, admin_graphql_info, input={"name": "a" * 256, "color": "#FF0000"},
     )
 
     assert not data.get("category")
@@ -128,7 +129,7 @@ async def test_create_category_mutation_fails_if_category_name_is_not_sluggable(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "!!!!"},
+        None, admin_graphql_info, input={"name": "!!!!", "color": "#FF0000"},
     )
 
     assert not data.get("category")
@@ -138,11 +139,41 @@ async def test_create_category_mutation_fails_if_category_name_is_not_sluggable(
 
 
 @pytest.mark.asyncio
+async def test_create_category_mutation_fails_if_category_color_is_empty(
+    admin_graphql_info,
+):
+    data = await resolve_create_category(
+        None, admin_graphql_info, input={"name": "Test", "color": ""},
+    )
+
+    assert not data.get("category")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["color"]
+    assert data["errors"].get_errors_types() == ["value_error.color"]
+
+
+@pytest.mark.asyncio
+async def test_create_category_mutation_fails_if_category_color_is_invalid(
+    admin_graphql_info,
+):
+    data = await resolve_create_category(
+        None, admin_graphql_info, input={"name": "Test", "color": "invalid"},
+    )
+
+    assert not data.get("category")
+    assert data.get("errors")
+    assert data["errors"].get_errors_locations() == ["color"]
+    assert data["errors"].get_errors_types() == ["value_error.color"]
+
+
+@pytest.mark.asyncio
 async def test_create_category_mutation_fails_if_parent_id_is_invalid(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "New category", "parent": "invalid"},
+        None,
+        admin_graphql_info,
+        input={"name": "New category", "color": "#FF0000", "parent": "invalid"},
     )
 
     assert not data.get("category")
@@ -156,7 +187,9 @@ async def test_create_category_mutation_fails_if_parent_category_is_not_found(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "New category", "parent": 1},
+        None,
+        admin_graphql_info,
+        input={"name": "New category", "color": "#FF0000", "parent": 1},
     )
 
     assert not data.get("category")
@@ -172,7 +205,11 @@ async def test_create_category_mutation_fails_if_parent_category_is_child_catego
     data = await resolve_create_category(
         None,
         admin_graphql_info,
-        input={"name": "New category", "parent": str(child_category.id)},
+        input={
+            "name": "New category",
+            "color": "#FF0000",
+            "parent": str(child_category.id),
+        },
     )
 
     assert not data.get("category")

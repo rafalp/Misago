@@ -27,15 +27,7 @@ def resolve_children(
     return load_category_children(info.context, category.id)
 
 
-# placeholder resolvers for color and icon
-@category_type.field("color")
-def resolve_color(category: Category, info: GraphQLResolveInfo) -> str:
-    color_offset = category.left - 1
-    if color_offset > COLOR_PALETTE_SIZE:
-        color_offset -= (color_offset // COLOR_PALETTE_SIZE) * color_offset
-    return COLOR_PALETTE[color_offset]
-
-
+# placeholder resolver for icon
 @category_type.field("icon")
 def resolve_icon(category: Category, info: GraphQLResolveInfo) -> str:
     icon_offset = category.left - 1
@@ -66,29 +58,6 @@ def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
 def resolve_extra(category: Category, info: GraphQLResolveInfo) -> dict:
     return {}
 
-
-COLOR_PALETTE = (
-    "#FF5630",
-    "#36B37E",
-    "#FFAB00",
-    "#00B8D9",
-    "#6554C0",
-    "#0065FF",
-    "#FF7452",
-    "#57D9A3",
-    "#FFC400",
-    "#00C7E6",
-    "#8777D9",
-    "#2684FF",
-    "#DE350B",
-    "#00875A",
-    "#FF991F",
-    "#00A3BF",
-    "#5243AA",
-    "#0052CC",
-)
-
-COLOR_PALETTE_SIZE = len(COLOR_PALETTE) - 1
 
 ICONS_PALETTE = (
     "fas fa-pencil-ruler",

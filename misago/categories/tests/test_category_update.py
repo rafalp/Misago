@@ -19,6 +19,12 @@ async def test_category_name_can_be_updated(category):
 
 
 @pytest.mark.asyncio
+async def test_category_color_can_be_updated(category):
+    updated_category = await update_category(category, color="#0000ff")
+    assert updated_category.color == "#0000FF"
+
+
+@pytest.mark.asyncio
 async def test_category_parent_can_be_updated(category, sibling_category):
     updated_category = await update_category(category, parent=sibling_category)
     assert updated_category.parent_id == sibling_category.id

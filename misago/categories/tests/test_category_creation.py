@@ -18,6 +18,19 @@ async def test_category_is_created_with_slug(db):
 
 
 @pytest.mark.asyncio
+async def test_category_is_created_with_default_color(db):
+    category = await create_category("Test")
+    assert len(category.color) == 7
+    assert category.color[0] == "#"
+
+
+@pytest.mark.asyncio
+async def test_category_is_created_with_custom_color(db):
+    category = await create_category("Test", color="#ff0000")
+    assert category.color == "#FF0000"
+
+
+@pytest.mark.asyncio
 async def test_category_is_created_without_mptt_data(db):
     category = await create_category("TeST")
     assert category.parent_id is None

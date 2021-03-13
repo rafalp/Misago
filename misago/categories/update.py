@@ -10,7 +10,8 @@ from ..utils.strings import slugify
 async def update_category(
     category: Category,
     *,
-    name: str = None,
+    name: Optional[str] = None,
+    color: Optional[str] = None,
     parent: Optional[Union[Category, bool]] = None,
     left: Optional[int] = None,
     right: Optional[int] = None,
@@ -27,6 +28,9 @@ async def update_category(
     if name is not None and name != category.name:
         changes["name"] = name
         changes["slug"] = slugify(name)
+
+    if color is not None and color != category.color:
+        changes["color"] = color.upper()
 
     if parent is True:
         raise ValueError("'parent' must be of type 'None', 'False' or 'Category'")

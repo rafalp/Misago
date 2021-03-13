@@ -3,13 +3,19 @@ from typing import Optional
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
+from pydantic.color import Color
 
 from ....categories.create import create_category
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.tree import insert_category
 from ....types import Category
-from ....validation import CategoryExistsValidator, validate_data, validate_model
+from ....validation import (
+    CategoryExistsValidator,
+    color_validator,
+    validate_data,
+    validate_model,
+)
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 
@@ -28,7 +34,10 @@ async def resolve_create_category(
     cleaned_data, errors = validate_model(CategoryInputModel, input)
     cleaned_data, errors = await validate_data(
         cleaned_data,
-        {"parent": [CategoryExistsValidator(info.context), validate_parent]},
+        {
+            "color": [color_validator],
+            "parent": [CategoryExistsValidator(info.context), validate_parent],
+        },
         errors,
     )
 
@@ -39,6 +48,7 @@ async def resolve_create_category(
 
     new_category = await create_category(
         name=cleaned_data["name"],
+        color=cleaned_data["color"],
         parent=parent_obj,
         is_closed=cleaned_data.get("is_closed") or False,
     )
@@ -53,6 +63,7 @@ CategoryInputModel = create_model(
         constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
         ...,
     ),
+    color=(Color, ...),
     parent=(Optional[PositiveInt], None),
     is_closed=(Optional[bool], False),
 )

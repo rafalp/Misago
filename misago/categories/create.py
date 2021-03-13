@@ -10,6 +10,7 @@ from .categorytypes import CategoryTypes
 async def create_category(
     name: str,
     *,
+    color: Optional[str] = None,
     parent: Optional[Category] = None,
     left: Optional[int] = 0,
     right: Optional[int] = 0,
@@ -23,6 +24,7 @@ async def create_category(
         "type": CategoryTypes.THREADS,
         "name": name,
         "slug": slugify(name),
+        "color": (color or "#00FF00").upper(),
         "parent_id": parent.id if parent else None,
         "left": left,
         "right": right,

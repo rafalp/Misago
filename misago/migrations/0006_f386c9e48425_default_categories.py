@@ -56,6 +56,7 @@ categories: List[dict] = [
         "right": 2,
         "name": "Example category",
         "slug": "example-category",
+        "color": "#FF5630",
         "is_closed": False,
         "extra": {},
     },

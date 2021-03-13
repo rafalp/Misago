@@ -2,7 +2,16 @@ from ..category import Category
 
 
 def category_factory(*, id, left, right):  # pylint: disable=redefined-builtin
-    return Category(name="T", slug="t", type=0, id=id, left=left, right=right, extra={})
+    return Category(
+        name="T",
+        slug="t",
+        color="#000",
+        type=0,
+        id=id,
+        left=left,
+        right=right,
+        extra={},
+    )
 
 
 def test_category_is_not_its_own_parent_or_child():

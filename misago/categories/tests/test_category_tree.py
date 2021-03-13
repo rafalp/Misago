@@ -5,7 +5,16 @@ from ..tree import CategoryTree
 
 
 def category_factory(*, id, left=0, right=0):  # pylint: disable=redefined-builtin
-    return Category(name="T", slug="t", type=0, id=id, left=left, right=right, extra={})
+    return Category(
+        name="T",
+        slug="t",
+        color="#000000",
+        type=0,
+        id=id,
+        left=left,
+        right=right,
+        extra={},
+    )
 
 
 @pytest.fixture

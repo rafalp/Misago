@@ -12,6 +12,7 @@ from ....types import Category
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,
+    color_validator,
     for_location,
     validate_data,
     validate_model,
@@ -41,6 +42,7 @@ async def resolve_edit_category(
         cleaned_data,
         {
             "category": [CategoryExistsValidator(info.context)],
+            "color": [color_validator],
             "parent": [CategoryExistsValidator(info.context),],
             ROOT_LOCATION: [validate_parent_value],
         },
@@ -54,6 +56,7 @@ async def resolve_edit_category(
     updated_category = await update_category(
         category_obj,
         name=cleaned_data["name"],
+        color=cleaned_data["color"],
         is_closed=cleaned_data.get("is_closed") or False,
     )
 

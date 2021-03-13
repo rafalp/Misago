@@ -8,6 +8,7 @@ class Category:
     type: int
     name: str
     slug: str
+    color: str
     extra: dict
     left: int = 0
     right: int = 0
