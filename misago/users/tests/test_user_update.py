@@ -1,0 +1,96 @@
+import pytest
+
+from ...passwords import verify_password
+from ...utils import timezone
+from ..update import update_user
+
+
+@pytest.mark.asyncio
+async def test_user_name_is_updated(user):
+    updated_user = await update_user(user, name="Lorem")
+    assert updated_user.name == "Lorem"
+    assert updated_user.slug == "lorem"
+
+
+@pytest.mark.asyncio
+async def test_user_email_is_updated(user):
+    updated_user = await update_user(user, email="lorem@ipsum.com")
+    assert updated_user.email == "lorem@ipsum.com"
+    assert updated_user.email_hash != user.email_hash
+
+
+@pytest.mark.asyncio
+async def test_user_full_name_is_updated(user):
+    updated_user = await update_user(user, full_name="John Doe")
+    assert updated_user.full_name == "John Doe"
+
+
+@pytest.mark.asyncio
+async def test_user_full_name_is_removed(user):
+    updated_user = await update_user(user, full_name="")
+    assert updated_user.full_name is None
+
+
+@pytest.mark.asyncio
+async def test_user_password_is_changed(user):
+    updated_user = await update_user(user, password=" secr3t! ")
+    assert updated_user.password != user.password
+    assert await verify_password(" secr3t! ", updated_user.password)
+
+
+@pytest.mark.asyncio
+async def test_user_is_made_inactive(user):
+    updated_user = await update_user(user, is_active=False)
+    assert not updated_user.is_active
+
+
+@pytest.mark.asyncio
+async def test_inactive_user_is_made_active(inactive_user):
+    assert not inactive_user.is_active
+
+    updated_user = await update_user(inactive_user, is_active=True)
+    assert updated_user.is_active
+
+
+@pytest.mark.asyncio
+async def test_user_is_made_moderator(user):
+    updated_user = await update_user(user, is_moderator=True)
+    assert updated_user.is_moderator
+
+
+@pytest.mark.asyncio
+async def test_user_moderator_status_is_removed(moderator):
+    assert moderator.is_moderator
+
+    updated_user = await update_user(moderator, is_moderator=False)
+    assert not updated_user.is_moderator
+
+
+@pytest.mark.asyncio
+async def test_user_is_made_administrator(user):
+    updated_user = await update_user(user, is_administrator=True)
+    assert updated_user.is_administrator
+
+
+@pytest.mark.asyncio
+async def test_user_administrator_status_is_removed(admin):
+    assert admin.is_administrator
+
+    updated_user = await update_user(admin, is_administrator=False)
+    assert not updated_user.is_administrator
+
+
+@pytest.mark.asyncio
+async def test_user_joined_at_datetime_is_updated(user):
+    updated_user = await update_user(
+        user, joined_at=timezone.now().replace(year=2020, month=1, day=15)
+    )
+    assert updated_user.joined_at.year == 2020
+    assert updated_user.joined_at.month == 1
+    assert updated_user.joined_at.day == 15
+
+
+@pytest.mark.asyncio
+async def test_user_extra_is_updated(user):
+    updated_user = await update_user(user, extra={"test": "extra"})
+    assert updated_user.extra == {"test": "extra"}

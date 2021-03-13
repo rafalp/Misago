@@ -26,7 +26,7 @@ async def test_user_is_created_with_default_join_datetime(db, user_password):
 
 
 @pytest.mark.asyncio
-async def test_user_is_created_with_specifed_join_datetime(db, user_password):
+async def test_user_is_created_with_specified_join_datetime(db, user_password):
     joined_at = timezone.now()
     user = await create_user("test", "test@example.com", joined_at=joined_at)
     assert user.joined_at == joined_at
