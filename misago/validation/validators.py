@@ -372,5 +372,5 @@ class UsernameIsAvailableValidator:
 def color_validator(color: Union[Color, str], *_) -> str:
     if isinstance(color, Color):
         return color.as_hex().upper()
-    
+
     return Color(color).as_hex().upper()
