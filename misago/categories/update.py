@@ -12,6 +12,7 @@ async def update_category(
     *,
     name: Optional[str] = None,
     color: Optional[str] = None,
+    icon: Optional[str] = None,
     parent: Optional[Union[Category, bool]] = None,
     left: Optional[int] = None,
     right: Optional[int] = None,
@@ -31,6 +32,9 @@ async def update_category(
 
     if color is not None and color != category.color:
         changes["color"] = color.upper()
+
+    if icon is not None and icon != category.icon:
+        changes["icon"] = icon or None
 
     if parent is True:
         raise ValueError("'parent' must be of type 'None', 'False' or 'Category'")

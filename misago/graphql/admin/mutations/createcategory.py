@@ -49,6 +49,7 @@ async def resolve_create_category(
     new_category = await create_category(
         name=cleaned_data["name"],
         color=cleaned_data["color"],
+        icon=cleaned_data["icon"],
         parent=parent_obj,
         is_closed=cleaned_data.get("is_closed") or False,
     )
@@ -64,6 +65,7 @@ CategoryInputModel = create_model(
         ...,
     ),
     color=(Color, ...),
+    icon=(constr(strip_whitespace=True, min_length=0, max_length=255), ...),
     parent=(Optional[PositiveInt], None),
     is_closed=(Optional[bool], False),
 )

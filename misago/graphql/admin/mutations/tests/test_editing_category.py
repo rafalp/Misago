@@ -1,6 +1,7 @@
 import pytest
 
 from .....categories.get import get_all_categories, get_category_by_id
+from .....categories.update import update_category
 from ..editcategory import resolve_edit_category
 
 
@@ -10,7 +11,7 @@ async def test_edit_category_mutation_edits_category_name(admin_graphql_info, ca
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category", "color": "#F0F0F0"},
+        input={"name": "Edited category", "color": "#F0F0F0", "icon": ""},
     )
 
     assert not data.get("errors")
@@ -30,7 +31,7 @@ async def test_edit_category_mutation_edits_category_color(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category", "color": "#F0F0F0"},
+        input={"name": "Edited category", "color": "#F0F0F0", "icon": ""},
     )
 
     assert not data.get("errors")
@@ -42,12 +43,55 @@ async def test_edit_category_mutation_edits_category_color(
 
 
 @pytest.mark.asyncio
+async def test_edit_category_mutation_edits_category_icon(admin_graphql_info, category):
+    data = await resolve_edit_category(
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "Edited category", "color": "#F0F0F0", "icon": "fas fa-lock"},
+    )
+
+    assert not data.get("errors")
+    assert data["category"]
+
+    edited_category = await get_category_by_id(data["category"].id)
+    assert edited_category.id == category.id
+    assert edited_category.icon == "fas fa-lock"
+
+
+@pytest.mark.asyncio
+async def test_edit_category_mutation_removes_category_icon(
+    admin_graphql_info, category
+):
+    await update_category(category, icon="fas fa-lock")
+
+    data = await resolve_edit_category(
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        input={"name": "Edited category", "color": "#F0F0F0", "icon": ""},
+    )
+
+    assert not data.get("errors")
+    assert data["category"]
+
+    edited_category = await get_category_by_id(data["category"].id)
+    assert edited_category.id == category.id
+    assert edited_category.icon is None
+
+
+@pytest.mark.asyncio
 async def test_edit_category_mutation_closes_category(admin_graphql_info, category):
     data = await resolve_edit_category(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "Edited category", "color": "#F0F0F0", "isClosed": True},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "icon": "",
+            "isClosed": True,
+        },
     )
 
     assert not data.get("errors")
@@ -66,7 +110,12 @@ async def test_edit_category_mutation_opens_category(
         None,
         admin_graphql_info,
         category=str(closed_category.id),
-        input={"name": "Edited category", "color": "#F0F0F0", "isClosed": False},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "icon": "",
+            "isClosed": False,
+        },
     )
 
     assert not data.get("errors")
@@ -85,7 +134,7 @@ async def test_edit_category_mutation_changes_child_category_to_root_category(
         None,
         admin_graphql_info,
         category=str(child_category.id),
-        input={"name": "Edited category", "color": "#F0F0F0"},
+        input={"name": "Edited category", "color": "#F0F0F0", "icon": ""},
     )
 
     assert not data.get("errors")
@@ -121,6 +170,7 @@ async def test_edit_category_mutation_changes_root_category_to_child_category(
         input={
             "name": "Edited category",
             "color": "#F0F0F0",
+            "icon": "",
             "parent": str(category.id),
         },
     )
@@ -155,7 +205,7 @@ async def test_edit_category_mutation_fails_if_category_doesnt_exist(
         None,
         admin_graphql_info,
         category=str(category.id * 100),
-        input={"name": "Category", "color": "#F0F0F0"},
+        input={"name": "Category", "color": "#F0F0F0", "icon": ""},
     )
 
     assert not data.get("category")
@@ -172,7 +222,7 @@ async def test_edit_category_mutation_fails_if_category_id_is_invalid(
         None,
         admin_graphql_info,
         category="invalid",
-        input={"name": "Category", "color": "#F0F0F0"},
+        input={"name": "Category", "color": "#F0F0F0", "icon": ""},
     )
 
     assert not data.get("category")
@@ -189,7 +239,7 @@ async def test_edit_category_mutation_fails_if_category_name_is_too_short(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "   ", "color": "#F0F0F0"},
+        input={"name": "   ", "color": "#F0F0F0", "icon": ""},
     )
 
     assert data.get("category")
@@ -208,7 +258,7 @@ async def test_edit_category_mutation_fails_if_category_name_is_too_long(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "a" * 256, "color": "#F0F0F0"},
+        input={"name": "a" * 256, "color": "#F0F0F0", "icon": ""},
     )
 
     assert data.get("category")
@@ -227,7 +277,7 @@ async def test_edit_category_mutation_fails_if_category_name_is_not_sluggable(
         None,
         admin_graphql_info,
         category=str(category.id),
-        input={"name": "!!!!", "color": "#F0F0F0"},
+        input={"name": "!!!!", "color": "#F0F0F0", "icon": ""},
     )
 
     assert data.get("category")
@@ -246,7 +296,12 @@ async def test_edit_category_mutation_fails_if_category_parent_is_invalid(
         None,
         admin_graphql_info,
         category=str(sibling_category.id),
-        input={"name": "Edited category", "color": "#F0F0F0", "parent": "invalid"},
+        input={
+            "name": "Edited category",
+            "color": "#F0F0F0",
+            "icon": "",
+            "parent": "invalid",
+        },
     )
 
     assert data["category"]
@@ -266,6 +321,7 @@ async def test_edit_category_mutation_fails_if_category_parent_doesnt_exist(
         input={
             "name": "Edited category",
             "color": "#F0F0F0",
+            "icon": "",
             "parent": str(sibling_category.id * 100),
         },
     )
@@ -287,6 +343,7 @@ async def test_edit_category_mutation_fails_if_category_parent_is_category(
         input={
             "name": "Edited category",
             "color": "#F0F0F0",
+            "icon": "",
             "parent": str(sibling_category.id),
         },
     )
@@ -308,6 +365,7 @@ async def test_edit_category_mutation_fails_if_parent_is_child_category(
         input={
             "name": "Edited category",
             "color": "#F0F0F0",
+            "icon": "",
             "parent": str(child_category.id),
         },
     )
@@ -329,6 +387,7 @@ async def test_edit_category_mutation_fails_if_category_has_children(
         input={
             "name": "Edited category",
             "color": "#F0F0F0",
+            "icon": "",
             "parent": str(sibling_category.id),
         },
     )

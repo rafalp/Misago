@@ -31,6 +31,18 @@ async def test_category_is_created_with_custom_color(db):
 
 
 @pytest.mark.asyncio
+async def test_category_is_created_without_custom_icon(db):
+    category = await create_category("Test")
+    assert category.icon is None
+
+
+@pytest.mark.asyncio
+async def test_category_is_created_with_custom_icon(db):
+    category = await create_category("Test", icon="icon")
+    assert category.icon == "icon"
+
+
+@pytest.mark.asyncio
 async def test_category_is_created_without_mptt_data(db):
     category = await create_category("TeST")
     assert category.parent_id is None

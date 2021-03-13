@@ -89,6 +89,7 @@ categories = sqlalchemy.Table(
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("color", sqlalchemy.String(length=7), nullable=True),
+    sqlalchemy.Column("icon", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column(
         "threads", sqlalchemy.Integer, server_default="0", nullable=False
     ),

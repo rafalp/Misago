@@ -57,6 +57,7 @@ async def resolve_edit_category(
         category_obj,
         name=cleaned_data["name"],
         color=cleaned_data["color"],
+        icon=cleaned_data["icon"],
         is_closed=cleaned_data.get("is_closed") or False,
     )
 

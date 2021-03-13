@@ -10,6 +10,8 @@ type CategoryMutationResult {
 
 input CategoryInput {
     name: String!
+    color: String!
+    icon: String!
     parent: ID
     isClosed: Boolean
 }

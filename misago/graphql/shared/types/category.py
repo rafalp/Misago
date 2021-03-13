@@ -27,15 +27,6 @@ def resolve_children(
     return load_category_children(info.context, category.id)
 
 
-# placeholder resolver for icon
-@category_type.field("icon")
-def resolve_icon(category: Category, info: GraphQLResolveInfo) -> str:
-    icon_offset = category.left - 1
-    if icon_offset > ICONS_PALETTE_SIZE:
-        icon_offset -= (icon_offset // ICONS_PALETTE_SIZE) * icon_offset
-    return ICONS_PALETTE[icon_offset]
-
-
 @category_type.field("banner")
 def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
     return {
@@ -57,28 +48,3 @@ def resolve_banner(category: Category, info: GraphQLResolveInfo) -> dict:
 @category_type.field("extra")
 def resolve_extra(category: Category, info: GraphQLResolveInfo) -> dict:
     return {}
-
-
-ICONS_PALETTE = (
-    "fas fa-pencil-ruler",
-    "fas fa-rocket",
-    "fas fa-heart",
-    "fas fa-hammer",
-    "fas fa-award",
-    "fas fa-cog",
-    "fas fa-adjust",
-    "far fa-bookmark",
-    "far fa-calendar",
-    "fas fa-clinic-medical",
-    "fas fa-coffee",
-    "fas fa-car-battery",
-    "far fa-compass",
-    "far fa-envelope",
-    "fas fa-flask",
-    "far fa-image",
-    "fas fa-paint-brush",
-    "far fa-paper-plane",
-    "fas fa-plane",
-)
-
-ICONS_PALETTE_SIZE = len(ICONS_PALETTE) - 1

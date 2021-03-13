@@ -8,7 +8,7 @@ from ..update import update_category
 
 @pytest.fixture
 async def category(category):
-    return await create_category("Test category")
+    return await create_category("Test category", icon="icon")
 
 
 @pytest.mark.asyncio
@@ -22,6 +22,18 @@ async def test_category_name_can_be_updated(category):
 async def test_category_color_can_be_updated(category):
     updated_category = await update_category(category, color="#0000ff")
     assert updated_category.color == "#0000FF"
+
+
+@pytest.mark.asyncio
+async def test_category_icon_can_be_updated(category):
+    updated_category = await update_category(category, icon="new-icon")
+    assert updated_category.icon == "new-icon"
+
+
+@pytest.mark.asyncio
+async def test_category_icon_can_be_removed(category):
+    updated_category = await update_category(category, icon="")
+    assert updated_category.icon is None
 
 
 @pytest.mark.asyncio

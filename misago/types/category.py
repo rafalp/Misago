@@ -16,6 +16,7 @@ class Category:
     threads: int = 0
     posts: int = 0
     parent_id: Optional[int] = None
+    icon: Optional[str] = None
     is_closed: Optional[bool] = False
 
     def __str__(self):
