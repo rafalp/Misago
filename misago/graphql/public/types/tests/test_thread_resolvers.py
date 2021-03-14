@@ -1,5 +1,6 @@
 import pytest
 
+from .....users.update import update_user
 from ..thread import (
     resolve_category,
     resolve_first_post,
@@ -50,8 +51,18 @@ async def test_starter_resolver_returns_thread_starter(graphql_info, user_thread
     assert value == user
 
 
-def test_starter_resolver_returns_none_if_starter_is_empty(graphql_info, thread):
-    value = resolve_starter(thread, graphql_info)
+@pytest.mark.asyncio
+async def test_starter_resolver_returns_none_if_thread_starter_is_inactive(
+    graphql_info, user_thread, user
+):
+    await update_user(user, is_active=False)
+    value = await resolve_starter(user_thread, graphql_info)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_starter_resolver_returns_none_if_starter_is_empty(graphql_info, thread):
+    value = await resolve_starter(thread, graphql_info)
     assert value is None
 
 
@@ -63,10 +74,20 @@ async def test_last_poster_resolver_returns_threads_last_poster(
     assert value == user
 
 
-def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
+@pytest.mark.asyncio
+async def test_last_poster_resolver_returns_none_if_threads_last_poster_is_inactive(
+    graphql_info, user_thread, user
+):
+    await update_user(user, is_active=False)
+    value = await resolve_last_poster(user_thread, graphql_info)
+    assert value is None
+
+
+@pytest.mark.asyncio
+async def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
     graphql_info, thread
 ):
-    value = resolve_last_poster(thread, graphql_info)
+    value = await resolve_last_poster(thread, graphql_info)
     assert value is None
 
 

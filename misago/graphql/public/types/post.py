@@ -27,11 +27,11 @@ def resolve_thread(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Thread]:
 
 
 @post_type.field("poster")
-def resolve_poster(
-    obj: Post, info: GraphQLResolveInfo
-) -> Optional[Awaitable[Optional[User]]]:
+async def resolve_poster(obj: Post, info: GraphQLResolveInfo) -> Optional[User]:
     if obj.poster_id:
-        return load_user(info.context, obj.poster_id)
+        poster = await load_user(info.context, obj.poster_id)
+        if poster and poster.is_active:
+            return poster
     return None
 
 
