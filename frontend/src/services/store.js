@@ -15,7 +15,9 @@ export class StoreWrapper {
   init() {
     this._store = createStore(
       combineReducers(this._reducers),
-      this._initialState
+      this._initialState,
+      // TODO: Remove this when live
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
     )
   }
 

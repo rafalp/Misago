@@ -9,4 +9,7 @@
 
 {% trans "To read this reply, click the below link:" %}
 {% absoluteurl post.get_absolute_url %}
+
+{% trans "To unsubscribe or manage settings for Sleepio Community emails click the below link:" %}
+{% absoluteurl 'misago:threads-subscribed' %}
 {% endblock content %}

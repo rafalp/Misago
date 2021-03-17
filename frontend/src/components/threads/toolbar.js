@@ -2,6 +2,7 @@ import React from "react"
 import CategoryPicker from "misago/components/threads/category-picker"
 import ModerationControls from "misago/components/threads/moderation/controls"
 import SelectionControls from "misago/components/threads/moderation/selection"
+import BulkSubscriptions from "misago/components/threads/subscription"
 
 export default class extends React.Component {
   getCategoryPicker() {
@@ -93,11 +94,23 @@ export default class extends React.Component {
     )
   }
 
+  getBulkActions() {
+    // TODO better way to limit presence based on page routing?
+    if (this.props.disabled || !this.props.threads.length || (this.props.route.path != "/subscribed/" && this.props.route.path != "/threads/subscribed/")) return null
+
+    return (
+      <BulkSubscriptions {...this.props} />
+    )
+  }
+
   render() {
     return (
       <div className="row row-toolbar row-toolbar-bottom-margin">
         <div className="col-xs-3 col-sm-3 col-md-2 dropdown">
           {this.getCategoryPicker()}
+        </div>
+        <div className="col-xs-3 col-sm-3 col-md-2 dropdown">
+          {this.getBulkActions()}
         </div>
         <div className="hidden-xs col-sm-4 col-md-7" />
         {this.getModerationButton()}
