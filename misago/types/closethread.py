@@ -22,7 +22,8 @@ CloseThreadInputModelAction = Callable[
     [GraphQLContext], Awaitable[CloseThreadInputModel]
 ]
 CloseThreadInputModelFilter = Callable[
-    [CloseThreadInputModelAction, GraphQLContext], Awaitable[CloseThreadInputModel],
+    [CloseThreadInputModelAction, GraphQLContext],
+    Awaitable[CloseThreadInputModel],
 ]
 
 CloseThreadAction = Callable[[GraphQLContext, CloseThreadInput], Awaitable[Thread]]

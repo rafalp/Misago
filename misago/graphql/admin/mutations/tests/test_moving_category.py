@@ -109,7 +109,9 @@ async def test_move_category_mutation_moves_child_category_to_root(
     admin_graphql_info, child_category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(child_category.id),
+        None,
+        admin_graphql_info,
+        category=str(child_category.id),
     )
 
     assert not data.get("errors")
@@ -171,7 +173,11 @@ async def test_move_category_mutation_moves_child_category_to_root_before_parent
 async def test_move_category_mutation_fails_if_category_id_is_invalid(
     admin_graphql_info, category
 ):
-    data = await resolve_move_category(None, admin_graphql_info, category="invalid",)
+    data = await resolve_move_category(
+        None,
+        admin_graphql_info,
+        category="invalid",
+    )
 
     assert not data.get("category")
     assert data.get("errors")
@@ -184,7 +190,10 @@ async def test_move_category_mutation_fails_if_parent_id_is_invalid(
     admin_graphql_info, category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(category.id), parent="invalid",
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        parent="invalid",
     )
 
     assert data.get("category")
@@ -198,7 +207,10 @@ async def test_move_category_mutation_fails_if_before_id_is_invalid(
     admin_graphql_info, category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(category.id), before="invalid",
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        before="invalid",
     )
 
     assert data.get("category")
@@ -212,7 +224,9 @@ async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
     admin_graphql_info, category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(category.id + 1000),
+        None,
+        admin_graphql_info,
+        category=str(category.id + 1000),
     )
 
     assert not data.get("category")
@@ -243,7 +257,10 @@ async def test_move_category_mutation_fails_if_category_parent_is_itself(
     admin_graphql_info, category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(category.id), parent=str(category.id),
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        parent=str(category.id),
     )
 
     assert data.get("category")
@@ -257,7 +274,10 @@ async def test_move_category_mutation_fails_if_category_before_is_itself(
     admin_graphql_info, category
 ):
     data = await resolve_move_category(
-        None, admin_graphql_info, category=str(category.id), before=str(category.id),
+        None,
+        admin_graphql_info,
+        category=str(category.id),
+        before=str(category.id),
     )
 
     assert data.get("category")

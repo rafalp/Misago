@@ -19,7 +19,14 @@ def test_code_block_is_converted_to_html(graphql_context):
 
 def test_fragment_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "f", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "f",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == "Hello <b>world</b>!"
@@ -27,7 +34,14 @@ def test_fragment_block_is_converted_to_html(graphql_context):
 
 def test_heading_1_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h1", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h1",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h1">Hello <b>world</b>!</div>'
@@ -35,7 +49,14 @@ def test_heading_1_block_is_converted_to_html(graphql_context):
 
 def test_heading_2_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h2", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h2",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h2">Hello <b>world</b>!</div>'
@@ -43,7 +64,14 @@ def test_heading_2_block_is_converted_to_html(graphql_context):
 
 def test_heading_3_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h3", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h3",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h3">Hello <b>world</b>!</div>'
@@ -51,7 +79,14 @@ def test_heading_3_block_is_converted_to_html(graphql_context):
 
 def test_heading_4_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h4", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h4",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h4">Hello <b>world</b>!</div>'
@@ -59,7 +94,14 @@ def test_heading_4_block_is_converted_to_html(graphql_context):
 
 def test_heading_5_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h5", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h5",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h5">Hello <b>world</b>!</div>'
@@ -67,21 +109,38 @@ def test_heading_5_block_is_converted_to_html(graphql_context):
 
 def test_heading_6_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "h6", "text": "Hello <b>world</b>!",}],
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "h6",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == '<div class="h6">Hello <b>world</b>!</div>'
 
 
 def test_horizontal_rule_block_is_converted_to_html(graphql_context):
-    html = convert_rich_text_to_html(graphql_context, [{"id": "t3st", "type": "hr"}],)
+    html = convert_rich_text_to_html(
+        graphql_context,
+        [{"id": "t3st", "type": "hr"}],
+    )
 
     assert html == "<hr/>"
 
 
 def test_paragraph_block_is_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
-        graphql_context, [{"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",}]
+        graphql_context,
+        [
+            {
+                "id": "t3st",
+                "type": "p",
+                "text": "Hello <b>world</b>!",
+            }
+        ],
     )
 
     assert html == "<p>Hello <b>world</b>!</p>"
@@ -100,7 +159,11 @@ def test_ordered_list_block_is_converted_to_html(graphql_context):
                         "id": "t3st",
                         "type": "li",
                         "children": [
-                            {"id": "t3st", "type": "f", "text": "Hello <b>world</b>!",}
+                            {
+                                "id": "t3st",
+                                "type": "f",
+                                "text": "Hello <b>world</b>!",
+                            }
                         ],
                     }
                 ],
@@ -124,7 +187,11 @@ def test_unordered_list_block_is_converted_to_html(graphql_context):
                         "id": "t3st",
                         "type": "li",
                         "children": [
-                            {"id": "t3st", "type": "f", "text": "Hello <b>world</b>!",}
+                            {
+                                "id": "t3st",
+                                "type": "f",
+                                "text": "Hello <b>world</b>!",
+                            }
                         ],
                     }
                 ],
@@ -145,7 +212,11 @@ def test_quote_block_is_converted_to_html(graphql_context):
                 "author": None,
                 "post": None,
                 "children": [
-                    {"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",}
+                    {
+                        "id": "t3st",
+                        "type": "p",
+                        "text": "Hello <b>world</b>!",
+                    }
                 ],
             }
         ],
@@ -162,7 +233,11 @@ def test_spoiler_block_is_converted_to_html(graphql_context):
                 "id": "t3st",
                 "type": "spoiler",
                 "children": [
-                    {"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",}
+                    {
+                        "id": "t3st",
+                        "type": "p",
+                        "text": "Hello <b>world</b>!",
+                    }
                 ],
             }
         ],
@@ -175,8 +250,16 @@ def test_multiple_blocks_are_converted_to_html(graphql_context):
     html = convert_rich_text_to_html(
         graphql_context,
         [
-            {"id": "t3st", "type": "p", "text": "Hello <b>world</b>!",},
-            {"id": "z0rd", "type": "p", "text": "How's going?",},
+            {
+                "id": "t3st",
+                "type": "p",
+                "text": "Hello <b>world</b>!",
+            },
+            {
+                "id": "z0rd",
+                "type": "p",
+                "text": "How's going?",
+            },
         ],
     )
     assert html == ("<p>Hello <b>world</b>!</p>\n<p>How's going?</p>")

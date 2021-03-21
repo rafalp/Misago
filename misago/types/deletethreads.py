@@ -21,7 +21,8 @@ DeleteThreadsInputModelAction = Callable[
     [GraphQLContext], Awaitable[DeleteThreadsInputModel]
 ]
 DeleteThreadsInputModelFilter = Callable[
-    [DeleteThreadsInputModelAction, GraphQLContext], Awaitable[DeleteThreadsInputModel],
+    [DeleteThreadsInputModelAction, GraphQLContext],
+    Awaitable[DeleteThreadsInputModel],
 ]
 
 DeleteThreadsAction = Callable[[GraphQLContext, DeleteThreadsInput], Awaitable[None]]

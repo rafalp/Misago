@@ -8,7 +8,9 @@ from ..deletethreads import resolve_delete_threads
 @pytest.mark.asyncio
 async def test_delete_threads_mutation_deletes_threads(moderator_graphql_info, thread):
     data = await resolve_delete_threads(
-        None, moderator_graphql_info, input={"threads": [str(thread.id)]},
+        None,
+        moderator_graphql_info,
+        input={"threads": [str(thread.id)]},
     )
 
     assert "errors" not in data
@@ -21,7 +23,9 @@ async def test_delete_threads_mutation_fails_if_user_is_not_authorized(
     graphql_info, thread
 ):
     data = await resolve_delete_threads(
-        None, graphql_info, input={"threads": [str(thread.id)]},
+        None,
+        graphql_info,
+        input={"threads": [str(thread.id)]},
     )
 
     assert data["errors"].get_errors_locations() == [
@@ -41,7 +45,9 @@ async def test_delete_threads_mutation_fails_if_user_is_not_moderator(
     user_graphql_info, thread
 ):
     data = await resolve_delete_threads(
-        None, user_graphql_info, input={"threads": [str(thread.id)]},
+        None,
+        user_graphql_info,
+        input={"threads": [str(thread.id)]},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
@@ -57,7 +63,9 @@ async def test_delete_threads_mutation_fails_if_thread_id_is_invalid(
     moderator_graphql_info,
 ):
     data = await resolve_delete_threads(
-        None, moderator_graphql_info, input={"threads": ["invalid"]},
+        None,
+        moderator_graphql_info,
+        input={"threads": ["invalid"]},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
@@ -70,7 +78,9 @@ async def test_delete_threads_mutation_fails_if_thread_doesnt_exist(
     moderator_graphql_info,
 ):
     data = await resolve_delete_threads(
-        None, moderator_graphql_info, input={"threads": ["4000"]},
+        None,
+        moderator_graphql_info,
+        input={"threads": ["4000"]},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
@@ -83,7 +93,9 @@ async def test_delete_threads_mutation_with_threads_errors_still_deletes_valid_t
     moderator_graphql_info, thread
 ):
     data = await resolve_delete_threads(
-        None, moderator_graphql_info, input={"threads": ["4000", str(thread.id)]},
+        None,
+        moderator_graphql_info,
+        input={"threads": ["4000", str(thread.id)]},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]

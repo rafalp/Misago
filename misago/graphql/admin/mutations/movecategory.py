@@ -77,7 +77,10 @@ async def resolve_move_category(
 
 MoveCategoryInputModel = create_model(
     "MoveCategoryInputModel",
-    category=(PositiveInt, ...,),
+    category=(
+        PositiveInt,
+        ...,
+    ),
     parent=(Optional[PositiveInt], None),
     before=(Optional[PositiveInt], None),
 )

@@ -10,6 +10,8 @@ class DeleteCategoriesContentsAction(Protocol):
 
 class DeleteCategoriesContentsFilter(Protocol):
     async def __call__(
-        self, action: DeleteCategoriesContentsAction, categories: Iterable[Category],
+        self,
+        action: DeleteCategoriesContentsAction,
+        categories: Iterable[Category],
     ):
         ...

@@ -98,7 +98,9 @@ async def test_extra_opening_blocks_are_kept(graphql_context):
             "type": "quote",
             "author": None,
             "post": None,
-            "children": [{"id": ANY, "type": "p", "text": "world!"},],
+            "children": [
+                {"id": ANY, "type": "p", "text": "world!"},
+            ],
         },
     ]
 

@@ -316,7 +316,11 @@ async def test_post_thread_mutation_fails_if_markup_is_too_short(
     data = await resolve_post_thread(
         None,
         user_graphql_info,
-        input={"category": str(category.id), "title": "Hello world!", "markup": " ",},
+        input={
+            "category": str(category.id),
+            "title": "Hello world!",
+            "markup": " ",
+        },
     )
 
     assert not data.get("thread")

@@ -139,7 +139,12 @@ async def test_setup_site_mutation_validates_user_name(db, graphql_info):
 
     assert data == {
         "errors": [
-            {"loc": ("name",), "type": "value_error.username", "msg": ANY, "ctx": ANY,}
+            {
+                "loc": ("name",),
+                "type": "value_error.username",
+                "msg": ANY,
+                "ctx": ANY,
+            }
         ]
     }
 

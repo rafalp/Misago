@@ -38,8 +38,12 @@ async def resolve_setup_site(
 
     if cleaned_data:
         validators: Dict[str, List[Validator]] = {
-            "name": [UsernameIsAvailableValidator(),],
-            "email": [EmailIsAvailableValidator(),],
+            "name": [
+                UsernameIsAvailableValidator(),
+            ],
+            "email": [
+                EmailIsAvailableValidator(),
+            ],
         }
         cleaned_data, errors = await validate_data(cleaned_data, validators, errors)
 

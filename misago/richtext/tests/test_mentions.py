@@ -15,7 +15,11 @@ async def test_quote_author_is_included_in_mentions(graphql_context, user):
         {
             "id": ANY,
             "type": "quote",
-            "author": {"id": user.id, "name": user.name, "slug": user.slug,},
+            "author": {
+                "id": user.id,
+                "name": user.name,
+                "slug": user.slug,
+            },
             "post": None,
             "children": [{"id": ANY, "type": "p", "text": "Text"}],
         }

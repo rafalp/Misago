@@ -104,7 +104,10 @@ async def test_edit_title_mutation_fails_if_thread_is_closed(
     data = await resolve_edit_thread_title(
         None,
         user_graphql_info,
-        input={"thread": str(closed_user_thread.id), "title": "This is test thread!",},
+        input={
+            "thread": str(closed_user_thread.id),
+            "title": "This is test thread!",
+        },
     )
 
     assert data.get("thread")
@@ -120,7 +123,10 @@ async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_thre
     data = await resolve_edit_thread_title(
         None,
         moderator_graphql_info,
-        input={"thread": str(closed_user_thread.id), "title": "This is test thread!",},
+        input={
+            "thread": str(closed_user_thread.id),
+            "title": "This is test thread!",
+        },
     )
 
     assert data.get("thread")

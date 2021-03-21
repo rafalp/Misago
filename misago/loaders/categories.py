@@ -58,7 +58,8 @@ async def load_category_children(
 
 
 async def load_category_with_children(
-    context: GraphQLContext, category_id: Union[int, str],
+    context: GraphQLContext,
+    category_id: Union[int, str],
 ) -> List[Category]:
     category = await load_category(context, category_id)
     if not category:

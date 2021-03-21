@@ -10,7 +10,10 @@ async def test_login_mutation_returns_user_token_on_success(
     graphql_info, user, user_password
 ):
     data = await resolve_login(
-        None, graphql_info, username=user.name, password=user_password,
+        None,
+        graphql_info,
+        username=user.name,
+        password=user_password,
     )
 
     assert not data.get("errors")
@@ -25,7 +28,10 @@ async def test_login_mutation_returns_user_on_success(
     graphql_info, user, user_password
 ):
     data = await resolve_login(
-        None, graphql_info, username=user.name, password=user_password,
+        None,
+        graphql_info,
+        username=user.name,
+        password=user_password,
     )
 
     assert not data.get("errors")
@@ -35,7 +41,12 @@ async def test_login_mutation_returns_user_on_success(
 
 @pytest.mark.asyncio
 async def test_login_mutation_requires_username(graphql_info, user, user_password):
-    data = await resolve_login(None, graphql_info, username="", password=user_password,)
+    data = await resolve_login(
+        None,
+        graphql_info,
+        username="",
+        password=user_password,
+    )
 
     assert not data.get("user")
     assert not data.get("token")
@@ -46,7 +57,12 @@ async def test_login_mutation_requires_username(graphql_info, user, user_passwor
 
 @pytest.mark.asyncio
 async def test_login_mutation_requires_password(graphql_info, user, user_password):
-    data = await resolve_login(None, graphql_info, username=user.name, password="",)
+    data = await resolve_login(
+        None,
+        graphql_info,
+        username=user.name,
+        password="",
+    )
 
     assert not data.get("user")
     assert not data.get("token")
@@ -60,7 +76,10 @@ async def test_login_mutation_returns_error_on_nonexistent_user_credentials(
     graphql_info, user
 ):
     data = await resolve_login(
-        None, graphql_info, username=user.name, password="invalid",
+        None,
+        graphql_info,
+        username=user.name,
+        password="invalid",
     )
 
     assert not data.get("user")

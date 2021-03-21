@@ -43,7 +43,9 @@ async def resolve_edit_category(
         {
             "category": [CategoryExistsValidator(info.context)],
             "color": [color_validator],
-            "parent": [CategoryExistsValidator(info.context),],
+            "parent": [
+                CategoryExistsValidator(info.context),
+            ],
             ROOT_LOCATION: [validate_parent_value],
         },
         errors,

@@ -23,7 +23,9 @@ def validate_model(model: Type[BaseModel], input_data: Data) -> Tuple[Data, Erro
 
 
 async def validate_data(
-    data: Data, validators: Dict[str, List[Validator]], errors: ErrorsList,
+    data: Data,
+    validators: Dict[str, List[Validator]],
+    errors: ErrorsList,
 ) -> Tuple[Data, ErrorsList]:
     if not data or not validators:
         return data, errors
@@ -67,7 +69,10 @@ async def validate_data(
 
 
 async def validate_field_data(
-    field_name: str, data: Any, validators: List[Validator], errors: ErrorsList,
+    field_name: str,
+    data: Any,
+    validators: List[Validator],
+    errors: ErrorsList,
 ) -> Optional[Any]:
     try:
         for validator in validators:

@@ -74,7 +74,9 @@ async def resolve_post_reply(
                 ),
                 ThreadIsOpenValidator(info.context),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
+            ErrorsList.ROOT_LOCATION: [
+                UserIsAuthorizedRootValidator(info.context),
+            ],
         }
         cleaned_data, errors = await post_reply_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

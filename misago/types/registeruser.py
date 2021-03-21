@@ -22,7 +22,8 @@ RegisterUserInputModelAction = Callable[
     [GraphQLContext], Awaitable[RegisterUserInputModel]
 ]
 RegisterUserInputModelFilter = Callable[
-    [RegisterUserInputModelAction, GraphQLContext], Awaitable[RegisterUserInputModel],
+    [RegisterUserInputModelAction, GraphQLContext],
+    Awaitable[RegisterUserInputModel],
 ]
 
 RegisterUserAction = Callable[[GraphQLContext, RegisterUserInput], Awaitable[User]]

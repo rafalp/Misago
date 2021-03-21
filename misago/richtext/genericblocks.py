@@ -35,7 +35,10 @@ def split_paragraph_ast(node: dict) -> List[dict]:
         if child_node["type"] in BLOCK_NODES:
             if new_children:
                 new_ast.append(
-                    {"type": "paragraph", "children": new_children,}
+                    {
+                        "type": "paragraph",
+                        "children": new_children,
+                    }
                 )
                 new_children = []
             new_ast.append(child_node)
@@ -44,7 +47,10 @@ def split_paragraph_ast(node: dict) -> List[dict]:
 
     if new_children:
         new_ast.append(
-            {"type": "paragraph", "children": new_children,}
+            {
+                "type": "paragraph",
+                "children": new_children,
+            }
         )
 
     return new_ast
@@ -78,7 +84,10 @@ def find_blocks_pairs(ast: List[dict]):
     for node in ast:
         if node["type"] == BLOCK_OPEN:
             counter += 1
-            node["block_id"] = "%s:%s" % (node["block_type"], counter,)
+            node["block_id"] = "%s:%s" % (
+                node["block_type"],
+                counter,
+            )
             stack.append(node)
 
         if node["type"] == BLOCK_CLOSE:

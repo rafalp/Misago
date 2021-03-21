@@ -121,7 +121,9 @@ async def test_validation_is_interrupted_at_first_validation_error(errors):
 @pytest.mark.asyncio
 async def test_validation_is_skipped_when_field_value_is_none(errors):
     cleaned_data, new_errors = await validate_data(
-        {"data": None}, {"data": [validate_value, validate_value_other]}, errors,
+        {"data": None},
+        {"data": [validate_value, validate_value_other]},
+        errors,
     )
     assert cleaned_data == {"data": None}
     assert not new_errors
@@ -130,7 +132,9 @@ async def test_validation_is_skipped_when_field_value_is_none(errors):
 @pytest.mark.asyncio
 async def test_root_validators_are_ran_data(errors):
     _, new_errors = await validate_data(
-        {"data": VALID_VALUE}, {ROOT_LOCATION: [validate_root_value]}, errors,
+        {"data": VALID_VALUE},
+        {ROOT_LOCATION: [validate_root_value]},
+        errors,
     )
     assert not new_errors
 
@@ -138,7 +142,9 @@ async def test_root_validators_are_ran_data(errors):
 @pytest.mark.asyncio
 async def test_root_validators_errors_are_added_to_errors_list(errors):
     _, new_errors = await validate_data(
-        {"data": INVALID_VALUE}, {ROOT_LOCATION: [validate_root_value]}, errors,
+        {"data": INVALID_VALUE},
+        {ROOT_LOCATION: [validate_root_value]},
+        errors,
     )
     assert new_errors
     assert new_errors.get_errors_locations() == [ROOT_LOCATION]
@@ -148,7 +154,9 @@ async def test_root_validators_errors_are_added_to_errors_list(errors):
 @pytest.mark.asyncio
 async def test_root_validators_can_customize_errors_location(errors):
     _, new_errors = await validate_data(
-        {"data": INVALID_VALUE}, {ROOT_LOCATION: [validate_root_value_local]}, errors,
+        {"data": INVALID_VALUE},
+        {ROOT_LOCATION: [validate_root_value_local]},
+        errors,
     )
     assert new_errors
     assert new_errors.get_errors_locations() == ["data"]

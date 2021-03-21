@@ -80,7 +80,9 @@ async def resolve_move_thread(
 
 async def create_input_model(context: GraphQLContext) -> MoveThreadInputModel:
     return create_model(
-        "MoveThreadInputModel", thread=(PositiveInt, ...), category=(PositiveInt, ...),
+        "MoveThreadInputModel",
+        thread=(PositiveInt, ...),
+        category=(PositiveInt, ...),
     )
 
 

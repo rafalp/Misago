@@ -43,7 +43,11 @@ async def test_parser_escapes_html(graphql_context):
 async def test_parser_handles_diacritics(graphql_context):
     result, _ = await parse_markup(graphql_context, "**Cześć**, opie!")
     assert result == [
-        {"id": ANY, "type": "p", "text": "<strong>Cześć</strong>, opie!",}
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "<strong>Cześć</strong>, opie!",
+        }
     ]
 
 
@@ -60,7 +64,12 @@ async def test_parser_parses_multiple_paragraphs(graphql_context):
 async def test_parser_blocks_are_case_insensitive(graphql_context):
     result, _ = await parse_markup(graphql_context, "[coDE]Hello world![/COde]")
     assert result == [
-        {"id": ANY, "type": "code", "syntax": None, "text": "Hello world!",}
+        {
+            "id": ANY,
+            "type": "code",
+            "syntax": None,
+            "text": "Hello world!",
+        }
     ]
 
 

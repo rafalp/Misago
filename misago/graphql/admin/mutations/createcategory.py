@@ -27,7 +27,10 @@ create_category_mutation = MutationType()
 @admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_create_category(
-    _, info: GraphQLResolveInfo, *, input: dict,  # pylint: disable=redefined-builtin
+    _,
+    info: GraphQLResolveInfo,
+    *,
+    input: dict,  # pylint: disable=redefined-builtin
 ):
     categories = await get_all_categories()
 

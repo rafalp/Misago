@@ -19,7 +19,11 @@ SCHEMA_DIR = os.path.join(BASE_DIR, "schema")
 admin_type_defs = load_schema_from_path(SCHEMA_DIR)
 
 admin_schema = make_executable_schema(
-    [shared_type_defs, admin_type_defs, *graphql_admin_type_defs_hook,],
+    [
+        shared_type_defs,
+        admin_type_defs,
+        *graphql_admin_type_defs_hook,
+    ],
     *shared_scalars,
     *shared_types,
     *types,

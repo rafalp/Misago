@@ -17,14 +17,16 @@ GetAuthUserFilter = Callable[
 
 GetUserFromContextAction = Callable[[GraphQLContext, bool], Awaitable[Optional[User]]]
 GetUserFromContextFilter = Callable[
-    [GetUserFromContextAction, GraphQLContext, bool], Awaitable[Optional[User]],
+    [GetUserFromContextAction, GraphQLContext, bool],
+    Awaitable[Optional[User]],
 ]
 
 GetUserFromTokenAction = Callable[
     [GraphQLContext, str, bool], Awaitable[Optional[User]]
 ]
 GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, GraphQLContext, str, bool], Awaitable[Optional[User]],
+    [GetUserFromTokenAction, GraphQLContext, str, bool],
+    Awaitable[Optional[User]],
 ]
 
 GetUserFromTokenPayloadAction = Callable[

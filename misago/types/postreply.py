@@ -11,7 +11,12 @@ from .validator import Validator
 
 PostReplyInput = Dict[str, Any]
 PostReplyInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], PostReplyInput, ErrorsList,],
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        PostReplyInput,
+        ErrorsList,
+    ],
     Awaitable[Tuple[PostReplyInput, ErrorsList]],
 ]
 PostReplyInputFilter = Callable[
@@ -22,7 +27,8 @@ PostReplyInputFilter = Callable[
 PostReplyInputModel = Type[BaseModel]
 PostReplyInputModelAction = Callable[[GraphQLContext], Awaitable[PostReplyInputModel]]
 PostReplyInputModelFilter = Callable[
-    [PostReplyInputModelAction, GraphQLContext], Awaitable[PostReplyInputModel],
+    [PostReplyInputModelAction, GraphQLContext],
+    Awaitable[PostReplyInputModel],
 ]
 
 PostReplyAction = Callable[

@@ -190,7 +190,8 @@ def validate_update(
 
 
 async def delete_category(
-    categories: Sequence[Category], category: Category,
+    categories: Sequence[Category],
+    category: Category,
 ) -> List[Category]:
     categories_map = {c.id: c for c in categories}
     categories_map[category.id] = category

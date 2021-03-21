@@ -71,7 +71,10 @@ async def resolve_last_poster(obj: Thread, info: GraphQLResolveInfo) -> Optional
 
 @thread_type.field("lastPostUrl")
 async def resolve_last_post_url(
-    obj: Thread, info: GraphQLResolveInfo, *, absolute: bool = False,
+    obj: Thread,
+    info: GraphQLResolveInfo,
+    *,
+    absolute: bool = False,
 ) -> Optional[str]:
     if obj.last_post_id:
         post = await load_post(info.context, obj.last_post_id)

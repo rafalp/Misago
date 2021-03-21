@@ -9,7 +9,12 @@ from .validator import Validator
 
 EditThreadTitleInput = Dict[str, Any]
 EditThreadTitleInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], EditThreadTitleInput, ErrorsList,],
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        EditThreadTitleInput,
+        ErrorsList,
+    ],
     Awaitable[Tuple[EditThreadTitleInput, ErrorsList]],
 ]
 EditThreadTitleInputFilter = Callable[

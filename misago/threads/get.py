@@ -71,7 +71,11 @@ async def get_threads_feed(
     if categories is not None and not categories:
         return ThreadsFeed()
 
-    query = filter_threads_query(query, categories=categories, starter_id=starter_id,)
+    query = filter_threads_query(
+        query,
+        categories=categories,
+        starter_id=starter_id,
+    )
 
     if cursor:
         query = query.where(threads.c.last_post_id < cursor)

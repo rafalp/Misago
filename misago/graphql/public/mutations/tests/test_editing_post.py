@@ -26,7 +26,9 @@ async def test_edit_post_mutation_fails_if_user_is_not_authorized(
     graphql_info, user_post
 ):
     data = await resolve_edit_post(
-        None, graphql_info, input={"post": str(user_post.id), "markup": "Edited post"},
+        None,
+        graphql_info,
+        input={"post": str(user_post.id), "markup": "Edited post"},
     )
 
     assert data.get("thread")
@@ -57,7 +59,9 @@ async def test_edit_post_mutation_fails_if_post_id_is_invalid(user_graphql_info)
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_post_doesnt_exist(user_graphql_info):
     data = await resolve_edit_post(
-        None, user_graphql_info, input={"post": "4000", "markup": "This is test post!"},
+        None,
+        user_graphql_info,
+        input={"post": "4000", "markup": "This is test post!"},
     )
 
     assert not data.get("thread")
@@ -174,7 +178,12 @@ async def test_edit_post_mutation_fails_if_markup_is_too_short(
     user_graphql_info, user_post
 ):
     data = await resolve_edit_post(
-        None, user_graphql_info, input={"post": str(user_post.id), "markup": " ",},
+        None,
+        user_graphql_info,
+        input={
+            "post": str(user_post.id),
+            "markup": " ",
+        },
     )
 
     assert data.get("thread")

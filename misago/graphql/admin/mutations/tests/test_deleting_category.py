@@ -11,7 +11,9 @@ async def test_delete_category_mutation_deletes_category_with_its_children(
     admin_graphql_info, category, child_category
 ):
     data = await resolve_delete_category(
-        None, admin_graphql_info, category=str(category.id),
+        None,
+        admin_graphql_info,
+        category=str(category.id),
     )
 
     assert not data.get("errors")
@@ -75,7 +77,9 @@ async def test_delete_category_mutation_deletes_category_and_its_threads(
     admin_graphql_info, category, thread, post
 ):
     data = await resolve_delete_category(
-        None, admin_graphql_info, category=str(category.id),
+        None,
+        admin_graphql_info,
+        category=str(category.id),
     )
 
     assert not data.get("errors")
@@ -129,7 +133,9 @@ async def test_delete_category_mutation_deletes_children_threads(
     await update_post(post, category=child_category)
 
     data = await resolve_delete_category(
-        None, admin_graphql_info, category=str(category.id),
+        None,
+        admin_graphql_info,
+        category=str(category.id),
     )
 
     assert not data.get("errors")
@@ -214,7 +220,11 @@ async def test_delete_category_but_move_all_mutation_keeps_children_threads(
 async def test_delete_category_mutation_fails_if_category_id_is_invalid(
     admin_graphql_info, category
 ):
-    data = await resolve_delete_category(None, admin_graphql_info, category="invalid",)
+    data = await resolve_delete_category(
+        None,
+        admin_graphql_info,
+        category="invalid",
+    )
 
     assert not data["deleted"]
     assert data.get("errors")

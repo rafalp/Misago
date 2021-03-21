@@ -48,8 +48,12 @@ async def resolve_register(
 
     if cleaned_data:
         validators: Dict[str, List[Validator]] = {
-            "name": [UsernameIsAvailableValidator(),],
-            "email": [EmailIsAvailableValidator(),],
+            "name": [
+                UsernameIsAvailableValidator(),
+            ],
+            "email": [
+                EmailIsAvailableValidator(),
+            ],
         }
         cleaned_data, errors = await register_user_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

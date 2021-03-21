@@ -132,7 +132,9 @@ async def test_create_category_mutation_fails_if_category_name_is_too_short(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "   ", "color": "#FF0000", "icon": ""},
+        None,
+        admin_graphql_info,
+        input={"name": "   ", "color": "#FF0000", "icon": ""},
     )
 
     assert not data.get("category")
@@ -178,7 +180,9 @@ async def test_create_category_mutation_fails_if_category_color_is_empty(
     admin_graphql_info,
 ):
     data = await resolve_create_category(
-        None, admin_graphql_info, input={"name": "Test", "color": "", "icon": ""},
+        None,
+        admin_graphql_info,
+        input={"name": "Test", "color": "", "icon": ""},
     )
 
     assert not data.get("category")

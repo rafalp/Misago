@@ -24,7 +24,11 @@ def test_error_dict_includes_provided_location():
 
 def test_error_dict_includes_provided_sequence_location():
     error_dict = get_error_dict(Exception("message"), ["field", 1, "name"])
-    assert error_dict["loc"] == ("field", 1, "name",)
+    assert error_dict["loc"] == (
+        "field",
+        1,
+        "name",
+    )
 
 
 def test_error_type_is_resolved_for_assertion_error():

@@ -122,7 +122,9 @@ def test_has_errors_at_location_check_returns_true_if_errors_match_location(
     assert errors_list.has_errors_at_location("username")
 
 
-def test_has_root_errors_property_returns_false_if_no_errors_are_present(errors_list,):
+def test_has_root_errors_property_returns_false_if_no_errors_are_present(
+    errors_list,
+):
     assert not errors_list.has_root_errors
 
 

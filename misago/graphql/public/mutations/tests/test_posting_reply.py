@@ -15,7 +15,10 @@ async def test_post_reply_mutation_creates_new_reply(
     data = await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": str(thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert not data.get("errors")
@@ -39,7 +42,10 @@ async def test_post_reply_mutation_updates_thread(
     data = await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": str(thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert not data.get("errors")
@@ -63,7 +69,10 @@ async def test_post_thread_mutation_publishes_thread_updated_event(
     await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": str(thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
@@ -76,7 +85,10 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
     data = await resolve_post_reply(
         None,
         graphql_info,
-        input={"thread": str(thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert data.get("thread")
@@ -91,7 +103,10 @@ async def test_post_reply_mutation_fails_if_thread_id_is_invalid(user_graphql_in
     data = await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": "invalid", "markup": "This is test post!",},
+        input={
+            "thread": "invalid",
+            "markup": "This is test post!",
+        },
     )
 
     assert not data.get("thread")
@@ -106,7 +121,10 @@ async def test_post_reply_mutation_fails_if_thread_doesnt_exist(user_graphql_inf
     data = await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": "4000", "markup": "This is test post!",},
+        input={
+            "thread": "4000",
+            "markup": "This is test post!",
+        },
     )
 
     assert not data.get("thread")
@@ -123,7 +141,10 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
     data = await resolve_post_reply(
         None,
         user_graphql_info,
-        input={"thread": str(closed_thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(closed_thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert data.get("thread")
@@ -140,7 +161,10 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thre
     data = await resolve_post_reply(
         None,
         moderator_graphql_info,
-        input={"thread": str(closed_thread.id), "markup": "This is test post!",},
+        input={
+            "thread": str(closed_thread.id),
+            "markup": "This is test post!",
+        },
     )
 
     assert data.get("thread")
@@ -191,7 +215,12 @@ async def test_post_reply_mutation_fails_if_markup_is_too_short(
     publish, user_graphql_info, thread
 ):
     data = await resolve_post_reply(
-        None, user_graphql_info, input={"thread": str(thread.id), "markup": " ",},
+        None,
+        user_graphql_info,
+        input={
+            "thread": str(thread.id),
+            "markup": " ",
+        },
     )
 
     assert data.get("thread")

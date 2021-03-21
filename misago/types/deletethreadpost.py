@@ -9,7 +9,12 @@ from .validator import Validator
 
 DeleteThreadPostInput = Dict[str, Any]
 DeleteThreadPostInputThreadAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], DeleteThreadPostInput, ErrorsList,],
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        DeleteThreadPostInput,
+        ErrorsList,
+    ],
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputThreadFilter = Callable[
@@ -17,7 +22,12 @@ DeleteThreadPostInputThreadFilter = Callable[
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputPostAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], DeleteThreadPostInput, ErrorsList,],
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        DeleteThreadPostInput,
+        ErrorsList,
+    ],
     Awaitable[Tuple[DeleteThreadPostInput, ErrorsList]],
 ]
 DeleteThreadPostInputPostFilter = Callable[

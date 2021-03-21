@@ -54,6 +54,8 @@ async def test_query_resolver_returns_none_when_called_without_admin_auth(
 
 
 @pytest.mark.asyncio
-async def test_query_resolver_returns_none_when_called_without_any_auth(graphql_info,):
+async def test_query_resolver_returns_none_when_called_without_any_auth(
+    graphql_info,
+):
     value = await admin_query_resolver(None, graphql_info)
     assert value is None

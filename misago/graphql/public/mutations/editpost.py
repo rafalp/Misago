@@ -68,7 +68,9 @@ async def resolve_edit_post(
                 ),
                 PostThreadValidator(info.context, ThreadIsOpenValidator(info.context)),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
+            ErrorsList.ROOT_LOCATION: [
+                UserIsAuthorizedRootValidator(info.context),
+            ],
         }
         cleaned_data, errors = await edit_post_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

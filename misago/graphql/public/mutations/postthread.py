@@ -61,7 +61,9 @@ async def resolve_post_thread(
                 CategoryExistsValidator(info.context),
                 CategoryIsOpenValidator(info.context),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context),],
+            ErrorsList.ROOT_LOCATION: [
+                UserIsAuthorizedRootValidator(info.context),
+            ],
         }
 
         if cleaned_data.get("is_closed") and cleaned_data.get("category"):

@@ -106,11 +106,21 @@ async def test_image_markdown_is_supported(graphql_context):
 async def test_short_image_markdown_is_supported(graphql_context):
     result, _ = await parse_markup(graphql_context, "See !(http://google.com)!")
     assert result == [
-        {"id": ANY, "type": "p", "text": 'See <img src="http://google.com" alt="" />!',}
+        {
+            "id": ANY,
+            "type": "p",
+            "text": 'See <img src="http://google.com" alt="" />!',
+        }
     ]
 
 
 @pytest.mark.asyncio
 async def test_hard_linebreak_is_supported(graphql_context):
     result, _ = await parse_markup(graphql_context, "Hello\nWorld!")
-    assert result == [{"id": ANY, "type": "p", "text": "Hello<br/>World!",}]
+    assert result == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "Hello<br/>World!",
+        }
+    ]

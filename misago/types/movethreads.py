@@ -22,7 +22,8 @@ MoveThreadsInputModelAction = Callable[
     [GraphQLContext], Awaitable[MoveThreadsInputModel]
 ]
 MoveThreadsInputModelFilter = Callable[
-    [MoveThreadsInputModelAction, GraphQLContext], Awaitable[MoveThreadsInputModel],
+    [MoveThreadsInputModelAction, GraphQLContext],
+    Awaitable[MoveThreadsInputModel],
 ]
 
 MoveThreadsAction = Callable[

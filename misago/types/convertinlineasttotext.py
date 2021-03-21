@@ -6,7 +6,10 @@ from .parsemarkup import ParsedMarkupMetadata
 
 class ConvertInlineAstToTextAction(Protocol):
     def __call__(
-        self, context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata,
+        self,
+        context: GraphQLContext,
+        ast: dict,
+        metadata: ParsedMarkupMetadata,
     ) -> Optional[str]:
         ...
 

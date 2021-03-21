@@ -34,7 +34,10 @@ def upgrade():
         sa.Column("replies", sa.Integer(), server_default="0", nullable=False),
         sa.Column("is_closed", sa.Boolean(), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
-        sa.ForeignKeyConstraint(["category_id"], ["misago_categories.id"],),
+        sa.ForeignKeyConstraint(
+            ["category_id"],
+            ["misago_categories.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["last_poster_id"], ["misago_users.id"], ondelete="SET NULL"
         ),
@@ -61,7 +64,10 @@ def upgrade():
         sa.Column("edits", sa.Integer(), nullable=False),
         sa.Column("posted_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
-        sa.ForeignKeyConstraint(["category_id"], ["misago_categories.id"],),
+        sa.ForeignKeyConstraint(
+            ["category_id"],
+            ["misago_categories.id"],
+        ),
         sa.ForeignKeyConstraint(
             ["poster_id"], ["misago_users.id"], ondelete="SET NULL"
         ),

@@ -74,7 +74,9 @@ async def resolve_close_thread(
 
 async def create_input_model(context: GraphQLContext) -> CloseThreadInputModel:
     return create_model(
-        "CloseThreadInputModel", thread=(PositiveInt, ...), is_closed=(bool, ...),
+        "CloseThreadInputModel",
+        thread=(PositiveInt, ...),
+        is_closed=(bool, ...),
     )
 
 

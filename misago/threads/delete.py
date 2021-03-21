@@ -47,7 +47,8 @@ async def delete_thread_posts(
         .limit(1)
     )
     posts_count, last_post_data = await gather(
-        posts_count_query, database.fetch_one(last_reply_query),
+        posts_count_query,
+        database.fetch_one(last_reply_query),
     )
 
     last_post = Post(**cast(dict, last_post_data))

@@ -40,7 +40,9 @@ async def test_close_threads_mutation_fails_if_user_is_not_authorized(
     graphql_info, thread
 ):
     data = await resolve_close_threads(
-        None, graphql_info, input={"threads": [str(thread.id)], "isClosed": True},
+        None,
+        graphql_info,
+        input={"threads": [str(thread.id)], "isClosed": True},
     )
 
     assert data["errors"].get_errors_locations() == [
@@ -60,7 +62,9 @@ async def test_close_threads_mutation_fails_if_user_is_not_moderator(
     user_graphql_info, thread
 ):
     data = await resolve_close_threads(
-        None, user_graphql_info, input={"threads": [str(thread.id)], "isClosed": True},
+        None,
+        user_graphql_info,
+        input={"threads": [str(thread.id)], "isClosed": True},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
@@ -76,7 +80,9 @@ async def test_close_threads_mutation_fails_if_thread_id_is_invalid(
     moderator_graphql_info,
 ):
     data = await resolve_close_threads(
-        None, moderator_graphql_info, input={"threads": ["invalid"], "isClosed": True},
+        None,
+        moderator_graphql_info,
+        input={"threads": ["invalid"], "isClosed": True},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]
@@ -90,7 +96,9 @@ async def test_close_threads_mutation_fails_if_thread_doesnt_exist(
     moderator_graphql_info,
 ):
     data = await resolve_close_threads(
-        None, moderator_graphql_info, input={"threads": ["4000"], "isClosed": True},
+        None,
+        moderator_graphql_info,
+        input={"threads": ["4000"], "isClosed": True},
     )
 
     assert data["errors"].get_errors_locations() == ["threads.0"]

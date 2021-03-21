@@ -20,7 +20,11 @@ branch_labels = None
 depends_on = None
 
 # default data
-table = table("misago_settings", column("name", String), column("value", JSON),)
+table = table(
+    "misago_settings",
+    column("name", String),
+    column("value", JSON),
+)
 
 settings = [
     {"name": "bulk_action_limit", "value": 30},

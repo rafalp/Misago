@@ -12,6 +12,8 @@ class DeleteCategoriesContentsHook(
     FilterHook[DeleteCategoriesContentsAction, DeleteCategoriesContentsFilter]
 ):
     async def call_action(
-        self, action: DeleteCategoriesContentsAction, categories: Iterable[Category],
+        self,
+        action: DeleteCategoriesContentsAction,
+        categories: Iterable[Category],
     ):
         await self.filter(action, categories)

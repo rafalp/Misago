@@ -8,7 +8,8 @@ from ..context import get_graphql_context
 @pytest.fixture
 def request_mock():
     return Mock(
-        scope={"type": "request"}, state=Mock(cache_versions=Mock(), settings=Mock()),
+        scope={"type": "request"},
+        state=Mock(cache_versions=Mock(), settings=Mock()),
     )
 
 
