@@ -19,7 +19,7 @@ services:
     environment:
       # Misago
       - MISAGO_DEBUG=True
-      - MISAGO_DATABASE_URL=postgresql://postgres/misago?user=misago&password=misago
+      - MISAGO_DATABASE_URL=postgresql://misago:misago@postgres/misago
       - MISAGO_TEST_DATABASE_NAME=test
       - MISAGO_CACHE_URL=locmem://0
       - MISAGO_PUBSUB_URL=redis://redis:6379

@@ -14,7 +14,6 @@ from ..utils import timezone
 from .user import get_user
 
 JWT_ALGORITHM = "HS256"
-TOKEN_ENCODING = "utf-8"
 
 
 async def create_user_token(
@@ -65,13 +64,11 @@ def get_jwt_secret(context: GraphQLContext) -> str:
 
 
 def encode_jwt_token(secret: str, payload: Dict[str, Any]) -> str:
-    token_bytes = jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
-    return token_bytes.decode(TOKEN_ENCODING)
+    return jwt.encode(payload, secret, algorithm=JWT_ALGORITHM)
 
 
 def decode_jwt_token(secret: str, token: str) -> Optional[Dict[str, Any]]:
     try:
-        token_bytes = token.encode(TOKEN_ENCODING)
-        return jwt.decode(token_bytes, secret, algorithms=[JWT_ALGORITHM])
+        return jwt.decode(token, secret, algorithms=[JWT_ALGORITHM])
     except InvalidTokenError:
         return None

@@ -37,8 +37,8 @@ def get_database_connection(url: DatabaseURL) -> Engine:
 def get_database_server_url(url: DatabaseURL) -> URL:
     return URL(
         "postgresql",
-        username=url.options.get("user"),
-        password=url.options.get("password"),
+        username=url.username,
+        password=url.password,
         host=url.hostname,
         port=url.port,
     )
