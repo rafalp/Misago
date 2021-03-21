@@ -11,5 +11,5 @@ def serialize_generic_scalar(value: Any) -> Any:
 
 
 @generic_scalar.literal_parser
-def parse_generic_scalar_literal(value: Any) -> Any:
+def parse_generic_scalar_literal(value: Any, ast: Any = None) -> Any:
     return value

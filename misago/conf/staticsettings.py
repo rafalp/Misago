@@ -90,9 +90,9 @@ def get_avatar_sizes_value(settings: Dict[str, Any], setting: str) -> List[int]:
 
     try:
         sizes = [int(i.strip()) for i in settings[setting].split(",")]
-    except (TypeError, ValueError):
+    except (TypeError, ValueError) as exception:
         raise ValueError(
             f"'{setting}' setting should be comma-separated list of integers (40,120,400)"
-        )
+        ) from exception
 
     return sorted(set(sizes), reverse=True) or DEFAULT_AVATAR_SIZES

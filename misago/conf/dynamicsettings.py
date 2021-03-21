@@ -24,8 +24,8 @@ class DynamicSettings(Settings):
             return self._overrides[setting]
         try:
             return super().__getitem__(setting)
-        except KeyError:
-            raise KeyError(f"Setting '{setting}' is not defined.")
+        except KeyError as exception:
+            raise KeyError(f"Setting '{setting}' is not defined.") from exception
 
     @classmethod
     def override_settings(cls, overrides: Settings):

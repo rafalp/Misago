@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Optional, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, constr, create_model
+from pydantic import BaseModel, PositiveInt, constr, create_model
 from pydantic.color import Color
 
 from ....categories.create import create_category
@@ -61,7 +61,7 @@ async def resolve_create_category(
     return {"category": new_category}
 
 
-CategoryInputModel = create_model(
+CategoryInputModel: Type[BaseModel] = create_model(
     "CategoryInputModel",
     name=(
         constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),

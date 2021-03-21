@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import Optional, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, create_model
+from pydantic import BaseModel, PositiveInt, create_model
 
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
@@ -75,7 +75,7 @@ async def resolve_move_category(
     return {"category": moved_category, "categories": root_categories}
 
 
-MoveCategoryInputModel = create_model(
+MoveCategoryInputModel: Type[BaseModel] = create_model(
     "MoveCategoryInputModel",
     category=(
         PositiveInt,

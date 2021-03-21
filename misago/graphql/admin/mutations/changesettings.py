@@ -1,6 +1,8 @@
+from typing import Type
+
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import constr, create_model
+from pydantic import BaseModel, constr, create_model
 
 from ....conf.cache import clear_settings_cache
 from ....conf.dynamicsettings import get_settings_from_db
@@ -29,7 +31,7 @@ async def resolve_change_settings(
     return {"settings": await get_settings_from_db()}
 
 
-InputModel = create_model(
+InputModel: Type[BaseModel] = create_model(
     "InputModel",
     forum_index_header=(constr(min_length=0, max_length=255), ...),
     forum_index_threads=(bool, ...),
