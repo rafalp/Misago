@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Mapping, Sequence, Union
 
 from sqlalchemy import func
-from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, select
+from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, select, not_
 
 from .database import database
 

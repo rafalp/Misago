@@ -7,7 +7,7 @@ from ..database import database
 from ..database.queries import count, delete, delete_many
 from ..tables import posts as posts_table
 from ..tables import threads as threads_table
-from ..types import Category, Post, Thread
+from ..types import Category, Post, Thread, User
 from .update import update_thread
 
 
@@ -68,4 +68,14 @@ async def delete_threads_in_categories(categories: Iterable[Category]):
     query = threads_table.delete(None).where(
         threads_table.c.category_id.in_([c.id for c in categories])
     )
+    await database.execute(query)
+
+
+async def delete_user_threads(user: User):
+    query = threads_table.delete(None).where(threads_table.c.user_id == user.id)
+    await database.execute(query)
+
+
+async def delete_user_posts(user: User):
+    query = threads_table.delete(None).where(threads_table.c.user_id == user.id)
     await database.execute(query)
