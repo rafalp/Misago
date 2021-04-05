@@ -4,7 +4,7 @@ from typing import Any
 import pytest
 
 from ...tables import categories, settings, users
-from ..mapper import Mapper
+from ..mapper import Mapper, InvalidColumnError
 
 
 @pytest.mark.asyncio
@@ -49,13 +49,25 @@ async def test_query_is_filtered(db):
 
 
 @pytest.mark.asyncio
+async def test_query_filter_raises_invalid_column_error_if_filter_is_invalid(db):
+    mapper = Mapper(settings)
+    with pytest.raises(InvalidColumnError):
+        await mapper.filter(invalid_col="forum_name")
+
+
+@pytest.mark.asyncio
 async def test_query_excludes_some_results(admin, user):
     mapper = Mapper(users)
     results = await mapper.exclude(is_administrator=False).all()
     assert results
     assert results[0]["id"] == admin.id
-    assert results[0]["slug"] == admin.slug
-    assert results[0]["email"] == admin.email
+
+
+@pytest.mark.asyncio
+async def test_query_exclude_raises_invalid_column_error_if_filter_is_invalid(db):
+    mapper = Mapper(settings)
+    with pytest.raises(InvalidColumnError):
+        await mapper.exclude(invalid_col="forum_name")
 
 
 @pytest.mark.asyncio
@@ -64,8 +76,6 @@ async def test_filter_and_exclude_can_be_combined(admin, user):
     results = await mapper.filter(is_active=True).exclude(is_administrator=False).all()
     assert results
     assert results[0]["id"] == admin.id
-    assert results[0]["slug"] == admin.slug
-    assert results[0]["email"] == admin.email
 
 
 @pytest.mark.asyncio
@@ -74,9 +84,25 @@ async def test_query_can_be_filtered_using_in(category, sibling_category):
     results = await mapper.filter(id__in=[category.id, sibling_category.id]).all()
     assert len(results) == 2
     assert results[0]["id"] == category.id
-    assert results[0]["name"] == category.name
     assert results[1]["id"] == sibling_category.id
-    assert results[1]["name"] == sibling_category.name
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_isnull_false(category, child_category):
+    mapper = Mapper(categories)
+    result = await mapper.filter(
+        id__in=[category.id, child_category.id], parent_id__isnull=False
+    ).one()
+    assert result["id"] == child_category.id
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_isnull_true(category, child_category):
+    mapper = Mapper(categories)
+    result = await mapper.filter(
+        id__in=[category.id, child_category.id], parent_id__isnull=True
+    ).one()
+    assert result["id"] == category.id
 
 
 @pytest.mark.asyncio
@@ -87,7 +113,6 @@ async def test_query_can_be_filtered_using_sql_alchemy_expression(
     results = await mapper.filter(mapper.columns.id == category.id).all()
     assert len(results) == 1
     assert results[0]["id"] == category.id
-    assert results[0]["name"] == category.name
 
 
 @pytest.mark.asyncio
@@ -102,6 +127,13 @@ async def test_query_result_is_flat_list_of_given_columns(db):
     mapper = Mapper(settings)
     results = await mapper.filter(name="forum_name").all("name", flat=True)
     assert results == ["forum_name"]
+
+
+@pytest.mark.asyncio
+async def test_query_raises_error_when_its_limited_to_invalid_column(db):
+    mapper = Mapper(settings)
+    with pytest.raises(InvalidColumnError):
+        await mapper.all("invalid_column")
 
 
 @pytest.mark.asyncio
@@ -150,6 +182,13 @@ async def test_query_result_is_ordered_desc_by_multiple_columns(
         .all("id", flat=True)
     )
     assert results == [sibling_category.id, category.id, child_category.id]
+
+
+@pytest.mark.asyncio
+async def test_query_ordering_raises_error_when_query_is_ordered_by_invalid_column():
+    mapper = Mapper(categories)
+    with pytest.raises(InvalidColumnError):
+        mapper.order_by("depth", "-invalid")
 
 
 @pytest.mark.asyncio

@@ -1,4 +1,4 @@
-from typing import Iterable, Mapping, Optional, Sequence, Union
+from typing import Any, Dict, Iterable, Optional, Sequence, Type
 
 from sqlalchemy import asc, desc, func
 from sqlalchemy.sql import ClauseElement, TableClause, not_, select
@@ -9,6 +9,7 @@ from .database import database
 class QueryBuilder:
     def __init__(
         self,
+        *,
         filters: Optional[list] = None,
         exclude: Optional[list] = None,
         start: Optional[int] = None,
@@ -21,46 +22,66 @@ class QueryBuilder:
         self._stop = stop or 0
         self._order_by = order_by or None
 
-    def filter(self, *clauses: Iterable[ClauseElement], **kwargs):
+    def filter(self, *clauses: ClauseElement, **kwargs: Dict[str, Any]):
         new_clause = (self._filters or []) + list(clauses) + list(kwargs.items())
         return QueryBuilder(
-            new_clause, self._exclude, self._start, self._stop, self._order_by
+            filters=new_clause,
+            exclude=self._exclude,
+            start=self._start,
+            stop=self._stop,
+            order_by=self._order_by,
         )
 
-    def exclude(self, *clauses: Iterable[ClauseElement], **kwargs):
+    def exclude(self, *clauses: ClauseElement, **kwargs: Dict[str, Any]):
         new_clause = (self._exclude or []) + list(clauses) + list(kwargs.items())
         return QueryBuilder(
-            self._filters, new_clause, self._start, self._stop, self._order_by
+            filters=self._filters,
+            exclude=new_clause,
+            start=self._start,
+            stop=self._stop,
+            order_by=self._order_by,
         )
 
     def start(self, start: int):
         if self._start:
-            raise ValueError("Query is already sliced!")
+            raise ValueError("This query is already sliced!")
 
         return QueryBuilder(
-            self._filters, self._exclude, start, self._stop, self._order_by
+            filters=self._filters,
+            exclude=self._exclude,
+            start=start,
+            stop=self._stop,
+            order_by=self._order_by,
         )
 
     def stop(self, stop: int):
         if self._stop:
-            raise ValueError("Query is already sliced!")
+            raise ValueError("This query is already sliced!")
 
         return QueryBuilder(
-            self._filters, self._exclude, self._start, stop, self._order_by
+            filters=self._filters,
+            exclude=self._exclude,
+            start=self._start,
+            stop=stop,
+            order_by=self._order_by,
         )
 
-    def order_by(self, *clauses: Sequence[str]):
+    def order_by(self, *clauses: str):
         return QueryBuilder(
-            self._filters, self._exclude, self._stop, self._stop, *clauses
+            filters=self._filters,
+            exclude=self._exclude,
+            start=self._stop,
+            stop=self._stop,
+            order_by=clauses,
         )
 
-    def apply_to_query(self, table, query):
+    def apply_to_query(self, table: TableClause, query):
         query = self.filter_query(table, query)
         query = self.slice_query(table, query)
         query = self.order_query(table, query)
         return query
 
-    def filter_query(self, table, query):
+    def filter_query(self, table: TableClause, query):
         if self._filters:
             for clause in self._filters:
                 query = query.where(self.get_where_clause(table, clause))
@@ -69,22 +90,16 @@ class QueryBuilder:
                 query = query.where(not_(self.get_where_clause(table, clause)))
         return query
 
-    def get_where_clause(self, table, clause):
+    def get_where_clause(self, table: TableClause, clause):
+        # pylint: disable=too-many-return-statements
         if isinstance(clause, ClauseElement):
             return clause  # Pass SQL alchemy clauses verbatim
 
         col_name, value = clause
         if "__" not in col_name:
-            if col_name not in table.c:
-                raise ValueError(
-                    f"Undefined column '{col_name}' on table '{table.name}'"
-                )
             return table.c[col_name] == value
 
         col_name, op = col_name.split("__")
-        if col_name not in table.c:
-            raise ValueError(f"Undefined column '{col_name}' on table '{table.name}'")
-
         if op == "gt":
             return table.c[col_name] > value
         if op == "gte":
@@ -97,19 +112,19 @@ class QueryBuilder:
             return table.c[col_name].in_(value)
         if op == "isnull":
             if value:
-                return table.c[col_name] == None
-            return table.c[col_name] != None
+                return table.c[col_name].is_(None)
+            return table.c[col_name].isnot(None)
 
         raise ValueError(f"Unknown comparator '{op}'")
 
-    def slice_query(self, table, query):
+    def slice_query(self, table: TableClause, query):
         if self._start:
             query = query.offset(self._start)
         if self._stop:
             query = query.limit(self._stop - self._start)
         return query
 
-    def order_query(self, table, query):
+    def order_query(self, table: TableClause, query):
         if not self._order_by:
             return query
 
@@ -127,10 +142,10 @@ class MapperBase:
     def __init__(
         self,
         table: TableClause,
-        model: Mapping,
+        model: Any,
         query_builder: QueryBuilder,
-        does_not_exist_exc: "DoesNotExist",
-        multiple_objects_exc: "MultipleObjectsReturned",
+        does_not_exist_exc: Type["DoesNotExist"],
+        multiple_objects_exc: Type["MultipleObjectsReturned"],
     ):
         self._table = table
         if len(table.primary_key.columns) == 1:
@@ -152,8 +167,10 @@ class MapperBase:
     def columns(self):
         return self._table.c
 
-    def filter(self, *clauses: Iterable[ClauseElement], **kwargs):
-        new_query_builder = self._query_builder.filter(*clauses, **kwargs)
+    def filter(self, *clauses: ClauseElement, **filters: Dict[str, Any]):
+        self.validate_filters(filters)
+
+        new_query_builder = self._query_builder.filter(*clauses, **filters)
         return MapperQuery(
             self._table,
             model=self._model,
@@ -162,8 +179,10 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    def exclude(self, *clauses: Iterable[ClauseElement], **kwargs):
-        new_query_builder = self._query_builder.exclude(*clauses, **kwargs)
+    def exclude(self, *clauses: ClauseElement, **filters: Dict[str, Any]):
+        self.validate_filters(filters)
+
+        new_query_builder = self._query_builder.exclude(*clauses, **filters)
         return MapperQuery(
             self._table,
             model=self._model,
@@ -171,6 +190,12 @@ class MapperBase:
             does_not_exist_exc=self.DoesNotExist,
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
+
+    def validate_filters(self, filters: Dict[str, Any]):
+        for col_name in filters:
+            if "__" in col_name:
+                col_name, _ = col_name.split("__", 1)
+            validate_column(col_name, self._table)
 
     def start(self, offset: int):
         new_query_builder = self._query_builder.start(offset)
@@ -182,7 +207,7 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    def length(self, offset: int):
+    def stop(self, offset: int):
         new_query_builder = self._query_builder.stop(offset)
         return MapperQuery(
             self._table,
@@ -202,8 +227,14 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    def order_by(self, *clauses: Sequence[str]):
-        new_query_builder = self._query_builder.order_by(clauses)
+    def order_by(self, *clauses: str):
+        for col_name in clauses:
+            if col_name[0] == "-":
+                validate_column(col_name[1:], self._table)
+            else:
+                validate_column(col_name, self._table)
+
+        new_query_builder = self._query_builder.order_by(*clauses)
         return MapperQuery(
             self._table,
             model=self._model,
@@ -212,8 +243,9 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    async def all(self, *columns: Sequence[str], flat: bool = False):
+    async def all(self, *columns: str, flat: bool = False):
         if columns:
+            validate_columns(columns, self._table)
             query = select(self._table.c[col] for col in columns)
             model = dict
         else:
@@ -227,8 +259,9 @@ class MapperBase:
             return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
-    async def one(self, *columns: Sequence[str]):
+    async def one(self, *columns: str):
         if columns:
+            validate_columns(columns, self._table)
             query = select(self._table.c[col] for col in columns)
             model = dict
         else:
@@ -260,7 +293,7 @@ class MapperBase:
 
 
 class Mapper(MapperBase):
-    def __init__(self, table: TableClause, model: Mapping = dict):
+    def __init__(self, table: TableClause, model: Any = dict):
         self.DoesNotExist = type(
             "%sDoesNotExist" % table.name.title(),
             (DoesNotExist,),
@@ -287,8 +320,9 @@ class Mapper(MapperBase):
             values[self._pk.name] = new_row_id
         return self._model(**values)
 
-    async def all(self, *columns: Sequence[str], flat: bool = False):
+    async def all(self, *columns: str, flat: bool = False):
         if columns:
+            validate_columns(columns, self._table)
             query = select(self._table.c[col] for col in columns)
             model = dict
         else:
@@ -301,7 +335,7 @@ class Mapper(MapperBase):
             return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
-    async def delete_all(self, *columns: Sequence[str]) -> int:
+    async def delete_all(self) -> int:
         return await database.execute(self._table.delete())
 
 
@@ -310,10 +344,10 @@ class MapperQuery(MapperBase):
         self,
         table: TableClause,
         *,
-        model: Mapping,
+        model: Any,
         query_builder: QueryBuilder,
-        does_not_exist_exc: "DoesNotExist",
-        multiple_objects_exc: "MultipleObjectsReturned",
+        does_not_exist_exc: Type["DoesNotExist"],
+        multiple_objects_exc: Type["MultipleObjectsReturned"],
     ):
         super().__init__(
             table, model, query_builder, does_not_exist_exc, multiple_objects_exc
@@ -331,3 +365,24 @@ class MultipleObjectsReturned(RuntimeError):
 
 class DoesNotExist(RuntimeError):
     pass
+
+
+def validate_columns(columns: Iterable[str], table: TableClause):
+    for col_name in columns:
+        if col_name not in table.c:
+            raise InvalidColumnError(col_name, table)
+
+
+def validate_column(col_name: str, table: TableClause):
+    if col_name not in table.c:
+        raise InvalidColumnError(col_name, table)
+
+
+class InvalidColumnError(ValueError):
+    def __init__(self, col_name: str, table: TableClause):
+        valid_columns = ", ".join(table.c.keys())
+        msg = (
+            f"'{col_name}' is not a valid column for table '{table.name}'. "
+            f"Valid columns are: {valid_columns}"
+        )
+        super().__init__(msg)
