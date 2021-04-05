@@ -51,7 +51,7 @@ class QueryBuilder:
 
     def order_by(self, *clauses: Sequence[str]):
         return QueryBuilder(
-            self._filters, self._exclude, self._stop, self._stop, clauses
+            self._filters, self._exclude, self._stop, self._stop, *clauses
         )
 
     def apply_to_query(self, table, query):
@@ -114,11 +114,11 @@ class QueryBuilder:
             return query
 
         order_by = []
-        for col in self._order_by:
-            if isinstance(col, str):
-                col_name = col.lstrip("-", 1)
-                ordering = desc if col[0] == "-" else asc
-                order_by.append(ordering(table.c[col_name]))
+        for col_name in self._order_by:
+            if col_name[0] == "-":
+                order_by.append(desc(table.c[col_name[1:]]))
+            else:
+                order_by.append(asc(table.c[col_name]))
 
         return query.order_by(*order_by)
 
@@ -202,7 +202,7 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    async def order_by(self, *clauses: Sequence[str]):
+    def order_by(self, *clauses: Sequence[str]):
         new_query_builder = self._query_builder.order_by(clauses)
         return MapperQuery(
             self._table,
@@ -212,7 +212,7 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    async def all(self, *columns: Sequence[str]):
+    async def all(self, *columns: Sequence[str], flat: bool = False):
         if columns:
             query = select(self._table.c[col] for col in columns)
             model = dict
@@ -222,6 +222,9 @@ class MapperBase:
 
         query = self._query_builder.apply_to_query(self._table, query)
         result = await database.fetch_all(query)
+
+        if columns and len(columns) == 1 and flat:
+            return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
     async def one(self, *columns: Sequence[str]):
@@ -284,7 +287,7 @@ class Mapper(MapperBase):
             values[self._pk.name] = new_row_id
         return self._model(**values)
 
-    async def all(self, *columns: Sequence[str]):
+    async def all(self, *columns: Sequence[str], flat: bool = False):
         if columns:
             query = select(self._table.c[col] for col in columns)
             model = dict
@@ -293,6 +296,9 @@ class Mapper(MapperBase):
             model = self._model
 
         result = await database.fetch_all(query)
+
+        if columns and len(columns) == 1 and flat:
+            return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
     async def delete_all(self, *columns: Sequence[str]) -> int:

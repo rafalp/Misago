@@ -8,7 +8,7 @@ from ..mapper import Mapper
 
 
 @pytest.mark.asyncio
-async def test_select_all_returns_results(db):
+async def test_all_results_are_retrieved(db):
     mapper = Mapper(settings)
     results = await mapper.all()
     assert results
@@ -17,7 +17,7 @@ async def test_select_all_returns_results(db):
 
 
 @pytest.mark.asyncio
-async def test_select_one_returns_result(db):
+async def test_one_result_is_retrieved(db):
     mapper = Mapper(settings)
     result = await mapper.filter(name="forum_name").one()
     assert result
@@ -26,14 +26,14 @@ async def test_select_one_returns_result(db):
 
 
 @pytest.mark.asyncio
-async def test_select_one_raises_exception_if_multiple_results_are_returned(db):
+async def test_multiple_results_exception_is_raised_when_one_is_expected(db):
     mapper = Mapper(settings)
     with pytest.raises(mapper.MultipleObjectsReturned):
         await mapper.one()
 
 
 @pytest.mark.asyncio
-async def test_select_one_raises_exception_if_no_results_are_returned(db):
+async def test_does_not_exist_exception_is_raised_when_one_is_expected(db):
     mapper = Mapper(users)
     with pytest.raises(mapper.DoesNotExist):
         await mapper.one()
@@ -69,7 +69,7 @@ async def test_filter_and_exclude_can_be_combined(admin, user):
 
 
 @pytest.mark.asyncio
-async def test_query_can_be_filtered_using_in(db, category, sibling_category):
+async def test_query_can_be_filtered_using_in(category, sibling_category):
     mapper = Mapper(categories)
     results = await mapper.filter(id__in=[category.id, sibling_category.id]).all()
     assert len(results) == 2
@@ -81,7 +81,7 @@ async def test_query_can_be_filtered_using_in(db, category, sibling_category):
 
 @pytest.mark.asyncio
 async def test_query_can_be_filtered_using_sql_alchemy_expression(
-    db, category, sibling_category
+    category, sibling_category
 ):
     mapper = Mapper(categories)
     results = await mapper.filter(mapper.columns.id == category.id).all()
@@ -98,21 +98,76 @@ async def test_query_result_is_limited_to_given_columns(db):
 
 
 @pytest.mark.asyncio
-async def test_count_results_table_size(db, admin, user):
+async def test_query_result_is_flat_list_of_given_columns(db):
+    mapper = Mapper(settings)
+    results = await mapper.filter(name="forum_name").all("name", flat=True)
+    assert results == ["forum_name"]
+
+
+@pytest.mark.asyncio
+async def test_query_result_is_ordered_by_single_column(category, child_category):
+    mapper = Mapper(categories)
+    results = await (
+        mapper.filter(id__in=[category.id, child_category.id])
+        .order_by("left")
+        .all("id", flat=True)
+    )
+    assert results == [category.id, child_category.id]
+
+
+@pytest.mark.asyncio
+async def test_query_result_is_ordered_desc_by_single_column(category, child_category):
+    mapper = Mapper(categories)
+    results = await (
+        mapper.filter(id__in=[category.id, child_category.id])
+        .order_by("-left")
+        .all("id", flat=True)
+    )
+    assert results == [child_category.id, category.id]
+
+
+@pytest.mark.asyncio
+async def test_query_result_is_ordered_by_multiple_columns(
+    category, child_category, sibling_category
+):
+    mapper = Mapper(categories)
+    results = await (
+        mapper.filter(id__in=[category.id, child_category.id, sibling_category.id])
+        .order_by("depth", "left")
+        .all("id", flat=True)
+    )
+    assert results == [category.id, sibling_category.id, child_category.id]
+
+
+@pytest.mark.asyncio
+async def test_query_result_is_ordered_desc_by_multiple_columns(
+    category, child_category, sibling_category
+):
+    mapper = Mapper(categories)
+    results = await (
+        mapper.filter(id__in=[category.id, child_category.id, sibling_category.id])
+        .order_by("depth", "-left")
+        .all("id", flat=True)
+    )
+    assert results == [sibling_category.id, category.id, child_category.id]
+
+
+@pytest.mark.asyncio
+async def test_count_results_table_size(admin, user):
     mapper = Mapper(users)
     rows_count = await mapper.count()
     assert rows_count == 2
 
 
 @pytest.mark.asyncio
-async def test_count_can_be_filtered(db, admin, user):
+async def test_count_can_be_filtered(admin, user):
     mapper = Mapper(users)
     rows_count = await mapper.filter(is_administrator=True).count()
     assert rows_count == 1
 
 
 @pytest.mark.asyncio
-async def test_delete_all_empties_table(db, admin, user):
+async def test_delete_all_empties_table(admin, user):
     mapper = Mapper(users)
 
     rows_count = await mapper.count()
@@ -125,7 +180,7 @@ async def test_delete_all_empties_table(db, admin, user):
 
 
 @pytest.mark.asyncio
-async def test_delete_can_be_filtered(db, admin, user):
+async def test_delete_can_be_filtered(admin, user):
     mapper = Mapper(users)
 
     rows_count = await mapper.count()
@@ -147,7 +202,7 @@ async def test_insert_creates_new_row(db):
 
 
 @pytest.mark.asyncio
-async def test_update_updates_all_rows(db, admin):
+async def test_update_updates_all_rows(admin):
     assert admin.is_administrator
 
     mapper = Mapper(users)
