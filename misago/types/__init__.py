@@ -67,16 +67,6 @@ from .deletecategoriescontents import (
     DeleteCategoriesContentsAction,
     DeleteCategoriesContentsFilter,
 )
-from .deletethread import (
-    DeleteThreadAction,
-    DeleteThreadFilter,
-    DeleteThreadInput,
-    DeleteThreadInputAction,
-    DeleteThreadInputFilter,
-    DeleteThreadInputModel,
-    DeleteThreadInputModelAction,
-    DeleteThreadInputModelFilter,
-)
 from .deletethreadpost import (
     DeleteThreadPostAction,
     DeleteThreadPostFilter,

@@ -24,11 +24,6 @@ from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
 from .createusertoken import CreateUserTokenHook, CreateUserTokenPayloadHook
 from .deletecategoriescontents import DeleteCategoriesContentsHook
-from .deletethread import (
-    DeleteThreadHook,
-    DeleteThreadInputHook,
-    DeleteThreadInputModelHook,
-)
 from .deletethreadpost import (
     DeleteThreadPostHook,
     DeleteThreadPostInputModelHook,
@@ -98,9 +93,6 @@ create_user_hook = CreateUserHook()
 create_user_token_hook = CreateUserTokenHook()
 create_user_token_payload_hook = CreateUserTokenPayloadHook()
 delete_categories_contents_hook = DeleteCategoriesContentsHook()
-delete_thread_hook = DeleteThreadHook()
-delete_thread_input_hook = DeleteThreadInputHook()
-delete_thread_input_model_hook = DeleteThreadInputModelHook()
 delete_thread_post_hook = DeleteThreadPostHook()
 delete_thread_post_input_model_hook = DeleteThreadPostInputModelHook()
 delete_thread_post_input_post_hook = DeleteThreadPostInputPostHook()

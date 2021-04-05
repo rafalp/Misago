@@ -35,7 +35,14 @@ async def inject_extra_data_to_graphql_context(get_graphql_context, request):
 Standard hooks
 --------------
 
-All standard hooks can be imported from `misago.hooks` module:
+### `misago.hooks.deletethread`
+
+- [`delete_thread_hook`](./delete-thread-hook.md)
+- [`delete_thread_input_hook`](./delete-thread-input-hook.md)
+- [`delete_thread_input_model_hook`](./delete-thread-input-model-hook.md)
+
+
+### `misago.hooks`
 
 - [`authenticate_user_hook`](./authenticate-user-hook.md)
 - [`close_thread_hook`](./close-thread-hook.md)
@@ -54,9 +61,6 @@ All standard hooks can be imported from `misago.hooks` module:
 - [`create_user_hook`](./create-user-hook.md)
 - [`create_user_token_hook`](./create-user-token-hook.md)
 - [`create_user_token_payload_hook`](./create-user-token-payload-hook.md)
-- [`delete_thread_hook`](./delete-thread-hook.md)
-- [`delete_thread_input_hook`](./delete-thread-input-hook.md)
-- [`delete_thread_input_model_hook`](./delete-thread-input-model-hook.md)
 - [`delete_thread_post_hook`](./delete-thread-post-hook.md)
 - [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
 - [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)

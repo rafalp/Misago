@@ -1,4 +1,4 @@
-# `delete_thread_input_model_hook`
+# `misago.hooks.deletethread.delete_thread_input_model_hook`
 
 ```python
 delete_thread_input_model_hook.call_action(
