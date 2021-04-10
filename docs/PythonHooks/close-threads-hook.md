@@ -1,6 +1,8 @@
 # `close_threads_hook`
 
 ```python
+from misago.hooks.closethreads import close_threads_hook
+
 close_threads_hook.call_action(
     action: CloseThreadsAction,
     context: GraphQLContext,

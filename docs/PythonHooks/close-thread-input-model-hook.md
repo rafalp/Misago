@@ -1,6 +1,8 @@
 # `close_thread_input_model_hook`
 
 ```python
+from misago.hooks.closethread import close_thread_input_model_hook
+
 close_thread_input_model_hook.call_action(
     action: CloseThreadInputModelAction, context: GraphQLContext
 )

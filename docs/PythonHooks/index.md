@@ -35,6 +35,32 @@ async def inject_extra_data_to_graphql_context(get_graphql_context, request):
 Standard hooks
 --------------
 
+
+### `misago.hooks.auth`
+
+- [`authenticate_user_hook`](./authenticate-user-hook.md)
+- [`create_user_token_hook`](./create-user-token-hook.md)
+- [`create_user_token_payload_hook`](./create-user-token-payload-hook.md)
+- [`get_auth_user_hook`](./get-auth-user-hook.md)
+- [`get_user_from_context_hook`](./get-user-from-context-hook.md)
+- [`get_user_from_token_hook`](./get-user-from-token-hook.md)
+- [`get_user_from_token_payload_hook`](./get-user-from-token-payload-hook.md)
+
+
+### `misago.hooks.closethread`
+
+- [`close_thread_hook`](./close-thread-hook.md)
+- [`close_thread_input_hook`](./close-thread-input-hook.md)
+- [`close_thread_input_model_hook`](./close-thread-input-model-hook.md)
+
+
+### `misago.hooks.closethreads`
+
+- [`close_threads_hook`](./close-threads-hook.md)
+- [`close_threads_input_hook`](./close-threads-input-hook.md)
+- [`close_threads_input_model_hook`](./close-threads-input-model-hook.md)
+
+
 ### `misago.hooks.deletethread`
 
 - [`delete_thread_hook`](./delete-thread-hook.md)
@@ -44,13 +70,6 @@ Standard hooks
 
 ### `misago.hooks`
 
-- [`authenticate_user_hook`](./authenticate-user-hook.md)
-- [`close_thread_hook`](./close-thread-hook.md)
-- [`close_thread_input_hook`](./close-thread-input-hook.md)
-- [`close_thread_input_model_hook`](./close-thread-input-model-hook.md)
-- [`close_threads_hook`](./close-threads-hook.md)
-- [`close_threads_input_hook`](./close-threads-input-hook.md)
-- [`close_threads_input_model_hook`](./close-threads-input-model-hook.md)
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)
 - [`convert_inline_ast_to_text_hook`](./convert-inline-ast-to-text-hook.md)
 - [`convert_rich_text_block_to_html_hook`](./convert-rich-text-block-to-html-hook.md)
@@ -59,8 +78,6 @@ Standard hooks
 - [`create_post_hook`](./create-post-hook.md)
 - [`create_thread_hook`](./create-thread-hook.md)
 - [`create_user_hook`](./create-user-hook.md)
-- [`create_user_token_hook`](./create-user-token-hook.md)
-- [`create_user_token_payload_hook`](./create-user-token-payload-hook.md)
 - [`delete_thread_post_hook`](./delete-thread-post-hook.md)
 - [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
 - [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)
@@ -78,10 +95,6 @@ Standard hooks
 - [`edit_thread_title_hook`](./edit-thread-title-hook.md)
 - [`edit_thread_title_input_hook`](./edit-thread-title-input-hook.md)
 - [`edit_thread_title_input_model_hook`](./edit-thread-title-input-model-hook.md)
-- [`get_auth_user_hook`](./get-auth-user-hook.md)
-- [`get_user_from_context_hook`](./get-user-from-context-hook.md)
-- [`get_user_from_token_hook`](./get-user-from-token-hook.md)
-- [`get_user_from_token_payload_hook`](./get-user-from-token-payload-hook.md)
 - [`graphql_admin_directives_hook`](./graphql-admin-directives-hook.md)
 - [`graphql_admin_type_defs_hook`](./graphql-admin-type-defs-hook.md)
 - [`graphql_admin_types_hook`](./graphql-admin-types-hook.md)

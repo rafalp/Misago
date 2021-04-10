@@ -2,6 +2,8 @@
 
 
 ```python
+from misago.hooks.auth import get_user_from_context_hook
+
 get_user_from_context_hook.call_action(
     action: GetUserFromContextAction, context: GraphQLContext, in_admin: bool
 )

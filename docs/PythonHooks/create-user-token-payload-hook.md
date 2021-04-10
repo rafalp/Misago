@@ -1,6 +1,8 @@
 # `create_user_token_payload_hook`
 
 ```python
+from misago.hooks.auth import create_user_token_payload_hook
+
 create_user_token_payload_hook.call_action(
     action: CreateUserTokenPayloadAction,
     context: GraphQLContext,

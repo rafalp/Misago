@@ -1,6 +1,8 @@
 # `authenticate_user_hook`
 
 ```python
+from misago.hooks.auth import authenticate_user_hook
+
 authenticate_user_hook.call_action(
     action: AuthenticateUserAction,
     context: GraphQLContext,

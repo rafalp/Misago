@@ -1,6 +1,8 @@
 # `get_user_from_token_payload_hook`
 
 ```python
+from misago.hooks.auth import get_user_from_token_payload_hook
+
 get_user_from_token_payload_hook.call_action(
     action: GetUserFromTokenAction,
     context: GraphQLContext,

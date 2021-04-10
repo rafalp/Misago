@@ -8,11 +8,11 @@ from ....auth import create_user_token
 from ....errors import ErrorsList
 from ....hooks import (
     create_user_hook,
-    create_user_token_hook,
     register_user_hook,
     register_user_input_hook,
     register_user_input_model_hook,
 )
+from ....hooks.auth import create_user_token_hook
 from ....loaders import store_user
 from ....types import (
     GraphQLContext,

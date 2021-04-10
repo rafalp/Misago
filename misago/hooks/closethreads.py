@@ -1,30 +1,39 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from ..types import (
-    CloseThreadsAction,
-    CloseThreadsFilter,
-    CloseThreadsInput,
-    CloseThreadsInputAction,
-    CloseThreadsInputFilter,
-    CloseThreadsInputModel,
-    CloseThreadsInputModelAction,
-    CloseThreadsInputModelFilter,
-    GraphQLContext,
-    Thread,
-    Validator,
-)
+from ..types import GraphQLContext, Thread, Validator
 from .filter import FilterHook
 
+CloseThreadsInputModel = Type[BaseModel]
+CloseThreadsInputModelAction = Callable[
+    [GraphQLContext], Awaitable[CloseThreadsInputModel]
+]
+CloseThreadsInputModelFilter = Callable[
+    [CloseThreadsInputModelAction, GraphQLContext],
+    Awaitable[CloseThreadsInputModel],
+]
 
-class CloseThreadsHook(FilterHook[CloseThreadsAction, CloseThreadsFilter]):
+
+class CloseThreadsInputModelHook(
+    FilterHook[CloseThreadsInputModelAction, CloseThreadsInputModelFilter]
+):
     def call_action(
-        self,
-        action: CloseThreadsAction,
-        context: GraphQLContext,
-        cleaned_data: CloseThreadsInput,
-    ) -> Awaitable[List[Thread]]:
-        return self.filter(action, context, cleaned_data)
+        self, action: CloseThreadsInputModelAction, context: GraphQLContext
+    ) -> Awaitable[CloseThreadsInputModel]:
+        return self.filter(action, context)
+
+
+CloseThreadsInput = Dict[str, Any]
+CloseThreadsInputAction = Callable[
+    [GraphQLContext, Dict[str, List[Validator]], CloseThreadsInput, ErrorsList],
+    Awaitable[Tuple[CloseThreadsInput, ErrorsList]],
+]
+CloseThreadsInputFilter = Callable[
+    [CloseThreadsInputAction, GraphQLContext, CloseThreadsInput],
+    Awaitable[Tuple[CloseThreadsInput, ErrorsList]],
+]
 
 
 class CloseThreadsInputHook(
@@ -41,10 +50,24 @@ class CloseThreadsInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-class CloseThreadsInputModelHook(
-    FilterHook[CloseThreadsInputModelAction, CloseThreadsInputModelFilter]
-):
+CloseThreadsAction = Callable[
+    [GraphQLContext, CloseThreadsInput], Awaitable[List[Thread]]
+]
+CloseThreadsFilter = Callable[
+    [CloseThreadsAction, GraphQLContext, CloseThreadsInput], Awaitable[List[Thread]]
+]
+
+
+class CloseThreadsHook(FilterHook[CloseThreadsAction, CloseThreadsFilter]):
     def call_action(
-        self, action: CloseThreadsInputModelAction, context: GraphQLContext
-    ) -> Awaitable[CloseThreadsInputModel]:
-        return self.filter(action, context)
+        self,
+        action: CloseThreadsAction,
+        context: GraphQLContext,
+        cleaned_data: CloseThreadsInput,
+    ) -> Awaitable[List[Thread]]:
+        return self.filter(action, context, cleaned_data)
+
+
+close_threads_hook = CloseThreadsHook()
+close_threads_input_hook = CloseThreadsInputHook()
+close_threads_input_model_hook = CloseThreadsInputModelHook()

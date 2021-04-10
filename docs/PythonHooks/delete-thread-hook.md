@@ -1,6 +1,8 @@
-# `misago.hooks.deletethread.delete_thread_hook`
+# `delete_thread_hook`
 
 ```python
+from misago.hooks.deletethread import delete_thread_hook
+
 delete_thread_hook.call_action(
     action: DeleteThreadAction,
     context: GraphQLContext,

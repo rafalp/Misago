@@ -8,7 +8,8 @@ from ....auth import create_user_token
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
-from ....hooks import create_user_hook, create_user_token_hook
+from ....hooks import create_user_hook
+from ....hooks.auth import create_user_token_hook
 from ....types import GraphQLContext, Validator
 from ....users.create import create_user
 from ....validation import (

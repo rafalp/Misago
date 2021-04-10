@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..hooks import (
+from ..hooks.auth import (
     create_user_token_payload_hook,
     get_auth_user_hook,
     get_user_from_token_payload_hook,

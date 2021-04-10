@@ -3,17 +3,6 @@ from typing import Any, Dict, List, Type
 from ariadne import SchemaBindable, SchemaDirectiveVisitor
 
 from .action import ActionHook
-from .authenticateuser import AuthenticateUserHook
-from .closethread import (
-    CloseThreadHook,
-    CloseThreadInputHook,
-    CloseThreadInputModelHook,
-)
-from .closethreads import (
-    CloseThreadsHook,
-    CloseThreadsInputHook,
-    CloseThreadsInputModelHook,
-)
 from .convertblockasttorichtext import ConvertBlockAstToRichTextHook
 from .convertinlineasttotext import ConvertInlineAstToTextHook
 from .convertrichtextblocktohtml import ConvertRichTextBlockToHTMLHook
@@ -22,7 +11,6 @@ from .createmarkdown import CreateMarkdownHook
 from .createpost import CreatePostHook
 from .createthread import CreateThreadHook
 from .createuser import CreateUserHook
-from .createusertoken import CreateUserTokenHook, CreateUserTokenPayloadHook
 from .deletecategoriescontents import DeleteCategoriesContentsHook
 from .deletethreadpost import (
     DeleteThreadPostHook,
@@ -68,20 +56,7 @@ from .registeruser import (
 from .templatecontext import TemplateContextHook
 from .updatemarkupmetadata import UpdateMarkupMetadataHook
 from .updatepost import UpdatePostHook
-from .userauth import (
-    GetAuthUserHook,
-    GetUserFromContextHook,
-    GetUserFromTokenHook,
-    GetUserFromTokenPayloadHook,
-)
 
-authenticate_user_hook = AuthenticateUserHook()
-close_thread_hook = CloseThreadHook()
-close_thread_input_hook = CloseThreadInputHook()
-close_thread_input_model_hook = CloseThreadInputModelHook()
-close_threads_hook = CloseThreadsHook()
-close_threads_input_hook = CloseThreadsInputHook()
-close_threads_input_model_hook = CloseThreadsInputModelHook()
 convert_block_ast_to_rich_text_hook = ConvertBlockAstToRichTextHook()
 convert_inline_ast_to_text_hook = ConvertInlineAstToTextHook()
 convert_rich_text_block_to_html_hook = ConvertRichTextBlockToHTMLHook()
@@ -90,8 +65,6 @@ create_markdown_hook = CreateMarkdownHook()
 create_post_hook = CreatePostHook()
 create_thread_hook = CreateThreadHook()
 create_user_hook = CreateUserHook()
-create_user_token_hook = CreateUserTokenHook()
-create_user_token_payload_hook = CreateUserTokenPayloadHook()
 delete_categories_contents_hook = DeleteCategoriesContentsHook()
 delete_thread_post_hook = DeleteThreadPostHook()
 delete_thread_post_input_model_hook = DeleteThreadPostInputModelHook()
@@ -110,10 +83,6 @@ edit_post_input_model_hook = EditPostInputModelHook()
 edit_thread_title_hook = EditThreadTitleHook()
 edit_thread_title_input_hook = EditThreadTitleInputHook()
 edit_thread_title_input_model_hook = EditThreadTitleInputModelHook()
-get_auth_user_hook = GetAuthUserHook()
-get_user_from_context_hook = GetUserFromContextHook()
-get_user_from_token_hook = GetUserFromTokenHook()
-get_user_from_token_payload_hook = GetUserFromTokenPayloadHook()
 graphql_admin_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_admin_type_defs_hook: List[str] = []
 graphql_admin_types_hook: List[SchemaBindable] = []

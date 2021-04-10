@@ -5,20 +5,16 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
-from ....hooks import (
+from ....hooks.closethread import (
+    CloseThreadInput,
+    CloseThreadInputModel,
     close_thread_hook,
     close_thread_input_hook,
     close_thread_input_model_hook,
 )
 from ....loaders import load_thread, store_thread
 from ....threads.close import close_thread
-from ....types import (
-    CloseThreadInput,
-    CloseThreadInputModel,
-    GraphQLContext,
-    Thread,
-    Validator,
-)
+from ....types import GraphQLContext, Thread, Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,

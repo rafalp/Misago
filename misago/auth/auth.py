@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..hooks import get_user_from_context_hook, get_user_from_token_hook
+from ..hooks.auth import get_user_from_context_hook, get_user_from_token_hook
 from ..passwords import verify_password
 from ..types import GraphQLContext, User
 from ..users.get import get_user_by_name_or_email

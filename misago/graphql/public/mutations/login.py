@@ -3,8 +3,8 @@ from graphql import GraphQLResolveInfo
 
 from ....auth import authenticate_user, create_user_token
 from ....errors import AllFieldsAreRequiredError, InvalidCredentialsError
-from ....hooks import authenticate_user_hook, create_user_token_hook
 from ...errorhandler import error_handler
+from ....hooks.auth import authenticate_user_hook, create_user_token_hook
 
 login_mutation = MutationType()
 
