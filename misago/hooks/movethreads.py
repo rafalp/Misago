@@ -1,30 +1,39 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from ..types import (
-    GraphQLContext,
-    MoveThreadsAction,
-    MoveThreadsFilter,
-    MoveThreadsInput,
-    MoveThreadsInputAction,
-    MoveThreadsInputFilter,
-    MoveThreadsInputModel,
-    MoveThreadsInputModelAction,
-    MoveThreadsInputModelFilter,
-    Thread,
-    Validator,
-)
+from ..types import GraphQLContext, Thread, Validator
 from .filter import FilterHook
 
+MoveThreadsInputModel = Type[BaseModel]
+MoveThreadsInputModelAction = Callable[
+    [GraphQLContext], Awaitable[MoveThreadsInputModel]
+]
+MoveThreadsInputModelFilter = Callable[
+    [MoveThreadsInputModelAction, GraphQLContext],
+    Awaitable[MoveThreadsInputModel],
+]
 
-class MoveThreadsHook(FilterHook[MoveThreadsAction, MoveThreadsFilter]):
+
+class MoveThreadsInputModelHook(
+    FilterHook[MoveThreadsInputModelAction, MoveThreadsInputModelFilter]
+):
     def call_action(
-        self,
-        action: MoveThreadsAction,
-        context: GraphQLContext,
-        cleaned_data: MoveThreadsInput,
-    ) -> Awaitable[List[Thread]]:
-        return self.filter(action, context, cleaned_data)
+        self, action: MoveThreadsInputModelAction, context: GraphQLContext
+    ) -> Awaitable[MoveThreadsInputModel]:
+        return self.filter(action, context)
+
+
+MoveThreadsInput = Dict[str, Any]
+MoveThreadsInputAction = Callable[
+    [GraphQLContext, Dict[str, List[Validator]], MoveThreadsInput, ErrorsList],
+    Awaitable[Tuple[MoveThreadsInput, ErrorsList]],
+]
+MoveThreadsInputFilter = Callable[
+    [MoveThreadsInputAction, GraphQLContext, MoveThreadsInput],
+    Awaitable[Tuple[MoveThreadsInput, ErrorsList]],
+]
 
 
 class MoveThreadsInputHook(FilterHook[MoveThreadsInputAction, MoveThreadsInputFilter]):
@@ -39,10 +48,24 @@ class MoveThreadsInputHook(FilterHook[MoveThreadsInputAction, MoveThreadsInputFi
         return self.filter(action, context, validators, data, errors_list)
 
 
-class MoveThreadsInputModelHook(
-    FilterHook[MoveThreadsInputModelAction, MoveThreadsInputModelFilter]
-):
+MoveThreadsAction = Callable[
+    [GraphQLContext, MoveThreadsInput], Awaitable[List[Thread]]
+]
+MoveThreadsFilter = Callable[
+    [MoveThreadsAction, GraphQLContext, MoveThreadsInput], Awaitable[List[Thread]]
+]
+
+
+class MoveThreadsHook(FilterHook[MoveThreadsAction, MoveThreadsFilter]):
     def call_action(
-        self, action: MoveThreadsInputModelAction, context: GraphQLContext
-    ) -> Awaitable[MoveThreadsInputModel]:
-        return self.filter(action, context)
+        self,
+        action: MoveThreadsAction,
+        context: GraphQLContext,
+        cleaned_data: MoveThreadsInput,
+    ) -> Awaitable[List[Thread]]:
+        return self.filter(action, context, cleaned_data)
+
+
+move_threads_hook = MoveThreadsHook()
+move_threads_input_hook = MoveThreadsInputHook()
+move_threads_input_model_hook = MoveThreadsInputModelHook()

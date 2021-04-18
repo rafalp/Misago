@@ -5,17 +5,14 @@ from typing import List, Optional, Tuple, cast
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 from mistune.plugins import plugin_strikethrough
 
-from ..hooks import (
-    convert_block_ast_to_rich_text_hook,
-    convert_inline_ast_to_text_hook,
-    create_markdown_hook,
-    markdown_hook,
-    parse_markup_hook,
-    update_markup_metadata_hook,
-)
+from ..hooks.convertblockasttorichtext import convert_block_ast_to_rich_text_hook
+from ..hooks.convertinlineasttotext import convert_inline_ast_to_text_hook
+from ..hooks.createmarkdown import MarkdownPlugin, create_markdown_hook
+from ..hooks.markdown import markdown_hook
+from ..hooks.parsemarkup import parse_markup_hook
+from ..hooks.updatemarkupmetadata import update_markup_metadata_hook
 from ..types import (
     GraphQLContext,
-    MarkdownPlugin,
     ParsedMarkupMetadata,
     RichText,
     RichTextBlock,

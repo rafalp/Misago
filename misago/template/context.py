@@ -2,8 +2,8 @@ from typing import Optional
 
 from starlette.requests import Request
 
-from ..hooks import template_context_hook
-from ..types import TemplateContext
+from .hooks import template_context_hook
+from .types import TemplateContext
 
 
 async def get_final_context(

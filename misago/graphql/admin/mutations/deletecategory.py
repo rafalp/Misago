@@ -8,7 +8,8 @@ from ....categories.errors import CategoryInvalidError
 from ....categories.get import get_all_categories
 from ....categories.tree import delete_category, move_category
 from ....errors import ErrorsList
-from ....hooks import delete_categories_contents_hook, move_categories_contents_hook
+from ....hooks.deletecategoriescontents import delete_categories_contents_hook
+from ....hooks.movecategoriescontents import move_categories_contents_hook
 from ....loaders import clear_categories
 from ....threads.move import move_categories_threads
 from ....threads.delete import delete_threads_in_categories

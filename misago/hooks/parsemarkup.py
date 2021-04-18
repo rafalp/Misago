@@ -1,13 +1,25 @@
-from typing import Awaitable, Tuple
+from typing import Awaitable, Protocol, Tuple
 
-from ..types import (
-    GraphQLContext,
-    ParsedMarkupMetadata,
-    ParseMarkupAction,
-    ParseMarkupFilter,
-    RichText,
-)
+from ..types import GraphQLContext, ParsedMarkupMetadata, RichText
 from .filter import FilterHook
+
+
+class ParseMarkupAction(Protocol):
+    async def __call__(
+        self, context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
+    ) -> Tuple[RichText, ParsedMarkupMetadata]:
+        ...
+
+
+class ParseMarkupFilter(Protocol):
+    async def __call__(
+        self,
+        action: ParseMarkupAction,
+        context: GraphQLContext,
+        markup: str,
+        metadata: ParsedMarkupMetadata,
+    ) -> Tuple[RichText, ParsedMarkupMetadata]:
+        ...
 
 
 class ParseMarkupHook(FilterHook[ParseMarkupAction, ParseMarkupFilter]):
@@ -19,3 +31,6 @@ class ParseMarkupHook(FilterHook[ParseMarkupAction, ParseMarkupFilter]):
         metadata: ParsedMarkupMetadata,
     ) -> Awaitable[Tuple[RichText, ParsedMarkupMetadata]]:
         return self.filter(action, context, markup, metadata)
+
+
+parse_markup_hook = ParseMarkupHook()

@@ -3,7 +3,7 @@ from typing import Optional
 from starlette.requests import Request
 from starlette.responses import Response
 
-from ..types import TemplateContext
+from .types import TemplateContext
 from .context import get_final_context
 from .environment import env
 

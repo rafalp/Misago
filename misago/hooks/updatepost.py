@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Awaitable, Optional
+from typing import Awaitable, Optional, Protocol
 
 from ..types import (
     Category,
@@ -7,11 +7,50 @@ from ..types import (
     Post,
     RichText,
     Thread,
-    UpdatePostAction,
-    UpdatePostFilter,
     User,
 )
 from .filter import FilterHook
+
+
+class UpdatePostAction(Protocol):
+    async def __call__(
+        self,
+        post: Post,
+        *,
+        category: Optional[Category] = None,
+        thread: Optional[Thread] = None,
+        markup: Optional[str] = None,
+        rich_text: Optional[RichText] = None,
+        poster: Optional[User] = None,
+        poster_name: Optional[str] = None,
+        edits: Optional[int] = None,
+        increment_edits: Optional[bool] = False,
+        posted_at: Optional[datetime] = None,
+        extra: Optional[dict] = None,
+        context: Optional[GraphQLContext] = None,
+    ) -> Post:
+        ...
+
+
+class UpdatePostFilter(Protocol):
+    async def __call__(
+        self,
+        action: UpdatePostAction,
+        post: Post,
+        *,
+        category: Optional[Category] = None,
+        thread: Optional[Thread] = None,
+        markup: Optional[str] = None,
+        rich_text: Optional[RichText] = None,
+        poster: Optional[User] = None,
+        poster_name: Optional[str] = None,
+        edits: Optional[int] = None,
+        increment_edits: Optional[bool] = False,
+        posted_at: Optional[datetime] = None,
+        extra: Optional[dict] = None,
+        context: Optional[GraphQLContext] = None,
+    ) -> Post:
+        ...
 
 
 class UpdatePostHook(FilterHook[UpdatePostAction, UpdatePostFilter]):
@@ -47,3 +86,6 @@ class UpdatePostHook(FilterHook[UpdatePostAction, UpdatePostFilter]):
             extra=extra,
             context=context,
         )
+
+
+update_post_hook = UpdatePostHook()

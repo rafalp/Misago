@@ -3,8 +3,8 @@ from typing import List
 from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 
 from ..conf import settings
-from ..hooks import jinja2_extensions_hook, jinja2_filters_hook
 from ..plugins import plugins
+from .hooks import jinja2_extensions_hook, jinja2_filters_hook
 
 
 def get_template_loaders() -> List[PackageLoader]:

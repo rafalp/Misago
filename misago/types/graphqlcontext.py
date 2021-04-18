@@ -1,9 +1,3 @@
-from typing import Any, Awaitable, Callable, Dict
-
-from starlette.requests import Request
+from typing import Any, Dict
 
 GraphQLContext = Dict[str, Any]
-GraphQLContextAction = Callable[[Request], Awaitable[GraphQLContext]]
-GraphQLContextFilter = Callable[
-    [GraphQLContextAction, Request], Awaitable[GraphQLContext]
-]

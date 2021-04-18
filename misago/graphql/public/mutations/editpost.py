@@ -5,18 +5,18 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ....errors import ErrorsList
-from ....hooks import (
+from ....hooks.editpost import (
+    EditPostInput,
+    EditPostInputModel,
     edit_post_hook,
     edit_post_input_hook,
     edit_post_input_model_hook,
-    update_post_hook,
 )
+from ....hooks.updatepost import update_post_hook
 from ....loaders import load_post, load_thread, store_post
 from ....richtext.parser import parse_markup
 from ....threads.update import update_post
 from ....types import (
-    EditPostInput,
-    EditPostInputModel,
     GraphQLContext,
     ParsedMarkupMetadata,
     Post,

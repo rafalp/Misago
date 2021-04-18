@@ -1,30 +1,45 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from ..types import (
-    EditThreadTitleAction,
-    EditThreadTitleFilter,
-    EditThreadTitleInput,
-    EditThreadTitleInputAction,
-    EditThreadTitleInputFilter,
-    EditThreadTitleInputModel,
-    EditThreadTitleInputModelAction,
-    EditThreadTitleInputModelFilter,
-    GraphQLContext,
-    Thread,
-    Validator,
-)
+from ..types import GraphQLContext, Thread, Validator
 from .filter import FilterHook
 
 
-class EditThreadTitleHook(FilterHook[EditThreadTitleAction, EditThreadTitleFilter]):
+EditThreadTitleInputModel = Type[BaseModel]
+EditThreadTitleInputModelAction = Callable[
+    [GraphQLContext], Awaitable[EditThreadTitleInputModel]
+]
+EditThreadTitleInputModelFilter = Callable[
+    [EditThreadTitleInputModelAction, GraphQLContext],
+    Awaitable[EditThreadTitleInputModel],
+]
+
+
+class EditThreadTitleInputModelHook(
+    FilterHook[EditThreadTitleInputModelAction, EditThreadTitleInputModelFilter]
+):
     def call_action(
-        self,
-        action: EditThreadTitleAction,
-        context: GraphQLContext,
-        cleaned_data: EditThreadTitleInput,
-    ) -> Awaitable[Thread]:
-        return self.filter(action, context, cleaned_data)
+        self, action: EditThreadTitleInputModelAction, context: GraphQLContext
+    ) -> Awaitable[EditThreadTitleInputModel]:
+        return self.filter(action, context)
+
+
+EditThreadTitleInput = Dict[str, Any]
+EditThreadTitleInputAction = Callable[
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        EditThreadTitleInput,
+        ErrorsList,
+    ],
+    Awaitable[Tuple[EditThreadTitleInput, ErrorsList]],
+]
+EditThreadTitleInputFilter = Callable[
+    [EditThreadTitleInputAction, GraphQLContext, EditThreadTitleInput],
+    Awaitable[Tuple[EditThreadTitleInput, ErrorsList]],
+]
 
 
 class EditThreadTitleInputHook(
@@ -41,10 +56,24 @@ class EditThreadTitleInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-class EditThreadTitleInputModelHook(
-    FilterHook[EditThreadTitleInputModelAction, EditThreadTitleInputModelFilter]
-):
+EditThreadTitleAction = Callable[
+    [GraphQLContext, EditThreadTitleInput], Awaitable[Thread]
+]
+EditThreadTitleFilter = Callable[
+    [EditThreadTitleAction, GraphQLContext, EditThreadTitleInput], Awaitable[Thread]
+]
+
+
+class EditThreadTitleHook(FilterHook[EditThreadTitleAction, EditThreadTitleFilter]):
     def call_action(
-        self, action: EditThreadTitleInputModelAction, context: GraphQLContext
-    ) -> Awaitable[EditThreadTitleInputModel]:
-        return self.filter(action, context)
+        self,
+        action: EditThreadTitleAction,
+        context: GraphQLContext,
+        cleaned_data: EditThreadTitleInput,
+    ) -> Awaitable[Thread]:
+        return self.filter(action, context, cleaned_data)
+
+
+edit_thread_title_hook = EditThreadTitleHook()
+edit_thread_title_input_hook = EditThreadTitleInputHook()
+edit_thread_title_input_model_hook = EditThreadTitleInputModelHook()

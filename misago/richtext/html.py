@@ -1,6 +1,7 @@
 from typing import Optional
 
-from ..hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
+from ..hooks.convertrichtextblocktohtml import convert_rich_text_block_to_html_hook
+from ..hooks.convertrichtexttohtml import convert_rich_text_to_html_hook
 from ..types import GraphQLContext, RichText, RichTextBlock
 from .highlight import highlight_code
 

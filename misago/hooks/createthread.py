@@ -1,16 +1,51 @@
 from datetime import datetime
-from typing import Any, Awaitable, Dict, Optional
+from typing import Any, Awaitable, Dict, Optional, Protocol
 
 from ..types import (
     Category,
-    CreateThreadAction,
-    CreateThreadFilter,
     GraphQLContext,
     Post,
     Thread,
     User,
 )
 from .filter import FilterHook
+
+
+class CreateThreadAction(Protocol):
+    async def __call__(
+        self,
+        category: Category,
+        title: str,
+        *,
+        first_post: Optional[Post] = None,
+        starter: Optional[User] = None,
+        starter_name: Optional[str] = None,
+        replies: int = 0,
+        is_closed: bool = False,
+        started_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
+    ) -> Thread:
+        ...
+
+
+class CreateThreadFilter(Protocol):
+    async def __call__(
+        self,
+        action: CreateThreadAction,
+        category: Category,
+        title: str,
+        *,
+        first_post: Optional[Post] = None,
+        starter: Optional[User] = None,
+        starter_name: Optional[str] = None,
+        replies: int = 0,
+        is_closed: bool = False,
+        started_at: Optional[datetime] = None,
+        extra: Optional[Dict[str, Any]] = None,
+        context: Optional[GraphQLContext] = None,
+    ) -> Thread:
+        ...
 
 
 class CreateThreadHook(FilterHook[CreateThreadAction, CreateThreadFilter]):
@@ -42,3 +77,6 @@ class CreateThreadHook(FilterHook[CreateThreadAction, CreateThreadFilter]):
             extra=extra,
             context=context,
         )
+
+
+create_thread_hook = CreateThreadHook()

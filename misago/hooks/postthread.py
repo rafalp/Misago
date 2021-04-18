@@ -1,32 +1,48 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
 from ..types import (
     GraphQLContext,
     ParsedMarkupMetadata,
     Post,
-    PostThreadAction,
-    PostThreadFilter,
-    PostThreadInput,
-    PostThreadInputAction,
-    PostThreadInputFilter,
-    PostThreadInputModel,
-    PostThreadInputModelAction,
-    PostThreadInputModelFilter,
     Thread,
     Validator,
 )
 from .filter import FilterHook
 
+PostThreadInputModel = Type[BaseModel]
+PostThreadInputModelAction = Callable[[GraphQLContext], Awaitable[PostThreadInputModel]]
+PostThreadInputModelFilter = Callable[
+    [PostThreadInputModelAction, GraphQLContext],
+    Awaitable[PostThreadInputModel],
+]
 
-class PostThreadHook(FilterHook[PostThreadAction, PostThreadFilter]):
+
+class PostThreadInputModelHook(
+    FilterHook[PostThreadInputModelAction, PostThreadInputModelFilter]
+):
     def call_action(
-        self,
-        action: PostThreadAction,
-        context: GraphQLContext,
-        cleaned_data: PostThreadInput,
-    ) -> Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]]:
-        return self.filter(action, context, cleaned_data)
+        self, action: PostThreadInputModelAction, context: GraphQLContext
+    ) -> Awaitable[PostThreadInputModel]:
+        return self.filter(action, context)
+
+
+PostThreadInput = Dict[str, Any]
+PostThreadInputAction = Callable[
+    [
+        GraphQLContext,
+        Dict[str, List[Validator]],
+        PostThreadInput,
+        ErrorsList,
+    ],
+    Awaitable[Tuple[PostThreadInput, ErrorsList]],
+]
+PostThreadInputFilter = Callable[
+    [PostThreadInputAction, GraphQLContext, PostThreadInput],
+    Awaitable[Tuple[PostThreadInput, ErrorsList]],
+]
 
 
 class PostThreadInputHook(FilterHook[PostThreadInputAction, PostThreadInputFilter]):
@@ -41,10 +57,26 @@ class PostThreadInputHook(FilterHook[PostThreadInputAction, PostThreadInputFilte
         return self.filter(action, context, validators, data, errors_list)
 
 
-class PostThreadInputModelHook(
-    FilterHook[PostThreadInputModelAction, PostThreadInputModelFilter]
-):
+PostThreadAction = Callable[
+    [GraphQLContext, PostThreadInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
+]
+PostThreadFilter = Callable[
+    [PostThreadAction, GraphQLContext, PostThreadInput],
+    Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
+]
+
+
+class PostThreadHook(FilterHook[PostThreadAction, PostThreadFilter]):
     def call_action(
-        self, action: PostThreadInputModelAction, context: GraphQLContext
-    ) -> Awaitable[PostThreadInputModel]:
-        return self.filter(action, context)
+        self,
+        action: PostThreadAction,
+        context: GraphQLContext,
+        cleaned_data: PostThreadInput,
+    ) -> Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]]:
+        return self.filter(action, context, cleaned_data)
+
+
+post_thread_hook = PostThreadHook()
+post_thread_input_hook = PostThreadInputHook()
+post_thread_input_model_hook = PostThreadInputModelHook()

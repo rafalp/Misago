@@ -1,30 +1,39 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from ..types import (
-    GraphQLContext,
-    RegisterUserAction,
-    RegisterUserFilter,
-    RegisterUserInput,
-    RegisterUserInputAction,
-    RegisterUserInputFilter,
-    RegisterUserInputModel,
-    RegisterUserInputModelAction,
-    RegisterUserInputModelFilter,
-    User,
-    Validator,
-)
+from ..types import GraphQLContext, User, Validator
 from .filter import FilterHook
 
+RegisterUserInputModel = Type[BaseModel]
+RegisterUserInputModelAction = Callable[
+    [GraphQLContext], Awaitable[RegisterUserInputModel]
+]
+RegisterUserInputModelFilter = Callable[
+    [RegisterUserInputModelAction, GraphQLContext],
+    Awaitable[RegisterUserInputModel],
+]
 
-class RegisterUserHook(FilterHook[RegisterUserAction, RegisterUserFilter]):
+
+class RegisterUserInputModelHook(
+    FilterHook[RegisterUserInputModelAction, RegisterUserInputModelFilter]
+):
     def call_action(
-        self,
-        action: RegisterUserAction,
-        context: GraphQLContext,
-        cleaned_data: RegisterUserInput,
-    ) -> Awaitable[User]:
-        return self.filter(action, context, cleaned_data)
+        self, action: RegisterUserInputModelAction, context: GraphQLContext
+    ) -> Awaitable[RegisterUserInputModel]:
+        return self.filter(action, context)
+
+
+RegisterUserInput = Dict[str, Any]
+RegisterUserInputAction = Callable[
+    [GraphQLContext, Dict[str, List[Validator]], RegisterUserInput, ErrorsList],
+    Awaitable[Tuple[RegisterUserInput, ErrorsList]],
+]
+RegisterUserInputFilter = Callable[
+    [RegisterUserInputAction, GraphQLContext, RegisterUserInput],
+    Awaitable[Tuple[RegisterUserInput, ErrorsList]],
+]
 
 
 class RegisterUserInputHook(
@@ -41,10 +50,22 @@ class RegisterUserInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-class RegisterUserInputModelHook(
-    FilterHook[RegisterUserInputModelAction, RegisterUserInputModelFilter]
-):
+RegisterUserAction = Callable[[GraphQLContext, RegisterUserInput], Awaitable[User]]
+RegisterUserFilter = Callable[
+    [RegisterUserAction, GraphQLContext, RegisterUserInput], Awaitable[User]
+]
+
+
+class RegisterUserHook(FilterHook[RegisterUserAction, RegisterUserFilter]):
     def call_action(
-        self, action: RegisterUserInputModelAction, context: GraphQLContext
-    ) -> Awaitable[RegisterUserInputModel]:
-        return self.filter(action, context)
+        self,
+        action: RegisterUserAction,
+        context: GraphQLContext,
+        cleaned_data: RegisterUserInput,
+    ) -> Awaitable[User]:
+        return self.filter(action, context, cleaned_data)
+
+
+register_user_hook = RegisterUserHook()
+register_user_input_hook = RegisterUserInputHook()
+register_user_input_model_hook = RegisterUserInputModelHook()

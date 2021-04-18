@@ -1,29 +1,39 @@
-from typing import Awaitable, Dict, List, Tuple
+from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+
+from pydantic import BaseModel
 
 from ..errors import ErrorsList
-from ..types import (
-    DeleteThreadsAction,
-    DeleteThreadsFilter,
-    DeleteThreadsInput,
-    DeleteThreadsInputAction,
-    DeleteThreadsInputFilter,
-    DeleteThreadsInputModel,
-    DeleteThreadsInputModelAction,
-    DeleteThreadsInputModelFilter,
-    GraphQLContext,
-    Validator,
-)
+from ..types import GraphQLContext, Validator
 from .filter import FilterHook
 
+DeleteThreadsInputModel = Type[BaseModel]
+DeleteThreadsInputModelAction = Callable[
+    [GraphQLContext], Awaitable[DeleteThreadsInputModel]
+]
+DeleteThreadsInputModelFilter = Callable[
+    [DeleteThreadsInputModelAction, GraphQLContext],
+    Awaitable[DeleteThreadsInputModel],
+]
 
-class DeleteThreadsHook(FilterHook[DeleteThreadsAction, DeleteThreadsFilter]):
-    async def call_action(
-        self,
-        action: DeleteThreadsAction,
-        context: GraphQLContext,
-        cleaned_data: DeleteThreadsInput,
-    ):
-        await self.filter(action, context, cleaned_data)
+
+class DeleteThreadsInputModelHook(
+    FilterHook[DeleteThreadsInputModelAction, DeleteThreadsInputModelFilter]
+):
+    def call_action(
+        self, action: DeleteThreadsInputModelAction, context: GraphQLContext
+    ) -> Awaitable[DeleteThreadsInputModel]:
+        return self.filter(action, context)
+
+
+DeleteThreadsInput = Dict[str, Any]
+DeleteThreadsInputAction = Callable[
+    [GraphQLContext, Dict[str, List[Validator]], DeleteThreadsInput, ErrorsList],
+    Awaitable[Tuple[DeleteThreadsInput, ErrorsList]],
+]
+DeleteThreadsInputFilter = Callable[
+    [DeleteThreadsInputAction, GraphQLContext, DeleteThreadsInput],
+    Awaitable[Tuple[DeleteThreadsInput, ErrorsList]],
+]
 
 
 class DeleteThreadsInputHook(
@@ -40,10 +50,22 @@ class DeleteThreadsInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-class DeleteThreadsInputModelHook(
-    FilterHook[DeleteThreadsInputModelAction, DeleteThreadsInputModelFilter]
-):
-    def call_action(
-        self, action: DeleteThreadsInputModelAction, context: GraphQLContext
-    ) -> Awaitable[DeleteThreadsInputModel]:
-        return self.filter(action, context)
+DeleteThreadsAction = Callable[[GraphQLContext, DeleteThreadsInput], Awaitable[None]]
+DeleteThreadsFilter = Callable[
+    [DeleteThreadsAction, GraphQLContext, DeleteThreadsInput], Awaitable[None]
+]
+
+
+class DeleteThreadsHook(FilterHook[DeleteThreadsAction, DeleteThreadsFilter]):
+    async def call_action(
+        self,
+        action: DeleteThreadsAction,
+        context: GraphQLContext,
+        cleaned_data: DeleteThreadsInput,
+    ):
+        await self.filter(action, context, cleaned_data)
+
+
+delete_threads_hook = DeleteThreadsHook()
+delete_threads_input_hook = DeleteThreadsInputHook()
+delete_threads_input_model_hook = DeleteThreadsInputModelHook()

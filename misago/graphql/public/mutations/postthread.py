@@ -9,9 +9,11 @@ from ....auth import get_authenticated_user
 from ....categories.update import update_category
 from ....database import database
 from ....errors import ErrorsList
-from ....hooks import (
-    create_post_hook,
-    create_thread_hook,
+from ....hooks.createpost import create_post_hook
+from ....hooks.createthread import create_thread_hook
+from ....hooks.postthread import (
+    PostThreadInput,
+    PostThreadInputModel,
     post_thread_hook,
     post_thread_input_hook,
     post_thread_input_model_hook,
@@ -25,8 +27,6 @@ from ....types import (
     GraphQLContext,
     ParsedMarkupMetadata,
     Post,
-    PostThreadInput,
-    PostThreadInputModel,
     Thread,
     Validator,
 )

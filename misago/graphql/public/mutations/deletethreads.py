@@ -5,19 +5,16 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
-from ....hooks import (
+from ....hooks.deletethreads import (
+    DeleteThreadsInput,
+    DeleteThreadsInputModel,
     delete_threads_hook,
     delete_threads_input_hook,
     delete_threads_input_model_hook,
 )
 from ....loaders import clear_all_posts, clear_threads, load_threads
 from ....threads.delete import delete_threads
-from ....types import (
-    DeleteThreadsInput,
-    DeleteThreadsInputModel,
-    GraphQLContext,
-    Validator,
-)
+from ....types import GraphQLContext, Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
