@@ -2,15 +2,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 
 from pydantic import BaseModel
 
-from ..errors import ErrorsList
-from ..types import (
+from .....errors import ErrorsList
+from .....hooks import FilterHook
+from .....types import (
     GraphQLContext,
     ParsedMarkupMetadata,
     Post,
     Thread,
     Validator,
 )
-from .filter import FilterHook
 
 PostReplyInputModel = Type[BaseModel]
 PostReplyInputModelAction = Callable[[GraphQLContext], Awaitable[PostReplyInputModel]]

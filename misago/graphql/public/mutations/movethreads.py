@@ -5,13 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
-from ....hooks.movethreads import (
-    MoveThreadsInput,
-    MoveThreadsInputModel,
-    move_threads_hook,
-    move_threads_input_hook,
-    move_threads_input_model_hook,
-)
 from ....loaders import load_threads, store_threads
 from ....threads.move import move_threads
 from ....types import GraphQLContext, Thread, Validator
@@ -29,6 +22,13 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.movethreads import (
+    MoveThreadsInput,
+    MoveThreadsInputModel,
+    move_threads_hook,
+    move_threads_input_hook,
+    move_threads_input_model_hook,
+)
 
 move_threads_mutation = MutationType()
 

@@ -11,13 +11,6 @@ from ....database import database
 from ....errors import ErrorsList
 from ....hooks.createpost import create_post_hook
 from ....hooks.createthread import create_thread_hook
-from ....hooks.postthread import (
-    PostThreadInput,
-    PostThreadInputModel,
-    post_thread_hook,
-    post_thread_input_hook,
-    post_thread_input_model_hook,
-)
 from ....loaders import store_category, store_post, store_thread
 from ....pubsub.threads import publish_thread_update
 from ....richtext import parse_markup
@@ -40,6 +33,13 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.postthread import (
+    PostThreadInput,
+    PostThreadInputModel,
+    post_thread_hook,
+    post_thread_input_hook,
+    post_thread_input_model_hook,
+)
 
 post_thread_mutation = MutationType()
 

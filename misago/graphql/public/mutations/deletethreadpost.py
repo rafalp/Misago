@@ -5,14 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
-from ....hooks.deletethreadpost import (
-    DeleteThreadPostInput,
-    DeleteThreadPostInputModel,
-    delete_thread_post_hook,
-    delete_thread_post_input_model_hook,
-    delete_thread_post_input_post_hook,
-    delete_thread_post_input_thread_hook,
-)
 from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
 from ....types import GraphQLContext, Thread, Validator
@@ -27,6 +19,14 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.deletethreadpost import (
+    DeleteThreadPostInput,
+    DeleteThreadPostInputModel,
+    delete_thread_post_hook,
+    delete_thread_post_input_model_hook,
+    delete_thread_post_input_post_hook,
+    delete_thread_post_input_thread_hook,
+)
 
 delete_thread_post_mutation = MutationType()
 

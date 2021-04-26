@@ -5,13 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
-from ....hooks.closethread import (
-    CloseThreadInput,
-    CloseThreadInputModel,
-    close_thread_hook,
-    close_thread_input_hook,
-    close_thread_input_model_hook,
-)
 from ....loaders import load_thread, store_thread
 from ....threads.close import close_thread
 from ....types import GraphQLContext, Thread, Validator
@@ -24,6 +17,13 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.closethread import (
+    CloseThreadInput,
+    CloseThreadInputModel,
+    close_thread_hook,
+    close_thread_input_hook,
+    close_thread_input_model_hook,
+)
 
 close_thread_mutation = MutationType()
 

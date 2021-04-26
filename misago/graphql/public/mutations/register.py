@@ -7,13 +7,6 @@ from pydantic import EmailStr, create_model
 from ....auth import create_user_token
 from ....errors import ErrorsList
 from ....hooks.createuser import create_user_hook
-from ....hooks.registeruser import (
-    RegisterUserInput,
-    RegisterUserInputModel,
-    register_user_hook,
-    register_user_input_hook,
-    register_user_input_model_hook,
-)
 from ....hooks.auth import create_user_token_hook
 from ....loaders import store_user
 from ....types import GraphQLContext, User, Validator
@@ -27,6 +20,13 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.registeruser import (
+    RegisterUserInput,
+    RegisterUserInputModel,
+    register_user_hook,
+    register_user_input_hook,
+    register_user_input_model_hook,
+)
 
 register_mutation = MutationType()
 

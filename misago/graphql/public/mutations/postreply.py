@@ -8,13 +8,6 @@ from pydantic import PositiveInt, constr, create_model
 from ....auth import get_authenticated_user
 from ....categories.update import update_category
 from ....errors import ErrorsList
-from ....hooks.postreply import (
-    PostReplyInput,
-    PostReplyInputModel,
-    post_reply_hook,
-    post_reply_input_hook,
-    post_reply_input_model_hook,
-)
 from ....hooks.createpost import create_post_hook
 from ....loaders import (
     load_category,
@@ -45,6 +38,13 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
+from .hooks.postreply import (
+    PostReplyInput,
+    PostReplyInputModel,
+    post_reply_hook,
+    post_reply_input_hook,
+    post_reply_input_model_hook,
+)
 
 post_reply_mutation = MutationType()
 

@@ -2,9 +2,9 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 
 from pydantic import BaseModel
 
-from ..errors import ErrorsList
-from ..types import GraphQLContext, User, Validator
-from .filter import FilterHook
+from .....errors import ErrorsList
+from .....hooks import FilterHook
+from .....types import GraphQLContext, User, Validator
 
 RegisterUserInputModel = Type[BaseModel]
 RegisterUserInputModelAction = Callable[
