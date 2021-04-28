@@ -8,7 +8,6 @@ from ....errors import ErrorsList
 from ....loaders import load_threads, store_threads
 from ....threads.close import close_threads
 from ....threads.models import Thread
-from ....types import Validator
 from ....utils.lists import remove_none_items, update_list_items
 from ....validation import (
     CategoryModeratorValidator,
@@ -16,6 +15,7 @@ from ....validation import (
     ThreadExistsValidator,
     ThreadsBulkValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     bulkactionidslist,
     validate_data,
     validate_model,

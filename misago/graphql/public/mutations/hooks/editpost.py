@@ -6,7 +6,7 @@ from .....errors import ErrorsList
 from .....hooks import FilterHook
 from .....richtext import ParsedMarkupMetadata
 from .....threads.models import Post, Thread
-from .....types import Validator
+from .....validation import Validator
 from .... import GraphQLContext
 
 EditPostInputModel = Type[BaseModel]

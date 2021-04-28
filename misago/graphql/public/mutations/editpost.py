@@ -10,7 +10,6 @@ from ....richtext.parser import ParsedMarkupMetadata, parse_markup
 from ....threads.hooks.updatepost import update_post_hook
 from ....threads.models import Post, Thread
 from ....threads.update import update_post
-from ....types import Validator
 from ....validation import (
     CategoryIsOpenValidator,
     PostAuthorValidator,
@@ -19,6 +18,7 @@ from ....validation import (
     PostThreadValidator,
     ThreadIsOpenValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

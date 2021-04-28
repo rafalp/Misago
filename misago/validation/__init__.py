@@ -27,6 +27,7 @@ from .validators import (
     ThreadsBulkValidator,
     UserIsAuthorizedRootValidator,
     UsernameIsAvailableValidator,
+    Validator,
     color_validator,
 )
 from .root_validator import for_location
@@ -53,6 +54,7 @@ __all__ = [
     "ThreadsBulkValidator",
     "UserIsAuthorizedRootValidator",
     "UsernameIsAvailableValidator",
+    "Validator",
     "bulkactionidslist",
     "color_validator",
     "for_location",

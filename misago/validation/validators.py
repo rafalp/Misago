@@ -1,5 +1,5 @@
 from asyncio import gather
-from typing import Any, List, Optional, Union, cast
+from typing import Any, Awaitable, Callable, List, Optional, Union, cast
 
 from pydantic import PydanticTypeError, PydanticValueError
 from pydantic.color import Color
@@ -29,16 +29,10 @@ from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread
 from ..tables import users
 from ..threads.models import Post, Thread
-from ..types import Validator
 from ..users.email import get_email_hash
 from ..utils.lists import remove_none_items
 
-
-async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
-    category = await load_category(context, category_id)
-    if category:
-        return category.type
-    return 0
+Validator = Callable[[Any, ErrorsList, str], Union[Awaitable[Any], Any]]
 
 
 class BulkValidator:
@@ -214,6 +208,13 @@ class PostExistsValidator:
         if category_type != self._category_type:
             raise PostDoesNotExistError(post_id=post_id)
         return post
+
+
+async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
+    category = await load_category(context, category_id)
+    if category:
+        return category.type
+    return 0
 
 
 class PostThreadValidator:

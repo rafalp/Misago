@@ -8,7 +8,6 @@ from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
 from ....threads.models import Thread
 from ....threads.move import move_thread
-from ....types import Validator
 from ....validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
@@ -16,6 +15,7 @@ from ....validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

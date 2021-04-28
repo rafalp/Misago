@@ -8,7 +8,6 @@ from ....errors import ErrorsList
 from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
 from ....threads.models import Thread
-from ....types import Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
@@ -16,6 +15,7 @@ from ....validation import (
     ThreadPostExistsValidator,
     ThreadPostIsReplyValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

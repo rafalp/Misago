@@ -5,8 +5,9 @@ from faker import Faker
 
 from misago.categories.get import get_all_categories
 from misago.cli import cli
+from misago.threads.models import Post, Thread
 from misago.threads.update import update_thread
-from misago.types import Post, Thread, User
+from misago.users.models import User
 from misago.utils.async_context import uses_database
 
 from .categories import create_fake_category

@@ -22,13 +22,13 @@ from ....threads.create import create_post
 from ....threads.hooks.createpost import create_post_hook
 from ....threads.models import Post, Thread
 from ....threads.update import update_thread
-from ....types import Validator
 from ....validation import (
     CategoryIsOpenValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

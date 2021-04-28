@@ -7,12 +7,12 @@ from pydantic import PositiveInt, create_model
 from ....errors import ErrorsList
 from ....loaders import clear_all_posts, clear_thread
 from ....threads.delete import delete_thread
-from ....types import Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

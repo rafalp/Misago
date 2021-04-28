@@ -9,12 +9,12 @@ from ....auth.hooks import create_user_token_hook
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
-from ....types import Validator
 from ....users.create import create_user
 from ....users.hooks import create_user_hook
 from ....validation import (
     EmailIsAvailableValidator,
     UsernameIsAvailableValidator,
+    Validator,
     passwordstr,
     usernamestr,
     validate_data,

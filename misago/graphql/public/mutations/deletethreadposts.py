@@ -8,7 +8,6 @@ from ....errors import ErrorsList
 from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_posts
 from ....threads.models import Thread
-from ....types import Validator
 from ....validation import (
     ROOT_LOCATION,
     CategoryModeratorValidator,
@@ -18,6 +17,7 @@ from ....validation import (
     ThreadPostExistsValidator,
     ThreadPostIsReplyValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     bulkactionidslist,
     validate_data,
     validate_model,

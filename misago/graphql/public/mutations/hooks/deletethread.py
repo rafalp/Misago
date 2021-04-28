@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
-from .....types import Validator
+from .....validation import Validator
 from .... import GraphQLContext
 
 DeleteThreadInputModel = Type[BaseModel]

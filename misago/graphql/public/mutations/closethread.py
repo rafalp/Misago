@@ -8,12 +8,12 @@ from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
 from ....threads.close import close_thread
 from ....threads.models import Thread
-from ....types import Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
     UserIsAuthorizedRootValidator,
+    Validator,
     validate_data,
     validate_model,
 )

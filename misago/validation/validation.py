@@ -6,7 +6,7 @@ from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 from pydantic import validate_model as pydantic_validate_model
 
 from ..errors import AuthError, ErrorsList
-from ..types import Validator
+from .validators import Validator
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
 
