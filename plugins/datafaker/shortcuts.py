@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 from faker import Faker
 
-from misago.types import User
+from misago.users.models import User
 
 from .randomrow import get_random_user
 from .users import get_fake_username

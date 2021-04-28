@@ -9,8 +9,9 @@ from misago.categories.get import get_all_categories
 from misago.database import database
 from misago.database.queries import update
 from misago.tables import users
+from misago.threads.models import Post, Thread
 from misago.threads.update import update_thread
-from misago.types import Post, Thread, User
+from misago.users.models import User
 from misago.utils import timezone
 
 from .randomrow import get_random_thread

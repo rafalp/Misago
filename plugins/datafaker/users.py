@@ -5,8 +5,8 @@ from typing import Optional
 from asyncpg.exceptions import UniqueViolationError
 from faker import Faker
 
-from misago.types import User
 from misago.users.create import create_user
+from misago.users.models import User
 from misago.utils.strings import get_random_string
 
 

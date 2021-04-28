@@ -78,7 +78,9 @@ async def createfakethreads(count):
         starter, starter_name = await get_random_poster(fake)
 
         thread = await create_fake_thread(
-            category, starter=starter, starter_name=starter_name,
+            category,
+            starter=starter,
+            starter_name=starter_name,
         )
         click.echo(f"- #{thread.id} in {category.name}")
 

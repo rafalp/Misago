@@ -6,7 +6,8 @@ from sqlalchemy.sql import TableClause
 
 from misago.database import database
 from misago.tables import threads, users
-from misago.types import Thread, User
+from misago.threads.models import Thread
+from misago.users.models import User
 
 
 async def get_random_thread() -> Optional[Thread]:

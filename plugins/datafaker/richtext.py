@@ -1,7 +1,6 @@
 import random
 
-from misago.richtext import get_block_id
-from misago.types import RichText, RichTextBlock
+from misago.richtext import RichText, RichTextBlock, get_block_id
 
 from .sentences import Sentences
 

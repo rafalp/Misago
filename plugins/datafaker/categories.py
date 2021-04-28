@@ -3,9 +3,9 @@ from typing import Optional
 
 from faker import Faker
 
-from misago.types import Category
 from misago.categories.create import create_category
 from misago.categories.get import get_all_categories
+from misago.categories.models import Category
 from misago.categories.tree import insert_category
 
 

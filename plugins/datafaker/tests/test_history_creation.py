@@ -1,7 +1,8 @@
 import pytest
 
+from misago.threads.models import Post, Thread
 from misago.users.get import get_user_by_id
-from misago.types import Post, Thread, User
+from misago.users.models import User
 
 from ..history import create_fake_forum_history
 
