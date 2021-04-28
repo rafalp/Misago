@@ -3,10 +3,11 @@ from typing import List, Optional, Sequence
 from sqlalchemy import asc, desc
 from sqlalchemy.sql import ClauseElement
 
+from ..categories.models import Category
 from ..database import database
 from ..database.paginator import PageDoesNotExist, Paginator
 from ..tables import posts, threads
-from ..types import Category, Post, Thread, ThreadPostsPage, ThreadsFeed
+from .models import Post, Thread, ThreadPostsPage, ThreadsFeed
 
 
 async def get_post_by_id(post_id: int) -> Optional[Post]:

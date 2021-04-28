@@ -2,8 +2,8 @@ from typing import List, Optional, Sequence
 
 from ..database import database
 from ..tables import users
-from ..types import User
 from .email import get_email_hash
+from .models import User
 
 
 async def get_user_by_id(user_id: int) -> Optional[User]:

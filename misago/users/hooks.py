@@ -1,8 +1,9 @@
 from datetime import datetime
 from typing import Any, Awaitable, Dict, Optional, Protocol
 
-from ..hooks.filter import FilterHook
-from ..types import GraphQLContext, User
+from ..graphql import GraphQLContext
+from ..hooks import FilterHook
+from .models import User
 
 
 class CreateUserAction(Protocol):

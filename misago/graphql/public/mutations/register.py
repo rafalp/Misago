@@ -5,12 +5,13 @@ from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ....auth import create_user_token
+from ....auth.hooks import create_user_token_hook
 from ....errors import ErrorsList
-from ....hooks.createuser import create_user_hook
-from ....hooks.auth import create_user_token_hook
 from ....loaders import store_user
-from ....types import GraphQLContext, User, Validator
+from ....types import Validator
 from ....users.create import create_user
+from ....users.hooks import create_user_hook
+from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,
     UsernameIsAvailableValidator,
@@ -19,6 +20,7 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.registeruser import (
     RegisterUserInput,

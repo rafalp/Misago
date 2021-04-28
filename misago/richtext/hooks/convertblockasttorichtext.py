@@ -1,7 +1,8 @@
 from typing import Optional, Protocol
 
-from ..types import GraphQLContext, ParsedMarkupMetadata, RichTextBlock
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ..types import ParsedMarkupMetadata, RichTextBlock
 
 
 class ConvertBlockAstToRichTextAction(Protocol):

@@ -1,7 +1,7 @@
 from typing import List
 
-from ..types import ParsedMarkupMetadata
 from ..users.get import get_users_by_name
+from .types import ParsedMarkupMetadata
 
 MAX_MENTIONED_USERS = 20
 

@@ -1,4 +1,4 @@
-from ..category import Category
+from ..models import Category
 
 
 def category_factory(*, id, left, right):  # pylint: disable=redefined-builtin

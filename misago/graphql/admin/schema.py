@@ -2,7 +2,7 @@ import os
 
 from ariadne import load_schema_from_path, make_executable_schema
 
-from ...hooks import (
+from ..hooks import (
     graphql_admin_directives_hook,
     graphql_admin_type_defs_hook,
     graphql_admin_types_hook,

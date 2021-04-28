@@ -3,11 +3,12 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from ..database.queries import update
+from ..graphql import GraphQLContext
 from ..passwords import hash_password
 from ..tables import users
-from ..types import GraphQLContext, User
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
+from .models import User
 
 
 async def update_user(

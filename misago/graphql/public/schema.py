@@ -2,7 +2,7 @@ import os
 
 from ariadne import load_schema_from_path, make_executable_schema
 
-from ...hooks import graphql_directives_hook, graphql_type_defs_hook, graphql_types_hook
+from ..hooks import graphql_directives_hook, graphql_type_defs_hook, graphql_types_hook
 from ..shared.scalars import shared_scalars
 from ..shared.schema import shared_type_defs
 from ..shared.types import shared_types

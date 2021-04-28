@@ -4,10 +4,11 @@ from typing import Any, Dict, Optional
 from ..database import queries
 from ..passwords import hash_password
 from ..tables import users
-from ..types import GraphQLContext, User
+from ..graphql import GraphQLContext
 from ..utils import timezone
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
+from .models import User
 
 
 async def create_user(

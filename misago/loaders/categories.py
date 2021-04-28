@@ -2,7 +2,8 @@ from asyncio import Future
 from typing import Dict, List, Optional, Union
 
 from ..categories.get import get_all_categories
-from ..types import Category, GraphQLContext
+from ..categories.models import Category
+from ..graphql import GraphQLContext
 from ..utils.strings import parse_db_id
 from .loader import list_loader
 

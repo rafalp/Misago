@@ -5,24 +5,23 @@ from typing import List, Optional, Tuple, cast
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 from mistune.plugins import plugin_strikethrough
 
-from ..hooks.convertblockasttorichtext import convert_block_ast_to_rich_text_hook
-from ..hooks.convertinlineasttotext import convert_inline_ast_to_text_hook
-from ..hooks.createmarkdown import MarkdownPlugin, create_markdown_hook
-from ..hooks.markdown import markdown_hook
-from ..hooks.parsemarkup import parse_markup_hook
-from ..hooks.updatemarkupmetadata import update_markup_metadata_hook
-from ..types import (
-    GraphQLContext,
-    ParsedMarkupMetadata,
-    RichText,
-    RichTextBlock,
-)
+from ..graphql import GraphQLContext
 from ..utils.strings import get_random_string
 from .genericblocks import restructure_generic_blocks
 from .highlight import highlight_code
+from .hooks import (
+    MarkdownPlugin,
+    convert_block_ast_to_rich_text_hook,
+    convert_inline_ast_to_text_hook,
+    create_markdown_hook,
+    markdown_hook,
+    parse_markup_hook,
+    update_markup_metadata_hook,
+)
 from .mentions import clean_mention, find_user_mentions, update_metadata_from_mentions
 from .plugins import builtin_plugins
 from .scanner import MisagoScanner
+from .types import ParsedMarkupMetadata, RichText, RichTextBlock
 
 
 async def parse_markup(

@@ -3,8 +3,8 @@ from typing import Dict, Optional
 from ariadne import SubscriptionType, convert_kwargs_to_snake_case
 
 from ....categories.get import get_category_by_id
+from ....categories.models import Category
 from ....pubsub.threads import threads_updates
-from ....types import Category
 from ....utils.strings import parse_db_id
 
 threads_subscription = SubscriptionType()

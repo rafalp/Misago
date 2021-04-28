@@ -1,6 +1,6 @@
 from ..database.queries import delete
 from ..tables import categories
-from ..types import Category
+from .models import Category
 
 
 async def delete_category(category: Category):

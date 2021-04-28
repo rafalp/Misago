@@ -3,9 +3,11 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
+from ....categories.models import Category
 from ....loaders import load_category, load_thread, load_thread_post_url, load_user
 from ....richtext.html import convert_rich_text_to_html
-from ....types import Category, Post, Thread, User
+from ....threads.models import Post, Thread
+from ....users.models import User
 
 post_type = ObjectType("Post")
 

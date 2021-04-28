@@ -1,14 +1,11 @@
 from datetime import datetime
 from typing import Any, Awaitable, Dict, Optional, Protocol
 
-from ..types import (
-    GraphQLContext,
-    Post,
-    RichText,
-    Thread,
-    User,
-)
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ...richtext import RichText
+from ...users.models import User
+from ..models import Post, Thread
 
 
 class CreatePostAction(Protocol):

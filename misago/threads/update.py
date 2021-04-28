@@ -2,10 +2,14 @@ from dataclasses import replace
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from ..categories.models import Category
 from ..database.queries import update
+from ..graphql import GraphQLContext
+from ..richtext import RichText
 from ..tables import posts, threads
-from ..types import Category, GraphQLContext, Post, RichText, Thread, User
 from ..utils.strings import slugify
+from ..users.models import User
+from .models import Post, Thread
 
 
 async def update_post(

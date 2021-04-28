@@ -5,10 +5,10 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt
 
 from ....categories.get import get_all_categories
+from ....categories.models import Category
 from ....categories.tree import move_category
 from ....categories.update import update_category
 from ....categories.validators import validate_category_parent
-from ....types import Category
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,

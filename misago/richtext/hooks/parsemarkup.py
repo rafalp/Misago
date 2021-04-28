@@ -1,7 +1,8 @@
 from typing import Awaitable, Protocol, Tuple
 
-from ..types import GraphQLContext, ParsedMarkupMetadata, RichText
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ..types import ParsedMarkupMetadata, RichText
 
 
 class ParseMarkupAction(Protocol):

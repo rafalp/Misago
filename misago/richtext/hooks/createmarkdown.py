@@ -2,8 +2,8 @@ from typing import Callable, List, Protocol
 
 from mistune import BlockParser, InlineParser, Markdown
 
-from ..types import GraphQLContext
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
 
 MarkdownPlugin = Callable[[Markdown], None]
 

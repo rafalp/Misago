@@ -1,6 +1,6 @@
 from ..database.queries import count
 from ..tables import posts, threads
-from ..types import Category
+from .models import Category
 from .update import update_category
 
 

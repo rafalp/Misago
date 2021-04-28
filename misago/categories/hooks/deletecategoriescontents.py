@@ -1,7 +1,7 @@
 from typing import Iterable, Protocol
 
-from ..types import Category
-from .filter import FilterHook
+from ...hooks import FilterHook
+from ..models import Category
 
 
 class DeleteCategoriesContentsAction(Protocol):

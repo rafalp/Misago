@@ -2,10 +2,14 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from ..database import queries
+from ..categories.models import Category
+from ..graphql import GraphQLContext
+from ..richtext import RichText
 from ..tables import posts, threads
-from ..types import Category, GraphQLContext, Post, RichText, Thread, User
+from ..users.models import User
 from ..utils import timezone
 from ..utils.strings import slugify
+from .models import Post, Thread
 
 
 async def create_post(

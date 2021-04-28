@@ -1,10 +1,12 @@
 from asyncio import gather
+from typing import Dict
 
 from ..database import database
 from ..database.queries import fetch_all
 from ..tables import cache_versions
-from ..types import CacheVersions
 from .utils import generate_version_string
+
+CacheVersions = Dict[str, str]
 
 
 async def get_cache_versions() -> CacheVersions:

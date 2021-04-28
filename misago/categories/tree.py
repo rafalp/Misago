@@ -1,8 +1,8 @@
 from dataclasses import replace
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-from ..types import Category
 from . import delete
+from .models import Category
 from .update import update_category
 
 

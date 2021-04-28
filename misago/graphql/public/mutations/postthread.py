@@ -9,20 +9,15 @@ from ....auth import get_authenticated_user
 from ....categories.update import update_category
 from ....database import database
 from ....errors import ErrorsList
-from ....hooks.createpost import create_post_hook
-from ....hooks.createthread import create_thread_hook
 from ....loaders import store_category, store_post, store_thread
 from ....pubsub.threads import publish_thread_update
-from ....richtext import parse_markup
+from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.create import create_post, create_thread
+from ....threads.hooks.createpost import create_post_hook
+from ....threads.hooks.createthread import create_thread_hook
+from ....threads.models import Post, Thread
 from ....threads.update import update_thread
-from ....types import (
-    GraphQLContext,
-    ParsedMarkupMetadata,
-    Post,
-    Thread,
-    Validator,
-)
+from ....types import Validator
 from ....validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
@@ -32,6 +27,7 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postthread import (
     PostThreadInput,

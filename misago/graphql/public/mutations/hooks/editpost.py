@@ -4,13 +4,10 @@ from pydantic import BaseModel
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
-from .....types import (
-    GraphQLContext,
-    ParsedMarkupMetadata,
-    Post,
-    Thread,
-    Validator,
-)
+from .....richtext import ParsedMarkupMetadata
+from .....threads.models import Post, Thread
+from .....types import Validator
+from .... import GraphQLContext
 
 EditPostInputModel = Type[BaseModel]
 EditPostInputModelAction = Callable[[GraphQLContext], Awaitable[EditPostInputModel]]

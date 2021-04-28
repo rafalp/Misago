@@ -1,15 +1,12 @@
 from datetime import datetime
 from typing import Awaitable, Optional, Protocol
 
-from ..types import (
-    Category,
-    GraphQLContext,
-    Post,
-    RichText,
-    Thread,
-    User,
-)
-from .filter import FilterHook
+from ...categories.models import Category
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ...richtext import RichText
+from ...users.models import User
+from ..models import Post, Thread
 
 
 class UpdatePostAction(Protocol):

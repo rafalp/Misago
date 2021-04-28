@@ -2,7 +2,7 @@ from asyncio import iscoroutinefunction
 from functools import wraps
 
 from ..conf.dynamicsettings import DynamicSettings
-from ..types import Setting
+from ..conf.types import Setting
 
 
 class override_dynamic_settings:

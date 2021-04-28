@@ -1,7 +1,7 @@
 from typing import Optional
 
-from ..types import Category
 from .errors import CategoryInvalidParentError
+from .models import Category
 
 
 def validate_category_parent(

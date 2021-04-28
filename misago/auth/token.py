@@ -4,13 +4,14 @@ from typing import Any, Dict, Optional
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..hooks.auth import (
+from ..graphql import GraphQLContext
+from ..utils import timezone
+from ..users.models import User
+from .hooks import (
     create_user_token_payload_hook,
     get_auth_user_hook,
     get_user_from_token_payload_hook,
 )
-from ..types import GraphQLContext, User
-from ..utils import timezone
 from .user import get_user
 
 JWT_ALGORITHM = "HS256"

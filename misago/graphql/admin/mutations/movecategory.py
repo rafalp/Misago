@@ -6,9 +6,9 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
+from ....categories.models import Category
 from ....categories.tree import move_category
 from ....loaders import clear_categories
-from ....types import Category
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,

@@ -1,7 +1,9 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
+from ..categories.models import Category
+from ..graphql import GraphQLContext
 from ..threads.get import get_threads_by_id, get_threads_feed
-from ..types import Category, GraphQLContext, Thread, ThreadsFeed
+from ..threads.models import Thread, ThreadsFeed
 from ..utils.strings import parse_db_id
 from .loader import get_loader
 

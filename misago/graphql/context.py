@@ -1,8 +1,11 @@
+from typing import Any, Dict
+
 from starlette.requests import Request
 
 from ..cacheversions import get_cache_versions
 from ..conf.dynamicsettings import get_dynamic_settings
-from ..types import GraphQLContext
+
+GraphQLContext = Dict[str, Any]
 
 
 async def get_graphql_context(request: Request) -> GraphQLContext:

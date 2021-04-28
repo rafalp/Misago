@@ -1,8 +1,8 @@
 from typing import Optional
 
 from ..cache import cache
-from ..cacheversions import invalidate_cache
-from ..types import CacheVersions, Settings
+from ..cacheversions import CacheVersions, invalidate_cache
+from .types import Settings
 
 SETTINGS_CACHE = "settings"
 

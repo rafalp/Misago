@@ -7,6 +7,7 @@ from sqlalchemy.sql import select
 
 from ..auth import get_authenticated_user
 from ..categories import CategoryTypes
+from ..categories.models import Category
 from ..database import database
 from ..errors import (
     AuthError,
@@ -24,9 +25,11 @@ from ..errors import (
     ThreadFirstPostError,
     UsernameNotAvailableError,
 )
+from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread
 from ..tables import users
-from ..types import Category, GraphQLContext, Post, Thread, Validator
+from ..threads.models import Post, Thread
+from ..types import Validator
 from ..users.email import get_email_hash
 from ..utils.lists import remove_none_items
 

@@ -4,7 +4,7 @@ from typing import Any, Awaitable, Callable, Dict, List, Sequence
 
 from aiodataloader import DataLoader
 
-from ..types import GraphQLContext
+from ..graphql import GraphQLContext
 from ..utils.strings import parse_db_id
 
 LoaderFunction = Callable[[Sequence[Any]], Awaitable[Sequence[Any]]]

@@ -5,13 +5,13 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, constr, create_model
 
 from ....auth import create_user_token
+from ....auth.hooks import create_user_token_hook
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
-from ....hooks.auth import create_user_token_hook
-from ....hooks.createuser import create_user_hook
-from ....types import GraphQLContext, Validator
+from ....types import Validator
 from ....users.create import create_user
+from ....users.hooks import create_user_hook
 from ....validation import (
     EmailIsAvailableValidator,
     UsernameIsAvailableValidator,
@@ -20,6 +20,7 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ... import GraphQLContext
 from ...errorhandler import error_handler
 
 setup_site_mutation = MutationType()

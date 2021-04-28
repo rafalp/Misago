@@ -3,8 +3,8 @@ from typing import Awaitable, List, Optional
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
+from ....categories.models import Category
 from ....loaders import load_category, load_category_children
-from ....types import Category
 
 category_type = ObjectType("Category")
 

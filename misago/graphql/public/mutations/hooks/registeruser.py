@@ -4,7 +4,9 @@ from pydantic import BaseModel
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
-from .....types import GraphQLContext, User, Validator
+from .....types import Validator
+from .....users.models import User
+from .... import GraphQLContext
 
 RegisterUserInputModel = Type[BaseModel]
 RegisterUserInputModelAction = Callable[

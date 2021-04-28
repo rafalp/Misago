@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterable, Optional
 from ariadne import ObjectType
 
 from ....conf import settings
-from ....types import User
+from ....users.models import User
 
 user_type = ObjectType("User")
 

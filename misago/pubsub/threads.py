@@ -1,6 +1,6 @@
 import json
 
-from ..types import Thread
+from ..threads.models import Thread
 from .broadcast import broadcast
 
 THREADS_CHANNEL = "threads_updates"

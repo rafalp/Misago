@@ -1,6 +1,6 @@
 import pytest
 
-from ...types import Category
+from ..models import Category
 from ..tree import CategoryTree
 
 

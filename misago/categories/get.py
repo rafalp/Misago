@@ -4,8 +4,8 @@ from sqlalchemy import and_
 
 from ..database import database
 from ..tables import categories
-from ..types import Category
 from .categorytypes import CategoryTypes
+from .models import Category
 
 
 async def get_all_categories(

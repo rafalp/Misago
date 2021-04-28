@@ -4,9 +4,10 @@ from typing import cast
 
 from sqlalchemy import and_
 
+from ..conf.types import Settings
 from ..database.queries import count
 from ..tables import posts
-from ..types import Post, Settings, Thread
+from .models import Post, Thread
 
 
 async def get_thread_post_url(settings: Settings, thread: Thread, post: Post) -> str:

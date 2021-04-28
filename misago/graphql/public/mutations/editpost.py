@@ -5,17 +5,12 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ....errors import ErrorsList
-from ....hooks.updatepost import update_post_hook
 from ....loaders import load_post, load_thread, store_post
-from ....richtext.parser import parse_markup
+from ....richtext.parser import ParsedMarkupMetadata, parse_markup
+from ....threads.hooks.updatepost import update_post_hook
+from ....threads.models import Post, Thread
 from ....threads.update import update_post
-from ....types import (
-    GraphQLContext,
-    ParsedMarkupMetadata,
-    Post,
-    Thread,
-    Validator,
-)
+from ....types import Validator
 from ....validation import (
     CategoryIsOpenValidator,
     PostAuthorValidator,
@@ -27,6 +22,7 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.editpost import (
     EditPostInput,

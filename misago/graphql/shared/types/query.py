@@ -1,7 +1,7 @@
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
-from ....types import Settings
+from ....conf.types import Settings
 
 query_type = QueryType()
 

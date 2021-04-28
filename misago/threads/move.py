@@ -2,10 +2,11 @@ from asyncio import gather
 from dataclasses import replace
 from typing import List, Iterable
 
+from ..categories.models import Category
 from ..database import database
 from ..tables import posts
 from ..tables import threads as threads_table
-from ..types import Category, Thread
+from .models import Thread
 from .update import update_thread
 
 

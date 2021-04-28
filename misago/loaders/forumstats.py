@@ -1,5 +1,5 @@
 from ..forumstats import get_forum_stats
-from ..types import GraphQLContext
+from ..graphql import GraphQLContext
 
 CACHE_NAME = "__forum_stats"
 

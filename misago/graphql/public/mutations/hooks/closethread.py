@@ -4,7 +4,9 @@ from pydantic import BaseModel
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
-from .....types import GraphQLContext, Thread, Validator
+from .....threads.models import Thread
+from .....types import Validator
+from .... import GraphQLContext
 
 CloseThreadInputModel = Type[BaseModel]
 CloseThreadInputModelAction = Callable[

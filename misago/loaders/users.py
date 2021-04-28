@@ -1,7 +1,8 @@
 from typing import Awaitable, Iterable, Optional, Sequence, Union
 
-from ..types import GraphQLContext, User
+from ..graphql import GraphQLContext
 from ..users.get import get_users_by_id
+from ..users.models import User
 from .loader import get_loader
 
 

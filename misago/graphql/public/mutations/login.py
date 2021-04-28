@@ -2,8 +2,8 @@ from ariadne import MutationType
 from graphql import GraphQLResolveInfo
 
 from ....auth import authenticate_user, create_user_token
+from ....auth.hooks import authenticate_user_hook, create_user_token_hook
 from ....errors import AllFieldsAreRequiredError, InvalidCredentialsError
-from ....hooks.auth import authenticate_user_hook, create_user_token_hook
 from ...errorhandler import error_handler
 
 login_mutation = MutationType()

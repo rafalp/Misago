@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 
 from ....database.paginator import Paginator
 from ....loaders import load_thread_posts_page
-from ....types import ThreadPostsPage
+from ....threads.models import ThreadPostsPage
 
 thread_posts_type = ObjectType("ThreadPosts")
 

@@ -4,8 +4,8 @@ from typing import Any, Callable, Generator, Type, cast
 from pydantic import ConstrainedList, ConstrainedStr, constr
 from pydantic.validators import list_validator
 
+from ..conf.types import Settings
 from ..errors import ListRepeatedItemsError, UsernameError
-from ..types import Settings
 
 CallableGenerator = Generator[Callable[..., Any], None, None]
 

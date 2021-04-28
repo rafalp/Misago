@@ -3,7 +3,7 @@ from typing import List, Sequence
 
 from ..database import database
 from ..tables import threads as threads_table
-from ..types import Thread
+from .models import Thread
 from .update import update_thread
 
 

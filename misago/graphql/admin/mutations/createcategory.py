@@ -8,8 +8,8 @@ from pydantic.color import Color
 from ....categories.create import create_category
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
+from ....categories.models import Category
 from ....categories.tree import insert_category
-from ....types import Category
 from ....validation import (
     CategoryExistsValidator,
     color_validator,

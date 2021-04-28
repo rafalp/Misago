@@ -7,7 +7,8 @@ from pydantic import PositiveInt, create_model
 from ....errors import ErrorsList
 from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
-from ....types import GraphQLContext, Thread, Validator
+from ....threads.models import Thread
+from ....types import Validator
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
@@ -18,6 +19,7 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.deletethreadpost import (
     DeleteThreadPostInput,

@@ -3,6 +3,7 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
+from ....categories.models import Category
 from ....database.paginator import Paginator
 from ....loaders import (
     load_category,
@@ -11,7 +12,8 @@ from ....loaders import (
     load_thread_posts_paginator,
     load_user,
 )
-from ....types import Category, Post, Thread, User
+from ....threads.models import Post, Thread
+from ....users.models import User
 
 thread_type = ObjectType("Thread")
 

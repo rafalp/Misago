@@ -1,7 +1,8 @@
 from typing import Any, Awaitable, Callable, Dict, Optional
 
-from ..types import GraphQLContext, User
-from .filter import FilterHook
+from ..graphql import GraphQLContext
+from ..hooks import FilterHook
+from ..users.models import User
 
 
 AuthenticateUserAction = Callable[

@@ -3,7 +3,7 @@ from typing import Any
 
 from ..database.queries import update
 from ..tables import settings
-from ..types import Settings
+from .types import Settings
 
 
 async def update_settings(settings: Settings):

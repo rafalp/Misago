@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional, Union
 
 from ..database.queries import update
 from ..tables import categories
-from ..types import Category
 from ..utils.strings import slugify
+from .models import Category
 
 
 async def update_category(

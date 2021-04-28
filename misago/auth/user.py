@@ -1,7 +1,8 @@
 from typing import Optional
 
+from ..graphql import GraphQLContext
 from ..loaders import load_user
-from ..types import GraphQLContext, User
+from ..users.models import User
 
 
 async def get_user(

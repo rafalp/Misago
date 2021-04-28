@@ -5,7 +5,7 @@ from sqlalchemy import asc, or_
 from ..database import database
 from ..database.queries import istartswith
 from ..tables import users
-from ..types import User
+from .models import User
 
 RESULTS_MAX_LIMIT = 50
 

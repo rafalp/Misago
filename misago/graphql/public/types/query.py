@@ -4,6 +4,7 @@ from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
 from ....auth import get_authenticated_user
+from ....categories.models import Category
 from ....loaders import (
     load_categories,
     load_category,
@@ -15,8 +16,9 @@ from ....loaders import (
     load_threads_feed,
     load_user,
 )
-from ....richtext import parse_markup
-from ....types import Category, Post, RichText, Thread, ThreadsFeed, User
+from ....richtext import RichText, parse_markup
+from ....threads.models import Post, Thread, ThreadsFeed
+from ....users.models import User
 
 query_type = QueryType()
 

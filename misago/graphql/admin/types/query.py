@@ -3,8 +3,8 @@ from typing import Awaitable, List
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
+from ....categories.models import Category
 from ....loaders import load_root_categories
-from ....types import Category
 from ..decorators import admin_query
 
 query_type = QueryType()

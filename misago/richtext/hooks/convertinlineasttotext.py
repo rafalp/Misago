@@ -1,7 +1,8 @@
 from typing import Optional, Protocol
 
-from ..types import GraphQLContext, ParsedMarkupMetadata
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ..types import ParsedMarkupMetadata
 
 
 class ConvertInlineAstToTextAction(Protocol):

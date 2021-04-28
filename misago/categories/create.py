@@ -2,9 +2,9 @@ from typing import Any, Dict, Optional
 
 from ..database import queries
 from ..tables import categories
-from ..types import Category
 from ..utils.strings import slugify
 from .categorytypes import CategoryTypes
+from .models import Category
 
 
 async def create_category(

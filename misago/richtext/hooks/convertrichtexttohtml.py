@@ -1,7 +1,8 @@
 from typing import Protocol
 
-from ..types import GraphQLContext, RichText
-from .filter import FilterHook
+from ...graphql import GraphQLContext
+from ...hooks import FilterHook
+from ..types import RichText
 
 
 class ConvertRichTextToHTMLAction(Protocol):
