@@ -6,7 +6,7 @@ from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
 from ....loaders import clear_all_posts, clear_threads, load_threads
-from ....threads.delete import delete_threads
+from ....threads.models import Thread
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
@@ -105,6 +105,7 @@ def is_valid(cleaned_data: DeleteThreadsInput, errors_locations: ErrorsList) -> 
 async def delete_threads_action(
     context: GraphQLContext, cleaned_data: DeleteThreadsInput
 ):
-    await delete_threads(cleaned_data["threads"])
+    threads_ids = [thread.id for thread in cleaned_data["threads"]]
+    await Thread.query.filter(id__in=threads_ids).delete()
     clear_threads(context, cleaned_data["threads"])
     clear_all_posts(context)

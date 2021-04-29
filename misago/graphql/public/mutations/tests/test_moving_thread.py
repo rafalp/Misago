@@ -1,7 +1,6 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_thread_by_id
 from ..movethread import resolve_move_thread
 
 
@@ -17,7 +16,7 @@ async def test_move_thread_mutation_moves_thread(
 
     assert not data.get("errors")
     assert data.get("thread")
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert data["thread"].category_id == sibling_category.id
 
 

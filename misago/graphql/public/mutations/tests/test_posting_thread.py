@@ -5,7 +5,6 @@ import pytest
 from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
 from .....testing import override_dynamic_settings
-from .....threads.get import get_post_by_id, get_thread_by_id
 from ..postthread import resolve_post_thread
 
 
@@ -25,7 +24,7 @@ async def test_post_thread_mutation_creates_new_thread(
 
     assert not data.get("errors")
     assert data.get("thread")
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert data["thread"].category_id == category.id
     assert data["thread"].starter_id == user.id
     assert data["thread"].starter_name == user.name
@@ -52,7 +51,7 @@ async def test_post_thread_mutation_creates_new_post(
     assert not data.get("errors")
     assert data.get("post")
     assert data["post"].id == data["thread"].first_post_id
-    assert data["post"] == await get_post_by_id(data["thread"].first_post_id)
+    assert data["post"] == await data["thread"].first_post
     assert data["post"].thread_id == data["thread"].id
     assert data["post"].category_id == category.id
     assert data["post"].poster_id == user.id
@@ -262,7 +261,7 @@ async def test_post_thread_mutation_creates_open_thread(
 
     assert not data.get("errors")
     assert data.get("thread")
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert not data["thread"].is_closed
 
 
@@ -283,7 +282,7 @@ async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
 
     assert not data.get("errors")
     assert data.get("thread")
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert data["thread"].is_closed
 
 

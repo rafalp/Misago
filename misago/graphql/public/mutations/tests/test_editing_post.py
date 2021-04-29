@@ -1,7 +1,6 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_post_by_id
 from ..editpost import resolve_edit_post
 
 
@@ -15,7 +14,7 @@ async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
 
     assert not data.get("errors")
     assert data.get("post")
-    assert data["post"] == await get_post_by_id(data["post"].id)
+    assert data["post"] == await data["post"].refresh_from_db()
     assert data["post"].markup == "Edited post"
     assert data["post"].rich_text[0]["type"] == "p"
     assert data["post"].rich_text[0]["text"] == "Edited post"

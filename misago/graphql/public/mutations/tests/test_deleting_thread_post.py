@@ -1,7 +1,7 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_post_by_id
+from .....threads.models import Post
 from ..deletethreadpost import resolve_delete_thread_post
 
 
@@ -18,7 +18,9 @@ async def test_delete_thread_post_mutation_deletes_thread_post(
     assert data.get("thread")
     assert not data.get("errors")
     assert data["deleted"] == [thread_reply.id]
-    assert await get_post_by_id(thread_reply.id) is None
+
+    with pytest.raises(Post.DoesNotExist):
+        await thread_reply.refresh_from_db()
 
 
 @pytest.mark.asyncio

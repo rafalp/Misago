@@ -1,7 +1,7 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_post_by_id
+from .....threads.models import Post
 from ..deletethreadposts import resolve_delete_thread_posts
 
 
@@ -18,7 +18,9 @@ async def test_delete_thread_posts_mutation_deletes_thread_reply(
     assert "errors" not in data
     assert data["thread"]
     assert data["deleted"] == [thread_reply.id]
-    assert await get_post_by_id(thread_reply.id) is None
+
+    with pytest.raises(Post.DoesNotExist):
+        await thread_reply.refresh_from_db()
 
 
 @pytest.mark.asyncio
@@ -186,5 +188,8 @@ async def test_delete_thread_posts_mutation_with_posts_errors_still_deletes_vali
     assert data["errors"].get_errors_locations() == ["posts.1"]
     assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
     assert data["deleted"] == [thread_reply.id]
-    assert await get_post_by_id(thread_reply.id) is None
-    assert await get_post_by_id(other_user_post.id) is not None
+
+    with pytest.raises(Post.DoesNotExist):
+        await thread_reply.refresh_from_db()
+
+    assert await other_user_post.refresh_from_db()

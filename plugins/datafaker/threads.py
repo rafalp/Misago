@@ -3,9 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 from misago.categories.models import Category
-from misago.threads.create import create_post, create_thread
 from misago.threads.models import Post, Thread
-from misago.threads.update import update_thread
 from misago.users.models import User
 
 from .richtext import create_fake_rich_text
@@ -28,7 +26,7 @@ async def create_fake_post(
 
     rich_text = create_fake_rich_text()
 
-    return await create_post(
+    return await Post.create(
         thread,
         markup,
         rich_text,
@@ -45,7 +43,7 @@ async def create_fake_thread(
     starter_name: Optional[str] = None,
     started_at: Optional[datetime] = None,
 ) -> Thread:
-    thread = await create_thread(
+    thread = await Thread.create(
         category,
         title=sentences.get_random_sentence(),
         starter=starter,
@@ -58,6 +56,6 @@ async def create_fake_thread(
         thread, poster=starter, poster_name=starter_name, posted_at=thread.started_at
     )
 
-    thread = await update_thread(thread, first_post=post, last_post=post)
+    thread = await thread.update(first_post=post, last_post=post)
 
     return thread

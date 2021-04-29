@@ -1,8 +1,7 @@
 import pytest
 
 from .....categories.get import get_all_categories, get_category_by_id
-from .....threads.get import get_post_by_id, get_thread_by_id
-from .....threads.update import update_post, update_thread
+from .....threads.models import Post, Thread
 from ..deletecategory import resolve_delete_category
 
 
@@ -85,8 +84,11 @@ async def test_delete_category_mutation_deletes_category_and_its_threads(
     assert not data.get("errors")
     assert data["deleted"]
 
-    assert await get_thread_by_id(thread.id) is None
-    assert await get_post_by_id(post.id) is None
+    with pytest.raises(Thread.DoesNotExist):
+        await thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        await post.refresh_from_db()
 
     db_categories = await get_all_categories()
     categories_ids = [c.id for c in db_categories]
@@ -105,8 +107,8 @@ async def test_delete_category_mutation_deletes_category_and_its_threads(
 async def test_delete_category_but_move_children_mutation_keeps_children_threads(
     admin_graphql_info, category, child_category, sibling_category, thread, post
 ):
-    await update_thread(thread, category=child_category)
-    await update_post(post, category=child_category)
+    await thread.update(category=child_category)
+    await post.update(category=child_category)
 
     data = await resolve_delete_category(
         None,
@@ -118,10 +120,10 @@ async def test_delete_category_but_move_children_mutation_keeps_children_threads
     assert not data.get("errors")
     assert data["deleted"]
 
-    updated_thread = await get_thread_by_id(thread.id)
+    updated_thread = await thread.refresh_from_db()
     assert updated_thread.category_id == child_category.id
 
-    updated_post = await get_post_by_id(post.id)
+    updated_post = await post.refresh_from_db()
     assert updated_post.category_id == child_category.id
 
 
@@ -129,8 +131,8 @@ async def test_delete_category_but_move_children_mutation_keeps_children_threads
 async def test_delete_category_mutation_deletes_children_threads(
     admin_graphql_info, category, child_category, thread, post
 ):
-    await update_thread(thread, category=child_category)
-    await update_post(post, category=child_category)
+    await thread.update(category=child_category)
+    await post.update(category=child_category)
 
     data = await resolve_delete_category(
         None,
@@ -141,16 +143,19 @@ async def test_delete_category_mutation_deletes_children_threads(
     assert not data.get("errors")
     assert data["deleted"]
 
-    assert await get_thread_by_id(thread.id) is None
-    assert await get_post_by_id(post.id) is None
+    with pytest.raises(Thread.DoesNotExist):
+        await thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        await post.refresh_from_db()
 
 
 @pytest.mark.asyncio
 async def test_delete_category_but_move_threads_mutation_moves_children_threads(
     admin_graphql_info, category, child_category, sibling_category, thread, post
 ):
-    await update_thread(thread, category=child_category)
-    await update_post(post, category=child_category)
+    await thread.update(category=child_category)
+    await post.update(category=child_category)
 
     data = await resolve_delete_category(
         None,
@@ -162,10 +167,10 @@ async def test_delete_category_but_move_threads_mutation_moves_children_threads(
     assert not data.get("errors")
     assert data["deleted"]
 
-    updated_thread = await get_thread_by_id(thread.id)
+    updated_thread = await thread.refresh_from_db()
     assert updated_thread.category_id == sibling_category.id
 
-    updated_post = await get_post_by_id(post.id)
+    updated_post = await post.refresh_from_db()
     assert updated_post.category_id == sibling_category.id
 
 
@@ -184,10 +189,10 @@ async def test_delete_category_but_move_all_mutation_moves_category_threads(
     assert not data.get("errors")
     assert data["deleted"]
 
-    updated_thread = await get_thread_by_id(thread.id)
+    updated_thread = await thread.refresh_from_db()
     assert updated_thread.category_id == sibling_category.id
 
-    updated_post = await get_post_by_id(post.id)
+    updated_post = await post.refresh_from_db()
     assert updated_post.category_id == sibling_category.id
 
 
@@ -195,8 +200,8 @@ async def test_delete_category_but_move_all_mutation_moves_category_threads(
 async def test_delete_category_but_move_all_mutation_keeps_children_threads(
     admin_graphql_info, category, child_category, sibling_category, thread, post
 ):
-    await update_thread(thread, category=child_category)
-    await update_post(post, category=child_category)
+    await thread.update(category=child_category)
+    await post.update(category=child_category)
 
     data = await resolve_delete_category(
         None,
@@ -209,10 +214,10 @@ async def test_delete_category_but_move_all_mutation_keeps_children_threads(
     assert not data.get("errors")
     assert data["deleted"]
 
-    updated_thread = await get_thread_by_id(thread.id)
+    updated_thread = await thread.refresh_from_db()
     assert updated_thread.category_id == child_category.id
 
-    updated_post = await get_post_by_id(post.id)
+    updated_post = await post.refresh_from_db()
     assert updated_post.category_id == child_category.id
 
 

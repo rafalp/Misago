@@ -6,7 +6,6 @@ from faker import Faker
 from misago.categories.get import get_all_categories
 from misago.cli import cli
 from misago.threads.models import Post, Thread
-from misago.threads.update import update_thread
 from misago.users.models import User
 from misago.utils.async_context import uses_database
 
@@ -106,7 +105,7 @@ async def createfakeposts(count):
 
         poster, poster_name = await get_random_poster(fake)
         post = await create_fake_post(thread, poster=poster, poster_name=poster_name)
-        await update_thread(thread, last_post=post, increment_replies=True)
+        await thread.update(last_post=post, increment_replies=True)
 
         click.echo(f"- {post.poster_name} in thread #{thread.id}")
 

@@ -6,7 +6,6 @@ from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
-from ....threads.update import update_thread
 from ....threads.models import Thread
 from ....validation import (
     CategoryIsOpenValidator,
@@ -98,7 +97,7 @@ async def edit_thread_title(
     context: GraphQLContext, cleaned_data: EditThreadTitleInput
 ) -> Thread:
     thread = cleaned_data["thread"]
-    thread = await update_thread(thread, title=cleaned_data["title"])
+    thread = await thread.update(title=cleaned_data["title"])
 
     store_thread(context, thread)
 

@@ -1,33 +1,31 @@
 import pytest
 
 from ...utils import timezone
-from ..create import create_post, create_thread
-from ..get import get_post_by_id
-from ..update import update_post
+from ..models import Post, Thread
 
 
 @pytest.fixture
 async def thread(category):
-    return await create_thread(category, "Test thread", starter_name="Guest")
+    return await Thread.create(category, "Test thread", starter_name="Guest")
 
 
 @pytest.fixture
 async def post(thread):
-    return await create_post(thread, poster_name="Guest")
+    return await Post.create(thread, poster_name="Guest")
 
 
 @pytest.mark.asyncio
 async def test_post_category_is_updated(post, child_category):
-    updated_post = await update_post(post, category=child_category)
+    updated_post = await post.update(category=child_category)
     assert updated_post.category_id == child_category.id
 
 
 @pytest.mark.asyncio
 async def test_post_thread_is_updated(post, child_category):
-    other_thread = await create_thread(
+    other_thread = await Thread.create(
         child_category, "Test thread", starter_name="Guest"
     )
-    updated_post = await update_post(post, thread=other_thread)
+    updated_post = await post.update(thread=other_thread)
     assert updated_post.category_id == other_thread.category_id
     assert updated_post.thread_id == other_thread.id
 
@@ -36,45 +34,45 @@ async def test_post_thread_is_updated(post, child_category):
 async def test_updating_post_thread_and_category_raises_value_error(
     post, child_category
 ):
-    other_thread = await create_thread(
+    other_thread = await Thread.create(
         child_category, "Test thread", starter_name="Guest"
     )
     with pytest.raises(ValueError):
-        await update_post(post, category=child_category, thread=other_thread)
+        await post.update(category=child_category, thread=other_thread)
 
 
 @pytest.mark.asyncio
 async def test_post_markup_is_updated(post):
     new_markup = "Hello"
-    updated_post = await update_post(post, markup=new_markup)
+    updated_post = await post.update(markup=new_markup)
     assert updated_post.markup == new_markup
 
 
 @pytest.mark.asyncio
 async def test_post_rich_text_is_updated(post):
     new_rich_text = {"new": True}
-    updated_post = await update_post(post, rich_text=new_rich_text)
+    updated_post = await post.update(rich_text=new_rich_text)
     assert updated_post.rich_text == new_rich_text
 
 
 @pytest.mark.asyncio
 async def test_post_poster_is_updated(post, user):
-    updated_post = await update_post(post, poster=user)
+    updated_post = await post.update(poster=user)
     assert updated_post.poster_id == user.id
     assert updated_post.poster_name == user.name
 
 
 @pytest.mark.asyncio
 async def test_post_poster_name_is_updated(post):
-    updated_post = await update_post(post, poster_name="User")
+    updated_post = await post.update(poster_name="User")
     assert updated_post.poster_id is None
     assert updated_post.poster_name == "User"
 
 
 @pytest.mark.asyncio
 async def test_post_poster_can_be_removed(post, user):
-    post = await update_post(post, poster=user)
-    updated_post = await update_post(post, poster_name="Guest")
+    post = await post.update(poster=user)
+    updated_post = await post.update(poster_name="Guest")
     assert updated_post.poster_id is None
     assert updated_post.poster_name == "Guest"
 
@@ -82,39 +80,39 @@ async def test_post_poster_can_be_removed(post, user):
 @pytest.mark.asyncio
 async def test_updating_post_poster_and_poster_name_raises_value_error(post, user):
     with pytest.raises(ValueError):
-        await update_post(post, poster=user, poster_name=user.name)
+        await post.update(poster=user, poster_name=user.name)
 
 
 @pytest.mark.asyncio
 async def test_post_edits_count_is_updated(post):
-    updated_post = await update_post(post, edits=5)
+    updated_post = await post.update(edits=5)
     assert updated_post.edits == 5
 
 
 @pytest.mark.asyncio
 async def test_post_edits_count_can_be_incremented(post):
-    updated_post = await update_post(post, increment_edits=True)
+    updated_post = await post.update(increment_edits=True)
     assert updated_post.edits == 1
 
-    post_from_db = await get_post_by_id(post.id)
+    post_from_db = await post.refresh_from_db()
     assert post_from_db.edits == 1
 
 
 @pytest.mark.asyncio
 async def test_updating_and_incrementing_post_edits_raises_value_error(post):
     with pytest.raises(ValueError):
-        await update_post(post, edits=5, increment_edits=True)
+        await post.update(edits=5, increment_edits=True)
 
 
 @pytest.mark.asyncio
 async def test_post_date_is_updated(post):
     posted_at = timezone.now()
-    updated_post = await update_post(post, posted_at=posted_at)
+    updated_post = await post.update(posted_at=posted_at)
     assert updated_post.posted_at == posted_at
 
 
 @pytest.mark.asyncio
 async def test_post_extra_is_updated(post):
     new_extra = {"new": True}
-    updated_post = await update_post(post, extra=new_extra)
+    updated_post = await post.update(extra=new_extra)
     assert updated_post.extra == new_extra

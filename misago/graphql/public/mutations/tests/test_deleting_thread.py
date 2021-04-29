@@ -1,7 +1,7 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_thread_by_id
+from .....threads.models import Thread
 from ..deletethread import resolve_delete_thread
 
 
@@ -15,7 +15,9 @@ async def test_delete_thread_mutation_deletes_thread(moderator_graphql_info, thr
 
     assert not data.get("errors")
     assert data["deleted"] == [thread.id]
-    assert await get_thread_by_id(thread.id) is None
+
+    with pytest.raises(Thread.DoesNotExist):
+        await thread.refresh_from_db()
 
 
 @pytest.mark.asyncio

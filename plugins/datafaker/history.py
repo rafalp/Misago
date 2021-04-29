@@ -10,7 +10,6 @@ from misago.database import database
 from misago.database.queries import update
 from misago.tables import users
 from misago.threads.models import Post, Thread
-from misago.threads.update import update_thread
 from misago.users.models import User
 from misago.utils import timezone
 
@@ -59,7 +58,7 @@ async def create_fake_forum_history(
                     posted_at=action_date,
                 )
 
-                await update_thread(thread, last_post=post, increment_replies=True)
+                await thread.update(last_post=post, increment_replies=True)
 
                 yield post
 

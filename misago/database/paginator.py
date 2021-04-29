@@ -1,8 +1,7 @@
 import math
+from typing import Union
 
-from sqlalchemy.sql import Select
-
-from ..database.queries import count
+from .mapper import Mapper, MapperQuery
 
 
 class PageDoesNotExist(ValueError):
@@ -10,7 +9,7 @@ class PageDoesNotExist(ValueError):
 
 
 class Paginator:
-    _query: Select
+    _query: Union[Mapper, MapperQuery]
     _counted: bool
     _count: int
     _pages: int
@@ -20,7 +19,7 @@ class Paginator:
 
     def __init__(
         self,
-        query: Select,
+        query: Union[Mapper, MapperQuery],
         per_page: int,
         orphans: int = 0,
         overlap_pages: bool = False,
@@ -44,7 +43,7 @@ class Paginator:
 
     async def count_pages(self):
         self._counted = True
-        self._count = await count(self._query)
+        self._count = await self._query.count()
 
         if self.overlap_pages:
             self._pages = count_pages_with_overlaps(
@@ -65,7 +64,7 @@ class Paginator:
         if stop + self.orphans >= self._count:
             stop = self._count
 
-        page_query = self._query.offset(start).limit(stop - start)
+        page_query = self._query.start(start).stop(start)
         return Page(page_query, page_number, start, stop, self)
 
     async def get_offset_page(self, item_offset: int) -> int:
@@ -96,7 +95,7 @@ def count_pages_with_overlaps(count: int, per_page: int, orphans: int = 0) -> in
 
 class Page:
     _paginator: Paginator
-    _query: Select
+    _query: MapperQuery
 
     number: int
     start: int
@@ -108,10 +107,16 @@ class Page:
     has_next: bool
 
     def __init__(
-        self, query: Select, number: int, start: int, stop: int, paginator: Paginator
+        self,
+        query: MapperQuery,
+        number: int,
+        start: int,
+        stop: int,
+        paginator: Paginator,
     ):
         self._paginator = paginator
         self._query = query
+        self._items = query.all()
 
         self.number = number
         self.start = start
@@ -127,5 +132,9 @@ class Page:
         return self._paginator
 
     @property
-    def query(self) -> Select:
+    def query(self) -> MapperQuery:
         return self._query
+
+    @property
+    def items(self):
+        return self._items

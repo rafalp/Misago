@@ -1,8 +1,5 @@
 import pytest
-from sqlalchemy import desc
 
-from ...tables import threads
-from ..database import database
 from ..paginator import (
     PageDoesNotExist,
     Paginator,
@@ -13,16 +10,15 @@ from ..paginator import (
 
 @pytest.mark.asyncio
 async def test_paginator_returns_page(thread, category):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10)
     page = await paginator.get_page(1)
-    query = page.query.order_by(desc(threads.c.last_post_id))
-    assert await database.fetch_all(query)
+    assert await page.items
 
 
 @pytest.mark.asyncio
 async def test_paginator_raises_page_not_exists_error_for_zero_page(thread, category):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10)
     with pytest.raises(PageDoesNotExist):
         await paginator.get_page(0)
@@ -30,25 +26,23 @@ async def test_paginator_raises_page_not_exists_error_for_zero_page(thread, cate
 
 @pytest.mark.asyncio
 async def test_paginator_allows_orphans_to_be_set(thread, category):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10, orphans=1)
     page = await paginator.get_page(1)
-    query = page.query.order_by(desc(threads.c.last_post_id))
-    assert await database.fetch_all(query)
+    assert await page.items
 
 
 @pytest.mark.asyncio
 async def test_paginator_allows_page_overlapping_to_be_set(thread, category):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10, overlap_pages=True)
     page = await paginator.get_page(1)
-    query = page.query.order_by(desc(threads.c.last_post_id))
-    assert await database.fetch_all(query)
+    assert await page.items
 
 
 @pytest.mark.asyncio
 async def test_paginator_returns_page_for_given_offset(thread, category):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10)
     page = await paginator.get_offset_page(0)
     assert page == 1
@@ -58,7 +52,7 @@ async def test_paginator_returns_page_for_given_offset(thread, category):
 async def test_paginator_raises_page_not_exists_error_for_page_outside_range(
     thread, category
 ):
-    query = threads.select(None).where(threads.c.category_id == category.id)
+    query = category.threads_query.order_by("-last_post_id")
     paginator = Paginator(query, 10)
     with pytest.raises(PageDoesNotExist):
         await paginator.get_page(10)

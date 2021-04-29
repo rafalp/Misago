@@ -26,6 +26,15 @@ async def test_one_result_is_retrieved(db):
 
 
 @pytest.mark.asyncio
+async def test_one_result_is_retrieved_using_shortcut(db):
+    mapper = Mapper(settings)
+    result = await mapper.one(name="forum_name")
+    assert result
+    assert result["name"]
+    assert result["value"]
+
+
+@pytest.mark.asyncio
 async def test_multiple_results_exception_is_raised_when_one_is_expected(db):
     mapper = Mapper(settings)
     with pytest.raises(mapper.MultipleObjectsReturned):

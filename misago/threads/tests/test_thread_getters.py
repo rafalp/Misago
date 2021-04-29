@@ -1,16 +1,6 @@
 import pytest
 
-from ..get import get_thread_by_id, get_threads_by_id, get_threads_feed
-
-
-@pytest.mark.asyncio
-async def test_thread_can_be_get_by_id(thread):
-    assert thread == await get_thread_by_id(thread.id)
-
-
-@pytest.mark.asyncio
-async def test_getting_thread_by_nonexistent_id_returns_none(db):
-    assert await get_thread_by_id(1) is None
+from ..get import get_threads_by_id, get_threads_feed
 
 
 @pytest.mark.asyncio

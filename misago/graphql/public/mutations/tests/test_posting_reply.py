@@ -4,7 +4,6 @@ import pytest
 
 from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
-from .....threads.get import get_post_by_id, get_thread_by_id
 from ..postreply import resolve_post_reply
 
 
@@ -23,7 +22,7 @@ async def test_post_reply_mutation_creates_new_reply(
 
     assert not data.get("errors")
     assert data.get("post")
-    assert data["post"] == await get_post_by_id(data["post"].id)
+    assert data["post"] == await data["post"].refresh_from_db()
     assert data["post"].thread_id == data["thread"].id
     assert data["post"].category_id == thread.category_id
     assert data["post"].poster_id == user.id
@@ -51,7 +50,7 @@ async def test_post_reply_mutation_updates_thread(
     assert not data.get("errors")
     assert data.get("thread")
     assert data["post"].id == data["thread"].last_post_id
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert data["thread"].last_post_id != data["thread"].first_post_id
     assert data["thread"].id == thread.id
     assert data["thread"].starter_id != user.id

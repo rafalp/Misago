@@ -1,7 +1,6 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_thread_by_id
 from ..editthreadtitle import resolve_edit_thread_title
 
 
@@ -15,7 +14,7 @@ async def test_edit_title_mutation_updates_thread(user_graphql_info, user_thread
 
     assert not data.get("errors")
     assert data.get("thread")
-    assert data["thread"] == await get_thread_by_id(data["thread"].id)
+    assert data["thread"] == await data["thread"].refresh_from_db()
     assert data["thread"].title == "Edited thread"
     assert data["thread"].slug == "edited-thread"
 

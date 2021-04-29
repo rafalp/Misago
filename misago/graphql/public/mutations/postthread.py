@@ -12,11 +12,9 @@ from ....errors import ErrorsList
 from ....loaders import store_category, store_post, store_thread
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
-from ....threads.create import create_post, create_thread
 from ....threads.hooks.createpost import create_post_hook
 from ....threads.hooks.createthread import create_thread_hook
 from ....threads.models import Post, Thread
-from ....threads.update import update_thread
 from ....validation import (
     CategoryExistsValidator,
     CategoryIsOpenValidator,
@@ -111,6 +109,12 @@ async def post_thread(
     user = await get_authenticated_user(context)
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 
+    def create_thread(*args, **kwargs):
+        return Thread.create(*args, **kwargs)
+
+    def create_post(*args, **kwargs):
+        return Post.create(*args, **kwargs)
+
     async with database.transaction():
         thread = await create_thread_hook.call_action(
             create_thread,
@@ -130,7 +134,7 @@ async def post_thread(
         )
         category = cleaned_data["category"]
         thread, category = await gather(
-            update_thread(thread, first_post=post, last_post=post),
+            thread.update(first_post=post, last_post=post),
             update_category(category, increment_threads=True, increment_posts=True),
         )
 

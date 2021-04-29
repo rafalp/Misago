@@ -18,10 +18,8 @@ from ....loaders import (
 )
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
-from ....threads.create import create_post
 from ....threads.hooks.createpost import create_post_hook
 from ....threads.models import Post, Thread
-from ....threads.update import update_thread
 from ....validation import (
     CategoryIsOpenValidator,
     ThreadCategoryValidator,
@@ -117,6 +115,9 @@ async def post_reply(
     user = await get_authenticated_user(context)
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 
+    def create_post(*args, **kwargs):
+        return Post.create(*args, **kwargs)
+
     reply = await create_post_hook.call_action(
         create_post,
         thread,
@@ -128,7 +129,7 @@ async def post_reply(
     category = cast(Category, await load_category(context, thread.category_id))
 
     thread, category = await gather(
-        update_thread(thread, last_post=reply, increment_replies=True),
+        thread.update(last_post=reply, increment_replies=True),
         update_category(category, increment_posts=True),
     )
 

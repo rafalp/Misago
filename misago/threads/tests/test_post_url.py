@@ -1,6 +1,6 @@
 import pytest
 
-from ..create import create_post
+from ..models import Post
 from ..post_url import get_thread_post_page, get_thread_post_url
 
 
@@ -29,10 +29,10 @@ async def test_thread_post_page_for_last_post_on_first_page_is_calculated_to_2(
 
     # fill in first page
     for _ in range(3):
-        post = await create_post(thread, poster_name="hello")
+        post = await Post.create(thread, poster_name="hello")
     # fill in next page
     for _ in range(dynamic_settings["posts_per_page"]):
-        await create_post(thread, poster_name="hello")
+        await Post.create(thread, poster_name="hello")
 
     page = await get_thread_post_page(dynamic_settings, thread, post)
     assert page == 2
@@ -47,10 +47,10 @@ async def test_thread_post_page_for_last_post_on_first_page_is_calculated_to_1(
 
     # fill in first page
     for _ in range(3):
-        post = await create_post(thread, poster_name="hello")
+        post = await Post.create(thread, poster_name="hello")
     # fill in next page
     for _ in range(3):
-        await create_post(thread, poster_name="hello")
+        await Post.create(thread, poster_name="hello")
 
     page = await get_thread_post_page(dynamic_settings, thread, post)
     assert page == 1

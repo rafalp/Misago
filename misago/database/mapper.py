@@ -43,9 +43,6 @@ class QueryBuilder:
         )
 
     def start(self, start: int):
-        if self._start:
-            raise ValueError("This query is already sliced!")
-
         return QueryBuilder(
             filters=self._filters,
             exclude=self._exclude,
@@ -54,10 +51,10 @@ class QueryBuilder:
             order_by=self._order_by,
         )
 
-    def stop(self, stop: int):
-        if self._stop:
-            raise ValueError("This query is already sliced!")
+    def get_start(self) -> int:
+        return self._start
 
+    def stop(self, stop: int):
         return QueryBuilder(
             filters=self._filters,
             exclude=self._exclude,
@@ -65,6 +62,9 @@ class QueryBuilder:
             stop=stop,
             order_by=self._order_by,
         )
+
+    def get_stop(self) -> int:
+        return self._stop
 
     def order_by(self, *clauses: str):
         return QueryBuilder(
@@ -160,6 +160,10 @@ class MapperBase:
         self.MultipleObjectsReturned = multiple_objects_exc
 
     @property
+    def model(self):
+        return self._model
+
+    @property
     def table(self):
         return self._table
 
@@ -167,7 +171,7 @@ class MapperBase:
     def columns(self):
         return self._table.c
 
-    def filter(self, *clauses: ClauseElement, **filters: Dict[str, Any]):
+    def filter(self, *clauses: ClauseElement, **filters):
         self.validate_filters(filters)
 
         new_query_builder = self._query_builder.filter(*clauses, **filters)
@@ -179,7 +183,7 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    def exclude(self, *clauses: ClauseElement, **filters: Dict[str, Any]):
+    def exclude(self, *clauses: ClauseElement, **filters):
         self.validate_filters(filters)
 
         new_query_builder = self._query_builder.exclude(*clauses, **filters)
@@ -259,7 +263,7 @@ class MapperBase:
             return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
-    async def one(self, *columns: str):
+    async def one(self, *columns: str, **filters):
         if columns:
             validate_columns(columns, self._table)
             query = select(self._table.c[col] for col in columns)
@@ -268,7 +272,15 @@ class MapperBase:
             query = self._table.select(None)
             model = self._model
 
-        query_builder = self._query_builder.stop(2)
+        if filters:
+            self.validate_filters(filters)
+            query_builder = self._query_builder.filter(**filters)
+        else:
+            query_builder = self._query_builder
+
+        if query_builder.get_stop() != 1:
+            query_builder = query_builder.stop(2)
+
         query = query_builder.filter_query(self._table, query)
         results = await database.fetch_all(query)
 
@@ -286,6 +298,7 @@ class MapperBase:
         return await database.fetch_val(query)
 
     async def update(self, **values) -> int:
+        validate_columns(values.keys(), self._table)
         query = self._table.update(None).values(values)
         query = self._query_builder.filter_query(self._table, query)
         query = self._query_builder.slice_query(self._table, query)
@@ -314,6 +327,7 @@ class Mapper(MapperBase):
         )
 
     async def insert(self, **values):
+        validate_columns(values.keys(), self._table)
         query = self._table.insert(None).values(**values)
         new_row_id = await database.execute(query)
         if self._pk is not None and new_row_id:

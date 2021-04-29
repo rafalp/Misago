@@ -1,13 +1,15 @@
 import pytest
 
 from ..delete import delete_thread_post, delete_thread_posts
-from ..get import get_post_by_id
+from ..models import Post
 
 
 @pytest.mark.asyncio
 async def test_thread_post_is_deleted(thread_with_reply, thread_reply):
     await delete_thread_post(thread_with_reply, thread_reply)
-    assert await get_post_by_id(thread_reply.id) is None
+
+    with pytest.raises(Post.DoesNotExist):
+        await thread_reply.refresh_from_db()
 
 
 @pytest.mark.asyncio
@@ -33,7 +35,9 @@ async def test_thread_post_delete_updates_thread_replies_count(
 @pytest.mark.asyncio
 async def test_thread_posts_are_deleted(thread_with_reply, thread_reply):
     await delete_thread_posts(thread_with_reply, [thread_reply])
-    assert await get_post_by_id(thread_reply.id) is None
+
+    with pytest.raises(Post.DoesNotExist):
+        await thread_reply.refresh_from_db()
 
 
 @pytest.mark.asyncio

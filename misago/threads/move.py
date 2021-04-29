@@ -3,26 +3,16 @@ from dataclasses import replace
 from typing import List, Iterable
 
 from ..categories.models import Category
-from ..database import database
-from ..tables import posts
-from ..tables import threads as threads_table
-from .models import Thread
-from .update import update_thread
+from .models import Post, Thread
 
 
 async def move_thread(thread: Thread, new_category: Category) -> Thread:
     if thread.category_id == new_category.id:
         return thread
 
-    move_posts_query = (
-        posts.update(None)
-        .values(category_id=new_category.id)
-        .where(posts.c.thread_id == thread.id)
-    )
-
     thread, _ = await gather(
-        update_thread(thread, category=new_category),
-        database.execute(move_posts_query),
+        thread.update(category=new_category),
+        thread.posts_query.update(category_id=new_category.id),
     )
 
     return thread
@@ -32,28 +22,22 @@ async def move_threads(
     threads: Iterable[Thread], new_category: Category
 ) -> List[Thread]:
     updated_threads: List[Thread] = []
-    db_update: List[int] = []
+    threads_ids: List[int] = []
 
     for thread in threads:
         if thread.category_id != new_category.id:
             thread = replace(thread, category_id=new_category.id)
-            db_update.append(thread.id)
+            threads_ids.append(thread.id)
         updated_threads.append(thread)
 
-    if db_update:
-        move_threads_query = (
-            threads_table.update(None)
-            .values(category_id=new_category.id)
-            .where(threads_table.c.id.in_(db_update))
+    if threads_ids:
+        move_threads_query = Thread.query.filter(id__in=threads_ids).update(
+            category_id=new_category.id
         )
-        move_posts_query = (
-            posts.update(None)
-            .values(category_id=new_category.id)
-            .where(posts.c.thread_id.in_(db_update))
+        move_posts_query = Post.query.filter(thread_id__in=threads_ids).update(
+            category_id=new_category.id
         )
-        await gather(
-            database.execute(move_threads_query), database.execute(move_posts_query)
-        )
+        await gather(move_threads_query, move_posts_query)
 
     return updated_threads
 
@@ -62,17 +46,11 @@ async def move_categories_threads(
     categories: Iterable[Category], new_category: Category
 ):
     categories_ids = [c.id for c in categories]
-    move_threads_query = (
-        threads_table.update(None)
-        .values(category_id=new_category.id)
-        .where(threads_table.c.category_id.in_(categories_ids))
+    move_threads_query = Thread.query.filter(category_id__in=categories_ids).update(
+        category_id=new_category.id
     )
-    move_posts_query = (
-        posts.update(None)
-        .values(category_id=new_category.id)
-        .where(posts.c.category_id.in_(categories_ids))
+    move_posts_query = Post.query.filter(category_id__in=categories_ids).update(
+        category_id=new_category.id
     )
 
-    await gather(
-        database.execute(move_threads_query), database.execute(move_posts_query)
-    )
+    await gather(move_threads_query, move_posts_query)

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from ..database import MapperQuery, model_registry
+
 
 @dataclass
 class Category:
@@ -18,6 +20,14 @@ class Category:
     parent_id: Optional[int] = None
     icon: Optional[str] = None
     is_closed: Optional[bool] = False
+
+    @property
+    def posts_query(self) -> MapperQuery:
+        return model_registry["Post"].filter(category_id=self.id)
+
+    @property
+    def threads_query(self) -> MapperQuery:
+        return model_registry["Thread"].filter(category_id=self.id)
 
     def __str__(self):
         return self.name

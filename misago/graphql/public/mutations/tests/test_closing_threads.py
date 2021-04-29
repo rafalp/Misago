@@ -1,7 +1,6 @@
 import pytest
 
 from .....errors import ErrorsList
-from .....threads.get import get_thread_by_id
 from ..closethreads import resolve_close_threads
 
 
@@ -14,7 +13,7 @@ async def test_close_threads_mutation_closes_threads(moderator_graphql_info, thr
     )
 
     assert "errors" not in data
-    assert data["threads"] == [await get_thread_by_id(data["threads"][0].id)]
+    assert data["threads"] == [await data["threads"][0].refresh_from_db()]
     assert data["threads"][0].is_closed
     assert data["updated"]
 
@@ -30,7 +29,7 @@ async def test_close_threads_mutation_opens_threads(
     )
 
     assert "errors" not in data
-    assert data["threads"] == [await get_thread_by_id(data["threads"][0].id)]
+    assert data["threads"] == [await data["threads"][0].refresh_from_db()]
     assert not data["threads"][0].is_closed
     assert data["updated"]
 

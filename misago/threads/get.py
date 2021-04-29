@@ -1,44 +1,24 @@
-from typing import List, Optional, Sequence
-
-from sqlalchemy import asc, desc
-from sqlalchemy.sql import ClauseElement
+from typing import Awaitable, List, Optional, Sequence
 
 from ..categories.models import Category
-from ..database import database
 from ..database.paginator import PageDoesNotExist, Paginator
-from ..tables import posts, threads
 from .models import Post, Thread, ThreadPostsPage, ThreadsFeed
 
 
-async def get_post_by_id(post_id: int) -> Optional[Post]:
-    query = posts.select().where(posts.c.id == post_id)
-    data = await database.fetch_one(query)
-    return Post(**data) if data else None
+def get_posts_by_id(ids: Sequence[int]) -> Awaitable[List[Post]]:
+    return Post.query.filter(id__in=ids).all()
 
 
-async def get_posts_by_id(ids: Sequence[int]) -> List[Post]:
-    query = posts.select().where(posts.c.id.in_(ids))
-    data = await database.fetch_all(query)
-    return [Post(**row) for row in data]
-
-
-async def get_thread_by_id(thread_id: int) -> Optional[Thread]:
-    query = threads.select().where(threads.c.id == thread_id)
-    data = await database.fetch_one(query)
-    return Thread(**data) if data else None
-
-
-async def get_threads_by_id(ids: Sequence[int]) -> List[Thread]:
-    query = threads.select().where(threads.c.id.in_(ids))
-    data = await database.fetch_all(query)
-    return [Thread(**row) for row in data]
+def get_threads_by_id(ids: Sequence[int]) -> Awaitable[List[Thread]]:
+    return Thread.query.filter(id__in=ids).all()
 
 
 async def get_thread_posts_paginator(
     thread: Thread, per_page: int, orphans: int = 0
 ) -> Paginator:
-    query = posts.select().where(posts.c.thread_id == thread.id)
-    paginator = Paginator(query, per_page, orphans, overlap_pages=True)
+    paginator = Paginator(
+        thread.posts_query.order_by("id"), per_page, orphans, overlap_pages=True
+    )
     await paginator.count_pages()
     return paginator
 
@@ -50,10 +30,7 @@ async def get_thread_posts_page(
         posts_page = await paginator.get_page(page)
     except PageDoesNotExist:
         return None
-    data = await database.fetch_all(posts_page.query.order_by(asc(posts.c.id)))
-    return ThreadPostsPage.from_paginator_page(
-        posts_page, [Post(**row) for row in data]
-    )
+    return ThreadPostsPage.from_paginator_page(posts_page, await posts_page.items)
 
 
 async def get_threads_feed(
@@ -63,43 +40,22 @@ async def get_threads_feed(
     categories: Optional[Sequence[Category]] = None,
     starter_id: Optional[int] = None,
 ) -> ThreadsFeed:
-    query = (
-        threads.select(None)
-        .order_by(desc(threads.c.last_post_id))
-        .limit(threads_per_page + 1)
-    )
-
     if categories is not None and not categories:
         return ThreadsFeed()
 
-    query = filter_threads_query(
-        query,
-        categories=categories,
-        starter_id=starter_id,
-    )
-
+    query = Thread.query.order_by("-last_post_id").stop(threads_per_page + 1)
+    if categories:
+        query = query.filter(category_id__in=[category.id for category in categories])
+    if starter_id:
+        query = query.filter(starter_id=starter_id)
     if cursor:
-        query = query.where(threads.c.last_post_id < cursor)
+        query = query.filter(last_post_id__lt=cursor)
 
-    rows = await database.fetch_all(query)
-    if len(rows) > threads_per_page:
-        rows = rows[:-1]
-        next_cursor = rows[-1]["last_post_id"]
+    results = await query.all()
+    if len(results) > threads_per_page:
+        results = results[:-1]
+        next_cursor = results[-1].last_post_id
     else:
         next_cursor = None
 
-    return ThreadsFeed(items=[Thread(**row) for row in rows], next_cursor=next_cursor)
-
-
-def filter_threads_query(
-    query: ClauseElement,
-    *,
-    categories: Optional[Sequence[Category]] = None,
-    starter_id: Optional[int] = None,
-) -> ClauseElement:
-    if categories is not None:
-        categories_ids = [i.id for i in categories]
-        query = query.where(threads.c.category_id.in_(categories_ids))
-    if starter_id:
-        query = query.where(threads.c.starter_id == starter_id)
-    return query
+    return ThreadsFeed(items=results, next_cursor=next_cursor)
