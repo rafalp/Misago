@@ -51,7 +51,7 @@ async def test_post_thread_mutation_creates_new_post(
     assert not data.get("errors")
     assert data.get("post")
     assert data["post"].id == data["thread"].first_post_id
-    assert data["post"] == await data["thread"].first_post
+    assert data["post"] == await data["thread"].fetch_first_post()
     assert data["post"].thread_id == data["thread"].id
     assert data["post"].category_id == category.id
     assert data["post"].poster_id == user.id

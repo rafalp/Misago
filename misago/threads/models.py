@@ -4,10 +4,10 @@ from typing import Any, Dict, List, Optional
 
 from ..categories.models import Category
 from ..database import MapperQuery, Model, model_registry, register_model
+from ..database.paginator import PaginationPage
 from ..graphql import GraphQLContext
 from ..richtext import RichText
 from ..tables import posts, threads
-from ..types import PaginationPage
 from ..users.models import User
 from ..utils import timezone
 from ..utils.strings import slugify
@@ -37,12 +37,12 @@ class Thread(Model):
     def posts_query(self) -> MapperQuery:
         return model_registry["Post"].filter(thread_id=self.id)
 
-    async def get_first_post(self) -> Optional["Post"]:
+    async def fetch_first_post(self) -> Optional["Post"]:
         if self.first_post_id:
             return await model_registry["Post"].one(id=self.first_post_id)
         return None
 
-    async def get_last_post(self) -> Optional["Post"]:
+    async def fetch_last_post(self) -> Optional["Post"]:
         if self.last_post_id:
             return await model_registry["Post"].one(id=self.last_post_id)
         return None
