@@ -1,7 +1,7 @@
 import pytest
 
-from ..create import create_category
 from ..get import get_all_categories
+from ..models import Category
 from ..tree import insert_category
 
 
@@ -11,7 +11,7 @@ async def test_new_top_level_category_is_inserted_at_the_end_of_tree(
 ):
     all_categories = await get_all_categories()
 
-    new_category = await create_category(name="New category", extra={})
+    new_category = await Category.create(name="New category", extra={})
     inserted_category, categories = await insert_category(all_categories, new_category)
 
     # Category contents are updated
@@ -43,7 +43,7 @@ async def test_new_child_category_is_inserted_at_the_end_of_tree(
 ):
     all_categories = await get_all_categories()
 
-    new_category = await create_category(name="New category", extra={})
+    new_category = await Category.create(name="New category", extra={})
     inserted_category, categories = await insert_category(
         all_categories, new_category, category
     )

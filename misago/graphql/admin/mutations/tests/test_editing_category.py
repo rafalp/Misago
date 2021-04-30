@@ -1,7 +1,6 @@
 import pytest
 
 from .....categories.get import get_all_categories, get_category_by_id
-from .....categories.update import update_category
 from ..editcategory import resolve_edit_category
 
 
@@ -63,7 +62,7 @@ async def test_edit_category_mutation_edits_category_icon(admin_graphql_info, ca
 async def test_edit_category_mutation_removes_category_icon(
     admin_graphql_info, category
 ):
-    await update_category(category, icon="fas fa-lock")
+    await category.update(icon="fas fa-lock")
 
     data = await resolve_edit_category(
         None,

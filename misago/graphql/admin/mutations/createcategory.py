@@ -5,7 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 from pydantic.color import Color
 
-from ....categories.create import create_category
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.models import Category
@@ -26,7 +25,7 @@ create_category_mutation = MutationType()
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case
-async def resolve_create_category(
+async def resolve_category_create(
     _,
     info: GraphQLResolveInfo,
     *,
@@ -49,7 +48,7 @@ async def resolve_create_category(
 
     parent_obj: Optional[Category] = cleaned_data.get("parent")
 
-    new_category = await create_category(
+    new_category = await Category.create(
         name=cleaned_data["name"],
         color=cleaned_data["color"],
         icon=cleaned_data["icon"],

@@ -1,7 +1,6 @@
 from asyncio import gather
 
 from .models import Category
-from .update import update_category
 
 
 async def sync_category(category: Category) -> Category:
@@ -10,4 +9,4 @@ async def sync_category(category: Category) -> Category:
         category.posts_query.count(),
     )
 
-    return await update_category(category, threads=threads_count, posts=posts_count)
+    return await category.update(threads=threads_count, posts=posts_count)

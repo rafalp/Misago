@@ -1,9 +1,7 @@
-from dataclasses import replace
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 from . import delete
 from .models import Category
-from .update import update_category
 
 
 class CategoryTreeNode:
@@ -15,7 +13,7 @@ class CategoryTreeNode:
         self._children = []
 
     def insert_node(self, node: Category):
-        node = replace(node, parent_id=self._root.id)
+        node = node.replace(parent_id=self._root.id)
         self._children.append(CategoryTreeNode(node))
 
     def get_category(self, category_id: int) -> Optional[Category]:
@@ -41,8 +39,8 @@ class CategoryTreeNode:
         self, depth: int = 0, left: int = 0, parent_id: Optional[int] = None
     ) -> List[Category]:
         nodes_list: List[Category] = []
-        root_node = replace(
-            self._root, left=left, right=left + 1, depth=depth, parent_id=parent_id
+        root_node = self._root.replace(
+            left=left, right=left + 1, depth=depth, parent_id=parent_id
         )
         nodes_list.append(root_node)
         if self._children:
@@ -231,8 +229,7 @@ async def update_categories(
         if updated_category.parent_id:
             parent_category = categories_map[updated_category.parent_id]
 
-        updated_categories[old_category.id] = await update_category(
-            old_category,
+        updated_categories[old_category.id] = await old_category.update(
             parent=parent_category,
             depth=updated_category.depth,
             left=updated_category.left,

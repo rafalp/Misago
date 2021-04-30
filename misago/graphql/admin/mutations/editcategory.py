@@ -7,7 +7,6 @@ from pydantic import PositiveInt
 from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import move_category
-from ....categories.update import update_category
 from ....categories.validators import validate_category_parent
 from ....validation import (
     ROOT_LOCATION,
@@ -55,8 +54,7 @@ async def resolve_edit_category(
     if errors or not category_obj:
         return {"errors": errors, "category": category_obj}
 
-    updated_category = await update_category(
-        category_obj,
+    updated_category = await category_obj.update(
         name=cleaned_data["name"],
         color=cleaned_data["color"],
         icon=cleaned_data["icon"],

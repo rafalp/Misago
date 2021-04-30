@@ -3,7 +3,7 @@ from unittest.mock import Mock
 import pytest
 
 from . import tables
-from .categories.create import create_category
+from .categories.models import Category
 from .conf.cache import SETTINGS_CACHE
 from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
@@ -77,12 +77,12 @@ async def dynamic_settings(db, cache_versions):
 
 @pytest.fixture
 async def categories(db):
-    top_category = await create_category(name="Category", left=3, right=6)
-    child_category = await create_category(
+    top_category = await Category.create(name="Category", left=3, right=6)
+    child_category = await Category.create(
         name="Child Category", parent=top_category, left=4, right=5, depth=1
     )
-    sibling_category = await create_category(name="Sibling Category", left=7, right=8)
-    closed_category = await create_category(
+    sibling_category = await Category.create(name="Sibling Category", left=7, right=8)
+    closed_category = await Category.create(
         name="Closed Category", left=9, right=10, is_closed=True
     )
     return (top_category, child_category, sibling_category, closed_category)

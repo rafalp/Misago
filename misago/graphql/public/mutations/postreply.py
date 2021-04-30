@@ -7,7 +7,6 @@ from pydantic import PositiveInt, constr, create_model
 
 from ....auth import get_authenticated_user
 from ....categories.models import Category
-from ....categories.update import update_category
 from ....errors import ErrorsList
 from ....loaders import (
     load_category,
@@ -130,7 +129,7 @@ async def post_reply(
 
     thread, category = await gather(
         thread.update(last_post=reply, increment_replies=True),
-        update_category(category, increment_posts=True),
+        category.update(increment_posts=True),
     )
 
     store_category(context, category)

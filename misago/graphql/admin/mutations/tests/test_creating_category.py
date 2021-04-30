@@ -1,14 +1,14 @@
 import pytest
 
 from .....categories.get import get_all_categories, get_category_by_id
-from ..createcategory import resolve_create_category
+from ..createcategory import resolve_category_create
 
 
 @pytest.mark.asyncio
 async def test_create_category_mutation_creates_top_level_category(
     admin_graphql_info, categories
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "New category", "color": "#FF0000", "icon": ""},
@@ -49,7 +49,7 @@ async def test_create_category_mutation_creates_top_level_category(
 async def test_create_category_mutation_creates_new_child_category(
     admin_graphql_info, categories, category
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={
@@ -90,7 +90,7 @@ async def test_create_category_mutation_creates_new_child_category(
 async def test_create_category_mutation_creates_category_with_icon(
     admin_graphql_info, categories
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "New category", "color": "#FF0000", "icon": "fas fa-lock"},
@@ -108,7 +108,7 @@ async def test_create_category_mutation_creates_category_with_icon(
 async def test_create_category_mutation_creates_closed_category(
     admin_graphql_info, categories
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={
@@ -131,7 +131,7 @@ async def test_create_category_mutation_creates_closed_category(
 async def test_create_category_mutation_fails_if_category_name_is_too_short(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "   ", "color": "#FF0000", "icon": ""},
@@ -147,7 +147,7 @@ async def test_create_category_mutation_fails_if_category_name_is_too_short(
 async def test_create_category_mutation_fails_if_category_name_is_too_long(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "a" * 256, "color": "#FF0000", "icon": ""},
@@ -163,7 +163,7 @@ async def test_create_category_mutation_fails_if_category_name_is_too_long(
 async def test_create_category_mutation_fails_if_category_name_is_not_sluggable(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "!!!!", "color": "#FF0000", "icon": ""},
@@ -179,7 +179,7 @@ async def test_create_category_mutation_fails_if_category_name_is_not_sluggable(
 async def test_create_category_mutation_fails_if_category_color_is_empty(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "Test", "color": "", "icon": ""},
@@ -195,7 +195,7 @@ async def test_create_category_mutation_fails_if_category_color_is_empty(
 async def test_create_category_mutation_fails_if_category_color_is_invalid(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "Test", "color": "invalid", "icon": ""},
@@ -211,7 +211,7 @@ async def test_create_category_mutation_fails_if_category_color_is_invalid(
 async def test_create_category_mutation_fails_if_parent_id_is_invalid(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={
@@ -232,7 +232,7 @@ async def test_create_category_mutation_fails_if_parent_id_is_invalid(
 async def test_create_category_mutation_fails_if_parent_category_is_not_found(
     admin_graphql_info,
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={"name": "New category", "color": "#FF0000", "icon": "", "parent": 1},
@@ -248,7 +248,7 @@ async def test_create_category_mutation_fails_if_parent_category_is_not_found(
 async def test_create_category_mutation_fails_if_parent_category_is_child_category(
     admin_graphql_info, child_category
 ):
-    data = await resolve_create_category(
+    data = await resolve_category_create(
         None,
         admin_graphql_info,
         input={

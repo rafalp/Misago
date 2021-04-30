@@ -6,7 +6,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
 from ....auth import get_authenticated_user
-from ....categories.update import update_category
 from ....database import database
 from ....errors import ErrorsList
 from ....loaders import store_category, store_post, store_thread
@@ -135,7 +134,7 @@ async def post_thread(
         category = cleaned_data["category"]
         thread, category = await gather(
             thread.update(first_post=post, last_post=post),
-            update_category(category, increment_threads=True, increment_posts=True),
+            category.update(increment_threads=True, increment_posts=True),
         )
 
     store_thread(context, thread)
