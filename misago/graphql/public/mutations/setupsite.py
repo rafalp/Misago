@@ -9,8 +9,8 @@ from ....auth.hooks import create_user_token_hook
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
-from ....users.create import create_user
 from ....users.hooks import create_user_hook
+from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,
     UsernameIsAvailableValidator,
@@ -60,6 +60,9 @@ async def resolve_setup_site(
         }
     )
     await clear_settings_cache()
+
+    def create_user(*args, **kwargs):
+        return User.create(*args, **kwargs)
 
     user = await create_user_hook.call_action(
         create_user,

@@ -3,14 +3,13 @@ import pytest
 from ...passwords import verify_password
 from ...utils import timezone
 from ..models import User
-from ..get import get_user_by_id
 
 
 @pytest.mark.asyncio
 async def test_user_is_created_in_db(db):
     user = await User.create("test", "test@example.com")
     assert user.id
-    assert user == await get_user_by_id(user.id)
+    assert user == await User.query.one(id=user.id)
 
 
 @pytest.mark.asyncio

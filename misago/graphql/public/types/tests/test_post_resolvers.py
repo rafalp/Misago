@@ -1,6 +1,5 @@
 import pytest
 
-from .....users.update import update_user
 from ..post import (
     resolve_category,
     resolve_html,
@@ -26,7 +25,7 @@ async def test_post_resolver_returns_post_poster(graphql_info, user_post, user):
 async def test_post_resolver_returns_none_if_post_poster_is_inactive(
     graphql_info, user_post, user
 ):
-    await update_user(user, is_active=False)
+    await user.update(is_active=False)
     value = await resolve_poster(user_post, graphql_info)
     assert value is None
 

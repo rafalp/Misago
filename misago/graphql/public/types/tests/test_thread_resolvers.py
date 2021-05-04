@@ -1,6 +1,5 @@
 import pytest
 
-from .....users.update import update_user
 from ..thread import (
     resolve_category,
     resolve_first_post,
@@ -55,7 +54,7 @@ async def test_starter_resolver_returns_thread_starter(graphql_info, user_thread
 async def test_starter_resolver_returns_none_if_thread_starter_is_inactive(
     graphql_info, user_thread, user
 ):
-    await update_user(user, is_active=False)
+    await user.update(is_active=False)
     value = await resolve_starter(user_thread, graphql_info)
     assert value is None
 
@@ -78,7 +77,7 @@ async def test_last_poster_resolver_returns_threads_last_poster(
 async def test_last_poster_resolver_returns_none_if_threads_last_poster_is_inactive(
     graphql_info, user_thread, user
 ):
-    await update_user(user, is_active=False)
+    await user.update(is_active=False)
     value = await resolve_last_poster(user_thread, graphql_info)
     assert value is None
 

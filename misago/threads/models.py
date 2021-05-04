@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Awaitable, Dict, List, Optional
 
 from ..categories.models import Category
 from ..database import MapperQuery, Model, model_registry, register_model
@@ -61,7 +61,7 @@ class Thread(Model):
         started_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> "Thread":
+    ) -> Awaitable["Thread"]:
         if first_post:
             if starter:
                 raise ValueError(
@@ -283,7 +283,7 @@ class Post(Model):
         posted_at: Optional[datetime] = None,
         extra: Optional[dict] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> "Post":
+    ) -> Awaitable["Post"]:
         if poster and poster_name:
             raise ValueError(
                 "'poster' and 'poster_name' arguments are mutually exclusive"

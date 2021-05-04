@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Union
+from typing import Any, Awaitable, Dict, Optional, Union
 
 from ..database import MapperQuery, Model, model_registry, register_model
 from ..graphql import GraphQLContext
@@ -50,7 +50,7 @@ class Category(Model):
         is_closed: Optional[bool] = False,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
-    ) -> "Category":
+    ) -> Awaitable["Category"]:
         data: Dict[str, Any] = {
             "type": CategoryTypes.THREADS,
             "name": name,

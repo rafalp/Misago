@@ -1,7 +1,6 @@
 import pytest
 
 from misago.threads.models import Post, Thread
-from misago.users.get import get_user_by_id
 from misago.users.models import User
 
 from ..history import create_fake_forum_history
@@ -18,5 +17,5 @@ async def test_pre_existing_users_are_moved_to_past_by_history_creator(user, fak
     async for _ in create_fake_forum_history(faker, 1, 1):
         pass
 
-    updated_user = await get_user_by_id(user.id)
+    updated_user = await User.query.one(id=user.id)
     assert updated_user.joined_at < user.joined_at

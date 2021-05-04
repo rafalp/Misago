@@ -4,6 +4,7 @@ from typing import Any
 import pytest
 
 from ...tables import categories, settings, users
+from ...utils import timezone
 from ..mapper import Mapper, InvalidColumnError
 
 
@@ -198,6 +199,61 @@ async def test_query_ordering_raises_error_when_query_is_ordered_by_invalid_colu
     mapper = Mapper(categories)
     with pytest.raises(InvalidColumnError):
         mapper.order_by("depth", "-invalid")
+
+
+class IteratorModel:
+    def __init__(self, **kwargs):
+        self.id = kwargs.pop("id")
+
+
+@pytest.mark.asyncio
+async def test_large_query_result_is_iterated_in_descending_order(db):
+    mapper = Mapper(users, IteratorModel)
+    test_ids = []
+    for i in range(20):
+        item = await mapper.insert(
+            name=f"test{i}",
+            slug=f"test{i}",
+            email=f"test{i}@example.com",
+            email_hash=f"test{i}",
+            is_active=False,
+            is_moderator=False,
+            is_administrator=False,
+            joined_at=timezone.now(),
+            extra={},
+        )
+        test_ids.insert(0, item.id)
+
+    results_ids = []
+    async for item in mapper.iterator(batch_size=5):
+        results_ids.append(item.id)
+
+    assert results_ids == test_ids
+
+
+@pytest.mark.asyncio
+async def test_large_query_result_is_iterated_in_ascending_order(db):
+    mapper = Mapper(users, IteratorModel)
+    test_ids = []
+    for i in range(20):
+        item = await mapper.insert(
+            name=f"test{i}",
+            slug=f"test{i}",
+            email=f"test{i}@example.com",
+            email_hash=f"test{i}",
+            is_active=False,
+            is_moderator=False,
+            is_administrator=False,
+            joined_at=timezone.now(),
+            extra={},
+        )
+        test_ids.append(item.id)
+
+    results_ids = []
+    async for item in mapper.iterator(batch_size=5, asc=True):
+        results_ids.append(item.id)
+
+    assert results_ids == test_ids
 
 
 @pytest.mark.asyncio

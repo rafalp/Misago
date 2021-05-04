@@ -75,6 +75,9 @@ class QueryBuilder:
             order_by=clauses,
         )
 
+    def get_ordering(self) -> Optional[Sequence[str]]:
+        return self._order_by
+
     def apply_to_query(self, table: TableClause, query):
         query = self.filter_query(table, query)
         query = self.slice_query(table, query)
@@ -262,6 +265,28 @@ class MapperBase:
         if columns and len(columns) == 1 and flat:
             return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
+
+    async def iterator(self, batch_size: int = 20, asc: bool = False):
+        base_query = self.order_by("id" if asc else "-id").start(0)
+        last_id = None
+        run = True
+        while run:
+            query = base_query.stop(batch_size + 1)
+            if last_id:
+                if asc:
+                    query = query.filter(id__gt=last_id)
+                else:
+                    query = query.filter(id__lt=last_id)
+
+            items = list(await query.all())
+            if len(items) > batch_size:
+                items = items[:batch_size]
+                last_id = items[-1].id
+            else:
+                run = False
+
+            for item in items:
+                yield item
 
     async def one(self, *columns: str, **filters):
         if columns:

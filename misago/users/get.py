@@ -1,21 +1,11 @@
-from typing import List, Optional, Sequence
+from typing import Awaitable, List, Optional, Sequence
 
-from ..database import database
-from ..tables import users
 from .email import get_email_hash
 from .models import User
 
 
-async def get_user_by_id(user_id: int) -> Optional[User]:
-    query = users.select().where(users.c.id == user_id)
-    data = await database.fetch_one(query)
-    return User(**data) if data else None
-
-
-async def get_users_by_id(ids: Sequence[int]) -> List[User]:
-    query = users.select().where(users.c.id.in_(ids))
-    data = await database.fetch_all(query)
-    return [User(**row) for row in data]
+def get_users_by_id(ids: Sequence[int]) -> Awaitable[List[User]]:
+    return User.query.filter(id__in=ids).all()
 
 
 async def get_user_by_name_or_email(name_or_email: str) -> Optional[User]:
@@ -25,18 +15,18 @@ async def get_user_by_name_or_email(name_or_email: str) -> Optional[User]:
 
 
 async def get_user_by_name(name: str) -> Optional[User]:
-    query = users.select().where(users.c.slug == name.lower())
-    data = await database.fetch_one(query)
-    return User(**data) if data else None
+    try:
+        return await User.query.one(slug=name.lower())
+    except User.DoesNotExist:
+        return None
 
 
-async def get_users_by_name(names: Sequence[str]) -> List[User]:
-    query = users.select().where(users.c.slug.in_([s.lower() for s in names]))
-    data = await database.fetch_all(query)
-    return [User(**row) for row in data]
+def get_users_by_name(names: Sequence[str]) -> Awaitable[List[User]]:
+    return User.query.filter(slug__in=[s.lower() for s in names]).all()
 
 
 async def get_user_by_email(email: str) -> Optional[User]:
-    query = users.select().where(users.c.email_hash == get_email_hash(email))
-    data = await database.fetch_one(query)
-    return User(**data) if data else None
+    try:
+        return await User.query.one(email_hash=get_email_hash(email))
+    except User.DoesNotExist:
+        return None

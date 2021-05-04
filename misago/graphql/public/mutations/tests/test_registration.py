@@ -3,7 +3,7 @@ import pytest
 from .....auth import get_user_from_token
 from .....passwords import verify_password
 from .....testing import override_dynamic_settings
-from .....users.get import get_user_by_id
+from .....users.models import User
 from ..register import resolve_register
 
 
@@ -21,7 +21,7 @@ async def test_registration_mutation_creates_new_user_account(graphql_info):
 
     assert "errors" not in data
     assert "user" in data
-    assert data["user"] == await get_user_by_id(data["user"].id)
+    assert data["user"] == await User.query.one(id=data["user"].id)
 
 
 @pytest.mark.asyncio
@@ -38,7 +38,7 @@ async def test_registration_mutation_preserves_spaces_in_user_password(graphql_i
 
     assert "user" in data
 
-    user = await get_user_by_id(data["user"].id)
+    user = await User.query.one(id=data["user"].id)
     assert await verify_password(" password123 ", user.password)
 
 

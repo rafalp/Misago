@@ -5,7 +5,6 @@ from typing import Optional
 from asyncpg.exceptions import UniqueViolationError
 from faker import Faker
 
-from misago.users.create import create_user
 from misago.users.models import User
 from misago.utils.strings import get_random_string
 
@@ -19,7 +18,7 @@ async def create_fake_user(
     user = None
     while not user:
         try:
-            user = await create_user(
+            user = await User.create(
                 get_fake_username(fake),
                 email=fake.email(),
                 password=PASSWORD,
