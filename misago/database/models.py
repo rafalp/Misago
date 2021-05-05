@@ -12,6 +12,7 @@ class Model:
 
     id: int
     query: ClassVar[Mapper]
+    table: ClassVar[TableClause]
 
     def replace(self, **kwargs):
         return replace(self, **kwargs)
@@ -33,9 +34,11 @@ def register_model(name: str, table: TableClause):
         mapper = Mapper(table, model)
         model_registry[name] = mapper
 
-        model.query = mapper
         model.DoesNotExist = mapper.DoesNotExist
         model.MultipleObjectsReturned = mapper.MultipleObjectsReturned
+
+        model.query = mapper
+        model.table = mapper.table
 
         return model
 

@@ -65,7 +65,7 @@ class Paginator:
         if stop + self.orphans >= self._count:
             stop = self._count
 
-        page_query = self._query.start(start).stop(start)
+        page_query = self._query.offset(start).limit(stop - start)
         return Page(page_query, page_number, start, stop, self)
 
     async def get_offset_page(self, item_offset: int) -> int:

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Awaitable, Dict, Optional
 
-from ..database import Model, register_model
+from ..database import MapperQuery, Model, model_registry, register_model
 from ..passwords import hash_password
 from ..tables import users
 from ..graphql import GraphQLContext
@@ -26,6 +26,14 @@ class User(Model):
     is_administrator: bool
     joined_at: datetime
     extra: dict
+
+    @property
+    def posts_query(self) -> MapperQuery:
+        return model_registry["Post"].filter(poster_id=self.id)
+
+    @property
+    def threads_query(self) -> MapperQuery:
+        return model_registry["Thread"].filter(starter_id=self.id)
 
     @classmethod
     async def create(

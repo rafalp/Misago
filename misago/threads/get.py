@@ -43,7 +43,7 @@ async def get_threads_feed(
     if categories is not None and not categories:
         return ThreadsFeed()
 
-    query = Thread.query.order_by("-last_post_id").stop(threads_per_page + 1)
+    query = Thread.query.order_by("-last_post_id").limit(threads_per_page + 1)
     if categories:
         query = query.filter(category_id__in=[category.id for category in categories])
     if starter_id:

@@ -1,144 +1,10 @@
-from typing import Any, Dict, Iterable, Optional, Sequence, Type
+from typing import Any, Dict, Iterable, Type
 
-from sqlalchemy import asc, desc, func
-from sqlalchemy.sql import ClauseElement, TableClause, not_, select
+from sqlalchemy import func
+from sqlalchemy.sql import ClauseElement, TableClause, select
 
 from .database import database
-
-
-class QueryBuilder:
-    def __init__(
-        self,
-        *,
-        filters: Optional[list] = None,
-        exclude: Optional[list] = None,
-        start: Optional[int] = None,
-        stop: Optional[int] = None,
-        order_by: Optional[Sequence[str]] = None,
-    ):
-        self._filters = filters or None
-        self._exclude = exclude or None
-        self._start = start or 0
-        self._stop = stop or 0
-        self._order_by = order_by or None
-
-    def filter(self, *clauses: ClauseElement, **kwargs: Dict[str, Any]):
-        new_clause = (self._filters or []) + list(clauses) + list(kwargs.items())
-        return QueryBuilder(
-            filters=new_clause,
-            exclude=self._exclude,
-            start=self._start,
-            stop=self._stop,
-            order_by=self._order_by,
-        )
-
-    def exclude(self, *clauses: ClauseElement, **kwargs: Dict[str, Any]):
-        new_clause = (self._exclude or []) + list(clauses) + list(kwargs.items())
-        return QueryBuilder(
-            filters=self._filters,
-            exclude=new_clause,
-            start=self._start,
-            stop=self._stop,
-            order_by=self._order_by,
-        )
-
-    def start(self, start: int):
-        return QueryBuilder(
-            filters=self._filters,
-            exclude=self._exclude,
-            start=start,
-            stop=self._stop,
-            order_by=self._order_by,
-        )
-
-    def get_start(self) -> int:
-        return self._start
-
-    def stop(self, stop: int):
-        return QueryBuilder(
-            filters=self._filters,
-            exclude=self._exclude,
-            start=self._start,
-            stop=stop,
-            order_by=self._order_by,
-        )
-
-    def get_stop(self) -> int:
-        return self._stop
-
-    def order_by(self, *clauses: str):
-        return QueryBuilder(
-            filters=self._filters,
-            exclude=self._exclude,
-            start=self._stop,
-            stop=self._stop,
-            order_by=clauses,
-        )
-
-    def get_ordering(self) -> Optional[Sequence[str]]:
-        return self._order_by
-
-    def apply_to_query(self, table: TableClause, query):
-        query = self.filter_query(table, query)
-        query = self.slice_query(table, query)
-        query = self.order_query(table, query)
-        return query
-
-    def filter_query(self, table: TableClause, query):
-        if self._filters:
-            for clause in self._filters:
-                query = query.where(self.get_where_clause(table, clause))
-        if self._exclude:
-            for clause in self._exclude:
-                query = query.where(not_(self.get_where_clause(table, clause)))
-        return query
-
-    def get_where_clause(self, table: TableClause, clause):
-        # pylint: disable=too-many-return-statements
-        if isinstance(clause, ClauseElement):
-            return clause  # Pass SQL alchemy clauses verbatim
-
-        col_name, value = clause
-        if "__" not in col_name:
-            return table.c[col_name] == value
-
-        col_name, op = col_name.split("__")
-        if op == "gt":
-            return table.c[col_name] > value
-        if op == "gte":
-            return table.c[col_name] >= value
-        if op == "lt":
-            return table.c[col_name] < value
-        if op == "lte":
-            return table.c[col_name] <= value
-        if op == "in":
-            return table.c[col_name].in_(value)
-        if op == "isnull":
-            if value:
-                return table.c[col_name].is_(None)
-            return table.c[col_name].isnot(None)
-
-        raise ValueError(f"Unknown comparator '{op}'")
-
-    def slice_query(self, table: TableClause, query):
-        if self._start:
-            query = query.offset(self._start)
-        if self._stop:
-            query = query.limit(self._stop - self._start)
-        return query
-
-    def order_query(self, table: TableClause, query):
-        if not self._order_by:
-            return query
-
-        order_by = []
-        for col_name in self._order_by:
-            if col_name[0] == "-":
-                order_by.append(desc(table.c[col_name[1:]]))
-            else:
-                order_by.append(asc(table.c[col_name]))
-
-        return query.order_by(*order_by)
+from .querybuilder import QueryBuilder
 
 
 class MapperBase:
@@ -204,8 +70,8 @@ class MapperBase:
                 col_name, _ = col_name.split("__", 1)
             validate_column(col_name, self._table)
 
-    def start(self, offset: int):
-        new_query_builder = self._query_builder.start(offset)
+    def offset(self, offset: int):
+        new_query_builder = self._query_builder.offset(offset)
         return MapperQuery(
             self._table,
             model=self._model,
@@ -214,18 +80,8 @@ class MapperBase:
             multiple_objects_exc=self.MultipleObjectsReturned,
         )
 
-    def stop(self, offset: int):
-        new_query_builder = self._query_builder.stop(offset)
-        return MapperQuery(
-            self._table,
-            model=self._model,
-            query_builder=new_query_builder,
-            does_not_exist_exc=self.DoesNotExist,
-            multiple_objects_exc=self.MultipleObjectsReturned,
-        )
-
-    def offset(self, start: int, stop: int):
-        new_query_builder = self._query_builder.start(start).stop(stop)
+    def limit(self, offset: int):
+        new_query_builder = self._query_builder.limit(offset)
         return MapperQuery(
             self._table,
             model=self._model,
@@ -266,19 +122,19 @@ class MapperBase:
             return [row[columns[0]] for row in result]
         return [model(**row) for row in result]
 
-    async def iterator(self, batch_size: int = 20, asc: bool = False):
-        base_query = self.order_by("id" if asc else "-id").start(0)
+    async def iterator(self, *columns: str, batch_size: int = 20, asc: bool = False):
+        base_query = self.order_by("id" if asc else "-id").offset(0)
         last_id = None
         run = True
         while run:
-            query = base_query.stop(batch_size + 1)
+            query = base_query.limit(batch_size + 1)
             if last_id:
                 if asc:
                     query = query.filter(id__gt=last_id)
                 else:
                     query = query.filter(id__lt=last_id)
 
-            items = list(await query.all())
+            items = list(await query.all(*columns))
             if len(items) > batch_size:
                 items = items[:batch_size]
                 last_id = items[-1].id
@@ -303,10 +159,10 @@ class MapperBase:
         else:
             query_builder = self._query_builder
 
-        if query_builder.get_stop() != 1:
-            query_builder = query_builder.stop(2)
+        if query_builder.get_limit() != 1:
+            query_builder = query_builder.limit(2)
 
-        query = query_builder.filter_query(self._table, query)
+        query = query_builder.apply_to_query(self._table, query)
         results = await database.fetch_all(query)
 
         if not results:
@@ -319,14 +175,13 @@ class MapperBase:
     async def count(self) -> int:
         query = select([func.count()]).select_from(self._table)
         query = self._query_builder.filter_query(self._table, query)
-        query = self._query_builder.slice_query(self._table, query)
+        query = self._query_builder.slice_query(query)
         return await database.fetch_val(query)
 
     async def update(self, **values) -> int:
         validate_columns(values.keys(), self._table)
         query = self._table.update(None).values(values)
         query = self._query_builder.filter_query(self._table, query)
-        query = self._query_builder.slice_query(self._table, query)
         return await database.execute(query)
 
 

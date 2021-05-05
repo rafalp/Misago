@@ -1,37 +1,25 @@
-from asyncio import gather
-from typing import Iterable, Sequence, Tuple
+from typing import Awaitable, Iterable, Sequence, Tuple
+
+from sqlalchemy import select
 
 from ..categories.models import Category
 from ..users.models import User
 from .models import Post, Thread
+from .sync import sync_thread, sync_thread_by_id
 
 
-async def delete_thread_post(thread: Thread, post: Post) -> Tuple[Thread, Post]:
-    return await delete_thread_posts(thread, [post])
+def delete_thread_post(thread: Thread, post: Post) -> Awaitable[Tuple[Thread, Post]]:
+    return delete_thread_posts(thread, [post])
 
 
 async def delete_thread_posts(
     thread: Thread, posts: Sequence[Post]
 ) -> Tuple[Thread, Post]:
     posts_ids = [i.id for i in posts]
-    posts_count_query = thread.posts_query.exclude(id__in=posts_ids).count()
-    last_reply_query = (
-        thread.posts_query.exclude(id__in=posts_ids).order_by("-id").stop(1).one()
-    )
-
-    posts_count, last_post = await gather(
-        posts_count_query,
-        last_reply_query,
-    )
-
-    updated_thread = await thread.update(
-        replies=posts_count - 1,  # first post doesnt count to replies,
-        last_post=last_post,
-    )
-
+    posts_query = thread.posts_query.exclude(id__in=posts_ids)
+    updated_thread, stats = await sync_thread(thread, posts_query)
     await thread.posts_query.filter(id__in=posts_ids).delete()
-
-    return updated_thread, last_post
+    return updated_thread, stats["last_post"]
 
 
 def delete_threads_in_categories(categories: Iterable[Category]):
@@ -39,8 +27,18 @@ def delete_threads_in_categories(categories: Iterable[Category]):
 
 
 def delete_user_threads(user: User):
-    return Thread.query.filter(user_id=user.id).delete()
+    return user.threads_query.filter(starter_id=user.id).delete()
 
 
-def delete_user_posts(user: User):
-    return Post.query.filter(user_id=user.id).delete()
+async def delete_user_posts(user: User):
+    threads_ids_subquery = select([Post.table.c.thread_id.distinct()]).where(
+        Post.table.c.poster_id == user.id
+    )
+
+    threads_to_update = Thread.query.filter(id__in=threads_ids_subquery)
+    exclude_deleted_posts = Post.query.exclude(poster_id=user.id)
+
+    async for thread in threads_to_update.iterator("id"):
+        await sync_thread_by_id(thread["id"], exclude_deleted_posts)
+
+    await user.posts_query.delete()

@@ -193,6 +193,7 @@ class Thread(Model):
                 raise ValueError(
                     "'last_post' and 'last_posted_at' options are mutually exclusive"
                 )
+
             if last_post.id != self.last_post_id:
                 changes["last_post_id"] = last_post.id
             if last_post.poster_id != self.last_poster_id:
