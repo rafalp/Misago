@@ -1,0 +1,9 @@
+# Delete user
+extend type Mutation {
+    deleteUser(user: ID!, deleteContent: Boolean): DeleteUserMutationResult!
+}
+
+type DeleteUserMutationResult {
+    errors: [Error!]
+    deleted: Boolean!
+}

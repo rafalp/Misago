@@ -23,8 +23,9 @@ def pytest_unconfigure():
 
 @pytest.fixture
 async def db():
-    async with database:
-        yield
+    await database.connect()
+    yield
+    await database.disconnect()
 
 
 @pytest.fixture

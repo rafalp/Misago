@@ -117,6 +117,14 @@ class ThreadTitleNotAllowedError(PydanticValueError):
     msg_template = "thread title is not allowed"
 
 
+class UserDoesNotExistError(PydanticValueError):
+    code = "user.not_exists"
+    msg_template = "user with id '{id}' does not exist"
+
+    def __init__(self, *, user_id: Union[int, str]) -> None:
+        super().__init__(id=user_id)
+
+
 class UsernameError(PydanticValueError):
     code = "username"
     msg_template = 'username does not match regex "{pattern}"'

@@ -8,7 +8,7 @@ from ....auth import create_user_token
 from ....auth.hooks import create_user_token_hook
 from ....errors import ErrorsList
 from ....loaders import store_user
-from ....users.hooks import create_user_hook
+from ....users.hooks.createuser import create_user_hook
 from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,

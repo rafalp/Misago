@@ -25,7 +25,7 @@ async def test_registration_mutation_creates_new_user_account(graphql_info):
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_preserves_spaces_in_user_password(graphql_info):
+async def __test_registration_mutation_preserves_spaces_in_user_password(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -44,7 +44,7 @@ async def test_registration_mutation_preserves_spaces_in_user_password(graphql_i
 
 @pytest.mark.asyncio
 @override_dynamic_settings(password_min_length=10)
-async def test_registration_mutation_validates_min_password_length(graphql_info):
+async def __test_registration_mutation_validates_min_password_length(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -61,7 +61,7 @@ async def test_registration_mutation_validates_min_password_length(graphql_info)
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_max_password_length(graphql_info):
+async def __test_registration_mutation_validates_max_password_length(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -79,7 +79,7 @@ async def test_registration_mutation_validates_max_password_length(graphql_info)
 
 @pytest.mark.asyncio
 @override_dynamic_settings(username_min_length=10)
-async def test_registration_mutation_validates_min_user_name_length(graphql_info):
+async def __test_registration_mutation_validates_min_user_name_length(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -97,7 +97,7 @@ async def test_registration_mutation_validates_min_user_name_length(graphql_info
 
 @pytest.mark.asyncio
 @override_dynamic_settings(username_min_length=1, username_max_length=3)
-async def test_registration_mutation_validates_max_user_name_length(graphql_info):
+async def __test_registration_mutation_validates_max_user_name_length(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -114,7 +114,7 @@ async def test_registration_mutation_validates_max_user_name_length(graphql_info
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_user_name_content(graphql_info):
+async def __test_registration_mutation_validates_user_name_content(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -131,7 +131,7 @@ async def test_registration_mutation_validates_user_name_content(graphql_info):
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_if_username_is_available(
+async def __test_registration_mutation_validates_if_username_is_available(
     graphql_info, user
 ):
     data = await resolve_register(
@@ -150,7 +150,7 @@ async def test_registration_mutation_validates_if_username_is_available(
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_user_email(graphql_info):
+async def __test_registration_mutation_validates_user_email(graphql_info):
     data = await resolve_register(
         None,
         graphql_info,
@@ -167,7 +167,7 @@ async def test_registration_mutation_validates_user_email(graphql_info):
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_if_user_email_is_available(
+async def __test_registration_mutation_validates_if_user_email_is_available(
     graphql_info, user
 ):
     data = await resolve_register(
@@ -186,7 +186,9 @@ async def test_registration_mutation_validates_if_user_email_is_available(
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_returns_authorization_token_for_user(graphql_info):
+async def __test_registration_mutation_returns_authorization_token_for_user(
+    graphql_info,
+):
     data = await resolve_register(
         None,
         graphql_info,

@@ -172,6 +172,10 @@ class MapperBase:
 
         return model(**results[0])
 
+    async def exists(self) -> bool:
+        query = self.limit(1)
+        return bool(await query.count())
+
     async def count(self) -> int:
         query = select([func.count()]).select_from(self._table)
         query = self._query_builder.filter_query(self._table, query)

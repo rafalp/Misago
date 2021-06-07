@@ -9,7 +9,7 @@ from ....auth.hooks import create_user_token_hook
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
-from ....users.hooks import create_user_hook
+from ....users.hooks.createuser import create_user_hook
 from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,
