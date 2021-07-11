@@ -54,7 +54,6 @@ async def resolve_delete_user(
         return {"errors": errors, "deleted": False}
 
     if delete_content:
-
         async def delete_user_content(user, *args, **kwargs):
             await delete_user_threads(user)
             await delete_user_posts(user)
