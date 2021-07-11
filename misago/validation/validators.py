@@ -3,12 +3,10 @@ from typing import Any, Awaitable, Callable, List, Optional, Union, cast
 
 from pydantic import PydanticTypeError, PydanticValueError
 from pydantic.color import Color
-from sqlalchemy.sql import select
 
 from ..auth import get_authenticated_user
 from ..categories import CategoryTypes
 from ..categories.models import Category
-from ..database import database
 from ..errors import (
     AuthError,
     CategoryClosedError,
@@ -28,7 +26,6 @@ from ..errors import (
 )
 from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread, load_user
-from ..tables import users
 from ..threads.models import Post, Thread
 from ..users.email import get_email_hash
 from ..users.models import User

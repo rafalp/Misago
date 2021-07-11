@@ -62,7 +62,10 @@ def list_loader(cache_key: str):
                 except Exception as e:  # pylint: disable=broad-except
                     future.set_exception(e)
 
-            return await context[cache_key]
+            if not context[cache_key].done():
+                await context[cache_key]
+            
+            return context[cache_key].result()
 
         return wrapped_list_loader_func
 

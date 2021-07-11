@@ -13,6 +13,7 @@ disable=
     attribute-defined-outside-init,
     bad-continuation,
     cyclic-import,
+    deprecated-module,
     duplicate-code,
     expression-not-assigned,
     fixme,
