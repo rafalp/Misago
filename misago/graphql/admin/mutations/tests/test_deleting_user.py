@@ -1,5 +1,6 @@
 import pytest
 
+from .....threads.models import Post, Thread
 from .....users.models import User
 from ..deleteuser import resolve_delete_user
 
@@ -20,7 +21,9 @@ async def test_delete_user_mutation_deletes_user(admin_graphql_info, user):
 
 
 @pytest.mark.asyncio
-async def test_delete_user_mutation_leaves_user_content(admin_graphql_info, user):
+async def test_delete_user_mutation_leaves_user_content(
+    admin_graphql_info, user, user_thread, user_post
+):
     data = await resolve_delete_user(
         None,
         admin_graphql_info,
@@ -32,6 +35,32 @@ async def test_delete_user_mutation_leaves_user_content(admin_graphql_info, user
 
     with pytest.raises(User.DoesNotExist):
         await user.refresh_from_db()
+
+    await user_thread.refresh_from_db()
+    await user_post.refresh_from_db()
+
+
+@pytest.mark.asyncio
+async def test_delete_user_mutation_deletes_user_content(
+    admin_graphql_info, user, user_thread, user_post
+):
+    data = await resolve_delete_user(
+        None,
+        admin_graphql_info,
+        user=str(user.id),
+    )
+
+    assert not data.get("errors")
+    assert data["deleted"]
+
+    with pytest.raises(User.DoesNotExist):
+        await user.refresh_from_db()
+
+    with pytest.raises(Thread.DoesNotExist):
+        await user_thread.refresh_from_db()
+
+    with pytest.raises(Post.DoesNotExist):
+        await user_post.refresh_from_db()
 
 
 @pytest.mark.asyncio

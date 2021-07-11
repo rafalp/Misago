@@ -10,8 +10,10 @@ from ....validation import (
     validate_data,
     validate_model,
 )
+from ....threads.delete import delete_user_posts, delete_user_threads
 from ....users.errors import CantDeleteSelfError, UserIsProtectedError
 from ....users.hooks.deleteuser import delete_user_hook
+from ....users.hooks.deleteusercontent import delete_user_content_hook
 from ....users.models import User
 from ... import GraphQLContext
 from ...errorhandler import error_handler
@@ -50,6 +52,16 @@ async def resolve_delete_user(
 
     if errors:
         return {"errors": errors, "deleted": False}
+
+    if delete_content:
+
+        async def delete_user_content(user, *args, **kwargs):
+            await delete_user_threads(user)
+            await delete_user_posts(user)
+
+        await delete_user_content_hook.call_action(
+            delete_user_content, cleaned_data["user"], context=info.context
+        )
 
     def delete_user(user, *args, **kwargs):
         return cleaned_data["user"].delete()
