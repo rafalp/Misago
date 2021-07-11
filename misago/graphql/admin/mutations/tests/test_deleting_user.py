@@ -48,6 +48,7 @@ async def test_delete_user_mutation_deletes_user_content(
         None,
         admin_graphql_info,
         user=str(user.id),
+        delete_content=True
     )
 
     assert not data.get("errors")
