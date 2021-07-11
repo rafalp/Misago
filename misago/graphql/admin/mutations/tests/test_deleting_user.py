@@ -45,10 +45,7 @@ async def test_delete_user_mutation_deletes_user_content(
     admin_graphql_info, user, user_thread, user_post
 ):
     data = await resolve_delete_user(
-        None,
-        admin_graphql_info,
-        user=str(user.id),
-        delete_content=True
+        None, admin_graphql_info, user=str(user.id), delete_content=True
     )
 
     assert not data.get("errors")
