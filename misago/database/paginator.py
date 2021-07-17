@@ -2,7 +2,7 @@ import math
 from dataclasses import dataclass, field
 from typing import Generic, List, TypeVar, Union
 
-from .mapper import Mapper, MapperQuery
+from .objectmapper import ObjectMapper, ObjectMapperQuery
 
 
 class PageDoesNotExist(ValueError):
@@ -10,7 +10,7 @@ class PageDoesNotExist(ValueError):
 
 
 class Paginator:
-    _query: Union[Mapper, MapperQuery]
+    _query: Union[ObjectMapper, ObjectMapperQuery]
     _counted: bool
     _count: int
     _pages: int
@@ -20,7 +20,7 @@ class Paginator:
 
     def __init__(
         self,
-        query: Union[Mapper, MapperQuery],
+        query: Union[ObjectMapper, ObjectMapperQuery],
         per_page: int,
         orphans: int = 0,
         overlap_pages: bool = False,
@@ -96,7 +96,7 @@ def count_pages_with_overlaps(count: int, per_page: int, orphans: int = 0) -> in
 
 class Page:
     _paginator: Paginator
-    _query: MapperQuery
+    _query: ObjectMapperQuery
 
     number: int
     start: int
@@ -109,7 +109,7 @@ class Page:
 
     def __init__(
         self,
-        query: MapperQuery,
+        query: ObjectMapperQuery,
         number: int,
         start: int,
         stop: int,
@@ -133,7 +133,7 @@ class Page:
         return self._paginator
 
     @property
-    def query(self) -> MapperQuery:
+    def query(self) -> ObjectMapperQuery:
         return self._query
 
     @property

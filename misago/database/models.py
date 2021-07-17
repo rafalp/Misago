@@ -3,7 +3,7 @@ from typing import ClassVar, Type
 
 from sqlalchemy.sql import TableClause
 
-from .mapper import DoesNotExist, Mapper, MultipleObjectsReturned
+from .objectmapper import DoesNotExist, MultipleObjectsReturned, ObjectMapper
 
 
 class Model:
@@ -11,7 +11,7 @@ class Model:
     MultipleObjectsReturned: ClassVar[Type[MultipleObjectsReturned]]
 
     id: int
-    query: ClassVar[Mapper]
+    query: ClassVar[ObjectMapper]
     table: ClassVar[TableClause]
 
     def replace(self, **kwargs):
@@ -23,7 +23,7 @@ class Model:
 
 class ModelsRegistry(dict):
     def register(self, name: str, model: Type[Model], table: TableClause):
-        self[name] = Mapper(table, model)
+        self[name] = ObjectMapper(table, model)
 
 
 model_registry = ModelsRegistry()
@@ -31,7 +31,7 @@ model_registry = ModelsRegistry()
 
 def register_model(name: str, table: TableClause):
     def register(model: Type[Model]):
-        mapper = Mapper(table, model)
+        mapper = ObjectMapper(table, model)
         model_registry[name] = mapper
 
         model.DoesNotExist = mapper.DoesNotExist

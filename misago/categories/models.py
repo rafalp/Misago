@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Awaitable, Dict, Optional, Union
 
-from ..database import MapperQuery, Model, model_registry, register_model
+from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..graphql import GraphQLContext
 from ..tables import categories
 from ..utils.strings import slugify
@@ -27,11 +27,11 @@ class Category(Model):
     is_closed: Optional[bool] = False
 
     @property
-    def posts_query(self) -> MapperQuery:
+    def posts_query(self) -> ObjectMapperQuery:
         return model_registry["Post"].filter(category_id=self.id)
 
     @property
-    def threads_query(self) -> MapperQuery:
+    def threads_query(self) -> ObjectMapperQuery:
         return model_registry["Thread"].filter(category_id=self.id)
 
     @classmethod

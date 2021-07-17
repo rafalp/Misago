@@ -7,7 +7,7 @@ from .database import database
 from .querybuilder import QueryBuilder
 
 
-class MapperBase:
+class ObjectMapperBase:
     def __init__(
         self,
         table: TableClause,
@@ -44,7 +44,7 @@ class MapperBase:
         self.validate_filters(filters)
 
         new_query_builder = self._query_builder.filter(*clauses, **filters)
-        return MapperQuery(
+        return ObjectMapperQuery(
             self._table,
             model=self._model,
             query_builder=new_query_builder,
@@ -56,7 +56,7 @@ class MapperBase:
         self.validate_filters(filters)
 
         new_query_builder = self._query_builder.exclude(*clauses, **filters)
-        return MapperQuery(
+        return ObjectMapperQuery(
             self._table,
             model=self._model,
             query_builder=new_query_builder,
@@ -72,7 +72,7 @@ class MapperBase:
 
     def offset(self, offset: int):
         new_query_builder = self._query_builder.offset(offset)
-        return MapperQuery(
+        return ObjectMapperQuery(
             self._table,
             model=self._model,
             query_builder=new_query_builder,
@@ -82,7 +82,7 @@ class MapperBase:
 
     def limit(self, offset: int):
         new_query_builder = self._query_builder.limit(offset)
-        return MapperQuery(
+        return ObjectMapperQuery(
             self._table,
             model=self._model,
             query_builder=new_query_builder,
@@ -98,7 +98,7 @@ class MapperBase:
                 validate_column(col_name, self._table)
 
         new_query_builder = self._query_builder.order_by(*clauses)
-        return MapperQuery(
+        return ObjectMapperQuery(
             self._table,
             model=self._model,
             query_builder=new_query_builder,
@@ -189,7 +189,7 @@ class MapperBase:
         return await database.execute(query)
 
 
-class Mapper(MapperBase):
+class ObjectMapper(ObjectMapperBase):
     def __init__(self, table: TableClause, model: Any = dict):
         self.DoesNotExist = type(
             "%sDoesNotExist" % table.name.title(),
@@ -237,7 +237,7 @@ class Mapper(MapperBase):
         return await database.execute(self._table.delete())
 
 
-class MapperQuery(MapperBase):
+class ObjectMapperQuery(ObjectMapperBase):
     def __init__(
         self,
         table: TableClause,

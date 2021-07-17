@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Awaitable, Dict, List, Optional
 
 from ..categories.models import Category
-from ..database import MapperQuery, Model, model_registry, register_model
+from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..database.paginator import PaginationPage
 from ..graphql import GraphQLContext
 from ..richtext import RichText
@@ -34,7 +34,7 @@ class Thread(Model):
     last_poster_id: Optional[int]
 
     @property
-    def posts_query(self) -> MapperQuery:
+    def posts_query(self) -> ObjectMapperQuery:
         return model_registry["Post"].filter(thread_id=self.id)
 
     async def fetch_first_post(self) -> Optional["Post"]:

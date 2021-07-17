@@ -2,7 +2,8 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Awaitable, Dict, Optional
 
-from ..database import MapperQuery, Model, model_registry, register_model
+from ..database import Model, ObjectMapperQuery, model_registry, register_model
+from ..database.paginator import PaginationPage
 from ..passwords import hash_password
 from ..tables import users
 from ..graphql import GraphQLContext
@@ -28,11 +29,11 @@ class User(Model):
     extra: dict
 
     @property
-    def posts_query(self) -> MapperQuery:
+    def posts_query(self) -> ObjectMapperQuery:
         return model_registry["Post"].filter(poster_id=self.id)
 
     @property
-    def threads_query(self) -> MapperQuery:
+    def threads_query(self) -> ObjectMapperQuery:
         return model_registry["Thread"].filter(starter_id=self.id)
 
     @classmethod
@@ -124,3 +125,8 @@ class User(Model):
 
     def delete(self):
         return User.query.filter(id=self.id).delete()
+
+
+@dataclass
+class UsersListPage(PaginationPage[User]):
+    pass

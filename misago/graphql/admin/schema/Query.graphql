@@ -1,3 +1,12 @@
 extend type Query {
     categories: [Category!]
+    users(filters: UsersFilters): UsersList
+}
+
+input UsersFilters {
+    name: String
+    email: String
+    isActive: Boolean
+    isModerator: Boolean
+    isAdministrator: Boolean
 }

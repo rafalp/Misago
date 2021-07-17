@@ -1,0 +1,11 @@
+type UsersList {
+    page(page: Int): UsersListPage
+    pagination: Pagination!
+}
+
+type UsersListPage {
+    items: [User!]!
+    number: Int
+    start: Int
+    stop: Int
+}

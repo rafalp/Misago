@@ -5,12 +5,12 @@ import pytest
 
 from ...tables import categories, settings, users
 from ...utils import timezone
-from ..mapper import Mapper, InvalidColumnError
+from ..objectmapper import ObjectMapper, InvalidColumnError
 
 
 @pytest.mark.asyncio
 async def test_all_results_are_retrieved(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     results = await mapper.all()
     assert results
     assert results[0]["name"]
@@ -19,7 +19,7 @@ async def test_all_results_are_retrieved(db):
 
 @pytest.mark.asyncio
 async def test_one_result_is_retrieved(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     result = await mapper.filter(name="forum_name").one()
     assert result
     assert result["name"]
@@ -28,7 +28,7 @@ async def test_one_result_is_retrieved(db):
 
 @pytest.mark.asyncio
 async def test_one_result_is_retrieved_using_shortcut(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     result = await mapper.one(name="forum_name")
     assert result
     assert result["name"]
@@ -37,21 +37,21 @@ async def test_one_result_is_retrieved_using_shortcut(db):
 
 @pytest.mark.asyncio
 async def test_multiple_results_exception_is_raised_when_one_is_expected(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     with pytest.raises(mapper.MultipleObjectsReturned):
         await mapper.one()
 
 
 @pytest.mark.asyncio
 async def test_does_not_exist_exception_is_raised_when_one_is_expected(db):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     with pytest.raises(mapper.DoesNotExist):
         await mapper.one()
 
 
 @pytest.mark.asyncio
 async def test_query_is_filtered(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     results = await mapper.filter(name="forum_name").all()
     assert results
     assert results[0]["name"] == "forum_name"
@@ -60,14 +60,14 @@ async def test_query_is_filtered(db):
 
 @pytest.mark.asyncio
 async def test_query_filter_raises_invalid_column_error_if_filter_is_invalid(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     with pytest.raises(InvalidColumnError):
         await mapper.filter(invalid_col="forum_name")
 
 
 @pytest.mark.asyncio
 async def test_query_excludes_some_results(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     results = await mapper.exclude(is_administrator=False).all()
     assert results
     assert results[0]["id"] == admin.id
@@ -75,14 +75,14 @@ async def test_query_excludes_some_results(admin, user):
 
 @pytest.mark.asyncio
 async def test_query_exclude_raises_invalid_column_error_if_filter_is_invalid(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     with pytest.raises(InvalidColumnError):
         await mapper.exclude(invalid_col="forum_name")
 
 
 @pytest.mark.asyncio
 async def test_filter_and_exclude_can_be_combined(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     results = await mapper.filter(is_active=True).exclude(is_administrator=False).all()
     assert results
     assert results[0]["id"] == admin.id
@@ -90,7 +90,7 @@ async def test_filter_and_exclude_can_be_combined(admin, user):
 
 @pytest.mark.asyncio
 async def test_query_can_be_filtered_using_in(category, sibling_category):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await mapper.filter(id__in=[category.id, sibling_category.id]).all()
     assert len(results) == 2
     assert results[0]["id"] == category.id
@@ -99,7 +99,7 @@ async def test_query_can_be_filtered_using_in(category, sibling_category):
 
 @pytest.mark.asyncio
 async def test_query_can_be_filtered_using_isnull_false(category, child_category):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     result = await mapper.filter(
         id__in=[category.id, child_category.id], parent_id__isnull=False
     ).one()
@@ -108,7 +108,7 @@ async def test_query_can_be_filtered_using_isnull_false(category, child_category
 
 @pytest.mark.asyncio
 async def test_query_can_be_filtered_using_isnull_true(category, child_category):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     result = await mapper.filter(
         id__in=[category.id, child_category.id], parent_id__isnull=True
     ).one()
@@ -119,7 +119,7 @@ async def test_query_can_be_filtered_using_isnull_true(category, child_category)
 async def test_query_can_be_filtered_using_sql_alchemy_expression(
     category, sibling_category
 ):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await mapper.filter(mapper.columns.id == category.id).all()
     assert len(results) == 1
     assert results[0]["id"] == category.id
@@ -127,28 +127,28 @@ async def test_query_can_be_filtered_using_sql_alchemy_expression(
 
 @pytest.mark.asyncio
 async def test_query_result_is_limited_to_given_columns(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     results = await mapper.filter(name="forum_name").all("name")
     assert results == [{"name": "forum_name"}]
 
 
 @pytest.mark.asyncio
 async def test_query_result_is_flat_list_of_given_columns(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     results = await mapper.filter(name="forum_name").all("name", flat=True)
     assert results == ["forum_name"]
 
 
 @pytest.mark.asyncio
 async def test_query_raises_error_when_its_limited_to_invalid_column(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     with pytest.raises(InvalidColumnError):
         await mapper.all("invalid_column")
 
 
 @pytest.mark.asyncio
 async def test_query_result_is_ordered_by_single_column(category, child_category):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await (
         mapper.filter(id__in=[category.id, child_category.id])
         .order_by("left")
@@ -159,7 +159,7 @@ async def test_query_result_is_ordered_by_single_column(category, child_category
 
 @pytest.mark.asyncio
 async def test_query_result_is_ordered_desc_by_single_column(category, child_category):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await (
         mapper.filter(id__in=[category.id, child_category.id])
         .order_by("-left")
@@ -172,7 +172,7 @@ async def test_query_result_is_ordered_desc_by_single_column(category, child_cat
 async def test_query_result_is_ordered_by_multiple_columns(
     category, child_category, sibling_category
 ):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await (
         mapper.filter(id__in=[category.id, child_category.id, sibling_category.id])
         .order_by("depth", "left")
@@ -185,7 +185,7 @@ async def test_query_result_is_ordered_by_multiple_columns(
 async def test_query_result_is_ordered_desc_by_multiple_columns(
     category, child_category, sibling_category
 ):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     results = await (
         mapper.filter(id__in=[category.id, child_category.id, sibling_category.id])
         .order_by("depth", "-left")
@@ -196,7 +196,7 @@ async def test_query_result_is_ordered_desc_by_multiple_columns(
 
 @pytest.mark.asyncio
 async def test_query_ordering_raises_error_when_query_is_ordered_by_invalid_column():
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     with pytest.raises(InvalidColumnError):
         mapper.order_by("depth", "-invalid")
 
@@ -208,7 +208,7 @@ class IteratorModel:
 
 @pytest.mark.asyncio
 async def test_large_query_result_is_iterated_in_descending_order(db):
-    mapper = Mapper(users, IteratorModel)
+    mapper = ObjectMapper(users, IteratorModel)
     test_ids = []
     for i in range(20):
         item = await mapper.insert(
@@ -233,7 +233,7 @@ async def test_large_query_result_is_iterated_in_descending_order(db):
 
 @pytest.mark.asyncio
 async def test_large_query_result_is_iterated_in_ascending_order(db):
-    mapper = Mapper(users, IteratorModel)
+    mapper = ObjectMapper(users, IteratorModel)
     test_ids = []
     for i in range(20):
         item = await mapper.insert(
@@ -258,21 +258,21 @@ async def test_large_query_result_is_iterated_in_ascending_order(db):
 
 @pytest.mark.asyncio
 async def test_count_results_table_size(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     rows_count = await mapper.count()
     assert rows_count == 2
 
 
 @pytest.mark.asyncio
 async def test_count_can_be_filtered(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     rows_count = await mapper.filter(is_administrator=True).count()
     assert rows_count == 1
 
 
 @pytest.mark.asyncio
 async def test_delete_all_empties_table(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
 
     rows_count = await mapper.count()
     assert rows_count == 2
@@ -285,7 +285,7 @@ async def test_delete_all_empties_table(admin, user):
 
 @pytest.mark.asyncio
 async def test_delete_can_be_filtered(admin, user):
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
 
     rows_count = await mapper.count()
     assert rows_count == 2
@@ -298,7 +298,7 @@ async def test_delete_can_be_filtered(admin, user):
 
 @pytest.mark.asyncio
 async def test_insert_creates_new_row(db):
-    mapper = Mapper(settings)
+    mapper = ObjectMapper(settings)
     result = await mapper.insert(name="test_setting", value="wololo")
     assert result
     assert result["name"] == "test_setting"
@@ -309,7 +309,7 @@ async def test_insert_creates_new_row(db):
 async def test_update_updates_all_rows(admin):
     assert admin.is_administrator
 
-    mapper = Mapper(users)
+    mapper = ObjectMapper(users)
     await mapper.update(is_administrator=False)
 
     admin_from_db = await mapper.filter(id=admin.id).one()
@@ -318,7 +318,7 @@ async def test_update_updates_all_rows(admin):
 
 @pytest.mark.asyncio
 async def test_insert_sets_id_on_newly_created_row(db):
-    mapper = Mapper(categories)
+    mapper = ObjectMapper(categories)
     result = await mapper.insert(
         name="Test",
         slug="test",
@@ -348,7 +348,7 @@ class Model:
 
 @pytest.mark.asyncio
 async def test_query_result_is_mapped_to_type(db):
-    mapper = Mapper(settings, Model)
+    mapper = ObjectMapper(settings, Model)
     results = await mapper.all()
     assert results
     assert isinstance(results[0], Model)
