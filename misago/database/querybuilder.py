@@ -114,6 +114,16 @@ class QueryBuilder:
             return table.c[col_name] <= value
         if op == "in":
             return table.c[col_name].in_(value)
+        if op == "imatch":
+            return imatch(table.c[col_name], value)
+        if op == "ilike":
+            return ilike(table.c[col_name], value)
+        if op == "icontains":
+            return icontains(table.c[col_name], value)
+        if op == "istartswith":
+            return istartswith(table.c[col_name], value)
+        if op == "iendswith":
+            return iendswith(table.c[col_name], value)
         if op == "isnull":
             if value:
                 return table.c[col_name].is_(None)
@@ -144,6 +154,16 @@ class QueryBuilder:
             return table.c[col_name] > value
         if op == "in":
             return not_(table.c[col_name].in_(value))
+        if op == "imatch":
+            return not_(imatch(table.c[col_name], value))
+        if op == "ilike":
+            return not_(ilike(table.c[col_name], value))
+        if op == "icontains":
+            return not_(icontains(table.c[col_name], value))
+        if op == "istartswith":
+            return not_(istartswith(table.c[col_name], value))
+        if op == "iendswith":
+            return not_(iendswith(table.c[col_name], value))
         if op == "isnull":
             if value:
                 return table.c[col_name].isnot(None)
@@ -170,3 +190,44 @@ class QueryBuilder:
                 order_by.append(asc(table.c[col_name]))
 
         return query.order_by(*order_by)
+
+
+ESCAPE_CHARACTER = "\\"
+
+
+def imatch(column, value):
+    starts = value.endswith("*")
+    ends = value.startswith("*")
+    value_clean = value.strip("*").strip()
+
+    if starts and ends:
+        return icontains(column, value_clean)
+    if starts:
+        return istartswith(column, value_clean)
+    if ends:
+        return iendswith(column, value_clean)
+    return ilike(column, value_clean)
+
+
+def ilike(column, value):
+    escaped_value = escape_value(value)
+    return column.ilike(f"{escaped_value}", escape=ESCAPE_CHARACTER)
+
+
+def icontains(column, value):
+    escaped_value = escape_value(value)
+    return column.ilike(f"%{escaped_value}%", escape=ESCAPE_CHARACTER)
+
+
+def istartswith(column, value):
+    escaped_value = escape_value(value)
+    return column.ilike(f"{escaped_value}%", escape=ESCAPE_CHARACTER)
+
+
+def iendswith(column, value):
+    escaped_value = escape_value(value)
+    return column.ilike(f"%{escaped_value}", escape=ESCAPE_CHARACTER)
+
+
+def escape_value(value) -> str:
+    return value.replace(ESCAPE_CHARACTER, ESCAPE_CHARACTER * 2).replace(r"%", r"\%")

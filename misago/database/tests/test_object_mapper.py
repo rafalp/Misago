@@ -98,6 +98,70 @@ async def test_query_can_be_filtered_using_in(category, sibling_category):
 
 
 @pytest.mark.asyncio
+async def test_query_can_be_filtered_using_ilike(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__ilike="FORUM_NAME").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_istartswith(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__istartswith="FORUM_NA").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_iendswith(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__iendswith="rum_NAME").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_icontains(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__icontains="RUM_NAM").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_imatch(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__imatch="FORUM_NAME").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_imatch_prefix(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__imatch="*UM_NAME").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_imatch_suffix(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__imatch="FORUM_NAM*").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
+async def test_query_can_be_filtered_using_imatch_contains(db):
+    mapper = ObjectMapper(settings)
+    results = await mapper.filter(name__imatch="*RUM_NAM*").all()
+    assert len(results) == 1
+    assert results[0]["name"] == "forum_name"
+
+
+@pytest.mark.asyncio
 async def test_query_can_be_filtered_using_isnull_false(category, child_category):
     mapper = ObjectMapper(categories)
     result = await mapper.filter(

@@ -2,7 +2,7 @@ from typing import List
 
 from sqlalchemy import or_
 
-from ..database.queries import istartswith
+from ..database.querybuilder import istartswith
 from .models import User
 
 RESULTS_MAX_LIMIT = 50
