@@ -1,14 +1,17 @@
-from unittest.mock import Mock
+from unittest.mock import AsyncMock, Mock
 
+import httpx
 import pytest
 
 from . import tables
+from .asgi import app
 from .categories.models import Category
 from .conf.cache import SETTINGS_CACHE
 from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
 from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
+from .graphql.admin.schema import admin_schema
 from .threads.models import Post, Thread
 from .users.models import User
 
@@ -129,7 +132,7 @@ async def other_user(db, user_password):
 @pytest.fixture
 async def inactive_user(db, user_password):
     return await User.create(
-        "User", "user@example.com", password=user_password, is_active=False
+        "User", "inactive@example.com", password=user_password, is_active=False
     )
 
 
@@ -152,11 +155,13 @@ async def admin(db, user_password):
     )
 
 
-request_mock = Mock(headers={}, base_url="http://test.com/")
+@pytest.fixture
+def request_mock():
+    return Mock(headers={}, base_url="http://test.com/")
 
 
 @pytest.fixture
-def graphql_context(cache_versions, dynamic_settings):
+def graphql_context(request_mock, cache_versions, dynamic_settings):
     return {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -170,7 +175,7 @@ def graphql_info(graphql_context):
 
 
 @pytest.fixture
-def user_graphql_context(cache_versions, dynamic_settings, user):
+def user_graphql_context(request_mock, cache_versions, dynamic_settings, user):
     return {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -185,7 +190,9 @@ def user_graphql_info(user_graphql_context):
 
 
 @pytest.fixture
-def moderator_graphql_context(cache_versions, dynamic_settings, moderator):
+def moderator_graphql_context(
+    request_mock, cache_versions, dynamic_settings, moderator
+):
     return {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -200,7 +207,7 @@ def moderator_graphql_info(moderator_graphql_context):
 
 
 @pytest.fixture
-def admin_graphql_context(cache_versions, dynamic_settings, admin):
+def admin_graphql_context(request_mock, cache_versions, dynamic_settings, admin):
     return {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -383,3 +390,24 @@ def closed_category_user_thread(closed_category_user_thread_and_post):
 def closed_category_user_post(closed_category_user_thread_and_post):
     _, post = closed_category_user_thread_and_post
     return post
+
+
+import pytest
+
+
+@pytest.fixture
+def query_admin_api(admin, monkeypatch):
+    async def query_admin_schema(query, variables=None, *, auth: bool = True):
+        if auth:
+            monkeypatch.setattr(
+                "misago.auth.auth.get_user_from_context",
+                AsyncMock(return_value=admin),
+            )
+
+        async with httpx.AsyncClient(app=app, base_url="http://example.com") as client:
+            r = await client.post(
+                "/admin/graphql/", json={"query": query, "variables": variables}
+            )
+            return r.json()
+
+    return query_admin_schema

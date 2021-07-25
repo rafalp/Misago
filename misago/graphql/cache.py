@@ -5,10 +5,10 @@ from typing import Any
 
 
 def cached_resolver(f):
-    cache_key = f"__cache_{f.__name__}"
-
     @wraps(f)
     async def resolver_with_cache(obj, info, *args, **kwargs):
+        cache_key = f"__cache_{f.__name__}_{kwargs}"
+
         context = info.context
         if cache_key not in context:
             future: Future[Any] = Future()

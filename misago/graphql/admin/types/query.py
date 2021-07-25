@@ -7,7 +7,6 @@ from ....categories.models import Category
 from ....database.paginator import Paginator
 from ....loaders import load_root_categories
 from ....users.models import User
-from ...cache import cached_resolver
 from ..decorators import admin_query
 
 query_type = QueryType()
@@ -21,7 +20,6 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 
 @query_type.field("users")
 @admin_query
-@cached_resolver
 @convert_kwargs_to_snake_case
 async def resolve_users(
     *_, filters: Optional[dict] = None, sort: Optional[str] = None
@@ -39,7 +37,7 @@ async def resolve_users(
             query = query.filter(is_administrator=filters["is_administrator"])
         if filters.get("is_moderator") is not None:
             query = query.filter(is_moderator=filters["is_moderator"])
-    
+
     query = query.order_by("-id")
 
     paginator = Paginator(query, 50, 15)

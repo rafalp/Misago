@@ -23,6 +23,7 @@ class Paginator:
         query: Union[ObjectMapper, ObjectMapperQuery],
         per_page: int,
         orphans: int = 0,
+        *,
         overlap_pages: bool = False,
     ):
         self._query = query
