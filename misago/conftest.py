@@ -392,9 +392,6 @@ def closed_category_user_post(closed_category_user_thread_and_post):
     return post
 
 
-import pytest
-
-
 @pytest.fixture
 def query_admin_api(admin, monkeypatch):
     async def query_admin_schema(query, variables=None, *, auth: bool = True):

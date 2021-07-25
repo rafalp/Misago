@@ -23,7 +23,7 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 @convert_kwargs_to_snake_case
 async def resolve_users(
     *_, filters: Optional[dict] = None, sort: Optional[str] = None
-) -> Awaitable[List[Category]]:
+) -> Paginator:
     query = User.query
 
     if filters:
