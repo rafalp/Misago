@@ -1,3 +1,4 @@
+from typing import Optional
 from unittest.mock import AsyncMock, Mock
 
 import httpx
@@ -11,7 +12,6 @@ from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
 from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
-from .graphql.admin.schema import admin_schema
 from .threads.models import Post, Thread
 from .users.models import User
 
@@ -411,3 +411,23 @@ def query_admin_api(admin, monkeypatch):
             return r.json()
 
     return query_admin_schema
+
+
+@pytest.fixture
+def query_public_api(monkeypatch):
+    async def query_public_schema(
+        query, variables=None, *, auth: Optional[User] = None
+    ):
+        if auth:
+            monkeypatch.setattr(
+                "misago.auth.auth.get_user_from_context",
+                AsyncMock(return_value=auth),
+            )
+
+        async with httpx.AsyncClient(app=app, base_url="http://example.com") as client:
+            r = await client.post(
+                "/graphql/", json={"query": query, "variables": variables}
+            )
+            return r.json()
+
+    return query_public_schema
