@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
 from ....database.paginator import Paginator
-from ....loaders import load_root_categories
+from ....loaders import load_root_categories, load_user
 from ....users.models import User
 from ..decorators import admin_query
 
@@ -16,6 +16,14 @@ query_type = QueryType()
 @admin_query
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
     return load_root_categories(info.context)
+
+
+@query_type.field("user")
+@admin_query
+def resolve_user(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Awaitable[Optional[User]]:
+    return load_user(info.context, id)
 
 
 @query_type.field("users")

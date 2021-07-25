@@ -1,5 +1,6 @@
 extend type Query {
     categories: [Category!]
+    user(id: ID!): User
     users(filters: UsersFilters): UsersList
 }
 
