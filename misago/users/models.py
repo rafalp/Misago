@@ -4,7 +4,7 @@ from typing import Any, Awaitable, Dict, Optional
 
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..database.paginator import PaginationPage
-from ..passwords import hash_password
+from ..passwords import check_password, hash_password
 from ..tables import users
 from ..graphql import GraphQLContext
 from ..utils import timezone
@@ -125,6 +125,12 @@ class User(Model):
 
     def delete(self):
         return User.query.filter(id=self.id).delete()
+
+    async def check_password(self, password: str) -> bool:
+        if not self.password:
+            return False
+
+        return await check_password(password, self.password)
 
 
 @dataclass

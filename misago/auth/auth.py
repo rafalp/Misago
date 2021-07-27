@@ -1,7 +1,7 @@
 from typing import Optional
 
 from ..graphql import GraphQLContext
-from ..passwords import verify_password
+from ..passwords import check_password
 from ..users.get import get_user_by_name_or_email
 from ..users.models import User
 from .hooks import get_user_from_context_hook, get_user_from_token_hook
@@ -18,7 +18,7 @@ async def authenticate_user(
 
     if not user or not user.is_active:
         return None
-    if user.password is None or not await verify_password(password, user.password):
+    if user.password is None or not await check_password(password, user.password):
         return None
 
     return user

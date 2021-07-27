@@ -1,6 +1,6 @@
 import pytest
 
-from ...passwords import verify_password
+from ...passwords import check_password
 from ...utils import timezone
 from ..models import User
 
@@ -35,7 +35,7 @@ async def test_user_is_created_with_specified_join_datetime(db, user_password):
 async def test_user_is_created_with_useable_password(db, user_password):
     user = await User.create("test", "test@example.com", password=user_password)
     assert user.id
-    assert await verify_password(user_password, user.password)
+    assert await check_password(user_password, user.password)
 
 
 @pytest.mark.asyncio

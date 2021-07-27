@@ -394,7 +394,9 @@ def closed_category_user_post(closed_category_user_thread_and_post):
 
 @pytest.fixture
 def query_admin_api(admin, monkeypatch):
-    async def query_admin_schema(query, variables=None, *, auth: bool = True):
+    async def query_admin_schema(
+        query, variables=None, *, auth: bool = True, allow_errors: bool = False
+    ):
         if auth:
             monkeypatch.setattr(
                 "misago.auth.auth.get_user_from_context",
@@ -405,7 +407,11 @@ def query_admin_api(admin, monkeypatch):
             r = await client.post(
                 "/admin/graphql/", json={"query": query, "variables": variables}
             )
-            return r.json()
+            result = r.json()
+            if not allow_errors:
+                assert not "errors" in result, "GraphQL query could not be completed"
+
+            return result
 
     return query_admin_schema
 

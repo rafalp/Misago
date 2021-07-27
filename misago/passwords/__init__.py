@@ -6,7 +6,7 @@ from .hasher import PasswordHasher
 __all__ = [
     "password_hasher",
     "hash_password",
-    "verify_password",
+    "check_password",
     "is_password_outdated",
 ]
 
@@ -19,5 +19,5 @@ else:
 
 
 hash_password = password_hasher.hash_password
-verify_password = password_hasher.verify_password
+check_password = password_hasher.check_password
 is_password_outdated = password_hasher.is_password_outdated

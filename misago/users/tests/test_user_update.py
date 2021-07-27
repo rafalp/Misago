@@ -1,6 +1,6 @@
 import pytest
 
-from ...passwords import verify_password
+from ...passwords import check_password
 from ...utils import timezone
 
 
@@ -34,7 +34,7 @@ async def test_user_full_name_is_removed(user):
 async def test_user_password_is_changed(user):
     updated_user = await user.update(password=" secr3t! ")
     assert updated_user.password != user.password
-    assert await verify_password(" secr3t! ", updated_user.password)
+    assert await check_password(" secr3t! ", updated_user.password)
 
 
 @pytest.mark.asyncio

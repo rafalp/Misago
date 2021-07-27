@@ -1,7 +1,7 @@
 import pytest
 
 from .....auth import get_user_from_token
-from .....passwords import verify_password
+from .....passwords import check_password
 from .....testing import override_dynamic_settings
 from .....users.models import User
 from ..register import resolve_register
@@ -39,7 +39,7 @@ async def __test_registration_mutation_preserves_spaces_in_user_password(graphql
     assert "user" in data
 
     user = await User.query.one(id=data["user"].id)
-    assert await verify_password(" password123 ", user.password)
+    assert await check_password(" password123 ", user.password)
 
 
 @pytest.mark.asyncio
