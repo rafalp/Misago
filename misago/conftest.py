@@ -395,9 +395,9 @@ def closed_category_user_post(closed_category_user_thread_and_post):
 @pytest.fixture
 def query_admin_api(admin, monkeypatch):
     async def query_admin_schema(
-        query, variables=None, *, auth: bool = True, allow_errors: bool = False
+        query, variables=None, *, include_auth: bool = True, allow_errors: bool = False
     ):
-        if auth:
+        if include_auth:
             monkeypatch.setattr(
                 "misago.auth.auth.get_user_from_context",
                 AsyncMock(return_value=admin),

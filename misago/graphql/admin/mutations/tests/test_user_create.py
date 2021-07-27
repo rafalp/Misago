@@ -164,3 +164,21 @@ async def test_user_create_mutation_returns_error_if_password_is_invalid(
     assert data["errors"] == [
         {"location": ["password"], "type": "value_error.any_str.min_length"}
     ]
+
+
+@pytest.mark.asyncio
+async def test_user_create_mutation_requires_admin_auth(query_admin_api):
+    variables = {
+        "input": {
+            "name": "TestUser",
+            "email": "test@example.com",
+            "password": "password123",
+        }
+    }
+    result = await query_admin_api(USER_CREATE_MUTATION, variables, include_auth=False)
+
+    data = result["data"]["userCreate"]
+    assert not data["user"]
+    assert data["errors"] == [
+        {"location": ["__root__"], "type": "auth_error.not_admin"}
+    ]
