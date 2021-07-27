@@ -1,13 +1,18 @@
 extend type Mutation {
-    userCreate(input: UserCreateInput!): UserMutationResult!
-    userUpdate(user: ID!, input: UserUpdateInput!): UserMutationResult!
-    deleteUser(user: ID!, deleteContent: Boolean): DeleteUserMutationResult!
+    userCreate(input: UserCreateInput!): UserCreateMutationResult!
+    userUpdate(user: ID!, input: UserUpdateInput!): UserUpdateMutationResult!
+    userDelete(user: ID!, deleteContent: Boolean): UserDeleteMutationResult!
 }
 
 input UserCreateInput {
     name: String!
     email: String!
     password: String!
+}
+
+type UserCreateMutationResult {
+    errors: [Error!]
+    user: User
 }
 
 input UserUpdateInput {
@@ -20,12 +25,13 @@ input UserUpdateInput {
     isModerator: Boolean
 }
 
-type UserMutationResult {
+type UserUpdateMutationResult {
     errors: [Error!]
+    updated: Boolean!
     user: User
 }
 
-type DeleteUserMutationResult {
+type UserDeleteMutationResult {
     errors: [Error!]
     deleted: Boolean!
 }

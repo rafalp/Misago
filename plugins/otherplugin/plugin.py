@@ -1,3 +1,4 @@
+from misago.users.hooks.updateuser import update_user_hook
 from misago.graphql.hooks import graphql_context_hook
 
 print("PLUGIN!", __file__)
@@ -8,3 +9,13 @@ async def add_plugin_data_to_graphql_context(action, request):
     context = await action(request)
     context["plugin"] = "YES!"
     return context
+
+
+@update_user_hook.append
+async def update_user_updates_count(next, user, **kwargs):
+    if not kwargs.get("extra"):
+        kwargs["extra"] = user.extra
+
+    kwargs["extra"].setdefault("updates", 0)
+    kwargs["extra"]["updates"] += 1
+    return await next(user, **kwargs)

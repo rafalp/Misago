@@ -22,7 +22,7 @@ from ..decorators import admin_mutation
 delete_user_mutation = MutationType()
 
 
-@delete_user_mutation.field("deleteUser")
+@delete_user_mutation.field("userDelete")
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case

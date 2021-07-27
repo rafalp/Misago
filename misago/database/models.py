@@ -1,5 +1,5 @@
 from dataclasses import replace
-from typing import ClassVar, Type
+from typing import Any, ClassVar, Type
 
 from sqlalchemy.sql import TableClause
 
