@@ -1,6 +1,6 @@
-# Delete user
 extend type Mutation {
-    userCreate(input: UserCreateInput): UserMutationResult!
+    userCreate(input: UserCreateInput!): UserMutationResult!
+    userUpdate(user: ID!, input: UserUpdateInput!): UserMutationResult!
     deleteUser(user: ID!, deleteContent: Boolean): DeleteUserMutationResult!
 }
 
@@ -8,6 +8,16 @@ input UserCreateInput {
     name: String!
     email: String!
     password: String!
+}
+
+input UserUpdateInput {
+    name: String
+    fullName: String
+    email: String
+    password: String
+    isActive: Boolean
+    isAdministrator: Boolean
+    isModerator: Boolean
 }
 
 type UserMutationResult {
