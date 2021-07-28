@@ -13,7 +13,7 @@ async def add_plugin_data_to_graphql_context(action, request):
     return context
 
 
-@update_user_hook.append
+@update_user_hook.append  # type: ignore
 async def update_user_updates_count(next_action: Any, user, **kwargs):
     if not kwargs.get("extra"):
         kwargs["extra"] = user.extra
