@@ -3,9 +3,14 @@ from typing import Union
 from pydantic import PydanticValueError
 
 
-class CantDeleteSelfError(PydanticValueError):
+class UserDeleteSelfError(PydanticValueError):
     code = "user.delete_self"
-    msg_template = "authenticated user can't delete themselves"
+    msg_template = "user can't delete own account"
+
+
+class UserDeactivateSelfError(PydanticValueError):
+    code = "user.deactivate_self"
+    msg_template = "user can't deactivate own account"
 
 
 class UserIsProtectedError(PydanticValueError):
@@ -14,3 +19,8 @@ class UserIsProtectedError(PydanticValueError):
 
     def __init__(self, *, user_id: Union[int, str]) -> None:
         super().__init__(id=user_id)
+
+
+class UserRemoveOwnAdminError(PydanticValueError):
+    code = "user.remove_own_admin"
+    msg_template = "user can't remove own admin status"

@@ -11,7 +11,7 @@ from ....validation import (
     validate_model,
 )
 from ....threads.delete import delete_user_posts, delete_user_threads
-from ....users.errors import CantDeleteSelfError, UserIsProtectedError
+from ....users.errors import UserDeleteSelfError, UserIsProtectedError
 from ....users.hooks.deleteuser import delete_user_hook
 from ....users.hooks.deleteusercontent import delete_user_content_hook
 from ....users.models import User
@@ -82,7 +82,7 @@ def user_can_be_deleted_validator(context: GraphQLContext):
     async def validate_delete_user(user: User, errors, field_name):
         context_user = cast(User, await get_authenticated_user(context))
         if user.id == context_user.id:
-            raise CantDeleteSelfError()
+            raise UserDeleteSelfError()
         if user.is_administrator:
             raise UserIsProtectedError(user_id=user.id)
 
