@@ -2,7 +2,6 @@ import pytest
 
 from .....users.models import User
 
-
 USER_CREATE_MUTATION = """
     mutation UserCreate($input: UserCreateInput!) {
         userCreate(input: $input) {

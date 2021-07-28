@@ -19,14 +19,14 @@ from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 
-delete_user_mutation = MutationType()
+user_delete_mutation = MutationType()
 
 
-@delete_user_mutation.field("userDelete")
+@user_delete_mutation.field("userDelete")
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case
-async def resolve_delete_user(
+async def resolve_user_delete(
     _,
     info: GraphQLResolveInfo,
     *,
