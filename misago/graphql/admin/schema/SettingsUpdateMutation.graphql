@@ -1,0 +1,27 @@
+extend type Mutation {
+    settingsUpdate(input: SettingsUpdateInput!): SettingsUpdateResult!
+}
+
+input SettingsUpdateInput {
+    bulkActionLimit: Int
+    forumIndexHeader: String
+    forumIndexThreads: Boolean
+    forumIndexTitle: String
+    forumName: String
+    jwtExp: Int
+    passwordMinLength: Int
+    postMinLength: Int
+    postsPerPage: Int
+    postsPerPageOrphans: Int
+    threadTitleMinLength: Int
+    threadTitleMaxLength: Int
+    threadsPerPage: Int
+    usernameMinLength: Int
+    usernameMaxLength: Int
+}
+
+type SettingsUpdateResult {
+    errors: [Error!]
+    updated: Boolean
+    settings: Settings
+}
