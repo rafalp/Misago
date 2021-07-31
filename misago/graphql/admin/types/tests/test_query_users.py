@@ -98,3 +98,15 @@ async def test_users_query_filters_inactive_users(
     result = await query_admin_api(FILTER_USERS_QUERY, {"filters": {"isActive": False}})
     assert "errors" not in result
     assert result["data"]["users"]["page"]["items"] == [{"id": str(inactive_user.id)}]
+
+
+@pytest.mark.asyncio
+async def test_users_query_requires_admin_auth(query_admin_api):
+    result = await query_admin_api(
+        FILTER_USERS_QUERY,
+        {"filters": {"isActive": False}},
+        expect_error=True,
+        include_auth=False,
+    )
+    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
+    assert result["data"]["users"] is None

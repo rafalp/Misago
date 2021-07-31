@@ -24,9 +24,7 @@ async def test_user_query_returns_none_when_user_is_not_found(query_admin_api, a
 
 
 @pytest.mark.asyncio
-async def test_user_query_returns_none_when_client_is_not_authenticated(
-    query_admin_api, admin
-):
+async def test_user_query_requires_admin_auth(query_admin_api, admin):
     result = await query_admin_api(
         USER_QUERY, {"id": admin.id}, expect_error=True, include_auth=False
     )

@@ -27,7 +27,7 @@ def resolve_user(
 
 
 @query_type.field("users")
-@admin_query
+@admin_resolver
 @convert_kwargs_to_snake_case
 async def resolve_users(
     *_, filters: Optional[dict] = None, sort: Optional[str] = None
