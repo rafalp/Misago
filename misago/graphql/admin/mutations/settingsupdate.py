@@ -9,14 +9,14 @@ from ....conf.dynamicsettings import get_settings_from_db
 from ....conf.update import update_settings
 from ....validation import PASSWORD_MAX_LENGTH, validate_model
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 
 settings_update_mutation = MutationType()
 
 
 @settings_update_mutation.field("settingsUpdate")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_settings_update(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin

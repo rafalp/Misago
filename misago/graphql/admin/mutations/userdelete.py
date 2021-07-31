@@ -17,14 +17,14 @@ from ....users.hooks.deleteusercontent import delete_user_content_hook
 from ....users.models import User
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 
 user_delete_mutation = MutationType()
 
 
 @user_delete_mutation.field("userDelete")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_user_delete(
     _,

@@ -2,7 +2,6 @@ import pytest
 
 from .....conf.cache import SETTINGS_CACHE
 from .....conf.dynamicsettings import get_settings_from_db
-from .....errors import ErrorsList
 from .....testing.cacheversions import assert_invalidates_cache
 
 SETTINGS_UPDATE_MUTATION = """
@@ -34,7 +33,7 @@ SETTINGS_UPDATE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_changes_settings(query_admin_api):
+async def test_settings_update_mutation_changes_settings(query_admin_api):
     variables = {
         "input": {
             "bulkActionLimit": 5,
@@ -80,7 +79,7 @@ async def test_change_settings_mutation_changes_settings(query_admin_api):
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_changes_some_settings(query_admin_api):
+async def test_settings_update_mutation_changes_some_settings(query_admin_api):
     variables = {
         "input": {
             "bulkActionLimit": 5,
@@ -103,7 +102,7 @@ async def test_change_settings_mutation_changes_some_settings(query_admin_api):
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_invalidates_settings_cache(query_admin_api):
+async def test_settings_update_mutation_invalidates_settings_cache(query_admin_api):
     async with assert_invalidates_cache(SETTINGS_CACHE):
         variables = {
             "input": {
@@ -121,7 +120,7 @@ async def test_change_settings_mutation_invalidates_settings_cache(query_admin_a
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_validates_settings_values(query_admin_api):
+async def test_settings_update_mutation_validates_settings_values(query_admin_api):
     variables = {
         "input": {
             "forumIndexHeader": "New Index Header",
@@ -140,28 +139,7 @@ async def test_change_settings_mutation_validates_settings_values(query_admin_ap
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_fails_if_user_is_not_admin(query_admin_api):
-    variables = {
-        "input": {
-            "forumIndexHeader": "New Index Header",
-            "forumIndexThreads": False,
-            "forumIndexTitle": "New Index Title",
-            "forumName": "New Forum Name",
-        }
-    }
-
-    result = await query_admin_api(
-        SETTINGS_UPDATE_MUTATION, variables, include_auth=False
-    )
-    data = result["data"]["settingsUpdate"]
-
-    assert data["errors"] == [
-        {"location": [ErrorsList.ROOT_LOCATION], "type": "auth_error.not_admin"}
-    ]
-
-
-@pytest.mark.asyncio
-async def test_change_settings_mutation_validates_posts_pagination_bounds(
+async def test_settings_update_mutation_validates_posts_pagination_bounds(
     query_admin_api,
 ):
     variables = {
@@ -181,7 +159,7 @@ async def test_change_settings_mutation_validates_posts_pagination_bounds(
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_validates_thread_title_bounds(query_admin_api):
+async def test_settings_update_mutation_validates_thread_title_bounds(query_admin_api):
     variables = {
         "input": {
             "threadTitleMinLength": 25,
@@ -199,7 +177,7 @@ async def test_change_settings_mutation_validates_thread_title_bounds(query_admi
 
 
 @pytest.mark.asyncio
-async def test_change_settings_mutation_validates_username_bounds(query_admin_api):
+async def test_settings_update_mutation_validates_username_bounds(query_admin_api):
     variables = {
         "input": {
             "usernameMinLength": 5,
@@ -214,3 +192,17 @@ async def test_change_settings_mutation_validates_username_bounds(query_admin_ap
         {"location": ["usernameMinLength"], "type": "value_error.number.not_lt"},
         {"location": ["usernameMaxLength"], "type": "value_error.number.not_gt"},
     ]
+
+
+@pytest.mark.asyncio
+async def test_settings_update_mutation_requires_admin_auth(query_admin_api):
+    variables = {
+        "input": {
+            "usernameMinLength": 5,
+        }
+    }
+    result = await query_admin_api(
+        SETTINGS_UPDATE_MUTATION, variables, include_auth=False, expect_error=True
+    )
+    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
+    assert result["data"] is None

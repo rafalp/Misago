@@ -18,14 +18,14 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 
 user_create_mutation = MutationType()
 
 
 @user_create_mutation.field("userCreate")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_user_create(
     _,

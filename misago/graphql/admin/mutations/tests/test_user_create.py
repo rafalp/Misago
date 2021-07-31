@@ -174,10 +174,8 @@ async def test_user_create_mutation_requires_admin_auth(query_admin_api):
             "password": "password123",
         }
     }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables, include_auth=False)
-
-    data = result["data"]["userCreate"]
-    assert not data["user"]
-    assert data["errors"] == [
-        {"location": ["__root__"], "type": "auth_error.not_admin"}
-    ]
+    result = await query_admin_api(
+        USER_CREATE_MUTATION, variables, include_auth=False, expect_error=True
+    )
+    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
+    assert result["data"] is None

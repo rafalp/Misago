@@ -112,3 +112,15 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
     ]
 
     await user.refresh_from_db()
+
+
+@pytest.mark.asyncio
+async def test_user_delete_mutation_requires_admin_auth(query_admin_api, user):
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {"id": str(user.id)},
+        include_auth=False,
+        expect_error=True,
+    )
+    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
+    assert result["data"] is None

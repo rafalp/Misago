@@ -395,7 +395,7 @@ def closed_category_user_post(closed_category_user_thread_and_post):
 @pytest.fixture
 def query_admin_api(admin, monkeypatch):
     async def query_admin_schema(
-        query, variables=None, *, include_auth: bool = True, allow_errors: bool = False
+        query, variables=None, *, include_auth: bool = True, expect_error: bool = False
     ):
         if include_auth:
             monkeypatch.setattr(
@@ -408,8 +408,10 @@ def query_admin_api(admin, monkeypatch):
                 "/admin/graphql/", json={"query": query, "variables": variables}
             )
             result = r.json()
-            if not allow_errors:
+            if not expect_error:
                 assert not "errors" in result, "GraphQL query could not be completed"
+            else:
+                assert "errors" in result, "GraphQL expected to error"
 
             return result
 
