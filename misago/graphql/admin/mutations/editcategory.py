@@ -18,12 +18,12 @@ from ....validation import (
 )
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
-from .createcategory import CategoryInputModel
+from .categorycreate import CategoryInputModel
 
-edit_category_mutation = MutationType()
+category_update_mutation = MutationType()
 
 
-@edit_category_mutation.field("editCategory")
+@category_update_mutation.field("categoryUpdate")
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case

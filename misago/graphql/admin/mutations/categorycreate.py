@@ -16,14 +16,14 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 
-create_category_mutation = MutationType()
+category_create_mutation = MutationType()
 
 
-@create_category_mutation.field("createCategory")
+@category_create_mutation.field("categoryCreate")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_category_create(
     _,
@@ -66,8 +66,8 @@ CategoryInputModel: Type[BaseModel] = create_model(
         constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
         ...,
     ),
-    color=(Color, ...),
-    icon=(constr(strip_whitespace=True, min_length=0, max_length=255), ...),
+    color=(Color, None),
+    icon=(constr(strip_whitespace=True, min_length=0, max_length=255), None),
     parent=(Optional[PositiveInt], None),
     is_closed=(Optional[bool], False),
 )

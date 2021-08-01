@@ -1,6 +1,16 @@
 extend type Mutation {
-    createCategory(input: CategoryInput!): CategoryMutationResult!
-    editCategory(category: ID!, input: CategoryInput!): CategoryMutationResult!
+    categoryCreate(input: CategoryInput!): CategoryMutationResult!
+    categoryUpdate(category: ID!, input: CategoryInput!): CategoryMutationResult!
+    categoryMove(category: ID!, parent: ID, before: ID): CategoryMoveMutationResult!
+    categoryDelete(category: ID!, moveThreadsTo: ID, moveChildrenTo: ID): CategoryDeleteMutationResult!
+}
+
+input CategoryInput {
+    name: String!
+    color: String
+    icon: String
+    parent: ID
+    isClosed: Boolean
 }
 
 type CategoryMutationResult {
@@ -8,31 +18,13 @@ type CategoryMutationResult {
     category: Category
 }
 
-input CategoryInput {
-    name: String!
-    color: String!
-    icon: String!
-    parent: ID
-    isClosed: Boolean
-}
-
-# Move category
-extend type Mutation {
-    moveCategory(category: ID!, parent: ID, before: ID): MoveCategoryMutationResult!
-}
-
-type MoveCategoryMutationResult {
+type CategoryMoveMutationResult {
     errors: [Error!]
     category: Category
     categories: [Category!]!
 }
 
-# Delete category
-extend type Mutation {
-    deleteCategory(category: ID!, moveThreadsTo: ID, moveChildrenTo: ID): DeleteCategoryMutationResult!
-}
-
-type DeleteCategoryMutationResult {
+type CategoryDeleteMutationResult {
     errors: [Error!]
     deleted: Boolean!
     categories: [Category!]!

@@ -7,6 +7,8 @@ from ..tables import categories
 from ..utils.strings import slugify
 from .categorytypes import CategoryTypes
 
+DEFAULT_COLOR = "#0F0"
+
 
 @register_model("Category", categories)
 @dataclass
@@ -55,7 +57,7 @@ class Category(Model):
             "type": CategoryTypes.THREADS,
             "name": name,
             "slug": slugify(name),
-            "color": (color or "#00FF00").upper(),
+            "color": (color or DEFAULT_COLOR).upper(),
             "icon": icon or None,
             "parent_id": parent.id if parent else None,
             "left": left,

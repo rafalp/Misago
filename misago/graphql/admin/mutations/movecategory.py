@@ -20,10 +20,10 @@ from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 from .editcategory import validate_parent_value
 
-move_category_mutation = MutationType()
+category_move_mutation = MutationType()
 
 
-@move_category_mutation.field("moveCategory")
+@category_move_mutation.field("categoryMove")
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case

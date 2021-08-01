@@ -26,10 +26,10 @@ from ....validation import (
 from ...errorhandler import error_handler
 from ..decorators import admin_mutation
 
-delete_category_mutation = MutationType()
+category_delete_mutation = MutationType()
 
 
-@delete_category_mutation.field("deleteCategory")
+@category_delete_mutation.field("categoryDelete")
 @error_handler
 @admin_mutation
 @convert_kwargs_to_snake_case

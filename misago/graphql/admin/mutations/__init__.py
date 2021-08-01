@@ -1,19 +1,19 @@
-from .createcategory import create_category_mutation
-from .deletecategory import delete_category_mutation
-from .editcategory import edit_category_mutation
+from .categorycreate import category_create_mutation
+from .deletecategory import category_delete_mutation
+from .editcategory import category_update_mutation
 from .login import login_mutation
-from .movecategory import move_category_mutation
+from .movecategory import category_move_mutation
 from .settingsupdate import settings_update_mutation
 from .usercreate import user_create_mutation
 from .userdelete import user_delete_mutation
 from .userupdate import user_update_mutation
 
 mutations = [
-    create_category_mutation,
-    delete_category_mutation,
-    edit_category_mutation,
+    category_create_mutation,
+    category_delete_mutation,
+    category_move_mutation,
+    category_update_mutation,
     login_mutation,
-    move_category_mutation,
     settings_update_mutation,
     user_create_mutation,
     user_delete_mutation,
