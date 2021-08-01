@@ -18,7 +18,7 @@ from ....validation import (
 )
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
-from .editcategory import validate_parent_value
+from .categoryupdate import validate_parent_value
 
 category_move_mutation = MutationType()
 
@@ -27,7 +27,7 @@ category_move_mutation = MutationType()
 @admin_resolver
 @error_handler
 @convert_kwargs_to_snake_case
-async def resolve_move_category(
+async def resolve_category_move(
     _,
     info: GraphQLResolveInfo,
     *,
@@ -62,7 +62,7 @@ async def resolve_move_category(
             "categories": root_categories,
         }
 
-    moved_category, updated_categories = await move_category(
+    category_obj, updated_categories = await move_category(
         categories,
         category_obj,
         parent=cleaned_data.get("parent"),
@@ -72,7 +72,7 @@ async def resolve_move_category(
     clear_categories(info.context)
 
     root_categories = [c for c in updated_categories if c.depth == 0]
-    return {"category": moved_category, "categories": root_categories}
+    return {"category": category_obj, "categories": root_categories}
 
 
 MoveCategoryInputModel: Type[BaseModel] = create_model(

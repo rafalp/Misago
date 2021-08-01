@@ -33,7 +33,7 @@ category_delete_mutation = MutationType()
 @admin_resolver
 @error_handler
 @convert_kwargs_to_snake_case
-async def resolve_delete_category(
+async def resolve_category_delete(
     _,
     info: GraphQLResolveInfo,
     *,

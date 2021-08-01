@@ -1,8 +1,8 @@
-from typing import Optional, cast
+from typing import Optional, Type, cast
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt
+from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....categories.get import get_all_categories
 from ....categories.models import Category
@@ -17,17 +17,17 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
-from .categorycreate import CategoryInputModel
+from ..decorators import admin_resolver
+from .categorycreate import CategoryCreateInputModel
 
 category_update_mutation = MutationType()
 
 
 @category_update_mutation.field("categoryUpdate")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
-async def resolve_edit_category(
+async def resolve_category_update(
     _,
     info: GraphQLResolveInfo,
     *,
@@ -36,7 +36,7 @@ async def resolve_edit_category(
 ):
     input["category"] = category
 
-    cleaned_data, errors = validate_model(EditCategoryInputModel, input)
+    cleaned_data, errors = validate_model(CategoryUpdateInputModel, input)
     cleaned_data, errors = await validate_data(
         cleaned_data,
         {
@@ -50,31 +50,35 @@ async def resolve_edit_category(
         errors,
     )
 
-    category_obj = cast(Optional[Category], cleaned_data.get("category"))
+    category_obj = cast(Optional[Category], cleaned_data.pop("category", None))
     if errors or not category_obj:
-        return {"errors": errors, "category": category_obj}
+        return {"errors": errors, "updated": False, "category": category_obj}
 
-    updated_category = await category_obj.update(
-        name=cleaned_data["name"],
-        color=cleaned_data["color"],
-        icon=cleaned_data["icon"],
-        is_closed=cleaned_data.get("is_closed") or False,
-    )
+    new_parent = cast(Optional[Category], cleaned_data.pop("parent", None))
 
-    parent = cast(Optional[Category], cleaned_data.get("parent"))
-    parent_id = parent.id if parent else None
+    updated_category = await category_obj.update(**cleaned_data)
 
-    if updated_category.parent_id != parent_id:
-        categories = await get_all_categories()
-        updated_category, _ = await move_category(
-            categories, updated_category, parent=parent
-        )
+    if "parent" in input:
+        parent_id = new_parent.id if new_parent else None
 
-    return {"category": updated_category}
+        if updated_category.parent_id != parent_id:
+            categories = await get_all_categories()
+            updated_category, _ = await move_category(
+                categories, updated_category, parent=new_parent
+            )
+
+    return {"updated": updated_category != category_obj, "category": updated_category}
 
 
-class EditCategoryInputModel(CategoryInputModel):  # type: ignore
-    category: PositiveInt
+CategoryUpdateInputModel: Type[BaseModel] = create_model(
+    "CategoryUpdateInputModel",
+    __base__=CategoryCreateInputModel,
+    category=(PositiveInt, ...),
+    name=(
+        constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
+        None,
+    ),
+)
 
 
 @for_location("parent")

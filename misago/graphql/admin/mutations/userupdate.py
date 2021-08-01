@@ -55,29 +55,27 @@ async def resolve_user_update(
         errors,
     )
 
-    user_instance: Optional[User] = cleaned_data.pop("user", None)
+    user_obj: Optional[User] = cleaned_data.pop("user", None)
 
-    if user_instance:
+    if user_obj:
         validators: Dict[str, List[Validator]] = {
             "name": [
-                UsernameIsAvailableValidator(user_instance.id),
+                UsernameIsAvailableValidator(user_obj.id),
             ],
             "email": [
-                EmailIsAvailableValidator(user_instance.id),
+                EmailIsAvailableValidator(user_obj.id),
             ],
-            "is_active": [is_active_validator(info.context, user_instance)],
-            "is_administrator": [
-                is_administrator_validator(info.context, user_instance)
-            ],
+            "is_active": [is_active_validator(info.context, user_obj)],
+            "is_administrator": [is_administrator_validator(info.context, user_obj)],
         }
         cleaned_data, errors = await validate_data(cleaned_data, validators, errors)
 
     if errors:
-        return {"errors": errors, "updated": False, "user": user_instance}
+        return {"errors": errors, "updated": False, "user": user_obj}
 
-    if user_instance and cleaned_data:
-        updated_user = await update_user(info.context, user_instance, cleaned_data)
-        return {"updated": updated_user != user_instance, "user": updated_user}
+    if user_obj and cleaned_data:
+        updated_user = await update_user(info.context, user_obj, cleaned_data)
+        return {"updated": updated_user != user_obj, "user": updated_user}
 
     return {"updated": False, "user": user}
 

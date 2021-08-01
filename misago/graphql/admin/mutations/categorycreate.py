@@ -33,7 +33,7 @@ async def resolve_category_create(
 ):
     categories = await get_all_categories()
 
-    cleaned_data, errors = validate_model(CategoryInputModel, input)
+    cleaned_data, errors = validate_model(CategoryCreateInputModel, input)
     cleaned_data, errors = await validate_data(
         cleaned_data,
         {
@@ -46,22 +46,22 @@ async def resolve_category_create(
     if errors:
         return {"errors": errors}
 
-    parent_obj: Optional[Category] = cleaned_data.get("parent")
+    parent: Optional[Category] = cleaned_data.get("parent")
 
-    new_category = await Category.create(
+    category_obj = await Category.create(
         name=cleaned_data["name"],
         color=cleaned_data["color"],
         icon=cleaned_data["icon"],
-        parent=parent_obj,
+        parent=parent,
         is_closed=cleaned_data.get("is_closed") or False,
     )
-    new_category, _ = await insert_category(categories, new_category, parent_obj)
+    category_obj, _ = await insert_category(categories, category_obj, parent)
 
-    return {"category": new_category}
+    return {"category": category_obj}
 
 
-CategoryInputModel: Type[BaseModel] = create_model(
-    "CategoryInputModel",
+CategoryCreateInputModel: Type[BaseModel] = create_model(
+    "CategoryCreateInputModel",
     name=(
         constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"),
         ...,

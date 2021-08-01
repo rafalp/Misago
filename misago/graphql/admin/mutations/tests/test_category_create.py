@@ -4,7 +4,7 @@ from .....categories.get import get_all_categories
 from .....categories.models import Category
 
 CATEGORY_CREATE_MUTATION = """
-    mutation CategoryCreate($input: CategoryInput!) {
+    mutation CategoryCreate($input: CategoryCreateInput!) {
         categoryCreate(input: $input) {
             errors {
                 location
