@@ -17,15 +17,15 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 from .editcategory import validate_parent_value
 
 category_move_mutation = MutationType()
 
 
 @category_move_mutation.field("categoryMove")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_move_category(
     _,
