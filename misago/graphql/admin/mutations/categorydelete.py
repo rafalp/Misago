@@ -24,14 +24,14 @@ from ....validation import (
     validate_model,
 )
 from ...errorhandler import error_handler
-from ..decorators import admin_mutation
+from ..decorators import admin_resolver
 
 category_delete_mutation = MutationType()
 
 
 @category_delete_mutation.field("categoryDelete")
+@admin_resolver
 @error_handler
-@admin_mutation
 @convert_kwargs_to_snake_case
 async def resolve_delete_category(
     _,

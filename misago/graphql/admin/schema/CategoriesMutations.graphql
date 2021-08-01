@@ -2,7 +2,7 @@ extend type Mutation {
     categoryCreate(input: CategoryInput!): CategoryMutationResult!
     categoryUpdate(category: ID!, input: CategoryInput!): CategoryMutationResult!
     categoryMove(category: ID!, parent: ID, before: ID): CategoryMoveMutationResult!
-    categoryDelete(category: ID!, moveThreadsTo: ID, moveChildrenTo: ID): CategoryDeleteMutationResult!
+    categoryDelete(category: ID!, moveChildrenTo: ID, moveThreadsTo: ID): CategoryDeleteMutationResult!
 }
 
 input CategoryInput {

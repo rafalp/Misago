@@ -1,5 +1,5 @@
 from .categorycreate import category_create_mutation
-from .deletecategory import category_delete_mutation
+from .categorydelete import category_delete_mutation
 from .editcategory import category_update_mutation
 from .login import login_mutation
 from .movecategory import category_move_mutation
