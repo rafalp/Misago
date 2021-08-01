@@ -20,7 +20,7 @@ async def test_category_is_created_with_slug(db):
 @pytest.mark.asyncio
 async def test_category_is_created_with_default_color(db):
     category = await Category.create("Test")
-    assert len(category.color) == 7
+    assert len(category.color) == 4
     assert category.color[0] == "#"
 
 
