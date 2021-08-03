@@ -2,110 +2,112 @@ import pytest
 
 from .....auth import get_user_from_token
 from .....errors import ErrorsList
-from ..login import resolve_admin_login
+
+ADMIN_LOGIN_MUTATION = """
+    mutation AdminLogin($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+            errors {
+                location
+                type
+            }
+            user {
+                id
+            }
+            token
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_returns_admin_token_on_success(
-    graphql_info, admin, user_password
+    query_admin_api, admin_graphql_info, admin, user_password
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username=admin.name,
-        password=user_password,
-    )
+    variables = {"username": admin.name, "password": user_password}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["errors"]
+    assert data["token"]
 
-    assert not data.get("errors")
-    assert data.get("token")
-
-    token_user = await get_user_from_token(graphql_info.context, data["token"])
+    token_user = await get_user_from_token(admin_graphql_info.context, data["token"])
     assert token_user == admin
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_returns_admin_user_on_success(
-    graphql_info, admin, user_password
+    query_admin_api, admin, user_password
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username=admin.name,
-        password=user_password,
-    )
+    variables = {"username": admin.name, "password": user_password}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["errors"]
+    assert data["user"]
 
     assert not data.get("errors")
     assert data.get("user")
-    assert data["user"] == admin
+    assert data["user"]["id"] == str(admin.id)
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_requires_username(
-    graphql_info, user, user_password
+    query_admin_api, user, user_password
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username="",
-        password=user_password,
-    )
-
-    assert not data.get("user")
-    assert not data.get("token")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["value_error.all_fields_are_required"]
+    variables = {"username": "", "password": user_password}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["token"]
+    assert not data["user"]
+    assert data["errors"] == [
+        {
+            "location": [ErrorsList.ROOT_LOCATION],
+            "type": "value_error.all_fields_are_required",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_requires_password(
-    graphql_info, user, user_password
+    query_admin_api, user, user_password
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username=user.name,
-        password="",
-    )
-
-    assert not data.get("user")
-    assert not data.get("token")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["value_error.all_fields_are_required"]
+    variables = {"username": user.name, "password": ""}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["token"]
+    assert not data["user"]
+    assert data["errors"] == [
+        {
+            "location": [ErrorsList.ROOT_LOCATION],
+            "type": "value_error.all_fields_are_required",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_returns_error_on_nonexistent_user_credentials(
-    graphql_info, user
+    query_admin_api, user
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username=user.name,
-        password="invalid",
-    )
-
-    assert not data.get("user")
-    assert not data.get("token")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["value_error.invalid_credentials"]
+    variables = {"username": user.name, "password": "invalid"}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["token"]
+    assert not data["user"]
+    assert data["errors"] == [
+        {
+            "location": [ErrorsList.ROOT_LOCATION],
+            "type": "value_error.invalid_credentials",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_admin_login_mutation_returns_error_if_user_is_not_admin(
-    graphql_info, user, user_password
+    query_admin_api, user, user_password
 ):
-    data = await resolve_admin_login(
-        None,
-        graphql_info,
-        username=user.name,
-        password=user_password,
-    )
-
-    assert not data.get("user")
-    assert not data.get("token")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["auth_error.not_admin"]
+    variables = {"username": user.name, "password": user_password}
+    result = await query_admin_api(ADMIN_LOGIN_MUTATION, variables, include_auth=False)
+    data = result["data"]["login"]
+    assert not data["token"]
+    assert not data["user"]
+    assert data["errors"] == [
+        {"location": [ErrorsList.ROOT_LOCATION], "type": "auth_error.not_admin"}
+    ]

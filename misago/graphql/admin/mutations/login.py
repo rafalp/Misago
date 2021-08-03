@@ -11,7 +11,7 @@ login_mutation = MutationType()
 
 @login_mutation.field("login")
 @error_handler
-async def resolve_admin_login(
+async def resolve_login_mutation(
     _, info: GraphQLResolveInfo, *, username: str, password: str
 ):
     username = str(username or "").strip()
