@@ -5,15 +5,23 @@ from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
 from ....database.paginator import Paginator
-from ....loaders import load_root_categories, load_user
+from ....loaders import load_category, load_root_categories, load_user
 from ....users.models import User
-from ..decorators import admin_query, admin_resolver
+from ..decorators import admin_resolver
 
 query_type = QueryType()
 
 
+@query_type.field("category")
+@admin_resolver
+def resolve_categories(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Awaitable[Category]:
+    return load_category(info.context, id)
+
+
 @query_type.field("categories")
-@admin_query
+@admin_resolver
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
     return load_root_categories(info.context)
 
