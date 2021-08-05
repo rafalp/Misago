@@ -24,9 +24,12 @@ async def test_category_query_returns_none_when_category_is_not_found(
 
 
 @pytest.mark.asyncio
-async def test_category_query_requires_admin_auth(query_admin_api, admin):
+async def test_category_query_requires_admin_auth(query_admin_api, category):
     result = await query_admin_api(
-        CATEGORY_QUERY, {"id": admin.id}, expect_error=True, include_auth=False
+        CATEGORY_QUERY,
+        {"id": category.id + 100},
+        expect_error=True,
+        include_auth=False,
     )
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"]["category"] is None

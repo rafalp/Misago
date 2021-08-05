@@ -4,6 +4,7 @@ from ariadne import QueryType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
+from ....conf.types import Settings
 from ....database.paginator import Paginator
 from ....loaders import load_category, load_root_categories, load_user
 from ....users.models import User
@@ -24,6 +25,12 @@ def resolve_category(
 @admin_resolver
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
     return load_root_categories(info.context)
+
+
+@query_type.field("settings")
+@admin_resolver
+def resolve_settings(_, info: GraphQLResolveInfo) -> Settings:
+    return info.context["settings"]
 
 
 @query_type.field("user")
