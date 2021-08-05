@@ -151,7 +151,7 @@ async def moderator(db, user_password):
 @pytest.fixture
 async def admin(db, user_password):
     return await User.create(
-        "Admin", "admin@example.com", password=user_password, is_administrator=True
+        "Admin", "admin@example.com", password=user_password, is_admin=True
     )
 
 

@@ -66,7 +66,7 @@ async def resolve_user_update(
                 EmailIsAvailableValidator(user_obj.id),
             ],
             "is_active": [is_active_validator(info.context, user_obj)],
-            "is_administrator": [is_administrator_validator(info.context, user_obj)],
+            "is_admin": [is_admin_validator(info.context, user_obj)],
         }
         cleaned_data, errors = await validate_data(cleaned_data, validators, errors)
 
@@ -90,7 +90,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
         password=(passwordstr(context["settings"]), None),
         is_active=(bool, None),
         is_moderator=(bool, None),
-        is_administrator=(bool, None),
+        is_admin=(bool, None),
     )
 
 
@@ -100,7 +100,7 @@ def is_active_validator(context: GraphQLContext, user: User):
             context_user = cast(User, await get_authenticated_user(context))
             if user.id == context_user.id:
                 raise UserDeactivateSelfError()
-            if user.is_administrator:
+            if user.is_admin:
                 raise UserIsProtectedError(user_id=user.id)
 
         return is_active
@@ -108,15 +108,15 @@ def is_active_validator(context: GraphQLContext, user: User):
     return validate_is_active
 
 
-def is_administrator_validator(context: GraphQLContext, user: User):
-    async def validate_is_administrator(is_administrator: bool, errors, field_name):
+def is_admin_validator(context: GraphQLContext, user: User):
+    async def validate_is_admin(is_admin: bool, errors, field_name):
         context_user = cast(User, await get_authenticated_user(context))
-        if is_administrator is False and user.id == context_user.id:
+        if is_admin is False and user.id == context_user.id:
             raise UserRemoveOwnAdminError(user_id=user.id)
 
-        return is_administrator
+        return is_admin
 
-    return validate_is_administrator
+    return validate_is_admin
 
 
 async def update_user(context: GraphQLContext, user: User, cleaned_data: dict) -> User:

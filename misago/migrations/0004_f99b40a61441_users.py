@@ -28,7 +28,7 @@ def upgrade():
         sa.Column("password", sa.String(length=255), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
-        sa.Column("is_administrator", sa.Boolean(), nullable=False),
+        sa.Column("is_admin", sa.Boolean(), nullable=False),
         sa.Column("joined_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
@@ -39,9 +39,9 @@ def upgrade():
     op.create_index(
         "misago_users_admins",
         "misago_users",
-        ["is_administrator"],
+        ["is_admin"],
         unique=False,
-        postgresql_where=sa.text("is_administrator = true"),
+        postgresql_where=sa.text("is_admin = true"),
     )
     op.create_index(
         "misago_users_inactive",

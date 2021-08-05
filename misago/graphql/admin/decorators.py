@@ -11,7 +11,7 @@ def admin_resolver(f):
         auth = await get_authenticated_user(info.context)
         if not auth:
             raise AuthenticationGraphQLError()
-        if not auth.is_administrator:
+        if not auth.is_admin:
             raise ForbiddenGraphQLError()
 
         result = f(obj, info, *args, **kwargs)

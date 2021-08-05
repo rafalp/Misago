@@ -10,5 +10,5 @@ input UsersFilters {
     email: String
     isActive: Boolean
     isModerator: Boolean
-    isAdministrator: Boolean
+    isAdmin: Boolean
 }

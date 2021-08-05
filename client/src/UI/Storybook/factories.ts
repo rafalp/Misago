@@ -39,7 +39,7 @@ const defaultUser = {
   slug: "john",
   email: "john@example.com",
   isModerator: false,
-  isAdministrator: false,
+  isAdmin: false,
   joinedAt: "2010-01-14T18:09:58.387Z",
   avatars: [],
   extra: {},

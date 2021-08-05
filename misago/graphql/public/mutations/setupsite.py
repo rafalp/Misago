@@ -69,7 +69,7 @@ async def resolve_setup_site(
         cleaned_data["name"],
         cleaned_data["email"],
         password=cleaned_data["password"],
-        is_administrator=True,
+        is_admin=True,
         is_moderator=True,
         extra={},
         context=info.context,

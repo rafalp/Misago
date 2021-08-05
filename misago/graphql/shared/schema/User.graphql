@@ -5,7 +5,7 @@ type User {
     email: String!
     fullName: String
     isModerator: Boolean!
-    isAdministrator: Boolean!
+    isAdmin: Boolean!
     joinedAt: DateTime!
     avatars: [Avatar!]!
     avatar(size: Int): Avatar!

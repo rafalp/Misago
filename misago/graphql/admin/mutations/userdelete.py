@@ -83,7 +83,7 @@ def user_can_be_deleted_validator(context: GraphQLContext):
         context_user = cast(User, await get_authenticated_user(context))
         if user.id == context_user.id:
             raise UserDeleteSelfError()
-        if user.is_administrator:
+        if user.is_admin:
             raise UserIsProtectedError(user_id=user.id)
 
         return user

@@ -47,17 +47,13 @@ async def test_users_query_filters_emails(query_admin_api, user):
 
 @pytest.mark.asyncio
 async def test_users_query_filters_admins(query_admin_api, admin, user):
-    result = await query_admin_api(
-        FILTER_USERS_QUERY, {"filters": {"isAdministrator": True}}
-    )
+    result = await query_admin_api(FILTER_USERS_QUERY, {"filters": {"isAdmin": True}})
     assert result["data"]["users"]["page"]["items"] == [{"id": str(admin.id)}]
 
 
 @pytest.mark.asyncio
 async def test_users_query_filters_non_admins(query_admin_api, admin, user):
-    result = await query_admin_api(
-        FILTER_USERS_QUERY, {"filters": {"isAdministrator": False}}
-    )
+    result = await query_admin_api(FILTER_USERS_QUERY, {"filters": {"isAdmin": False}})
     assert result["data"]["users"]["page"]["items"] == [{"id": str(user.id)}]
 
 

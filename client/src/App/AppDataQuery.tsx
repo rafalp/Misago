@@ -44,7 +44,7 @@ const INITIAL_DATA_QUERY = gql`
         size
         url
       }
-      isAdministrator
+      isAdmin
       isModerator
     }
     categories {

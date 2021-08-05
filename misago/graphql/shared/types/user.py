@@ -11,7 +11,7 @@ user_type = ObjectType("User")
 user_type.set_alias("fullName", "full_name")
 user_type.set_alias("joinedAt", "joined_at")
 user_type.set_alias("isModerator", "is_moderator")
-user_type.set_alias("isAdministrator", "is_administrator")
+user_type.set_alias("isAdmin", "is_admin")
 
 
 @user_type.field("avatars")

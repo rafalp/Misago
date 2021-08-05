@@ -26,7 +26,7 @@ async def resolve_login_mutation(
 
     if not user:
         raise InvalidCredentialsError()
-    if not user.is_administrator:
+    if not user.is_admin:
         raise NotAdminError()
 
     token = await create_user_token_hook.call_action(

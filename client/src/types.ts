@@ -16,7 +16,7 @@ export interface AuthUser {
   slug: string
   email: string | null
   isModerator: boolean
-  isAdministrator: boolean
+  isAdmin: boolean
   joinedAt: string
   avatars: Array<AvatarData>
   extra: any

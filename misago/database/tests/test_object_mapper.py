@@ -68,7 +68,7 @@ async def test_query_filter_raises_invalid_column_error_if_filter_is_invalid(db)
 @pytest.mark.asyncio
 async def test_query_excludes_some_results(admin, user):
     mapper = ObjectMapper(users)
-    results = await mapper.exclude(is_administrator=False).all()
+    results = await mapper.exclude(is_admin=False).all()
     assert results
     assert results[0]["id"] == admin.id
 
@@ -83,7 +83,7 @@ async def test_query_exclude_raises_invalid_column_error_if_filter_is_invalid(db
 @pytest.mark.asyncio
 async def test_filter_and_exclude_can_be_combined(admin, user):
     mapper = ObjectMapper(users)
-    results = await mapper.filter(is_active=True).exclude(is_administrator=False).all()
+    results = await mapper.filter(is_active=True).exclude(is_admin=False).all()
     assert results
     assert results[0]["id"] == admin.id
 
@@ -282,7 +282,7 @@ async def test_large_query_result_is_iterated_in_descending_order(db):
             email_hash=f"test{i}",
             is_active=False,
             is_moderator=False,
-            is_administrator=False,
+            is_admin=False,
             joined_at=timezone.now(),
             extra={},
         )
@@ -307,7 +307,7 @@ async def test_large_query_result_is_iterated_in_ascending_order(db):
             email_hash=f"test{i}",
             is_active=False,
             is_moderator=False,
-            is_administrator=False,
+            is_admin=False,
             joined_at=timezone.now(),
             extra={},
         )
@@ -330,7 +330,7 @@ async def test_count_results_table_size(admin, user):
 @pytest.mark.asyncio
 async def test_count_can_be_filtered(admin, user):
     mapper = ObjectMapper(users)
-    rows_count = await mapper.filter(is_administrator=True).count()
+    rows_count = await mapper.filter(is_admin=True).count()
     assert rows_count == 1
 
 
@@ -354,7 +354,7 @@ async def test_delete_can_be_filtered(admin, user):
     rows_count = await mapper.count()
     assert rows_count == 2
 
-    await mapper.filter(is_administrator=False).delete()
+    await mapper.filter(is_admin=False).delete()
 
     rows_count = await mapper.count()
     assert rows_count == 1
@@ -371,13 +371,13 @@ async def test_insert_creates_new_row(db):
 
 @pytest.mark.asyncio
 async def test_update_updates_all_rows(admin):
-    assert admin.is_administrator
+    assert admin.is_admin
 
     mapper = ObjectMapper(users)
-    await mapper.update(is_administrator=False)
+    await mapper.update(is_admin=False)
 
     admin_from_db = await mapper.filter(id=admin.id).one()
-    assert not admin_from_db["is_administrator"]
+    assert not admin_from_db["is_admin"]
 
 
 @pytest.mark.asyncio

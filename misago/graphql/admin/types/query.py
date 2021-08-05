@@ -56,8 +56,8 @@ async def resolve_users(
             query = query.filter(email__imatch=filters["email"])
         if filters.get("is_active") is not None:
             query = query.filter(is_active=filters["is_active"])
-        if filters.get("is_administrator") is not None:
-            query = query.filter(is_administrator=filters["is_administrator"])
+        if filters.get("is_admin") is not None:
+            query = query.filter(is_admin=filters["is_admin"])
         if filters.get("is_moderator") is not None:
             query = query.filter(is_moderator=filters["is_moderator"])
 

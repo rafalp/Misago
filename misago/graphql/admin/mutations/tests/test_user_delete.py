@@ -102,7 +102,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
 async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
     query_admin_api, user
 ):
-    await user.update(is_administrator=True)
+    await user.update(is_admin=True)
 
     result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(user.id)})
     data = result["data"]["userDelete"]

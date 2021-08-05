@@ -66,17 +66,17 @@ async def test_user_moderator_status_is_removed(moderator):
 
 
 @pytest.mark.asyncio
-async def test_user_is_made_administrator(user):
-    updated_user = await user.update(is_administrator=True)
-    assert updated_user.is_administrator
+async def test_user_is_made_admin(user):
+    updated_user = await user.update(is_admin=True)
+    assert updated_user.is_admin
 
 
 @pytest.mark.asyncio
-async def test_user_administrator_status_is_removed(admin):
-    assert admin.is_administrator
+async def test_user_admin_status_is_removed(admin):
+    assert admin.is_admin
 
-    updated_user = await admin.update(is_administrator=False)
-    assert not updated_user.is_administrator
+    updated_user = await admin.update(is_admin=False)
+    assert not updated_user.is_admin
 
 
 @pytest.mark.asyncio

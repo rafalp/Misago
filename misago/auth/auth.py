@@ -39,7 +39,7 @@ async def get_authenticated_admin(context: GraphQLContext) -> Optional[User]:
         context["user"] = await get_user_from_context_hook.call_action(
             get_user_from_context, context, in_admin=True
         )
-    if context["user"] and context["user"].is_administrator:
+    if context["user"] and context["user"].is_admin:
         return context["user"]
     return None
 

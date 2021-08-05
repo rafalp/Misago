@@ -24,7 +24,7 @@ class User(Model):
     password: Optional[str]
     is_active: bool
     is_moderator: bool
-    is_administrator: bool
+    is_admin: bool
     joined_at: datetime
     extra: dict
 
@@ -46,7 +46,7 @@ class User(Model):
         password: Optional[str] = None,
         is_active: bool = True,
         is_moderator: bool = False,
-        is_administrator: bool = False,
+        is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
@@ -64,7 +64,7 @@ class User(Model):
             "password": password_hash,
             "is_active": is_active,
             "is_moderator": is_moderator,
-            "is_administrator": is_administrator,
+            "is_admin": is_admin,
             "joined_at": joined_at or timezone.now(),
             "extra": extra or {},
         }
@@ -80,7 +80,7 @@ class User(Model):
         password: Optional[str] = None,
         is_active: bool = True,
         is_moderator: bool = False,
-        is_administrator: bool = False,
+        is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[GraphQLContext] = None,
@@ -107,8 +107,8 @@ class User(Model):
         if is_moderator is not None and is_moderator != self.is_moderator:
             changes["is_moderator"] = is_moderator
 
-        if is_administrator is not None and is_administrator != self.is_administrator:
-            changes["is_administrator"] = is_administrator
+        if is_admin is not None and is_admin != self.is_admin:
+            changes["is_admin"] = is_admin
 
         if joined_at is not None and joined_at != self.joined_at:
             changes["joined_at"] = joined_at

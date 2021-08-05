@@ -21,7 +21,7 @@ input UserUpdateInput {
     email: String
     password: String
     isActive: Boolean
-    isAdministrator: Boolean
+    isAdmin: Boolean
     isModerator: Boolean
 }
 
