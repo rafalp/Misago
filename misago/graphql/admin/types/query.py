@@ -14,9 +14,9 @@ query_type = QueryType()
 
 @query_type.field("category")
 @admin_resolver
-def resolve_categories(
+def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
-) -> Awaitable[Category]:
+) -> Awaitable[Optional[Category]]:
     return load_category(info.context, id)
 
 
