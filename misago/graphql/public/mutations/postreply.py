@@ -5,7 +5,6 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import PositiveInt, constr, create_model
 
-from ....auth import get_authenticated_user
 from ....categories.models import Category
 from ....errors import ErrorsList
 from ....loaders import (
@@ -111,7 +110,6 @@ async def post_reply(
     context: GraphQLContext, cleaned_data: PostReplyInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     thread = cleaned_data["thread"]
-    user = await get_authenticated_user(context)
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 
     def create_post(*args, **kwargs):
@@ -122,7 +120,7 @@ async def post_reply(
         thread,
         cleaned_data["markup"],
         rich_text,
-        poster=user,
+        poster=context["user"],
         context=context,
     )
     category = cast(Category, await load_category(context, thread.category_id))

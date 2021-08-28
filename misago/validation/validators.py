@@ -4,7 +4,6 @@ from typing import Any, Awaitable, Callable, List, Optional, Union, cast
 from pydantic import PydanticTypeError, PydanticValueError
 from pydantic.color import Color
 
-from ..auth import get_authenticated_user
 from ..categories import CategoryTypes
 from ..categories.models import Category
 from ..errors import (
@@ -95,7 +94,7 @@ class CategoryIsOpenValidator:
 
     async def __call__(self, category: Category, *_) -> Category:
         if category.is_closed:
-            user = await get_authenticated_user(self._context)
+            user = self._context["user"]
             if not (user and user.is_moderator):
                 raise CategoryClosedError(category_id=category.id)
         return category
@@ -108,7 +107,7 @@ class CategoryModeratorValidator:
         self._context = context
 
     async def __call__(self, category: Category, *_) -> Category:
-        user = await get_authenticated_user(self._context)
+        user = self._context["user"]
         if not user or not user.is_moderator:
             raise NotModeratorError()
         return category
@@ -148,7 +147,7 @@ class NewThreadIsClosedValidator:
         else:
             category = await load_category(self._context, self._category)
 
-        user = await get_authenticated_user(self._context)
+        user = self._context["user"]
 
         if not category or not user or not user.is_moderator:
             raise NotModeratorError()
@@ -163,7 +162,7 @@ class PostAuthorValidator:
         self._context = context
 
     async def __call__(self, post: Post, *_) -> Post:
-        user = await get_authenticated_user(self._context)
+        user = self._context["user"]
         if not user:
             raise NotPostAuthorError(post_id=post.id)
         if not user.is_moderator and user.id != post.poster_id:
@@ -248,7 +247,7 @@ class ThreadAuthorValidator:
         self._context = context
 
     async def __call__(self, thread: Thread, *_) -> Thread:
-        user = await get_authenticated_user(self._context)
+        user = self._context["user"]
         if not user:
             raise NotThreadAuthorError(thread_id=thread.id)
         if not user.is_moderator and user.id != thread.starter_id:
@@ -304,8 +303,8 @@ class ThreadIsOpenValidator:
 
     async def __call__(self, thread: Thread, *_) -> Thread:
         if thread.is_closed:
-            user = await get_authenticated_user(self._context)
-            if not (user and user.is_moderator):
+            user = self._context["user"]
+            if not user or not user.is_moderator:
                 raise ThreadClosedError(thread_id=thread.id)
         return thread
 
@@ -364,7 +363,7 @@ class UserIsAuthorizedRootValidator:
         self._context = context
 
     async def __call__(self, data: Any, *_) -> Any:
-        user = await get_authenticated_user(self._context)
+        user = self._context["user"]
         if not user:
             raise NotAuthorizedError()
         return data

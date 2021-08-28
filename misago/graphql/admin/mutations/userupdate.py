@@ -4,7 +4,6 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, PositiveInt, constr, create_model
 
-from ....auth import get_authenticated_user
 from ....loaders import store_user
 from ....users.hooks.updateuser import update_user_hook
 from ....users.models import User
@@ -97,7 +96,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 def is_active_validator(context: GraphQLContext, user: User):
     async def validate_is_active(is_active: bool, errors, field_name):
         if is_active is False:
-            context_user = cast(User, await get_authenticated_user(context))
+            context_user = cast(User, context["user"])
             if user.id == context_user.id:
                 raise UserDeactivateSelfError()
             if user.is_admin:
@@ -110,7 +109,7 @@ def is_active_validator(context: GraphQLContext, user: User):
 
 def is_admin_validator(context: GraphQLContext, user: User):
     async def validate_is_admin(is_admin: bool, errors, field_name):
-        context_user = cast(User, await get_authenticated_user(context))
+        context_user = cast(User, context["user"])
         if is_admin is False and user.id == context_user.id:
             raise UserRemoveOwnAdminError(user_id=user.id)
 

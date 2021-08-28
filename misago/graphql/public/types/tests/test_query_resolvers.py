@@ -15,14 +15,14 @@ from ..query import (
 
 
 @pytest.mark.asyncio
-async def test_auth_resolver_returns_authenticated_user(user_graphql_info, user):
-    value = await resolve_auth(None, user_graphql_info)
+def test_auth_resolver_returns_authenticated_user(user_graphql_info, user):
+    value = resolve_auth(None, user_graphql_info)
     assert value == user
 
 
 @pytest.mark.asyncio
-async def test_auth_resolver_returns_none_if_no_user_is_authenticated(graphql_info):
-    value = await resolve_auth(None, graphql_info)
+def test_auth_resolver_returns_none_if_no_user_is_authenticated(graphql_info):
+    value = resolve_auth(None, graphql_info)
     assert value is None
 
 

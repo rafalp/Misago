@@ -3,7 +3,6 @@ from typing import Awaitable, List, Optional
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
-from ....auth import get_authenticated_user
 from ....categories.models import Category
 from ....loaders import (
     load_categories,
@@ -24,8 +23,8 @@ query_type = QueryType()
 
 
 @query_type.field("auth")
-def resolve_auth(_, info: GraphQLResolveInfo) -> Awaitable[Optional[User]]:
-    return get_authenticated_user(info.context)
+def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
+    return info.context["user"]
 
 
 @query_type.field("categories")

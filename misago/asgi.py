@@ -1,17 +1,11 @@
 from time import time
 
-from ariadne.asgi import GraphQL
 from starlette.applications import Starlette
-from starlette.requests import Request
 
 from .cache import cache
 from .conf import settings
 from .database import database
-from .graphql import GraphQLContext
-from .graphql.admin.schema import admin_schema
-from .graphql.context import get_graphql_context
-from .graphql.hooks import graphql_context_hook
-from .graphql.public.schema import public_schema
+from .graphql.apps import admin_grapqhl, public_graphql
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
@@ -40,18 +34,7 @@ async def homepage(request):
     return await render(request, "index.html", {"time": time()})
 
 
-async def resolve_graphql_context(request: Request) -> GraphQLContext:
-    return await graphql_context_hook.call_action(get_graphql_context, request)
+app.mount("/graphql/", public_graphql)
+app.add_websocket_route("/graphql/", public_graphql.websocket_server)
 
-
-graphql = GraphQL(
-    public_schema, debug=settings.debug, context_value=resolve_graphql_context
-)
-
-app.mount("/graphql/", graphql)
-app.add_websocket_route("/graphql/", graphql.websocket_server)
-
-app.mount(
-    "/admin/graphql/",
-    GraphQL(admin_schema, debug=settings.debug, context_value=resolve_graphql_context),
-)
+app.mount("/admin/graphql/", admin_grapqhl)

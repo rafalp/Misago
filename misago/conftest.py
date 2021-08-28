@@ -157,7 +157,7 @@ async def admin(db, user_password):
 
 @pytest.fixture
 def request_mock():
-    return Mock(headers={}, base_url="http://test.com/")
+    return Mock(headers={}, base_url="http://test.com/", user=None)
 
 
 @pytest.fixture
@@ -166,6 +166,7 @@ def graphql_context(request_mock, cache_versions, dynamic_settings):
         "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
+        "user": None,
     }
 
 

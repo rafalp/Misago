@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Awaitable, Optional
 
 from ..graphql import GraphQLContext
 from ..passwords import check_password
@@ -24,24 +24,16 @@ async def authenticate_user(
     return user
 
 
-async def get_authenticated_user(context: GraphQLContext) -> Optional[User]:
-    if "user" not in context:
-        context["user"] = await get_user_from_context_hook.call_action(
-            get_user_from_context, context, in_admin=False
-        )
-
-    return context["user"]
+def get_authenticated_user(context: GraphQLContext) -> Awaitable[Optional[User]]:
+    return get_user_from_context_hook.call_action(
+        get_user_from_context, context, in_admin=False
+    )
 
 
-async def get_authenticated_admin(context: GraphQLContext) -> Optional[User]:
-    if "checked_admin_auth" not in context:
-        context["checked_admin_auth"] = True
-        context["user"] = await get_user_from_context_hook.call_action(
-            get_user_from_context, context, in_admin=True
-        )
-    if context["user"] and context["user"].is_admin:
-        return context["user"]
-    return None
+def get_authenticated_admin(context: GraphQLContext) -> Awaitable[Optional[User]]:
+    return get_user_from_context_hook.call_action(
+        get_user_from_context, context, in_admin=True
+    )
 
 
 async def get_user_from_context(
@@ -56,9 +48,14 @@ async def get_user_from_context(
     if not token:
         return None
 
-    return await get_user_from_token_hook.call_action(
+    user = await get_user_from_token_hook.call_action(
         get_user_from_token, context, token, in_admin
     )
+
+    if in_admin and user and not user.is_admin:
+        return None
+
+    return user
 
 
 def get_auth_token(header: str) -> Optional[str]:

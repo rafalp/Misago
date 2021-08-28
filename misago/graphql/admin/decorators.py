@@ -1,17 +1,16 @@
 from functools import wraps
 from inspect import isawaitable
 
-from ...auth import get_authenticated_user
 from .errors import AuthenticationGraphQLError, ForbiddenGraphQLError
 
 
 def admin_resolver(f):
     @wraps(f)
     async def wrapper(obj, info, *args, **kwargs):
-        auth = await get_authenticated_user(info.context)
-        if not auth:
+        user = info.context["user"]
+        if not user:
             raise AuthenticationGraphQLError()
-        if not auth.is_admin:
+        if not user.is_admin:
             raise ForbiddenGraphQLError()
 
         result = f(obj, info, *args, **kwargs)
