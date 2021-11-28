@@ -1,6 +1,0 @@
-// Add extra margin to fluid container on larger devices
-@include media-breakpoint-up(md) {
-  .container-fluid {
-    padding: 0 $spacer * 2;
-  }
-}

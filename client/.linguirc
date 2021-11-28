@@ -1,7 +1,0 @@
-{
-  "locales": ["en", "pl"],
-  "rootDir": "./src/",
-  "format": "po",
-  "sourceLocale": "en",
-  "compileNamespace": "cjs"
-}

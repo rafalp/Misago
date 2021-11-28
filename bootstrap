@@ -1,0 +1,76 @@
+#!/bin/bash
+# Bootstrap script used to run setup tasks for Misago python server image
+
+# Text styles
+RED='\033[0;31m'
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+# Utility functions used by action commands
+error() {
+    echo -e "${RED}Error:${NORMAL} $1"
+}
+
+wait_for_db() {
+    export PGPASSWORD=misago
+    RETRIES=10
+
+    until psql -h postgres -U misago -d misago -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+        echo "Waiting for PostgreSQL to start, $((RETRIES--)) remaining attempts..."
+        sleep 2
+    done
+}
+
+# Commands
+install_dependencies() {
+    pip install --upgrade pip
+    pip install -r /app/requirements.txt
+    if [ -z ${INSTALL_DEV_DEPS} ]; then
+        pip install -r /app/requirements-dev.txt
+    fi
+}
+
+install_plugins() {
+    # If plugins are present, install their Python requirements
+    if [[ ! -d /app/plugins ]]; then
+        echo "SKIP"
+        exit 0
+    fi
+
+    if compgen -G "/app/plugins/*/requirements.txt" > /dev/null; then
+        for requirements in /app/plugins/*/requirements.txt; do
+            pip install -r $requirements
+        done
+    fi
+
+    if [ -z ${INSTALL_DEV_DEPS} ]; then
+        if compgen -G "/app/plugins/*/requirements-dev.txt" > /dev/null; then
+            for requirements in /app/plugins/*/requirements-dev.txt; do
+                pip install -r $requirements
+            done
+        fi
+    fi
+}
+
+migrate_database() {
+    wait_for_db
+    python misagocli.py migrate
+}
+
+# Command dispatcher
+if [[ $1 ]]; then
+    if [[ $1 = "dependencies" ]]; then
+        install_dependencies
+    elif [[ $1 = "migrate" ]]; then
+        migrate_database
+    elif [[ $1 = "plugins" ]]; then
+        install_plugins
+    else
+        invalid_argument $1
+        echo -e "Invalid argument: ${RED}$1${NORMAL}"
+        exit 1
+    fi
+else
+    error "This command needs to be ran with an argument."
+    exit 1
+fi

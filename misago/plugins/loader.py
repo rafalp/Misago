@@ -1,33 +1,22 @@
+import os
 import sys
 from types import ModuleType
 from typing import List, Optional, Tuple
 
 from .plugin import Plugin
-from .pluginlist import load_plugin_list_if_exists
+from .discovery import discover_plugins
 
 
 class PluginLoader:
     _plugins: List[Plugin]
 
-    def __init__(self, plugin_list_path: Optional[str]):
-        if plugin_list_path:
-            self._plugins = self.load_plugins(plugin_list_path)
+    def __init__(self, plugins_root_path: Optional[str]):
+        if plugins_root_path:
+            self._plugins = discover_plugins(plugins_root_path)
+            for plugin in self._plugins:
+                sys.path.append(plugin.get_path())
         else:
             self._plugins = []
-
-    def load_plugins(self, plugin_list_path: str) -> List[Plugin]:
-        plugins = load_plugin_list_if_exists(plugin_list_path)
-        if not plugins:
-            return []
-
-        loaded_plugins = []
-        for plugin in plugins:
-            if "@" in plugin:
-                plugin, path = plugin.split("@", 1)
-                sys.path.append(path)
-            loaded_plugins.append(Plugin(plugin))
-
-        return loaded_plugins
 
     def import_modules_if_exists(
         self, module_name: str
@@ -36,7 +25,7 @@ class PluginLoader:
         for plugin in self._plugins:
             module = plugin.import_module_if_exists(module_name)
             if module:
-                modules.append((plugin.module_name, module))
+                modules.append((plugin, module))
 
         return modules
 
@@ -44,5 +33,7 @@ class PluginLoader:
         plugins = []
         for plugin in self._plugins:
             if plugin.has_directory(directory_name):
-                plugins.append(plugin)
+                plugins.append(
+                    (plugin, os.path.join(plugin.get_path(), directory_name))
+                )
         return plugins

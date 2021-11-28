@@ -1,6 +1,7 @@
 from time import time
 
 from starlette.applications import Starlette
+from starlette.middleware.cors import CORSMiddleware
 
 from .cache import cache
 from .conf import settings
@@ -27,6 +28,13 @@ if not settings.test:
     app.add_event_handler("shutdown", broadcast.disconnect)
 
 app.add_middleware(MisagoMiddleware)
+app.add_middleware(
+    CORSMiddleware, 
+    allow_origins=['*'],
+    allow_methods=['*'],
+    allow_credentials=True,
+    allow_headers=['*'],
+)
 
 
 @app.route("/")

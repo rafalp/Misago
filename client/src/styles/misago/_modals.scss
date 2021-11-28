@@ -1,9 +1,0 @@
-/* Make modal scrollable on smaller viewports */
-.modal {
-  overflow: auto;
-}
-
-/* Include border between stacked modal bodies */
-.modal-body + .modal-body {
-  border-top: $modal-header-border-width solid $modal-header-border-color;
-}

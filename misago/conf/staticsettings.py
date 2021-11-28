@@ -16,9 +16,9 @@ class StaticSettings:
 
     _static_root: str
     _media_root: str
+    _plugins_root: Optional[str]
 
     _avatar_sizes: List[int]
-    _enabled_plugins: Optional[str]
 
     def __init__(self, settings: Dict[str, Any]):
         self._debug = settings.get("MISAGO_DEBUG", "").lower() in TRUE_STR_VALUES
@@ -32,9 +32,9 @@ class StaticSettings:
 
         self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
         self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
+        self._plugins_root = settings.get("MISAGO_PLUGINS_ROOT", "").strip() or None
 
         self._avatar_sizes = get_avatar_sizes_value(settings, "MISAGO_AVATAR_SIZES")
-        self._enabled_plugins = settings.get("MISAGO_ENABLED_PLUGINS", "").strip()
 
     @property
     def debug(self) -> bool:
@@ -69,8 +69,8 @@ class StaticSettings:
         return self._media_root
 
     @property
-    def enabled_plugins(self) -> Optional[str]:
-        return self._enabled_plugins
+    def plugins_root(self) -> Optional[str]:
+        return self._plugins_root
 
     @property
     def avatar_sizes(self) -> List[int]:

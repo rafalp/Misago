@@ -75,11 +75,9 @@ def test_media_root_url_setting_value_is_set_and_retrieved():
     assert settings.media_root == "/media-test/"
 
 
-def test_enabled_plugins_setting_value_is_set_and_retrieved():
-    settings = StaticSettings(
-        mock_settings({"MISAGO_ENABLED_PLUGINS": "/plugins-test/"})
-    )
-    assert settings.enabled_plugins == "/plugins-test/"
+def test_plugins_root_setting_value_is_set_and_retrieved():
+    settings = StaticSettings(mock_settings({"MISAGO_PLUGINS_ROOT": "/plugins-test/"}))
+    assert settings.plugins_root == "/plugins-test/"
 
 
 def test_avatar_sizes_setting_value_is_set_and_retrieved():
