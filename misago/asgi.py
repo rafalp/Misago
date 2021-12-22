@@ -29,11 +29,11 @@ if not settings.test:
 
 app.add_middleware(MisagoMiddleware)
 app.add_middleware(
-    CORSMiddleware, 
-    allow_origins=['*'],
-    allow_methods=['*'],
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
     allow_credentials=True,
-    allow_headers=['*'],
+    allow_headers=["*"],
 )
 
 
