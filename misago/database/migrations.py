@@ -44,7 +44,9 @@ def show_migrations_history():
 
 def get_migrations_map() -> Dict[str, str]:
     migrations = [("misago", misago_migrations)]
-    migrations += plugins.import_modules_if_exists("migrations")
+    migrations += [
+        module for _, module in plugins.import_modules_if_exists("migrations")
+    ]
     return {k: os.path.dirname(v.__file__) for k, v in migrations}
 
 

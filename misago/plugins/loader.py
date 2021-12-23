@@ -31,7 +31,7 @@ class PluginLoader:
 
     def get_plugins_with_directory(
         self, directory_name: str
-    ) -> List[Tuple[Plugin, ModuleType]]:
+    ) -> List[Tuple[Plugin, str]]:
         plugins = []
         for plugin in self._plugins:
             if plugin.has_directory(directory_name):
