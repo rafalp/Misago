@@ -26,7 +26,7 @@ def test_template_loaders_include_misago(mocker, patch_package_loader):
 def test_template_loaders_include_plugins(mocker, patch_package_loader):
     mocker.patch(
         "misago.template.environment.plugins.get_plugins_with_directory",
-        return_value=[Mock(module_name="test_plugin")],
+        return_value=[(Mock(package_name="test_plugin"), "...")],
     )
 
     loaders = get_template_loaders()
