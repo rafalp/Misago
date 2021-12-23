@@ -10,7 +10,7 @@ from .hooks import jinja2_extensions_hook, jinja2_filters_hook
 def get_template_loaders() -> List[PackageLoader]:
     template_loaders = [PackageLoader("misago.template", "templates")]
     for plugin, _ in plugins.get_plugins_with_directory("templates"):
-        template_loaders.append(PackageLoader(plugin.module_name, "templates"))
+        template_loaders.append(PackageLoader(plugin.package_name, "templates"))
     return list(reversed(template_loaders))
 
 
