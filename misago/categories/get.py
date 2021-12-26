@@ -22,8 +22,10 @@ async def get_all_categories(
 async def get_category_by_id(
     category_id: int, category_type: int = CategoryTypes.THREADS
 ) -> Optional[Category]:
-    query = categories.select().where(
-        and_(categories.c.id == category_id, categories.c.type == category_type)
+    query = (
+        categories.select()
+        .where(and_(categories.c.id == category_id, categories.c.type == category_type))
+        .limit(1)
     )
     row = await database.fetch_one(query)
     return Category(**row) if row else None
