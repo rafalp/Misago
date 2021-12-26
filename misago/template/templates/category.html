@@ -1,12 +1,15 @@
 {% extends "base.html" %}
 
 {% block title -%}
-{{ settings["forum_index_title"] or settings["forum_name"] }}
+{{ category.name }} {{ super() }}
 {%- endblock title %}
 
 {% block content %}
-<h1>{{ settings["forum_index_header"] or settings["forum_name"] }}</h1>
+<h1>{{ category.name }}</h1>
 <ul>
+  <li>
+    <a href="/">{{ settings["forum_name"] }}</a>
+  </li>
   {% for category in categories %}
     <li>
       <a href="/c/{{ category.slug }}/{{ category.id }}/">{{ category.name }}</a>
@@ -21,6 +24,6 @@
   {% endfor %}
 </ul>
 {% if threads.next_cursor %}
-<a href="/?cursor={{ threads.next_cursor }}">More</a>
+<a href="/c/{{ category.slug }}/{{ category.id }}/?cursor={{ threads.next_cursor }}">More</a>
 {% endif %}
 {% endblock content %}

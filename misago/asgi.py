@@ -1,5 +1,3 @@
-from time import time
-
 from starlette.applications import Starlette
 from starlette.middleware.cors import CORSMiddleware
 
@@ -10,7 +8,7 @@ from .graphql.apps import admin_grapqhl, public_graphql
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
-from .template import render
+from .routes import register_routes
 
 import_plugins()
 
@@ -36,13 +34,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.route("/")
-async def homepage(request):
-    return await render(request, "index.html", {"time": time()})
-
-
 app.mount("/graphql/", public_graphql)
 app.add_websocket_route("/graphql/", public_graphql.websocket_server)
 
 app.mount("/admin/graphql/", admin_grapqhl)
+
+register_routes(app)

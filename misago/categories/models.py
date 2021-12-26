@@ -164,8 +164,12 @@ class Category(Model):
     def has_children(self) -> bool:
         return (self.left + 1) < self.right
 
-    def is_parent(self, category: "Category") -> bool:
+    def is_parent(self, category: "Category", include_self: bool = False) -> bool:
+        if include_self:
+            return self.left <= category.left and self.right >= category.right
         return self.left < category.left and self.right > category.right
 
-    def is_child(self, category: "Category") -> bool:
+    def is_child(self, category: "Category", include_self: bool = False) -> bool:
+        if include_self:
+            return self.left >= category.left and self.right <= category.right
         return self.left > category.left and self.right < category.right

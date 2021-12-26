@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title -%}
+{{ thread.title }} | {{ category.name }} {{ super() }}
+{%- endblock title %}
+
+{% block content %}
+<h1>{{ thread.title }}</h1>
+<ul>
+  <li>
+    <a href="/">{{ settings["forum_name"] }}</a>
+  </li>
+  {% for category in path %}
+    <li>
+      <a href="/c/{{ category.slug }}/{{ category.id }}/">{{ category.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock content %}
