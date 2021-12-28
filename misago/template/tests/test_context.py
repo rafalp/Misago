@@ -33,7 +33,9 @@ async def test_final_template_context_includes_extra_context(request_mock):
 
 
 @pytest.mark.asyncio
-async def test_final_template_context_merges_default_context_with_extra_context(request_mock):
+async def test_final_template_context_merges_default_context_with_extra_context(
+    request_mock,
+):
     context = await get_final_context(request_mock, {"settings": True})
     assert context["request"] is request_mock
     assert context["cache_versions"] is request_mock.state.cache_versions

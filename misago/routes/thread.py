@@ -1,4 +1,3 @@
-from operator import pos
 from typing import List
 
 from starlette.requests import Request
@@ -6,7 +5,11 @@ from starlette.requests import Request
 from ..categories.get import get_all_categories
 from ..categories.models import Category
 from ..template import render
-from ..threads.get import get_thread_posts_page, get_thread_posts_paginator, get_threads_by_id
+from ..threads.get import (
+    get_thread_posts_page,
+    get_thread_posts_paginator,
+    get_threads_by_id,
+)
 from ..threads.models import Thread
 from .exceptions import HTTPNotFound
 from .utils import parse_id_or_404, parse_page_no_or_404
@@ -43,8 +46,8 @@ async def get_thread_or_404(thread_id: int) -> Thread:
     threads = await get_threads_by_id([thread_id])
     try:
         return threads[0]
-    except IndexError:
-        raise HTTPNotFound()
+    except IndexError as exception:
+        raise HTTPNotFound() from exception
 
 
 async def get_thread_path(category_id: int) -> List[Category]:

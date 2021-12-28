@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from starlette.requests import Request
 
@@ -39,9 +39,9 @@ async def category_route(request: Request):
     )
 
 
-def find_category_by_id(categories: List[Category], id: int) -> Category:
+def find_category_by_id(categories: List[Category], category_id: int) -> Category:
     categories_map = {category.id: category for category in categories}
     try:
-        return categories_map[id]
-    except KeyError:
-        raise HTTPNotFound()
+        return categories_map[category_id]
+    except KeyError as exception:
+        raise HTTPNotFound() from exception

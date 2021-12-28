@@ -11,8 +11,8 @@ def get_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[i
             cursor = int(request.query_params[query_key])
         else:
             cursor = None
-    except (TypeError, ValueError):
-        raise HTTPNotFound()
+    except (TypeError, ValueError) as exception:
+        raise HTTPNotFound() from exception
 
     if cursor is not None and cursor < 1:
         raise HTTPNotFound()
@@ -22,16 +22,16 @@ def get_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[i
 
 def parse_id_or_404(request: Request, path_param: str = "id") -> int:
     try:
-        id = request.path_params.get(path_param)
-        if id:
-            id = int(id)
-    except (TypeError, ValueError):
+        obj_id = request.path_params.get(path_param)
+        if obj_id:
+            obj_id = int(obj_id)
+    except (TypeError, ValueError) as exception:
+        raise HTTPNotFound() from exception
+
+    if obj_id is None or obj_id < 1:
         raise HTTPNotFound()
 
-    if id is None or id < 1:
-        raise HTTPNotFound()
-
-    return id
+    return obj_id
 
 
 def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional[int]:
@@ -39,8 +39,8 @@ def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional
         page = request.path_params.get(path_param)
         if page:
             page = int(page)
-    except (TypeError, ValueError):
-        raise HTTPNotFound()
+    except (TypeError, ValueError) as exception:
+        raise HTTPNotFound() from exception
 
     if page is not None and page < 1:
         raise HTTPNotFound()
