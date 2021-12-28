@@ -10,7 +10,7 @@ def discover_plugins(plugins_root: str) -> List[Plugin]:
     for plugin_path in Path(plugins_root).glob("**/plugin.py"):
         plugins.append(
             Plugin(
-                path.dirname(path.dirname(plugin_path)),
+                path.dirname(plugin_path),
                 plugin_path.parts[-2],
             )
         )

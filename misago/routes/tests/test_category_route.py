@@ -45,7 +45,6 @@ async def test_category_route_slices_threads_list_by_cursor(
         url += f"?cursor={cursor}"
         response = await client.get(url)
 
-    print(cursor, thread.last_post_id, user_thread.last_post_id)
     if cursor == thread.last_post_id:
         thread_url = app.url_path_for("thread", slug=thread.slug, id=thread.id)
         assert_not_contains(response, thread_url)

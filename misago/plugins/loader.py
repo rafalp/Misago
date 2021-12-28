@@ -14,7 +14,7 @@ class PluginLoader:
         if plugins_root_path:
             self._plugins = discover_plugins(plugins_root_path)
             for plugin in self._plugins:
-                sys.path.append(plugin.get_path())
+                sys.path.append(os.path.dirname(plugin.get_path()))
         else:
             self._plugins = []
 

@@ -4,6 +4,7 @@ from jinja2 import ChoiceLoader, Environment, PackageLoader, select_autoescape
 
 from ..conf import settings
 from ..plugins import plugins
+from ..translations import translations
 from .hooks import jinja2_extensions_hook, jinja2_filters_hook
 
 
@@ -20,9 +21,10 @@ def get_jinja2_environment() -> Environment:
         autoescape=select_autoescape(["html", "svg", "xml"]),
         enable_async=True,
         extensions=["jinja2.ext.i18n"],
-        newstyle_gettext=True,
         loader=ChoiceLoader(get_template_loaders()),
     )
+
+    env.install_gettext_translations(translations.load("pl"))
 
     env.filters.update(jinja2_filters_hook)
     for extension in jinja2_extensions_hook:

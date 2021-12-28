@@ -4,6 +4,7 @@ from starlette.responses import Response
 
 from .cacheversions import get_cache_versions
 from .conf.dynamicsettings import get_dynamic_settings
+from .translations import translations
 
 
 class MisagoMiddleware(BaseHTTPMiddleware):

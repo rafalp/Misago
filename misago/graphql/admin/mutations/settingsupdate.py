@@ -98,7 +98,6 @@ def create_second_stage_model(clean_settings, settings):
 
     for set_rule, setting_name, limit_name in second_stage_rules:
         if setting_name in clean_settings:
-            print(setting_name, clean_settings[setting_name])
             set_rule(rules, setting_name, limit_name, clean_settings, settings)
 
     if not rules:
@@ -116,7 +115,6 @@ def set_second_stage_int_min_rule(
 ):
     setting_min_value = clean_settings.get(limit_name) or settings[limit_name]
     rules[setting_name] = (conint(gt=setting_min_value), ...)
-    print(setting_name, "gt", setting_min_value)
 
 
 def set_second_stage_int_max_rule(
@@ -128,4 +126,3 @@ def set_second_stage_int_max_rule(
 ):
     setting_max_value = clean_settings.get(limit_name) or settings[limit_name]
     rules[setting_name] = (conint(lt=setting_max_value), ...)
-    print(setting_name, "lt", setting_max_value)

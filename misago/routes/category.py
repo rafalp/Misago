@@ -31,7 +31,6 @@ async def category_route(request: Request):
     )
 
     if cursor and not threads.items:
-        print("NO ITEMS")
         raise HTTPNotFound()
 
     return await render(
