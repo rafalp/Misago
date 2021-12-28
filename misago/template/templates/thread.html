@@ -12,7 +12,9 @@
   </li>
   {% for category in path %}
     <li>
-      <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">{{ category.name }}</a>
+      <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">
+        {{ category.name }}
+      </a>
     </li>
   {% endfor %}
 </ul>
@@ -31,6 +33,8 @@
   {% endfor %}
 </ul>
 {% if posts.has_next %}
-  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.number + 1) }}">More</a>
+  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.number + 1) }}">
+    {% trans %}More replies{% endtrans %}
+  </a>
 {% endif %}
 {% endblock content %}

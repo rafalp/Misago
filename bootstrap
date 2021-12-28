@@ -57,6 +57,19 @@ migrate_database() {
     python misagocli.py migrate
 }
 
+makemessages() {
+    pybabel extract -F babel.cfg -o misago/locale/messages.pot misago
+    if [ -n $1 ]; then
+        if [[ ! -f "misago/locale/$1/LC_MESSAGES/messages.po" ]]; then
+            pybabel init -i misago/locale/messages.pot -d misago/locale -l $1
+        else
+            pybabel update -i misago/locale/messages.pot -d misago/locale -l $1
+        fi
+    else
+        pybabel update -i misago/locale/messages.pot -d misago/locale
+    fi
+}
+
 # Command dispatcher
 if [[ $1 ]]; then
     if [[ $1 = "dependencies" ]]; then
@@ -65,6 +78,8 @@ if [[ $1 ]]; then
         migrate_database
     elif [[ $1 = "plugins" ]]; then
         install_plugins
+    elif [[ $1 = "makemessages" ]]; then
+        makemessages $2
     else
         invalid_argument $1
         echo -e "Invalid argument: ${RED}$1${NORMAL}"

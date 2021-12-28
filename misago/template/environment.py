@@ -19,6 +19,8 @@ def get_jinja2_environment() -> Environment:
         auto_reload=settings.debug,
         autoescape=select_autoescape(["html", "svg", "xml"]),
         enable_async=True,
+        extensions=["jinja2.ext.i18n"],
+        newstyle_gettext=True,
         loader=ChoiceLoader(get_template_loaders()),
     )
 
