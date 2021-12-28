@@ -6,11 +6,10 @@ from .exceptions import HTTPNotFound
 
 
 def get_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[int]:
+    cursor: Optional[int] = None
     try:
         if request.query_params.get(query_key):
             cursor = int(request.query_params[query_key])
-        else:
-            cursor = None
     except (TypeError, ValueError) as exception:
         raise HTTPNotFound() from exception
 
