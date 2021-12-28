@@ -19,11 +19,11 @@
 <ul>
   {% for thread in threads.items %}
     <li>
-      <a href="/t/{{ thread.slug }}/{{ thread.id }}/">{{ thread.title }}</a>  
+      <a href="/t/{{ thread.slug }}/{{ thread.id }}/">{{ thread.title }}</a>
     </li>
   {% endfor %}
 </ul>
 {% if threads.next_cursor %}
-<a href="/c/{{ category.slug }}/{{ category.id }}/?cursor={{ threads.next_cursor }}">More</a>
+  <a href="/c/{{ category.slug }}/{{ category.id }}/?cursor={{ threads.next_cursor }}">More</a>
 {% endif %}
 {% endblock content %}

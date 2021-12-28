@@ -32,3 +32,17 @@ def parse_id_or_404(request: Request, path_param: str = "id") -> int:
         raise HTTPNotFound()
 
     return id
+
+
+def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional[int]:
+    try:
+        page = request.path_params.get(path_param)
+        if page:
+            page = int(page)
+    except (TypeError, ValueError):
+        raise HTTPNotFound()
+
+    if page is not None and page < 1:
+        raise HTTPNotFound()
+
+    return page

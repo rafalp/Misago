@@ -1,8 +1,9 @@
 aiodataloader
-alembic<1.5
+alembic
 ariadne
 asgiref
 async-caches
+Babel
 broadcaster[redis]
 click
 databases[postgresql]
@@ -15,7 +16,7 @@ pydantic[email,typing_extensions]
 pygments
 pyjwt
 pytz
-sqlalchemy<1.4
+sqlalchemy
 starlette
 unidecode
 uvicorn[standard]

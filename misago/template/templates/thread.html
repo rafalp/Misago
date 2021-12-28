@@ -16,4 +16,21 @@
     </li>
   {% endfor %}
 </ul>
+<ul>
+  {% for post in posts.items %}
+    <li>
+      <article>
+        <header>
+          <span>{{ post.poster_name }}</span>
+          &#8212;
+          <span>{{ post.posted_at.strftime("%Y-%m-%d %H:%M:%S %Z") }}</span>
+        </header>
+        {{ render_rich_text(post.rich_text)|safe }}
+      </article>
+    </li>
+  {% endfor %}
+</ul>
+{% if posts.has_next %}
+  <a href="/t/{{ thread.slug }}/{{ thread.id }}/{{ posts.number + 1 }}/">More</a>
+{% endif %}
 {% endblock content %}

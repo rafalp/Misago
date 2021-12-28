@@ -21,6 +21,6 @@
   {% endfor %}
 </ul>
 {% if threads.next_cursor %}
-<a href="/?cursor={{ threads.next_cursor }}">More</a>
+  <a href="/?cursor={{ threads.next_cursor }}">More</a>
 {% endif %}
 {% endblock content %}
