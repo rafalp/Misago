@@ -333,7 +333,11 @@ def closed_thread_post(closed_thread_and_post):
 
 @pytest.fixture
 async def closed_category_thread_and_post(closed_category):
-    thread = await Thread.create(closed_category, "Thread", starter_name="Guest")
+    thread = await Thread.create(
+        closed_category,
+        "Closed Category Thread",
+        starter_name="Guest",
+    )
     post = await Post.create(thread, poster_name="Guest")
     thread = await thread.update(first_post=post, last_post=post)
     return thread, post

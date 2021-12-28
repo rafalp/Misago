@@ -8,11 +8,14 @@ from .graphql.apps import admin_grapqhl, public_graphql
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
-from .routes import register_routes
+from .routes import get_exception_handlers, register_routes
 
 import_plugins()
 
-app = Starlette(debug=settings.debug)
+app = Starlette(
+    debug=settings.debug,
+    exception_handlers=get_exception_handlers(),
+)
 
 app.add_event_handler("startup", cache.connect)
 app.add_event_handler("shutdown", cache.disconnect)

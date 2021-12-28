@@ -13,11 +13,11 @@ from ..threads.get import (
 )
 from ..threads.models import Thread
 from .exceptions import HTTPNotFound
-from .utils import ExplicitFirstPage, parse_id_or_404, parse_page_no_or_404
+from .utils import ExplicitFirstPage, clean_id_or_404, clean_page_number_or_404
 
 
 async def thread_route(request: Request):
-    thread_id = parse_id_or_404(request)
+    thread_id = clean_id_or_404(request)
     thread = await get_thread_or_404(thread_id)
 
     if thread.slug != request.path_params["slug"]:
@@ -32,11 +32,11 @@ async def thread_route(request: Request):
     )
 
     try:
-        page_no = parse_page_no_or_404(request)
+        page_number = clean_page_number_or_404(request)
     except ExplicitFirstPage:
         return get_thread_redirect(request, thread)
 
-    posts = await get_thread_posts_page(paginator, page_no or 1)
+    posts = await get_thread_posts_page(paginator, page_number or 1)
     if not posts:
         raise HTTPNotFound()
 

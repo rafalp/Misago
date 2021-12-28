@@ -5,7 +5,7 @@ from starlette.requests import Request
 from .exceptions import HTTPNotFound
 
 
-def get_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[int]:
+def clean_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[int]:
     cursor: Optional[int] = None
     try:
         if request.query_params.get(query_key):
@@ -19,7 +19,7 @@ def get_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[i
     return cursor
 
 
-def parse_id_or_404(request: Request, path_param: str = "id") -> int:
+def clean_id_or_404(request: Request, path_param: str = "id") -> int:
     try:
         obj_id = request.path_params.get(path_param)
         if obj_id:
@@ -37,7 +37,9 @@ class ExplicitFirstPage(Exception):
     pass
 
 
-def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional[int]:
+def clean_page_number_or_404(
+    request: Request, path_param: str = "page"
+) -> Optional[int]:
     try:
         page = request.path_params.get(path_param)
         if page:
