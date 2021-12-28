@@ -20,7 +20,7 @@ class HTTPNotFound(HTTPException):
         super().__init__(404, detail)
 
 
-async def not_found_route(request: Request, exc: Exception):
+async def not_found_route(request: Request, exc: HTTPException):
     return await render(request, "error_404.html", status_code=exc.status_code)
 
 
