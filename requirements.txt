@@ -33,6 +33,10 @@ babel==2.9.1
 broadcaster[redis]==0.2.0
     # via -r requirements.in
 certifi==2021.10.8
+    # via
+    #   httpcore
+    #   httpx
+charset-normalizer==2.0.9
     # via httpx
 click==8.0.3
     # via
@@ -52,11 +56,11 @@ h11==0.12.0
     # via
     #   httpcore
     #   uvicorn
-httpcore==0.13.7
+httpcore==0.14.3
     # via httpx
 httptools==0.3.0
     # via uvicorn
-httpx==0.18.2
+httpx==0.21.1
     # via -r requirements.in
 idna==3.3
     # via

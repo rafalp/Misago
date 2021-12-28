@@ -7,7 +7,7 @@ Babel
 broadcaster[redis]
 click
 databases[postgresql]
-httpx<0.19
+httpx
 jinja2
 mistune==2.0.0rc1
 passlib

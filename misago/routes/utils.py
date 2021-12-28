@@ -33,6 +33,10 @@ def parse_id_or_404(request: Request, path_param: str = "id") -> int:
     return obj_id
 
 
+class ExplicitFirstPage(Exception):
+    pass
+
+
 def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional[int]:
     try:
         page = request.path_params.get(path_param)
@@ -41,7 +45,10 @@ def parse_page_no_or_404(request: Request, path_param: str = "page") -> Optional
     except (TypeError, ValueError) as exception:
         raise HTTPNotFound() from exception
 
-    if page is not None and page < 1:
-        raise HTTPNotFound()
+    if page is not None:
+        if page < 1:
+            raise HTTPNotFound()
+        if page == 1:
+            raise ExplicitFirstPage()
 
     return page

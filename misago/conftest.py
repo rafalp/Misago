@@ -394,7 +394,12 @@ def closed_category_user_post(closed_category_user_thread_and_post):
 
 
 @pytest.fixture
-def query_admin_api(admin, monkeypatch):
+def http_client():
+    return httpx.AsyncClient(app=app, base_url="http://example.com")
+
+
+@pytest.fixture
+def query_admin_api(http_client, admin, monkeypatch):
     async def query_admin_schema(
         query, variables=None, *, include_auth: bool = True, expect_error: bool = False
     ):
@@ -404,7 +409,7 @@ def query_admin_api(admin, monkeypatch):
                 AsyncMock(return_value=admin),
             )
 
-        async with httpx.AsyncClient(app=app, base_url="http://example.com") as client:
+        async with http_client as client:
             r = await client.post(
                 "/admin/graphql/", json={"query": query, "variables": variables}
             )
@@ -420,7 +425,7 @@ def query_admin_api(admin, monkeypatch):
 
 
 @pytest.fixture
-def query_public_api(monkeypatch):
+def query_public_api(http_client, monkeypatch):
     async def query_public_schema(
         query, variables=None, *, auth: Optional[User] = None
     ):
@@ -430,7 +435,7 @@ def query_public_api(monkeypatch):
                 AsyncMock(return_value=auth),
             )
 
-        async with httpx.AsyncClient(app=app, base_url="http://example.com") as client:
+        async with http_client as client:
             r = await client.post(
                 "/graphql/", json={"query": query, "variables": variables}
             )

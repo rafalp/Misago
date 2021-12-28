@@ -1,6 +1,7 @@
 from typing import List
 
 from starlette.requests import Request
+from starlette.responses import RedirectResponse
 
 from ..categories.get import get_all_categories
 from ..categories.models import Category
@@ -12,12 +13,16 @@ from ..threads.get import (
 )
 from ..threads.models import Thread
 from .exceptions import HTTPNotFound
-from .utils import parse_id_or_404, parse_page_no_or_404
+from .utils import ExplicitFirstPage, parse_id_or_404, parse_page_no_or_404
 
 
 async def thread_route(request: Request):
     thread_id = parse_id_or_404(request)
     thread = await get_thread_or_404(thread_id)
+
+    if thread.slug != request.path_params["slug"]:
+        return get_thread_redirect(request, thread)
+
     path = await get_thread_path(thread.category_id)
 
     paginator = await get_thread_posts_paginator(
@@ -25,7 +30,12 @@ async def thread_route(request: Request):
         request.state.settings["posts_per_page"],
         request.state.settings["posts_per_page_orphans"],
     )
-    page_no = parse_page_no_or_404(request)
+
+    try:
+        page_no = parse_page_no_or_404(request)
+    except ExplicitFirstPage:
+        return get_thread_redirect(request, thread)
+
     posts = await get_thread_posts_page(paginator, page_no or 1)
     if not posts:
         raise HTTPNotFound()
@@ -48,6 +58,13 @@ async def get_thread_or_404(thread_id: int) -> Thread:
         return threads[0]
     except IndexError as exception:
         raise HTTPNotFound() from exception
+
+
+def get_thread_redirect(request: Request, thread: Thread) -> RedirectResponse:
+    url = request.url_for("thread", slug=thread.slug, id=thread.id)
+    if request.path_params.get("page", 0) > 1:
+        url += "%s/" % request.path_params["page"]
+    return RedirectResponse(url, 301)
 
 
 async def get_thread_path(category_id: int) -> List[Category]:
