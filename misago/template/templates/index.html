@@ -9,18 +9,18 @@
 <ul>
   {% for category in categories %}
     <li>
-      <a href="/c/{{ category.slug }}/{{ category.id }}/">{{ category.name }}</a>
+      <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">{{ category.name }}</a>
     </li>
   {% endfor %}
 </ul>
 <ul>
   {% for thread in threads.items %}
     <li>
-      <a href="/t/{{ thread.slug }}/{{ thread.id }}/">{{ thread.title }}</a>  
+      <a href="{{ url_for('thread', slug=thread.slug, id=thread.id) }}">{{ thread.title }}</a>
     </li>
   {% endfor %}
 </ul>
 {% if threads.next_cursor %}
-  <a href="/?cursor={{ threads.next_cursor }}">More</a>
+  <a href="{{ url_for('index') }}?cursor={{ threads.next_cursor }}">More</a>
 {% endif %}
 {% endblock content %}

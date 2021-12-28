@@ -8,11 +8,11 @@
 <h1>{{ thread.title }}</h1>
 <ul>
   <li>
-    <a href="/">{{ settings["forum_name"] }}</a>
+    <a href="{{ url_for('index') }}">{{ settings["forum_name"] }}</a>
   </li>
   {% for category in path %}
     <li>
-      <a href="/c/{{ category.slug }}/{{ category.id }}/">{{ category.name }}</a>
+      <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">{{ category.name }}</a>
     </li>
   {% endfor %}
 </ul>
@@ -31,6 +31,6 @@
   {% endfor %}
 </ul>
 {% if posts.has_next %}
-  <a href="/t/{{ thread.slug }}/{{ thread.id }}/{{ posts.number + 1 }}/">More</a>
+  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.number + 1) }}">More</a>
 {% endif %}
 {% endblock content %}

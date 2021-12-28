@@ -24,6 +24,7 @@ async def get_default_context(request: Request) -> TemplateContext:
 
     return {
         "request": request,
+        "url_for": request.url_for,
         "render_rich_text": render_rich_text,
         "settings": request.state.settings,
         "cache_versions": request.state.cache_versions,
