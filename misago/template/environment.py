@@ -24,7 +24,7 @@ def get_jinja2_environment() -> Environment:
         loader=ChoiceLoader(get_template_loaders()),
     )
 
-    env.install_gettext_translations(translations.load("pl"))
+    env.install_gettext_translations(translations.load("pl"))  # type: ignore
 
     env.filters.update(jinja2_filters_hook)
     for extension in jinja2_extensions_hook:

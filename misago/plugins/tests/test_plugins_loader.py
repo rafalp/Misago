@@ -53,7 +53,9 @@ def test_loader_returns_list_of_plugins_with_directory(plugins_root):
     dirs = loader.get_plugins_with_directory("somedir")
     assert len(dirs) == 1
     assert dirs[0][0].package_name == "someplugin"
-    assert dirs[0][1] == os.path.join(plugins_root, "some_plugin", "somedir")
+    assert dirs[0][1] == os.path.join(
+        plugins_root, "some_plugin", "someplugin", "somedir"
+    )
 
 
 def test_loader_returns_empty_list_if_plugin_didnt_have_directory(plugins_root):
