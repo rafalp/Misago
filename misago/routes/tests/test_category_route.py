@@ -58,6 +58,16 @@ async def test_category_route_slices_threads_list_by_cursor(
 
 
 @pytest.mark.asyncio
+async def test_category_route_returns_404_for_invalid_cursor(http_client, category):
+    async with http_client as client:
+        url = app.url_path_for("category", slug=category.slug, id=category.id)
+        url += f"?cursor=invalid"
+        response = await client.get(url)
+
+    assert response.status_code == 404
+
+
+@pytest.mark.asyncio
 async def test_category_route_returns_301_for_invalid_slug(http_client, category):
     async with http_client as client:
         url = app.url_path_for("category", slug="outdated-slug", id=category.id)
