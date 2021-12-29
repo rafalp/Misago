@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title -%}
+{% trans %}Categories{% endtrans %} {{ super() }}
+{%- endblock title %}
+
+{% block content %}
+<h1>{% trans %}Categories{% endtrans %}</h1>
+{% include "categories_list.html" %}
+{% endblock content %}

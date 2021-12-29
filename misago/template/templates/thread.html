@@ -7,9 +7,6 @@
 {% block content %}
 <h1>{{ thread.title }}</h1>
 <ul>
-  <li>
-    <a href="{{ url_for('index') }}">{{ settings["forum_name"] }}</a>
-  </li>
   {% for category in path %}
     <li>
       <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">

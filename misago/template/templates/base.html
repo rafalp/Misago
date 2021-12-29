@@ -6,6 +6,24 @@
     <title>{% block title -%}| {{ settings["forum_name"] }}{%- endblock title %}</title>
   </head>
   <body>
+    <ul>
+      <li>
+        <a href="{{ url_for('index') }}">
+          {{ settings["forum_name"] }}
+        </a>
+      </li>
+      <li>
+        {% if settings["forum_index_threads"] %}
+          <a href="{{ url_for('categories') }}">
+            {% trans %}Categories{% endtrans %}
+          </a>
+        {% else %}
+          <a href="{{ url_for('threads') }}">
+            {% trans %}Threads{% endtrans %}
+          </a>
+        {% endif %}
+      </li>
+    </ul>
     {% block content %}{% endblock content %}
   </body>
 </html>

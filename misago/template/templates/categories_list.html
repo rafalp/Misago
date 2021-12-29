@@ -1,0 +1,9 @@
+<ul>
+  {% for category in categories %}
+    <li>
+      <a href="{{ url_for('category', slug=category.slug, id=category.id) }}">
+        {{ category.name }}
+      </a>
+    </li>
+  {% endfor %}
+</ul>

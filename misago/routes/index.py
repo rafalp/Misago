@@ -1,25 +1,20 @@
 from starlette.requests import Request
 
-from ..categories.get import get_all_categories
-from ..template import render
-from ..threads.get import get_threads_feed
-from .exceptions import HTTPNotFound
-from .utils import clean_cursor_or_404
+from .categories import categories_route
+from .threads import threads_route
 
 
 async def index_route(request: Request):
     """Simple router that renders either threads list or categories list"""
-    cursor = clean_cursor_or_404(request)
-    threads = await get_threads_feed(
-        request.state.settings["threads_per_page"],
-        cursor or None,
-    )
+    if request.state.settings["forum_index_threads"]:
+        return await threads_route(
+            request,
+            on_index=True,
+            template_name="index_threads.html",
+        )
 
-    if cursor and not threads.items:
-        raise HTTPNotFound()
-
-    categories = await get_all_categories()
-
-    return await render(
-        request, "index.html", {"categories": categories, "threads": threads}
+    return await categories_route(
+        request,
+        on_index=True,
+        template_name="index_categories.html",
     )

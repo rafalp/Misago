@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title -%}
+{% trans %}Treads{% endtrans %} {{ super() }}
+{%- endblock title %}
+
+{% block content %}
+<h1>{% trans %}Threads{% endtrans %}</h1>
+{% with url_prefix=url_for("threads") %}
+  {% include "threads_list.html" %}
+{% endwith %}
+{% endblock content %}
