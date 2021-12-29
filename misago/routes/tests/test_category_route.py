@@ -61,7 +61,7 @@ async def test_category_route_slices_threads_list_by_cursor(
 async def test_category_route_returns_404_for_invalid_cursor(http_client, category):
     async with http_client as client:
         url = app.url_path_for("category", slug=category.slug, id=category.id)
-        url += f"?cursor=invalid"
+        url += "?cursor=invalid"
         response = await client.get(url)
 
     assert response.status_code == 404
