@@ -1,0 +1,44 @@
+# English translations for PROJECT.
+# Copyright (C) 2021 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2021.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2021-12-29 17:56+0000\n"
+"PO-Revision-Date: 2021-12-29 17:56+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.9.1\n"
+
+#: misago/template/templates/base.html:19
+#: misago/template/templates/categories.html:4
+#: misago/template/templates/categories.html:8
+msgid "Categories"
+msgstr ""
+
+#: misago/template/templates/base.html:23
+#: misago/template/templates/threads.html:4
+#: misago/template/templates/threads.html:8
+msgid "Threads"
+msgstr ""
+
+#: misago/template/templates/error_404.html:9
+msgid "Requested page could not be found."
+msgstr ""
+
+#: misago/template/templates/thread.html:34
+msgid "More replies"
+msgstr ""
+
+#: misago/template/templates/threads_list.html:12
+msgid "More threads"
+msgstr ""
+
