@@ -1,4 +1,5 @@
 from starlette.applications import Starlette
+from starlette.staticfiles import StaticFiles
 
 from ..conf import settings
 from .categories import categories_route
@@ -24,4 +25,6 @@ def register_default_routes(app: Starlette):
     app.add_route("/t/{slug}/{id:int}/{page:int}/", thread_route, name="thread")
 
     if settings.debug:
+        app.mount("/static/", StaticFiles(directory=settings.static_root))
+        app.mount("/media/", StaticFiles(directory=settings.media_root))
         app.add_route("/error-500/", error_500_route, include_in_schema=False)

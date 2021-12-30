@@ -30,7 +30,7 @@ async def server_error_route(request: Request, exc: Exception):
 
 
 def get_exception_handlers():
-    exception_handlers_hook.call_action(get_default_exception_handlers)
+    return exception_handlers_hook.call_action(get_default_exception_handlers)
 
 
 def get_default_exception_handlers():

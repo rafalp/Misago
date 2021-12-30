@@ -4,28 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title -%}| {{ settings["forum_name"] }}{%- endblock title %}</title>
+    {%- for css_file in asset_manifests["misago"]["css"] %}
+    <link href="/static/{{ css_file }}" rel="stylesheet">
+    {% endfor -%}
   </head>
   <body>
-    <noscript>
-      <ul>
-        <li>
-          <a href="{{ url_for('index') }}">
-            {{ settings["forum_name"] }}
-          </a>
-        </li>
-        <li>
-          {% if settings["forum_index_threads"] %}
-            <a href="{{ url_for('categories') }}">
-              {% trans %}Categories{% endtrans %}
+    <div id="root">
+      <noscript>
+        <ul>
+          <li>
+            <a href="{{ url_for('index') }}">
+              {{ settings["forum_name"] }}
             </a>
-          {% else %}
-            <a href="{{ url_for('threads') }}">
-              {% trans %}Threads{% endtrans %}
-            </a>
-          {% endif %}
-        </li>
-      </ul>
-      {% block content %}{% endblock content %}
-    </noscript>
+          </li>
+          <li>
+            {% if settings["forum_index_threads"] %}
+              <a href="{{ url_for('categories') }}">
+                {% trans %}Categories{% endtrans %}
+              </a>
+            {% else %}
+              <a href="{{ url_for('threads') }}">
+                {% trans %}Threads{% endtrans %}
+              </a>
+            {% endif %}
+          </li>
+        </ul>
+        {% block content %}{% endblock content %}
+      </noscript>
+      <div class="root-loader">
+        <div class="root-loader-body">
+          <div class="spinner-border" role="status"></div>
+        </div>
+      </div>
+    </div>
+    <div id="portals-root"></div>
+    {% if asset_manifests["misago"]["runtime"] %}
+    <script>{{ asset_manifests["misago"]["runtime"]|safe }}</script>
+    {% endif -%}
+    {%- for js_chunk in asset_manifests["misago"]["chunks"] -%}
+    <script src="/static/{{js_chunk}}"></script>
+    {% endfor %}
   </body>
 </html>
