@@ -59,7 +59,7 @@ migrate_database() {
 
 makemessages() {
     pybabel extract -F babel.cfg -o misago/locale/messages.pot misago
-    if [ -n $1 ]; then
+    if [ -n "$1" ]; then
         if [[ ! -f "misago/locale/$1/LC_MESSAGES/messages.po" ]]; then
             pybabel init -i misago/locale/messages.pot -d misago/locale -l $1
         else
