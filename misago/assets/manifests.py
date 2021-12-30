@@ -11,6 +11,7 @@ class AssetManifestError(ValueError):
 
 MISAGO_PATH = os.path.join(settings.static_root, "misago", "asset-manifest.json")
 
+
 def discover_asset_manifests():
     assets = {
         "misago": {
@@ -63,19 +64,15 @@ def parse_asset_manifest(manifest_path: str) -> dict:
 
 def validate_manifest_json(manifest: dict):
     if not isinstance(manifest, dict):
-        raise AssetManifestError(
-            f"{path} file did not define JSON object"
-        )
+        raise AssetManifestError(f"{path} file did not define JSON object")
 
     if "entrypoints" not in manifest:
-        raise AssetManifestError(
-            f"{path} file did not define 'entrypoints' list"
-        )
+        raise AssetManifestError(f"{path} file did not define 'entrypoints' list")
 
     if not isinstance(manifest["entrypoints"], list):
         raise AssetManifestError(
             f"{path} file contains 'entrypoints' value but it's not list"
         )
-        
+
 
 asset_manifests = discover_asset_manifests()
