@@ -39,7 +39,7 @@ def parse_asset_manifest(manifest_path: str) -> dict:
     with open(manifest_path) as json_file:
         manifest = json.load(json_file)
 
-    validate_manifest_json(manifest)
+    validate_manifest_json(manifest_path, manifest)
 
     for path in manifest["entrypoints"]:
         if ".." in path:
@@ -62,7 +62,7 @@ def parse_asset_manifest(manifest_path: str) -> dict:
     return assets
 
 
-def validate_manifest_json(manifest: dict):
+def validate_manifest_json(path: str, manifest: dict):
     if not isinstance(manifest, dict):
         raise AssetManifestError(f"{path} file did not define JSON object")
 
