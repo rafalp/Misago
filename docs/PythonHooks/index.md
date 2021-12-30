@@ -68,6 +68,11 @@ Standard hooks
 - [`delete_thread_input_model_hook`](./delete-thread-input-model-hook.md)
 
 
+### `misago.hooks.routes`
+
+- [`register_routes_hook`](./register-routes-hook.md)
+
+
 ### `misago.hooks`
 
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)

@@ -1,0 +1,1 @@
+from .registerroutes import register_routes_hook
