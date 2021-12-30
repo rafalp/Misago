@@ -82,6 +82,7 @@ Standard hooks
 
 ### `misago.routes.hooks`
 
+- [`exception_handlers_hook`](./exception-handlers-hook.md)
 - [`register_routes_hook`](./register-routes-hook.md)
 
 

@@ -1,1 +1,2 @@
+from .exceptionhandlers import exception_handlers_hook
 from .registerroutes import register_routes_hook
