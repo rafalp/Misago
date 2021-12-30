@@ -36,7 +36,7 @@ Standard hooks
 --------------
 
 
-### `misago.hooks.auth`
+### `misago.auth.hooks`
 
 - [`authenticate_user_hook`](./authenticate-user-hook.md)
 - [`create_user_token_hook`](./create-user-token-hook.md)
@@ -47,42 +47,65 @@ Standard hooks
 - [`get_user_from_token_payload_hook`](./get-user-from-token-payload-hook.md)
 
 
-### `misago.hooks.closethread`
+### `misago.closethread.hooks`
 
 - [`close_thread_hook`](./close-thread-hook.md)
 - [`close_thread_input_hook`](./close-thread-input-hook.md)
 - [`close_thread_input_model_hook`](./close-thread-input-model-hook.md)
 
 
-### `misago.hooks.closethreads`
+### `misago.closethreads.hooks`
 
 - [`close_threads_hook`](./close-threads-hook.md)
 - [`close_threads_input_hook`](./close-threads-input-hook.md)
 - [`close_threads_input_model_hook`](./close-threads-input-model-hook.md)
 
 
-### `misago.hooks.deletethread`
+### `misago.deletethread.hooks`
 
 - [`delete_thread_hook`](./delete-thread-hook.md)
 - [`delete_thread_input_hook`](./delete-thread-input-hook.md)
 - [`delete_thread_input_model_hook`](./delete-thread-input-model-hook.md)
 
 
-### `misago.hooks.routes`
-
-- [`register_routes_hook`](./register-routes-hook.md)
-
-
-### `misago.hooks`
+### `misago.richtext.hooks`
 
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)
 - [`convert_inline_ast_to_text_hook`](./convert-inline-ast-to-text-hook.md)
 - [`convert_rich_text_block_to_html_hook`](./convert-rich-text-block-to-html-hook.md)
 - [`convert_rich_text_to_html_hook`](./convert-rich-text-to-html-hook.md)
 - [`create_markdown_hook`](./create-markdown-hook.md)
+- [`markdown_hook`](./markdown-hook.md)
+- [`parse_markup_hook`](./parse-markup-hook.md)
+- [`update_markup_metadata_hook`](./update-markup-metadata-hook.md)
+
+
+### `misago.routes.hooks`
+
+- [`register_routes_hook`](./register-routes-hook.md)
+
+
+### `misago.template.hooks`
+
+- [`jinja2_extensions_hook`](./jinja2-extensions-hook.md)
+- [`jinja2_filters_hook`](./jinja2-filters-hook.md)
+- [`template_context_hook`](./template-context-hook.md)
+
+
+### `misago.threads.hooks`
+
 - [`create_post_hook`](./create-post-hook.md)
 - [`create_thread_hook`](./create-thread-hook.md)
+- [`update_post_hook`](./update-post-hook.md)
+
+
+### `misago.users.hooks`
+
 - [`create_user_hook`](./create-user-hook.md)
+
+
+### `misago.hooks`
+
 - [`delete_thread_post_hook`](./delete-thread-post-hook.md)
 - [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
 - [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)
@@ -107,16 +130,12 @@ Standard hooks
 - [`graphql_directives_hook`](./graphql-directives-hook.md)
 - [`graphql_type_defs_hook`](./graphql-type-defs-hook.md)
 - [`graphql_types_hook`](./graphql-types-hook.md)
-- [`jinja2_extensions_hook`](./jinja2-extensions-hook.md)
-- [`jinja2_filters_hook`](./jinja2-filters-hook.md)
-- [`markdown_hook`](./markdown-hook.md)
 - [`move_thread_hook`](./move-thread-hook.md)
 - [`move_thread_input_hook`](./move-thread-input-hook.md)
 - [`move_thread_input_model_hook`](./move-thread-input-model-hook.md)
 - [`move_threads_hook`](./move-threads-hook.md)
 - [`move_threads_input_hook`](./move-threads-input-hook.md)
 - [`move_threads_input_model_hook`](./move-threads-input-model-hook.md)
-- [`parse_markup_hook`](./parse-markup-hook.md)
 - [`post_reply_hook`](./post-reply-hook.md)
 - [`post_reply_input_hook`](./post-reply-input-hook.md)
 - [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
@@ -126,9 +145,6 @@ Standard hooks
 - [`register_user_hook`](./register-user-hook.md)
 - [`register_user_input_hook`](./register-user-input-hook.md)
 - [`register_user_input_model_hook`](./register-user-input-model-hook.md)
-- [`template_context_hook`](./template-context-hook.md)
-- [`update_markup_metadata_hook`](./update-markup-metadata-hook.md)
-- [`update_post_hook`](./update-post-hook.md)
 
 
 Implementing custom action hook
