@@ -2,7 +2,6 @@ from asyncio import gather
 from typing import Dict
 
 from ..database import database
-from ..database.queries import fetch_all
 from ..tables import cache_versions
 from .utils import generate_version_string
 
@@ -10,7 +9,8 @@ CacheVersions = Dict[str, str]
 
 
 async def get_cache_versions() -> CacheVersions:
-    return {i["cache"]: i["version"] for i in await fetch_all(cache_versions)}
+    rows = await database.fetch_all(cache_versions.select(None))
+    return {row["cache"]: row["version"] for row in rows}
 
 
 async def invalidate_cache(cache: str) -> str:

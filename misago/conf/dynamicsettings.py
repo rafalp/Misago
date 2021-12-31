@@ -1,5 +1,5 @@
 from ..cacheversions import CacheVersions
-from ..database.queries import fetch_all
+from ..database import database
 from ..tables import settings
 from .types import DynamicSettings, Settings
 from .cache import get_settings_cache, set_settings_cache
@@ -14,4 +14,5 @@ async def get_dynamic_settings(cache_versions: CacheVersions) -> DynamicSettings
 
 
 async def get_settings_from_db() -> Settings:
-    return {setting["name"]: setting["value"] for setting in await fetch_all(settings)}
+    rows = await database.fetch_all(settings.select(None))
+    return {row["name"]: row["value"] for row in rows}

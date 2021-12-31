@@ -1,7 +1,7 @@
 import asyncio
 from typing import Any
 
-from ..database.queries import update
+from ..database import database
 from ..tables import settings
 from .types import Settings
 
@@ -13,4 +13,6 @@ async def update_settings(settings: Settings):
 
 
 async def update_setting(setting: str, value: Any):
-    await update(settings, setting, value=value)
+    await database.execute(
+        settings.update(None).values(value=value).where(settings.c.name == setting)
+    )

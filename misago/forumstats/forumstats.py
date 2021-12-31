@@ -1,5 +1,5 @@
-from ..database.queries import count
-from ..tables import posts, threads, users
+from ..threads.models import Post, Thread
+from ..users.models import User
 from ..utils.strings import get_random_string
 from .cache import get_forum_stats_cache, set_forum_stats_cache
 
@@ -15,7 +15,7 @@ async def get_forum_stats() -> dict:
 async def get_forum_stats_from_db() -> dict:
     return {
         "id": get_random_string(),
-        "threads": await count(threads),
-        "posts": await count(posts),
-        "users": await count(users),
+        "threads": await Thread.query.count(),
+        "posts": await Post.query.count(),
+        "users": await User.query.count(),
     }

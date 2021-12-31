@@ -2,11 +2,7 @@ from asyncio import gather
 from math import ceil
 from typing import cast
 
-from sqlalchemy import and_
-
 from ..conf.types import Settings
-from ..database.queries import count
-from ..tables import posts
 from .models import Post, Thread
 
 
@@ -21,14 +17,8 @@ async def get_thread_post_url(settings: Settings, thread: Thread, post: Post) ->
 
 
 async def get_thread_post_page(settings: Settings, thread: Thread, post: Post) -> int:
-    thread_length_query = count(
-        posts.select(None).where(posts.c.thread_id == thread.id)
-    )
-    post_position_query = count(
-        posts.select().where(
-            and_(posts.c.thread_id == thread.id, posts.c.id <= post.id)
-        )
-    )
+    thread_length_query = thread.posts_query.count()
+    post_position_query = thread.posts_query.filter(id__lte=post.id).count()
 
     thread_length, post_position = await gather(
         thread_length_query, post_position_query

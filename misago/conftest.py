@@ -10,7 +10,6 @@ from .categories.models import Category
 from .conf.cache import SETTINGS_CACHE
 from .conf.dynamicsettings import get_dynamic_settings
 from .database import database
-from .database.queries import insert
 from .database.testdatabase import create_test_database, teardown_test_database
 from .threads.models import Post, Thread
 from .users.models import User
@@ -64,13 +63,19 @@ def cache_versions():
 
 @pytest.fixture
 async def cache_version(db):
-    await insert(tables.cache_versions, cache="test_cache", version="version")
+    query = tables.cache_versions.insert(None).values(
+        cache="test_cache", version="version"
+    )
+    await database.execute(query)
     return {"cache": "test_cache", "version": "version"}
 
 
 @pytest.fixture
 async def other_cache_version(db):
-    await insert(tables.cache_versions, cache="test_other_cache", version="version")
+    query = tables.cache_versions.insert(None).values(
+        cache="test_other_cache", version="version"
+    )
+    await database.execute(query)
     return {"cache": "test_other_cache", "version": "version"}
 
 
