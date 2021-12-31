@@ -14,8 +14,8 @@ def get_error_dict(
 
     return {
         "loc": tuple(location),
-        "msg": str(error),
         "type": get_error_type(error),
+        "msg": str(error),
     }
 
 
