@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title -%}| {{ settings["forum_name"] }}{%- endblock title %}</title>
-    {%- for css_file in asset_manifests["misago"]["css"] %}
+    {%- for css_file in asset_manifests["misago"].css %}
     <link href="/static/{{ css_file }}" rel="stylesheet">
     {% endfor -%}
   </head>
@@ -38,11 +38,11 @@
       </div>
     </div>
     <div id="portals-root"></div>
-    {% if asset_manifests["misago"]["runtime"] %}
-    <script>{{ asset_manifests["misago"]["runtime"]|safe }}</script>
+    {% if asset_manifests["misago"].runtime %}
+    <script>{{ asset_manifests["misago"].runtime|safe }}</script>
     {% endif -%}
-    {%- for js_chunk in asset_manifests["misago"]["chunks"] -%}
-    <script src="/static/{{js_chunk}}"></script>
+    {%- for js_file in asset_manifests["misago"].js -%}
+    <script src="/static/{{js_file}}"></script>
     {% endfor %}
   </body>
 </html>
