@@ -1,5 +1,5 @@
 extend type Mutation {
-    categoryCreate(input: CategoryCreateInput!): CategoryMutationResult!
+    categoryCreate(input: CategoryCreateInput!): CategoryCreateMutationResult!
     categoryUpdate(category: ID!, input: CategoryUpdateInput!): CategoryMutationResult!
     categoryMove(category: ID!, parent: ID, before: ID): CategoryMoveMutationResult!
     categoryDelete(category: ID!, moveChildrenTo: ID, moveThreadsTo: ID): CategoryDeleteMutationResult!
@@ -11,6 +11,12 @@ input CategoryCreateInput {
     icon: String
     parent: ID
     isClosed: Boolean
+}
+
+type CategoryCreateMutationResult {
+    errors: [Error!]
+    created: Boolean!
+    category: Category
 }
 
 input CategoryUpdateInput {
