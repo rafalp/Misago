@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, create_model
 
 from ....loaders import store_user
-from ....users.hooks.createuser import create_user_hook
+from ....users.hooks import create_user_hook
 from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,

@@ -1,6 +1,8 @@
 # `create_thread_hook`
 
 ```python
+from misago.threads.hooks import create_thread_hook
+
 create_thread_hook.call_action(
     action: CreateThreadAction,
     category: Category,

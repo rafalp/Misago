@@ -1,6 +1,8 @@
 # `edit_post_input_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.editpost import edit_post_input_hook
+
 edit_post_input_hook.call_action(
     action: EditPostInputAction,
     context: GraphQLContext,

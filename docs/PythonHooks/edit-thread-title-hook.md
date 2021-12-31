@@ -1,6 +1,8 @@
 # `edit_thread_title_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.editthreadtitle import edit_thread_title_hook
+
 edit_thread_title_hook.call_action(
     action: EditThreadTitleAction,
     context: GraphQLContext,

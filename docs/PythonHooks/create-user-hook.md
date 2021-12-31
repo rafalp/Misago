@@ -1,6 +1,8 @@
 # `create_user_hook`
 
 ```python
+from misago.users.hooks import create_user_hook
+
 create_user_hook.call_action(
     action: CreateUserAction,
     name: str,

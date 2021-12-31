@@ -9,7 +9,7 @@ Add new type `Like` to GraphQL schema:
 
 ```python
 from ariadne import gql
-from misago.hooks import graphql_type_defs_hook
+from misago.graphql.hooks import graphql_type_defs_hook
 
 
 graphql_type_defs_hook.append(

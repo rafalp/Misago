@@ -1,7 +1,7 @@
 # `close_thread_hook`
 
 ```python
-from misago.hooks.closethread import close_thread_hook
+from misago.graphql.public.mutations.hooks.closethread import close_thread_hook
 
 close_thread_hook.call_action(
     action: CloseThreadAction,

@@ -1,7 +1,7 @@
 # `close_threads_input_model_hook`
 
 ```python
-from misago.hooks.closethreads import close_threads_input_model_hook
+from misago.graphql.public.mutations.hooks.closethreads import close_threads_input_model_hook
 
 close_threads_input_model_hook.call_action(
     action: CloseThreadsInputModelAction, context: GraphQLContext

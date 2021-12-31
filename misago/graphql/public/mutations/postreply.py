@@ -16,7 +16,7 @@ from ....loaders import (
 )
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
-from ....threads.hooks.createpost import create_post_hook
+from ....threads.hooks import create_post_hook
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryIsOpenValidator,

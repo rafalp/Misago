@@ -7,7 +7,7 @@ from pydantic import PositiveInt, constr, create_model
 from ....errors import ErrorsList
 from ....loaders import load_post, load_thread, store_post
 from ....richtext.parser import ParsedMarkupMetadata, parse_markup
-from ....threads.hooks.updatepost import update_post_hook
+from ....threads.hooks import update_post_hook
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryIsOpenValidator,

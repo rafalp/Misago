@@ -11,8 +11,7 @@ from ....validation import (
 )
 from ....threads.delete import delete_user_posts, delete_user_threads
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
-from ....users.hooks.deleteuser import delete_user_hook
-from ....users.hooks.deleteusercontent import delete_user_content_hook
+from ....users.hooks import delete_user_content_hook, delete_user_hook
 from ....users.models import User
 from ... import GraphQLContext
 from ...errorhandler import error_handler

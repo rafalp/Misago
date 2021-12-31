@@ -1,7 +1,7 @@
 # `get_auth_user_hook`
 
 ```python
-from misago.hooks.auth import get_auth_user_hook
+from misago.auth.hooks import get_auth_user_hook
 
 get_auth_user_hook.call_action(
     action: GetAuthUserAction, context: GraphQLContext, user_id: int, in_admin: bool

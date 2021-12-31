@@ -1,6 +1,8 @@
 # `move_thread_input_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.movethread import move_thread_input_hook
+
 move_thread_input_hook.call_action(
     action: MoveThreadInputAction,
     context: GraphQLContext,

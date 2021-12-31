@@ -1,6 +1,8 @@
 # `register_routes_hook`
 
 ```python
+from misago.routes.hooks import register_routes_hook
+
 register_routes_hook.call_action(
     action: RegisterRoutesAction,
     app: Starlette,

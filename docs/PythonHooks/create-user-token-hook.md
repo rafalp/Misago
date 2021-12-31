@@ -1,7 +1,7 @@
 # `create_user_token_hook`
 
 ```python
-from misago.hooks.auth import create_user_token_hook
+from misago.auth.hooks import create_user_token_hook
 
 create_user_token_hook.call_action(
     action: CreateUserTokenAction,

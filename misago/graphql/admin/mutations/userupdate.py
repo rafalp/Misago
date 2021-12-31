@@ -5,7 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, PositiveInt, constr, create_model
 
 from ....loaders import store_user
-from ....users.hooks.updateuser import update_user_hook
+from ....users.hooks import update_user_hook
 from ....users.models import User
 from ....users.errors import (
     UserDeactivateSelfError,

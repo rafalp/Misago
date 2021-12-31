@@ -9,7 +9,7 @@ Add new type `Like` to admin GraphQL schema:
 
 ```python
 from ariadne import gql
-from misago.hooks import graphql_admin_type_defs_hook
+from misago.graphql.hooks import graphql_admin_type_defs_hook
 
 
 graphql_admin_type_defs_hook.append(

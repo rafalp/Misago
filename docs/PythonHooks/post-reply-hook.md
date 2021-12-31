@@ -1,6 +1,8 @@
 # `post_reply_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.postreply import post_reply_hook
+
 post_reply_hook.call_action(
     action: PostReplyAction,
     context: GraphQLContext,

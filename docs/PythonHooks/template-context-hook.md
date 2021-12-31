@@ -1,6 +1,8 @@
 # `template_context_hook`
 
 ```python
+from misago.template.hooks import template_context_hook
+
 template_context_hook.call_action(action: TemplateContextAction, request: Request)
 ```
 

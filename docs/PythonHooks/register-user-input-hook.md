@@ -1,6 +1,8 @@
 # `register_user_input_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.registeruser import register_user_input_hook
+
 register_user_input_hook.call_action(
     action: RegisterUserInputAction,
     context: GraphQLContext,

@@ -1,6 +1,8 @@
 # `parse_markup_hook`
 
 ```python
+from misago.richtext.hooks import parse_markup_hook
+
 parse_markup_hook.call_action(
     action: ParseMarkupAction,
     context: GraphQLContext,

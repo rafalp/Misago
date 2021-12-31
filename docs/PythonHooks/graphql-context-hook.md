@@ -1,6 +1,8 @@
 # `graphql_context_hook`
 
 ```python
+from misago.graphql.hooks import graphql_context_hook
+
 graphql_context_hook.call_action(action: GraphQLContextAction, request: Request)
 ```
 

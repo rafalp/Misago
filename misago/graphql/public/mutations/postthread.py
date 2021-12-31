@@ -10,8 +10,7 @@ from ....errors import ErrorsList
 from ....loaders import store_category, store_post, store_thread
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
-from ....threads.hooks.createpost import create_post_hook
-from ....threads.hooks.createthread import create_thread_hook
+from ....threads.hooks import create_post_hook, create_thread_hook
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryExistsValidator,

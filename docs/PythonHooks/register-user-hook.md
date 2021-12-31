@@ -1,6 +1,8 @@
 # `register_user_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.registeruser import register_user_hook
+
 register_user_hook.call_action(
     action: RegisterUserAction,
     context: GraphQLContext,

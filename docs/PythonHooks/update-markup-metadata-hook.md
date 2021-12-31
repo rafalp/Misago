@@ -1,6 +1,8 @@
 # `update_markup_metadata_hook`
 
 ```python
+from misago.richtext.hooks import update_markup_metadata_hook
+
 update_markup_metadata_hook.call_action(
     action: UpdateMarkupMetadataAction,
     context: GraphQLContext,

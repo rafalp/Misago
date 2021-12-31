@@ -7,7 +7,7 @@ A `list` of [Ariadne bindables](https://ariadnegraphql.org/docs/resolvers) that 
 
 ```python
 from ariadne import TypeObject
-from misago.hooks import graphql_admin_types_hook
+from misago.graphql.hooks import graphql_admin_types_hook
 from misago.loaders import load_post
 
 

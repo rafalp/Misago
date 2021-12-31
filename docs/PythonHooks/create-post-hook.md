@@ -1,6 +1,8 @@
 # `create_post_hook`
 
 ```python
+from misago.threads.hooks import create_post_hook
+
 create_post_hook.call_action(
     action: CreatePostAction,
     thread: Thread,

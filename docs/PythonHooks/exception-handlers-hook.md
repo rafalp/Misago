@@ -1,6 +1,8 @@
 # `exception_handlers_hook`
 
 ```python
+from misago.routes.hooks import exception_handlers_hook
+
 exception_handlers_hook.call_action(
     action: ExceptionHandlersAction,
 )

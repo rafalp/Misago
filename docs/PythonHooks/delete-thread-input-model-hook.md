@@ -1,7 +1,7 @@
 # `delete_thread_input_model_hook`
 
 ```python
-from misago.hooks.deletethread import delete_thread_input_model_hook
+from misago.graphql.public.mutations.hooks.deletethread import delete_thread_input_model_hook
 
 delete_thread_input_model_hook.call_action(
     action: DeleteThreadInputModelAction, context: GraphQLContext

@@ -1,7 +1,7 @@
 # `get_user_from_token_hook`
 
 ```python
-from misago.hooks.auth import get_user_from_token_hook
+from misago.auth.hooks import get_user_from_token_hook
 
 get_user_from_token_hook.call_action(
     action: GetUserFromTokenAction, context: GraphQLContext, token: str, in_admin: bool

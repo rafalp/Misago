@@ -1,6 +1,8 @@
 # `convert_block_ast_to_rich_text_hook`
 
 ```python
+from misago.richtext.hooks import convert_block_ast_to_rich_text_hook
+
 convert_block_ast_to_rich_text_hook.call_action(
     action: ConvertBlockAstToRichTextAction,
     context: GraphQLContext,

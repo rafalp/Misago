@@ -11,7 +11,7 @@ See Ariadne [Schema Directives](https://ariadnegraphql.org/docs/schema-directive
 
 ```python
 from ariadne import SchemaDirectiveVisitor
-from misago.hooks import graphql_admin_directives_hook
+from misago.graphql.hooks import graphql_admin_directives_hook
 
 
 class MyDirective(SchemaDirectiveVisitor):

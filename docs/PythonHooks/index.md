@@ -47,25 +47,114 @@ Standard hooks
 - [`get_user_from_token_payload_hook`](./get-user-from-token-payload-hook.md)
 
 
-### `misago.closethread.hooks`
+### `misago.categories.hooks`
+
+- [`delete_categories_contents_hook`](./delete-categories-contents-hook.md)
+- [`move_categories_contents_hook`](./move-categories-contents-hook.md)
+
+
+### `misago.graphql.hooks`
+
+- [`graphql_admin_directives_hook`](./graphql-admin-directives-hook.md)
+- [`graphql_admin_type_defs_hook`](./graphql-admin-type-defs-hook.md)
+- [`graphql_admin_types_hook`](./graphql-admin-types-hook.md)
+- [`graphql_context_hook`](./graphql-context-hook.md)
+- [`graphql_directives_hook`](./graphql-directives-hook.md)
+- [`graphql_type_defs_hook`](./graphql-type-defs-hook.md)
+- [`graphql_types_hook`](./graphql-types-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.closethread`
 
 - [`close_thread_hook`](./close-thread-hook.md)
 - [`close_thread_input_hook`](./close-thread-input-hook.md)
 - [`close_thread_input_model_hook`](./close-thread-input-model-hook.md)
 
 
-### `misago.closethreads.hooks`
+### `misago.graphql.public.mutations.hooks.closethreads`
 
 - [`close_threads_hook`](./close-threads-hook.md)
 - [`close_threads_input_hook`](./close-threads-input-hook.md)
 - [`close_threads_input_model_hook`](./close-threads-input-model-hook.md)
 
 
-### `misago.deletethread.hooks`
+### `misago.graphql.public.mutations.hooks.deletethread`
 
 - [`delete_thread_hook`](./delete-thread-hook.md)
 - [`delete_thread_input_hook`](./delete-thread-input-hook.md)
 - [`delete_thread_input_model_hook`](./delete-thread-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.deletethreads`
+
+- [`delete_threads_hook`](./delete-threads-hook.md)
+- [`delete_threads_input_hook`](./delete-threads-input-hook.md)
+- [`delete_threads_input_model_hook`](./delete-threads-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.deletethreadpost`
+
+- [`delete_thread_post_hook`](./delete-thread-post-hook.md)
+- [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
+- [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)
+- [`delete_thread_post_input_thread_hook`](./delete-thread-post-input-thread-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.deletethreadposts`
+
+- [`delete_thread_posts_hook`](./delete-thread-posts-hook.md)
+- [`delete_thread_posts_input_model_hook`](./delete-thread-posts-input-model-hook.md)
+- [`delete_thread_posts_input_posts_hook`](./delete-thread-posts-input-posts-hook.md)
+- [`delete_thread_posts_input_thread_hook`](./delete-thread-posts-input-thread-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.editpost`
+
+- [`edit_post_hook`](./edit-post-hook.md)
+- [`edit_post_input_hook`](./edit-post-input-hook.md)
+- [`edit_post_input_model_hook`](./edit-post-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.editthreadtitle`
+
+- [`edit_thread_title_hook`](./edit-thread-title-hook.md)
+- [`edit_thread_title_input_hook`](./edit-thread-title-input-hook.md)
+- [`edit_thread_title_input_model_hook`](./edit-thread-title-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.movethread`
+
+- [`move_thread_hook`](./move-thread-hook.md)
+- [`move_thread_input_hook`](./move-thread-input-hook.md)
+- [`move_thread_input_model_hook`](./move-thread-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.movethreads`
+
+- [`move_threads_hook`](./move-threads-hook.md)
+- [`move_threads_input_hook`](./move-threads-input-hook.md)
+- [`move_threads_input_model_hook`](./move-threads-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.postreply`
+
+- [`post_reply_hook`](./post-reply-hook.md)
+- [`post_reply_input_hook`](./post-reply-input-hook.md)
+- [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.postthread`
+
+- [`post_thread_hook`](./post-thread-hook.md)
+- [`post_thread_input_hook`](./post-thread-input-hook.md)
+- [`post_thread_input_model_hook`](./post-thread-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.registeruser`
+
+- [`register_user_hook`](./register-user-hook.md)
+- [`register_user_input_hook`](./register-user-input-hook.md)
+- [`register_user_input_model_hook`](./register-user-input-model-hook.md)
 
 
 ### `misago.richtext.hooks`
@@ -103,49 +192,6 @@ Standard hooks
 ### `misago.users.hooks`
 
 - [`create_user_hook`](./create-user-hook.md)
-
-
-### `misago.hooks`
-
-- [`delete_thread_post_hook`](./delete-thread-post-hook.md)
-- [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
-- [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)
-- [`delete_thread_post_input_thread_hook`](./delete-thread-post-input-thread-hook.md)
-- [`delete_thread_posts_hook`](./delete-thread-posts-hook.md)
-- [`delete_thread_posts_input_model_hook`](./delete-thread-posts-input-model-hook.md)
-- [`delete_thread_posts_input_posts_hook`](./delete-thread-posts-input-posts-hook.md)
-- [`delete_thread_posts_input_thread_hook`](./delete-thread-posts-input-thread-hook.md)
-- [`delete_threads_hook`](./delete-threads-hook.md)
-- [`delete_threads_input_hook`](./delete-threads-input-hook.md)
-- [`delete_threads_input_model_hook`](./delete-threads-input-model-hook.md)
-- [`edit_post_hook`](./edit-post-hook.md)
-- [`edit_post_input_hook`](./edit-post-input-hook.md)
-- [`edit_post_input_model_hook`](./edit-post-input-model-hook.md)
-- [`edit_thread_title_hook`](./edit-thread-title-hook.md)
-- [`edit_thread_title_input_hook`](./edit-thread-title-input-hook.md)
-- [`edit_thread_title_input_model_hook`](./edit-thread-title-input-model-hook.md)
-- [`graphql_admin_directives_hook`](./graphql-admin-directives-hook.md)
-- [`graphql_admin_type_defs_hook`](./graphql-admin-type-defs-hook.md)
-- [`graphql_admin_types_hook`](./graphql-admin-types-hook.md)
-- [`graphql_context_hook`](./graphql-context-hook.md)
-- [`graphql_directives_hook`](./graphql-directives-hook.md)
-- [`graphql_type_defs_hook`](./graphql-type-defs-hook.md)
-- [`graphql_types_hook`](./graphql-types-hook.md)
-- [`move_thread_hook`](./move-thread-hook.md)
-- [`move_thread_input_hook`](./move-thread-input-hook.md)
-- [`move_thread_input_model_hook`](./move-thread-input-model-hook.md)
-- [`move_threads_hook`](./move-threads-hook.md)
-- [`move_threads_input_hook`](./move-threads-input-hook.md)
-- [`move_threads_input_model_hook`](./move-threads-input-model-hook.md)
-- [`post_reply_hook`](./post-reply-hook.md)
-- [`post_reply_input_hook`](./post-reply-input-hook.md)
-- [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
-- [`post_thread_hook`](./post-thread-hook.md)
-- [`post_thread_input_hook`](./post-thread-input-hook.md)
-- [`post_thread_input_model_hook`](./post-thread-input-model-hook.md)
-- [`register_user_hook`](./register-user-hook.md)
-- [`register_user_input_hook`](./register-user-input-hook.md)
-- [`register_user_input_model_hook`](./register-user-input-model-hook.md)
 
 
 Implementing custom action hook

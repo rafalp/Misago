@@ -1,6 +1,8 @@
 # `update_post_hook`
 
 ```python
+from misago.threads.hooks import update_post_hook
+
 update_post_hook.call_action(
     action: UpdatePostAction,
     post: Post,

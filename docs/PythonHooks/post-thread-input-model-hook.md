@@ -1,6 +1,8 @@
 # `post_thread_input_model_hook`
 
 ```python
+from misago.graphql.public.mutations.hooks.postthread import post_thread_input_model_hook
+
 post_thread_input_model_hook.call_action(
     action: PostThreadInputModelAction, context: GraphQLContext
 )

@@ -1,6 +1,8 @@
 # `convert_inline_ast_to_text_hook`
 
 ```python
+from misago.richtext.hooks import convert_inline_ast_to_text_hook
+
 convert_inline_ast_to_text_hook.call_action(
     action: ConvertInlineAstToTextAction,
     context: GraphQLContext,

@@ -6,10 +6,8 @@ from pydantic import BaseModel, PositiveInt
 
 from ....categories.errors import CategoryInvalidError
 from ....categories.get import get_all_categories
-from ....categories.hooks.deletecategoriescontents import (
-    delete_categories_contents_hook,
-)
-from ....categories.hooks.movecategoriescontents import move_categories_contents_hook
+from ....categories.hooks import delete_categories_contents_hook
+from ....categories.hooks import move_categories_contents_hook
 from ....categories.tree import delete_category, move_category
 from ....categories.models import Category
 from ....errors import ErrorsList
