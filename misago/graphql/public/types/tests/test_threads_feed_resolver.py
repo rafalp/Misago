@@ -78,9 +78,5 @@ async def test_threads_query_resolves_to_empty_list_for_nonexistant_user(
 ):
     result = await query_public_api(THREADS_FEED_QUERY, {"user": str(user.id * 100)})
     assert result["data"]["threads"] == {
-        "items": [
-            {
-                "id": str(user_thread.id),
-            },
-        ],
+        "items": [],
     }
