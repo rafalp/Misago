@@ -1,42 +1,131 @@
 import pytest
 
-from .....threads.get import get_thread_posts_paginator
-from ..threadposts import resolve_page, resolve_pagination
 
-
-@pytest.fixture
-async def paginator(thread, post):
-    return await get_thread_posts_paginator(thread, 10)
-
-
-@pytest.mark.asyncio
-async def test_page_resolver_returns_first_thread_posts_page_by_default(
-    graphql_info, paginator, post
-):
-    value = await resolve_page(paginator, graphql_info)
-    assert value.number == 1
-    assert value.items == [post]
-
-
-@pytest.mark.asyncio
-async def test_page_resolver_returns_specified_thread_posts_page(
-    graphql_info, paginator, post
-):
-    value = await resolve_page(paginator, graphql_info, page=1)
-    assert value.number == 1
-    assert value.items == [post]
+THREAD_POSTS_QUERY = """
+    query GetThreadPosts($thread: ID!, $page: Int) {
+        thread(id: $thread) {
+            id
+            posts {
+                page(page: $page) {
+                    items {
+                        id
+                    }
+                    number
+                }
+                pagination {
+                    count
+                    pages
+                }
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
-async def test_page_resolver_returns_none_for_too_large_page_number(
-    graphql_info, paginator
+async def test_thread_posts_first_page_is_resolved_by_default(
+    query_public_api, thread, post
 ):
-    value = await resolve_page(paginator, graphql_info, page=100)
-    assert value is None
+    result = await query_public_api(THREAD_POSTS_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"] == {
+        "id": str(thread.id),
+        "posts": {
+            "page": {
+                "items": [
+                    {
+                        "id": str(post.id),
+                    }
+                ],
+                "number": 1,
+            },
+            "pagination": {
+                "count": 1,
+                "pages": 1,
+            },
+        },
+    }
 
 
-def test_thread_posts_pagination_resolver_returns_thread_posts_paginator(
-    graphql_info, paginator
+@pytest.mark.asyncio
+async def test_thread_posts_page_is_resolved_by_number(query_public_api, thread, post):
+    result = await query_public_api(
+        THREAD_POSTS_QUERY, {"thread": str(thread.id), "page": 1}
+    )
+    assert result["data"]["thread"] == {
+        "id": str(thread.id),
+        "posts": {
+            "page": {
+                "items": [
+                    {
+                        "id": str(post.id),
+                    }
+                ],
+                "number": 1,
+            },
+            "pagination": {
+                "count": 1,
+                "pages": 1,
+            },
+        },
+    }
+
+
+@pytest.mark.asyncio
+async def test_thread_posts_page_is_resolved_to_none_for_too_big_page(
+    query_public_api, thread
 ):
-    value = resolve_pagination(paginator, graphql_info)
-    assert value == paginator
+    result = await query_public_api(
+        THREAD_POSTS_QUERY, {"thread": str(thread.id), "page": 100}
+    )
+    assert result["data"]["thread"] == {
+        "id": str(thread.id),
+        "posts": {
+            "page": None,
+            "pagination": {
+                "count": 1,
+                "pages": 1,
+            },
+        },
+    }
+
+
+THREAD_POST_QUERY = """
+    query GetThreadPost($thread: ID!, $post: ID!) {
+        thread(id: $thread) {
+            id
+            post(id: $post) {
+                id
+            }
+        }
+    }
+"""
+
+
+@pytest.mark.asyncio
+async def test_thread_post_is_resolved_by_id(query_public_api, thread, post):
+    result = await query_public_api(
+        THREAD_POST_QUERY, {"thread": str(thread.id), "post": str(post.id)}
+    )
+    assert result["data"]["thread"]["post"] == {
+        "id": str(post.id),
+    }
+
+
+@pytest.mark.asyncio
+async def test_thread_post_is_resolved_to_none_for_post_in_other_thread(
+    query_public_api, thread, user_post
+):
+    result = await query_public_api(
+        THREAD_POST_QUERY, {"thread": str(thread.id), "post": str(user_post.id)}
+    )
+    assert result["data"]["thread"]["post"] is None
+
+
+@pytest.mark.asyncio
+async def test_thread_post_is_resolved_to_none_for_nonexistant_post(
+    query_public_api, thread, post
+):
+    result = await query_public_api(
+        THREAD_POST_QUERY, {"thread": str(thread.id), "post": str(post.id * 100)}
+    )
+    assert result["data"]["thread"]["post"] is None

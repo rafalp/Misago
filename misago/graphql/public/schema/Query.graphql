@@ -3,7 +3,7 @@ extend type Query {
     categories: [Category!]!
     category(id: ID!): Category
     thread(id: ID!): Thread
-    threads(cursor: ID, category: ID, user: ID, year: Int): ThreadsFeed
+    threads(cursor: ID, category: ID, user: ID): ThreadsFeed
     post(id: ID!): Post
     user(id: ID!): User
     forumStats: ForumStats!

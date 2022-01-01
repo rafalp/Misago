@@ -14,7 +14,7 @@ CATEGORY_CHILDREN_QUERY = """
 
 
 @pytest.mark.asyncio
-async def test_category_children_resolver_returns_list_with_category_children(
+async def test_category_children_resolves_to_list_with_category_children(
     query_public_api, category, child_category
 ):
     result = await query_public_api(
@@ -29,7 +29,7 @@ async def test_category_children_resolver_returns_list_with_category_children(
 
 
 @pytest.mark.asyncio
-async def test_category_children_resolver_returns_empty_list_for_leaf_category(
+async def test_category_children_resolves_to_empty_list_for_leaf_category(
     query_public_api, sibling_category
 ):
     result = await query_public_api(
@@ -44,7 +44,7 @@ async def test_category_children_resolver_returns_empty_list_for_leaf_category(
 
 
 @pytest.mark.asyncio
-async def test_category_extra_resolver_returns_dict_with_extra(
+async def test_category_extra_resolves_to_empty_list_for_leaf_category(
     query_public_api, category
 ):
     query = """
@@ -64,9 +64,7 @@ async def test_category_extra_resolver_returns_dict_with_extra(
 
 
 @pytest.mark.asyncio
-async def test_category_banner_resolver_returns_dict_with_category_banners(
-    query_public_api, category
-):
+async def test_category_banner_resolves_to_category_banners(query_public_api, category):
     query = """
         query GetCategory($category: ID!) {
             category(id: $category) {
@@ -122,7 +120,7 @@ CATEGORY_PARENT_QUERY = """
 
 
 @pytest.mark.asyncio
-async def test_category_parent_resolver_returns_category_parent(
+async def test_category_parent_resolves_to_category_parent(
     query_public_api, category, child_category
 ):
     result = await query_public_api(
@@ -137,7 +135,7 @@ async def test_category_parent_resolver_returns_category_parent(
 
 
 @pytest.mark.asyncio
-async def test_category_parent_resolver_returns_none_for_top_level_category(
+async def test_category_parent_resolves_to_none_for_top_level_category(
     query_public_api, category
 ):
     result = await query_public_api(

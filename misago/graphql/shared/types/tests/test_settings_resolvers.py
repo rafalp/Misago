@@ -4,7 +4,7 @@ from .....validation import PASSWORD_MAX_LENGTH
 
 
 @pytest.mark.asyncio
-async def test_query_settings_resolver_returns_settings_from_context(
+async def test_query_settings_resolves_to_settings_list(
     query_public_api, dynamic_settings
 ):
     query = """

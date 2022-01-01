@@ -1,160 +1,151 @@
 import pytest
 
-from ..thread import (
-    resolve_category,
-    resolve_first_post,
-    resolve_last_post,
-    resolve_last_post_url,
-    resolve_last_poster,
-    resolve_post,
-    resolve_post_url,
-    resolve_posts,
-    resolve_starter,
-)
+
+THREAD_QUERY = """
+    query GetThread($thread: ID!) {
+        thread(id: $thread) {
+            id
+            title
+            startedAt
+            lastPostedAt
+            category {
+                id
+                name
+            }
+            firstPost {
+                id
+            }
+            starter {
+                id
+                name
+            }
+            lastPoster {
+                id
+                name
+            }
+            lastPost {
+                id
+            }
+            lastPostUrl
+            lastPostUrlAbsolute: lastPostUrl(absolute: true)
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
-async def test_category_resolver_returns_thread_category(
-    graphql_info, category, thread
+async def test_thread_query_is_resolved_by_id(query_public_api, thread):
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["id"] == str(thread.id)
+    assert result["data"]["thread"]["title"] == thread.title
+
+
+@pytest.mark.asyncio
+async def test_thread_query_is_resolved_to_none_for_nonexisting_thread(
+    query_public_api, thread
 ):
-    value = await resolve_category(thread, graphql_info)
-    assert value == category
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id * 100)})
+    assert result["data"]["thread"] is None
 
 
 @pytest.mark.asyncio
-async def test_posts_resolver_returns_thread_posts_paginator(
-    graphql_info, thread, post
+async def test_thread_category_is_resolved(query_public_api, thread, category):
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["category"] == {
+        "id": str(category.id),
+        "name": category.name,
+    }
+
+
+@pytest.mark.asyncio
+async def test_thread_starter_is_resolved(query_public_api, thread, user):
+    await thread.update(starter=user)
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["starter"] == {
+        "id": str(user.id),
+        "name": user.name,
+    }
+
+
+@pytest.mark.asyncio
+async def test_thread_starter_is_resolved_to_none_is_user_is_deleted(
+    query_public_api, thread
 ):
-    value = await resolve_posts(thread, graphql_info)
-    assert value.get_count() == 1
-    assert value.get_pages() == 1
+    await thread.update(starter=False)
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["starter"] is None
 
 
 @pytest.mark.asyncio
-async def test_first_post_resolver_returns_threads_first_post(
-    graphql_info, thread, post
+async def test_thread_starter_is_resolved_to_none_is_user_is_inactive(
+    query_public_api, thread, user
 ):
-    value = await resolve_first_post(thread, graphql_info)
-    assert value == post
-
-
-@pytest.mark.asyncio
-async def test_last_post_resolver_returns_threads_last_post(graphql_info, thread, post):
-    value = await resolve_last_post(thread, graphql_info)
-    assert value == post
-
-
-@pytest.mark.asyncio
-async def test_starter_resolver_returns_thread_starter(graphql_info, user_thread, user):
-    value = await resolve_starter(user_thread, graphql_info)
-    assert value == user
-
-
-@pytest.mark.asyncio
-async def test_starter_resolver_returns_none_if_thread_starter_is_inactive(
-    graphql_info, user_thread, user
-):
+    await thread.update(starter=user)
     await user.update(is_active=False)
-    value = await resolve_starter(user_thread, graphql_info)
-    assert value is None
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["starter"] is None
 
 
 @pytest.mark.asyncio
-async def test_starter_resolver_returns_none_if_starter_is_empty(graphql_info, thread):
-    value = await resolve_starter(thread, graphql_info)
-    assert value is None
+async def test_thread_last_poster_is_resolved(query_public_api, thread, user):
+    await thread.update(last_poster=user)
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPoster"] == {
+        "id": str(user.id),
+        "name": user.name,
+    }
 
 
 @pytest.mark.asyncio
-async def test_last_poster_resolver_returns_threads_last_poster(
-    graphql_info, user_thread, user
+async def test_thread_last_poster_is_resolved_to_none_if_user_is_deletedd(
+    query_public_api, thread
 ):
-    value = await resolve_last_poster(user_thread, graphql_info)
-    assert value == user
+    await thread.update(last_poster=False)
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPoster"] is None
 
 
 @pytest.mark.asyncio
-async def test_last_poster_resolver_returns_none_if_threads_last_poster_is_inactive(
-    graphql_info, user_thread, user
+async def test_thread_last_poster_is_resolved_to_none_is_user_is_inactive(
+    query_public_api, thread, user
 ):
+    await thread.update(last_poster=user)
     await user.update(is_active=False)
-    value = await resolve_last_poster(user_thread, graphql_info)
-    assert value is None
+
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPoster"] is None
 
 
 @pytest.mark.asyncio
-async def test_last_poster_resolver_returns_none_if_last_poster_is_empty(
-    graphql_info, thread
+async def test_thread_first_post_is_resolved(query_public_api, thread, post):
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["firstPost"] == {"id": str(post.id)}
+
+
+@pytest.mark.asyncio
+async def test_thread_last_post_is_resolved(query_public_api, thread, post):
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPost"] == {"id": str(post.id)}
+
+
+@pytest.mark.asyncio
+async def test_thread_last_post_url_is_resolved(query_public_api, thread, post):
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPostUrl"] == (
+        f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
+    )
+
+
+@pytest.mark.asyncio
+async def test_thread_last_post_absolute_url_is_resolved(
+    query_public_api, thread, post
 ):
-    value = await resolve_last_poster(thread, graphql_info)
-    assert value is None
-
-
-@pytest.mark.asyncio
-async def test_post_resolver_returns_thread_post(graphql_info, thread, post):
-    value = await resolve_post(thread, graphql_info, id=post.id)
-    assert value == post
-
-
-@pytest.mark.asyncio
-async def test_post_resolver_returns_none_if_post_is_in_other_thread(
-    graphql_info, thread, closed_thread_post
-):
-    value = await resolve_post(thread, graphql_info, id=closed_thread_post.id)
-    assert value is None
-
-
-@pytest.mark.asyncio
-async def test_post_resolver_returns_none_if_post_doesnt_exist(
-    graphql_info, thread, post
-):
-    value = await resolve_post(thread, graphql_info, id=post.id + 1)
-    assert value is None
-
-
-@pytest.mark.asyncio
-async def test_last_post_url_resolver_returns_url_to_thread_last_post(
-    graphql_info, thread, post
-):
-    value = await resolve_last_post_url(thread, graphql_info)
-    assert value == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
-
-
-@pytest.mark.asyncio
-async def test_last_post_url_resolver_returns_absolute_url_to_thread_last_post(
-    graphql_info, thread, post
-):
-    value = await resolve_last_post_url(thread, graphql_info, absolute=True)
-    assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
-
-
-@pytest.mark.asyncio
-async def test_post_url_resolver_returns_url_to_specified_thread_post(
-    graphql_info, thread, post
-):
-    value = await resolve_post_url(thread, graphql_info, id=post.id)
-    assert value == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
-
-
-@pytest.mark.asyncio
-async def test_post_url_resolver_returns_absolute_url_to_specified_thread_post(
-    graphql_info, thread, post
-):
-    value = await resolve_post_url(thread, graphql_info, id=post.id, absolute=True)
-    assert value == f"http://test.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
-
-
-@pytest.mark.asyncio
-async def test_post_url_resolver_returns_none_if_post_is_not_found(
-    graphql_info, thread, post
-):
-    value = await resolve_post_url(thread, graphql_info, id=post.id * 10)
-    assert value is None
-
-
-@pytest.mark.asyncio
-async def test_post_url_resolver_returns_none_if_post_belongs_to_other_thread(
-    graphql_info, thread, post, closed_thread_post
-):
-    value = await resolve_post_url(thread, graphql_info, id=closed_thread_post.id)
-    assert value is None
+    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
+    assert result["data"]["thread"]["lastPostUrlAbsolute"] == (
+        f"http://example.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
+    )
