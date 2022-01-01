@@ -10,7 +10,7 @@ from ....loaders import (
     load_category_with_children,
     load_forum_stats,
     load_post,
-    load_root_categories,
+    load_categories,
     load_thread,
     load_threads_feed,
     load_user,
@@ -29,15 +29,22 @@ def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
 
 @query_type.field("categories")
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
-    # TODO: aggregate loaded categories stats
-    return load_root_categories(info.context)
+    return load_categories(info.context)
 
 
 @query_type.field("category")
 def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Category]]:
-    return load_category(info.context, id)
+    # Load all categories so we can aggregate their stats
+    categories = load_categories(info.context)
+
+    # Search for category
+    for category in categories:
+        if str(category.id) == id:
+            return category
+    
+    return None
 
 
 @query_type.field("thread")
