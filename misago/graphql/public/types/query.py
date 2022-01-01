@@ -33,11 +33,11 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 
 
 @query_type.field("category")
-def resolve_category(
+async def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
-) -> Awaitable[Optional[Category]]:
+) -> Optional[Category]:
     # Load all categories so we can aggregate their stats
-    categories = load_categories(info.context)
+    categories = await load_categories(info.context)
 
     # Search for category
     for category in categories:
