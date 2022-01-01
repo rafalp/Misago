@@ -6,11 +6,10 @@ from graphql import GraphQLResolveInfo
 from ....categories.models import Category
 from ....loaders import (
     load_categories,
-    load_category,
     load_category_with_children,
     load_forum_stats,
     load_post,
-    load_categories,
+    load_root_categories,
     load_thread,
     load_threads_feed,
     load_user,
@@ -29,7 +28,7 @@ def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
 
 @query_type.field("categories")
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
-    return load_categories(info.context)
+    return load_root_categories(info.context)
 
 
 @query_type.field("category")
@@ -43,7 +42,7 @@ async def resolve_category(
     for category in categories:
         if str(category.id) == id:
             return category
-    
+
     return None
 
 
