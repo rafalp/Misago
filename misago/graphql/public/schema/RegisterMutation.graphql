@@ -9,7 +9,7 @@ input RegisterInput {
 }
 
 type RegisterMutationResult {
-    errors: [Error!]
-    token: String
     user: User
+    token: String
+    errors: [Error!]
 }

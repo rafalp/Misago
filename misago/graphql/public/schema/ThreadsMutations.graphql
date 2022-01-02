@@ -50,8 +50,8 @@ input MoveThreadInput {
 }
 
 type ThreadMutationResult {
-    errors: [Error!]
     thread: Thread
+    errors: [Error!]
 }
 
 input DeleteThreadInput {
@@ -81,8 +81,8 @@ input BulkMoveThreadsInput {
 
 type BulkThreadsMutationResult {
     updated: Boolean!
-    errors: [Error!]
     threads: [Thread!]
+    errors: [Error!]
 }
 
 input BulkDeleteThreadsInput {
@@ -90,8 +90,8 @@ input BulkDeleteThreadsInput {
 }
 
 type BulkDeleteThreadsMutationResult {
-    errors: [Error!]
     deleted: [ID!]!
+    errors: [Error!]
 }
 
 extend type Mutation {
@@ -105,9 +105,9 @@ input DeleteThreadPostInput {
 }
 
 type DeleteThreadPostMutationResult {
-    errors: [Error!]
-    thread: Thread
     deleted: [ID!]!
+    thread: Thread
+    errors: [Error!]
 }
 
 input BulkDeleteThreadPostsInput {
@@ -116,7 +116,7 @@ input BulkDeleteThreadPostsInput {
 }
 
 type BulkDeleteThreadPostsMutationResult {
-    errors: [Error!]
-    thread: Thread
     deleted: [ID!]!
+    thread: Thread
+    errors: [Error!]
 }
