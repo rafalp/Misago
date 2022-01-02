@@ -2,7 +2,6 @@ import pytest
 
 from .....errors import ErrorsList
 from .....threads.models import Post
-from ..deletethreadposts import resolve_delete_thread_posts
 
 
 DELETE_THREAD_POSTS_MUTATION = """
