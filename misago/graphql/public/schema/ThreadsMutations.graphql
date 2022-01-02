@@ -22,9 +22,9 @@ input EditPostInput {
 }
 
 type PostMutationResult {
-    errors: [Error!]
     thread: Thread
     post: Post
+    errors: [Error!]
 }
 
 extend type Mutation {
@@ -59,8 +59,8 @@ input DeleteThreadInput {
 }
 
 type DeleteThreadMutationResult {
-    errors: [Error!]
     deleted: [ID!]!
+    errors: [Error!]
 }
 
 extend type Mutation {
@@ -80,9 +80,9 @@ input BulkMoveThreadsInput {
 }
 
 type BulkThreadsMutationResult {
+    updated: Boolean!
     errors: [Error!]
     threads: [Thread!]
-    updated: Boolean!
 }
 
 input BulkDeleteThreadsInput {

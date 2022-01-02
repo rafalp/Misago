@@ -4,120 +4,205 @@ from .....errors import ErrorsList
 from ..closethreads import resolve_close_threads
 
 
+CLOSE_THREADS_MUTATION = """
+    mutation CloseThreads($input: BulkCloseThreadsInput!) {
+        closeThreads(input: $input) {
+            updated
+            threads {
+                id
+                isClosed
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
+
+
 @pytest.mark.asyncio
-async def test_close_threads_mutation_closes_threads(moderator_graphql_info, thread):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": [str(thread.id)], "isClosed": True},
+async def test_close_threads_mutation_closes_threads(
+    query_public_api, moderator, thread
+):
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "isClosed": True}},
+        auth=moderator,
     )
 
-    assert "errors" not in data
-    assert data["threads"] == [await data["threads"][0].refresh_from_db()]
-    assert data["threads"][0].is_closed
-    assert data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": True,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "isClosed": True,
+            },
+        ],
+        "errors": None,
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_opens_threads(
-    moderator_graphql_info, closed_thread
+    query_public_api, moderator, closed_thread
 ):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": [str(closed_thread.id)], "isClosed": False},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": [str(closed_thread.id)], "isClosed": False}},
+        auth=moderator,
     )
 
-    assert "errors" not in data
-    assert data["threads"] == [await data["threads"][0].refresh_from_db()]
-    assert not data["threads"][0].is_closed
-    assert data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": True,
+        "threads": [
+            {
+                "id": str(closed_thread.id),
+                "isClosed": False,
+            },
+        ],
+        "errors": None,
+    }
+
+    thread_from_db = await closed_thread.refresh_from_db()
+    assert not thread_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_fails_if_user_is_not_authorized(
-    graphql_info, thread
+    query_public_api, thread
 ):
-    data = await resolve_close_threads(
-        None,
-        graphql_info,
-        input={"threads": [str(thread.id)], "isClosed": True},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "isClosed": True}},
     )
 
-    assert data["errors"].get_errors_locations() == [
-        "threads.0",
-        ErrorsList.ROOT_LOCATION,
-    ]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-        "auth_error.not_authorized",
-    ]
-    assert not data["threads"][0].is_closed
-    assert not data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "isClosed": False,
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "auth_error.not_moderator",
+            },
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert not thread_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_fails_if_user_is_not_moderator(
-    user_graphql_info, thread
+    query_public_api, user, thread
 ):
-    data = await resolve_close_threads(
-        None,
-        user_graphql_info,
-        input={"threads": [str(thread.id)], "isClosed": True},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "isClosed": True}},
+        auth=user,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-    ]
-    assert not data["threads"][0].is_closed
-    assert not data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "isClosed": False,
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "auth_error.not_moderator",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert not thread_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_fails_if_thread_id_is_invalid(
-    moderator_graphql_info,
+    query_public_api, moderator
 ):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": ["invalid"], "isClosed": True},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": ["invalid"], "isClosed": True}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert not data["threads"]
-    assert not data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": False,
+        "threads": [],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_fails_if_thread_doesnt_exist(
-    moderator_graphql_info,
+    query_public_api, moderator
 ):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": ["4000"], "isClosed": True},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": ["4000"], "isClosed": True}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert not data["threads"]
-    assert not data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": False,
+        "threads": [],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "value_error.thread.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_close_threads_mutation_with_threads_errors_still_updates_valid_threads(
-    moderator_graphql_info, thread
+    query_public_api, moderator, thread
 ):
-    data = await resolve_close_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": ["4000", str(thread.id)], "isClosed": True},
+    result = await query_public_api(
+        CLOSE_THREADS_MUTATION,
+        {"input": {"threads": ["4000", str(thread.id)], "isClosed": True}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert len(data["threads"]) == 1
-    assert data["threads"][0].is_closed
-    assert data["updated"]
+    assert result["data"]["closeThreads"] == {
+        "updated": True,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "isClosed": True,
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "value_error.thread.not_exists",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.is_closed
