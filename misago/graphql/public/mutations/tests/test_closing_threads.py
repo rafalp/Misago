@@ -1,7 +1,6 @@
 import pytest
 
 from .....errors import ErrorsList
-from ..closethreads import resolve_close_threads
 
 
 CLOSE_THREADS_MUTATION = """
