@@ -1,192 +1,362 @@
+from unittest.mock import ANY
+
 import pytest
 
 from .....errors import ErrorsList
-from ..editpost import resolve_edit_post
+
+EDIT_POST_MUTATION = """
+    mutation EditPost($input: EditPostInput!) {
+        editPost(input: $input) {
+            thread {
+                id
+            }
+            post {
+                id
+                richText
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_updates_post(user_graphql_info, user_post):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={"post": str(user_post.id), "markup": "Edited post"},
+async def test_edit_post_mutation_updates_post(query_public_api, user, user_post):
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(user_post.id), "markup": "Edited post"}},
+        auth=user,
     )
 
-    assert not data.get("errors")
-    assert data.get("post")
-    assert data["post"] == await data["post"].refresh_from_db()
-    assert data["post"].markup == "Edited post"
-    assert data["post"].rich_text[0]["type"] == "p"
-    assert data["post"].rich_text[0]["text"] == "Edited post"
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(user_post.thread_id),
+        },
+        "post": {
+            "id": str(user_post.id),
+            "richText": [
+                {
+                    "id": ANY,
+                    "type": "p",
+                    "text": "Edited post",
+                },
+            ],
+        },
+        "errors": None,
+    }
 
-
-@pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_user_is_not_authorized(
-    graphql_info, user_post
-):
-    data = await resolve_edit_post(
-        None,
-        graphql_info,
-        input={"post": str(user_post.id), "markup": "Edited post"},
-    )
-
-    assert data.get("thread")
-    assert data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post", ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.post.not_author",
-        "auth_error.not_authorized",
+    post_from_db = await user_post.refresh_from_db()
+    assert post_from_db.rich_text == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "Edited post",
+        }
     ]
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_post_id_is_invalid(user_graphql_info):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={"post": "invalid", "markup": "This is test post!"},
+async def test_edit_post_mutation_fails_if_user_is_not_authorized(
+    query_public_api, user_post
+):
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(user_post.id), "markup": "Edited post"}},
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(user_post.thread_id),
+        },
+        "post": {
+            "id": str(user_post.id),
+            "richText": [],
+        },
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "auth_error.post.not_author",
+            },
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
+
+    post_from_db = await user_post.refresh_from_db()
+    assert post_from_db.rich_text == []
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_post_doesnt_exist(user_graphql_info):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={"post": "4000", "markup": "This is test post!"},
+async def test_edit_post_mutation_fails_if_post_id_is_invalid(query_public_api, user):
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": "invalid", "markup": "Edited post"}},
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["value_error.post.not_exists"]
+    assert result["data"]["editPost"] == {
+        "thread": None,
+        "post": None,
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
+
+
+@pytest.mark.asyncio
+async def test_edit_post_mutation_fails_if_post_doesnt_exist(query_public_api, user):
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": "4000", "markup": "Edited post"}},
+        auth=user,
+    )
+
+    assert result["data"]["editPost"] == {
+        "thread": None,
+        "post": None,
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "value_error.post.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_post_author_is_other_user(
-    user_graphql_info, other_user_post
+    query_public_api, user, other_user_post
 ):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={"post": str(other_user_post.id), "markup": "This is test post!"},
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(other_user_post.id), "markup": "Edited post"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["auth_error.post.not_author"]
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(other_user_post.thread_id),
+        },
+        "post": {
+            "id": str(other_user_post.id),
+            "richText": [],
+        },
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "auth_error.post.not_author",
+            },
+        ],
+    }
+
+    post_from_db = await other_user_post.refresh_from_db()
+    assert post_from_db.rich_text == []
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_allowss_moderator_to_edit_other_user_post(
-    moderator_graphql_info, other_user_post
+async def test_edit_post_mutation_allows_moderator_to_edit_other_user_post(
+    query_public_api, moderator, post
 ):
-    data = await resolve_edit_post(
-        None,
-        moderator_graphql_info,
-        input={"post": str(other_user_post.id), "markup": "This is test post!"},
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(post.id), "markup": "Edited post"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert not data.get("errors")
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(post.thread_id),
+        },
+        "post": {
+            "id": str(post.id),
+            "richText": [
+                {
+                    "id": ANY,
+                    "type": "p",
+                    "text": "Edited post",
+                },
+            ],
+        },
+        "errors": None,
+    }
+
+    post_from_db = await post.refresh_from_db()
+    assert post_from_db.rich_text == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "Edited post",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_thread_is_closed(
-    user_graphql_info, closed_user_thread_post
+    query_public_api, user, closed_user_thread_post
 ):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={"post": str(closed_user_thread_post.id), "markup": "This is test post!"},
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(closed_user_thread_post.id), "markup": "Edited post"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["auth_error.thread.closed"]
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(closed_user_thread_post.thread_id),
+        },
+        "post": {
+            "id": str(closed_user_thread_post.id),
+            "richText": [],
+        },
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "auth_error.thread.closed",
+            },
+        ],
+    }
+
+    post_from_db = await closed_user_thread_post.refresh_from_db()
+    assert post_from_db.rich_text == []
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_thread(
-    moderator_graphql_info, closed_user_thread_post
+    query_public_api, moderator, closed_user_thread_post
 ):
-    data = await resolve_edit_post(
-        None,
-        moderator_graphql_info,
-        input={"post": str(closed_user_thread_post.id), "markup": "This is test post!"},
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(closed_user_thread_post.id), "markup": "Edited post"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert not data.get("errors")
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(closed_user_thread_post.thread_id),
+        },
+        "post": {
+            "id": str(closed_user_thread_post.id),
+            "richText": [
+                {
+                    "id": ANY,
+                    "type": "p",
+                    "text": "Edited post",
+                },
+            ],
+        },
+        "errors": None,
+    }
+
+    post_from_db = await closed_user_thread_post.refresh_from_db()
+    assert post_from_db.rich_text == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "Edited post",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_category_is_closed(
-    user_graphql_info, closed_category_user_post
+    query_public_api, user, closed_category_user_post
 ):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={
-            "post": str(closed_category_user_post.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(closed_category_user_post.id), "markup": "Edited post"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["post"]
-    assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(closed_category_user_post.thread_id),
+        },
+        "post": {
+            "id": str(closed_category_user_post.id),
+            "richText": [],
+        },
+        "errors": [
+            {
+                "location": ["post"],
+                "type": "auth_error.category.closed",
+            },
+        ],
+    }
+
+    post_from_db = await closed_category_user_post.refresh_from_db()
+    assert post_from_db.rich_text == []
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_category(
-    moderator_graphql_info, closed_category_user_post
+    query_public_api, moderator, closed_category_user_post
 ):
-    data = await resolve_edit_post(
-        None,
-        moderator_graphql_info,
-        input={
-            "post": str(closed_category_user_post.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(closed_category_user_post.id), "markup": "Edited post"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert not data.get("errors")
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(closed_category_user_post.thread_id),
+        },
+        "post": {
+            "id": str(closed_category_user_post.id),
+            "richText": [
+                {
+                    "id": ANY,
+                    "type": "p",
+                    "text": "Edited post",
+                },
+            ],
+        },
+        "errors": None,
+    }
+
+    post_from_db = await closed_category_user_post.refresh_from_db()
+    assert post_from_db.rich_text == [
+        {
+            "id": ANY,
+            "type": "p",
+            "text": "Edited post",
+        }
+    ]
 
 
 @pytest.mark.asyncio
 async def test_edit_post_mutation_fails_if_markup_is_too_short(
-    user_graphql_info, user_post
+    query_public_api, moderator, user_post
 ):
-    data = await resolve_edit_post(
-        None,
-        user_graphql_info,
-        input={
-            "post": str(user_post.id),
-            "markup": " ",
-        },
+    result = await query_public_api(
+        EDIT_POST_MUTATION,
+        {"input": {"post": str(user_post.id), "markup": "!"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["markup"]
-    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+    assert result["data"]["editPost"] == {
+        "thread": {
+            "id": str(user_post.thread_id),
+        },
+        "post": {
+            "id": str(user_post.id),
+            "richText": [],
+        },
+        "errors": [
+            {
+                "location": ["markup"],
+                "type": "value_error.any_str.min_length",
+            }
+        ],
+    }
+
+    post_from_db = await user_post.refresh_from_db()
+    assert post_from_db.rich_text == []
