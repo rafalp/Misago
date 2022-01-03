@@ -1,168 +1,282 @@
 import pytest
 
 from .....errors import ErrorsList
-from ..editthreadtitle import resolve_edit_thread_title
+
+EDIT_THREAD_TITLE_MUTATION = """
+    mutation EditThreadTitle($input: EditThreadTitleInput!) {
+        editThreadTitle(input: $input) {
+            thread {
+                id
+                title
+                slug
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_updates_thread(user_graphql_info, user_thread):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={"thread": str(user_thread.id), "title": "Edited thread"},
+async def test_edit_title_mutation_updates_thread(query_public_api, user, user_thread):
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(user_thread.id), "title": "Edited thread"}},
+        auth=user,
     )
 
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data["thread"] == await data["thread"].refresh_from_db()
-    assert data["thread"].title == "Edited thread"
-    assert data["thread"].slug == "edited-thread"
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(user_thread.id),
+            "title": "Edited thread",
+            "slug": "edited-thread",
+        },
+        "errors": None,
+    }
+
+    thread_from_db = await user_thread.refresh_from_db()
+    assert thread_from_db.title == "Edited thread"
+    assert thread_from_db.slug == "edited-thread"
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_fails_if_user_is_not_authorized(
-    graphql_info, user_thread
+    query_public_api, user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        graphql_info,
-        input={"thread": str(user_thread.id), "title": "Edited thread"},
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(user_thread.id), "title": "Edited thread"}},
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread", ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.thread.not_author",
-        "auth_error.not_authorized",
-    ]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(user_thread.id),
+            "title": "Thread",
+            "slug": "thread",
+        },
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.thread.not_author",
+            },
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
+
+    thread_from_db = await user_thread.refresh_from_db()
+    assert thread_from_db.title == "Thread"
+    assert thread_from_db.slug == "thread"
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_id_is_invalid(user_graphql_info):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={"thread": "invalid", "title": "This is test thread!"},
+async def test_edit_title_mutation_fails_if_thread_id_is_invalid(
+    query_public_api, user
+):
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": "invalid", "title": "Edited thread"}},
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_doesnt_exist(user_graphql_info):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={"thread": "4000", "title": "This is test thread!"},
+async def test_edit_title_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": "invalid", "title": "Edited thread"}},
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_fails_if_thread_author_is_other_user(
-    user_graphql_info, other_user_thread
+    query_public_api, user, other_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={"thread": str(other_user_thread.id), "title": "This is test thread!"},
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(other_user_thread.id), "title": "Edited thread"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["auth_error.thread.not_author"]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(other_user_thread.id),
+            "title": "Thread",
+            "slug": "thread",
+        },
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.thread.not_author",
+            },
+        ],
+    }
+
+    thread_from_db = await other_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Thread"
+    assert thread_from_db.slug == "thread"
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_allowss_moderator_to_edit_other_user_thread(
-    moderator_graphql_info, other_user_thread
+async def test_edit_title_mutation_allows_moderator_to_edit_other_user_thread(
+    query_public_api, moderator, other_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        moderator_graphql_info,
-        input={"thread": str(other_user_thread.id), "title": "This is test thread!"},
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(other_user_thread.id), "title": "Edited thread"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert not data.get("errors")
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(other_user_thread.id),
+            "title": "Edited thread",
+            "slug": "edited-thread",
+        },
+        "errors": None,
+    }
+
+    thread_from_db = await other_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Edited thread"
+    assert thread_from_db.slug == "edited-thread"
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_fails_if_thread_is_closed(
-    user_graphql_info, closed_user_thread
+    query_public_api, user, closed_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(closed_user_thread.id),
-            "title": "This is test thread!",
-        },
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(closed_user_thread.id), "title": "Edited thread"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["auth_error.thread.closed"]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(closed_user_thread.id),
+            "title": "Thread",
+            "slug": "thread",
+        },
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.thread.closed",
+            },
+        ],
+    }
+
+    thread_from_db = await closed_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Thread"
+    assert thread_from_db.slug == "thread"
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_thread(
-    moderator_graphql_info, closed_user_thread
+    query_public_api, moderator, closed_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        moderator_graphql_info,
-        input={
-            "thread": str(closed_user_thread.id),
-            "title": "This is test thread!",
-        },
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {"input": {"thread": str(closed_user_thread.id), "title": "Edited thread"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert not data.get("errors")
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(closed_user_thread.id),
+            "title": "Edited thread",
+            "slug": "edited-thread",
+        },
+        "errors": None,
+    }
+
+    thread_from_db = await closed_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Edited thread"
+    assert thread_from_db.slug == "edited-thread"
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_fails_if_category_is_closed(
-    user_graphql_info, closed_category_user_thread
+    query_public_api, user, closed_category_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(closed_category_user_thread.id),
-            "title": "This is test thread!",
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {
+            "input": {
+                "thread": str(closed_category_user_thread.id),
+                "title": "Edited thread",
+            }
         },
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(closed_category_user_thread.id),
+            "title": "Thread",
+            "slug": "thread",
+        },
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.category.closed",
+            },
+        ],
+    }
+
+    thread_from_db = await closed_category_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Thread"
+    assert thread_from_db.slug == "thread"
 
 
 @pytest.mark.asyncio
 async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_category(
-    moderator_graphql_info, closed_category_user_thread
+    query_public_api, moderator, closed_category_user_thread
 ):
-    data = await resolve_edit_thread_title(
-        None,
-        moderator_graphql_info,
-        input={
-            "thread": str(closed_category_user_thread.id),
-            "title": "This is test thread!",
+    result = await query_public_api(
+        EDIT_THREAD_TITLE_MUTATION,
+        {
+            "input": {
+                "thread": str(closed_category_user_thread.id),
+                "title": "Edited thread",
+            }
         },
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert not data.get("errors")
+    assert result["data"]["editThreadTitle"] == {
+        "thread": {
+            "id": str(closed_category_user_thread.id),
+            "title": "Edited thread",
+            "slug": "edited-thread",
+        },
+        "errors": None,
+    }
+
+    thread_from_db = await closed_category_user_thread.refresh_from_db()
+    assert thread_from_db.title == "Edited thread"
+    assert thread_from_db.slug == "edited-thread"
