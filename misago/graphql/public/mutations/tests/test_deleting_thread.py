@@ -2,19 +2,34 @@ import pytest
 
 from .....errors import ErrorsList
 from .....threads.models import Thread
-from ..deletethread import resolve_delete_thread
+
+DELETE_THREAD_MUTATION = """
+    mutation DeleteThread($input: DeleteThreadInput!) {
+        deleteThread(input: $input) {
+            deleted
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_mutation_deletes_thread(moderator_graphql_info, thread):
-    data = await resolve_delete_thread(
-        None,
-        moderator_graphql_info,
-        input={"thread": str(thread.id)},
+async def test_delete_thread_mutation_deletes_thread(
+    query_public_api, moderator, thread
+):
+    result = await query_public_api(
+        DELETE_THREAD_MUTATION,
+        {"input": {"thread": str(thread.id)}},
+        auth=moderator,
     )
 
-    assert not data.get("errors")
-    assert data["deleted"] == [thread.id]
+    assert result["data"]["deleteThread"] == {
+        "deleted": [str(thread.id)],
+        "errors": None,
+    }
 
     with pytest.raises(Thread.DoesNotExist):
         await thread.refresh_from_db()
@@ -22,68 +37,90 @@ async def test_delete_thread_mutation_deletes_thread(moderator_graphql_info, thr
 
 @pytest.mark.asyncio
 async def test_delete_thread_mutation_fails_if_user_is_not_authorized(
-    graphql_info, thread
+    query_public_api, thread
 ):
-    data = await resolve_delete_thread(
-        None,
-        graphql_info,
-        input={"thread": str(thread.id)},
+    result = await query_public_api(
+        DELETE_THREAD_MUTATION,
+        {"input": {"thread": str(thread.id)}},
     )
 
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread", ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-        "auth_error.not_authorized",
-    ]
-    assert data["deleted"] == []
+    assert result["data"]["deleteThread"] == {
+        "deleted": [],
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.not_moderator",
+            },
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
+
+    await thread.refresh_from_db()
 
 
 @pytest.mark.asyncio
 async def test_delete_thread_mutation_fails_if_user_is_not_moderator(
-    user_graphql_info, thread
+    query_public_api, user, thread
 ):
-    data = await resolve_delete_thread(
-        None,
-        user_graphql_info,
-        input={"thread": str(thread.id)},
+    result = await query_public_api(
+        DELETE_THREAD_MUTATION,
+        {"input": {"thread": str(thread.id)}},
+        auth=user,
     )
 
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-    ]
-    assert data["deleted"] == []
+    assert result["data"]["deleteThread"] == {
+        "deleted": [],
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.not_moderator",
+            },
+        ],
+    }
+
+    await thread.refresh_from_db()
 
 
 @pytest.mark.asyncio
 async def test_delete_thread_mutation_fails_if_thread_id_is_invalid(
-    moderator_graphql_info,
+    query_public_api, moderator
 ):
-    data = await resolve_delete_thread(
-        None,
-        moderator_graphql_info,
-        input={"thread": "invalid"},
+    result = await query_public_api(
+        DELETE_THREAD_MUTATION,
+        {"input": {"thread": "invalid"}},
+        auth=moderator,
     )
 
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert data["deleted"] == []
+    assert result["data"]["deleteThread"] == {
+        "deleted": [],
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_delete_thread_mutation_fails_if_thread_doesnt_exist(
-    moderator_graphql_info,
+    query_public_api, moderator
 ):
-    data = await resolve_delete_thread(
-        None,
-        moderator_graphql_info,
-        input={"thread": "4000"},
+    result = await query_public_api(
+        DELETE_THREAD_MUTATION,
+        {"input": {"thread": "4000"}},
+        auth=moderator,
     )
 
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert data["deleted"] == []
+    assert result["data"]["deleteThread"] == {
+        "deleted": [],
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "value_error.thread.not_exists",
+            },
+        ],
+    }
