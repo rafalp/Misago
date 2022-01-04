@@ -3,7 +3,7 @@ type Mutation {
 }
 
 type LoginMutationResult {
-    errors: [Error!]
-    token: String
     user: User
+    token: String
+    errors: [Error!]
 }

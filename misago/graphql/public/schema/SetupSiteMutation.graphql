@@ -11,7 +11,7 @@ input SetupSiteInput {
 }
 
 type SetupSiteMutationResult {
-    errors: [Error!]
     user: User
     token: String
+    errors: [Error!]
 }
