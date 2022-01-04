@@ -4,226 +4,269 @@ import pytest
 
 from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
-from ..postreply import resolve_post_reply
+from .....threads.models import Post
+
+POST_REPLY_MUTATION = """
+    mutation PostReply($input: PostReplyInput!) {
+        postReply(input: $input) {
+            thread {
+                id
+            }
+            post {
+                id
+                richText
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_creates_new_reply(
-    publish, user_graphql_info, user, thread
+    publish, query_public_api, user, thread
 ):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(thread.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": str(thread.id), "markup": "This is test post!"}},
+        auth=user,
     )
 
-    assert not data.get("errors")
-    assert data.get("post")
-    assert data["post"] == await data["post"].refresh_from_db()
-    assert data["post"].thread_id == data["thread"].id
-    assert data["post"].category_id == thread.category_id
-    assert data["post"].poster_id == user.id
-    assert data["post"].poster_name == user.name
-    assert data["post"].posted_at != data["thread"].started_at
-    assert data["post"].posted_at == data["thread"].last_posted_at
-    assert data["post"].markup == "This is test post!"
-    assert data["post"].rich_text[0]["type"] == "p"
-    assert data["post"].rich_text[0]["text"] == "This is test post!"
+    data = result["data"]["postReply"]
 
-
-@pytest.mark.asyncio
-async def test_post_reply_mutation_updates_thread(
-    publish, user_graphql_info, user, thread
-):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(thread.id),
-            "markup": "This is test post!",
+    assert data == {
+        "thread": {
+            "id": str(thread.id),
         },
-    )
-
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data["post"].id == data["thread"].last_post_id
-    assert data["thread"] == await data["thread"].refresh_from_db()
-    assert data["thread"].last_post_id != data["thread"].first_post_id
-    assert data["thread"].id == thread.id
-    assert data["thread"].starter_id != user.id
-    assert data["thread"].starter_name != user.name
-    assert data["thread"].last_poster_id == user.id
-    assert data["thread"].last_poster_name == user.name
-    assert data["thread"].last_posted_at > thread.last_posted_at
-    assert data["thread"].replies > thread.replies
-
-
-@pytest.mark.asyncio
-async def test_post_thread_mutation_publishes_thread_updated_event(
-    publish, user_graphql_info, thread
-):
-    await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(thread.id),
-            "markup": "This is test post!",
+        "post": {
+            "id": ANY,
+            "richText": [
+                {"id": ANY, "type": "p", "text": "This is test post!"},
+            ],
         },
-    )
+        "errors": None,
+    }
 
+    thread_from_db = await thread.refresh_from_db()
+    post_from_db = await Post.query.one(id=int(data["post"]["id"]))
+
+    assert thread_from_db.started_at == thread.started_at
+    assert thread_from_db.last_posted_at > thread.last_posted_at
+    assert thread_from_db.last_posted_at == post_from_db.posted_at
+    assert thread_from_db.last_poster_id == user.id
+    assert thread_from_db.last_poster_name == user.name
+    assert thread_from_db.last_post_id == post_from_db.id
+    assert thread_from_db.replies == thread.replies + 1
+
+    assert post_from_db.thread_id == thread.id
+    assert post_from_db.category_id == thread.category_id
+    assert post_from_db.poster_id == user.id
+    assert post_from_db.poster_name == user.name
+    assert post_from_db.markup == "This is test post!"
+    assert post_from_db.rich_text[0]["type"] == "p"
+    assert post_from_db.rich_text[0]["text"] == "This is test post!"
+
+    # Thread update sent to subscribers
     publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_fails_if_user_is_not_authorized(
-    graphql_info, thread
+    query_public_api, thread
 ):
-    data = await resolve_post_reply(
-        None,
-        graphql_info,
-        input={
-            "thread": str(thread.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": str(thread.id), "markup": "This is test post!"}},
     )
 
-    assert data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(thread.id),
+        },
+        "post": None,
+        "errors": [
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            }
+        ],
+    }
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_thread_id_is_invalid(user_graphql_info):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": "invalid",
-            "markup": "This is test post!",
-        },
+async def test_post_reply_mutation_fails_if_thread_id_is_invalid(
+    query_public_api, user
+):
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": "invalid", "markup": "This is test post!"}},
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert result["data"]["postReply"] == {
+        "thread": None,
+        "post": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "type_error.integer",
+            }
+        ],
+    }
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_thread_doesnt_exist(user_graphql_info):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": "4000",
-            "markup": "This is test post!",
-        },
+async def test_post_reply_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": "4000", "markup": "This is test post!"}},
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
+    assert result["data"]["postReply"] == {
+        "thread": None,
+        "post": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "value_error.thread.not_exists",
+            }
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_fails_if_thread_is_closed(
-    user_graphql_info, closed_thread
+    query_public_api, user, closed_thread
 ):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(closed_thread.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": str(closed_thread.id), "markup": "This is test post!"}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["auth_error.thread.closed"]
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(closed_thread.id),
+        },
+        "post": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.thread.closed",
+            }
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thread(
-    publish, moderator_graphql_info, closed_thread
+    publish, query_public_api, moderator, closed_thread
 ):
-    data = await resolve_post_reply(
-        None,
-        moderator_graphql_info,
-        input={
-            "thread": str(closed_thread.id),
-            "markup": "This is test post!",
-        },
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": str(closed_thread.id), "markup": "This is test post!"}},
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert not data.get("errors")
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(closed_thread.id),
+        },
+        "post": {
+            "id": ANY,
+            "richText": [
+                {"id": ANY, "type": "p", "text": "This is test post!"},
+            ],
+        },
+        "errors": None,
+    }
+
+    publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_fails_if_category_is_closed(
-    user_graphql_info, closed_category_thread
+    query_public_api, user, closed_category_thread
 ):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(closed_category_thread.id),
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {
+            "input": {
+                "thread": str(closed_category_thread.id),
+                "markup": "This is test post!",
+            }
         },
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["thread"]
-    assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(closed_category_thread.id),
+        },
+        "post": None,
+        "errors": [
+            {
+                "location": ["thread"],
+                "type": "auth_error.category.closed",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_category(
-    publish, moderator_graphql_info, closed_category_thread
+    publish, query_public_api, moderator, closed_category_thread
 ):
-    data = await resolve_post_reply(
-        None,
-        moderator_graphql_info,
-        input={
-            "thread": str(closed_category_thread.id),
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {
+            "input": {
+                "thread": str(closed_category_thread.id),
+                "markup": "This is test post!",
+            }
         },
+        auth=moderator,
     )
 
-    assert data.get("thread")
-    assert data.get("post")
-    assert not data.get("errors")
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(closed_category_thread.id),
+        },
+        "post": {
+            "id": ANY,
+            "richText": [
+                {"id": ANY, "type": "p", "text": "This is test post!"},
+            ],
+        },
+        "errors": None,
+    }
+
+    publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_fails_if_markup_is_too_short(
-    publish, user_graphql_info, thread
+    query_public_api, user, thread
 ):
-    data = await resolve_post_reply(
-        None,
-        user_graphql_info,
-        input={
-            "thread": str(thread.id),
-            "markup": " ",
-        },
+    result = await query_public_api(
+        POST_REPLY_MUTATION,
+        {"input": {"thread": str(thread.id), "markup": " "}},
+        auth=user,
     )
 
-    assert data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["markup"]
-    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+    assert result["data"]["postReply"] == {
+        "thread": {
+            "id": str(thread.id),
+        },
+        "post": None,
+        "errors": [
+            {
+                "location": ["markup"],
+                "type": "value_error.any_str.min_length",
+            }
+        ],
+    }
