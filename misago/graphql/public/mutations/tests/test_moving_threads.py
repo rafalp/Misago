@@ -1,143 +1,260 @@
 import pytest
 
 from .....errors import ErrorsList
-from ..movethreads import resolve_move_threads
+
+MOVE_THREADS_MUTATION = """
+    mutation MoveThread($input: BulkMoveThreadsInput!) {
+        moveThreads(input: $input) {
+            updated
+            threads {
+                id
+                category {
+                    id
+                }
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_moves_threads(
-    moderator_graphql_info, thread, sibling_category
+    query_public_api, moderator, thread, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": [str(thread.id)], "category": str(sibling_category.id)},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "category": str(sibling_category.id)}},
+        auth=moderator,
     )
 
-    assert "errors" not in data
-    assert data["threads"] == [await data["threads"][0].refresh_from_db()]
-    assert data["threads"][0].category_id == sibling_category.id
-    assert data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": True,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(sibling_category.id),
+                },
+            },
+        ],
+        "errors": None,
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == sibling_category.id
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_user_is_not_authorized(
-    graphql_info, thread, sibling_category
+    query_public_api, thread, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        graphql_info,
-        input={"threads": [str(thread.id)], "category": str(sibling_category.id)},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "category": str(sibling_category.id)}},
     )
 
-    assert data["errors"].get_errors_locations() == [
-        "threads.0",
-        ErrorsList.ROOT_LOCATION,
-    ]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-        "auth_error.not_authorized",
-    ]
-    assert data["threads"][0].category_id == thread.category_id
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(thread.category_id),
+                },
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "auth_error.not_moderator",
+            },
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == thread.category_id
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_user_is_not_moderator(
-    user_graphql_info, thread, sibling_category
+    query_public_api, user, thread, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        user_graphql_info,
-        input={"threads": [str(thread.id)], "category": str(sibling_category.id)},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "category": str(sibling_category.id)}},
+        auth=user,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == [
-        "auth_error.not_moderator",
-    ]
-    assert data["threads"][0].category_id == thread.category_id
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(thread.category_id),
+                },
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "auth_error.not_moderator",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == thread.category_id
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_thread_id_is_invalid(
-    moderator_graphql_info, sibling_category
+    query_public_api, moderator, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": ["invalid"], "category": str(sibling_category.id)},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": ["invalid"], "category": str(sibling_category.id)}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert not data["threads"]
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_thread_doesnt_exist(
-    moderator_graphql_info, sibling_category
+    query_public_api, moderator, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": ["4000"], "category": str(sibling_category.id)},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": ["4000"], "category": str(sibling_category.id)}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert not data["threads"]
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "value_error.thread.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_category_id_is_invalid(
-    moderator_graphql_info, thread
+    query_public_api, moderator, thread
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": [str(thread.id)], "category": "invalid"},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "category": "invalid"}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
-    assert data["threads"][0].category_id == thread.category_id
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(thread.category_id),
+                },
+            },
+        ],
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == thread.category_id
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_fails_if_category_doesnt_exist(
-    moderator_graphql_info, thread
+    query_public_api, moderator, thread
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={"threads": [str(thread.id)], "category": "1000"},
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {"input": {"threads": [str(thread.id)], "category": "1000"}},
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["value_error.category.not_exists"]
-    assert data["threads"][0].category_id == thread.category_id
-    assert not data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": False,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(thread.category_id),
+                },
+            },
+        ],
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "value_error.category.not_exists",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == thread.category_id
 
 
 @pytest.mark.asyncio
 async def test_move_threads_mutation_with_threads_errors_still_updates_valid_threads(
-    moderator_graphql_info, thread, sibling_category
+    query_public_api, moderator, thread, sibling_category
 ):
-    data = await resolve_move_threads(
-        None,
-        moderator_graphql_info,
-        input={
-            "threads": ["4000", str(thread.id)],
-            "category": str(sibling_category.id),
+    result = await query_public_api(
+        MOVE_THREADS_MUTATION,
+        {
+            "input": {
+                "threads": ["4000", str(thread.id)],
+                "category": str(sibling_category.id),
+            }
         },
+        auth=moderator,
     )
 
-    assert data["errors"].get_errors_locations() == ["threads.0"]
-    assert data["errors"].get_errors_types() == ["value_error.thread.not_exists"]
-    assert data["threads"][0].category_id == sibling_category.id
-    assert data["updated"]
+    assert result["data"]["moveThreads"] == {
+        "updated": True,
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(sibling_category.id),
+                },
+            },
+        ],
+        "errors": [
+            {
+                "location": ["threads", "0"],
+                "type": "value_error.thread.not_exists",
+            },
+        ],
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == sibling_category.id
