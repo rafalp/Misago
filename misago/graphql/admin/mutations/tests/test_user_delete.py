@@ -88,7 +88,12 @@ async def test_user_delete_mutation_fails_if_user_id_is_invalid(query_admin_api)
     )
     data = result["data"]["userDelete"]
     assert not data["deleted"]
-    assert data["errors"] == [{"location": ["user"], "type": "type_error.integer"}]
+    assert data["errors"] == [
+        {
+            "location": ["user"],
+            "type": "type_error.integer",
+        },
+    ]
 
 
 @pytest.mark.asyncio
@@ -104,7 +109,10 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_u
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
-        {"location": ["user"], "type": "value_error.user.not_exists"}
+        {
+            "location": ["user"],
+            "type": "value_error.user.not_exists",
+        },
     ]
 
 
@@ -121,7 +129,10 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
-        {"location": ["user"], "type": "value_error.user.delete_self"}
+        {
+            "location": ["user"],
+            "type": "value_error.user.delete_self",
+        },
     ]
 
     await admin.refresh_from_db()
@@ -142,7 +153,10 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
-        {"location": ["user"], "type": "value_error.user.is_protected"}
+        {
+            "location": ["user"],
+            "type": "value_error.user.is_protected",
+        },
     ]
 
     await user.refresh_from_db()
