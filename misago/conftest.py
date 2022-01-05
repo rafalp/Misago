@@ -404,7 +404,10 @@ def closed_category_user_post(closed_category_user_thread_and_post):
 
 @pytest.fixture
 def http_client():
-    return httpx.AsyncClient(app=app, base_url="http://example.com")
+    def create_http_client():
+        return httpx.AsyncClient(app=app, base_url="http://example.com")
+
+    return create_http_client
 
 
 @pytest.fixture
@@ -418,7 +421,7 @@ def query_admin_api(http_client, admin, monkeypatch):
                 AsyncMock(return_value=admin),
             )
 
-        async with http_client as client:
+        async with http_client() as client:
             r = await client.post(
                 "/admin/graphql/", json={"query": query, "variables": variables}
             )
@@ -444,7 +447,7 @@ def query_public_api(http_client, monkeypatch):
                 AsyncMock(return_value=auth),
             )
 
-        async with http_client as client:
+        async with http_client() as client:
             r = await client.post(
                 "/graphql/", json={"query": query, "variables": variables}
             )

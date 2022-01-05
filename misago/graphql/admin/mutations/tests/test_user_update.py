@@ -27,8 +27,13 @@ USER_UPDATE_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_fails_if_user_id_is_invalid(query_admin_api):
-    variables = {"id": "invalid", "input": {}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": "invalid",
+            "input": {},
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -38,8 +43,13 @@ async def test_user_update_mutation_fails_if_user_id_is_invalid(query_admin_api)
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, admin):
-    variables = {"id": str(admin.id + 1), "input": {}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(admin.id + 1),
+            "input": {},
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -51,13 +61,15 @@ async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, 
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_updates_user_name(query_admin_api, user):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "name": "UpdatedUser",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "name": "UpdatedUser",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -74,13 +86,15 @@ async def test_user_update_mutation_updates_user_name(query_admin_api, user):
 async def test_user_update_mutation_fails_if_user_name_is_invalid(
     query_admin_api, user
 ):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "name": "!!!!",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "name": "!!!!",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -97,8 +111,15 @@ async def test_user_update_mutation_fails_if_user_name_is_invalid(
 async def test_user_update_mutation_fails_if_user_name_is_not_available(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"name": "Admin"}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "name": "Admin",
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -117,8 +138,15 @@ async def test_user_update_mutation_fails_if_user_name_is_not_available(
 async def test_user_update_mutation_skips_update_if_new_name_is_same(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"name": "User"}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "name": "User",
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -133,13 +161,15 @@ async def test_user_update_mutation_skips_update_if_new_name_is_same(
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_updates_user_email(query_admin_api, user):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "email": "new@email.com",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "email": "new@email.com",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -154,13 +184,15 @@ async def test_user_update_mutation_updates_user_email(query_admin_api, user):
 async def test_user_update_mutation_fails_if_user_email_is_invalid(
     query_admin_api, user
 ):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "email": "invalid",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "email": "invalid",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -175,8 +207,15 @@ async def test_user_update_mutation_fails_if_user_email_is_invalid(
 async def test_user_update_mutation_fails_if_user_email_is_not_available(
     query_admin_api, admin, user
 ):
-    variables = {"id": str(user.id), "input": {"email": admin.email}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "email": admin.email,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -193,8 +232,15 @@ async def test_user_update_mutation_fails_if_user_email_is_not_available(
 async def test_user_update_mutation_skips_update_if_new_email_is_same(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"email": user.email}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "email": user.email,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -207,13 +253,15 @@ async def test_user_update_mutation_skips_update_if_new_email_is_same(
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_updates_user_password(query_admin_api, user):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "password": "n3wp5ssword  ",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "password": "n3wp5ssword  ",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -227,13 +275,15 @@ async def test_user_update_mutation_updates_user_password(query_admin_api, user)
 async def test_user_update_mutation_fails_if_user_password_is_invalid(
     query_admin_api, user, user_password
 ):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "password": "a",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "password": "a",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -247,13 +297,15 @@ async def test_user_update_mutation_fails_if_user_password_is_invalid(
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_updates_user_full_name(query_admin_api, user):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "fullName": "Bob Bobertson",
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "fullName": "Bob Bobertson",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -267,13 +319,16 @@ async def test_user_update_mutation_updates_user_full_name(query_admin_api, user
 @pytest.mark.asyncio
 async def test_user_update_mutation_clears_user_full_name(query_admin_api, user):
     user = await user.update(full_name="Bob Bobertson")
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "fullName": "",
+
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "fullName": "",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -288,13 +343,15 @@ async def test_user_update_mutation_clears_user_full_name(query_admin_api, user)
 async def test_user_update_mutation_fails_if_full_name_is_too_long(
     query_admin_api, user
 ):
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "fullName": "Bob Bobertson" * 20,
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "fullName": "Bob Bobertson" * 20,
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -312,13 +369,16 @@ async def test_user_update_mutation_skips_update_if_new_full_name_is_same(
     query_admin_api, user
 ):
     user = await user.update(full_name="Bob Bobertson")
-    variables = {
-        "id": str(user.id),
-        "input": {
-            "fullName": "Bob Bobertson",
+
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "fullName": "Bob Bobertson",
+            },
         },
-    }
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -331,8 +391,15 @@ async def test_user_update_mutation_skips_update_if_new_full_name_is_same(
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_updates_admin_status_to_true(query_admin_api, user):
-    variables = {"id": str(user.id), "input": {"isAdmin": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isAdmin": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -349,8 +416,15 @@ async def test_user_update_mutation_updates_admin_status_to_false(
 ):
     user = await user.update(is_admin=True)
 
-    variables = {"id": str(user.id), "input": {"isAdmin": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isAdmin": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -365,8 +439,15 @@ async def test_user_update_mutation_updates_admin_status_to_false(
 async def test_admin_update_mutation_skips_update_if_admin_status_is_same(
     query_admin_api, admin
 ):
-    variables = {"id": str(admin.id), "input": {"isAdmin": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(admin.id),
+            "input": {
+                "isAdmin": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -381,8 +462,15 @@ async def test_admin_update_mutation_skips_update_if_admin_status_is_same(
 async def test_user_update_mutation_skips_update_if_admin_status_is_same(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"isAdmin": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isAdmin": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -397,8 +485,15 @@ async def test_user_update_mutation_skips_update_if_admin_status_is_same(
 async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
     query_admin_api, admin
 ):
-    variables = {"id": str(admin.id), "input": {"isAdmin": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(admin.id),
+            "input": {
+                "isAdmin": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -415,8 +510,15 @@ async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
 async def test_user_update_mutation_updates_moderator_status_to_true(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"isModerator": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isModerator": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -431,8 +533,15 @@ async def test_user_update_mutation_updates_moderator_status_to_true(
 async def test_user_update_mutation_updates_moderator_status_to_false(
     query_admin_api, moderator
 ):
-    variables = {"id": str(moderator.id), "input": {"isModerator": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(moderator.id),
+            "input": {
+                "isModerator": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -447,8 +556,15 @@ async def test_user_update_mutation_updates_moderator_status_to_false(
 async def test_moderator_update_mutation_skips_update_if_moderator_status_is_same(
     query_admin_api, moderator
 ):
-    variables = {"id": str(moderator.id), "input": {"isModerator": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(moderator.id),
+            "input": {
+                "isModerator": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -463,8 +579,15 @@ async def test_moderator_update_mutation_skips_update_if_moderator_status_is_sam
 async def test_user_update_mutation_skips_update_if_moderator_status_is_same(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"isModerator": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isModerator": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -479,8 +602,15 @@ async def test_user_update_mutation_skips_update_if_moderator_status_is_same(
 async def test_inactive_user_update_mutation_updates_active_status_to_true(
     query_admin_api, inactive_user
 ):
-    variables = {"id": str(inactive_user.id), "input": {"isActive": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(inactive_user.id),
+            "input": {
+                "isActive": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -495,8 +625,15 @@ async def test_inactive_user_update_mutation_updates_active_status_to_true(
 async def test_user_update_mutation_updates_active_status_to_false(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"isActive": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isActive": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["errors"]
@@ -511,8 +648,15 @@ async def test_user_update_mutation_updates_active_status_to_false(
 async def test_user_update_mutation_fails_if_user_deastives_themselves(
     query_admin_api, admin
 ):
-    variables = {"id": str(admin.id), "input": {"isActive": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(admin.id),
+            "input": {
+                "isActive": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -529,8 +673,15 @@ async def test_user_update_mutation_fails_if_user_deastives_themselves(
 async def test_inactive_user_update_mutation_skips_update_if_active_status_is_same(
     query_admin_api, inactive_user
 ):
-    variables = {"id": str(inactive_user.id), "input": {"isActive": False}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(inactive_user.id),
+            "input": {
+                "isActive": False,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -545,8 +696,15 @@ async def test_inactive_user_update_mutation_skips_update_if_active_status_is_sa
 async def test_user_update_mutation_skips_update_if_active_status_is_same(
     query_admin_api, user
 ):
-    variables = {"id": str(user.id), "input": {"isActive": True}}
-    result = await query_admin_api(USER_UPDATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_UPDATE_MUTATION,
+        {
+            "id": str(user.id),
+            "input": {
+                "isActive": True,
+            },
+        },
+    )
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -561,7 +719,12 @@ async def test_user_update_mutation_skips_update_if_active_status_is_same(
 async def test_user_update_mutation_requires_admin_auth(query_admin_api, user):
     result = await query_admin_api(
         USER_UPDATE_MUTATION,
-        {"id": str(user.id), "input": {"isActive": True}},
+        {
+            "id": str(user.id),
+            "input": {
+                "isActive": True,
+            },
+        },
         include_auth=False,
         expect_error=True,
     )

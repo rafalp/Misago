@@ -6,7 +6,7 @@ from ...testing import assert_contains, assert_not_contains
 
 @pytest.mark.asyncio
 async def test_category_route_returns_response(http_client, category):
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug=category.slug, id=category.id)
         response = await client.get(url)
 
@@ -17,7 +17,7 @@ async def test_category_route_returns_response(http_client, category):
 async def test_category_route_returns_category_threads_list(
     http_client, category, thread, closed_category_thread
 ):
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug=category.slug, id=category.id)
         response = await client.get(url)
 
@@ -40,7 +40,7 @@ async def test_category_route_slices_threads_list_by_cursor(
     http_client, category, thread, user_thread
 ):
     cursor = max([thread.last_post_id, user_thread.last_post_id])
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug=category.slug, id=category.id)
         url += f"?cursor={cursor}"
         response = await client.get(url)
@@ -59,7 +59,7 @@ async def test_category_route_slices_threads_list_by_cursor(
 
 @pytest.mark.asyncio
 async def test_category_route_returns_404_for_invalid_cursor(http_client, category):
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug=category.slug, id=category.id)
         url += "?cursor=invalid"
         response = await client.get(url)
@@ -69,7 +69,7 @@ async def test_category_route_returns_404_for_invalid_cursor(http_client, catego
 
 @pytest.mark.asyncio
 async def test_category_route_returns_301_for_invalid_slug(http_client, category):
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug="outdated-slug", id=category.id)
         response = await client.get(url)
 
@@ -81,7 +81,7 @@ async def test_category_route_returns_301_for_invalid_slug(http_client, category
 
 @pytest.mark.asyncio
 async def test_category_route_returns_404_for_non_existing_category(db, http_client):
-    async with http_client as client:
+    async with http_client() as client:
         url = app.url_path_for("category", slug="slug", id=123)
         response = await client.get(url)
 

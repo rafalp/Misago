@@ -18,7 +18,12 @@ USER_DELETE_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_user_delete_mutation_deletes_user(query_admin_api, user):
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(user.id)})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": str(user.id),
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["errors"]
     assert data["deleted"]
@@ -31,7 +36,12 @@ async def test_user_delete_mutation_deletes_user(query_admin_api, user):
 async def test_user_delete_mutation_leaves_user_content(
     query_admin_api, user, user_thread, user_post
 ):
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(user.id)})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": str(user.id),
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["errors"]
     assert data["deleted"]
@@ -48,7 +58,11 @@ async def test_user_delete_mutation_deletes_user_content(
     query_admin_api, user, user_thread, user_post
 ):
     result = await query_admin_api(
-        USER_DELETE_MUTATION, {"id": str(user.id), "deleteContent": True}
+        USER_DELETE_MUTATION,
+        {
+            "id": str(user.id),
+            "deleteContent": True,
+        },
     )
     data = result["data"]["userDelete"]
     assert not data["errors"]
@@ -66,7 +80,12 @@ async def test_user_delete_mutation_deletes_user_content(
 
 @pytest.mark.asyncio
 async def test_user_delete_mutation_fails_if_user_id_is_invalid(query_admin_api):
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": "invalid"})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": "invalid",
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [{"location": ["user"], "type": "type_error.integer"}]
@@ -76,7 +95,12 @@ async def test_user_delete_mutation_fails_if_user_id_is_invalid(query_admin_api)
 async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_user(
     query_admin_api, user
 ):
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(user.id + 100)})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": str(user.id + 100),
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
@@ -88,7 +112,12 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_u
 async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
     query_admin_api, admin
 ):
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(admin.id)})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": str(admin.id),
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
@@ -104,7 +133,12 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
 ):
     await user.update(is_admin=True)
 
-    result = await query_admin_api(USER_DELETE_MUTATION, {"id": str(user.id)})
+    result = await query_admin_api(
+        USER_DELETE_MUTATION,
+        {
+            "id": str(user.id),
+        },
+    )
     data = result["data"]["userDelete"]
     assert not data["deleted"]
     assert data["errors"] == [
@@ -118,7 +152,9 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
 async def test_user_delete_mutation_requires_admin_auth(query_admin_api, user):
     result = await query_admin_api(
         USER_DELETE_MUTATION,
-        {"id": str(user.id)},
+        {
+            "id": str(user.id),
+        },
         include_auth=False,
         expect_error=True,
     )

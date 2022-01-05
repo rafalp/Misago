@@ -19,14 +19,16 @@ USER_CREATE_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_user_create_mutation_creates_user(query_admin_api):
-    variables = {
-        "input": {
-            "name": "TestUser",
-            "email": "test@example.com",
-            "password": "password123",
-        }
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "TestUser",
+                "email": "test@example.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["errors"]
@@ -43,10 +45,16 @@ async def test_user_create_mutation_creates_user(query_admin_api):
 async def test_user_create_mutation_returns_error_if_username_is_empty(
     query_admin_api,
 ):
-    variables = {
-        "input": {"name": " ", "email": "test@example.com", "password": "password123"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": " ",
+                "email": "test@example.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -59,10 +67,16 @@ async def test_user_create_mutation_returns_error_if_username_is_empty(
 async def test_user_create_mutation_returns_error_if_username_is_invalid(
     query_admin_api,
 ):
-    variables = {
-        "input": {"name": "!!!", "email": "test@example.com", "password": "password123"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "!!!",
+                "email": "test@example.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -73,14 +87,16 @@ async def test_user_create_mutation_returns_error_if_username_is_invalid(
 async def test_user_create_mutation_returns_error_if_name_is_not_available(
     query_admin_api, user
 ):
-    variables = {
-        "input": {
-            "name": user.name,
-            "email": "test@example.com",
-            "password": "password123",
-        }
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": user.name,
+                "email": "test@example.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -93,10 +109,16 @@ async def test_user_create_mutation_returns_error_if_name_is_not_available(
 async def test_user_create_mutation_returns_error_if_email_is_empty(
     query_admin_api, user
 ):
-    variables = {
-        "input": {"name": "NewUser", "email": "invalid.com", "password": "password123"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "NewUser",
+                "email": "invalid.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -107,10 +129,16 @@ async def test_user_create_mutation_returns_error_if_email_is_empty(
 async def test_user_create_mutation_returns_error_if_email_is_invalid(
     query_admin_api, user
 ):
-    variables = {
-        "input": {"name": "NewUser", "email": "invalid.com", "password": "password123"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "NewUser",
+                "email": "invalid.com",
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -121,10 +149,16 @@ async def test_user_create_mutation_returns_error_if_email_is_invalid(
 async def test_user_create_mutation_returns_error_if_email_is_not_available(
     query_admin_api, user
 ):
-    variables = {
-        "input": {"name": "NewUser", "email": user.email, "password": "password123"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "NewUser",
+                "email": user.email,
+                "password": "password123",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -137,10 +171,16 @@ async def test_user_create_mutation_returns_error_if_email_is_not_available(
 async def test_user_create_mutation_returns_error_if_password_is_empty(
     query_admin_api,
 ):
-    variables = {
-        "input": {"name": "TestUser", "email": "test@example.com", "password": ""}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "TestUser",
+                "email": "test@example.com",
+                "password": "",
+            }
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -153,10 +193,16 @@ async def test_user_create_mutation_returns_error_if_password_is_empty(
 async def test_user_create_mutation_returns_error_if_password_is_invalid(
     query_admin_api,
 ):
-    variables = {
-        "input": {"name": "TestUser", "email": "test@example.com", "password": "a"}
-    }
-    result = await query_admin_api(USER_CREATE_MUTATION, variables)
+    result = await query_admin_api(
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "TestUser",
+                "email": "test@example.com",
+                "password": "a",
+            },
+        },
+    )
 
     data = result["data"]["userCreate"]
     assert not data["user"]
@@ -174,7 +220,7 @@ async def test_user_create_mutation_requires_admin_auth(query_admin_api):
                 "name": "TestUser",
                 "email": "test@example.com",
                 "password": "password123",
-            }
+            },
         },
         include_auth=False,
         expect_error=True,
