@@ -1,3 +1,4 @@
+from os import close
 from unittest.mock import ANY
 
 import pytest
@@ -5,325 +6,413 @@ import pytest
 from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
 from .....testing import override_dynamic_settings
-from ..postthread import resolve_post_thread
+from .....threads.models import Post, Thread
+
+POST_THREAD_MUTATION = """
+    mutation PostThread($input: PostThreadInput!) {
+        postThread(input: $input) {
+            thread {
+                id
+                category {
+                    id
+                }
+                isClosed
+            }
+            errors {
+                location
+                type
+            }
+        }
+    }
+"""
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_new_thread(
-    publish, user_graphql_info, user, category
+    publish, query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data["thread"] == await data["thread"].refresh_from_db()
-    assert data["thread"].category_id == category.id
-    assert data["thread"].starter_id == user.id
-    assert data["thread"].starter_name == user.name
-    assert data["thread"].last_poster_id == user.id
-    assert data["thread"].last_poster_name == user.name
-    assert data["thread"].first_post_id
-    assert data["thread"].first_post_id == data["thread"].last_post_id
+    data = result["data"]["postThread"]
 
-
-@pytest.mark.asyncio
-async def test_post_thread_mutation_creates_new_post(
-    publish, user_graphql_info, user, category
-):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
+    assert data == {
+        "thread": {
+            "id": ANY,
+            "category": {"id": str(category.id)},
+            "isClosed": False,
         },
-    )
+        "errors": None,
+    }
 
-    assert not data.get("errors")
-    assert data.get("post")
-    assert data["post"].id == data["thread"].first_post_id
-    assert data["post"] == await data["thread"].fetch_first_post()
-    assert data["post"].thread_id == data["thread"].id
-    assert data["post"].category_id == category.id
-    assert data["post"].poster_id == user.id
-    assert data["post"].poster_name == user.name
-    assert data["post"].posted_at == data["thread"].started_at
-    assert data["post"].posted_at == data["thread"].last_posted_at
-    assert data["post"].markup == "This is test post!"
-    assert data["post"].rich_text[0]["type"] == "p"
-    assert data["post"].rich_text[0]["text"] == "This is test post!"
+    thread_from_db = await Thread.query.one(id=int(data["thread"]["id"]))
+    post_from_db = await Post.query.one(id=thread_from_db.first_post_id)
 
+    assert thread_from_db.category_id == category.id
+    assert thread_from_db.started_at == post_from_db.posted_at
+    assert thread_from_db.starter_id == user.id
+    assert thread_from_db.starter_name == user.name
+    assert thread_from_db.first_post_id == post_from_db.id
+    assert thread_from_db.last_posted_at == post_from_db.posted_at
+    assert thread_from_db.last_poster_id == user.id
+    assert thread_from_db.last_poster_name == user.name
+    assert thread_from_db.last_post_id == post_from_db.id
+    assert thread_from_db.replies == 0
+    assert not thread_from_db.is_closed
 
-@pytest.mark.asyncio
-async def test_post_thread_mutation_publishes_thread_updated_event(
-    publish, user_graphql_info, category
-):
-    await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
-        },
-    )
+    assert post_from_db.thread_id == thread_from_db.id
+    assert post_from_db.category_id == category.id
+    assert post_from_db.poster_id == user.id
+    assert post_from_db.poster_name == user.name
+    assert post_from_db.markup == "This is test post!"
+    assert post_from_db.rich_text[0]["type"] == "p"
+    assert post_from_db.rich_text[0]["text"] == "This is test post!"
 
+    # Thread sent to subscribers
     publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_fails_if_user_is_not_authorized(
-    graphql_info, category
+    query_public_api, category
 ):
-    data = await resolve_post_thread(
-        None,
-        graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == [ErrorsList.ROOT_LOCATION]
-    assert data["errors"].get_errors_types() == ["auth_error.not_authorized"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": [ErrorsList.ROOT_LOCATION],
+                "type": "auth_error.not_authorized",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_category_id_is_invalid(user_graphql_info):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": "invalid",
-            "title": "Hello world!",
-            "markup": "This is test post!",
+async def test_post_thread_mutation_fails_if_category_id_is_invalid(
+    query_public_api, user
+):
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": "invalid",
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["type_error.integer"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_category_doesnt_exist(user_graphql_info):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": "4000",
-            "title": "Hello world!",
-            "markup": "This is test post!",
+async def test_post_thread_mutation_fails_if_category_doesnt_exist(
+    query_public_api, user
+):
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": "4000",
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["value_error.category.not_exists"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "value_error.category.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 @override_dynamic_settings(thread_title_min_length=5)
 async def test_post_thread_mutation_validates_min_title_length(
-    user_graphql_info, category
+    query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Test",
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Test",
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["title"]
-    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["title"],
+                "type": "value_error.any_str.min_length",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 @override_dynamic_settings(thread_title_max_length=10)
 async def test_post_thread_mutation_validates_max_title_length(
-    user_graphql_info, category
+    query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "a" * 11,
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Test" * 10,
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["title"]
-    assert data["errors"].get_errors_types() == ["value_error.any_str.max_length"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["title"],
+                "type": "value_error.any_str.max_length",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_validates_title_contains_alphanumeric_characters(
-    user_graphql_info, category
+    query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "!" * 10,
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "!!!" * 10,
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["title"]
-    assert data["errors"].get_errors_types() == ["value_error.str.regex"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["title"],
+                "type": "value_error.str.regex",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_fails_if_category_is_closed(
-    user_graphql_info, closed_category
+    query_public_api, user, closed_category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(closed_category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(closed_category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["category"]
-    assert data["errors"].get_errors_types() == ["auth_error.category.closed"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "auth_error.category.closed",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_category(
-    publish, moderator_graphql_info, closed_category
+    publish, query_public_api, moderator, closed_category
 ):
-    data = await resolve_post_thread(
-        None,
-        moderator_graphql_info,
-        input={
-            "category": str(closed_category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(closed_category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+            },
         },
+        auth=moderator,
     )
 
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data.get("post")
+    assert result["data"]["postThread"] == {
+        "thread": {
+            "id": ANY,
+            "category": {
+                "id": str(closed_category.id),
+            },
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_open_thread(
-    publish, user_graphql_info, category
+    publish, query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
-            "is_closed": False,
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+                "isClosed": False,
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data["thread"] == await data["thread"].refresh_from_db()
-    assert not data["thread"].is_closed
+    assert result["data"]["postThread"] == {
+        "thread": {
+            "id": ANY,
+            "category": {
+                "id": str(category.id),
+            },
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
-    publish, moderator_graphql_info, category
+    publish, query_public_api, moderator, category
 ):
-    data = await resolve_post_thread(
-        None,
-        moderator_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
-            "is_closed": True,
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+                "isClosed": True,
+            },
         },
+        auth=moderator,
     )
 
-    assert not data.get("errors")
-    assert data.get("thread")
-    assert data["thread"] == await data["thread"].refresh_from_db()
-    assert data["thread"].is_closed
+    assert result["data"]["postThread"] == {
+        "thread": {
+            "id": ANY,
+            "category": {
+                "id": str(category.id),
+            },
+            "isClosed": True,
+        },
+        "errors": None,
+    }
+
+    publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
-    publish, user_graphql_info, category
+    query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": "This is test post!",
-            "is_closed": True,
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "This is test post!",
+                "isClosed": True,
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["isClosed"]
-    assert data["errors"].get_errors_types() == ["auth_error.not_moderator"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["isClosed"],
+                "type": "auth_error.not_moderator",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_fails_if_markup_is_too_short(
-    publish, user_graphql_info, category
+    query_public_api, user, category
 ):
-    data = await resolve_post_thread(
-        None,
-        user_graphql_info,
-        input={
-            "category": str(category.id),
-            "title": "Hello world!",
-            "markup": " ",
+    result = await query_public_api(
+        POST_THREAD_MUTATION,
+        {
+            "input": {
+                "category": str(category.id),
+                "title": "Hello world!",
+                "markup": "a",
+            },
         },
+        auth=user,
     )
 
-    assert not data.get("thread")
-    assert not data.get("post")
-    assert data.get("errors")
-    assert data["errors"].get_errors_locations() == ["markup"]
-    assert data["errors"].get_errors_types() == ["value_error.any_str.min_length"]
+    assert result["data"]["postThread"] == {
+        "thread": None,
+        "errors": [
+            {
+                "location": ["markup"],
+                "type": "value_error.any_str.min_length",
+            },
+        ],
+    }
