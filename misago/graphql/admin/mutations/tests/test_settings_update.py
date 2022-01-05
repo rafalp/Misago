@@ -8,30 +8,13 @@ from .....testing.cacheversions import assert_invalidates_cache
 from .....validation import PASSWORD_MAX_LENGTH
 
 
-@pytest.mark.asyncio
-async def test_settings_update_mutation_changes_all_settings(query_admin_api):
-    query = """
+def create_query(settings: str) -> str:
+    return """
         mutation SettingsUpdate($input: SettingsUpdateInput!) {
             settingsUpdate(input: $input) {
                 updated
                 settings {
-                    bulkActionLimit
-                    enableSiteWizard
-                    forumIndexHeader
-                    forumIndexThreads
-                    forumIndexTitle
-                    forumName
-                    jwtExp
-                    passwordMinLength
-                    passwordMaxLength
-                    postMinLength
-                    postsPerPage
-                    postsPerPageOrphans
-                    threadTitleMinLength
-                    threadTitleMaxLength
-                    threadsPerPage
-                    usernameMinLength
-                    usernameMaxLength
+                    %s
                 }
                 errors {
                     location
@@ -39,7 +22,32 @@ async def test_settings_update_mutation_changes_all_settings(query_admin_api):
                 }
             }
         }
-    """
+    """ % settings
+
+
+@pytest.mark.asyncio
+async def test_settings_update_mutation_changes_all_settings(query_admin_api):
+    query = create_query(
+        """
+            bulkActionLimit
+            enableSiteWizard
+            forumIndexHeader
+            forumIndexThreads
+            forumIndexTitle
+            forumName
+            jwtExp
+            passwordMinLength
+            passwordMaxLength
+            postMinLength
+            postsPerPage
+            postsPerPageOrphans
+            threadTitleMinLength
+            threadTitleMaxLength
+            threadsPerPage
+            usernameMinLength
+            usernameMaxLength
+        """
+    )
 
     result = await query_admin_api(
         query,
@@ -108,23 +116,14 @@ async def test_settings_update_mutation_changes_all_settings(query_admin_api):
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_changes_some_settings(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    bulkActionLimit
-                    forumIndexThreads
-                    forumName
-                    jwtExp
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query(
+        """
+            bulkActionLimit
+            forumIndexThreads
+            forumName
+            jwtExp
+        """
+    )
 
     result = await query_admin_api(
         query,
@@ -157,21 +156,7 @@ async def test_settings_update_mutation_changes_some_settings(query_admin_api):
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_invalidates_settings_cache(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    bulkActionLimit
-                    forumName
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("bulkActionLimit forumName")
 
     async with assert_invalidates_cache(SETTINGS_CACHE):
         result = await query_admin_api(
@@ -196,21 +181,7 @@ async def test_settings_update_mutation_invalidates_settings_cache(query_admin_a
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_validates_settings_values(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    forumIndexTitle
-                    forumName
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("forumIndexTitle forumName")
 
     result = await query_admin_api(
         query,
@@ -241,21 +212,7 @@ async def test_settings_update_mutation_validates_settings_values(query_admin_ap
 async def test_settings_update_mutation_validates_posts_pagination_bounds(
     query_admin_api,
 ):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    postsPerPage
-                    postsPerPageOrphans
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("postsPerPage postsPerPageOrphans")
 
     result = await query_admin_api(
         query,
@@ -288,21 +245,7 @@ async def test_settings_update_mutation_validates_posts_pagination_bounds(
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_validates_thread_title_bounds(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    threadTitleMinLength
-                    threadTitleMaxLength
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("threadTitleMinLength threadTitleMaxLength")
 
     result = await query_admin_api(
         query,
@@ -335,21 +278,7 @@ async def test_settings_update_mutation_validates_thread_title_bounds(query_admi
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_validates_username_bounds(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    usernameMinLength
-                    usernameMaxLength
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("usernameMinLength usernameMaxLength")
 
     result = await query_admin_api(
         query,
@@ -382,20 +311,7 @@ async def test_settings_update_mutation_validates_username_bounds(query_admin_ap
 
 @pytest.mark.asyncio
 async def test_settings_update_mutation_requires_admin_auth(query_admin_api):
-    query = """
-        mutation SettingsUpdate($input: SettingsUpdateInput!) {
-            settingsUpdate(input: $input) {
-                updated
-                settings {
-                    forumName
-                }
-                errors {
-                    location
-                    type
-                }
-            }
-        }
-    """
+    query = create_query("forumName")
 
     result = await query_admin_api(
         query,
