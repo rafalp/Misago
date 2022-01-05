@@ -1,5 +1,3 @@
-from unittest.mock import ANY
-
 import pytest
 
 from .....conf.cache import SETTINGS_CACHE
@@ -9,7 +7,8 @@ from .....validation import PASSWORD_MAX_LENGTH
 
 
 def create_query(settings: str) -> str:
-    return """
+    return (
+        """
         mutation SettingsUpdate($input: SettingsUpdateInput!) {
             settingsUpdate(input: $input) {
                 updated
@@ -22,7 +21,9 @@ def create_query(settings: str) -> str:
                 }
             }
         }
-    """ % settings
+    """
+        % settings
+    )
 
 
 @pytest.mark.asyncio

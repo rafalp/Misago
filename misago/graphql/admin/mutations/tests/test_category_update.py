@@ -1,7 +1,6 @@
 import pytest
 
 from .....categories.get import get_all_categories
-from .....categories.models import Category
 
 CATEGORY_UPDATE_MUTATION = """
     mutation CategoryUpdate($category: ID!, $input: CategoryUpdateInput!) {

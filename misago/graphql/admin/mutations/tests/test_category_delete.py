@@ -1,7 +1,6 @@
 import pytest
 
 from .....categories.get import get_all_categories
-from .....categories.models import Category
 from .....threads.models import Post, Thread
 
 CATEGORY_DELETE_MUTATION = """

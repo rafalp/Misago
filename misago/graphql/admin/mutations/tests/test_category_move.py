@@ -3,7 +3,6 @@ from unittest.mock import ANY
 import pytest
 
 from .....categories.get import get_all_categories
-from .....categories.models import Category
 
 CATEGORY_MOVE_MUTATION = """
     mutation CategoryMove(
