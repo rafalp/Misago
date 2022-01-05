@@ -34,7 +34,7 @@ async def test_post_query_is_resolved_by_id(query_public_api, user_post):
 
 
 @pytest.mark.asyncio
-async def test_post_query_is_resolved_to_none_for_nonexisting_post(
+async def test_post_query_resolves_to_none_for_nonexisting_post(
     query_public_api, user_post
 ):
     result = await query_public_api(POST_QUERY, {"post": str(user_post.id * 1000)})
@@ -51,7 +51,7 @@ async def test_post_poster_is_resolved(query_public_api, user_post, user):
 
 
 @pytest.mark.asyncio
-async def test_post_poster_is_resolved_to_null_if_user_is_inactive(
+async def test_post_poster_resolves_to_null_if_user_is_inactive(
     query_public_api, user_post, user
 ):
     await user.update(is_active=False)
@@ -61,7 +61,7 @@ async def test_post_poster_is_resolved_to_null_if_user_is_inactive(
 
 
 @pytest.mark.asyncio
-async def test_post_poster_is_resolved_to_null_if_poster_is_deleted(
+async def test_post_poster_resolves_to_null_if_poster_is_deleted(
     query_public_api, post
 ):
     result = await query_public_api(POST_QUERY, {"post": str(post.id)})
@@ -104,9 +104,7 @@ async def test_post_rich_text_is_resolved(query_public_api, post):
 
 
 @pytest.mark.asyncio
-async def test_post_url_is_resolved_to_posts_relative_url(
-    query_public_api, thread, post
-):
+async def test_post_url_resolves_to_posts_relative_url(query_public_api, thread, post):
     result = await query_public_api(POST_QUERY, {"post": str(post.id)})
     assert result["data"]["post"]["url"] == (
         f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
@@ -114,9 +112,7 @@ async def test_post_url_is_resolved_to_posts_relative_url(
 
 
 @pytest.mark.asyncio
-async def test_post_url_is_resolved_to_posts_absolute_url(
-    query_public_api, thread, post
-):
+async def test_post_url_resolves_to_posts_absolute_url(query_public_api, thread, post):
     result = await query_public_api(POST_QUERY, {"post": str(post.id)})
     assert result["data"]["post"]["absoluteUrl"] == (
         f"http://example.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
@@ -124,6 +120,6 @@ async def test_post_url_is_resolved_to_posts_absolute_url(
 
 
 @pytest.mark.asyncio
-async def test_post_extra_is_resolved_to_dict(query_public_api, post):
+async def test_post_extra_resolves_to_dict(query_public_api, post):
     result = await query_public_api(POST_QUERY, {"post": str(post.id)})
     assert result["data"]["post"]["extra"] == {}

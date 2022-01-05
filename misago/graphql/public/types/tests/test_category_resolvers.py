@@ -13,7 +13,7 @@ CATEGORIES_QUERY = """
 
 
 @pytest.mark.asyncio
-async def test_categories_query_resolves_to_top_level_categories(
+async def test_categories_query_resolves_to_only_top_level_categories(
     query_public_api, category, child_category
 ):
     result = await query_public_api(CATEGORIES_QUERY)
@@ -23,7 +23,7 @@ async def test_categories_query_resolves_to_top_level_categories(
 
 
 @pytest.mark.asyncio
-async def test_categories_query_have_their_stats_aggregated(
+async def test_categories_query_resolver_aggregates_categories_stats(
     query_public_api, category, child_category
 ):
     await category.update(threads=1, posts=2)

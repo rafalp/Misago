@@ -16,15 +16,19 @@ FORUM_STATS_QUERY = """
 
 
 @pytest.mark.asyncio
-async def test_query_forum_stats_query_resolves_random_id(
+async def test_forum_stats_id_resolves_to_randomm_value(
     query_public_api, db, user, thread, post
 ):
     result = await query_public_api(FORUM_STATS_QUERY)
     assert result["data"]["forumStats"]["id"]
 
+    other_result = await query_public_api(FORUM_STATS_QUERY)
+    previous_id = result["data"]["forumStats"]["id"]
+    assert other_result["data"]["forumStats"]["id"] != previous_id
+
 
 @pytest.mark.asyncio
-async def test_query_forum_stats_query_resolves_forum_stats(
+async def test_forum_stats_values_are_resolved(
     query_public_api, db, user, thread, post
 ):
     result = await query_public_api(FORUM_STATS_QUERY)
