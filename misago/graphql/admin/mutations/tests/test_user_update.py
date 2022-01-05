@@ -1,7 +1,5 @@
 import pytest
 
-from .....users.models import User
-
 USER_UPDATE_MUTATION = """
     mutation UserUpdate($id: ID!, $input: UserUpdateInput!) {
         userUpdate(user: $id, input: $input) {
