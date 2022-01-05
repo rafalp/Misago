@@ -1,4 +1,3 @@
-from os import close
 from unittest.mock import ANY
 
 import pytest
