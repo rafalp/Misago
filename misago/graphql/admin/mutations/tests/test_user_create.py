@@ -167,15 +167,18 @@ async def test_user_create_mutation_returns_error_if_password_is_invalid(
 
 @pytest.mark.asyncio
 async def test_user_create_mutation_requires_admin_auth(query_admin_api):
-    variables = {
-        "input": {
-            "name": "TestUser",
-            "email": "test@example.com",
-            "password": "password123",
-        }
-    }
     result = await query_admin_api(
-        USER_CREATE_MUTATION, variables, include_auth=False, expect_error=True
+        USER_CREATE_MUTATION,
+        {
+            "input": {
+                "name": "TestUser",
+                "email": "test@example.com",
+                "password": "password123",
+            }
+        },
+        include_auth=False,
+        expect_error=True,
     )
+
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None

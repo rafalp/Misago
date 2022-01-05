@@ -14,9 +14,8 @@ input CategoryCreateInput {
 }
 
 type CategoryCreateMutationResult {
-    errors: [Error!]
-    created: Boolean!
     category: Category
+    errors: [Error!]
 }
 
 input CategoryUpdateInput {
@@ -28,19 +27,19 @@ input CategoryUpdateInput {
 }
 
 type CategoryMutationResult {
-    errors: [Error!]
     updated: Boolean!
     category: Category
+    errors: [Error!]
 }
 
 type CategoryMoveMutationResult {
-    errors: [Error!]
     category: Category
     categories: [Category!]!
+    errors: [Error!]
 }
 
 type CategoryDeleteMutationResult {
-    errors: [Error!]
     deleted: Boolean!
     categories: [Category!]!
+    errors: [Error!]
 }

@@ -122,5 +122,6 @@ async def test_user_delete_mutation_requires_admin_auth(query_admin_api, user):
         include_auth=False,
         expect_error=True,
     )
+
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None

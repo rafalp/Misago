@@ -11,8 +11,8 @@ input UserCreateInput {
 }
 
 type UserCreateMutationResult {
-    errors: [Error!]
     user: User
+    errors: [Error!]
 }
 
 input UserUpdateInput {
@@ -26,12 +26,12 @@ input UserUpdateInput {
 }
 
 type UserUpdateMutationResult {
-    errors: [Error!]
     updated: Boolean!
     user: User
+    errors: [Error!]
 }
 
 type UserDeleteMutationResult {
-    errors: [Error!]
     deleted: Boolean!
+    errors: [Error!]
 }

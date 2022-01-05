@@ -6,12 +6,20 @@ from .....categories.models import Category
 CATEGORY_UPDATE_MUTATION = """
     mutation CategoryUpdate($category: ID!, $input: CategoryUpdateInput!) {
         categoryUpdate(category: $category, input: $input) {
+            category {
+                id
+                name
+                slug
+                icon
+                color
+                parent {
+                    id
+                }
+                isClosed
+            }
             errors {
                 location
                 type
-            }
-            category {
-                id
             }
         }
     }
@@ -20,51 +28,91 @@ CATEGORY_UPDATE_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_edits_category_name(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-        "input": {"name": "Edited category"},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "name": "Edited category",
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == category.id
-    assert updated_category.name == "Edited category"
-    assert updated_category.slug == "edited-category"
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Edited category",
+            "slug": "edited-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await category.refresh_from_db()
+    assert category_from_db.name == "Edited category"
+    assert category_from_db.slug == "edited-category"
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_edits_category_color(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-        "input": {"color": "#F0F0F0"},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "color": "#F0F0F0",
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == category.id
-    assert updated_category.color == "#F0F0F0"
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#F0F0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await category.refresh_from_db()
+    assert category_from_db.id == category.id
+    assert category_from_db.color == "#F0F0F0"
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_edits_category_icon(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-        "input": {"icon": "fas fa-lock"},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "icon": "fas fa-lock",
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == category.id
-    assert updated_category.icon == "fas fa-lock"
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": "fas fa-lock",
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await category.refresh_from_db()
+    assert category_from_db.icon == "fas fa-lock"
 
 
 @pytest.mark.asyncio
@@ -73,73 +121,125 @@ async def test_category_update_mutation_removes_category_icon(
 ):
     await category.update(icon="fas fa-lock")
 
-    variables = {
-        "category": str(category.id),
-        "input": {"icon": ""},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "icon": "",
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == category.id
-    assert updated_category.icon is None
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await category.refresh_from_db()
+    assert category_from_db.icon is None
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_closes_category(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-        "input": {"isClosed": True},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "isClosed": True,
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == category.id
-    assert updated_category.is_closed
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": True,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await category.refresh_from_db()
+    assert category_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_opens_category(
     query_admin_api, closed_category
 ):
-    variables = {
-        "category": str(closed_category.id),
-        "input": {"isClosed": False},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(closed_category.id),
+            "input": {
+                "isClosed": False,
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == closed_category.id
-    assert not updated_category.is_closed
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(closed_category.id),
+            "name": "Closed Category",
+            "slug": "closed-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await closed_category.refresh_from_db()
+    assert not category_from_db.is_closed
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_changes_child_category_to_root_category(
     query_admin_api, child_category
 ):
-    variables = {
-        "category": str(child_category.id),
-        "input": {"parent": None},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(child_category.id),
+            "input": {
+                "parent": None,
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == child_category.id
-    assert updated_category.parent_id is None
-    assert updated_category.depth == 0
-    assert updated_category.left == 9
-    assert updated_category.right == 10
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(child_category.id),
+            "name": "Child Category",
+            "slug": "child-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await child_category.refresh_from_db()
+    assert category_from_db.parent_id is None
+    assert category_from_db.depth == 0
+    assert category_from_db.left == 9
+    assert category_from_db.right == 10
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -157,21 +257,36 @@ async def test_category_update_mutation_changes_child_category_to_root_category(
 async def test_category_update_mutation_changes_root_category_to_child_category(
     query_admin_api, category, sibling_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "input": {"parent": str(category.id)},
-    }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["errors"]
-    assert data["category"]
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "input": {
+                "parent": str(category.id),
+            },
+        },
+    )
 
-    updated_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert updated_category.id == sibling_category.id
-    assert updated_category.parent_id == category.id
-    assert updated_category.depth == 1
-    assert updated_category.left == 6
-    assert updated_category.right == 7
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "name": "Sibling Category",
+            "slug": "sibling-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": {
+                "id": str(category.id),
+            },
+            "isClosed": False,
+        },
+        "errors": None,
+    }
+
+    category_from_db = await sibling_category.refresh_from_db()
+    assert category_from_db.parent_id == category.id
+    assert category_from_db.depth == 1
+    assert category_from_db.left == 6
+    assert category_from_db.right == 7
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -186,167 +301,328 @@ async def test_category_update_mutation_changes_root_category_to_child_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_doesnt_exist(
-    query_admin_api, category
+async def test_category_update_mutation_fails_if_category_id_is_invalid(
+    query_admin_api,
 ):
-    variables = {
-        "category": str(category.id + 100),
-        "input": {"name": "Updated Category"},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": "invalid",
+            "input": {
+                "name": "Edited category",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": None,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "type_error.integer",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["category"]
-    assert data["errors"] == [
-        {"location": ["category"], "type": "value_error.category.not_exists"}
-    ]
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_id_is_invalid(
-    query_admin_api, category
-):
-    variables = {
-        "category": "invalid",
-        "input": {"name": "Updated Category"},
+async def test_category_update_mutation_fails_if_category_doesnt_exist(query_admin_api):
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": "4000",
+            "input": {
+                "name": "Edited category",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": None,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "value_error.category.not_exists",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert not data["category"]
-    assert data["errors"] == [{"location": ["category"], "type": "type_error.integer"}]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_name_is_too_short(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "input": {"name": "    "},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "name": "   ",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["name"],
+                "type": "value_error.any_str.min_length",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["name"], "type": "value_error.any_str.min_length"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_name_is_too_long(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "input": {"name": "a" * 256},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "name": "a" * 256,
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["name"],
+                "type": "value_error.any_str.max_length",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["name"], "type": "value_error.any_str.max_length"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_name_is_not_sluggable(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "input": {"name": "!!!!"},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "name": "!!!!",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["name"],
+                "type": "value_error.str.regex",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [{"location": ["name"], "type": "value_error.str.regex"}]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_parent_is_invalid(
     query_admin_api, sibling_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "input": {"parent": "invalid"},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "input": {
+                "parent": "invalid",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "name": "Sibling Category",
+            "slug": "sibling-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "type_error.integer",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [{"location": ["parent"], "type": "type_error.integer"}]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_parent_doesnt_exist(
     query_admin_api, sibling_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "input": {"parent": str(sibling_category.id + 100)},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "input": {
+                "parent": "4000",
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "name": "Sibling Category",
+            "slug": "sibling-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.not_exists",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.not_exists"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_parent_is_category(
     query_admin_api, sibling_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "input": {"parent": str(sibling_category.id)},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "input": {
+                "parent": str(sibling_category.id),
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "name": "Sibling Category",
+            "slug": "sibling-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_parent_is_child_category(
     query_admin_api, child_category, sibling_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "input": {"parent": str(child_category.id)},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "input": {
+                "parent": str(child_category.id),
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "name": "Sibling Category",
+            "slug": "sibling-category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_fails_if_category_has_children(
     query_admin_api, category, sibling_category
 ):
-    variables = {
-        "category": str(category.id),
-        "input": {"parent": str(sibling_category.id)},
+    result = await query_admin_api(
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {
+                "parent": str(sibling_category.id),
+            },
+        },
+    )
+
+    assert result["data"]["categoryUpdate"] == {
+        "category": {
+            "id": str(category.id),
+            "name": "Category",
+            "slug": "category",
+            "icon": None,
+            "color": "#0F0",
+            "parent": None,
+            "isClosed": False,
+        },
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_UPDATE_MUTATION, variables)
-    data = result["data"]["categoryUpdate"]
-    assert data["category"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_update_mutation_requires_admin_auth(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-        "input": {"name": "Updated Category"},
-    }
     result = await query_admin_api(
-        CATEGORY_UPDATE_MUTATION, variables, include_auth=False, expect_error=True
+        CATEGORY_UPDATE_MUTATION,
+        {
+            "category": str(category.id),
+            "input": {"name": "Updated Category"},
+        },
+        include_auth=False,
+        expect_error=True,
     )
+
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None

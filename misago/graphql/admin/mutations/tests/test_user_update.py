@@ -559,9 +559,12 @@ async def test_user_update_mutation_skips_update_if_active_status_is_same(
 
 @pytest.mark.asyncio
 async def test_user_update_mutation_requires_admin_auth(query_admin_api, user):
-    variables = {"id": str(user.id), "input": {"isActive": True}}
     result = await query_admin_api(
-        USER_UPDATE_MUTATION, variables, include_auth=False, expect_error=True
+        USER_UPDATE_MUTATION,
+        {"id": str(user.id), "input": {"isActive": True}},
+        include_auth=False,
+        expect_error=True,
     )
+
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None

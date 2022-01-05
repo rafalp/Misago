@@ -1,3 +1,5 @@
+from unittest.mock import ANY
+
 import pytest
 
 from .....categories.get import get_all_categories
@@ -12,15 +14,21 @@ CATEGORY_MOVE_MUTATION = """
             parent: $parent,
             before: $before
         ) {
-            errors {
-                location
-                type
-            }
             category {
                 id
+                parent {
+                    id
+                }
             }
             categories {
                 id
+                children {
+                    id
+                }
+            }
+            errors {
+                location
+                type
             }
         }
     }
@@ -29,21 +37,48 @@ CATEGORY_MOVE_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_moves_sibling_category_before_other_category(
-    query_admin_api, category, sibling_category
+    query_admin_api, category, child_category, sibling_category, closed_category
 ):
-    variables = {"category": str(sibling_category.id), "before": str(category.id)}
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["errors"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "before": str(category.id),
+        },
+    )
 
-    moved_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert moved_category.id == sibling_category.id
-    assert moved_category.parent_id is None
-    assert moved_category.depth == 0
-    assert moved_category.left == 3
-    assert moved_category.right == 4
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "parent": None,
+        },
+        "categories": [
+            ANY,
+            {
+                "id": str(sibling_category.id),
+                "children": [],
+            },
+            {
+                "id": str(category.id),
+                "children": [
+                    {
+                        "id": str(child_category.id),
+                    },
+                ],
+            },
+            {
+                "id": str(closed_category.id),
+                "children": [],
+            },
+        ],
+        "errors": None,
+    }
+
+    category_from_db = await sibling_category.refresh_from_db()
+    assert category_from_db.parent_id is None
+    assert category_from_db.depth == 0
+    assert category_from_db.left == 3
+    assert category_from_db.right == 4
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -59,25 +94,50 @@ async def test_move_category_mutation_moves_sibling_category_before_other_catego
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_moves_sibling_category_before_child_category(
-    query_admin_api, category, child_category, sibling_category
+    query_admin_api, category, child_category, sibling_category, closed_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "parent": str(category.id),
-        "before": str(child_category.id),
-    }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["errors"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "parent": str(category.id),
+            "before": str(child_category.id),
+        },
+    )
 
-    moved_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert moved_category.id == sibling_category.id
-    assert moved_category.parent_id == category.id
-    assert moved_category.depth == 1
-    assert moved_category.left == 4
-    assert moved_category.right == 5
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "parent": {
+                "id": str(category.id),
+            },
+        },
+        "categories": [
+            ANY,  # Default category
+            {
+                "id": str(category.id),
+                "children": [
+                    {
+                        "id": str(sibling_category.id),
+                    },
+                    {
+                        "id": str(child_category.id),
+                    },
+                ],
+            },
+            {
+                "id": str(closed_category.id),
+                "children": [],
+            },
+        ],
+        "errors": None,
+    }
+
+    category_from_db = await sibling_category.refresh_from_db()
+    assert category_from_db.parent_id == category.id
+    assert category_from_db.depth == 1
+    assert category_from_db.left == 4
+    assert category_from_db.right == 5
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -93,24 +153,49 @@ async def test_move_category_mutation_moves_sibling_category_before_child_catego
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_moves_sibling_category_after_child_category(
-    query_admin_api, category, sibling_category
+    query_admin_api, category, child_category, sibling_category, closed_category
 ):
-    variables = {
-        "category": str(sibling_category.id),
-        "parent": str(category.id),
-    }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["errors"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(sibling_category.id),
+            "parent": str(category.id),
+        },
+    )
 
-    moved_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert moved_category.id == sibling_category.id
-    assert moved_category.parent_id == category.id
-    assert moved_category.depth == 1
-    assert moved_category.left == 6
-    assert moved_category.right == 7
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(sibling_category.id),
+            "parent": {
+                "id": str(category.id),
+            },
+        },
+        "categories": [
+            ANY,  # Default category
+            {
+                "id": str(category.id),
+                "children": [
+                    {
+                        "id": str(child_category.id),
+                    },
+                    {
+                        "id": str(sibling_category.id),
+                    },
+                ],
+            },
+            {
+                "id": str(closed_category.id),
+                "children": [],
+            },
+        ],
+        "errors": None,
+    }
+
+    category_from_db = await sibling_category.refresh_from_db()
+    assert category_from_db.parent_id == category.id
+    assert category_from_db.depth == 1
+    assert category_from_db.left == 6
+    assert category_from_db.right == 7
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -126,23 +211,47 @@ async def test_move_category_mutation_moves_sibling_category_after_child_categor
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_moves_child_category_to_root(
-    query_admin_api, child_category
+    query_admin_api, category, child_category, sibling_category, closed_category
 ):
-    variables = {
-        "category": str(child_category.id),
-    }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["errors"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(child_category.id),
+        },
+    )
 
-    moved_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert moved_category.id == child_category.id
-    assert moved_category.parent_id is None
-    assert moved_category.depth == 0
-    assert moved_category.left == 9
-    assert moved_category.right == 10
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(child_category.id),
+            "parent": None,
+        },
+        "categories": [
+            ANY,  # Default category
+            {
+                "id": str(category.id),
+                "children": [],
+            },
+            {
+                "id": str(sibling_category.id),
+                "children": [],
+            },
+            {
+                "id": str(closed_category.id),
+                "children": [],
+            },
+            {
+                "id": str(child_category.id),
+                "children": [],
+            },
+        ],
+        "errors": None,
+    }
+
+    category_from_db = await child_category.refresh_from_db()
+    assert category_from_db.parent_id is None
+    assert category_from_db.depth == 0
+    assert category_from_db.left == 9
+    assert category_from_db.right == 10
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -158,24 +267,49 @@ async def test_move_category_mutation_moves_child_category_to_root(
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_moves_child_category_to_root_before_parent(
-    query_admin_api, category, child_category
+    query_admin_api, category, child_category, sibling_category, closed_category
 ):
-    variables = {
-        "category": str(child_category.id),
-        "before": str(category.id),
-    }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["errors"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(child_category.id),
+            "before": str(category.id),
+        },
+    )
 
-    moved_category = await Category.query.one(id=int(data["category"]["id"]))
-    assert moved_category.id == child_category.id
-    assert moved_category.parent_id is None
-    assert moved_category.depth == 0
-    assert moved_category.left == 3
-    assert moved_category.right == 4
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(child_category.id),
+            "parent": None,
+        },
+        "categories": [
+            ANY,  # Default category
+            {
+                "id": str(child_category.id),
+                "children": [],
+            },
+            {
+                "id": str(category.id),
+                "children": [],
+            },
+            {
+                "id": str(sibling_category.id),
+                "children": [],
+            },
+            {
+                "id": str(closed_category.id),
+                "children": [],
+            },
+        ],
+        "errors": None,
+    }
+
+    category_from_db = await child_category.refresh_from_db()
+    assert category_from_db.id == child_category.id
+    assert category_from_db.parent_id is None
+    assert category_from_db.depth == 0
+    assert category_from_db.left == 3
+    assert category_from_db.right == 4
 
     # Categories tree is valid
     db_categories = await get_all_categories()
@@ -190,192 +324,305 @@ async def test_move_category_mutation_moves_child_category_to_root_before_parent
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_category_id_is_invalid(
-    query_admin_api, category
-):
-    variables = {
-        "category": "invalid",
+async def test_move_category_mutation_fails_if_category_id_is_invalid(query_admin_api):
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": "invalid",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": None,
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "type_error.integer",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [{"location": ["category"], "type": "type_error.integer"}]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_parent_id_is_invalid(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "parent": "invalid",
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "parent": "invalid",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "type_error.integer",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [{"location": ["parent"], "type": "type_error.integer"}]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_before_id_is_invalid(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "before": "invalid",
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "before": "invalid",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["before"],
+                "type": "type_error.integer",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [{"location": ["before"], "type": "type_error.integer"}]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
-    query_admin_api, category
+    query_admin_api,
 ):
-    variables = {
-        "category": str(category.id + 1000),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": "4000",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": None,
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["category"],
+                "type": "value_error.category.not_exists",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert not data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["category"], "type": "value_error.category.not_exists"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_parent_id_doesnt_exist(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "parent": str(category.id + 1000),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "parent": "4000",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.not_exists",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.not_exists"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_before_id_doesnt_exist(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "before": str(category.id + 1000),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "before": "4000",
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["before"],
+                "type": "value_error.category.not_exists",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["before"], "type": "value_error.category.not_exists"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_category_parent_is_itself(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "parent": str(category.id),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "parent": str(category.id),
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_category_before_is_itself(
     query_admin_api, category
 ):
-    variables = {
-        "category": str(category.id),
-        "before": str(category.id),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "before": str(category.id),
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["before"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["before"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_parent_is_child_category(
     query_admin_api, category, child_category
 ):
-    variables = {
-        "category": str(category.id),
-        "parent": str(child_category.id),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "parent": str(child_category.id),
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["parent"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["parent"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_root_category_is_moved_after_child(
     query_admin_api, category, child_category
 ):
-    variables = {
-        "category": str(category.id),
-        "before": str(child_category.id),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+            "before": str(child_category.id),
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(category.id),
+            "parent": None,
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["before"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["before"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_move_category_mutation_fails_if_child_is_moved_after_root(
     query_admin_api, category, child_category, sibling_category
 ):
-    variables = {
-        "category": str(child_category.id),
-        "parent": str(category.id),
-        "before": str(sibling_category.id),
+    result = await query_admin_api(
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(child_category.id),
+            "parent": str(category.id),
+            "before": str(sibling_category.id),
+        },
+    )
+
+    assert result["data"]["categoryMove"] == {
+        "category": {
+            "id": str(child_category.id),
+            "parent": {
+                "id": str(category.id),
+            },
+        },
+        "categories": ANY,
+        "errors": [
+            {
+                "location": ["before"],
+                "type": "value_error.category.invalid_parent",
+            }
+        ],
     }
-    result = await query_admin_api(CATEGORY_MOVE_MUTATION, variables)
-    data = result["data"]["categoryMove"]
-    assert data["category"]
-    assert data["categories"][0]["id"]
-    assert data["errors"] == [
-        {"location": ["before"], "type": "value_error.category.invalid_parent"}
-    ]
 
 
 @pytest.mark.asyncio
 async def test_category_move_mutation_requires_admin_auth(query_admin_api, category):
-    variables = {
-        "category": str(category.id),
-    }
     result = await query_admin_api(
-        CATEGORY_MOVE_MUTATION, variables, include_auth=False, expect_error=True
+        CATEGORY_MOVE_MUTATION,
+        {
+            "category": str(category.id),
+        },
+        include_auth=False,
+        expect_error=True,
     )
+
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None
