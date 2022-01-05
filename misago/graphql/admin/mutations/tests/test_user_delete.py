@@ -24,9 +24,11 @@ async def test_user_delete_mutation_deletes_user(query_admin_api, user):
             "id": str(user.id),
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["errors"]
-    assert data["deleted"]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": True,
+        "errors": None,
+    }
 
     with pytest.raises(User.DoesNotExist):
         await user.refresh_from_db()
@@ -42,9 +44,11 @@ async def test_user_delete_mutation_leaves_user_content(
             "id": str(user.id),
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["errors"]
-    assert data["deleted"]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": True,
+        "errors": None,
+    }
 
     with pytest.raises(User.DoesNotExist):
         await user.refresh_from_db()
@@ -64,9 +68,11 @@ async def test_user_delete_mutation_deletes_user_content(
             "deleteContent": True,
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["errors"]
-    assert data["deleted"]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": True,
+        "errors": None,
+    }
 
     with pytest.raises(User.DoesNotExist):
         await user.refresh_from_db()
@@ -86,14 +92,16 @@ async def test_user_delete_mutation_fails_if_user_id_is_invalid(query_admin_api)
             "id": "invalid",
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["deleted"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "type_error.integer",
-        },
-    ]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": False,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
@@ -106,14 +114,16 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_u
             "id": str(user.id + 100),
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["deleted"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "value_error.user.not_exists",
-        },
-    ]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": False,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "value_error.user.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
@@ -126,14 +136,16 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
             "id": str(admin.id),
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["deleted"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "value_error.user.delete_self",
-        },
-    ]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": False,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "value_error.user.delete_self",
+            },
+        ],
+    }
 
     await admin.refresh_from_db()
 
@@ -150,14 +162,16 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
             "id": str(user.id),
         },
     )
-    data = result["data"]["userDelete"]
-    assert not data["deleted"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "value_error.user.is_protected",
-        },
-    ]
+
+    assert result["data"]["userDelete"] == {
+        "deleted": False,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "value_error.user.is_protected",
+            },
+        ],
+    }
 
     await user.refresh_from_db()
 
@@ -173,5 +187,5 @@ async def test_user_delete_mutation_requires_admin_auth(query_admin_api, user):
         expect_error=True,
     )
 
-    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"] is None
+    assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
