@@ -33,15 +33,16 @@ async def test_user_update_mutation_fails_if_user_id_is_invalid(query_admin_api)
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["user"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "type_error.integer",
-        },
-    ]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": None,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "type_error.integer",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
@@ -54,15 +55,16 @@ async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, 
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["user"]
-    assert data["errors"] == [
-        {
-            "location": ["user"],
-            "type": "value_error.user.not_exists",
-        },
-    ]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": None,
+        "errors": [
+            {
+                "location": ["user"],
+                "type": "value_error.user.not_exists",
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
@@ -77,11 +79,20 @@ async def test_user_update_mutation_updates_user_name(query_admin_api, user):
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["name"] == "UpdatedUser"
-    assert data["user"]["slug"] == "updateduser"
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "UpdatedUser",
+            "slug": "updateduser",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.name == "UpdatedUser"
@@ -102,16 +113,25 @@ async def test_user_update_mutation_fails_if_user_name_is_invalid(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["name"],
-            "type": "value_error.username",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["name"] == user.name
-    assert data["user"]["slug"] == user.slug
+        "errors": [
+            {
+                "location": ["name"],
+                "type": "value_error.username",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.name == user.name
@@ -132,16 +152,25 @@ async def test_user_update_mutation_fails_if_user_name_is_not_available(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["name"],
-            "type": "value_error.username.not_available",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["name"] == user.name
-    assert data["user"]["slug"] == user.slug
+        "errors": [
+            {
+                "location": ["name"],
+                "type": "value_error.username.not_available",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.name == user.name
@@ -162,11 +191,20 @@ async def test_user_update_mutation_skips_update_if_new_name_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert data["user"]["name"] == user.name
-    assert data["user"]["slug"] == user.slug
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.name == user.name
@@ -185,10 +223,20 @@ async def test_user_update_mutation_updates_user_email(query_admin_api, user):
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["email"] == "new@email.com"
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "new@email.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.email == "new@email.com"
@@ -208,15 +256,25 @@ async def test_user_update_mutation_fails_if_user_email_is_invalid(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["email"],
-            "type": "value_error.email",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["email"] == user.email
+        "errors": [
+            {
+                "location": ["email"],
+                "type": "value_error.email",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.email == user.email
@@ -236,15 +294,25 @@ async def test_user_update_mutation_fails_if_user_email_is_not_available(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["email"],
-            "type": "value_error.email.not_available",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["email"] == user.email
+        "errors": [
+            {
+                "location": ["email"],
+                "type": "value_error.email.not_available",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.email == user.email
@@ -264,10 +332,20 @@ async def test_user_update_mutation_skips_update_if_new_email_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert data["user"]["email"] == user.email
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.email == user.email
@@ -285,9 +363,20 @@ async def test_user_update_mutation_updates_user_password(query_admin_api, user)
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert await user_from_db.check_password("n3wp5ssword  ")
@@ -307,14 +396,25 @@ async def test_user_update_mutation_fails_if_user_password_is_invalid(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["password"],
-            "type": "value_error.any_str.min_length",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
+        "errors": [
+            {
+                "location": ["password"],
+                "type": "value_error.any_str.min_length",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert await user_from_db.check_password(user_password)
@@ -332,10 +432,20 @@ async def test_user_update_mutation_updates_user_full_name(query_admin_api, user
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["fullName"] == "Bob Bobertson"
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": "Bob Bobertson",
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.full_name == "Bob Bobertson"
@@ -355,10 +465,20 @@ async def test_user_update_mutation_clears_user_full_name(query_admin_api, user)
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["fullName"] is None
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.full_name is None
@@ -378,15 +498,25 @@ async def test_user_update_mutation_fails_if_full_name_is_too_long(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["fullName"],
-            "type": "value_error.any_str.max_length",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
         },
-    ]
-    assert not data["user"]["fullName"]
+        "errors": [
+            {
+                "location": ["fullName"],
+                "type": "value_error.any_str.max_length",
+            },
+        ],
+    }
 
     user_from_db = await user.refresh_from_db()
     assert not user_from_db.full_name
@@ -408,10 +538,20 @@ async def test_user_update_mutation_skips_update_if_new_full_name_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert not data["updated"]
-    assert data["user"]["fullName"] == "Bob Bobertson"
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": "Bob Bobertson",
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.full_name == "Bob Bobertson"
@@ -429,10 +569,20 @@ async def test_user_update_mutation_updates_admin_status_to_true(query_admin_api
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["isAdmin"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": True,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.is_admin
@@ -454,10 +604,20 @@ async def test_user_update_mutation_updates_admin_status_to_false(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert not data["user"]["isAdmin"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert not user_from_db.is_admin
@@ -477,10 +637,20 @@ async def test_admin_update_mutation_skips_update_if_admin_status_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert data["user"]["isAdmin"]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(admin.id),
+            "name": "Admin",
+            "slug": "admin",
+            "fullName": None,
+            "email": "admin@example.com",
+            "isActive": True,
+            "isAdmin": True,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     admin_from_db = await admin.refresh_from_db()
     assert admin_from_db.is_admin
@@ -500,10 +670,20 @@ async def test_user_update_mutation_skips_update_if_admin_status_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert not data["user"]["isAdmin"]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert not user_from_db.is_admin
@@ -523,15 +703,25 @@ async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["isAdmin"],
-            "type": "value_error.user.remove_own_admin",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(admin.id),
+            "name": "Admin",
+            "slug": "admin",
+            "fullName": None,
+            "email": "admin@example.com",
+            "isActive": True,
+            "isAdmin": True,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["isAdmin"]
+        "errors": [
+            {
+                "location": ["isAdmin"],
+                "type": "value_error.user.remove_own_admin",
+            },
+        ],
+    }
 
     admin_from_db = await admin.refresh_from_db()
     assert admin_from_db.is_admin
@@ -551,10 +741,20 @@ async def test_user_update_mutation_updates_moderator_status_to_true(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["isModerator"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": True,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.is_moderator
@@ -574,10 +774,20 @@ async def test_user_update_mutation_updates_moderator_status_to_false(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert not data["user"]["isModerator"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(moderator.id),
+            "name": "Moderator",
+            "slug": "moderator",
+            "fullName": None,
+            "email": "moderator@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     moderator_from_db = await moderator.refresh_from_db()
     assert not moderator_from_db.is_moderator
@@ -597,10 +807,20 @@ async def test_moderator_update_mutation_skips_update_if_moderator_status_is_sam
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert data["user"]["isModerator"]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(moderator.id),
+            "name": "Moderator",
+            "slug": "moderator",
+            "fullName": None,
+            "email": "moderator@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": True,
+        },
+        "errors": None,
+    }
 
     moderator_from_db = await moderator.refresh_from_db()
     assert moderator_from_db.is_moderator
@@ -620,10 +840,20 @@ async def test_user_update_mutation_skips_update_if_moderator_status_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert not data["user"]["isModerator"]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert not user_from_db.is_moderator
@@ -643,10 +873,20 @@ async def test_inactive_user_update_mutation_updates_active_status_to_true(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert data["user"]["isActive"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(inactive_user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "inactive@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     inactive_user_from_db = await inactive_user.refresh_from_db()
     assert inactive_user_from_db.is_active
@@ -666,10 +906,20 @@ async def test_user_update_mutation_updates_active_status_to_false(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["errors"]
-    assert data["updated"]
-    assert not data["user"]["isActive"]
+    assert result["data"]["userUpdate"] == {
+        "updated": True,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": False,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert not user_from_db.is_active
@@ -689,15 +939,25 @@ async def test_user_update_mutation_fails_if_user_deactivates_themselves(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert data["errors"] == [
-        {
-            "location": ["isActive"],
-            "type": "value_error.user.deactivate_self",
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(admin.id),
+            "name": "Admin",
+            "slug": "admin",
+            "fullName": None,
+            "email": "admin@example.com",
+            "isActive": True,
+            "isAdmin": True,
+            "isModerator": False,
         },
-    ]
-    assert data["user"]["isActive"]
+        "errors": [
+            {
+                "location": ["isActive"],
+                "type": "value_error.user.deactivate_self",
+            },
+        ],
+    }
 
     admin_from_db = await admin.refresh_from_db()
     assert admin_from_db.is_active
@@ -716,6 +976,21 @@ async def test_inactive_user_update_mutation_skips_update_if_active_status_is_sa
             },
         },
     )
+
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(inactive_user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "inactive@example.com",
+            "isActive": False,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     data = result["data"]["userUpdate"]
     assert not data["updated"]
@@ -740,10 +1015,20 @@ async def test_user_update_mutation_skips_update_if_active_status_is_same(
         },
     )
 
-    data = result["data"]["userUpdate"]
-    assert not data["updated"]
-    assert not data["errors"]
-    assert data["user"]["isActive"]
+    assert result["data"]["userUpdate"] == {
+        "updated": False,
+        "user": {
+            "id": str(user.id),
+            "name": "User",
+            "slug": "user",
+            "fullName": None,
+            "email": "user@example.com",
+            "isActive": True,
+            "isAdmin": False,
+            "isModerator": False,
+        },
+        "errors": None,
+    }
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.is_active
