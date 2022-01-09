@@ -8,6 +8,7 @@ class UploadContentTypeError(PydanticValueError):
     msg_template = "ensure uploaded file is one of type: {limit_value}"
 
     def __init__(self, *, limit_value: List[str]) -> None:
+        # pylint: ignore=useless-super-delegation
         super().__init__(limit_value=", ".join(limit_value))
 
 
