@@ -1,7 +1,5 @@
 from io import BytesIO
 import os
-from tempfile import TemporaryDirectory
-from unittest.mock import patch
 
 import pytest
 
@@ -13,13 +11,6 @@ from ..store import (
     media_file_exists,
     store_media_file,
 )
-
-
-@pytest.fixture
-def mock_media_dir():
-    with TemporaryDirectory() as tmp_media_dir:
-        with patch("misago.conf.settings._media_root", tmp_media_dir):
-            yield tmp_media_dir
 
 
 def test_media_path_can_be_created(mock_media_dir):

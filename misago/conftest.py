@@ -1,5 +1,6 @@
+from tempfile import TemporaryDirectory
 from typing import Optional
-from unittest.mock import AsyncMock, Mock
+from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 import pytest
@@ -54,6 +55,13 @@ def mock_subscribe(mocker):
         return mocker.patch("misago.pubsub.broadcast.subscribe", MockSubscribe)
 
     return patch_subscribe
+
+
+@pytest.fixture
+def mock_media_dir():
+    with TemporaryDirectory() as tmp_media_dir:
+        with patch("misago.conf.settings._media_root", tmp_media_dir):
+            yield tmp_media_dir
 
 
 @pytest.fixture
