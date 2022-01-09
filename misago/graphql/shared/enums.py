@@ -1,4 +1,3 @@
-from enum import Enum
 from ariadne import EnumType
 
 from ...avatars.types import AvatarType

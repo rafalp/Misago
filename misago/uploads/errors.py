@@ -14,6 +14,3 @@ class UploadContentTypeError(PydanticValueError):
 class UploadMaxSizeError(PydanticValueError):
     code = "upload.max_size"
     msg_template = "ensure uploaded file size is less than {limit_value}"
-
-    def __init__(self, *, limit_value: int) -> None:
-        super().__init__(limit_value=limit_value)
