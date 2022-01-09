@@ -1,0 +1,9 @@
+type Avatar {
+    size: Int!
+    url: String!
+}
+
+enum AvatarType {
+    GRAVATAR
+    UPLOAD
+}

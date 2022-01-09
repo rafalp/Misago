@@ -1,0 +1,9 @@
+extend type Mutation {
+    avatarUpload(upload: Upload!): AvatarMutationResult!
+    avatarDelete: AvatarMutationResult!
+}
+
+type AvatarMutationResult {
+    user: User
+    errors: [Error!]
+}
