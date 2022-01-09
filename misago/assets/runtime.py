@@ -21,7 +21,6 @@ SOURCE_MAPPING_URL = "sourceMappingURL"
 
 
 def is_line_with_source_mapping(line: str, runtime_path: str) -> bool:
-    print("line", line)
     line = line.strip()
     if line.startswith("//"):
         line = line[2:].strip()

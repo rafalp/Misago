@@ -15,8 +15,10 @@ class StaticSettings:
     _pubsub_url: str
 
     _static_root: str
-    _media_root: str
     _plugins_root: Optional[str]
+
+    _media_root: str
+    _media_url: str
 
     _avatar_sizes: List[int]
 
@@ -31,8 +33,10 @@ class StaticSettings:
         self._pubsub_url = get_setting_value(settings, "MISAGO_PUBSUB_URL")
 
         self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
-        self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
         self._plugins_root = settings.get("MISAGO_PLUGINS_ROOT", "").strip() or None
+
+        self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
+        self._media_url = settings.get("MISAGO_MEDIA_URL", "/media/").strip()
 
         self._avatar_sizes = get_avatar_sizes_value(settings, "MISAGO_AVATAR_SIZES")
 
@@ -65,12 +69,16 @@ class StaticSettings:
         return self._static_root
 
     @property
+    def plugins_root(self) -> Optional[str]:
+        return self._plugins_root
+
+    @property
     def media_root(self) -> str:
         return self._media_root
 
     @property
-    def plugins_root(self) -> Optional[str]:
-        return self._plugins_root
+    def media_url(self) -> str:
+        return self._media_url
 
     @property
     def avatar_sizes(self) -> List[int]:

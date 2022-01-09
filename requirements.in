@@ -1,6 +1,6 @@
 aiodataloader
 alembic
-ariadne
+ariadne[asgi-file-uploads]
 asgiref
 async-caches
 Babel
@@ -11,6 +11,7 @@ httpx
 jinja2
 mistune==2.0.0rc1
 passlib
+pillow
 psycopg2
 pydantic[email,typing_extensions]
 pygments

@@ -1,5 +1,7 @@
 import sqlalchemy
 
+from .avatars.types import AvatarType
+
 metadata = sqlalchemy.MetaData()
 
 cache_versions = sqlalchemy.Table(
@@ -31,6 +33,8 @@ users = sqlalchemy.Table(
         "email_hash", sqlalchemy.String(length=255), nullable=False, unique=True
     ),
     sqlalchemy.Column("full_name", sqlalchemy.String(length=150), nullable=True),
+    sqlalchemy.Column("avatar_type", sqlalchemy.Enum(AvatarType), nullable=False),
+    sqlalchemy.Column("avatars", sqlalchemy.JSON(), nullable=True),
     sqlalchemy.Column("password", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("is_active", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),

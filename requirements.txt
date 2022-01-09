@@ -14,7 +14,7 @@ anyio==3.4.0
     # via
     #   httpcore
     #   starlette
-ariadne==0.14.0
+ariadne[asgi-file-uploads]==0.14.0
     # via -r requirements.in
 asgiref==3.4.1
     # via
@@ -79,6 +79,8 @@ mistune==2.0.0rc1
     # via -r requirements.in
 passlib==1.7.4
     # via -r requirements.in
+pillow==9.0.0
+    # via -r requirements.in
 psycopg2==2.9.2
     # via -r requirements.in
 pydantic[email,typing_extensions]==1.8.2
@@ -89,6 +91,8 @@ pyjwt==2.3.0
     # via -r requirements.in
 python-dotenv==0.19.2
     # via uvicorn
+python-multipart==0.0.5
+    # via ariadne
 pytz==2021.3
     # via
     #   -r requirements.in
@@ -97,6 +101,8 @@ pyyaml==6.0
     # via uvicorn
 rfc3986[idna2008]==1.5.0
     # via httpx
+six==1.16.0
+    # via python-multipart
 sniffio==1.2.0
     # via
     #   anyio

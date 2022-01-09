@@ -9,10 +9,6 @@ type User {
     joinedAt: DateTime!
     avatars: [Avatar!]!
     avatar(size: Int): Avatar!
+    avatarType: AvatarType!
     extra: Generic!
-}
-
-type Avatar {
-    size: Int!
-    url: String!
 }

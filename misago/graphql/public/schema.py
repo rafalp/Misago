@@ -3,6 +3,7 @@ import os
 from ariadne import load_schema_from_path, make_executable_schema
 
 from ..hooks import graphql_directives_hook, graphql_type_defs_hook, graphql_types_hook
+from ..shared.enums import shared_enums
 from ..shared.scalars import shared_scalars
 from ..shared.schema import shared_type_defs
 from ..shared.types import shared_types
@@ -17,6 +18,7 @@ public_type_defs = load_schema_from_path(SCHEMA_DIR)
 
 public_schema = make_executable_schema(
     [shared_type_defs, public_type_defs, *graphql_type_defs_hook],
+    *shared_enums,
     *shared_scalars,
     *shared_types,
     *types,

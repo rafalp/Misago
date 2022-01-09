@@ -1,3 +1,4 @@
+from .avatarupload import avatar_upload_mutation
 from .closethread import close_thread_mutation
 from .closethreads import close_threads_mutation
 from .deletethread import delete_thread_mutation
@@ -15,6 +16,7 @@ from .register import register_mutation
 from .setupsite import setup_site_mutation
 
 mutations = [
+    avatar_upload_mutation,
     close_thread_mutation,
     close_threads_mutation,
     delete_thread_mutation,

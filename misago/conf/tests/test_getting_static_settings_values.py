@@ -65,14 +65,24 @@ def test_pubsub_url_setting_value_is_set_and_retrieved():
     assert settings.pubsub_url == "/pubsub-test/"
 
 
-def test_static_root_url_setting_value_is_set_and_retrieved():
+def test_static_root_setting_value_is_set_and_retrieved():
     settings = StaticSettings(mock_settings({"MISAGO_STATIC_ROOT": "/static-test/"}))
     assert settings.static_root == "/static-test/"
 
 
-def test_media_root_url_setting_value_is_set_and_retrieved():
+def test_media_root_setting_value_is_set_and_retrieved():
     settings = StaticSettings(mock_settings({"MISAGO_MEDIA_ROOT": "/media-test/"}))
     assert settings.media_root == "/media-test/"
+
+
+def test_media_url_setting_value_is_set_and_retrieved():
+    settings = StaticSettings(mock_settings({"MISAGO_MEDIA_URL": "/media-url-test/"}))
+    assert settings.media_url == "/media-url-test/"
+
+
+def test_media_url_setting_value_is_set_to_default_value_and_retrieved():
+    settings = StaticSettings(mock_settings({}))
+    assert settings.media_url == "/media/"
 
 
 def test_plugins_root_setting_value_is_set_and_retrieved():

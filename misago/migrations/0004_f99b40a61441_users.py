@@ -26,6 +26,8 @@ def upgrade():
         sa.Column("email_hash", sa.String(length=255), nullable=False),
         sa.Column("full_name", sa.String(length=150), nullable=True),
         sa.Column("password", sa.String(length=255), nullable=True),
+        sa.Column("avatar_type", sa.String(length=50), nullable=False),
+        sa.Column("avatars", sa.JSON(), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
         sa.Column("is_admin", sa.Boolean(), nullable=False),

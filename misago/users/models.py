@@ -1,7 +1,9 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Awaitable, Dict, Optional
+from typing import Any, Awaitable, Dict, List, Optional
 
+from ..avatars.store import delete_user_avatars
+from ..avatars.types import AvatarType
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..database.paginator import PaginationPage
 from ..passwords import check_password, hash_password
@@ -22,6 +24,8 @@ class User(Model):
     email_hash: str
     full_name: Optional[str]
     password: Optional[str]
+    avatar_type: AvatarType
+    avatars: List[dict]
     is_active: bool
     is_moderator: bool
     is_admin: bool
@@ -44,6 +48,8 @@ class User(Model):
         *,
         full_name: Optional[str] = None,
         password: Optional[str] = None,
+        avatar_type: Optional[AvatarType] = None,
+        avatars: Optional[List[dict]] = None,
         is_active: bool = True,
         is_moderator: bool = False,
         is_admin: bool = False,
@@ -62,6 +68,8 @@ class User(Model):
             "email_hash": get_email_hash(email),
             "full_name": full_name,
             "password": password_hash,
+            "avatar_type": avatar_type or AvatarType.GRAVATAR,
+            "avatars": avatars or [],
             "is_active": is_active,
             "is_moderator": is_moderator,
             "is_admin": is_admin,
@@ -78,6 +86,8 @@ class User(Model):
         email: Optional[str] = None,
         full_name: Optional[str] = None,
         password: Optional[str] = None,
+        avatar_type: Optional[AvatarType] = None,
+        avatars: Optional[List[dict]] = None,
         is_active: bool = True,
         is_moderator: bool = False,
         is_admin: bool = False,
@@ -101,6 +111,12 @@ class User(Model):
         if password is not None:
             changes["password"] = await hash_password(password)
 
+        if avatar_type is not None and avatar_type != self.avatar_type:
+            changes["avatar_type"] = avatar_type
+
+        if avatars is not None and avatars != self.avatars:
+            changes["avatars"] = avatars
+
         if is_active is not None and is_active != self.is_active:
             changes["is_active"] = is_active
 
@@ -123,8 +139,9 @@ class User(Model):
 
         return self.replace(**changes)
 
-    def delete(self):
-        return User.query.filter(id=self.id).delete()
+    async def delete(self):
+        await delete_user_avatars(self)
+        return await User.query.filter(id=self.id).delete()
 
     async def check_password(self, password: str) -> bool:
         if not self.password:
