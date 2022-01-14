@@ -35,17 +35,14 @@ async def test_upload_avatar_mutation_uploads_avatar(
     test_files_path,
     tmp_media_dir,
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "avatar.png",
-                open(os.path.join(test_files_path, "avatar.png"), "rb"),
-                "image/png",
-            ),
-        },
-        auth=user,
-    )
+    with open(os.path.join(test_files_path, "avatar.png"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("avatar.png", upload, "image/png"),
+            },
+            auth=user,
+        )
 
     user_from_db = await user.refresh_from_db()
     assert user_from_db.avatars
@@ -70,16 +67,13 @@ async def test_upload_avatar_mutation_uploads_avatar(
 async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
     query_public_api, user, test_files_path
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "avatar.png",
-                open(os.path.join(test_files_path, "avatar.png"), "rb"),
-                "image/png",
-            ),
-        },
-    )
+    with open(os.path.join(test_files_path, "avatar.png"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("avatar.png", upload, "image/png"),
+            },
+        )
 
     assert result["data"]["avatarUpload"] == {
         "user": None,
@@ -100,17 +94,14 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
 async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_type(
     query_public_api, user, test_files_path
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "avatar.png",
-                open(os.path.join(test_files_path, "avatar.png"), "rb"),
-                "image/vnd.adobe.photoshop",
-            ),
-        },
-        auth=user,
-    )
+    with open(os.path.join(test_files_path, "avatar.png"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("avatar.png", upload, "image/vnd.adobe.photoshop"),
+            },
+            auth=user,
+        )
 
     assert result["data"]["avatarUpload"] == {
         "user": {
@@ -138,17 +129,14 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_typ
 async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
     query_public_api, user, test_files_path
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "avatar.png",
-                open(os.path.join(test_files_path, "avatar.png"), "rb"),
-                "image/png",
-            ),
-        },
-        auth=user,
-    )
+    with open(os.path.join(test_files_path, "avatar.png"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("avatar.png", upload, "image/png"),
+            },
+            auth=user,
+        )
 
     assert result["data"]["avatarUpload"] == {
         "user": {
@@ -172,17 +160,14 @@ async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
 async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
     query_public_api, user, test_files_path
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "text_file.txt",
-                open(os.path.join(test_files_path, "text_file.txt"), "rb"),
-                "image/png",
-            ),
-        },
-        auth=user,
-    )
+    with open(os.path.join(test_files_path, "text_file.txt"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("text_file.txt", upload, "image/png"),
+            },
+            auth=user,
+        )
 
     assert result["data"]["avatarUpload"] == {
         "user": {
@@ -192,8 +177,8 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
         "errors": [
             {
                 "location": ["upload"],
-                "type": "value_error.upload.image",
-                "message": "ensure uploaded file is valid image",
+                "type": "value_error.image",
+                "message": "ensure value is valid image",
             },
         ],
     }
@@ -206,17 +191,14 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
 async def test_upload_avatar_mutation_fails_if_image_is_too_small(
     query_public_api, user, test_files_path
 ):
-    result = await query_public_api(
-        UPLOAD_AVATAR_MUTATION,
-        {
-            "upload": (
-                "image.png",
-                open(os.path.join(test_files_path, "image.png"), "rb"),
-                "image/png",
-            ),
-        },
-        auth=user,
-    )
+    with open(os.path.join(test_files_path, "image.png"), "rb") as upload:
+        result = await query_public_api(
+            UPLOAD_AVATAR_MUTATION,
+            {
+                "upload": ("image.png", upload, "image/png"),
+            },
+            auth=user,
+        )
 
     assert result["data"]["avatarUpload"] == {
         "user": {
@@ -226,8 +208,8 @@ async def test_upload_avatar_mutation_fails_if_image_is_too_small(
         "errors": [
             {
                 "location": ["upload"],
-                "type": "value_error.upload.image.min_size",
-                "message": "ensure uploaded image size is at least 400x400 pixels",
+                "type": "value_error.image.min_size",
+                "message": "ensure image size is at least 400x400 pixels",
             },
         ],
     }

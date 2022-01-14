@@ -5,10 +5,10 @@ from asgiref.sync import sync_to_async
 from starlette.datastructures import UploadFile
 
 from .errors import (
+    ImageError,
+    ImageMaxSizeError,
+    ImageMinSizeError,
     UploadContentTypeError,
-    UploadImageError,
-    UploadImageMaxSizeError,
-    UploadImageMinSizeError,
     UploadMaxSizeError,
 )
 from .utils import get_upload_size
@@ -65,11 +65,11 @@ class UploadImageValidator:
             image = Image.open(upload.file)
             width, height = image.size
         except UnidentifiedImageError as exc:
-            raise UploadImageError() from exc
+            raise ImageError() from exc
 
         min_width, min_height = self.min_size
         if width < min_width or height < min_height:
-            raise UploadImageMinSizeError(
+            raise ImageMinSizeError(
                 limit_width_value=min_width,
                 limit_height_value=min_height,
             )
@@ -77,7 +77,7 @@ class UploadImageValidator:
         if self.max_size:
             max_width, max_height = self.max_size
             if width > max_width or height > max_height:
-                raise UploadImageMaxSizeError(
+                raise ImageMaxSizeError(
                     limit_width_value=max_width,
                     limit_height_value=max_height,
                 )
