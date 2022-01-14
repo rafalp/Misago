@@ -1,4 +1,3 @@
-import os
 from unittest.mock import Mock
 
 import pytest
@@ -16,8 +15,6 @@ from ..validators import (
     UploadImageValidator,
     UploadSizeValidator,
 )
-
-TEST_FILES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
 
 
 def test_content_type_validator_passes_allowed_types():
@@ -59,22 +56,17 @@ async def test_upload_size_validator_raises_error_for_too_large_uploads():
         await exact_size_validator(upload)
 
 
-async def create_upload_file(filename):
-    upload = UploadFile(filename)
-    with open(os.path.join(TEST_FILES_DIR, filename), "rb") as fp:
-        await upload.write(fp.read())
-    return upload
-
-
 @pytest.mark.asyncio
-async def test_upload_image_validator_passes_valid_image_file():
+async def test_upload_image_validator_passes_valid_image_file(create_upload_file):
     upload = await create_upload_file("image.png")
     image_validator = UploadImageValidator()
     assert await image_validator(upload)
 
 
 @pytest.mark.asyncio
-async def test_upload_image_validator_raises_error_if_upload_is_not_image():
+async def test_upload_image_validator_raises_error_if_upload_is_not_image(
+    create_upload_file,
+):
     upload = await create_upload_file("text_file.txt")
     image_validator = UploadImageValidator()
     with pytest.raises(UploadImageError):
@@ -82,14 +74,18 @@ async def test_upload_image_validator_raises_error_if_upload_is_not_image():
 
 
 @pytest.mark.asyncio
-async def test_upload_image_validator_passes_image_file_with_valid_min_dimensions():
+async def test_upload_image_validator_passes_image_file_with_valid_min_dimensions(
+    create_upload_file,
+):
     upload = await create_upload_file("image.png")
     image_validator = UploadImageValidator(min_size=(30, 20))
     assert await image_validator(upload)
 
 
 @pytest.mark.asyncio
-async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_small():
+async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_small(
+    create_upload_file,
+):
     upload = await create_upload_file("image.png")
 
     with pytest.raises(UploadImageMinSizeError):
@@ -102,14 +98,18 @@ async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_smal
 
 
 @pytest.mark.asyncio
-async def test_upload_image_validator_passes_image_file_with_valid_max_dimensions():
+async def test_upload_image_validator_passes_image_file_with_valid_max_dimensions(
+    create_upload_file,
+):
     upload = await create_upload_file("image.png")
     image_validator = UploadImageValidator(max_size=(40, 30))
     assert await image_validator(upload)
 
 
 @pytest.mark.asyncio
-async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_large():
+async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_large(
+    create_upload_file,
+):
     upload = await create_upload_file("image.png")
 
     with pytest.raises(UploadImageMaxSizeError):

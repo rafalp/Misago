@@ -1,15 +1,17 @@
 from typing import Dict, List
 
-from pydantic import PydanticValueError
-
 from ariadne import MutationType
-from asgiref.sync import sync_to_async
 from graphql import GraphQLResolveInfo
 from starlette.datastructures import UploadFile
 
 from ....avatars.upload import store_uploaded_avatar
+from ....conf import settings
 from ....errors import ErrorsList
-from ....uploads.validators import UploadSizeValidator
+from ....uploads.validators import (
+    UploadContentTypeValidator,
+    UploadImageValidator,
+    UploadSizeValidator,
+)
 from ....users.models import User
 from ....validation import (
     UserIsAuthorizedRootValidator,
@@ -18,50 +20,35 @@ from ....validation import (
 )
 from ...errorhandler import error_handler
 
-avatar_upload_mutation = MutationType()
-
-
-@avatar_upload_mutation.field("avatarUpload")
-@error_handler
-async def resolve_avatar_uploadd(_, info: GraphQLResolveInfo, *, upload: UploadFile):
-    data = {"upload": upload}
-    validators: Dict[str, List[Validator]] = {
-        "upload": [
-            UploadSizeValidator(info.context["settings"]["avatar_max_size"]),
-            validate_avatar_file,
-        ],
-        ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
-    }
-    cleaned_data, errors = await validate_data(data, validators, ErrorsList())
-
-    if errors:
-        return {"errors": errors}
-
-    user: User = info.context["user"]
-    user = await store_uploaded_avatar(user, cleaned_data["upload"])
-
-    return {
-        "user": user,
-        "errors": None,
-    }
-
-
-IMAGE_FILE_MEDIA = (
+AVATAR_CONTENT_TYPES = (
     "image/gif",
     "image/jpeg",
     "image/png",
     "image/webp",
 )
+AVATAR_MIN_SIZE = max(settings.avatar_sizes)
+
+avatar_upload_mutation = MutationType()
 
 
-class ImageError(PydanticValueError):
-    code = "image.type"
-    msg_template = "image type unrecognized"
+@avatar_upload_mutation.field("avatarUpload")
+@error_handler
+async def resolve_avatar_upload(_, info: GraphQLResolveInfo, *, upload: UploadFile):
+    data = {"upload": upload}
+    validators: Dict[str, List[Validator]] = {
+        "upload": [
+            UploadSizeValidator(info.context["settings"]["avatar_max_size"]),
+            UploadContentTypeValidator(AVATAR_CONTENT_TYPES),
+            UploadImageValidator(min_size=(AVATAR_MIN_SIZE, AVATAR_MIN_SIZE)),
+        ],
+        ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
+    }
+    cleaned_data, errors = await validate_data(data, validators, ErrorsList())
 
+    user: User = info.context["user"]
+    if errors:
+        return {"errors": errors, "user": user}
 
-@sync_to_async
-def validate_avatar_file(value: UploadFile, errors: ErrorsList, field_name: str):
-    if value.content_type not in IMAGE_FILE_MEDIA:
-        raise ImageError()
+    user = await store_uploaded_avatar(user, cleaned_data["upload"])
 
-    return value
+    return {"user": user}

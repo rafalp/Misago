@@ -1,9 +1,12 @@
+import json
+import os
 from tempfile import TemporaryDirectory
 from typing import Optional
 from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 import pytest
+from starlette.datastructures import UploadFile
 
 from . import tables
 from .asgi import app
@@ -447,7 +450,11 @@ def query_admin_api(http_client, admin, monkeypatch):
 @pytest.fixture
 def query_public_api(http_client, monkeypatch):
     async def query_public_schema(
-        query, variables=None, *, auth: Optional[User] = None
+        query,
+        variables=None,
+        *,
+        auth: Optional[User] = None,
+        files=None,
     ):
         if auth:
             monkeypatch.setattr(
@@ -456,9 +463,64 @@ def query_public_api(http_client, monkeypatch):
             )
 
         async with http_client() as client:
-            r = await client.post(
-                "/graphql/", json={"query": query, "variables": variables}
-            )
+            files_map = {}
+            files_data = {}
+
+            if variables:
+                extract_uploads_from_variables(files_map, files_data, variables)
+
+            if files_map and files_data:
+                r = await client.post(
+                    "/graphql/",
+                    data={
+                        "operations": json.dumps(
+                            {"query": query, "variables": variables}
+                        ),
+                        "map": json.dumps(files_map),
+                    },
+                    files=files_data,
+                )
+            else:
+                r = await client.post(
+                    "/graphql/", json={"query": query, "variables": variables}
+                )
+
             return r.json()
 
     return query_public_schema
+
+
+def extract_uploads_from_variables(
+    files_map, files_data, variables, prefix="variables"
+):
+    for name, value in variables.items():
+        if not isinstance(value, tuple) or len(value) != 3:
+            continue
+
+        index = str(len(files_map))
+        files_map[index] = ["%s.%s" % (prefix, name)]
+        files_data[index] = value
+        variables[name] = None
+
+
+TEST_FILES_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "testing",
+    "files",
+)
+
+
+@pytest.fixture
+def test_files_path():
+    return TEST_FILES_PATH
+
+
+@pytest.fixture
+def create_upload_file(test_files_path):
+    async def upload_file_factory(filename):
+        upload = UploadFile(filename)
+        with open(os.path.join(test_files_path, filename), "rb") as fp:
+            await upload.write(fp.read())
+        return upload
+
+    return upload_file_factory

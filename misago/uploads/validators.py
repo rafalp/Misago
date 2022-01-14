@@ -13,6 +13,12 @@ from .errors import (
 )
 from .utils import get_upload_size
 
+__all__ = [
+    "UploadContentTypeValidator",
+    "UploadImageValidator",
+    "UploadSizeValidator",
+]
+
 
 class UploadSizeValidator:
     limit_value: int
@@ -58,8 +64,8 @@ class UploadImageValidator:
         try:
             image = Image.open(upload.file)
             width, height = image.size
-        except UnidentifiedImageError:
-            raise UploadImageError()
+        except UnidentifiedImageError as exc:
+            raise UploadImageError() from exc
 
         min_width, min_height = self.min_size
         if width < min_width or height < min_height:

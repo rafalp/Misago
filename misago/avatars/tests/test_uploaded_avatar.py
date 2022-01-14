@@ -1,11 +1,16 @@
 import os
 
-from PIL import Image
 import pytest
+from PIL import Image
 
 from ...conf import settings
 from ...uploads.store import make_media_path
 from ..upload import store_uploaded_avatar
+
+
+@pytest.fixture
+async def uploaded_image(create_upload_file):
+    return await create_upload_file("avatar.png")
 
 
 @pytest.mark.asyncio
@@ -53,7 +58,7 @@ async def test_uploaded_avatar_replaces_previous_avatar(
     updated_user = await store_uploaded_avatar(user, uploaded_image)
     assert updated_user.avatars
 
-    updated_user.avatars != user.avatars
+    assert updated_user.avatars != user.avatars
 
     for avatar in user.avatars:
         avatar_path = make_media_path(avatar["image"])

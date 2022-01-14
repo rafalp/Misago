@@ -1,3 +1,5 @@
+from typing import cast
+
 from asgiref.sync import sync_to_async
 from starlette.datastructures import UploadFile
 
@@ -10,4 +12,4 @@ def get_upload_size(upload: UploadFile) -> int:
         upload._misago_file_size = upload.file.tell()
         upload.file.seek(0, 0)
 
-    return upload._misago_file_size
+    return cast(int, upload._misago_file_size)

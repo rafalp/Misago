@@ -50,16 +50,16 @@ def test_media_file_can_be_stored_in_dir_and_accessed(tmp_media_dir):
 
 
 def test_media_dirs_can_be_created(tmp_media_dir):
-    dirname = make_media_path("some/test/avatars")
+    dirname = "some/test/avatars"
     make_media_directory(dirname)
-    assert os.path.isdir(dirname)
+    assert os.path.isdir(make_media_path(dirname))
 
 
 def test_creating_already_existing_media_dirs_is_not_error(tmp_media_dir):
-    dirname = make_media_path("some/test/avatars")
+    dirname = "some/test/avatars"
     make_media_directory(dirname)
     make_media_directory(dirname)
-    assert os.path.isdir(dirname)
+    assert os.path.isdir(make_media_path(dirname))
 
 
 def test_media_file_can_be_removed(tmp_media_dir):
