@@ -26,5 +26,5 @@ def register_default_routes(app: Starlette):
 
     if settings.debug:
         app.mount("/static/", StaticFiles(directory=settings.static_root))
-        app.mount("/media/", StaticFiles(directory=settings.media_root))
+        app.mount(settings.media_url, StaticFiles(directory=settings.media_root))
         app.add_route("/error-500/", error_500_route, include_in_schema=False)

@@ -80,7 +80,12 @@ def test_media_url_setting_value_is_set_and_retrieved():
     assert settings.media_url == "/media-url-test/"
 
 
-def test_media_url_setting_value_is_set_to_default_value_and_retrieved():
+def test_media_url_setting_value_is_normalized_when_set():
+    settings = StaticSettings(mock_settings({"MISAGO_MEDIA_URL": "/ media-dirty  "}))
+    assert settings.media_url == "/media-dirty/"
+
+
+def test_media_url_setting_value_is_set_to_default_value_if_not_set():
     settings = StaticSettings(mock_settings({}))
     assert settings.media_url == "/media/"
 

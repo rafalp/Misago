@@ -9,7 +9,7 @@ def make_media_path(file_path: str) -> str:
     if ".." in file_path or "./" in file_path:
         raise ValueError(f"Insecure path {file_path}")
 
-    return os.path.join(settings.media_root, file_path)
+    return os.path.join(settings.media_root.rstrip("/"), file_path.lstrip("/"))
 
 
 def media_file_exists(file_path: str) -> bool:
@@ -19,7 +19,7 @@ def media_file_exists(file_path: str) -> bool:
 
 def store_media_file(file: IO, file_path: str):
     media_path = make_media_path(file_path)
-    make_media_directory(os.path.dirname(media_path))
+    make_media_directory(os.path.dirname(media_path), media_path=True)
 
     with open(media_path, "wb") as fp:
         while True:
@@ -29,9 +29,11 @@ def store_media_file(file: IO, file_path: str):
             fp.write(chunk)
 
 
-def make_media_directory(dir_path: str):
-    media_path = make_media_path(dir_path)
-    os.makedirs(media_path, exist_ok=True)
+def make_media_directory(dir_path: str, *, media_path: bool = False):
+    if not media_path:
+        dir_path = make_media_path(dir_path)
+
+    os.makedirs(dir_path, exist_ok=True)
 
 
 def delete_media_file(file_path: str):

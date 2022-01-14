@@ -58,7 +58,7 @@ def mock_subscribe(mocker):
 
 
 @pytest.fixture
-def mock_media_dir():
+def tmp_media_dir():
     with TemporaryDirectory() as tmp_media_dir:
         with patch("misago.conf.settings._media_root", tmp_media_dir):
             yield tmp_media_dir
