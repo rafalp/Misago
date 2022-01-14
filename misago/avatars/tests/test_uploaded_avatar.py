@@ -1,10 +1,8 @@
-import os
-
 import pytest
 from PIL import Image
 
 from ...conf import settings
-from ...uploads.store import make_media_path
+from ...uploads.store import media_file_exists, make_media_path
 from ..upload import store_uploaded_avatar
 
 
@@ -33,8 +31,7 @@ async def test_uploaded_avatar_is_stored_in_media(user, uploaded_image, tmp_medi
     assert updated_user.avatars
 
     for avatar in updated_user.avatars:
-        avatar_path = make_media_path(avatar["image"])
-        assert os.path.isfile(avatar_path)
+        assert media_file_exists(avatar["image"])
 
 
 @pytest.mark.asyncio
@@ -61,9 +58,7 @@ async def test_uploaded_avatar_replaces_previous_avatar(
     assert updated_user.avatars != user.avatars
 
     for avatar in user.avatars:
-        avatar_path = make_media_path(avatar["image"])
-        assert not os.path.isfile(avatar_path)
+        assert not media_file_exists(avatar["image"])
 
     for avatar in updated_user.avatars:
-        avatar_path = make_media_path(avatar["image"])
-        assert os.path.isfile(avatar_path)
+        assert media_file_exists(avatar["image"])

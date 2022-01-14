@@ -1,11 +1,12 @@
 import os
+
 from unittest.mock import ANY
 
 import pytest
 
 from .....errors import ErrorsList
 from .....testing import override_dynamic_settings
-from .....uploads.store import make_media_path
+from .....uploads.store import media_file_exists
 from .....uploads.urls import make_media_url
 
 UPLOAD_AVATAR_MUTATION = """
@@ -59,8 +60,7 @@ async def test_upload_avatar_mutation_uploads_avatar(
     }
 
     for avatar in user_from_db.avatars:
-        avatar_path = make_media_path(avatar["image"])
-        assert os.path.isfile(avatar_path)
+        assert media_file_exists(avatar["image"])
 
 
 @pytest.mark.asyncio

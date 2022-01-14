@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Iterable, Optional, Tuple
 
 from PIL import Image, UnidentifiedImageError
 from asgiref.sync import sync_to_async
@@ -30,9 +30,9 @@ class UploadSizeValidator:
 
 
 class UploadContentTypeValidator:
-    content_types: List[str]
+    content_types: Iterable[str]
 
-    def __init__(self, content_types: List[str]):
+    def __init__(self, content_types: Iterable[str]):
         self.content_types = content_types
 
     def __call__(self, upload: UploadFile, *_):
