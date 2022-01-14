@@ -64,7 +64,7 @@ async def test_upload_image_validator_raises_error_if_upload_is_not_image(
 ):
     upload = await create_upload_file("text_file.txt")
     image_validator = UploadImageValidator()
-    with pytest.raises(UploadImageError):
+    with pytest.raises(ImageError):
         await image_validator(upload)
 
 
@@ -83,11 +83,11 @@ async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_smal
 ):
     upload = await create_upload_file("image.png")
 
-    with pytest.raises(UploadImageMinSizeError):
+    with pytest.raises(ImageMinSizeError):
         image_validator = UploadImageValidator(min_size=(30, 31))
         await image_validator(upload)
 
-    with pytest.raises(UploadImageMinSizeError):
+    with pytest.raises(ImageMinSizeError):
         image_validator = UploadImageValidator(min_size=(31, 30))
         await image_validator(upload)
 
@@ -107,10 +107,10 @@ async def test_upload_image_validator_raises_error_if_uploaded_image_is_too_larg
 ):
     upload = await create_upload_file("image.png")
 
-    with pytest.raises(UploadImageMaxSizeError):
+    with pytest.raises(ImageMaxSizeError):
         image_validator = UploadImageValidator(max_size=(29, 30))
         await image_validator(upload)
 
-    with pytest.raises(UploadImageMaxSizeError):
+    with pytest.raises(ImageMaxSizeError):
         image_validator = UploadImageValidator(max_size=(30, 29))
         await image_validator(upload)

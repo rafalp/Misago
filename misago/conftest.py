@@ -463,8 +463,8 @@ def query_public_api(http_client, monkeypatch):
             )
 
         async with http_client() as client:
-            files_map = {}
-            files_data = {}
+            files_map: dict = {}
+            files_data: dict = {}
 
             if variables:
                 extract_uploads_from_variables(files_map, files_data, variables)

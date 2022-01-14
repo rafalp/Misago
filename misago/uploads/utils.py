@@ -9,7 +9,7 @@ def get_upload_size(upload: UploadFile) -> int:
     if not hasattr(upload, "_misago_file_size"):
         # TODO: remove this when UploadFile provides simpler way for checking size
         upload.file.seek(0, 2)  # Seek end of file
-        upload._misago_file_size = upload.file.tell()
+        upload._misago_file_size = upload.file.tell()  # type: ignore
         upload.file.seek(0, 0)
 
-    return cast(int, upload._misago_file_size)
+    return upload._misago_file_size  # type: ignore
