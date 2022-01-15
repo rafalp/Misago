@@ -1,4 +1,7 @@
 type Settings {
+    avatarUploadContentTypes: [String!]!
+    avatarUploadImageMinSize: Int!
+    avatarUploadMaxSize: Int!
     bulkActionLimit: Int!
     enableSiteWizard: Boolean!
     forumIndexHeader: String!

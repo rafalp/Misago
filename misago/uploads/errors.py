@@ -1,4 +1,4 @@
-from typing import List
+from typing import Iterable
 
 from pydantic import PydanticValueError
 
@@ -7,7 +7,7 @@ class UploadContentTypeError(PydanticValueError):
     code = "upload.content_type"
     msg_template = "ensure uploaded file is one of type: {limit_value}"
 
-    def __init__(self, *, limit_value: List[str]) -> None:
+    def __init__(self, *, limit_value: Iterable[str]) -> None:
         # pylint: disable=useless-super-delegation
         super().__init__(limit_value=", ".join(limit_value))
 

@@ -1,5 +1,6 @@
 import pytest
 
+from .....conf import settings
 from .....validation import PASSWORD_MAX_LENGTH
 
 
@@ -10,6 +11,9 @@ async def test_query_settings_resolves_to_settings_list(
     query = """
         query GetSettings {
             settings {
+                avatarUploadContentTypes
+                avatarUploadImageMinSize
+                avatarUploadMaxSize
                 bulkActionLimit
                 enableSiteWizard
                 forumIndexHeader
@@ -29,6 +33,9 @@ async def test_query_settings_resolves_to_settings_list(
 
     result = await query_public_api(query)
     assert result["data"]["settings"] == {
+        "avatarUploadContentTypes": list(settings.avatar_content_types),
+        "avatarUploadImageMinSize": max(settings.avatar_sizes),
+        "avatarUploadMaxSize": dynamic_settings["avatar_upload_max_size"],
         "bulkActionLimit": dynamic_settings["bulk_action_limit"],
         "enableSiteWizard": dynamic_settings["enable_site_wizard"],
         "forumIndexHeader": dynamic_settings["forum_index_header"],

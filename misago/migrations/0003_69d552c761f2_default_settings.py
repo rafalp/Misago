@@ -27,7 +27,7 @@ table = table(
 )
 
 settings = [
-    {"name": "avatar_max_size", "value": 1024 * 1024 * 2},  # 2 MB
+    {"name": "avatar_upload_max_size", "value": 1024 * 1024 * 2},  # 2 MB
     {"name": "bulk_action_limit", "value": 30},
     {"name": "enable_site_wizard", "value": True},
     {"name": "forum_index_header", "value": ""},

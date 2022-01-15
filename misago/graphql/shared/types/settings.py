@@ -1,5 +1,6 @@
 from ariadne import ObjectType
 
+from ....conf import settings
 from ....validation import PASSWORD_MAX_LENGTH
 
 settings_type = ObjectType("Settings")
@@ -17,6 +18,21 @@ settings_type.set_alias("threadTitleMinLength", "thread_title_min_length")
 settings_type.set_alias("threadTitleMaxLength", "thread_title_max_length")
 settings_type.set_alias("usernameMinLength", "username_min_length")
 settings_type.set_alias("usernameMaxLength", "username_max_length")
+
+
+@settings_type.field("avatarUploadContentTypes")
+def resolve_avatar_upload_content_types(*_):
+    return settings.avatar_content_types
+
+
+@settings_type.field("avatarUploadImageMinSize")
+def resolve_avatar_upload_image_min_size(*_):
+    return max(settings.avatar_sizes)
+
+
+@settings_type.field("avatarUploadMaxSize")
+def resolve_avatar_upload_max_size(_, info):
+    return info.context["settings"]["avatar_upload_max_size"]
 
 
 @settings_type.field("passwordMaxLength")

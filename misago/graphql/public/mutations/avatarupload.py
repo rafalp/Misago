@@ -20,12 +20,7 @@ from ....validation import (
 )
 from ...errorhandler import error_handler
 
-AVATAR_CONTENT_TYPES = (
-    "image/gif",
-    "image/jpeg",
-    "image/png",
-    "image/webp",
-)
+AVATAR_CONTENT_TYPES = settings.avatar_content_types
 AVATAR_MIN_SIZE = max(settings.avatar_sizes)
 
 avatar_upload_mutation = MutationType()
@@ -37,7 +32,7 @@ async def resolve_avatar_upload(_, info: GraphQLResolveInfo, *, upload: UploadFi
     data = {"upload": upload}
     validators: Dict[str, List[Validator]] = {
         "upload": [
-            UploadSizeValidator(info.context["settings"]["avatar_max_size"]),
+            UploadSizeValidator(info.context["settings"]["avatar_upload_max_size"]),
             UploadContentTypeValidator(AVATAR_CONTENT_TYPES),
             UploadImageValidator(min_size=(AVATAR_MIN_SIZE, AVATAR_MIN_SIZE)),
         ],

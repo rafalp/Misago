@@ -21,6 +21,12 @@ class StaticSettings:
     _media_url: str
 
     _avatar_sizes: List[int]
+    avatar_content_types = (
+        "image/gif",
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+    )
 
     def __init__(self, settings: Dict[str, Any]):
         self._debug = settings.get("MISAGO_DEBUG", "").lower() in TRUE_STR_VALUES
