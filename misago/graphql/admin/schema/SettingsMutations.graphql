@@ -3,6 +3,7 @@ extend type Mutation {
 }
 
 input SettingsUpdateInput {
+    avatarUploadMaxSize: Int
     bulkActionLimit: Int
     forumIndexHeader: String
     forumIndexThreads: Boolean

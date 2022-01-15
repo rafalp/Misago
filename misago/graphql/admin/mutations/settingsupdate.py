@@ -52,6 +52,7 @@ async def resolve_settings_update(
 
 SettingsChangeInputModel: Type[BaseModel] = create_model(
     "SettingsChangeInputModel",
+    avatar_upload_max_size=(conint(ge=1), None),
     bulk_action_limit=(conint(ge=5), None),
     forum_index_header=(
         constr(min_length=0, max_length=255, strip_whitespace=True),
