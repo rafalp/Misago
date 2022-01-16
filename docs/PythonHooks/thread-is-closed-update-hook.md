@@ -1,16 +1,16 @@
-# `close_thread_hook`
+# `thread_is_closed_update_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.closethread import close_thread_hook
+from misago.graphql.public.mutations.hooks.threadisclosedupdate import thread_is_closed_update_hook
 
-close_thread_hook.call_action(
-    action: CloseThreadAction,
+thread_is_closed_update_hook.call_action(
+    action: ThreadIsClosedUpdateAction,
     context: GraphQLContext,
-    cleaned_data: CloseThreadInput,
+    cleaned_data: ThreadIsClosedUpdateInput,
 )
 ```
 
-A filter for the function used by GraphQL mutation closing thread to update the thread in the database.
+A filter for the function used by `threadIsClosedUpdate` GraphQL mutation to update the thread in the database.
 
 Returns `Thread` dataclass with updated thread data.
 
@@ -20,7 +20,7 @@ Returns `Thread` dataclass with updated thread data.
 ### `action`
 
 ```python
-async def close_thread(context: GraphQLContext, cleaned_data: CloseThreadInput) -> Thread:
+async def close_thread(context: GraphQLContext, cleaned_data: ThreadIsClosedUpdateInput) -> Thread:
     ...
 ```
 
@@ -45,7 +45,7 @@ Dict[str, Any]
 A dict with already validated and cleaned input data. Will contain at least `thread` and `is_closed` keys:
 
 ```python
-class CloseThreadInput(TypedDict):
+class ThreadIsClosedUpdateInput(TypedDict):
     thread: Thread
     is_closed: bool
 ```

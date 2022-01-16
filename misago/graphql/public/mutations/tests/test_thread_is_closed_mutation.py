@@ -3,9 +3,9 @@ import pytest
 from .....errors import ErrorsList
 
 
-CLOSE_THREAD_MUTATION = """
-    mutation CloseThread($input: CloseThreadInput!) {
-        closeThread(input: $input) {
+THREAD_IS_CLOSED_UPDATE_MUTATION = """
+    mutation ThreadIsClosedUpdate($input: ThreadIsClosedUpdateInput!) {
+        threadIsClosedUpdate(input: $input) {
             thread {
                 id
                 isClosed
@@ -20,14 +20,14 @@ CLOSE_THREAD_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_closes_thread(query_public_api, moderator, thread):
+async def test_thread_is_closed_mutation_closes_thread(query_public_api, moderator, thread):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "isClosed": True,
@@ -40,16 +40,16 @@ async def test_close_thread_mutation_closes_thread(query_public_api, moderator, 
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_opens_thread(
+async def test_thread_is_closed_mutation_opens_thread(
     query_public_api, moderator, closed_thread
 ):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": str(closed_thread.id), "isClosed": False}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": {
             "id": str(closed_thread.id),
             "isClosed": False,
@@ -62,15 +62,15 @@ async def test_close_thread_mutation_opens_thread(
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_fails_if_user_is_not_authorized(
+async def test_thread_is_closed_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread
 ):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "isClosed": True}},
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "isClosed": False,
@@ -92,16 +92,16 @@ async def test_close_thread_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_fails_if_user_is_not_moderator(
+async def test_thread_is_closed_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread
 ):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "isClosed": True}},
         auth=user,
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "isClosed": False,
@@ -119,17 +119,17 @@ async def test_close_thread_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_fails_if_thread_id_is_invalid(
+async def test_thread_is_closed_mutation_fails_if_thread_id_is_invalid(
     query_public_api,
     moderator,
 ):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": "invalid", "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": None,
         "errors": [
             {
@@ -141,17 +141,17 @@ async def test_close_thread_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_close_thread_mutation_fails_if_thread_doesnt_exist(
+async def test_thread_is_closed_mutation_fails_if_thread_doesnt_exist(
     query_public_api,
     moderator,
 ):
     result = await query_public_api(
-        CLOSE_THREAD_MUTATION,
+        THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": "4000", "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThread"] == {
+    assert result["data"]["threadIsClosedUpdate"] == {
         "thread": None,
         "errors": [
             {

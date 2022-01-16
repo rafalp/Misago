@@ -28,25 +28,25 @@ type PostMutationResult {
 }
 
 extend type Mutation {
-    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
-    closeThread(input: CloseThreadInput!): ThreadMutationResult!
     threadCategoryUpdate(input: ThreadCategoryUpdateInput!): ThreadMutationResult!
+    threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
+    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
     deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
-}
-
-input ThreadTitleUpdateInput {
-    thread: ID!
-    title: String!
-}
-
-input CloseThreadInput {
-    thread: ID!
-    isClosed: Boolean!
 }
 
 input ThreadCategoryUpdateInput {
     thread: ID!
     category: ID!
+}
+
+input ThreadIsClosedUpdateInput {
+    thread: ID!
+    isClosed: Boolean!
+}
+
+input ThreadTitleUpdateInput {
+    thread: ID!
+    title: String!
 }
 
 type ThreadMutationResult {

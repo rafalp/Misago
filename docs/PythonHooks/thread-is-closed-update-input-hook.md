@@ -1,18 +1,18 @@
-# `close_thread_input_hook`
+# `thread_is_closed_update_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.closethread import close_thread_input_hook
+from misago.graphql.public.mutations.hooks.threadisclosedupdate import thread_is_closed_update_input_hook
 
-close_thread_input_hook.call_action(
-    action: CloseThreadInputAction,
+thread_is_closed_update_input_hook.call_action(
+    action: ThreadIsClosedInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: CloseThreadInput,
+    data: ThreadIsClosedInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `CloseThreadInputModel` GraphQL input type.
+A filter for the function used to validate data for `ThreadIsClosedInputModel` GraphQL input type used by `threadIsClosedUpdate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update the thread and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to update the thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: CloseThreadInput,
+    data: ThreadIsClosedInput,
     errors: ErrorsList,
-) -> Tuple[CloseThreadInput, ErrorsList]:
+) -> Tuple[ThreadIsClosedInput, ErrorsList]:
     ...
 ```
 
