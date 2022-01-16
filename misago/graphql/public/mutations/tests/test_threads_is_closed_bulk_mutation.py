@@ -3,7 +3,7 @@ import pytest
 from .....errors import ErrorsList
 
 
-THREADS_CLOSE_BULK_MUTATION = """
+THREADS_IS_CLOSED_BULK_MUTATION = """
     mutation ThreadsClose($input: ThreadsIsClosedBulkUpdateInput!) {
         threadsIsClosedBulkUpdate(input: $input) {
             updated
@@ -25,7 +25,7 @@ async def test_threads_is_closed_bulk_mutation_closes_threads(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
         auth=moderator,
     )
@@ -50,7 +50,7 @@ async def test_threads_is_closed_bulk_mutation_opens_threads(
     query_public_api, moderator, closed_thread
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": [str(closed_thread.id)], "isClosed": False}},
         auth=moderator,
     )
@@ -75,7 +75,7 @@ async def test_threads_is_closed_bulk_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
     )
 
@@ -108,7 +108,7 @@ async def test_threads_is_closed_bulk_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
         auth=user,
     )
@@ -138,7 +138,7 @@ async def test_threads_is_closed_bulk_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": ["invalid"], "isClosed": True}},
         auth=moderator,
     )
@@ -160,7 +160,7 @@ async def test_threads_is_closed_bulk_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": ["4000"], "isClosed": True}},
         auth=moderator,
     )
@@ -182,7 +182,7 @@ async def test_threads_is_closed_bulk_mutation_with_threads_errors_still_updates
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        THREADS_CLOSE_BULK_MUTATION,
+        THREADS_IS_CLOSED_BULK_MUTATION,
         {"input": {"threads": ["4000", str(thread.id)], "isClosed": True}},
         auth=moderator,
     )
