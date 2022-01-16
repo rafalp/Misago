@@ -21,24 +21,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.movethread import (
-    MoveThreadInput,
-    MoveThreadInputModel,
-    move_thread_hook,
-    move_thread_input_hook,
-    move_thread_input_model_hook,
+from .hooks.threadcategoryupdate import (
+    ThreadCategoryUpdateInput,
+    ThreadCategoryUpdateInputModel,
+    thread_category_update_hook,
+    thread_category_update_input_hook,
+    thread_category_update_input_model_hook,
 )
 
-move_thread_mutation = MutationType()
+thread_category_update_mutation = MutationType()
 
 
-@move_thread_mutation.field("moveThread")
+@thread_category_update_mutation.field("threadCategoryUpdate")
 @convert_kwargs_to_snake_case
 @error_handler
 async def resolve_move_thread(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await move_thread_input_model_hook.call_action(
+    input_model = await thread_category_update_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -62,23 +62,23 @@ async def resolve_move_thread(
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
-        cleaned_data, errors = await move_thread_input_hook.call_action(
+        cleaned_data, errors = await thread_category_update_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread = await move_thread_hook.call_action(
-        move_thread_action, info.context, cleaned_data
+    thread = await thread_category_update_hook.call_action(
+        thread_category_update_action, info.context, cleaned_data
     )
 
     return {"thread": thread}
 
 
-async def create_input_model(context: GraphQLContext) -> MoveThreadInputModel:
+async def create_input_model(context: GraphQLContext) -> ThreadCategoryUpdateInputModel:
     return create_model(
-        "MoveThreadInputModel",
+        "ThreadCategoryUpdateInputModel",
         thread=(PositiveInt, ...),
         category=(PositiveInt, ...),
     )
@@ -87,14 +87,14 @@ async def create_input_model(context: GraphQLContext) -> MoveThreadInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: MoveThreadInput,
+    data: ThreadCategoryUpdateInput,
     errors: ErrorsList,
-) -> Tuple[MoveThreadInput, ErrorsList]:
+) -> Tuple[ThreadCategoryUpdateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def move_thread_action(
-    context: GraphQLContext, cleaned_data: MoveThreadInput
+async def thread_category_update_action(
+    context: GraphQLContext, cleaned_data: ThreadCategoryUpdateInput
 ) -> Thread:
     thread = cleaned_data["thread"]
     thread = await move_thread(thread, cleaned_data["category"])

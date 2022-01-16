@@ -2,9 +2,9 @@ import pytest
 
 from .....errors import ErrorsList
 
-MOVE_THREAD_MUTATION = """
-    mutation MoveThread($input: MoveThreadInput!) {
-        moveThread(input: $input) {
+THREAD_CATEGORY_UPDATE_MUTATION = """
+    mutation ThreadCategoryUpdate($input: ThreadCategoryUpdateInput!) {
+        threadCategoryUpdate(input: $input) {
             thread {
                 id
                 category {
@@ -21,16 +21,16 @@ MOVE_THREAD_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_moves_thread(
+async def test_thread_category_update_mutation_moves_thread(
     query_public_api, moderator, thread, sibling_category
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "category": str(sibling_category.id)}},
         auth=moderator,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -45,15 +45,15 @@ async def test_move_thread_mutation_moves_thread(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_user_is_not_authorized(
+async def test_thread_category_update_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread, sibling_category
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "category": str(sibling_category.id)}},
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -77,16 +77,16 @@ async def test_move_thread_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_user_is_not_moderator(
+async def test_thread_category_update_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread, sibling_category
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "category": str(sibling_category.id)}},
         auth=user,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -106,16 +106,16 @@ async def test_move_thread_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_thread_id_is_invalid(
+async def test_thread_category_update_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator, sibling_category
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": "invalid", "category": str(sibling_category.id)}},
         auth=moderator,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": None,
         "errors": [
             {
@@ -127,16 +127,16 @@ async def test_move_thread_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_thread_doesnt_exist(
+async def test_thread_category_update_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator, sibling_category
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": "4000", "category": str(sibling_category.id)}},
         auth=moderator,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": None,
         "errors": [
             {
@@ -148,16 +148,16 @@ async def test_move_thread_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_category_id_is_invalid(
+async def test_thread_category_update_mutation_fails_if_category_id_is_invalid(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "category": "invalid"}},
         auth=moderator,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -177,16 +177,16 @@ async def test_move_thread_mutation_fails_if_category_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_thread_mutation_fails_if_category_doesnt_exist(
+async def test_thread_category_update_mutation_fails_if_category_doesnt_exist(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        MOVE_THREAD_MUTATION,
+        THREAD_CATEGORY_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "category": "4000"}},
         auth=moderator,
     )
 
-    assert result["data"]["moveThread"] == {
+    assert result["data"]["threadCategoryUpdate"] == {
         "thread": {
             "id": str(thread.id),
             "category": {

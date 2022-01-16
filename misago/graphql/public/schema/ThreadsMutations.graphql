@@ -30,7 +30,7 @@ type PostMutationResult {
 extend type Mutation {
     threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
     closeThread(input: CloseThreadInput!): ThreadMutationResult!
-    moveThread(input: MoveThreadInput!): ThreadMutationResult!
+    threadCategoryUpdate(input: ThreadCategoryUpdateInput!): ThreadMutationResult!
     deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
@@ -44,7 +44,7 @@ input CloseThreadInput {
     isClosed: Boolean!
 }
 
-input MoveThreadInput {
+input ThreadCategoryUpdateInput {
     thread: ID!
     category: ID!
 }
