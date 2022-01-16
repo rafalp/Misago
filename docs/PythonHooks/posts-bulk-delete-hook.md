@@ -1,16 +1,16 @@
-# `delete_thread_posts_hook`
+# `posts_bulk_delete_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.deletethreadposts import delete_thread_posts_hook
+from misago.graphql.public.mutations.hooks.postsbulkdelete import posts_bulk_delete_hook
 
-delete_thread_posts_hook.call_action(
-    action: DeleteThreadPostsAction,
+posts_bulk_delete_hook.call_action(
+    action: PostsBulkDeleteAction,
     context: GraphQLContext,
-    cleaned_data: DeleteThreadPostsInput,
+    cleaned_data: PostsBulkDeleteInput,
 )
 ```
 
-A filter for the function used by GraphQL mutation deleting thread posts to delete posts from the database.
+A filter for the function used by `postsBulkDelete` GraphQL mutation to delete posts from the database.
 
 Returns `Thread` with updated thread data.
 
@@ -21,7 +21,7 @@ Returns `Thread` with updated thread data.
 
 ```python
 async def delete_thread_posts(
-    context: GraphQLContext, cleaned_data: DeleteThreadPostsInput
+    context: GraphQLContext, cleaned_data: PostsBulkDeleteInput
 ) -> Thread:
     ...
 ```
@@ -47,7 +47,7 @@ Dict[str, Any]
 A dict with already validated and cleaned input data. Will contain `thread` and `posts` keys:
 
 ```python
-class DeleteThreadPostsInput(TypedDict):
+class PostsBulkDeleteInput(TypedDict):
     thread: Thread
     posts: List[Post]
 ```

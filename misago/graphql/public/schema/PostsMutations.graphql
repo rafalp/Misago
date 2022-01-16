@@ -20,27 +20,17 @@ type PostMutationResult {
 }
 
 extend type Mutation {
-    deleteThreadPost(input: DeleteThreadPostInput!): DeleteThreadPostMutationResult!
-    deleteThreadPosts(input: BulkDeleteThreadPostsInput!): BulkDeleteThreadPostsMutationResult!
+    postDelete(thread: ID!, post: ID!): PostDeleteMutationResult
+    postsBulkDelete(thread: ID!, posts: [ID!]!): PostsBulkDeleteMutationResult!
 }
 
-input DeleteThreadPostInput {
-    thread: ID!
-    post: ID!
-}
-
-type DeleteThreadPostMutationResult {
+type PostDeleteMutationResult {
     deleted: [ID!]!
     thread: Thread
     errors: [Error!]
 }
 
-input BulkDeleteThreadPostsInput {
-    thread: ID!
-    posts: [ID!]!
-}
-
-type BulkDeleteThreadPostsMutationResult {
+type PostsBulkDeleteMutationResult {
     deleted: [ID!]!
     thread: Thread
     errors: [Error!]

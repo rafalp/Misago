@@ -1,20 +1,20 @@
-# `delete_thread_post_input_post_hook`
+# `post_delete_input_thread_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.deletethreadpost import delete_thread_post_input_post_hook
+from misago.graphql.public.mutations.hooks.postdelete import post_delete_input_thread_hook
 
-delete_thread_post_input_post_hook.call_action(
-    action: DeleteThreadPostInputPostAction,
+post_delete_input_thread_hook.call_action(
+    action: PostDeleteInputThreadAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: DeleteThreadPostInput,
+    data: PostDeleteInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `DeleteThreadPostInputModel` GraphQL input type after thread data was validated by [`delete_thread_post_input_thread_hook`](./delete-thread-post-input-thread-hook.md).
+A filter for the function used to validate data for `PostDeleteInputModel` GraphQL input type before data is validated by [`post_delete_input_post_hook`](./post-delete-input-post-hook.md).
 
-Returns a tuple of `data` that should be used to delete the thread post and validation `errors`.
+Returns a tuple of `data` that should be used to validate if thread reply can be deleted and validation `errors`.
 
 
 ## Required arguments
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to delete the thread post and vali
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: DeleteThreadPostInput,
+    data: PostDeleteInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadPostInput, ErrorsList]:
+) -> Tuple[PostDeleteInput, ErrorsList]:
     ...
 ```
 

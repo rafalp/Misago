@@ -64,20 +64,25 @@ Standard hooks
 - [`graphql_types_hook`](./graphql-types-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.deletethreadpost`
+### `misago.graphql.public.mutations.hooks.postcreate`
 
-- [`delete_thread_post_hook`](./delete-thread-post-hook.md)
-- [`delete_thread_post_input_model_hook`](./delete-thread-post-input-model-hook.md)
-- [`delete_thread_post_input_post_hook`](./delete-thread-post-input-post-hook.md)
-- [`delete_thread_post_input_thread_hook`](./delete-thread-post-input-thread-hook.md)
+- [`post_create_hook`](./post-create-hook.md)
+- [`post_create_input_hook`](./post-create-input-hook.md)
+- [`post_create_input_model_hook`](./post-create-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.deletethreadposts`
+### `misago.graphql.public.mutations.hooks.postdelete`
 
-- [`delete_thread_posts_hook`](./delete-thread-posts-hook.md)
-- [`delete_thread_posts_input_model_hook`](./delete-thread-posts-input-model-hook.md)
-- [`delete_thread_posts_input_posts_hook`](./delete-thread-posts-input-posts-hook.md)
-- [`delete_thread_posts_input_thread_hook`](./delete-thread-posts-input-thread-hook.md)
+- [`post_delete_hook`](./post-delete-hook.md)
+- [`post_delete_input_post_hook`](./post-delete-input-post-hook.md)
+- [`post_delete_input_thread_hook`](./post-delete-input-thread-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.postsbulkdelete`
+
+- [`posts_bulk_delete_hook`](./posts-bulk-delete-hook.md)
+- [`posts_bulk_delete_input_posts_hook`](./posts-bulk-delete-input-posts-hook.md)
+- [`posts_bulk_delete_input_thread_hook`](./posts-bulk-delete-input-thread-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.postupdate`
@@ -85,13 +90,6 @@ Standard hooks
 - [`post_update_hook`](./post-update-hook.md)
 - [`post_update_input_hook`](./post-update-input-hook.md)
 - [`post_update_input_model_hook`](./post-update-input-model-hook.md)
-
-
-### `misago.graphql.public.mutations.hooks.postcreate`
-
-- [`post_create_hook`](./post-create-hook.md)
-- [`post_create_input_hook`](./post-create-input-hook.md)
-- [`post_create_input_model_hook`](./post-create-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.registeruser`
