@@ -1,6 +1,6 @@
 from functools import wraps
 from inspect import isawaitable
-from typing import Sequence, Union
+from typing import Union
 
 from pydantic import PydanticTypeError, PydanticValueError
 
@@ -29,20 +29,5 @@ def error_handler(f):
 
 def format_error(error: Union[ErrorDict, Exception]) -> ErrorDict:
     if isinstance(error, Exception):
-        error = get_error_dict(error)
-    error["loc"] = format_error_location(error["loc"])
+        return get_error_dict(error)
     return error
-
-
-def format_error_location(
-    error_location: Sequence[Union[str, int]]
-) -> Sequence[Union[str, int]]:
-    new_location = []
-    for item in error_location:
-        if isinstance(item, int) or item == ErrorsList.ROOT_LOCATION:
-            new_location.append(item)
-            continue
-
-        new_location.append((item[0] + item.title()[1:]).replace("_", ""))
-
-    return tuple(new_location)

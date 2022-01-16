@@ -58,7 +58,7 @@ async def test_login_mutation_requires_username(query_public_api, user, user_pas
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.all_fields_are_required",
             },
         ],
@@ -77,7 +77,7 @@ async def test_login_mutation_requires_password(query_public_api, user):
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.all_fields_are_required",
             },
         ],
@@ -98,7 +98,7 @@ async def test_login_mutation_returns_error_on_nonexistent_user_credentials(
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.invalid_credentials",
             },
         ],

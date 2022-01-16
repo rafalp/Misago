@@ -69,11 +69,11 @@ async def test_move_threads_mutation_fails_if_user_is_not_authorized(
         ],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -105,7 +105,7 @@ async def test_move_threads_mutation_fails_if_user_is_not_moderator(
         ],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "auth_error.not_moderator",
             },
         ],
@@ -130,7 +130,7 @@ async def test_move_threads_mutation_fails_if_thread_id_is_invalid(
         "threads": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "type_error.integer",
             },
         ],
@@ -152,7 +152,7 @@ async def test_move_threads_mutation_fails_if_thread_doesnt_exist(
         "threads": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "value_error.thread.not_exists",
             },
         ],
@@ -181,7 +181,7 @@ async def test_move_threads_mutation_fails_if_category_id_is_invalid(
         ],
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             },
         ],
@@ -213,7 +213,7 @@ async def test_move_threads_mutation_fails_if_category_doesnt_exist(
         ],
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "value_error.category.not_exists",
             },
         ],
@@ -250,7 +250,7 @@ async def test_move_threads_mutation_with_threads_errors_still_updates_valid_thr
         ],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "value_error.thread.not_exists",
             },
         ],

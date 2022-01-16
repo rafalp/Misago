@@ -48,11 +48,11 @@ async def test_delete_threads_mutation_fails_if_user_is_not_authorized(
         "deleted": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -75,7 +75,7 @@ async def test_delete_threads_mutation_fails_if_user_is_not_moderator(
         "deleted": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "auth_error.not_moderator",
             },
         ],
@@ -98,7 +98,7 @@ async def test_delete_threads_mutation_fails_if_thread_id_is_invalid(
         "deleted": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "type_error.integer",
             },
         ],
@@ -119,7 +119,7 @@ async def test_delete_threads_mutation_fails_if_thread_doesnt_exist(
         "deleted": [],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "value_error.thread.not_exists",
             },
         ],
@@ -140,7 +140,7 @@ async def test_delete_threads_mutation_with_threads_errors_still_deletes_valid_t
         "deleted": [str(thread.id)],
         "errors": [
             {
-                "location": ["threads", "0"],
+                "location": "threads.0",
                 "type": "value_error.thread.not_exists",
             },
         ],

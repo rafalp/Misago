@@ -73,7 +73,7 @@ async def test_user_create_mutation_returns_error_if_username_is_empty(
         "user": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.min_length",
             },
         ],
@@ -99,7 +99,7 @@ async def test_user_create_mutation_returns_error_if_username_is_invalid(
         "user": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username",
             },
         ],
@@ -125,7 +125,7 @@ async def test_user_create_mutation_returns_error_if_name_is_not_available(
         "user": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username.not_available",
             },
         ],
@@ -149,7 +149,7 @@ async def test_user_create_mutation_returns_error_if_email_is_empty(query_admin_
         "user": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email",
             },
         ],
@@ -173,7 +173,7 @@ async def test_user_create_mutation_returns_error_if_email_is_invalid(query_admi
         "user": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email",
             },
         ],
@@ -199,7 +199,7 @@ async def test_user_create_mutation_returns_error_if_email_is_not_available(
         "user": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email.not_available",
             },
         ],
@@ -225,7 +225,7 @@ async def test_user_create_mutation_returns_error_if_password_is_empty(
         "user": None,
         "errors": [
             {
-                "location": ["password"],
+                "location": "password",
                 "type": "value_error.any_str.min_length",
             },
         ],
@@ -251,7 +251,7 @@ async def test_user_create_mutation_returns_error_if_password_is_too_long(
         "user": None,
         "errors": [
             {
-                "location": ["password"],
+                "location": "password",
                 "type": "value_error.any_str.max_length",
             },
         ],

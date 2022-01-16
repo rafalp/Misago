@@ -202,7 +202,7 @@ async def test_settings_update_mutation_validates_settings_values(query_admin_ap
         },
         "errors": [
             {
-                "location": ["forumName"],
+                "location": "forumName",
                 "type": "value_error.any_str.min_length",
             },
         ],
@@ -233,11 +233,11 @@ async def test_settings_update_mutation_validates_posts_pagination_bounds(
         },
         "errors": [
             {
-                "location": ["postsPerPage"],
+                "location": "postsPerPage",
                 "type": "value_error.number.not_gt",
             },
             {
-                "location": ["postsPerPageOrphans"],
+                "location": "postsPerPageOrphans",
                 "type": "value_error.number.not_lt",
             },
         ],
@@ -266,11 +266,11 @@ async def test_settings_update_mutation_validates_thread_title_bounds(query_admi
         },
         "errors": [
             {
-                "location": ["threadTitleMinLength"],
+                "location": "threadTitleMinLength",
                 "type": "value_error.number.not_lt",
             },
             {
-                "location": ["threadTitleMaxLength"],
+                "location": "threadTitleMaxLength",
                 "type": "value_error.number.not_gt",
             },
         ],
@@ -299,11 +299,11 @@ async def test_settings_update_mutation_validates_username_bounds(query_admin_ap
         },
         "errors": [
             {
-                "location": ["usernameMinLength"],
+                "location": "usernameMinLength",
                 "type": "value_error.number.not_lt",
             },
             {
-                "location": ["usernameMaxLength"],
+                "location": "usernameMaxLength",
                 "type": "value_error.number.not_gt",
             },
         ],

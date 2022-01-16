@@ -52,4 +52,5 @@ class ErrorsList(List[ErrorDict]):
 
     @property
     def has_root_errors(self) -> bool:
-        return self.has_errors_at_location(ErrorsList.ROOT_LOCATION)
+        locations = [e["loc"] for e in self]  # pylint: disable=not-an-iterable
+        return ErrorsList.ROOT_LOCATION in locations

@@ -19,8 +19,12 @@ async def test_bulk_threads_validator_partially_validates_threads(thread):
     errors = ErrorsList()
     context = {}
     validator = ThreadsBulkValidator([ThreadExistsValidator(context)])
-    threads = await validator([thread.id, "1000"], errors, "threads")
-    assert errors
-    assert errors.get_errors_locations() == ["threads.1"]
-    assert errors.get_errors_types() == ["value_error.thread.not_exists"]
+    threads = await validator([thread.id, thread.id + 1], errors, "threads")
+    assert errors == [
+        {
+            "loc": "threads.1",
+            "type": "value_error.thread.not_exists",
+            "msg": f"thread with id '{thread.id + 1}' does not exist",
+        },
+    ]
     assert threads == [thread]

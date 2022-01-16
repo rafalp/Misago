@@ -1,7 +1,7 @@
-from typing import Sequence, TypedDict, Union
+from typing import TypedDict
 
 
 class ErrorDict(TypedDict):
-    loc: Sequence[Union[int, str]]
+    loc: str
     msg: str
     type: str

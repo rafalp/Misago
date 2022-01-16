@@ -14,21 +14,17 @@ def test_error_dict_includes_error_type():
 
 def test_error_dict_includes_default_location():
     error_dict = get_error_dict(Exception("message"))
-    assert error_dict["loc"] == (ROOT_LOCATION,)
+    assert error_dict["loc"] == ROOT_LOCATION
 
 
 def test_error_dict_includes_provided_location():
     error_dict = get_error_dict(Exception("message"), "field")
-    assert error_dict["loc"] == ("field",)
+    assert error_dict["loc"] == "field"
 
 
 def test_error_dict_includes_provided_sequence_location():
-    error_dict = get_error_dict(Exception("message"), ["field", 1, "name"])
-    assert error_dict["loc"] == (
-        "field",
-        1,
-        "name",
-    )
+    error_dict = get_error_dict(Exception("message"), ["test_field", 1, "name"])
+    assert error_dict["loc"] == "testField.1.name"
 
 
 def test_error_type_is_resolved_for_assertion_error():

@@ -277,7 +277,7 @@ async def test_category_delete_mutation_fails_if_category_id_is_invalid(
         "deleted": False,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             },
         ],
@@ -300,7 +300,7 @@ async def test_category_delete_mutation_fails_if_move_children_id_is_invalid(
         "deleted": False,
         "errors": [
             {
-                "location": ["moveChildrenTo"],
+                "location": "moveChildrenTo",
                 "type": "type_error.integer",
             },
         ],
@@ -323,7 +323,7 @@ async def test_category_delete_mutation_fails_if_move_threads_id_is_invalid(
         "deleted": False,
         "errors": [
             {
-                "location": ["moveThreadsTo"],
+                "location": "moveThreadsTo",
                 "type": "type_error.integer",
             },
         ],
@@ -346,7 +346,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ca
         "deleted": False,
         "errors": [
             {
-                "location": ["moveThreadsTo"],
+                "location": "moveThreadsTo",
                 "type": "value_error.category.invalid",
             },
         ],
@@ -369,7 +369,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ch
         "deleted": False,
         "errors": [
             {
-                "location": ["moveThreadsTo"],
+                "location": "moveThreadsTo",
                 "type": "value_error.category.invalid",
             },
         ],
@@ -392,7 +392,7 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_deleted_c
         "deleted": False,
         "errors": [
             {
-                "location": ["moveChildrenTo"],
+                "location": "moveChildrenTo",
                 "type": "value_error.category.invalid",
             },
         ],
@@ -415,7 +415,7 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_child_cat
         "deleted": False,
         "errors": [
             {
-                "location": ["moveChildrenTo"],
+                "location": "moveChildrenTo",
                 "type": "value_error.category.invalid",
             },
         ],

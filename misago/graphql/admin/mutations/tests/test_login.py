@@ -66,7 +66,7 @@ async def test_admin_login_mutation_requires_username(
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.all_fields_are_required",
             },
         ],
@@ -89,7 +89,7 @@ async def test_admin_login_mutation_requires_password(query_admin_api, user):
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.all_fields_are_required",
             },
         ],
@@ -114,7 +114,7 @@ async def test_admin_login_mutation_returns_error_on_nonexistent_user_credential
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.invalid_credentials",
             },
         ],
@@ -139,7 +139,7 @@ async def test_admin_login_mutation_returns_error_if_user_is_not_admin(
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_admin",
             }
         ],

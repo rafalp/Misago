@@ -58,11 +58,11 @@ async def test_edit_title_mutation_fails_if_user_is_not_authorized(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.thread.not_author",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -87,7 +87,7 @@ async def test_edit_title_mutation_fails_if_thread_id_is_invalid(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "type_error.integer",
             },
         ],
@@ -106,7 +106,7 @@ async def test_edit_title_mutation_fails_if_thread_doesnt_exist(query_public_api
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "type_error.integer",
             },
         ],
@@ -131,7 +131,7 @@ async def test_edit_title_mutation_fails_if_thread_author_is_other_user(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.thread.not_author",
             },
         ],
@@ -184,7 +184,7 @@ async def test_edit_title_mutation_fails_if_thread_is_closed(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.thread.closed",
             },
         ],
@@ -242,7 +242,7 @@ async def test_edit_title_mutation_fails_if_category_is_closed(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.category.closed",
             },
         ],

@@ -79,7 +79,7 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
         "user": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
                 "message": "authorization is required",
             },
@@ -110,7 +110,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_typ
         },
         "errors": [
             {
-                "location": ["upload"],
+                "location": "upload",
                 "type": "value_error.upload.content_type",
                 "message": (
                     "ensure uploaded file is one of type: "
@@ -145,7 +145,7 @@ async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
         },
         "errors": [
             {
-                "location": ["upload"],
+                "location": "upload",
                 "type": "value_error.upload.max_size",
                 "message": "ensure uploaded file size is not larger than 10 bytes",
             },
@@ -176,7 +176,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
         },
         "errors": [
             {
-                "location": ["upload"],
+                "location": "upload",
                 "type": "value_error.image",
                 "message": "ensure value is valid image",
             },
@@ -207,7 +207,7 @@ async def test_upload_avatar_mutation_fails_if_image_is_too_small(
         },
         "errors": [
             {
-                "location": ["upload"],
+                "location": "upload",
                 "type": "value_error.image.min_size",
                 "message": "ensure image size is at least 400x400 pixels",
             },

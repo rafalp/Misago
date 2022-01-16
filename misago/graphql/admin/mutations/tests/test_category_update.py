@@ -317,7 +317,7 @@ async def test_category_update_mutation_fails_if_category_id_is_invalid(
         "category": None,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             }
         ],
@@ -340,7 +340,7 @@ async def test_category_update_mutation_fails_if_category_doesnt_exist(query_adm
         "category": None,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -373,7 +373,7 @@ async def test_category_update_mutation_fails_if_category_name_is_too_short(
         },
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.min_length",
             }
         ],
@@ -406,7 +406,7 @@ async def test_category_update_mutation_fails_if_category_name_is_too_long(
         },
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.max_length",
             }
         ],
@@ -439,7 +439,7 @@ async def test_category_update_mutation_fails_if_category_name_is_not_sluggable(
         },
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.str.regex",
             }
         ],
@@ -472,7 +472,7 @@ async def test_category_update_mutation_fails_if_category_parent_is_invalid(
         },
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "type_error.integer",
             }
         ],
@@ -505,7 +505,7 @@ async def test_category_update_mutation_fails_if_category_parent_doesnt_exist(
         },
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -538,7 +538,7 @@ async def test_category_update_mutation_fails_if_category_parent_is_category(
         },
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -571,7 +571,7 @@ async def test_category_update_mutation_fails_if_parent_is_child_category(
         },
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -604,7 +604,7 @@ async def test_category_update_mutation_fails_if_category_has_children(
         },
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],

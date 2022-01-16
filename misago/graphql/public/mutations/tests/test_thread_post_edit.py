@@ -77,11 +77,11 @@ async def test_edit_post_mutation_fails_if_user_is_not_authorized(
         },
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "auth_error.post.not_author",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -104,7 +104,7 @@ async def test_edit_post_mutation_fails_if_post_id_is_invalid(query_public_api, 
         "post": None,
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "type_error.integer",
             },
         ],
@@ -124,7 +124,7 @@ async def test_edit_post_mutation_fails_if_post_doesnt_exist(query_public_api, u
         "post": None,
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "value_error.post.not_exists",
             },
         ],
@@ -151,7 +151,7 @@ async def test_edit_post_mutation_fails_if_post_author_is_other_user(
         },
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "auth_error.post.not_author",
             },
         ],
@@ -218,7 +218,7 @@ async def test_edit_post_mutation_fails_if_thread_is_closed(
         },
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "auth_error.thread.closed",
             },
         ],
@@ -285,7 +285,7 @@ async def test_edit_post_mutation_fails_if_category_is_closed(
         },
         "errors": [
             {
-                "location": ["post"],
+                "location": "post",
                 "type": "auth_error.category.closed",
             },
         ],
@@ -352,7 +352,7 @@ async def test_edit_post_mutation_fails_if_markup_is_too_short(
         },
         "errors": [
             {
-                "location": ["markup"],
+                "location": "markup",
                 "type": "value_error.any_str.min_length",
             }
         ],

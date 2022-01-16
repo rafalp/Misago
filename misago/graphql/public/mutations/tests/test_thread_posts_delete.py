@@ -66,11 +66,11 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_authorized(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -99,7 +99,7 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_moderator(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.not_moderator",
             },
         ],
@@ -123,7 +123,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_id_is_invalid(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "type_error.integer",
             },
         ],
@@ -147,7 +147,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_doesnt_exist(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "value_error.thread.not_exists",
             },
         ],
@@ -173,7 +173,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_id_is_invalid(
         },
         "errors": [
             {
-                "location": ["posts", "0"],
+                "location": "posts.0",
                 "type": "type_error.integer",
             },
         ],
@@ -204,7 +204,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_doesnt_exist(
         },
         "errors": [
             {
-                "location": ["posts", "0"],
+                "location": "posts.0",
                 "type": "value_error.post.not_exists",
             },
         ],
@@ -230,7 +230,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_threads_first_post(
         },
         "errors": [
             {
-                "location": ["posts", "0"],
+                "location": "posts.0",
                 "type": "value_error.post.thread_start",
             },
         ],
@@ -261,7 +261,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_in_other_thread(
         },
         "errors": [
             {
-                "location": ["posts", "0"],
+                "location": "posts.0",
                 "type": "value_error.post.not_exists",
             },
         ],
@@ -292,7 +292,7 @@ async def test_delete_thread_posts_mutation_with_posts_errors_still_deletes_vali
         },
         "errors": [
             {
-                "location": ["posts", "1"],
+                "location": "posts.1",
                 "type": "value_error.post.not_exists",
             },
         ],

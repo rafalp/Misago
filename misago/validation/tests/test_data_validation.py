@@ -90,9 +90,13 @@ async def test_invalid_data_errors_are_added_to_errors_list(errors):
     _, new_errors = await validate_data(
         {"data": INVALID_VALUE}, {"data": [validate_value]}, errors
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == ["data"]
-    assert new_errors.get_errors_types() == ["value_error.invalid"]
+    assert new_errors == [
+        {
+            "loc": "data",
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
+    ]
 
 
 @pytest.mark.asyncio
@@ -111,10 +115,12 @@ async def test_validation_is_interrupted_at_first_validation_error(errors):
         {"data": [validate_value, validate_value_other]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == ["data"]
-    assert new_errors.get_errors_types() == [
-        "value_error.invalid",
+    assert new_errors == [
+        {
+            "loc": "data",
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
     ]
 
 
@@ -146,9 +152,13 @@ async def test_root_validators_errors_are_added_to_errors_list(errors):
         {ROOT_LOCATION: [validate_root_value]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == [ROOT_LOCATION]
-    assert new_errors.get_errors_types() == ["value_error.invalid"]
+    assert new_errors == [
+        {
+            "loc": ROOT_LOCATION,
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
+    ]
 
 
 @pytest.mark.asyncio
@@ -158,9 +168,13 @@ async def test_root_validators_can_customize_errors_location(errors):
         {ROOT_LOCATION: [validate_root_value_local]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == ["data"]
-    assert new_errors.get_errors_types() == ["value_error.invalid_other"]
+    assert new_errors == [
+        {
+            "loc": "data",
+            "type": "value_error.invalid_other",
+            "msg": "other invalid test data",
+        },
+    ]
 
 
 @pytest.mark.asyncio
@@ -170,11 +184,17 @@ async def test_root_validators_are_ran_for_completely_invalid_data(errors):
         {"data": [validate_value], ROOT_LOCATION: [validate_root_value]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == ["data", ROOT_LOCATION]
-    assert new_errors.get_errors_types() == [
-        "value_error.invalid",
-        "value_error.invalid",
+    assert new_errors == [
+        {
+            "loc": "data",
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
+        {
+            "loc": ROOT_LOCATION,
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
     ]
 
 
@@ -185,11 +205,17 @@ async def test_root_validators_are_ran_for_partially_valid_data(errors):
         {"data": [validate_value], ROOT_LOCATION: [validate_root_value]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == ["data", ROOT_LOCATION]
-    assert new_errors.get_errors_types() == [
-        "value_error.invalid",
-        "value_error.invalid",
+    assert new_errors == [
+        {
+            "loc": "data",
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
+        {
+            "loc": ROOT_LOCATION,
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
     ]
 
 
@@ -200,9 +226,13 @@ async def test_root_validators_is_interrupted_on_first_error(errors):
         {ROOT_LOCATION: [validate_root_value, validate_and_change_root_value]},
         errors,
     )
-    assert new_errors
-    assert new_errors.get_errors_locations() == [ROOT_LOCATION]
-    assert new_errors.get_errors_types() == ["value_error.invalid"]
+    assert new_errors == [
+        {
+            "loc": ROOT_LOCATION,
+            "type": "value_error.invalid",
+            "msg": "invalid test data",
+        },
+    ]
 
 
 @pytest.mark.asyncio

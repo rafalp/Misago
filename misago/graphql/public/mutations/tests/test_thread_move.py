@@ -62,11 +62,11 @@ async def test_move_thread_mutation_fails_if_user_is_not_authorized(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -95,7 +95,7 @@ async def test_move_thread_mutation_fails_if_user_is_not_moderator(
         },
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.not_moderator",
             },
         ],
@@ -119,7 +119,7 @@ async def test_move_thread_mutation_fails_if_thread_id_is_invalid(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "type_error.integer",
             },
         ],
@@ -140,7 +140,7 @@ async def test_move_thread_mutation_fails_if_thread_doesnt_exist(
         "thread": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "value_error.thread.not_exists",
             },
         ],
@@ -166,7 +166,7 @@ async def test_move_thread_mutation_fails_if_category_id_is_invalid(
         },
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             },
         ],
@@ -195,7 +195,7 @@ async def test_move_thread_mutation_fails_if_category_doesnt_exist(
         },
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "value_error.category.not_exists",
             },
         ],

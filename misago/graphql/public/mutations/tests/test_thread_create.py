@@ -99,7 +99,7 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
         "thread": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             },
         ],
@@ -126,7 +126,7 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(
         "thread": None,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             },
         ],
@@ -153,7 +153,7 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(
         "thread": None,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "value_error.category.not_exists",
             },
         ],
@@ -181,7 +181,7 @@ async def test_post_thread_mutation_validates_min_title_length(
         "thread": None,
         "errors": [
             {
-                "location": ["title"],
+                "location": "title",
                 "type": "value_error.any_str.min_length",
             },
         ],
@@ -209,7 +209,7 @@ async def test_post_thread_mutation_validates_max_title_length(
         "thread": None,
         "errors": [
             {
-                "location": ["title"],
+                "location": "title",
                 "type": "value_error.any_str.max_length",
             },
         ],
@@ -236,7 +236,7 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
         "thread": None,
         "errors": [
             {
-                "location": ["title"],
+                "location": "title",
                 "type": "value_error.str.regex",
             },
         ],
@@ -263,7 +263,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
         "thread": None,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "auth_error.category.closed",
             },
         ],
@@ -383,7 +383,7 @@ async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
         "thread": None,
         "errors": [
             {
-                "location": ["isClosed"],
+                "location": "isClosed",
                 "type": "auth_error.not_moderator",
             },
         ],
@@ -410,7 +410,7 @@ async def test_post_thread_mutation_fails_if_markup_is_too_short(
         "thread": None,
         "errors": [
             {
-                "location": ["markup"],
+                "location": "markup",
                 "type": "value_error.any_str.min_length",
             },
         ],

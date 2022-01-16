@@ -336,7 +336,7 @@ async def test_move_category_mutation_fails_if_category_id_is_invalid(query_admi
         "categories": ANY,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "type_error.integer",
             }
         ],
@@ -363,7 +363,7 @@ async def test_move_category_mutation_fails_if_parent_id_is_invalid(
         "categories": ANY,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "type_error.integer",
             }
         ],
@@ -390,7 +390,7 @@ async def test_move_category_mutation_fails_if_before_id_is_invalid(
         "categories": ANY,
         "errors": [
             {
-                "location": ["before"],
+                "location": "before",
                 "type": "type_error.integer",
             }
         ],
@@ -413,7 +413,7 @@ async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
         "categories": ANY,
         "errors": [
             {
-                "location": ["category"],
+                "location": "category",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -440,7 +440,7 @@ async def test_move_category_mutation_fails_if_parent_id_doesnt_exist(
         "categories": ANY,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -467,7 +467,7 @@ async def test_move_category_mutation_fails_if_before_id_doesnt_exist(
         "categories": ANY,
         "errors": [
             {
-                "location": ["before"],
+                "location": "before",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -494,7 +494,7 @@ async def test_move_category_mutation_fails_if_category_parent_is_itself(
         "categories": ANY,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -521,7 +521,7 @@ async def test_move_category_mutation_fails_if_category_before_is_itself(
         "categories": ANY,
         "errors": [
             {
-                "location": ["before"],
+                "location": "before",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -548,7 +548,7 @@ async def test_move_category_mutation_fails_if_parent_is_child_category(
         "categories": ANY,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -575,7 +575,7 @@ async def test_move_category_mutation_fails_if_root_category_is_moved_after_chil
         "categories": ANY,
         "errors": [
             {
-                "location": ["before"],
+                "location": "before",
                 "type": "value_error.category.invalid_parent",
             }
         ],
@@ -605,7 +605,7 @@ async def test_move_category_mutation_fails_if_child_is_moved_after_root(
         "categories": ANY,
         "errors": [
             {
-                "location": ["before"],
+                "location": "before",
                 "type": "value_error.category.invalid_parent",
             }
         ],

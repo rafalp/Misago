@@ -1,5 +1,5 @@
 type Error {
-    location: [String!]!
+    location: String!
     type: String!
     message: String!
 }

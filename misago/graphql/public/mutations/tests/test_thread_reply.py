@@ -89,7 +89,7 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
         "post": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "auth_error.not_authorized",
             }
         ],
@@ -111,7 +111,7 @@ async def test_post_reply_mutation_fails_if_thread_id_is_invalid(
         "post": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "type_error.integer",
             }
         ],
@@ -131,7 +131,7 @@ async def test_post_reply_mutation_fails_if_thread_doesnt_exist(query_public_api
         "post": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "value_error.thread.not_exists",
             }
         ],
@@ -155,7 +155,7 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
         "post": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.thread.closed",
             }
         ],
@@ -210,7 +210,7 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
         "post": None,
         "errors": [
             {
-                "location": ["thread"],
+                "location": "thread",
                 "type": "auth_error.category.closed",
             },
         ],
@@ -265,7 +265,7 @@ async def test_post_reply_mutation_fails_if_markup_is_too_short(
         "post": None,
         "errors": [
             {
-                "location": ["markup"],
+                "location": "markup",
                 "type": "value_error.any_str.min_length",
             }
         ],

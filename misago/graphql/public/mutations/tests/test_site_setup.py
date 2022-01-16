@@ -90,7 +90,7 @@ async def test_setup_site_mutation_returns_error_if_site_wizard_is_disabled(
         "token": None,
         "errors": [
             {
-                "location": [ErrorsList.ROOT_LOCATION],
+                "location": ErrorsList.ROOT_LOCATION,
                 "type": "value_error.site_wizard.disabled",
             },
         ],
@@ -120,7 +120,7 @@ async def test_setup_site_mutation_validates_user_name(query_public_api, db):
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username",
             },
         ],
@@ -149,7 +149,7 @@ async def test_setup_site_mutation_validates_user_name_is_available(
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username.not_available",
             },
         ],
@@ -176,7 +176,7 @@ async def test_setup_site_mutation_validates_user_email(query_public_api, db):
         "token": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email",
             },
         ],
@@ -205,7 +205,7 @@ async def test_setup_site_mutation_validates_user_email_is_available(
         "token": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email.not_available",
             },
         ],

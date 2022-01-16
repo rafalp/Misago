@@ -38,7 +38,7 @@ async def test_user_update_mutation_fails_if_user_id_is_invalid(query_admin_api)
         "user": None,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "type_error.integer",
             },
         ],
@@ -60,7 +60,7 @@ async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, 
         "user": None,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "value_error.user.not_exists",
             },
         ],
@@ -127,7 +127,7 @@ async def test_user_update_mutation_fails_if_user_name_is_invalid(
         },
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username",
             },
         ],
@@ -166,7 +166,7 @@ async def test_user_update_mutation_fails_if_user_name_is_not_available(
         },
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username.not_available",
             },
         ],
@@ -270,7 +270,7 @@ async def test_user_update_mutation_fails_if_user_email_is_invalid(
         },
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email",
             },
         ],
@@ -308,7 +308,7 @@ async def test_user_update_mutation_fails_if_user_email_is_not_available(
         },
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email.not_available",
             },
         ],
@@ -410,7 +410,7 @@ async def test_user_update_mutation_fails_if_user_password_is_invalid(
         },
         "errors": [
             {
-                "location": ["password"],
+                "location": "password",
                 "type": "value_error.any_str.min_length",
             },
         ],
@@ -512,7 +512,7 @@ async def test_user_update_mutation_fails_if_full_name_is_too_long(
         },
         "errors": [
             {
-                "location": ["fullName"],
+                "location": "fullName",
                 "type": "value_error.any_str.max_length",
             },
         ],
@@ -717,7 +717,7 @@ async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
         },
         "errors": [
             {
-                "location": ["isAdmin"],
+                "location": "isAdmin",
                 "type": "value_error.user.remove_own_admin",
             },
         ],
@@ -953,7 +953,7 @@ async def test_user_update_mutation_fails_if_user_deactivates_themselves(
         },
         "errors": [
             {
-                "location": ["isActive"],
+                "location": "isActive",
                 "type": "value_error.user.deactivate_self",
             },
         ],

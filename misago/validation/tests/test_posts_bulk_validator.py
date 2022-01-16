@@ -19,8 +19,12 @@ async def test_bulk_posts_validator_partially_validates_posts(post):
     errors = ErrorsList()
     context = {}
     validator = PostsBulkValidator([PostExistsValidator(context)])
-    posts = await validator([post.id, "1000"], errors, "posts")
-    assert errors
-    assert errors.get_errors_locations() == ["posts.1"]
-    assert errors.get_errors_types() == ["value_error.post.not_exists"]
+    posts = await validator([post.id, post.id + 1], errors, "posts")
+    assert errors == [
+        {
+            "loc": "posts.1",
+            "type": "value_error.post.not_exists",
+            "msg": f"post with id '{post.id + 1}' does not exist",
+        },
+    ]
     assert posts == [post]

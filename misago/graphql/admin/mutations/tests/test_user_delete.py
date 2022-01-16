@@ -97,7 +97,7 @@ async def test_user_delete_mutation_fails_if_user_id_is_invalid(query_admin_api)
         "deleted": False,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "type_error.integer",
             },
         ],
@@ -119,7 +119,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_u
         "deleted": False,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "value_error.user.not_exists",
             },
         ],
@@ -141,7 +141,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
         "deleted": False,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "value_error.user.delete_self",
             },
         ],
@@ -167,7 +167,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
         "deleted": False,
         "errors": [
             {
-                "location": ["user"],
+                "location": "user",
                 "type": "value_error.user.is_protected",
             },
         ],

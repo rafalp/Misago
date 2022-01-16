@@ -80,7 +80,7 @@ async def test_registration_mutation_validates_min_password_length(
         "token": None,
         "errors": [
             {
-                "location": ["password"],
+                "location": "password",
                 "type": "value_error.any_str.min_length",
             }
         ],
@@ -107,7 +107,7 @@ async def test_registration_mutation_validates_max_password_length(
         "token": None,
         "errors": [
             {
-                "location": ["password"],
+                "location": "password",
                 "type": "value_error.any_str.max_length",
             }
         ],
@@ -135,7 +135,7 @@ async def test_registration_mutation_validates_min_user_name_length(
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.min_length",
             }
         ],
@@ -163,7 +163,7 @@ async def test_registration_mutation_validates_max_user_name_length(
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.max_length",
             }
         ],
@@ -188,7 +188,7 @@ async def test_registration_mutation_validates_user_name_content(query_public_ap
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username",
             }
         ],
@@ -215,7 +215,7 @@ async def test_registration_mutation_validates_if_username_is_available(
         "token": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.username.not_available",
             }
         ],
@@ -240,7 +240,7 @@ async def test_registration_mutation_validates_user_email(query_public_api, db):
         "token": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email",
             }
         ],
@@ -267,7 +267,7 @@ async def test_registration_mutation_validates_if_user_email_is_available(
         "token": None,
         "errors": [
             {
-                "location": ["email"],
+                "location": "email",
                 "type": "value_error.email.not_available",
             }
         ],

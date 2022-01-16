@@ -215,7 +215,7 @@ async def test_category_create_mutation_fails_if_category_color_is_invalid(
         "category": None,
         "errors": [
             {
-                "location": ["color"],
+                "location": "color",
                 "type": "value_error.color",
             },
         ],
@@ -271,7 +271,7 @@ async def test_category_create_mutation_fails_if_category_name_is_too_short(
         "category": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.min_length",
             }
         ],
@@ -295,7 +295,7 @@ async def test_category_create_mutation_fails_if_category_name_is_too_long(
         "category": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.any_str.max_length",
             }
         ],
@@ -319,7 +319,7 @@ async def test_category_create_mutation_fails_if_category_name_is_not_sluggable(
         "category": None,
         "errors": [
             {
-                "location": ["name"],
+                "location": "name",
                 "type": "value_error.str.regex",
             }
         ],
@@ -344,7 +344,7 @@ async def test_category_create_mutation_fails_if_parent_id_is_invalid(
         "category": None,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "type_error.integer",
             }
         ],
@@ -369,7 +369,7 @@ async def test_category_create_mutation_fails_if_parent_category_is_not_found(
         "category": None,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.not_exists",
             }
         ],
@@ -394,7 +394,7 @@ async def test_category_create_mutation_fails_if_parent_category_is_child_catego
         "category": None,
         "errors": [
             {
-                "location": ["parent"],
+                "location": "parent",
                 "type": "value_error.category.invalid_parent",
             }
         ],
