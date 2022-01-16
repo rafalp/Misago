@@ -1,0 +1,17 @@
+extend type Mutation {
+    siteSetup(input: SiteSetupInput!): SiteSetupMutationResult!
+}
+
+input SiteSetupInput {
+    forumName: String!
+    forumIndexThreads: Boolean!
+    name: String!
+    email: String!
+    password: String!
+}
+
+type SiteSetupMutationResult {
+    user: User
+    token: String
+    errors: [Error!]
+}
