@@ -7,9 +7,9 @@ from .....pubsub.threads import THREADS_CHANNEL
 from .....testing import override_dynamic_settings
 from .....threads.models import Post, Thread
 
-POST_THREAD_MUTATION = """
-    mutation PostThread($input: PostThreadInput!) {
-        postThread(input: $input) {
+THREAD_CREATE_MUTATION = """
+    mutation ThreadCreate($input: ThreadCreateInput!) {
+        threadCreate(input: $input) {
             thread {
                 id
                 category {
@@ -27,11 +27,11 @@ POST_THREAD_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_creates_new_thread(
+async def test_thread_create_mutation_creates_new_thread(
     broadcast_publish, query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -42,7 +42,7 @@ async def test_post_thread_mutation_creates_new_thread(
         auth=user,
     )
 
-    data = result["data"]["postThread"]
+    data = result["data"]["threadCreate"]
 
     assert data == {
         "thread": {
@@ -81,11 +81,11 @@ async def test_post_thread_mutation_creates_new_thread(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_user_is_not_authorized(
+async def test_thread_create_mutation_fails_if_user_is_not_authorized(
     query_public_api, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -95,7 +95,7 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
         },
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -107,11 +107,11 @@ async def test_post_thread_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_category_id_is_invalid(
+async def test_thread_create_mutation_fails_if_category_id_is_invalid(
     query_public_api, user
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": "invalid",
@@ -122,7 +122,7 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -134,11 +134,11 @@ async def test_post_thread_mutation_fails_if_category_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_category_doesnt_exist(
+async def test_thread_create_mutation_fails_if_category_doesnt_exist(
     query_public_api, user
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": "4000",
@@ -149,7 +149,7 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -162,11 +162,11 @@ async def test_post_thread_mutation_fails_if_category_doesnt_exist(
 
 @pytest.mark.asyncio
 @override_dynamic_settings(thread_title_min_length=5)
-async def test_post_thread_mutation_validates_min_title_length(
+async def test_thread_create_mutation_validates_min_title_length(
     query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -177,7 +177,7 @@ async def test_post_thread_mutation_validates_min_title_length(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -190,11 +190,11 @@ async def test_post_thread_mutation_validates_min_title_length(
 
 @pytest.mark.asyncio
 @override_dynamic_settings(thread_title_max_length=10)
-async def test_post_thread_mutation_validates_max_title_length(
+async def test_thread_create_mutation_validates_max_title_length(
     query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -205,7 +205,7 @@ async def test_post_thread_mutation_validates_max_title_length(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -217,11 +217,11 @@ async def test_post_thread_mutation_validates_max_title_length(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_validates_title_contains_alphanumeric_characters(
+async def test_thread_create_mutation_validates_title_contains_alphanumeric_characters(
     query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -232,7 +232,7 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -244,11 +244,11 @@ async def test_post_thread_mutation_validates_title_contains_alphanumeric_charac
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_category_is_closed(
+async def test_thread_create_mutation_fails_if_category_is_closed(
     query_public_api, user, closed_category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(closed_category.id),
@@ -259,7 +259,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -271,11 +271,11 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_category(
+async def test_thread_create_mutation_allows_moderator_to_post_thread_in_closed_category(
     broadcast_publish, query_public_api, moderator, closed_category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(closed_category.id),
@@ -286,7 +286,7 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
         auth=moderator,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": {
             "id": ANY,
             "category": {
@@ -301,11 +301,11 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_creates_open_thread(
+async def test_thread_create_mutation_creates_open_thread(
     broadcast_publish, query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -317,7 +317,7 @@ async def test_post_thread_mutation_creates_open_thread(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": {
             "id": ANY,
             "category": {
@@ -332,11 +332,11 @@ async def test_post_thread_mutation_creates_open_thread(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
+async def test_thread_create_mutation_allows_moderator_to_post_closed_thread(
     broadcast_publish, query_public_api, moderator, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -348,7 +348,7 @@ async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
         auth=moderator,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": {
             "id": ANY,
             "category": {
@@ -363,11 +363,11 @@ async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
+async def test_thread_create_mutation_fails_if_non_moderator_posts_closed_thread(
     query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -379,7 +379,7 @@ async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {
@@ -391,11 +391,11 @@ async def test_post_thread_mutation_fails_if_non_moderator_posts_closed_thread(
 
 
 @pytest.mark.asyncio
-async def test_post_thread_mutation_fails_if_markup_is_too_short(
+async def test_thread_create_mutation_fails_if_markup_is_too_short(
     query_public_api, user, category
 ):
     result = await query_public_api(
-        POST_THREAD_MUTATION,
+        THREAD_CREATE_MUTATION,
         {
             "input": {
                 "category": str(category.id),
@@ -406,7 +406,7 @@ async def test_post_thread_mutation_fails_if_markup_is_too_short(
         auth=user,
     )
 
-    assert result["data"]["postThread"] == {
+    assert result["data"]["threadCreate"] == {
         "thread": None,
         "errors": [
             {

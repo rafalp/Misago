@@ -24,24 +24,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.postthread import (
-    PostThreadInput,
-    PostThreadInputModel,
-    post_thread_hook,
-    post_thread_input_hook,
-    post_thread_input_model_hook,
+from .hooks.threadcreate import (
+    ThreadCreateInput,
+    ThreadCreateInputModel,
+    thread_create_hook,
+    thread_create_input_hook,
+    thread_create_input_model_hook,
 )
 
-post_thread_mutation = MutationType()
+thread_create_mutation = MutationType()
 
 
-@post_thread_mutation.field("postThread")
+@thread_create_mutation.field("threadCreate")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_post_thread(
+async def resolve_thread_create(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await post_thread_input_model_hook.call_action(
+    input_model = await thread_create_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -62,23 +62,23 @@ async def resolve_post_thread(
                 NewThreadIsClosedValidator(info.context, cleaned_data["category"])
             ]
 
-        cleaned_data, errors = await post_thread_input_hook.call_action(
+        cleaned_data, errors = await thread_create_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors}
 
-    thread, post, _ = await post_thread_hook.call_action(
-        post_thread, info.context, cleaned_data
+    thread, post, _ = await thread_create_hook.call_action(
+        thread_create, info.context, cleaned_data
     )
 
     return {"thread": thread, "post": post}
 
 
-async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
+async def create_input_model(context: GraphQLContext) -> ThreadCreateInputModel:
     return create_model(
-        "PostThreadInputModel",
+        "ThreadCreateInputModel",
         category=(PositiveInt, ...),
         title=(threadtitlestr(context["settings"]), ...),
         markup=(
@@ -94,14 +94,14 @@ async def create_input_model(context: GraphQLContext) -> PostThreadInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostThreadInput,
+    data: ThreadCreateInput,
     errors: ErrorsList,
-) -> Tuple[PostThreadInput, ErrorsList]:
+) -> Tuple[ThreadCreateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def post_thread(
-    context: GraphQLContext, cleaned_data: PostThreadInput
+async def thread_create(
+    context: GraphQLContext, cleaned_data: ThreadCreateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     user = context["user"]
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])

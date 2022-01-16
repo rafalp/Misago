@@ -30,24 +30,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.postreply import (
-    PostReplyInput,
-    PostReplyInputModel,
-    post_reply_hook,
-    post_reply_input_hook,
-    post_reply_input_model_hook,
+from .hooks.postcreate import (
+    PostCreateInput,
+    PostCreateInputModel,
+    post_create_hook,
+    post_create_input_hook,
+    post_create_input_model_hook,
 )
 
-post_reply_mutation = MutationType()
+post_create_mutation = MutationType()
 
 
-@post_reply_mutation.field("postReply")
+@post_create_mutation.field("postCreate")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_post_reply(
+async def resolve_post_create(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await post_reply_input_model_hook.call_action(
+    input_model = await post_create_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -70,23 +70,23 @@ async def resolve_post_reply(
                 UserIsAuthorizedRootValidator(info.context),
             ],
         }
-        cleaned_data, errors = await post_reply_input_hook.call_action(
+        cleaned_data, errors = await post_create_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread, post, _ = await post_reply_hook.call_action(
-        post_reply, info.context, cleaned_data
+    thread, post, _ = await post_create_hook.call_action(
+        post_create, info.context, cleaned_data
     )
 
     return {"thread": thread, "post": post}
 
 
-async def create_input_model(context: GraphQLContext) -> PostReplyInputModel:
+async def create_input_model(context: GraphQLContext) -> PostCreateInputModel:
     return create_model(
-        "PostReplyInputModel",
+        "PostCreateInputModel",
         thread=(PositiveInt, ...),
         markup=(
             constr(
@@ -100,14 +100,14 @@ async def create_input_model(context: GraphQLContext) -> PostReplyInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostReplyInput,
+    data: PostCreateInput,
     errors: ErrorsList,
-) -> Tuple[PostReplyInput, ErrorsList]:
+) -> Tuple[PostCreateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def post_reply(
-    context: GraphQLContext, cleaned_data: PostReplyInput
+async def post_create(
+    context: GraphQLContext, cleaned_data: PostCreateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     thread = cleaned_data["thread"]
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])

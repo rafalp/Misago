@@ -11,7 +11,7 @@ from .....users.get import get_user_by_email
 from .....users.models import User
 
 SITE_SETUP_MUTATION = """
-    mutation SiteSetup($input: SetupSiteInput!) {
+    mutation SiteSetup($input: SiteSetupInput!) {
         siteSetup(input: $input) {
             user {
                 id

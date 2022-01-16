@@ -1,17 +1,17 @@
 extend type Mutation {
-    postThread(input: PostThreadInput!): PostMutationResult!
-    postReply(input: PostReplyInput!): PostMutationResult!
+    threadCreate(input: ThreadCreateInput!): PostMutationResult!
+    postCreate(input: PostCreateInput!): PostMutationResult!
     editPost(input: EditPostInput!): PostMutationResult!
 }
 
-input PostThreadInput {
+input ThreadCreateInput {
     category: ID!
     title: String!
     markup: String!
     isClosed: Boolean
 }
 
-input PostReplyInput {
+input PostCreateInput {
     thread: ID!
     markup: String!
 }

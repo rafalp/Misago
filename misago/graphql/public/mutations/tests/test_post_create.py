@@ -6,9 +6,9 @@ from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
 from .....threads.models import Post
 
-POST_REPLY_MUTATION = """
-    mutation PostReply($input: PostReplyInput!) {
-        postReply(input: $input) {
+POST_CREATE_MUTATION = """
+    mutation PostCreate($input: PostCreateInput!) {
+        postCreate(input: $input) {
             thread {
                 id
             }
@@ -26,16 +26,16 @@ POST_REPLY_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_creates_new_reply(
+async def test_post_create_mutation_creates_new_reply(
     broadcast_publish, query_public_api, user, thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": str(thread.id), "markup": "This is test post!"}},
         auth=user,
     )
 
-    data = result["data"]["postReply"]
+    data = result["data"]["postCreate"]
 
     assert data == {
         "thread": {
@@ -74,15 +74,15 @@ async def test_post_reply_mutation_creates_new_reply(
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_user_is_not_authorized(
+async def test_post_create_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": str(thread.id), "markup": "This is test post!"}},
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(thread.id),
         },
@@ -97,16 +97,16 @@ async def test_post_reply_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_thread_id_is_invalid(
+async def test_post_create_mutation_fails_if_thread_id_is_invalid(
     query_public_api, user
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": "invalid", "markup": "This is test post!"}},
         auth=user,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": None,
         "post": None,
         "errors": [
@@ -119,14 +119,14 @@ async def test_post_reply_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+async def test_post_create_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": "4000", "markup": "This is test post!"}},
         auth=user,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": None,
         "post": None,
         "errors": [
@@ -139,16 +139,16 @@ async def test_post_reply_mutation_fails_if_thread_doesnt_exist(query_public_api
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_thread_is_closed(
+async def test_post_create_mutation_fails_if_thread_is_closed(
     query_public_api, user, closed_thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": str(closed_thread.id), "markup": "This is test post!"}},
         auth=user,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(closed_thread.id),
         },
@@ -163,16 +163,16 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thread(
+async def test_post_create_mutation_allows_moderator_to_post_create_in_closed_thread(
     broadcast_publish, query_public_api, moderator, closed_thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": str(closed_thread.id), "markup": "This is test post!"}},
         auth=moderator,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(closed_thread.id),
         },
@@ -189,11 +189,11 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thre
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_category_is_closed(
+async def test_post_create_mutation_fails_if_category_is_closed(
     query_public_api, user, closed_category_thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {
             "input": {
                 "thread": str(closed_category_thread.id),
@@ -203,7 +203,7 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
         auth=user,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(closed_category_thread.id),
         },
@@ -218,11 +218,11 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_category(
+async def test_post_create_mutation_allows_moderator_to_post_create_in_closed_category(
     broadcast_publish, query_public_api, moderator, closed_category_thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {
             "input": {
                 "thread": str(closed_category_thread.id),
@@ -232,7 +232,7 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_cate
         auth=moderator,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(closed_category_thread.id),
         },
@@ -249,16 +249,16 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_cate
 
 
 @pytest.mark.asyncio
-async def test_post_reply_mutation_fails_if_markup_is_too_short(
+async def test_post_create_mutation_fails_if_markup_is_too_short(
     query_public_api, user, thread
 ):
     result = await query_public_api(
-        POST_REPLY_MUTATION,
+        POST_CREATE_MUTATION,
         {"input": {"thread": str(thread.id), "markup": " "}},
         auth=user,
     )
 
-    assert result["data"]["postReply"] == {
+    assert result["data"]["postCreate"] == {
         "thread": {
             "id": str(thread.id),
         },

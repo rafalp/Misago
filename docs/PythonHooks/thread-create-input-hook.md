@@ -1,18 +1,18 @@
-# `post_thread_input_hook`
+# `thread_create_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postthread import post_thread_input_hook
+from misago.graphql.public.mutations.hooks.threadcreate import thread_create_input_hook
 
-post_thread_input_hook.call_action(
-    action: PostThreadInputAction,
+thread_create_input_hook.call_action(
+    action: ThreadCreateInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostThreadInput,
+    data: ThreadCreateInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `PostThreadInputModel` GraphQL input type.
+A filter for the function used by `threacCreate` GraphQL mutation to validate data for `ThreadCreateInputModel` GraphQL input type.
 
 Returns a tuple of `data` that should be used to create new thread and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to create new thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostThreadInput,
+    data: ThreadCreateInput,
     errors: ErrorsList,
-) -> Tuple[PostThreadInput, ErrorsList]:
+) -> Tuple[ThreadCreateInput, ErrorsList]:
     ...
 ```
 

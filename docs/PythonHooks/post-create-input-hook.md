@@ -1,18 +1,18 @@
-# `post_reply_input_hook`
+# `post_create_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postreply import post_reply_input_hook
+from misago.graphql.public.mutations.hooks.postcreate import post_create_input_hook
 
-post_reply_input_hook.call_action(
-    action: PostReplyInputAction,
+post_create_input_hook.call_action(
+    action: PostCreateInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostReplyInput,
+    data: PostCreateInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `PostReplyInputModel` GraphQL input type.
+A filter for the function used to validate data for `PostCreateInputModel` GraphQL input type used by `postCreate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to create new reply and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to create new reply and validation
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: PostReplyInput,
+    data: PostCreateInput,
     errors: ErrorsList,
-) -> Tuple[PostReplyInput, ErrorsList]:
+) -> Tuple[PostCreateInput, ErrorsList]:
     ...
 ```
 

@@ -10,10 +10,10 @@ from .editthreadtitle import edit_thread_title_mutation
 from .login import login_mutation
 from .movethread import move_thread_mutation
 from .movethreads import move_threads_mutation
-from .postreply import post_reply_mutation
-from .postthread import post_thread_mutation
+from .postcreate import post_create_mutation
 from .register import register_mutation
 from .sitesetup import site_setup_mutation
+from .threadcreate import thread_create_mutation
 
 mutations = [
     avatar_upload_mutation,
@@ -28,8 +28,8 @@ mutations = [
     login_mutation,
     move_thread_mutation,
     move_threads_mutation,
-    post_reply_mutation,
-    post_thread_mutation,
+    post_create_mutation,
     register_mutation,
     site_setup_mutation,
+    thread_create_mutation,
 ]

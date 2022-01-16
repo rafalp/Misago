@@ -1,16 +1,16 @@
-# `post_reply_hook`
+# `post_create_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postreply import post_reply_hook
+from misago.graphql.public.mutations.hooks.postcreate import post_create_hook
 
-post_reply_hook.call_action(
-    action: PostReplyAction,
+post_create_hook.call_action(
+    action: PostCreateAction,
     context: GraphQLContext,
-    cleaned_data: PostReplyInput,
+    cleaned_data: PostCreateInput,
 )
 ```
 
-A filter for the function used by GraphQL mutation creating new reply to create new reply in the database.
+A filter for the function used by `postCreate` GraphQL mutation creating new thread reply.
 
 Returns tuple of `Thread`, `Post` dataclasses with newly created reply data and `ParsedMarkupMetadata` being Python `dict` with metadata for parsed message.
 
@@ -20,9 +20,9 @@ Returns tuple of `Thread`, `Post` dataclasses with newly created reply data and 
 ### `action`
 
 ```python
-async def post_reply(
+async def post_create(
     context: GraphQLContext,
-    cleaned_data: PostReplyInput,
+    cleaned_data: PostCreateInput,
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     ...
 ```
@@ -48,7 +48,7 @@ Dict[str, Any]
 A dict with already validated and cleaned input data. Will contain at least `thread` and `markup` keys:
 
 ```python
-class PostReplyInput(TypedDict):
+class PostCreateInput(TypedDict):
     thread: Thread
     markup: str
 ```

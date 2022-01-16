@@ -136,18 +136,11 @@ Standard hooks
 - [`move_threads_input_model_hook`](./move-threads-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.postreply`
+### `misago.graphql.public.mutations.hooks.postcreate`
 
-- [`post_reply_hook`](./post-reply-hook.md)
-- [`post_reply_input_hook`](./post-reply-input-hook.md)
-- [`post_reply_input_model_hook`](./post-reply-input-model-hook.md)
-
-
-### `misago.graphql.public.mutations.hooks.postthread`
-
-- [`post_thread_hook`](./post-thread-hook.md)
-- [`post_thread_input_hook`](./post-thread-input-hook.md)
-- [`post_thread_input_model_hook`](./post-thread-input-model-hook.md)
+- [`post_create_hook`](./post-create-hook.md)
+- [`post_create_input_hook`](./post-create-input-hook.md)
+- [`post_create_input_model_hook`](./post-create-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.registeruser`
@@ -157,12 +150,19 @@ Standard hooks
 - [`register_user_input_model_hook`](./register-user-input-model-hook.md)
 
 
+### `misago.graphql.public.mutations.hooks.threadcreate`
+
+- [`thread_create_hook`](./thread-create-hook.md)
+- [`thread_create_input_hook`](./thread-create-input-hook.md)
+- [`thread_create_input_model_hook`](./thread-create-input-model-hook.md)
+
+
 ### `misago.richtext.hooks`
 
 - [`convert_block_ast_to_rich_text_hook`](./convert-block-ast-to-rich-text-hook.md)
 - [`convert_inline_ast_to_text_hook`](./convert-inline-ast-to-text-hook.md)
 - [`convert_rich_text_block_to_html_hook`](./convert-rich-text-block-to-html-hook.md)
-- [`convert_rich_text_to_html_hook`](./convert-rich-text-to-html-hook.md)
+- [`convert_rich_text_to_html_hook`](./convert-rich-text-to-html-hook.
 - [`create_markdown_hook`](./create-markdown-hook.md)
 - [`markdown_hook`](./markdown-hook.md)
 - [`parse_markup_hook`](./parse-markup-hook.md)
