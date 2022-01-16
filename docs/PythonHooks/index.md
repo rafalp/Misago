@@ -108,11 +108,11 @@ Standard hooks
 - [`delete_thread_posts_input_thread_hook`](./delete-thread-posts-input-thread-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.editpost`
+### `misago.graphql.public.mutations.hooks.postupdate`
 
-- [`edit_post_hook`](./edit-post-hook.md)
-- [`edit_post_input_hook`](./edit-post-input-hook.md)
-- [`edit_post_input_model_hook`](./edit-post-input-model-hook.md)
+- [`post_update_hook`](./post-update-hook.md)
+- [`post_update_input_hook`](./post-update-input-hook.md)
+- [`post_update_input_model_hook`](./post-update-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.editthreadtitle`

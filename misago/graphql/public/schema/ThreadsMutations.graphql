@@ -1,7 +1,7 @@
 extend type Mutation {
     threadCreate(input: ThreadCreateInput!): PostMutationResult!
     postCreate(input: PostCreateInput!): PostMutationResult!
-    editPost(input: EditPostInput!): PostMutationResult!
+    postUpdate(input: PostUpdateInput!): PostMutationResult!
 }
 
 input ThreadCreateInput {
@@ -16,7 +16,7 @@ input PostCreateInput {
     markup: String!
 }
 
-input EditPostInput {
+input PostUpdateInput {
     post: ID!
     markup: String!
 }

@@ -23,24 +23,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.editpost import (
-    EditPostInput,
-    EditPostInputModel,
-    edit_post_hook,
-    edit_post_input_hook,
-    edit_post_input_model_hook,
+from .hooks.postupdate import (
+    PostUpdateInput,
+    PostUpdateInputModel,
+    post_update_hook,
+    post_update_input_hook,
+    post_update_input_model_hook,
 )
 
-edit_post_mutation = MutationType()
+post_update_mutation = MutationType()
 
 
-@edit_post_mutation.field("editPost")
+@post_update_mutation.field("postUpdate")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_edit_post(
+async def resolve_post_update(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await edit_post_input_model_hook.call_action(
+    input_model = await post_update_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -67,23 +67,23 @@ async def resolve_edit_post(
                 UserIsAuthorizedRootValidator(info.context),
             ],
         }
-        cleaned_data, errors = await edit_post_input_hook.call_action(
+        cleaned_data, errors = await post_update_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread, "post": post}
 
-    thread, post, _ = await edit_post_hook.call_action(
-        edit_post, info.context, cleaned_data
+    thread, post, _ = await post_update_hook.call_action(
+        post_update, info.context, cleaned_data
     )
 
     return {"thread": thread, "post": post}
 
 
-async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
+async def create_input_model(context: GraphQLContext) -> PostUpdateInputModel:
     return create_model(
-        "EditPostInputModel",
+        "PostUpdateInputModel",
         post=(PositiveInt, ...),
         markup=(
             constr(
@@ -97,14 +97,14 @@ async def create_input_model(context: GraphQLContext) -> EditPostInputModel:
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditPostInput,
+    data: PostUpdateInput,
     errors: ErrorsList,
-) -> Tuple[EditPostInput, ErrorsList]:
+) -> Tuple[PostUpdateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def edit_post(
-    context: GraphQLContext, cleaned_data: EditPostInput
+async def post_update(
+    context: GraphQLContext, cleaned_data: PostUpdateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 

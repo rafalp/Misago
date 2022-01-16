@@ -1,18 +1,18 @@
-# `edit_post_input_hook`
+# `post_update_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.editpost import edit_post_input_hook
+from misago.graphql.public.mutations.hooks.postupdate import post_update_input_hook
 
-edit_post_input_hook.call_action(
-    action: EditPostInputAction,
+post_update_input_hook.call_action(
+    action: PostUpdateInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditPostInput,
+    data: PostUpdateInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `EditPostInputModel` GraphQL input type.
+A filter for the function used to validate data for `PostUpdateInputModel` GraphQL input type used by `postUpdate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update the post and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to update the post and validation 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditPostInput,
+    data: PostUpdateInput,
     errors: ErrorsList,
-) -> Tuple[EditPostInput, ErrorsList]:
+) -> Tuple[PostUpdateInput, ErrorsList]:
     ...
 ```
 

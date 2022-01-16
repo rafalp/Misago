@@ -1,16 +1,16 @@
-# `edit_post_hook`
+# `post_update_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.editpost import edit_post_hook
+from misago.graphql.public.mutations.hooks.postupdate import post_update_hook
 
-edit_post_hook.call_action(
-    action: EditPostAction,
+post_update_hook.call_action(
+    action: PostUpdateAction,
     context: GraphQLContext,
-    cleaned_data: EditPostInput,
+    cleaned_data: PostUpdateInput,
 )
 ```
 
-A filter for the function used by GraphQL mutation editing post to update the post in the database.
+A filter for the function used by `postUpdate` GraphQL mutation to update the post in the database.
 
 Returns tuple with `Post` dataclass with updated post data and `ParsedMarkupMetadata` being Python `dict` with metadata for parsed message.
 
@@ -20,8 +20,8 @@ Returns tuple with `Post` dataclass with updated post data and `ParsedMarkupMeta
 ### `action`
 
 ```python
-async def edit_post(
-    context: GraphQLContext, cleaned_data: EditPostInput
+async def post_update(
+    context: GraphQLContext, cleaned_data: PostUpdateInput
 ) -> Tuple[Post, ParsedMarkupMetadata]:
     ...
 ```
@@ -47,7 +47,7 @@ Dict[str, Any]
 A dict with already validated and cleaned input data. Will contain at least `post` and `markup` keys:
 
 ```python
-class EditPostInput(TypedDict):
+class PostUpdateInput(TypedDict):
     post: Post
     markup: str
 ```

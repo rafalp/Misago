@@ -4,9 +4,9 @@ import pytest
 
 from .....errors import ErrorsList
 
-EDIT_POST_MUTATION = """
-    mutation EditPost($input: EditPostInput!) {
-        editPost(input: $input) {
+POST_UPDATE_MUTATION = """
+    mutation PostUpdate($input: PostUpdateInput!) {
+        postUpdate(input: $input) {
             thread {
                 id
             }
@@ -24,14 +24,14 @@ EDIT_POST_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_updates_post(query_public_api, user, user_post):
+async def test_post_update_mutation_updates_post(query_public_api, user, user_post):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(user_post.id), "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(user_post.thread_id),
         },
@@ -59,15 +59,15 @@ async def test_edit_post_mutation_updates_post(query_public_api, user, user_post
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_user_is_not_authorized(
+async def test_post_update_mutation_fails_if_user_is_not_authorized(
     query_public_api, user_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(user_post.id), "markup": "Edited post"}},
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(user_post.thread_id),
         },
@@ -92,14 +92,14 @@ async def test_edit_post_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_post_id_is_invalid(query_public_api, user):
+async def test_post_update_mutation_fails_if_post_id_is_invalid(query_public_api, user):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": "invalid", "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": None,
         "post": None,
         "errors": [
@@ -112,14 +112,14 @@ async def test_edit_post_mutation_fails_if_post_id_is_invalid(query_public_api, 
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_post_doesnt_exist(query_public_api, user):
+async def test_post_update_mutation_fails_if_post_doesnt_exist(query_public_api, user):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": "4000", "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": None,
         "post": None,
         "errors": [
@@ -132,16 +132,16 @@ async def test_edit_post_mutation_fails_if_post_doesnt_exist(query_public_api, u
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_post_author_is_other_user(
+async def test_post_update_mutation_fails_if_post_author_is_other_user(
     query_public_api, user, other_user_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(other_user_post.id), "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(other_user_post.thread_id),
         },
@@ -162,16 +162,16 @@ async def test_edit_post_mutation_fails_if_post_author_is_other_user(
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_allows_moderator_to_edit_other_user_post(
+async def test_post_update_mutation_allows_moderator_to_edit_other_user_post(
     query_public_api, moderator, post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(post.id), "markup": "Edited post"}},
         auth=moderator,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(post.thread_id),
         },
@@ -199,16 +199,16 @@ async def test_edit_post_mutation_allows_moderator_to_edit_other_user_post(
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_thread_is_closed(
+async def test_post_update_mutation_fails_if_thread_is_closed(
     query_public_api, user, closed_user_thread_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(closed_user_thread_post.id), "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(closed_user_thread_post.thread_id),
         },
@@ -229,16 +229,16 @@ async def test_edit_post_mutation_fails_if_thread_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_thread(
+async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_thread(
     query_public_api, moderator, closed_user_thread_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(closed_user_thread_post.id), "markup": "Edited post"}},
         auth=moderator,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(closed_user_thread_post.thread_id),
         },
@@ -266,16 +266,16 @@ async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_thread
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_category_is_closed(
+async def test_post_update_mutation_fails_if_category_is_closed(
     query_public_api, user, closed_category_user_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(closed_category_user_post.id), "markup": "Edited post"}},
         auth=user,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(closed_category_user_post.thread_id),
         },
@@ -296,16 +296,16 @@ async def test_edit_post_mutation_fails_if_category_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_category(
+async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_category(
     query_public_api, moderator, closed_category_user_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(closed_category_user_post.id), "markup": "Edited post"}},
         auth=moderator,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(closed_category_user_post.thread_id),
         },
@@ -333,16 +333,16 @@ async def test_edit_post_mutation_allows_moderator_to_edit_post_in_closed_catego
 
 
 @pytest.mark.asyncio
-async def test_edit_post_mutation_fails_if_markup_is_too_short(
+async def test_post_update_mutation_fails_if_markup_is_too_short(
     query_public_api, moderator, user_post
 ):
     result = await query_public_api(
-        EDIT_POST_MUTATION,
+        POST_UPDATE_MUTATION,
         {"input": {"post": str(user_post.id), "markup": "!"}},
         auth=moderator,
     )
 
-    assert result["data"]["editPost"] == {
+    assert result["data"]["postUpdate"] == {
         "thread": {
             "id": str(user_post.thread_id),
         },
