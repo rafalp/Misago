@@ -115,13 +115,6 @@ Standard hooks
 - [`post_update_input_model_hook`](./post-update-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.editthreadtitle`
-
-- [`edit_thread_title_hook`](./edit-thread-title-hook.md)
-- [`edit_thread_title_input_hook`](./edit-thread-title-input-hook.md)
-- [`edit_thread_title_input_model_hook`](./edit-thread-title-input-model-hook.md)
-
-
 ### `misago.graphql.public.mutations.hooks.movethread`
 
 - [`move_thread_hook`](./move-thread-hook.md)
@@ -155,6 +148,13 @@ Standard hooks
 - [`thread_create_hook`](./thread-create-hook.md)
 - [`thread_create_input_hook`](./thread-create-input-hook.md)
 - [`thread_create_input_model_hook`](./thread-create-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.threadtitleupdate`
+
+- [`thread_title_update_hook`](./thread-title-update-hook.md)
+- [`thread_title_update_input_hook`](./thread-title-update-input-hook.md)
+- [`thread_title_update_input_model_hook`](./thread-title-update-input-model-hook.md)
 
 
 ### `misago.richtext.hooks`

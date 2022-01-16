@@ -1,16 +1,16 @@
-# `edit_thread_title_hook`
+# `thread_title_update_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.editthreadtitle import edit_thread_title_hook
+from misago.graphql.public.mutations.hooks.threadtitleupdate import thread_title_update_hook
 
-edit_thread_title_hook.call_action(
-    action: EditThreadTitleAction,
+thread_title_update_hook.call_action(
+    action: ThreadTitleUpdateAction,
     context: GraphQLContext,
-    cleaned_data: EditThreadTitleInput,
+    cleaned_data: ThreadTitleUpdateInput,
 )
 ```
 
-A filter for the function used by GraphQL mutation editing thread title to update the thread in the database.
+A filter for the function used by `threadTitleUpdate` GraphQL mutation to update the thread in the database.
 
 Returns `Thread` dataclass with updated thread data.
 
@@ -20,7 +20,7 @@ Returns `Thread` dataclass with updated thread data.
 ### `action`
 
 ```python
-async def edit_thread_title(context: GraphQLContext, cleaned_data: EditThreadTitleInput) -> Thread:
+async def thread_title_update(context: GraphQLContext, cleaned_data: ThreadTitleUpdateInput) -> Thread:
     ...
 ```
 
@@ -45,7 +45,7 @@ Dict[str, Any]
 A dict with already validated and cleaned input data. Will contain at least `thread` and `title` keys:
 
 ```python
-class EditThreadTitleInput(TypedDict):
+class ThreadTitleUpdateInput(TypedDict):
     thread: Thread
     title: str
 ```

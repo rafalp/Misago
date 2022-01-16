@@ -2,9 +2,9 @@ import pytest
 
 from .....errors import ErrorsList
 
-EDIT_THREAD_TITLE_MUTATION = """
-    mutation EditThreadTitle($input: EditThreadTitleInput!) {
-        editThreadTitle(input: $input) {
+THREAD_TITLE_UPDATE_MUTATION = """
+    mutation ThreadTitleUpdate($input: ThreadTitleUpdateInput!) {
+        threadTitleUpdate(input: $input) {
             thread {
                 id
                 title
@@ -20,14 +20,14 @@ EDIT_THREAD_TITLE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_updates_thread(query_public_api, user, user_thread):
+async def test_title_update_mutation_updates_thread(query_public_api, user, user_thread):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(user_thread.id), "title": "Edited thread"}},
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(user_thread.id),
             "title": "Edited thread",
@@ -42,15 +42,15 @@ async def test_edit_title_mutation_updates_thread(query_public_api, user, user_t
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_user_is_not_authorized(
+async def test_title_update_mutation_fails_if_user_is_not_authorized(
     query_public_api, user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(user_thread.id), "title": "Edited thread"}},
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(user_thread.id),
             "title": "Thread",
@@ -74,16 +74,16 @@ async def test_edit_title_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_id_is_invalid(
+async def test_title_update_mutation_fails_if_thread_id_is_invalid(
     query_public_api, user
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": "invalid", "title": "Edited thread"}},
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": None,
         "errors": [
             {
@@ -95,14 +95,14 @@ async def test_edit_title_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+async def test_title_update_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": "invalid", "title": "Edited thread"}},
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": None,
         "errors": [
             {
@@ -114,16 +114,16 @@ async def test_edit_title_mutation_fails_if_thread_doesnt_exist(query_public_api
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_author_is_other_user(
+async def test_title_update_mutation_fails_if_thread_author_is_other_user(
     query_public_api, user, other_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(other_user_thread.id), "title": "Edited thread"}},
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(other_user_thread.id),
             "title": "Thread",
@@ -143,16 +143,16 @@ async def test_edit_title_mutation_fails_if_thread_author_is_other_user(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_allows_moderator_to_edit_other_user_thread(
+async def test_title_update_mutation_allows_moderator_to_edit_other_user_thread(
     query_public_api, moderator, other_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(other_user_thread.id), "title": "Edited thread"}},
         auth=moderator,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(other_user_thread.id),
             "title": "Edited thread",
@@ -167,16 +167,16 @@ async def test_edit_title_mutation_allows_moderator_to_edit_other_user_thread(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_thread_is_closed(
+async def test_title_update_mutation_fails_if_thread_is_closed(
     query_public_api, user, closed_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(closed_user_thread.id), "title": "Edited thread"}},
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(closed_user_thread.id),
             "title": "Thread",
@@ -196,16 +196,16 @@ async def test_edit_title_mutation_fails_if_thread_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_thread(
+async def test_title_update_mutation_allows_moderator_to_title_update_in_closed_thread(
     query_public_api, moderator, closed_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(closed_user_thread.id), "title": "Edited thread"}},
         auth=moderator,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(closed_user_thread.id),
             "title": "Edited thread",
@@ -220,11 +220,11 @@ async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_thre
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_fails_if_category_is_closed(
+async def test_title_update_mutation_fails_if_category_is_closed(
     query_public_api, user, closed_category_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {
             "input": {
                 "thread": str(closed_category_user_thread.id),
@@ -234,7 +234,7 @@ async def test_edit_title_mutation_fails_if_category_is_closed(
         auth=user,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(closed_category_user_thread.id),
             "title": "Thread",
@@ -254,11 +254,11 @@ async def test_edit_title_mutation_fails_if_category_is_closed(
 
 
 @pytest.mark.asyncio
-async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_category(
+async def test_title_update_mutation_allows_moderator_to_title_update_in_closed_category(
     query_public_api, moderator, closed_category_user_thread
 ):
     result = await query_public_api(
-        EDIT_THREAD_TITLE_MUTATION,
+        THREAD_TITLE_UPDATE_MUTATION,
         {
             "input": {
                 "thread": str(closed_category_user_thread.id),
@@ -268,7 +268,7 @@ async def test_edit_title_mutation_allows_moderator_to_edit_title_in_closed_cate
         auth=moderator,
     )
 
-    assert result["data"]["editThreadTitle"] == {
+    assert result["data"]["threadTitleUpdate"] == {
         "thread": {
             "id": str(closed_category_user_thread.id),
             "title": "Edited thread",

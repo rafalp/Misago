@@ -1,18 +1,18 @@
-# `edit_thread_title_input_hook`
+# `thread_title_update_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.editthreadtitle import edit_thread_title_input_hook
+from misago.graphql.public.mutations.hooks.threadtitleupdate import thread_title_update_input_hook
 
-edit_thread_title_input_hook.call_action(
-    action: EditThreadTitleInputAction,
+thread_title_update_input_hook.call_action(
+    action: ThreadTitleUpdateInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditThreadTitleInput,
+    data: ThreadTitleUpdateInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `EditThreadTitleInputModel` GraphQL input type.
+A filter for the function used to validate data for `ThreadTitleUpdateInputModel` GraphQL input type used by `threadTitleUpdate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update the thread and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to update the thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditThreadTitleInput,
+    data: ThreadTitleUpdateInput,
     errors: ErrorsList,
-) -> Tuple[EditThreadTitleInput, ErrorsList]:
+) -> Tuple[ThreadTitleUpdateInput, ErrorsList]:
     ...
 ```
 

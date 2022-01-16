@@ -21,24 +21,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.editthreadtitle import (
-    EditThreadTitleInput,
-    EditThreadTitleInputModel,
-    edit_thread_title_hook,
-    edit_thread_title_input_hook,
-    edit_thread_title_input_model_hook,
+from .hooks.threadtitleupdate import (
+    ThreadTitleUpdateInput,
+    ThreadTitleUpdateInputModel,
+    thread_title_update_hook,
+    thread_title_update_input_hook,
+    thread_title_update_input_model_hook,
 )
 
-edit_thread_title_mutation = MutationType()
+thread_title_update_mutation = MutationType()
 
 
-@edit_thread_title_mutation.field("editThreadTitle")
+@thread_title_update_mutation.field("threadTitleUpdate")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_edit_thread_title(
+async def resolve_thread_title_update(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await edit_thread_title_input_model_hook.call_action(
+    input_model = await thread_title_update_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -62,23 +62,23 @@ async def resolve_edit_thread_title(
                 UserIsAuthorizedRootValidator(info.context),
             ],
         }
-        cleaned_data, errors = await edit_thread_title_input_hook.call_action(
+        cleaned_data, errors = await thread_title_update_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors, "thread": thread}
 
-    thread = await edit_thread_title_hook.call_action(
-        edit_thread_title, info.context, cleaned_data
+    thread = await thread_title_update_hook.call_action(
+        thread_title_update, info.context, cleaned_data
     )
 
     return {"thread": thread}
 
 
-async def create_input_model(context: GraphQLContext) -> EditThreadTitleInputModel:
+async def create_input_model(context: GraphQLContext) -> ThreadTitleUpdateInputModel:
     return create_model(
-        "EditThreadTitleInputModel",
+        "ThreadTitleUpdateInputModel",
         thread=(PositiveInt, ...),
         title=(threadtitlestr(context["settings"]), ...),
     )
@@ -87,14 +87,14 @@ async def create_input_model(context: GraphQLContext) -> EditThreadTitleInputMod
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: EditThreadTitleInput,
+    data: ThreadTitleUpdateInput,
     errors: ErrorsList,
-) -> Tuple[EditThreadTitleInput, ErrorsList]:
+) -> Tuple[ThreadTitleUpdateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def edit_thread_title(
-    context: GraphQLContext, cleaned_data: EditThreadTitleInput
+async def thread_title_update(
+    context: GraphQLContext, cleaned_data: ThreadTitleUpdateInput
 ) -> Thread:
     thread = cleaned_data["thread"]
     thread = await thread.update(title=cleaned_data["title"])

@@ -28,13 +28,13 @@ type PostMutationResult {
 }
 
 extend type Mutation {
-    editThreadTitle(input: EditThreadTitleInput!): ThreadMutationResult!
+    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
     closeThread(input: CloseThreadInput!): ThreadMutationResult!
     moveThread(input: MoveThreadInput!): ThreadMutationResult!
     deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
-input EditThreadTitleInput {
+input ThreadTitleUpdateInput {
     thread: ID!
     title: String!
 }
