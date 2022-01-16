@@ -3,9 +3,9 @@ import pytest
 from .....errors import ErrorsList
 from .....threads.models import Thread
 
-DELETE_THREADS_MUTATION = """
-    mutation DeleteThreads($input: BulkDeleteThreadsInput!) {
-        deleteThreads(input: $input) {
+THREADS_BULK_DELETE_MUTATION = """
+    mutation ThreadsBulkDelete($threads: [ID!]!) {
+        threadsBulkDelete(threads: $threads) {
             deleted
             errors {
                 location
@@ -17,16 +17,16 @@ DELETE_THREADS_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_deletes_threads(
+async def test_threads_bulk_delete_mutation_deletes_threads(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": [str(thread.id)]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": [str(thread.id)]},
         auth=moderator,
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [str(thread.id)],
         "errors": None,
     }
@@ -36,15 +36,15 @@ async def test_delete_threads_mutation_deletes_threads(
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_fails_if_user_is_not_authorized(
+async def test_threads_bulk_delete_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": [str(thread.id)]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": [str(thread.id)]},
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [],
         "errors": [
             {
@@ -62,16 +62,16 @@ async def test_delete_threads_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_fails_if_user_is_not_moderator(
+async def test_threads_bulk_delete_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": [str(thread.id)]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": [str(thread.id)]},
         auth=user,
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [],
         "errors": [
             {
@@ -85,16 +85,16 @@ async def test_delete_threads_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_fails_if_thread_id_is_invalid(
+async def test_threads_bulk_delete_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": ["invalid"]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": ["invalid"]},
         auth=moderator,
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [],
         "errors": [
             {
@@ -106,16 +106,16 @@ async def test_delete_threads_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_fails_if_thread_doesnt_exist(
+async def test_threads_bulk_delete_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": ["4000"]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": ["4000"]},
         auth=moderator,
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [],
         "errors": [
             {
@@ -127,16 +127,16 @@ async def test_delete_threads_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_delete_threads_mutation_with_threads_errors_still_deletes_valid_threads(
+async def test_threads_bulk_delete_mutation_with_threads_errors_still_deletes_valid_threads(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        DELETE_THREADS_MUTATION,
-        {"input": {"threads": ["4000", str(thread.id)]}},
+        THREADS_BULK_DELETE_MUTATION,
+        {"threads": ["4000", str(thread.id)]},
         auth=moderator,
     )
 
-    assert result["data"]["deleteThreads"] == {
+    assert result["data"]["threadsBulkDelete"] == {
         "deleted": [str(thread.id)],
         "errors": [
             {

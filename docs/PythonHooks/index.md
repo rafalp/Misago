@@ -64,13 +64,6 @@ Standard hooks
 - [`graphql_types_hook`](./graphql-types-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.deletethreads`
-
-- [`delete_threads_hook`](./delete-threads-hook.md)
-- [`delete_threads_input_hook`](./delete-threads-input-hook.md)
-- [`delete_threads_input_model_hook`](./delete-threads-input-model-hook.md)
-
-
 ### `misago.graphql.public.mutations.hooks.deletethreadpost`
 
 - [`delete_thread_post_hook`](./delete-thread-post-hook.md)
@@ -134,6 +127,12 @@ Standard hooks
 - [`thread_is_closed_update_hook`](./thread-is-closed-update-hook.md)
 - [`thread_is_closed_update_input_hook`](./thread-is-closed-update-input-hook.md)
 - [`thread_is_closed_update_input_model_hook`](./thread-is-closed-update-input-model-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.threadsbulkdelete`
+
+- [`threads_bulk_delete_hook`](./threads-bulk-delete-hook.md)
+- [`threads_bulk_delete_input_hook`](./threads-bulk-delete-input-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threadsbulkmove`

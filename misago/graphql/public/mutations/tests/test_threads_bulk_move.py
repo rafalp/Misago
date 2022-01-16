@@ -22,7 +22,7 @@ THREADS_BULK_MOVE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_moves_threads(
+async def test_threads_bulk_move_mutation_moves_threads(
     query_public_api, moderator, thread, sibling_category
 ):
     result = await query_public_api(
@@ -49,7 +49,7 @@ async def test_move_threads_mutation_moves_threads(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_user_is_not_authorized(
+async def test_threads_bulk_move_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread, sibling_category
 ):
     result = await query_public_api(
@@ -84,7 +84,7 @@ async def test_move_threads_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_user_is_not_moderator(
+async def test_threads_bulk_move_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread, sibling_category
 ):
     result = await query_public_api(
@@ -116,7 +116,7 @@ async def test_move_threads_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_thread_id_is_invalid(
+async def test_threads_bulk_move_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator, sibling_category
 ):
     result = await query_public_api(
@@ -138,7 +138,7 @@ async def test_move_threads_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_thread_doesnt_exist(
+async def test_threads_bulk_move_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator, sibling_category
 ):
     result = await query_public_api(
@@ -160,7 +160,7 @@ async def test_move_threads_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_category_id_is_invalid(
+async def test_threads_bulk_move_mutation_fails_if_category_id_is_invalid(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
@@ -192,7 +192,7 @@ async def test_move_threads_mutation_fails_if_category_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_fails_if_category_doesnt_exist(
+async def test_threads_bulk_move_mutation_fails_if_category_doesnt_exist(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
@@ -224,7 +224,7 @@ async def test_move_threads_mutation_fails_if_category_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_threads_mutation_with_threads_errors_still_updates_valid_threads(
+async def test_threads_bulk_move_mutation_with_threads_errors_still_updates_valid_threads(
     query_public_api, moderator, thread, sibling_category
 ):
     result = await query_public_api(

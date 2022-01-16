@@ -44,8 +44,8 @@ type ThreadDeleteMutationResult {
 
 extend type Mutation {
     threadsIsClosedBulkUpdate(input: ThreadsIsClosedBulkUpdateInput!): ThreadsBulkMutationResult!
+    threadsBulkDelete(threads: [ID!]!): ThreadsBulkDeleteMutationResult!
     threadsBulkMove(threads: [ID!]!, category: ID!): ThreadsBulkMutationResult!
-    deleteThreads(input: BulkDeleteThreadsInput!): BulkDeleteThreadsMutationResult!
 }
 
 input ThreadsIsClosedBulkUpdateInput {
@@ -59,11 +59,7 @@ type ThreadsBulkMutationResult {
     errors: [Error!]
 }
 
-input BulkDeleteThreadsInput {
-    threads: [ID!]!
-}
-
-type BulkDeleteThreadsMutationResult {
+type ThreadsBulkDeleteMutationResult {
     deleted: [ID!]!
     errors: [Error!]
 }

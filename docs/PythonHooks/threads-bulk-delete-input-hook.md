@@ -1,18 +1,18 @@
-# `delete_threads_input_hook`
+# `threads_bulk_delete_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.deletethreads import delete_threads_input_hook
+from misago.graphql.public.mutations.hooks.threadsbulkdelete import threads_bulk_delete_input_hook
 
-delete_threads_input_hook.call_action(
-    action: DeleteThreadsInputAction,
+threads_bulk_delete_input_hook.call_action(
+    action: ThreadsBulkDeleteInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: DeleteThreadsInput,
+    data: ThreadsBulkDeleteInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `DeleteThreadsInputModel` GraphQL input type.
+A filter for the function used to validate data for `ThreadsBulkDeleteInputModel` GraphQL input type used by `threadsBulkDelete` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to delete threads and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to delete threads and validation `
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: DeleteThreadsInput,
+    data: ThreadsBulkDeleteInput,
     errors: ErrorsList,
-) -> Tuple[DeleteThreadsInput, ErrorsList]:
+) -> Tuple[ThreadsBulkDeleteInput, ErrorsList]:
     ...
 ```
 
