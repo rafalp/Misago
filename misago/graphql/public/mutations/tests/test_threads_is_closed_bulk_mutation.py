@@ -3,9 +3,9 @@ import pytest
 from .....errors import ErrorsList
 
 
-CLOSE_THREADS_MUTATION = """
-    mutation CloseThreads($input: BulkCloseThreadsInput!) {
-        closeThreads(input: $input) {
+THREADS_CLOSE_BULK_MUTATION = """
+    mutation ThreadsClose($input: ThreadsIsClosedBulkUpdateInput!) {
+        threadsIsClosedBulkUpdate(input: $input) {
             updated
             threads {
                 id
@@ -21,16 +21,16 @@ CLOSE_THREADS_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_closes_threads(
+async def test_threads_is_closed_bulk_mutation_closes_threads(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": True,
         "threads": [
             {
@@ -46,16 +46,16 @@ async def test_close_threads_mutation_closes_threads(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_opens_threads(
+async def test_threads_is_closed_bulk_mutation_opens_threads(
     query_public_api, moderator, closed_thread
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": [str(closed_thread.id)], "isClosed": False}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": True,
         "threads": [
             {
@@ -71,15 +71,15 @@ async def test_close_threads_mutation_opens_threads(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_user_is_not_authorized(
+async def test_threads_is_closed_bulk_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": False,
         "threads": [
             {
@@ -104,16 +104,16 @@ async def test_close_threads_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_user_is_not_moderator(
+async def test_threads_is_closed_bulk_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": [str(thread.id)], "isClosed": True}},
         auth=user,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": False,
         "threads": [
             {
@@ -134,16 +134,16 @@ async def test_close_threads_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_thread_id_is_invalid(
+async def test_threads_is_closed_bulk_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": ["invalid"], "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": False,
         "threads": [],
         "errors": [
@@ -156,16 +156,16 @@ async def test_close_threads_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_fails_if_thread_doesnt_exist(
+async def test_threads_is_closed_bulk_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": ["4000"], "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": False,
         "threads": [],
         "errors": [
@@ -178,16 +178,16 @@ async def test_close_threads_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_close_threads_mutation_with_threads_errors_still_updates_valid_threads(
+async def test_threads_is_closed_bulk_mutation_with_threads_errors_still_updates_valid_threads(
     query_public_api, moderator, thread
 ):
     result = await query_public_api(
-        CLOSE_THREADS_MUTATION,
+        THREADS_CLOSE_BULK_MUTATION,
         {"input": {"threads": ["4000", str(thread.id)], "isClosed": True}},
         auth=moderator,
     )
 
-    assert result["data"]["closeThreads"] == {
+    assert result["data"]["threadsIsClosedBulkUpdate"] == {
         "updated": True,
         "threads": [
             {
