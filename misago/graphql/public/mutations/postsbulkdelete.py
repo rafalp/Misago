@@ -3,7 +3,6 @@ from typing import Dict, List, Tuple, Type
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
-from pydantic.main import BaseModel
 
 from ....errors import ErrorsList
 from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
