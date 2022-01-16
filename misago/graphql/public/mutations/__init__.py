@@ -1,6 +1,6 @@
 from .avatarupload import avatar_upload_mutation
 from .closethreads import close_threads_mutation
-from .deletethread import delete_thread_mutation
+from .threaddelete import thread_delete_mutation
 from .deletethreadpost import delete_thread_post_mutation
 from .deletethreadposts import delete_thread_posts_mutation
 from .deletethreads import delete_threads_mutation
@@ -18,7 +18,6 @@ from .threadtitleupdate import thread_title_update_mutation
 mutations = [
     avatar_upload_mutation,
     close_threads_mutation,
-    delete_thread_mutation,
     delete_thread_posts_mutation,
     delete_thread_post_mutation,
     delete_threads_mutation,
@@ -30,6 +29,7 @@ mutations = [
     site_setup_mutation,
     thread_category_update_mutation,
     thread_create_mutation,
+    thread_delete_mutation,
     thread_is_closed_update_mutation,
     thread_title_update_mutation,
 ]

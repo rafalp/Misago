@@ -1,7 +1,9 @@
 extend type Mutation {
-    threadCreate(input: ThreadCreateInput!): PostMutationResult!
-    postCreate(input: PostCreateInput!): PostMutationResult!
-    postUpdate(input: PostUpdateInput!): PostMutationResult!
+    threadCategoryUpdate(input: ThreadCategoryUpdateInput!): ThreadMutationResult!
+    threadCreate(input: ThreadCreateInput!): ThreadMutationResult!
+    threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
+    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
+    threadDelete(input: ThreadDeleteInput!): ThreadDeleteMutationResult!
 }
 
 input ThreadCreateInput {
@@ -9,29 +11,6 @@ input ThreadCreateInput {
     title: String!
     markup: String!
     isClosed: Boolean
-}
-
-input PostCreateInput {
-    thread: ID!
-    markup: String!
-}
-
-input PostUpdateInput {
-    post: ID!
-    markup: String!
-}
-
-type PostMutationResult {
-    thread: Thread
-    post: Post
-    errors: [Error!]
-}
-
-extend type Mutation {
-    threadCategoryUpdate(input: ThreadCategoryUpdateInput!): ThreadMutationResult!
-    threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
-    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
-    deleteThread(input: DeleteThreadInput!): DeleteThreadMutationResult!
 }
 
 input ThreadCategoryUpdateInput {
@@ -54,11 +33,11 @@ type ThreadMutationResult {
     errors: [Error!]
 }
 
-input DeleteThreadInput {
+input ThreadDeleteInput {
     thread: ID!
 }
 
-type DeleteThreadMutationResult {
+type ThreadDeleteMutationResult {
     deleted: [ID!]!
     errors: [Error!]
 }
@@ -91,32 +70,5 @@ input BulkDeleteThreadsInput {
 
 type BulkDeleteThreadsMutationResult {
     deleted: [ID!]!
-    errors: [Error!]
-}
-
-extend type Mutation {
-    deleteThreadPost(input: DeleteThreadPostInput!): DeleteThreadPostMutationResult!
-    deleteThreadPosts(input: BulkDeleteThreadPostsInput!): BulkDeleteThreadPostsMutationResult!
-}
-
-input DeleteThreadPostInput {
-    thread: ID!
-    post: ID!
-}
-
-type DeleteThreadPostMutationResult {
-    deleted: [ID!]!
-    thread: Thread
-    errors: [Error!]
-}
-
-input BulkDeleteThreadPostsInput {
-    thread: ID!
-    posts: [ID!]!
-}
-
-type BulkDeleteThreadPostsMutationResult {
-    deleted: [ID!]!
-    thread: Thread
     errors: [Error!]
 }

@@ -69,11 +69,11 @@ async def resolve_thread_create(
     if errors:
         return {"errors": errors}
 
-    thread, post, _ = await thread_create_hook.call_action(
+    thread, _, _ = await thread_create_hook.call_action(
         thread_create, info.context, cleaned_data
     )
 
-    return {"thread": thread, "post": post}
+    return {"thread": thread}
 
 
 async def create_input_model(context: GraphQLContext) -> ThreadCreateInputModel:
