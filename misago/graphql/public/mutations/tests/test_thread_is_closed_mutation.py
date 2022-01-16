@@ -20,7 +20,9 @@ THREAD_IS_CLOSED_UPDATE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_thread_is_closed_mutation_closes_thread(query_public_api, moderator, thread):
+async def test_thread_is_closed_mutation_closes_thread(
+    query_public_api, moderator, thread
+):
     result = await query_public_api(
         THREAD_IS_CLOSED_UPDATE_MUTATION,
         {"input": {"thread": str(thread.id), "isClosed": True}},

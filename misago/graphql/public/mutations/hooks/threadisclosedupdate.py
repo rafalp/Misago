@@ -19,7 +19,9 @@ ThreadIsClosedUpdateInputModelFilter = Callable[
 
 
 class ThreadIsClosedUpdateInputModelHook(
-    FilterHook[ThreadIsClosedUpdateInputModelAction, ThreadIsClosedUpdateInputModelFilter]
+    FilterHook[
+        ThreadIsClosedUpdateInputModelAction, ThreadIsClosedUpdateInputModelFilter
+    ]
 ):
     def call_action(
         self, action: ThreadIsClosedUpdateInputModelAction, context: GraphQLContext
@@ -38,7 +40,9 @@ ThreadIsClosedUpdateInputFilter = Callable[
 ]
 
 
-class ThreadIsClosedUpdateInputHook(FilterHook[ThreadIsClosedUpdateInputAction, ThreadIsClosedUpdateInputFilter]):
+class ThreadIsClosedUpdateInputHook(
+    FilterHook[ThreadIsClosedUpdateInputAction, ThreadIsClosedUpdateInputFilter]
+):
     def call_action(
         self,
         action: ThreadIsClosedUpdateInputAction,
@@ -50,13 +54,18 @@ class ThreadIsClosedUpdateInputHook(FilterHook[ThreadIsClosedUpdateInputAction, 
         return self.filter(action, context, validators, data, errors_list)
 
 
-ThreadIsClosedUpdateAction = Callable[[GraphQLContext, ThreadIsClosedUpdateInput], Awaitable[Thread]]
+ThreadIsClosedUpdateAction = Callable[
+    [GraphQLContext, ThreadIsClosedUpdateInput], Awaitable[Thread]
+]
 ThreadIsClosedUpdateFilter = Callable[
-    [ThreadIsClosedUpdateAction, GraphQLContext, ThreadIsClosedUpdateInput], Awaitable[Thread]
+    [ThreadIsClosedUpdateAction, GraphQLContext, ThreadIsClosedUpdateInput],
+    Awaitable[Thread],
 ]
 
 
-class ThreadIsClosedUpdateHook(FilterHook[ThreadIsClosedUpdateAction, ThreadIsClosedUpdateFilter]):
+class ThreadIsClosedUpdateHook(
+    FilterHook[ThreadIsClosedUpdateAction, ThreadIsClosedUpdateFilter]
+):
     def call_action(
         self,
         action: ThreadIsClosedUpdateAction,
