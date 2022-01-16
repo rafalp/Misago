@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, cast
 from pydantic import BaseModel, PydanticTypeError, PydanticValueError
 from pydantic import validate_model as pydantic_validate_model
 
-from ..errors import AuthError, ErrorsList, get_error_location
+from ..errors import AuthError, ErrorDict, ErrorsList, get_error_location
 from .validators import Validator
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
@@ -24,7 +24,7 @@ def validate_model(model: Type[BaseModel], input_data: Data) -> Tuple[Data, Erro
 
     for error in errors.errors():
         error["loc"] = get_error_location(error["loc"])
-        errors_list.append(error)
+        errors_list.append(cast(ErrorDict, error))
 
     return validated_data, errors_list
 
