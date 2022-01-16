@@ -65,7 +65,9 @@ ThreadTitleUpdateFilter = Callable[
 ]
 
 
-class ThreadTitleUpdateHook(FilterHook[ThreadTitleUpdateAction, ThreadTitleUpdateFilter]):
+class ThreadTitleUpdateHook(
+    FilterHook[ThreadTitleUpdateAction, ThreadTitleUpdateFilter]
+):
     def call_action(
         self,
         action: ThreadTitleUpdateAction,

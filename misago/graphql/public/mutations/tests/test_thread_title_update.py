@@ -20,7 +20,9 @@ THREAD_TITLE_UPDATE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_title_update_mutation_updates_thread(query_public_api, user, user_thread):
+async def test_title_update_mutation_updates_thread(
+    query_public_api, user, user_thread
+):
     result = await query_public_api(
         THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": str(user_thread.id), "title": "Edited thread"}},
@@ -95,7 +97,9 @@ async def test_title_update_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_title_update_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+async def test_title_update_mutation_fails_if_thread_doesnt_exist(
+    query_public_api, user
+):
     result = await query_public_api(
         THREAD_TITLE_UPDATE_MUTATION,
         {"input": {"thread": "invalid", "title": "Edited thread"}},
