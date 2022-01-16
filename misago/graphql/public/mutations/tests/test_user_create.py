@@ -7,9 +7,9 @@ from .....passwords import check_password
 from .....testing import override_dynamic_settings
 from .....users.models import User
 
-REGISTER_MUTATION = """
-    mutation Register($input: RegisterInput!) {
-        register(input: $input) {
+USER_CREATE_MUTATION = """
+    mutation UserCreate($input: UserCreateInput!) {
+        userCreate(input: $input) {
             user {
                 id
                 name
@@ -25,11 +25,11 @@ REGISTER_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_creates_new_user_account(
+async def test_user_create_mutation_creates_new_user_account(
     query_public_api, graphql_info, db
 ):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "John",
@@ -39,7 +39,7 @@ async def test_registration_mutation_creates_new_user_account(
         },
     )
 
-    data = result["data"]["register"]
+    data = result["data"]["userCreate"]
 
     assert data == {
         "user": {"id": ANY, "name": "John"},
@@ -61,11 +61,9 @@ async def test_registration_mutation_creates_new_user_account(
 
 @pytest.mark.asyncio
 @override_dynamic_settings(password_min_length=10)
-async def test_registration_mutation_validates_min_password_length(
-    query_public_api, db
-):
+async def test_user_create_mutation_validates_min_password_length(query_public_api, db):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "abcd",
@@ -75,7 +73,7 @@ async def test_registration_mutation_validates_min_password_length(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -88,11 +86,9 @@ async def test_registration_mutation_validates_min_password_length(
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_max_password_length(
-    query_public_api, db
-):
+async def test_user_create_mutation_validates_max_password_length(query_public_api, db):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "abcd",
@@ -102,7 +98,7 @@ async def test_registration_mutation_validates_max_password_length(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -116,11 +112,11 @@ async def test_registration_mutation_validates_max_password_length(
 
 @pytest.mark.asyncio
 @override_dynamic_settings(username_min_length=10)
-async def test_registration_mutation_validates_min_user_name_length(
+async def test_user_create_mutation_validates_min_user_name_length(
     query_public_api, db
 ):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "abcd",
@@ -130,7 +126,7 @@ async def test_registration_mutation_validates_min_user_name_length(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -144,11 +140,11 @@ async def test_registration_mutation_validates_min_user_name_length(
 
 @pytest.mark.asyncio
 @override_dynamic_settings(username_min_length=1, username_max_length=3)
-async def test_registration_mutation_validates_max_user_name_length(
+async def test_user_create_mutation_validates_max_user_name_length(
     query_public_api, db
 ):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "abcd",
@@ -158,7 +154,7 @@ async def test_registration_mutation_validates_max_user_name_length(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -171,9 +167,9 @@ async def test_registration_mutation_validates_max_user_name_length(
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_user_name_content(query_public_api, db):
+async def test_user_create_mutation_validates_user_name_content(query_public_api, db):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "invalid!",
@@ -183,7 +179,7 @@ async def test_registration_mutation_validates_user_name_content(query_public_ap
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -196,11 +192,11 @@ async def test_registration_mutation_validates_user_name_content(query_public_ap
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_if_username_is_available(
+async def test_user_create_mutation_validates_if_username_is_available(
     query_public_api, user
 ):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": user.name,
@@ -210,7 +206,7 @@ async def test_registration_mutation_validates_if_username_is_available(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -223,9 +219,9 @@ async def test_registration_mutation_validates_if_username_is_available(
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_user_email(query_public_api, db):
+async def test_user_create_mutation_validates_user_email(query_public_api, db):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "John",
@@ -235,7 +231,7 @@ async def test_registration_mutation_validates_user_email(query_public_api, db):
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -248,11 +244,11 @@ async def test_registration_mutation_validates_user_email(query_public_api, db):
 
 
 @pytest.mark.asyncio
-async def test_registration_mutation_validates_if_user_email_is_available(
+async def test_user_create_mutation_validates_if_user_email_is_available(
     query_public_api, user
 ):
     result = await query_public_api(
-        REGISTER_MUTATION,
+        USER_CREATE_MUTATION,
         {
             "input": {
                 "name": "John",
@@ -262,7 +258,7 @@ async def test_registration_mutation_validates_if_user_email_is_available(
         },
     )
 
-    assert result["data"]["register"] == {
+    assert result["data"]["userCreate"] == {
         "user": None,
         "token": None,
         "errors": [

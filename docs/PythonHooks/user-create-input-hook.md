@@ -1,18 +1,18 @@
-# `register_user_input_hook`
+# `user_create_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.registeruser import register_user_input_hook
+from misago.graphql.public.mutations.hooks.usercreate import user_create_input_hook
 
-register_user_input_hook.call_action(
-    action: RegisterUserInputAction,
+user_create_input_hook.call_action(
+    action: UserCreateInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: RegisterUserInput,
+    data: UserCreateInput,
     errors_list: ErrorsList
 )
 ```
 
-A filter for the function used to validate data for `RegisterUserInputModel` GraphQL input type.
+A filter for the function used to validate data for `UserCreateInputModel` GraphQL input type used by `userCreate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to create new user and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to create new user and validation 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: RegisterUserInput,
+    data: UserCreateInput,
     errors: ErrorsList,
-) -> Tuple[RegisterUserInput, ErrorsList]:
+) -> Tuple[UserCreateInput, ErrorsList]:
     ...
 ```
 

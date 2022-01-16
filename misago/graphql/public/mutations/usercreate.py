@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
@@ -21,24 +21,24 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.registeruser import (
-    RegisterUserInput,
-    RegisterUserInputModel,
-    register_user_hook,
-    register_user_input_hook,
-    register_user_input_model_hook,
+from .hooks.usercreate import (
+    UserCreateInput,
+    UserCreateInputModel,
+    user_create_hook,
+    user_create_input_hook,
+    user_create_input_model_hook,
 )
 
-register_mutation = MutationType()
+user_create_mutation = MutationType()
 
 
-@register_mutation.field("register")
+@user_create_mutation.field("userCreate")
 @convert_kwargs_to_snake_case
 @error_handler
-async def resolve_register(
+async def resolve_user_create(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await register_user_input_model_hook.call_action(
+    input_model = await user_create_input_model_hook.call_action(
         create_input_model, info.context
     )
     cleaned_data, errors = validate_model(input_model, input)
@@ -52,16 +52,14 @@ async def resolve_register(
                 EmailIsAvailableValidator(),
             ],
         }
-        cleaned_data, errors = await register_user_input_hook.call_action(
+        cleaned_data, errors = await user_create_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if errors:
         return {"errors": errors}
 
-    user = await register_user_hook.call_action(
-        register_user, info.context, cleaned_data
-    )
+    user = await user_create_hook.call_action(register_user, info.context, cleaned_data)
     token = await create_user_token_hook.call_action(
         create_user_token, info.context, user, in_admin=False
     )
@@ -69,27 +67,26 @@ async def resolve_register(
     return {"user": user, "token": token}
 
 
-async def create_input_model(context: GraphQLContext) -> RegisterUserInputModel:
+async def create_input_model(context: GraphQLContext) -> UserCreateInputModel:
     return create_model(
         "RegisterInputModel",
         name=(usernamestr(context["settings"]), ...),
         email=(EmailStr, ...),
         password=(passwordstr(context["settings"]), ...),
+        captcha=(Any, None),
     )
 
 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: RegisterUserInput,
+    data: UserCreateInput,
     errors: ErrorsList,
-) -> Tuple[RegisterUserInput, ErrorsList]:
+) -> Tuple[UserCreateInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-async def register_user(
-    context: GraphQLContext, cleaned_data: RegisterUserInput
-) -> User:
+async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) -> User:
     def create_user(*args, **kwargs):
         return User.create(*args, **kwargs)
 

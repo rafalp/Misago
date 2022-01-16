@@ -21,7 +21,7 @@ POSTS_BULK_DELETE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_deletes_thread_reply(
+async def test_posts_bulk_delete_mutation_deletes_thread_reply(
     query_public_api, moderator, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -46,7 +46,7 @@ async def test_delete_thread_posts_mutation_deletes_thread_reply(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_user_is_not_authorized(
+async def test_posts_bulk_delete_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -76,7 +76,7 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_authorized(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_user_is_not_moderator(
+async def test_posts_bulk_delete_mutation_fails_if_user_is_not_moderator(
     query_public_api, user, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -103,7 +103,7 @@ async def test_delete_thread_posts_mutation_fails_if_user_is_not_moderator(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_thread_id_is_invalid(
+async def test_posts_bulk_delete_mutation_fails_if_thread_id_is_invalid(
     query_public_api, moderator, thread_reply
 ):
     result = await query_public_api(
@@ -127,7 +127,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_thread_doesnt_exist(
+async def test_posts_bulk_delete_mutation_fails_if_thread_doesnt_exist(
     query_public_api, moderator, thread_reply
 ):
     result = await query_public_api(
@@ -151,7 +151,7 @@ async def test_delete_thread_posts_mutation_fails_if_thread_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_post_id_is_invalid(
+async def test_posts_bulk_delete_mutation_fails_if_post_id_is_invalid(
     query_public_api, moderator, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -177,7 +177,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_post_doesnt_exist(
+async def test_posts_bulk_delete_mutation_fails_if_post_doesnt_exist(
     query_public_api, moderator, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -206,7 +206,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_post_is_threads_first_post(
+async def test_posts_bulk_delete_mutation_fails_if_post_is_threads_first_post(
     query_public_api, moderator, thread, post
 ):
     result = await query_public_api(
@@ -232,7 +232,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_threads_first_post(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_fails_if_post_is_in_other_thread(
+async def test_posts_bulk_delete_mutation_fails_if_post_is_in_other_thread(
     query_public_api, moderator, thread_with_reply, other_user_post
 ):
     result = await query_public_api(
@@ -261,7 +261,7 @@ async def test_delete_thread_posts_mutation_fails_if_post_is_in_other_thread(
 
 
 @pytest.mark.asyncio
-async def test_delete_thread_posts_mutation_with_posts_errors_still_deletes_valid_posts(
+async def test_posts_bulk_delete_mutation_with_posts_errors_still_deletes_valid_posts(
     query_public_api, moderator, thread_with_reply, thread_reply, other_user_post
 ):
     result = await query_public_api(

@@ -92,11 +92,11 @@ Standard hooks
 - [`post_update_input_model_hook`](./post-update-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.registeruser`
+### `misago.graphql.public.mutations.hooks.usercreate`
 
-- [`register_user_hook`](./register-user-hook.md)
-- [`register_user_input_hook`](./register-user-input-hook.md)
-- [`register_user_input_model_hook`](./register-user-input-model-hook.md)
+- [`user_create_hook`](./user-create-hook.md)
+- [`user_create_input_hook`](./user-create-input-hook.md)
+- [`user_create_input_model_hook`](./user-create-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threadcategoryupdate`
