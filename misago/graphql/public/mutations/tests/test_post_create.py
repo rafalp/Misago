@@ -119,7 +119,9 @@ async def test_post_create_mutation_fails_if_thread_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_post_create_mutation_fails_if_thread_doesnt_exist(query_public_api, user):
+async def test_post_create_mutation_fails_if_thread_doesnt_exist(
+    query_public_api, user
+):
     result = await query_public_api(
         POST_CREATE_MUTATION,
         {"input": {"thread": "4000", "markup": "This is test post!"}},

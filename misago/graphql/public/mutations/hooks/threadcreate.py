@@ -10,7 +10,9 @@ from .....validation import Validator
 from .... import GraphQLContext
 
 ThreadCreateInputModel = Type[BaseModel]
-ThreadCreateInputModelAction = Callable[[GraphQLContext], Awaitable[ThreadCreateInputModel]]
+ThreadCreateInputModelAction = Callable[
+    [GraphQLContext], Awaitable[ThreadCreateInputModel]
+]
 ThreadCreateInputModelFilter = Callable[
     [ThreadCreateInputModelAction, GraphQLContext],
     Awaitable[ThreadCreateInputModel],
@@ -42,7 +44,9 @@ ThreadCreateInputFilter = Callable[
 ]
 
 
-class ThreadCreateInputHook(FilterHook[ThreadCreateInputAction, ThreadCreateInputFilter]):
+class ThreadCreateInputHook(
+    FilterHook[ThreadCreateInputAction, ThreadCreateInputFilter]
+):
     def call_action(
         self,
         action: ThreadCreateInputAction,
