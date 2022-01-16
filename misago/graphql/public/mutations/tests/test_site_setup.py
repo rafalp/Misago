@@ -10,9 +10,9 @@ from .....testing import override_dynamic_settings
 from .....users.get import get_user_by_email
 from .....users.models import User
 
-SETUP_SITE_MUTATION = """
-    mutation SetupSite($input: SetupSiteInput!) {
-        setupSite(input: $input) {
+SITE_SETUP_MUTATION = """
+    mutation SiteSetup($input: SetupSiteInput!) {
+        siteSetup(input: $input) {
             user {
                 id
                 name
@@ -30,7 +30,7 @@ SETUP_SITE_MUTATION = """
 @pytest.mark.asyncio
 async def test_setup_site_mutation_setups_site(query_public_api, graphql_info, db):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -42,7 +42,7 @@ async def test_setup_site_mutation_setups_site(query_public_api, graphql_info, d
         },
     )
 
-    data = result["data"]["setupSite"]
+    data = result["data"]["siteSetup"]
 
     assert data == {
         "user": {"id": ANY, "name": "John"},
@@ -73,7 +73,7 @@ async def test_setup_site_mutation_returns_error_if_site_wizard_is_disabled(
     query_public_api, db
 ):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -85,7 +85,7 @@ async def test_setup_site_mutation_returns_error_if_site_wizard_is_disabled(
         },
     )
 
-    assert result["data"]["setupSite"] == {
+    assert result["data"]["siteSetup"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -103,7 +103,7 @@ async def test_setup_site_mutation_returns_error_if_site_wizard_is_disabled(
 @pytest.mark.asyncio
 async def test_setup_site_mutation_validates_user_name(query_public_api, db):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -115,7 +115,7 @@ async def test_setup_site_mutation_validates_user_name(query_public_api, db):
         },
     )
 
-    assert result["data"]["setupSite"] == {
+    assert result["data"]["siteSetup"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -132,7 +132,7 @@ async def test_setup_site_mutation_validates_user_name_is_available(
     query_public_api, user
 ):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -144,7 +144,7 @@ async def test_setup_site_mutation_validates_user_name_is_available(
         },
     )
 
-    assert result["data"]["setupSite"] == {
+    assert result["data"]["siteSetup"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -159,7 +159,7 @@ async def test_setup_site_mutation_validates_user_name_is_available(
 @pytest.mark.asyncio
 async def test_setup_site_mutation_validates_user_email(query_public_api, db):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -171,7 +171,7 @@ async def test_setup_site_mutation_validates_user_email(query_public_api, db):
         },
     )
 
-    assert result["data"]["setupSite"] == {
+    assert result["data"]["siteSetup"] == {
         "user": None,
         "token": None,
         "errors": [
@@ -188,7 +188,7 @@ async def test_setup_site_mutation_validates_user_email_is_available(
     query_public_api, user
 ):
     result = await query_public_api(
-        SETUP_SITE_MUTATION,
+        SITE_SETUP_MUTATION,
         {
             "input": {
                 "forumName": "Hello world!",
@@ -200,7 +200,7 @@ async def test_setup_site_mutation_validates_user_email_is_available(
         },
     )
 
-    assert result["data"]["setupSite"] == {
+    assert result["data"]["siteSetup"] == {
         "user": None,
         "token": None,
         "errors": [

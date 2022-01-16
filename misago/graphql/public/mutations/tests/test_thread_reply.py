@@ -27,7 +27,7 @@ POST_REPLY_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_creates_new_reply(
-    publish, query_public_api, user, thread
+    broadcast_publish, query_public_api, user, thread
 ):
     result = await query_public_api(
         POST_REPLY_MUTATION,
@@ -70,7 +70,7 @@ async def test_post_reply_mutation_creates_new_reply(
     assert post_from_db.rich_text[0]["text"] == "This is test post!"
 
     # Thread update sent to subscribers
-    publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
+    broadcast_publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
 
 
 @pytest.mark.asyncio
@@ -164,7 +164,7 @@ async def test_post_reply_mutation_fails_if_thread_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thread(
-    publish, query_public_api, moderator, closed_thread
+    broadcast_publish, query_public_api, moderator, closed_thread
 ):
     result = await query_public_api(
         POST_REPLY_MUTATION,
@@ -185,7 +185,7 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_thre
         "errors": None,
     }
 
-    publish.assert_called_once()
+    broadcast_publish.assert_called_once()
 
 
 @pytest.mark.asyncio
@@ -219,7 +219,7 @@ async def test_post_reply_mutation_fails_if_category_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_category(
-    publish, query_public_api, moderator, closed_category_thread
+    broadcast_publish, query_public_api, moderator, closed_category_thread
 ):
     result = await query_public_api(
         POST_REPLY_MUTATION,
@@ -245,7 +245,7 @@ async def test_post_reply_mutation_allows_moderator_to_post_reply_in_closed_cate
         "errors": None,
     }
 
-    publish.assert_called_once()
+    broadcast_publish.assert_called_once()
 
 
 @pytest.mark.asyncio

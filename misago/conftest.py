@@ -35,7 +35,7 @@ async def db():
 
 
 @pytest.fixture
-def publish(mocker):
+def broadcast_publish(mocker):
     return mocker.patch("misago.pubsub.broadcast.publish")
 
 

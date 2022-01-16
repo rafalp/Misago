@@ -28,7 +28,7 @@ POST_THREAD_MUTATION = """
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_new_thread(
-    publish, query_public_api, user, category
+    broadcast_publish, query_public_api, user, category
 ):
     result = await query_public_api(
         POST_THREAD_MUTATION,
@@ -77,7 +77,7 @@ async def test_post_thread_mutation_creates_new_thread(
     assert post_from_db.rich_text[0]["text"] == "This is test post!"
 
     # Thread sent to subscribers
-    publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
+    broadcast_publish.assert_called_once_with(channel=THREADS_CHANNEL, message=ANY)
 
 
 @pytest.mark.asyncio
@@ -272,7 +272,7 @@ async def test_post_thread_mutation_fails_if_category_is_closed(
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_category(
-    publish, query_public_api, moderator, closed_category
+    broadcast_publish, query_public_api, moderator, closed_category
 ):
     result = await query_public_api(
         POST_THREAD_MUTATION,
@@ -297,12 +297,12 @@ async def test_post_thread_mutation_allows_moderator_to_post_thread_in_closed_ca
         "errors": None,
     }
 
-    publish.assert_called_once()
+    broadcast_publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_creates_open_thread(
-    publish, query_public_api, user, category
+    broadcast_publish, query_public_api, user, category
 ):
     result = await query_public_api(
         POST_THREAD_MUTATION,
@@ -328,12 +328,12 @@ async def test_post_thread_mutation_creates_open_thread(
         "errors": None,
     }
 
-    publish.assert_called_once()
+    broadcast_publish.assert_called_once()
 
 
 @pytest.mark.asyncio
 async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
-    publish, query_public_api, moderator, category
+    broadcast_publish, query_public_api, moderator, category
 ):
     result = await query_public_api(
         POST_THREAD_MUTATION,
@@ -359,7 +359,7 @@ async def test_post_thread_mutation_allows_moderator_to_post_closed_thread(
         "errors": None,
     }
 
-    publish.assert_called_once()
+    broadcast_publish.assert_called_once()
 
 
 @pytest.mark.asyncio

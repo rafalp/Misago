@@ -11,9 +11,9 @@ def message(thread):
 
 
 @pytest.mark.asyncio
-async def test_threads_event_is_published(publish, thread, message):
+async def test_threads_event_is_published(broadcast_publish, thread, message):
     await publish_thread_update(thread)
-    publish.assert_called_once_with(channel=THREADS_CHANNEL, message=message)
+    broadcast_publish.assert_called_once_with(channel=THREADS_CHANNEL, message=message)
 
 
 @pytest.mark.asyncio
