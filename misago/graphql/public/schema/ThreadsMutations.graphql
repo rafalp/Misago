@@ -1,5 +1,5 @@
 extend type Mutation {
-    threadCategoryUpdate(input: ThreadCategoryUpdateInput!): ThreadMutationResult!
+    threadMove(thread: ID!, category: ID!): ThreadMutationResult!
     threadCreate(input: ThreadCreateInput!): ThreadMutationResult!
     threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
     threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
@@ -11,11 +11,6 @@ input ThreadCreateInput {
     title: String!
     markup: String!
     isClosed: Boolean
-}
-
-input ThreadCategoryUpdateInput {
-    thread: ID!
-    category: ID!
 }
 
 input ThreadIsClosedUpdateInput {

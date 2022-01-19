@@ -99,11 +99,10 @@ Standard hooks
 - [`user_create_input_model_hook`](./user-create-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.threadcategoryupdate`
+### `misago.graphql.public.mutations.hooks.threadmove`
 
-- [`thread_category_update_hook`](./thread-category-update-hook.md)
-- [`thread_category_update_input_hook`](./thread-category-update-input-hook.md)
-- [`thread_category_update_input_model_hook`](./thread-category-update-input-model-hook.md)
+- [`thread_move_hook`](./thread-category-update-hook.md)
+- [`thread_move_input_hook`](./thread-category-update-input-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threadcreate`
