@@ -1,18 +1,18 @@
-# `thread_title_update_input_hook`
+# `thread_rename_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadtitleupdate import thread_title_update_input_hook
+from misago.graphql.public.mutations.hooks.threadrename import thread_rename_input_hook
 
-thread_title_update_input_hook.call_action(
-    action: ThreadTitleUpdateInputAction,
+thread_rename_input_hook.call_action(
+    action: ThreadRenameInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: ThreadTitleUpdateInput,
+    data: ThreadRenameInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `ThreadTitleUpdateInputModel` GraphQL input type used by `threadTitleUpdate` GraphQL mutation.
+A filter for the function used to validate data for `threadRename` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update the thread and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to update the thread and validatio
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: ThreadTitleUpdateInput,
+    data: ThreadRenameInput,
     errors: ErrorsList,
-) -> Tuple[ThreadTitleUpdateInput, ErrorsList]:
+) -> Tuple[ThreadRenameInput, ErrorsList]:
     ...
 ```
 
@@ -55,7 +55,9 @@ A dict of lists of validators that should be used to validate inputs values.
 ### `data`
 
 ```python
-Dict[str, Any]
+class ThreadRenameInput(TypedDict):
+    thread: int
+    title: str
 ```
 
 A dict with input data that passed initial cleaning and validation. If any of fields failed initial cleanup and validation, it won't be present in this dict.

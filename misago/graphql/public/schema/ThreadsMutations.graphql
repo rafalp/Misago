@@ -1,9 +1,9 @@
 extend type Mutation {
     threadMove(thread: ID!, category: ID!): ThreadMutationResult!
     threadCreate(input: ThreadCreateInput!): ThreadMutationResult!
-    threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
-    threadTitleUpdate(input: ThreadTitleUpdateInput!): ThreadMutationResult!
     threadDelete(input: ThreadDeleteInput!): ThreadDeleteMutationResult!
+    threadIsClosedUpdate(input: ThreadIsClosedUpdateInput!): ThreadMutationResult!
+    threadRename(thread: ID!, title: String!): ThreadMutationResult!
 }
 
 input ThreadCreateInput {
@@ -16,11 +16,6 @@ input ThreadCreateInput {
 input ThreadIsClosedUpdateInput {
     thread: ID!
     isClosed: Boolean!
-}
-
-input ThreadTitleUpdateInput {
-    thread: ID!
-    title: String!
 }
 
 type ThreadMutationResult {

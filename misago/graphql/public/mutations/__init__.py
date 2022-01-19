@@ -12,7 +12,7 @@ from .threadmove import thread_move_mutation
 from .threadsbulkdelete import threads_bulk_delete_mutation
 from .threadsbulkmove import threads_bulk_move_mutation
 from .threadsisclosedbulkupdate import threads_is_closed_bulk_update_mutation
-from .threadtitleupdate import thread_title_update_mutation
+from .threadrename import thread_rename_mutation
 from .usercreate import user_create_mutation
 
 mutations = [
@@ -27,7 +27,7 @@ mutations = [
     thread_delete_mutation,
     thread_is_closed_update_mutation,
     thread_move_mutation,
-    thread_title_update_mutation,
+    thread_rename_mutation,
     threads_bulk_delete_mutation,
     threads_bulk_move_mutation,
     threads_is_closed_bulk_update_mutation,
