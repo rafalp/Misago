@@ -3,7 +3,7 @@ import pytest
 from .....errors import ErrorsList
 
 THREAD_RENAME_MUTATION = """
-    mutation ThreadTitleUpdate($thread: ID!, $title: String!) {
+    mutation ThreadRename($thread: ID!, $title: String!) {
         threadRename(thread: $thread, title: $title) {
             thread {
                 id

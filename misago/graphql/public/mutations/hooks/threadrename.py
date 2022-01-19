@@ -1,4 +1,4 @@
-from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
+from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
