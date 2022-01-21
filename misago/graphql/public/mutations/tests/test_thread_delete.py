@@ -4,8 +4,8 @@ from .....errors import ErrorsList
 from .....threads.models import Thread
 
 THREAD_DELETE_MUTATION = """
-    mutation ThreadDelete($input: ThreadDeleteInput!) {
-        threadDelete(input: $input) {
+    mutation ThreadDelete($thread: ID!) {
+        threadDelete(thread: $thread) {
             deleted
             errors {
                 location
@@ -22,7 +22,7 @@ async def test_thread_delete_mutation_deletes_thread(
 ):
     result = await query_public_api(
         THREAD_DELETE_MUTATION,
-        {"input": {"thread": str(thread.id)}},
+        {"thread": str(thread.id)},
         auth=moderator,
     )
 
@@ -41,7 +41,7 @@ async def test_thread_delete_mutation_fails_if_user_is_not_authorized(
 ):
     result = await query_public_api(
         THREAD_DELETE_MUTATION,
-        {"input": {"thread": str(thread.id)}},
+        {"thread": str(thread.id)},
     )
 
     assert result["data"]["threadDelete"] == {
@@ -67,7 +67,7 @@ async def test_thread_delete_mutation_fails_if_user_is_not_moderator(
 ):
     result = await query_public_api(
         THREAD_DELETE_MUTATION,
-        {"input": {"thread": str(thread.id)}},
+        {"thread": str(thread.id)},
         auth=user,
     )
 
@@ -90,7 +90,7 @@ async def test_thread_delete_mutation_fails_if_thread_id_is_invalid(
 ):
     result = await query_public_api(
         THREAD_DELETE_MUTATION,
-        {"input": {"thread": "invalid"}},
+        {"thread": "invalid"},
         auth=moderator,
     )
 
@@ -111,7 +111,7 @@ async def test_thread_delete_mutation_fails_if_thread_doesnt_exist(
 ):
     result = await query_public_api(
         THREAD_DELETE_MUTATION,
-        {"input": {"thread": "4000"}},
+        {"thread": "4000"},
         auth=moderator,
     )
 

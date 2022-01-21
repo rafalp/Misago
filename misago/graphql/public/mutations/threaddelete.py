@@ -32,11 +32,9 @@ thread_delete_mutation = MutationType()
 @convert_kwargs_to_snake_case
 @error_handler
 async def resolve_thread_delete(
-    _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
+    _, info: GraphQLResolveInfo, **input  # pylint: disable=redefined-builtin
 ):
-    input_model = await thread_delete_input_model_hook.call_action(
-        create_input_model, info.context
-    )
+    input_model = create_model("ThreadDeleteInputModel", thread=(PositiveInt, ...))
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
@@ -61,10 +59,6 @@ async def resolve_thread_delete(
     )
 
     return {"deleted": [cleaned_data["thread"].id]}
-
-
-async def create_input_model(context: GraphQLContext) -> ThreadDeleteInputModel:
-    return create_model("ThreadDeleteInputModel", thread=(PositiveInt, ...))
 
 
 async def validate_input_data(

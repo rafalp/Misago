@@ -1,8 +1,8 @@
-from typing import Dict, List, Tuple, Type
+from typing import Dict, List, Tuple
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, PositiveInt, create_model
+from pydantic import PositiveInt, create_model
 
 from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
@@ -33,7 +33,7 @@ thread_open_mutation = MutationType()
 async def resolve_thread_open(
     _, info: GraphQLResolveInfo, **input  # pylint: disable=redefined-builtin
 ):
-    input_model = create_input_model()
+    input_model = create_model("ThreadOpenInputModel", thread=(PositiveInt, ...))
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
@@ -63,13 +63,6 @@ async def resolve_thread_open(
     )
 
     return {"thread": thread}
-
-
-def create_input_model() -> Type[BaseModel]:
-    return create_model(
-        "ThreadOpenInputModel",
-        thread=(PositiveInt, ...),
-    )
 
 
 async def validate_input_data(
