@@ -12,7 +12,7 @@ post_update_input_hook.call_action(
 )
 ```
 
-A filter for the function used to validate data for `PostUpdateInputModel` GraphQL input type used by `postUpdate` GraphQL mutation.
+A filter for the function used to validate data for `postUpdate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update the post and validation `errors`.
 

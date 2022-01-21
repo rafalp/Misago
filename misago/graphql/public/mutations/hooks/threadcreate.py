@@ -1,6 +1,4 @@
-from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
-
-from pydantic import BaseModel
+from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
@@ -8,25 +6,6 @@ from .....richtext import ParsedMarkupMetadata
 from .....threads.models import Post, Thread
 from .....validation import Validator
 from .... import GraphQLContext
-
-ThreadCreateInputModel = Type[BaseModel]
-ThreadCreateInputModelAction = Callable[
-    [GraphQLContext], Awaitable[ThreadCreateInputModel]
-]
-ThreadCreateInputModelFilter = Callable[
-    [ThreadCreateInputModelAction, GraphQLContext],
-    Awaitable[ThreadCreateInputModel],
-]
-
-
-class ThreadCreateInputModelHook(
-    FilterHook[ThreadCreateInputModelAction, ThreadCreateInputModelFilter]
-):
-    def call_action(
-        self, action: ThreadCreateInputModelAction, context: GraphQLContext
-    ) -> Awaitable[ThreadCreateInputModel]:
-        return self.filter(action, context)
-
 
 ThreadCreateInput = Dict[str, Any]
 ThreadCreateInputAction = Callable[
@@ -80,4 +59,3 @@ class ThreadCreateHook(FilterHook[ThreadCreateAction, ThreadCreateFilter]):
 
 thread_create_hook = ThreadCreateHook()
 thread_create_input_hook = ThreadCreateInputHook()
-thread_create_input_model_hook = ThreadCreateInputModelHook()

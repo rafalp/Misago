@@ -68,7 +68,6 @@ Standard hooks
 
 - [`post_create_hook`](./post-create-hook.md)
 - [`post_create_input_hook`](./post-create-input-hook.md)
-- [`post_create_input_model_hook`](./post-create-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.postdelete`
@@ -89,7 +88,6 @@ Standard hooks
 
 - [`post_update_hook`](./post-update-hook.md)
 - [`post_update_input_hook`](./post-update-input-hook.md)
-- [`post_update_input_model_hook`](./post-update-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.usercreate`
@@ -109,7 +107,6 @@ Standard hooks
 
 - [`thread_create_hook`](./thread-create-hook.md)
 - [`thread_create_input_hook`](./thread-create-input-hook.md)
-- [`thread_create_input_model_hook`](./thread-create-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threaddelete`

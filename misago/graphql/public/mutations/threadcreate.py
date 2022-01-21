@@ -1,9 +1,9 @@
 from asyncio import gather
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, constr, create_model
+from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....database import database
 from ....errors import ErrorsList
@@ -26,10 +26,8 @@ from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadcreate import (
     ThreadCreateInput,
-    ThreadCreateInputModel,
     thread_create_hook,
     thread_create_input_hook,
-    thread_create_input_model_hook,
 )
 
 thread_create_mutation = MutationType()
@@ -41,9 +39,7 @@ thread_create_mutation = MutationType()
 async def resolve_thread_create(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await thread_create_input_model_hook.call_action(
-        create_input_model, info.context
-    )
+    input_model = create_input_model(info.context)
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
@@ -76,14 +72,15 @@ async def resolve_thread_create(
     return {"thread": thread}
 
 
-async def create_input_model(context: GraphQLContext) -> ThreadCreateInputModel:
+def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     return create_model(
         "ThreadCreateInputModel",
         category=(PositiveInt, ...),
         title=(threadtitlestr(context["settings"]), ...),
         markup=(
             constr(
-                strip_whitespace=True, min_length=context["settings"]["post_min_length"]
+                strip_whitespace=True,
+                min_length=context["settings"]["post_min_length"],
             ),
             ...,
         ),

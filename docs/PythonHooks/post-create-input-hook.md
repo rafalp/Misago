@@ -12,7 +12,7 @@ post_create_input_hook.call_action(
 )
 ```
 
-A filter for the function used to validate data for `PostCreateInputModel` GraphQL input type used by `postCreate` GraphQL mutation.
+A filter for the function used to validate data for `postCreate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to create new reply and validation `errors`.
 

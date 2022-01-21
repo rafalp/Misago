@@ -12,7 +12,7 @@ thread_create_input_hook.call_action(
 )
 ```
 
-A filter for the function used by `threacCreate` GraphQL mutation to validate data for `ThreadCreateInputModel` GraphQL input type.
+A filter for the function used to validate data for `threadCreate` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to create new thread and validation `errors`.
 

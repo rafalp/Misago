@@ -1,8 +1,8 @@
-from typing import Dict, List, Tuple, cast
+from typing import Dict, List, Tuple, Type, cast
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, constr, create_model
+from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....errors import ErrorsList
 from ....loaders import load_post, load_thread, store_post
@@ -25,10 +25,8 @@ from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postupdate import (
     PostUpdateInput,
-    PostUpdateInputModel,
     post_update_hook,
     post_update_input_hook,
-    post_update_input_model_hook,
 )
 
 post_update_mutation = MutationType()
@@ -40,9 +38,7 @@ post_update_mutation = MutationType()
 async def resolve_post_update(
     _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
 ):
-    input_model = await post_update_input_model_hook.call_action(
-        create_input_model, info.context
-    )
+    input_model = create_input_model(info.context)
     cleaned_data, errors = validate_model(input_model, input)
 
     post = None
@@ -81,13 +77,14 @@ async def resolve_post_update(
     return {"thread": thread, "post": post}
 
 
-async def create_input_model(context: GraphQLContext) -> PostUpdateInputModel:
+def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     return create_model(
         "PostUpdateInputModel",
         post=(PositiveInt, ...),
         markup=(
             constr(
-                strip_whitespace=True, min_length=context["settings"]["post_min_length"]
+                strip_whitespace=True,
+                min_length=context["settings"]["post_min_length"],
             ),
             ...,
         ),

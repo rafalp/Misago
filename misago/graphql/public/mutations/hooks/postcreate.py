@@ -1,6 +1,4 @@
-from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
-
-from pydantic import BaseModel
+from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
@@ -8,23 +6,6 @@ from .....richtext import ParsedMarkupMetadata
 from .....threads.models import Post, Thread
 from .....validation import Validator
 from .... import GraphQLContext
-
-PostCreateInputModel = Type[BaseModel]
-PostCreateInputModelAction = Callable[[GraphQLContext], Awaitable[PostCreateInputModel]]
-PostCreateInputModelFilter = Callable[
-    [PostCreateInputModelAction, GraphQLContext],
-    Awaitable[PostCreateInputModel],
-]
-
-
-class PostCreateInputModelHook(
-    FilterHook[PostCreateInputModelAction, PostCreateInputModelFilter]
-):
-    def call_action(
-        self, action: PostCreateInputModelAction, context: GraphQLContext
-    ) -> Awaitable[PostCreateInputModel]:
-        return self.filter(action, context)
-
 
 PostCreateInput = Dict[str, Any]
 PostCreateInputAction = Callable[
@@ -76,4 +57,3 @@ class PostCreateHook(FilterHook[PostCreateAction, PostCreateFilter]):
 
 post_create_hook = PostCreateHook()
 post_create_input_hook = PostCreateInputHook()
-post_create_input_model_hook = PostCreateInputModelHook()
