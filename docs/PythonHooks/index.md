@@ -99,6 +99,12 @@ Standard hooks
 - [`user_create_input_model_hook`](./user-create-input-model-hook.md)
 
 
+### `misago.graphql.public.mutations.hooks.threadclose`
+
+- [`thread_close_hook`](./thread-close-hook.md)
+- [`thread_close_input_hook`](./thread-close-input-hook.md)
+
+
 ### `misago.graphql.public.mutations.hooks.threadcreate`
 
 - [`thread_create_hook`](./thread-create-hook.md)
@@ -113,17 +119,16 @@ Standard hooks
 - [`thread_delete_input_model_hook`](./thread-delete-input-model-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.threadisclosedupdate`
-
-- [`thread_is_closed_update_hook`](./thread-is-closed-update-hook.md)
-- [`thread_is_closed_update_input_hook`](./thread-is-closed-update-input-hook.md)
-- [`thread_is_closed_update_input_model_hook`](./thread-is-closed-update-input-model-hook.md)
-
-
 ### `misago.graphql.public.mutations.hooks.threadmove`
 
 - [`thread_move_hook`](./thread-category-update-hook.md)
 - [`thread_move_input_hook`](./thread-category-update-input-hook.md)
+
+
+### `misago.graphql.public.mutations.hooks.threadopen`
+
+- [`thread_open_hook`](./thread-open-hook.md)
+- [`thread_open_input_hook`](./thread-open-input-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threadrename`
