@@ -42,7 +42,7 @@ async def test_moving_threads_to_their_current_category_does_nothing(
 ):
     gather = mocker.patch("misago.threads.move.gather")
     updated_threads = await move_threads([thread], category)
-    assert updated_threads[0] == thread
+    assert updated_threads == []
     gather.assert_not_called()
 
 

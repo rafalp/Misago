@@ -30,18 +30,14 @@ type ThreadDeleteMutationResult {
 }
 
 extend type Mutation {
-    threadsIsClosedBulkUpdate(input: ThreadsIsClosedBulkUpdateInput!): ThreadsBulkMutationResult!
     threadsBulkDelete(threads: [ID!]!): ThreadsBulkDeleteMutationResult!
     threadsBulkMove(threads: [ID!]!, category: ID!): ThreadsBulkMutationResult!
-}
-
-input ThreadsIsClosedBulkUpdateInput {
-    threads: [ID!]!
-    isClosed: Boolean!
+    threadsBulkClose(threads: [ID!]!): ThreadsBulkMutationResult!
+    threadsBulkOpen(threads: [ID!]!): ThreadsBulkMutationResult!
 }
 
 type ThreadsBulkMutationResult {
-    updated: Boolean!
+    updated: [ID!]!
     threads: [Thread!]
     errors: [Error!]
 }

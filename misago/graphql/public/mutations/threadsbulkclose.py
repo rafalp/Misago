@@ -1,8 +1,8 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, create_model
+from pydantic import BaseModel, PositiveInt, create_model
 
 from ....errors import ErrorsList
 from ....loaders import load_threads, store_threads
@@ -22,26 +22,22 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.threadsisclosedbulkupdate import (
-    ThreadsIsClosedBulkUpdateInput,
-    ThreadsIsClosedBulkUpdateInputModel,
-    threads_is_closed_bulk_update_hook,
-    threads_is_closed_bulk_update_input_hook,
-    threads_is_closed_bulk_update_input_model_hook,
+from .hooks.threadsbulkclose import (
+    ThreadsBulkCloseInput,
+    threads_bulk_close_hook,
+    threads_bulk_close_input_hook,
 )
 
-threads_is_closed_bulk_update_mutation = MutationType()
+threads_bulk_close_mutation = MutationType()
 
 
-@threads_is_closed_bulk_update_mutation.field("threadsIsClosedBulkUpdate")
+@threads_bulk_close_mutation.field("threadsBulkClose")
 @error_handler
 @convert_kwargs_to_snake_case
-async def resolve_threads_is_closed_bulk_update(
-    _, info: GraphQLResolveInfo, *, input: dict  # pylint: disable=redefined-builtin
+async def resolve_threads_bulk_close(
+    _, info: GraphQLResolveInfo, **input  # pylint: disable=redefined-builtin
 ):
-    input_model = await threads_is_closed_bulk_update_input_model_hook.call_action(
-        create_input_model, info.context
-    )
+    input_model = create_input_model(info.context)
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("threads"):
@@ -65,24 +61,21 @@ async def resolve_threads_is_closed_bulk_update(
             ],
             ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
         }
-        (
-            cleaned_data,
-            errors,
-        ) = await threads_is_closed_bulk_update_input_hook.call_action(
+        (cleaned_data, errors,) = await threads_bulk_close_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
         )
 
     if is_valid(cleaned_data, errors):
-        updated_threads = await threads_is_closed_bulk_update_hook.call_action(
-            threads_is_closed_bulk_update_action, info.context, cleaned_data
+        updated_threads = await threads_bulk_close_hook.call_action(
+            threads_bulk_close_action, info.context, cleaned_data
         )
 
         result = {
             "threads": update_list_items(threads, updated_threads),
-            "updated": True,
+            "updated": sorted([thread.id for thread in updated_threads]),
         }
     else:
-        result = {"threads": threads, "updated": False}
+        result = {"threads": threads, "updated": []}
 
     if errors:
         result["errors"] = errors
@@ -90,38 +83,34 @@ async def resolve_threads_is_closed_bulk_update(
     return result
 
 
-async def create_input_model(
-    context: GraphQLContext,
-) -> ThreadsIsClosedBulkUpdateInputModel:
+def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     return create_model(
-        "ThreadsIsClosedBulkUpdateInputModel",
+        "ThreadsBulkCloseInputModel",
         threads=(bulkactionidslist(PositiveInt, context["settings"]), ...),
-        is_closed=(bool, ...),
     )
 
 
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: ThreadsIsClosedBulkUpdateInput,
+    data: ThreadsBulkCloseInput,
     errors: ErrorsList,
-) -> Tuple[ThreadsIsClosedBulkUpdateInput, ErrorsList]:
+) -> Tuple[ThreadsBulkCloseInput, ErrorsList]:
     return await validate_data(data, validators, errors)
 
 
-def is_valid(cleaned_data: ThreadsIsClosedBulkUpdateInput, errors: ErrorsList) -> bool:
+def is_valid(cleaned_data: ThreadsBulkCloseInput, errors: ErrorsList) -> bool:
     if errors.has_root_errors:
         return False
-    if not cleaned_data.get("threads") or "is_closed" not in cleaned_data:
-        return False
-    return True
+
+    return bool(cleaned_data.get("threads"))
 
 
-async def threads_is_closed_bulk_update_action(
-    context: GraphQLContext, cleaned_data: ThreadsIsClosedBulkUpdateInput
+async def threads_bulk_close_action(
+    context: GraphQLContext, cleaned_data: ThreadsBulkCloseInput
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
-    threads = await close_threads(threads, cleaned_data["is_closed"])
+    threads = await close_threads(threads)
     store_threads(context, threads)
 
     return threads

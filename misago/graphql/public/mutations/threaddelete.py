@@ -1,8 +1,8 @@
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Type
 
 from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
-from pydantic import PositiveInt, create_model
+from pydantic import BaseModel, PositiveInt, create_model
 
 from ....errors import ErrorsList
 from ....loaders import clear_all_posts, clear_thread
@@ -19,10 +19,8 @@ from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threaddelete import (
     ThreadDeleteInput,
-    ThreadDeleteInputModel,
     thread_delete_hook,
     thread_delete_input_hook,
-    thread_delete_input_model_hook,
 )
 
 thread_delete_mutation = MutationType()
@@ -34,7 +32,7 @@ thread_delete_mutation = MutationType()
 async def resolve_thread_delete(
     _, info: GraphQLResolveInfo, **input  # pylint: disable=redefined-builtin
 ):
-    input_model = create_model("ThreadDeleteInputModel", thread=(PositiveInt, ...))
+    input_model = create_input_model()
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data:
@@ -59,6 +57,10 @@ async def resolve_thread_delete(
     )
 
     return {"deleted": [cleaned_data["thread"].id]}
+
+
+def create_input_model() -> Type[BaseModel]:
+    return create_model("ThreadDeleteInputModel", thread=(PositiveInt, ...))
 
 
 async def validate_input_data(

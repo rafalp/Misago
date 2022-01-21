@@ -1,18 +1,18 @@
-# `threads_is_closed_bulk_updatethreads_is_closed_bulk_update_input_hook`
+# `threads_bulk_close_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadsisclosedbulkupdate import threads_is_closed_bulk_updatethreads_is_closed_bulk_update_input_hook
+frotm misago.graphql.public.mutations.hooks.threadsbulkclose import threads_bulk_close_input_hook
 
-threads_is_closed_bulk_update_input_hook.call_action(
-    action: ThreadsIsClosedBulkUpdateInputAction,
+thrteads_bulk_close_input_hook.call_action(
+    action: ThreadsBulkCloseInputAction,
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: ThreadsIsClosedBulkUpdateInput,
+    data: ThreadsBulkCloseInput,
     errors_list: ErrorsList,
 )
 ```
 
-A filter for the function used to validate data for `ThreadsIsClosedBulkUpdateInputModel` GraphQL input type used by `threadsIsClosedBulkUpdate` GraphQL mutation.
+A filter for the function used to validate data for `threadsBulkClose` GraphQL mutation.
 
 Returns a tuple of `data` that should be used to update threads and validation `errors`.
 
@@ -25,9 +25,9 @@ Returns a tuple of `data` that should be used to update threads and validation `
 async def validate_input_data(
     context: GraphQLContext,
     validators: Dict[str, List[Validator]],
-    data: ThreadsIsClosedBulkUpdateInput,
+    data: ThreadsBulkCloseInput,
     errors: ErrorsList,
-) -> Tuple[ThreadsIsClosedBulkUpdateInput, ErrorsList]:
+) -> Tuple[ThreadsBulkCloseInput, ErrorsList]:
     ...
 ```
 

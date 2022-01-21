@@ -32,7 +32,7 @@ async def test_threads_bulk_move_mutation_moves_threads(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": True,
+        "updated": [str(thread.id)],
         "threads": [
             {
                 "id": str(thread.id),
@@ -49,6 +49,33 @@ async def test_threads_bulk_move_mutation_moves_threads(
 
 
 @pytest.mark.asyncio
+async def test_threads_bulk_move_doesnt_move_threads_in_target_category(
+    query_public_api, moderator, thread
+):
+    result = await query_public_api(
+        THREADS_BULK_MOVE_MUTATION,
+        {"threads": [str(thread.id)], "category": str(thread.category_id)},
+        auth=moderator,
+    )
+
+    assert result["data"]["threadsBulkMove"] == {
+        "updated": [],
+        "threads": [
+            {
+                "id": str(thread.id),
+                "category": {
+                    "id": str(thread.category_id),
+                },
+            },
+        ],
+        "errors": None,
+    }
+
+    thread_from_db = await thread.refresh_from_db()
+    assert thread_from_db.category_id == thread.category_id
+
+
+@pytest.mark.asyncio
 async def test_threads_bulk_move_mutation_fails_if_user_is_not_authorized(
     query_public_api, thread, sibling_category
 ):
@@ -58,7 +85,7 @@ async def test_threads_bulk_move_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [
             {
                 "id": str(thread.id),
@@ -94,7 +121,7 @@ async def test_threads_bulk_move_mutation_fails_if_user_is_not_moderator(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [
             {
                 "id": str(thread.id),
@@ -126,7 +153,7 @@ async def test_threads_bulk_move_mutation_fails_if_thread_id_is_invalid(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [],
         "errors": [
             {
@@ -148,7 +175,7 @@ async def test_threads_bulk_move_mutation_fails_if_thread_doesnt_exist(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [],
         "errors": [
             {
@@ -170,7 +197,7 @@ async def test_threads_bulk_move_mutation_fails_if_category_id_is_invalid(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [
             {
                 "id": str(thread.id),
@@ -202,7 +229,7 @@ async def test_threads_bulk_move_mutation_fails_if_category_doesnt_exist(
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": False,
+        "updated": [],
         "threads": [
             {
                 "id": str(thread.id),
@@ -237,7 +264,7 @@ async def test_threads_bulk_move_mutation_with_threads_errors_still_updates_vali
     )
 
     assert result["data"]["threadsBulkMove"] == {
-        "updated": True,
+        "updated": [str(thread.id)],
         "threads": [
             {
                 "id": str(thread.id),

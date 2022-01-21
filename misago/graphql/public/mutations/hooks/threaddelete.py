@@ -1,30 +1,9 @@
-from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
-
-from pydantic import BaseModel
+from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
 from .....errors import ErrorsList
 from .....hooks import FilterHook
 from .....validation import Validator
 from .... import GraphQLContext
-
-ThreadDeleteInputModel = Type[BaseModel]
-ThreadDeleteInputModelAction = Callable[
-    [GraphQLContext], Awaitable[ThreadDeleteInputModel]
-]
-ThreadDeleteInputModelFilter = Callable[
-    [ThreadDeleteInputModelAction, GraphQLContext],
-    Awaitable[ThreadDeleteInputModel],
-]
-
-
-class ThreadDeleteInputModelHook(
-    FilterHook[ThreadDeleteInputModelAction, ThreadDeleteInputModelFilter]
-):
-    def call_action(
-        self, action: ThreadDeleteInputModelAction, context: GraphQLContext
-    ) -> Awaitable[ThreadDeleteInputModel]:
-        return self.filter(action, context)
-
 
 ThreadDeleteInput = Dict[str, Any]
 ThreadDeleteInputAction = Callable[
@@ -69,4 +48,3 @@ class ThreadDeleteHook(FilterHook[ThreadDeleteAction, ThreadDeleteFilter]):
 
 thread_delete_hook = ThreadDeleteHook()
 thread_delete_input_hook = ThreadDeleteInputHook()
-thread_delete_input_model_hook = ThreadDeleteInputModelHook()

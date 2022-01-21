@@ -28,7 +28,7 @@ async def move_threads(
         if thread.category_id != new_category.id:
             thread = replace(thread, category_id=new_category.id)
             threads_ids.append(thread.id)
-        updated_threads.append(thread)
+            updated_threads.append(thread)
 
     if threads_ids:
         move_threads_query = Thread.query.filter(id__in=threads_ids).update(

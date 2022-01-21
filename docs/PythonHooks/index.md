@@ -116,7 +116,6 @@ Standard hooks
 
 - [`thread_delete_hook`](./thread-delete-hook.md)
 - [`thread_delete_input_hook`](./thread-delete-input-hook.md)
-- [`thread_delete_input_model_hook`](./thread-delete-input-model-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.threadmove`
@@ -137,6 +136,12 @@ Standard hooks
 - [`thread_rename_input_hook`](./thread-rename-input-hook.md)
 
 
+### `misago.graphql.public.mutations.hooks.threadsbulkclose`
+
+- [`threads_bulk_close_hook`](./threads-bulk-close-hook.md)
+- [`threads_bulk_close_input_hook`](./threads-bulk-close-input-hook.md)
+
+
 ### `misago.graphql.public.mutations.hooks.threadsbulkdelete`
 
 - [`threads_bulk_delete_hook`](./threads-bulk-delete-hook.md)
@@ -149,11 +154,10 @@ Standard hooks
 - [`threads_bulk_move_input_hook`](./threads-bulk-move-input-hook.md)
 
 
-### `misago.graphql.public.mutations.hooks.threadsisclosedbulkupdate`
+### `misago.graphql.public.mutations.hooks.threadsbulkopen`
 
-- [`threads_is_closed_bulk_update_hook`](./threads-is-closed-bulk-update-hook.md)
-- [`threads_is_closed_bulk_update_input_hook`](./threads-is-closed-bulk-update-input-hook.md)
-- [`threads_is_closed_bulk_update_input_model_hook`](./threads-is-closed-bulk-update-input-model-hook.md)
+- [`threads_bulk_open_hook`](./threads-bulk-open-hook.md)
+- [`threads_bulk_open_input_hook`](./threads-bulk-open-input-hook.md)
 
 
 ### `misago.richtext.hooks`
