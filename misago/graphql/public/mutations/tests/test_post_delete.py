@@ -31,7 +31,7 @@ async def test_post_delete_mutation_deletes_thread_reply(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [str(thread_reply.id)],
+        "deleted": True,
         "thread": {
             "id": str(thread_with_reply.id),
         },
@@ -52,7 +52,7 @@ async def test_post_delete_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
         },
@@ -82,7 +82,7 @@ async def test_post_delete_mutation_fails_if_user_is_not_moderator(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
         },
@@ -108,7 +108,7 @@ async def test_post_delete_mutation_fails_if_thread_id_is_invalid(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": None,
         "errors": [
             {
@@ -132,7 +132,7 @@ async def test_post_delete_mutation_fails_if_thread_doesnt_exist(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": None,
         "errors": [
             {
@@ -156,7 +156,7 @@ async def test_post_delete_mutation_fails_if_post_id_is_invalid(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
         },
@@ -185,7 +185,7 @@ async def test_post_delete_mutation_fails_if_post_doesnt_exist(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
         },
@@ -211,7 +211,7 @@ async def test_post_delete_mutation_fails_if_post_is_thread_first_post(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread.id),
         },
@@ -240,7 +240,7 @@ async def test_post_delete_mutation_fails_if_post_is_in_other_thread(
     )
 
     assert result["data"]["postDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
         },

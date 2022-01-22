@@ -5,6 +5,7 @@ from .....errors import ErrorsList
 THREAD_MOVE_MUTATION = """
     mutation ThreadMove($thread: ID!, $category: ID!) {
         threadMove(thread: $thread, category: $category) {
+            updated
             thread {
                 id
                 category {
@@ -31,6 +32,7 @@ async def test_thread_move_mutation_moves_thread(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": True,
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -54,6 +56,7 @@ async def test_thread_move_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -87,6 +90,7 @@ async def test_thread_move_mutation_fails_if_user_is_not_moderator(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -116,6 +120,7 @@ async def test_thread_move_mutation_fails_if_thread_id_is_invalid(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": None,
         "errors": [
             {
@@ -137,6 +142,7 @@ async def test_thread_move_mutation_fails_if_thread_doesnt_exist(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": None,
         "errors": [
             {
@@ -158,6 +164,7 @@ async def test_thread_move_mutation_fails_if_category_id_is_invalid(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "category": {
@@ -187,6 +194,7 @@ async def test_thread_move_mutation_fails_if_category_doesnt_exist(
     )
 
     assert result["data"]["threadMove"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "category": {

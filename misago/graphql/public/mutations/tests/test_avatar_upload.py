@@ -12,6 +12,7 @@ from .....uploads.urls import make_media_url
 UPLOAD_AVATAR_MUTATION = """
     mutation AvatarUpload($upload: Upload!) {
         avatarUpload(upload: $upload) {
+            updated
             user {
                 id
                 avatars {
@@ -49,6 +50,7 @@ async def test_upload_avatar_mutation_uploads_avatar(
     assert user_from_db.avatars
 
     assert result["data"]["avatarUpload"] == {
+        "updated": True,
         "user": {
             "id": str(user.id),
             "avatars": [
@@ -76,6 +78,7 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
         )
 
     assert result["data"]["avatarUpload"] == {
+        "updated": False,
         "user": None,
         "errors": [
             {
@@ -104,6 +107,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_typ
         )
 
     assert result["data"]["avatarUpload"] == {
+        "updated": False,
         "user": {
             "id": str(user.id),
             "avatars": ANY,
@@ -139,6 +143,7 @@ async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
         )
 
     assert result["data"]["avatarUpload"] == {
+        "updated": False,
         "user": {
             "id": str(user.id),
             "avatars": ANY,
@@ -170,6 +175,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
         )
 
     assert result["data"]["avatarUpload"] == {
+        "updated": False,
         "user": {
             "id": str(user.id),
             "avatars": ANY,
@@ -201,6 +207,7 @@ async def test_upload_avatar_mutation_fails_if_image_is_too_small(
         )
 
     assert result["data"]["avatarUpload"] == {
+        "updated": False,
         "user": {
             "id": str(user.id),
             "avatars": ANY,

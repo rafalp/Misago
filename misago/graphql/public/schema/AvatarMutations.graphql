@@ -4,6 +4,7 @@ extend type Mutation {
 }
 
 type AvatarMutationResult {
+    updated: Boolean!
     user: User
     errors: [Error!]
 }

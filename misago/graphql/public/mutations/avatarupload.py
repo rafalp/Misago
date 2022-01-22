@@ -42,8 +42,8 @@ async def resolve_avatar_upload(_, info: GraphQLResolveInfo, *, upload: UploadFi
 
     user: User = info.context["user"]
     if errors:
-        return {"errors": errors, "user": user}
+        return {"errors": errors, "user": user, "updated": False}
 
     user = await store_uploaded_avatar(user, cleaned_data["upload"])
 
-    return {"user": user}
+    return {"user": user, "updated": True}

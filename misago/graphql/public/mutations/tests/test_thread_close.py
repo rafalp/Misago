@@ -6,6 +6,7 @@ from .....errors import ErrorsList
 THREAD_CLOSE_MUTATION = """
     mutation ThreadClose($thread: ID!) {
         threadClose(thread: $thread) {
+            updated
             thread {
                 id
                 isClosed
@@ -28,6 +29,7 @@ async def test_thread_close_mutation_opens_thread(query_public_api, moderator, t
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": True,
         "thread": {
             "id": str(thread.id),
             "isClosed": True,
@@ -50,6 +52,7 @@ async def test_thread_close_mutation_does_nothing_for_closed_thread(
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": False,
         "thread": {
             "id": str(closed_thread.id),
             "isClosed": True,
@@ -71,6 +74,7 @@ async def test_thread_close_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "isClosed": False,
@@ -102,6 +106,7 @@ async def test_thread_close_mutation_fails_if_user_is_not_moderator(
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": False,
         "thread": {
             "id": str(thread.id),
             "isClosed": False,
@@ -129,6 +134,7 @@ async def test_thread_close_mutation_fails_if_thread_id_is_invalid(
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": False,
         "thread": None,
         "errors": [
             {
@@ -150,6 +156,7 @@ async def test_thread_close_mutation_fails_if_thread_doesnt_exist(
     )
 
     assert result["data"]["threadClose"] == {
+        "updated": False,
         "thread": None,
         "errors": [
             {

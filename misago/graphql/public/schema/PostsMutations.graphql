@@ -1,5 +1,5 @@
 extend type Mutation {
-    postCreate(input: PostCreateInput!): PostMutationResult!
+    postCreate(input: PostCreateInput!): PostCreateMutationResult!
     postUpdate(input: PostUpdateInput!): PostMutationResult!
 }
 
@@ -8,12 +8,19 @@ input PostCreateInput {
     markup: String!
 }
 
+type PostCreateMutationResult {
+    thread: Thread
+    post: Post
+    errors: [Error!]
+}
+
 input PostUpdateInput {
     post: ID!
     markup: String!
 }
 
 type PostMutationResult {
+    updated: Boolean!
     thread: Thread
     post: Post
     errors: [Error!]
@@ -25,7 +32,7 @@ extend type Mutation {
 }
 
 type PostDeleteMutationResult {
-    deleted: [ID!]!
+    deleted: Boolean!
     thread: Thread
     errors: [Error!]
 }

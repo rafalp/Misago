@@ -63,13 +63,13 @@ async def resolve_thread_move(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread}
+        return {"errors": errors, "thread": thread, "updated": False}
 
-    thread = await thread_move_hook.call_action(
+    updated_thread = await thread_move_hook.call_action(
         thread_move_action, info.context, cleaned_data
     )
 
-    return {"thread": thread}
+    return {"thread": updated_thread, "updated": updated_thread != thread}
 
 
 def create_input_model() -> Type[BaseModel]:

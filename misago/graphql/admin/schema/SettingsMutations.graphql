@@ -22,7 +22,7 @@ input SettingsUpdateInput {
 }
 
 type SettingsUpdateResult {
-    updated: Boolean
+    updated: Boolean!
     settings: Settings
     errors: [Error!]
 }

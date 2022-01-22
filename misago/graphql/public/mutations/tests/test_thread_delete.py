@@ -27,7 +27,7 @@ async def test_thread_delete_mutation_deletes_thread(
     )
 
     assert result["data"]["threadDelete"] == {
-        "deleted": [str(thread.id)],
+        "deleted": True,
         "errors": None,
     }
 
@@ -45,7 +45,7 @@ async def test_thread_delete_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["threadDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "errors": [
             {
                 "location": "thread",
@@ -72,7 +72,7 @@ async def test_thread_delete_mutation_fails_if_user_is_not_moderator(
     )
 
     assert result["data"]["threadDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "errors": [
             {
                 "location": "thread",
@@ -95,7 +95,7 @@ async def test_thread_delete_mutation_fails_if_thread_id_is_invalid(
     )
 
     assert result["data"]["threadDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "errors": [
             {
                 "location": "thread",
@@ -116,7 +116,7 @@ async def test_thread_delete_mutation_fails_if_thread_doesnt_exist(
     )
 
     assert result["data"]["threadDelete"] == {
-        "deleted": [],
+        "deleted": False,
         "errors": [
             {
                 "location": "thread",

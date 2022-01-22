@@ -7,6 +7,7 @@ from .....errors import ErrorsList
 POST_UPDATE_MUTATION = """
     mutation PostUpdate($input: PostUpdateInput!) {
         postUpdate(input: $input) {
+            updated
             thread {
                 id
             }
@@ -32,6 +33,7 @@ async def test_post_update_mutation_updates_post(query_public_api, user, user_po
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": True,
         "thread": {
             "id": str(user_post.thread_id),
         },
@@ -68,6 +70,7 @@ async def test_post_update_mutation_fails_if_user_is_not_authorized(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": {
             "id": str(user_post.thread_id),
         },
@@ -100,6 +103,7 @@ async def test_post_update_mutation_fails_if_post_id_is_invalid(query_public_api
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": None,
         "post": None,
         "errors": [
@@ -120,6 +124,7 @@ async def test_post_update_mutation_fails_if_post_doesnt_exist(query_public_api,
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": None,
         "post": None,
         "errors": [
@@ -142,6 +147,7 @@ async def test_post_update_mutation_fails_if_post_author_is_other_user(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": {
             "id": str(other_user_post.thread_id),
         },
@@ -172,6 +178,7 @@ async def test_post_update_mutation_allows_moderator_to_edit_other_user_post(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": True,
         "thread": {
             "id": str(post.thread_id),
         },
@@ -209,6 +216,7 @@ async def test_post_update_mutation_fails_if_thread_is_closed(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": {
             "id": str(closed_user_thread_post.thread_id),
         },
@@ -239,6 +247,7 @@ async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_th
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": True,
         "thread": {
             "id": str(closed_user_thread_post.thread_id),
         },
@@ -276,6 +285,7 @@ async def test_post_update_mutation_fails_if_category_is_closed(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": {
             "id": str(closed_category_user_post.thread_id),
         },
@@ -306,6 +316,7 @@ async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_ca
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": True,
         "thread": {
             "id": str(closed_category_user_post.thread_id),
         },
@@ -343,6 +354,7 @@ async def test_post_update_mutation_fails_if_markup_is_too_short(
     )
 
     assert result["data"]["postUpdate"] == {
+        "updated": False,
         "thread": {
             "id": str(user_post.thread_id),
         },

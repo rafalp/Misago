@@ -20,12 +20,13 @@ type ThreadCreateMutationResult {
 }
 
 type ThreadMutationResult {
+    updated: Boolean!
     thread: Thread
     errors: [Error!]
 }
 
 type ThreadDeleteMutationResult {
-    deleted: [ID!]!
+    deleted: Boolean!
     errors: [Error!]
 }
 

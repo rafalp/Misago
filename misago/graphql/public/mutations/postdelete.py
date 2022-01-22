@@ -64,7 +64,7 @@ async def resolve_post_delete(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread, "deleted": []}
+        return {"errors": errors, "thread": thread, "deleted": False}
 
     if cleaned_data.get("thread"):
         post_validators: Dict[str, List[Validator]] = {
@@ -82,13 +82,13 @@ async def resolve_post_delete(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread, "deleted": []}
+        return {"errors": errors, "thread": thread, "deleted": False}
 
     thread = await post_delete_hook.call_action(
         post_delete_action, info.context, cleaned_data
     )
 
-    return {"thread": thread, "deleted": [cleaned_data["post"].id]}
+    return {"thread": thread, "deleted": True}
 
 
 def create_input_model() -> Type[BaseModel]:

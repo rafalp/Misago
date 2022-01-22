@@ -50,13 +50,13 @@ async def resolve_thread_delete(
         )
 
     if errors:
-        return {"errors": errors, "deleted": []}
+        return {"errors": errors, "deleted": False}
 
     await thread_delete_hook.call_action(
         thread_delete_action, info.context, cleaned_data
     )
 
-    return {"deleted": [cleaned_data["thread"].id]}
+    return {"deleted": True}
 
 
 def create_input_model() -> Type[BaseModel]:

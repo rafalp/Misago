@@ -68,13 +68,22 @@ async def resolve_post_update(
         )
 
     if errors:
-        return {"errors": errors, "thread": thread, "post": post}
+        return {
+            "errors": errors,
+            "thread": thread,
+            "post": post,
+            "updated": False,
+        }
 
-    thread, post, _ = await post_update_hook.call_action(
+    thread, updated_post, _ = await post_update_hook.call_action(
         post_update, info.context, cleaned_data
     )
 
-    return {"thread": thread, "post": post}
+    return {
+        "thread": thread,
+        "post": updated_post,
+        "updated": updated_post != post,
+    }
 
 
 def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
