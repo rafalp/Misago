@@ -24,7 +24,7 @@ async def test_bulk_posts_validator_partially_validates_posts(post):
         {
             "loc": "posts.1",
             "type": "value_error.post.not_found",
-            "msg": f"post with id '{post.id + 1}' does not exist",
+            "msg": f"post with id '{post.id + 1}' could not be found",
         },
     ]
     assert posts == [post]
