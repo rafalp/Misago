@@ -34,4 +34,3 @@ def sibling_category(categories):
 @pytest.fixture
 def closed_category(categories):
     return categories[3]
-

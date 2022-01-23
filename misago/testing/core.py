@@ -1,9 +1,9 @@
 import os
-from starlette.datastructures import UploadFile
 from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
 
 import pytest
+from starlette.datastructures import UploadFile
 
 from .. import tables
 from ..conf.cache import SETTINGS_CACHE
@@ -88,9 +88,7 @@ def tmp_media_dir():
             yield tmp_media_dir
 
 
-TEST_FILES_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "files"
-)
+TEST_FILES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "files")
 
 
 @pytest.fixture
