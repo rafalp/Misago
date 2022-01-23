@@ -7,7 +7,6 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 from ....errors import ErrorsList
 from ....loaders import load_post, load_thread, store_post
 from ....richtext.parser import ParsedMarkupMetadata, parse_markup
-from ....threads.hooks import update_post_hook
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryIsOpenValidator,
@@ -110,16 +109,11 @@ async def post_update(
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 
-    def update_post(post, **kwargs):
-        return post.update(**kwargs)
-
-    post = await update_post_hook.call_action(
-        update_post,
-        cleaned_data["post"],
+    post = cleaned_data["post"]
+    post = await post.update(
         markup=cleaned_data["markup"],
         rich_text=rich_text,
         increment_edits=True,
-        context=context,
     )
 
     store_post(context, post)

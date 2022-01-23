@@ -5,7 +5,6 @@ from typing import Any, Awaitable, Dict, List, Optional
 from ..categories.models import Category
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..database.paginator import PaginationPage
-from ..graphql import GraphQLContext
 from ..richtext import RichText
 from ..tables import posts, threads
 from ..users.models import User
@@ -60,7 +59,6 @@ class Thread(Model):
         is_closed: bool = False,
         started_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
     ) -> Awaitable["Thread"]:
         if first_post:
             if starter:
@@ -283,7 +281,6 @@ class Post(Model):
         edits: Optional[int] = 0,
         posted_at: Optional[datetime] = None,
         extra: Optional[dict] = None,
-        context: Optional[GraphQLContext] = None,
     ) -> Awaitable["Post"]:
         if poster and poster_name:
             raise ValueError(
@@ -317,7 +314,6 @@ class Post(Model):
         increment_edits: Optional[bool] = False,
         posted_at: Optional[datetime] = None,
         extra: Optional[dict] = None,
-        context: Optional[GraphQLContext] = None,
     ) -> "Post":
         changes: Dict[str, Any] = {}
 

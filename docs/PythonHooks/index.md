@@ -182,13 +182,6 @@ Standard hooks
 - [`template_context_hook`](./template-context-hook.md)
 
 
-### `misago.threads.hooks`
-
-- [`create_post_hook`](./create-post-hook.md)
-- [`create_thread_hook`](./create-thread-hook.md)
-- [`update_post_hook`](./update-post-hook.md)
-
-
 ### `misago.users.hooks`
 
 - [`create_user_hook`](./create-user-hook.md)

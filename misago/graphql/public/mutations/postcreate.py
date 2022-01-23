@@ -16,7 +16,6 @@ from ....loaders import (
 )
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
-from ....threads.hooks import create_post_hook
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryIsOpenValidator,
@@ -105,16 +104,11 @@ async def post_create(
     thread = cleaned_data["thread"]
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 
-    def create_post(*args, **kwargs):
-        return Post.create(*args, **kwargs)
-
-    reply = await create_post_hook.call_action(
-        create_post,
+    reply = await Post.create(
         thread,
         cleaned_data["markup"],
         rich_text,
         poster=context["user"],
-        context=context,
     )
     category = cast(Category, await load_category(context, thread.category_id))
 
