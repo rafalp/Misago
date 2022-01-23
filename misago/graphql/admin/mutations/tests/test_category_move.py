@@ -414,7 +414,7 @@ async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
         "errors": [
             {
                 "location": "category",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             }
         ],
     }
@@ -441,7 +441,7 @@ async def test_move_category_mutation_fails_if_parent_id_doesnt_exist(
         "errors": [
             {
                 "location": "parent",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             }
         ],
     }
@@ -468,7 +468,7 @@ async def test_move_category_mutation_fails_if_before_id_doesnt_exist(
         "errors": [
             {
                 "location": "before",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             }
         ],
     }

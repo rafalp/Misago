@@ -10,11 +10,11 @@ from .threadcreate import thread_create_mutation
 from .threaddelete import thread_delete_mutation
 from .threadmove import thread_move_mutation
 from .threadopen import thread_open_mutation
+from .threadrename import thread_rename_mutation
 from .threadsbulkclose import threads_bulk_close_mutation
 from .threadsbulkdelete import threads_bulk_delete_mutation
 from .threadsbulkmove import threads_bulk_move_mutation
 from .threadsbulkopen import threads_bulk_open_mutation
-from .threadrename import thread_rename_mutation
 from .usercreate import user_create_mutation
 
 mutations = [

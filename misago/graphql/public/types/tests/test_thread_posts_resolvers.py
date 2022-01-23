@@ -1,6 +1,5 @@
 import pytest
 
-
 THREAD_POSTS_QUERY = """
     query GetThreadPosts($thread: ID!, $page: Int) {
         thread(id: $thread) {

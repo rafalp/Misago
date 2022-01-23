@@ -9,19 +9,19 @@ from ..categories.models import Category
 from ..errors import (
     AuthError,
     CategoryClosedError,
-    CategoryDoesNotExistError,
+    CategoryNotFoundError,
     EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
     NotModeratorError,
     NotPostAuthorError,
     NotThreadAuthorError,
-    PostDoesNotExistError,
+    PostNotFoundError,
     ThreadClosedError,
-    ThreadDoesNotExistError,
     ThreadFirstPostError,
-    UserDoesNotExistError,
+    ThreadNotFoundError,
     UsernameNotAvailableError,
+    UserNotFoundError,
 )
 from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread, load_user
@@ -82,7 +82,7 @@ class CategoryExistsValidator:
     async def __call__(self, category_id: Union[int, str], *_) -> Category:
         category = await load_category(self._context, category_id)
         if not category or category.type != self._category_type:
-            raise CategoryDoesNotExistError(category_id=category_id)
+            raise CategoryNotFoundError(category_id=category_id)
         return category
 
 
@@ -201,10 +201,10 @@ class PostExistsValidator:
     async def __call__(self, post_id: Union[int, str], *_) -> Post:
         post = await load_post(self._context, post_id)
         if not post:
-            raise PostDoesNotExistError(post_id=post_id)
+            raise PostNotFoundError(post_id=post_id)
         category_type = await _get_category_type(self._context, post.category_id)
         if category_type != self._category_type:
-            raise PostDoesNotExistError(post_id=post_id)
+            raise PostNotFoundError(post_id=post_id)
         return post
 
 
@@ -288,10 +288,10 @@ class ThreadExistsValidator:
     async def __call__(self, thread_id: Union[int, str], *_) -> Thread:
         thread = await load_thread(self._context, thread_id)
         if not thread:
-            raise ThreadDoesNotExistError(thread_id=thread_id)
+            raise ThreadNotFoundError(thread_id=thread_id)
         category_type = await _get_category_type(self._context, thread.category_id)
         if category_type != self._category_type:
-            raise ThreadDoesNotExistError(thread_id=thread_id)
+            raise ThreadNotFoundError(thread_id=thread_id)
         return thread
 
 
@@ -320,7 +320,7 @@ class ThreadPostExistsValidator:
     async def __call__(self, post_id: Union[int, str], *_) -> Post:
         post = await load_post(self._context, post_id)
         if not post or post.thread_id != self._thread.id:
-            raise PostDoesNotExistError(post_id=post_id)
+            raise PostNotFoundError(post_id=post_id)
         return post
 
 
@@ -352,7 +352,7 @@ class UserExistsValidator:
     async def __call__(self, user_id: Union[int, str], *_) -> User:
         user = await load_user(self._context, user_id)
         if not user:
-            raise UserDoesNotExistError(user_id=user_id)
+            raise UserNotFoundError(user_id=user_id)
         return user
 
 

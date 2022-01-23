@@ -1,7 +1,7 @@
 import pytest
 
 from ...categories import CategoryTypes
-from ...errors import CategoryDoesNotExistError
+from ...errors import CategoryNotFoundError
 from ..validators import CategoryExistsValidator
 
 
@@ -16,7 +16,7 @@ async def test_validator_raises_category_not_exists_error_if_category_not_exists
     db,
 ):
     validator = CategoryExistsValidator({})
-    with pytest.raises(CategoryDoesNotExistError):
+    with pytest.raises(CategoryNotFoundError):
         await validator(100)
 
 
@@ -31,5 +31,5 @@ async def test_validator_raises_category_not_exists_error_for_wrong_category_typ
     category,
 ):
     validator = CategoryExistsValidator({}, CategoryTypes.PRIVATE_THREADS)
-    with pytest.raises(CategoryDoesNotExistError):
+    with pytest.raises(CategoryNotFoundError):
         await validator(category.id)

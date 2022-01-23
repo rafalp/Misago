@@ -1,7 +1,7 @@
 from typing import Iterable, Optional, Tuple
 
-from PIL import Image, UnidentifiedImageError
 from asgiref.sync import sync_to_async
+from PIL import Image, UnidentifiedImageError
 from starlette.datastructures import UploadFile
 
 from ..validation.errors import ImageError, ImageMaxSizeError, ImageMinSizeError

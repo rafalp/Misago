@@ -2,7 +2,6 @@ from unittest.mock import ANY
 
 import pytest
 
-
 RICH_TEXT_QUERY = """
     query Search($markup: String!) {
         richText(markup: $markup)

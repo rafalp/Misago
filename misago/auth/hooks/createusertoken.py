@@ -4,7 +4,6 @@ from ...graphql import GraphQLContext
 from ...hooks import FilterHook
 from ...users.models import User
 
-
 CreateUserTokenAction = Callable[[GraphQLContext, User, bool], Awaitable[str]]
 CreateUserTokenFilter = Callable[
     [CreateUserTokenAction, GraphQLContext, User, bool], Awaitable[str]

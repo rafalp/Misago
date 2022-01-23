@@ -3,8 +3,8 @@ import sys
 from types import ModuleType
 from typing import List, Optional, Tuple
 
-from .plugin import Plugin
 from .discovery import discover_plugins
+from .plugin import Plugin
 
 
 class PluginLoader:

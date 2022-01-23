@@ -1,6 +1,5 @@
 import pytest
 
-
 CATEGORY_CHILDREN_QUERY = """
     query GetCategory($category: ID!) {
         category(id: $category) {

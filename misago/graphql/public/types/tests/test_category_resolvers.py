@@ -1,6 +1,5 @@
 import pytest
 
-
 CATEGORIES_QUERY = """
     query GetCategories {
         categories {

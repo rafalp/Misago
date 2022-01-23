@@ -134,7 +134,7 @@ async def test_post_create_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             }
         ],
     }

@@ -1,5 +1,6 @@
 black
 coveralls
+isort
 mypy
 pip-tools
 pylint

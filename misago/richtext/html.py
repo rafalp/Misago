@@ -1,8 +1,8 @@
 from typing import Optional
 
 from ..graphql import GraphQLContext
-from .hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
 from .highlight import highlight_code
+from .hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
 from .types import RichText, RichTextBlock
 
 __all__ = ["convert_rich_text_block_to_html", "convert_rich_text_to_html"]

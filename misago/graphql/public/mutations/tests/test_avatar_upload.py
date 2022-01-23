@@ -1,5 +1,4 @@
 import os
-
 from unittest.mock import ANY
 
 import pytest

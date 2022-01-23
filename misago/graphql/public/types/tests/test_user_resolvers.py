@@ -1,6 +1,5 @@
 import pytest
 
-
 USER_QUERY = """
     query GetUser($user: ID!) {
         user(id: $user) {

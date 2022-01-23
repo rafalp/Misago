@@ -1,6 +1,5 @@
 import pytest
 
-
 POST_QUERY = """
     query GetPost($post: ID!) {
         post(id: $post) {

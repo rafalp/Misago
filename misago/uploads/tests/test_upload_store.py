@@ -1,11 +1,11 @@
-from io import BytesIO
 import os
+from io import BytesIO
 
 import pytest
 
 from ..store import (
-    delete_media_file,
     delete_media_directory,
+    delete_media_file,
     make_media_directory,
     make_media_path,
     media_file_exists,

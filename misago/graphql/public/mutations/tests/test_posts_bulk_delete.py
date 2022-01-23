@@ -3,7 +3,6 @@ import pytest
 from .....errors import ErrorsList
 from .....threads.models import Post
 
-
 POSTS_BULK_DELETE_MUTATION = """
     mutation PostsBulkDelete($thread: ID!, $posts: [ID!]!) {
         postsBulkDelete(thread: $thread, posts: $posts) {
@@ -142,7 +141,7 @@ async def test_posts_bulk_delete_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }
@@ -197,7 +196,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_doesnt_exist(
         "errors": [
             {
                 "location": "posts.0",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }
@@ -252,7 +251,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_is_in_other_thread(
         "errors": [
             {
                 "location": "posts.0",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }
@@ -281,7 +280,7 @@ async def test_posts_bulk_delete_mutation_with_posts_errors_still_deletes_valid_
         "errors": [
             {
                 "location": "posts.1",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }

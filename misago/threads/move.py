@@ -1,6 +1,6 @@
 from asyncio import gather
 from dataclasses import replace
-from typing import List, Iterable
+from typing import Iterable, List
 
 from ..categories.models import Category
 from .models import Post, Thread

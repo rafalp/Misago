@@ -18,11 +18,7 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.threadopen import (
-    ThreadOpenInput,
-    thread_open_hook,
-    thread_open_input_hook,
-)
+from .hooks.threadopen import ThreadOpenInput, thread_open_hook, thread_open_input_hook
 
 thread_open_mutation = MutationType()
 

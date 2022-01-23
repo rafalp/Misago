@@ -1,8 +1,8 @@
 from math import ceil
 from typing import TYPE_CHECKING
 
-from PIL import Image
 from asgiref.sync import sync_to_async
+from PIL import Image
 from starlette.datastructures import UploadFile
 
 from .store import store_user_avatar

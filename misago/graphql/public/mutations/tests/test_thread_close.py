@@ -2,7 +2,6 @@ import pytest
 
 from .....errors import ErrorsList
 
-
 THREAD_CLOSE_MUTATION = """
     mutation ThreadClose($thread: ID!) {
         threadClose(thread: $thread) {
@@ -161,7 +160,7 @@ async def test_thread_close_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }

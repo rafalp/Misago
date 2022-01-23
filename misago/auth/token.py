@@ -5,8 +5,8 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 
 from ..graphql import GraphQLContext
-from ..utils import timezone
 from ..users.models import User
+from ..utils import timezone
 from .hooks import (
     create_user_token_payload_hook,
     get_auth_user_hook,

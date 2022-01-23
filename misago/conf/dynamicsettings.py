@@ -1,8 +1,8 @@
 from ..cacheversions import CacheVersions
 from ..database import database
 from ..tables import settings
-from .types import DynamicSettings, Settings
 from .cache import get_settings_cache, set_settings_cache
+from .types import DynamicSettings, Settings
 
 
 async def get_dynamic_settings(cache_versions: CacheVersions) -> DynamicSettings:

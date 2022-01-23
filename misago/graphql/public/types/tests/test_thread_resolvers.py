@@ -1,6 +1,5 @@
 import pytest
 
-
 THREAD_QUERY = """
     query GetThread($thread: ID!) {
         thread(id: $thread) {

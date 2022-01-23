@@ -2,7 +2,7 @@ import pytest
 from PIL import Image
 
 from ...conf import settings
-from ...uploads.store import media_file_exists, make_media_path
+from ...uploads.store import make_media_path, media_file_exists
 from ..upload import store_uploaded_avatar
 
 

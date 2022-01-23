@@ -30,11 +30,7 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.postcreate import (
-    PostCreateInput,
-    post_create_hook,
-    post_create_input_hook,
-)
+from .hooks.postcreate import PostCreateInput, post_create_hook, post_create_input_hook
 
 post_create_mutation = MutationType()
 

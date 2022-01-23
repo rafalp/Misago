@@ -341,7 +341,7 @@ async def test_category_update_mutation_fails_if_category_doesnt_exist(query_adm
         "errors": [
             {
                 "location": "category",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             }
         ],
     }
@@ -506,7 +506,7 @@ async def test_category_update_mutation_fails_if_category_parent_doesnt_exist(
         "errors": [
             {
                 "location": "parent",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             }
         ],
     }

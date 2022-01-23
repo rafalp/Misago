@@ -3,7 +3,6 @@ import pytest
 from .....errors import ErrorsList
 from .....threads.models import Post
 
-
 POST_DELETE_MUTATION = """
     mutation PostDelete($thread: ID!, $post: ID!) {
         postDelete(thread: $thread, post: $post) {
@@ -137,7 +136,7 @@ async def test_post_delete_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }
@@ -192,7 +191,7 @@ async def test_post_delete_mutation_fails_if_post_doesnt_exist(
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }
@@ -247,7 +246,7 @@ async def test_post_delete_mutation_fails_if_post_is_in_other_thread(
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }

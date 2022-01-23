@@ -1,3 +1,4 @@
+from .root_validator import for_location
 from .types import (
     PASSWORD_MAX_LENGTH,
     bulkactionidslist,
@@ -31,7 +32,6 @@ from .validators import (
     Validator,
     color_validator,
 )
-from .root_validator import for_location
 
 __all__ = [
     "ROOT_LOCATION",

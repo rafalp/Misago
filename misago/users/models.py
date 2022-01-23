@@ -6,9 +6,9 @@ from ..avatars.store import delete_user_avatars
 from ..avatars.types import AvatarType
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..database.paginator import PaginationPage
+from ..graphql import GraphQLContext
 from ..passwords import check_password, hash_password
 from ..tables import users
-from ..graphql import GraphQLContext
 from ..utils import timezone
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email

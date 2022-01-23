@@ -2,7 +2,6 @@ import pytest
 
 from .....errors import ErrorsList
 
-
 THREAD_OPEN_MUTATION = """
     mutation ThreadOpen($thread: ID!) {
         threadOpen(thread: $thread) {
@@ -163,7 +162,7 @@ async def test_thread_open_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }

@@ -1,6 +1,5 @@
 import pytest
 
-
 AUTH_QUERY = """
     query GetAuth {
         auth {

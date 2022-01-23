@@ -1,9 +1,8 @@
 from hashlib import md5
 from typing import TYPE_CHECKING, Dict
 
-
-from PIL import Image
 from asgiref.sync import sync_to_async
+from PIL import Image
 
 from ..conf import settings
 from ..uploads.store import (

@@ -5,11 +5,11 @@ from ..conf import settings
 from .categories import categories_route
 from .category import category_route
 from .error_500 import error_500_route
+from .exceptions import HTTPNotFound, get_exception_handlers
 from .hooks import register_routes_hook
 from .index import index_route
 from .thread import thread_route
 from .threads import threads_route
-from .exceptions import HTTPNotFound, get_exception_handlers
 
 
 def register_routes(app: Starlette):

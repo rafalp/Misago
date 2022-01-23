@@ -154,7 +154,7 @@ async def test_thread_create_mutation_fails_if_category_doesnt_exist(
         "errors": [
             {
                 "location": "category",
-                "type": "value_error.category.not_exists",
+                "type": "value_error.category.not_found",
             },
         ],
     }

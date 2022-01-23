@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
-from ..runtime import read_runtime, is_line_with_source_mapping
-
+from ..runtime import is_line_with_source_mapping, read_runtime
 
 RUNTIME_PATH = "misago/js/runtime-main.ef606b99.js"
 

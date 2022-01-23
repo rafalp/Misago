@@ -4,15 +4,11 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt
 
-from ....validation import (
-    UserExistsValidator,
-    validate_data,
-    validate_model,
-)
 from ....threads.delete import delete_user_posts, delete_user_threads
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
 from ....users.hooks import delete_user_content_hook, delete_user_hook
 from ....users.models import User
+from ....validation import UserExistsValidator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver

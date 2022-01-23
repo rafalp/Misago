@@ -21,11 +21,7 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.threadmove import (
-    ThreadMoveInput,
-    thread_move_hook,
-    thread_move_input_hook,
-)
+from .hooks.threadmove import ThreadMoveInput, thread_move_hook, thread_move_input_hook
 
 thread_move_mutation = MutationType()
 

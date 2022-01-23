@@ -130,7 +130,7 @@ async def test_post_update_mutation_fails_if_post_doesnt_exist(query_public_api,
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_exists",
+                "type": "value_error.post.not_found",
             },
         ],
     }

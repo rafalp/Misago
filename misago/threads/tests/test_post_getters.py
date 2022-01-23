@@ -1,10 +1,6 @@
 import pytest
 
-from ..get import (
-    get_posts_by_id,
-    get_thread_posts_page,
-    get_thread_posts_paginator,
-)
+from ..get import get_posts_by_id, get_thread_posts_page, get_thread_posts_paginator
 
 
 @pytest.mark.asyncio

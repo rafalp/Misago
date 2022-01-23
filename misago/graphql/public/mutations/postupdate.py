@@ -23,11 +23,7 @@ from ....validation import (
 )
 from ... import GraphQLContext
 from ...errorhandler import error_handler
-from .hooks.postupdate import (
-    PostUpdateInput,
-    post_update_hook,
-    post_update_input_hook,
-)
+from .hooks.postupdate import PostUpdateInput, post_update_hook, post_update_input_hook
 
 post_update_mutation = MutationType()
 

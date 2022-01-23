@@ -13,11 +13,7 @@ from ....uploads.validators import (
     UploadSizeValidator,
 )
 from ....users.models import User
-from ....validation import (
-    UserIsAuthorizedRootValidator,
-    Validator,
-    validate_data,
-)
+from ....validation import UserIsAuthorizedRootValidator, Validator, validate_data
 from ...errorhandler import error_handler
 
 AVATAR_CONTENT_TYPES = settings.avatar_content_types

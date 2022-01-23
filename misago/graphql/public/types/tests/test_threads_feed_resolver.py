@@ -1,6 +1,5 @@
 import pytest
 
-
 THREADS_FEED_QUERY = """
     query GetThreads($category: ID, $user: ID) {
         threads(category: $category, user: $user) {

@@ -5,7 +5,7 @@ import pytest
 
 from ...tables import categories, settings, users
 from ...utils import timezone
-from ..objectmapper import ObjectMapper, InvalidColumnError
+from ..objectmapper import InvalidColumnError, ObjectMapper
 
 
 @pytest.mark.asyncio

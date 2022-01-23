@@ -4,7 +4,6 @@ from ...graphql import GraphQLContext
 from ...hooks import FilterHook
 from ...users.models import User
 
-
 GetAuthUserAction = Callable[[GraphQLContext, int], Awaitable[Optional[User]]]
 GetAuthUserFilter = Callable[
     [GetAuthUserAction, GraphQLContext, int], Awaitable[Optional[User]]

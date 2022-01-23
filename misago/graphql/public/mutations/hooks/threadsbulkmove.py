@@ -6,7 +6,6 @@ from .....threads.models import Thread
 from .....validation import Validator
 from .... import GraphQLContext
 
-
 ThreadsBulkMoveInput = Dict[str, Any]
 ThreadsBulkMoveInputAction = Callable[
     [GraphQLContext, Dict[str, List[Validator]], ThreadsBulkMoveInput, ErrorsList],

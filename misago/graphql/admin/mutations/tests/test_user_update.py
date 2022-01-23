@@ -61,7 +61,7 @@ async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, 
         "errors": [
             {
                 "location": "user",
-                "type": "value_error.user.not_exists",
+                "type": "value_error.user.not_found",
             },
         ],
     }

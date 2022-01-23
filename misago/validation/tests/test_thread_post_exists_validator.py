@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import PostDoesNotExistError
+from ...errors import PostNotFoundError
 from ..validators import ThreadPostExistsValidator
 
 
@@ -13,7 +13,7 @@ async def test_validator_returns_reply_if_id_given_exists_in_db(thread, reply):
 @pytest.mark.asyncio
 async def test_validator_raises_post_not_exists_error_if_reply_not_exists(thread):
     validator = ThreadPostExistsValidator({}, thread)
-    with pytest.raises(PostDoesNotExistError):
+    with pytest.raises(PostNotFoundError):
         await validator(100)
 
 
@@ -22,5 +22,5 @@ async def test_validator_raises_post_not_exists_error_if_reply_belongs_to_other_
     user_thread, reply
 ):
     validator = ThreadPostExistsValidator({}, user_thread)
-    with pytest.raises(PostDoesNotExistError):
+    with pytest.raises(PostNotFoundError):
         await validator(reply.id)

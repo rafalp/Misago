@@ -23,7 +23,7 @@ async def test_bulk_threads_validator_partially_validates_threads(thread):
     assert errors == [
         {
             "loc": "threads.1",
-            "type": "value_error.thread.not_exists",
+            "type": "value_error.thread.not_found",
             "msg": f"thread with id '{thread.id + 1}' does not exist",
         },
     ]

@@ -2,7 +2,6 @@ from unittest.mock import ANY
 
 import pytest
 
-
 FORUM_STATS_QUERY = """
     query ForumStats {
         forumStats {

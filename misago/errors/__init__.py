@@ -13,9 +13,9 @@ class AllFieldsAreRequiredError(PydanticValueError):
     msg_template = "all fields are required"
 
 
-class CategoryDoesNotExistError(PydanticValueError):
-    code = "category.not_exists"
-    msg_template = "category with id '{id}' does not exist"
+class CategoryNotFoundError(PydanticValueError):
+    code = "category.not_found"
+    msg_template = "category with id '{id}' could not be found"
 
     def __init__(self, *, category_id: Union[int, str]) -> None:
         super().__init__(id=category_id)
@@ -75,9 +75,9 @@ class NotThreadAuthorError(AuthError):
         super().__init__(id=thread_id)
 
 
-class PostDoesNotExistError(PydanticValueError):
-    code = "post.not_exists"
-    msg_template = "post with id '{id}' does not exist"
+class PostNotFoundError(PydanticValueError):
+    code = "post.not_found"
+    msg_template = "post with id '{id}' could not be found"
 
     def __init__(self, *, post_id: Union[int, str]) -> None:
         super().__init__(id=post_id)
@@ -88,9 +88,9 @@ class SiteWizardDisabledError(PydanticValueError):
     msg_template = "site wizard is disabled"
 
 
-class ThreadDoesNotExistError(PydanticValueError):
-    code = "thread.not_exists"
-    msg_template = "thread with id '{id}' does not exist"
+class ThreadNotFoundError(PydanticValueError):
+    code = "thread.not_found"
+    msg_template = "thread with id '{id}' could not be found"
 
     def __init__(self, *, thread_id: Union[int, str]) -> None:
         super().__init__(id=thread_id)
@@ -117,9 +117,9 @@ class ThreadTitleNotAllowedError(PydanticValueError):
     msg_template = "thread title is not allowed"
 
 
-class UserDoesNotExistError(PydanticValueError):
-    code = "user.not_exists"
-    msg_template = "user with id '{id}' does not exist"
+class UserNotFoundError(PydanticValueError):
+    code = "user.not_found"
+    msg_template = "user with id '{id}' could not be found"
 
     def __init__(self, *, user_id: Union[int, str]) -> None:
         super().__init__(id=user_id)

@@ -1,6 +1,5 @@
 import pytest
 
-
 SEARCH_QUERY = """
     query Search($query: String!) {
         search(query: $query) {

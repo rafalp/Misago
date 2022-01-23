@@ -1,7 +1,7 @@
 import pytest
 
-from ..errors import AuthenticationGraphQLError, ForbiddenGraphQLError
 from ..decorators import admin_resolver
+from ..errors import AuthenticationGraphQLError, ForbiddenGraphQLError
 
 
 @admin_resolver

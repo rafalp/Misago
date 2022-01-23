@@ -2,7 +2,6 @@ import pytest
 
 from .....errors import ErrorsList
 
-
 THREADS_BULK_CLOSE_MUTATION = """
     mutation ThreadsClose($threads: [ID!]!) {
         threadsBulkClose(threads: $threads) {
@@ -171,7 +170,7 @@ async def test_threads_bulk_close_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }
@@ -198,7 +197,7 @@ async def test_threads_bulk_close_mutation_with_threads_errors_still_updates_val
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_exists",
+                "type": "value_error.thread.not_found",
             },
         ],
     }
