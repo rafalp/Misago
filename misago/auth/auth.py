@@ -4,14 +4,34 @@ from ..graphql import GraphQLContext
 from ..passwords import check_password
 from ..users.get import get_user_by_name_or_email
 from ..users.models import User
-from .hooks import get_user_from_context_hook, get_user_from_token_hook
+from .hooks import (
+    authenticate_user_hook,
+    get_user_from_context_hook,
+    get_user_from_token_hook,
+)
 from .token import get_user_from_token
+
+__all__ = [
+    "AUTHORIZATION_HEADER",
+    "AUTHORIZATION_TYPE",
+    "authenticate_user",
+    "get_authenticated_user",
+    "get_authenticated_admin",
+]
 
 AUTHORIZATION_HEADER = "authorization"
 AUTHORIZATION_TYPE = "bearer"
 
 
-async def authenticate_user(
+def authenticate_user(
+    context: GraphQLContext, username: str, password: str, in_admin: bool = False
+) -> Awaitable[Optional[User]]:
+    return authenticate_user_hook.call_action(
+        authenticate_user_action, context, username, password, in_admin
+    )
+
+
+async def authenticate_user_action(
     context: GraphQLContext, username: str, password: str, in_admin: bool = False
 ) -> Optional[User]:
     user = await get_user_by_name_or_email(username)

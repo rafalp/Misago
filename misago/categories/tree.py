@@ -209,7 +209,7 @@ async def delete_category(
     await update_categories(categories_map, tree)
 
     for c in reversed(deleted_categories):
-        await category.delete()
+        await c.delete()
 
     return tree.get_list()
 

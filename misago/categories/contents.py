@@ -12,11 +12,11 @@ async def move_categories_contents(
     categories: Iterable[Category], new_category: Category
 ):
     await move_categories_contents_hook.call_action(
-        _move_categories_contents_action, categories, new_category
+        move_categories_contents_action, categories, new_category
     )
 
 
-async def _move_categories_contents_action(
+async def move_categories_contents_action(
     categories: Iterable[Category], new_category: Category
 ):
     categories_ids = [c.id for c in categories]
@@ -32,9 +32,9 @@ async def _move_categories_contents_action(
 
 async def delete_categories_contents(categories: Iterable[Category]):
     await delete_categories_contents_hook.call_action(
-        _delete_categories_contents_action, categories
+        delete_categories_contents_action, categories
     )
 
 
-async def _delete_categories_contents_action(categories: Iterable[Category]):
+async def delete_categories_contents_action(categories: Iterable[Category]):
     await Thread.query.filter(category_id__in=[c.id for c in categories]).delete()

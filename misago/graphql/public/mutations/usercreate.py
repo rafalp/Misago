@@ -5,7 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ....auth import create_user_token
-from ....auth.hooks import create_user_token_hook
 from ....errors import ErrorsList
 from ....loaders import store_user
 from ....users.hooks import create_user_hook
@@ -60,9 +59,7 @@ async def resolve_user_create(
         return {"errors": errors}
 
     user = await user_create_hook.call_action(register_user, info.context, cleaned_data)
-    token = await create_user_token_hook.call_action(
-        create_user_token, info.context, user, in_admin=False
-    )
+    token = await create_user_token(info.context, user, in_admin=False)
 
     return {"user": user, "token": token}
 

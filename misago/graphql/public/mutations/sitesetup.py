@@ -5,7 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, constr, create_model
 
 from ....auth import create_user_token
-from ....auth.hooks import create_user_token_hook
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
 from ....errors import SiteWizardDisabledError
@@ -74,9 +73,7 @@ async def resolve_site_setup(
         extra={},
         context=info.context,
     )
-    token = await create_user_token_hook.call_action(
-        create_user_token, info.context, user, in_admin=False
-    )
+    token = await create_user_token(info.context, user, in_admin=False)
 
     return {"user": user, "token": token}
 

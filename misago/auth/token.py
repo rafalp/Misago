@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from typing import Any, Dict, Optional
+from typing import Any, Awaitable, Dict, Optional
 
 import jwt
 from jwt.exceptions import InvalidTokenError
@@ -8,6 +8,7 @@ from ..graphql import GraphQLContext
 from ..users.models import User
 from ..utils import timezone
 from .hooks import (
+    create_user_token_hook,
     create_user_token_payload_hook,
     get_auth_user_hook,
     get_user_from_token_payload_hook,
@@ -17,7 +18,15 @@ from .user import get_user
 JWT_ALGORITHM = "HS256"
 
 
-async def create_user_token(
+def create_user_token(
+    context: GraphQLContext, user: User, in_admin: bool = False
+) -> Awaitable[str]:
+    return create_user_token_hook.call_action(
+        create_user_token_action, context, user, in_admin
+    )
+
+
+async def create_user_token_action(
     context: GraphQLContext, user: User, in_admin: bool = False
 ) -> str:
     secret = get_jwt_secret(context)
