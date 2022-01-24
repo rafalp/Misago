@@ -10,7 +10,6 @@ from ....users.errors import (
     UserIsProtectedError,
     UserRemoveOwnAdminError,
 )
-from ....users.hooks import update_user_hook
 from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,
@@ -119,14 +118,6 @@ def is_admin_validator(context: GraphQLContext, user: User):
 
 
 async def update_user(context: GraphQLContext, user: User, cleaned_data: dict) -> User:
-    def update_user_action(user: User, **cleaned_data):
-        return user.update(**cleaned_data)
-
-    user = await update_user_hook.call_action(
-        update_user_action,
-        user,
-        context=context,
-        **cleaned_data,
-    )
+    user = await user.update(**cleaned_data)
     store_user(context, user)
     return user
