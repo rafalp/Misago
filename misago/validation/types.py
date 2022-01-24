@@ -1,16 +1,12 @@
-import re
 from typing import Any, Callable, Generator, Type, cast
 
-from pydantic import ConstrainedList, ConstrainedStr, constr
+from pydantic import ConstrainedList, constr
 from pydantic.validators import list_validator
 
 from ..conf.types import Settings
-from ..errors import ListRepeatedItemsError, UsernameError
+from ..errors import ListRepeatedItemsError
 
 CallableGenerator = Generator[Callable[..., Any], None, None]
-
-PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
-USERNAME_RE = re.compile(r"^[0-9a-z]+$", re.IGNORECASE)
 
 
 class BulkActionIdsList(ConstrainedList):
@@ -39,14 +35,6 @@ def bulkactionidslist(item_type: Type[Any], settings: Settings) -> Type[str]:
     return type("BulkActionIdsListValue", (BulkActionIdsList,), namespace)
 
 
-def passwordstr(settings: Settings) -> Type[str]:
-    return constr(
-        strip_whitespace=False,
-        min_length=cast(int, settings["password_min_length"]),
-        max_length=PASSWORD_MAX_LENGTH,
-    )
-
-
 def sluggablestr(min_length: int, max_length: int) -> Type[str]:
     return constr(
         strip_whitespace=True,
@@ -61,25 +49,3 @@ def threadtitlestr(settings: Settings) -> Type[str]:
         min_length=cast(int, settings["thread_title_min_length"]),
         max_length=cast(int, settings["thread_title_max_length"]),
     )
-
-
-class UsernameStr(ConstrainedStr):
-    strip_whitespace: bool = True
-    strict: bool = False
-
-    @classmethod
-    def validate(cls, value: str) -> str:
-        if not USERNAME_RE.match(value):
-            raise UsernameError(pattern=cast(str, USERNAME_RE))
-
-        return value
-
-
-def usernamestr(settings: Settings) -> Type[str]:
-    # use kwargs then define conf in a dict to aid with IDE type hinting
-    namespace = dict(
-        min_length=cast(int, settings["username_min_length"]),
-        max_length=cast(int, settings["username_max_length"]),
-    )
-
-    return type("UsernameStrValue", (UsernameStr,), namespace)

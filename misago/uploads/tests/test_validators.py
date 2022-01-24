@@ -3,8 +3,13 @@ from unittest.mock import Mock
 import pytest
 from starlette.datastructures import UploadFile
 
-from ...validation.errors import ImageError, ImageMaxSizeError, ImageMinSizeError
-from ..errors import UploadContentTypeError, UploadMaxSizeError
+from ..errors import (
+    ImageError,
+    ImageMaxSizeError,
+    ImageMinSizeError,
+    UploadContentTypeError,
+    UploadMaxSizeError,
+)
 from ..validators import (
     UploadContentTypeValidator,
     UploadImageValidator,

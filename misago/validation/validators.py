@@ -10,7 +10,6 @@ from ..errors import (
     AuthError,
     CategoryClosedError,
     CategoryNotFoundError,
-    EmailNotAvailableError,
     ErrorsList,
     NotAuthorizedError,
     NotModeratorError,
@@ -20,13 +19,10 @@ from ..errors import (
     ThreadClosedError,
     ThreadFirstPostError,
     ThreadNotFoundError,
-    UsernameNotAvailableError,
-    UserNotFoundError,
 )
 from ..graphql import GraphQLContext
-from ..loaders import load_category, load_post, load_thread, load_user
+from ..loaders import load_category, load_post, load_thread
 from ..threads.models import Post, Thread
-from ..users.email import get_email_hash
 from ..users.models import User
 from ..utils.lists import remove_none_items
 
@@ -111,22 +107,6 @@ class CategoryModeratorValidator:
         if not user or not user.is_moderator:
             raise NotModeratorError()
         return category
-
-
-class EmailIsAvailableValidator:
-    _exclude_user: Optional[int]
-
-    def __init__(self, exclude_user: Optional[int] = None):
-        self._exclude_user = exclude_user
-
-    async def __call__(self, email: str, *_) -> str:
-        email_hash = get_email_hash(email)
-        query = User.query.filter(email_hash=email_hash)
-        if self._exclude_user:
-            query = query.exclude(id=self._exclude_user)
-        if await query.exists():
-            raise EmailNotAvailableError()
-        return email
 
 
 class NewThreadIsClosedValidator:
@@ -343,19 +323,6 @@ class ThreadsBulkValidator(BulkValidator):
         return await super().__call__(threads, errors, field_name)
 
 
-class UserExistsValidator:
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, user_id: Union[int, str], *_) -> User:
-        user = await load_user(self._context, user_id)
-        if not user:
-            raise UserNotFoundError(user_id=user_id)
-        return user
-
-
 class UserIsAuthorizedRootValidator:
     _context: GraphQLContext
 
@@ -367,21 +334,6 @@ class UserIsAuthorizedRootValidator:
         if not user:
             raise NotAuthorizedError()
         return data
-
-
-class UsernameIsAvailableValidator:
-    _exclude_user: Optional[int]
-
-    def __init__(self, exclude_user: Optional[int] = None):
-        self._exclude_user = exclude_user
-
-    async def __call__(self, username: str, *_) -> str:
-        query = User.query.filter(slug=username.lower())
-        if self._exclude_user:
-            query = query.exclude(id=self._exclude_user)
-        if await query.exists():
-            raise UsernameNotAvailableError()
-        return username
 
 
 def color_validator(color: Union[Color, str], *_) -> str:

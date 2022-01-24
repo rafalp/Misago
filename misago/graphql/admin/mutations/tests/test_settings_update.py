@@ -3,7 +3,7 @@ import pytest
 from .....conf.cache import SETTINGS_CACHE
 from .....conf.dynamicsettings import get_settings_from_db
 from .....testing.cacheversions import assert_invalidates_cache
-from .....validation import PASSWORD_MAX_LENGTH
+from .....users.validators import PASSWORD_MAX_LENGTH
 
 
 def create_query(settings: str) -> str:

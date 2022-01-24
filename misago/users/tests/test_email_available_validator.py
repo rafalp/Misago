@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import EmailNotAvailableError
+from ..errors import EmailNotAvailableError
 from ..validators import EmailIsAvailableValidator
 
 

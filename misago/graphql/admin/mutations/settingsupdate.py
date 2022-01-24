@@ -7,7 +7,8 @@ from pydantic import BaseModel, conint, constr, create_model
 from ....conf.cache import clear_settings_cache
 from ....conf.dynamicsettings import get_settings_from_db
 from ....conf.update import update_settings
-from ....validation import PASSWORD_MAX_LENGTH, validate_model
+from ....users.validators import PASSWORD_MAX_LENGTH
+from ....validation import validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 

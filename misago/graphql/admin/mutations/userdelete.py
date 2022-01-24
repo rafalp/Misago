@@ -7,7 +7,8 @@ from pydantic import BaseModel, PositiveInt
 from ....users.delete import delete_user, delete_user_content
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
 from ....users.models import User
-from ....validation import UserExistsValidator, validate_data, validate_model
+from ....users.validators import UserExistsValidator
+from ....validation import validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver

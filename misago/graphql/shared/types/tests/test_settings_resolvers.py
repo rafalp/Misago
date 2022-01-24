@@ -1,7 +1,7 @@
 import pytest
 
 from .....conf import settings
-from .....validation import PASSWORD_MAX_LENGTH
+from .....users.validators import PASSWORD_MAX_LENGTH
 
 
 @pytest.mark.asyncio

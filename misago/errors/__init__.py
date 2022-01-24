@@ -44,11 +44,6 @@ class NotModeratorError(AuthError):
     msg_template = "moderator permission is required"
 
 
-class EmailNotAvailableError(PydanticValueError):
-    code = "email.not_available"
-    msg_template = "e-mail is not available"
-
-
 class InvalidCredentialsError(PydanticValueError):
     code = "invalid_credentials"
     msg_template = "invalid credentials"
@@ -115,31 +110,3 @@ class ThreadClosedError(AuthError):
 class ThreadTitleNotAllowedError(PydanticValueError):
     code = "thread_title.not_allowed"
     msg_template = "thread title is not allowed"
-
-
-class UserNotFoundError(PydanticValueError):
-    code = "user.not_found"
-    msg_template = "user with id '{id}' could not be found"
-
-    def __init__(self, *, user_id: Union[int, str]) -> None:
-        super().__init__(id=user_id)
-
-
-class UsernameError(PydanticValueError):
-    code = "username"
-    msg_template = 'username does not match regex "{pattern}"'
-
-    def __init__(  # pylint: disable=useless-super-delegation
-        self, *, pattern: str
-    ) -> None:
-        super().__init__(pattern=pattern)
-
-
-class UsernameNotAvailableError(PydanticValueError):
-    code = "username.not_available"
-    msg_template = "username is not available"
-
-
-class UsernameNotAllowedError(PydanticValueError):
-    code = "username.not_allowed"
-    msg_template = "username is not allowed"

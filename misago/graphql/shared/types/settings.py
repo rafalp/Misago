@@ -1,7 +1,7 @@
 from ariadne import ObjectType
 
 from ....conf import settings
-from ....validation import PASSWORD_MAX_LENGTH
+from ....users.validators import PASSWORD_MAX_LENGTH
 
 settings_type = ObjectType("Settings")
 

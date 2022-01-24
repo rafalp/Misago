@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import UsernameNotAvailableError
+from ..errors import UsernameNotAvailableError
 from ..validators import UsernameIsAvailableValidator
 
 
