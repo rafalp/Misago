@@ -17,7 +17,7 @@ class Model:
     def replace(self, **kwargs):
         return replace(self, **kwargs)
 
-    def refresh_from_db(self):
+    def fetch_from_db(self):
         return self.query.one(id=self.id)
 
 

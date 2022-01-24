@@ -9,7 +9,7 @@ async def test_thread_post_is_deleted(thread_with_reply, thread_reply):
     await delete_thread_post(thread_with_reply, thread_reply)
 
     with pytest.raises(Post.DoesNotExist):
-        await thread_reply.refresh_from_db()
+        await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -37,7 +37,7 @@ async def test_thread_posts_are_deleted(thread_with_reply, thread_reply):
     await delete_thread_posts(thread_with_reply, [thread_reply])
 
     with pytest.raises(Post.DoesNotExist):
-        await thread_reply.refresh_from_db()
+        await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio

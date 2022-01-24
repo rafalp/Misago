@@ -45,7 +45,7 @@ async def test_upload_avatar_mutation_uploads_avatar(
             auth=user,
         )
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars
 
     assert result["data"]["avatarUpload"] == {
@@ -88,7 +88,7 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars == []
 
 
@@ -123,7 +123,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_typ
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars == []
 
 
@@ -156,7 +156,7 @@ async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars == []
 
 
@@ -188,7 +188,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_file_type(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars == []
 
 
@@ -220,5 +220,5 @@ async def test_upload_avatar_mutation_fails_if_image_is_too_small(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.avatars == []

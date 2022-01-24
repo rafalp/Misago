@@ -31,7 +31,7 @@ async def test_user_delete_mutation_deletes_user(query_admin_api, user):
     }
 
     with pytest.raises(User.DoesNotExist):
-        await user.refresh_from_db()
+        await user.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -51,10 +51,10 @@ async def test_user_delete_mutation_leaves_user_content(
     }
 
     with pytest.raises(User.DoesNotExist):
-        await user.refresh_from_db()
+        await user.fetch_from_db()
 
-    await user_thread.refresh_from_db()
-    await user_post.refresh_from_db()
+    await user_thread.fetch_from_db()
+    await user_post.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -75,13 +75,13 @@ async def test_user_delete_mutation_deletes_user_content(
     }
 
     with pytest.raises(User.DoesNotExist):
-        await user.refresh_from_db()
+        await user.fetch_from_db()
 
     with pytest.raises(Thread.DoesNotExist):
-        await user_thread.refresh_from_db()
+        await user_thread.fetch_from_db()
 
     with pytest.raises(Post.DoesNotExist):
-        await user_post.refresh_from_db()
+        await user_post.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -147,7 +147,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
         ],
     }
 
-    await admin.refresh_from_db()
+    await admin.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -173,7 +173,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
         ],
     }
 
-    await user.refresh_from_db()
+    await user.fetch_from_db()
 
 
 @pytest.mark.asyncio

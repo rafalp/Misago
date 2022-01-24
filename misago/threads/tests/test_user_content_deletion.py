@@ -40,4 +40,4 @@ async def test_user_posts_are_deleted(category, user):
     assert await Post.query.count() == 1
 
     with pytest.raises(Post.DoesNotExist):
-        await user_post.refresh_from_db()
+        await user_post.fetch_from_db()

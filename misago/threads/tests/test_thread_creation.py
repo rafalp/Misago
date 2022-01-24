@@ -10,7 +10,7 @@ from ..models import Post, Thread
 async def test_thread_is_created_in_db(category):
     thread = await Thread.create(category, "Test thread", starter_name="User")
     assert thread.id
-    assert thread == await thread.refresh_from_db()
+    assert thread == await thread.fetch_from_db()
 
 
 @pytest.mark.asyncio

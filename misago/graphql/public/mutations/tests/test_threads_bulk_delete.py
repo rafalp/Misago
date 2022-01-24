@@ -32,7 +32,7 @@ async def test_threads_bulk_delete_mutation_deletes_threads(
     }
 
     with pytest.raises(Thread.DoesNotExist):
-        await thread.refresh_from_db()
+        await thread.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -58,7 +58,7 @@ async def test_threads_bulk_delete_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    await thread.refresh_from_db()
+    await thread.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -81,7 +81,7 @@ async def test_threads_bulk_delete_mutation_fails_if_user_is_not_moderator(
         ],
     }
 
-    await thread.refresh_from_db()
+    await thread.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -147,4 +147,4 @@ async def test_threads_bulk_delete_mutation_with_threads_errors_still_deletes_va
     }
 
     with pytest.raises(Thread.DoesNotExist):
-        await thread.refresh_from_db()
+        await thread.fetch_from_db()

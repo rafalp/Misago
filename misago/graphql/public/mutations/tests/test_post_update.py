@@ -50,7 +50,7 @@ async def test_post_update_mutation_updates_post(query_public_api, user, user_po
         "errors": None,
     }
 
-    post_from_db = await user_post.refresh_from_db()
+    post_from_db = await user_post.fetch_from_db()
     assert post_from_db.rich_text == [
         {
             "id": ANY,
@@ -90,7 +90,7 @@ async def test_post_update_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    post_from_db = await user_post.refresh_from_db()
+    post_from_db = await user_post.fetch_from_db()
     assert post_from_db.rich_text == []
 
 
@@ -163,7 +163,7 @@ async def test_post_update_mutation_fails_if_post_author_is_other_user(
         ],
     }
 
-    post_from_db = await other_user_post.refresh_from_db()
+    post_from_db = await other_user_post.fetch_from_db()
     assert post_from_db.rich_text == []
 
 
@@ -195,7 +195,7 @@ async def test_post_update_mutation_allows_moderator_to_edit_other_user_post(
         "errors": None,
     }
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.rich_text == [
         {
             "id": ANY,
@@ -232,7 +232,7 @@ async def test_post_update_mutation_fails_if_thread_is_closed(
         ],
     }
 
-    post_from_db = await closed_user_thread_post.refresh_from_db()
+    post_from_db = await closed_user_thread_post.fetch_from_db()
     assert post_from_db.rich_text == []
 
 
@@ -264,7 +264,7 @@ async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_th
         "errors": None,
     }
 
-    post_from_db = await closed_user_thread_post.refresh_from_db()
+    post_from_db = await closed_user_thread_post.fetch_from_db()
     assert post_from_db.rich_text == [
         {
             "id": ANY,
@@ -301,7 +301,7 @@ async def test_post_update_mutation_fails_if_category_is_closed(
         ],
     }
 
-    post_from_db = await closed_category_user_post.refresh_from_db()
+    post_from_db = await closed_category_user_post.fetch_from_db()
     assert post_from_db.rich_text == []
 
 
@@ -333,7 +333,7 @@ async def test_post_update_mutation_allows_moderator_to_post_update_in_closed_ca
         "errors": None,
     }
 
-    post_from_db = await closed_category_user_post.refresh_from_db()
+    post_from_db = await closed_category_user_post.fetch_from_db()
     assert post_from_db.rich_text == [
         {
             "id": ANY,
@@ -370,5 +370,5 @@ async def test_post_update_mutation_fails_if_markup_is_too_short(
         ],
     }
 
-    post_from_db = await user_post.refresh_from_db()
+    post_from_db = await user_post.fetch_from_db()
     assert post_from_db.rich_text == []

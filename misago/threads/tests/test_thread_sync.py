@@ -29,6 +29,6 @@ async def test_thread_is_synced_by_id(thread, reply):
     assert stats["replies"] == 2
     assert stats["last_post"] == new_reply
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.replies == 2
     assert thread_from_db.last_post_id == new_reply.id

@@ -4,18 +4,13 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt
 
+from ....categories.contents import delete_categories_contents, move_categories_contents
 from ....categories.errors import CategoryInvalidError
 from ....categories.get import get_all_categories
-from ....categories.hooks import (
-    delete_categories_contents_hook,
-    move_categories_contents_hook,
-)
 from ....categories.models import Category
 from ....categories.tree import delete_category, move_category
 from ....errors import ErrorsList
 from ....loaders import clear_categories
-from ....threads.delete import delete_threads_in_categories
-from ....threads.move import move_categories_threads
 from ....validation import (
     ROOT_LOCATION,
     CategoryExistsValidator,
@@ -83,12 +78,10 @@ async def resolve_category_delete(
                 categories_removed.append(child)
 
     if not cleaned_data["move_threads_to"]:
-        await delete_categories_contents_hook.call_action(
-            delete_threads_in_categories, categories_removed
-        )
+        await delete_categories_contents(categories_removed)
     else:
-        await move_categories_contents_hook.call_action(
-            move_categories_threads, categories_removed, cleaned_data["move_threads_to"]
+        await move_categories_contents(
+            categories_removed, cleaned_data["move_threads_to"]
         )
 
     categories = await delete_category(categories, category_obj)

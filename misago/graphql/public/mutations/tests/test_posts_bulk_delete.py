@@ -41,7 +41,7 @@ async def test_posts_bulk_delete_mutation_deletes_thread_reply(
     }
 
     with pytest.raises(Post.DoesNotExist):
-        await thread_reply.refresh_from_db()
+        await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -71,7 +71,7 @@ async def test_posts_bulk_delete_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -98,7 +98,7 @@ async def test_posts_bulk_delete_mutation_fails_if_user_is_not_moderator(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -122,7 +122,7 @@ async def test_posts_bulk_delete_mutation_fails_if_thread_id_is_invalid(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -146,7 +146,7 @@ async def test_posts_bulk_delete_mutation_fails_if_thread_doesnt_exist(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -172,7 +172,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_id_is_invalid(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -201,7 +201,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_doesnt_exist(
         ],
     }
 
-    await thread_reply.refresh_from_db()
+    await thread_reply.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -227,7 +227,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_is_threads_first_post(
         ],
     }
 
-    await post.refresh_from_db()
+    await post.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -256,7 +256,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_is_in_other_thread(
         ],
     }
 
-    await other_user_post.refresh_from_db()
+    await other_user_post.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -286,6 +286,6 @@ async def test_posts_bulk_delete_mutation_with_posts_errors_still_deletes_valid_
     }
 
     with pytest.raises(Post.DoesNotExist):
-        await thread_reply.refresh_from_db()
+        await thread_reply.fetch_from_db()
 
-    await other_user_post.refresh_from_db()
+    await other_user_post.fetch_from_db()

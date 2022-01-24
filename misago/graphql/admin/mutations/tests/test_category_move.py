@@ -73,7 +73,7 @@ async def test_move_category_mutation_moves_sibling_category_before_other_catego
         "errors": None,
     }
 
-    category_from_db = await sibling_category.refresh_from_db()
+    category_from_db = await sibling_category.fetch_from_db()
     assert category_from_db.parent_id is None
     assert category_from_db.depth == 0
     assert category_from_db.left == 3
@@ -132,7 +132,7 @@ async def test_move_category_mutation_moves_sibling_category_before_child_catego
         "errors": None,
     }
 
-    category_from_db = await sibling_category.refresh_from_db()
+    category_from_db = await sibling_category.fetch_from_db()
     assert category_from_db.parent_id == category.id
     assert category_from_db.depth == 1
     assert category_from_db.left == 4
@@ -190,7 +190,7 @@ async def test_move_category_mutation_moves_sibling_category_after_child_categor
         "errors": None,
     }
 
-    category_from_db = await sibling_category.refresh_from_db()
+    category_from_db = await sibling_category.fetch_from_db()
     assert category_from_db.parent_id == category.id
     assert category_from_db.depth == 1
     assert category_from_db.left == 6
@@ -246,7 +246,7 @@ async def test_move_category_mutation_moves_child_category_to_root(
         "errors": None,
     }
 
-    category_from_db = await child_category.refresh_from_db()
+    category_from_db = await child_category.fetch_from_db()
     assert category_from_db.parent_id is None
     assert category_from_db.depth == 0
     assert category_from_db.left == 9
@@ -303,7 +303,7 @@ async def test_move_category_mutation_moves_child_category_to_root_before_parent
         "errors": None,
     }
 
-    category_from_db = await child_category.refresh_from_db()
+    category_from_db = await child_category.fetch_from_db()
     assert category_from_db.id == child_category.id
     assert category_from_db.parent_id is None
     assert category_from_db.depth == 0

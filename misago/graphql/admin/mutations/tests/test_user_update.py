@@ -94,7 +94,7 @@ async def test_user_update_mutation_updates_user_name(query_admin_api, user):
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.name == "UpdatedUser"
     assert user_from_db.slug == "updateduser"
 
@@ -133,7 +133,7 @@ async def test_user_update_mutation_fails_if_user_name_is_invalid(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.name == user.name
     assert user_from_db.slug == user.slug
 
@@ -172,7 +172,7 @@ async def test_user_update_mutation_fails_if_user_name_is_not_available(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.name == user.name
     assert user_from_db.slug == user.slug
 
@@ -206,7 +206,7 @@ async def test_user_update_mutation_skips_update_if_new_name_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.name == user.name
     assert user_from_db.slug == user.slug
 
@@ -238,7 +238,7 @@ async def test_user_update_mutation_updates_user_email(query_admin_api, user):
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.email == "new@email.com"
 
 
@@ -276,7 +276,7 @@ async def test_user_update_mutation_fails_if_user_email_is_invalid(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.email == user.email
 
 
@@ -314,7 +314,7 @@ async def test_user_update_mutation_fails_if_user_email_is_not_available(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.email == user.email
 
 
@@ -347,7 +347,7 @@ async def test_user_update_mutation_skips_update_if_new_email_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.email == user.email
 
 
@@ -378,7 +378,7 @@ async def test_user_update_mutation_updates_user_password(query_admin_api, user)
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert await user_from_db.check_password("n3wp5ssword  ")
 
 
@@ -416,7 +416,7 @@ async def test_user_update_mutation_fails_if_user_password_is_invalid(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert await user_from_db.check_password(user_password)
 
 
@@ -447,7 +447,7 @@ async def test_user_update_mutation_updates_user_full_name(query_admin_api, user
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.full_name == "Bob Bobertson"
 
 
@@ -480,7 +480,7 @@ async def test_user_update_mutation_clears_user_full_name(query_admin_api, user)
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.full_name is None
 
 
@@ -518,7 +518,7 @@ async def test_user_update_mutation_fails_if_full_name_is_too_long(
         ],
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert not user_from_db.full_name
 
 
@@ -553,7 +553,7 @@ async def test_user_update_mutation_skips_update_if_new_full_name_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.full_name == "Bob Bobertson"
 
 
@@ -584,7 +584,7 @@ async def test_user_update_mutation_updates_admin_status_to_true(query_admin_api
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.is_admin
 
 
@@ -619,7 +619,7 @@ async def test_user_update_mutation_updates_admin_status_to_false(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert not user_from_db.is_admin
 
 
@@ -652,7 +652,7 @@ async def test_admin_update_mutation_skips_update_if_admin_status_is_same(
         "errors": None,
     }
 
-    admin_from_db = await admin.refresh_from_db()
+    admin_from_db = await admin.fetch_from_db()
     assert admin_from_db.is_admin
 
 
@@ -685,7 +685,7 @@ async def test_user_update_mutation_skips_update_if_admin_status_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert not user_from_db.is_admin
 
 
@@ -723,7 +723,7 @@ async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
         ],
     }
 
-    admin_from_db = await admin.refresh_from_db()
+    admin_from_db = await admin.fetch_from_db()
     assert admin_from_db.is_admin
 
 
@@ -756,7 +756,7 @@ async def test_user_update_mutation_updates_moderator_status_to_true(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.is_moderator
 
 
@@ -789,7 +789,7 @@ async def test_user_update_mutation_updates_moderator_status_to_false(
         "errors": None,
     }
 
-    moderator_from_db = await moderator.refresh_from_db()
+    moderator_from_db = await moderator.fetch_from_db()
     assert not moderator_from_db.is_moderator
 
 
@@ -822,7 +822,7 @@ async def test_moderator_update_mutation_skips_update_if_moderator_status_is_sam
         "errors": None,
     }
 
-    moderator_from_db = await moderator.refresh_from_db()
+    moderator_from_db = await moderator.fetch_from_db()
     assert moderator_from_db.is_moderator
 
 
@@ -855,7 +855,7 @@ async def test_user_update_mutation_skips_update_if_moderator_status_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert not user_from_db.is_moderator
 
 
@@ -888,7 +888,7 @@ async def test_inactive_user_update_mutation_updates_active_status_to_true(
         "errors": None,
     }
 
-    inactive_user_from_db = await inactive_user.refresh_from_db()
+    inactive_user_from_db = await inactive_user.fetch_from_db()
     assert inactive_user_from_db.is_active
 
 
@@ -921,7 +921,7 @@ async def test_user_update_mutation_updates_active_status_to_false(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert not user_from_db.is_active
 
 
@@ -959,7 +959,7 @@ async def test_user_update_mutation_fails_if_user_deactivates_themselves(
         ],
     }
 
-    admin_from_db = await admin.refresh_from_db()
+    admin_from_db = await admin.fetch_from_db()
     assert admin_from_db.is_active
 
 
@@ -997,7 +997,7 @@ async def test_inactive_user_update_mutation_skips_update_if_active_status_is_sa
     assert not data["errors"]
     assert not data["user"]["isActive"]
 
-    inactive_user_from_db = await inactive_user.refresh_from_db()
+    inactive_user_from_db = await inactive_user.fetch_from_db()
     assert not inactive_user_from_db.is_active
 
 
@@ -1030,7 +1030,7 @@ async def test_user_update_mutation_skips_update_if_active_status_is_same(
         "errors": None,
     }
 
-    user_from_db = await user.refresh_from_db()
+    user_from_db = await user.fetch_from_db()
     assert user_from_db.is_active
 
 

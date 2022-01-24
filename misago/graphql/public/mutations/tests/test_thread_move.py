@@ -42,7 +42,7 @@ async def test_thread_move_mutation_moves_thread(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == sibling_category.id
 
 
@@ -75,7 +75,7 @@ async def test_thread_move_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == thread.category_id
 
 
@@ -105,7 +105,7 @@ async def test_thread_move_mutation_fails_if_user_is_not_moderator(
         ],
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == thread.category_id
 
 
@@ -179,7 +179,7 @@ async def test_thread_move_mutation_fails_if_category_id_is_invalid(
         ],
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == thread.category_id
 
 
@@ -209,5 +209,5 @@ async def test_thread_move_mutation_fails_if_category_doesnt_exist(
         ],
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == thread.category_id

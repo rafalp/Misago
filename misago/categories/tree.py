@@ -1,6 +1,5 @@
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 
-from . import delete
 from .models import Category
 
 
@@ -210,7 +209,7 @@ async def delete_category(
     await update_categories(categories_map, tree)
 
     for c in reversed(deleted_categories):
-        await delete.delete_category(c)
+        await category.delete()
 
     return tree.get_list()
 

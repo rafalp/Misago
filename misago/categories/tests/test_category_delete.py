@@ -1,14 +1,7 @@
 import pytest
 
-from .. import delete, tree
+from .. import tree
 from ..get import get_all_categories
-
-
-@pytest.mark.asyncio
-async def test_delete_util_deletes_category(sibling_category):
-    await delete.delete_category(sibling_category)
-    db_categories = await get_all_categories()
-    assert sibling_category not in db_categories
 
 
 @pytest.mark.asyncio

@@ -74,12 +74,12 @@ async def test_category_delete_mutation_deletes_category_but_moves_its_children(
     assert category.id not in categories_ids
     assert child_category.id in categories_ids
 
-    parent_from_db = await sibling_category.refresh_from_db()
+    parent_from_db = await sibling_category.fetch_from_db()
     assert parent_from_db.depth == 0
     assert parent_from_db.left == 3
     assert parent_from_db.right == 6
 
-    child_from_db = await child_category.refresh_from_db()
+    child_from_db = await child_category.fetch_from_db()
     assert child_from_db.depth == 1
     assert child_from_db.left == 4
     assert child_from_db.right == 5
@@ -111,10 +111,10 @@ async def test_category_delete_mutation_deletes_category_and_its_threads(
     }
 
     with pytest.raises(Thread.DoesNotExist):
-        await thread.refresh_from_db()
+        await thread.fetch_from_db()
 
     with pytest.raises(Post.DoesNotExist):
-        await post.refresh_from_db()
+        await post.fetch_from_db()
 
     db_categories = await get_all_categories()
     categories_ids = [c.id for c in db_categories]
@@ -149,10 +149,10 @@ async def test_category_delete_but_move_children_mutation_keeps_children_threads
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == child_category.id
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.category_id == child_category.id
 
 
@@ -176,10 +176,10 @@ async def test_category_delete_mutation_deletes_children_threads(
     }
 
     with pytest.raises(Thread.DoesNotExist):
-        await thread.refresh_from_db()
+        await thread.fetch_from_db()
 
     with pytest.raises(Post.DoesNotExist):
-        await post.refresh_from_db()
+        await post.fetch_from_db()
 
 
 @pytest.mark.asyncio
@@ -202,10 +202,10 @@ async def test_category_delete_but_move_threads_mutation_moves_children_threads(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == sibling_category.id
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.category_id == sibling_category.id
 
 
@@ -227,10 +227,10 @@ async def test_category_delete_but_move_all_mutation_moves_category_threads(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == sibling_category.id
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.category_id == sibling_category.id
 
 
@@ -255,10 +255,10 @@ async def test_category_delete_but_move_all_mutation_keeps_children_threads(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.category_id == child_category.id
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.category_id == child_category.id
 
 

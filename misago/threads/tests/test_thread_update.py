@@ -111,7 +111,7 @@ async def test_thread_replies_count_can_be_incremented(thread):
     updated_thread = await thread.update(increment_replies=True)
     assert updated_thread.replies == 1
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert thread_from_db.replies == 1
 
 

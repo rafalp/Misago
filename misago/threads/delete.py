@@ -2,7 +2,6 @@ from typing import Awaitable, Iterable, Sequence, Tuple
 
 from sqlalchemy import select
 
-from ..categories.models import Category
 from ..users.models import User
 from .models import Post, Thread
 from .sync import sync_thread, sync_thread_by_id
@@ -20,10 +19,6 @@ async def delete_thread_posts(
     updated_thread, stats = await sync_thread(thread, posts_query)
     await thread.posts_query.filter(id__in=posts_ids).delete()
     return updated_thread, stats["last_post"]
-
-
-def delete_threads_in_categories(categories: Iterable[Category]):
-    return Thread.query.filter(category_id__in=[c.id for c in categories]).delete()
 
 
 def delete_user_threads(user: User):

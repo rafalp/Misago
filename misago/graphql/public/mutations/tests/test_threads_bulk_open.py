@@ -40,7 +40,7 @@ async def test_threads_bulk_open_mutation_opens_threads(
         "errors": None,
     }
 
-    thread_from_db = await closed_thread.refresh_from_db()
+    thread_from_db = await closed_thread.fetch_from_db()
     assert not thread_from_db.is_closed
 
 
@@ -65,7 +65,7 @@ async def test_threads_bulk_open_mutation_skips_open_threads(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     assert not thread_from_db.is_closed
 
 
@@ -98,7 +98,7 @@ async def test_threads_bulk_open_mutation_fails_if_user_is_not_authorized(
         ],
     }
 
-    thread_from_db = await closed_thread.refresh_from_db()
+    thread_from_db = await closed_thread.fetch_from_db()
     assert thread_from_db.is_closed
 
 
@@ -128,7 +128,7 @@ async def test_threads_bulk_open_mutation_fails_if_user_is_not_moderator(
         ],
     }
 
-    thread_from_db = await closed_thread.refresh_from_db()
+    thread_from_db = await closed_thread.fetch_from_db()
     assert thread_from_db.is_closed
 
 
@@ -202,5 +202,5 @@ async def test_threads_bulk_open_mutation_with_threads_errors_still_updates_vali
         ],
     }
 
-    thread_from_db = await closed_thread.refresh_from_db()
+    thread_from_db = await closed_thread.fetch_from_db()
     assert not thread_from_db.is_closed

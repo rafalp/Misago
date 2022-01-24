@@ -50,7 +50,7 @@ async def test_post_create_mutation_creates_new_reply(
         "errors": None,
     }
 
-    thread_from_db = await thread.refresh_from_db()
+    thread_from_db = await thread.fetch_from_db()
     post_from_db = await Post.query.one(id=int(data["post"]["id"]))
 
     assert thread_from_db.started_at == thread.started_at

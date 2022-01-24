@@ -94,7 +94,7 @@ async def test_post_edits_count_can_be_incremented(post):
     updated_post = await post.update(increment_edits=True)
     assert updated_post.edits == 1
 
-    post_from_db = await post.refresh_from_db()
+    post_from_db = await post.fetch_from_db()
     assert post_from_db.edits == 1
 
 

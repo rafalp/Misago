@@ -50,7 +50,7 @@ async def test_category_update_mutation_edits_category_name(query_admin_api, cat
         "errors": None,
     }
 
-    category_from_db = await category.refresh_from_db()
+    category_from_db = await category.fetch_from_db()
     assert category_from_db.name == "Edited category"
     assert category_from_db.slug == "edited-category"
 
@@ -80,7 +80,7 @@ async def test_category_update_mutation_edits_category_color(query_admin_api, ca
         "errors": None,
     }
 
-    category_from_db = await category.refresh_from_db()
+    category_from_db = await category.fetch_from_db()
     assert category_from_db.id == category.id
     assert category_from_db.color == "#F0F0F0"
 
@@ -110,7 +110,7 @@ async def test_category_update_mutation_edits_category_icon(query_admin_api, cat
         "errors": None,
     }
 
-    category_from_db = await category.refresh_from_db()
+    category_from_db = await category.fetch_from_db()
     assert category_from_db.icon == "fas fa-lock"
 
 
@@ -143,7 +143,7 @@ async def test_category_update_mutation_removes_category_icon(
         "errors": None,
     }
 
-    category_from_db = await category.refresh_from_db()
+    category_from_db = await category.fetch_from_db()
     assert category_from_db.icon is None
 
 
@@ -172,7 +172,7 @@ async def test_category_update_mutation_closes_category(query_admin_api, categor
         "errors": None,
     }
 
-    category_from_db = await category.refresh_from_db()
+    category_from_db = await category.fetch_from_db()
     assert category_from_db.is_closed
 
 
@@ -203,7 +203,7 @@ async def test_category_update_mutation_opens_category(
         "errors": None,
     }
 
-    category_from_db = await closed_category.refresh_from_db()
+    category_from_db = await closed_category.fetch_from_db()
     assert not category_from_db.is_closed
 
 
@@ -234,7 +234,7 @@ async def test_category_update_mutation_changes_child_category_to_root_category(
         "errors": None,
     }
 
-    category_from_db = await child_category.refresh_from_db()
+    category_from_db = await child_category.fetch_from_db()
     assert category_from_db.parent_id is None
     assert category_from_db.depth == 0
     assert category_from_db.left == 9
@@ -281,7 +281,7 @@ async def test_category_update_mutation_changes_root_category_to_child_category(
         "errors": None,
     }
 
-    category_from_db = await sibling_category.refresh_from_db()
+    category_from_db = await sibling_category.fetch_from_db()
     assert category_from_db.parent_id == category.id
     assert category_from_db.depth == 1
     assert category_from_db.left == 6
