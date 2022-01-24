@@ -23,7 +23,6 @@ from ..errors import (
 from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread
 from ..threads.models import Post, Thread
-from ..users.models import User
 from ..utils.lists import remove_none_items
 
 Validator = Callable[[Any, ErrorsList, str], Union[Awaitable[Any], Any]]
