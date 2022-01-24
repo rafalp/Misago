@@ -8,6 +8,7 @@ create_user_hook.call_action(
     name: str,
     email: str,
     *,
+    full_name: Optional[str] = None,
     password: Optional[str] = None,
     is_active: bool = True,
     is_moderator: bool = False,
@@ -18,7 +19,7 @@ create_user_hook.call_action(
 )
 ```
 
-A filter for the function used to create new user account in the database.
+A filter for the function used to create and setup new user account.
 
 Returns `User` dataclass with newly created user data.
 
@@ -32,6 +33,7 @@ async def create_user(
     name: str,
     email: str,
     *,
+    full_name: Optional[str] = None,
     password: Optional[str] = None,
     is_active: bool = True,
     is_moderator: bool = False,
@@ -65,6 +67,15 @@ User e-mail address.
 
 
 ## Optional arguments
+
+### `full_name`
+
+```python
+Optional[str] = None
+```
+
+User's full name.
+
 
 ### `password`
 

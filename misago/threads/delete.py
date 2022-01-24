@@ -1,4 +1,4 @@
-from typing import Awaitable, Iterable, Sequence, Tuple
+from typing import Awaitable, Sequence, Tuple
 
 from sqlalchemy import select
 

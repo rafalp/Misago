@@ -85,10 +85,10 @@ async def validate_input_data(
 
 async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) -> User:
     user = await create_user(
+        context,
         cleaned_data["name"],
         cleaned_data["email"],
         password=cleaned_data["password"],
-        context=context,
     )
     store_user(context, user)
     return user

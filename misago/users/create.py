@@ -1,11 +1,12 @@
-from typing import Optional
+from typing import Optional, cast
 
 from ..graphql import GraphQLContext
-from .hooks import create_user_hook
+from .hooks.createuser import CreateUserAction, create_user_hook
 from .models import User
 
 
 async def create_user(
+    context: GraphQLContext,
     name: str,
     email: str,
     *,
@@ -13,10 +14,9 @@ async def create_user(
     is_active: bool = True,
     is_moderator: bool = False,
     is_admin: bool = False,
-    context: Optional[GraphQLContext] = None,
 ) -> User:
     return await create_user_hook.call_action(
-        User.create,
+        cast(CreateUserAction, User.create),
         name,
         email,
         password=password,

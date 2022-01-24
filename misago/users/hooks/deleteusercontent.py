@@ -1,6 +1,5 @@
-from typing import Awaitable, Optional, Protocol
+from typing import Awaitable, Protocol
 
-from ...graphql import GraphQLContext
 from ...hooks import FilterHook
 from ..models import User
 
@@ -9,8 +8,6 @@ class DeleteUserContentAction(Protocol):
     async def __call__(
         self,
         user: User,
-        *,
-        context: Optional[GraphQLContext] = None,
     ) -> User:
         ...
 
@@ -20,8 +17,6 @@ class DeleteUserContentFilter(Protocol):
         self,
         action: DeleteUserContentAction,
         user: User,
-        *,
-        context: Optional[GraphQLContext] = None,
     ) -> User:
         ...
 
@@ -33,14 +28,8 @@ class DeleteUserContentHook(
         self,
         action: DeleteUserContentAction,
         user: User,
-        *,
-        context: Optional[GraphQLContext] = None,
     ) -> Awaitable[User]:
-        return self.filter(
-            action,
-            user,
-            context=context,
-        )
+        return self.filter(action, user)
 
 
 delete_user_content_hook = DeleteUserContentHook()

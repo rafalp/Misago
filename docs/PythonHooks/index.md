@@ -185,6 +185,8 @@ Standard hooks
 ### `misago.users.hooks`
 
 - [`create_user_hook`](./create-user-hook.md)
+- [`delete_user_content_hook`](./delete-user-content-hook.md)
+- [`delete_user_hook`](./delete-user-hook.md)
 
 
 Implementing custom action hook

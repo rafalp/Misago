@@ -4,9 +4,8 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt
 
-from ....users.delete import delete_user_content
+from ....users.delete import delete_user, delete_user_content
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
-from ....users.hooks import delete_user_content_hook, delete_user_hook
 from ....users.models import User
 from ....validation import UserExistsValidator, validate_data, validate_model
 from ... import GraphQLContext
@@ -48,20 +47,9 @@ async def resolve_user_delete(
         return {"errors": errors, "deleted": False}
 
     if delete_content:
+        await delete_user_content(cleaned_data["user"])
 
-        async def delete_user_content_action(user, *args, **kwargs):
-            await delete_user_content(user)
-
-        await delete_user_content_hook.call_action(
-            delete_user_content_action, cleaned_data["user"], context=info.context
-        )
-
-    def delete_user(user, *args, **kwargs):
-        return cleaned_data["user"].delete()
-
-    await delete_user_hook.call_action(
-        delete_user, cleaned_data["user"], context=info.context
-    )
+    await delete_user(cleaned_data["user"])
 
     return {"deleted": True}
 

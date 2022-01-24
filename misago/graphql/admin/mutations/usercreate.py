@@ -66,10 +66,10 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 async def register_user(context: GraphQLContext, cleaned_data: dict) -> User:
     user = await create_user(
+        context,
         cleaned_data["name"],
         cleaned_data["email"],
         password=cleaned_data["password"],
-        context=context,
     )
     store_user(context, user)
     return user
