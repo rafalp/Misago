@@ -9,7 +9,7 @@ from .hooks import template_context_hook
 from .types import TemplateContext
 
 
-async def get_final_context(
+async def get_template_context(
     request: Request, context: Optional[TemplateContext] = None
 ) -> TemplateContext:
     final_context = await template_context_hook.call_action(

@@ -16,8 +16,8 @@ async def render(
     status_code: int = 200,
     media_type: str = "text/html",
 ) -> Response:
-    final_context = await get_template_context(request, context)
-    content = await render_to_string(template_name, final_context)
+    template_context = await get_template_context(request, context)
+    content = await render_to_string(template_name, template_context)
     return Response(content, status_code=status_code, media_type=media_type)
 
 

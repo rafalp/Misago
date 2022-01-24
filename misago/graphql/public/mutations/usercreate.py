@@ -7,7 +7,7 @@ from pydantic import EmailStr, create_model
 from ....auth import create_user_token
 from ....errors import ErrorsList
 from ....loaders import store_user
-from ....users.hooks import create_user_hook
+from ....users.create import create_user
 from ....users.models import User
 from ....validation import (
     EmailIsAvailableValidator,
@@ -84,15 +84,10 @@ async def validate_input_data(
 
 
 async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) -> User:
-    def create_user(*args, **kwargs):
-        return User.create(*args, **kwargs)
-
-    user = await create_user_hook.call_action(
-        create_user,
+    user = await create_user(
         cleaned_data["name"],
         cleaned_data["email"],
         password=cleaned_data["password"],
-        extra={},
         context=context,
     )
     store_user(context, user)
