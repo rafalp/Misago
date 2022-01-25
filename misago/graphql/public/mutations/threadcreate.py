@@ -5,6 +5,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 
+from ....auth.errors import NotModeratorError
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryExistsValidator
 from ....database import database
@@ -15,7 +16,6 @@ from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.models import Post, Thread
 from ....validation import (
     CategoryIsOpenValidator,
-    NewThreadIsClosedValidator,
     Validator,
     threadtitlestr,
     validate_data,
@@ -52,9 +52,9 @@ async def resolve_thread_create(
             ],
         }
 
-        if cleaned_data.get("is_closed") and cleaned_data.get("category"):
+        if cleaned_data.get("category"):
             validators["is_closed"] = [
-                NewThreadIsClosedValidator(info.context, cleaned_data["category"])
+                IsClosedValidator(info.context, cleaned_data["category"])
             ]
 
         cleaned_data, errors = await thread_create_input_hook.call_action(
@@ -69,6 +69,22 @@ async def resolve_thread_create(
     )
 
     return {"thread": thread}
+
+
+class IsClosedValidator:
+    _context: GraphQLContext
+    _category_id: str
+
+    def __init__(self, context: GraphQLContext, category_id: str):
+        self._context = context
+        self._category_id = category_id
+
+    def __call__(self, is_closed: bool, *_) -> bool:
+        user = self._context["user"]
+        if is_closed and (not user or not user.is_moderator):
+            raise NotModeratorError()
+            
+        return is_closed
 
 
 def create_input_model(context: GraphQLContext) -> Type[BaseModel]:

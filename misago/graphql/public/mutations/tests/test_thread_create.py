@@ -154,7 +154,7 @@ async def test_thread_create_mutation_fails_if_category_doesnt_exist(
         "errors": [
             {
                 "location": "category",
-                "type": "value_error.category.not_found",
+                "type": "category_error.not_found",
             },
         ],
     }
@@ -264,7 +264,7 @@ async def test_thread_create_mutation_fails_if_category_is_closed(
         "errors": [
             {
                 "location": "category",
-                "type": "auth_error.category.closed",
+                "type": "category_error.closed",
             },
         ],
     }

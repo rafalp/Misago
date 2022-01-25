@@ -70,6 +70,7 @@ async def validate_data(
                 else:
                     validated_data = cast(Data, result)
             except Exception as error:
+                print(error)
                 new_errors.add_root_error(error)
 
     return validated_data, new_errors

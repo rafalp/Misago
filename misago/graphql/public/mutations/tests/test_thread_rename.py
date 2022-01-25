@@ -307,7 +307,7 @@ async def test_thread_rename_mutation_fails_if_category_is_closed(
         "errors": [
             {
                 "location": "thread",
-                "type": "auth_error.category.closed",
+                "type": "category_error.closed",
             },
         ],
     }

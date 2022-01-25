@@ -1,7 +1,7 @@
 import pytest
 
-from ...categories import CategoryTypes
-from ...errors import CategoryNotFoundError
+from ..errors import CategoryNotFoundError
+from ..types import CategoryTypes
 from ..validators import CategoryExistsValidator
 
 

@@ -4,6 +4,7 @@ from typing import Any, Awaitable, Callable, List, Optional, Union, cast
 from pydantic.color import Color
 
 from ..categories import CategoryTypes
+from ..categories.errors import CategoryClosedError
 from ..categories.models import Category
 from ..errors import (
     ErrorsList,
@@ -80,35 +81,10 @@ class CategoryModeratorValidator:
 
     async def __call__(self, category: Category, *_) -> Category:
         user = self._context["user"]
+        from ..auth.errors import NotModeratorError
         if not user or not user.is_moderator:
             raise NotModeratorError()
         return category
-
-
-class NewThreadIsClosedValidator:
-    _context: GraphQLContext
-    _category: Union[str, int, Category]
-
-    def __init__(self, context: GraphQLContext, category: Union[str, int, Category]):
-        self._context = context
-        self._category = category
-
-    async def __call__(self, is_closed: bool, *_) -> bool:
-        if not is_closed:
-            return is_closed
-
-        category: Optional[Category] = None
-        if isinstance(self._category, Category):
-            category = self._category
-        else:
-            category = await load_category(self._context, self._category)
-
-        user = self._context["user"]
-
-        if not category or not user or not user.is_moderator:
-            raise NotModeratorError()
-
-        return is_closed
 
 
 class PostAuthorValidator:

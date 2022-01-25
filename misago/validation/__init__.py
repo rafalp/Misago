@@ -4,7 +4,6 @@ from .validation import ROOT_LOCATION, validate_data, validate_model
 from .validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
-    NewThreadIsClosedValidator,
     PostAuthorValidator,
     PostCategoryValidator,
     PostExistsValidator,
@@ -25,7 +24,6 @@ __all__ = [
     "ROOT_LOCATION",
     "CategoryIsOpenValidator",
     "CategoryModeratorValidator",
-    "NewThreadIsClosedValidator",
     "PostAuthorValidator",
     "PostCategoryValidator",
     "PostExistsValidator",

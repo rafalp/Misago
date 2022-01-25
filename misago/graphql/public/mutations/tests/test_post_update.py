@@ -296,7 +296,7 @@ async def test_post_update_mutation_fails_if_category_is_closed(
         "errors": [
             {
                 "location": "post",
-                "type": "auth_error.category.closed",
+                "type": "category_error.closed",
             },
         ],
     }
