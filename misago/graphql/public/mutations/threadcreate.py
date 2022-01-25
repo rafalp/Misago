@@ -49,13 +49,9 @@ async def resolve_thread_create(
             ],
             ErrorsList.ROOT_LOCATION: [
                 IsAuthenticatedValidator(info.context),
+                IsClosedValidator(info.context),
             ],
         }
-
-        if cleaned_data.get("category"):
-            validators["is_closed"] = [
-                IsClosedValidator(info.context, cleaned_data["category"])
-            ]
 
         cleaned_data, errors = await thread_create_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors
@@ -73,18 +69,19 @@ async def resolve_thread_create(
 
 class IsClosedValidator:
     _context: GraphQLContext
-    _category_id: str
 
-    def __init__(self, context: GraphQLContext, category_id: str):
+    def __init__(self, context: GraphQLContext):
         self._context = context
-        self._category_id = category_id
 
-    def __call__(self, is_closed: bool, *_) -> bool:
+    def __call__(self, data: dict, errors: ErrorsList, *_) -> dict:
         user = self._context["user"]
-        if is_closed and (not user or not user.is_moderator):
-            raise NotModeratorError()
-            
-        return is_closed
+        category = data.get("category")
+        is_closed = data.get("is_closed")
+
+        if category and is_closed and (not user or not user.is_moderator):
+            errors.add_error("is_closed", NotModeratorError())
+
+        return data
 
 
 def create_input_model(context: GraphQLContext) -> Type[BaseModel]:

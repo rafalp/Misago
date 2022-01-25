@@ -82,6 +82,7 @@ class CategoryModeratorValidator:
     async def __call__(self, category: Category, *_) -> Category:
         user = self._context["user"]
         from ..auth.errors import NotModeratorError
+
         if not user or not user.is_moderator:
             raise NotModeratorError()
         return category
