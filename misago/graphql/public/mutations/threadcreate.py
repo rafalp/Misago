@@ -5,6 +5,8 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
+from ....categories.validators import CategoryExistsValidator
 from ....database import database
 from ....errors import ErrorsList
 from ....loaders import store_category, store_post, store_thread
@@ -12,10 +14,8 @@ from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.models import Post, Thread
 from ....validation import (
-    CategoryExistsValidator,
     CategoryIsOpenValidator,
     NewThreadIsClosedValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     threadtitlestr,
     validate_data,
@@ -48,7 +48,7 @@ async def resolve_thread_create(
                 CategoryIsOpenValidator(info.context),
             ],
             ErrorsList.ROOT_LOCATION: [
-                UserIsAuthorizedRootValidator(info.context),
+                IsAuthenticatedValidator(info.context),
             ],
         }
 

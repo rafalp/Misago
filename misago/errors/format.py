@@ -1,6 +1,5 @@
 from typing import Sequence, Union
 
-from .autherror import AuthError
 from .errordict import ErrorDict
 
 ROOT_LOCATION = "__root__"
@@ -38,14 +37,21 @@ def get_error_type(error: Exception) -> str:
     if isinstance(error, AssertionError):
         return "assertion_error"
 
-    base_name = "value_error"
-    if isinstance(error, TypeError):
-        base_name = "type_error"
-    if isinstance(error, AuthError):
-        base_name = "auth_error"
-
+    base_name = get_error_base_name(error)
     code = (
         getattr(error, "code", None)
         or type(error).__name__.replace("Error", "").lower()
     )
     return base_name + "." + code
+
+
+def get_error_base_name(error: Exception) -> str:
+    if isinstance(error, ValueError):
+        return "value_error"
+    if isinstance(error, TypeError):
+        return "type_error"
+
+    if hasattr(error, "base_name"):
+        return error.base_name
+
+    return "error"

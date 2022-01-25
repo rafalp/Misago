@@ -4,6 +4,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
 from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
 from ....threads.models import Thread
@@ -13,7 +14,6 @@ from ....validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     threadtitlestr,
     validate_data,
@@ -55,7 +55,7 @@ async def resolve_thread_rename(
                 ThreadIsOpenValidator(info.context),
             ],
             ErrorsList.ROOT_LOCATION: [
-                UserIsAuthorizedRootValidator(info.context),
+                IsAuthenticatedValidator(info.context),
             ],
         }
         cleaned_data, errors = await thread_rename_input_hook.call_action(

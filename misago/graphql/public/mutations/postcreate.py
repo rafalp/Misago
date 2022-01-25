@@ -5,6 +5,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
 from ....categories.models import Category
 from ....errors import ErrorsList
 from ....loaders import (
@@ -22,7 +23,6 @@ from ....validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadIsOpenValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     validate_data,
     validate_model,
@@ -58,7 +58,7 @@ async def resolve_post_create(
                 ThreadIsOpenValidator(info.context),
             ],
             ErrorsList.ROOT_LOCATION: [
-                UserIsAuthorizedRootValidator(info.context),
+                IsAuthenticatedValidator(info.context),
             ],
         }
         cleaned_data, errors = await post_create_input_hook.call_action(

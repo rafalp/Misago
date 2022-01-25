@@ -7,10 +7,9 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import move_category
-from ....categories.validators import validate_category_parent
+from ....categories.validators import CategoryExistsValidator, validate_category_parent
 from ....validation import (
     ROOT_LOCATION,
-    CategoryExistsValidator,
     color_validator,
     for_location,
     validate_data,

@@ -1,7 +1,7 @@
 from typing import Awaitable, List, Optional
 
-from .categorytypes import CategoryTypes
 from .models import Category
+from .types import CategoryTypes
 
 
 def get_all_categories(

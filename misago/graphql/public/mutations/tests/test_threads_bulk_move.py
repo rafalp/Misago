@@ -76,7 +76,7 @@ async def test_threads_bulk_move_doesnt_move_threads_in_target_category(
 
 
 @pytest.mark.asyncio
-async def test_threads_bulk_move_mutation_fails_if_user_is_not_authorized(
+async def test_threads_bulk_move_mutation_fails_if_user_is_not_authenticated(
     query_public_api, thread, sibling_category
 ):
     result = await query_public_api(
@@ -101,7 +101,7 @@ async def test_threads_bulk_move_mutation_fails_if_user_is_not_authorized(
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "auth_error.not_authorized",
+                "type": "auth_error.not_authenticated",
             },
         ],
     }

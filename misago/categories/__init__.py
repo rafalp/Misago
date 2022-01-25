@@ -1,3 +1,3 @@
-from .categorytypes import CategoryTypes
+from .types import CategoryTypes
 
 __all__ = ["CategoryTypes"]

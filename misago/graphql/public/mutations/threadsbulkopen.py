@@ -4,6 +4,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
 from ....errors import ErrorsList
 from ....loaders import load_threads, store_threads
 from ....threads.close import open_threads
@@ -14,7 +15,6 @@ from ....validation import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadsBulkValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     bulkactionidslist,
     validate_data,
@@ -59,7 +59,7 @@ async def resolve_threads_bulk_open(
                     ]
                 ),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
+            ErrorsList.ROOT_LOCATION: [IsAuthenticatedValidator(info.context)],
         }
         (cleaned_data, errors,) = await threads_bulk_open_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

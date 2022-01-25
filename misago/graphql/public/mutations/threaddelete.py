@@ -4,13 +4,13 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
 from ....errors import ErrorsList
 from ....loaders import clear_all_posts, clear_thread
 from ....validation import (
     CategoryModeratorValidator,
     ThreadCategoryValidator,
     ThreadExistsValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     validate_data,
     validate_model,
@@ -43,7 +43,7 @@ async def resolve_thread_delete(
                     info.context, CategoryModeratorValidator(info.context)
                 ),
             ],
-            ErrorsList.ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
+            ErrorsList.ROOT_LOCATION: [IsAuthenticatedValidator(info.context)],
         }
         cleaned_data, errors = await thread_delete_input_hook.call_action(
             validate_input_data, info.context, validators, cleaned_data, errors

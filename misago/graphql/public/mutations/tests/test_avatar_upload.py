@@ -65,7 +65,7 @@ async def test_upload_avatar_mutation_uploads_avatar(
 
 
 @pytest.mark.asyncio
-async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
+async def test_upload_avatar_mutation_fails_if_user_is_not_authenticated(
     query_public_api, user, test_files_path
 ):
     with open(os.path.join(test_files_path, "avatar.png"), "rb") as upload:
@@ -82,7 +82,7 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authorized(
         "errors": [
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "auth_error.not_authorized",
+                "type": "auth_error.not_authenticated",
                 "message": "authorization is required",
             },
         ],

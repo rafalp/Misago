@@ -1,7 +1,27 @@
-from typing import Optional
+from typing import Optional, Union
 
-from .errors import CategoryInvalidParentError
+from ..graphql import GraphQLContext
+from ..loaders import load_category
+from .errors import CategoryInvalidParentError, CategoryNotFoundError
 from .models import Category
+from .types import CategoryTypes
+
+
+class CategoryExistsValidator:
+    _context: GraphQLContext
+    _category_type: int
+
+    def __init__(
+        self, context: GraphQLContext, category_type: int = CategoryTypes.THREADS
+    ):
+        self._context = context
+        self._category_type = category_type
+
+    async def __call__(self, category_id: Union[int, str], *_) -> Category:
+        category = await load_category(self._context, category_id)
+        if not category or category.type != self._category_type:
+            raise CategoryNotFoundError(category_id=category_id)
+        return category
 
 
 def validate_category_parent(

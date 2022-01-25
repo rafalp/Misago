@@ -2,7 +2,6 @@ from .root_validator import for_location
 from .types import bulkactionidslist, sluggablestr, threadtitlestr
 from .validation import ROOT_LOCATION, validate_data, validate_model
 from .validators import (
-    CategoryExistsValidator,
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
     NewThreadIsClosedValidator,
@@ -18,14 +17,12 @@ from .validators import (
     ThreadPostExistsValidator,
     ThreadPostIsReplyValidator,
     ThreadsBulkValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     color_validator,
 )
 
 __all__ = [
     "ROOT_LOCATION",
-    "CategoryExistsValidator",
     "CategoryIsOpenValidator",
     "CategoryModeratorValidator",
     "NewThreadIsClosedValidator",
@@ -41,7 +38,6 @@ __all__ = [
     "ThreadPostExistsValidator",
     "ThreadPostIsReplyValidator",
     "ThreadsBulkValidator",
-    "UserIsAuthorizedRootValidator",
     "Validator",
     "bulkactionidslist",
     "color_validator",

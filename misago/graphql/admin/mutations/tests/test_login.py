@@ -115,7 +115,7 @@ async def test_admin_login_mutation_returns_error_on_nonexistent_user_credential
         "errors": [
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "value_error.invalid_credentials",
+                "type": "auth_error.invalid_credentials",
             },
         ],
     }

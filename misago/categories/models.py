@@ -5,7 +5,7 @@ from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..graphql import GraphQLContext
 from ..tables import categories
 from ..utils.strings import slugify
-from .categorytypes import CategoryTypes
+from .types import CategoryTypes
 
 DEFAULT_COLOR = "#0F0"
 

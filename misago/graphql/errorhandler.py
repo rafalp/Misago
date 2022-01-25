@@ -2,9 +2,7 @@ from functools import wraps
 from inspect import isawaitable
 from typing import Union
 
-from pydantic import PydanticTypeError, PydanticValueError
-
-from ..errors import AuthError, ErrorDict, ErrorsList, get_error_dict
+from ..errors import ErrorDict, ErrorsList, get_error_dict
 
 ERRORS = "errors"
 
@@ -16,7 +14,7 @@ def error_handler(f):
             result = f(*args, **kwargs)
             if isawaitable(result):
                 result = await result
-        except (AuthError, PydanticTypeError, PydanticValueError) as error:
+        except Exception as error:
             result = {ERRORS: ErrorsList([format_error(error)])}
 
         if result.get(ERRORS):

@@ -42,7 +42,7 @@ async def test_post_delete_mutation_deletes_thread_reply(
 
 
 @pytest.mark.asyncio
-async def test_post_delete_mutation_fails_if_user_is_not_authorized(
+async def test_post_delete_mutation_fails_if_user_is_not_authenticated(
     query_public_api, thread_with_reply, thread_reply
 ):
     result = await query_public_api(
@@ -62,7 +62,7 @@ async def test_post_delete_mutation_fails_if_user_is_not_authorized(
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "auth_error.not_authorized",
+                "type": "auth_error.not_authenticated",
             },
         ],
     }

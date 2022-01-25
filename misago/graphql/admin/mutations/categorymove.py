@@ -8,14 +8,9 @@ from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import move_category
+from ....categories.validators import CategoryExistsValidator
 from ....loaders import clear_categories
-from ....validation import (
-    ROOT_LOCATION,
-    CategoryExistsValidator,
-    for_location,
-    validate_data,
-    validate_model,
-)
+from ....validation import ROOT_LOCATION, for_location, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 from .categoryupdate import validate_parent_value

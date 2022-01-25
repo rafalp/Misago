@@ -2,9 +2,7 @@ from functools import wraps
 from inspect import isawaitable
 from typing import Any, Dict
 
-from pydantic import PydanticTypeError, PydanticValueError
-
-from ..errors import AuthError, ErrorsList
+from ..errors import ErrorsList
 
 
 def for_location(location: str):
@@ -20,7 +18,7 @@ def for_location(location: str):
                 if isawaitable(result):
                     result = await result
                 return result
-            except (AuthError, PydanticTypeError, PydanticValueError) as error:
+            except Exception as error:
                 data.pop(location, None)
                 errors.add_error(location, error)
                 return data

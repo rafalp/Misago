@@ -2,7 +2,6 @@ from typing import Union
 
 from pydantic import PydanticValueError
 
-from .autherror import AuthError
 from .errordict import ErrorDict
 from .errorslist import ErrorsList
 from .format import get_error_dict, get_error_location, get_error_type
@@ -13,48 +12,12 @@ class AllFieldsAreRequiredError(PydanticValueError):
     msg_template = "all fields are required"
 
 
-class CategoryNotFoundError(PydanticValueError):
-    code = "category.not_found"
-    msg_template = "category with id '{id}' could not be found"
-
-    def __init__(self, *, category_id: Union[int, str]) -> None:
-        super().__init__(id=category_id)
-
-
-class CategoryClosedError(AuthError):
-    code = "category.closed"
-    msg_template = "category with id '{id}' is closed"
-
-    def __init__(self, *, category_id: Union[int, str]) -> None:
-        super().__init__(id=category_id)
-
-
-class NotAuthorizedError(AuthError):
-    code = "not_authorized"
-    msg_template = "authorization is required"
-
-
-class NotAdminError(AuthError):
-    code = "not_admin"
-    msg_template = "administrator permission is required"
-
-
-class NotModeratorError(AuthError):
-    code = "not_moderator"
-    msg_template = "moderator permission is required"
-
-
-class InvalidCredentialsError(PydanticValueError):
-    code = "invalid_credentials"
-    msg_template = "invalid credentials"
-
-
 class ListRepeatedItemsError(PydanticValueError):
     code = "list.repeated_items"
     msg_template = "ensure all items of the list are unique"
 
 
-class NotPostAuthorError(AuthError):
+class NotPostAuthorError(PydanticValueError):
     code = "post.not_author"
     msg_template = "must be author of post with id '{id}'"
 
@@ -62,7 +25,7 @@ class NotPostAuthorError(AuthError):
         super().__init__(id=post_id)
 
 
-class NotThreadAuthorError(AuthError):
+class NotThreadAuthorError(PydanticValueError):
     code = "thread.not_author"
     msg_template = "must be author of thread with id '{id}'"
 
@@ -99,7 +62,7 @@ class ThreadFirstPostError(PydanticValueError):
         super().__init__(id=post_id)
 
 
-class ThreadClosedError(AuthError):
+class ThreadClosedError(PydanticValueError):
     code = "thread.closed"
     msg_template = "thread with id '{id}' is closed"
 

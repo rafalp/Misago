@@ -77,7 +77,7 @@ async def test_thread_rename_mutation_does_nothing_if_new_title_is_same_as_old(
 
 
 @pytest.mark.asyncio
-async def test_thread_rename_mutation_fails_if_user_is_not_authorized(
+async def test_thread_rename_mutation_fails_if_user_is_not_authenticated(
     query_public_api, user_thread
 ):
     result = await query_public_api(
@@ -102,7 +102,7 @@ async def test_thread_rename_mutation_fails_if_user_is_not_authorized(
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "auth_error.not_authorized",
+                "type": "auth_error.not_authenticated",
             },
         ],
     }

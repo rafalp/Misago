@@ -9,15 +9,10 @@ from ....categories.errors import CategoryInvalidError
 from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import delete_category, move_category
+from ....categories.validators import CategoryExistsValidator
 from ....errors import ErrorsList
 from ....loaders import clear_categories
-from ....validation import (
-    ROOT_LOCATION,
-    CategoryExistsValidator,
-    for_location,
-    validate_data,
-    validate_model,
-)
+from ....validation import ROOT_LOCATION, for_location, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 

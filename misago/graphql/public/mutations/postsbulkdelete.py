@@ -4,6 +4,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
+from ....auth.validators import IsAuthenticatedValidator
 from ....errors import ErrorsList
 from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_posts
@@ -16,7 +17,6 @@ from ....validation import (
     ThreadExistsValidator,
     ThreadPostExistsValidator,
     ThreadPostIsReplyValidator,
-    UserIsAuthorizedRootValidator,
     Validator,
     bulkactionidslist,
     validate_data,
@@ -60,7 +60,7 @@ async def resolve_posts_bulk_delete(
                     info.context, CategoryModeratorValidator(info.context)
                 ),
             ],
-            ROOT_LOCATION: [UserIsAuthorizedRootValidator(info.context)],
+            ROOT_LOCATION: [IsAuthenticatedValidator(info.context)],
         }
 
         (cleaned_data, errors,) = await posts_bulk_delete_input_thread_hook.call_action(

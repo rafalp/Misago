@@ -1,18 +1,12 @@
 from asyncio import gather
 from typing import Any, Awaitable, Callable, List, Optional, Union, cast
 
-from pydantic import PydanticTypeError, PydanticValueError
 from pydantic.color import Color
 
 from ..categories import CategoryTypes
 from ..categories.models import Category
 from ..errors import (
-    AuthError,
-    CategoryClosedError,
-    CategoryNotFoundError,
     ErrorsList,
-    NotAuthorizedError,
-    NotModeratorError,
     NotPostAuthorError,
     NotThreadAuthorError,
     PostNotFoundError,
@@ -59,26 +53,9 @@ async def _validate_bulk_item(
         for validator in validators:
             data = await validator(data, errors, location[0])
         return data
-    except (AuthError, PydanticTypeError, PydanticValueError) as error:
+    except Exception as error:
         errors.add_error(location, error)
         return None
-
-
-class CategoryExistsValidator:
-    _context: GraphQLContext
-    _category_type: int
-
-    def __init__(
-        self, context: GraphQLContext, category_type: int = CategoryTypes.THREADS
-    ):
-        self._context = context
-        self._category_type = category_type
-
-    async def __call__(self, category_id: Union[int, str], *_) -> Category:
-        category = await load_category(self._context, category_id)
-        if not category or category.type != self._category_type:
-            raise CategoryNotFoundError(category_id=category_id)
-        return category
 
 
 class CategoryIsOpenValidator:
@@ -320,19 +297,6 @@ class ThreadsBulkValidator(BulkValidator):
         self, threads: List[Any], errors: ErrorsList, field_name: str
     ) -> List[Thread]:
         return await super().__call__(threads, errors, field_name)
-
-
-class UserIsAuthorizedRootValidator:
-    _context: GraphQLContext
-
-    def __init__(self, context: GraphQLContext):
-        self._context = context
-
-    async def __call__(self, data: Any, *_) -> Any:
-        user = self._context["user"]
-        if not user:
-            raise NotAuthorizedError()
-        return data
 
 
 def color_validator(color: Union[Color, str], *_) -> str:

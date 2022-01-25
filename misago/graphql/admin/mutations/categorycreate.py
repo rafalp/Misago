@@ -9,12 +9,8 @@ from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import insert_category
-from ....validation import (
-    CategoryExistsValidator,
-    color_validator,
-    validate_data,
-    validate_model,
-)
+from ....categories.validators import CategoryExistsValidator
+from ....validation import color_validator, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 

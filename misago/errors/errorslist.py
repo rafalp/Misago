@@ -1,8 +1,5 @@
 from typing import List, Sequence, Union
 
-from pydantic import PydanticTypeError, PydanticValueError
-
-from .autherror import AuthError
 from .errordict import ErrorDict
 from .format import ROOT_LOCATION as DEFAULT_ROOT_LOCATION
 from .format import get_error_dict
@@ -21,16 +18,10 @@ class ErrorsList(List[ErrorDict]):
     def copy(self):
         return ErrorsList(self[:])
 
-    def add_root_error(
-        self, error: Union[AuthError, PydanticTypeError, PydanticValueError]
-    ):
+    def add_root_error(self, error: Exception):
         self.add_error(self.ROOT_LOCATION, error)
 
-    def add_error(
-        self,
-        location: Union[str, Sequence[str]],
-        error: Union[AuthError, PydanticTypeError, PydanticValueError],
-    ):
+    def add_error(self, location: Union[str, Sequence[str]], error: Exception):
         error_dict = get_error_dict(error, location)
         if error_dict not in self:  # pylint: disable=unsupported-membership-test
             super().append(error_dict)

@@ -64,7 +64,7 @@ async def test_thread_close_mutation_does_nothing_for_closed_thread(
 
 
 @pytest.mark.asyncio
-async def test_thread_close_mutation_fails_if_user_is_not_authorized(
+async def test_thread_close_mutation_fails_if_user_is_not_authenticated(
     query_public_api, thread
 ):
     result = await query_public_api(
@@ -85,7 +85,7 @@ async def test_thread_close_mutation_fails_if_user_is_not_authorized(
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
-                "type": "auth_error.not_authorized",
+                "type": "auth_error.not_authenticated",
             },
         ],
     }

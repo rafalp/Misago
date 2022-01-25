@@ -2,10 +2,10 @@ from asyncio import gather
 from inspect import isawaitable
 from typing import Any, Dict, List, Optional, Tuple, Type, cast
 
-from pydantic import BaseModel, PydanticTypeError, PydanticValueError
+from pydantic import BaseModel
 from pydantic import validate_model as pydantic_validate_model
 
-from ..errors import AuthError, ErrorDict, ErrorsList, get_error_location
+from ..errors import ErrorDict, ErrorsList, get_error_location
 from .validators import Validator
 
 ROOT_LOCATION = ErrorsList.ROOT_LOCATION
@@ -69,7 +69,7 @@ async def validate_data(
                     validated_data = cast(Data, await result)
                 else:
                     validated_data = cast(Data, result)
-            except (AuthError, PydanticTypeError, PydanticValueError) as error:
+            except Exception as error:
                 new_errors.add_root_error(error)
 
     return validated_data, new_errors
@@ -87,6 +87,6 @@ async def validate_field_data(
             if isawaitable(data):
                 data = await (data)
         return data
-    except (AuthError, PydanticTypeError, PydanticValueError) as error:
+    except Exception as error:
         errors.add_error(field_name, error)
         return None
