@@ -5,7 +5,7 @@ from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..graphql import GraphQLContext
 from ..tables import categories
 from ..utils.strings import slugify
-from .types import CategoryTypes
+from .enums import CategoryType
 
 DEFAULT_COLOR = "#0F0"
 
@@ -54,7 +54,7 @@ class Category(Model):
         context: Optional[GraphQLContext] = None,
     ) -> Awaitable["Category"]:
         data: Dict[str, Any] = {
-            "type": CategoryTypes.THREADS,
+            "type": CategoryType.THREADS,
             "name": name,
             "slug": slugify(name),
             "color": (color or DEFAULT_COLOR).upper(),

@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import NotModeratorError
+from ...auth.errors import NotModeratorError
 from ..validators import CategoryModeratorValidator
 
 

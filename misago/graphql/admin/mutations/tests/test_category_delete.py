@@ -347,7 +347,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ca
         "errors": [
             {
                 "location": "moveThreadsTo",
-                "type": "value_error.category.invalid",
+                "type": "category_error.invalid",
             },
         ],
     }
@@ -370,7 +370,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ch
         "errors": [
             {
                 "location": "moveThreadsTo",
-                "type": "value_error.category.invalid",
+                "type": "category_error.invalid",
             },
         ],
     }
@@ -393,7 +393,7 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_deleted_c
         "errors": [
             {
                 "location": "moveChildrenTo",
-                "type": "value_error.category.invalid",
+                "type": "category_error.invalid",
             },
         ],
     }
@@ -416,7 +416,7 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_child_cat
         "errors": [
             {
                 "location": "moveChildrenTo",
-                "type": "value_error.category.invalid",
+                "type": "category_error.invalid",
             },
         ],
     }

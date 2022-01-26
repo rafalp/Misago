@@ -180,7 +180,7 @@ async def test_threads_bulk_move_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }
@@ -241,7 +241,7 @@ async def test_threads_bulk_move_mutation_fails_if_category_doesnt_exist(
         "errors": [
             {
                 "location": "category",
-                "type": "value_error.category.not_found",
+                "type": "category_error.not_found",
             },
         ],
     }
@@ -276,7 +276,7 @@ async def test_threads_bulk_move_mutation_with_threads_errors_still_updates_vali
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }

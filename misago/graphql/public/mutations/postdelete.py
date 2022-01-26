@@ -5,20 +5,18 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
+from ....categories.validators import CategoryModeratorValidator
 from ....errors import ErrorsList
 from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
 from ....threads.models import Thread
-from ....validation import (
-    CategoryModeratorValidator,
+from ....threads.validators import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadPostExistsValidator,
     ThreadPostIsReplyValidator,
-    Validator,
-    validate_data,
-    validate_model,
 )
+from ....validation import Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postdelete import (

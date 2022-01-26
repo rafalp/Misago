@@ -15,7 +15,7 @@ class CategoryNotFoundError(CategoryError):
         super().__init__(id=category_id)
 
 
-class CategoryClosedError(CategoryError):
+class CategoryIsClosedError(CategoryError):
     code = "closed"
     msg_template = "category with id '{id}' is closed"
 

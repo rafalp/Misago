@@ -1,7 +1,7 @@
 import pytest
 
+from ..enums import CategoryType
 from ..errors import CategoryNotFoundError
-from ..types import CategoryTypes
 from ..validators import CategoryExistsValidator
 
 
@@ -22,7 +22,7 @@ async def test_validator_raises_category_not_exists_error_if_category_not_exists
 
 @pytest.mark.asyncio
 async def test_validator_returns_category_if_given_id_and_type_exists_in_db(category):
-    validator = CategoryExistsValidator({}, CategoryTypes.THREADS)
+    validator = CategoryExistsValidator({}, CategoryType.THREADS)
     assert await validator(category.id) == category
 
 
@@ -30,6 +30,6 @@ async def test_validator_returns_category_if_given_id_and_type_exists_in_db(cate
 async def test_validator_raises_category_not_exists_error_for_wrong_category_type(
     category,
 ):
-    validator = CategoryExistsValidator({}, CategoryTypes.PRIVATE_THREADS)
+    validator = CategoryExistsValidator({}, CategoryType.PRIVATE_THREADS)
     with pytest.raises(CategoryNotFoundError):
         await validator(category.id)

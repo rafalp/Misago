@@ -1,7 +1,7 @@
 import pytest
 
 from ..errors import UsernameError
-from ..types import usernamestr
+from ..validators import usernamestr
 
 settings = {"username_min_length": 1, "username_max_length": 4}
 

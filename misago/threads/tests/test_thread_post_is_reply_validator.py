@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import ThreadFirstPostError
+from ..errors import PostIsThreadStartError
 from ..validators import ThreadPostIsReplyValidator
 
 
@@ -15,5 +15,5 @@ async def test_validator_raises_first_post_error_if_post_is_original_message(
     thread, post
 ):
     validator = ThreadPostIsReplyValidator(thread)
-    with pytest.raises(ThreadFirstPostError):
+    with pytest.raises(PostIsThreadStartError):
         await validator(post)

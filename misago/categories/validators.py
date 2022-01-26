@@ -1,10 +1,15 @@
 from typing import Optional, Union
 
+from ..auth.errors import NotModeratorError
 from ..graphql import GraphQLContext
 from ..loaders import load_category
-from .errors import CategoryInvalidParentError, CategoryNotFoundError
+from .enums import CategoryType
+from .errors import (
+    CategoryInvalidParentError,
+    CategoryIsClosedError,
+    CategoryNotFoundError,
+)
 from .models import Category
-from .types import CategoryTypes
 
 
 class CategoryExistsValidator:
@@ -12,7 +17,7 @@ class CategoryExistsValidator:
     _category_type: int
 
     def __init__(
-        self, context: GraphQLContext, category_type: int = CategoryTypes.THREADS
+        self, context: GraphQLContext, category_type: int = CategoryType.THREADS
     ):
         self._context = context
         self._category_type = category_type
@@ -21,6 +26,34 @@ class CategoryExistsValidator:
         category = await load_category(self._context, category_id)
         if not category or category.type != self._category_type:
             raise CategoryNotFoundError(category_id=category_id)
+        return category
+
+
+class CategoryIsOpenValidator:
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, category: Category, *_) -> Category:
+        if category.is_closed:
+            user = self._context["user"]
+            if not (user and user.is_moderator):
+                raise CategoryIsClosedError(category_id=category.id)
+        return category
+
+
+class CategoryModeratorValidator:
+    _context: GraphQLContext
+
+    def __init__(self, context: GraphQLContext):
+        self._context = context
+
+    async def __call__(self, category: Category, *_) -> Category:
+        user = self._context["user"]
+
+        if not user or not user.is_moderator:
+            raise NotModeratorError()
         return category
 
 

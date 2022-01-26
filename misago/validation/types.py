@@ -42,10 +42,3 @@ def sluggablestr(min_length: int, max_length: int) -> Type[str]:
         min_length=min_length,
         max_length=max_length,
     )
-
-
-def threadtitlestr(settings: Settings) -> Type[str]:
-    return sluggablestr(
-        min_length=cast(int, settings["thread_title_min_length"]),
-        max_length=cast(int, settings["thread_title_max_length"]),
-    )

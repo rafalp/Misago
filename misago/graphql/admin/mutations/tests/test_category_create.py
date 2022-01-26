@@ -370,7 +370,7 @@ async def test_category_create_mutation_fails_if_parent_category_is_not_found(
         "errors": [
             {
                 "location": "parent",
-                "type": "value_error.category.not_found",
+                "type": "category_error.not_found",
             }
         ],
     }
@@ -395,7 +395,7 @@ async def test_category_create_mutation_fails_if_parent_category_is_child_catego
         "errors": [
             {
                 "location": "parent",
-                "type": "value_error.category.invalid_parent",
+                "type": "category_error.invalid_parent",
             }
         ],
     }

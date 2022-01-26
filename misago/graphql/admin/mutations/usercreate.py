@@ -7,8 +7,12 @@ from pydantic import BaseModel, EmailStr, create_model
 from ....loaders import store_user
 from ....users.create import create_user
 from ....users.models import User
-from ....users.types import passwordstr, usernamestr
-from ....users.validators import EmailIsAvailableValidator, UsernameIsAvailableValidator
+from ....users.validators import (
+    EmailIsAvailableValidator,
+    UsernameIsAvailableValidator,
+    passwordstr,
+    usernamestr,
+)
 from ....validation import Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler

@@ -23,7 +23,7 @@ async def test_bulk_posts_validator_partially_validates_posts(post):
     assert errors == [
         {
             "loc": "posts.1",
-            "type": "value_error.post.not_found",
+            "type": "post_error.not_found",
             "msg": f"post with id '{post.id + 1}' could not be found",
         },
     ]

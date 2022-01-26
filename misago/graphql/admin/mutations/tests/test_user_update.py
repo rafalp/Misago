@@ -61,7 +61,7 @@ async def test_user_update_mutation_fails_if_user_doesnt_exist(query_admin_api, 
         "errors": [
             {
                 "location": "user",
-                "type": "value_error.user.not_found",
+                "type": "user_error.not_found",
             },
         ],
     }
@@ -718,7 +718,7 @@ async def test_admin_update_mutation_fails_if_admin_tries_to_remove_own_status(
         "errors": [
             {
                 "location": "isAdmin",
-                "type": "value_error.user.remove_own_admin",
+                "type": "user_error.remove_own_admin",
             },
         ],
     }
@@ -954,7 +954,7 @@ async def test_user_update_mutation_fails_if_user_deactivates_themselves(
         "errors": [
             {
                 "location": "isActive",
-                "type": "value_error.user.deactivate_self",
+                "type": "user_error.deactivate_self",
             },
         ],
     }

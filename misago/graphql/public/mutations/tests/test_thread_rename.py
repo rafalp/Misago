@@ -98,7 +98,7 @@ async def test_thread_rename_mutation_fails_if_user_is_not_authenticated(
         "errors": [
             {
                 "location": "thread",
-                "type": "auth_error.thread.not_author",
+                "type": "thread_error.not_author",
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
@@ -185,7 +185,7 @@ async def test_thread_rename_mutation_fails_if_thread_author_is_other_user(
         "errors": [
             {
                 "location": "thread",
-                "type": "auth_error.thread.not_author",
+                "type": "thread_error.not_author",
             },
         ],
     }
@@ -246,7 +246,7 @@ async def test_thread_rename_mutation_fails_if_thread_is_closed(
         "errors": [
             {
                 "location": "thread",
-                "type": "auth_error.thread.closed",
+                "type": "thread_error.closed",
             },
         ],
     }

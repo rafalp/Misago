@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import PostNotFoundError
+from ..errors import PostNotFoundError
 from ..validators import ThreadPostExistsValidator
 
 

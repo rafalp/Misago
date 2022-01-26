@@ -120,7 +120,7 @@ async def test_threads_bulk_delete_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }
@@ -141,7 +141,7 @@ async def test_threads_bulk_delete_mutation_with_threads_errors_still_deletes_va
         "errors": [
             {
                 "location": "threads.0",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }

@@ -32,6 +32,14 @@ class UserError(PydanticErrorMixin, Exception):
     base_name = "user_error"
 
 
+class UserNotFoundError(UserError):
+    code = "not_found"
+    msg_template = "user with id '{id}' could not be found"
+
+    def __init__(self, *, user_id: Union[int, str]) -> None:
+        super().__init__(id=user_id)
+
+
 class UserDeleteSelfError(UserError):
     code = "delete_self"
     msg_template = "user can't delete own account"
@@ -53,11 +61,3 @@ class UserIsProtectedError(UserError):
 class UserRemoveOwnAdminError(UserError):
     code = "remove_own_admin"
     msg_template = "user can't remove own admin status"
-
-
-class UserNotFoundError(UserError):
-    code = "not_found"
-    msg_template = "user with id '{id}' could not be found"
-
-    def __init__(self, *, user_id: Union[int, str]) -> None:
-        super().__init__(id=user_id)

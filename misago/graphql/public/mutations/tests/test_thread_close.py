@@ -160,7 +160,7 @@ async def test_thread_close_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }

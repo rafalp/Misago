@@ -1,3 +1,3 @@
-from .types import CategoryTypes
+from .enums import CategoryType
 
-__all__ = ["CategoryTypes"]
+__all__ = ["CategoryType"]

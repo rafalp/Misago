@@ -11,11 +11,12 @@ from ....users.errors import (
     UserRemoveOwnAdminError,
 )
 from ....users.models import User
-from ....users.types import passwordstr, usernamestr
 from ....users.validators import (
     EmailIsAvailableValidator,
     UserExistsValidator,
     UsernameIsAvailableValidator,
+    passwordstr,
+    usernamestr,
 )
 from ....validation import Validator, validate_data, validate_model
 from ... import GraphQLContext

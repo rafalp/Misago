@@ -141,7 +141,7 @@ async def test_posts_bulk_delete_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }
@@ -196,7 +196,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_doesnt_exist(
         "errors": [
             {
                 "location": "posts.0",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }
@@ -222,7 +222,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_is_threads_first_post(
         "errors": [
             {
                 "location": "posts.0",
-                "type": "value_error.post.thread_start",
+                "type": "post_error.thread_start",
             },
         ],
     }
@@ -251,7 +251,7 @@ async def test_posts_bulk_delete_mutation_fails_if_post_is_in_other_thread(
         "errors": [
             {
                 "location": "posts.0",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }
@@ -280,7 +280,7 @@ async def test_posts_bulk_delete_mutation_with_posts_errors_still_deletes_valid_
         "errors": [
             {
                 "location": "posts.1",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }

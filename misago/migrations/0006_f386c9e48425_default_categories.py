@@ -11,7 +11,7 @@ from alembic import op
 from sqlalchemy import JSON, Boolean, Integer, String
 from sqlalchemy.sql import column, table
 
-from misago.categories.types import CategoryTypes
+from misago.categories.enums import CategoryType
 
 # revision identifiers, used by Alembic.
 revision = "f386c9e48425"
@@ -37,7 +37,7 @@ table = table(
 categories: List[dict] = [
     {
         # id: 1
-        "type": CategoryTypes.PRIVATE_THREADS,
+        "type": CategoryType.PRIVATE_THREADS,
         "parent_id": None,
         "depth": 0,
         "left": 1,
@@ -49,7 +49,7 @@ categories: List[dict] = [
     },
     {
         # id: 2
-        "type": CategoryTypes.THREADS,
+        "type": CategoryType.THREADS,
         "parent_id": None,
         "depth": 0,
         "left": 1,

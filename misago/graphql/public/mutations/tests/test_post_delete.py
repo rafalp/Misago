@@ -136,7 +136,7 @@ async def test_post_delete_mutation_fails_if_thread_doesnt_exist(
         "errors": [
             {
                 "location": "thread",
-                "type": "value_error.thread.not_found",
+                "type": "thread_error.not_found",
             },
         ],
     }
@@ -191,7 +191,7 @@ async def test_post_delete_mutation_fails_if_post_doesnt_exist(
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }
@@ -217,7 +217,7 @@ async def test_post_delete_mutation_fails_if_post_is_thread_first_post(
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.thread_start",
+                "type": "post_error.thread_start",
             },
         ],
     }
@@ -246,7 +246,7 @@ async def test_post_delete_mutation_fails_if_post_is_in_other_thread(
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }

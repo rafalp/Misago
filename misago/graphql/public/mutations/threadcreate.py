@@ -7,20 +7,15 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.errors import NotModeratorError
 from ....auth.validators import IsAuthenticatedValidator
-from ....categories.validators import CategoryExistsValidator
+from ....categories.validators import CategoryExistsValidator, CategoryIsOpenValidator
 from ....database import database
 from ....errors import ErrorsList
 from ....loaders import store_category, store_post, store_thread
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.models import Post, Thread
-from ....validation import (
-    CategoryIsOpenValidator,
-    Validator,
-    threadtitlestr,
-    validate_data,
-    validate_model,
-)
+from ....threads.validators import threadtitlestr
+from ....validation import Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadcreate import (

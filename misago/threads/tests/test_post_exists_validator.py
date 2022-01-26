@@ -1,7 +1,7 @@
 import pytest
 
-from ...categories import CategoryTypes
-from ...errors import PostNotFoundError
+from ...categories import CategoryType
+from ..errors import PostNotFoundError
 from ..validators import PostExistsValidator
 
 
@@ -20,12 +20,12 @@ async def test_validator_raises_post_not_exists_error_if_post_not_exists(db):
 
 @pytest.mark.asyncio
 async def test_validator_returns_post_if_given_id_and_type_exists_in_db(post):
-    validator = PostExistsValidator({}, CategoryTypes.THREADS)
+    validator = PostExistsValidator({}, CategoryType.THREADS)
     assert await validator(post.id) == post
 
 
 @pytest.mark.asyncio
 async def test_validator_raises_post_not_exists_error_for_wrong_category_type(post):
-    validator = PostExistsValidator({}, CategoryTypes.PRIVATE_THREADS)
+    validator = PostExistsValidator({}, CategoryType.PRIVATE_THREADS)
     with pytest.raises(PostNotFoundError):
         await validator(post.id)

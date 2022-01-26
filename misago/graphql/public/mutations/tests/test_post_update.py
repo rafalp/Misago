@@ -81,7 +81,7 @@ async def test_post_update_mutation_fails_if_user_is_not_authenticated(
         "errors": [
             {
                 "location": "post",
-                "type": "auth_error.post.not_author",
+                "type": "post_error.not_author",
             },
             {
                 "location": ErrorsList.ROOT_LOCATION,
@@ -130,7 +130,7 @@ async def test_post_update_mutation_fails_if_post_doesnt_exist(query_public_api,
         "errors": [
             {
                 "location": "post",
-                "type": "value_error.post.not_found",
+                "type": "post_error.not_found",
             },
         ],
     }
@@ -158,7 +158,7 @@ async def test_post_update_mutation_fails_if_post_author_is_other_user(
         "errors": [
             {
                 "location": "post",
-                "type": "auth_error.post.not_author",
+                "type": "post_error.not_author",
             },
         ],
     }
@@ -227,7 +227,7 @@ async def test_post_update_mutation_fails_if_thread_is_closed(
         "errors": [
             {
                 "location": "post",
-                "type": "auth_error.thread.closed",
+                "type": "thread_error.closed",
             },
         ],
     }

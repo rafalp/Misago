@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import NotThreadAuthorError
+from ..errors import ThreadNotAuthorError
 from ..validators import ThreadAuthorValidator
 
 
@@ -33,7 +33,7 @@ async def test_validator_raises_not_author_error_if_user_is_not_authenticated(
     graphql_context, user_thread
 ):
     validator = ThreadAuthorValidator(graphql_context)
-    with pytest.raises(NotThreadAuthorError):
+    with pytest.raises(ThreadNotAuthorError):
         assert await validator(user_thread)
 
 
@@ -42,7 +42,7 @@ async def test_validator_raises_not_author_error_if_user_is_not_other_user_threa
     graphql_context, other_user_thread
 ):
     validator = ThreadAuthorValidator(graphql_context)
-    with pytest.raises(NotThreadAuthorError):
+    with pytest.raises(ThreadNotAuthorError):
         assert await validator(other_user_thread)
 
 
@@ -51,5 +51,5 @@ async def test_validator_raises_not_author_error_if_user_is_not_guest_thread_own
     graphql_context, thread
 ):
     validator = ThreadAuthorValidator(graphql_context)
-    with pytest.raises(NotThreadAuthorError):
+    with pytest.raises(ThreadNotAuthorError):
         assert await validator(thread)

@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import NotPostAuthorError
+from ..errors import PostNotAuthorError
 from ..validators import PostAuthorValidator
 
 
@@ -33,7 +33,7 @@ async def test_validator_raises_not_author_error_if_user_is_not_authenticated(
     graphql_context, user_post
 ):
     validator = PostAuthorValidator(graphql_context)
-    with pytest.raises(NotPostAuthorError):
+    with pytest.raises(PostNotAuthorError):
         assert await validator(user_post)
 
 
@@ -42,7 +42,7 @@ async def test_validator_raises_not_author_error_if_user_is_not_other_user_post_
     graphql_context, other_user_post
 ):
     validator = PostAuthorValidator(graphql_context)
-    with pytest.raises(NotPostAuthorError):
+    with pytest.raises(PostNotAuthorError):
         assert await validator(other_user_post)
 
 
@@ -51,5 +51,5 @@ async def test_validator_raises_not_author_error_if_user_is_not_guest_post_owner
     graphql_context, post
 ):
     validator = PostAuthorValidator(graphql_context)
-    with pytest.raises(NotPostAuthorError):
+    with pytest.raises(PostNotAuthorError):
         assert await validator(post)

@@ -5,23 +5,22 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
-from ....categories.validators import CategoryExistsValidator
+from ....categories.validators import (
+    CategoryExistsValidator,
+    CategoryIsOpenValidator,
+    CategoryModeratorValidator,
+)
 from ....errors import ErrorsList
 from ....loaders import load_threads, store_threads
 from ....threads.models import Thread
 from ....threads.move import move_threads
-from ....utils.lists import remove_none_items, update_list_items
-from ....validation import (
-    CategoryIsOpenValidator,
-    CategoryModeratorValidator,
+from ....threads.validators import (
     ThreadCategoryValidator,
     ThreadExistsValidator,
     ThreadsBulkValidator,
-    Validator,
-    bulkactionidslist,
-    validate_data,
-    validate_model,
 )
+from ....utils.lists import remove_none_items, update_list_items
+from ....validation import Validator, bulkactionidslist, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadsbulkmove import (

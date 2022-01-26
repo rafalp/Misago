@@ -120,7 +120,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_non_existing_u
         "errors": [
             {
                 "location": "user",
-                "type": "value_error.user.not_found",
+                "type": "user_error.not_found",
             },
         ],
     }
@@ -142,7 +142,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_self(
         "errors": [
             {
                 "location": "user",
-                "type": "value_error.user.delete_self",
+                "type": "user_error.delete_self",
             },
         ],
     }
@@ -168,7 +168,7 @@ async def test_user_delete_mutation_fails_if_user_tries_to_delete_admin(
         "errors": [
             {
                 "location": "user",
-                "type": "value_error.user.is_protected",
+                "type": "user_error.is_protected",
             },
         ],
     }
