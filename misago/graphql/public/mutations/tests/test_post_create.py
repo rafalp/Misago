@@ -2,9 +2,9 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
 from .....threads.models import Post
+from .....validation import ROOT_LOCATION
 
 POST_CREATE_MUTATION = """
     mutation PostCreate($input: PostCreateInput!) {
@@ -89,7 +89,7 @@ async def test_post_create_mutation_fails_if_user_is_not_authenticated(
         "post": None,
         "errors": [
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             }
         ],

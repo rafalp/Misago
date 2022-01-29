@@ -1,6 +1,6 @@
 from pydantic.errors import NoneIsNotAllowedError, PydanticErrorMixin
 
-from ..format import ROOT_LOCATION, get_error_dict
+from ..errordict import ROOT_LOCATION, get_error_dict
 
 
 class BaseError(PydanticErrorMixin, Exception):

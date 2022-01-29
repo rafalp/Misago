@@ -1,8 +1,7 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
-from .....errors import ErrorsList
 from .....hooks import FilterHook
-from .....validation import Validator
+from .....validation import ErrorsList, Validator
 from .... import GraphQLContext
 
 ThreadsBulkDeleteInput = Dict[str, Any]

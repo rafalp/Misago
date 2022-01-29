@@ -1,6 +1,6 @@
 import pytest
 
-from .....errors import ErrorsList
+from .....validation import ROOT_LOCATION
 
 THREAD_MOVE_MUTATION = """
     mutation ThreadMove($thread: ID!, $category: ID!) {
@@ -69,7 +69,7 @@ async def test_thread_move_mutation_fails_if_user_is_not_authenticated(
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

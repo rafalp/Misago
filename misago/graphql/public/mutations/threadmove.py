@@ -10,12 +10,11 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
-from ....errors import ErrorsList
 from ....loaders import load_thread, store_thread
 from ....threads.models import Thread
 from ....threads.move import move_thread
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
-from ....validation import Validator, validate_data, validate_model
+from ....validation import ErrorsList, Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadmove import ThreadMoveInput, thread_move_hook, thread_move_input_hook

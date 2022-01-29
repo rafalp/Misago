@@ -1,12 +1,10 @@
 from typing import List, Sequence, Union
 
-from .errordict import ErrorDict
-from .format import ROOT_LOCATION as DEFAULT_ROOT_LOCATION
-from .format import get_error_dict
+from .errordict import ROOT_LOCATION, ErrorDict, get_error_dict
 
 
 class ErrorsList(List[ErrorDict]):
-    ROOT_LOCATION = DEFAULT_ROOT_LOCATION
+    ROOT_LOCATION = ROOT_LOCATION
 
     def __add__(self, other_list: Sequence[ErrorDict]) -> "ErrorsList":
         errors_list = list(self)

@@ -1,7 +1,7 @@
 import pytest
 
-from .....errors import ErrorsList
 from .....threads.models import Post
+from .....validation import ROOT_LOCATION
 
 POSTS_BULK_DELETE_MUTATION = """
     mutation PostsBulkDelete($thread: ID!, $posts: [ID!]!) {
@@ -65,7 +65,7 @@ async def test_posts_bulk_delete_mutation_fails_if_user_is_not_authenticated(
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

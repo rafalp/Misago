@@ -6,7 +6,6 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....errors import ErrorsList
 from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_posts
 from ....threads.models import Thread
@@ -19,6 +18,7 @@ from ....threads.validators import (
 )
 from ....validation import (
     ROOT_LOCATION,
+    ErrorsList,
     Validator,
     bulkactionidslist,
     validate_data,

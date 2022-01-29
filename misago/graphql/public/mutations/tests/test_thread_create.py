@@ -2,10 +2,10 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....errors import ErrorsList
 from .....pubsub.threads import THREADS_CHANNEL
 from .....testing import override_dynamic_settings
 from .....threads.models import Post, Thread
+from .....validation import ROOT_LOCATION
 
 THREAD_CREATE_MUTATION = """
     mutation ThreadCreate($input: ThreadCreateInput!) {
@@ -99,7 +99,7 @@ async def test_thread_create_mutation_fails_if_user_is_not_authenticated(
         "thread": None,
         "errors": [
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

@@ -5,7 +5,6 @@ from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ....auth import create_user_token
-from ....errors import ErrorsList
 from ....loaders import store_user
 from ....users.create import create_user
 from ....users.models import User
@@ -15,7 +14,7 @@ from ....users.validators import (
     passwordstr,
     usernamestr,
 )
-from ....validation import Validator, validate_data, validate_model
+from ....validation import ErrorsList, Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.usercreate import (

@@ -8,7 +8,6 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.models import Category
 from ....categories.validators import CategoryIsOpenValidator
-from ....errors import ErrorsList
 from ....loaders import (
     load_category,
     load_thread,
@@ -24,7 +23,7 @@ from ....threads.validators import (
     ThreadExistsValidator,
     ThreadIsOpenValidator,
 )
-from ....validation import Validator, validate_data, validate_model
+from ....validation import ErrorsList, Validator, validate_data, validate_model
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postcreate import PostCreateInput, post_create_hook, post_create_input_hook

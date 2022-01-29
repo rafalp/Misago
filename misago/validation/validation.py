@@ -5,12 +5,10 @@ from typing import Any, Dict, List, Optional, Tuple, Type, cast
 from pydantic import BaseModel
 from pydantic import validate_model as pydantic_validate_model
 
-from ..errors import ErrorDict, ErrorsList, get_error_location
+from .errordict import ROOT_LOCATION, ErrorDict, get_error_location
 from .errors import VALIDATION_ERRORS
+from .errorslist import ErrorsList
 from .validators import Validator
-
-ROOT_LOCATION = ErrorsList.ROOT_LOCATION
-
 
 Data = Dict[str, Any]
 

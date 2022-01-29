@@ -2,11 +2,11 @@ from functools import wraps
 from inspect import isawaitable
 from typing import Any, Dict
 
-from ..errors import ErrorsList
 from .errors import VALIDATION_ERRORS
+from .errorslist import ErrorsList
 
 
-def for_location(location: str):
+def root_validator(*, location: str):
     """Decorator for root validators that puts their errors at defined location"""
 
     def root_validator_wrapper(f):

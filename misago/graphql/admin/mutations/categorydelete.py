@@ -10,9 +10,14 @@ from ....categories.get import get_all_categories
 from ....categories.models import Category
 from ....categories.tree import delete_category, move_category
 from ....categories.validators import CategoryExistsValidator
-from ....errors import ErrorsList
 from ....loaders import clear_categories
-from ....validation import ROOT_LOCATION, for_location, validate_data, validate_model
+from ....validation import (
+    ROOT_LOCATION,
+    ErrorsList,
+    root_validator,
+    validate_data,
+    validate_model,
+)
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 
@@ -93,7 +98,7 @@ class DeleteCategoryInputModel(BaseModel):  # type: ignore
     move_children_to: Optional[PositiveInt]
 
 
-@for_location("move_threads_to")
+@root_validator(location="move_threads_to")
 def validate_move_threads_to_value(cleaned_data: dict, errors: ErrorsList, *_) -> dict:
     if errors:
         return cleaned_data
@@ -111,7 +116,7 @@ def validate_move_threads_to_value(cleaned_data: dict, errors: ErrorsList, *_) -
     return cleaned_data
 
 
-@for_location("move_children_to")
+@root_validator(location="move_children_to")
 def validate_move_children_to_value(cleaned_data: dict, errors: ErrorsList, *_) -> dict:
     if errors:
         return cleaned_data

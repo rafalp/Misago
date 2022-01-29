@@ -7,14 +7,13 @@ from starlette.datastructures import UploadFile
 from ....auth.validators import IsAuthenticatedValidator
 from ....avatars.upload import store_uploaded_avatar
 from ....conf import settings
-from ....errors import ErrorsList
 from ....uploads.validators import (
     UploadContentTypeValidator,
     UploadImageValidator,
     UploadSizeValidator,
 )
 from ....users.models import User
-from ....validation import Validator, validate_data
+from ....validation import ErrorsList, Validator, validate_data
 from ...errorhandler import error_handler
 
 AVATAR_CONTENT_TYPES = settings.avatar_content_types

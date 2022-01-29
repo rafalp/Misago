@@ -2,7 +2,7 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....errors import ErrorsList
+from .....validation import ROOT_LOCATION
 
 POST_UPDATE_MUTATION = """
     mutation PostUpdate($input: PostUpdateInput!) {
@@ -84,7 +84,7 @@ async def test_post_update_mutation_fails_if_user_is_not_authenticated(
                 "type": "post_error.not_author",
             },
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

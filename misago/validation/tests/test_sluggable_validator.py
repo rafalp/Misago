@@ -1,7 +1,7 @@
 import pytest
 from pydantic.errors import StrRegexError
 
-from ..types import sluggablestr
+from ..validators import sluggablestr
 
 
 def test_sluggablestr_constraint_returns_string_type():

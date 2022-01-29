@@ -11,7 +11,7 @@ from ....categories.validators import CategoryExistsValidator, validate_category
 from ....validation import (
     ROOT_LOCATION,
     color_validator,
-    for_location,
+    root_validator,
     validate_data,
     validate_model,
 )
@@ -80,7 +80,7 @@ CategoryUpdateInputModel: Type[BaseModel] = create_model(
 )
 
 
-@for_location("parent")
+@root_validator(location="parent")
 def validate_parent_value(cleaned_data: dict, *_) -> dict:
     if "category" not in cleaned_data:
         return cleaned_data

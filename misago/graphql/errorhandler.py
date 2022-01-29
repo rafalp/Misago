@@ -2,8 +2,7 @@ from functools import wraps
 from inspect import isawaitable
 from typing import Union
 
-from ..errors import ErrorDict, ErrorsList, get_error_dict
-from ..validation import VALIDATION_ERRORS
+from ..validation import VALIDATION_ERRORS, ErrorDict, ErrorsList, get_error_dict
 
 ERRORS = "errors"
 

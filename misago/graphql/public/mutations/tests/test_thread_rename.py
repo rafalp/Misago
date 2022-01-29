@@ -1,6 +1,6 @@
 import pytest
 
-from .....errors import ErrorsList
+from .....validation import ROOT_LOCATION
 
 THREAD_RENAME_MUTATION = """
     mutation ThreadRename($thread: ID!, $title: String!) {
@@ -101,7 +101,7 @@ async def test_thread_rename_mutation_fails_if_user_is_not_authenticated(
                 "type": "thread_error.not_author",
             },
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

@@ -3,7 +3,7 @@ from unittest.mock import ANY
 import pytest
 
 from .....auth import get_user_from_token
-from .....errors import ErrorsList
+from .....validation import ErrorsList
 
 ADMIN_LOGIN_MUTATION = """
     mutation AdminLogin($username: String!, $password: String!) {

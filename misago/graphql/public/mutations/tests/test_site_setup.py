@@ -4,11 +4,11 @@ import pytest
 
 from .....auth import get_user_from_token
 from .....conf.dynamicsettings import get_settings_from_db
-from .....errors import ErrorsList
 from .....passwords import check_password
 from .....testing import override_dynamic_settings
 from .....users.get import get_user_by_email
 from .....users.models import User
+from .....validation import ROOT_LOCATION
 
 SITE_SETUP_MUTATION = """
     mutation SiteSetup($input: SiteSetupInput!) {
@@ -90,7 +90,7 @@ async def test_setup_site_mutation_returns_error_if_site_wizard_is_disabled(
         "token": None,
         "errors": [
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "value_error.site_wizard.disabled",
             },
         ],

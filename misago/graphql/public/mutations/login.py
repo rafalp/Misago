@@ -3,7 +3,7 @@ from graphql import GraphQLResolveInfo
 
 from ....auth import authenticate_user, create_user_token
 from ....auth.errors import InvalidCredentialsError
-from ....errors import AllFieldsAreRequiredError
+from ....validation import AllFieldsAreRequiredError
 from ...errorhandler import error_handler
 
 login_mutation = MutationType()

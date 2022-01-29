@@ -3,10 +3,9 @@ from typing import Any, List, Type, Union, cast
 from ..categories.enums import CategoryType
 from ..categories.models import Category
 from ..conf.types import Settings
-from ..errors import ErrorsList
 from ..graphql import GraphQLContext
 from ..loaders import load_category, load_post, load_thread
-from ..validation import BulkValidator, Validator, sluggablestr
+from ..validation import BulkValidator, ErrorsList, Validator, sluggablestr
 from .errors import (
     PostIsThreadStartError,
     PostNotAuthorError,

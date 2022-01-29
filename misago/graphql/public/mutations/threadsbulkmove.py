@@ -10,7 +10,6 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
-from ....errors import ErrorsList
 from ....loaders import load_threads, store_threads
 from ....threads.models import Thread
 from ....threads.move import move_threads
@@ -20,7 +19,13 @@ from ....threads.validators import (
     ThreadsBulkValidator,
 )
 from ....utils.lists import remove_none_items, update_list_items
-from ....validation import Validator, bulkactionidslist, validate_data, validate_model
+from ....validation import (
+    ErrorsList,
+    Validator,
+    bulkactionidslist,
+    validate_data,
+    validate_model,
+)
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadsbulkmove import (

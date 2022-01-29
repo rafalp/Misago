@@ -3,10 +3,10 @@ from unittest.mock import ANY
 
 import pytest
 
-from .....errors import ErrorsList
 from .....testing import override_dynamic_settings
 from .....uploads.store import media_file_exists
 from .....uploads.urls import make_media_url
+from .....validation import ROOT_LOCATION
 
 UPLOAD_AVATAR_MUTATION = """
     mutation AvatarUpload($upload: Upload!) {
@@ -81,7 +81,7 @@ async def test_upload_avatar_mutation_fails_if_user_is_not_authenticated(
         "user": None,
         "errors": [
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
                 "message": "authorization is required",
             },

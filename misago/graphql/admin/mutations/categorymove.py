@@ -10,7 +10,7 @@ from ....categories.models import Category
 from ....categories.tree import move_category
 from ....categories.validators import CategoryExistsValidator
 from ....loaders import clear_categories
-from ....validation import ROOT_LOCATION, for_location, validate_data, validate_model
+from ....validation import ROOT_LOCATION, root_validator, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 from .categoryupdate import validate_parent_value
@@ -81,7 +81,7 @@ MoveCategoryInputModel: Type[BaseModel] = create_model(
 )
 
 
-@for_location("before")
+@root_validator(location="before")
 def validate_before_value(cleaned_data: dict, *_) -> dict:
     if (
         "category" not in cleaned_data

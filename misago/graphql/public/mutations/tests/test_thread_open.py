@@ -1,6 +1,6 @@
 import pytest
 
-from .....errors import ErrorsList
+from .....validation import ROOT_LOCATION
 
 THREAD_OPEN_MUTATION = """
     mutation ThreadOpen($thread: ID!) {
@@ -86,7 +86,7 @@ async def test_thread_open_mutation_fails_if_user_is_not_authenticated(
                 "type": "auth_error.not_moderator",
             },
             {
-                "location": ErrorsList.ROOT_LOCATION,
+                "location": ROOT_LOCATION,
                 "type": "auth_error.not_authenticated",
             },
         ],

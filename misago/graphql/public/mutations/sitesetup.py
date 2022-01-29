@@ -7,7 +7,6 @@ from pydantic import BaseModel, EmailStr, constr, create_model
 from ....auth import create_user_token
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
-from ....errors import SiteWizardDisabledError
 from ....users.create import create_user
 from ....users.validators import (
     EmailIsAvailableValidator,
@@ -15,7 +14,12 @@ from ....users.validators import (
     passwordstr,
     usernamestr,
 )
-from ....validation import Validator, validate_data, validate_model
+from ....validation import (
+    SiteWizardDisabledError,
+    Validator,
+    validate_data,
+    validate_model,
+)
 from ... import GraphQLContext
 from ...errorhandler import error_handler
 

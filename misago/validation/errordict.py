@@ -1,8 +1,12 @@
-from typing import Sequence, Union
-
-from .errordict import ErrorDict
+from typing import Sequence, TypedDict, Union
 
 ROOT_LOCATION = "__root__"
+
+
+class ErrorDict(TypedDict):
+    loc: str
+    msg: str
+    type: str
 
 
 def get_error_dict(

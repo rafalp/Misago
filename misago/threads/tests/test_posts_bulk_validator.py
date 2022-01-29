@@ -1,6 +1,6 @@
 import pytest
 
-from ...errors import ErrorsList
+from ...validation import ErrorsList
 from ..validators import PostExistsValidator, PostsBulkValidator
 
 
