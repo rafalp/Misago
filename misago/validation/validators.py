@@ -5,6 +5,7 @@ from pydantic.color import Color
 
 from ..errors import ErrorsList
 from ..utils.lists import remove_none_items
+from .errors import VALIDATION_ERRORS
 
 Validator = Callable[[Any, ErrorsList, str], Union[Awaitable[Any], Any]]
 
@@ -40,7 +41,7 @@ async def _validate_bulk_item(
         for validator in validators:
             data = await validator(data, errors, location[0])
         return data
-    except Exception as error:
+    except VALIDATION_ERRORS as error:
         errors.add_error(location, error)
         return None
 

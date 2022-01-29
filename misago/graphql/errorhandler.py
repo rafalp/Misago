@@ -3,6 +3,7 @@ from inspect import isawaitable
 from typing import Union
 
 from ..errors import ErrorDict, ErrorsList, get_error_dict
+from ..validation import VALIDATION_ERRORS
 
 ERRORS = "errors"
 
@@ -14,7 +15,7 @@ def error_handler(f):
             result = f(*args, **kwargs)
             if isawaitable(result):
                 result = await result
-        except Exception as error:
+        except VALIDATION_ERRORS as error:
             result = {ERRORS: ErrorsList([format_error(error)])}
 
         if result.get(ERRORS):

@@ -1,9 +1,9 @@
 from typing import Union
 
-from pydantic.errors import PydanticErrorMixin
+from ..validation import BaseError
 
 
-class CategoryError(PydanticErrorMixin, Exception):
+class CategoryError(BaseError):
     base_name = "category_error"
 
 

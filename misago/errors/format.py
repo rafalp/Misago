@@ -52,6 +52,6 @@ def get_error_base_name(error: Exception) -> str:
         return "type_error"
 
     if hasattr(error, "base_name"):
-        return error.base_name
+        return error.base_name  # type: ignore
 
     return "error"

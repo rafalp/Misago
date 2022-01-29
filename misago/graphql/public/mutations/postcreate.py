@@ -7,7 +7,7 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.models import Category
-from ....categories.validators import Category, CategoryIsOpenValidator
+from ....categories.validators import CategoryIsOpenValidator
 from ....errors import ErrorsList
 from ....loaders import (
     load_category,

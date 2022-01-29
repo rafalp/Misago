@@ -1,7 +1,7 @@
-from pydantic.errors import PydanticErrorMixin
+from ..validation import BaseError
 
 
-class AuthError(PydanticErrorMixin, Exception):
+class AuthError(BaseError):
     base_name = "auth_error"
 
 

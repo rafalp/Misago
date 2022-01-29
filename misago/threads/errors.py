@@ -1,13 +1,15 @@
 from typing import Union
 
-from pydantic.errors import PydanticErrorMixin, PydanticValueError
+from pydantic import PydanticValueError
+
+from ..validation import BaseError
 
 
-class PostError(PydanticErrorMixin, Exception):
+class PostError(BaseError):
     base_name = "post_error"
 
 
-class ThreadError(PydanticErrorMixin, Exception):
+class ThreadError(BaseError):
     base_name = "thread_error"
 
 

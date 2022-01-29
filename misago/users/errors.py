@@ -1,6 +1,8 @@
 from typing import Union
 
-from pydantic.errors import PydanticErrorMixin, PydanticValueError
+from pydantic.errors import PydanticValueError
+
+from ..validation import BaseError
 
 
 class EmailNotAvailableError(PydanticValueError):
@@ -28,7 +30,7 @@ class UsernameNotAllowedError(PydanticValueError):
     msg_template = "username is not allowed"
 
 
-class UserError(PydanticErrorMixin, Exception):
+class UserError(BaseError):
     base_name = "user_error"
 
 

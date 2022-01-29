@@ -3,6 +3,7 @@ from inspect import isawaitable
 from typing import Any, Dict
 
 from ..errors import ErrorsList
+from .errors import VALIDATION_ERRORS
 
 
 def for_location(location: str):
@@ -18,7 +19,7 @@ def for_location(location: str):
                 if isawaitable(result):
                     result = await result
                 return result
-            except Exception as error:
+            except VALIDATION_ERRORS as error:
                 data.pop(location, None)
                 errors.add_error(location, error)
                 return data
