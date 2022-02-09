@@ -5,21 +5,25 @@ from ..validators import ThreadExistsValidator, ThreadsBulkValidator
 
 
 @pytest.mark.asyncio
-async def test_bulk_threads_validator_validates_threads(thread, user_thread):
+async def test_bulk_threads_validator_validates_threads(
+    loaders_context, thread, user_thread
+):
     errors = ErrorsList()
-    context = {}
-    validator = ThreadsBulkValidator([ThreadExistsValidator(context)])
+    validator = ThreadsBulkValidator([ThreadExistsValidator(loaders_context)])
     threads = await validator([thread.id, user_thread.id], errors, "threads")
+
     assert not errors
     assert threads == [thread, user_thread]
 
 
 @pytest.mark.asyncio
-async def test_bulk_threads_validator_partially_validates_threads(thread):
+async def test_bulk_threads_validator_partially_validates_threads(
+    loaders_context, thread
+):
     errors = ErrorsList()
-    context = {}
-    validator = ThreadsBulkValidator([ThreadExistsValidator(context)])
+    validator = ThreadsBulkValidator([ThreadExistsValidator(loaders_context)])
     threads = await validator([thread.id, thread.id + 1], errors, "threads")
+
     assert errors == [
         {
             "loc": "threads.1",

@@ -6,8 +6,8 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....loaders import clear_post, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_post
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
     ThreadCategoryValidator,
@@ -38,7 +38,7 @@ async def resolve_post_delete(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
@@ -119,7 +119,9 @@ async def post_delete_action(
 ) -> Thread:
     thread = cleaned_data["thread"]
     thread, last_post = await delete_thread_post(thread, cleaned_data["post"])
-    clear_post(context, cleaned_data["post"])
-    store_post(context, last_post)
-    store_thread(context, thread)
+
+    posts_loader.unload(context, cleaned_data["post"].id)
+    posts_loader.store(context, last_post)
+    threads_loader.store(context, thread)
+
     return thread

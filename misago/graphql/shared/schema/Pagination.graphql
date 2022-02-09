@@ -1,5 +1,0 @@
-type Pagination {
-    count: Int!
-    pages: Int!
-    perPage: Int!
-}

@@ -5,6 +5,7 @@ from starlette.requests import Request
 from ..auth import get_authenticated_admin, get_authenticated_user
 from ..cacheversions import get_cache_versions
 from ..conf.dynamicsettings import get_dynamic_settings
+from ..threads.loaders import posts_loader, threads_loader
 from . import GraphQLContext
 from .hooks import graphql_context_hook
 
@@ -18,23 +19,33 @@ class Space:
 async def get_graphql_context(request: Request) -> GraphQLContext:
     request.scope["user"] = None
 
+    context = {
+        "request": request,
+        "user": None,
+    }
+
     if request.scope["type"] == "websocket":
         cache_versions = await get_cache_versions()
         settings = await get_dynamic_settings(cache_versions)
 
-        return {
-            "request": request,
-            "cache_versions": cache_versions,
-            "settings": settings,
-            "user": None,
-        }
+        context.update(
+            {
+                "cache_versions": cache_versions,
+                "settings": settings,
+            }
+        )
+    else:
+        context.update(
+            {
+                "cache_versions": request.state.cache_versions,
+                "settings": request.state.settings,
+            }
+        )
 
-    return {
-        "request": request,
-        "cache_versions": request.state.cache_versions,
-        "settings": request.state.settings,
-        "user": None,
-    }
+    threads_loader.setup_context(context)
+    posts_loader.setup_context(context)
+
+    return context
 
 
 async def get_public_graphql_context(request: Request) -> GraphQLContext:

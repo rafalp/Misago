@@ -8,15 +8,20 @@ from ....loaders import (
     load_categories,
     load_category_with_children,
     load_forum_stats,
-    load_post,
     load_root_categories,
-    load_thread,
-    load_threads_feed,
     load_user,
 )
 from ....richtext import RichText, parse_markup
+from ....threads.get import get_threads_page
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread, ThreadsFeed
 from ....users.models import User
+from ...cleanargs import (
+    clean_graphql_id,
+    clean_graphql_cursor,
+    clean_graphql_cursors,
+    invalid_args_result,
+)
 
 query_type = QueryType()
 
@@ -32,58 +37,92 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 
 
 @query_type.field("category")
+@invalid_args_result
 async def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[Category]:
+    category_id = clean_graphql_id(id)
+
     # Load all categories so we can aggregate their stats
     categories = await load_categories(info.context)
 
     # Search for category
     for category in categories:
-        if str(category.id) == id:
+        if category.id == category_id:
             return category
 
     return None
 
 
 @query_type.field("thread")
+@invalid_args_result
 def resolve_thread(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Thread]]:
-    return load_thread(info.context, id)
-
-
-@query_type.field("post")
-def resolve_post(
-    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
-) -> Awaitable[Optional[Post]]:
-    return load_post(info.context, id)
+    thread_id = clean_graphql_id(id)
+    return threads_loader.load(info.context, thread_id)
 
 
 @query_type.field("threads")
+@invalid_args_result
 async def resolve_threads(
     _,
     info: GraphQLResolveInfo,
     *,
-    cursor: Optional[str] = None,
+    after: Optional[str] = None,
+    before: Optional[str] = None,
     category: Optional[str] = None,
     user: Optional[str] = None
-) -> Optional[ThreadsFeed]:
-    if category:
-        categories = await load_category_with_children(info.context, category)
+) -> Awaitable[ThreadsFeed]:
+    after, before = clean_graphql_cursors(after, before)
+    category_id = clean_graphql_id(category)
+    starter_id = clean_graphql_id(user)
+
+    if category_id:
+        categories = await load_category_with_children(info.context, category_id)
     else:
         categories = await load_categories(info.context)
 
-    return await load_threads_feed(
-        info.context, categories=categories, cursor=cursor, starter_id=user
+    return await get_threads_page(
+        info.context["settings"]["threads_per_page"],
+        after=after,
+        before=before,
+        starter_id=starter_id,
+        categories_ids=[category.id for category in categories],
     )
 
 
+@query_type.field("post")
+@invalid_args_result
+def resolve_post(
+    _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+) -> Awaitable[Optional[Post]]:
+    post_id = clean_graphql_id(id)
+    return posts_loader.load(info.context, post_id)
+
+
+@query_type.field("posts")
+@invalid_args_result
+async def resolve_posts(
+    _, info: GraphQLResolveInfo, *, thread: str, page: int = 1
+) -> Optional[Post]:
+    thread_id = clean_graphql_id(thread)
+    page = clean_graphql_cursor(page)
+
+    paginator = await posts_loader.load_paginator(info.context, thread_id)
+    if not paginator:
+        return None
+
+    return await paginator.get_page(page)
+
+
 @query_type.field("user")
+@invalid_args_result
 def resolve_user(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[User]]:
-    return load_user(info.context, id)
+    user_id = clean_graphql_id(id)
+    return load_user(info.context, user_id)
 
 
 @query_type.field("search")

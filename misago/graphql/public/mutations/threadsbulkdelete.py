@@ -6,7 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....loaders import clear_all_posts, clear_threads, load_threads
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
     ThreadCategoryValidator,
@@ -42,7 +42,7 @@ async def resolve_threads_bulk_delete(
 
     if cleaned_data.get("threads"):
         # prime threads cache for bulk action
-        await load_threads(info.context, cleaned_data["threads"])
+        await threads_loader.load_many(info.context, cleaned_data["threads"])
 
     if cleaned_data:
         validators: Dict[str, List[Validator]] = {
@@ -107,5 +107,6 @@ async def threads_bulk_delete_action(
 ):
     threads_ids = [thread.id for thread in cleaned_data["threads"]]
     await Thread.query.filter(id__in=threads_ids).delete()
-    clear_threads(context, cleaned_data["threads"])
-    clear_all_posts(context)
+
+    threads_loader.unload_many(context, threads_ids)
+    posts_loader.unload_with_thread_id_in(context, threads_ids)

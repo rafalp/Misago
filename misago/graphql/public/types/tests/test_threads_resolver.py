@@ -3,8 +3,10 @@ import pytest
 THREADS_FEED_QUERY = """
     query GetThreads($category: ID, $user: ID) {
         threads(category: $category, user: $user) {
-            items {
-                id
+            edges {
+                node {
+                    id
+                }
             }
         }
     }
@@ -15,7 +17,7 @@ THREADS_FEED_QUERY = """
 async def test_threads_query_resolves_to_empty_list(query_public_api, db):
     result = await query_public_api(THREADS_FEED_QUERY)
     assert result["data"]["threads"] == {
-        "items": [],
+        "edges": [],
     }
 
 
@@ -23,9 +25,27 @@ async def test_threads_query_resolves_to_empty_list(query_public_api, db):
 async def test_threads_query_resolves_to_threads_list(query_public_api, thread):
     result = await query_public_api(THREADS_FEED_QUERY)
     assert result["data"]["threads"] == {
-        "items": [
+        "edges": [
             {
-                "id": str(thread.id),
+                "node": {
+                    "id": str(thread.id),
+                },
+            },
+        ],
+    }
+
+
+@pytest.mark.asyncio
+async def test_threads_query_resolves_to_empty_list_for_negative_cursor(
+    query_public_api, thread
+):
+    result = await query_public_api(THREADS_FEED_QUERY, {"cursor": "-1"})
+    assert result["data"]["threads"] == {
+        "edges": [
+            {
+                "node": {
+                    "id": str(thread.id),
+                },
             },
         ],
     }
@@ -37,24 +57,34 @@ async def test_threads_query_resolves_to_category_threads_list(
 ):
     result = await query_public_api(THREADS_FEED_QUERY, {"category": str(category.id)})
     assert result["data"]["threads"] == {
-        "items": [
+        "edges": [
             {
-                "id": str(thread.id),
+                "node": {
+                    "id": str(thread.id),
+                },
             },
         ],
     }
 
 
 @pytest.mark.asyncio
-async def test_threads_query_resolves_to_empty_list_for_nonexistant_category(
+async def test_threads_query_resolves_to_none_for_nonexistant_category(
     query_public_api, category, thread
 ):
     result = await query_public_api(
         THREADS_FEED_QUERY, {"category": str(category.id * 100)}
     )
     assert result["data"]["threads"] == {
-        "items": [],
+        "edges": [],
     }
+
+
+@pytest.mark.asyncio
+async def test_threads_query_resolves_to_none_for_invalid_category(
+    query_public_api, category, thread
+):
+    result = await query_public_api(THREADS_FEED_QUERY, {"category": "invalid"})
+    assert result["data"]["threads"] is None
 
 
 @pytest.mark.asyncio
@@ -63,9 +93,11 @@ async def test_threads_query_resolves_to_user_threads_list(
 ):
     result = await query_public_api(THREADS_FEED_QUERY, {"user": str(user.id)})
     assert result["data"]["threads"] == {
-        "items": [
+        "edges": [
             {
-                "id": str(user_thread.id),
+                "node": {
+                    "id": str(user_thread.id),
+                },
             },
         ],
     }
@@ -77,5 +109,13 @@ async def test_threads_query_resolves_to_empty_list_for_nonexistant_user(
 ):
     result = await query_public_api(THREADS_FEED_QUERY, {"user": str(user.id * 100)})
     assert result["data"]["threads"] == {
-        "items": [],
+        "edges": [],
     }
+
+
+@pytest.mark.asyncio
+async def test_threads_query_resolves_to_none_list_for_invalid_user(
+    query_public_api, thread, user_thread, user
+):
+    result = await query_public_api(THREADS_FEED_QUERY, {"user": "invalid"})
+    assert result["data"]["threads"] is None

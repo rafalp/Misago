@@ -3,13 +3,12 @@ from typing import Optional, Union
 from ..auth.errors import NotModeratorError
 from ..graphql import GraphQLContext
 from ..loaders import load_category
-from .enums import CategoryType
 from .errors import (
     CategoryInvalidParentError,
     CategoryIsClosedError,
     CategoryNotFoundError,
 )
-from .models import Category
+from .models import Category, CategoryType
 
 
 class CategoryExistsValidator:

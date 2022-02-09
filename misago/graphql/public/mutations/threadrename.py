@@ -6,7 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryIsOpenValidator
-from ....loaders import load_thread, store_thread
+from ....threads.loaders import threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
     ThreadAuthorValidator,
@@ -37,7 +37,7 @@ async def resolve_thread_rename(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
@@ -92,6 +92,6 @@ async def thread_rename(
     thread = cleaned_data["thread"]
     thread = await thread.update(title=cleaned_data["title"])
 
-    store_thread(context, thread)
+    threads_loader.store(context, thread)
 
     return thread

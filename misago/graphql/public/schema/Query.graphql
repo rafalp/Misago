@@ -3,8 +3,9 @@ extend type Query {
     categories: [Category!]!
     category(id: ID!): Category
     thread(id: ID!): Thread
-    threads(cursor: ID, category: ID, user: ID): ThreadsFeed
+    threads(before: ID, after: ID, category: ID, user: ID): ThreadsPage
     post(id: ID!): Post
+    posts(thread: ID!, page: Int): PostsPage
     user(id: ID!): User
     forumStats: ForumStats!
     search(query: String): SearchResults!

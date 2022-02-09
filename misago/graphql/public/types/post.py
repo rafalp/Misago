@@ -4,10 +4,12 @@ from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
-from ....loaders import load_category, load_thread, load_thread_post_url, load_user
+from ....loaders import load_category, load_user
 from ....richtext.html import convert_rich_text_to_html
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
 from ....users.models import User
+from ....utils.request import create_absolute_url
 
 post_type = ObjectType("Post")
 
@@ -24,7 +26,7 @@ def resolve_category(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Category]
 
 @post_type.field("thread")
 def resolve_thread(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Thread]:
-    thread = load_thread(info.context, obj.thread_id)
+    thread = threads_loader.load(info.context, obj.thread_id)
     return cast(Awaitable[Thread], thread)
 
 
@@ -46,5 +48,8 @@ def resolve_html(obj: Post, info: GraphQLResolveInfo) -> str:
 async def resolve_url(
     obj: Post, info: GraphQLResolveInfo, *, absolute: bool = False
 ) -> str:
-    thread = cast(Thread, await load_thread(info.context, obj.thread_id))
-    return await load_thread_post_url(info.context, thread, obj, absolute)
+    url = await posts_loader.load_url(info.context, obj)
+    if absolute:
+        return create_absolute_url(info.context["request"], url)
+
+    return url

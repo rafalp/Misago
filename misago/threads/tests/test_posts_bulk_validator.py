@@ -5,21 +5,21 @@ from ..validators import PostExistsValidator, PostsBulkValidator
 
 
 @pytest.mark.asyncio
-async def test_bulk_posts_validator_validates_posts(post, user_post):
+async def test_bulk_posts_validator_validates_posts(loaders_context, post, user_post):
     errors = ErrorsList()
-    context = {}
-    validator = PostsBulkValidator([PostExistsValidator(context)])
+    validator = PostsBulkValidator([PostExistsValidator(loaders_context)])
     posts = await validator([post.id, user_post.id], errors, "posts")
+
     assert not errors
     assert posts == [post, user_post]
 
 
 @pytest.mark.asyncio
-async def test_bulk_posts_validator_partially_validates_posts(post):
+async def test_bulk_posts_validator_partially_validates_posts(loaders_context, post):
     errors = ErrorsList()
-    context = {}
-    validator = PostsBulkValidator([PostExistsValidator(context)])
+    validator = PostsBulkValidator([PostExistsValidator(loaders_context)])
     posts = await validator([post.id, post.id + 1], errors, "posts")
+
     assert errors == [
         {
             "loc": "posts.1",

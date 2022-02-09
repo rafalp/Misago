@@ -37,7 +37,7 @@ async def test_category_loader_returns_category(category):
 
 
 @pytest.mark.asyncio
-async def test_category_loader_returns_none_for_nonexistent_category_id(db):
+async def test_category_loader_returns_none_for_nonexistant_category_id(db):
     loaded_category = await load_category({}, 100)
     assert loaded_category is None
 
@@ -57,7 +57,7 @@ async def test_category_child_loader_returns_category_children(
 
 
 @pytest.mark.asyncio
-async def test_category_child_loader_returns_empty_list_for_nonexistent_category(db):
+async def test_category_child_loader_returns_empty_list_for_nonexistant_category(db):
     loaded_categories = await load_category_children({}, 100)
     assert loaded_categories == []
 

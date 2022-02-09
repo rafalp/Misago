@@ -1,0 +1,9 @@
+type PageInfo {
+    number: Int!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+    next: Int
+    previous: Int
+    start: Int!
+    stop: Int!
+}

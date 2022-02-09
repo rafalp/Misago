@@ -25,8 +25,6 @@ THREAD_QUERY = """
             lastPost {
                 id
             }
-            lastPostUrl
-            lastPostUrlAbsolute: lastPostUrl(absolute: true)
         }
     }
 """
@@ -44,6 +42,12 @@ async def test_thread_query_is_resolved_to_none_for_nonexisting_thread(
     query_public_api, thread
 ):
     result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id * 100)})
+    assert result["data"]["thread"] is None
+
+
+@pytest.mark.asyncio
+async def test_thread_query_is_resolved_to_none_for_invalid_id(query_public_api, db):
+    result = await query_public_api(THREAD_QUERY, {"thread": "invalid"})
     assert result["data"]["thread"] is None
 
 
@@ -130,21 +134,3 @@ async def test_thread_first_post_is_resolved(query_public_api, thread, post):
 async def test_thread_last_post_is_resolved(query_public_api, thread, post):
     result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
     assert result["data"]["thread"]["lastPost"] == {"id": str(post.id)}
-
-
-@pytest.mark.asyncio
-async def test_thread_last_post_url_is_resolved(query_public_api, thread, post):
-    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
-    assert result["data"]["thread"]["lastPostUrl"] == (
-        f"/t/{thread.slug}/{thread.id}/#post-{post.id}"
-    )
-
-
-@pytest.mark.asyncio
-async def test_thread_last_post_absolute_url_is_resolved(
-    query_public_api, thread, post
-):
-    result = await query_public_api(THREAD_QUERY, {"thread": str(thread.id)})
-    assert result["data"]["thread"]["lastPostUrlAbsolute"] == (
-        f"http://example.com/t/{thread.slug}/{thread.id}/#post-{post.id}"
-    )

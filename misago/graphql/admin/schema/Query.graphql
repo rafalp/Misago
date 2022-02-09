@@ -2,7 +2,7 @@ extend type Query {
     category(id: ID!): Category
     categories: [Category!]
     user(id: ID!): User
-    users(filters: UsersFilters): UsersList
+    users(filters: UsersFilters, page: Int): UsersPage
 }
 
 input UsersFilters {

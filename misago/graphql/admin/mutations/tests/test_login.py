@@ -97,7 +97,7 @@ async def test_admin_login_mutation_requires_password(query_admin_api, user):
 
 
 @pytest.mark.asyncio
-async def test_admin_login_mutation_returns_error_on_nonexistent_user_credentials(
+async def test_admin_login_mutation_returns_error_on_nonexistant_user_credentials(
     query_admin_api, user
 ):
     result = await query_admin_api(

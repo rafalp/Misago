@@ -11,7 +11,7 @@ from alembic import op
 from sqlalchemy import JSON, Boolean, Integer, String
 from sqlalchemy.sql import column, table
 
-from misago.categories.enums import CategoryType
+from misago.categories.models import CategoryType
 
 # revision identifiers, used by Alembic.
 revision = "f386c9e48425"

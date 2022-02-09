@@ -6,9 +6,9 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryIsOpenValidator
-from ....loaders import load_post, load_thread, store_post
 from ....richtext.parser import ParsedMarkupMetadata, parse_markup
 from ....threads.models import Post, Thread
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.validators import (
     PostAuthorValidator,
     PostCategoryValidator,
@@ -37,9 +37,9 @@ async def resolve_post_update(
     thread = None
 
     if cleaned_data.get("post"):
-        post = await load_post(info.context, input["post"])
+        post = await posts_loader.load(info.context, input["post"])
         if post:
-            thread = await load_thread(info.context, post.thread_id)
+            thread = await threads_loader.load(info.context, post.thread_id)
 
     if cleaned_data:
         validators: Dict[str, List[Validator]] = {
@@ -113,9 +113,9 @@ async def post_update(
         increment_edits=True,
     )
 
-    store_post(context, post)
+    posts_loader.store(context, post)
 
-    thread = await load_thread(context, post.thread_id)
+    thread = await threads_loader.load(context, post.thread_id)
     thread = cast(Thread, thread)
 
     return thread, post, metadata

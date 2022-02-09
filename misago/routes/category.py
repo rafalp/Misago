@@ -5,10 +5,9 @@ from starlette.responses import RedirectResponse
 
 from ..categories.get import get_all_categories
 from ..categories.models import Category
-from ..template import render
-from ..threads.get import get_threads_feed
+from .threads import base_threads_route
 from .exceptions import HTTPNotFound
-from .utils import clean_cursor_or_404, clean_id_or_404
+from .utils import clean_id_or_404
 
 
 async def category_route(request: Request):
@@ -23,23 +22,13 @@ async def category_route(request: Request):
         node for node in categories if category.is_parent(node, include_self=True)
     ]
 
-    cursor = clean_cursor_or_404(request)
-    threads = await get_threads_feed(
-        request.state.settings["threads_per_page"],
-        cursor or None,
-        categories=child_categories,
-    )
-
-    if cursor and not threads.items:
-        raise HTTPNotFound()
-
-    return await render(
+    return await base_threads_route(
         request,
         "category.html",
+        [category.id for category in child_categories],
         {
             "category": category,
             "categories": child_categories[1:],
-            "threads": threads,
         },
     )
 

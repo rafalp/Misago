@@ -14,5 +14,5 @@ async def test_category_can_be_get_by_id(category):
 
 
 @pytest.mark.asyncio
-async def test_getting_category_by_nonexistent_id_returns_none(db):
+async def test_getting_category_by_nonexistant_id_returns_none(db):
     assert await get_category_by_id(2000) is None

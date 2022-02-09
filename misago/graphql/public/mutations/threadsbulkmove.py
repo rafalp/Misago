@@ -10,7 +10,7 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
-from ....loaders import load_threads, store_threads
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.move import move_threads
 from ....threads.validators import (
@@ -48,7 +48,7 @@ async def resolve_threads_bulk_move(
 
     if cleaned_data.get("threads"):
         threads = remove_none_items(
-            await load_threads(info.context, cleaned_data["threads"])
+            await threads_loader.load_many(info.context, cleaned_data["threads"])
         )
     else:
         threads = []
@@ -123,6 +123,8 @@ async def threads_bulk_move_action(
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
     threads = await move_threads(threads, cleaned_data["category"])
-    store_threads(context, threads)
+
+    threads_loader.store_many(context, threads)
+    posts_loader.unload_with_thread_id_in(context, [thread.id for thread in threads])
 
     return threads

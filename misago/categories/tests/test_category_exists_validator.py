@@ -1,7 +1,7 @@
 import pytest
 
-from ..enums import CategoryType
 from ..errors import CategoryNotFoundError
+from ..models import CategoryType
 from ..validators import CategoryExistsValidator
 
 

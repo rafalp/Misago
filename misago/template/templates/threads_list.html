@@ -1,5 +1,5 @@
 <ul>
-  {% for thread in threads.items %}
+  {% for thread in threads.results %}
     <li>
       <a href="{{ url_for('thread', slug=thread.slug, id=thread.id) }}">
         {{ thread.title }}
@@ -7,8 +7,13 @@
     </li>
   {% endfor %}
 </ul>
-{% if threads.next_cursor %}
-  <a href="{{ url_prefix }}?cursor={{ threads.next_cursor }}">
+{% if threads.has_previous %}
+  <a href="{{ url_prefix }}?before={{ threads.results[0].last_post_id }}">
+    {% trans %}Previous threads{% endtrans %}
+  </a>
+{% endif %}
+{% if threads.has_next %}
+  <a href="{{ url_prefix }}?after={{ threads.results[-1].last_post_id }}">
     {% trans %}More threads{% endtrans %}
   </a>
 {% endif %}

@@ -4,7 +4,6 @@ from typing import Any, Awaitable, Dict, List, Optional
 
 from ..categories.models import Category
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
-from ..database.paginator import PaginationPage
 from ..richtext import RichText
 from ..tables import posts, threads
 from ..users.models import User
@@ -380,8 +379,3 @@ class Post(Model):
 class ThreadsFeed:
     items: List[Thread] = field(default_factory=list)
     next_cursor: Optional[int] = None
-
-
-@dataclass
-class ThreadPostsPage(PaginationPage[Post]):
-    pass

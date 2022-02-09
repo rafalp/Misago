@@ -6,6 +6,7 @@ import httpx
 import pytest
 
 from ..asgi import app
+from ..threads.loaders import posts_loader, threads_loader
 from ..users.models import User
 
 
@@ -16,12 +17,17 @@ def request_mock():
 
 @pytest.fixture
 def graphql_context(request_mock, cache_versions, dynamic_settings):
-    return {
+    context = {
         "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "user": None,
     }
+
+    threads_loader.setup_context(context)
+    posts_loader.setup_context(context)
+
+    return context
 
 
 @pytest.fixture

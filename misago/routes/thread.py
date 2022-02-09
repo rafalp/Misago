@@ -6,11 +6,7 @@ from starlette.responses import RedirectResponse
 from ..categories.get import get_all_categories
 from ..categories.models import Category
 from ..template import render
-from ..threads.get import (
-    get_thread_posts_page,
-    get_thread_posts_paginator,
-    get_threads_by_id,
-)
+from ..threads.get import get_thread_posts_paginator, get_threads_by_id
 from ..threads.models import Thread
 from .exceptions import HTTPNotFound
 from .utils import ExplicitFirstPage, clean_id_or_404, clean_page_number_or_404
@@ -36,8 +32,8 @@ async def thread_route(request: Request):
     except ExplicitFirstPage:
         return get_thread_redirect(request, thread)
 
-    posts = await get_thread_posts_page(paginator, page_number or 1)
-    if not posts:
+    posts = await paginator.get_page(page_number or 1)
+    if not posts.results:
         raise HTTPNotFound()
 
     return await render(

@@ -6,7 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....loaders import load_threads, store_threads
+from ....threads.loaders import threads_loader
 from ....threads.close import close_threads
 from ....threads.models import Thread
 from ....threads.validators import (
@@ -44,7 +44,7 @@ async def resolve_threads_bulk_close(
 
     if cleaned_data.get("threads"):
         threads = remove_none_items(
-            await load_threads(info.context, cleaned_data["threads"])
+            await threads_loader.load_many(info.context, cleaned_data["threads"])
         )
     else:
         threads = []
@@ -113,6 +113,7 @@ async def threads_bulk_close_action(
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
     threads = await close_threads(threads)
-    store_threads(context, threads)
+
+    threads_loader.store_many(context, threads)
 
     return threads

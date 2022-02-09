@@ -10,13 +10,11 @@ from ....categories.models import Category
 from ....categories.validators import CategoryIsOpenValidator
 from ....loaders import (
     load_category,
-    load_thread,
     store_category,
-    store_post,
-    store_thread,
 )
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
 from ....threads.validators import (
     ThreadCategoryValidator,
@@ -41,7 +39,7 @@ async def resolve_post_create(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
@@ -115,8 +113,8 @@ async def post_create(
     )
 
     store_category(context, category)
-    store_thread(context, thread)
-    store_post(context, reply)
+    threads_loader.store(context, thread)
+    posts_loader.store(context, reply)
 
     await publish_thread_update(thread)
 

@@ -10,9 +10,9 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
-from ....loaders import load_thread, store_thread
 from ....threads.models import Thread
 from ....threads.move import move_thread
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
 from ....validation import ErrorsList, Validator, validate_data, validate_model
 from ... import GraphQLContext
@@ -32,7 +32,7 @@ async def resolve_thread_move(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
@@ -87,6 +87,7 @@ async def thread_move_action(
     thread = cleaned_data["thread"]
     thread = await move_thread(thread, cleaned_data["category"])
 
-    store_thread(context, thread)
+    threads_loader.store(context, thread)
+    posts_loader.unload_with_thread_id(context, thread.id)
 
     return thread

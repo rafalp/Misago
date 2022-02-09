@@ -41,6 +41,12 @@ async def test_post_query_resolves_to_none_for_nonexisting_post(
 
 
 @pytest.mark.asyncio
+async def test_post_query_resolves_to_none_for_invalid_id(query_public_api, db):
+    result = await query_public_api(POST_QUERY, {"post": "invalid"})
+    assert result["data"]["post"] is None
+
+
+@pytest.mark.asyncio
 async def test_post_poster_is_resolved(query_public_api, user_post, user):
     result = await query_public_api(POST_QUERY, {"post": str(user_post.id)})
     assert result["data"]["post"]["poster"] == {

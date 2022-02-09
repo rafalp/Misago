@@ -9,9 +9,10 @@ from ....auth.errors import NotModeratorError
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryExistsValidator, CategoryIsOpenValidator
 from ....database import database
-from ....loaders import store_category, store_post, store_thread
+from ....loaders import store_category
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
 from ....threads.validators import threadtitlestr
 from ....validation import ErrorsList, Validator, validate_data, validate_model
@@ -128,9 +129,9 @@ async def thread_create(
             category.update(increment_threads=True, increment_posts=True),
         )
 
-    store_thread(context, thread)
+    threads_loader.store(context, thread)
     store_category(context, category)
-    store_post(context, post)
+    posts_loader.store(context, post)
 
     await publish_thread_update(thread)
 

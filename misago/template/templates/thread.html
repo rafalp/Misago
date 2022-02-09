@@ -16,7 +16,7 @@
   {% endfor %}
 </ul>
 <ul>
-  {% for post in posts.items %}
+  {% for post in posts.results %}
     <li>
       <article>
         <header>
@@ -29,8 +29,8 @@
     </li>
   {% endfor %}
 </ul>
-{% if posts.has_next %}
-  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.number + 1) }}">
+{% if posts.page_info.has_next %}
+  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.page_info.number + 1) }}">
     {% trans %}More replies{% endtrans %}
   </a>
 {% endif %}

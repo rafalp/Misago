@@ -8,6 +8,7 @@ from ....conf.types import Settings
 from ....database.paginator import Paginator
 from ....loaders import load_category, load_root_categories, load_user
 from ....users.models import User
+from ...cleanargs import clean_graphql_cursor, invalid_args_result
 from ..decorators import admin_resolver
 
 query_type = QueryType()
@@ -44,9 +45,10 @@ def resolve_user(
 @query_type.field("users")
 @admin_resolver
 @convert_kwargs_to_snake_case
-async def resolve_users(
-    *_, filters: Optional[dict] = None, sort: Optional[str] = None
-) -> Paginator:
+@invalid_args_result
+async def resolve_users(*_, filters: Optional[dict] = None, page: int = 1) -> dict:
+    page = clean_graphql_cursor(page)
+
     query = User.query
 
     if filters:
@@ -65,4 +67,5 @@ async def resolve_users(
 
     paginator = Paginator(query, 50, 15)
     await paginator.count_pages()
-    return paginator
+
+    return await paginator.get_page(page)

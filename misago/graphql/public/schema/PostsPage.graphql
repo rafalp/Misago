@@ -1,0 +1,6 @@
+type PostsPage {
+    totalCount: Int!
+    totalPages: Int!
+    results: [Post!]!
+    pageInfo: PageInfo!
+}

@@ -6,7 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....loaders import load_thread, store_thread
+from ....threads.loaders import threads_loader
 from ....threads.models import Thread
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
 from ....validation import ErrorsList, Validator, validate_data, validate_model
@@ -27,7 +27,7 @@ async def resolve_thread_open(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
@@ -74,6 +74,6 @@ async def thread_open_action(
     thread = cleaned_data["thread"]
     if thread.is_closed:
         thread = await thread.update(is_closed=False)
-        store_thread(context, thread)
+        threads_loader.store(context, thread)
 
     return thread

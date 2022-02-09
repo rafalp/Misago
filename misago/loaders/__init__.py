@@ -1,3 +1,4 @@
+from .batchloadfunction import batch_load_function
 from .categories import (
     clear_categories,
     load_categories,
@@ -8,30 +9,8 @@ from .categories import (
     store_category,
 )
 from .forumstats import load_forum_stats
-from .posts import (
-    clear_all_posts,
-    clear_all_posts_urls,
-    clear_post,
-    clear_post_url,
-    clear_posts,
-    load_post,
-    load_posts,
-    load_thread_post_url,
-    load_thread_posts_page,
-    load_thread_posts_paginator,
-    store_post,
-    store_posts,
-)
-from .threads import (
-    clear_all_threads,
-    clear_thread,
-    clear_threads,
-    load_thread,
-    load_threads,
-    load_threads_feed,
-    store_thread,
-    store_threads,
-)
+from .loader import Loader
+from .simpleloader import simple_loader
 from .users import (
     clear_all_users,
     clear_user,
@@ -43,14 +22,11 @@ from .users import (
 )
 
 __all__ = [
-    "clear_all_posts",
-    "clear_all_threads",
+    "Loader",
+    "batch_load_function",
+    "simple_loader",
     "clear_all_users",
     "clear_categories",
-    "clear_post",
-    "clear_posts",
-    "clear_thread",
-    "clear_threads",
     "clear_user",
     "clear_users",
     "load_categories",
@@ -58,21 +34,10 @@ __all__ = [
     "load_category_children",
     "load_category_with_children",
     "load_forum_stats",
-    "load_post",
-    "load_posts",
     "load_root_categories",
-    "load_thread",
-    "load_thread_posts_page",
-    "load_thread_posts_paginator",
-    "load_threads",
-    "load_threads_feed",
     "load_user",
     "load_users",
     "store_category",
-    "store_post",
-    "store_posts",
-    "store_thread",
-    "store_threads",
     "store_user",
     "store_users",
 ]

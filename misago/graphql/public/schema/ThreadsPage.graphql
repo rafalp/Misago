@@ -1,0 +1,12 @@
+type ThreadsPage {
+    edges: [ThreadEdge!]!
+    hasNext: Boolean!
+    hasPrevious: Boolean!
+    next: ID
+    previous: ID
+}
+
+type ThreadEdge {
+    node: Thread!
+    cursor: ID!
+}

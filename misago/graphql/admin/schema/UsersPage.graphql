@@ -1,0 +1,6 @@
+type UsersPage {
+    totalCount: Int!
+    totalPages: Int!
+    results: [User!]!
+    pageInfo: PageInfo!
+}

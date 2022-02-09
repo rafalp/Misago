@@ -6,8 +6,8 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
-from ....loaders import clear_posts, load_posts, load_thread, store_post, store_thread
 from ....threads.delete import delete_thread_posts
+from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
     PostsBulkValidator,
@@ -46,13 +46,13 @@ async def resolve_posts_bulk_delete(
     cleaned_data, errors = validate_model(input_model, input)
 
     if cleaned_data.get("thread"):
-        thread = await load_thread(info.context, cleaned_data["thread"])
+        thread = await threads_loader.load(info.context, cleaned_data["thread"])
     else:
         thread = None
 
     if thread and cleaned_data.get("posts"):
         # prime posts cache for bulk action
-        await load_posts(info.context, cleaned_data["posts"])
+        await posts_loader.load_many(info.context, cleaned_data["posts"])
 
     if cleaned_data:
         thread_validators: Dict[str, List[Validator]] = {
@@ -65,7 +65,7 @@ async def resolve_posts_bulk_delete(
             ROOT_LOCATION: [IsAuthenticatedValidator(info.context)],
         }
 
-        (cleaned_data, errors,) = await posts_bulk_delete_input_thread_hook.call_action(
+        cleaned_data, errors = await posts_bulk_delete_input_thread_hook.call_action(
             validate_input_thread_data,
             info.context,
             thread_validators,
@@ -94,7 +94,7 @@ async def resolve_posts_bulk_delete(
             ],
         }
 
-        (cleaned_data, errors,) = await posts_bulk_delete_input_posts_hook.call_action(
+        cleaned_data, errors = await posts_bulk_delete_input_posts_hook.call_action(
             validate_input_posts_data,
             info.context,
             posts_validators,
@@ -149,7 +149,9 @@ async def posts_bulk_delete_action(
 ) -> Thread:
     thread = cleaned_data["thread"]
     thread, last_post = await delete_thread_posts(thread, cleaned_data["posts"])
-    clear_posts(context, cleaned_data["posts"])
-    store_post(context, last_post)
-    store_thread(context, thread)
+
+    posts_loader.unload_many(context, [post.id for post in cleaned_data["posts"]])
+    posts_loader.store(context, last_post)
+    threads_loader.store(context, thread)
+
     return thread

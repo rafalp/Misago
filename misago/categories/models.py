@@ -1,3 +1,4 @@
+import enum
 from dataclasses import dataclass
 from typing import Any, Awaitable, Dict, Optional, Union
 
@@ -5,9 +6,13 @@ from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..graphql import GraphQLContext
 from ..tables import categories
 from ..utils.strings import slugify
-from .enums import CategoryType
 
 DEFAULT_COLOR = "#0F0"
+
+
+class CategoryType(enum.IntEnum):
+    THREADS = 1
+    PRIVATE_THREADS = 2
 
 
 @register_model("Category", categories)

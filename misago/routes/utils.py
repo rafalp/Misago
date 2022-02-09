@@ -5,18 +5,23 @@ from starlette.requests import Request
 from .exceptions import HTTPNotFound
 
 
-def clean_cursor_or_404(request: Request, query_key: str = "cursor") -> Optional[int]:
-    cursor: Optional[int] = None
+def clean_cursor_or_404(request: Request) -> Optional[int]:
+    after = request.query_params.get("after")
+    before = request.query_params.get("before")
+
     try:
-        if request.query_params.get(query_key):
-            cursor = int(request.query_params[query_key])
+        after = int(after) if after is not None else None
+        before = int(before) if before is not None else None
     except (TypeError, ValueError) as exception:
         raise HTTPNotFound() from exception
 
-    if cursor is not None and cursor < 1:
+    if (after is not None and after < 1) or (before is not None and before < 1):
         raise HTTPNotFound()
 
-    return cursor
+    if after and before:
+        raise HTTPNotFound()
+
+    return after, before
 
 
 def clean_id_or_404(request: Request, path_param: str = "id") -> int:

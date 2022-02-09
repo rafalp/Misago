@@ -1,7 +1,6 @@
 from typing import Awaitable, List, Optional
 
-from .enums import CategoryType
-from .models import Category
+from .models import Category, CategoryType
 
 
 def get_all_categories(
