@@ -2,11 +2,10 @@ from asyncio import iscoroutinefunction
 from functools import wraps
 
 from ..conf.dynamicsettings import DynamicSettings
-from ..conf.types import Setting
 
 
 class override_dynamic_settings:
-    def __init__(self, **settings: Setting):
+    def __init__(self, **settings):
         self._overrides = settings
 
     async def __aenter__(self):

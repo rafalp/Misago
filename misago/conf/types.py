@@ -1,20 +1,12 @@
-from typing import Dict, List, TypedDict, Union
+from typing import Any, Dict
 
-
-class SettingImage(TypedDict):
-    path: str
-    width: int
-    height: int
-
-
-Setting = Union[bool, int, str, List[str], SettingImage]
-Settings = Dict[str, Setting]
+Settings = Dict[str, Any]
 
 
 class DynamicSettings(Settings):
     _overrides: Settings = {}
 
-    def __getitem__(self, setting: str) -> Setting:
+    def __getitem__(self, setting: str) -> Any:
         if setting in self._overrides:
             return self._overrides[setting]
         try:

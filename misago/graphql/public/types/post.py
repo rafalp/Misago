@@ -48,7 +48,7 @@ def resolve_html(obj: Post, info: GraphQLResolveInfo) -> str:
 async def resolve_url(
     obj: Post, info: GraphQLResolveInfo, *, absolute: bool = False
 ) -> str:
-    url = await posts_loader.load_url(info.context, obj)
+    url = cast(str, await posts_loader.load_url(info.context, obj))
     if absolute:
         return create_absolute_url(info.context["request"], url)
 

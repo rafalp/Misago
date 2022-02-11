@@ -33,8 +33,8 @@ class ThreadsPage:
     results: List[Thread]
     has_next: bool
     has_previous: bool
-    next: Optional[int]
-    previous: Optional[int]
+    next_cursor: Optional[int]
+    previous_cursor: Optional[int]
 
 
 async def get_threads_page(
@@ -50,8 +50,8 @@ async def get_threads_page(
             results=[],
             has_next=False,
             has_previous=False,
-            next=None,
-            previous=None,
+            next_cursor=None,
+            previous_cursor=None,
         )
 
     query = Thread.query
@@ -88,24 +88,24 @@ async def slice_threads_using_after(
             .limit(1)
             .one("last_post_id")
         )
-        results, previous = await gather(results_query, previous_query)
-        previous = previous["last_post_id"]
+        results, previous_result = await gather(results_query, previous_query)
+        previous_cursor = previous_result["last_post_id"]
     else:
         results = await results_query
-        previous = None
+        previous_cursor = None
 
     if len(results) > length:
-        next = results[-1].last_post_id
+        next_cursor = results[-1].last_post_id
         results = results[:-1]
     else:
-        next = None
+        next_cursor = None
 
     return ThreadsPage(
         results=results,
-        has_next=bool(next),
-        has_previous=bool(previous),
-        next=next,
-        previous=previous,
+        has_next=bool(next_cursor),
+        has_previous=bool(previous_cursor),
+        next_cursor=next_cursor,
+        previous_cursor=previous_cursor,
     )
 
 
@@ -128,22 +128,22 @@ async def slice_threads_using_before(
             .limit(1)
             .one("last_post_id")
         )
-        results, next = await gather(results_query, next_query)
-        next = next["last_post_id"]
+        results, next_result = await gather(results_query, next_query)
+        next_cursor = next_result["last_post_id"]
     else:
         results = await results_query
-        next = None
+        next_cursor = None
 
     if len(results) > length:
-        previous = results[-1].last_post_id
+        previous_cursor = results[-1].last_post_id
         results = results[:-1]
     else:
-        previous = None
+        previous_cursor = None
 
     return ThreadsPage(
         results=list(reversed(results)),
-        has_next=bool(next),
-        has_previous=bool(previous),
-        next=next,
-        previous=previous,
+        has_next=bool(next_cursor),
+        has_previous=bool(previous_cursor),
+        next_cursor=next_cursor,
+        previous_cursor=previous_cursor,
     )

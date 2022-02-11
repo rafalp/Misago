@@ -5,10 +5,10 @@ from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
 from ....conf.types import Settings
-from ....database.paginator import Paginator
+from ....database.paginator import Paginator, Page
 from ....loaders import load_category, load_root_categories, load_user
 from ....users.models import User
-from ...cleanargs import clean_graphql_cursor, invalid_args_result
+from ...cleanargs import clean_graphql_page, invalid_args_result
 from ..decorators import admin_resolver
 
 query_type = QueryType()
@@ -46,8 +46,8 @@ def resolve_user(
 @admin_resolver
 @convert_kwargs_to_snake_case
 @invalid_args_result
-async def resolve_users(*_, filters: Optional[dict] = None, page: int = 1) -> dict:
-    page = clean_graphql_cursor(page)
+async def resolve_users(*_, filters: Optional[dict] = None, page: int = 1) -> Page:
+    page = clean_graphql_page(page)
 
     query = User.query
 

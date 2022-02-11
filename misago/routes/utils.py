@@ -1,11 +1,11 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 from starlette.requests import Request
 
 from .exceptions import HTTPNotFound
 
 
-def clean_cursor_or_404(request: Request) -> Optional[int]:
+def clean_cursor_or_404(request: Request) -> Tuple[Optional[int], Optional[int]]:
     after = request.query_params.get("after")
     before = request.query_params.get("before")
 

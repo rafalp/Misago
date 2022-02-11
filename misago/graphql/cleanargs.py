@@ -7,10 +7,7 @@ class InvalidArgumentError(ValueError):
     pass
 
 
-def clean_graphql_id(value: Any) -> Optional[int]:
-    if value is None:
-        return None
-
+def clean_graphql_id(value: Any) -> int:
     try:
         value = int(value)
         if value < 1:
@@ -44,6 +41,19 @@ def clean_graphql_cursor(value: Any) -> Optional[int]:
     try:
         value = int(value)
         if value < 0:
+            raise ValueError()
+        return value
+    except (TypeError, ValueError) as error:
+        raise InvalidArgumentError() from error
+
+
+def clean_graphql_page(value: Any) -> int:
+    if value is None:
+        return 1
+
+    try:
+        value = int(value)
+        if value < 1:
             raise ValueError()
         return value
     except (TypeError, ValueError) as error:

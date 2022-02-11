@@ -2,7 +2,6 @@ import pytest
 
 from ...categories.models import CategoryType
 from ..errors import ThreadNotFoundError
-from ..loaders import threads_loader
 from ..validators import ThreadExistsValidator
 
 

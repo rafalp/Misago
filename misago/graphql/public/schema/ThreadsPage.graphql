@@ -2,8 +2,8 @@ type ThreadsPage {
     edges: [ThreadEdge!]!
     hasNext: Boolean!
     hasPrevious: Boolean!
-    next: ID
-    previous: ID
+    nextCursor: ID
+    previousCursor: ID
 }
 
 type ThreadEdge {

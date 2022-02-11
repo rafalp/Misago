@@ -5,8 +5,8 @@ from starlette.requests import Request
 from ..auth import get_authenticated_admin, get_authenticated_user
 from ..cacheversions import get_cache_versions
 from ..conf.dynamicsettings import get_dynamic_settings
+from ..context import Context
 from ..threads.loaders import posts_loader, threads_loader
-from . import GraphQLContext
 from .hooks import graphql_context_hook
 
 
@@ -16,10 +16,10 @@ class Space:
     public: bool
 
 
-async def get_graphql_context(request: Request) -> GraphQLContext:
+async def get_graphql_context(request: Request) -> Context:
     request.scope["user"] = None
 
-    context = {
+    context: Context = {
         "request": request,
         "user": None,
     }
@@ -48,13 +48,13 @@ async def get_graphql_context(request: Request) -> GraphQLContext:
     return context
 
 
-async def get_public_graphql_context(request: Request) -> GraphQLContext:
+async def get_public_graphql_context(request: Request) -> Context:
     return await graphql_context_hook.call_action(
         get_public_graphql_context_action, request
     )
 
 
-async def get_public_graphql_context_action(request: Request) -> GraphQLContext:
+async def get_public_graphql_context_action(request: Request) -> Context:
     context = await get_graphql_context(request)
     context["space"] = Space(admin=False, public=True)
     context["user"] = await get_authenticated_user(context)
@@ -62,13 +62,13 @@ async def get_public_graphql_context_action(request: Request) -> GraphQLContext:
     return context
 
 
-async def get_admin_graphql_context(request: Request) -> GraphQLContext:
+async def get_admin_graphql_context(request: Request) -> Context:
     return await graphql_context_hook.call_action(
         get_admin_graphql_context_action, request
     )
 
 
-async def get_admin_graphql_context_action(request: Request) -> GraphQLContext:
+async def get_admin_graphql_context_action(request: Request) -> Context:
     context = await get_graphql_context(request)
     context["space"] = Space(admin=True, public=False)
     context["user"] = await get_authenticated_admin(context)

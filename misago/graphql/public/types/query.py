@@ -4,6 +4,7 @@ from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
+from ....database.paginator import Page
 from ....loaders import (
     load_categories,
     load_category_with_children,
@@ -12,13 +13,13 @@ from ....loaders import (
     load_user,
 )
 from ....richtext import RichText, parse_markup
-from ....threads.get import get_threads_page
+from ....threads.get import ThreadsPage, get_threads_page
 from ....threads.loaders import posts_loader, threads_loader
-from ....threads.models import Post, Thread, ThreadsFeed
+from ....threads.models import Post, Thread
 from ....users.models import User
 from ...cleanargs import (
     clean_graphql_id,
-    clean_graphql_cursor,
+    clean_graphql_page,
     clean_graphql_cursors,
     invalid_args_result,
 )
@@ -73,10 +74,10 @@ async def resolve_threads(
     before: Optional[str] = None,
     category: Optional[str] = None,
     user: Optional[str] = None
-) -> Awaitable[ThreadsFeed]:
-    after, before = clean_graphql_cursors(after, before)
-    category_id = clean_graphql_id(category)
-    starter_id = clean_graphql_id(user)
+) -> ThreadsPage:
+    after_cursor, before_cursor = clean_graphql_cursors(after, before)
+    category_id = clean_graphql_id(category) if category else None
+    starter_id = clean_graphql_id(user) if user else None
 
     if category_id:
         categories = await load_category_with_children(info.context, category_id)
@@ -85,8 +86,8 @@ async def resolve_threads(
 
     return await get_threads_page(
         info.context["settings"]["threads_per_page"],
-        after=after,
-        before=before,
+        after=after_cursor,
+        before=before_cursor,
         starter_id=starter_id,
         categories_ids=[category.id for category in categories],
     )
@@ -105,9 +106,9 @@ def resolve_post(
 @invalid_args_result
 async def resolve_posts(
     _, info: GraphQLResolveInfo, *, thread: str, page: int = 1
-) -> Optional[Post]:
+) -> Optional[Page]:
     thread_id = clean_graphql_id(thread)
-    page = clean_graphql_cursor(page)
+    page = clean_graphql_page(page)
 
     paginator = await posts_loader.load_paginator(info.context, thread_id)
     if not paginator:

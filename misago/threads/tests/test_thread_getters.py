@@ -26,8 +26,8 @@ async def test_threads_page_is_retrieved(thread, threads):
     assert page.results == threads
     assert page.has_next is False
     assert page.has_previous is False
-    assert page.next is None
-    assert page.previous is None
+    assert page.next_cursor is None
+    assert page.previous_cursor is None
 
 
 @pytest.mark.asyncio
@@ -40,8 +40,8 @@ async def test_threads_page_after_cursor_is_retrieved(thread, threads):
     assert page.results == threads[1:]
     assert page.has_next is False
     assert page.has_previous is True
-    assert page.next is None
-    assert page.previous == threads[0].last_post_id
+    assert page.next_cursor is None
+    assert page.previous_cursor == threads[0].last_post_id
 
 
 @pytest.mark.asyncio
@@ -54,8 +54,8 @@ async def test_threads_page_before_cursor_is_retrieved(thread, threads):
     assert page.results == threads[:-1]
     assert page.has_next is True
     assert page.has_previous is False
-    assert page.next == threads[-1].last_post_id
-    assert page.previous is None
+    assert page.next_cursor == threads[-1].last_post_id
+    assert page.previous_cursor is None
 
 
 @pytest.mark.asyncio

@@ -17,11 +17,13 @@ from typing import (
 from aiodataloader import DataLoader
 
 from ..context import Context
+from ..database import Model
 from ..graphql import GraphQLContext
 from ..utils.strings import parse_db_id
 from .batchloadfunction import BatchLoadFunction
 
-LoadedType = TypeVar("LoadedType")
+
+LoadedType = TypeVar("LoadedType", bound=Model)
 
 
 @dataclass
@@ -34,7 +36,7 @@ class Loader(Generic[LoadedType]):
     context_key: str
 
     def setup_context(self, context: Context) -> LoaderState:
-        cache = {}
+        cache: Dict[int, Future[LoadedType]] = {}
         state = LoaderState(
             cache=cache,
             loader=DataLoader(

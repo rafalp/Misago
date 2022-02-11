@@ -8,7 +8,7 @@ from .get import (
     get_threads_by_id,
     get_thread_posts_paginator,
 )
-from .models import Post, Thread, ThreadsFeed
+from .models import Post, Thread
 from .posturl import get_thread_post_url
 
 batch_load_posts = batch_load_function(get_posts_by_id)
@@ -56,15 +56,17 @@ async def load_post_url(
     *,
     thread_id: int,
     post_id: int,
-):
+) -> Optional[str]:
     thread = await threads_loader.load(context, thread_id)
-    return await get_thread_post_url(context["settings"], thread, post_id)
+    if thread:
+        return await get_thread_post_url(context["settings"], thread, post_id)
+    return None
 
 
 @simple_loader("thread_posts")
 async def load_posts_paginator(
     context: Context, *, thread_id: int
-) -> Awaitable[Optional[Paginator]]:
+) -> Optional[Paginator]:
     thread = await threads_loader.load(context, thread_id)
     if not thread:
         return None

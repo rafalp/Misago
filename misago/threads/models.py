@@ -1,6 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Awaitable, Dict, List, Optional
+from typing import Any, Awaitable, Dict, Optional
 
 from ..categories.models import Category
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
@@ -373,9 +373,3 @@ class Post(Model):
 
     def delete(self):
         return Post.query.filter(id=self.id).delete()
-
-
-@dataclass
-class ThreadsFeed:
-    items: List[Thread] = field(default_factory=list)
-    next_cursor: Optional[int] = None

@@ -1,4 +1,4 @@
-from typing import Any, List, Type, Union, cast
+from typing import Any, List, Type, cast
 
 from ..categories.models import Category, CategoryType
 from ..conf.types import Settings
@@ -60,7 +60,7 @@ class PostExistsValidator:
         self._context = context
         self._category_type = category_type
 
-    async def __call__(self, post_id: Union[int, str], *_) -> Post:
+    async def __call__(self, post_id: int, *_) -> Post:
         post = await posts_loader.load(self._context, post_id)
         if not post:
             raise PostNotFoundError(post_id=post_id)
@@ -147,7 +147,7 @@ class ThreadExistsValidator:
         self._context = context
         self._category_type = category_type
 
-    async def __call__(self, thread_id: Union[int, str], *_) -> Thread:
+    async def __call__(self, thread_id: int, *_) -> Thread:
         thread = await threads_loader.load(self._context, thread_id)
         if not thread:
             raise ThreadNotFoundError(thread_id=thread_id)
@@ -179,7 +179,7 @@ class ThreadPostExistsValidator:
         self._context = context
         self._thread = thread
 
-    async def __call__(self, post_id: Union[int, str], *_) -> Post:
+    async def __call__(self, post_id: int, *_) -> Post:
         post = await posts_loader.load(self._context, post_id)
         if not post or post.thread_id != self._thread.id:
             raise PostNotFoundError(post_id=post_id)

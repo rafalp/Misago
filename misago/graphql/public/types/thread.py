@@ -11,6 +11,7 @@ from ....loaders import (
 from ....threads.models import Post, Thread
 from ....threads.loaders import posts_loader
 from ....users.models import User
+from ...cleanargs import clean_graphql_id, invalid_args_result
 
 thread_type = ObjectType("Thread")
 
@@ -64,13 +65,15 @@ async def resolve_last_poster(obj: Thread, info: GraphQLResolveInfo) -> Optional
 
 
 @thread_type.field("post")
+@invalid_args_result
 async def resolve_post(
     obj: Thread,
     info: GraphQLResolveInfo,
     *,
     id: str,  # pylint: disable=redefined-builtin
 ) -> Optional[Post]:
-    post = await posts_loader.load(info.context, id)
+    post_id = clean_graphql_id(id)
+    post = await posts_loader.load(info.context, post_id)
     if post and post.thread_id == obj.id:
         return post
     return None
