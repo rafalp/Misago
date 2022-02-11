@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt
 
 from ....users.delete import delete_user, delete_user_content
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
+from ....users.loaders import users_loader
 from ....users.models import User
 from ....users.validators import UserExistsValidator
 from ....validation import validate_data, validate_model
@@ -47,10 +48,13 @@ async def resolve_user_delete(
     if errors:
         return {"errors": errors, "deleted": False}
 
-    if delete_content:
-        await delete_user_content(cleaned_data["user"])
+    user_obj = cleaned_data["user"]
 
-    await delete_user(cleaned_data["user"])
+    if delete_content:
+        await delete_user_content(user_obj)
+
+    await delete_user(user_obj)
+    users_loader.unload(info.context, user_obj.id)
 
     return {"deleted": True}
 

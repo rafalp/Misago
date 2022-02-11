@@ -4,12 +4,12 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, PositiveInt, constr, create_model
 
-from ....loaders import store_user
 from ....users.errors import (
     UserDeactivateSelfError,
     UserIsProtectedError,
     UserRemoveOwnAdminError,
 )
+from ....users.loaders import users_loader
 from ....users.models import User
 from ....users.validators import (
     EmailIsAvailableValidator,
@@ -117,5 +117,5 @@ def is_admin_validator(context: GraphQLContext, user: User):
 
 async def update_user(context: GraphQLContext, user: User, cleaned_data: dict) -> User:
     user = await user.update(**cleaned_data)
-    store_user(context, user)
+    users_loader.store(context, user)
     return user

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 from misago import __version__ as version
-
 
 SETUP_DIR = os.path.dirname(__file__)
 

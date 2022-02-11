@@ -10,18 +10,18 @@ from ....loaders import (
     load_category_with_children,
     load_forum_stats,
     load_root_categories,
-    load_user,
 )
 from ....richtext import RichText, parse_markup
 from ....threads.get import ThreadsPage, get_threads_page
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
+from ....users.loaders import users_loader
 from ....users.models import User
 from ...cleanargs import (
+    clean_cursors_args,
     clean_id_arg,
     clean_page_arg,
-    clean_cursors_args,
-    invalid_args_result,
+    invalid_args_handler,
 )
 
 query_type = QueryType()
@@ -38,7 +38,7 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 
 
 @query_type.field("category")
-@invalid_args_result
+@invalid_args_handler
 async def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[Category]:
@@ -56,7 +56,7 @@ async def resolve_category(
 
 
 @query_type.field("thread")
-@invalid_args_result
+@invalid_args_handler
 def resolve_thread(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Thread]]:
@@ -65,7 +65,7 @@ def resolve_thread(
 
 
 @query_type.field("threads")
-@invalid_args_result
+@invalid_args_handler
 async def resolve_threads(
     _,
     info: GraphQLResolveInfo,
@@ -94,7 +94,7 @@ async def resolve_threads(
 
 
 @query_type.field("post")
-@invalid_args_result
+@invalid_args_handler
 def resolve_post(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Post]]:
@@ -103,7 +103,7 @@ def resolve_post(
 
 
 @query_type.field("posts")
-@invalid_args_result
+@invalid_args_handler
 async def resolve_posts(
     _, info: GraphQLResolveInfo, *, thread: str, page: int = 1
 ) -> Optional[Page]:
@@ -118,12 +118,12 @@ async def resolve_posts(
 
 
 @query_type.field("user")
-@invalid_args_result
+@invalid_args_handler
 def resolve_user(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[User]]:
     user_id = clean_id_arg(id)
-    return load_user(info.context, user_id)
+    return users_loader.load(info.context, user_id)
 
 
 @query_type.field("search")

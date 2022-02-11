@@ -1,7 +1,6 @@
 from functools import wraps
 from typing import Any, Awaitable, Callable, Dict, List, Sequence, Union
 
-
 BatchLoadFunction = Callable[[Sequence[Any]], Awaitable[Sequence[Any]]]
 Id = Union[str, int]
 

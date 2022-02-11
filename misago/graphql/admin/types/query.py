@@ -5,10 +5,11 @@ from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
 from ....conf.types import Settings
-from ....database.paginator import Paginator, Page
-from ....loaders import load_category, load_root_categories, load_user
+from ....database.paginator import Page, Paginator
+from ....loaders import load_category, load_root_categories
+from ....users.loaders import users_loader
 from ....users.models import User
-from ...cleanargs import clean_id_arg, clean_page_arg, invalid_args_result
+from ...cleanargs import clean_id_arg, clean_page_arg, invalid_args_handler
 from ..decorators import admin_resolver
 
 query_type = QueryType()
@@ -36,17 +37,18 @@ def resolve_settings(_, info: GraphQLResolveInfo) -> Settings:
 
 @query_type.field("user")
 @admin_resolver
+@invalid_args_handler
 def resolve_user(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[User]]:
     user_id = clean_id_arg(id)
-    return load_user(info.context, user_id)
+    return users_loader.load(info.context, user_id)
 
 
 @query_type.field("users")
 @admin_resolver
 @convert_kwargs_to_snake_case
-@invalid_args_result
+@invalid_args_handler
 async def resolve_users(*_, filters: Optional[dict] = None, page: int = 1) -> Page:
     page = clean_page_arg(page)
 

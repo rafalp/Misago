@@ -4,10 +4,11 @@ from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
-from ....loaders import load_category, load_user
+from ....loaders import load_category
 from ....richtext.html import convert_rich_text_to_html
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
+from ....users.loaders import users_loader
 from ....users.models import User
 from ....utils.request import create_absolute_url
 
@@ -33,7 +34,7 @@ def resolve_thread(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Thread]:
 @post_type.field("poster")
 async def resolve_poster(obj: Post, info: GraphQLResolveInfo) -> Optional[User]:
     if obj.poster_id:
-        poster = await load_user(info.context, obj.poster_id)
+        poster = await users_loader.load(info.context, obj.poster_id)
         if poster and poster.is_active:
             return poster
     return None

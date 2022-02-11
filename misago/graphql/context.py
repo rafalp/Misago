@@ -7,6 +7,7 @@ from ..cacheversions import get_cache_versions
 from ..conf.dynamicsettings import get_dynamic_settings
 from ..context import Context
 from ..threads.loaders import posts_loader, threads_loader
+from ..users.loaders import users_loader
 from .hooks import graphql_context_hook
 
 
@@ -44,6 +45,7 @@ async def get_graphql_context(request: Request) -> Context:
 
     threads_loader.setup_context(context)
     posts_loader.setup_context(context)
+    users_loader.setup_context(context)
 
     return context
 

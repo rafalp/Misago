@@ -2,8 +2,8 @@ import pytest
 
 from ...users.get import get_users_by_id
 from ...users.models import User
-from ..loader import Loader
 from ..batchloadfunction import BatchLoadFunction, batch_load_function
+from ..loader import Loader
 
 batch_load_users = batch_load_function(get_users_by_id)
 

@@ -7,7 +7,16 @@ import pytest
 
 from ..asgi import app
 from ..threads.loaders import posts_loader, threads_loader
+from ..users.loaders import users_loader
 from ..users.models import User
+
+
+def setup_loaders(context: dict):
+    threads_loader.setup_context(context)
+    posts_loader.setup_context(context)
+    users_loader.setup_context(context)
+
+    return context
 
 
 @pytest.fixture
@@ -24,8 +33,7 @@ def graphql_context(request_mock, cache_versions, dynamic_settings):
         "user": None,
     }
 
-    threads_loader.setup_context(context)
-    posts_loader.setup_context(context)
+    setup_loaders(context)
 
     return context
 
@@ -37,12 +45,16 @@ def graphql_info(graphql_context):
 
 @pytest.fixture
 def user_graphql_context(request_mock, cache_versions, dynamic_settings, user):
-    return {
+    context = {
         "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "user": user,
     }
+
+    setup_loaders(context)
+
+    return context
 
 
 @pytest.fixture
@@ -54,12 +66,16 @@ def user_graphql_info(user_graphql_context):
 def moderator_graphql_context(
     request_mock, cache_versions, dynamic_settings, moderator
 ):
-    return {
+    context = {
         "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "user": moderator,
     }
+
+    setup_loaders(context)
+
+    return context
 
 
 @pytest.fixture
@@ -69,13 +85,17 @@ def moderator_graphql_info(moderator_graphql_context):
 
 @pytest.fixture
 def admin_graphql_context(request_mock, cache_versions, dynamic_settings, admin):
-    return {
+    context = {
         "request": request_mock,
         "cache_versions": cache_versions,
         "settings": dynamic_settings,
         "checked_admin_auth": True,
         "user": admin,
     }
+
+    setup_loaders(context)
+
+    return context
 
 
 @pytest.fixture

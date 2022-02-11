@@ -7,8 +7,8 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryIsOpenValidator
 from ....richtext.parser import ParsedMarkupMetadata, parse_markup
-from ....threads.models import Post, Thread
 from ....threads.loaders import posts_loader, threads_loader
+from ....threads.models import Post, Thread
 from ....threads.validators import (
     PostAuthorValidator,
     PostCategoryValidator,

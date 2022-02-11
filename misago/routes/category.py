@@ -5,8 +5,8 @@ from starlette.responses import RedirectResponse
 
 from ..categories.get import get_all_categories
 from ..categories.models import Category
-from .threads import base_threads_route
 from .exceptions import HTTPNotFound
+from .threads import base_threads_route
 from .utils import clean_id_or_404
 
 

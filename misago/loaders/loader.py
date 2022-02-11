@@ -22,7 +22,6 @@ from ..graphql import GraphQLContext
 from ..utils.strings import parse_db_id
 from .batchloadfunction import BatchLoadFunction
 
-
 LoadedType = TypeVar("LoadedType", bound=Model)
 
 

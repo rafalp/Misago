@@ -1,11 +1,10 @@
 import re
-from typing import Optional, Type, Union, cast
+from typing import Optional, Type, cast
 
 from pydantic import ConstrainedStr, constr
 
 from ..conf.types import Settings
 from ..graphql import GraphQLContext
-from ..loaders import load_user
 from .email import get_email_hash
 from .errors import (
     EmailNotAvailableError,
@@ -13,6 +12,7 @@ from .errors import (
     UsernameNotAvailableError,
     UserNotFoundError,
 )
+from .loaders import users_loader
 from .models import User
 
 PASSWORD_MAX_LENGTH = 40  # Hardcoded for perf. reasons
@@ -71,8 +71,8 @@ class UserExistsValidator:
     def __init__(self, context: GraphQLContext):
         self._context = context
 
-    async def __call__(self, user_id: Union[int, str], *_) -> User:
-        user = await load_user(self._context, user_id)
+    async def __call__(self, user_id: int, *_) -> User:
+        user = await users_loader.load(self._context, user_id)
         if not user:
             raise UserNotFoundError(user_id=user_id)
         return user

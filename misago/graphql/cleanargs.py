@@ -58,7 +58,7 @@ def clean_page_arg(value: Any) -> int:
         raise InvalidArgumentError() from error
 
 
-def invalid_args_result(f):
+def invalid_args_handler(f):
     """Returns None from decorated resolver when it raises InvalidArgumentError."""
 
     @wraps(f)

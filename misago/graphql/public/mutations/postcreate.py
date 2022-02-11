@@ -8,10 +8,7 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.models import Category
 from ....categories.validators import CategoryIsOpenValidator
-from ....loaders import (
-    load_category,
-    store_category,
-)
+from ....loaders import load_category, store_category
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.loaders import posts_loader, threads_loader

@@ -1,6 +1,6 @@
 from asyncio import gather
 from dataclasses import dataclass
-from typing import Awaitable, List, Optional, Sequence, Iterable, Union
+from typing import Awaitable, Iterable, List, Optional, Sequence, Union
 
 from ..database.objectmapper import ObjectMapper, ObjectMapperQuery
 from ..database.paginator import Paginator

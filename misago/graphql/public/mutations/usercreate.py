@@ -5,8 +5,8 @@ from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ....auth import create_user_token
-from ....loaders import store_user
 from ....users.create import create_user
+from ....users.loaders import users_loader
 from ....users.models import User
 from ....users.validators import (
     EmailIsAvailableValidator,
@@ -87,5 +87,5 @@ async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) 
         cleaned_data["email"],
         password=cleaned_data["password"],
     )
-    store_user(context, user)
+    users_loader.store(context, user)
     return user

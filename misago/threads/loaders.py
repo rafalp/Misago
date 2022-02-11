@@ -1,13 +1,9 @@
 from typing import Awaitable, Iterable, Optional
 
 from ..context import Context
-from ..loaders import Loader, batch_load_function, simple_loader
 from ..database.paginator import Paginator
-from .get import (
-    get_posts_by_id,
-    get_threads_by_id,
-    get_thread_posts_paginator,
-)
+from ..loaders import Loader, batch_load_function, simple_loader
+from .get import get_posts_by_id, get_thread_posts_paginator, get_threads_by_id
 from .models import Post, Thread
 from .posturl import get_thread_post_url
 

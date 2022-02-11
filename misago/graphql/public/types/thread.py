@@ -4,14 +4,12 @@ from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
 from ....categories.models import Category
-from ....loaders import (
-    load_category,
-    load_user,
-)
-from ....threads.models import Post, Thread
+from ....loaders import load_category
 from ....threads.loaders import posts_loader
+from ....threads.models import Post, Thread
+from ....users.loaders import users_loader
 from ....users.models import User
-from ...cleanargs import clean_id_arg, invalid_args_result
+from ...cleanargs import clean_id_arg, invalid_args_handler
 
 thread_type = ObjectType("Thread")
 
@@ -40,7 +38,7 @@ def resolve_first_post(
 @thread_type.field("starter")
 async def resolve_starter(obj: Thread, info: GraphQLResolveInfo) -> Optional[User]:
     if obj.starter_id:
-        starter = await load_user(info.context, obj.starter_id)
+        starter = await users_loader.load(info.context, obj.starter_id)
         if starter and starter.is_active:
             return starter
     return None
@@ -58,14 +56,14 @@ def resolve_last_post(
 @thread_type.field("lastPoster")
 async def resolve_last_poster(obj: Thread, info: GraphQLResolveInfo) -> Optional[User]:
     if obj.last_poster_id:
-        last_poster = await load_user(info.context, obj.last_poster_id)
+        last_poster = await users_loader.load(info.context, obj.last_poster_id)
         if last_poster and last_poster.is_active:
             return last_poster
     return None
 
 
 @thread_type.field("post")
-@invalid_args_result
+@invalid_args_handler
 async def resolve_post(
     obj: Thread,
     info: GraphQLResolveInfo,
