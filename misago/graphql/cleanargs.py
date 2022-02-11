@@ -7,7 +7,7 @@ class InvalidArgumentError(ValueError):
     pass
 
 
-def clean_graphql_id(value: Any) -> int:
+def clean_id_arg(value: Any) -> int:
     try:
         value = int(value)
         if value < 1:
@@ -17,24 +17,22 @@ def clean_graphql_id(value: Any) -> int:
         raise InvalidArgumentError() from error
 
 
-def clean_graphql_cursors(
-    after: Any, before: Any
-) -> Tuple[Optional[int], Optional[int]]:
+def clean_cursors_args(after: Any, before: Any) -> Tuple[Optional[int], Optional[int]]:
     if after and before:
         raise InvalidArgumentError()
 
     if after:
-        after = clean_graphql_cursor(after)
+        after = clean_cursor_arg(after)
         return after, None
 
     if before:
-        before = clean_graphql_cursor(before)
+        before = clean_cursor_arg(before)
         return None, before
 
     return None, None
 
 
-def clean_graphql_cursor(value: Any) -> Optional[int]:
+def clean_cursor_arg(value: Any) -> Optional[int]:
     if value is None:
         return None
 
@@ -47,7 +45,7 @@ def clean_graphql_cursor(value: Any) -> Optional[int]:
         raise InvalidArgumentError() from error
 
 
-def clean_graphql_page(value: Any) -> int:
+def clean_page_arg(value: Any) -> int:
     if value is None:
         return 1
 

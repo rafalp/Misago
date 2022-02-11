@@ -11,7 +11,7 @@ from ....loaders import (
 from ....threads.models import Post, Thread
 from ....threads.loaders import posts_loader
 from ....users.models import User
-from ...cleanargs import clean_graphql_id, invalid_args_result
+from ...cleanargs import clean_id_arg, invalid_args_result
 
 thread_type = ObjectType("Thread")
 
@@ -72,7 +72,7 @@ async def resolve_post(
     *,
     id: str,  # pylint: disable=redefined-builtin
 ) -> Optional[Post]:
-    post_id = clean_graphql_id(id)
+    post_id = clean_id_arg(id)
     post = await posts_loader.load(info.context, post_id)
     if post and post.thread_id == obj.id:
         return post

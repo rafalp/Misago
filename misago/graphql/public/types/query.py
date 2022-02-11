@@ -18,9 +18,9 @@ from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
 from ....users.models import User
 from ...cleanargs import (
-    clean_graphql_id,
-    clean_graphql_page,
-    clean_graphql_cursors,
+    clean_id_arg,
+    clean_page_arg,
+    clean_cursors_args,
     invalid_args_result,
 )
 
@@ -42,7 +42,7 @@ def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]
 async def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Optional[Category]:
-    category_id = clean_graphql_id(id)
+    category_id = clean_id_arg(id)
 
     # Load all categories so we can aggregate their stats
     categories = await load_categories(info.context)
@@ -60,7 +60,7 @@ async def resolve_category(
 def resolve_thread(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Thread]]:
-    thread_id = clean_graphql_id(id)
+    thread_id = clean_id_arg(id)
     return threads_loader.load(info.context, thread_id)
 
 
@@ -75,9 +75,9 @@ async def resolve_threads(
     category: Optional[str] = None,
     user: Optional[str] = None
 ) -> ThreadsPage:
-    after_cursor, before_cursor = clean_graphql_cursors(after, before)
-    category_id = clean_graphql_id(category) if category else None
-    starter_id = clean_graphql_id(user) if user else None
+    after_cursor, before_cursor = clean_cursors_args(after, before)
+    category_id = clean_id_arg(category) if category else None
+    starter_id = clean_id_arg(user) if user else None
 
     if category_id:
         categories = await load_category_with_children(info.context, category_id)
@@ -98,7 +98,7 @@ async def resolve_threads(
 def resolve_post(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Post]]:
-    post_id = clean_graphql_id(id)
+    post_id = clean_id_arg(id)
     return posts_loader.load(info.context, post_id)
 
 
@@ -107,8 +107,8 @@ def resolve_post(
 async def resolve_posts(
     _, info: GraphQLResolveInfo, *, thread: str, page: int = 1
 ) -> Optional[Page]:
-    thread_id = clean_graphql_id(thread)
-    page = clean_graphql_page(page)
+    thread_id = clean_id_arg(thread)
+    page = clean_page_arg(page)
 
     paginator = await posts_loader.load_paginator(info.context, thread_id)
     if not paginator:
@@ -122,7 +122,7 @@ async def resolve_posts(
 def resolve_user(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[User]]:
-    user_id = clean_graphql_id(id)
+    user_id = clean_id_arg(id)
     return load_user(info.context, user_id)
 
 
