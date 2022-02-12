@@ -12,7 +12,7 @@ async def test_getting_categories_index_returns_index_of_categories(category):
 @pytest.mark.asyncio
 async def test_categories_index_returns_list_all_categories_ids(category):
     categories = await get_categories_index()
-    assert category.id in categories.get_all_ids()
+    assert category.id in categories.all_ids
 
 
 @pytest.mark.asyncio

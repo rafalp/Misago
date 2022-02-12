@@ -17,7 +17,8 @@ class IndexCategory:
 
 
 class CategoriesIndex(Dict[int, IndexCategory]):
-    def get_all_ids(self) -> List[int]:
+    @property
+    def all_ids(self) -> List[int]:
         return list(self.keys())
 
     def get_children_ids(self, parent_id: int, include_parent=False) -> List[int]:

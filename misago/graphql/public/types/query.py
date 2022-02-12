@@ -73,7 +73,7 @@ async def resolve_threads(
     if category_id:
         categories = categories_index.get_children_ids(category_id, include_parent=True)
     else:
-        categories = categories_index.get_all_ids()
+        categories = categories_index.all_ids
 
     return await get_threads_page(
         info.context["settings"]["threads_per_page"],
