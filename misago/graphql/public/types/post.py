@@ -3,8 +3,8 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
-from ....loaders import load_category
 from ....richtext.html import convert_rich_text_to_html
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
@@ -21,7 +21,7 @@ post_type.set_alias("richText", "rich_text")
 
 @post_type.field("category")
 def resolve_category(obj: Post, info: GraphQLResolveInfo) -> Awaitable[Category]:
-    category = load_category(info.context, obj.category_id)
+    category = categories_loader.load(info.context, obj.category_id)
     return cast(Awaitable[Category], category)
 
 

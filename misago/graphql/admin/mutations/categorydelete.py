@@ -7,10 +7,10 @@ from pydantic import BaseModel, PositiveInt
 from ....categories.contents import delete_categories_contents, move_categories_contents
 from ....categories.errors import CategoryInvalidError
 from ....categories.get import get_all_categories
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....categories.tree import delete_category, move_category
 from ....categories.validators import CategoryExistsValidator
-from ....loaders import clear_categories
 from ....validation import (
     ROOT_LOCATION,
     ErrorsList,
@@ -86,7 +86,7 @@ async def resolve_category_delete(
 
     categories = await delete_category(categories, category_obj)
 
-    clear_categories(info.context)
+    categories_loader.unload_all(info.context)
 
     root_categories = [c for c in categories if c.depth == 0]
     return {"deleted": True, "categories": root_categories}

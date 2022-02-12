@@ -1,4 +1,5 @@
 from ...pagetype import create_page_type
+from .category import category_type
 from .post import post_type
 from .query import query_type
 from .searchresults import search_results_type
@@ -8,6 +9,7 @@ from .threadspage import threads_page_type
 
 types = [
     create_page_type("PostsPage"),
+    category_type,
     post_type,
     query_type,
     search_results_type,

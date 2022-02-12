@@ -1,7 +1,6 @@
 type Category {
     id: ID!
     parent: Category
-    children: [Category!]!
     depth: Int!
     name: String!
     slug: String!

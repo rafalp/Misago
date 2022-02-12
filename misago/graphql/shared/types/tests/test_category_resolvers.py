@@ -1,46 +1,5 @@
 import pytest
 
-CATEGORY_CHILDREN_QUERY = """
-    query GetCategory($category: ID!) {
-        category(id: $category) {
-            id
-            children {
-                id
-            }
-        }
-    }
-"""
-
-
-@pytest.mark.asyncio
-async def test_category_children_resolves_to_list_with_category_children(
-    query_public_api, category, child_category
-):
-    result = await query_public_api(
-        CATEGORY_CHILDREN_QUERY, {"category": str(category.id)}
-    )
-    assert result["data"] == {
-        "category": {
-            "id": str(category.id),
-            "children": [{"id": str(child_category.id)}],
-        }
-    }
-
-
-@pytest.mark.asyncio
-async def test_category_children_resolves_to_empty_list_for_leaf_category(
-    query_public_api, sibling_category
-):
-    result = await query_public_api(
-        CATEGORY_CHILDREN_QUERY, {"category": str(sibling_category.id)}
-    )
-    assert result["data"] == {
-        "category": {
-            "id": str(sibling_category.id),
-            "children": [],
-        }
-    }
-
 
 @pytest.mark.asyncio
 async def test_category_extra_resolves_to_empty_list_for_leaf_category(

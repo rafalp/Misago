@@ -6,12 +6,17 @@ import httpx
 import pytest
 
 from ..asgi import app
+from ..categories.index import get_categories_index
+from ..categories.loaders import categories_loader
 from ..threads.loaders import posts_loader, threads_loader
 from ..users.loaders import users_loader
 from ..users.models import User
 
 
-def setup_loaders(context: dict):
+async def setup_context(context: dict):
+    context["categories"] = await get_categories_index()
+
+    categories_loader.setup_context(context)
     threads_loader.setup_context(context)
     posts_loader.setup_context(context)
     users_loader.setup_context(context)
@@ -25,7 +30,7 @@ def request_mock():
 
 
 @pytest.fixture
-def graphql_context(request_mock, cache_versions, dynamic_settings):
+async def graphql_context(request_mock, cache_versions, dynamic_settings):
     context = {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -33,7 +38,7 @@ def graphql_context(request_mock, cache_versions, dynamic_settings):
         "user": None,
     }
 
-    setup_loaders(context)
+    await setup_context(context)
 
     return context
 
@@ -44,7 +49,7 @@ def graphql_info(graphql_context):
 
 
 @pytest.fixture
-def user_graphql_context(request_mock, cache_versions, dynamic_settings, user):
+async def user_graphql_context(request_mock, cache_versions, dynamic_settings, user):
     context = {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -52,7 +57,7 @@ def user_graphql_context(request_mock, cache_versions, dynamic_settings, user):
         "user": user,
     }
 
-    setup_loaders(context)
+    await setup_context(context)
 
     return context
 
@@ -63,7 +68,7 @@ def user_graphql_info(user_graphql_context):
 
 
 @pytest.fixture
-def moderator_graphql_context(
+async def moderator_graphql_context(
     request_mock, cache_versions, dynamic_settings, moderator
 ):
     context = {
@@ -73,7 +78,7 @@ def moderator_graphql_context(
         "user": moderator,
     }
 
-    setup_loaders(context)
+    await setup_context(context)
 
     return context
 
@@ -84,7 +89,7 @@ def moderator_graphql_info(moderator_graphql_context):
 
 
 @pytest.fixture
-def admin_graphql_context(request_mock, cache_versions, dynamic_settings, admin):
+async def admin_graphql_context(request_mock, cache_versions, dynamic_settings, admin):
     context = {
         "request": request_mock,
         "cache_versions": cache_versions,
@@ -93,7 +98,7 @@ def admin_graphql_context(request_mock, cache_versions, dynamic_settings, admin)
         "user": admin,
     }
 
-    setup_loaders(context)
+    await setup_context(context)
 
     return context
 

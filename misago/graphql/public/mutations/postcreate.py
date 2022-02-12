@@ -6,9 +6,9 @@ from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....categories.validators import CategoryIsOpenValidator
-from ....loaders import load_category, store_category
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.loaders import posts_loader, threads_loader
@@ -102,14 +102,14 @@ async def post_create(
         rich_text,
         poster=context["user"],
     )
-    category = cast(Category, await load_category(context, thread.category_id))
+    category = cast(Category, await categories_loader.load(context, thread.category_id))
 
     thread, category = await gather(
         thread.update(last_post=reply, increment_replies=True),
         category.update(increment_posts=True),
     )
 
-    store_category(context, category)
+    categories_loader.store(context, category)
     threads_loader.store(context, thread)
     posts_loader.store(context, reply)
 

@@ -21,9 +21,7 @@ CATEGORY_MOVE_MUTATION = """
             }
             categories {
                 id
-                children {
-                    id
-                }
+                depth
             }
             errors {
                 location
@@ -55,19 +53,19 @@ async def test_move_category_mutation_moves_sibling_category_before_other_catego
             ANY,
             {
                 "id": str(sibling_category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(category.id),
-                "children": [
-                    {
-                        "id": str(child_category.id),
-                    },
-                ],
+                "depth": 0,
+            },
+            {
+                "id": str(child_category.id),
+                "depth": 1,
             },
             {
                 "id": str(closed_category.id),
-                "children": [],
+                "depth": 0,
             },
         ],
         "errors": None,
@@ -115,18 +113,19 @@ async def test_move_category_mutation_moves_sibling_category_before_child_catego
             ANY,  # Default category
             {
                 "id": str(category.id),
-                "children": [
-                    {
-                        "id": str(sibling_category.id),
-                    },
-                    {
-                        "id": str(child_category.id),
-                    },
-                ],
+                "depth": 0,
+            },
+            {
+                "id": str(sibling_category.id),
+                "depth": 1,
+            },
+            {
+                "id": str(child_category.id),
+                "depth": 1,
             },
             {
                 "id": str(closed_category.id),
-                "children": [],
+                "depth": 0,
             },
         ],
         "errors": None,
@@ -173,18 +172,19 @@ async def test_move_category_mutation_moves_sibling_category_after_child_categor
             ANY,  # Default category
             {
                 "id": str(category.id),
-                "children": [
-                    {
-                        "id": str(child_category.id),
-                    },
-                    {
-                        "id": str(sibling_category.id),
-                    },
-                ],
+                "depth": 0,
+            },
+            {
+                "id": str(child_category.id),
+                "depth": 1,
+            },
+            {
+                "id": str(sibling_category.id),
+                "depth": 1,
             },
             {
                 "id": str(closed_category.id),
-                "children": [],
+                "depth": 0,
             },
         ],
         "errors": None,
@@ -228,19 +228,19 @@ async def test_move_category_mutation_moves_child_category_to_root(
             ANY,  # Default category
             {
                 "id": str(category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(sibling_category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(closed_category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(child_category.id),
-                "children": [],
+                "depth": 0,
             },
         ],
         "errors": None,
@@ -285,19 +285,19 @@ async def test_move_category_mutation_moves_child_category_to_root_before_parent
             ANY,  # Default category
             {
                 "id": str(child_category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(sibling_category.id),
-                "children": [],
+                "depth": 0,
             },
             {
                 "id": str(closed_category.id),
-                "children": [],
+                "depth": 0,
             },
         ],
         "errors": None,

@@ -66,10 +66,9 @@ def invalid_args_handler(f):
         try:
             result = f(*args, **kwargs)
             if isawaitable(result):
-                result = await result
+                return await result
+            return result
         except InvalidArgumentError:
             return None
-
-        return result
 
     return wrap_resolver

@@ -1,9 +1,9 @@
 from typing import Any, List, Type, cast
 
+from ..categories.loaders import categories_loader
 from ..categories.models import Category, CategoryType
 from ..conf.types import Settings
 from ..graphql import GraphQLContext
-from ..loaders import load_category
 from ..validation import BulkValidator, ErrorsList, Validator, sluggablestr
 from .errors import (
     PostIsThreadStartError,
@@ -44,7 +44,7 @@ class PostCategoryValidator:
         return self._validator
 
     async def __call__(self, post: Post, errors: ErrorsList, field_name: str) -> Post:
-        category = await load_category(self._context, post.category_id)
+        category = await categories_loader.load(self._context, post.category_id)
         category = cast(Category, category)
         await self._validator(category, errors, field_name)
         return post
@@ -71,7 +71,7 @@ class PostExistsValidator:
 
 
 async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
-    category = await load_category(context, category_id)
+    category = await categories_loader.load(context, category_id)
     if category:
         return category.type
     return 0
@@ -131,7 +131,7 @@ class ThreadCategoryValidator:
     async def __call__(
         self, thread: Thread, errors: ErrorsList, field_name: str
     ) -> Thread:
-        category = await load_category(self._context, thread.category_id)
+        category = await categories_loader.load(self._context, thread.category_id)
         category = cast(Category, category)
         await self._validator(category, errors, field_name)
         return thread

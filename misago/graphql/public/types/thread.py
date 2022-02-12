@@ -3,8 +3,8 @@ from typing import Awaitable, Optional, cast
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
-from ....loaders import load_category
 from ....threads.loaders import posts_loader
 from ....threads.models import Post, Thread
 from ....users.loaders import users_loader
@@ -22,7 +22,7 @@ thread_type.set_alias("isClosed", "is_closed")
 
 @thread_type.field("category")
 def resolve_category(obj: Thread, info: GraphQLResolveInfo) -> Awaitable[Category]:
-    category = load_category(info.context, obj.category_id)
+    category = categories_loader.load(info.context, obj.category_id)
     return cast(Awaitable[Category], category)
 
 

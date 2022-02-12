@@ -7,9 +7,9 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.errors import NotModeratorError
 from ....auth.validators import IsAuthenticatedValidator
+from ....categories.loaders import categories_loader
 from ....categories.validators import CategoryExistsValidator, CategoryIsOpenValidator
 from ....database import database
-from ....loaders import store_category
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.loaders import posts_loader, threads_loader
@@ -130,7 +130,7 @@ async def thread_create(
         )
 
     threads_loader.store(context, thread)
-    store_category(context, category)
+    categories_loader.store(context, category)
     posts_loader.store(context, post)
 
     await publish_thread_update(thread)

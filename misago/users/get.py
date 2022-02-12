@@ -1,10 +1,10 @@
-from typing import Awaitable, List, Optional, Sequence
+from typing import Awaitable, Iterable, List, Optional
 
 from .email import get_email_hash
 from .models import User
 
 
-def get_users_by_id(ids: Sequence[int]) -> Awaitable[List[User]]:
+def get_users_by_id(ids: Iterable[int]) -> Awaitable[List[User]]:
     return User.query.filter(id__in=ids).all()
 
 
@@ -21,7 +21,7 @@ async def get_user_by_name(name: str) -> Optional[User]:
         return None
 
 
-def get_users_by_name(names: Sequence[str]) -> Awaitable[List[User]]:
+def get_users_by_name(names: Iterable[str]) -> Awaitable[List[User]]:
     return User.query.filter(slug__in=[s.lower() for s in names]).all()
 
 

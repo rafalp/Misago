@@ -5,7 +5,7 @@ from ariadne import SubscriptionType, convert_kwargs_to_snake_case
 from ....categories.get import get_category_by_id
 from ....categories.models import Category
 from ....pubsub.threads import threads_updates
-from ....utils.strings import parse_db_id
+from ...cleanargs import InvalidArgumentError, clean_id_arg
 
 threads_subscription = SubscriptionType()
 
@@ -13,13 +13,16 @@ threads_subscription = SubscriptionType()
 @threads_subscription.source("threads")
 @convert_kwargs_to_snake_case
 async def threads_source(*_, category: Optional[str] = None):
+    category_obj = None
     categories_map: Dict[int, bool] = {}
 
-    category_obj = None
-    category_id = parse_db_id(category)
-    if category and category_id:
-        category_obj = await get_category_by_id(category_id)
-        categories_map[category_id] = bool(category_obj)
+    try:
+        category_id = clean_id_arg(category) if category else None
+        if category and category_id:
+            category_obj = await get_category_by_id(category_id)
+            categories_map[category_id] = bool(category_obj)
+    except InvalidArgumentError:
+        pass
 
     # consume thread event, check if its category is subscribed before yielding
     async for event in threads_updates():

@@ -5,9 +5,9 @@ from ..validators import PostExistsValidator, PostsBulkValidator
 
 
 @pytest.mark.asyncio
-async def test_bulk_posts_validator_validates_posts(loaders_context, post, user_post):
+async def test_bulk_posts_validator_validates_posts(graphql_context, post, user_post):
     errors = ErrorsList()
-    validator = PostsBulkValidator([PostExistsValidator(loaders_context)])
+    validator = PostsBulkValidator([PostExistsValidator(graphql_context)])
     posts = await validator([post.id, user_post.id], errors, "posts")
 
     assert not errors
@@ -15,9 +15,9 @@ async def test_bulk_posts_validator_validates_posts(loaders_context, post, user_
 
 
 @pytest.mark.asyncio
-async def test_bulk_posts_validator_partially_validates_posts(loaders_context, post):
+async def test_bulk_posts_validator_partially_validates_posts(graphql_context, post):
     errors = ErrorsList()
-    validator = PostsBulkValidator([PostExistsValidator(loaders_context)])
+    validator = PostsBulkValidator([PostExistsValidator(graphql_context)])
     posts = await validator([post.id, post.id + 1], errors, "posts")
 
     assert errors == [

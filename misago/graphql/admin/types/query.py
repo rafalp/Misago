@@ -3,10 +3,11 @@ from typing import Awaitable, List, Optional
 from ariadne import QueryType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 
+from ....categories.get import get_all_categories
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....conf.types import Settings
 from ....database.paginator import Page, Paginator
-from ....loaders import load_category, load_root_categories
 from ....users.loaders import users_loader
 from ....users.models import User
 from ...cleanargs import clean_id_arg, clean_page_arg, invalid_args_handler
@@ -17,16 +18,18 @@ query_type = QueryType()
 
 @query_type.field("category")
 @admin_resolver
+@invalid_args_handler
 def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
 ) -> Awaitable[Optional[Category]]:
-    return load_category(info.context, id)
+    category_id = clean_id_arg(id)
+    return categories_loader.load(info.context, category_id)
 
 
 @query_type.field("categories")
 @admin_resolver
 def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
-    return load_root_categories(info.context)
+    return get_all_categories()
 
 
 @query_type.field("settings")

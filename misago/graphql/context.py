@@ -4,6 +4,8 @@ from starlette.requests import Request
 
 from ..auth import get_authenticated_admin, get_authenticated_user
 from ..cacheversions import get_cache_versions
+from ..categories.index import get_categories_index
+from ..categories.loaders import categories_loader
 from ..conf.dynamicsettings import get_dynamic_settings
 from ..context import Context
 from ..threads.loaders import posts_loader, threads_loader
@@ -22,6 +24,7 @@ async def get_graphql_context(request: Request) -> Context:
 
     context: Context = {
         "request": request,
+        "categories": await get_categories_index(),
         "user": None,
     }
 
@@ -43,6 +46,7 @@ async def get_graphql_context(request: Request) -> Context:
             }
         )
 
+    categories_loader.setup_context(context)
     threads_loader.setup_context(context)
     posts_loader.setup_context(context)
     users_loader.setup_context(context)

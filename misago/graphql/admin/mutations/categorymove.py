@@ -6,10 +6,10 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....categories.errors import CategoryInvalidParentError
 from ....categories.get import get_all_categories
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....categories.tree import move_category
 from ....categories.validators import CategoryExistsValidator
-from ....loaders import clear_categories
 from ....validation import ROOT_LOCATION, root_validator, validate_data, validate_model
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
@@ -31,7 +31,6 @@ async def resolve_category_move(
     before: Optional[str] = None
 ):
     categories = await get_all_categories()
-    root_categories = [c for c in categories if c.depth == 0]
 
     cleaned_data, errors = validate_model(
         MoveCategoryInputModel,
@@ -54,7 +53,7 @@ async def resolve_category_move(
         return {
             "errors": errors,
             "category": category_obj,
-            "categories": root_categories,
+            "categories": categories,
         }
 
     category_obj, updated_categories = await move_category(
@@ -64,10 +63,9 @@ async def resolve_category_move(
         before=cleaned_data.get("before"),
     )
 
-    clear_categories(info.context)
+    categories_loader.unload_all(info.context)
 
-    root_categories = [c for c in updated_categories if c.depth == 0]
-    return {"category": category_obj, "categories": root_categories}
+    return {"category": category_obj, "categories": updated_categories}
 
 
 MoveCategoryInputModel: Type[BaseModel] = create_model(

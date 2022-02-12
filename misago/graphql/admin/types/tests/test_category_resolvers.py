@@ -4,21 +4,19 @@ CATEGORIES_QUERY = """
     query Categories {
         categories {
             id
-            children {
-                id
-            }
         }
     }
 """
 
 
 @pytest.mark.asyncio
-async def test_categories_query_returns_root_categories(
-    query_admin_api, categories, category
+async def test_categories_query_returns_all_categories(
+    query_admin_api, categories, category, child_category
 ):
     result = await query_admin_api(CATEGORIES_QUERY)
     categories_ids = [c["id"] for c in result["data"]["categories"]]
     assert str(category.id) in categories_ids
+    assert str(child_category.id) in categories_ids
 
 
 @pytest.mark.asyncio

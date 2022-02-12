@@ -1,39 +1,43 @@
 import pytest
 
-CATEGORIES_QUERY = """
-    query GetCategories {
-        categories {
-            id
-            threads
-            posts
-        }
-    }
-"""
-
 
 @pytest.mark.asyncio
-async def test_categories_query_resolves_to_only_top_level_categories(
+async def test_categories_query_resolves_to_categories_list(
     query_public_api, category, child_category
 ):
-    result = await query_public_api(CATEGORIES_QUERY)
+    query = """
+        query GetCategories {
+            categories {
+                id
+            }
+        }
+    """
+
+    result = await query_public_api(query)
     ids = [i["id"] for i in result["data"]["categories"]]
     assert str(category.id) in ids
-    assert str(child_category.id) not in ids
+    assert str(child_category.id) in ids
 
 
 @pytest.mark.asyncio
-async def test_categories_query_resolver_aggregates_categories_stats(
-    query_public_api, category, child_category
+async def test_categories_query_resolves_to_categories_with_given_parent(
+    query_public_api, child_category
 ):
-    await category.update(threads=1, posts=2)
-    await child_category.update(threads=2, posts=3)
+    query = """
+        query GetCategories($parent: ID) {
+            categories(parent: $parent) {
+                id
+            }
+        }
+    """
 
-    result = await query_public_api(CATEGORIES_QUERY)
-    categories = {i["id"]: i for i in result["data"]["categories"]}
-    assert categories[str(category.id)] == {
-        "id": str(category.id),
-        "threads": 3,
-        "posts": 5,
+    result = await query_public_api(query, {"parent": str(child_category.parent_id)})
+    assert result["data"] == {
+        "categories": [
+            {
+                "id": str(child_category.id),
+            },
+        ],
     }
 
 

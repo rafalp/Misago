@@ -14,19 +14,19 @@ def request_mock():
 
 
 @pytest.mark.asyncio
-async def test_graphql_context_includes_request(request_mock):
+async def test_graphql_context_includes_request(db, request_mock):
     context = await get_graphql_context(request_mock)
     assert context["request"] is request_mock
 
 
 @pytest.mark.asyncio
-async def test_graphql_context_includes_cache_versions(request_mock):
+async def test_graphql_context_includes_cache_versions(db, request_mock):
     context = await get_graphql_context(request_mock)
     assert context["cache_versions"] == request_mock.state.cache_versions
 
 
 @pytest.mark.asyncio
-async def test_graphql_context_includes_settings(request_mock):
+async def test_graphql_context_includes_settings(db, request_mock):
     context = await get_graphql_context(request_mock)
     assert context["settings"] == request_mock.state.settings
 
@@ -37,18 +37,18 @@ def websocket_mock():
 
 
 @pytest.mark.asyncio
-async def test_graphql_websocket_context_includes_request(websocket_mock):
+async def test_graphql_websocket_context_includes_request(db, websocket_mock):
     context = await get_graphql_context(websocket_mock)
     assert context["request"] is websocket_mock
 
 
 @pytest.mark.asyncio
-async def test_graphql_websocket_context_includes_cache_versions(websocket_mock):
+async def test_graphql_websocket_context_includes_cache_versions(db, websocket_mock):
     context = await get_graphql_context(websocket_mock)
     assert context["cache_versions"]
 
 
 @pytest.mark.asyncio
-async def test_graphql_websocket_context_includes_settings(websocket_mock):
+async def test_graphql_websocket_context_includes_settings(db, websocket_mock):
     context = await get_graphql_context(websocket_mock)
     assert context["settings"]

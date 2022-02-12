@@ -1,41 +1,39 @@
-from typing import Optional, Union
+from typing import Optional
 
 from ..auth.errors import NotModeratorError
-from ..graphql import GraphQLContext
-from ..loaders import load_category
+from ..context import Context
 from .errors import (
     CategoryInvalidParentError,
     CategoryIsClosedError,
     CategoryNotFoundError,
 )
-from .models import Category, CategoryType
+from .index import IndexCategory
+from .loaders import categories_loader
+from .models import Category
 
 
 class CategoryExistsValidator:
-    _context: GraphQLContext
-    _category_type: int
+    _context: Context
 
-    def __init__(
-        self, context: GraphQLContext, category_type: int = CategoryType.THREADS
-    ):
+    def __init__(self, context: Context):
         self._context = context
-        self._category_type = category_type
 
-    async def __call__(self, category_id: Union[int, str], *_) -> Category:
-        category = await load_category(self._context, category_id)
-        if not category or category.type != self._category_type:
+    async def __call__(self, category_id: int, *_) -> Category:
+        category = await categories_loader.load(self._context, category_id)
+        if not category:
             raise CategoryNotFoundError(category_id=category_id)
         return category
 
 
 class CategoryIsOpenValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, category: Category, *_) -> Category:
-        if category.is_closed:
+        index_category: IndexCategory = self._context["categories"].get(category.id)
+        if index_category.is_closed:
             user = self._context["user"]
             if not (user and user.is_moderator):
                 raise CategoryIsClosedError(category_id=category.id)
@@ -43,9 +41,9 @@ class CategoryIsOpenValidator:
 
 
 class CategoryModeratorValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, category: Category, *_) -> Category:

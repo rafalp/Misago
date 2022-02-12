@@ -3,14 +3,11 @@ from typing import Awaitable, List, Optional
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
+from ....categories.get import get_categories
+from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....database.paginator import Page
-from ....loaders import (
-    load_categories,
-    load_category_with_children,
-    load_forum_stats,
-    load_root_categories,
-)
+from ....forumstats.loaders import load_forum_stats
 from ....richtext import RichText, parse_markup
 from ....threads.get import ThreadsPage, get_threads_page
 from ....threads.loaders import posts_loader, threads_loader
@@ -32,27 +29,20 @@ def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
     return info.context["user"]
 
 
-@query_type.field("categories")
-def resolve_categories(_, info: GraphQLResolveInfo) -> Awaitable[List[Category]]:
-    return load_root_categories(info.context)
-
-
 @query_type.field("category")
 @invalid_args_handler
-async def resolve_category(
+def resolve_category(
     _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
-) -> Optional[Category]:
+) -> Awaitable[Optional[Category]]:
     category_id = clean_id_arg(id)
+    return categories_loader.load(info.context, category_id)
 
-    # Load all categories so we can aggregate their stats
-    categories = await load_categories(info.context)
 
-    # Search for category
-    for category in categories:
-        if category.id == category_id:
-            return category
-
-    return None
+@query_type.field("categories")
+@invalid_args_handler
+def resolve_categories(*_, parent: Optional[int] = None) -> Awaitable[List[Category]]:
+    parent_id = clean_id_arg(parent) if parent else None
+    return get_categories(parent_id=parent_id)
 
 
 @query_type.field("thread")
@@ -79,17 +69,18 @@ async def resolve_threads(
     category_id = clean_id_arg(category) if category else None
     starter_id = clean_id_arg(user) if user else None
 
+    categories_index = info.context["categories"]
     if category_id:
-        categories = await load_category_with_children(info.context, category_id)
+        categories = categories_index.get_children_ids(category_id, include_parent=True)
     else:
-        categories = await load_categories(info.context)
+        categories = categories_index.get_all_ids()
 
     return await get_threads_page(
         info.context["settings"]["threads_per_page"],
         after=after_cursor,
         before=before_cursor,
         starter_id=starter_id,
-        categories_ids=[category.id for category in categories],
+        categories_ids=categories,
     )
 
 
