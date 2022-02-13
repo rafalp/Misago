@@ -38,9 +38,7 @@ class CategoriesChildrenLoader:
             batch_load_fn=get_categories_children,
         )
 
-    def load(
-        self, context: Context, category_id: int
-    ) -> Awaitable[List[Category]]:
+    def load(self, context: Context, category_id: int) -> Awaitable[List[Category]]:
         return context[self.context_key].load(category_id)
 
 
