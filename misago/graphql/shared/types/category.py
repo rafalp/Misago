@@ -1,9 +1,9 @@
-from typing import Awaitable, Optional
+from typing import Awaitable, List, Optional, Union
 
 from ariadne import ObjectType
 from graphql import GraphQLResolveInfo
 
-from ....categories.loaders import categories_loader
+from ....categories.loaders import categories_children_loader, categories_loader
 from ....categories.models import Category
 
 category_type = ObjectType("Category")
@@ -18,6 +18,16 @@ def resolve_parent(
     if category.parent_id:
         return categories_loader.load(info.context, category.parent_id)
     return None
+
+
+@category_type.field("children")
+def resolve_children(
+    category: Category, info: GraphQLResolveInfo
+) -> Union[Awaitable[List[Category]], List[Category]]:
+    if category.has_children():
+        return categories_children_loader.load(info.context, category.id)
+
+    return []
 
 
 @category_type.field("banner")

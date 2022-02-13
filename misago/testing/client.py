@@ -7,7 +7,7 @@ import pytest
 
 from ..asgi import app
 from ..categories.index import get_categories_index
-from ..categories.loaders import categories_loader
+from ..categories.loaders import categories_children_loader, categories_loader
 from ..threads.loaders import posts_loader, threads_loader
 from ..users.loaders import users_loader
 from ..users.models import User
@@ -17,6 +17,7 @@ async def setup_context(context: dict):
     context["categories"] = await get_categories_index()
 
     categories_loader.setup_context(context)
+    categories_children_loader.setup_context(context)
     threads_loader.setup_context(context)
     posts_loader.setup_context(context)
     users_loader.setup_context(context)

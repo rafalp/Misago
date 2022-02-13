@@ -3,7 +3,7 @@ from typing import Awaitable, List, Optional
 from ariadne import QueryType
 from graphql import GraphQLResolveInfo
 
-from ....categories.get import get_categories
+from ....categories.get import get_root_categories
 from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....database.paginator import Page
@@ -39,10 +39,8 @@ def resolve_category(
 
 
 @query_type.field("categories")
-@invalid_args_handler
-def resolve_categories(*_, parent: Optional[int] = None) -> Awaitable[List[Category]]:
-    parent_id = clean_id_arg(parent) if parent else None
-    return get_categories(parent_id=parent_id)
+def resolve_categories(*_) -> Awaitable[List[Category]]:
+    return get_root_categories()
 
 
 @query_type.field("thread")

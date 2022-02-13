@@ -2,9 +2,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_category_extra_resolves_to_empty_list_for_leaf_category(
-    query_public_api, category
-):
+async def test_category_extra_resolves_to_empty_dict(query_public_api, category):
     query = """
         query GetCategory($category: ID!) {
             category(id: $category) {
@@ -102,4 +100,46 @@ async def test_category_parent_resolves_to_none_for_top_level_category(
     assert result["data"]["category"] == {
         "id": str(category.id),
         "parent": None,
+    }
+
+
+CATEGORY_CHILDREN_QUERY = """
+    query GetCategory($category: ID!) {
+        category(id: $category) {
+            id
+            children {
+                id
+            }
+        }
+    }
+"""
+
+
+@pytest.mark.asyncio
+async def test_category_children_resolves_to_category_children(
+    query_public_api, child_category
+):
+    result = await query_public_api(
+        CATEGORY_CHILDREN_QUERY, {"category": str(child_category.parent_id)}
+    )
+    assert result["data"]["category"] == {
+        "id": str(child_category.parent_id),
+        "children": [
+            {
+                "id": str(child_category.id),
+            },
+        ],
+    }
+
+
+@pytest.mark.asyncio
+async def test_category_children_resolves_to_empty_list_for_leaf_category(
+    query_public_api, sibling_category
+):
+    result = await query_public_api(
+        CATEGORY_CHILDREN_QUERY, {"category": str(sibling_category.id)}
+    )
+    assert result["data"]["category"] == {
+        "id": str(sibling_category.id),
+        "children": [],
     }

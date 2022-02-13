@@ -9,15 +9,11 @@ def get_all_categories(
     return Category.query.filter(type=category_type).order_by("left").all()
 
 
-def get_categories(
+def get_root_categories(
     *,
     category_type: int = CategoryType.THREADS,
-    parent_id: Optional[int] = None,
 ) -> Awaitable[List[Category]]:
-    query = Category.query.filter(type=category_type)
-    if parent_id:
-        query = query.filter(parent_id=parent_id)
-    return query.order_by("left").all()
+    return Category.query.filter(type=category_type, depth=0).order_by("left").all()
 
 
 def get_categories_by_id(

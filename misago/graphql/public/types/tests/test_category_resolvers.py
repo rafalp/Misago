@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_categories_query_resolves_to_categories_list(
+async def test_categories_query_resolves_to_root_categories_list(
     query_public_api, category, child_category
 ):
     query = """
@@ -16,29 +16,7 @@ async def test_categories_query_resolves_to_categories_list(
     result = await query_public_api(query)
     ids = [i["id"] for i in result["data"]["categories"]]
     assert str(category.id) in ids
-    assert str(child_category.id) in ids
-
-
-@pytest.mark.asyncio
-async def test_categories_query_resolves_to_categories_with_given_parent(
-    query_public_api, child_category
-):
-    query = """
-        query GetCategories($parent: ID) {
-            categories(parent: $parent) {
-                id
-            }
-        }
-    """
-
-    result = await query_public_api(query, {"parent": str(child_category.parent_id)})
-    assert result["data"] == {
-        "categories": [
-            {
-                "id": str(child_category.id),
-            },
-        ],
-    }
+    assert str(child_category.id) not in ids
 
 
 CATEGORY_QUERY = """

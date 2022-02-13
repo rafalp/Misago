@@ -1,6 +1,6 @@
 extend type Query {
     auth: User
-    categories(parent: ID): [Category!]!
+    categories: [Category!]!
     category(id: ID!): Category
     thread(id: ID!): Thread
     threads(before: ID, after: ID, category: ID, user: ID): ThreadsPage
