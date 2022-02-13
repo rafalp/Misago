@@ -7,13 +7,13 @@
     </li>
   {% endfor %}
 </ul>
-{% if threads.has_previous %}
-  <a href="{{ url_prefix }}?before={{ threads.results[0].last_post_id }}">
+{% if threads.has_previous_page %}
+  <a href="{{ url_prefix }}?before={{ threads.start_cursor }}">
     {% trans %}Previous threads{% endtrans %}
   </a>
 {% endif %}
-{% if threads.has_next %}
-  <a href="{{ url_prefix }}?after={{ threads.results[-1].last_post_id }}">
+{% if threads.has_next_page %}
+  <a href="{{ url_prefix }}?after={{ threads.end_cursor }}">
     {% trans %}More threads{% endtrans %}
   </a>
 {% endif %}

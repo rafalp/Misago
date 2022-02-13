@@ -10,10 +10,10 @@ POSTS_QUERY = """
             }
             pageInfo {
                 number
-                hasNext
-                hasPrevious
-                next
-                previous
+                hasNextPage
+                hasPreviousPage
+                nextPage
+                previousPage
                 start
                 stop
             }
@@ -35,10 +35,10 @@ async def test_posts_query_resolves_to_first_posts_page(query_public_api, thread
         ],
         "pageInfo": {
             "number": 1,
-            "hasNext": False,
-            "hasPrevious": False,
-            "next": None,
-            "previous": None,
+            "hasNextPage": False,
+            "hasPreviousPage": False,
+            "nextPage": None,
+            "previousPage": None,
             "start": 1,
             "stop": 1,
         },
@@ -60,10 +60,10 @@ async def test_posts_query_resolves_to_specified_posts_page(
         ],
         "pageInfo": {
             "number": 1,
-            "hasNext": False,
-            "hasPrevious": False,
-            "next": None,
-            "previous": None,
+            "hasNextPage": False,
+            "hasPreviousPage": False,
+            "nextPage": None,
+            "previousPage": None,
             "start": 1,
             "stop": 1,
         },
@@ -79,10 +79,10 @@ async def test_posts_query_resolves_to_empty_page(query_public_api, thread, post
         "results": [],
         "pageInfo": {
             "number": 10,
-            "hasNext": False,
-            "hasPrevious": True,
-            "next": None,
-            "previous": 1,
+            "hasNextPage": False,
+            "hasPreviousPage": True,
+            "nextPage": None,
+            "previousPage": 1,
             "start": 0,
             "stop": 0,
         },

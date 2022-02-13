@@ -1,9 +1,8 @@
 type PageInfo {
-    number: Int!
-    hasNext: Boolean!
-    hasPrevious: Boolean!
-    next: Int
-    previous: Int
-    start: Int!
-    stop: Int!
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+    nextCursor: String
+    previousCursor: String
 }

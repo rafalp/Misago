@@ -24,10 +24,12 @@ async def test_getting_threads_by_nonexistant_id_returns_empty_list(db):
 async def test_threads_page_is_retrieved(thread, threads):
     page = await get_threads_page(10, categories_ids=[thread.category_id])
     assert page.results == threads
-    assert page.has_next is False
-    assert page.has_previous is False
-    assert page.next_cursor is None
-    assert page.previous_cursor is None
+    assert page.page_info.start_cursor == page.results[0].last_post_id
+    assert page.page_info.end_cursor == page.results[-1].last_post_id
+    assert page.page_info.has_next_page is False
+    assert page.page_info.has_previous_page is False
+    assert page.page_info.next_cursor is None
+    assert page.page_info.previous_cursor is None
 
 
 @pytest.mark.asyncio
@@ -38,10 +40,12 @@ async def test_threads_page_after_cursor_is_retrieved(thread, threads):
         after=threads[0].last_post_id,
     )
     assert page.results == threads[1:]
-    assert page.has_next is False
-    assert page.has_previous is True
-    assert page.next_cursor is None
-    assert page.previous_cursor == threads[0].last_post_id
+    assert page.page_info.start_cursor == page.results[0].last_post_id
+    assert page.page_info.end_cursor == page.results[-1].last_post_id
+    assert page.page_info.has_next_page is False
+    assert page.page_info.has_previous_page is True
+    assert page.page_info.next_cursor is None
+    assert page.page_info.previous_cursor == threads[0].last_post_id
 
 
 @pytest.mark.asyncio
@@ -52,10 +56,12 @@ async def test_threads_page_before_cursor_is_retrieved(thread, threads):
         before=threads[-1].last_post_id,
     )
     assert page.results == threads[:-1]
-    assert page.has_next is True
-    assert page.has_previous is False
-    assert page.next_cursor == threads[-1].last_post_id
-    assert page.previous_cursor is None
+    assert page.page_info.start_cursor == page.results[0].last_post_id
+    assert page.page_info.end_cursor == page.results[-1].last_post_id
+    assert page.page_info.has_next_page is True
+    assert page.page_info.has_previous_page is False
+    assert page.page_info.next_cursor == threads[-1].last_post_id
+    assert page.page_info.previous_cursor is None
 
 
 @pytest.mark.asyncio

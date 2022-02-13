@@ -43,7 +43,7 @@ async def base_threads_route(
         raise HTTPNotFound()
 
     if before:
-        if not threads.has_previous:
+        if not threads.page_info.has_previous_page:
             # On explicit first page of threads redirect user to page without cursor
             return RedirectResponse(request.base_url)
 

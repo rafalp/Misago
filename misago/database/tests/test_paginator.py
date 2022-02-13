@@ -17,10 +17,10 @@ async def test_paginator_returns_page(thread, category):
     assert page.results == [thread]
 
     assert page.page_info.number == 1
-    assert page.page_info.has_next is False
-    assert page.page_info.has_previous is False
-    assert page.page_info.next is None
-    assert page.page_info.previous is None
+    assert page.page_info.has_next_page is False
+    assert page.page_info.has_previous_page is False
+    assert page.page_info.next_page is None
+    assert page.page_info.previous_page is None
     assert page.page_info.start == 1
     assert page.page_info.stop == 1
 
@@ -58,10 +58,10 @@ async def test_paginator_returns_empty_page_for_page_outside_range(thread, categ
     assert page.results == []
 
     assert page.page_info.number == 10
-    assert page.page_info.has_next is False
-    assert page.page_info.has_previous is True
-    assert page.page_info.next is None
-    assert page.page_info.previous == 1
+    assert page.page_info.has_next_page is False
+    assert page.page_info.has_previous_page is True
+    assert page.page_info.next_page is None
+    assert page.page_info.previous_page == 1
     assert page.page_info.start == 0
     assert page.page_info.stop == 0
 

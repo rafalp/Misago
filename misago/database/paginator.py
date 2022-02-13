@@ -20,10 +20,10 @@ class Page:
 @dataclass
 class PageInfo:
     number: int
-    has_next: bool
-    has_previous: bool
-    next: Optional[int]
-    previous: Optional[int]
+    has_next_page: bool
+    has_previous_page: bool
+    next_page: Optional[int]
+    previous_page: Optional[int]
     start: int
     stop: int
 
@@ -91,10 +91,10 @@ class Paginator:
             results=results,
             page_info=PageInfo(
                 number=page_number,
-                has_next=page_number < self.total_pages,
-                has_previous=page_number > 1,
-                next=page_number + 1 if page_number < self.total_pages else None,
-                previous=page_number - 1 if page_number > 2 else None,
+                has_next_page=page_number < self.total_pages,
+                has_previous_page=page_number > 1,
+                next_page=page_number + 1 if page_number < self.total_pages else None,
+                previous_page=page_number - 1 if page_number > 2 else None,
                 start=start or 1,
                 stop=stop,
             ),
@@ -107,10 +107,10 @@ class Paginator:
             results=[],
             page_info=PageInfo(
                 number=page_number,
-                has_next=False,
-                has_previous=True,
-                next=None,
-                previous=self.total_pages or 1,
+                has_next_page=False,
+                has_previous_page=True,
+                next_page=None,
+                previous_page=self.total_pages or 1,
                 start=0,
                 stop=0,
             ),

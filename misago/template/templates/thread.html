@@ -29,9 +29,14 @@
     </li>
   {% endfor %}
 </ul>
-{% if posts.page_info.has_next %}
-  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.page_info.number + 1) }}">
-    {% trans %}More replies{% endtrans %}
+{% if posts.page_info.has_previous_page %}
+  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.page_info.previous_page) }}">
+    {% trans %}Previous page{% endtrans %}
+  </a>
+{% endif %}
+{% if posts.page_info.has_next_page %}
+  <a href="{{ url_for('thread', slug=thread.slug, id=thread.id, page=posts.page_info.next_page) }}">
+    {% trans %}Next page{% endtrans %}
   </a>
 {% endif %}
 {% endblock content %}

@@ -38,5 +38,5 @@ async def test_empty_page_is_returned_for_thread_posts_page_if_page_number_is_in
     assert page.total_count == 1
     assert page.results == []
     assert page.page_info.number == 100
-    assert page.page_info.has_next is False
-    assert page.page_info.has_previous is True
+    assert page.page_info.has_next_page is False
+    assert page.page_info.has_previous_page is True

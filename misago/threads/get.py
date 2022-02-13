@@ -29,12 +29,19 @@ async def get_thread_posts_paginator(
 
 
 @dataclass
-class ThreadsPage:
-    results: List[Thread]
-    has_next: bool
-    has_previous: bool
+class PageInfo:
+    has_next_page: bool
+    has_previous_page: bool
+    start_cursor: Optional[int]
+    end_cursor: Optional[int]
     next_cursor: Optional[int]
     previous_cursor: Optional[int]
+
+
+@dataclass
+class ThreadsPage:
+    results: List[Thread]
+    page_info: PageInfo
 
 
 async def get_threads_page(
@@ -48,10 +55,14 @@ async def get_threads_page(
     if not categories_ids:
         return ThreadsPage(
             results=[],
-            has_next=False,
-            has_previous=False,
-            next_cursor=None,
-            previous_cursor=None,
+            page_info=PageInfo(
+                has_next_page=False,
+                has_previous_page=False,
+                start_cursor=None,
+                end_cursor=None,
+                next_cursor=None,
+                previous_cursor=None,
+            ),
         )
 
     query = Thread.query
@@ -100,12 +111,23 @@ async def slice_threads_using_after(
     else:
         next_cursor = None
 
+    if results:
+        start_cursor = results[0].last_post_id
+        end_cursor = results[-1].last_post_id
+    else:
+        start_cursor = None
+        end_cursor = None
+
     return ThreadsPage(
         results=results,
-        has_next=bool(next_cursor),
-        has_previous=bool(previous_cursor),
-        next_cursor=next_cursor,
-        previous_cursor=previous_cursor,
+        page_info=PageInfo(
+            has_next_page=bool(next_cursor),
+            has_previous_page=bool(previous_cursor),
+            start_cursor=start_cursor,
+            end_cursor=end_cursor,
+            next_cursor=next_cursor,
+            previous_cursor=previous_cursor,
+        ),
     )
 
 
@@ -140,10 +162,21 @@ async def slice_threads_using_before(
     else:
         previous_cursor = None
 
+    if results:
+        start_cursor = results[-1].last_post_id
+        end_cursor = results[0].last_post_id
+    else:
+        start_cursor = None
+        end_cursor = None
+
     return ThreadsPage(
         results=list(reversed(results)),
-        has_next=bool(next_cursor),
-        has_previous=bool(previous_cursor),
-        next_cursor=next_cursor,
-        previous_cursor=previous_cursor,
+        page_info=PageInfo(
+            has_next_page=bool(next_cursor),
+            has_previous_page=bool(previous_cursor),
+            start_cursor=start_cursor,
+            end_cursor=end_cursor,
+            next_cursor=next_cursor,
+            previous_cursor=previous_cursor,
+        ),
     )
