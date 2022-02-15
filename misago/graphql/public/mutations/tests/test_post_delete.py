@@ -10,6 +10,11 @@ POST_DELETE_MUTATION = """
             thread {
                 id
             }
+            posts {
+                results {
+                    id
+                }
+            }
             errors {
                 location
                 type
@@ -34,6 +39,13 @@ async def test_post_delete_mutation_deletes_thread_reply(
         "thread": {
             "id": str(thread_with_reply.id),
         },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+            ],
+        },
         "errors": None,
     }
 
@@ -54,6 +66,16 @@ async def test_post_delete_mutation_fails_if_user_is_not_authenticated(
         "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
+        },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+                {
+                    "id": str(thread_reply.id),
+                },
+            ],
         },
         "errors": [
             {
@@ -85,6 +107,16 @@ async def test_post_delete_mutation_fails_if_user_is_not_moderator(
         "thread": {
             "id": str(thread_with_reply.id),
         },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+                {
+                    "id": str(thread_reply.id),
+                },
+            ],
+        },
         "errors": [
             {
                 "location": "thread",
@@ -109,6 +141,7 @@ async def test_post_delete_mutation_fails_if_thread_id_is_invalid(
     assert result["data"]["postDelete"] == {
         "deleted": False,
         "thread": None,
+        "posts": None,
         "errors": [
             {
                 "location": "thread",
@@ -133,6 +166,7 @@ async def test_post_delete_mutation_fails_if_thread_doesnt_exist(
     assert result["data"]["postDelete"] == {
         "deleted": False,
         "thread": None,
+        "posts": None,
         "errors": [
             {
                 "location": "thread",
@@ -158,6 +192,16 @@ async def test_post_delete_mutation_fails_if_post_id_is_invalid(
         "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
+        },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+                {
+                    "id": str(thread_reply.id),
+                },
+            ],
         },
         "errors": [
             {
@@ -188,6 +232,16 @@ async def test_post_delete_mutation_fails_if_post_doesnt_exist(
         "thread": {
             "id": str(thread_with_reply.id),
         },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+                {
+                    "id": str(thread_reply.id),
+                },
+            ],
+        },
         "errors": [
             {
                 "location": "post",
@@ -214,6 +268,13 @@ async def test_post_delete_mutation_fails_if_post_is_thread_first_post(
         "thread": {
             "id": str(thread.id),
         },
+        "posts": {
+            "results": [
+                {
+                    "id": str(post.id),
+                },
+            ],
+        },
         "errors": [
             {
                 "location": "post",
@@ -227,7 +288,7 @@ async def test_post_delete_mutation_fails_if_post_is_thread_first_post(
 
 @pytest.mark.asyncio
 async def test_post_delete_mutation_fails_if_post_is_in_other_thread(
-    query_public_api, moderator, thread_with_reply, other_user_post
+    query_public_api, moderator, thread_with_reply, thread_reply, other_user_post
 ):
     result = await query_public_api(
         POST_DELETE_MUTATION,
@@ -242,6 +303,16 @@ async def test_post_delete_mutation_fails_if_post_is_in_other_thread(
         "deleted": False,
         "thread": {
             "id": str(thread_with_reply.id),
+        },
+        "posts": {
+            "results": [
+                {
+                    "id": str(thread_with_reply.first_post_id),
+                },
+                {
+                    "id": str(thread_reply.id),
+                },
+            ],
         },
         "errors": [
             {

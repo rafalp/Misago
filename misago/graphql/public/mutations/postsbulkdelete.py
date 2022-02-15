@@ -78,7 +78,7 @@ async def resolve_posts_bulk_delete(
     if errors:
         return {
             "errors": errors,
-            "thread": cleaned_data.get("thread"),
+            "thread": thread,
             "deleted": deleted,
         }
 

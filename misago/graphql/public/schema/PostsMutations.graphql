@@ -34,11 +34,13 @@ extend type Mutation {
 type PostDeleteMutationResult {
     deleted: Boolean!
     thread: Thread
+    posts(page: Int): PostsPage
     errors: [Error!]
 }
 
 type PostsBulkDeleteMutationResult {
     deleted: [ID!]!
     thread: Thread
+    posts(page: Int): PostsPage
     errors: [Error!]
 }
