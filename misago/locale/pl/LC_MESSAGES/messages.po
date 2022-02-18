@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2021-12-30 12:44+0000\n"
+"POT-Creation-Date: 2022-02-18 21:19+0000\n"
 "PO-Revision-Date: 2021-12-28 22:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: pl\n"
@@ -19,13 +19,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.9.1\n"
 
-#: misago/template/templates/base.html:19
+#: misago/template/templates/base.html:23
 #: misago/template/templates/categories.html:4
 #: misago/template/templates/categories.html:8
 msgid "Categories"
 msgstr "Kategorie"
 
-#: misago/template/templates/base.html:23
+#: misago/template/templates/base.html:27
 #: misago/template/templates/threads.html:4
 #: misago/template/templates/threads.html:8
 msgid "Threads"
@@ -36,10 +36,22 @@ msgid "Requested page could not be found."
 msgstr "Żądana strona nie została znaleziona."
 
 #: misago/template/templates/thread.html:34
-msgid "More replies"
-msgstr "Więcej odpowiedzi"
+msgid "Previous page"
+msgstr ""
+
+#: misago/template/templates/thread.html:39
+msgid "Next page"
+msgstr ""
 
 #: misago/template/templates/threads_list.html:12
+#, fuzzy
+msgid "Previous threads"
+msgstr "Więcej tematów"
+
+#: misago/template/templates/threads_list.html:17
 msgid "More threads"
 msgstr "Więcej tematów"
+
+#~ msgid "More replies"
+#~ msgstr "Więcej odpowiedzi"
 
