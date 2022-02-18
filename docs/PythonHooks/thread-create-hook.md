@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadcreate import thread_create_hoo
 
 thread_create_hook.call_action(
     action: ThreadCreateAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadCreateInput,
 )
 ```
@@ -21,7 +21,7 @@ Returns tuple of `Thread` and `Post` dataclasses with newly created thread data 
 
 ```python
 async def thread_create(
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadCreateInput,
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     ...
@@ -33,7 +33,7 @@ Next filter or built-in function used to create new thread in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

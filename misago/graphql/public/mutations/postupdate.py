@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt, constr, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryIsOpenValidator
+from ....context import Context
 from ....richtext.parser import ParsedMarkupMetadata, parse_markup
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
@@ -17,7 +18,6 @@ from ....threads.validators import (
     ThreadIsOpenValidator,
 )
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postupdate import PostUpdateInput, post_update_hook, post_update_input_hook
 
@@ -78,7 +78,7 @@ async def resolve_post_update(
     }
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "PostUpdateInputModel",
         post=(PositiveInt, ...),
@@ -93,7 +93,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostUpdateInput,
     errors: ErrorsList,
@@ -102,7 +102,7 @@ async def validate_input_data(
 
 
 async def post_update(
-    context: GraphQLContext, cleaned_data: PostUpdateInput
+    context: Context, cleaned_data: PostUpdateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])
 

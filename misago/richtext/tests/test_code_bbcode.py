@@ -6,36 +6,32 @@ from ..parser import parse_markup
 
 
 @pytest.mark.asyncio
-async def test_code_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "[code]Hello **world**![/code]")
+async def test_code_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "[code]Hello **world**![/code]")
     assert result == [
         {"id": ANY, "type": "code", "syntax": None, "text": "Hello **world**!"}
     ]
 
 
 @pytest.mark.asyncio
-async def test_multiline_code_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "[code]\nHello **world**!\n[/code]")
+async def test_multiline_code_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "[code]\nHello **world**!\n[/code]")
     assert result == [
         {"id": ANY, "type": "code", "syntax": None, "text": "Hello **world**!"}
     ]
 
 
 @pytest.mark.asyncio
-async def test_code_bbcode_is_parsed_before_indented_code(graphql_context):
-    result, _ = await parse_markup(
-        graphql_context, "[code]\n    Hello **world**!\n[/code]"
-    )
+async def test_code_bbcode_is_parsed_before_indented_code(context):
+    result, _ = await parse_markup(context, "[code]\n    Hello **world**!\n[/code]")
     assert result == [
         {"id": ANY, "type": "code", "syntax": None, "text": "Hello **world**!"}
     ]
 
 
 @pytest.mark.asyncio
-async def test_code_bbcode_with_syntax_is_supported(graphql_context):
-    result, _ = await parse_markup(
-        graphql_context, "[code=python]Hello **world**![/code]"
-    )
+async def test_code_bbcode_with_syntax_is_supported(context):
+    result, _ = await parse_markup(context, "[code=python]Hello **world**![/code]")
     assert result == [
         {
             "id": ANY,
@@ -53,10 +49,8 @@ async def test_code_bbcode_with_syntax_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_code_bbcode_disables_nested_bbcode(graphql_context):
-    result, _ = await parse_markup(
-        graphql_context, "[code][quote]Hello world![/quote][/code]"
-    )
+async def test_code_bbcode_disables_nested_bbcode(context):
+    result, _ = await parse_markup(context, "[code][quote]Hello world![/quote][/code]")
     assert result == [
         {
             "id": ANY,

@@ -6,11 +6,11 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
+from ....context import Context
 from ....threads.loaders import threads_loader
 from ....threads.models import Thread
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadclose import (
     ThreadCloseInput,
@@ -64,7 +64,7 @@ def create_input_model() -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadCloseInput,
     errors: ErrorsList,
@@ -73,7 +73,7 @@ async def validate_input_data(
 
 
 async def thread_close_action(
-    context: GraphQLContext, cleaned_data: ThreadCloseInput
+    context: Context, cleaned_data: ThreadCloseInput
 ) -> Thread:
     thread = cleaned_data["thread"]
     if not thread.is_closed:

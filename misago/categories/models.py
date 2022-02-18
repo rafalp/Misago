@@ -2,8 +2,8 @@ import enum
 from dataclasses import dataclass
 from typing import Any, Awaitable, Dict, Optional, Union
 
+from ..context import Context
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
-from ..graphql import GraphQLContext
 from ..tables import categories
 from ..utils.strings import slugify
 
@@ -56,7 +56,7 @@ class Category(Model):
         posts: Optional[int] = 0,
         is_closed: Optional[bool] = False,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> Awaitable["Category"]:
         data: Dict[str, Any] = {
             "type": CategoryType.THREADS,

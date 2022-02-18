@@ -6,15 +6,15 @@ from ..parser import parse_markup
 
 
 @pytest.mark.asyncio
-async def test_parser_parses_simple_paragraph(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello world!")
+async def test_parser_parses_simple_paragraph(context):
+    result, _ = await parse_markup(context, "Hello world!")
     assert result == [{"id": ANY, "type": "p", "text": "Hello world!"}]
 
 
 @pytest.mark.asyncio
-async def test_parser_parses_complex_paragraph(graphql_context):
+async def test_parser_parses_complex_paragraph(context):
     result, _ = await parse_markup(
-        graphql_context,
+        context,
         "Hello **world**, can [you _just_ google](http://google.com) it?",
     )
 
@@ -32,16 +32,16 @@ async def test_parser_parses_complex_paragraph(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_parser_escapes_html(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello <b>world</b>!")
+async def test_parser_escapes_html(context):
+    result, _ = await parse_markup(context, "Hello <b>world</b>!")
     assert result == [
         {"id": ANY, "type": "p", "text": "Hello &lt;b&gt;world&lt;/b&gt;!"}
     ]
 
 
 @pytest.mark.asyncio
-async def test_parser_handles_diacritics(graphql_context):
-    result, _ = await parse_markup(graphql_context, "**Cześć**, opie!")
+async def test_parser_handles_diacritics(context):
+    result, _ = await parse_markup(context, "**Cześć**, opie!")
     assert result == [
         {
             "id": ANY,
@@ -52,8 +52,8 @@ async def test_parser_handles_diacritics(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_parser_parses_multiple_paragraphs(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello world!\n\nHow's going?")
+async def test_parser_parses_multiple_paragraphs(context):
+    result, _ = await parse_markup(context, "Hello world!\n\nHow's going?")
     assert result == [
         {"id": ANY, "type": "p", "text": "Hello world!"},
         {"id": ANY, "type": "p", "text": "How&#x27;s going?"},
@@ -61,8 +61,8 @@ async def test_parser_parses_multiple_paragraphs(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_parser_blocks_are_case_insensitive(graphql_context):
-    result, _ = await parse_markup(graphql_context, "[coDE]Hello world![/COde]")
+async def test_parser_blocks_are_case_insensitive(context):
+    result, _ = await parse_markup(context, "[coDE]Hello world![/COde]")
     assert result == [
         {
             "id": ANY,
@@ -74,10 +74,8 @@ async def test_parser_blocks_are_case_insensitive(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_parser_inline_items_are_case_insensitive(graphql_context):
-    result, _ = await parse_markup(
-        graphql_context, "[uRl=http://misago-project.org]Test[/UrL]"
-    )
+async def test_parser_inline_items_are_case_insensitive(context):
+    result, _ = await parse_markup(context, "[uRl=http://misago-project.org]Test[/UrL]")
     assert result == [
         {
             "id": ANY,

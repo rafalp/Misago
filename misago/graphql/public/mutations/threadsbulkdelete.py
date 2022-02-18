@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
+from ....context import Context
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
@@ -20,7 +21,6 @@ from ....validation import (
     validate_data,
     validate_model,
 )
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadsbulkdelete import (
     ThreadsBulkDeleteInput,
@@ -76,7 +76,7 @@ async def resolve_threads_bulk_delete(
     return result
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "ThreadsBulkDeleteInputModel",
         threads=(bulkactionidslist(PositiveInt, context["settings"]), ...),
@@ -84,7 +84,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadsBulkDeleteInput,
     errors: ErrorsList,
@@ -103,7 +103,7 @@ def is_valid(
 
 
 async def threads_bulk_delete_action(
-    context: GraphQLContext, cleaned_data: ThreadsBulkDeleteInput
+    context: Context, cleaned_data: ThreadsBulkDeleteInput
 ):
     threads_ids = [thread.id for thread in cleaned_data["threads"]]
     await Thread.query.filter(id__in=threads_ids).delete()

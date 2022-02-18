@@ -6,8 +6,8 @@ from ..parser import parse_markup
 
 
 @pytest.mark.asyncio
-async def test_quote_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "[quote]Hello world![/quote]")
+async def test_quote_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "[quote]Hello world![/quote]")
     assert result == [
         {
             "id": ANY,
@@ -20,8 +20,8 @@ async def test_quote_bbcode_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_quote_with_author_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "[quote=Bob]Hello world![/quote]")
+async def test_quote_with_author_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "[quote=Bob]Hello world![/quote]")
     assert result == [
         {
             "id": ANY,
@@ -34,10 +34,8 @@ async def test_quote_with_author_bbcode_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_quote_with_author_and_post_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(
-        graphql_context, "[quote=Bob:1421]Hello world![/quote]"
-    )
+async def test_quote_with_author_and_post_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "[quote=Bob:1421]Hello world![/quote]")
     assert result == [
         {
             "id": ANY,

@@ -1,16 +1,16 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 ThreadsBulkDeleteInput = Dict[str, Any]
 ThreadsBulkDeleteInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], ThreadsBulkDeleteInput, ErrorsList],
+    [Context, Dict[str, List[Validator]], ThreadsBulkDeleteInput, ErrorsList],
     Awaitable[Tuple[ThreadsBulkDeleteInput, ErrorsList]],
 ]
 ThreadsBulkDeleteInputFilter = Callable[
-    [ThreadsBulkDeleteInputAction, GraphQLContext, ThreadsBulkDeleteInput],
+    [ThreadsBulkDeleteInputAction, Context, ThreadsBulkDeleteInput],
     Awaitable[Tuple[ThreadsBulkDeleteInput, ErrorsList]],
 ]
 
@@ -21,7 +21,7 @@ class ThreadsBulkDeleteInputHook(
     def call_action(
         self,
         action: ThreadsBulkDeleteInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: ThreadsBulkDeleteInput,
         errors_list: ErrorsList,
@@ -29,11 +29,9 @@ class ThreadsBulkDeleteInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-ThreadsBulkDeleteAction = Callable[
-    [GraphQLContext, ThreadsBulkDeleteInput], Awaitable[None]
-]
+ThreadsBulkDeleteAction = Callable[[Context, ThreadsBulkDeleteInput], Awaitable[None]]
 ThreadsBulkDeleteFilter = Callable[
-    [ThreadsBulkDeleteAction, GraphQLContext, ThreadsBulkDeleteInput], Awaitable[None]
+    [ThreadsBulkDeleteAction, Context, ThreadsBulkDeleteInput], Awaitable[None]
 ]
 
 
@@ -43,7 +41,7 @@ class ThreadsBulkDeleteHook(
     async def call_action(
         self,
         action: ThreadsBulkDeleteAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: ThreadsBulkDeleteInput,
     ):
         await self.filter(action, context, cleaned_data)

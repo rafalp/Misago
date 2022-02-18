@@ -4,8 +4,8 @@ from typing import Any, Awaitable, Dict, List, Optional
 
 from ..avatars.store import delete_user_avatars
 from ..avatars.types import AvatarType
+from ..context import Context
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
-from ..graphql import GraphQLContext
 from ..passwords import check_password, hash_password
 from ..tables import users
 from ..utils import timezone
@@ -54,7 +54,7 @@ class User(Model):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> Awaitable["User"]:
         password_hash = None
         if password:
@@ -92,7 +92,7 @@ class User(Model):
         is_admin: Optional[bool] = None,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> "User":
         changes: Dict[str, Any] = {}
 

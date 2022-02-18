@@ -5,7 +5,7 @@ from misago.richtext.hooks import create_markdown_hook
 
 create_markdown_hook.call_action(
     action: CreateMarkdownAction,
-    context: GraphQLContext,
+    context: Context,
     block: BlockParser,
     inline: InlineParser,
     plugins: List[MarkdownPlugin],
@@ -23,7 +23,7 @@ Returns `mistune.Markdown` instance.
 
 ```python
 def create_markdown_action(
-    context: GraphQLContext,
+    context: Context,
     block: BlockParser,
     inline: InlineParser,
     plugins: List[MarkdownPlugin],
@@ -37,7 +37,7 @@ Next filter or built-in function used to create new post in the database.
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context.

@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadsbulkdelete import threads_bulk
 
 threads_bulk_delete_hook.call_action(
     action: ThreadsBulkDeleteAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadsBulkDeleteInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `None`.
 ### `action`
 
 ```python
-async def delete_threads(context: GraphQLContext, cleaned_data: ThreadsBulkDeleteInput):
+async def delete_threads(context: Context, cleaned_data: ThreadsBulkDeleteInput):
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to delete threads from the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

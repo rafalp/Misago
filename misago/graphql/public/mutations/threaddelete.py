@@ -6,10 +6,10 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
+from ....context import Context
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threaddelete import (
     ThreadDeleteInput,
@@ -58,7 +58,7 @@ def create_input_model() -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadDeleteInput,
     errors: ErrorsList,
@@ -66,9 +66,7 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def thread_delete_action(
-    context: GraphQLContext, cleaned_data: ThreadDeleteInput
-):
+async def thread_delete_action(context: Context, cleaned_data: ThreadDeleteInput):
     thread = cleaned_data["thread"]
     await thread.delete()
 

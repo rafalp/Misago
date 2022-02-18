@@ -6,8 +6,8 @@ from ..parser import parse_markup
 
 
 @pytest.mark.asyncio
-async def test_h1_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "# Hello world!")
+async def test_h1_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "# Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -18,8 +18,8 @@ async def test_h1_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h1_alternate_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello world!\n====")
+async def test_h1_alternate_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "Hello world!\n====")
     assert result == [
         {
             "id": ANY,
@@ -30,8 +30,8 @@ async def test_h1_alternate_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h2_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello world!\n----")
+async def test_h2_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "Hello world!\n----")
     assert result == [
         {
             "id": ANY,
@@ -42,8 +42,8 @@ async def test_h2_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h2_alternate_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "## Hello world!")
+async def test_h2_alternate_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "## Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -54,8 +54,8 @@ async def test_h2_alternate_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h3_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "### Hello world!")
+async def test_h3_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "### Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -66,8 +66,8 @@ async def test_h3_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h4_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "#### Hello world!")
+async def test_h4_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "#### Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -78,8 +78,8 @@ async def test_h4_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h5_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "##### Hello world!")
+async def test_h5_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "##### Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -90,8 +90,8 @@ async def test_h5_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_h6_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "###### Hello world!")
+async def test_h6_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "###### Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -102,8 +102,8 @@ async def test_h6_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_quote_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "> Hello world!")
+async def test_quote_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "> Hello world!")
     assert result == [
         {
             "id": ANY,
@@ -122,8 +122,8 @@ async def test_quote_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_code_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "```\nconsole.log('test')\n```")
+async def test_code_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "```\nconsole.log('test')\n```")
     assert result == [
         {
             "id": ANY,
@@ -135,8 +135,8 @@ async def test_code_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_code_markdown_with_syntax_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "```python\nlog('test')\n```")
+async def test_code_markdown_with_syntax_is_supported(context):
+    result, _ = await parse_markup(context, "```python\nlog('test')\n```")
     assert result == [
         {
             "id": ANY,
@@ -153,8 +153,8 @@ async def test_code_markdown_with_syntax_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_code_markdown_escapes_text(graphql_context):
-    result, _ = await parse_markup(graphql_context, "```\n<script>\n```")
+async def test_code_markdown_escapes_text(context):
+    result, _ = await parse_markup(context, "```\n<script>\n```")
     assert result == [
         {
             "id": ANY,
@@ -166,8 +166,8 @@ async def test_code_markdown_escapes_text(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_horizontal_line_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello\n- - -\nWorld")
+async def test_horizontal_line_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "Hello\n- - -\nWorld")
     assert result == [
         {
             "id": ANY,
@@ -187,8 +187,8 @@ async def test_horizontal_line_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_ordered_list_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "1. Lorem\n2. Ipsum")
+async def test_ordered_list_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "1. Lorem\n2. Ipsum")
     assert result == [
         {
             "id": ANY,
@@ -211,8 +211,8 @@ async def test_ordered_list_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_unordered_list_markdown_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "- Lorem\n- Ipsum")
+async def test_unordered_list_markdown_is_supported(context):
+    result, _ = await parse_markup(context, "- Lorem\n- Ipsum")
     assert result == [
         {
             "id": ANY,
@@ -235,9 +235,9 @@ async def test_unordered_list_markdown_is_supported(graphql_context):
 
 
 @pytest.mark.asyncio
-async def test_nesting_lists_markdown_is_supported(graphql_context):
+async def test_nesting_lists_markdown_is_supported(context):
     result, _ = await parse_markup(
-        graphql_context,
+        context,
         (
             "1. Apple\n"
             "2. Orange\n"

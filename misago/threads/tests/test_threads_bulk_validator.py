@@ -5,11 +5,9 @@ from ..validators import ThreadExistsValidator, ThreadsBulkValidator
 
 
 @pytest.mark.asyncio
-async def test_bulk_threads_validator_validates_threads(
-    graphql_context, thread, user_thread
-):
+async def test_bulk_threads_validator_validates_threads(context, thread, user_thread):
     errors = ErrorsList()
-    validator = ThreadsBulkValidator([ThreadExistsValidator(graphql_context)])
+    validator = ThreadsBulkValidator([ThreadExistsValidator(context)])
     threads = await validator([thread.id, user_thread.id], errors, "threads")
 
     assert not errors
@@ -17,11 +15,9 @@ async def test_bulk_threads_validator_validates_threads(
 
 
 @pytest.mark.asyncio
-async def test_bulk_threads_validator_partially_validates_threads(
-    graphql_context, thread
-):
+async def test_bulk_threads_validator_partially_validates_threads(context, thread):
     errors = ErrorsList()
-    validator = ThreadsBulkValidator([ThreadExistsValidator(graphql_context)])
+    validator = ThreadsBulkValidator([ThreadExistsValidator(context)])
     threads = await validator([thread.id, thread.id + 1], errors, "threads")
 
     assert errors == [

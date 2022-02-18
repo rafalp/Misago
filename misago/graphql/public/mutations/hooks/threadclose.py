@@ -1,17 +1,17 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....threads.models import Thread
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 ThreadCloseInput = Dict[str, Any]
 ThreadCloseInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], ThreadCloseInput, ErrorsList],
+    [Context, Dict[str, List[Validator]], ThreadCloseInput, ErrorsList],
     Awaitable[Tuple[ThreadCloseInput, ErrorsList]],
 ]
 ThreadCloseInputFilter = Callable[
-    [ThreadCloseInputAction, GraphQLContext, ThreadCloseInput],
+    [ThreadCloseInputAction, Context, ThreadCloseInput],
     Awaitable[Tuple[ThreadCloseInput, ErrorsList]],
 ]
 
@@ -20,7 +20,7 @@ class ThreadCloseInputHook(FilterHook[ThreadCloseInputAction, ThreadCloseInputFi
     def call_action(
         self,
         action: ThreadCloseInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: ThreadCloseInput,
         errors_list: ErrorsList,
@@ -28,9 +28,9 @@ class ThreadCloseInputHook(FilterHook[ThreadCloseInputAction, ThreadCloseInputFi
         return self.filter(action, context, validators, data, errors_list)
 
 
-ThreadCloseAction = Callable[[GraphQLContext, ThreadCloseInput], Awaitable[Thread]]
+ThreadCloseAction = Callable[[Context, ThreadCloseInput], Awaitable[Thread]]
 ThreadCloseFilter = Callable[
-    [ThreadCloseAction, GraphQLContext, ThreadCloseInput],
+    [ThreadCloseAction, Context, ThreadCloseInput],
     Awaitable[Thread],
 ]
 
@@ -39,7 +39,7 @@ class ThreadCloseHook(FilterHook[ThreadCloseAction, ThreadCloseFilter]):
     def call_action(
         self,
         action: ThreadCloseAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: ThreadCloseInput,
     ) -> Awaitable[Thread]:
         return self.filter(action, context, cleaned_data)

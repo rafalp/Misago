@@ -4,6 +4,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, create_model
 
+from ....context import Context
 from ....users.create import create_user
 from ....users.loaders import users_loader
 from ....users.models import User
@@ -14,7 +15,6 @@ from ....users.validators import (
     usernamestr,
 )
 from ....validation import Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 
@@ -53,7 +53,7 @@ async def resolve_user_create(
     return {"user": user}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "UserCreateInputModel",
         name=(usernamestr(context["settings"]), ...),
@@ -62,7 +62,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     )
 
 
-async def register_user(context: GraphQLContext, cleaned_data: dict) -> User:
+async def register_user(context: Context, cleaned_data: dict) -> User:
     user = await create_user(
         context,
         cleaned_data["name"],

@@ -2,15 +2,15 @@ from typing import Any, Awaitable, Callable, Dict, List, Tuple, Type
 
 from pydantic import BaseModel
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....users.models import User
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 UserCreateInputModel = Type[BaseModel]
-UserCreateInputModelAction = Callable[[GraphQLContext], Awaitable[UserCreateInputModel]]
+UserCreateInputModelAction = Callable[[Context], Awaitable[UserCreateInputModel]]
 UserCreateInputModelFilter = Callable[
-    [UserCreateInputModelAction, GraphQLContext],
+    [UserCreateInputModelAction, Context],
     Awaitable[UserCreateInputModel],
 ]
 
@@ -19,18 +19,18 @@ class UserCreateInputModelHook(
     FilterHook[UserCreateInputModelAction, UserCreateInputModelFilter]
 ):
     def call_action(
-        self, action: UserCreateInputModelAction, context: GraphQLContext
+        self, action: UserCreateInputModelAction, context: Context
     ) -> Awaitable[UserCreateInputModel]:
         return self.filter(action, context)
 
 
 UserCreateInput = Dict[str, Any]
 UserCreateInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], UserCreateInput, ErrorsList],
+    [Context, Dict[str, List[Validator]], UserCreateInput, ErrorsList],
     Awaitable[Tuple[UserCreateInput, ErrorsList]],
 ]
 UserCreateInputFilter = Callable[
-    [UserCreateInputAction, GraphQLContext, UserCreateInput],
+    [UserCreateInputAction, Context, UserCreateInput],
     Awaitable[Tuple[UserCreateInput, ErrorsList]],
 ]
 
@@ -39,7 +39,7 @@ class UserCreateInputHook(FilterHook[UserCreateInputAction, UserCreateInputFilte
     def call_action(
         self,
         action: UserCreateInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: UserCreateInput,
         errors_list: ErrorsList,
@@ -47,9 +47,9 @@ class UserCreateInputHook(FilterHook[UserCreateInputAction, UserCreateInputFilte
         return self.filter(action, context, validators, data, errors_list)
 
 
-UserCreateAction = Callable[[GraphQLContext, UserCreateInput], Awaitable[User]]
+UserCreateAction = Callable[[Context, UserCreateInput], Awaitable[User]]
 UserCreateFilter = Callable[
-    [UserCreateAction, GraphQLContext, UserCreateInput], Awaitable[User]
+    [UserCreateAction, Context, UserCreateInput], Awaitable[User]
 ]
 
 
@@ -57,7 +57,7 @@ class UserCreateHook(FilterHook[UserCreateAction, UserCreateFilter]):
     def call_action(
         self,
         action: UserCreateAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: UserCreateInput,
     ) -> Awaitable[User]:
         return self.filter(action, context, cleaned_data)

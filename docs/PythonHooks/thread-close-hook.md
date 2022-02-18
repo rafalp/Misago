@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadclose import thread_close_hook
 
 thread_close_hook.call_action(
     action: ThreadCloseAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadCloseInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `Thread` dataclass with updated thread data.
 ### `action`
 
 ```python
-async def close_thread(context: GraphQLContext, cleaned_data: ThreadCloseInput) -> Thread:
+async def close_thread(context: Context, cleaned_data: ThreadCloseInput) -> Thread:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update the thread in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

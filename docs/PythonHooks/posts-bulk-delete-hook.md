@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postsbulkdelete import posts_bulk_del
 
 posts_bulk_delete_hook.call_action(
     action: PostsBulkDeleteAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: PostsBulkDeleteInput,
 )
 ```
@@ -21,7 +21,7 @@ Returns `Thread` with updated thread data.
 
 ```python
 async def delete_thread_posts(
-    context: GraphQLContext, cleaned_data: PostsBulkDeleteInput
+    context: Context, cleaned_data: PostsBulkDeleteInput
 ) -> Thread:
     ...
 ```
@@ -32,7 +32,7 @@ Next filter or built-in function used to delete thread posts from the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

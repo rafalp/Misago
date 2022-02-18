@@ -1,12 +1,12 @@
 from typing import Awaitable, Callable, Optional
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ...users.models import User
 
-GetUserFromContextAction = Callable[[GraphQLContext, bool], Awaitable[Optional[User]]]
+GetUserFromContextAction = Callable[[Context, bool], Awaitable[Optional[User]]]
 GetUserFromContextFilter = Callable[
-    [GetUserFromContextAction, GraphQLContext, bool],
+    [GetUserFromContextAction, Context, bool],
     Awaitable[Optional[User]],
 ]
 
@@ -15,7 +15,7 @@ class GetUserFromContextHook(
     FilterHook[GetUserFromContextAction, GetUserFromContextFilter]
 ):
     def call_action(
-        self, action: GetUserFromContextAction, context: GraphQLContext, in_admin: bool
+        self, action: GetUserFromContextAction, context: Context, in_admin: bool
     ) -> Awaitable[Optional[User]]:
         return self.filter(action, context, in_admin)
 

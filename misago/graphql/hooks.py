@@ -3,26 +3,24 @@ from typing import Awaitable, Callable, Dict, List, Type
 from ariadne import SchemaBindable, SchemaDirectiveVisitor
 from starlette.requests import Request
 
+from ..context import Context
 from ..hooks import FilterHook
-from . import GraphQLContext
 
-GraphQLContextAction = Callable[[Request], Awaitable[GraphQLContext]]
-GraphQLContextFilter = Callable[
-    [GraphQLContextAction, Request], Awaitable[GraphQLContext]
-]
+ContextAction = Callable[[Request], Awaitable[Context]]
+ContextFilter = Callable[[ContextAction, Request], Awaitable[Context]]
 
 
-class GraphQLContextHook(FilterHook[GraphQLContextAction, GraphQLContextFilter]):
+class ContextHook(FilterHook[ContextAction, ContextFilter]):
     def call_action(
-        self, action: GraphQLContextAction, request: Request
-    ) -> Awaitable[GraphQLContext]:
+        self, action: ContextAction, request: Request
+    ) -> Awaitable[Context]:
         return self.filter(action, request)
 
 
 graphql_admin_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_admin_type_defs_hook: List[str] = []
 graphql_admin_types_hook: List[SchemaBindable] = []
-graphql_context_hook = GraphQLContextHook()
+graphql_context_hook = ContextHook()
 graphql_directives_hook: Dict[str, Type[SchemaDirectiveVisitor]] = {}
 graphql_type_defs_hook: List[str] = []
 graphql_types_hook: List[SchemaBindable] = []

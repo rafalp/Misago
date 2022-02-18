@@ -4,7 +4,7 @@
 from misago.richtext.hooks import convert_rich_text_block_to_html_hook
 
 convert_rich_text_block_to_html_hook.call_action(
-    action: ConvertRichTextBlockToHTMLAction, context: GraphQLContext, block: dict
+    action: ConvertRichTextBlockToHTMLAction, context: Context, block: dict
 )
 ```
 
@@ -19,7 +19,7 @@ Returns `str` or `None`.
 
 ```python
 def convert_rich_text_block_to_html(
-    context: GraphQLContext, block: dict
+    context: Context, block: dict
 ) -> Optional[str]:
     ...
 ```
@@ -30,7 +30,7 @@ Next filter or built-in function used to convert `dict` with rich text block to 
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context.

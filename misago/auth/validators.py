@@ -1,13 +1,13 @@
 from typing import Any
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from .errors import NotAuthenticatedError
 
 
 class IsAuthenticatedValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, data: Any, *_) -> Any:

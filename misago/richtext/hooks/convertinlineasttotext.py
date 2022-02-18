@@ -1,6 +1,6 @@
 from typing import Optional, Protocol
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ..types import ParsedMarkupMetadata
 
@@ -8,7 +8,7 @@ from ..types import ParsedMarkupMetadata
 class ConvertInlineAstToTextAction(Protocol):
     def __call__(
         self,
-        context: GraphQLContext,
+        context: Context,
         ast: dict,
         metadata: ParsedMarkupMetadata,
     ) -> Optional[str]:
@@ -19,7 +19,7 @@ class ConvertInlineAstToTextFilter(Protocol):
     def __call__(
         self,
         action: ConvertInlineAstToTextAction,
-        context: GraphQLContext,
+        context: Context,
         ast: dict,
         metadata: ParsedMarkupMetadata,
     ) -> Optional[str]:
@@ -34,7 +34,7 @@ class ConvertInlineAstToTextHook(
     def call_action(
         self,
         action: ConvertInlineAstToTextAction,
-        context: GraphQLContext,
+        context: Context,
         ast: dict,
         metadata: ParsedMarkupMetadata,
     ) -> Optional[str]:

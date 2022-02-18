@@ -15,7 +15,7 @@ create_user_hook.call_action(
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
-    context: Optional[GraphQLContext] = None,
+    context: Optional[Context] = None,
 )
 ```
 
@@ -40,7 +40,7 @@ async def create_user(
     is_admin: bool = False,
     joined_at: Optional[datetime] = None,
     extra: Optional[Dict[str, Any]] = None,
-    context: Optional[GraphQLContext] = None,
+    context: Optional[Context] = None,
 ) -> User:
     ...
 ```
@@ -134,7 +134,7 @@ JSON-serializable dict with extra data for this user. This value is not used by 
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context. Depending on where user is created may be unavailable and thus `None`.

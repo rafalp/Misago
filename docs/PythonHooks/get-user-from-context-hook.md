@@ -5,7 +5,7 @@
 from misago.auth.hooks import get_user_from_context_hook
 
 get_user_from_context_hook.call_action(
-    action: GetUserFromContextAction, context: GraphQLContext, in_admin: bool
+    action: GetUserFromContextAction, context: Context, in_admin: bool
 )
 ```
 
@@ -19,7 +19,7 @@ Returns `User` dataclass with authorized user data or `None` if context didn't c
 ### `action`
 
 ```python
-async def get_user_from_context(context: GraphQLContext, in_admin: bool) -> Optional[User]:
+async def get_user_from_context(context: Context, in_admin: bool) -> Optional[User]:
     ...
 ```
 
@@ -29,7 +29,7 @@ Next filter or built-in function used to obtain user for current context.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

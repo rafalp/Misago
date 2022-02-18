@@ -1,17 +1,17 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....threads.models import Thread
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 ThreadMoveInput = Dict[str, Any]
 ThreadMoveInputAction = Callable[
-    [GraphQLContext, Dict[str, List[Validator]], ThreadMoveInput, ErrorsList],
+    [Context, Dict[str, List[Validator]], ThreadMoveInput, ErrorsList],
     Awaitable[Tuple[ThreadMoveInput, ErrorsList]],
 ]
 ThreadMoveInputFilter = Callable[
-    [ThreadMoveInputAction, GraphQLContext, ThreadMoveInput],
+    [ThreadMoveInputAction, Context, ThreadMoveInput],
     Awaitable[Tuple[ThreadMoveInput, ErrorsList]],
 ]
 
@@ -20,7 +20,7 @@ class ThreadMoveInputHook(FilterHook[ThreadMoveInputAction, ThreadMoveInputFilte
     def call_action(
         self,
         action: ThreadMoveInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: ThreadMoveInput,
         errors_list: ErrorsList,
@@ -28,9 +28,9 @@ class ThreadMoveInputHook(FilterHook[ThreadMoveInputAction, ThreadMoveInputFilte
         return self.filter(action, context, validators, data, errors_list)
 
 
-ThreadMoveAction = Callable[[GraphQLContext, ThreadMoveInput], Awaitable[Thread]]
+ThreadMoveAction = Callable[[Context, ThreadMoveInput], Awaitable[Thread]]
 ThreadMoveFilter = Callable[
-    [ThreadMoveAction, GraphQLContext, ThreadMoveInput],
+    [ThreadMoveAction, Context, ThreadMoveInput],
     Awaitable[Thread],
 ]
 
@@ -39,7 +39,7 @@ class ThreadMoveHook(FilterHook[ThreadMoveAction, ThreadMoveFilter]):
     def call_action(
         self,
         action: ThreadMoveAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: ThreadMoveInput,
     ) -> Awaitable[Thread]:
         return self.filter(action, context, cleaned_data)

@@ -1,13 +1,13 @@
 from typing import List, Protocol
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ..types import ParsedMarkupMetadata
 
 
 class UpdateMarkupMetadataAction(Protocol):
     async def __call__(
-        self, context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+        self, context: Context, ast: List[dict], metadata: ParsedMarkupMetadata
     ):
         ...
 
@@ -16,7 +16,7 @@ class UpdateMarkupMetadataFilter(Protocol):
     async def __call__(
         self,
         action: UpdateMarkupMetadataAction,
-        context: GraphQLContext,
+        context: Context,
         ast: List[dict],
         metadata: ParsedMarkupMetadata,
     ):
@@ -29,7 +29,7 @@ class UpdateMarkupMetadataHook(
     def call_action(
         self,
         action: UpdateMarkupMetadataAction,
-        context: GraphQLContext,
+        context: Context,
         ast: List[dict],
         metadata: ParsedMarkupMetadata,
     ):

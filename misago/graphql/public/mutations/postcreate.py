@@ -9,6 +9,7 @@ from ....auth.validators import IsAuthenticatedValidator
 from ....categories.loaders import categories_loader
 from ....categories.models import Category
 from ....categories.validators import CategoryIsOpenValidator
+from ....context import Context
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
 from ....threads.loaders import posts_loader, threads_loader
@@ -19,7 +20,6 @@ from ....threads.validators import (
     ThreadIsOpenValidator,
 )
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postcreate import PostCreateInput, post_create_hook, post_create_input_hook
 
@@ -67,7 +67,7 @@ async def resolve_post_create(
     return {"thread": thread, "post": post}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "PostCreateInputModel",
         thread=(PositiveInt, ...),
@@ -82,7 +82,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostCreateInput,
     errors: ErrorsList,
@@ -91,7 +91,7 @@ async def validate_input_data(
 
 
 async def post_create(
-    context: GraphQLContext, cleaned_data: PostCreateInput
+    context: Context, cleaned_data: PostCreateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     thread = cleaned_data["thread"]
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])

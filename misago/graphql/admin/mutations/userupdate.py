@@ -4,6 +4,7 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, EmailStr, PositiveInt, constr, create_model
 
+from ....context import Context
 from ....users.errors import (
     UserDeactivateSelfError,
     UserIsProtectedError,
@@ -19,7 +20,6 @@ from ....users.validators import (
     usernamestr,
 )
 from ....validation import Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 
@@ -76,7 +76,7 @@ async def resolve_user_update(
     return {"updated": False, "user": user}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "UserCreateInputModel",
         user=(PositiveInt, ...),
@@ -90,7 +90,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
     )
 
 
-def is_active_validator(context: GraphQLContext, user: User):
+def is_active_validator(context: Context, user: User):
     async def validate_is_active(is_active: bool, errors, field_name):
         if is_active is False:
             context_user = cast(User, context["user"])
@@ -104,7 +104,7 @@ def is_active_validator(context: GraphQLContext, user: User):
     return validate_is_active
 
 
-def is_admin_validator(context: GraphQLContext, user: User):
+def is_admin_validator(context: Context, user: User):
     async def validate_is_admin(is_admin: bool, errors, field_name):
         context_user = cast(User, context["user"])
         if is_admin is False and user.id == context_user.id:
@@ -115,7 +115,7 @@ def is_admin_validator(context: GraphQLContext, user: User):
     return validate_is_admin
 
 
-async def update_user(context: GraphQLContext, user: User, cleaned_data: dict) -> User:
+async def update_user(context: Context, user: User, cleaned_data: dict) -> User:
     user = await user.update(**cleaned_data)
     users_loader.store(context, user)
     return user

@@ -3,5 +3,6 @@ pytest_plugins = [
     "misago.testing.user",
     "misago.testing.category",
     "misago.testing.thread",
+    "misago.testing.context",
     "misago.testing.client",
 ]

@@ -5,6 +5,7 @@ from graphql import GraphQLResolveInfo
 from pydantic import EmailStr, create_model
 
 from ....auth import create_user_token
+from ....context import Context
 from ....users.create import create_user
 from ....users.loaders import users_loader
 from ....users.models import User
@@ -15,7 +16,6 @@ from ....users.validators import (
     usernamestr,
 )
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.usercreate import (
     UserCreateInput,
@@ -61,7 +61,7 @@ async def resolve_user_create(
     return {"user": user, "token": token}
 
 
-async def create_input_model(context: GraphQLContext) -> UserCreateInputModel:
+async def create_input_model(context: Context) -> UserCreateInputModel:
     return create_model(
         "RegisterInputModel",
         name=(usernamestr(context["settings"]), ...),
@@ -72,7 +72,7 @@ async def create_input_model(context: GraphQLContext) -> UserCreateInputModel:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: UserCreateInput,
     errors: ErrorsList,
@@ -80,7 +80,7 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) -> User:
+async def register_user(context: Context, cleaned_data: UserCreateInput) -> User:
     user = await create_user(
         context,
         cleaned_data["name"],

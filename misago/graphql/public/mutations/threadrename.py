@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryIsOpenValidator
+from ....context import Context
 from ....threads.loaders import threads_loader
 from ....threads.models import Thread
 from ....threads.validators import (
@@ -16,7 +17,6 @@ from ....threads.validators import (
     threadtitlestr,
 )
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadrename import (
     ThreadRenameInput,
@@ -69,7 +69,7 @@ async def resolve_thread_rename(
     return {"thread": updated_thread, "updated": updated_thread != thread}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "ThreadRenameInputModel",
         thread=(PositiveInt, ...),
@@ -78,7 +78,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadRenameInput,
     errors: ErrorsList,
@@ -86,9 +86,7 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def thread_rename(
-    context: GraphQLContext, cleaned_data: ThreadRenameInput
-) -> Thread:
+async def thread_rename(context: Context, cleaned_data: ThreadRenameInput) -> Thread:
     thread = cleaned_data["thread"]
     thread = await thread.update(title=cleaned_data["title"])
 

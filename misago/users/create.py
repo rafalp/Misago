@@ -1,12 +1,12 @@
 from typing import Optional, cast
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from .hooks.createuser import CreateUserAction, create_user_hook
 from .models import User
 
 
 async def create_user(
-    context: GraphQLContext,
+    context: Context,
     name: str,
     email: str,
     *,

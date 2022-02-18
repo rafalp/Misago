@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postcreate import post_create_hook
 
 post_create_hook.call_action(
     action: PostCreateAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: PostCreateInput,
 )
 ```
@@ -21,7 +21,7 @@ Returns tuple of `Thread`, `Post` dataclasses with newly created reply data and 
 
 ```python
 async def post_create(
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: PostCreateInput,
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     ...
@@ -33,7 +33,7 @@ Next filter or built-in function used to create new reply in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

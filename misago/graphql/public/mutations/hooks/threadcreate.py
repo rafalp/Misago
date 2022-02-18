@@ -1,15 +1,15 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....richtext import ParsedMarkupMetadata
 from .....threads.models import Post, Thread
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 ThreadCreateInput = Dict[str, Any]
 ThreadCreateInputAction = Callable[
     [
-        GraphQLContext,
+        Context,
         Dict[str, List[Validator]],
         ThreadCreateInput,
         ErrorsList,
@@ -17,7 +17,7 @@ ThreadCreateInputAction = Callable[
     Awaitable[Tuple[ThreadCreateInput, ErrorsList]],
 ]
 ThreadCreateInputFilter = Callable[
-    [ThreadCreateInputAction, GraphQLContext, ThreadCreateInput],
+    [ThreadCreateInputAction, Context, ThreadCreateInput],
     Awaitable[Tuple[ThreadCreateInput, ErrorsList]],
 ]
 
@@ -28,7 +28,7 @@ class ThreadCreateInputHook(
     def call_action(
         self,
         action: ThreadCreateInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: ThreadCreateInput,
         errors_list: ErrorsList,
@@ -37,11 +37,11 @@ class ThreadCreateInputHook(
 
 
 ThreadCreateAction = Callable[
-    [GraphQLContext, ThreadCreateInput],
+    [Context, ThreadCreateInput],
     Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 ThreadCreateFilter = Callable[
-    [ThreadCreateAction, GraphQLContext, ThreadCreateInput],
+    [ThreadCreateAction, Context, ThreadCreateInput],
     Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 
@@ -50,7 +50,7 @@ class ThreadCreateHook(FilterHook[ThreadCreateAction, ThreadCreateFilter]):
     def call_action(
         self,
         action: ThreadCreateAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: ThreadCreateInput,
     ) -> Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]]:
         return self.filter(action, context, cleaned_data)

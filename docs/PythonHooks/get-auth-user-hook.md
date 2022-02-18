@@ -4,7 +4,7 @@
 from misago.auth.hooks import get_auth_user_hook
 
 get_auth_user_hook.call_action(
-    action: GetAuthUserAction, context: GraphQLContext, user_id: int, in_admin: bool
+    action: GetAuthUserAction, context: Context, user_id: int, in_admin: bool
 )
 ```
 
@@ -19,7 +19,7 @@ Returns `User` dataclass with authorized user data or `None` if user was not fou
 
 ```python
 async def get_user(
-    context: GraphQLContext, user_id: int, in_admin: bool
+    context: Context, user_id: int, in_admin: bool
 ) -> Optional[User]:
     ...
 ```
@@ -30,7 +30,7 @@ Next filter or built-in function used to obtain authorized user by their id.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

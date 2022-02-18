@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadrename import thread_rename_hoo
 
 thread_rename_hook.call_action(
     action: ThreadRenameAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadRenameInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `Thread` dataclass with updated thread data.
 ### `action`
 
 ```python
-async def thread_rename(context: GraphQLContext, cleaned_data: ThreadRenameInput) -> Thread:
+async def thread_rename(context: Context, cleaned_data: ThreadRenameInput) -> Thread:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update the thread in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

@@ -3,7 +3,7 @@ from typing import Any, List, Type, cast
 from ..categories.loaders import categories_loader
 from ..categories.models import Category, CategoryType
 from ..conf.types import Settings
-from ..graphql import GraphQLContext
+from ..context import Context
 from ..validation import BulkValidator, ErrorsList, Validator, sluggablestr
 from .errors import (
     PostIsThreadStartError,
@@ -18,9 +18,9 @@ from .models import Post, Thread
 
 
 class PostAuthorValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, post: Post, *_) -> Post:
@@ -33,9 +33,9 @@ class PostAuthorValidator:
 
 
 class PostCategoryValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext, category_validator: Validator):
+    def __init__(self, context: Context, category_validator: Validator):
         self._context = context
         self._validator = category_validator
 
@@ -51,12 +51,10 @@ class PostCategoryValidator:
 
 
 class PostExistsValidator:
-    _context: GraphQLContext
+    _context: Context
     _category_type: int
 
-    def __init__(
-        self, context: GraphQLContext, category_type: int = CategoryType.THREADS
-    ):
+    def __init__(self, context: Context, category_type: int = CategoryType.THREADS):
         self._context = context
         self._category_type = category_type
 
@@ -70,7 +68,7 @@ class PostExistsValidator:
         return post
 
 
-async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
+async def _get_category_type(context: Context, category_id: int) -> int:
     category = await categories_loader.load(context, category_id)
     if category:
         return category.type
@@ -78,9 +76,9 @@ async def _get_category_type(context: GraphQLContext, category_id: int) -> int:
 
 
 class PostThreadValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext, thread_validator: Validator):
+    def __init__(self, context: Context, thread_validator: Validator):
         self._context = context
         self._validator = thread_validator
 
@@ -103,9 +101,9 @@ class PostsBulkValidator(BulkValidator):
 
 
 class ThreadAuthorValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, thread: Thread, *_) -> Thread:
@@ -118,9 +116,9 @@ class ThreadAuthorValidator:
 
 
 class ThreadCategoryValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext, category_validator: Validator):
+    def __init__(self, context: Context, category_validator: Validator):
         self._context = context
         self._validator = category_validator
 
@@ -138,12 +136,10 @@ class ThreadCategoryValidator:
 
 
 class ThreadExistsValidator:
-    _context: GraphQLContext
+    _context: Context
     _category_type: int
 
-    def __init__(
-        self, context: GraphQLContext, category_type: int = CategoryType.THREADS
-    ):
+    def __init__(self, context: Context, category_type: int = CategoryType.THREADS):
         self._context = context
         self._category_type = category_type
 
@@ -158,9 +154,9 @@ class ThreadExistsValidator:
 
 
 class ThreadIsOpenValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, thread: Thread, *_) -> Thread:
@@ -172,10 +168,10 @@ class ThreadIsOpenValidator:
 
 
 class ThreadPostExistsValidator:
-    _context: GraphQLContext
+    _context: Context
     _thread: Thread
 
-    def __init__(self, context: GraphQLContext, thread: Thread):
+    def __init__(self, context: Context, thread: Thread):
         self._context = context
         self._thread = thread
 

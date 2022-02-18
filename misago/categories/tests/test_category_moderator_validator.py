@@ -6,25 +6,25 @@ from ..validators import CategoryModeratorValidator
 
 @pytest.mark.asyncio
 async def test_validator_returns_category_if_user_is_moderator(
-    moderator_graphql_context, category
+    category, moderator_context
 ):
-    validator = CategoryModeratorValidator(moderator_graphql_context)
+    validator = CategoryModeratorValidator(moderator_context)
     assert await validator(category) == category
 
 
 @pytest.mark.asyncio
 async def test_validator_raises_not_moderator_error_if_user_is_not_moderator(
-    user_graphql_context, category
+    category, user_context
 ):
-    validator = CategoryModeratorValidator(user_graphql_context)
+    validator = CategoryModeratorValidator(user_context)
     with pytest.raises(NotModeratorError):
         await validator(category)
 
 
 @pytest.mark.asyncio
 async def test_validator_raises_not_moderator_error_if_user_is_not_authenticated(
-    graphql_context, category
+    category, context
 ):
-    validator = CategoryModeratorValidator(graphql_context)
+    validator = CategoryModeratorValidator(context)
     with pytest.raises(NotModeratorError):
         await validator(category)

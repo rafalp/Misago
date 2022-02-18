@@ -3,12 +3,12 @@
 ```python
 from misago.graphql.hooks import graphql_context_hook
 
-graphql_context_hook.call_action(action: GraphQLContextAction, request: Request)
+graphql_context_hook.call_action(action: ContextAction, request: Request)
 ```
 
 A filter for the function used to create a GraphQL context.
 
-Returns `GraphQLContext` dict with current GraphQL query context.
+Returns `Context` dict with current GraphQL query context.
 
 
 ## Required arguments
@@ -16,7 +16,7 @@ Returns `GraphQLContext` dict with current GraphQL query context.
 ### `action`
 
 ```python
-async def get_graphql_context(request: Request) -> GraphQLContext:
+async def get_graphql_context(request: Request) -> Context:
     ...
 ```
 

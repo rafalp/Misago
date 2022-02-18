@@ -1,13 +1,13 @@
 from typing import Optional, Protocol
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ..types import ParsedMarkupMetadata, RichTextBlock
 
 
 class ConvertBlockAstToRichTextAction(Protocol):
     def __call__(
-        self, context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+        self, context: Context, ast: dict, metadata: ParsedMarkupMetadata
     ) -> Optional[RichTextBlock]:
         ...
 
@@ -16,7 +16,7 @@ class ConvertBlockAstToRichTextFilter(Protocol):
     def __call__(
         self,
         action: ConvertBlockAstToRichTextAction,
-        context: GraphQLContext,
+        context: Context,
         ast: dict,
         metadata: ParsedMarkupMetadata,
     ) -> Optional[RichTextBlock]:
@@ -31,7 +31,7 @@ class ConvertBlockAstToRichTextHook(
     def call_action(
         self,
         action: ConvertBlockAstToRichTextAction,
-        context: GraphQLContext,
+        context: Context,
         ast: dict,
         metadata: ParsedMarkupMetadata,
     ) -> Optional[RichTextBlock]:

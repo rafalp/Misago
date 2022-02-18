@@ -1,15 +1,15 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....richtext import ParsedMarkupMetadata
 from .....threads.models import Post, Thread
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 PostUpdateInput = Dict[str, Any]
 PostUpdateInputAction = Callable[
     [
-        GraphQLContext,
+        Context,
         Dict[str, List[Validator]],
         PostUpdateInput,
         ErrorsList,
@@ -17,7 +17,7 @@ PostUpdateInputAction = Callable[
     Awaitable[Tuple[PostUpdateInput, ErrorsList]],
 ]
 PostUpdateInputFilter = Callable[
-    [PostUpdateInputAction, GraphQLContext, PostUpdateInput],
+    [PostUpdateInputAction, Context, PostUpdateInput],
     Awaitable[Tuple[PostUpdateInput, ErrorsList]],
 ]
 
@@ -26,7 +26,7 @@ class PostUpdateInputHook(FilterHook[PostUpdateInputAction, PostUpdateInputFilte
     def call_action(
         self,
         action: PostUpdateInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: PostUpdateInput,
         errors_list: ErrorsList,
@@ -35,11 +35,11 @@ class PostUpdateInputHook(FilterHook[PostUpdateInputAction, PostUpdateInputFilte
 
 
 PostUpdateAction = Callable[
-    [GraphQLContext, PostUpdateInput],
+    [Context, PostUpdateInput],
     Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 PostUpdateFilter = Callable[
-    [PostUpdateAction, GraphQLContext, PostUpdateInput],
+    [PostUpdateAction, Context, PostUpdateInput],
     Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]],
 ]
 
@@ -48,7 +48,7 @@ class PostUpdateHook(FilterHook[PostUpdateAction, PostUpdateFilter]):
     def call_action(
         self,
         action: PostUpdateAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: PostUpdateInput,
     ) -> Awaitable[Tuple[Thread, Post, ParsedMarkupMetadata]]:
         return self.filter(action, context, cleaned_data)

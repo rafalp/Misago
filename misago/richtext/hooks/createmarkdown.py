@@ -2,7 +2,7 @@ from typing import Callable, List, Protocol
 
 from mistune import BlockParser, InlineParser, Markdown
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 
 MarkdownPlugin = Callable[[Markdown], None]
@@ -11,7 +11,7 @@ MarkdownPlugin = Callable[[Markdown], None]
 class CreateMarkdownAction(Protocol):
     def __call__(
         self,
-        context: GraphQLContext,
+        context: Context,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],
@@ -23,7 +23,7 @@ class CreateMarkdownFilter(Protocol):
     def __call__(
         self,
         action: CreateMarkdownAction,
-        context: GraphQLContext,
+        context: Context,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],
@@ -37,7 +37,7 @@ class CreateMarkdownHook(FilterHook[CreateMarkdownAction, CreateMarkdownFilter])
     def call_action(
         self,
         action: CreateMarkdownAction,
-        context: GraphQLContext,
+        context: Context,
         block: BlockParser,
         inline: InlineParser,
         plugins: List[MarkdownPlugin],

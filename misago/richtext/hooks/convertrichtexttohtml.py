@@ -1,12 +1,12 @@
 from typing import Protocol
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ..types import RichText
 
 
 class ConvertRichTextToHTMLAction(Protocol):
-    def __call__(self, context: GraphQLContext, rich_text: RichText) -> str:
+    def __call__(self, context: Context, rich_text: RichText) -> str:
         ...
 
 
@@ -14,7 +14,7 @@ class ConvertRichTextToHTMLFilter(Protocol):
     def __call__(
         self,
         action: ConvertRichTextToHTMLAction,
-        context: GraphQLContext,
+        context: Context,
         rich_text: RichText,
     ) -> str:
         ...
@@ -28,7 +28,7 @@ class ConvertRichTextToHTMLHook(
     def call_action(
         self,
         action: ConvertRichTextToHTMLAction,
-        context: GraphQLContext,
+        context: Context,
         rich_text: RichText,
     ) -> str:
         return self.filter(action, context, rich_text)

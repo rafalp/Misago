@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threaddelete import thread_delete_hoo
 
 thread_delete_hook.call_action(
     action: ThreadDeleteAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadDeleteInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `None`.
 ### `action`
 
 ```python
-async def thread_delete(context: GraphQLContext, cleaned_data: ThreadDeleteInput):
+async def thread_delete(context: Context, cleaned_data: ThreadDeleteInput):
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to delete the thread from the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

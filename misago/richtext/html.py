@@ -1,6 +1,6 @@
 from typing import Optional
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from .highlight import highlight_code
 from .hooks import convert_rich_text_block_to_html_hook, convert_rich_text_to_html_hook
 from .types import RichText, RichTextBlock
@@ -8,15 +8,13 @@ from .types import RichText, RichTextBlock
 __all__ = ["convert_rich_text_block_to_html", "convert_rich_text_to_html"]
 
 
-def convert_rich_text_to_html(context: GraphQLContext, rich_text: RichText) -> str:
+def convert_rich_text_to_html(context: Context, rich_text: RichText) -> str:
     return convert_rich_text_to_html_hook.call_action(
         convert_rich_text_to_html_action, context, rich_text
     )
 
 
-def convert_rich_text_to_html_action(
-    context: GraphQLContext, rich_text: RichText
-) -> str:
+def convert_rich_text_to_html_action(context: Context, rich_text: RichText) -> str:
     html = []
     for node in rich_text:
         node_html = convert_rich_text_block_to_html(context, node)
@@ -26,7 +24,7 @@ def convert_rich_text_to_html_action(
 
 
 def convert_rich_text_block_to_html(
-    context: GraphQLContext, block: RichTextBlock
+    context: Context, block: RichTextBlock
 ) -> Optional[str]:
     return convert_rich_text_block_to_html_hook.call_action(
         convert_rich_text_block_to_html_action, context, block
@@ -37,7 +35,7 @@ HEADINGS = ("h1", "h2", "h3", "h4", "h5", "h6")
 
 
 def convert_rich_text_block_to_html_action(
-    context: GraphQLContext, block: RichTextBlock
+    context: Context, block: RichTextBlock
 ) -> Optional[str]:
     # pylint: disable=too-many-return-statements
     if block["type"] == "code":

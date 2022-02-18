@@ -13,6 +13,6 @@ async def test_posts_loader_loads_post(post):
 
 
 @pytest.mark.asyncio
-async def test_posts_loader_loads_post_url(graphql_context, thread, post):
-    loaded_url = await posts_loader.load_url(graphql_context, post)
+async def test_posts_loader_loads_post_url(context, thread, post):
+    loaded_url = await posts_loader.load_url(context, post)
     assert loaded_url == f"/t/{thread.slug}/{thread.id}/#post-{post.id}"

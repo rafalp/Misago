@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postsbulkdelete import posts_bulk_del
 
 posts_bulk_delete_input_posts_hook.call_action(
     action: PostsBulkDeleteInputRepliesAction,
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostsBulkDeleteInput,
     errors_list: ErrorsList,
@@ -23,7 +23,7 @@ Returns a tuple of `data` that should be used to delete thread posts and validat
 
 ```python
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostsBulkDeleteInput,
     errors: ErrorsList,
@@ -37,7 +37,7 @@ Next filter or built-in function used to validate input data.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

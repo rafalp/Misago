@@ -8,12 +8,12 @@ from ..validators import PostThreadValidator
 
 @pytest.mark.asyncio
 async def test_post_thread_validator_calls_given_validator_against_post_thread(
-    graphql_context, post, thread
+    context, post, thread
 ):
     future = Future()
     future.set_result(thread)
     thread_validator = Mock(return_value=future)
-    validator = PostThreadValidator(graphql_context, thread_validator)
+    validator = PostThreadValidator(context, thread_validator)
     await validator(post, "errors", "field")
     thread_validator.assert_called_once_with(thread, "errors", "field")
 

@@ -4,13 +4,13 @@ from ariadne import MutationType, convert_kwargs_to_snake_case
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, PositiveInt
 
+from ....context import Context
 from ....users.delete import delete_user, delete_user_content
 from ....users.errors import UserDeleteSelfError, UserIsProtectedError
 from ....users.loaders import users_loader
 from ....users.models import User
 from ....users.validators import UserExistsValidator
 from ....validation import validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from ..decorators import admin_resolver
 
@@ -64,7 +64,7 @@ class DeleteUserInputModel(BaseModel):  # type: ignore
     delete_content: bool
 
 
-def user_can_be_deleted_validator(context: GraphQLContext):
+def user_can_be_deleted_validator(context: Context):
     async def validate_delete_user(user: User, errors, field_name):
         context_user = cast(User, context["user"])
         if user.id == context_user.id:

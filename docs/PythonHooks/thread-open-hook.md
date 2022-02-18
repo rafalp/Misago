@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadopen import thread_open_hook
 
 thread_open_hook.call_action(
     action: ThreadOpenAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadOpenInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `Thread` dataclass with updated thread data.
 ### `action`
 
 ```python
-async def open_thread(context: GraphQLContext, cleaned_data: ThreadOpenInput) -> Thread:
+async def open_thread(context: Context, cleaned_data: ThreadOpenInput) -> Thread:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update the thread in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

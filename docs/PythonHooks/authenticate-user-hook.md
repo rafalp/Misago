@@ -5,7 +5,7 @@ from misago.auth.hooks import authenticate_user_hook
 
 authenticate_user_hook.call_action(
     action: AuthenticateUserAction,
-    context: GraphQLContext,
+    context: Context,
     username: str,
     password: str,
     in_admin: bool,
@@ -23,7 +23,7 @@ Returns `User` dataclass with authenticated user data or `None` if user should n
 
 ```python
 async def authenticate_user(
-    context: GraphQLContext,
+    context: Context,
     username: str,
     password: str,
     in_admin: str,

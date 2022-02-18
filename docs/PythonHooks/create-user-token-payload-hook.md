@@ -5,7 +5,7 @@ from misago.auth.hooks import create_user_token_payload_hook
 
 create_user_token_payload_hook.call_action(
     action: CreateUserTokenPayloadAction,
-    context: GraphQLContext,
+    context: Context,
     user: User,
     in_admin: bool
 )
@@ -22,7 +22,7 @@ Returns `dict` which should be used as JWT token's payload.
 
 ```python
 async def create_user_token_payload(
-    context: GraphQLContext, user: User, in_admin: bool
+    context: Context, user: User, in_admin: bool
 ) -> Dict[str, Any]:
     ...
 ```
@@ -33,7 +33,7 @@ Next filter or built-in function used to create payload for user authorization t
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

@@ -1,14 +1,14 @@
 from typing import Any, Awaitable, Callable, Dict, List, Tuple
 
+from .....context import Context
 from .....hooks import FilterHook
 from .....threads.models import Thread
 from .....validation import ErrorsList, Validator
-from .... import GraphQLContext
 
 ThreadRenameInput = Dict[str, Any]
 ThreadRenameInputAction = Callable[
     [
-        GraphQLContext,
+        Context,
         Dict[str, List[Validator]],
         ThreadRenameInput,
         ErrorsList,
@@ -16,7 +16,7 @@ ThreadRenameInputAction = Callable[
     Awaitable[Tuple[ThreadRenameInput, ErrorsList]],
 ]
 ThreadRenameInputFilter = Callable[
-    [ThreadRenameInputAction, GraphQLContext, ThreadRenameInput],
+    [ThreadRenameInputAction, Context, ThreadRenameInput],
     Awaitable[Tuple[ThreadRenameInput, ErrorsList]],
 ]
 
@@ -27,7 +27,7 @@ class ThreadRenameInputHook(
     def call_action(
         self,
         action: ThreadRenameInputAction,
-        context: GraphQLContext,
+        context: Context,
         validators: Dict[str, List[Validator]],
         data: ThreadRenameInput,
         errors_list: ErrorsList,
@@ -35,9 +35,9 @@ class ThreadRenameInputHook(
         return self.filter(action, context, validators, data, errors_list)
 
 
-ThreadRenameAction = Callable[[GraphQLContext, ThreadRenameInput], Awaitable[Thread]]
+ThreadRenameAction = Callable[[Context, ThreadRenameInput], Awaitable[Thread]]
 ThreadRenameFilter = Callable[
-    [ThreadRenameAction, GraphQLContext, ThreadRenameInput], Awaitable[Thread]
+    [ThreadRenameAction, Context, ThreadRenameInput], Awaitable[Thread]
 ]
 
 
@@ -45,7 +45,7 @@ class ThreadRenameHook(FilterHook[ThreadRenameAction, ThreadRenameFilter]):
     def call_action(
         self,
         action: ThreadRenameAction,
-        context: GraphQLContext,
+        context: Context,
         cleaned_data: ThreadRenameInput,
     ) -> Awaitable[Thread]:
         return self.filter(action, context, cleaned_data)

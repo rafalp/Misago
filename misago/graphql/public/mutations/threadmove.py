@@ -10,12 +10,12 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
+from ....context import Context
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.move import move_thread
 from ....threads.validators import ThreadCategoryValidator, ThreadExistsValidator
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadmove import ThreadMoveInput, thread_move_hook, thread_move_input_hook
 
@@ -73,7 +73,7 @@ def create_input_model() -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadMoveInput,
     errors: ErrorsList,
@@ -81,9 +81,7 @@ async def validate_input_data(
     return await validate_data(data, validators, errors)
 
 
-async def thread_move_action(
-    context: GraphQLContext, cleaned_data: ThreadMoveInput
-) -> Thread:
+async def thread_move_action(context: Context, cleaned_data: ThreadMoveInput) -> Thread:
     thread = cleaned_data["thread"]
     thread = await move_thread(thread, cleaned_data["category"])
 

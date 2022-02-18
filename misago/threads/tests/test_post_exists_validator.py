@@ -6,32 +6,28 @@ from ..validators import PostExistsValidator
 
 
 @pytest.mark.asyncio
-async def test_validator_returns_post_if_id_given_exists_in_db(graphql_context, post):
-    validator = PostExistsValidator(graphql_context)
+async def test_validator_returns_post_if_id_given_exists_in_db(context, post):
+    validator = PostExistsValidator(context)
     assert await validator(post.id) == post
 
 
 @pytest.mark.asyncio
-async def test_validator_raises_post_not_exists_error_if_post_not_exists(
-    db, graphql_context
-):
-    validator = PostExistsValidator(graphql_context)
+async def test_validator_raises_post_not_exists_error_if_post_not_exists(context):
+    validator = PostExistsValidator(context)
     with pytest.raises(PostNotFoundError):
         await validator(100)
 
 
 @pytest.mark.asyncio
-async def test_validator_returns_post_if_given_id_and_type_exists_in_db(
-    graphql_context, post
-):
-    validator = PostExistsValidator(graphql_context, CategoryType.THREADS)
+async def test_validator_returns_post_if_given_id_and_type_exists_in_db(context, post):
+    validator = PostExistsValidator(context, CategoryType.THREADS)
     assert await validator(post.id) == post
 
 
 @pytest.mark.asyncio
 async def test_validator_raises_post_not_exists_error_for_wrong_category_type(
-    graphql_context, post
+    context, post
 ):
-    validator = PostExistsValidator(graphql_context, CategoryType.PRIVATE_THREADS)
+    validator = PostExistsValidator(context, CategoryType.PRIVATE_THREADS)
     with pytest.raises(PostNotFoundError):
         await validator(post.id)

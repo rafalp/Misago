@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple, cast
 from mistune import AstRenderer, BlockParser, InlineParser, Markdown
 from mistune.plugins import plugin_strikethrough
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from ..utils.strings import get_random_string
 from .genericblocks import restructure_generic_blocks
 from .highlight import highlight_code
@@ -25,7 +25,7 @@ from .types import ParsedMarkupMetadata, RichText, RichTextBlock
 
 
 async def parse_markup(
-    context: GraphQLContext, markup: str
+    context: Context, markup: str
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
     cache_key = get_markup_cache_key(markup)
     if cache_key not in context:
@@ -44,7 +44,7 @@ def get_markup_cache_key(markup: str) -> str:
 
 
 async def parse_markup_action(
-    context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
+    context: Context, markup: str, metadata: ParsedMarkupMetadata
 ) -> Tuple[RichText, ParsedMarkupMetadata]:
     ast = markdown_hook.call_action(markdown_action, context, markup, metadata)
     await update_markup_metadata_hook.call_action(
@@ -54,7 +54,7 @@ async def parse_markup_action(
 
 
 def markdown_action(
-    context: GraphQLContext, markup: str, metadata: ParsedMarkupMetadata
+    context: Context, markup: str, metadata: ParsedMarkupMetadata
 ) -> List[dict]:
     markdown = create_markdown(context)
     markdown = restructure_generic_blocks(markdown(markup))
@@ -62,7 +62,7 @@ def markdown_action(
     return markdown
 
 
-def create_markdown(context: GraphQLContext) -> Markdown:
+def create_markdown(context: Context) -> Markdown:
     return create_markdown_hook.call_action(
         create_markdown_action,
         context,
@@ -83,7 +83,7 @@ class MisagoInlineParser(InlineParser):
 
 
 def create_markdown_action(
-    context: GraphQLContext,
+    context: Context,
     block: BlockParser,
     inline: InlineParser,
     plugins: List[MarkdownPlugin],
@@ -95,13 +95,13 @@ def create_markdown_action(
 
 
 async def update_markup_metadata_action(
-    context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+    context: Context, ast: List[dict], metadata: ParsedMarkupMetadata
 ):
     await update_metadata_from_mentions(metadata)
 
 
 def convert_ast_to_rich_text(
-    context: GraphQLContext, ast: List[dict], metadata: ParsedMarkupMetadata
+    context: Context, ast: List[dict], metadata: ParsedMarkupMetadata
 ) -> RichText:
     rich_text = []
     for node in ast:
@@ -113,7 +113,7 @@ def convert_ast_to_rich_text(
 
 
 def convert_block_ast_to_rich_text(
-    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+    context: Context, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[RichTextBlock]:
     return convert_block_ast_to_rich_text_hook.call_action(
         convert_block_ast_to_rich_text_action, context, ast, metadata
@@ -121,7 +121,7 @@ def convert_block_ast_to_rich_text(
 
 
 def convert_block_ast_to_rich_text_action(
-    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+    context: Context, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[RichTextBlock]:
     # pylint: disable=too-many-return-statements
     if ast["type"] == "block_text":
@@ -223,7 +223,7 @@ def get_block_id() -> str:
 
 
 def convert_children_ast_to_text(
-    context: GraphQLContext, ast: Optional[List[dict]], metadata: ParsedMarkupMetadata
+    context: Context, ast: Optional[List[dict]], metadata: ParsedMarkupMetadata
 ) -> str:
     # Fail-safe for situations when `ast["children"]` is None
     if not ast:
@@ -243,7 +243,7 @@ def convert_children_ast_to_text(
 
 
 def convert_inline_ast_to_text(
-    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+    context: Context, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[str]:
     return convert_inline_ast_to_text_hook.call_action(
         convert_inline_ast_to_text_action, context, ast, metadata
@@ -251,7 +251,7 @@ def convert_inline_ast_to_text(
 
 
 def convert_inline_ast_to_text_action(
-    context: GraphQLContext, ast: dict, metadata: ParsedMarkupMetadata
+    context: Context, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[str]:
     # pylint: disable=too-many-return-statements
     if ast["type"] == "linebreak":

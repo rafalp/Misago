@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
+from ....context import Context
 from ....threads.delete import delete_thread_posts
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
@@ -24,7 +25,6 @@ from ....validation import (
     validate_data,
     validate_model,
 )
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.postsbulkdelete import (
     PostsBulkDeleteInput,
@@ -118,7 +118,7 @@ async def resolve_posts_bulk_delete(
     return {"thread": thread, "deleted": deleted}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "PostsBulkDeleteInputModel",
         thread=(PositiveInt, ...),
@@ -127,7 +127,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_posts_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostsBulkDeleteInput,
     errors: ErrorsList,
@@ -136,7 +136,7 @@ async def validate_input_posts_data(
 
 
 async def validate_input_thread_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostsBulkDeleteInput,
     errors: ErrorsList,
@@ -145,7 +145,7 @@ async def validate_input_thread_data(
 
 
 async def posts_bulk_delete_action(
-    context: GraphQLContext, cleaned_data: PostsBulkDeleteInput
+    context: Context, cleaned_data: PostsBulkDeleteInput
 ) -> Thread:
     thread = cleaned_data["thread"]
     thread, last_post = await delete_thread_posts(thread, cleaned_data["posts"])

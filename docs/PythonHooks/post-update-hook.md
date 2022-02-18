@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postupdate import post_update_hook
 
 post_update_hook.call_action(
     action: PostUpdateAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: PostUpdateInput,
 )
 ```
@@ -21,7 +21,7 @@ Returns tuple with `Post` dataclass with updated post data and `ParsedMarkupMeta
 
 ```python
 async def post_update(
-    context: GraphQLContext, cleaned_data: PostUpdateInput
+    context: Context, cleaned_data: PostUpdateInput
 ) -> Tuple[Post, ParsedMarkupMetadata]:
     ...
 ```
@@ -32,7 +32,7 @@ Next filter or built-in function used to update the post in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

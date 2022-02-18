@@ -4,7 +4,7 @@ from typing import Any, Awaitable, Dict, Optional
 import jwt
 from jwt.exceptions import InvalidTokenError
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from ..users.models import User
 from ..utils import timezone
 from .hooks import (
@@ -19,7 +19,7 @@ JWT_ALGORITHM = "HS256"
 
 
 def create_user_token(
-    context: GraphQLContext, user: User, in_admin: bool = False
+    context: Context, user: User, in_admin: bool = False
 ) -> Awaitable[str]:
     return create_user_token_hook.call_action(
         create_user_token_action, context, user, in_admin
@@ -27,7 +27,7 @@ def create_user_token(
 
 
 async def create_user_token_action(
-    context: GraphQLContext, user: User, in_admin: bool = False
+    context: Context, user: User, in_admin: bool = False
 ) -> str:
     secret = get_jwt_secret(context)
     payload = await create_user_token_payload_hook.call_action(
@@ -37,17 +37,17 @@ async def create_user_token_action(
 
 
 async def create_user_token_payload(
-    context: GraphQLContext, user: User, in_admin: bool = False
+    context: Context, user: User, in_admin: bool = False
 ) -> Dict[str, Any]:
     return {"exp": get_jwt_exp(context), "user": user.id}
 
 
-def get_jwt_exp(context: GraphQLContext) -> datetime:
+def get_jwt_exp(context: Context) -> datetime:
     return timezone.now() + timedelta(seconds=context["settings"]["jwt_exp"])
 
 
 async def get_user_from_token(
-    context: GraphQLContext, token: str, in_admin: bool = False
+    context: Context, token: str, in_admin: bool = False
 ) -> Optional[User]:
     secret = get_jwt_secret(context)
     token_payload = decode_jwt_token(secret, token)
@@ -60,7 +60,7 @@ async def get_user_from_token(
 
 
 async def get_user_from_token_payload(
-    context: GraphQLContext, token_payload: Dict[str, Any], in_admin: bool = False
+    context: Context, token_payload: Dict[str, Any], in_admin: bool = False
 ) -> Optional[User]:
     if token_payload.get("user"):
         return await get_auth_user_hook.call_action(
@@ -69,7 +69,7 @@ async def get_user_from_token_payload(
     return None
 
 
-def get_jwt_secret(context: GraphQLContext) -> str:
+def get_jwt_secret(context: Context) -> str:
     return context["settings"]["jwt_secret"]
 
 

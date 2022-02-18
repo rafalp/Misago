@@ -6,8 +6,8 @@ from ..parser import parse_markup
 
 
 @pytest.mark.asyncio
-async def test_horizontal_line_bbcode_is_supported(graphql_context):
-    result, _ = await parse_markup(graphql_context, "Hello\n\n[hr]\n\nWorld")
+async def test_horizontal_line_bbcode_is_supported(context):
+    result, _ = await parse_markup(context, "Hello\n\n[hr]\n\nWorld")
     assert result == [
         {
             "id": ANY,

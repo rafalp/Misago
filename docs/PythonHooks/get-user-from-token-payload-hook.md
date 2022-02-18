@@ -5,7 +5,7 @@ from misago.auth.hooks import get_user_from_token_payload_hook
 
 get_user_from_token_payload_hook.call_action(
     action: GetUserFromTokenAction,
-    context: GraphQLContext,
+    context: Context,
     payload: Dict[str, Any],
     in_admin: bool,
 )
@@ -22,7 +22,7 @@ Returns `User` dataclass with authorized user data or `None` if token's payload 
 
 ```python
 async def get_user_from_token_payload(
-    context: GraphQLContext, token_payload: Dict[str, any], in_admin: bool
+    context: Context, token_payload: Dict[str, any], in_admin: bool
 ) -> Optional[User]:
     ...
 ```
@@ -33,7 +33,7 @@ Next filter or built-in function used to obtain user for authorization token pay
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

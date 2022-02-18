@@ -5,7 +5,7 @@ from misago.richtext.hooks import convert_inline_ast_to_text_hook
 
 convert_inline_ast_to_text_hook.call_action(
     action: ConvertInlineAstToTextAction,
-    context: GraphQLContext,
+    context: Context,
     ast: dict,
     metadata: dict,
 )
@@ -22,7 +22,7 @@ Returns `str` if inline AST is valid or `None`.
 
 ```python
 def convert_inline_ast_to_text(
-    context: GraphQLContext, act: dict
+    context: Context, act: dict
 ) -> Optional[str]:
     ...
 ```
@@ -33,7 +33,7 @@ Next filter or built-in function used to convert `dict` with inline abstract syn
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context.

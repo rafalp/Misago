@@ -9,6 +9,7 @@ from ....auth.errors import NotModeratorError
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.loaders import categories_loader
 from ....categories.validators import CategoryExistsValidator, CategoryIsOpenValidator
+from ....context import Context
 from ....database import database
 from ....pubsub.threads import publish_thread_update
 from ....richtext import ParsedMarkupMetadata, parse_markup
@@ -16,7 +17,6 @@ from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Post, Thread
 from ....threads.validators import threadtitlestr
 from ....validation import ErrorsList, Validator, validate_data, validate_model
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadcreate import (
     ThreadCreateInput,
@@ -63,9 +63,9 @@ async def resolve_thread_create(
 
 
 class IsClosedValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     def __call__(self, data: dict, errors: ErrorsList, *_) -> dict:
@@ -79,7 +79,7 @@ class IsClosedValidator:
         return data
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "ThreadCreateInputModel",
         category=(PositiveInt, ...),
@@ -96,7 +96,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadCreateInput,
     errors: ErrorsList,
@@ -105,7 +105,7 @@ async def validate_input_data(
 
 
 async def thread_create(
-    context: GraphQLContext, cleaned_data: ThreadCreateInput
+    context: Context, cleaned_data: ThreadCreateInput
 ) -> Tuple[Thread, Post, ParsedMarkupMetadata]:
     user = context["user"]
     rich_text, metadata = await parse_markup(context, cleaned_data["markup"])

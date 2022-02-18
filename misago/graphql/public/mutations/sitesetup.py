@@ -7,6 +7,7 @@ from pydantic import BaseModel, EmailStr, constr, create_model
 from ....auth import create_user_token
 from ....conf.cache import clear_settings_cache
 from ....conf.update import update_settings
+from ....context import Context
 from ....users.create import create_user
 from ....users.validators import (
     EmailIsAvailableValidator,
@@ -20,7 +21,6 @@ from ....validation import (
     validate_data,
     validate_model,
 )
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 
 site_setup_mutation = MutationType()
@@ -74,7 +74,7 @@ async def resolve_site_setup(
     return {"user": user, "token": token}
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "SiteSetupInputModel",
         forum_name=(constr(strip_whitespace=True, min_length=1, max_length=150), ...),

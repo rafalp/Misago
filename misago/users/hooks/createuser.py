@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Any, Awaitable, Dict, List, Optional, Protocol
 
 from ...avatars.types import AvatarType
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ..models import User
 
@@ -22,7 +22,7 @@ class CreateUserAction(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> User:
         ...
 
@@ -42,7 +42,7 @@ class CreateUserFilter(Protocol):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> User:
         ...
 
@@ -63,7 +63,7 @@ class CreateUserHook(FilterHook[CreateUserAction, CreateUserFilter]):
         is_admin: bool = False,
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
-        context: Optional[GraphQLContext] = None,
+        context: Optional[Context] = None,
     ) -> Awaitable[User]:
         return self.filter(
             action,

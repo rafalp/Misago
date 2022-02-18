@@ -5,7 +5,7 @@ from misago.richtext.hooks import update_markup_metadata_hook
 
 update_markup_metadata_hook.call_action(
     action: UpdateMarkupMetadataAction,
-    context: GraphQLContext,
+    context: Context,
     ast: dict,
     metadata: dict,
 )
@@ -20,7 +20,7 @@ An asynchronous filter for the function used to update `dict` parsed markup's me
 
 ```python
 async def update_markup_metadata(
-    context: GraphQLContext, act: dict, metadata: dict
+    context: Context, act: dict, metadata: dict
 ):
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update `dict` with parsed markup `metad
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

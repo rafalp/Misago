@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postupdate import post_update_input_h
 
 post_update_input_hook.call_action(
     action: PostUpdateInputAction,
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostUpdateInput,
     errors_list: ErrorsList,
@@ -23,7 +23,7 @@ Returns a tuple of `data` that should be used to update the post and validation 
 
 ```python
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostUpdateInput,
     errors: ErrorsList,
@@ -37,7 +37,7 @@ Next filter or built-in function used to validate input data.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

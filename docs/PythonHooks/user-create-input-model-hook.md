@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.usercreate import user_create_input_m
 
 user_create_input_model_hook.call_action(
     action: UserCreateInputModelAction,
-    context: GraphQLContext,
+    context: Context,
 )
 ```
 
@@ -19,7 +19,7 @@ Returns `UserCreateInputModel` input model type.
 ### `action`
 
 ```python
-async def create_input_model(context: GraphQLContext) -> UserCreateInputModel:
+async def create_input_model(context: Context) -> UserCreateInputModel:
     ...
 ```
 
@@ -29,7 +29,7 @@ Next filter or built-in function used to create input model type.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

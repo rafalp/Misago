@@ -4,7 +4,7 @@ from typing import Optional, Type, cast
 from pydantic import ConstrainedStr, constr
 
 from ..conf.types import Settings
-from ..graphql import GraphQLContext
+from ..context import Context
 from .email import get_email_hash
 from .errors import (
     EmailNotAvailableError,
@@ -66,9 +66,9 @@ class EmailIsAvailableValidator:
 
 
 class UserExistsValidator:
-    _context: GraphQLContext
+    _context: Context
 
-    def __init__(self, context: GraphQLContext):
+    def __init__(self, context: Context):
         self._context = context
 
     async def __call__(self, user_id: int, *_) -> User:

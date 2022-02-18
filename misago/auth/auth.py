@@ -1,6 +1,6 @@
 from typing import Awaitable, Optional
 
-from ..graphql import GraphQLContext
+from ..context import Context
 from ..passwords import check_password
 from ..users.get import get_user_by_name_or_email
 from ..users.models import User
@@ -24,7 +24,7 @@ AUTHORIZATION_TYPE = "bearer"
 
 
 def authenticate_user(
-    context: GraphQLContext, username: str, password: str, in_admin: bool = False
+    context: Context, username: str, password: str, in_admin: bool = False
 ) -> Awaitable[Optional[User]]:
     return authenticate_user_hook.call_action(
         authenticate_user_action, context, username, password, in_admin
@@ -32,7 +32,7 @@ def authenticate_user(
 
 
 async def authenticate_user_action(
-    context: GraphQLContext, username: str, password: str, in_admin: bool = False
+    context: Context, username: str, password: str, in_admin: bool = False
 ) -> Optional[User]:
     user = await get_user_by_name_or_email(username)
 
@@ -44,20 +44,20 @@ async def authenticate_user_action(
     return user
 
 
-def get_authenticated_user(context: GraphQLContext) -> Awaitable[Optional[User]]:
+def get_authenticated_user(context: Context) -> Awaitable[Optional[User]]:
     return get_user_from_context_hook.call_action(
         get_user_from_context, context, in_admin=False
     )
 
 
-def get_authenticated_admin(context: GraphQLContext) -> Awaitable[Optional[User]]:
+def get_authenticated_admin(context: Context) -> Awaitable[Optional[User]]:
     return get_user_from_context_hook.call_action(
         get_user_from_context, context, in_admin=True
     )
 
 
 async def get_user_from_context(
-    context: GraphQLContext, in_admin: bool = False
+    context: Context, in_admin: bool = False
 ) -> Optional[User]:
     headers = context["request"].headers
     authorization = headers.get(AUTHORIZATION_HEADER)

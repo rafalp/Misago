@@ -41,27 +41,27 @@ def test_util_extracts_jwt_secret_from_context():
 
 
 @pytest.mark.asyncio
-async def test_user_token_can_be_created(graphql_context, user):
-    token = await create_user_token(graphql_context, user)
-    secret = get_jwt_secret(graphql_context)
+async def test_user_token_can_be_created(context, user):
+    token = await create_user_token(context, user)
+    secret = get_jwt_secret(context)
     payload = decode_jwt_token(secret, token)
     assert payload["user"] == user.id
 
 
 @pytest.mark.asyncio
-async def test_user_can_be_obtained_from_token(graphql_context, user):
-    token = await create_user_token(graphql_context, user)
-    assert await get_user_from_token(graphql_context, token) == user
+async def test_user_can_be_obtained_from_token(context, user):
+    token = await create_user_token(context, user)
+    assert await get_user_from_token(context, token) == user
 
 
 @pytest.mark.asyncio
-async def test_no_user_is_returned_for_invalid_token(graphql_context):
-    user = await get_user_from_token(graphql_context, "invalid")
+async def test_no_user_is_returned_for_invalid_token(context):
+    user = await get_user_from_token(context, "invalid")
     assert user is None
 
 
 @pytest.mark.asyncio
-async def test_deleted_user_is_not_obtained_from_token(graphql_context, user):
-    token = await create_user_token(graphql_context, user)
+async def test_deleted_user_is_not_obtained_from_token(context, user):
+    token = await create_user_token(context, user)
     await user.delete()
-    assert await get_user_from_token(graphql_context, token) is None
+    assert await get_user_from_token(context, token) is None

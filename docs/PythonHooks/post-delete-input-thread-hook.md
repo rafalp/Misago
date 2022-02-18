@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.postdelete import post_delete_input_t
 
 post_delete_input_thread_hook.call_action(
     action: PostDeleteInputThreadAction,
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostDeleteInput,
     errors_list: ErrorsList,
@@ -23,7 +23,7 @@ Returns a tuple of `data` that should be used to validate if thread reply can be
 
 ```python
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: PostDeleteInput,
     errors: ErrorsList,
@@ -37,7 +37,7 @@ Next filter or built-in function used to validate input data.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

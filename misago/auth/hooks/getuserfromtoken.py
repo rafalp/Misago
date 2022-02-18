@@ -1,14 +1,12 @@
 from typing import Any, Awaitable, Callable, Dict, Optional
 
-from ...graphql import GraphQLContext
+from ...context import Context
 from ...hooks import FilterHook
 from ...users.models import User
 
-GetUserFromTokenAction = Callable[
-    [GraphQLContext, str, bool], Awaitable[Optional[User]]
-]
+GetUserFromTokenAction = Callable[[Context, str, bool], Awaitable[Optional[User]]]
 GetUserFromTokenFilter = Callable[
-    [GetUserFromTokenAction, GraphQLContext, str, bool],
+    [GetUserFromTokenAction, Context, str, bool],
     Awaitable[Optional[User]],
 ]
 
@@ -17,7 +15,7 @@ class GetUserFromTokenHook(FilterHook[GetUserFromTokenAction, GetUserFromTokenFi
     def call_action(
         self,
         action: GetUserFromTokenAction,
-        context: GraphQLContext,
+        context: Context,
         token: str,
         in_admin: bool,
     ) -> Awaitable[Optional[User]]:
@@ -25,10 +23,10 @@ class GetUserFromTokenHook(FilterHook[GetUserFromTokenAction, GetUserFromTokenFi
 
 
 GetUserFromTokenPayloadAction = Callable[
-    [GraphQLContext, Dict[str, Any], bool], Awaitable[Optional[User]]
+    [Context, Dict[str, Any], bool], Awaitable[Optional[User]]
 ]
 GetUserFromTokenPayloadFilter = Callable[
-    [GetUserFromTokenPayloadAction, GraphQLContext, Dict[str, Any], bool],
+    [GetUserFromTokenPayloadAction, Context, Dict[str, Any], bool],
     Awaitable[Optional[User]],
 ]
 
@@ -39,7 +37,7 @@ class GetUserFromTokenPayloadHook(
     def call_action(
         self,
         action: GetUserFromTokenPayloadAction,
-        context: GraphQLContext,
+        context: Context,
         token_payload: Dict[str, Any],
         in_admin: bool,
     ) -> Awaitable[Optional[User]]:

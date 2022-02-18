@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.usercreate import user_create_hook
 
 user_create_hook.call_action(
     action: UserCreateAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: UserCreateInput
 )
 ```
@@ -20,7 +20,7 @@ Returns `User` dataclass with newly created user data.
 ### `action`
 
 ```python
-async def register_user(context: GraphQLContext, cleaned_data: UserCreateInput) -> User:
+async def register_user(context: Context, cleaned_data: UserCreateInput) -> User:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to register new user account in the databa
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

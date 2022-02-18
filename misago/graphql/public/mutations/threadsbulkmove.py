@@ -10,6 +10,7 @@ from ....categories.validators import (
     CategoryIsOpenValidator,
     CategoryModeratorValidator,
 )
+from ....context import Context
 from ....threads.loaders import posts_loader, threads_loader
 from ....threads.models import Thread
 from ....threads.move import move_threads
@@ -26,7 +27,6 @@ from ....validation import (
     validate_data,
     validate_model,
 )
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadsbulkmove import (
     ThreadsBulkMoveInput,
@@ -93,7 +93,7 @@ async def resolve_threads_bulk_move(
     return result
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "ThreadsBulkMoveInputModel",
         threads=(bulkactionidslist(PositiveInt, context["settings"]), ...),
@@ -102,7 +102,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadsBulkMoveInput,
     errors: ErrorsList,
@@ -119,7 +119,7 @@ def is_valid(cleaned_data: ThreadsBulkMoveInput, errors_locations: ErrorsList) -
 
 
 async def threads_bulk_move_action(
-    context: GraphQLContext, cleaned_data: ThreadsBulkMoveInput
+    context: Context, cleaned_data: ThreadsBulkMoveInput
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
     threads = await move_threads(threads, cleaned_data["category"])

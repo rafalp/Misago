@@ -5,7 +5,7 @@ from misago.auth.hooks import create_user_token_hook
 
 create_user_token_hook.call_action(
     action: CreateUserTokenAction,
-    context: GraphQLContext,
+    context: Context,
     user: User,
     in_admin: bool,
 )
@@ -21,7 +21,7 @@ Returns `str` with authorization token that should be included by the client in 
 ### `action`
 
 ```python
-async def create_user_token(context: GraphQLContext, user: User, in_admin: bool) -> str:
+async def create_user_token(context: Context, user: User, in_admin: bool) -> str:
     ...
 ```
 
@@ -31,7 +31,7 @@ Next filter or built-in function used to create authorization token for user.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

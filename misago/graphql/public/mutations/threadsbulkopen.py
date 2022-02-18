@@ -6,6 +6,7 @@ from pydantic import BaseModel, PositiveInt, create_model
 
 from ....auth.validators import IsAuthenticatedValidator
 from ....categories.validators import CategoryModeratorValidator
+from ....context import Context
 from ....threads.close import open_threads
 from ....threads.loaders import threads_loader
 from ....threads.models import Thread
@@ -22,7 +23,6 @@ from ....validation import (
     validate_data,
     validate_model,
 )
-from ... import GraphQLContext
 from ...errorhandler import error_handler
 from .hooks.threadsbulkopen import (
     ThreadsBulkOpenInput,
@@ -85,7 +85,7 @@ async def resolve_threads_bulk_open(
     return result
 
 
-def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
+def create_input_model(context: Context) -> Type[BaseModel]:
     return create_model(
         "ThreadsBulkOpenInputModel",
         threads=(bulkactionidslist(PositiveInt, context["settings"]), ...),
@@ -93,7 +93,7 @@ def create_input_model(context: GraphQLContext) -> Type[BaseModel]:
 
 
 async def validate_input_data(
-    context: GraphQLContext,
+    context: Context,
     validators: Dict[str, List[Validator]],
     data: ThreadsBulkOpenInput,
     errors: ErrorsList,
@@ -109,7 +109,7 @@ def is_valid(cleaned_data: ThreadsBulkOpenInput, errors: ErrorsList) -> bool:
 
 
 async def threads_bulk_open_action(
-    context: GraphQLContext, cleaned_data: ThreadsBulkOpenInput
+    context: Context, cleaned_data: ThreadsBulkOpenInput
 ) -> List[Thread]:
     threads = cleaned_data["threads"]
     threads = await open_threads(threads)

@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadsbulkopen import threads_bulk_o
 
 threads_bulk_open_hook.call_action(
     action: ThreadsBulkOpenAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadsBulkOpenInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns `list` of `Thread` dataclasses with updated threads data.
 ### `action`
 
 ```python
-async def open_threads(context: GraphQLContext, cleaned_data: ThreadsBulkOpenInput) -> List[Thread]:
+async def open_threads(context: Context, cleaned_data: ThreadsBulkOpenInput) -> List[Thread]:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update the threads in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

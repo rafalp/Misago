@@ -4,7 +4,7 @@
 from misago.richtext.hooks import convert_rich_text_to_html_hook
 
 convert_rich_text_to_html_hook.call_action(
-    action: ConvertRichTextBlockToHTMLAction, context: GraphQLContext, rich_text: List[dict]
+    action: ConvertRichTextBlockToHTMLAction, context: Context, rich_text: List[dict]
 )
 ```
 
@@ -19,7 +19,7 @@ Returns `str`.
 
 ```python
 def convert_rich_text_to_html(
-    context: GraphQLContext, rich_text: List[dict]
+    context: Context, rich_text: List[dict]
 ) -> str:
     ...
 ```
@@ -30,7 +30,7 @@ Next filter or built-in function used to convert rich text to HTML `str`.
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context.

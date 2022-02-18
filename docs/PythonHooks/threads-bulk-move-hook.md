@@ -5,7 +5,7 @@ from misago.graphql.public.mutations.hooks.threadsbulkmove import threads_bulk_m
 
 threads_bulk_move_hook.call_action(
     action: ThreadsBulkMoveAction,
-    context: GraphQLContext,
+    context: Context,
     cleaned_data: ThreadsBulkMoveInput,
 )
 ```
@@ -20,7 +20,7 @@ Returns list of `Thread` dataclasses with updated threads data.
 ### `action`
 
 ```python
-async def move_threads(context: GraphQLContext, cleaned_data: ThreadsBulkMoveInput) -> List[Thread]:
+async def move_threads(context: Context, cleaned_data: ThreadsBulkMoveInput) -> List[Thread]:
     ...
 ```
 
@@ -30,7 +30,7 @@ Next filter or built-in function used to update threads in the database.
 ### `context`
 
 ```python
-GraphQLContext
+Context
 ```
 
 A dict with GraphQL query context.

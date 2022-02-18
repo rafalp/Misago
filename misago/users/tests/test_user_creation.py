@@ -71,9 +71,9 @@ async def test_user_is_created_with_admin_status(db):
 
 
 @pytest.mark.asyncio
-async def test_create_user_util_creates_user_in_db(db, user_password, graphql_context):
+async def test_create_user_util_creates_user_in_db(db, user_password, context):
     user = await create_user(
-        graphql_context,
+        context,
         "TeST",
         "test@example.com",
         password=user_password,

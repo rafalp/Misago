@@ -5,7 +5,7 @@ from misago.richtext.hooks import convert_block_ast_to_rich_text_hook
 
 convert_block_ast_to_rich_text_hook.call_action(
     action: ConvertBlockAstToRichTextAction,
-    context: GraphQLContext,
+    context: Context,
     ast: dict,
     metadata: dict,
 )
@@ -22,7 +22,7 @@ Returns JSON-serializable `dict` if block's AST is valid or `None`.
 
 ```python
 def convert_block_ast_to_rich_text(
-    context: GraphQLContext, act: dict
+    context: Context, act: dict
 ) -> Optional[RichTextBlock]:
     ...
 ```
@@ -33,7 +33,7 @@ Next filter or built-in function used to convert `dict` with block's abstract sy
 ### `context`
 
 ```python
-Optional[GraphQLContext]
+Optional[Context]
 ```
 
 A dict with GraphQL query context.
