@@ -16,6 +16,11 @@ from ..decorators import admin_resolver
 query_type = QueryType()
 
 
+@query_type.field("auth")
+def resolve_auth(_, info: GraphQLResolveInfo) -> Optional[User]:
+    return info.context["user"]
+
+
 @query_type.field("category")
 @admin_resolver
 @invalid_args_handler
