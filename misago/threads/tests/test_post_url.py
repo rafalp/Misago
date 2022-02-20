@@ -37,6 +37,9 @@ async def test_thread_post_page_for_last_post_on_first_page_is_calculated_to_2(
     page = await get_thread_post_page(dynamic_settings, thread, post.id)
     assert page == 2
 
+    url = await get_thread_post_url(dynamic_settings, thread, post.id)
+    assert url == f"/t/{thread.slug}/{thread.id}/2/#post-{post.id}"
+
 
 @pytest.mark.asyncio
 async def test_thread_post_page_for_last_post_on_first_page_is_calculated_to_1(

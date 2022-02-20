@@ -8,7 +8,7 @@ async def get_thread_post_url(settings: Settings, thread: Thread, post_id: int) 
 
     url = f"/t/{thread.slug}/{thread.id}/"
     if page_number > 1:
-        url += f"/{page_number}/"
+        url += f"{page_number}/"
     url += f"#post-{post_id}"
     return url
 
