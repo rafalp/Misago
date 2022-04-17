@@ -19,34 +19,6 @@ class Space:
     public: bool
 
 
-async def get_admin_graphql_context(request: Request) -> Context:
-    return await graphql_context_hook.call_action(
-        get_admin_graphql_context_action, request
-    )
-
-
-async def get_admin_graphql_context_action(request: Request) -> Context:
-    context = await get_graphql_context(request)
-    context["space"] = Space(admin=True, public=False)
-    context["user"] = await get_authenticated_admin(context)
-    request.scope["user"] = context["user"]
-    return context
-
-
-async def get_public_graphql_context(request: Request) -> Context:
-    return await graphql_context_hook.call_action(
-        get_public_graphql_context_action, request
-    )
-
-
-async def get_public_graphql_context_action(request: Request) -> Context:
-    context = await get_graphql_context(request)
-    context["space"] = Space(admin=False, public=True)
-    context["user"] = await get_authenticated_user(context)
-    request.scope["user"] = context["user"]
-    return context
-
-
 async def get_graphql_context(request: Request) -> Context:
     request.scope["user"] = None
 
@@ -80,4 +52,32 @@ async def get_graphql_context(request: Request) -> Context:
     posts_loader.setup_context(context)
     users_loader.setup_context(context)
 
+    return context
+
+
+async def get_public_graphql_context(request: Request) -> Context:
+    return await graphql_context_hook.call_action(
+        get_public_graphql_context_action, request
+    )
+
+
+async def get_public_graphql_context_action(request: Request) -> Context:
+    context = await get_graphql_context(request)
+    context["space"] = Space(admin=False, public=True)
+    context["user"] = await get_authenticated_user(context)
+    request.scope["user"] = context["user"]
+    return context
+
+
+async def get_admin_graphql_context(request: Request) -> Context:
+    return await graphql_context_hook.call_action(
+        get_admin_graphql_context_action, request
+    )
+
+
+async def get_admin_graphql_context_action(request: Request) -> Context:
+    context = await get_graphql_context(request)
+    context["space"] = Space(admin=True, public=False)
+    context["user"] = await get_authenticated_admin(context)
+    request.scope["user"] = context["user"]
     return context

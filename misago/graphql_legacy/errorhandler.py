@@ -15,10 +15,10 @@ def error_handler(f):
             if isawaitable(result):
                 result = await result
         except VALIDATION_ERRORS as error:
-            result = {ERRORS: ErrorsList([format_error(error)])}
+            result = {ERRORS: [error]}
 
         if result.get(ERRORS):
-            result[ERRORS] = ErrorsList([format_error(e) for e in result.get(ERRORS)])
+            result[ERRORS] = ErrorsList([format_error(e) for e in result[ERRORS]])
 
         return result
 

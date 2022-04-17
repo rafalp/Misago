@@ -1,7 +1,7 @@
 aiodataloader
 alembic
-ariadne[asgi-file-uploads]==0.15.0.dev4
-ariadne-graphql-modules==0.2.0.dev1
+ariadne[asgi-file-uploads]
+ariadne-graphql-modules
 asgiref
 async-caches
 Babel

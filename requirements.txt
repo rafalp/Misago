@@ -18,7 +18,7 @@ ariadne[asgi-file-uploads]==0.15.0.dev4
     # via
     #   -r requirements.in
     #   ariadne-graphql-modules
-ariadne-graphql-modules==0.2.0.dev1
+ariadne-graphql-modules==0.2.0.dev2
     # via -r requirements.in
 asgiref==3.4.1
     # via

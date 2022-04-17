@@ -4,7 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 from .cache import cache
 from .conf import settings
 from .database import database
-from .graphql.apps import admin_grapqhl, public_graphql
+from .graphql.apps import admin_graphql, public_graphql
 from .middleware import MisagoMiddleware
 from .plugins import import_plugins
 from .pubsub import broadcast
@@ -40,6 +40,6 @@ app.add_middleware(
 app.mount("/graphql/", public_graphql)
 app.add_websocket_route("/graphql/", public_graphql.websocket_server)
 
-app.mount("/admin/graphql/", admin_grapqhl)
+app.mount("/admin/graphql/", admin_graphql)
 
 register_routes(app)
