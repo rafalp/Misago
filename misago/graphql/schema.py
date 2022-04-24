@@ -1,19 +1,19 @@
-from ariadne import gql
 from ariadne_graphql_modules import BaseType, make_executable_schema
 from graphql import GraphQLSchema
 
-from . import auth, users
+from . import auth, user
 from .hooks import create_admin_schema_hook, create_public_schema_hook
 
 ADMIN_TYPES = [
     auth.AdminLoginMutation,
-    auth.QueryType,
-    users.AdminUserType,
+    auth.AuthQueries,
+    user.AdminUserQueries,
 ]
 
 PUBLIC_TYPES = [
     auth.LoginMutation,
-    auth.QueryType,
+    auth.AuthQueries,
+    user.UserQueries,
 ]
 
 

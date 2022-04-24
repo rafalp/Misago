@@ -1,7 +1,7 @@
 from inspect import isawaitable
 from typing import Union
 
-from ariadne_graphql_modules import MutationType
+from ariadne_graphql_modules import MutationType as BaseMutationType
 
 from ...validation import VALIDATION_ERRORS, ErrorDict, ErrorsList, get_error_dict
 from ..errors import AuthenticationGraphQLError, ForbiddenGraphQLError
@@ -9,7 +9,7 @@ from ..errors import AuthenticationGraphQLError, ForbiddenGraphQLError
 ERRORS = "errors"
 
 
-class Mutation(MutationType):
+class MutationType(BaseMutationType):
     __abstract__ = True
 
     @classmethod
@@ -39,7 +39,7 @@ def format_error(error: Union[ErrorDict, Exception]) -> ErrorDict:
     return error
 
 
-class AdminMutation(Mutation):
+class AdminMutationTypes(MutationType):
     __abstract__ = True
 
     @classmethod

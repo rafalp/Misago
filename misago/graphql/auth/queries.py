@@ -7,7 +7,7 @@ from ...users.models import User
 from ..users import UserType
 
 
-class QueryType(ObjectType):
+class AuthQueries(ObjectType):
     __schema__ = gql(
         """
         type Query {

@@ -1,0 +1,2 @@
+class InvalidArgumentError(ValueError):
+    pass

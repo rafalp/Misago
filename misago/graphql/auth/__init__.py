@@ -1,8 +1,8 @@
 from .login import AdminLoginMutation, LoginMutation
-from .query import QueryType
+from .queries import AuthQueries
 
 __all__ = [
     "AdminLoginMutation",
+    "AuthQueries",
     "LoginMutation",
-    "QueryType",
 ]
