@@ -5,7 +5,7 @@ from ...auth import authenticate_user, create_user_token
 from ...auth.errors import InvalidCredentialsError, NotAdminError
 from ...validation import AllFieldsAreRequiredError
 from ..mutation import ErrorType, MutationType
-from ..users import UserType
+from ..user import UserType
 
 
 class LoginMutationResult(ObjectType):

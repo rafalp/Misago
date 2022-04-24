@@ -4,7 +4,7 @@ from ariadne_graphql_modules import ObjectType, gql
 from graphql import GraphQLResolveInfo
 
 from ...users.models import User
-from ..users import UserType
+from ..user import UserType
 
 
 class AuthQueries(ObjectType):
