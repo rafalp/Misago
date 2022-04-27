@@ -29,14 +29,14 @@ class FloodProtectionMiddleware(PostingMiddleware):
         self.user.update_fields.append("last_posted_on")
 
         if self.settings.hourly_post_limit:
-            cutoff = now - timedelta(hours=24)
+            cutoff = now - timedelta(hours=1)
             if self.is_limit_exceeded(cutoff, self.settings.hourly_post_limit):
                 raise PostingInterrupt(
                     _("Your account has exceed an hourly post limit.")
                 )
 
         if self.settings.daily_post_limit:
-            cutoff = now - timedelta(hours=1)
+            cutoff = now - timedelta(hours=24)
             if self.is_limit_exceeded(cutoff, self.settings.daily_post_limit):
                 raise PostingInterrupt(_("Your account has exceed a daily post limit."))
 
