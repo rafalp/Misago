@@ -77,20 +77,12 @@ class AdminUserQueries(AdminQueries):
     __schema__ = gql(
         """
         type Query {
-            user(id: ID!): User
             users(filters: UsersFilters, page: Int): UsersPage
+            user(id: ID!): User
         }
         """
     )
     __requires__ = [AdminUserType, AdminUsersPageType, AdminUsersFilters]
-
-    @staticmethod
-    @handle_invalid_args
-    def resolve_user(
-        _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
-    ) -> Awaitable[Optional[User]]:
-        user_id = clean_id_arg(id)
-        return users_loader.load(info.context, user_id)
 
     @staticmethod
     @handle_invalid_args
@@ -117,3 +109,11 @@ class AdminUserQueries(AdminQueries):
         await paginator.count_pages()
 
         return await paginator.get_page(page)
+
+    @staticmethod
+    @handle_invalid_args
+    def resolve_user(
+        _, info: GraphQLResolveInfo, *, id: str  # pylint: disable=redefined-builtin
+    ) -> Awaitable[Optional[User]]:
+        user_id = clean_id_arg(id)
+        return users_loader.load(info.context, user_id)
