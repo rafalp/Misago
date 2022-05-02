@@ -11,7 +11,7 @@ public_graphql = GraphQL(
     context_value=get_public_graphql_context,
 )
 
-admin_grapqhl = GraphQL(
+admin_graphql = GraphQL(
     admin_schema,
     debug=settings.debug,
     context_value=get_admin_graphql_context,

@@ -1,4 +1,4 @@
 from .error import ErrorType
-from .mutation import AdminMutationTypes, MutationType
+from .mutation import AdminMutationType, MutationType
 
-__all__ = ["AdminMutationTypes", "ErrorType", "MutationType"]
+__all__ = ["AdminMutationType", "ErrorType", "MutationType"]

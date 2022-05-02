@@ -8,10 +8,10 @@ from ..mutation import ErrorType, MutationType
 from ..user import UserType
 
 
-class LoginMutationResult(ObjectType):
+class LoginResultType(ObjectType):
     __schema__ = gql(
         """
-        type LoginMutationResult {
+        type LoginResult {
             user: User
             token: String
             errors: [Error!]
@@ -25,11 +25,11 @@ class LoginMutation(MutationType):
     __schema__ = gql(
         """
         type Mutation {
-            login(username: String!, password: String!): LoginMutationResult!
+            login(username: String!, password: String!): LoginResult!
         }
         """
     )
-    __requires__ = [LoginMutationResult]
+    __requires__ = [LoginResultType]
 
     @staticmethod
     async def mutate(info: GraphQLResolveInfo, *, username: str, password: str) -> dict:
@@ -52,11 +52,11 @@ class AdminLoginMutation(MutationType):
     __schema__ = gql(
         """
         type Mutation {
-            login(username: String!, password: String!): LoginMutationResult!
+            login(username: String!, password: String!): LoginResult!
         }
         """
     )
-    __requires__ = [LoginMutationResult]
+    __requires__ = [LoginResultType]
 
     @staticmethod
     async def mutate(info: GraphQLResolveInfo, *, username: str, password: str) -> dict:

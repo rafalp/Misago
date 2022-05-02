@@ -39,7 +39,7 @@ def format_error(error: Union[ErrorDict, Exception]) -> ErrorDict:
     return error
 
 
-class AdminMutationTypes(MutationType):
+class AdminMutationType(MutationType):
     __abstract__ = True
 
     @classmethod

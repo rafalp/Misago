@@ -14,11 +14,11 @@ anyio==3.4.0
     # via
     #   httpcore
     #   starlette
-ariadne[asgi-file-uploads]==0.15.0.dev4
+ariadne[asgi-file-uploads]==0.15.1
     # via
     #   -r requirements.in
     #   ariadne-graphql-modules
-ariadne-graphql-modules==0.2.0.dev2
+ariadne-graphql-modules==0.3.0
     # via -r requirements.in
 asgiref==3.4.1
     # via
