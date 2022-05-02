@@ -33,7 +33,7 @@ CATEGORY_MOVE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_moves_sibling_category_before_other_category(
+async def test_admin_category_move_mutation_moves_sibling_category_before_other_category(
     query_admin_api, category, child_category, sibling_category, closed_category
 ):
     result = await query_admin_api(
@@ -90,7 +90,7 @@ async def test_move_category_mutation_moves_sibling_category_before_other_catego
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_moves_sibling_category_before_child_category(
+async def test_admin_category_move_mutation_moves_sibling_category_before_child_category(
     query_admin_api, category, child_category, sibling_category, closed_category
 ):
     result = await query_admin_api(
@@ -150,7 +150,7 @@ async def test_move_category_mutation_moves_sibling_category_before_child_catego
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_moves_sibling_category_after_child_category(
+async def test_admin_category_move_mutation_moves_sibling_category_after_child_category(
     query_admin_api, category, child_category, sibling_category, closed_category
 ):
     result = await query_admin_api(
@@ -209,7 +209,7 @@ async def test_move_category_mutation_moves_sibling_category_after_child_categor
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_moves_child_category_to_root(
+async def test_admin_category_move_mutation_moves_child_category_to_root(
     query_admin_api, category, child_category, sibling_category, closed_category
 ):
     result = await query_admin_api(
@@ -265,7 +265,7 @@ async def test_move_category_mutation_moves_child_category_to_root(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_moves_child_category_to_root_before_parent(
+async def test_admin_category_move_mutation_moves_child_category_to_root_before_parent(
     query_admin_api, category, child_category, sibling_category, closed_category
 ):
     result = await query_admin_api(
@@ -323,7 +323,9 @@ async def test_move_category_mutation_moves_child_category_to_root_before_parent
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_category_id_is_invalid(query_admin_api):
+async def test_admin_category_move_mutation_fails_if_category_id_is_invalid(
+    query_admin_api,
+):
     result = await query_admin_api(
         CATEGORY_MOVE_MUTATION,
         {
@@ -344,7 +346,7 @@ async def test_move_category_mutation_fails_if_category_id_is_invalid(query_admi
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_parent_id_is_invalid(
+async def test_admin_category_move_mutation_fails_if_parent_id_is_invalid(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -371,7 +373,7 @@ async def test_move_category_mutation_fails_if_parent_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_before_id_is_invalid(
+async def test_admin_category_move_mutation_fails_if_before_id_is_invalid(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -398,7 +400,7 @@ async def test_move_category_mutation_fails_if_before_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
+async def test_admin_category_move_mutation_fails_if_category_id_doesnt_exist(
     query_admin_api,
 ):
     result = await query_admin_api(
@@ -421,7 +423,7 @@ async def test_move_category_mutation_fails_if_category_id_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_parent_id_doesnt_exist(
+async def test_admin_category_move_mutation_fails_if_parent_id_doesnt_exist(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -448,7 +450,7 @@ async def test_move_category_mutation_fails_if_parent_id_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_before_id_doesnt_exist(
+async def test_admin_category_move_mutation_fails_if_before_id_doesnt_exist(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -475,7 +477,7 @@ async def test_move_category_mutation_fails_if_before_id_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_category_parent_is_itself(
+async def test_admin_category_move_mutation_fails_if_category_parent_is_itself(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -502,7 +504,7 @@ async def test_move_category_mutation_fails_if_category_parent_is_itself(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_category_before_is_itself(
+async def test_admin_category_move_mutation_fails_if_category_before_is_itself(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -529,7 +531,7 @@ async def test_move_category_mutation_fails_if_category_before_is_itself(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_parent_is_child_category(
+async def test_admin_category_move_mutation_fails_if_parent_is_child_category(
     query_admin_api, category, child_category
 ):
     result = await query_admin_api(
@@ -556,7 +558,7 @@ async def test_move_category_mutation_fails_if_parent_is_child_category(
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_root_category_is_moved_after_child(
+async def test_admin_category_move_mutation_fails_if_root_category_is_moved_after_child(
     query_admin_api, category, child_category
 ):
     result = await query_admin_api(
@@ -583,7 +585,7 @@ async def test_move_category_mutation_fails_if_root_category_is_moved_after_chil
 
 
 @pytest.mark.asyncio
-async def test_move_category_mutation_fails_if_child_is_moved_after_root(
+async def test_admin_category_move_mutation_fails_if_child_is_moved_after_root(
     query_admin_api, category, child_category, sibling_category
 ):
     result = await query_admin_api(

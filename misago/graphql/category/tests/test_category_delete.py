@@ -23,7 +23,7 @@ CATEGORY_DELETE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_deletes_category_with_its_children(
+async def test_admin_category_delete_mutation_deletes_category_with_its_children(
     query_admin_api, category, child_category
 ):
     result = await query_admin_api(
@@ -53,7 +53,7 @@ async def test_category_delete_mutation_deletes_category_with_its_children(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_deletes_category_but_moves_its_children(
+async def test_admin_category_delete_mutation_deletes_category_but_moves_its_children(
     query_admin_api, category, child_category, sibling_category
 ):
     result = await query_admin_api(
@@ -95,7 +95,7 @@ async def test_category_delete_mutation_deletes_category_but_moves_its_children(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_deletes_category_and_its_threads(
+async def test_admin_category_delete_mutation_deletes_category_and_its_threads(
     query_admin_api, category, thread, post
 ):
     result = await query_admin_api(
@@ -130,7 +130,7 @@ async def test_category_delete_mutation_deletes_category_and_its_threads(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_but_move_children_mutation_keeps_children_threads(
+async def test_admin_category_delete_but_move_children_mutation_keeps_children_threads(
     query_admin_api, category, child_category, sibling_category, thread, post
 ):
     await thread.update(category=child_category)
@@ -157,7 +157,7 @@ async def test_category_delete_but_move_children_mutation_keeps_children_threads
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_deletes_children_threads(
+async def test_admin_category_delete_mutation_deletes_children_threads(
     query_admin_api, category, child_category, thread, post
 ):
     await thread.update(category=child_category)
@@ -183,7 +183,7 @@ async def test_category_delete_mutation_deletes_children_threads(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_but_move_threads_mutation_moves_children_threads(
+async def test_admin_category_delete_but_move_threads_mutation_moves_children_threads(
     query_admin_api, category, child_category, sibling_category, thread, post
 ):
     await thread.update(category=child_category)
@@ -210,7 +210,7 @@ async def test_category_delete_but_move_threads_mutation_moves_children_threads(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_but_move_all_mutation_moves_category_threads(
+async def test_admin_category_delete_but_move_all_mutation_moves_category_threads(
     query_admin_api, category, child_category, sibling_category, thread, post
 ):
     result = await query_admin_api(
@@ -235,7 +235,7 @@ async def test_category_delete_but_move_all_mutation_moves_category_threads(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_but_move_all_mutation_keeps_children_threads(
+async def test_admin_category_delete_but_move_all_mutation_keeps_children_threads(
     query_admin_api, category, child_category, sibling_category, thread, post
 ):
     await thread.update(category=child_category)
@@ -263,7 +263,7 @@ async def test_category_delete_but_move_all_mutation_keeps_children_threads(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_category_id_is_invalid(
+async def test_admin_category_delete_mutation_fails_if_category_id_is_invalid(
     query_admin_api,
 ):
     result = await query_admin_api(
@@ -285,7 +285,7 @@ async def test_category_delete_mutation_fails_if_category_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_move_children_id_is_invalid(
+async def test_admin_category_delete_mutation_fails_if_move_children_id_is_invalid(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -308,7 +308,7 @@ async def test_category_delete_mutation_fails_if_move_children_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_move_threads_id_is_invalid(
+async def test_admin_category_delete_mutation_fails_if_move_threads_id_is_invalid(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -331,7 +331,7 @@ async def test_category_delete_mutation_fails_if_move_threads_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_category(
+async def test_admin_category_delete_mutation_fails_if_threads_are_moved_to_deleted_category(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -354,7 +354,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ca
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_child(
+async def test_admin_category_delete_mutation_fails_if_threads_are_moved_to_deleted_child(
     query_admin_api, category, child_category
 ):
     result = await query_admin_api(
@@ -377,7 +377,7 @@ async def test_category_delete_mutation_fails_if_threads_are_moved_to_deleted_ch
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_children_are_moved_to_deleted_category(
+async def test_admin_category_delete_mutation_fails_if_children_are_moved_to_deleted_category(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -400,7 +400,7 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_deleted_c
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_fails_if_children_are_moved_to_child_category(
+async def test_admin_category_delete_mutation_fails_if_children_are_moved_to_child_category(
     query_admin_api, sibling_category, child_category
 ):
     result = await query_admin_api(
@@ -423,7 +423,9 @@ async def test_category_delete_mutation_fails_if_children_are_moved_to_child_cat
 
 
 @pytest.mark.asyncio
-async def test_category_delete_mutation_requires_admin_auth(query_admin_api, category):
+async def test_admin_category_delete_mutation_requires_admin_auth(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_DELETE_MUTATION,
         {

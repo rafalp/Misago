@@ -26,7 +26,9 @@ CATEGORY_UPDATE_MUTATION = """
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_edits_category_name(query_admin_api, category):
+async def test_admin_category_update_mutation_edits_category_name(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {
@@ -56,7 +58,9 @@ async def test_category_update_mutation_edits_category_name(query_admin_api, cat
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_edits_category_color(query_admin_api, category):
+async def test_admin_category_update_mutation_edits_category_color(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {
@@ -86,7 +90,9 @@ async def test_category_update_mutation_edits_category_color(query_admin_api, ca
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_edits_category_icon(query_admin_api, category):
+async def test_admin_category_update_mutation_edits_category_icon(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {
@@ -115,7 +121,7 @@ async def test_category_update_mutation_edits_category_icon(query_admin_api, cat
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_removes_category_icon(
+async def test_admin_category_update_mutation_removes_category_icon(
     query_admin_api, category
 ):
     await category.update(icon="fas fa-lock")
@@ -148,7 +154,9 @@ async def test_category_update_mutation_removes_category_icon(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_closes_category(query_admin_api, category):
+async def test_admin_category_update_mutation_closes_category(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {
@@ -177,7 +185,7 @@ async def test_category_update_mutation_closes_category(query_admin_api, categor
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_opens_category(
+async def test_admin_category_update_mutation_opens_category(
     query_admin_api, closed_category
 ):
     result = await query_admin_api(
@@ -208,7 +216,7 @@ async def test_category_update_mutation_opens_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_changes_child_category_to_root_category(
+async def test_admin_category_update_mutation_changes_child_category_to_root_category(
     query_admin_api, child_category
 ):
     result = await query_admin_api(
@@ -253,7 +261,7 @@ async def test_category_update_mutation_changes_child_category_to_root_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_changes_root_category_to_child_category(
+async def test_admin_category_update_mutation_changes_root_category_to_child_category(
     query_admin_api, category, sibling_category
 ):
     result = await query_admin_api(
@@ -300,7 +308,7 @@ async def test_category_update_mutation_changes_root_category_to_child_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_id_is_invalid(
+async def test_admin_category_update_mutation_fails_if_category_id_is_invalid(
     query_admin_api,
 ):
     result = await query_admin_api(
@@ -325,7 +333,9 @@ async def test_category_update_mutation_fails_if_category_id_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_doesnt_exist(query_admin_api):
+async def test_admin_category_update_mutation_fails_if_category_doesnt_exist(
+    query_admin_api,
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {
@@ -348,7 +358,7 @@ async def test_category_update_mutation_fails_if_category_doesnt_exist(query_adm
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_name_is_too_short(
+async def test_admin_category_update_mutation_fails_if_category_name_is_too_short(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -381,7 +391,7 @@ async def test_category_update_mutation_fails_if_category_name_is_too_short(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_name_is_too_long(
+async def test_admin_category_update_mutation_fails_if_category_name_is_too_long(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -414,7 +424,7 @@ async def test_category_update_mutation_fails_if_category_name_is_too_long(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_name_is_not_sluggable(
+async def test_admin_category_update_mutation_fails_if_category_name_is_not_sluggable(
     query_admin_api, category
 ):
     result = await query_admin_api(
@@ -447,7 +457,7 @@ async def test_category_update_mutation_fails_if_category_name_is_not_sluggable(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_parent_is_invalid(
+async def test_admin_category_update_mutation_fails_if_category_parent_is_invalid(
     query_admin_api, sibling_category
 ):
     result = await query_admin_api(
@@ -480,7 +490,7 @@ async def test_category_update_mutation_fails_if_category_parent_is_invalid(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_parent_doesnt_exist(
+async def test_admin_category_update_mutation_fails_if_category_parent_doesnt_exist(
     query_admin_api, sibling_category
 ):
     result = await query_admin_api(
@@ -513,7 +523,7 @@ async def test_category_update_mutation_fails_if_category_parent_doesnt_exist(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_parent_is_category(
+async def test_admin_category_update_mutation_fails_if_category_parent_is_category(
     query_admin_api, sibling_category
 ):
     result = await query_admin_api(
@@ -546,7 +556,7 @@ async def test_category_update_mutation_fails_if_category_parent_is_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_parent_is_child_category(
+async def test_admin_category_update_mutation_fails_if_parent_is_child_category(
     query_admin_api, child_category, sibling_category
 ):
     result = await query_admin_api(
@@ -579,7 +589,7 @@ async def test_category_update_mutation_fails_if_parent_is_child_category(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_fails_if_category_has_children(
+async def test_admin_category_update_mutation_fails_if_category_has_children(
     query_admin_api, category, sibling_category
 ):
     result = await query_admin_api(
@@ -612,7 +622,9 @@ async def test_category_update_mutation_fails_if_category_has_children(
 
 
 @pytest.mark.asyncio
-async def test_category_update_mutation_requires_admin_auth(query_admin_api, category):
+async def test_admin_category_update_mutation_requires_admin_auth(
+    query_admin_api, category
+):
     result = await query_admin_api(
         CATEGORY_UPDATE_MUTATION,
         {

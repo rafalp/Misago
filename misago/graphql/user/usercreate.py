@@ -191,7 +191,7 @@ class AdminUserCreateMutation(AdminMutationType):
     @classmethod
     async def clean_data(cls, info: GraphQLResolveInfo, data: dict):
         input_model = cls.create_input_model(info.context)
-        cleaned_data, errors = validate_model(input_model, input)
+        cleaned_data, errors = validate_model(input_model, data)
 
         if cleaned_data:
             validators: Dict[str, List[Validator]] = {
@@ -207,7 +207,7 @@ class AdminUserCreateMutation(AdminMutationType):
         return cleaned_data, errors
 
     @classmethod
-    def create_input_model(context: Context) -> Type[BaseModel]:
+    def create_input_model(cls, context: Context) -> Type[BaseModel]:
         return create_model(
             "UserCreateInputModel",
             name=(usernamestr(context["settings"]), ...),
@@ -216,7 +216,7 @@ class AdminUserCreateMutation(AdminMutationType):
         )
 
     @classmethod
-    async def register_user(context: Context, cleaned_data: dict) -> User:
+    async def register_user(cls, context: Context, cleaned_data: dict) -> User:
         user = await create_user(
             context,
             cleaned_data["name"],
