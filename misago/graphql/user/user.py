@@ -8,7 +8,7 @@ from ...conf import settings
 from ...uploads.urls import make_media_url
 from ...users.models import User
 
-from ..avatars import AvatarType as AvatarGraphQLType, AvatarTypeEnum
+from ..avatar import AvatarType as AvatarGraphQLType, AvatarTypeEnum
 from ..scalars import DateTimeScalar
 
 
