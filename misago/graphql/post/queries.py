@@ -37,8 +37,7 @@ class PostQueries(ObjectType):
     ) -> Optional[Page]:
         thread_id = clean_id_arg(thread)
         page = clean_page_arg(page)
-
-        return resolve_posts_page(info, thread_id, page=page)
+        return await resolve_posts_page(info, thread_id, page=page)
 
     @staticmethod
     @handle_invalid_args
