@@ -46,7 +46,7 @@ class ThreadOpenMutation(MutationType):
     @classmethod
     async def mutate(cls, info: GraphQLResolveInfo, **data):
         cleaned_data, errors = await cls.clean_data(info, data)
-        thread = cleaned_data.get("thread")
+        thread = cleaned_data.get("org_thread")
 
         if errors:
             return {"errors": errors, "thread": thread, "updated": False}
@@ -63,9 +63,9 @@ class ThreadOpenMutation(MutationType):
         cleaned_data, errors = validate_model(input_model, data)
 
         if cleaned_data.get("thread"):
-            thread = await threads_loader.load(info.context, cleaned_data["thread"])
-        else:
-            thread = None
+            cleaned_data["org_thread"] = await threads_loader.load(
+                info.context, cleaned_data["thread"]
+            )
 
         if cleaned_data:
             validators: Dict[str, List[Validator]] = {
@@ -81,7 +81,6 @@ class ThreadOpenMutation(MutationType):
                 cls.validate_input_data, info.context, validators, cleaned_data, errors
             )
 
-        cleaned_data["thread"] = thread
         return cleaned_data, errors
 
     @classmethod
