@@ -82,7 +82,7 @@ class PostsBulkDeleteMutation(MutationType):
         cleaned_data, errors = await cls.clean_data(info, data)
 
         deleted: List[str] = []
-        thread = cleaned_data.get("thread")
+        thread = cleaned_data.get("org_thread")
 
         if cleaned_data.get("posts"):
             deleted = [i.id for i in cleaned_data["posts"]]
@@ -105,11 +105,11 @@ class PostsBulkDeleteMutation(MutationType):
         cleaned_data, errors = validate_model(input_model, data)
 
         if cleaned_data.get("thread"):
-            thread = await threads_loader.load(info.context, cleaned_data["thread"])
-        else:
-            thread = None
+            cleaned_data["org_thread"] = await threads_loader.load(
+                info.context, cleaned_data["thread"]
+            )
 
-        if thread and cleaned_data.get("posts"):
+        if cleaned_data.get("org_thread") and cleaned_data.get("posts"):
             # prime posts cache for bulk action
             await posts_loader.load_many(info.context, cleaned_data["posts"])
 
@@ -157,10 +157,9 @@ class PostsBulkDeleteMutation(MutationType):
                 errors,
             )
         else:
-            # Remove partially validated posts list
+            # Remove partially cleaned posts list from cleaned data
             cleaned_data.pop("posts", None)
 
-        cleaned_data["thread"] = thread
         return cleaned_data, errors
 
     @classmethod

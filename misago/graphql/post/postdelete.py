@@ -72,7 +72,7 @@ class PostDeleteMutation(MutationType):
         **data,
     ):
         cleaned_data, errors = await cls.clean_data(info, data)
-        thread = cleaned_data.get("thread")
+        thread = cleaned_data.get("org_thread")
 
         if errors:
             return {"errors": errors, "thread": thread, "deleted": False}
@@ -89,9 +89,9 @@ class PostDeleteMutation(MutationType):
         cleaned_data, errors = validate_model(input_model, data)
 
         if cleaned_data.get("thread"):
-            thread = await threads_loader.load(info.context, cleaned_data["thread"])
-        else:
-            thread = None
+            cleaned_data["org_thread"] = await threads_loader.load(
+                info.context, cleaned_data["thread"]
+            )
 
         if cleaned_data:
             thread_validators: Dict[str, List[Validator]] = {
@@ -112,7 +112,6 @@ class PostDeleteMutation(MutationType):
             )
 
         if errors:
-            cleaned_data["thread"] = thread
             return cleaned_data, errors
 
         if cleaned_data.get("thread"):
@@ -129,8 +128,6 @@ class PostDeleteMutation(MutationType):
                 cleaned_data,
                 errors,
             )
-
-        cleaned_data["thread"] = thread
 
         return cleaned_data, errors
 

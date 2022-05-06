@@ -67,7 +67,7 @@ class PostCreateMutation(MutationType):
         input: dict,  # pylint: disable=redefined-builtin
     ):
         cleaned_data, errors = await cls.clean_data(info, input)
-        thread = cleaned_data.get("thread")
+        thread = cleaned_data.get("org_thread")
 
         if errors:
             return {"errors": errors, "thread": thread}
@@ -84,9 +84,9 @@ class PostCreateMutation(MutationType):
         cleaned_data, errors = validate_model(input_model, data)
 
         if cleaned_data.get("thread"):
-            thread = await threads_loader.load(info.context, cleaned_data["thread"])
-        else:
-            thread = None
+            cleaned_data["org_thread"] = await threads_loader.load(
+                info.context, cleaned_data["thread"]
+            )
 
         if cleaned_data:
             validators: Dict[str, List[Validator]] = {
@@ -104,8 +104,6 @@ class PostCreateMutation(MutationType):
             cleaned_data, errors = await post_create_input_hook.call_action(
                 cls.validate_input_data, info.context, validators, cleaned_data, errors
             )
-
-        cleaned_data["thread"] = thread
 
         return cleaned_data, errors
 

@@ -66,8 +66,8 @@ class PostUpdateMutation(MutationType):
         input: dict,  # pylint: disable=redefined-builtin
     ):
         cleaned_data, errors = await cls.clean_data(info, input)
-        thread = cleaned_data.get("thread")
-        post = cleaned_data.get("post")
+        thread = cleaned_data.get("org_thread")
+        post = cleaned_data.get("org_post")
 
         if errors:
             return {
@@ -96,9 +96,13 @@ class PostUpdateMutation(MutationType):
         thread = None
 
         if cleaned_data.get("post"):
-            post = await posts_loader.load(info.context, cleaned_data["post"])
-            if post:
-                thread = await threads_loader.load(info.context, post.thread_id)
+            cleaned_data["org_post"] = await posts_loader.load(
+                info.context, cleaned_data["post"]
+            )
+            if cleaned_data["org_post"]:
+                cleaned_data["org_thread"] = await threads_loader.load(
+                    info.context, cleaned_data["org_post"].thread_id
+                )
 
         if cleaned_data:
             validators: Dict[str, List[Validator]] = {
@@ -119,9 +123,6 @@ class PostUpdateMutation(MutationType):
             cleaned_data, errors = await post_update_input_hook.call_action(
                 cls.validate_input_data, info.context, validators, cleaned_data, errors
             )
-
-        cleaned_data["thread"] = thread
-        cleaned_data["post"] = post
 
         return cleaned_data, errors
 

@@ -29,6 +29,7 @@ PUBLIC_TYPES = [
     post.PostQueries,
     richtext.RichTextQueries,
     settings.SettingsQueries,
+    thread.ThreadMutations,
     thread.ThreadQueries,
     user.UserCreateMutation,
     user.UserQueries,
