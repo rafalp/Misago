@@ -1,7 +1,7 @@
 from ariadne_graphql_modules import BaseType, make_executable_schema
 from graphql import GraphQLSchema
 
-from . import auth, avatar, category, settings, user
+from . import auth, avatar, category, post, richtext, settings, thread, user
 from .hooks import create_admin_schema_hook, create_public_schema_hook
 
 ADMIN_TYPES = [
@@ -25,7 +25,11 @@ PUBLIC_TYPES = [
     auth.AuthQueries,
     avatar.AvatarUploadMutation,
     category.CategoryQueries,
+    post.PostMutations,
+    post.PostQueries,
+    richtext.RichTextQueries,
     settings.SettingsQueries,
+    thread.ThreadQueries,
     user.UserCreateMutation,
     user.UserQueries,
 ]
