@@ -1,6 +1,0 @@
-type ForumStats {
-    id: ID!
-    threads: Int!
-    posts: Int!
-    users: Int!
-}

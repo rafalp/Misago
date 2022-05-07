@@ -1,9 +1,0 @@
-type OffsetPageInfo {
-    number: Int!
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    nextPage: Int
-    previousPage: Int
-    start: Int!
-    stop: Int!
-}

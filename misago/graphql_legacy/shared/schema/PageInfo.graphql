@@ -1,8 +1,0 @@
-type PageInfo {
-    hasNextPage: Boolean!
-    hasPreviousPage: Boolean!
-    startCursor: String
-    endCursor: String
-    nextCursor: String
-    previousCursor: String
-}

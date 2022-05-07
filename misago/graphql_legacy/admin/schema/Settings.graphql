@@ -1,6 +1,0 @@
-extend type Settings {
-    jwtExp: Int!
-    postsPerPage: Int!
-    postsPerPageOrphans: Int!
-    threadsPerPage: Int!
-}

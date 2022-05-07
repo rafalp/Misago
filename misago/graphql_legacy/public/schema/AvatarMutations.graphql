@@ -1,9 +1,0 @@
-extend type Mutation {
-    avatarUpload(upload: Upload!): AvatarMutationResult!
-}
-
-type AvatarMutationResult {
-    updated: Boolean!
-    user: User
-    errors: [Error!]
-}

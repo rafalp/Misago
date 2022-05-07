@@ -1,9 +1,0 @@
-type ThreadsPage {
-    edges: [ThreadEdge!]!
-    pageInfo: PageInfo!
-}
-
-type ThreadEdge {
-    node: Thread!
-    cursor: ID!
-}
