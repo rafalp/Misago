@@ -40,7 +40,7 @@ class AdminUserDeleteMutation(AdminMutationType):
     __requires__ = [AdminUserDeleteResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

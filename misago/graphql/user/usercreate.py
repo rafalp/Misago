@@ -66,7 +66,7 @@ class UserCreateMutation(MutationType):
     __requires__ = [UserCreateInputType, UserCreateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,
@@ -174,7 +174,7 @@ class AdminUserCreateMutation(AdminMutationType):
     __requires__ = [AdminUserCreateInputType, AdminUserCreateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

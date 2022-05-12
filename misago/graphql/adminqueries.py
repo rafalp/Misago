@@ -1,7 +1,8 @@
 from functools import wraps
+from typing import cast
 
 from ariadne_graphql_modules import ObjectType
-from graphql import GraphQLSchema
+from graphql import GraphQLSchema, GraphQLObjectType
 
 from .errors import AuthenticationGraphQLError, ForbiddenGraphQLError
 
@@ -11,7 +12,7 @@ class AdminQueries(ObjectType):
 
     @classmethod
     def __bind_to_schema__(cls, schema: GraphQLSchema):
-        graphql_type = schema.type_map.get(cls.graphql_name)
+        graphql_type = cast(GraphQLObjectType, schema.type_map.get(cls.graphql_name))
 
         for field_name, field_resolver in cls.resolvers.items():
             secured_resolver = secure_resolver(field_resolver)

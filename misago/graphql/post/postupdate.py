@@ -59,7 +59,7 @@ class PostUpdateMutation(MutationType):
     __requires__ = [PostUpdateInputType, PostUpdateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

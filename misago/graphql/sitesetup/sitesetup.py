@@ -67,7 +67,7 @@ class SiteSetupMutation(MutationType):
     __requires__ = [SiteSetupInputType, SiteSetupResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

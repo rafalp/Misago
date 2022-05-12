@@ -80,11 +80,11 @@ class AdminSettingsUpdateMutation(AdminMutationType):
     __requires__ = [AdminSettingsUpdateInputType, AdminSettingsUpdateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,
-        input: dict  # pylint: disable=redefined-builtin
+        input: dict,  # pylint: disable=redefined-builtin
     ):
         clean_settings, errors = cls.clean_data(info, input)
 

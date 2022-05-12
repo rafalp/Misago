@@ -45,7 +45,12 @@ class AvatarUploadMutation(MutationType):
     __requires__ = [UploadScalar, AvatarUploadResultType]
 
     @classmethod
-    async def mutate(cls, info: GraphQLResolveInfo, *, upload: UploadFile):
+    async def mutate(  # type: ignore
+        cls,
+        info: GraphQLResolveInfo,
+        *,
+        upload: UploadFile,
+    ):
         cleaned_data, errors = await cls.clean_data(info, upload)
         user: User = info.context["user"]
         if errors:

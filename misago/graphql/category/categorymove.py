@@ -40,7 +40,7 @@ class AdminCategoryMoveMutation(AdminMutationType):
     __requires__ = [AdminCategoryMoveResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

@@ -1,3 +1,5 @@
+from typing import Type
+
 from ariadne_graphql_modules import BaseType, make_executable_schema
 from graphql import GraphQLSchema
 
@@ -54,5 +56,5 @@ def create_public_schema() -> GraphQLSchema:
     return create_public_schema_hook.call_action(create_schema_action, *PUBLIC_TYPES)
 
 
-def create_schema_action(*types: BaseType) -> GraphQLSchema:
+def create_schema_action(*types: Type[BaseType]) -> GraphQLSchema:
     return make_executable_schema(*types)

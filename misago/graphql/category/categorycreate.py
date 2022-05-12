@@ -55,7 +55,7 @@ class AdminCategoryCreateMutation(AdminMutationType):
     __requires__ = [AdminCategoryCreateInputType, AdminCategoryCreateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

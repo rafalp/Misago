@@ -52,7 +52,7 @@ class AdminCategoryDeleteMutation(AdminMutationType):
     __requires__ = [AdminCategoryDeleteResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

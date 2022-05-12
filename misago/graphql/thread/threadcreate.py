@@ -65,7 +65,7 @@ class ThreadCreateMutation(MutationType):
     __requires__ = [ThreadCreateInputType, ThreadCreateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

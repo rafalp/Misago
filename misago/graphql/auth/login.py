@@ -32,7 +32,12 @@ class LoginMutation(MutationType):
     __requires__ = [LoginResultType]
 
     @staticmethod
-    async def mutate(info: GraphQLResolveInfo, *, username: str, password: str) -> dict:
+    async def mutate(  # type: ignore
+        info: GraphQLResolveInfo,
+        *,
+        username: str,
+        password: str,
+    ) -> dict:
         username = str(username or "").strip()
         password = str(password or "")
 
@@ -59,7 +64,12 @@ class AdminLoginMutation(MutationType):
     __requires__ = [LoginResultType]
 
     @staticmethod
-    async def mutate(info: GraphQLResolveInfo, *, username: str, password: str) -> dict:
+    async def mutate(  # type: ignore
+        info: GraphQLResolveInfo,
+        *,
+        username: str,
+        password: str,
+    ) -> dict:
         username = str(username or "").strip()
         password = str(password or "")
 

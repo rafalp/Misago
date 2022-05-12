@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from typing import Dict, Optional
+from typing import Dict, Optional, cast
 
 from alembic.command import heads, history, revision, upgrade
 from alembic.config import Config
@@ -46,7 +46,7 @@ def get_migrations_map() -> Dict[str, str]:
     migrations = [("misago", misago_migrations)]
     for plugin, module in plugins.import_modules_if_exists("migrations"):
         migrations.append((plugin.package_name, module))
-    return {k: os.path.dirname(v.__file__) for k, v in migrations}
+    return {k: os.path.dirname(cast(str, v.__file__)) for k, v in migrations}
 
 
 def get_migration_prefix(package_path: str) -> str:

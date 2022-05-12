@@ -70,7 +70,7 @@ class AdminUserUpdateMutation(AdminMutationType):
     __requires__ = [AdminUserUpdateInputType, AdminUserUpdateResultType]
 
     @classmethod
-    async def mutate(
+    async def mutate(  # type: ignore
         cls,
         info: GraphQLResolveInfo,
         *,

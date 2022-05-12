@@ -2,6 +2,7 @@ from inspect import isawaitable
 from typing import Union
 
 from ariadne_graphql_modules import MutationType as BaseMutationType
+from graphql import GraphQLResolveInfo
 
 from ...validation import VALIDATION_ERRORS, ErrorDict, ErrorsList, get_error_dict
 from ..errors import AuthenticationGraphQLError, ForbiddenGraphQLError
@@ -13,7 +14,7 @@ class MutationType(BaseMutationType):
     __abstract__ = True
 
     @classmethod
-    async def resolve_mutation(cls, _, info, **arguments):
+    async def resolve_mutation(cls, _, info: GraphQLResolveInfo, **arguments):
         try:
             result = await cls.mutate(info, **arguments)
             if isawaitable(result):
@@ -27,7 +28,7 @@ class MutationType(BaseMutationType):
         return result
 
     @classmethod
-    async def mutate(cls, info, **arguments):
+    async def mutate(cls, info: GraphQLResolveInfo, **arguments):
         raise NotImplementedError(
             "Mutation subclassess should override 'mutate' class method"
         )
@@ -43,7 +44,7 @@ class AdminMutationType(MutationType):
     __abstract__ = True
 
     @classmethod
-    async def resolve_mutation(cls, _, info, **arguments):
+    async def resolve_mutation(cls, _, info: GraphQLResolveInfo, **arguments):
         user = info.context["user"]
         if not user:
             raise AuthenticationGraphQLError()
