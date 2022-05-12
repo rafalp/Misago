@@ -78,7 +78,7 @@ class PostDeleteMutation(MutationType):
             return {"errors": errors, "thread": thread, "deleted": False}
 
         thread = await post_delete_hook.call_action(
-            cls.post_delete_action, info.context, cleaned_data
+            cls.post_delete, info.context, cleaned_data
         )
 
         return {"thread": thread, "deleted": True}
@@ -160,7 +160,7 @@ class PostDeleteMutation(MutationType):
         return await validate_data(data, validators, errors)
 
     @classmethod
-    async def post_delete_action(
+    async def post_delete(
         cls, context: Context, cleaned_data: PostDeleteInput
     ) -> Thread:
         thread = cleaned_data["thread"]

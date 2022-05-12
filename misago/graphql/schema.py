@@ -19,17 +19,12 @@ from .hooks import create_admin_schema_hook, create_public_schema_hook
 ADMIN_TYPES = [
     auth.AdminLoginMutation,
     auth.AuthQueries,
-    category.AdminCategoryCreateMutation,
-    category.AdminCategoryDeleteMutation,
-    category.AdminCategoryMoveMutation,
+    category.AdminCategoryMutations,
     category.AdminCategoryQueries,
-    category.AdminCategoryUpdateMutation,
+    settings.AdminSettingsMutations,
     settings.AdminSettingsQueries,
-    settings.AdminSettingsUpdateMutation,
-    user.AdminUserCreateMutation,
-    user.AdminUserDeleteMutation,
+    user.AdminUserMutations,
     user.AdminUserQueries,
-    user.AdminUserUpdateMutation,
 ]
 
 PUBLIC_TYPES = [
@@ -46,7 +41,7 @@ PUBLIC_TYPES = [
     sitesetup.SiteSetupMutation,
     thread.ThreadMutations,
     thread.ThreadQueries,
-    user.UserCreateMutation,
+    user.UserMutations,
     user.UserQueries,
 ]
 

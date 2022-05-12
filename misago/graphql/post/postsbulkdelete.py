@@ -87,7 +87,7 @@ class PostsBulkDeleteMutation(MutationType):
         if cleaned_data.get("posts"):
             deleted = [i.id for i in cleaned_data["posts"]]
             thread = await posts_bulk_delete_hook.call_action(
-                cls.posts_bulk_delete_action, info.context, cleaned_data
+                cls.posts_bulk_delete, info.context, cleaned_data
             )
 
         if errors:
@@ -191,7 +191,7 @@ class PostsBulkDeleteMutation(MutationType):
         return await validate_data(data, validators, errors)
 
     @classmethod
-    async def posts_bulk_delete_action(
+    async def posts_bulk_delete(
         cls, context: Context, cleaned_data: PostsBulkDeleteInput
     ) -> Thread:
         thread = cleaned_data["thread"]
