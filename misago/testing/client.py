@@ -114,6 +114,6 @@ def extract_uploads_from_variables(
             continue
 
         index = str(len(files_map))
-        files_map[index] = ["%s.%s" % (prefix, name)]
+        files_map[index] = [f"{prefix}.{name}"]
         files_data[index] = value
         variables[name] = None

@@ -84,10 +84,7 @@ def find_blocks_pairs(ast: List[dict]):
     for node in ast:
         if node["type"] == BLOCK_OPEN:
             counter += 1
-            node["block_id"] = "%s:%s" % (
-                node["block_type"],
-                counter,
-            )
+            node["block_id"] = f'{node["block_type"]}:{counter}'
             stack.append(node)
 
         if node["type"] == BLOCK_CLOSE:

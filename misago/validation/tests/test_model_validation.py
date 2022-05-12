@@ -15,7 +15,7 @@ def test_valid_input_validation_returns_valid_data():
 
 def test_valid_input_validation_returns_empty_errors_list():
     _, errors = validate_model(Model, {"id": 123, "name": "valid"})
-    assert errors == []
+    assert errors == []  # pylint: disable=use-implicit-booleaness-not-comparison
 
 
 def test_partially_valid_input_validation_returns_partial_valid_data():

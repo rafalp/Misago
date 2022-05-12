@@ -56,7 +56,7 @@ def parse_asset_manifest(manifest_path: str) -> Assets:
 
 
 def read_manifest_json(manifest_path: str) -> dict:
-    with open(manifest_path) as json_file:
+    with open(manifest_path, "r", encoding="utf-8") as json_file:
         manifest = json.load(json_file)
         validate_manifest_json(manifest_path, manifest)
         return manifest

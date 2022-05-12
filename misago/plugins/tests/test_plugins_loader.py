@@ -45,7 +45,7 @@ def test_loader_imports_plugin_module_if_it_exists(plugins_root):
 def test_loader_returns_empty_list_if_plugin_module_didnt_exist(plugins_root):
     loader = PluginLoader(plugins_root)
     modules = loader.import_modules_if_exists("notexisting")
-    assert modules == []
+    assert modules == []  # pylint: disable=use-implicit-booleaness-not-comparison
 
 
 def test_loader_returns_list_of_plugins_with_directory(plugins_root):
@@ -61,4 +61,4 @@ def test_loader_returns_list_of_plugins_with_directory(plugins_root):
 def test_loader_returns_empty_list_if_plugin_didnt_have_directory(plugins_root):
     loader = PluginLoader(plugins_root)
     dirs = loader.get_plugins_with_directory("notexisting")
-    assert dirs == []
+    assert dirs == []  # pylint: disable=use-implicit-booleaness-not-comparison
