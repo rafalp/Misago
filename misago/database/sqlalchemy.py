@@ -5,7 +5,7 @@ from .database import database
 
 
 def convert_database_url_to_sql_alchemy_format(url: DatabaseURL) -> str:
-    new_url = URL(
+    new_url = URL.create(
         "postgresql",
         username=url.username,
         password=url.password,
