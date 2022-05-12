@@ -1,3 +1,3 @@
 from .queries import SearchQueries
 
-__all__ = [SearchQueries]
+__all__ = ["SearchQueries"]

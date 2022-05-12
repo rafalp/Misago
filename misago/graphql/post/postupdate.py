@@ -92,9 +92,6 @@ class PostUpdateMutation(MutationType):
         input_model = cls.create_input_model(info.context)
         cleaned_data, errors = validate_model(input_model, data)
 
-        post = None
-        thread = None
-
         if cleaned_data.get("post"):
             cleaned_data["org_post"] = await posts_loader.load(
                 info.context, cleaned_data["post"]

@@ -91,7 +91,6 @@ class CategoryType(ObjectType):
 class AdminCategoryType(CategoryType):
     @staticmethod
     def resolve_threads(category: Category, info: GraphQLResolveInfo) -> int:
-        categories_index = info.context["categories"]
         return category.threads
 
     @staticmethod

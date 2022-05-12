@@ -1,5 +1,4 @@
 import pytest
-import pytest
 
 from ....conf import settings
 from ....users.validators import PASSWORD_MAX_LENGTH

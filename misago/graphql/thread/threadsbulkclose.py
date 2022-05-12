@@ -134,7 +134,7 @@ class ThreadsBulkCloseMutation(MutationType):
     @classmethod
     async def threads_bulk_close(
         cls, context: Context, cleaned_data: ThreadsBulkCloseInput
-    ):
+    ) -> List[Thread]:
         threads = cleaned_data["threads"]
         threads = await close_threads(threads)
 

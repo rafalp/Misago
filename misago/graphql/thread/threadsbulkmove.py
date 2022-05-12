@@ -146,7 +146,7 @@ class ThreadsBulkMoveMutation(MutationType):
     @classmethod
     async def threads_bulk_move(
         cls, context: Context, cleaned_data: ThreadsBulkMoveInput
-    ):
+    ) -> List[Thread]:
         threads = cleaned_data["threads"]
         threads = await move_threads(threads, cleaned_data["category"])
 

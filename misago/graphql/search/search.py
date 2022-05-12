@@ -16,6 +16,7 @@ class SearchType(ObjectType):
     )
     __requires__ = [DeferredType("User")]
 
+    @staticmethod
     def resolve_users(
         search_query: str, _, *, limit: int = 10
     ) -> Awaitable[List[User]]:

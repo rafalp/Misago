@@ -1,5 +1,3 @@
-from unittest.mock import ANY
-
 import pytest
 
 FORUM_STATS_ID_QUERY = """
