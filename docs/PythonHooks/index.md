@@ -55,13 +55,9 @@ Standard hooks
 
 ### `misago.graphql.hooks`
 
-- [`graphql_admin_directives_hook`](./graphql-admin-directives-hook.md)
-- [`graphql_admin_type_defs_hook`](./graphql-admin-type-defs-hook.md)
-- [`graphql_admin_types_hook`](./graphql-admin-types-hook.md)
+- [`create_admin_schema_hook`](./create-admin-schema-hook.md)
+- [`create_public_schema_hook`](./create-public-schema-hook.md)
 - [`graphql_context_hook`](./graphql-context-hook.md)
-- [`graphql_directives_hook`](./graphql-directives-hook.md)
-- [`graphql_type_defs_hook`](./graphql-type-defs-hook.md)
-- [`graphql_types_hook`](./graphql-types-hook.md)
 
 
 ### `misago.graphql.public.mutations.hooks.postcreate`
