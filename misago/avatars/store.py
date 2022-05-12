@@ -37,7 +37,7 @@ def get_unique_sizes_paths(user_id: int, extension: str = "png") -> Dict[int, st
     paths = {}
 
     user_hash = md5(str(user_id).encode("utf-8")).hexdigest()
-    prefix = "avatars/%s/%s" % (user_hash[0:2], user_hash[2:4])
+    prefix = f"avatars/{user_hash[0:2]}/{user_hash[2:4]}"
 
     make_media_directory(prefix)
 

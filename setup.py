@@ -7,10 +7,10 @@ from misago import __version__ as version
 
 SETUP_DIR = os.path.dirname(__file__)
 
-with open(os.path.join(SETUP_DIR, "README.md"), "rb") as f:
+with open(os.path.join(SETUP_DIR, "README.md"), "rb", encoding="utf-8") as f:
     README = f.read().decode("utf-8")
 
-with open(os.path.join(SETUP_DIR, "requirements.txt"), "r") as f:
+with open(os.path.join(SETUP_DIR, "requirements.txt"), "r", encoding="utf-8") as f:
     REQUIREMENTS = f.read()
 
 
@@ -29,7 +29,7 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     url="http://www.misago-project.org/",
-    author=u"Rafał Pitoń",
+    author="Rafał Pitoń",
     author_email="kontakt@rpiton.com",
     install_requires=REQUIREMENTS,
     packages=find_packages(),

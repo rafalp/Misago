@@ -7,6 +7,7 @@ from ....users.validators import PASSWORD_MAX_LENGTH
 
 
 def create_query(settings: str) -> str:
+    # pylint: disable=consider-using-f-string
     return (
         """
         mutation SettingsUpdate($input: SettingsUpdateInput!) {
@@ -21,7 +22,7 @@ def create_query(settings: str) -> str:
                 }
             }
         }
-    """
+        """
         % settings
     )
 

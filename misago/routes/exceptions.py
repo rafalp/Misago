@@ -12,7 +12,7 @@ ERROR_500_TEMPLATE_PATH = os.path.join(
     BASE_PATH, "template", "templates", "error_500.html"
 )
 
-with open(ERROR_500_TEMPLATE_PATH, "r") as fp:
+with open(ERROR_500_TEMPLATE_PATH, "r", encoding="utf-8") as fp:
     ERROR_500_TEMPLATE = fp.read()
 
 

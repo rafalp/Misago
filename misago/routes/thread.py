@@ -59,7 +59,7 @@ async def get_thread_or_404(thread_id: int) -> Thread:
 def get_thread_redirect(request: Request, thread: Thread) -> RedirectResponse:
     url = request.url_for("thread", slug=thread.slug, id=thread.id)
     if request.path_params.get("page", 0) > 1:
-        url += "%s/" % request.path_params["page"]
+        url += str(request.path_params["page"]) + "/"
     return RedirectResponse(url, 301)
 
 

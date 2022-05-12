@@ -37,7 +37,7 @@ HEADINGS = ("h1", "h2", "h3", "h4", "h5", "h6")
 def convert_rich_text_block_to_html_action(
     context: Context, block: RichTextBlock
 ) -> Optional[str]:
-    # pylint: disable=too-many-return-statements
+    # pylint: disable=consider-using-f-string,too-many-return-statements
     if block["type"] == "code":
         return "<pre><code>%s</code></pre>" % highlight_code(
             block["text"], block["syntax"]

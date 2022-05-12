@@ -192,12 +192,12 @@ class ObjectMapperBase:
 class ObjectMapper(ObjectMapperBase):
     def __init__(self, table: TableClause, model: Any = dict):
         self.DoesNotExist = type(
-            "%sDoesNotExist" % table.name.title(),
+            f"{table.name.title()}DoesNotExist",
             (DoesNotExist,),
             {},
         )
         self.MultipleObjectsReturned = type(
-            "%sMultipleObjectsReturned" % table.name.title(),
+            f"{table.name.title()}MultipleObjectsReturned",
             (MultipleObjectsReturned,),
             {},
         )

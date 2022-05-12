@@ -42,7 +42,7 @@ class StaticSettings:
         self._plugins_root = settings.get("MISAGO_PLUGINS_ROOT", "").strip() or None
 
         self._media_root = get_setting_value(settings, "MISAGO_MEDIA_ROOT")
-        self._media_url = "/%s/" % settings.get("MISAGO_MEDIA_URL", "media").strip("/ ")
+        self._media_url = f'/{settings.get("MISAGO_MEDIA_URL", "media").strip("/ ")}/'
 
         self._avatar_sizes = get_avatar_sizes_value(settings, "MISAGO_AVATAR_SIZES")
 

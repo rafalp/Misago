@@ -141,7 +141,7 @@ def convert_block_ast_to_rich_text_action(
     if ast["type"] == "heading":
         return {
             "id": get_block_id(),
-            "type": "h%s" % ast["level"],
+            "type": f"h{ast['level']}",
             "text": convert_children_ast_to_text(context, ast["children"], metadata),
         }
 
@@ -253,7 +253,7 @@ def convert_inline_ast_to_text(
 def convert_inline_ast_to_text_action(
     context: Context, ast: dict, metadata: ParsedMarkupMetadata
 ) -> Optional[str]:
-    # pylint: disable=too-many-return-statements
+    # pylint: disable=consider-using-f-string,too-many-return-statements
     if ast["type"] == "linebreak":
         return "<br/>"
 

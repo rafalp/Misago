@@ -4,7 +4,8 @@ from ..conf import settings
 
 
 def read_runtime(runtime_path: str) -> str:
-    with open(os.path.join(settings.static_root, runtime_path)) as fp:
+    full_runtime_path = os.path.join(settings.static_root, runtime_path)
+    with open(full_runtime_path, encoding="utf-8") as fp:
         runtime = fp.read()
         return update_runtime_map_url(runtime, runtime_path)
 

@@ -33,7 +33,7 @@ def test_media_file_can_be_stored_and_accessed(tmp_media_dir):
     store_media_file(test_file, "test.txt")
     assert media_file_exists("test.txt")
 
-    with open(make_media_path("test.txt"), "r") as fp:
+    with open(make_media_path("test.txt"), "r", encoding="utf-8") as fp:
         file_data = fp.read()
         assert file_data == "Hello world!"
 
@@ -44,7 +44,7 @@ def test_media_file_can_be_stored_in_dir_and_accessed(tmp_media_dir):
     store_media_file(test_file, "testdir/test.txt")
     assert media_file_exists("testdir/test.txt")
 
-    with open(make_media_path("testdir/test.txt"), "r") as fp:
+    with open(make_media_path("testdir/test.txt"), "r", encoding="utf-8") as fp:
         file_data = fp.read()
         assert file_data == "Hello world!"
 
