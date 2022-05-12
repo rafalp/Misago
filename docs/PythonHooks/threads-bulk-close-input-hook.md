@@ -1,7 +1,7 @@
 # `threads_bulk_close_input_hook`
 
 ```python
-frotm misago.graphql.public.mutations.hooks.threadsbulkclose import threads_bulk_close_input_hook
+frotm misago.graphql.thread.hooks.threadsbulkclose import threads_bulk_close_input_hook
 
 thrteads_bulk_close_input_hook.call_action(
     action: ThreadsBulkCloseInputAction,

@@ -1,7 +1,7 @@
 # `post_create_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postcreate import post_create_hook
+from misago.graphql.post.hooks.postcreate import post_create_hook
 
 post_create_hook.call_action(
     action: PostCreateAction,

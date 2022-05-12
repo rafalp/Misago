@@ -1,7 +1,7 @@
 # `threads_bulk_close_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadsbulkclose import threads_bulk_close_hook
+from misago.graphql.thread.hooks.threadsbulkclose import threads_bulk_close_hook
 
 threads_bulk_close_hook.call_action(
     action: ThreadsBulkCloseAction,

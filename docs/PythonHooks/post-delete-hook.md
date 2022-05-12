@@ -1,7 +1,7 @@
 # `post_delete_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postdelete import post_delete_hook
+from misago.graphql.post.hooks.postdelete import post_delete_hook
 
 post_delete_hook.call_action(
     action: PostDeleteAction,

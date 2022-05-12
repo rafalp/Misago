@@ -1,7 +1,7 @@
 # `thread_rename_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadrename import thread_rename_hook
+from misago.graphql.thread.hooks.threadrename import thread_rename_hook
 
 thread_rename_hook.call_action(
     action: ThreadRenameAction,

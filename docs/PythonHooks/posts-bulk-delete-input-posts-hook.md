@@ -1,7 +1,7 @@
 # `posts_bulk_delete_input_posts_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postsbulkdelete import posts_bulk_delete_input_posts_hook
+from misago.graphql.post.hooks.postsbulkdelete import posts_bulk_delete_input_posts_hook
 
 posts_bulk_delete_input_posts_hook.call_action(
     action: PostsBulkDeleteInputRepliesAction,

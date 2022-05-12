@@ -1,7 +1,7 @@
 # `user_create_input_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.usercreate import user_create_input_hook
+from misago.graphql.user.hooks.usercreate import user_create_input_hook
 
 user_create_input_hook.call_action(
     action: UserCreateInputAction,

@@ -1,7 +1,7 @@
 # `post_update_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.postupdate import post_update_hook
+from misago.graphql.post.hooks.postupdate import post_update_hook
 
 post_update_hook.call_action(
     action: PostUpdateAction,

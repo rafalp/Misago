@@ -1,7 +1,7 @@
 # `user_create_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.usercreate import user_create_hook
+from misago.graphql.user.hooks.usercreate import user_create_hook
 
 user_create_hook.call_action(
     action: UserCreateAction,

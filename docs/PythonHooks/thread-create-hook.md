@@ -1,7 +1,7 @@
 # `thread_create_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadcreate import thread_create_hook
+from misago.graphql.thread.hooks.threadcreate import thread_create_hook
 
 thread_create_hook.call_action(
     action: ThreadCreateAction,

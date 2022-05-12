@@ -1,7 +1,7 @@
 # `thread_move_hook`
 
 ```python
-from misago.graphql.public.mutations.hooks.threadmove import thread_move_hook
+from misago.graphql.thread.hooks.threadmove import thread_move_hook
 
 thread_move_hook.call_action(
     action: ThreaddMoveAction,
