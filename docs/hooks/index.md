@@ -1,5 +1,5 @@
-Python hooks
-============
+Misago Python Hooks
+===================
 
 There are three types of hooks in Misago's Python codebase:
 
