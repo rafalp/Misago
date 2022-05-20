@@ -11,7 +11,7 @@ class AssetManifestError(ValueError):
     pass
 
 
-MANIFEST_PATH = os.path.join(settings.static_root, "misago", "asset-manifest.json")
+MANIFESTS_DIRS = ("admin", "misago")
 
 
 @dataclass
@@ -22,12 +22,16 @@ class Assets:
 
 
 def discover_asset_manifests():
-    assets = {"misago": Assets()}
+    assets = {}
 
-    if not os.path.exists(MANIFEST_PATH) or not os.path.isfile(MANIFEST_PATH):
-        return assets
-
-    assets["misago"] = parse_asset_manifest(MANIFEST_PATH)
+    for dirname in MANIFESTS_DIRS:
+        manifest_path = os.path.join(
+            settings.static_root, dirname, "asset-manifest.json"
+        )
+        if os.path.isfile(manifest_path):
+            assets[dirname] = parse_asset_manifest(manifest_path)
+        else:
+            assets[dirname] = Assets()
 
     return assets
 

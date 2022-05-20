@@ -110,6 +110,5 @@ async def test_admin_settings_query_requires_admin_auth(query_admin_api):
     result = await query_admin_api(
         ADMIN_SETTINGS_QUERY, expect_error=True, include_auth=False
     )
-    print(result)
     assert result["errors"][0]["extensions"]["code"] == "UNAUTHENTICATED"
     assert result["data"]["settings"] is None

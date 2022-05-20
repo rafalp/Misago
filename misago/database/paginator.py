@@ -66,7 +66,6 @@ class Paginator:
             self.total_pages = count_pages(
                 self.total_count, self.per_page, self.orphans
             )
-        print(self.total_pages)
 
     async def get_page(self, page_number: int) -> Page:
         if not self._initialized:

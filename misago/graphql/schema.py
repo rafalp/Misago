@@ -43,6 +43,7 @@ PUBLIC_TYPES = [
     sitesetup.SiteSetupMutation,
     thread.ThreadMutations,
     thread.ThreadQueries,
+    thread.ThreadSubscriptions,
     user.UserMutations,
     user.UserQueries,
 ]

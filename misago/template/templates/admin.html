@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title -%}Misago{%- endblock title %}</title>
+    {%- for css_file in asset_manifests["admin"].css %}
+    <link href="/static/{{ css_file }}" rel="stylesheet">
+    {% endfor -%}
+  </head>
+  <body>
+    <div id="root">
+      <noscript>
+        Enable JavaScript to access admin control panel.
+      </noscript> 
+      <div class="layout-minimal">
+        <div class="page-loading" />
+      </div>
+    </div>
+    <div id="portals-root"></div>
+    {% if asset_manifests["admin"].runtime %}
+    <script>{{ asset_manifests["admin"].runtime|safe }}</script>
+    {% endif -%}
+    {%- for js_file in asset_manifests["admin"].js -%}
+    <script src="/static/{{js_file}}"></script>
+    {% endfor %}
+  </body>
+</html>

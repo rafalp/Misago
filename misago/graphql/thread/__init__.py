@@ -1,6 +1,7 @@
 from ariadne_graphql_modules import CollectionType
 
 from .queries import ThreadQueries
+from .subscriptions import ThreadSubscriptions
 from .thread import ThreadType
 from .threadclose import ThreadCloseMutation
 from .threadcreate import ThreadCreateMutation
@@ -32,5 +33,6 @@ class ThreadMutations(CollectionType):
 __all__ = [
     "ThreadMutations",
     "ThreadQueries",
+    "ThreadSubscriptions",
     "ThreadType",
 ]
