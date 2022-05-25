@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>{% block title -%}Misago{%- endblock title %}</title>
+    <title>{% block title -%}{% trans %}Misago Admin{% endtrans %}{%- endblock title %}</title>
     {%- for css_file in asset_manifests["admin"].css %}
     <link href="/static/{{ css_file }}" rel="stylesheet">
     {% endfor -%}
@@ -11,10 +11,10 @@
   <body>
     <div id="root">
       <noscript>
-        Enable JavaScript to access admin control panel.
+        {% trans %}Enable JavaScript to access admin control panel.{% endtrans %}
       </noscript> 
       <div class="layout-minimal">
-        <div class="page-loading" />
+        <div class="page-loading"></div>
       </div>
     </div>
     <div id="portals-root"></div>
