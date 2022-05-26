@@ -114,7 +114,7 @@ With exception of Admin Panel, Misago frontend relies heavily on React.js compon
 * **watchstyle** does quick build of less files, and re-builds them when they change
 * **test** runs Mocha.js tests suite for Misago's javascript
 
-To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifing assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
+To start work on custom frontend for Misago, fork and install it locally to have development forum setup. You can now develop custom theme by modifying assets in ``frontend`` directory, however special care should be taken when changing source javascripts.
 
 Misago defines template that allows you to include custom html and js code before Misago's JavaScript app is ran, named **scripts.html**.
 
