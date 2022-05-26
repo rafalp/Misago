@@ -23,9 +23,9 @@ export function insertImage(selection, replace) {
   }
 
   url = $.trim(prompt(gettext("Enter link to image") + ":", url))
-  label = $.trim(prompt(gettext("Enter image label (optional)") + ":", label))
 
   if (url.length) {
+    label = $.trim(prompt(gettext("Enter image label (optional)") + ":", label))
     if (label.length > 0) {
       replace("![" + label + "](" + url + ")")
     } else {
