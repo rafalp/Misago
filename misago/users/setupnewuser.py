@@ -27,3 +27,7 @@ def set_default_subscription_options(settings, user):
 
     replied_threads = SUBSCRIPTION_CHOICES[settings.subscribe_reply]
     user.subscribe_to_replied_threads = replied_threads
+
+    user.save(
+        update_fields=["subscribe_to_replied_threads", "subscribe_to_replied_threads"]
+    )
