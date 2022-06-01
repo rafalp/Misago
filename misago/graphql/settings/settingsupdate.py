@@ -143,7 +143,7 @@ SettingsChangeInputModel: Type[BaseModel] = create_model(
     ),
     forum_name=(constr(min_length=1, max_length=255, strip_whitespace=True), None),
     jwt_exp=(conint(ge=300), None),
-    password_min_length=(conint(ge=4, le=PASSWORD_MAX_LENGTH - 1), None),
+    password_min_length=(conint(ge=4, le=PASSWORD_MAX_LENGTH), None),
     post_min_length=(conint(ge=1), None),
     posts_per_page=(conint(ge=5, le=100), None),
     posts_per_page_orphans=(conint(ge=0), None),
