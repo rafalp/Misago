@@ -14,6 +14,8 @@ class StaticSettings:
     _cache_url: str
     _pubsub_url: str
 
+    _admin_path: str
+
     _static_root: str
     _plugins_root: Optional[str]
 
@@ -37,6 +39,10 @@ class StaticSettings:
         self._database_url = get_setting_value(settings, "MISAGO_DATABASE_URL")
         self._cache_url = get_setting_value(settings, "MISAGO_CACHE_URL")
         self._pubsub_url = get_setting_value(settings, "MISAGO_PUBSUB_URL")
+
+        self._admin_path = "/" + (
+            settings.get("MISAGO_ADMIN_PATH", "").strip("/ ") or "admin"
+        )
 
         self._static_root = get_setting_value(settings, "MISAGO_STATIC_ROOT")
         self._plugins_root = settings.get("MISAGO_PLUGINS_ROOT", "").strip() or None
@@ -69,6 +75,10 @@ class StaticSettings:
     @property
     def pubsub_url(self) -> str:
         return self._pubsub_url
+
+    @property
+    def admin_path(self) -> str:
+        return self._admin_path
 
     @property
     def static_root(self) -> str:

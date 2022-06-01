@@ -65,6 +65,16 @@ def test_pubsub_url_setting_value_is_set_and_retrieved():
     assert settings.pubsub_url == "/pubsub-test/"
 
 
+def test_admin_path_setting_value_is_set_and_retrieved():
+    settings = StaticSettings(mock_settings({"MISAGO_ADMIN_PATH": "/my-admin/"}))
+    assert settings.admin_path == "/my-admin"
+
+
+def test_admin_path_setting_default_value_is_set_and_retrieved():
+    settings = StaticSettings(mock_settings({}))
+    assert settings.admin_path == "/admin"
+
+
 def test_static_root_setting_value_is_set_and_retrieved():
     settings = StaticSettings(mock_settings({"MISAGO_STATIC_ROOT": "/static-test/"}))
     assert settings.static_root == "/static-test/"

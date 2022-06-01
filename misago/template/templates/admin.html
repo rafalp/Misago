@@ -18,6 +18,7 @@
       </div>
     </div>
     <div id="portals-root"></div>
+    <script>window.MISAGO_ADMIN_PATH = {{ admin_path|tojson|safe }}</script>
     {% if asset_manifests["admin"].runtime %}
     <script>{{ asset_manifests["admin"].runtime|safe }}</script>
     {% endif -%}

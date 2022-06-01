@@ -21,8 +21,8 @@ def register_routes(app: Starlette):
 
 def register_default_routes(app: Starlette):
     app.add_route("/", index_route, name="index")
-    app.add_route("/admin/", admin_route, name="admin")
-    app.add_route("/admin/{subpath:path}", admin_route, name="admin")
+    app.add_route(settings.admin_path + "/", admin_route, name="admin")
+    app.add_route(settings.admin_path + "/{subpath:path}", admin_route, name="admin")
     app.add_route("/categories/", categories_route, name="categories")
     app.add_route("/threads/", threads_route, name="threads")
     app.add_route("/c/{slug}/{id:int}/", category_route, name="category")
