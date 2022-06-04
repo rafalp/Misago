@@ -128,7 +128,7 @@ async def test_upload_avatar_mutation_fails_if_image_has_unsupported_content_typ
 
 
 @pytest.mark.asyncio
-@override_dynamic_settings(avatar_upload_max_size=10)
+@override_dynamic_settings(avatar_upload_max_size=2)
 async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
     query_public_api, user, test_files_path
 ):
@@ -151,7 +151,7 @@ async def test_upload_avatar_mutation_fails_if_image_file_is_too_large(
             {
                 "location": "upload",
                 "type": "value_error.upload.max_size",
-                "message": "ensure uploaded file size is not larger than 10 bytes",
+                "message": "ensure uploaded file size is not larger than 2048 bytes",
             },
         ],
     }

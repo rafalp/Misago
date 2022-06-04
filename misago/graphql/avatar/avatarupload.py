@@ -62,10 +62,12 @@ class AvatarUploadMutation(MutationType):
 
     @classmethod
     async def clean_data(cls, info: GraphQLResolveInfo, upload: UploadFile):
+        size_limit = info.context["settings"]["avatar_upload_max_size"] * 1024
+
         data = {"upload": upload}
         validators: Dict[str, List[Validator]] = {
             "upload": [
-                UploadSizeValidator(info.context["settings"]["avatar_upload_max_size"]),
+                UploadSizeValidator(size_limit),
                 UploadContentTypeValidator(AVATAR_CONTENT_TYPES),
                 UploadImageValidator(min_size=(AVATAR_MIN_SIZE, AVATAR_MIN_SIZE)),
             ],
