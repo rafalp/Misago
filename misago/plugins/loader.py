@@ -4,8 +4,6 @@ from dataclasses import dataclass
 from types import ModuleType
 from typing import List, Optional, Tuple
 
-from asgiref.sync import sync_to_async
-
 from .discover import discover_admin_plugins, discover_client_plugins, discover_plugins
 from .plugin import Plugin
 
