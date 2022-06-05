@@ -2,7 +2,7 @@ import os
 import sys
 from dataclasses import dataclass
 from types import ModuleType
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, cast
 
 from .discover import discover_admin_plugins, discover_client_plugins, discover_plugins
 from .plugin import Plugin
@@ -10,8 +10,8 @@ from .plugin import Plugin
 
 class PluginsLoader:
     _plugins: List[Plugin]
-    _admin_plugins = List[str]
-    _client_plugins = List[str]
+    _admin_plugins: List[str]
+    _client_plugins: List[str]
 
     def __init__(self, plugins_root_path: Optional[str]):
         if plugins_root_path:
@@ -24,6 +24,8 @@ class PluginsLoader:
             self._client_plugins = discover_client_plugins(plugins_root_path)
         else:
             self._plugins = []
+            self._admin_plugins = []
+            self._client_plugins = []
 
     def get_plugins_data(self) -> List["PluginData"]:
         done_plugins: List[str] = []
@@ -93,7 +95,7 @@ class PluginsLoader:
                 )
             )
 
-        return sorted(plugins_data, key=lambda x: x.name)
+        return sorted(plugins_data, key=lambda x: cast(str, x.name))
 
     def import_modules_if_exists(
         self, module_name: str

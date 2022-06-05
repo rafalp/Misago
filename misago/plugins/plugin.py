@@ -22,7 +22,7 @@ class Plugin:
     def __repr__(self):
         return f"<Plugin:{self.package_name}>"
 
-    def import_manifest(self) -> Optional[PluginManifest]:
+    def import_manifest(self):
         if find_spec(self.package_name):
             main_module = import_module(self.package_name)
             manifest = getattr(main_module, "__manifest__", None)

@@ -68,9 +68,10 @@ class PluginType(ObjectType):
                     "domain": parsed_uri.hostname.lower(),
                     "url": obj.homepage,
                 }
-            return None
         except (ValueError, TypeError):
             return None
+
+        return None
 
     @staticmethod
     def resolve_repo(obj: PluginData, *_) -> Optional[dict]:
@@ -88,3 +89,5 @@ class PluginType(ObjectType):
                 }
         except (ValueError, TypeError):
             return None
+
+        return None
