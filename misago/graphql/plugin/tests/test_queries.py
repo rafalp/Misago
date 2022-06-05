@@ -1,5 +1,6 @@
 import pytest
 
+from ....plugins import PluginsLoader
 
 PLUGINS_QUERY = """
     query {
@@ -29,7 +30,12 @@ PLUGINS_QUERY = """
 
 
 @pytest.mark.asyncio
-async def test_admin_schema_plugins_query_returns_plugins_list(query_admin_api, admin):
+async def test_admin_schema_plugins_query_returns_plugins_list(
+    mocker, plugins_root, query_admin_api, admin
+):
+    plugins_loader = PluginsLoader(plugins_root)
+    mocker.patch("misago.graphql.plugin.queries.plugins_loader", plugins_loader)
+
     result = await query_admin_api(PLUGINS_QUERY)
     assert result["data"]["plugins"]
 

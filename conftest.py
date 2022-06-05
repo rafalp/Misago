@@ -5,4 +5,5 @@ pytest_plugins = [
     "misago.testing.thread",
     "misago.testing.context",
     "misago.testing.client",
+    "misago.testing.plugins",
 ]
