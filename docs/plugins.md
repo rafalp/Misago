@@ -45,9 +45,11 @@ Plugins can declare manifests which are additional information about the plugin.
 To declare manifest, insert following code in your plugin's `__init__.py` module:
 
 ```python
+from misago.plugins import PluginManifest
+
 __manifest__ = PluginManifest(
     name="Example plugin",
-    description="Me example plugin",
+    description="My example plugin.",
     license="BSD-3",
     icon="fas fa-dice",
     color="0466c8",
