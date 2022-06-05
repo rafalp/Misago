@@ -15,7 +15,7 @@ def patch_package_loader(mocker):
 
 def test_template_loaders_include_misago(mocker, patch_package_loader):
     mocker.patch(
-        "misago.template.environment.plugins.get_plugins_with_directory",
+        "misago.template.environment.plugins_loader.get_plugins_with_directory",
         return_value=[],
     )
 
@@ -25,7 +25,7 @@ def test_template_loaders_include_misago(mocker, patch_package_loader):
 
 def test_template_loaders_include_plugins(mocker, patch_package_loader):
     mocker.patch(
-        "misago.template.environment.plugins.get_plugins_with_directory",
+        "misago.template.environment.plugins_loader.get_plugins_with_directory",
         return_value=[(Mock(package_name="test_plugin"), "templates")],
     )
 

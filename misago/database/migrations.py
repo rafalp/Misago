@@ -6,7 +6,7 @@ from alembic.command import heads, history, revision, upgrade
 from alembic.config import Config
 
 from .. import migrations as misago_migrations
-from ..plugins import plugins
+from ..plugins import plugins_loader
 from .sqlalchemy import database_url
 
 
@@ -44,7 +44,7 @@ def show_migrations_history():
 
 def get_migrations_map() -> Dict[str, str]:
     migrations = [("misago", misago_migrations)]
-    for plugin, module in plugins.import_modules_if_exists("migrations"):
+    for plugin, module in plugins_loader.import_modules_if_exists("migrations"):
         migrations.append((plugin.package_name, module))
     return {k: os.path.dirname(cast(str, v.__file__)) for k, v in migrations}
 

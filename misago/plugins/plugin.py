@@ -4,17 +4,30 @@ from importlib.util import find_spec
 from types import ModuleType
 from typing import Optional
 
+from .manifest import PluginManifest
+
 
 class Plugin:
     path: str
+    directory_name: str
     package_name: str
+    manifest: Optional[PluginManifest]
 
-    def __init__(self, path: str, package_name: str):
+    def __init__(self, path: str, directory_name: str, package_name: str):
         self.path = path
+        self.directory_name = directory_name
         self.package_name = package_name
+        self.manifest = None
 
     def __repr__(self):
         return f"<Plugin:{self.package_name}>"
+
+    def import_manifest(self) -> Optional[PluginManifest]:
+        if find_spec(self.package_name):
+            main_module = import_module(self.package_name)
+            manifest = getattr(main_module, "__manifest__", None)
+            if isinstance(manifest, PluginManifest):
+                self.manifest = manifest
 
     def import_module_if_exists(self, module_name: str) -> Optional[ModuleType]:
         module_path = f"{self.package_name}.{module_name}"
