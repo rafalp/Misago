@@ -68,7 +68,7 @@ async def test_admin_schema_category_query_requires_admin_auth(
 
 
 CATEGORIES_QUERY = """
-    query Categories {
+    {
         categories {
             id
         }

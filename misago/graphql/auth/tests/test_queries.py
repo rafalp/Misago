@@ -1,7 +1,7 @@
 import pytest
 
 AUTH_QUERY = """
-    query Auth {
+    {
         auth {
             id
             name

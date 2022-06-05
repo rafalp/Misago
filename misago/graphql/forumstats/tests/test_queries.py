@@ -1,7 +1,7 @@
 import pytest
 
 FORUM_STATS_ID_QUERY = """
-    query ForumStats {
+    {
         forumStats {
             id
             threads
@@ -25,7 +25,7 @@ async def test_forum_stats_id_resolves_to_random_value(
 
 
 FORUM_STATS_QUERY = """
-    query ForumStats {
+    {
         forumStats {
             threads
             posts

@@ -3,7 +3,7 @@ import pytest
 from ....plugins import PluginsLoader
 
 PLUGINS_QUERY = """
-    query {
+    {
         plugins {
             name
             description

@@ -4,7 +4,7 @@ from ....conf import settings
 from ....users.validators import PASSWORD_MAX_LENGTH
 
 SETTINGS_QUERY = """
-    query GetSettings {
+    {
         settings {
             avatarUploadContentTypes
             avatarUploadImageMinSize
@@ -51,7 +51,7 @@ async def test_settings_query_returns_settings(query_public_api, dynamic_setting
 
 
 ADMIN_SETTINGS_QUERY = """
-    query Settings {
+    {
         settings {
             avatarUploadContentTypes
             avatarUploadImageMinSize
