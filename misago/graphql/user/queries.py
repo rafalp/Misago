@@ -8,7 +8,9 @@ from ...users.loaders import users_loader
 from ...users.models import User
 from ..adminqueries import AdminQueries
 from ..args import clean_id_arg, clean_page_arg, handle_invalid_args
-from ..pagination import PageInfoType
+from .connection import UserConnectionType, user_connection
+from .filters import AdminUserFilters
+from .sortby import AdminUserSortByEnum
 from .user import AdminUserType, UserType
 
 
@@ -35,61 +37,35 @@ class UserQueries(ObjectType):
         return None
 
 
-class AdminUsersFilters(InputType):
-    __schema__ = gql(
-        """
-        input UsersFilters {
-            name: String
-            email: String
-            isActive: Boolean
-            isModerator: Boolean
-            isAdmin: Boolean
-        }
-        """
-    )
-    __args__ = {
-        "isActive": "is_active",
-        "isModerator": "is_moderator",
-        "isAdmin": "is_admin",
-    }
-
-
-class AdminUsersPageType(ObjectType):
-    __schema__ = gql(
-        """
-        type UsersPage {
-            totalCount: Int!
-            totalPages: Int!
-            results: [User!]!
-            pageInfo: PageInfo!
-        }
-        """
-    )
-    __aliases__ = {
-        "totalCount": "total_count",
-        "totalPages": "total_pages",
-        "pageInfo": "page_info",
-    }
-    __requires__ = [AdminUserType, PageInfoType]
-
-
 class AdminUserQueries(AdminQueries):
     __schema__ = gql(
         """
         type Query {
-            users(filters: UsersFilters, page: Int): UsersPage
+            users(
+                first: Int,
+                last: Int,
+                after: ID,
+                before: ID,
+                filter: UserFilters,
+                sortBy: UserSortBy! = JOINED_LAST,
+            ): UserConnection
             user(id: ID!): User
         }
         """
     )
-    __requires__ = [AdminUserType, AdminUsersPageType, AdminUsersFilters]
+    __fields_args__ = {"users": {"sortBy": "sort_by"}}
+    __requires__ = [
+        AdminUserType,
+        UserConnectionType,
+        AdminUserSortByEnum,
+        AdminUserFilters,
+    ]
 
     @staticmethod
     @handle_invalid_args
-    async def resolve_users(*_, filters: Optional[dict] = None, page: int = 1) -> Page:
-        page = clean_page_arg(page)
-
+    async def resolve_users(_, info: GraphQLResolveInfo, **data: dict) -> Page:
         query = User.query
+        filters = data.get("filter")
 
         if filters:
             if filters.get("name", "").strip():
@@ -103,12 +79,7 @@ class AdminUserQueries(AdminQueries):
             if filters.get("is_moderator") is not None:
                 query = query.filter(is_moderator=filters["is_moderator"])
 
-        query = query.order_by("-id")
-
-        paginator = Paginator(query, 50, 15)
-        await paginator.count_pages()
-
-        return await paginator.get_page(page)
+        return await user_connection.resolve(info.context, query, data, limit=100)
 
     @staticmethod
     @handle_invalid_args
