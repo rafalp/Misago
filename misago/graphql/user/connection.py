@@ -1,6 +1,7 @@
 from ariadne_graphql_modules import ObjectType, DeferredType, gql
 
 from ..connection import Connection, ConnectionResult
+from ..pagination import PageInfoType
 
 
 class UserConnection(Connection):
@@ -28,11 +29,12 @@ class UserConnectionType(ObjectType):
         type UserConnection {
             totalCount: Int!
             edges: [UserEdge!]!
+            pageInfo: PageInfo!
         }
         """
     )
-    __aliases__ = {"totalCount": "total_count"}
-    __requires__ = [UserEdgeType]
+    __aliases__ = {"totalCount": "total_count", "pageInfo": "page_info"}
+    __requires__ = [UserEdgeType, PageInfoType]
 
     @staticmethod
     def resolve_total_count(obj: ConnectionResult, *_):

@@ -1,8 +1,6 @@
 from dataclasses import dataclass
-from optparse import Option
-from typing import Any, List, Optional, Tuple, Type
+from typing import Any, List, Optional, Tuple
 
-from ariadne_graphql_modules import EnumType, InputType
 from sqlalchemy import BigInteger, Integer, SmallInteger
 
 from ...context import Context
@@ -30,11 +28,9 @@ class Connection:
         )
 
         cursor_name = sort_by.lstrip("-")
-
         edges = self.create_edges(context, nodes, cursor_name, data)
 
         return ConnectionResult(
-            sort_by=sort_by,
             query=query,
             edges=edges,
             has_previous_page=has_previous,
@@ -62,15 +58,20 @@ class Connection:
         if after:
             if sort_by[0] == "-":
                 sliced_query = query.filter(**{f"{col_name}__lt": after})
+                opposite_query = query.filter(**{f"{col_name}__gte": after})
             else:
                 sliced_query = query.filter(**{f"{col_name}__gt": after})
+                opposite_query = query.filter(**{f"{col_name}__lte": after})
         elif before:
             if sort_by[0] == "-":
                 sliced_query = query.filter(**{f"{col_name}__gt": before})
+                opposite_query = query.filter(**{f"{col_name}__lte": before})
             else:
                 sliced_query = query.filter(**{f"{col_name}__lt": before})
+                opposite_query = query.filter(**{f"{col_name}__gte": before})
         else:
             sliced_query = query
+            opposite_query = None
 
         if last:
             if sort_by[0] == "-":
@@ -84,11 +85,16 @@ class Connection:
         nodes = await sliced_query.all()
         has_more = len(nodes) > slice_size
 
+        if opposite_query:
+            has_prev = bool(await opposite_query.limit(1).count())
+        else:
+            has_prev = False
+
         if last:
             nodes.reverse()
-            return nodes[slice_size * -1 :], has_more, None
+            return nodes[slice_size * -1 :], has_more, has_prev
 
-        return nodes[:slice_size], None, has_more
+        return nodes[:slice_size], has_prev, has_more
 
     def create_edges(
         self, context: Context, nodes: list, cursor_name: str, data: dict
@@ -145,12 +151,16 @@ def clean_after_before_number(
 @dataclass
 class ConnectionResult:
     query: ObjectMapperQuery
-    sort_by: str
+
     edges: List["Edge"]
-    has_previous_page: Optional[bool]
-    has_next_page: Optional[bool]
+    has_previous_page: bool
+    has_next_page: bool
     start_cursor: Optional[Any]
     end_cursor: Optional[Any]
+
+    @property
+    def page_info(self):
+        return self
 
 
 @dataclass

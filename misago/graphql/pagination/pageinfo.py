@@ -7,10 +7,8 @@ class PageInfoType(ObjectType):
         type PageInfo {
             hasNextPage: Boolean!
             hasPreviousPage: Boolean!
-            startCursor: String
-            endCursor: String
-            nextCursor: String
-            previousCursor: String
+            startCursor: ID
+            endCursor: ID
         }
         """
     )
@@ -19,6 +17,4 @@ class PageInfoType(ObjectType):
         "hasPreviousPage": "has_previous_page",
         "startCursor": "start_cursor",
         "endCursor": "end_cursor",
-        "nextCursor": "next_cursor",
-        "previousCursor": "previous_cursor",
     }
