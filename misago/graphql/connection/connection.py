@@ -1,13 +1,9 @@
 from dataclasses import dataclass
 from typing import Any, List, Optional, Tuple
 
-from sqlalchemy import BigInteger, Integer, SmallInteger
-
 from ...context import Context
 from ...database import ObjectMapperQuery
-
-
-DB_INT_COLUMN = (BigInteger, Integer, SmallInteger)
+from .cleanargs import clean_after_before, clean_first_last
 
 
 class Connection:
@@ -51,9 +47,7 @@ class Connection:
     ) -> Tuple[list, Optional[bool], Optional[bool]]:
         col_name = sort_by.lstrip("-")
         first, last = clean_first_last(data, limit)
-        after, before = clean_after_before_number(
-            query.table.c[col_name].type, data.get("after"), data.get("before")
-        )
+        after, before = clean_after_before(data, query.table.c[col_name])
 
         if after:
             if sort_by[0] == "-":
@@ -102,50 +96,6 @@ class Connection:
         return [
             Edge(node=node, cursor=str(getattr(node, cursor_name))) for node in nodes
         ]
-
-
-def clean_first_last(data: dict, limit=int) -> Tuple[Optional[int], Optional[int]]:
-    if not data.get("first") and not data.get("last"):
-        raise ValueError("You must provide either 'first' or 'last' argument.")
-
-    first = data.get("first")
-    last = data.get("last")
-
-    if first is not None and last is not None:
-        raise ValueError("'first' and 'last' arguments can't be used at same time.")
-
-    if first is not None and first < 1:
-        raise ValueError("'first' can't be less than 1.")
-    if last is not None and last < 1:
-        raise ValueError("'last' can't be less than 1.")
-
-    if first and first > limit:
-        raise ValueError(f"'first' can't be greater than {limit}.")
-    if last and last > limit:
-        raise ValueError(f"'last' can't be greater than {limit}.")
-
-    return first, last
-
-
-def clean_after_before_number(
-    db_col, after, before
-) -> Tuple[Optional[Any], Optional[Any]]:
-    if after is not None and before is not None:
-        raise ValueError("'after' and 'before' arguments can't be used at same time.")
-
-    if isinstance(db_col, DB_INT_COLUMN) and (after or before):
-        try:
-            if after:
-                return int(after), None
-            if before:
-                return None, int(before)
-        except (ValueError, TypeError):
-            if after is not None:
-                raise ValueError("'after' argument must be a number.")
-            if before is not None:
-                raise ValueError("'before' argument must be a number.")
-
-    return after, before
 
 
 @dataclass
