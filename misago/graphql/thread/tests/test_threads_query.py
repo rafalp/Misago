@@ -2,11 +2,12 @@ import pytest
 
 THREADS_QUERY = """
     query GetThreads($category: ID, $user: ID) {
-        threads(category: $category, user: $user) {
+        threads(category: $category, user: $user, first: 10) {
             edges {
                 node {
                     id
                 }
+                cursor
             }
         }
     }
@@ -30,6 +31,7 @@ async def test_threads_query_resolves_to_threads_list(query_public_api, thread):
                 "node": {
                     "id": str(thread.id),
                 },
+                "cursor": str(thread.id),
             },
         ],
     }
@@ -46,6 +48,7 @@ async def test_threads_query_resolves_to_empty_list_for_negative_cursor(
                 "node": {
                     "id": str(thread.id),
                 },
+                "cursor": str(thread.id),
             },
         ],
     }
@@ -62,6 +65,7 @@ async def test_threads_query_resolves_to_category_threads_list(
                 "node": {
                     "id": str(thread.id),
                 },
+                "cursor": str(thread.id),
             },
         ],
     }
@@ -96,6 +100,7 @@ async def test_threads_query_resolves_to_user_threads_list(
                 "node": {
                     "id": str(user_thread.id),
                 },
+                "cursor": str(user_thread.id),
             },
         ],
     }

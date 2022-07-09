@@ -1,19 +1,19 @@
 <ul>
-  {% for thread in threads.results %}
+  {% for edge in threads.edges %}
     <li>
-      <a href="{{ url_for('thread', slug=thread.slug, id=thread.id) }}">
-        {{ thread.title }}
+      <a href="{{ url_for('thread', slug=edge.node.slug, id=edge.node.id) }}">
+        {{ edge.node.title }}
       </a>
     </li>
   {% endfor %}
 </ul>
-{% if threads.has_previous_page %}
-  <a href="{{ url_prefix }}?before={{ threads.start_cursor }}">
+{% if threads.page_info.has_previous_page %}
+  <a href="{{ url_prefix }}?before={{ threads.page_info.start_cursor }}">
     {% trans %}Previous threads{% endtrans %}
   </a>
 {% endif %}
-{% if threads.has_next_page %}
-  <a href="{{ url_prefix }}?after={{ threads.end_cursor }}">
+{% if threads.page_info.has_next_page %}
+  <a href="{{ url_prefix }}?after={{ threads.page_info.end_cursor }}">
     {% trans %}More threads{% endtrans %}
   </a>
 {% endif %}

@@ -34,7 +34,7 @@ async def test_attachment_type_is_created_with_all_fields(db):
     assert attachment_type.name == "Test"
     assert attachment_type.extensions == [".a", ".b", ".c"]
     assert attachment_type.mimetypes == ["a", "b", "c"]
-    assert attachment_type.size_limit is 1024
+    assert attachment_type.size_limit == 1024
     assert attachment_type.is_active is False
 
 

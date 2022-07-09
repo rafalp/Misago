@@ -1,3 +1,4 @@
+# pylint: disable=use-implicit-booleaness-not-comparison
 from ..models import clean_list_value
 
 

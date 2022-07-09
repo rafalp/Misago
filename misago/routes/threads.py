@@ -4,10 +4,13 @@ from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
 from ..categories.get import get_all_categories
+from ..graphql.connection import Connection
 from ..template import render
-from ..threads.get import get_threads_page
+from ..threads.models import Thread
 from .exceptions import HTTPNotFound
 from .utils import clean_cursor_or_404
+
+threads_connection = Connection("-last_post_id")
 
 
 async def threads_route(
@@ -32,14 +35,20 @@ async def base_threads_route(
     context: Optional[dict] = None,
 ):
     after, before = clean_cursor_or_404(request)
-    threads = await get_threads_page(
+    threads_query = Thread.query.filter(category_id__in=categories_ids)
+
+    threads = await threads_connection.resolve(
+        context,
+        threads_query,
+        {
+            "first": request.state.settings["threads_per_page"],
+            "after": after,
+            "before": before,
+        },
         request.state.settings["threads_per_page"],
-        categories_ids=categories_ids,
-        after=after,
-        before=before,
     )
 
-    if (after or before) and not threads.results:
+    if (after or before) and not threads.edges:
         raise HTTPNotFound()
 
     if before:
@@ -47,7 +56,7 @@ async def base_threads_route(
             # On explicit first page of threads redirect user to page without cursor
             return RedirectResponse(request.base_url)
 
-        if len(threads.results) < request.state.settings["threads_per_page"]:
+        if len(threads.edges) < request.state.settings["threads_per_page"]:
             # On partial first page of threads redirect user to page without cursor
             return RedirectResponse(request.base_url)
 

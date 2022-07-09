@@ -57,11 +57,11 @@ def clean_after_before(
                 if clean_before < 1:
                     raise ValidationError("'before' argument must be greater than 0.")
                 return None, clean_before
-        except (ValueError, TypeError):
+        except (ValueError, TypeError) as exc:
             if after is not None:
-                raise ValidationError("'after' argument must be a number.")
+                raise ValidationError("'after' argument must be a number.") from exc
             if before is not None:
-                raise ValidationError("'before' argument must be a number.")
+                raise ValidationError("'before' argument must be a number.") from exc
 
     if after is not None:
         return str(after), None

@@ -14,7 +14,7 @@ class Connection:
 
     async def resolve(
         self,
-        context: Context,
+        context: Optional[Context],
         query: Union[ObjectMapper, ObjectMapperQuery],
         data: dict,
         limit: int,
@@ -94,7 +94,7 @@ class Connection:
         return nodes[:slice_size], has_prev, has_more
 
     def create_edges(
-        self, context: Context, nodes: list, cursor_name: str, data: dict
+        self, context: Optional[Context], nodes: list, cursor_name: str, data: dict
     ) -> List["Edge"]:
         return [
             Edge(node=node, cursor=str(getattr(node, cursor_name))) for node in nodes

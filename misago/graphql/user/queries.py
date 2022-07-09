@@ -1,6 +1,6 @@
 from typing import Awaitable, Optional
 
-from ariadne_graphql_modules import InputType, ObjectType, gql
+from ariadne_graphql_modules import ObjectType, gql
 from graphql import GraphQLResolveInfo
 
 from ...users.loaders import users_loader
@@ -62,7 +62,9 @@ class AdminUserQueries(AdminQueries):
     ]
 
     @staticmethod
-    async def resolve_users(_, info: GraphQLResolveInfo, **data: dict) -> ConnectionResult:
+    async def resolve_users(
+        _, info: GraphQLResolveInfo, **data: dict
+    ) -> ConnectionResult:
         query = User.query
         filters = data.get("filter")
 

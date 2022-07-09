@@ -3,30 +3,26 @@ from typing import Awaitable, Optional
 from ariadne_graphql_modules import ObjectType, gql
 from graphql import GraphQLResolveInfo
 
-from ...threads.get import ThreadsPage, get_threads_page
 from ...threads.loaders import threads_loader
 from ...threads.models import Thread
-from ..args import (
-    clean_cursors_args,
-    clean_id_arg,
-    handle_invalid_args,
-)
+from ..args import clean_id_arg, handle_invalid_args
+from ..connection import ConnectionResult
+from .connection import ThreadConnectionType, thread_connection
 from .thread import ThreadType
-from .threadspage import ThreadsPageType
 
 
 class ThreadQueries(ObjectType):
     __schema__ = gql(
         """
         type Query {
-            threads(before: ID, after: ID, category: ID, user: ID): ThreadsPage
+            threads(before: ID, after: ID, first: Int, last: Int, category: ID, user: ID): ThreadConnection
             thread(id: ID!): Thread
         }
         """
     )
     __requires__ = [
+        ThreadConnectionType,
         ThreadType,
-        ThreadsPageType,
     ]
 
     @staticmethod
@@ -37,10 +33,11 @@ class ThreadQueries(ObjectType):
         *,
         after: Optional[str] = None,
         before: Optional[str] = None,
-        category: Optional[str] = None,
+        first: Optional[int] = None,
+        last: Optional[int] = None,
+        category: Optional[int] = None,
         user: Optional[str] = None
-    ) -> ThreadsPage:
-        after_cursor, before_cursor = clean_cursors_args(after, before)
+    ) -> ConnectionResult:
         category_id = clean_id_arg(category) if category else None
         starter_id = clean_id_arg(user) if user else None
 
@@ -52,12 +49,20 @@ class ThreadQueries(ObjectType):
         else:
             categories = categories_index.all_ids
 
-        return await get_threads_page(
+        threads_query = Thread.query.filter(category_id__in=categories)
+        if starter_id:
+            threads_query = threads_query.filter(starter_id=starter_id)
+
+        return await thread_connection.resolve(
+            info.context,
+            threads_query,
+            {
+                "after": after,
+                "before": before,
+                "first": first,
+                "last": last,
+            },
             info.context["settings"]["threads_per_page"],
-            after=after_cursor,
-            before=before_cursor,
-            starter_id=starter_id,
-            categories_ids=categories,
         )
 
     @staticmethod
