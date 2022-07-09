@@ -181,8 +181,21 @@ posts = sqlalchemy.Table(
     ),
     sqlalchemy.Column("poster_name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("markup", sqlalchemy.Text, nullable=False),
-    sqlalchemy.Column("rich_text", sqlalchemy.JSON, nullable=False),
+    sqlalchemy.Column("rich_text", sqlalchemy.JSON(), nullable=False),
     sqlalchemy.Column("edits", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("posted_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
+)
+
+attachment_types = sqlalchemy.Table(
+    "misago_attachment_types",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
+    sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
+    sqlalchemy.Column("extensions", sqlalchemy.JSON(), nullable=False),
+    sqlalchemy.Column("mimetypes", sqlalchemy.JSON(), nullable=False),
+    sqlalchemy.Column("size_limit", sqlalchemy.Integer, nullable=True),
+    sqlalchemy.Column(
+        "is_active", sqlalchemy.Boolean, server_default="true", nullable=False
+    ),
 )

@@ -18,7 +18,7 @@ class AdminQueries(ObjectType):
             secured_resolver = secure_resolver(field_resolver)
             graphql_type.fields[field_name].resolve = secured_resolver
 
-        if cls.__fields_args__:
+        if isinstance(cls.__fields_args__, dict):
             for field_name, field_args_mappings in cls.__fields_args__.items():
                 field_args = graphql_type.fields[field_name].args
                 for arg_name, arg_out_name in field_args_mappings.items():

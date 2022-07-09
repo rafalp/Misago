@@ -3,11 +3,11 @@ from typing import Awaitable, Optional
 from ariadne_graphql_modules import InputType, ObjectType, gql
 from graphql import GraphQLResolveInfo
 
-from ...database.paginator import Page, Paginator
 from ...users.loaders import users_loader
 from ...users.models import User
 from ..adminqueries import AdminQueries
-from ..args import clean_id_arg, clean_page_arg, handle_invalid_args
+from ..args import clean_id_arg, handle_invalid_args
+from ..connection import ConnectionResult
 from .connection import UserConnectionType, user_connection
 from .filters import AdminUserFilters
 from .sortby import AdminUserSortByEnum
@@ -62,8 +62,7 @@ class AdminUserQueries(AdminQueries):
     ]
 
     @staticmethod
-    @handle_invalid_args
-    async def resolve_users(_, info: GraphQLResolveInfo, **data: dict) -> Page:
+    async def resolve_users(_, info: GraphQLResolveInfo, **data: dict) -> ConnectionResult:
         query = User.query
         filters = data.get("filter")
 

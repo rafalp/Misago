@@ -1,18 +1,21 @@
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple
+from typing import Any, List, Optional, Tuple, Union, cast
 
 from ...context import Context
-from ...database import ObjectMapperQuery
+from ...database import ObjectMapper, ObjectMapperQuery
 from .cleanargs import clean_after_before, clean_first_last
 
 
 class Connection:
-    default_sort: str = "id"
+    default_sort: str
+
+    def __init__(self, default_sort: str = "id"):
+        self.default_sort = default_sort
 
     async def resolve(
         self,
         context: Context,
-        query: ObjectMapperQuery,
+        query: Union[ObjectMapper, ObjectMapperQuery],
         data: dict,
         limit: int,
     ) -> "ConnectionResult":
@@ -37,14 +40,14 @@ class Connection:
 
     def sort_query(
         self,
-        query: ObjectMapperQuery,
+        query: Union[ObjectMapper, ObjectMapperQuery],
         sort_by: str,
-    ) -> Tuple[ObjectMapperQuery, str]:
+    ) -> ObjectMapperQuery:
         return query.order_by(sort_by)
 
     async def slice_query(
         self, query: ObjectMapperQuery, data: dict, sort_by: str, limit: int
-    ) -> Tuple[list, Optional[bool], Optional[bool]]:
+    ) -> Tuple[list, bool, bool]:
         col_name = sort_by.lstrip("-")
         first, last = clean_first_last(data, limit)
         after, before = clean_after_before(data, query.table.c[col_name])
@@ -73,11 +76,11 @@ class Connection:
             else:
                 sliced_query = sliced_query.order_by("-" + col_name)
 
-        slice_size = first or last
+        slice_size = cast(int, first or last)
         sliced_query = sliced_query.limit(slice_size + 1)
 
         nodes = await sliced_query.all()
-        has_more = len(nodes) > slice_size
+        has_more: bool = len(nodes) > slice_size
 
         if opposite_query:
             has_prev = bool(await opposite_query.limit(1).count())
@@ -100,7 +103,7 @@ class Connection:
 
 @dataclass
 class ConnectionResult:
-    query: ObjectMapperQuery
+    query: Union[ObjectMapper, ObjectMapperQuery]
 
     edges: List["Edge"]
     has_previous_page: bool
@@ -117,3 +120,6 @@ class ConnectionResult:
 class Edge:
     node: Any
     cursor: str
+
+
+connection = Connection()

@@ -3,12 +3,7 @@ from ariadne_graphql_modules import ObjectType, DeferredType, gql
 from ..connection import Connection, ConnectionResult
 from ..pagination import PageInfoType
 
-
-class UserConnection(Connection):
-    pass
-
-
-user_connection = UserConnection()
+user_connection = Connection()
 
 
 class UserEdgeType(ObjectType):

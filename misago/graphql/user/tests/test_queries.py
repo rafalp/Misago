@@ -87,12 +87,14 @@ async def test_admin_schema_user_query_requires_admin_auth(query_admin_api, admi
 
 
 USERS_QUERY = """
-    query Users($filters: UsersFilters, $page: Int) {
-        users(filters: $filters, page: $page) {
+    query Users($filter: UserFilters, $first: Int) {
+        users(filter: $filter, first: $first) {
             totalCount
-            totalPages
-            results {
-                id
+            edges {
+                node {
+                    id
+                }
+                cursor
             }
         }
     }
@@ -103,14 +105,16 @@ USERS_QUERY = """
 async def test_admin_schema_users_query_returns_first_page_of_users_list(
     query_admin_api, admin
 ):
-    result = await query_admin_api(USERS_QUERY)
+    result = await query_admin_api(USERS_QUERY, {"first": 5})
 
     assert result["data"]["users"] == {
         "totalCount": 1,
-        "totalPages": 1,
-        "results": [
+        "edges": [
             {
-                "id": str(admin.id),
+                "node": {
+                    "id": str(admin.id),
+                },
+                "cursor": str(admin.id),
             },
         ],
     }
@@ -118,65 +122,161 @@ async def test_admin_schema_users_query_returns_first_page_of_users_list(
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_names(query_admin_api, other_user):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"name": "Other*"}})
-    assert result["data"]["users"]["results"] == [{"id": str(other_user.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"name": "Other*"}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(other_user.id),
+                },
+                "cursor": str(other_user.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_emails(query_admin_api, user):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"email": "user@*"}})
-    assert result["data"]["users"]["results"] == [{"id": str(user.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"email": "user@*"}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(user.id),
+                },
+                "cursor": str(user.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_admins(query_admin_api, admin, user):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isAdmin": True}})
-    assert result["data"]["users"]["results"] == [{"id": str(admin.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isAdmin": True}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(admin.id),
+                },
+                "cursor": str(admin.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_non_admins(
     query_admin_api, admin, user
 ):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isAdmin": False}})
-    assert result["data"]["users"]["results"] == [{"id": str(user.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isAdmin": False}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(user.id),
+                },
+                "cursor": str(user.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_mods(query_admin_api, moderator, user):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isModerator": True}})
-    assert result["data"]["users"]["results"] == [{"id": str(moderator.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isModerator": True}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(moderator.id),
+                },
+                "cursor": str(moderator.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_non_mods(
     query_admin_api, admin, moderator
 ):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isModerator": False}})
-    assert result["data"]["users"]["results"] == [{"id": str(admin.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isModerator": False}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(admin.id),
+                },
+                "cursor": str(admin.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_active_users(
     query_admin_api, admin, inactive_user
 ):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isActive": True}})
-    assert result["data"]["users"]["results"] == [{"id": str(admin.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isActive": True}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(admin.id),
+                },
+                "cursor": str(admin.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_filters_inactive_users(
     query_admin_api, admin, inactive_user
 ):
-    result = await query_admin_api(USERS_QUERY, {"filters": {"isActive": False}})
-    assert result["data"]["users"]["results"] == [{"id": str(inactive_user.id)}]
+    result = await query_admin_api(
+        USERS_QUERY, {"filter": {"isActive": False}, "first": 5}
+    )
+    assert result["data"]["users"] == {
+        "totalCount": 1,
+        "edges": [
+            {
+                "node": {
+                    "id": str(inactive_user.id),
+                },
+                "cursor": str(inactive_user.id),
+            },
+        ],
+    }
 
 
 @pytest.mark.asyncio
 async def test_admin_schema_users_query_requires_admin_auth(query_admin_api):
     result = await query_admin_api(
         USERS_QUERY,
-        {"filters": {"isActive": False}},
+        {"filter": {"isActive": False}},
         expect_error=True,
         include_auth=False,
     )
