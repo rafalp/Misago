@@ -61,7 +61,7 @@ export default class extends React.Component {
   revertEdit = edit => {
     if (this.state.isBusy) return
 
-    const confirmation = confirm(
+    const confirmation = window.confirm(
       gettext(
         "Are you sure you with to revert this post to the state from before this edit?"
       )

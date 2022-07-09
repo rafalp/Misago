@@ -65,7 +65,7 @@ export class PollChoice extends React.Component {
   }
 
   onDelete = () => {
-    const deleteItem = confirm(
+    const deleteItem = window.confirm(
       gettext("Are you sure you want to delete this choice?")
     )
     if (deleteItem) {

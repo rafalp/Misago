@@ -54,6 +54,8 @@
     "browserify": "^16.5.1",
     "browserify-shim": "^3.8.14",
     "del": "^2.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-react-app": "^6.0.0",
     "glob": "^7.0.3",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",

@@ -142,7 +142,7 @@ export class Edit extends React.Component {
 
 export class Delete extends React.Component {
   onClick = () => {
-    const deletePoll = confirm(
+    const deletePoll = window.confirm(
       gettext(
         "Are you sure you want to delete this poll? This action is not reversible."
       )

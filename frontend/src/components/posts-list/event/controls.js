@@ -116,7 +116,7 @@ export class Unhide extends React.Component {
 
 export class Delete extends React.Component {
   onClick = () => {
-    const decision = confirm(
+    const decision = window.confirm(
       gettext(
         "Are you sure you wish to delete this event? This action is not reversible!"
       )

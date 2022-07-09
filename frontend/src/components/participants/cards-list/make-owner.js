@@ -11,14 +11,14 @@ export default class extends React.Component {
   onClick = () => {
     let confirmed = false
     if (this.isUser) {
-      confirmed = confirm(
+      confirmed = window.confirm(
         gettext("Are you sure you want to take over this thread?")
       )
     } else {
       const message = gettext(
         "Are you sure you want to change thread owner to %(user)s?"
       )
-      confirmed = confirm(
+      confirmed = window.confirm(
         interpolate(
           message,
           {

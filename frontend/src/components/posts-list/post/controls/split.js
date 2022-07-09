@@ -171,8 +171,6 @@ export class ModerationForm extends Form {
         errors: Object.assign({}, this.state.errors, rejection)
       })
       snackbar.error(gettext("Form contains errors."))
-    } else if (rejection.status === 403 && Array.isArray(rejection)) {
-      modal.show(<ErrorsModal errors={rejection} />)
     } else {
       snackbar.apiError(rejection)
     }

@@ -89,7 +89,7 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const cancel = confirm(gettext("Are you sure you want to discard thread?"))
+    const cancel = window.confirm(gettext("Are you sure you want to discard thread?"))
     if (cancel) {
       posting.close()
     }

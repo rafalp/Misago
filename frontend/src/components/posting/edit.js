@@ -55,7 +55,7 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const cancel = confirm(gettext("Are you sure you want to discard changes?"))
+    const cancel = window.confirm(gettext("Are you sure you want to discard changes?"))
     if (cancel) {
       posting.close()
     }

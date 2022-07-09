@@ -221,7 +221,7 @@ export default class extends React.Component {
 
   delete = () => {
     if (
-      !confirm(gettext("Are you sure you want to delete selected threads?"))
+      !window.confirm(gettext("Are you sure you want to delete selected threads?"))
     ) {
       return
     }

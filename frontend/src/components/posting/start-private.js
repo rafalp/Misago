@@ -33,7 +33,7 @@ export default class extends Form {
   }
 
   onCancel = () => {
-    const cancel = confirm(
+    const cancel = window.confirm(
       gettext("Are you sure you want to discard private thread?")
     )
     if (cancel) {

@@ -19,7 +19,7 @@ export default class extends Form {
 
   clean() {
     if (this.props.polls && this.state.poll === "0") {
-      const confirmation = confirm(
+      const confirmation = window.confirm(
         gettext("Are you sure you want to delete all polls?")
       )
       return confirmation

@@ -11,6 +11,7 @@ import modal from "misago/services/modal"
 import snackbar from "misago/services/snackbar"
 import store from "misago/services/store"
 import * as validators from "misago/utils/validators"
+import ErrorsModal from "./errors-list"
 
 export default function(props) {
   return <PostingConfig {...props} Form={ModerationForm} />

@@ -158,7 +158,7 @@ export function patch(props, ops, previousState) {
 }
 
 export function remove(props) {
-  let confirmed = confirm(
+  let confirmed = window.confirm(
     gettext(
       "Are you sure you want to delete this post? This action is not reversible!"
     )

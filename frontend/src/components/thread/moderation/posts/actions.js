@@ -198,7 +198,7 @@ export function patch(props, ops, newState, previousState) {
 }
 
 export function merge(props) {
-  let confirmed = confirm(
+  let confirmed = window.confirm(
     gettext(
       "Are you sure you want to merge selected posts? This action is not reversible!"
     )
@@ -244,7 +244,7 @@ export function merge(props) {
 }
 
 export function remove(props) {
-  let confirmed = confirm(
+  let confirmed = window.confirm(
     gettext(
       "Are you sure you want to delete selected posts? This action is not reversible!"
     )

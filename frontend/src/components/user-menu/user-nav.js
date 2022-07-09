@@ -9,7 +9,7 @@ import modal from "misago/services/modal"
 
 export class UserMenu extends React.Component {
   logout() {
-    let decision = confirm(gettext("Are you sure you want to sign out?"))
+    let decision = window.confirm(gettext("Are you sure you want to sign out?"))
     if (decision) {
       $("#hidden-logout-form").submit()
     }

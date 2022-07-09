@@ -31,7 +31,7 @@ export class Posting {
         )
       }
 
-      const changeForm = confirm(message)
+      const changeForm = window.confirm(message)
       if (changeForm) {
         this._mode = props.mode
         this._isOpen = props.submit
