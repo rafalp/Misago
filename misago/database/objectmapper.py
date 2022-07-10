@@ -170,6 +170,9 @@ class ObjectMapperBase:
         if len(results) > 1:
             raise self.MultipleObjectsReturned()
 
+        if columns:
+            return dict(**results[0])
+
         return model(**results[0])
 
     async def exists(self) -> bool:

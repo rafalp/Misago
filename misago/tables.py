@@ -24,7 +24,7 @@ user_groups = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
-    sqlalchemy.Column("order", sqlalchemy.Integer, nullable=False),
+    sqlalchemy.Column("ordering", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("is_default", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_hidden", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),

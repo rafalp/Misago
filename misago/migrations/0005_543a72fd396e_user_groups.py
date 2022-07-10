@@ -23,14 +23,13 @@ def upgrade():
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column("name", sa.String(length=255), nullable=False),
         sa.Column("slug", sa.String(length=255), nullable=False),
-        sa.Column("order", sa.Integer(), nullable=False),
-        sa.Column("is_hidden", sa.Boolean(), nullable=False),
+        sa.Column("ordering", sa.Integer(), nullable=False),
         sa.Column("is_default", sa.Boolean(), nullable=False),
+        sa.Column("is_hidden", sa.Boolean(), nullable=False),
         sa.Column("is_moderator", sa.Boolean(), nullable=False),
         sa.Column("is_admin", sa.Boolean(), nullable=False),
         sa.Column("permissions", sa.JSON(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("role"),
     )
     # ### end Alembic commands ###
 

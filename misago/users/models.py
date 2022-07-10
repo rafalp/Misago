@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Awaitable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from ..avatars.store import delete_user_avatars
 from ..avatars.types import AvatarType
 from ..context import Context
 from ..database import Model, ObjectMapperQuery, model_registry, register_model
 from ..passwords import check_password, hash_password
-from ..tables import users
+from ..tables import user_groups, users
 from ..utils import timezone
 from ..utils.strings import slugify
 from .email import get_email_hash, normalize_email
@@ -23,6 +23,8 @@ class User(Model):
     email_hash: str
     full_name: Optional[str]
     password: Optional[str]
+    group_id: int
+    acl_key: str
     avatar_type: AvatarType
     avatars: List[dict]
     is_active: bool
@@ -47,6 +49,7 @@ class User(Model):
         *,
         full_name: Optional[str] = None,
         password: Optional[str] = None,
+        group_id: Optional[int] = None,
         avatar_type: Optional[AvatarType] = None,
         avatars: Optional[List[dict]] = None,
         is_active: bool = True,
@@ -55,10 +58,14 @@ class User(Model):
         joined_at: Optional[datetime] = None,
         extra: Optional[Dict[str, Any]] = None,
         context: Optional[Context] = None,
-    ) -> Awaitable["User"]:
+    ) -> "User":
         password_hash = None
         if password:
             password_hash = await hash_password(password)
+
+        if group_id is None:
+            group = await UserGroup.query.one(is_default=True)
+            group_id = group.id
 
         data: Dict[str, Any] = {
             "name": name,
@@ -66,6 +73,8 @@ class User(Model):
             "email": normalize_email(email),
             "email_hash": get_email_hash(email),
             "full_name": full_name,
+            "group_id": group_id,
+            "acl_key": "todo",
             "password": password_hash,
             "avatar_type": avatar_type or AvatarType.GRAVATAR,
             "avatars": avatars or [],
@@ -147,3 +156,65 @@ class User(Model):
             return False
 
         return await check_password(password, self.password)
+
+
+@register_model("UserGroup", user_groups)
+@dataclass
+class UserGroup(Model):
+    id: int
+    name: str
+    slug: str
+    ordering: int
+    is_default: bool
+    is_hidden: bool
+    is_moderator: bool
+    is_admin: bool
+    permissions: dict
+
+    @classmethod
+    async def create(
+        cls,
+        name: str,
+        *,
+        is_hidden: bool = False,
+        is_moderator: bool = False,
+        is_admin: bool = False,
+        permissions: Optional[dict] = None,
+        context: Optional[Context] = None,
+    ) -> "UserGroup":
+        last_group = (
+            await UserGroup.query.limit(1).order_by("-ordering").one("ordering")
+        )
+        ordering = last_group["ordering"] + 1
+
+        data: Dict[str, Any] = {
+            "name": name,
+            "slug": slugify(name),
+            "ordering": ordering,
+            "is_default": False,
+            "is_hidden": is_hidden,
+            "is_moderator": is_moderator,
+            "is_admin": is_admin,
+            "permissions": permissions or {},
+        }
+
+        return await cls.query.insert(**data)
+
+    async def update(
+        self,
+        *,
+        name: Optional[str] = None,
+        context: Optional[Context] = None,
+    ) -> "UserGroup":
+        changes: Dict[str, Any] = {}
+
+        if name is not None and name != self.name:
+            changes["name"] = name
+            changes["slug"] = slugify(name)
+
+        if not changes:
+            return self
+
+        await UserGroup.query.filter(id=self.id).update(**changes)
+
+        return self.replace(**changes)
