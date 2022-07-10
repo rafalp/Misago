@@ -18,8 +18,11 @@ SETTINGS_QUERY = """
             passwordMinLength
             passwordMaxLength
             postMinLength
+            postsPerPage
+            postsPerPageOrphans
             threadTitleMinLength
             threadTitleMaxLength
+            threadsPerPage
             usernameMinLength
             usernameMaxLength
         }
@@ -43,8 +46,11 @@ async def test_settings_query_returns_settings(query_public_api, dynamic_setting
         "passwordMinLength": dynamic_settings["password_min_length"],
         "passwordMaxLength": PASSWORD_MAX_LENGTH,
         "postMinLength": dynamic_settings["post_min_length"],
+        "postsPerPage": dynamic_settings["posts_per_page"],
+        "postsPerPageOrphans": dynamic_settings["posts_per_page_orphans"],
         "threadTitleMinLength": dynamic_settings["thread_title_min_length"],
         "threadTitleMaxLength": dynamic_settings["thread_title_max_length"],
+        "threadsPerPage": dynamic_settings["threads_per_page"],
         "usernameMinLength": dynamic_settings["username_min_length"],
         "usernameMaxLength": dynamic_settings["username_max_length"],
     }

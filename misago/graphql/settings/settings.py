@@ -21,6 +21,9 @@ class SettingsType(ObjectType):
             passwordMinLength: Int!
             passwordMaxLength: Int!
             postMinLength: Int!
+            postsPerPage: Int!
+            postsPerPageOrphans: Int!
+            threadsPerPage: Int!
             threadTitleMinLength: Int!
             threadTitleMaxLength: Int!
             usernameMinLength: Int!
@@ -41,6 +44,9 @@ class SettingsType(ObjectType):
         "passwordMinLength": "password_min_length",
         "passwordMaxLength": "password_max_length",
         "postMinLength": "post_min_length",
+        "postsPerPage": "posts_per_page",
+        "postsPerPageOrphans": "posts_per_page_orphans",
+        "threadsPerPage": "threads_per_page",
         "threadTitleMinLength": "thread_title_min_length",
         "threadTitleMaxLength": "thread_title_max_length",
         "usernameMinLength": "username_min_length",
@@ -69,16 +75,8 @@ class AdminSettingsType(ObjectType):
         """
         extend type Settings {
             jwtExp: Int!
-            postsPerPage: Int!
-            postsPerPageOrphans: Int!
-            threadsPerPage: Int!
         }
         """
     )
-    __aliases__ = {
-        "jwtExp": "jwt_exp",
-        "postsPerPage": "posts_per_page",
-        "postsPerPageOrphans": "posts_per_page_orphans",
-        "threadsPerPage": "threads_per_page",
-    }
+    __aliases__ = {"jwtExp": "jwt_exp"}
     __requires__ = [SettingsType]
