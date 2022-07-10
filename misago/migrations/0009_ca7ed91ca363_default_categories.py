@@ -1,8 +1,8 @@
 """default_categories
 
-Revision ID: f386c9e48425
-Revises: 05180e3cdd4b
-Create Date: 2019-12-15 21:51:27.434952
+Revision ID: ca7ed91ca363
+Revises: 9ea4f438f320
+Create Date: 2022-07-10 21:34:31.228445
 
 """
 from typing import List
@@ -13,9 +13,10 @@ from sqlalchemy.sql import column, table
 
 from misago.categories.models import CategoryType
 
+
 # revision identifiers, used by Alembic.
-revision = "f386c9e48425"
-down_revision = "05180e3cdd4b"
+revision = "ca7ed91ca363"
+down_revision = "9ea4f438f320"
 branch_labels = None
 depends_on = None
 

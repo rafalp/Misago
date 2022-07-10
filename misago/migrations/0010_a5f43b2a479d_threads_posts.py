@@ -1,16 +1,17 @@
 """threads_posts
 
-Revision ID: 135f742c6a0d
-Revises: f386c9e48425
-Create Date: 2019-12-16 17:32:58.038680
+Revision ID: a5f43b2a479d
+Revises: ca7ed91ca363
+Create Date: 2022-07-10 21:36:38.438252
 
 """
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision = "135f742c6a0d"
-down_revision = "f386c9e48425"
+revision = "a5f43b2a479d"
+down_revision = "ca7ed91ca363"
 branch_labels = None
 depends_on = None
 
@@ -20,12 +21,12 @@ def upgrade():
     op.create_table(
         "misago_threads",
         sa.Column("id", sa.BigInteger(), nullable=False),
-        sa.Column("category_id", sa.Integer(), nullable=False),
-        sa.Column("first_post_id", sa.Integer(), nullable=True),
-        sa.Column("starter_id", sa.Integer(), nullable=True),
+        sa.Column("category_id", sa.BigInteger(), nullable=False),
+        sa.Column("first_post_id", sa.BigInteger(), nullable=True),
+        sa.Column("starter_id", sa.BigInteger(), nullable=True),
         sa.Column("starter_name", sa.String(length=255), nullable=False),
-        sa.Column("last_post_id", sa.Integer(), nullable=True),
-        sa.Column("last_poster_id", sa.Integer(), nullable=True),
+        sa.Column("last_post_id", sa.BigInteger(), nullable=True),
+        sa.Column("last_poster_id", sa.BigInteger(), nullable=True),
         sa.Column("last_poster_name", sa.String(length=255), nullable=False),
         sa.Column("title", sa.String(length=255), nullable=False),
         sa.Column("slug", sa.String(length=255), nullable=False),
@@ -55,9 +56,9 @@ def upgrade():
     op.create_table(
         "misago_posts",
         sa.Column("id", sa.BigInteger(), nullable=False),
-        sa.Column("category_id", sa.Integer(), nullable=False),
-        sa.Column("thread_id", sa.Integer(), nullable=False),
-        sa.Column("poster_id", sa.Integer(), nullable=True),
+        sa.Column("category_id", sa.BigInteger(), nullable=False),
+        sa.Column("thread_id", sa.BigInteger(), nullable=False),
+        sa.Column("poster_id", sa.BigInteger(), nullable=True),
         sa.Column("poster_name", sa.String(length=255), nullable=False),
         sa.Column("markup", sa.Text(), nullable=False),
         sa.Column("rich_text", sa.JSON(), nullable=False),

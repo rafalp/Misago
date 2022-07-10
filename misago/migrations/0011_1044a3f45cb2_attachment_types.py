@@ -1,9 +1,8 @@
-"""add attachment types
+"""attachment-types
 
-
-Revision ID: 19d91a293d21
-Revises: 135f742c6a0d
-Create Date: 2022-07-09 12:47:18.856834
+Revision ID: 1044a3f45cb2
+Revises: a5f43b2a479d
+Create Date: 2022-07-10 21:39:47.018257
 
 """
 from alembic import op
@@ -11,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "19d91a293d21"
-down_revision = "135f742c6a0d"
+revision = "1044a3f45cb2"
+down_revision = "a5f43b2a479d"
 branch_labels = None
 depends_on = None
 
