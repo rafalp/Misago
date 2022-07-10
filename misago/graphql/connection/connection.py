@@ -36,25 +36,22 @@ class Connection:
             end_cursor=edges[-1].cursor if edges else None,
         )
 
-    def sort_query(
+    async def slice_query(
         self,
         query: Union[ObjectMapper, ObjectMapperQuery],
+        data: dict,
         sort_by: str,
-    ) -> ObjectMapperQuery:
-        return query.order_by(sort_by)
-
-    async def slice_query(
-        self, query: ObjectMapperQuery, data: dict, sort_by: str, limit: int
+        limit: int,
     ) -> Tuple[list, bool, bool]:
         col_name = sort_by.lstrip("-")
         first, last = clean_first_last(data, limit)
         after, before = clean_after_before(data, query.table.c[col_name])
 
-        if first and before:
+        if first is not None and before is not None:
             raise ValidationError(
                 "'first' and 'before' arguments can't be used at same time."
             )
-        if last and after:
+        if last is not None and after is not None:
             raise ValidationError(
                 "'last' and 'after' arguments can't be used at same time."
             )
