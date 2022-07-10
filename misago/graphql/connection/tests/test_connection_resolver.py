@@ -88,60 +88,6 @@ async def test_connection_returns_first_five_items_after_cursor_using_custom_sor
 
 
 @pytest.mark.asyncio
-async def test_connection_returns_first_five_items_before_cursor_using_default_sorting(
-    context, nodes
-):
-    connection = Connection("name")
-    result = await connection.resolve(
-        context, AttachmentType.query, {"first": 5, "before": "D"}, LIMIT
-    )
-    names = [edge.node.name for edge in result.edges]
-    assert names == ["A", "B", "C"]
-
-
-@pytest.mark.asyncio
-async def test_connection_returns_first_five_items_before_cursor_using_custom_sorting(
-    context, nodes
-):
-    connection = Connection("name")
-    result = await connection.resolve(
-        context,
-        AttachmentType.query,
-        {"first": 5, "before": "V", "sort_by": "-name"},
-        LIMIT,
-    )
-    names = [edge.node.name for edge in result.edges]
-    assert names == ["Z", "Y", "X", "W"]
-
-
-@pytest.mark.asyncio
-async def test_connection_returns_last_five_items_after_cursor_using_default_sorting(
-    context, nodes
-):
-    connection = Connection("name")
-    result = await connection.resolve(
-        context, AttachmentType.query, {"last": 5, "after": "W"}, LIMIT
-    )
-    names = [edge.node.name for edge in result.edges]
-    assert names == ["X", "Y", "Z"]
-
-
-@pytest.mark.asyncio
-async def test_connection_returns_last_five_items_after_cursor_using_custom_sorting(
-    context, nodes
-):
-    connection = Connection("name")
-    result = await connection.resolve(
-        context,
-        AttachmentType.query,
-        {"last": 5, "after": "D", "sort_by": "-name"},
-        LIMIT,
-    )
-    names = [edge.node.name for edge in result.edges]
-    assert names == ["C", "B", "A"]
-
-
-@pytest.mark.asyncio
 async def test_connection_returns_last_five_items_before_cursor_using_default_sorting(
     context, nodes
 ):
@@ -238,7 +184,7 @@ async def test_connection_sets_first_and_last_cursor(context, nodes):
 
 
 @pytest.mark.asyncio
-async def test_connection_raises_validation_error_for_invalid_after_before(
+async def test_connection_raises_validation_error_if_after_before_are_combined(
     context, nodes
 ):
     connection = Connection("name")
@@ -252,7 +198,7 @@ async def test_connection_raises_validation_error_for_invalid_after_before(
 
 
 @pytest.mark.asyncio
-async def test_connection_raises_validation_error_for_invalid_first_last(
+async def test_connection_raises_validation_error_if_first_last_are_combined(
     context, nodes
 ):
     connection = Connection("name")
@@ -261,6 +207,32 @@ async def test_connection_raises_validation_error_for_invalid_first_last(
             context,
             AttachmentType.query,
             {"first": 5, "last": 5},
+            LIMIT,
+        )
+
+
+@pytest.mark.asyncio
+async def test_connection_raises_validation_error_if_first_before(context, nodes):
+    connection = Connection("name")
+    with pytest.raises(ValidationError):
+        await connection.resolve(
+            context,
+            AttachmentType.query,
+            {"first": 5, "before": "B"},
+            LIMIT,
+        )
+
+
+@pytest.mark.asyncio
+async def test_connection_raises_validation_error_if_last_after_are_combined(
+    context, nodes
+):
+    connection = Connection("name")
+    with pytest.raises(ValidationError):
+        await connection.resolve(
+            context,
+            AttachmentType.query,
+            {"last": 5, "after": "D"},
             LIMIT,
         )
 

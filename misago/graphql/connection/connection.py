@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Tuple, Union, cast
 
 from ...context import Context
 from ...database import ObjectMapper, ObjectMapperQuery
-from .cleanargs import clean_after_before, clean_first_last
+from .cleanargs import ValidationError, clean_after_before, clean_first_last
 
 
 class Connection:
@@ -20,10 +20,8 @@ class Connection:
         limit: int,
     ) -> "ConnectionResult":
         sort_by = data.get("sort_by") or self.default_sort
-        sorted_query = self.sort_query(query, sort_by)
-
         nodes, has_previous, has_next = await self.slice_query(
-            sorted_query, data, sort_by, limit
+            query, data, sort_by, limit
         )
 
         cursor_name = sort_by.lstrip("-")
@@ -52,6 +50,15 @@ class Connection:
         first, last = clean_first_last(data, limit)
         after, before = clean_after_before(data, query.table.c[col_name])
 
+        if first and before:
+            raise ValidationError(
+                "'first' and 'before' arguments can't be used at same time."
+            )
+        if last and after:
+            raise ValidationError(
+                "'last' and 'after' arguments can't be used at same time."
+            )
+
         if after:
             if sort_by[0] == "-":
                 sliced_query = query.filter(**{f"{col_name}__lt": after})
@@ -75,6 +82,8 @@ class Connection:
                 sliced_query = sliced_query.order_by(col_name)
             else:
                 sliced_query = sliced_query.order_by("-" + col_name)
+        else:
+            sliced_query = sliced_query.order_by(sort_by)
 
         slice_size = cast(int, first or last)
         sliced_query = sliced_query.limit(slice_size + 1)

@@ -70,7 +70,7 @@ async def test_threads_route_displays_threads_before_cursor(
         url += f"?before={cursor}"
         response = await client.get(url)
 
-    for thread in threads[:11]:
+    for thread in threads[:10]:
         thread_url = app.url_path_for(
             "thread",
             slug=thread.slug,

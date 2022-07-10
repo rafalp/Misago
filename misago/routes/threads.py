@@ -35,13 +35,15 @@ async def base_threads_route(
     context: Optional[dict] = None,
 ):
     after, before = clean_cursor_or_404(request)
+    slice_key = "last" if before else "first"
+
     threads_query = Thread.query.filter(category_id__in=categories_ids)
 
     threads = await threads_connection.resolve(
         context,
         threads_query,
         {
-            "first": request.state.settings["threads_per_page"],
+            slice_key: request.state.settings["threads_per_page"],
             "after": after,
             "before": before,
         },
