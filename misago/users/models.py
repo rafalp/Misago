@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, cast
 
 from sqlalchemy import select
 
@@ -244,7 +244,7 @@ class User(Model):
                 main_group = group
             else:
                 secondary_groups.append(group)
-        return [main_group] + secondary_groups
+        return [cast("UserGroup", main_group)] + secondary_groups
 
 
 @register_model("UserGroup", user_groups)

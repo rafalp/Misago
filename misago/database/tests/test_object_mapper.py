@@ -4,7 +4,6 @@ from typing import Any
 import pytest
 
 from ...tables import attachment_types, categories, settings, users
-from ...utils import timezone
 from ..objectmapper import InvalidColumnError, ObjectMapper
 
 
