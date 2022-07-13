@@ -97,6 +97,7 @@ def upgrade():
         sa.Column("id", sa.BigInteger(), nullable=False),
         sa.Column("user_id", sa.BigInteger(), nullable=False),
         sa.Column("group_id", sa.BigInteger(), nullable=False),
+        sa.Column("is_main", sa.Boolean(), nullable=False, index=True),
         sa.ForeignKeyConstraint(
             ["group_id"], ["misago_user_groups.id"], ondelete="CASCADE"
         ),

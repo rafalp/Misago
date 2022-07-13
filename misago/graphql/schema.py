@@ -16,6 +16,7 @@ from . import (
     sitesetup,
     thread,
     user,
+    usergroup,
 )
 from .hooks import create_admin_schema_hook, create_public_schema_hook
 
@@ -29,6 +30,7 @@ ADMIN_TYPES = [
     settings.AdminSettingsQueries,
     user.AdminUserMutations,
     user.AdminUserQueries,
+    usergroup.AdminUserGroupQueries,
 ]
 
 PUBLIC_TYPES = [
@@ -48,6 +50,7 @@ PUBLIC_TYPES = [
     thread.ThreadSubscriptions,
     user.UserMutations,
     user.UserQueries,
+    usergroup.UserGroupQueries,
 ]
 
 

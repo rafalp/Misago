@@ -6,6 +6,7 @@ from ..get import (
     get_user_by_name_or_email,
     get_users_by_id,
     get_users_by_name,
+    get_users_groups_by_id,
 )
 
 
@@ -58,3 +59,9 @@ async def test_name_or_email_getter_returns_user_with_matching_email(user):
 @pytest.mark.asyncio
 async def test_name_or_email_getter_returns_none_if_no_user_is_found(db):
     assert await get_user_by_name_or_email("nonexistant") is None
+
+
+@pytest.mark.asyncio
+async def test_multiple_user_groups_can_be_get_by_id(admins, members):
+    groups = await get_users_groups_by_id([members.id, admins.id])
+    assert groups == [admins, members]

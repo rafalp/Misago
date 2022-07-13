@@ -24,12 +24,14 @@ user_groups = sqlalchemy.Table(
     sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
     sqlalchemy.Column("name", sqlalchemy.String(length=255), nullable=False),
     sqlalchemy.Column("slug", sqlalchemy.String(length=255), nullable=False),
+    sqlalchemy.Column("title", sqlalchemy.String(length=255), nullable=True),
+    sqlalchemy.Column("css_suffix", sqlalchemy.String(length=255), nullable=True),
     sqlalchemy.Column("ordering", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("is_default", sqlalchemy.Boolean, nullable=False),
+    sqlalchemy.Column("is_guest", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_hidden", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_moderator", sqlalchemy.Boolean, nullable=False),
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
-    sqlalchemy.Column("permissions", sqlalchemy.JSON(), nullable=False),
 )
 
 users = sqlalchemy.Table(
@@ -113,6 +115,7 @@ user_group_memberships = sqlalchemy.Table(
         sqlalchemy.ForeignKey("misago_user_groups.id", ondelete="CASCADE"),
         nullable=False,
     ),
+    sqlalchemy.Column("is_main", sqlalchemy.Boolean, nullable=False, index=True),
 )
 
 categories = sqlalchemy.Table(

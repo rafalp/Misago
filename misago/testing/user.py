@@ -1,6 +1,6 @@
 import pytest
 
-from ..users.models import User
+from ..users.models import User, UserGroup
 
 
 @pytest.fixture
@@ -44,3 +44,23 @@ async def admin(db, user_password):
     return await User.create(
         "Admin", "admin@example.com", password=user_password, is_admin=True
     )
+
+
+@pytest.fixture
+async def admins(db):
+    return await UserGroup.query.one(is_admin=True)
+
+
+@pytest.fixture
+async def moderators(db):
+    return await UserGroup.query.one(is_admin=False, is_moderator=True)
+
+
+@pytest.fixture
+async def members(db):
+    return await UserGroup.query.one(is_default=True)
+
+
+@pytest.fixture
+async def guests(db):
+    return await UserGroup.query.one(is_guest=True)

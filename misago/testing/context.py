@@ -5,7 +5,7 @@ import pytest
 from ..categories.index import get_categories_index
 from ..categories.loaders import categories_children_loader, categories_loader
 from ..threads.loaders import posts_loader, threads_loader
-from ..users.loaders import users_loader
+from ..users.loaders import users_groups_loader, users_loader
 
 
 async def setup_context(context: dict):
@@ -16,6 +16,7 @@ async def setup_context(context: dict):
     threads_loader.setup_context(context)
     posts_loader.setup_context(context)
     users_loader.setup_context(context)
+    users_groups_loader.setup_context(context)
 
     return context
 

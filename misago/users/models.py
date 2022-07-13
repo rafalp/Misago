@@ -1,15 +1,24 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, Optional
+
+from sqlalchemy import select
 
 from ..avatars.store import delete_user_avatars
 from ..avatars.types import AvatarType
 from ..context import Context
-from ..database import Model, ObjectMapperQuery, model_registry, register_model
+from ..database import (
+    Model,
+    ObjectMapperQuery,
+    database,
+    model_registry,
+    register_model,
+)
 from ..passwords import check_password, hash_password
-from ..tables import user_groups, users
+from ..tables import user_groups, user_group_memberships, users
 from ..utils import timezone
 from ..utils.strings import slugify
+from .aclkey import create_acl_key
 from .email import get_email_hash, normalize_email
 
 
@@ -49,7 +58,8 @@ class User(Model):
         *,
         full_name: Optional[str] = None,
         password: Optional[str] = None,
-        group_id: Optional[int] = None,
+        group: Optional["UserGroup"] = None,
+        secondary_groups: Optional[Iterable["UserGroup"]] = None,
         avatar_type: Optional[AvatarType] = None,
         avatars: Optional[List[dict]] = None,
         is_active: bool = True,
@@ -63,9 +73,13 @@ class User(Model):
         if password:
             password_hash = await hash_password(password)
 
-        if group_id is None:
+        if group is None:
             group = await UserGroup.query.one(is_default=True)
-            group_id = group.id
+
+        groups_ids = [group.id]
+        if secondary_groups:
+            groups_ids += [secondary_group.id for secondary_group in secondary_groups]
+        acl_key = create_acl_key(groups_ids)
 
         data: Dict[str, Any] = {
             "name": name,
@@ -73,8 +87,8 @@ class User(Model):
             "email": normalize_email(email),
             "email_hash": get_email_hash(email),
             "full_name": full_name,
-            "group_id": group_id,
-            "acl_key": "todo",
+            "group_id": group.id,
+            "acl_key": acl_key,
             "password": password_hash,
             "avatar_type": avatar_type or AvatarType.GRAVATAR,
             "avatars": avatars or [],
@@ -85,7 +99,31 @@ class User(Model):
             "extra": extra or {},
         }
 
-        return await cls.query.insert(**data)
+        user = await cls.query.insert(**data)
+
+        await cls._create_group_memberships(user, group, secondary_groups or [])
+
+        return user
+
+    @classmethod
+    async def _create_group_memberships(
+        cls, user: "User", main: "UserGroup", secondary: Iterable["UserGroup"]
+    ):
+        all_groups = [main] + list(secondary)
+        groups_ids = list({group.id for group in all_groups})
+        groups_ids.sort()
+
+        new_memberships = user_group_memberships.insert().values(
+            [
+                {
+                    "user_id": user.id,
+                    "group_id": group_id,
+                    "is_main": group_id == main.id,
+                }
+                for group_id in groups_ids
+            ]
+        )
+        await database.execute(new_memberships)
 
     async def update(
         self,
@@ -157,6 +195,57 @@ class User(Model):
 
         return await check_password(password, self.password)
 
+    async def update_groups(
+        self, main: "UserGroup", secondary: Iterable["UserGroup"]
+    ) -> "User":
+        async with database.transaction():
+            clear_memberships = user_group_memberships.delete().where(
+                user_group_memberships.c.user_id == self.id
+            )
+            await database.execute(clear_memberships)
+
+            all_groups = [main] + list(secondary)
+            groups_ids = list({group.id for group in all_groups})
+            groups_ids.sort()
+
+            new_memberships = user_group_memberships.insert().values(
+                [
+                    {
+                        "user_id": self.id,
+                        "group_id": group_id,
+                        "is_main": group_id == main.id,
+                    }
+                    for group_id in set(groups_ids)
+                ]
+            )
+            await database.execute(new_memberships)
+
+            changes = {
+                "acl_key": create_acl_key(groups_ids),
+                "group_id": main.id,
+            }
+
+            await User.query.filter(id=self.id).update(**changes)
+            return self.replace(**changes)
+
+    async def get_groups(self) -> List["UserGroup"]:
+        query = (
+            select(*user_groups.c.values())
+            .select_from(user_group_memberships.join(user_groups))
+            .where(user_group_memberships.c.user_id == self.id)
+        )
+        rows = await database.fetch_all(query)
+        groups = [UserGroup(**row) for row in rows]
+        groups.sort(key=lambda x: x.ordering)
+        main_group = None
+        secondary_groups = []
+        for group in groups:
+            if group.id == self.group_id:
+                main_group = group
+            else:
+                secondary_groups.append(group)
+        return [main_group] + secondary_groups
+
 
 @register_model("UserGroup", user_groups)
 @dataclass
@@ -164,22 +253,25 @@ class UserGroup(Model):
     id: int
     name: str
     slug: str
+    title: Optional[str]
+    css_suffix: Optional[str]
     ordering: int
     is_default: bool
+    is_guest: bool
     is_hidden: bool
     is_moderator: bool
     is_admin: bool
-    permissions: dict
 
     @classmethod
     async def create(
         cls,
         name: str,
         *,
+        title: Optional[str] = None,
+        css_suffix: Optional[str] = None,
         is_hidden: bool = False,
         is_moderator: bool = False,
         is_admin: bool = False,
-        permissions: Optional[dict] = None,
         context: Optional[Context] = None,
     ) -> "UserGroup":
         last_group = (
@@ -190,12 +282,14 @@ class UserGroup(Model):
         data: Dict[str, Any] = {
             "name": name,
             "slug": slugify(name),
+            "title": title or None,
+            "css_suffix": css_suffix or None,
             "ordering": ordering,
             "is_default": False,
+            "is_guest": False,
             "is_hidden": is_hidden,
             "is_moderator": is_moderator,
             "is_admin": is_admin,
-            "permissions": permissions or {},
         }
 
         return await cls.query.insert(**data)
@@ -204,6 +298,9 @@ class UserGroup(Model):
         self,
         *,
         name: Optional[str] = None,
+        is_hidden: Optional[bool] = None,
+        is_moderator: Optional[bool] = None,
+        is_admin: Optional[bool] = None,
         context: Optional[Context] = None,
     ) -> "UserGroup":
         changes: Dict[str, Any] = {}
@@ -211,6 +308,13 @@ class UserGroup(Model):
         if name is not None and name != self.name:
             changes["name"] = name
             changes["slug"] = slugify(name)
+
+        if is_hidden is not None and is_hidden != self.is_hidden:
+            changes["is_hidden"] = is_hidden
+        if is_moderator is not None and is_moderator != self.is_moderator:
+            changes["is_moderator"] = is_moderator
+        if is_admin is not None and is_admin != self.is_admin:
+            changes["is_admin"] = is_admin
 
         if not changes:
             return self

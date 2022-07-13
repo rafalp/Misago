@@ -3,7 +3,7 @@ from typing import Any
 
 import pytest
 
-from ...tables import categories, settings, users
+from ...tables import attachment_types, categories, settings, users
 from ...utils import timezone
 from ..objectmapper import InvalidColumnError, ObjectMapper
 
@@ -272,20 +272,13 @@ class IteratorModel:
 
 @pytest.mark.asyncio
 async def test_large_query_result_is_iterated_in_descending_order(db):
-    mapper = ObjectMapper(users, IteratorModel)
+    mapper = ObjectMapper(attachment_types, IteratorModel)
     test_ids = []
     for i in range(20):
         item = await mapper.insert(
             name=f"test{i}",
-            slug=f"test{i}",
-            email=f"test{i}@example.com",
-            email_hash=f"test{i}",
-            avatar_type="GRAVATAR",
-            is_active=False,
-            is_moderator=False,
-            is_admin=False,
-            joined_at=timezone.now(),
-            extra={},
+            extensions=[],
+            mimetypes=[],
         )
         test_ids.insert(0, item.id)
 
@@ -298,20 +291,13 @@ async def test_large_query_result_is_iterated_in_descending_order(db):
 
 @pytest.mark.asyncio
 async def test_large_query_result_is_iterated_in_ascending_order(db):
-    mapper = ObjectMapper(users, IteratorModel)
+    mapper = ObjectMapper(attachment_types, IteratorModel)
     test_ids = []
     for i in range(20):
         item = await mapper.insert(
             name=f"test{i}",
-            slug=f"test{i}",
-            email=f"test{i}@example.com",
-            email_hash=f"test{i}",
-            avatar_type="GRAVATAR",
-            is_active=False,
-            is_moderator=False,
-            is_admin=False,
-            joined_at=timezone.now(),
-            extra={},
+            extensions=[],
+            mimetypes=[],
         )
         test_ids.append(item.id)
 

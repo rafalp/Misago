@@ -83,3 +83,30 @@ async def test_create_user_util_creates_user_in_db(db, user_password, context):
     assert user.slug == "test"
     assert user.is_admin
     assert await check_password(user_password, user.password)
+
+
+@pytest.mark.asyncio
+async def test_user_is_created_with_default_group(members):
+    user = await User.create("TeST", "test@example.com")
+    assert user.group_id == members.id
+
+    groups = await user.get_groups()
+    assert groups == [members]
+
+
+@pytest.mark.asyncio
+async def test_user_is_created_with_specified_group(admins):
+    user = await User.create("TeST", "test@example.com", group=admins)
+    assert user.group_id == admins.id
+
+    groups = await user.get_groups()
+    assert groups == [admins]
+
+
+@pytest.mark.asyncio
+async def test_user_is_created_with_secondary_group(admins, members):
+    user = await User.create("TeST", "test@example.com", secondary_groups=[admins])
+    assert user.group_id == members.id
+
+    groups = await user.get_groups()
+    assert groups == [members, admins]
