@@ -8,9 +8,14 @@ class UserGroupType(ObjectType):
             id: ID!
             name: String!
             slug: String!
+            title: String
+            cssSuffix: String
         }
         """
     )
+    __aliases__ = {
+        "cssSuffix": "css_suffix",
+    }
 
 
 class AdminUserGroupType(ObjectType):

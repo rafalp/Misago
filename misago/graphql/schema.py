@@ -30,6 +30,7 @@ ADMIN_TYPES = [
     settings.AdminSettingsQueries,
     user.AdminUserMutations,
     user.AdminUserQueries,
+    usergroup.AdminUserGroupMutations,
     usergroup.AdminUserGroupQueries,
 ]
 

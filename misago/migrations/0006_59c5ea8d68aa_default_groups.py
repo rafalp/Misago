@@ -45,7 +45,7 @@ user_groups: List[dict] = [
     },
     {
         "name": "Moderators",
-        "slug": "Moderators",
+        "slug": "moderators",
         "ordering": 1,
         "is_default": False,
         "is_guest": False,

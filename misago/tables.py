@@ -34,6 +34,19 @@ user_groups = sqlalchemy.Table(
     sqlalchemy.Column("is_admin", sqlalchemy.Boolean, nullable=False),
 )
 
+user_groups_permissions = sqlalchemy.Table(
+    "misago_user_groups_permissions",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
+    sqlalchemy.Column(
+        "group_id",
+        sqlalchemy.BigInteger,
+        sqlalchemy.ForeignKey("misago_user_groups.id", ondelete="CASCADE"),
+        nullable=False,
+    ),
+    sqlalchemy.Column("permission", sqlalchemy.String(length=50), nullable=False),
+)
+
 users = sqlalchemy.Table(
     "misago_users",
     metadata,
@@ -227,6 +240,25 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column("edits", sqlalchemy.Integer, nullable=False),
     sqlalchemy.Column("posted_at", sqlalchemy.DateTime(timezone=True), nullable=False),
     sqlalchemy.Column("extra", sqlalchemy.JSON(), nullable=False),
+)
+
+categories_permissions = sqlalchemy.Table(
+    "misago_categories_permissions",
+    metadata,
+    sqlalchemy.Column("id", sqlalchemy.BigInteger, primary_key=True),
+    sqlalchemy.Column(
+        "group_id",
+        sqlalchemy.BigInteger,
+        sqlalchemy.ForeignKey("misago_user_groups.id", ondelete="CASCADE"),
+        nullable=False,
+    ),
+    sqlalchemy.Column(
+        "category_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("misago_categories.id", ondelete="CASCADE"),
+        nullable=False,
+    ),
+    sqlalchemy.Column("permission", sqlalchemy.String(length=50), nullable=False),
 )
 
 moderators = sqlalchemy.Table(
