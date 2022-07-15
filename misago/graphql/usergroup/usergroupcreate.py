@@ -93,7 +93,6 @@ class AdminUserGroupCreateMutation(AdminMutationType):
 
 
 class UserGroupCreateInputModel(BaseModel):
-    "UserGroupCreateInputModel",
     name: constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w")
     title: Optional[constr(strip_whitespace=True, min_length=0, max_length=255)] = None
     css_suffix: Optional[
