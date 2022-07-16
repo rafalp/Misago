@@ -4,9 +4,8 @@ from ariadne_graphql_modules import InputType, ObjectType, gql
 from graphql import GraphQLResolveInfo
 from pydantic import BaseModel, constr
 
-from ...context import Context
 from ...users.models import UserGroup
-from ...validation import ErrorsList, Validator, validate_data, validate_model
+from ...validation import Validator, validate_data, validate_model
 from ..mutation import AdminMutationType, ErrorType
 from .usergroup import AdminUserGroupType
 
@@ -66,7 +65,7 @@ class AdminUserGroupCreateMutation(AdminMutationType):
         if errors:
             return {"errors": errors}
 
-        group = await cls.create_group(info.context, cleaned_data)
+        group = await cls.create_group(cleaned_data)
 
         return {"group": group}
 
@@ -81,7 +80,7 @@ class AdminUserGroupCreateMutation(AdminMutationType):
         return cleaned_data, errors
 
     @classmethod
-    async def create_group(cls, context: Context, cleaned_data: dict) -> UserGroup:
+    async def create_group(cls, cleaned_data: dict) -> UserGroup:
         return await UserGroup.create(
             cleaned_data["name"],
             title=cleaned_data["title"],
