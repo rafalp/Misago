@@ -62,7 +62,11 @@ async def get_groups_permissions_action(
 
     for category in state["categories"]:
         # Skip categories with parent we can't read
-        if category.parent_id and category.parent_id not in groups_permissions["category"][CategoryPermission.READ]:
+        if (
+            category.parent_id
+            and category.parent_id
+            not in groups_permissions["category"][CategoryPermission.READ]
+        ):
             continue
 
         # Skip perms for invisible category
@@ -107,7 +111,6 @@ async def get_groups_permissions_action(
                 groups_permissions["category"][CategoryPermission.DOWNLOAD],
                 category.id,
             )
-
 
 
 def append_unique(list_: List[int], value: int):

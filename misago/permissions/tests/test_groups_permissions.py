@@ -10,9 +10,7 @@ async def test_groups_permissions_are_retrieved(admins, moderators, members):
 
 
 @pytest.mark.asyncio
-async def test_groups_permissions_grants_admin_perm_for_admins_group(
-    admins, members
-):
+async def test_groups_permissions_grants_admin_perm_for_admins_group(admins, members):
     permissions = await get_groups_permissions([admins, members])
     assert CorePermission.ADMIN in permissions["core"]
 
