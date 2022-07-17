@@ -22,7 +22,7 @@ class ObjectMapper:
 
     def query_table(self, table: TableClause) -> "ObjectMapperQuery":
         state = ObjectMapperQueryState(table)
-        return ObjectMapperQuery(self, state)
+        return ObjectMapperRootQuery(self, state)
 
 
 @dataclass
@@ -68,6 +68,28 @@ class ObjectMapperQuery:
         new_state = replace(self.state, order_by=columns)
         return ObjectMapperQuery(self.orm, new_state)
 
+    async def update(self, values: dict):
+        pass
+
+    async def delete(self) -> int:
+        pass
+
+    async def count(self) -> int:
+        query = select([func.count()]).select_from(self.state.table)
+        query = filter_query(self.state, query)
+        query = slice_query(self.state, query)
+        return await database.fetch_val(query)
+
+    async def exists(self) -> bool:
+        new_state = replace(
+            self.state,
+            limit=self.state.offset + 1 if self.state.offset else 1,
+        )
+        query = select([func.count()]).select_from(new_state.table)
+        query = filter_query(new_state, query)
+        query = slice_query(new_state, query)
+        return bool(await database.fetch_val(query))
+
     async def all(self, *columns: str):
         has_joins, rows = await select_rows(self.state, columns)
         if not has_joins:
@@ -91,7 +113,7 @@ class ObjectMapperQuery:
             mappings.append(self.orm.mappings.get(join_column.table.name, dict))
 
         for i, row in enumerate(rows):
-            rows[i] = [mapping(**row[m]) for m, mapping in enumerate(mappings)]
+            rows[i] = (mapping(**row[m]) for m, mapping in enumerate(mappings))
 
         return rows
 
@@ -100,35 +122,21 @@ class ObjectMapperQuery:
         results = await select_rows(new_state, columns)
         raise NotImplemented("TODO!")
 
-    async def update(self, values: dict):
-        pass
-
-    async def delete(self) -> int:
-        pass
-
-    async def count(self) -> int:
-        query = select([func.count()]).select_from(self.state.table)
-        query = filter_query(self.state, query)
-        query = slice_query(self.state, query)
-        return await database.fetch_val(query)
-
-    async def exists(self) -> bool:
-        new_state = replace(
-            self.state,
-            limit=self.state.offset + 1 if self.state.offset else 1,
-        )
-        query = select([func.count()]).select_from(new_state.table)
-        query = filter_query(new_state, query)
-        query = slice_query(new_state, query)
-        return bool(await database.fetch_val(query))
-
 
 class ObjectMapperRootQuery(ObjectMapperQuery):
-    async def insert(self):
-        raise NotImplemented("TODO!")
+    async def insert(self, values: dict):
+        validate_columns(values.keys(), self.state.table)
+        query = self.state.table.insert(None).values(**values)
+        new_row_id = await database.execute(query)
+        if self.state.table.primary_key.columns is not None and new_row_id:
+            values[self.state.table.primary_key.columns[0].name] = new_row_id
 
-    async def bulk_insert(self):
-        raise NotImplemented("TODO!")
+        mapping = self.orm.mappings.get(self.state.table.name, dict)
+        return mapping(**values)
+
+    async def bulk_insert(self, values: List[dict]):
+        new_memberships = self.state.table.insert().values(values)
+        await database.fetch_all(new_memberships)
 
     async def delete_all(self) -> int:
         return await database.execute(self.state.table.delete())
@@ -149,6 +157,7 @@ async def select_rows_simple(state: ObjectMapperQueryState, columns: Sequence[st
 
     query = filter_query(state, query)
     query = slice_query(state, query)
+    query = order_query(state, query)
 
     return await database.fetch_all(query)
 
@@ -168,6 +177,11 @@ async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[st
         )
 
     query = select(*cols).select_from(query)
+
+    query = filter_query(state, query)
+    query = slice_query(state, query)
+    query = order_query(state, query)
+
     rows = []
     for row in await database.fetch_all(query):
         tables_data = {i: {} for i in range(joins + 1)}
@@ -194,6 +208,10 @@ def slice_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseEl
         query = query.offset(state.offset)
     if state.limit:
         query = query.limit(state.limit)
+    return query
+
+
+def order_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
     return query
 
 
