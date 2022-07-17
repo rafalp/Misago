@@ -3,7 +3,7 @@ from dataclasses import dataclass, replace
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
 
 from sqlalchemy import func
-from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, select
+from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, not_, select
 
 from .database import database
 
@@ -30,7 +30,7 @@ class ObjectMapperQueryState:
     table: TableClause
     filter: Optional[List[dict]] = None
     exclude: Optional[List[dict]] = None
-    join: Optional[List[Tuple[str, ColumnElement]]] = None
+    join: Optional[List[Tuple[TableClause, ClauseElement, bool]]] = None
     order_by: Optional[Sequence[str]] = None
     offset: Optional[int] = None
     limit: Optional[int] = None
@@ -44,6 +44,24 @@ class ObjectMapperQuery:
         self.orm = orm
         self.state = state
 
+    def filter(self, *expressions, **conditions) -> "ObjectMapperQuery":
+        filters = list(self.state.filter or [])
+        if expressions:
+            filters.extend(expressions)
+        if conditions:
+            filters.extend([conditions])
+        new_state = replace(self.state, filter=filters)
+        return ObjectMapperQuery(self.orm, new_state)
+
+    def exclude(self, *expressions, **conditions) -> "ObjectMapperQuery":
+        excludes = list(self.state.exclude or [])
+        if expressions:
+            excludes.extend(expressions)
+        if conditions:
+            excludes.extend([conditions])
+        new_state = replace(self.state, exclude=excludes)
+        return ObjectMapperQuery(self.orm, new_state)
+
     def join_on(self, *columns: str) -> "ObjectMapperQuery":
         query = self
         for column in columns:
@@ -51,8 +69,45 @@ class ObjectMapperQuery:
         return query
 
     def join_on_column(self, column: str) -> "ObjectMapperQuery":
-        relation, *_ = self.state.table.c[column].foreign_keys
-        new_join = (self.state.join or []) + [(column, relation.column)]
+        if "." in column:
+            return self._join_on_column_deep(column.split("."))
+
+        return self._join_on_column_simple(column)
+
+    def _join_on_column_deep(self, columns: Sequence[str]) -> "ObjectMapperQuery":
+        columns_len = len(columns)
+        new_join = self.state.join or []
+        table = self.state.table
+
+        for i, column in enumerate(columns):
+            if column not in table.c:
+                raise InvalidColumnError(column, table)
+
+            foreign_key, *_ = table.c[column].foreign_keys
+            new_join.append(
+                (
+                    foreign_key.column.table,
+                    table.c[column] == foreign_key.column,
+                    i + 1 == columns_len,
+                )
+            )
+            table = foreign_key.column.table
+
+        new_state = replace(self.state, join=new_join)
+        return ObjectMapperQuery(self.orm, new_state)
+
+    def _join_on_column_simple(self, column: str) -> "ObjectMapperQuery":
+        if column not in self.state.table.c:
+            raise InvalidColumnError(column, self.state.table)
+
+        foreign_key, *_ = self.state.table.c[column].foreign_keys
+        new_join = (self.state.join or []) + [
+            (
+                foreign_key.column.table,
+                self.state.table.c[column] == foreign_key.column,
+                True,
+            )
+        ]
         new_state = replace(self.state, join=new_join)
         return ObjectMapperQuery(self.orm, new_state)
 
@@ -69,10 +124,18 @@ class ObjectMapperQuery:
         return ObjectMapperQuery(self.orm, new_state)
 
     async def update(self, values: dict):
-        pass
+        raise NotImplementedError("TODO")
 
     async def delete(self) -> int:
-        pass
+        query = self.state.table.delete()
+        query = filter_query(self.state, query)
+        await database.execute(query)
+
+    async def delete_all(self) -> int:
+        raise NotImplementedError(
+            "'delete_all()' method is not available on filtered queries. "
+            "To delete filtered objects call 'delete()'."
+        )
 
     async def count(self) -> int:
         query = select([func.count()]).select_from(self.state.table)
@@ -109,8 +172,9 @@ class ObjectMapperQuery:
 
         # Map rows dicts to items
         mappings = [self.orm.mappings.get(self.state.table.name, dict)]
-        for _, join_column in self.state.join:
-            mappings.append(self.orm.mappings.get(join_column.table.name, dict))
+        for join_table, _, include_in_result in self.state.join:
+            if include_in_result:
+                mappings.append(self.orm.mappings.get(join_table.name, dict))
 
         for i, row in enumerate(rows):
             rows[i] = (mapping(**row[m]) for m, mapping in enumerate(mappings))
@@ -138,8 +202,14 @@ class ObjectMapperRootQuery(ObjectMapperQuery):
         new_memberships = self.state.table.insert().values(values)
         await database.fetch_all(new_memberships)
 
-    async def delete_all(self) -> int:
-        return await database.execute(self.state.table.delete())
+    async def delete_all(self):
+        await database.execute(self.state.table.delete())
+
+    async def delete(self) -> int:
+        raise NotImplementedError(
+            "'delete()' method is not available on root queries. "
+            "To delete all objects call 'delete_all()'."
+        )
 
 
 async def select_rows(state: ObjectMapperQueryState, columns: Sequence[str]):
@@ -168,13 +238,13 @@ async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[st
     joins = 0
 
     query = state.table
-    for join_by, foreign_key in state.join:
-        joins += 1
-        cols += list(foreign_key.table.c.values())
-        cols_tables += [joins] * len(foreign_key.table.c)
-        query = query.outerjoin(
-            foreign_key.table, state.table.c[join_by] == foreign_key
-        )
+    for join_table, join_clause, include_in_result in state.join:
+        if include_in_result:
+            joins += 1
+            cols += list(join_table.c.values())
+            cols_tables += [joins] * len(join_table.c)
+
+        query = query.outerjoin(join_table, join_clause)
 
     query = select(*cols).select_from(query)
 
@@ -200,6 +270,75 @@ def has_joins(state: ObjectMapperQueryState, columns: Sequence[str]) -> bool:
 
 
 def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
+    if state.filter:
+        for filter_clause in state.filter:
+            if isinstance(filter_clause, dict):
+                for filter_col, filter_value in filter_clause.items():
+                    if "__" in filter_col:
+                        col_name, expression = filter_col.split("__")
+                        col = state.table.c[col_name]
+                        if expression == "in":
+                            query = query.where(col.in_(filter_value))
+                        elif expression == "gte":
+                            query = query.where(col >= filter_value)
+                        elif expression == "gt":
+                            query = query.where(col > filter_value)
+                        elif expression == "lte":
+                            query = query.where(col <= filter_value)
+                        elif expression == "lt":
+                            query = query.where(col < filter_value)
+                        elif expression == "isnull":
+                            if filter_value:
+                                query = query.where(col.is_(None))
+                            else:
+                                query = query.where(col.isnot(None))
+                    else:
+                        col = state.table.c[filter_col]
+                        if filter_value is True:
+                            query = query.where(col.is_(True))
+                        elif filter_value is False:
+                            query = query.where(col.is_(False))
+                        elif filter_value is None:
+                            query = query.where(col.is_(None))
+                        else:
+                            query = query.where(col == filter_value)
+            else:
+                query = query.where(filter_clause)
+
+    if state.exclude:
+        for exclude_clause in state.exclude:
+            if isinstance(exclude_clause, dict):
+                for filter_col, filter_value in exclude_clause.items():
+                    if "__" in filter_col:
+                        col_name, expression = filter_col.split("__")
+                        col = state.table.c[col_name]
+                        if expression == "in":
+                            query = query.where(not_(col.in_(filter_value)))
+                        elif expression == "gte":
+                            query = query.where(col < filter_value)
+                        elif expression == "gt":
+                            query = query.where(col <= filter_value)
+                        elif expression == "lte":
+                            query = query.where(col > filter_value)
+                        elif expression == "lt":
+                            query = query.where(col >= filter_value)
+                        elif expression == "isnull":
+                            if filter_value:
+                                query = query.where(col.isnot(None))
+                            else:
+                                query = query.where(col.is_(None))
+                    else:
+                        if filter_value is True or filter_value is False:
+                            query = query.where(
+                                state.table.c[filter_col] == (not filter_value)
+                            )
+                        else:
+                            query = query.where(
+                                state.table.c[filter_col] != filter_value
+                            )
+            else:
+                query = query.where(not_(exclude_clause))
+
     return query
 
 
