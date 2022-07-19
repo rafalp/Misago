@@ -19,6 +19,22 @@ async def test_all_objects_can_be_retrieved(user, admin):
 
 
 @pytest.mark.asyncio
+async def test_selected_dicts_of_all_objects_can_be_retrieved(user, admin):
+    results = await mapper.query_table(users).all("id", "email")
+    assert len(results) == 2
+    assert {"id": admin.id, "email": admin.email} in results
+    assert {"id": user.id, "email": user.email} in results
+
+
+@pytest.mark.asyncio
+async def test_selected_tuples_of_all_objects_can_be_retrieved(user, admin):
+    results = await mapper.query_table(users).all("id", "email", named=False)
+    assert len(results) == 2
+    assert (admin.id, admin.email) in results
+    assert (user.id, user.email) in results
+
+
+@pytest.mark.asyncio
 async def test_no_objects_can_be_retrieved(db):
     results = await mapper.query_table(users).all()
     assert results == []
@@ -96,3 +112,15 @@ async def test_excluded_objects_can_be_tested(user, admin):
         .exists()
     )
     assert result is False
+
+
+@pytest.mark.asyncio
+async def test_results_can_be_ordered(user, admin):
+    results = await mapper.query_table(users).order_by("name").all()
+    assert results == [admin, user]
+
+
+@pytest.mark.asyncio
+async def test_results_can_be_reverse_ordered(user, admin):
+    results = await mapper.query_table(users).order_by("-name").all()
+    assert results == [user, admin]

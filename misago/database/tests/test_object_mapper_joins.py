@@ -69,3 +69,31 @@ async def test_joins_can_be_filtered(user, admin, admins, members):
         await mapper.query_table(users).join_on("group_id").filter(is_admin=True).all()
     )
     results == [(admin, admins)]
+
+
+@pytest.mark.asyncio
+async def _test_selected_dicts_of_all_joined_objects_can_be_retrieved(
+    user, admin, admins, members
+):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .all("id", "email", "group_id.name")
+    )
+    assert len(results) == 2
+    assert {"id": admin.id, "email": admin.email} in results
+    assert {"id": user.id, "email": user.email} in results
+
+
+@pytest.mark.asyncio
+async def _test_selected_tuples_of_all_joined_objects_can_be_retrieved(
+    user, admin, admins, members
+):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .all("id", "email", "group_id.name", named=False)
+    )
+    assert len(results) == 2
+    assert (admin.id, admin.email) in results
+    assert (user.id, user.email) in results

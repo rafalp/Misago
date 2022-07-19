@@ -2,7 +2,7 @@
 from dataclasses import dataclass, replace
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
 
-from sqlalchemy import func
+from sqlalchemy import asc, desc, func
 from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, not_, select
 
 from .database import database
@@ -21,16 +21,27 @@ class ObjectMapper:
         self.mappings[table.name] = repr
 
     def query_table(self, table: TableClause) -> "ObjectMapperQuery":
-        state = ObjectMapperQueryState(table)
+        state = ObjectMapperQueryState(table.alias("m"), table_org_name=table.name)
         return ObjectMapperRootQuery(self, state)
+
+
+@dataclass
+class ObjectMapperJoin:
+    left_column: ColumnElement
+    right_column: ColumnElement
+    table: TableClause
+    table_org_name: str
+    on_expression: ClauseElement
+    include_in_result: bool
 
 
 @dataclass
 class ObjectMapperQueryState:
     table: TableClause
+    table_org_name: str
     filter: Optional[List[dict]] = None
     exclude: Optional[List[dict]] = None
-    join: Optional[List[Tuple[TableClause, ClauseElement, bool]]] = None
+    join: Optional[Dict[str, ObjectMapperJoin]] = None
     order_by: Optional[Sequence[str]] = None
     offset: Optional[int] = None
     limit: Optional[int] = None
@@ -76,22 +87,34 @@ class ObjectMapperQuery:
 
     def _join_on_column_deep(self, columns: Sequence[str]) -> "ObjectMapperQuery":
         columns_len = len(columns)
-        new_join = self.state.join or []
+        new_join = self.state.join.copy() if self.state.join else {}
         table = self.state.table
+        path = []
 
         for i, column in enumerate(columns):
             if column not in table.c:
                 raise InvalidColumnError(column, table)
 
-            foreign_key, *_ = table.c[column].foreign_keys
-            new_join.append(
-                (
-                    foreign_key.column.table,
-                    table.c[column] == foreign_key.column,
-                    i + 1 == columns_len,
-                )
+            path.append(column)
+            join_name = ".".join(path)
+            if join_name in new_join and i + 1 == columns_len:
+                new_join[join_name].include_in_result = True
+                continue
+
+            column_obj = table.c[column]
+            foreign_key, *_ = column_obj.foreign_keys
+            join_table = foreign_key.column.table.alias(f"j{len(new_join)}")
+            join_column = join_table.c[foreign_key.column.name]
+
+            new_join[join_name] = ObjectMapperJoin(
+                left_column=column_obj,
+                right_column=join_column,
+                table=join_table,
+                table_org_name=foreign_key.column.table.name,
+                on_expression=table.c[column] == join_column,
+                include_in_result=i + 1 == columns_len,
             )
-            table = foreign_key.column.table
+            table = join_table
 
         new_state = replace(self.state, join=new_join)
         return ObjectMapperQuery(self.orm, new_state)
@@ -100,14 +123,25 @@ class ObjectMapperQuery:
         if column not in self.state.table.c:
             raise InvalidColumnError(column, self.state.table)
 
-        foreign_key, *_ = self.state.table.c[column].foreign_keys
-        new_join = (self.state.join or []) + [
-            (
-                foreign_key.column.table,
-                self.state.table.c[column] == foreign_key.column,
-                True,
-            )
-        ]
+        new_join = self.state.join.copy() if self.state.join else {}
+        if column in new_join:
+            new_join[column].include_in_result = True
+            new_state = replace(self.state, join=new_join)
+            return ObjectMapperQuery(self.orm, new_state)
+
+        column_obj = self.state.table.c[column]
+        foreign_key, *_ = column_obj.foreign_keys
+        join_table = foreign_key.column.table.alias(f"j{len(new_join)}")
+        join_column = join_table.c[foreign_key.column.name]
+
+        new_join[column] = ObjectMapperJoin(
+            left_column=column_obj,
+            right_column=join_column,
+            table=join_table,
+            table_org_name=foreign_key.column.table.name,
+            on_expression=self.state.table.c[column] == join_column,
+            include_in_result=True,
+        )
         new_state = replace(self.state, join=new_join)
         return ObjectMapperQuery(self.orm, new_state)
 
@@ -153,28 +187,34 @@ class ObjectMapperQuery:
         query = slice_query(new_state, query)
         return bool(await database.fetch_val(query))
 
-    async def all(self, *columns: str):
+    async def all(self, *columns: str, named: bool = True):
         has_joins, rows = await select_rows(self.state, columns)
         if not has_joins:
-            return self._all_simple(rows, columns)
-        return self._all_with_joins(rows, columns)
+            return self._all_simple(rows, columns, named)
+        return self._all_with_joins(rows, columns, named)
 
-    def _all_simple(self, rows: List[dict], columns: List[str]):
+    def _all_simple(self, rows: List[dict], columns: List[str], named: bool):
         if columns:
-            return [dict(**row) for row in rows]
+            if named:
+                return [dict(**row) for row in rows]
+            else:
+                return [tuple(row.values()) for row in rows]
 
-        mapping = self.orm.mappings.get(self.state.table.name, dict)
-        return [mapping(**row) for row in rows]
+        if named:
+            mapping = self.orm.mappings.get(self.state.table_org_name, dict)
+            return [mapping(**row) for row in rows]
+        else:
+            return [tuple(row) for row in rows]
 
-    def _all_with_joins(self, rows: List[dict], columns: List[str]):
+    def _all_with_joins(self, rows: List[dict], columns: List[str], named: bool):
         if columns:
             return rows  # rows are already mapped to cols in joined query
 
         # Map rows dicts to items
-        mappings = [self.orm.mappings.get(self.state.table.name, dict)]
-        for join_table, _, include_in_result in self.state.join:
-            if include_in_result:
-                mappings.append(self.orm.mappings.get(join_table.name, dict))
+        mappings = [self.orm.mappings.get(self.state.table_org_name, dict)]
+        for join in self.state.join.values():
+            if join.include_in_result:
+                mappings.append(self.orm.mappings.get(join.table_org_name, dict))
 
         for i, row in enumerate(rows):
             rows[i] = (mapping(**row[m]) for m, mapping in enumerate(mappings))
@@ -233,20 +273,23 @@ async def select_rows_simple(state: ObjectMapperQueryState, columns: Sequence[st
 
 
 async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[str]):
-    cols = list(state.table.c.values())
-    cols_tables = [0] * len(cols)
-    joins = 0
+    tables = 0
+    if not columns:
+        cols = tuple(state.table.c.values())
+        cols_mappings = tuple((0, c.name) for c in cols)
+    else:
+        raise NotImplementedError("TODO!")
 
-    query = state.table
-    for join_table, join_clause, include_in_result in state.join:
-        if include_in_result:
-            joins += 1
-            cols += list(join_table.c.values())
-            cols_tables += [joins] * len(join_table.c)
+    query_from = state.table
+    for i, join in enumerate(state.join.values()):
+        if join.include_in_result:
+            tables += 1
+            cols += tuple(c.label(f"j{i}_{c.name}") for c in join.table.c.values())
+            cols_mappings += tuple((tables, c.name) for c in join.table.c.values())
 
-        query = query.outerjoin(join_table, join_clause)
+        query_from = query_from.outerjoin(join.table, join.on_expression)
 
-    query = select(*cols).select_from(query)
+    query = select(cols).select_from(query_from)
 
     query = filter_query(state, query)
     query = slice_query(state, query)
@@ -254,10 +297,11 @@ async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[st
 
     rows = []
     for row in await database.fetch_all(query):
-        tables_data = {i: {} for i in range(joins + 1)}
+        tables_data = tuple({} for _ in range(tables + 1))
         for col, value in enumerate(row.values()):
-            tables_data[cols_tables[col]][cols[col].name] = value
-        rows.append(list(tables_data.values()))
+            col_table, col_name = cols_mappings[col]
+            tables_data[col_table][col_name] = value
+        rows.append(tables_data)
 
     return rows
 
@@ -269,6 +313,14 @@ def has_joins(state: ObjectMapperQueryState, columns: Sequence[str]) -> bool:
     return False
 
 
+def get_column(state: ObjectMapperQueryState, name: str) -> ColumnElement:
+    if "." not in name:
+        return state.table.c[name]
+
+    join_name, name = name.rsplit(".", 1)
+    return state.join[join_name].table.c[name]
+
+
 def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
     if state.filter:
         for filter_clause in state.filter:
@@ -276,7 +328,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                 for filter_col, filter_value in filter_clause.items():
                     if "__" in filter_col:
                         col_name, expression = filter_col.split("__")
-                        col = state.table.c[col_name]
+                        col = get_column(state, col_name)
                         if expression == "in":
                             query = query.where(col.in_(filter_value))
                         elif expression == "gte":
@@ -293,7 +345,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                             else:
                                 query = query.where(col.isnot(None))
                     else:
-                        col = state.table.c[filter_col]
+                        col = get_column(state, filter_col)
                         if filter_value is True:
                             query = query.where(col.is_(True))
                         elif filter_value is False:
@@ -311,7 +363,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                 for filter_col, filter_value in exclude_clause.items():
                     if "__" in filter_col:
                         col_name, expression = filter_col.split("__")
-                        col = state.table.c[col_name]
+                        col = get_column(state, col_name)
                         if expression == "in":
                             query = query.where(not_(col.in_(filter_value)))
                         elif expression == "gte":
@@ -328,14 +380,11 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                             else:
                                 query = query.where(col.is_(None))
                     else:
+                        col = get_column(state, filter_col)
                         if filter_value is True or filter_value is False:
-                            query = query.where(
-                                state.table.c[filter_col] == (not filter_value)
-                            )
+                            query = query.where(col == (not filter_value))
                         else:
-                            query = query.where(
-                                state.table.c[filter_col] != filter_value
-                            )
+                            query = query.where(col != filter_value)
             else:
                 query = query.where(not_(exclude_clause))
 
@@ -351,7 +400,19 @@ def slice_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseEl
 
 
 def order_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
-    return query
+    if not state.order_by:
+        return query
+
+    order_by = []
+    for ordering in state.order_by:
+        if ordering[0] == "-":
+            col = get_column(state, ordering[1:])
+            order_by.append(desc(col))
+        else:
+            col = get_column(state, ordering)
+            order_by.append(asc(col))
+
+    return query.order_by(*order_by)
 
 
 class MultipleObjectsReturned(RuntimeError):
