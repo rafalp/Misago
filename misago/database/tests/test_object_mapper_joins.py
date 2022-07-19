@@ -43,6 +43,40 @@ async def test_all_objects_can_be_retrieved_with_deep_joins(
 
 
 @pytest.mark.asyncio
+async def test_all_objects_can_be_retrieved_with_deep_and_shallow_joins(
+    user_thread, user_post, user
+):
+    results = (
+        await mapper.query_table(threads)
+        .join_on("first_post_id", "first_post_id.poster_id")
+        .all()
+    )
+
+    results_ids = []
+    for thread, post, user in results:
+        results_ids.append((thread.id, post.id, user.id))
+
+    assert results_ids == [(user_thread.id, user_post.id, user.id)]
+
+
+@pytest.mark.asyncio
+async def test_all_objects_can_be_retrieved_with_reversed_deep_and_shallow_joins(
+    user_thread, user_post, user
+):
+    results = (
+        await mapper.query_table(threads)
+        .join_on("first_post_id.poster_id", "first_post_id")
+        .all()
+    )
+
+    results_ids = []
+    for thread, user, post in results:
+        results_ids.append((thread.id, user.id, post.id))
+
+    assert results_ids == [(user_thread.id, user.id, user_post.id)]
+
+
+@pytest.mark.asyncio
 async def test_all_objects_can_be_retrieved_with_multiple_joins(
     user, admin, moderator, admins, moderators, members
 ):

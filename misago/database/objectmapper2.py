@@ -42,6 +42,7 @@ class ObjectMapperQueryState:
     filter: Optional[List[dict]] = None
     exclude: Optional[List[dict]] = None
     join: Optional[Dict[str, ObjectMapperJoin]] = None
+    join_order: Optional[List[str]] = None
     order_by: Optional[Sequence[str]] = None
     offset: Optional[int] = None
     limit: Optional[int] = None
@@ -88,6 +89,7 @@ class ObjectMapperQuery:
     def _join_on_column_deep(self, columns: Sequence[str]) -> "ObjectMapperQuery":
         columns_len = len(columns)
         new_join = self.state.join.copy() if self.state.join else {}
+        new_join_order = list(self.state.join_order) if self.state.join_order else []
         table = self.state.table
         path = []
 
@@ -97,8 +99,12 @@ class ObjectMapperQuery:
 
             path.append(column)
             join_name = ".".join(path)
-            if join_name in new_join and i + 1 == columns_len:
-                new_join[join_name].include_in_result = True
+            if join_name in new_join:
+                if not new_join[join_name].include_in_result:
+                    # Include intermediate join col in resultset
+                    new_join[join_name].include_in_result = True
+
+                table = new_join[join_name].table
                 continue
 
             column_obj = table.c[column]
@@ -114,9 +120,11 @@ class ObjectMapperQuery:
                 on_expression=table.c[column] == join_column,
                 include_in_result=i + 1 == columns_len,
             )
+            new_join_order.append(join_name)
+
             table = join_table
 
-        new_state = replace(self.state, join=new_join)
+        new_state = replace(self.state, join=new_join, join_order=new_join_order)
         return ObjectMapperQuery(self.orm, new_state)
 
     def _join_on_column_simple(self, column: str) -> "ObjectMapperQuery":
@@ -124,10 +132,19 @@ class ObjectMapperQuery:
             raise InvalidColumnError(column, self.state.table)
 
         new_join = self.state.join.copy() if self.state.join else {}
+        new_join_order = list(self.state.join_order) if self.state.join_order else []
+
         if column in new_join:
-            new_join[column].include_in_result = True
-            new_state = replace(self.state, join=new_join)
-            return ObjectMapperQuery(self.orm, new_state)
+            if not new_join[column].include_in_result:
+                new_join[column].include_in_result = True
+                new_join_order.remove(column)
+                new_join_order.append(column)
+                new_state = replace(
+                    self.state, join=new_join, join_order=new_join_order
+                )
+                return ObjectMapperQuery(self.orm, new_state)
+
+            return self
 
         column_obj = self.state.table.c[column]
         foreign_key, *_ = column_obj.foreign_keys
@@ -142,7 +159,9 @@ class ObjectMapperQuery:
             on_expression=self.state.table.c[column] == join_column,
             include_in_result=True,
         )
-        new_state = replace(self.state, join=new_join)
+        new_join_order.append(column)
+
+        new_state = replace(self.state, join=new_join, join_order=new_join_order)
         return ObjectMapperQuery(self.orm, new_state)
 
     def offset(self, offset: int) -> "ObjectMapperQuery":
@@ -211,8 +230,12 @@ class ObjectMapperQuery:
             return rows  # rows are already mapped to cols in joined query
 
         # Map rows dicts to items
+        ordered_joins = tuple(
+            self.state.join[join_name] for join_name in self.state.join_order
+        )
+
         mappings = [self.orm.mappings.get(self.state.table_org_name, dict)]
-        for join in self.state.join.values():
+        for join in ordered_joins:
             if join.include_in_result:
                 mappings.append(self.orm.mappings.get(join.table_org_name, dict))
 
@@ -281,13 +304,15 @@ async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[st
         raise NotImplementedError("TODO!")
 
     query_from = state.table
-    for i, join in enumerate(state.join.values()):
+    for join in state.join.values():
+        query_from = query_from.outerjoin(join.table, join.on_expression)
+
+    for i, join_name in enumerate(state.join_order):
+        join = state.join[join_name]
         if join.include_in_result:
             tables += 1
             cols += tuple(c.label(f"j{i}_{c.name}") for c in join.table.c.values())
             cols_mappings += tuple((tables, c.name) for c in join.table.c.values())
-
-        query_from = query_from.outerjoin(join.table, join.on_expression)
 
     query = select(cols).select_from(query_from)
 
