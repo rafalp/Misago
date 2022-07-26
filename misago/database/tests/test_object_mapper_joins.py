@@ -30,9 +30,7 @@ async def test_all_objects_can_be_retrieved_with_single_join(
 
 
 @pytest.mark.asyncio
-async def test_all_objects_can_be_retrieved_with_single_join_missing_relation(
-    thread, post
-):
+async def test_all_objects_can_be_retrieved_with_single_join_missing_relation(thread):
     results = await mapper.query_table(threads).join_on("starter_id").all()
     assert len(results) == 1
     for thread, starter in results:
@@ -136,21 +134,37 @@ async def test_joins_can_be_filtered(user, admin, admins, members):
 
 
 @pytest.mark.asyncio
-async def _test_selected_dicts_of_all_joined_objects_can_be_retrieved(
-    user, admin, admins, members
-):
+async def test_selected_tuples_of_joined_objects_can_be_retrieved(user, members):
     results = (
         await mapper.query_table(users)
         .join_on("group_id")
         .all("id", "email", "group_id.name")
     )
-    assert len(results) == 2
-    assert {"id": admin.id, "email": admin.email} in results
-    assert {"id": user.id, "email": user.email} in results
+    assert len(results) == 1
+    for member, group in results:
+        assert user.id == member.id
+        assert user.email == member.email
+        assert group.name == members.name
 
 
 @pytest.mark.asyncio
-async def test_selected_tuples_of_all_joined_objects_can_be_retrieved(
+async def test_selected_cols_of_joined_objects_with_missing_relations_can_be_retrieved(
+    thread,
+):
+    results = (
+        await mapper.query_table(threads)
+        .join_on("starter_id")
+        .all("id", "title", "starter_id.email")
+    )
+    assert len(results) == 1
+    for thread, starter in results:
+        assert thread.id == thread.id
+        assert thread.title == thread.title
+        assert starter is None
+
+
+@pytest.mark.asyncio
+async def test_selected_cols_of_joined_objects_can_be_retrieved(
     user, admin, admins, members
 ):
     results = (

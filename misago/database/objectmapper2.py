@@ -254,38 +254,53 @@ async def select_from_joined_tables(
 
     # Build SELECT ...
     tables = 1
+    joins = {join_on: i + 1 for i, join_on in enumerate(state.join)}
+    cols = tuple()
+    cols_mappings = tuple()
+    drop_columns = tuple()
 
     if columns:
-        cols = tuple()
+        if named:
+            tables += len(state.join)
+
+            pk = root.primary_key[0]
+            if pk.name not in columns:
+                cols += (pk,)
+                cols_mappings += ((0, col.name),)
+                drop_columns += (pk.name,)
+            else:
+                drop_columns += (None,)
+
+            for i, join_name in enumerate(state.join):
+                join_table = state.join_tables[join_name]
+                join_pk = join_table.primary_key[0]
+                if f"{join_name}.{join_pk.name}" not in columns:
+                    cols += (join_pk,)
+                    cols_mappings += ((i + 1, join_pk.name),)
+                    drop_columns += (join_pk.name,)
+                else:
+                    drop_columns += (None,)
+
         for i, column in enumerate(columns):
             if "." not in column:
                 col = root.c[column]
                 cols += (col,)
+                cols_mappings += ((0, col.name),)
             else:
                 join_name, column = column.rsplit(".", 1)
                 col = state.join_tables[join_name].c[column]
                 cols += (col.label(f"c{i}_{col.name}"),)
-        if named:
-            cols_mappings = tuple((0, c.name) for c in cols)
+                cols_mappings += ((joins[join_name], col.name),)
+
     else:
         cols = tuple(root.c.values())
-        cols_mappings = tuple((0, c.name) for c in cols)
+        cols_mappings += tuple((0, c.name) for c in cols)
 
         for join_name in state.join:
             join_table = state.join_tables[join_name]
             cols += tuple(c.label(f"t{tables}_{c.name}") for c in join_table.c.values())
             cols_mappings += tuple((tables, c.name) for c in join_table.c.values())
             tables += 1
-
-    # Tables keys and mappings
-    keys = (root.primary_key[0].name,) + tuple(
-        state.join_tables[join_name].primary_key[0].name for join_name in state.join
-    )
-
-    mappings = [orm.mappings.get(state.table.name, dict)]
-    for join_on in state.join:
-        join_table = state.join_tables[join_on]
-        mappings.append(orm.mappings.get(join_table.element.name, dict))
 
     # Build final query
     query = select(cols).select_from(query_from)
@@ -296,27 +311,67 @@ async def select_from_joined_tables(
 
     # Fetch rows and convert each row into groups (dicts) each representing
     # other table, then map dicts to final types
-    rows = []
 
     # Fast path: named tuple with columns
     if columns and not named:
-        row_tuple = namedtuple("Result", (c.replace(".", "__") for c in columns))
-        for row in await database.fetch_all(query):
-            rows.append(row_tuple(*row.values()))
-        return rows
+        return [tuple(row.values()) for row in await database.fetch_all(query)]
 
+    # Tables keys and mappings
+    keys = (root.primary_key[0].name,) + tuple(
+        state.join_tables[join_name].primary_key[0].name for join_name in state.join
+    )
+
+    mappings = []
+    if columns:
+        obj_tuple = namedtuple(
+            "Result",
+            (c for c in columns if "." not in c and c != drop_columns[0]),
+        )
+        mappings.append(obj_tuple)
+
+        for i, join_on in enumerate(state.join):
+            table_cols = []
+            for table, col in cols_mappings:
+                if table == i + 1:
+                    table_cols.append(col)
+            obj_tuple = namedtuple(
+                "Result",
+                (c for c in table_cols if c != drop_columns[i + 1]),
+            )
+            mappings.append(obj_tuple)
+            del table_cols
+
+    else:
+        mappings.append(orm.mappings.get(state.table.name, dict))
+        for join_on in state.join:
+            join_table = state.join_tables[join_on]
+            mappings.append(orm.mappings.get(join_table.element.name, dict))
+
+    rows = []
     for row in await database.fetch_all(query):
         tables_data = tuple({} for _ in range(tables))
         for col, value in enumerate(row.values()):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
 
-        rows.append(
-            tuple(
-                mappings[i](**data) if data[keys[i]] is not None else None
-                for i, data in enumerate(tables_data)
+        if columns:
+            mapped_row = tuple()
+            for i, data in enumerate(tables_data):
+                if data[keys[i]] is None:
+                    mapped_row += (None,)
+                else:
+                    if drop_columns[i]:
+                        data.pop(drop_columns[i])
+                    mapped_row += (mappings[i](**data),)
+
+            rows.append(mapped_row)
+        else:
+            rows.append(
+                tuple(
+                    mappings[i](**data) if data[keys[i]] is not None else None
+                    for i, data in enumerate(tables_data)
+                )
             )
-        )
 
     return rows
 
