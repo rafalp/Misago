@@ -30,6 +30,17 @@ async def test_all_objects_can_be_retrieved_with_singe_join(
 
 
 @pytest.mark.asyncio
+async def test_all_objects_can_be_retrieved_with_singe_join_missing_relation(
+    thread, post
+):
+    results = await mapper.query_table(threads).join_on("starter_id").all()
+    assert len(results) == 1
+    for thread, starter in results:
+        assert thread.starter_id is None
+        assert starter is None
+
+
+@pytest.mark.asyncio
 async def test_all_objects_can_be_retrieved_with_deep_joins(
     user_thread, user_post, user
 ):
@@ -40,6 +51,19 @@ async def test_all_objects_can_be_retrieved_with_deep_joins(
         results_ids.append((thread.id, user.id))
 
     assert results_ids == [(user_thread.id, user.id)]
+
+
+@pytest.mark.asyncio
+async def test_all_objects_can_be_retrieved_with_deep_joins_missing_relation(
+    thread, post, user
+):
+    results = await mapper.query_table(threads).join_on("first_post_id.poster_id").all()
+
+    results_ids = []
+    for thread, user in results:
+        results_ids.append((thread.id, user))
+
+    assert results_ids == [(thread.id, None)]
 
 
 @pytest.mark.asyncio
@@ -95,6 +119,12 @@ async def test_all_objects_can_be_retrieved_with_multiple_joins(
 async def test_join_raises_error_if_column_to_use_doesnt_exist(db):
     with pytest.raises(InvalidColumnError):
         await mapper.query_table(users).join_on("invalid")
+
+
+@pytest.mark.asyncio
+async def test_join_raises_error_if_relation_column_to_use_doesnt_exist(db):
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).join_on("group_id.invalid")
 
 
 @pytest.mark.asyncio

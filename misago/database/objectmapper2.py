@@ -1,6 +1,7 @@
 # WIP: Experimental rewrite for object mapper
 from dataclasses import dataclass, replace
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
+from ntpath import join
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Type, Union
 
 from sqlalchemy import asc, desc, func
 from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, not_, select
@@ -21,28 +22,18 @@ class ObjectMapper:
         self.mappings[table.name] = repr
 
     def query_table(self, table: TableClause) -> "ObjectMapperQuery":
-        state = ObjectMapperQueryState(table.alias("m"), table_org_name=table.name)
+        state = ObjectMapperQueryState(table)
         return ObjectMapperRootQuery(self, state)
-
-
-@dataclass
-class ObjectMapperJoin:
-    left_column: ColumnElement
-    right_column: ColumnElement
-    table: TableClause
-    table_org_name: str
-    on_expression: ClauseElement
-    include_in_result: bool
 
 
 @dataclass
 class ObjectMapperQueryState:
     table: TableClause
-    table_org_name: str
     filter: Optional[List[dict]] = None
     exclude: Optional[List[dict]] = None
-    join: Optional[Dict[str, ObjectMapperJoin]] = None
-    join_order: Optional[List[str]] = None
+    join: Optional[List[str]] = None
+    join_root: Optional[TableClause] = None
+    join_tables: Optional[Dict[str, TableClause]] = None
     order_by: Optional[Sequence[str]] = None
     offset: Optional[int] = None
     limit: Optional[int] = None
@@ -70,29 +61,53 @@ class ObjectMapperQuery:
         if expressions:
             excludes.extend(expressions)
         if conditions:
+            validate_conditions(self.state, conditions)
             excludes.extend([conditions])
         new_state = replace(self.state, exclude=excludes)
         return ObjectMapperQuery(self.orm, new_state)
 
     def join_on(self, *columns: str) -> "ObjectMapperQuery":
-        query = self
-        for column in columns:
-            query = query.join_on_column(column)
-        return query
+        if not self.state.join_root:
+            self.state = replace(self.state, join_root=self.state.table.alias("r"))
 
-    def join_on_column(self, column: str) -> "ObjectMapperQuery":
-        if "." in column:
-            return self._join_on_column_deep(column.split("."))
+        new_join = self.state.join[:] if self.state.join else []
+        new_join_tables = (
+            self.state.join_tables.copy() if self.state.join_tables else {}
+        )
+        for join_on in columns:
+            if "." in join_on:
+                table = self.state.table
+                join_path = []
+                for join_col in join_on.split("."):
+                    join_path.append(join_col)
+                    validate_column(table, join_col)
+                    foreign_key, *_ = table.c[join_col].foreign_keys
+                    table = foreign_key.column.table
+                    join_name = ".".join(join_path)
+                    if join_name not in new_join_tables:
+                        new_join_tables[join_name] = table.alias(
+                            f"j{len(new_join_tables)}"
+                        )
+            elif join_on not in new_join_tables:
+                validate_column(self.state.table, join_on)
+                foreign_key, *_ = self.state.table.c[join_on].foreign_keys
+                new_join_tables[join_on] = foreign_key.column.table.alias(
+                    f"j{len(new_join_tables)}"
+                )
 
-        return self._join_on_column_simple(column)
+            # Join validated column
+            new_join.append(join_on)
 
-    def _join_on_column_deep(self, columns: Sequence[str]) -> "ObjectMapperQuery":
-        columns_len = len(columns)
+        new_state = replace(self.state, join=new_join, join_tables=new_join_tables)
+        return ObjectMapperQuery(self.orm, new_state)
+
+    def _join_on_column_deep__(
+        self, join_name: str, columns: Sequence[str]
+    ) -> "ObjectMapperQuery":
+        columns_len = len(columns) - 1
         new_join = self.state.join.copy() if self.state.join else {}
         new_join_order = list(self.state.join_order) if self.state.join_order else []
         table = self.state.table
-        path = []
-
         for i, column in enumerate(columns):
             if column not in table.c:
                 raise InvalidColumnError(column, table)
@@ -113,54 +128,15 @@ class ObjectMapperQuery:
             join_column = join_table.c[foreign_key.column.name]
 
             new_join[join_name] = ObjectMapperJoin(
-                left_column=column_obj,
                 right_column=join_column,
                 table=join_table,
-                table_org_name=foreign_key.column.table.name,
                 on_expression=table.c[column] == join_column,
                 include_in_result=i + 1 == columns_len,
             )
-            new_join_order.append(join_name)
 
             table = join_table
 
-        new_state = replace(self.state, join=new_join, join_order=new_join_order)
-        return ObjectMapperQuery(self.orm, new_state)
-
-    def _join_on_column_simple(self, column: str) -> "ObjectMapperQuery":
-        if column not in self.state.table.c:
-            raise InvalidColumnError(column, self.state.table)
-
-        new_join = self.state.join.copy() if self.state.join else {}
-        new_join_order = list(self.state.join_order) if self.state.join_order else []
-
-        if column in new_join:
-            if not new_join[column].include_in_result:
-                new_join[column].include_in_result = True
-                new_join_order.remove(column)
-                new_join_order.append(column)
-                new_state = replace(
-                    self.state, join=new_join, join_order=new_join_order
-                )
-                return ObjectMapperQuery(self.orm, new_state)
-
-            return self
-
-        column_obj = self.state.table.c[column]
-        foreign_key, *_ = column_obj.foreign_keys
-        join_table = foreign_key.column.table.alias(f"j{len(new_join)}")
-        join_column = join_table.c[foreign_key.column.name]
-
-        new_join[column] = ObjectMapperJoin(
-            left_column=column_obj,
-            right_column=join_column,
-            table=join_table,
-            table_org_name=foreign_key.column.table.name,
-            on_expression=self.state.table.c[column] == join_column,
-            include_in_result=True,
-        )
-        new_join_order.append(column)
-
+        new_join_order.append(join_name)
         new_state = replace(self.state, join=new_join, join_order=new_join_order)
         return ObjectMapperQuery(self.orm, new_state)
 
@@ -206,11 +182,16 @@ class ObjectMapperQuery:
         query = slice_query(new_state, query)
         return bool(await database.fetch_val(query))
 
-    async def all(self, *columns: str, named: bool = True):
-        has_joins, rows = await select_rows(self.state, columns)
-        if not has_joins:
-            return self._all_simple(rows, columns, named)
-        return self._all_with_joins(rows, columns, named)
+    async def all(self, *columns: str, named: bool = True) -> List[Any]:
+        if not self.state.join:
+            return await select_from_one_table(
+                self.orm, self.state, columns, named=named
+            )
+
+        if columns:
+            raise NotImplementedError("TODO!")
+
+        return await select_from_joined_tables(self.orm, self.state)
 
     def _all_simple(self, rows: List[dict], columns: List[str], named: bool):
         if columns:
@@ -220,7 +201,7 @@ class ObjectMapperQuery:
                 return [tuple(row.values()) for row in rows]
 
         if named:
-            mapping = self.orm.mappings.get(self.state.table_org_name, dict)
+            mapping = self.orm.mappings.get(self.state.table.element.name, dict)
             return [mapping(**row) for row in rows]
         else:
             return [tuple(row) for row in rows]
@@ -234,10 +215,10 @@ class ObjectMapperQuery:
             self.state.join[join_name] for join_name in self.state.join_order
         )
 
-        mappings = [self.orm.mappings.get(self.state.table_org_name, dict)]
+        mappings = [self.orm.mappings.get(self.state.table.element.name, dict)]
         for join in ordered_joins:
             if join.include_in_result:
-                mappings.append(self.orm.mappings.get(join.table_org_name, dict))
+                mappings.append(self.orm.mappings.get(join.table.element.name, dict))
 
         for i, row in enumerate(rows):
             rows[i] = (mapping(**row[m]) for m, mapping in enumerate(mappings))
@@ -252,13 +233,15 @@ class ObjectMapperQuery:
 
 class ObjectMapperRootQuery(ObjectMapperQuery):
     async def insert(self, values: dict):
-        validate_columns(values.keys(), self.state.table)
-        query = self.state.table.insert(None).values(**values)
-        new_row_id = await database.execute(query)
-        if self.state.table.primary_key.columns is not None and new_row_id:
-            values[self.state.table.primary_key.columns[0].name] = new_row_id
+        table = self.state.table
+        validate_columns(table, values.keys())
 
-        mapping = self.orm.mappings.get(self.state.table.name, dict)
+        query = table.insert(None).values(**values)
+        new_row_id = await database.execute(query)
+        if table.primary_key.columns is not None and new_row_id:
+            values[table.primary_key.columns[0].name] = new_row_id
+
+        mapping = self.orm.mappings.get(table.name, dict)
         return mapping(**values)
 
     async def bulk_insert(self, values: List[dict]):
@@ -275,15 +258,24 @@ class ObjectMapperRootQuery(ObjectMapperQuery):
         )
 
 
-async def select_rows(state: ObjectMapperQueryState, columns: Sequence[str]):
-    if not has_joins(state, columns):
-        return False, await select_rows_simple(state, columns)
-    return True, await select_rows_joined(state, columns)
+class MultipleObjectsReturned(RuntimeError):
+    pass
 
 
-async def select_rows_simple(state: ObjectMapperQueryState, columns: Sequence[str]):
+class DoesNotExist(RuntimeError):
+    pass
+
+
+async def select_from_one_table(
+    orm: ObjectMapper,
+    state: ObjectMapperQueryState,
+    columns: Sequence[str],
+    *,
+    named: bool = True,
+) -> List[Any]:
+    """Select all columns from simple select, return them as dict/tuple/mapping"""
     if columns:
-        validate_columns(columns, state.table)
+        validate_columns(state.table, columns)
         query = select(state.table.c[col] for col in columns)
     else:
         query = state.table.select(None)
@@ -292,68 +284,101 @@ async def select_rows_simple(state: ObjectMapperQueryState, columns: Sequence[st
     query = slice_query(state, query)
     query = order_query(state, query)
 
-    return await database.fetch_all(query)
+    rows = await database.fetch_all(query)
+
+    if columns:
+        if named:
+            return [dict(**row) for row in rows]
+        else:
+            return [tuple(row.values()) for row in rows]
+
+    mapping = orm.mappings.get(state.table.name)
+    return [mapping(**row) for row in rows]
 
 
-async def select_rows_joined(state: ObjectMapperQueryState, columns: Sequence[str]):
-    tables = 0
-    if not columns:
-        cols = tuple(state.table.c.values())
-        cols_mappings = tuple((0, c.name) for c in cols)
-    else:
-        raise NotImplementedError("TODO!")
+async def select_from_joined_tables(orm: ObjectMapper, state: ObjectMapperQueryState):
+    tables = 1
+    root = state.join_root
 
-    query_from = state.table
-    for join in state.join.values():
-        query_from = query_from.outerjoin(join.table, join.on_expression)
+    cols = tuple(root.c.values())
+    cols_mappings = tuple((0, c.name) for c in cols)
 
-    for i, join_name in enumerate(state.join_order):
-        join = state.join[join_name]
-        if join.include_in_result:
-            tables += 1
-            cols += tuple(c.label(f"j{i}_{c.name}") for c in join.table.c.values())
-            cols_mappings += tuple((tables, c.name) for c in join.table.c.values())
+    # Build query FROM ... LEFT JOIN ...
+    query_from = root
+    for join_on, join_table in state.join_tables.items():
+        if "." in join_on:
+            left_table_name, join_on = join_on.rsplit(".", 1)
+            left_table = state.join_tables[left_table_name]
+        else:
+            left_table = root
+
+        join_left = left_table.c[join_on]
+        foreign_key, *_ = join_left.foreign_keys
+        join_column = join_table.c[foreign_key.column.name]
+        query_from = query_from.outerjoin(join_table, join_left == join_column)
+
+    # Build SELECT ...
+    for join_name in state.join:
+        join_table = state.join_tables[join_name]
+        cols += tuple(c.label(f"t{tables}_{c.name}") for c in join_table.c.values())
+        cols_mappings += tuple((tables, c.name) for c in join_table.c.values())
+        tables += 1
 
     query = select(cols).select_from(query_from)
 
-    query = filter_query(state, query)
+    query = filter_query(state, query, in_join=True)
     query = slice_query(state, query)
-    query = order_query(state, query)
+    query = order_query(state, query, in_join=True)
+
+    # Tables keys and mappings
+    keys = (root.primary_key[0].name,) + tuple(
+        state.join_tables[join_name].primary_key[0].name for join_name in state.join
+    )
+
+    mappings = [orm.mappings.get(state.table.name, dict)]
+    for join_on in state.join:
+        join_table = state.join_tables[join_on]
+        mappings.append(orm.mappings.get(join_table.element.name, dict))
 
     rows = []
     for row in await database.fetch_all(query):
-        tables_data = tuple({} for _ in range(tables + 1))
+        tables_data = tuple({} for _ in range(tables))
         for col, value in enumerate(row.values()):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
-        rows.append(tables_data)
+
+        rows.append(
+            tuple(
+                mappings[i](**data) if data[keys[i]] is not None else None
+                for i, data in enumerate(tables_data)
+            )
+        )
 
     return rows
 
 
-def has_joins(state: ObjectMapperQueryState, columns: Sequence[str]) -> bool:
-    if state.join:
-        return True
-
-    return False
-
-
-def get_column(state: ObjectMapperQueryState, name: str) -> ColumnElement:
+def get_column(
+    state: ObjectMapperQueryState, name: str, in_join: bool = False
+) -> ColumnElement:
     if "." not in name:
+        if in_join:
+            return state.join_root.c[name]
         return state.table.c[name]
 
     join_name, name = name.rsplit(".", 1)
     return state.join[join_name].table.c[name]
 
 
-def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
+def filter_query(
+    state: ObjectMapperQueryState, query: ClauseElement, *, in_join: bool = False
+) -> ClauseElement:
     if state.filter:
         for filter_clause in state.filter:
             if isinstance(filter_clause, dict):
                 for filter_col, filter_value in filter_clause.items():
                     if "__" in filter_col:
                         col_name, expression = filter_col.split("__")
-                        col = get_column(state, col_name)
+                        col = get_column(state, col_name, in_join)
                         if expression == "in":
                             query = query.where(col.in_(filter_value))
                         elif expression == "gte":
@@ -370,7 +395,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                             else:
                                 query = query.where(col.isnot(None))
                     else:
-                        col = get_column(state, filter_col)
+                        col = get_column(state, filter_col, in_join)
                         if filter_value is True:
                             query = query.where(col.is_(True))
                         elif filter_value is False:
@@ -388,7 +413,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                 for filter_col, filter_value in exclude_clause.items():
                     if "__" in filter_col:
                         col_name, expression = filter_col.split("__")
-                        col = get_column(state, col_name)
+                        col = get_column(state, col_name, in_join)
                         if expression == "in":
                             query = query.where(not_(col.in_(filter_value)))
                         elif expression == "gte":
@@ -405,7 +430,7 @@ def filter_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseE
                             else:
                                 query = query.where(col.is_(None))
                     else:
-                        col = get_column(state, filter_col)
+                        col = get_column(state, filter_col, in_join)
                         if filter_value is True or filter_value is False:
                             query = query.where(col == (not filter_value))
                         else:
@@ -424,28 +449,33 @@ def slice_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseEl
     return query
 
 
-def order_query(state: ObjectMapperQueryState, query: ClauseElement) -> ClauseElement:
+def order_query(
+    state: ObjectMapperQueryState, query: ClauseElement, *, in_join: bool = False
+) -> ClauseElement:
     if not state.order_by:
         return query
 
     order_by = []
     for ordering in state.order_by:
         if ordering[0] == "-":
-            col = get_column(state, ordering[1:])
+            col = get_column(state, ordering[1:], in_join)
             order_by.append(desc(col))
         else:
-            col = get_column(state, ordering)
+            col = get_column(state, ordering, in_join)
             order_by.append(asc(col))
 
     return query.order_by(*order_by)
 
 
-class MultipleObjectsReturned(RuntimeError):
-    pass
-
-
-class DoesNotExist(RuntimeError):
-    pass
+def validate_conditions(state: ObjectMapperQueryState, conditions: Sequence[str]):
+    for condition in conditions:
+        if "__" in condition:
+            condition, _ = condition.split("__", 1)
+        if "." in condition:
+            join_path, field = condition.rsplit(".", 1)
+            validate_column(state.join_tables[join_path], field[0])
+        else:
+            validate_column(state.table, condition)
 
 
 class InvalidColumnError(ValueError):
@@ -458,12 +488,12 @@ class InvalidColumnError(ValueError):
         super().__init__(msg)
 
 
-def validate_columns(columns: Iterable[str], table: TableClause):
+def validate_columns(table: TableClause, columns: Iterable[str]):
     for col_name in columns:
         if col_name not in table.c:
             raise InvalidColumnError(col_name, table)
 
 
-def validate_column(col_name: str, table: TableClause):
+def validate_column(table: TableClause, col_name: str):
     if col_name not in table.c:
         raise InvalidColumnError(col_name, table)
