@@ -101,45 +101,6 @@ class ObjectMapperQuery:
         new_state = replace(self.state, join=new_join, join_tables=new_join_tables)
         return ObjectMapperQuery(self.orm, new_state)
 
-    def _join_on_column_deep__(
-        self, join_name: str, columns: Sequence[str]
-    ) -> "ObjectMapperQuery":
-        columns_len = len(columns) - 1
-        new_join = self.state.join.copy() if self.state.join else {}
-        new_join_order = list(self.state.join_order) if self.state.join_order else []
-        table = self.state.table
-        for i, column in enumerate(columns):
-            if column not in table.c:
-                raise InvalidColumnError(column, table)
-
-            path.append(column)
-            join_name = ".".join(path)
-            if join_name in new_join:
-                if not new_join[join_name].include_in_result:
-                    # Include intermediate join col in resultset
-                    new_join[join_name].include_in_result = True
-
-                table = new_join[join_name].table
-                continue
-
-            column_obj = table.c[column]
-            foreign_key, *_ = column_obj.foreign_keys
-            join_table = foreign_key.column.table.alias(f"j{len(new_join)}")
-            join_column = join_table.c[foreign_key.column.name]
-
-            new_join[join_name] = ObjectMapperJoin(
-                right_column=join_column,
-                table=join_table,
-                on_expression=table.c[column] == join_column,
-                include_in_result=i + 1 == columns_len,
-            )
-
-            table = join_table
-
-        new_join_order.append(join_name)
-        new_state = replace(self.state, join=new_join, join_order=new_join_order)
-        return ObjectMapperQuery(self.orm, new_state)
-
     def offset(self, offset: int) -> "ObjectMapperQuery":
         new_state = replace(self.state, offset=offset)
         return ObjectMapperQuery(self.orm, new_state)
@@ -192,38 +153,6 @@ class ObjectMapperQuery:
             raise NotImplementedError("TODO!")
 
         return await select_from_joined_tables(self.orm, self.state)
-
-    def _all_simple(self, rows: List[dict], columns: List[str], named: bool):
-        if columns:
-            if named:
-                return [dict(**row) for row in rows]
-            else:
-                return [tuple(row.values()) for row in rows]
-
-        if named:
-            mapping = self.orm.mappings.get(self.state.table.element.name, dict)
-            return [mapping(**row) for row in rows]
-        else:
-            return [tuple(row) for row in rows]
-
-    def _all_with_joins(self, rows: List[dict], columns: List[str], named: bool):
-        if columns:
-            return rows  # rows are already mapped to cols in joined query
-
-        # Map rows dicts to items
-        ordered_joins = tuple(
-            self.state.join[join_name] for join_name in self.state.join_order
-        )
-
-        mappings = [self.orm.mappings.get(self.state.table.element.name, dict)]
-        for join in ordered_joins:
-            if join.include_in_result:
-                mappings.append(self.orm.mappings.get(join.table.element.name, dict))
-
-        for i, row in enumerate(rows):
-            rows[i] = (mapping(**row[m]) for m, mapping in enumerate(mappings))
-
-        return rows
 
     async def one(self, *columns: str):
         new_state = replace(self.state, offset=None, limit=2)
