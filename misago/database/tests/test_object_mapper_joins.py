@@ -20,7 +20,7 @@ mapper.set_mapping(user_groups, UserGroup)
 
 
 @pytest.mark.asyncio
-async def test_all_objects_can_be_retrieved_with_singe_join(
+async def test_all_objects_can_be_retrieved_with_single_join(
     user, admin, admins, members
 ):
     results = await mapper.query_table(users).join_on("group_id").all()
@@ -30,7 +30,7 @@ async def test_all_objects_can_be_retrieved_with_singe_join(
 
 
 @pytest.mark.asyncio
-async def test_all_objects_can_be_retrieved_with_singe_join_missing_relation(
+async def test_all_objects_can_be_retrieved_with_single_join_missing_relation(
     thread, post
 ):
     results = await mapper.query_table(threads).join_on("starter_id").all()
@@ -150,7 +150,7 @@ async def _test_selected_dicts_of_all_joined_objects_can_be_retrieved(
 
 
 @pytest.mark.asyncio
-async def _test_selected_tuples_of_all_joined_objects_can_be_retrieved(
+async def test_selected_tuples_of_all_joined_objects_can_be_retrieved(
     user, admin, admins, members
 ):
     results = (
@@ -159,5 +159,5 @@ async def _test_selected_tuples_of_all_joined_objects_can_be_retrieved(
         .all("id", "email", "group_id.name", named=False)
     )
     assert len(results) == 2
-    assert (admin.id, admin.email) in results
-    assert (user.id, user.email) in results
+    assert (admin.id, admin.email, admins.name) in results
+    assert (user.id, user.email, members.name) in results

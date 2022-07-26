@@ -1,6 +1,5 @@
-# WIP: Experimental rewrite for object mapper
+from collections import namedtuple
 from dataclasses import dataclass, replace
-from ntpath import join
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Type, Union
 
 from sqlalchemy import asc, desc, func
@@ -146,13 +145,18 @@ class ObjectMapperQuery:
     async def all(self, *columns: str, named: bool = True) -> List[Any]:
         if not self.state.join:
             return await select_from_one_table(
-                self.orm, self.state, columns, named=named
+                self.orm,
+                self.state,
+                columns,
+                named=named,
             )
 
-        if columns:
-            raise NotImplementedError("TODO!")
-
-        return await select_from_joined_tables(self.orm, self.state)
+        return await select_from_joined_tables(
+            self.orm,
+            self.state,
+            columns,
+            named=named,
+        )
 
     async def one(self, *columns: str):
         new_state = replace(self.state, offset=None, limit=2)
@@ -225,14 +229,16 @@ async def select_from_one_table(
     return [mapping(**row) for row in rows]
 
 
-async def select_from_joined_tables(orm: ObjectMapper, state: ObjectMapperQueryState):
-    tables = 1
+async def select_from_joined_tables(
+    orm: ObjectMapper,
+    state: ObjectMapperQueryState,
+    columns: Sequence[str],
+    *,
+    named: bool = True,
+):
     root = state.join_root
 
-    cols = tuple(root.c.values())
-    cols_mappings = tuple((0, c.name) for c in cols)
-
-    # Build query FROM ... LEFT JOIN ...
+    # Build FROM ... LEFT JOIN ...
     query_from = root
     for join_on, join_table in state.join_tables.items():
         if "." in join_on:
@@ -247,17 +253,29 @@ async def select_from_joined_tables(orm: ObjectMapper, state: ObjectMapperQueryS
         query_from = query_from.outerjoin(join_table, join_left == join_column)
 
     # Build SELECT ...
-    for join_name in state.join:
-        join_table = state.join_tables[join_name]
-        cols += tuple(c.label(f"t{tables}_{c.name}") for c in join_table.c.values())
-        cols_mappings += tuple((tables, c.name) for c in join_table.c.values())
-        tables += 1
+    tables = 1
 
-    query = select(cols).select_from(query_from)
+    if columns:
+        cols = tuple()
+        for i, column in enumerate(columns):
+            if "." not in column:
+                col = root.c[column]
+                cols += (col,)
+            else:
+                join_name, column = column.rsplit(".", 1)
+                col = state.join_tables[join_name].c[column]
+                cols += (col.label(f"c{i}_{col.name}"),)
+        if named:
+            cols_mappings = tuple((0, c.name) for c in cols)
+    else:
+        cols = tuple(root.c.values())
+        cols_mappings = tuple((0, c.name) for c in cols)
 
-    query = filter_query(state, query, in_join=True)
-    query = slice_query(state, query)
-    query = order_query(state, query, in_join=True)
+        for join_name in state.join:
+            join_table = state.join_tables[join_name]
+            cols += tuple(c.label(f"t{tables}_{c.name}") for c in join_table.c.values())
+            cols_mappings += tuple((tables, c.name) for c in join_table.c.values())
+            tables += 1
 
     # Tables keys and mappings
     keys = (root.primary_key[0].name,) + tuple(
@@ -269,7 +287,24 @@ async def select_from_joined_tables(orm: ObjectMapper, state: ObjectMapperQueryS
         join_table = state.join_tables[join_on]
         mappings.append(orm.mappings.get(join_table.element.name, dict))
 
+    # Build final query
+    query = select(cols).select_from(query_from)
+
+    query = filter_query(state, query, in_join=True)
+    query = slice_query(state, query)
+    query = order_query(state, query, in_join=True)
+
+    # Fetch rows and convert each row into groups (dicts) each representing
+    # other table, then map dicts to final types
     rows = []
+
+    # Fast path: named tuple with columns
+    if columns and not named:
+        row_tuple = namedtuple("Result", (c.replace(".", "__") for c in columns))
+        for row in await database.fetch_all(query):
+            rows.append(row_tuple(*row.values()))
+        return rows
+
     for row in await database.fetch_all(query):
         tables_data = tuple({} for _ in range(tables))
         for col, value in enumerate(row.values()):

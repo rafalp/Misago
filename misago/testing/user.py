@@ -10,20 +10,29 @@ def user_password():
 
 @pytest.fixture
 async def user(db, user_password):
-    return await User.create("User", "user@example.com", password=user_password)
+    return await User.create(
+        "User",
+        "user@example.com",
+        password=user_password,
+    )
 
 
 @pytest.fixture
 async def other_user(db, user_password):
     return await User.create(
-        "OtherUser", "other-user@example.com", password=user_password
+        "OtherUser",
+        "other-user@example.com",
+        password=user_password,
     )
 
 
 @pytest.fixture
 async def inactive_user(db, user_password):
     return await User.create(
-        "User", "inactive@example.com", password=user_password, is_active=False
+        "User",
+        "inactive@example.com",
+        password=user_password,
+        is_active=False,
     )
 
 
@@ -35,14 +44,21 @@ async def no_password_user(db):
 @pytest.fixture
 async def moderator(db, user_password):
     return await User.create(
-        "Moderator", "moderator@example.com", password=user_password, is_moderator=True
+        "Moderator",
+        "moderator@example.com",
+        password=user_password,
+        is_moderator=True,
     )
 
 
 @pytest.fixture
-async def admin(db, user_password):
+async def admin(db, user_password, admins):
     return await User.create(
-        "Admin", "admin@example.com", password=user_password, is_admin=True
+        "Admin",
+        "admin@example.com",
+        password=user_password,
+        group=admins,
+        is_admin=True,
     )
 
 
