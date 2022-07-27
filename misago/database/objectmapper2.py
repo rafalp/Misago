@@ -9,7 +9,6 @@ from sqlalchemy.sql import (
     TableClause,
     not_,
     select,
-    Select,
 )
 
 from .database import database
@@ -342,7 +341,7 @@ async def select_with_joins_named_columns(
     pk = root.primary_key[0]
     if pk.name not in columns:
         cols += (pk,)
-        cols_mappings += ((0, col.name),)
+        cols_mappings += ((0, pk.name),)
         skip_columns += (pk.name,)
     else:
         skip_columns += (None,)
@@ -360,14 +359,20 @@ async def select_with_joins_named_columns(
     joins_index = {join_on: i for i, join_on in enumerate(state.join, 1)}
     for i, column in enumerate(columns):
         if "." not in column:
-            col = root.c[column]
-            cols += (col,)
-            cols_mappings += ((0, col.name),)
+            try:
+                col = root.c[column]
+                cols += (col,)
+                cols_mappings += ((0, col.name),)
+            except KeyError:
+                raise InvalidColumnError(column, state.table)
         else:
             join_name, column = column.rsplit(".", 1)
-            col = state.join_tables[join_name].c[column]
-            cols += (col.label(f"c{i}_{col.name}"),)
-            cols_mappings += ((joins_index[join_name], col.name),)
+            try:
+                col = state.join_tables[join_name].c[column]
+                cols += (col.label(f"c{i}_{col.name}"),)
+                cols_mappings += ((joins_index[join_name], col.name),)
+            except KeyError:
+                raise InvalidColumnError(column, state.join_tables[join_name].element)
 
     # Build SELECT ... FROM ... JOIN ... query
     query = get_select_join_query(state, cols)
@@ -427,12 +432,18 @@ async def select_with_joins_anonymous_columns(
     cols = tuple()
     for i, column in enumerate(columns):
         if "." not in column:
-            col = state.join_root.c[column]
-            cols += (col,)
+            try:
+                col = state.join_root.c[column]
+                cols += (col,)
+            except KeyError:
+                raise InvalidColumnError(column, state.table)
         else:
             join_name, column = column.rsplit(".", 1)
-            col = state.join_tables[join_name].c[column]
-            cols += (col.label(f"c{i}_{col.name}"),)
+            try:
+                col = state.join_tables[join_name].c[column]
+                cols += (col.label(f"c{i}_{col.name}"),)
+            except KeyError:
+                raise InvalidColumnError(column, state.join_tables[join_name].element)
 
     query = get_select_join_query(state, cols)
     return [tuple(row.values()) for row in await database.fetch_all(query)]
@@ -586,7 +597,7 @@ def validate_conditions(state: ObjectMapperQueryState, conditions: Sequence[str]
             validate_column(state.table, condition)
 
 
-class InvalidColumnError(ValueError):
+class InvalidColumnError(LookupError):
     def __init__(self, col_name: str, table: TableClause):
         valid_columns = ", ".join(table.c.keys())
         msg = (

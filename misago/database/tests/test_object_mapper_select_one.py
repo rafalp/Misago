@@ -2,7 +2,12 @@ import pytest
 
 from ...tables import users, user_groups
 from ...users.models import User, UserGroup
-from ..objectmapper2 import DoesNotExist, MultipleObjectsReturned, ObjectMapper
+from ..objectmapper2 import (
+    DoesNotExist,
+    InvalidColumnError,
+    MultipleObjectsReturned,
+    ObjectMapper,
+)
 
 mapper = ObjectMapper()
 
@@ -42,6 +47,12 @@ async def test_one_object_can_be_retrieved_as_named_tuple(user):
 async def test_one_object_can_be_retrieved_as_tuple(user):
     result = await mapper.query_table(users).one("id", "email")
     assert result == (user.id, user.email)
+
+
+@pytest.mark.asyncio
+async def test_error_is_raised_if_column_name_is_invalid(user):
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).one("id", "invalid", "email")
 
 
 @pytest.mark.asyncio

@@ -183,11 +183,27 @@ async def test_joins_can_be_retrieved_as_named_tuples(user, members):
     results = (
         await mapper.query_table(users)
         .join_on("group_id")
-        .all("id", "email", "group_id.name", named=True)
+        .all("id", "email", "group_id.id", "group_id.name", named=True)
     )
     assert len(results) == 1
     assert len(results[0]) == 2
     assert results[0][0].id == user.id
+    assert results[0][0].email == user.email
+    assert results[0][1].id == members.id
+    assert results[0][1].name == members.name
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_retrieved_as_named_tuples_without_primary_keys(
+    user, members
+):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .all("email", "group_id.name", named=True)
+    )
+    assert len(results) == 1
+    assert len(results[0]) == 2
     assert results[0][0].email == user.email
     assert results[0][1].name == members.name
 
@@ -218,3 +234,23 @@ async def test_joins_can_be_retrieved_as_tuples(user, admin, admins, members):
     assert len(results) == 2
     assert (admin.id, admin.email, admins.name) in results
     assert (user.id, user.email, members.name) in results
+
+
+@pytest.mark.asyncio
+async def test_join_raises_error_if_column_name_is_invalid(db):
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).join_on("group_id").all("invalid")
+
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).join_on("group_id").all("invalid", named=True)
+
+
+@pytest.mark.asyncio
+async def test_join_raises_error_if_relation_column_name_is_invalid(db):
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).join_on("group_id").all("group_id.invalid")
+
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(users).join_on("group_id").all(
+            "group_id.invalid", named=True
+        )

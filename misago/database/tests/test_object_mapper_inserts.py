@@ -1,13 +1,12 @@
 import pytest
 
 from ...attachments.models import AttachmentType
-from ...tables import attachment_types, settings
-from ..objectmapper2 import ObjectMapper
+from ...tables import attachment_types
+from ..objectmapper2 import InvalidColumnError, ObjectMapper
 
 mapper = ObjectMapper()
 
 mapper.set_mapping(attachment_types, AttachmentType)
-mapper.set_mapping(settings, dict)
 
 
 @pytest.mark.asyncio
@@ -29,6 +28,20 @@ async def test_data_can_be_inserted_to_database_and_object_is_returned(db):
     assert result.mimetypes == []
     assert result.size_limit == 42
     assert result.is_active is True
+
+
+@pytest.mark.asyncio
+async def test_insert_raises_error_if_column_name_is_invalid(db):
+    with pytest.raises(InvalidColumnError):
+        await mapper.query_table(attachment_types).insert(
+            {
+                "name": "Test",
+                "extensions": [".c", ".b", ".a"],
+                "invalid": True,
+                "size_limit": 42,
+                "is_active": True,
+            }
+        )
 
 
 @pytest.mark.asyncio
