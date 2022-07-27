@@ -1,9 +1,16 @@
 from collections import namedtuple
 from dataclasses import dataclass, replace
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
 
 from sqlalchemy import asc, desc, func
-from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, not_, select
+from sqlalchemy.sql import (
+    ClauseElement,
+    ColumnElement,
+    TableClause,
+    not_,
+    select,
+    Select,
+)
 
 from .database import database
 
@@ -100,11 +107,11 @@ class ObjectMapperQuery:
         new_state = replace(self.state, join=new_join, join_tables=new_join_tables)
         return ObjectMapperQuery(self.orm, new_state)
 
-    def offset(self, offset: int) -> "ObjectMapperQuery":
+    def offset(self, offset: Optional[int]) -> "ObjectMapperQuery":
         new_state = replace(self.state, offset=offset)
         return ObjectMapperQuery(self.orm, new_state)
 
-    def limit(self, limit: int) -> "ObjectMapperQuery":
+    def limit(self, limit: Optional[int]) -> "ObjectMapperQuery":
         new_state = replace(self.state, limit=limit)
         return ObjectMapperQuery(self.orm, new_state)
 
@@ -142,6 +149,10 @@ class ObjectMapperQuery:
         query = slice_query(new_state, query)
         return bool(await database.fetch_val(query))
 
+    async def one(self, *columns: str):
+        results = await self.limit(2).all(*columns)
+        raise NotImplemented("TODO!")
+
     async def all(self, *columns: str, named: bool = True) -> List[Any]:
         if not self.state.join:
             return await select_from_one_table(
@@ -151,17 +162,17 @@ class ObjectMapperQuery:
                 named=named,
             )
 
-        return await select_from_joined_tables(
-            self.orm,
-            self.state,
-            columns,
-            named=named,
-        )
+        if columns:
+            if named:
+                return await select_with_joins_named_columns(
+                    self.state, columns
+                )
 
-    async def one(self, *columns: str):
-        new_state = replace(self.state, offset=None, limit=2)
-        results = await select_rows(new_state, columns)
-        raise NotImplemented("TODO!")
+            return await select_with_joins_anonymous_columns(
+                self.state, columns
+            )
+
+        return await select_with_joins(self.orm, self.state)
 
 
 class ObjectMapperRootQuery(ObjectMapperQuery):
@@ -229,151 +240,188 @@ async def select_from_one_table(
     return [mapping(**row) for row in rows]
 
 
-async def select_from_joined_tables(
+async def select_with_joins(
     orm: ObjectMapper,
     state: ObjectMapperQueryState,
-    columns: Sequence[str],
-    *,
-    named: bool = True,
 ):
     root = state.join_root
 
-    # Build FROM ... LEFT JOIN ...
-    query_from = root
+    # Build cols tuple and index -> name tuple
+    cols = tuple(root.c.values())
+    cols_mappings = tuple((0, c.name) for c in cols)
+
+    for i, join_name in enumerate(state.join, 1):
+        join_table = state.join_tables[join_name]
+        cols += tuple(c.label(f"t{i}_{c.name}") for c in join_table.c.values())
+        cols_mappings += tuple((i, c.name) for c in join_table.c.values())
+
+    # Build SELECT ... FROM ... JOIN ... query
+    query = get_select_join_query(state, cols)
+
+    # Build tuples with primary key names and mappings
+    keys = (root.primary_key[0].name,)
+    mappings = (orm.mappings.get(state.table.name, dict),)
+
+    for join_on in state.join:
+        join_table = state.join_tables[join_on]
+        keys += (join_table.primary_key[0].name,)
+        mappings += (orm.mappings.get(join_table.element.name, dict),)
+
+    # Fetch rows and convert them to models
+    types_count = 1 + len(state.join)
+    rows = []
+
+    for row in await database.fetch_all(query):
+        tables_data = tuple({} for _ in range(types_count))
+        for col, value in enumerate(row.values()):
+            col_table, col_name = cols_mappings[col]
+            tables_data[col_table][col_name] = value
+
+        rows.append(
+            tuple(
+                mappings[i](**data) if data[keys[i]] is not None else None
+                for i, data in enumerate(tables_data)
+            )
+        )
+
+    return rows
+
+
+async def select_with_joins_named_columns(
+    state: ObjectMapperQueryState,
+    columns: Sequence[str],
+):
+    root = state.join_root
+
+    # Build cols tuple and index -> name tuple
+    cols = tuple()
+    cols_mappings = tuple()
+    skip_columns = tuple()  # Columns we need to remove from result set
+
+    pk = root.primary_key[0]
+    if pk.name not in columns:
+        cols += (pk,)
+        cols_mappings += ((0, col.name),)
+        skip_columns += (pk.name,)
+    else:
+        skip_columns += (None,)
+
+    for i, join_name in enumerate(state.join, 1):
+        join_table = state.join_tables[join_name]
+        join_pk = join_table.primary_key[0]
+        if f"{join_name}.{join_pk.name}" not in columns:
+            cols += (join_pk,)
+            cols_mappings += ((i, join_pk.name),)
+            skip_columns += (join_pk.name,)
+        else:
+            skip_columns += (None,)
+
+    joins_index = {join_on: i for i, join_on in enumerate(state.join, 1)}
+    for i, column in enumerate(columns):
+        if "." not in column:
+            col = root.c[column]
+            cols += (col,)
+            cols_mappings += ((0, col.name),)
+        else:
+            join_name, column = column.rsplit(".", 1)
+            col = state.join_tables[join_name].c[column]
+            cols += (col.label(f"c{i}_{col.name}"),)
+            cols_mappings += ((joins_index[join_name], col.name),)
+
+    # Build SELECT ... FROM ... JOIN ... query
+    query = get_select_join_query(state, cols)
+
+    # Build tuples with primary key names and mappings
+    keys = (root.primary_key[0].name,)
+    mappings = (
+        namedtuple(
+            "Result",
+            (c for c in columns if "." not in c and c != skip_columns[0]),
+        ),
+    )
+
+    for i, join_on in enumerate(state.join, 1):
+        keys += (state.join_tables[join_on].primary_key[0].name,)
+
+        table_cols = []
+        for table_index, col in cols_mappings:
+            if table_index == i:
+                table_cols.append(col)
+
+        mappings += (
+            namedtuple(
+                "Result",
+                (c for c in table_cols if c != skip_columns[i]),
+            ),
+        )
+
+    # Fetch rows and convert them to models
+    types_count = 1 + len(state.join)
+    rows = []
+
+    for row in await database.fetch_all(query):
+        tables_data = tuple({} for _ in range(types_count))
+        for col, value in enumerate(row.values()):
+            col_table, col_name = cols_mappings[col]
+            tables_data[col_table][col_name] = value
+
+        mapped_row = tuple()
+        for i, data in enumerate(tables_data):
+            if data[keys[i]] is None:
+                mapped_row += (None,)
+            else:
+                if skip_columns[i]:
+                    data.pop(skip_columns[i])
+                mapped_row += (mappings[i](**data),)
+
+        rows.append(mapped_row)
+
+    return rows
+
+
+async def select_with_joins_anonymous_columns(
+    state: ObjectMapperQueryState,
+    columns: Sequence[str],
+) -> List[Any]:
+    cols = tuple()
+    for i, column in enumerate(columns):
+        if "." not in column:
+            col = state.join_root.c[column]
+            cols += (col,)
+        else:
+            join_name, column = column.rsplit(".", 1)
+            col = state.join_tables[join_name].c[column]
+            cols += (col.label(f"c{i}_{col.name}"),)
+
+    query = get_select_join_query(state, cols)
+    return [tuple(row.values()) for row in await database.fetch_all(query)]
+
+
+def get_select_join_query(
+    state: ObjectMapperQueryState, columns: Sequence[ColumnElement]
+) -> ClauseElement:
+    query = select(columns).select_from(get_join_select_from(state))
+    query = filter_query(state, query, in_join=True)
+    query = slice_query(state, query)
+    query = order_query(state, query, in_join=True)
+    return query
+
+
+def get_join_select_from(state: ObjectMapperQueryState) -> ClauseElement:
+    query_from = state.join_root
     for join_on, join_table in state.join_tables.items():
         if "." in join_on:
             left_table_name, join_on = join_on.rsplit(".", 1)
             left_table = state.join_tables[left_table_name]
         else:
-            left_table = root
+            left_table = state.join_root
 
         join_left = left_table.c[join_on]
         foreign_key, *_ = join_left.foreign_keys
         join_column = join_table.c[foreign_key.column.name]
         query_from = query_from.outerjoin(join_table, join_left == join_column)
 
-    # Build SELECT ...
-    tables = 1
-    joins = {join_on: i + 1 for i, join_on in enumerate(state.join)}
-    cols = tuple()
-    cols_mappings = tuple()
-    drop_columns = tuple()
-
-    if columns:
-        if named:
-            tables += len(state.join)
-
-            pk = root.primary_key[0]
-            if pk.name not in columns:
-                cols += (pk,)
-                cols_mappings += ((0, col.name),)
-                drop_columns += (pk.name,)
-            else:
-                drop_columns += (None,)
-
-            for i, join_name in enumerate(state.join):
-                join_table = state.join_tables[join_name]
-                join_pk = join_table.primary_key[0]
-                if f"{join_name}.{join_pk.name}" not in columns:
-                    cols += (join_pk,)
-                    cols_mappings += ((i + 1, join_pk.name),)
-                    drop_columns += (join_pk.name,)
-                else:
-                    drop_columns += (None,)
-
-        for i, column in enumerate(columns):
-            if "." not in column:
-                col = root.c[column]
-                cols += (col,)
-                cols_mappings += ((0, col.name),)
-            else:
-                join_name, column = column.rsplit(".", 1)
-                col = state.join_tables[join_name].c[column]
-                cols += (col.label(f"c{i}_{col.name}"),)
-                cols_mappings += ((joins[join_name], col.name),)
-
-    else:
-        cols = tuple(root.c.values())
-        cols_mappings += tuple((0, c.name) for c in cols)
-
-        for join_name in state.join:
-            join_table = state.join_tables[join_name]
-            cols += tuple(c.label(f"t{tables}_{c.name}") for c in join_table.c.values())
-            cols_mappings += tuple((tables, c.name) for c in join_table.c.values())
-            tables += 1
-
-    # Build final query
-    query = select(cols).select_from(query_from)
-
-    query = filter_query(state, query, in_join=True)
-    query = slice_query(state, query)
-    query = order_query(state, query, in_join=True)
-
-    # Fetch rows and convert each row into groups (dicts) each representing
-    # other table, then map dicts to final types
-
-    # Fast path: named tuple with columns
-    if columns and not named:
-        return [tuple(row.values()) for row in await database.fetch_all(query)]
-
-    # Tables keys and mappings
-    keys = (root.primary_key[0].name,) + tuple(
-        state.join_tables[join_name].primary_key[0].name for join_name in state.join
-    )
-
-    mappings = []
-    if columns:
-        obj_tuple = namedtuple(
-            "Result",
-            (c for c in columns if "." not in c and c != drop_columns[0]),
-        )
-        mappings.append(obj_tuple)
-
-        for i, join_on in enumerate(state.join):
-            table_cols = []
-            for table, col in cols_mappings:
-                if table == i + 1:
-                    table_cols.append(col)
-            obj_tuple = namedtuple(
-                "Result",
-                (c for c in table_cols if c != drop_columns[i + 1]),
-            )
-            mappings.append(obj_tuple)
-            del table_cols
-
-    else:
-        mappings.append(orm.mappings.get(state.table.name, dict))
-        for join_on in state.join:
-            join_table = state.join_tables[join_on]
-            mappings.append(orm.mappings.get(join_table.element.name, dict))
-
-    rows = []
-    for row in await database.fetch_all(query):
-        tables_data = tuple({} for _ in range(tables))
-        for col, value in enumerate(row.values()):
-            col_table, col_name = cols_mappings[col]
-            tables_data[col_table][col_name] = value
-
-        if columns:
-            mapped_row = tuple()
-            for i, data in enumerate(tables_data):
-                if data[keys[i]] is None:
-                    mapped_row += (None,)
-                else:
-                    if drop_columns[i]:
-                        data.pop(drop_columns[i])
-                    mapped_row += (mappings[i](**data),)
-
-            rows.append(mapped_row)
-        else:
-            rows.append(
-                tuple(
-                    mappings[i](**data) if data[keys[i]] is not None else None
-                    for i, data in enumerate(tables_data)
-                )
-            )
-
-    return rows
+    return query_from
 
 
 def get_column(

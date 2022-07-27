@@ -65,13 +65,13 @@ async def test_no_objects_can_be_counted(db):
 
 
 @pytest.mark.asyncio
-async def test_filtered_objects_can_be_counter(user, admin):
+async def test_filtered_objects_can_be_counted(user, admin):
     results = await mapper.query_table(users).filter(is_admin=True).count()
     assert results == 1
 
 
 @pytest.mark.asyncio
-async def test_excluded_objects_can_be_counter(user, admin):
+async def test_excluded_objects_can_be_counted(user, admin):
     results = await mapper.query_table(users).exclude(is_admin=True).count()
     assert results == 1
 
