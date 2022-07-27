@@ -116,11 +116,14 @@ class ObjectMapperQuery:
         return ObjectMapperQuery(self.orm, new_state)
 
     def order_by(self, *columns: str) -> "ObjectMapperQuery":
-        new_state = replace(self.state, order_by=columns)
+        new_state = replace(self.state, order_by=columns or None)
         return ObjectMapperQuery(self.orm, new_state)
 
     async def update(self, values: dict):
-        raise NotImplementedError("TODO")
+        validate_columns(self.state.table, values.keys())
+        query = self.state.table.update(None).values(values)
+        query = filter_query(self.state, query)
+        return await database.execute(query)
 
     async def delete(self) -> int:
         query = self.state.table.delete()
@@ -142,18 +145,59 @@ class ObjectMapperQuery:
     async def exists(self) -> bool:
         new_state = replace(
             self.state,
-            limit=self.state.offset + 1 if self.state.offset else 1,
+            limit=(self.state.offset or 0) + 1,
         )
         query = select([func.count()]).select_from(new_state.table)
         query = filter_query(new_state, query)
         query = slice_query(new_state, query)
         return bool(await database.fetch_val(query))
 
-    async def one(self, *columns: str):
-        results = await self.limit(2).all(*columns)
-        raise NotImplemented("TODO!")
+    async def one(self, *columns: str, named: bool = False, **filters: str):
+        query = self.offset(None).limit(2)
+        if filters:
+            query = query.filter(**filters)
 
-    async def all(self, *columns: str, named: bool = True) -> List[Any]:
+        results = await query.all(*columns, named=named)
+        if not results:
+            raise DoesNotExist()
+        if len(results) > 1:
+            raise MultipleObjectsReturned()
+
+        return results[0]
+
+    async def batch(
+        self,
+        *columns: str,
+        cursor_column: str = "id",
+        batch_size: int = 20,
+        asc: bool = False,
+    ):
+        cursor = None
+        cursor_clause = cursor_column + ("__gt" if asc else "__lt")
+
+        base_query = (
+            self.order_by(cursor_column if asc else "-" + cursor_column)
+            .offset(0)
+            .limit(batch_size + 1)
+        )
+
+        loop = True
+        while loop:
+            query = base_query.limit(batch_size + 1)
+            if cursor:
+                query = query.filter(**{cursor_clause: cursor})
+
+            items = list(await query.all(*columns))
+            if len(items) > batch_size:
+                items = items[:batch_size]
+                cursor = items[-1].id
+            else:
+                loop = False
+
+            for item in items:
+                yield item
+
+    async def all(self, *columns: str, named: bool = False) -> List[Any]:
         if not self.state.join:
             return await select_from_one_table(
                 self.orm,
@@ -164,13 +208,9 @@ class ObjectMapperQuery:
 
         if columns:
             if named:
-                return await select_with_joins_named_columns(
-                    self.state, columns
-                )
+                return await select_with_joins_named_columns(self.state, columns)
 
-            return await select_with_joins_anonymous_columns(
-                self.state, columns
-            )
+            return await select_with_joins_anonymous_columns(self.state, columns)
 
         return await select_with_joins(self.orm, self.state)
 
@@ -215,7 +255,7 @@ async def select_from_one_table(
     state: ObjectMapperQueryState,
     columns: Sequence[str],
     *,
-    named: bool = True,
+    named: bool = False,
 ) -> List[Any]:
     """Select all columns from simple select, return them as dict/tuple/mapping"""
     if columns:
@@ -232,7 +272,8 @@ async def select_from_one_table(
 
     if columns:
         if named:
-            return [dict(**row) for row in rows]
+            mapping = namedtuple("Result", columns)
+            return [mapping(**row) for row in rows]
         else:
             return [tuple(row.values()) for row in rows]
 
