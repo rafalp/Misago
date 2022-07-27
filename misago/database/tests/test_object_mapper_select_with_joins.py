@@ -142,6 +142,43 @@ async def test_joins_can_be_ordered(user, admin, admins, members):
 
 
 @pytest.mark.asyncio
+async def test_joins_can_be_limited(user, admin, admins, members):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .order_by("is_admin")
+        .limit(1)
+        .all()
+    )
+    results == [(admin, admins)]
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_offset(user, admin, admins, members):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .order_by("is_admin")
+        .offset(1)
+        .all()
+    )
+    results == [(user, members)]
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_offset_limited(user, admin, admins, members):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .order_by("is_admin")
+        .offset(1)
+        .limit(1)
+        .all()
+    )
+    results == [(user, members)]
+
+
+@pytest.mark.asyncio
 async def test_joins_can_be_retrieved_as_named_tuples(user, members):
     results = (
         await mapper.query_table(users)

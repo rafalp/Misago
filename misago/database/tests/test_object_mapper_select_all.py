@@ -125,3 +125,21 @@ async def test_results_can_be_ordered(user, admin):
 async def test_results_can_be_reverse_ordered(user, admin):
     results = await mapper.query_table(users).order_by("-name").all()
     assert results == [user, admin]
+
+
+@pytest.mark.asyncio
+async def test_results_can_be_limited(user, admin):
+    results = await mapper.query_table(users).order_by("name").limit(1).all()
+    assert results == [admin]
+
+
+@pytest.mark.asyncio
+async def test_results_can_be_offset(user, admin):
+    results = await mapper.query_table(users).order_by("name").offset(1).all()
+    assert results == [user]
+
+
+@pytest.mark.asyncio
+async def test_results_can_be_offset_limited(user, admin):
+    results = await mapper.query_table(users).order_by("name").offset(1).limit(1).all()
+    assert results == [user]
