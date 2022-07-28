@@ -1,6 +1,6 @@
 from collections import namedtuple
 from dataclasses import dataclass, replace
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Type, Union
 
 from sqlalchemy import asc, desc, func
 from sqlalchemy.sql import (
@@ -22,9 +22,9 @@ class ObjectMapper:
         self.tables = {}
         self.mappings = {}
 
-    def set_mapping(self, table: TableClause, repr: Union[Type, dict]):
+    def set_mapping(self, table: TableClause, repr_: Union[Type, dict]):
         self.tables[table.name] = table
-        self.mappings[table.name] = repr
+        self.mappings[table.name] = repr_
 
     def query_table(self, table: TableClause) -> "ObjectMapperQuery":
         state = ObjectMapperQueryState(table)
@@ -278,8 +278,8 @@ async def select_from_one_table(
         if named:
             mapping = namedtuple("Result", columns)
             return [mapping(**row) for row in rows]
-        else:
-            return [tuple(row.values()) for row in rows]
+
+        return [tuple(row.values()) for row in rows]
 
     mapping = orm.mappings.get(state.table.name, dict)
     return [mapping(**row) for row in rows]
