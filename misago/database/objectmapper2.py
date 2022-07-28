@@ -42,6 +42,7 @@ class ObjectMapperQueryState:
     order_by: Optional[Sequence[str]] = None
     offset: Optional[int] = None
     limit: Optional[int] = None
+    subquery: Optional[str] = None
 
 
 class ObjectMapperQuery:
@@ -217,6 +218,25 @@ class ObjectMapperQuery:
             return await select_with_joins_anonymous_columns(self.state, columns)
 
         return await select_with_joins(self.orm, self.state)
+
+    def subquery(self, return_column: str) -> "ObjectMapperQuery":
+        if "." in return_column:
+            join_name, column = column.rsplit(".", 1)
+            if join_name not in self.state.join_tables:
+                raise InvalidJoinError(join_name, self.state)
+
+            validate_column(self.state.join_tables[join_name], column)
+        else:
+            validate_column(self.state.table, return_column)
+
+        new_state = replace(self.state, subquery=return_column)
+        return ObjectMapperQuery(self.orm, new_state)
+
+    def as_expression(self):
+        query = select(self.state.table.c[self.state.subquery])
+        query = filter_query(self.state, query)
+        query = slice_query(self.state, query)
+        return query
 
 
 class ObjectMapperRootQuery(ObjectMapperQuery):
@@ -504,7 +524,12 @@ def filter_query(
                         col_name, expression = filter_col.split("__")
                         col = get_column(state, col_name, in_join)
                         if expression == "in":
-                            query = query.where(col.in_(filter_value))
+                            if isinstance(filter_value, ObjectMapperQuery):
+                                query = query.where(
+                                    col.in_(filter_value.as_expression())
+                                )
+                            else:
+                                query = query.where(col.in_(filter_value))
                         elif expression == "gte":
                             query = query.where(col >= filter_value)
                         elif expression == "gt":
@@ -539,7 +564,12 @@ def filter_query(
                         col_name, expression = filter_col.split("__")
                         col = get_column(state, col_name, in_join)
                         if expression == "in":
-                            query = query.where(not_(col.in_(filter_value)))
+                            if isinstance(filter_value, ObjectMapperQuery):
+                                query = query.where(
+                                    not_(col.in_(filter_value.as_expression()))
+                                )
+                            else:
+                                query = query.where(not_(col.in_(filter_value)))
                         elif expression == "gte":
                             query = query.where(col < filter_value)
                         elif expression == "gt":
@@ -600,6 +630,15 @@ def validate_conditions(state: ObjectMapperQueryState, conditions: Sequence[str]
             validate_column(state.join_tables[join_path], field[0])
         else:
             validate_column(state.table, condition)
+
+
+class InvalidJoinError(LookupError):
+    def __init__(self, join_name: str, state: ObjectMapperQueryState):
+        msg = (
+            f"'{join_name}' is not a specified join for query. "
+            f"Specified joins: {state.join}"
+        )
+        super().__init__(msg)
 
 
 class InvalidColumnError(LookupError):
