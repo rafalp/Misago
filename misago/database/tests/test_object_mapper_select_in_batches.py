@@ -28,18 +28,15 @@ async def test_empty_table_can_be_batched(db):
 async def test_small_table_can_be_batched(db):
     await root_query.delete_all()
 
-    items = []
     for i in range(1, 6):
-        items.append(
-            await root_query.insert(
-                {
-                    "name": f"#{i}",
-                    "extensions": [],
-                    "mimetypes": [],
-                    "size_limit": None,
-                    "is_active": True,
-                },
-            )
+        await root_query.insert(
+            {
+                "name": f"#{i}",
+                "extensions": [],
+                "mimetypes": [],
+                "size_limit": None,
+                "is_active": True,
+            },
         )
 
     results = await consume_generator(root_query.batch())
@@ -50,18 +47,15 @@ async def test_small_table_can_be_batched(db):
 async def test_small_table_can_be_batched_in_ascending_order(db):
     await root_query.delete_all()
 
-    items = []
     for i in range(1, 6):
-        items.append(
-            await root_query.insert(
-                {
-                    "name": f"#{i}",
-                    "extensions": [],
-                    "mimetypes": [],
-                    "size_limit": None,
-                    "is_active": True,
-                },
-            )
+        await root_query.insert(
+            {
+                "name": f"#{i}",
+                "extensions": [],
+                "mimetypes": [],
+                "size_limit": None,
+                "is_active": True,
+            },
         )
 
     results = await consume_generator(root_query.batch(ascending=True))
@@ -72,18 +66,15 @@ async def test_small_table_can_be_batched_in_ascending_order(db):
 async def test_large_table_can_be_batched(db):
     await root_query.delete_all()
 
-    items = []
     for i in range(1, 41):
-        items.append(
-            await root_query.insert(
-                {
-                    "name": f"#{i}",
-                    "extensions": [],
-                    "mimetypes": [],
-                    "size_limit": None,
-                    "is_active": True,
-                },
-            )
+        await root_query.insert(
+            {
+                "name": f"#{i}",
+                "extensions": [],
+                "mimetypes": [],
+                "size_limit": None,
+                "is_active": True,
+            },
         )
 
     results = await consume_generator(root_query.batch())
@@ -94,19 +85,37 @@ async def test_large_table_can_be_batched(db):
 async def test_large_table_can_be_batched_in_ascending_order(db):
     await root_query.delete_all()
 
-    items = []
     for i in range(1, 41):
-        items.append(
-            await root_query.insert(
-                {
-                    "name": f"#{i}",
-                    "extensions": [],
-                    "mimetypes": [],
-                    "size_limit": None,
-                    "is_active": True,
-                },
-            )
+        await root_query.insert(
+            {
+                "name": f"#{i}",
+                "extensions": [],
+                "mimetypes": [],
+                "size_limit": None,
+                "is_active": True,
+            },
         )
 
     results = await consume_generator(root_query.batch(ascending=True))
     assert results == [f"#{i}" for i in range(1, 41)]
+
+
+@pytest.mark.asyncio
+async def test_filtered_query_can_be_batched(db):
+    await root_query.delete_all()
+
+    for i in range(1, 41):
+        await root_query.insert(
+            {
+                "name": f"#{i}",
+                "extensions": [],
+                "mimetypes": [],
+                "size_limit": None,
+                "is_active": bool(i % 2),
+            },
+        )
+
+    results = await consume_generator(
+        root_query.filter(is_active=True).batch(step_size=10)
+    )
+    assert results == [f"#{i}" for i in reversed(range(1, 41)) if i % 2 != 0]

@@ -168,7 +168,7 @@ class ObjectMapperQuery:
         self,
         *columns: str,
         cursor_column: str = "id",
-        batch_size: int = 20,
+        step_size: int = 20,
         ascending: bool = False,
     ):
         cursor = None
@@ -177,18 +177,19 @@ class ObjectMapperQuery:
         base_query = (
             self.order_by(cursor_column if ascending else "-" + cursor_column)
             .offset(0)
-            .limit(batch_size + 1)
+            .limit(step_size + 1)
         )
 
         loop = True
         while loop:
-            query = base_query.limit(batch_size + 1)
             if cursor:
                 query = query.filter(**{cursor_clause: cursor})
+            else:
+                query = base_query
 
             results = list(await query.all(*columns))
-            if len(results) > batch_size:
-                results = results[:batch_size]
+            if len(results) > step_size:
+                results = results[:step_size]
                 last_result = results[-1]
                 if isinstance(last_result, dict):
                     cursor = last_result[cursor_column]
