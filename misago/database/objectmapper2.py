@@ -169,13 +169,13 @@ class ObjectMapperQuery:
         *columns: str,
         cursor_column: str = "id",
         batch_size: int = 20,
-        asc: bool = False,
+        ascending: bool = False,
     ):
         cursor = None
-        cursor_clause = cursor_column + ("__gt" if asc else "__lt")
+        cursor_clause = cursor_column + ("__gt" if ascending else "__lt")
 
         base_query = (
-            self.order_by(cursor_column if asc else "-" + cursor_column)
+            self.order_by(cursor_column if ascending else "-" + cursor_column)
             .offset(0)
             .limit(batch_size + 1)
         )
@@ -186,15 +186,19 @@ class ObjectMapperQuery:
             if cursor:
                 query = query.filter(**{cursor_clause: cursor})
 
-            items = list(await query.all(*columns))
-            if len(items) > batch_size:
-                items = items[:batch_size]
-                cursor = items[-1].id
+            results = list(await query.all(*columns))
+            if len(results) > batch_size:
+                results = results[:batch_size]
+                last_result = results[-1]
+                if isinstance(last_result, dict):
+                    cursor = last_result[cursor_column]
+                else:
+                    cursor = getattr(last_result, cursor_column)
             else:
                 loop = False
 
-            for item in items:
-                yield item
+            for result in results:
+                yield result
 
     async def all(self, *columns: str, named: bool = False) -> List[Any]:
         if not self.state.join:
@@ -276,7 +280,7 @@ async def select_from_one_table(
         else:
             return [tuple(row.values()) for row in rows]
 
-    mapping = orm.mappings.get(state.table.name)
+    mapping = orm.mappings.get(state.table.name, dict)
     return [mapping(**row) for row in rows]
 
 
