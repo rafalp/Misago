@@ -58,6 +58,7 @@ class ObjectMapperQuery:
         if expressions:
             filters.extend(expressions)
         if conditions:
+            validate_conditions(self.state, conditions)
             filters.extend([conditions])
         new_state = replace(self.state, filter=filters)
         return ObjectMapperQuery(self.orm, new_state)
@@ -219,21 +220,41 @@ class ObjectMapperQuery:
 
         return await select_with_joins(self.orm, self.state)
 
-    def subquery(self, return_column: str) -> "ObjectMapperQuery":
-        if "." in return_column:
-            join_name, column = column.rsplit(".", 1)
-            if join_name not in self.state.join_tables:
-                raise InvalidJoinError(join_name, self.state)
-
-            validate_column(self.state.join_tables[join_name], column)
+    def subquery(self, return_column: Optional[str] = None) -> "ObjectMapperQuery":
+        if return_column:
+            if "." in return_column:
+                join_name, column = return_column.rsplit(".", 1)
+                validate_join(self.state, join_name)
+                validate_column(self.state.join_tables[join_name], column)
+            else:
+                validate_column(self.state.table, return_column)
         else:
-            validate_column(self.state.table, return_column)
+            if self.state.join:
+                return_column = self.state.join_root.primary_key.columns[0].name
+            else:
+                return_column = self.state.table.primary_key.columns[0].name
 
         new_state = replace(self.state, subquery=return_column)
         return ObjectMapperQuery(self.orm, new_state)
 
-    def as_expression(self):
-        query = select(self.state.table.c[self.state.subquery])
+    def as_select_expression(self):
+        subquery = self.state.subquery
+        if self.state.join:
+            if "." in subquery:
+                join_name, column = subquery.rsplit(".", 1)
+                return get_select_join_query(
+                    self.state,
+                    [self.state.join_tables[join_name].c[column]],
+                    for_subquery=True,
+                )
+
+            return get_select_join_query(
+                self.state,
+                [self.state.join_root.c[subquery]],
+                for_subquery=True,
+            )
+
+        query = select(self.state.table.c[subquery])
         query = filter_query(self.state, query)
         query = slice_query(self.state, query)
         return query
@@ -475,12 +496,15 @@ async def select_with_joins_anonymous_columns(
 
 
 def get_select_join_query(
-    state: ObjectMapperQueryState, columns: Sequence[ColumnElement]
+    state: ObjectMapperQueryState,
+    columns: Sequence[ColumnElement],
+    for_subquery: bool = False,
 ) -> ClauseElement:
     query = select(columns).select_from(get_join_select_from(state))
     query = filter_query(state, query, in_join=True)
     query = slice_query(state, query)
-    query = order_query(state, query, in_join=True)
+    if not for_subquery:
+        query = order_query(state, query, in_join=True)
     return query
 
 
@@ -510,7 +534,7 @@ def get_column(
         return state.table.c[name]
 
     join_name, name = name.rsplit(".", 1)
-    return state.join[join_name].table.c[name]
+    return state.join_tables[join_name].c[name]
 
 
 def filter_query(
@@ -526,7 +550,7 @@ def filter_query(
                         if expression == "in":
                             if isinstance(filter_value, ObjectMapperQuery):
                                 query = query.where(
-                                    col.in_(filter_value.as_expression())
+                                    col.in_(filter_value.as_select_expression())
                                 )
                             else:
                                 query = query.where(col.in_(filter_value))
@@ -566,7 +590,7 @@ def filter_query(
                         if expression == "in":
                             if isinstance(filter_value, ObjectMapperQuery):
                                 query = query.where(
-                                    not_(col.in_(filter_value.as_expression()))
+                                    not_(col.in_(filter_value.as_select_expression()))
                                 )
                             else:
                                 query = query.where(not_(col.in_(filter_value)))
@@ -626,8 +650,9 @@ def validate_conditions(state: ObjectMapperQueryState, conditions: Sequence[str]
         if "__" in condition:
             condition, _ = condition.split("__", 1)
         if "." in condition:
-            join_path, field = condition.rsplit(".", 1)
-            validate_column(state.join_tables[join_path], field[0])
+            join_name, field = condition.rsplit(".", 1)
+            validate_join(state, join_name)
+            validate_column(state.join_tables[join_name].element, field)
         else:
             validate_column(state.table, condition)
 
@@ -660,3 +685,8 @@ def validate_columns(table: TableClause, columns: Iterable[str]):
 def validate_column(table: TableClause, col_name: str):
     if col_name not in table.c:
         raise InvalidColumnError(col_name, table)
+
+
+def validate_join(state: ObjectMapperQueryState, join_name: str):
+    if not state.join or join_name not in state.join_tables:
+        raise InvalidJoinError(join_name, state)

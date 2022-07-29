@@ -9,7 +9,7 @@ from ...tables import (
 )
 from ...threads.models import Post, Thread
 from ...users.models import User, UserGroup
-from ..objectmapper2 import InvalidColumnError, ObjectMapper
+from ..objectmapper2 import InvalidColumnError, InvalidJoinError, ObjectMapper
 
 mapper = ObjectMapper()
 
@@ -109,8 +109,12 @@ async def test_all_objects_can_be_retrieved_with_multiple_joins(
     )
     assert len(results) == 3
     for m, u, g in results:
-        assert m["user_id"] == u.id
-        assert m["group_id"] == g.id
+        assert m == {
+            "id": m["id"],
+            "is_main": True,
+            "user_id": u.id,
+            "group_id": g.id,
+        }
 
 
 @pytest.mark.asyncio
@@ -130,15 +134,42 @@ async def test_joins_can_be_filtered(user, admin, admins, members):
     results = (
         await mapper.query_table(users).join_on("group_id").filter(is_admin=True).all()
     )
-    assert results == [(admin, admins)]
+    assert len(results) == 1
+    assert len(results[0]) == 2
+    assert results[0][0].id == admin.id
+    assert results[0][1].id == admins.id
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_filtered_over_relation(user, admin, admins, members):
+    results = (
+        await mapper.query_table(users)
+        .join_on("group_id")
+        .filter(**{"group_id.is_admin": True})
+        .all()
+    )
+    assert len(results) == 1
+    assert len(results[0]) == 2
+    assert results[0][0].id == admin.id
+    assert results[0][1].id == admins.id
+
+
+@pytest.mark.asyncio
+async def test_select_raises_invalid_join_error_if_filtered_over_missing_join(db):
+    with pytest.raises(InvalidJoinError):
+        (await mapper.query_table(users).filter(**{"not_join.is_admin": True}).all())
 
 
 @pytest.mark.asyncio
 async def test_joins_can_be_ordered(user, admin, admins, members):
-    results = (
-        await mapper.query_table(users).join_on("group_id").order_by("is_admin").all()
-    )
-    assert results == [(admin, admins), (user, members)]
+    results = await mapper.query_table(users).join_on("group_id").order_by("name").all()
+    assert len(results) == 2
+    assert len(results[0]) == 2
+    assert results[0][0].id == admin.id
+    assert results[0][1].id == admins.id
+    assert len(results[1]) == 2
+    assert results[1][0].id == user.id
+    assert results[1][1].id == members.id
 
 
 @pytest.mark.asyncio
@@ -146,11 +177,14 @@ async def test_joins_can_be_limited(user, admin, admins, members):
     results = (
         await mapper.query_table(users)
         .join_on("group_id")
-        .order_by("is_admin")
+        .order_by("name")
         .limit(1)
         .all()
     )
-    assert results == [(admin, admins)]
+    assert len(results) == 1
+    assert len(results[0]) == 2
+    assert results[0][0].id == admin.id
+    assert results[0][1].id == admins.id
 
 
 @pytest.mark.asyncio
@@ -158,11 +192,14 @@ async def test_joins_can_be_offset(user, admin, admins, members):
     results = (
         await mapper.query_table(users)
         .join_on("group_id")
-        .order_by("is_admin")
+        .order_by("name")
         .offset(1)
         .all()
     )
-    assert results == [(user, members)]
+    assert len(results) == 1
+    assert len(results[0]) == 2
+    assert results[0][0].id == user.id
+    assert results[0][1].id == members.id
 
 
 @pytest.mark.asyncio
@@ -170,12 +207,15 @@ async def test_joins_can_be_offset_limited(user, admin, admins, members):
     results = (
         await mapper.query_table(users)
         .join_on("group_id")
-        .order_by("is_admin")
+        .order_by("name")
         .offset(1)
         .limit(1)
         .all()
     )
-    assert results == [(user, members)]
+    assert len(results) == 1
+    assert len(results[0]) == 2
+    assert results[0][0].id == user.id
+    assert results[0][1].id == members.id
 
 
 @pytest.mark.asyncio
@@ -189,8 +229,6 @@ async def test_joins_can_be_retrieved_as_named_tuples(user, members):
     assert len(results[0]) == 2
     assert results[0][0].id == user.id
     assert results[0][0].email == user.email
-    assert results[0][1].id == members.id
-    assert results[0][1].name == members.name
 
 
 @pytest.mark.asyncio
