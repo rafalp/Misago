@@ -1,8 +1,9 @@
 import pytest
 
-from ...attachments.models import AttachmentType
-from ...tables import attachment_types
-from ..objectmapper2 import InvalidColumnError, ObjectMapper
+from ....attachments.models import AttachmentType
+from ....tables import attachment_types
+from ..exceptions import InvalidColumnError
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 

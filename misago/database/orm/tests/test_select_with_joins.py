@@ -1,15 +1,16 @@
 import pytest
 
-from ...tables import (
+from ....tables import (
     threads,
     posts,
     users,
     user_group_memberships,
     user_groups,
 )
-from ...threads.models import Post, Thread
-from ...users.models import User, UserGroup
-from ..objectmapper2 import InvalidColumnError, InvalidJoinError, ObjectMapper
+from ....threads.models import Post, Thread
+from ....users.models import User, UserGroup
+from ..exceptions import InvalidColumnError, InvalidJoinError
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 
@@ -200,6 +201,22 @@ async def test_joins_can_be_offset(user, admin, admins, members):
     assert len(results[0]) == 2
     assert results[0][0].id == user.id
     assert results[0][1].id == members.id
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_counted(user, admin, admins, members):
+    result = (
+        await mapper.query_table(users).join_on("group_id").order_by("name").count()
+    )
+    assert result == 2
+
+
+@pytest.mark.asyncio
+async def test_joins_can_be_tested_for_existence(user, admin, admins, members):
+    result = (
+        await mapper.query_table(users).join_on("group_id").order_by("name").exists()
+    )
+    assert result is True
 
 
 @pytest.mark.asyncio

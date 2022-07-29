@@ -2,8 +2,8 @@ from typing import List
 
 import pytest
 
-from ...tables import attachment_types
-from ..objectmapper2 import ObjectMapper
+from ....tables import attachment_types
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 root_query = mapper.query_table(attachment_types)

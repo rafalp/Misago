@@ -1,13 +1,13 @@
 import pytest
 
-from ...tables import users, user_groups
-from ...users.models import User, UserGroup
-from ..objectmapper2 import (
+from ....tables import users, user_groups
+from ....users.models import User, UserGroup
+from ..exceptions import (
     DoesNotExist,
     InvalidColumnError,
     MultipleObjectsReturned,
-    ObjectMapper,
 )
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 

@@ -1,8 +1,8 @@
 import pytest
 
-from ...tables import users, user_groups
-from ...users.models import User, UserGroup
-from ..objectmapper2 import ObjectMapper
+from ....tables import users, user_groups
+from ....users.models import User, UserGroup
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 

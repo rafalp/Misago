@@ -1,9 +1,10 @@
 import pytest
 
-from ...tables import posts, threads, users
-from ...threads.models import Post
-from ...users.models import User
-from ..objectmapper2 import InvalidColumnError, InvalidJoinError, ObjectMapper
+from ....tables import posts, threads, users
+from ....threads.models import Post
+from ....users.models import User
+from ..exceptions import InvalidColumnError, InvalidJoinError
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 

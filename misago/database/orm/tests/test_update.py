@@ -1,8 +1,9 @@
 import pytest
 
-from ...tables import users
-from ...users.models import User
-from ..objectmapper2 import InvalidColumnError, ObjectMapper
+from ....tables import users
+from ....users.models import User
+from ..exceptions import InvalidColumnError
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 mapper.set_mapping(users, User)

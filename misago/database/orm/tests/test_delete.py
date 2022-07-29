@@ -1,8 +1,8 @@
 import pytest
 
-from ...tables import users
-from ...users.models import User
-from ..objectmapper2 import ObjectMapper
+from ....tables import users
+from ....users.models import User
+from ..mapper import ObjectMapper
 
 mapper = ObjectMapper()
 mapper.set_mapping(users, User)
