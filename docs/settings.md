@@ -23,9 +23,21 @@ Static settings values are accessible throught the attributes of `misago.conf.se
 Dynamic settings
 ----------------
 
+- `avatar_upload_max_size: int` - Limit of uploaded image file size, in kilobytes.
+- `bulk_action_limit: int` - Maximum allowed number of items in bulk action (close threads, delete users).
+- `enable_site_wizard: bool` - Controls if site wizard UI and `setupSite` graphQL mutations are available.
+- `forum_index_header: str` - Header text on forum index.
+- `forum_index_threads: bool` - If `True`, display threads list on forum index. Categories otherwise.
+- `forum_index_title: str` - Page title on forum index.
 - `forum_name: str` - Forum name.
 - `jwt_exp: int` - Time for which JWT tokens stay valid, in seconds.
 - `jwt_secret: str` - JWT secret. Should be at least 64 characters long to be secure.
 - `password_min_length: int` - Min. allowed password length.
+- `post_min_length: int` - Min. required length of post body.
+- `posts_per_page: int` - Number of posts displayed per page on thread view.
+- `posts_per_page_orphans: int` - Max. number of orphaned posts that should rolled up to previous page.
+- `thread_title_min_length: int` - Min. required length of thread title.
+- `thread_title_max_length: int` - Max. allowed length of thread title.
+- `threads_per_page: int` - Max number of threads displayed on single page of threads list.
 - `username_max_length: int` - Min. allowed username length.
 - `username_min_length: int` - Max. allowed username length.
