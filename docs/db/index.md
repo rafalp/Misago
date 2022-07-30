@@ -13,7 +13,7 @@ Misago uses custom light-weight imperative ORM that abstracts away [SQL Alchemy'
 
 This ORM knows about [SQL Alchemy's tables](https://docs.sqlalchemy.org/en/20/core/metadata.html) and knows what Python types (mostly dataclasses but also plain dicts for simple M2M tables) to use to represent those tables rows.
 
-Misago database structure is located in [`misago.tables`](../misago/tables.py) module.
+Misago database structure is located in [`misago.tables`](/misago/tables.py) module.
 
 
 ## Migrations
