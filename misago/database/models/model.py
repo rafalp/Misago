@@ -1,12 +1,16 @@
 from dataclasses import replace
-from typing import ClassVar
+from typing import ClassVar, Type
 
 from sqlalchemy.sql import TableClause
 
+from .exceptions import DoesNotExist, MultipleObjectsReturned
 from .query import RootQuery
 
 
 class Model:
+    DoesNotExist: ClassVar[Type[DoesNotExist]]
+    MultipleObjectsReturned: ClassVar[Type[MultipleObjectsReturned]]
+
     id: int
 
     query: ClassVar[RootQuery]

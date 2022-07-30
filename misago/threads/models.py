@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Any, Awaitable, Dict, Optional
 
 from ..categories.models import Category
-from ..database import Model, ObjectMapperQuery, model_registry, register_model
+from ..database.models import Model, Query, mapper_registry, register_model
 from ..richtext import RichText
 from ..tables import posts, threads
 from ..users.models import User
@@ -32,17 +32,17 @@ class Thread(Model):
     last_poster_id: Optional[int]
 
     @property
-    def posts_query(self) -> ObjectMapperQuery:
-        return model_registry["Post"].filter(thread_id=self.id)
+    def posts_query(self) -> Query:
+        return mapper_registry.query_model("Post").filter(thread_id=self.id)
 
     async def fetch_first_post(self) -> Optional["Post"]:
         if self.first_post_id:
-            return await model_registry["Post"].one(id=self.first_post_id)
+            return await mapper_registry.query_model("Post").one(id=self.first_post_id)
         return None
 
     async def fetch_last_post(self) -> Optional["Post"]:
         if self.last_post_id:
-            return await model_registry["Post"].one(id=self.last_post_id)
+            return await mapper_registry.query_model("Post").one(id=self.last_post_id)
         return None
 
     @classmethod

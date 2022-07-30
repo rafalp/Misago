@@ -11,6 +11,7 @@ class QueryState:
     table: TableClause
     filter: Optional[List[ClauseElement | dict]] = None
     exclude: Optional[List[ClauseElement | dict]] = None
+    distinct: bool = False
     join: Optional[List[str]] = None
     join_root: Optional[TableClause] = None
     join_tables: Optional[Dict[str, TableClause]] = None

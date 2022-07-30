@@ -5,7 +5,7 @@ from typing import Any, Awaitable, Dict, Generic, Iterable, List, Optional, Type
 from aiodataloader import DataLoader
 
 from ..context import Context
-from ..database import Model
+from ..database.models import Model
 from .batchloadfunction import BatchLoadFunction
 
 LoadedType = TypeVar("LoadedType", bound=Model)

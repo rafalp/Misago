@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Any, List, Optional, Tuple, Union, cast
+from typing import Any, List, Optional, Tuple, cast
 
 from ...context import Context
-from ...database import ObjectMapper, ObjectMapperQuery
+from ...database.models import Query
 from .cleanargs import ValidationError, clean_after_before, clean_first_last
 
 
@@ -15,7 +15,7 @@ class Connection:
     async def resolve(
         self,
         context: Optional[Context],
-        query: Union[ObjectMapper, ObjectMapperQuery],
+        query: Query,
         data: dict,
         limit: int,
     ) -> "ConnectionResult":
@@ -38,7 +38,7 @@ class Connection:
 
     async def slice_query(
         self,
-        query: Union[ObjectMapper, ObjectMapperQuery],
+        query: Query,
         data: dict,
         sort_by: str,
         limit: int,
@@ -109,7 +109,7 @@ class Connection:
 
 @dataclass
 class ConnectionResult:
-    query: Union[ObjectMapper, ObjectMapperQuery]
+    query: Query
 
     edges: List["Edge"]
     has_previous_page: bool

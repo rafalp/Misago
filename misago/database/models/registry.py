@@ -2,6 +2,7 @@ from typing import Dict, Type
 
 from sqlalchemy.sql import TableClause
 
+from .exceptions import DoesNotExist, MultipleObjectsReturned
 from .model import Model
 from .query import RootQuery
 from .querystate import QueryState
@@ -24,6 +25,12 @@ class MapperRegistry:
     def set_model(self, name: str, model: Type | Type[dict]):
         self.models[name] = model
 
+    def query_model(self, name: str) -> "RootQuery":
+        try:
+            return self.models[name].query  # type: ignore
+        except AttributeError:
+            return self.query_table(self.tables[name])
+
     def query_table(self, table: TableClause) -> "RootQuery":
         state = QueryState(table)
         return RootQuery(self, state)
@@ -40,6 +47,22 @@ def register_model(name: str, table: TableClause):
         model.query = mapper_registry.query_table(table)
         model.table = table
 
+        if issubclass(model, Model):
+            create_model_exceptions(model, table)
+
         return model
 
     return register
+
+
+def create_model_exceptions(model: Type[Model], table: TableClause):
+    model.DoesNotExist = type(
+        f"{model.__name__}DoesNotExist",
+        (DoesNotExist,),
+        {},
+    )
+    model.MultipleObjectsReturned = type(
+        f"{model.__name__}MultipleObjectsReturned",
+        (MultipleObjectsReturned,),
+        {},
+    )

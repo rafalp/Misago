@@ -1,5 +1,6 @@
 from typing import Awaitable, Iterable, List, Optional
 
+from ..database.models import DoesNotExist
 from .models import Category, CategoryType
 
 
@@ -28,5 +29,5 @@ async def get_category_by_id(
 ) -> Optional[Category]:
     try:
         return await Category.query.one(type=category_type, id=category_id)
-    except Category.DoesNotExist:
+    except DoesNotExist:
         return None

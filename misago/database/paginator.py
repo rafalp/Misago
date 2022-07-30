@@ -1,8 +1,8 @@
 import math
 from dataclasses import dataclass
-from typing import Optional, Union, cast
+from typing import Optional, cast
 
-from .objectmapper import ObjectMapper, ObjectMapperQuery
+from .models import Query
 
 
 class PageInvalidError(Exception):
@@ -29,7 +29,7 @@ class PageInfo:
 
 
 class Paginator:
-    _query: Union[ObjectMapper, ObjectMapperQuery]
+    _query: Query
     _initialized: bool
     total_count: int
     total_pages: int
@@ -39,7 +39,7 @@ class Paginator:
 
     def __init__(
         self,
-        query: Union[ObjectMapper, ObjectMapperQuery],
+        query: Query,
         per_page: int,
         orphans: int = 0,
         *,

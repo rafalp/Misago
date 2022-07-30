@@ -35,6 +35,14 @@ async def test_all_objects_can_be_retrieved_as_tuples(user, admin):
 
 
 @pytest.mark.asyncio
+async def test_all_objects_can_be_retrieved_as_flat_list(user, admin):
+    results = await mapper_registry.query_table(users).all_flat("email")
+    assert len(results) == 2
+    assert admin.email in results
+    assert user.email in results
+
+
+@pytest.mark.asyncio
 async def test_no_objects_can_be_retrieved(db):
     results = await mapper_registry.query_table(users).all()
     assert results == []

@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, TypeAlias, cast
 
-from sqlalchemy.sql import ClauseElement, ColumnElement, not_
+from sqlalchemy.sql import ClauseElement, ColumnElement, not_, or_
 
 from .getcolumn import get_column
 from .querystate import QueryState
@@ -82,6 +82,11 @@ def get_filter_expression(col: ColumnElement, clause: str, value: Any) -> Clause
     if clause == "ilike":
         return ilike(col, value)
 
+    if clause == "simplesearch":
+        return simplesearch(col, value)
+    if clause == "isimplesearch":
+        return simplesearch(col, value, case_sensitive=False)
+
     if clause == "isnull":
         if value:
             return col.is_(None)
@@ -107,8 +112,11 @@ def apply_excludes(
                     col = get_column(state, filter_col, in_join)
                     if filter_value is True or filter_value is False:
                         query = query.where(col == (not filter_value))
+                    elif filter_value is None:
+                        query = query.where(col.isnot(None))
                     else:
-                        query = query.where(col != filter_value)
+                        # col != 3 OR col IS NULL
+                        query = query.where(or_(col != filter_value, col.is_(None)))
         else:
             query = query.where(not_(exclude_clause))
 
@@ -133,32 +141,32 @@ def get_exclude_expression(
     if clause == "lt":
         return col >= value
 
-    if clause == "contains":
-        return not_(contains(col, value))
-    if clause == "icontains":
-        return not_(contains(col, value, case_sensitive=False))
-
-    if clause == "startswith":
-        return not_(startswith(col, value))
-    if clause == "istartswith":
-        return not_(startswith(col, value, case_sensitive=False))
-
-    if clause == "endswith":
-        return not_(endswith(col, value))
-    if clause == "iendswith":
-        return not_(endswith(col, value, case_sensitive=False))
-
-    if clause == "ilike":
-        return not_(ilike(col, value))
     if clause == "isnull":
         if value:
             return col.isnot(None)
         return col.is_(None)
 
-    raise ValueError(f"Unknown clause '{clause}'")
+    return not_(get_filter_expression(col, clause, value))
 
 
 ESCAPE_CHARACTER = "\\"
+
+
+def simplesearch(
+    column: ColumnElement, value: str, case_sensitive: bool = True
+) -> ClauseElement:
+    start = value.endswith("*")
+    end = value.startswith("*")
+    value = escape_value(value.strip("*").strip())
+
+    if start and end:
+        return contains(column, value, case_sensitive)
+    if start:
+        return startswith(column, value, case_sensitive)
+    if end:
+        return endswith(column, value, case_sensitive)
+
+    return match(column, value, case_sensitive)
 
 
 def contains(

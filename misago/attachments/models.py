@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any, Awaitable, Dict, List, Optional
 
-from ..database import Model, register_model
+from ..database.models import Model, register_model
 from ..tables import attachment_types
 
 

@@ -34,10 +34,12 @@ async def select_from_one_table(
     else:
         query = state.table.select(None)
 
+    if state.distinct:
+        query = query.distinct()
+
     query = filter_query(state, query)
     query = slice_query(state, query)
     query = order_query(state, query)
-
     records = await database.fetch_all(query)
 
     mapping: DBMapping
@@ -247,6 +249,8 @@ def get_select_join_query(
     ordered: bool = True,
 ) -> ClauseElement:
     query = select(columns).select_from(get_join_select_from(state))
+    if state.distinct:
+        query = query.distinct()
     query = filter_query(state, query, in_join=True)
     query = slice_query(state, query)
     if ordered:

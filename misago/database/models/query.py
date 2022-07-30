@@ -35,6 +35,17 @@ class Query:
         self.mapper_registry = mapper_registry
         self.state = state
 
+    @property
+    def table(self):
+        return self.state.join_root or self.state.table
+
+    def distinct(self) -> "Query":
+        if self.state.distinct:
+            return self
+
+        new_state = replace(self.state, distinct=True)
+        return Query(self.mapper_registry, new_state)
+
     def filter(self, *expressions, **conditions) -> "Query":
         filters = list(self.state.filter or [])
         if expressions:
@@ -102,11 +113,11 @@ class Query:
         new_state = replace(self.state, order_by=columns or None)
         return Query(self.mapper_registry, new_state)
 
-    async def update(self, values: dict):
+    async def update(self, **values: Any):
         validate_columns(self.state.table, values.keys())
         query = self.state.table.update(None).values(values)
         query = filter_query(self.state, query)
-        return await database.execute(query)
+        await database.execute(query)
 
     async def delete(self):
         query = self.state.table.delete()
@@ -132,18 +143,45 @@ class Query:
         query = self.limit(1)
         return bool(await query.count())
 
-    async def one(self, *columns: str, named: bool = False, **filters: str):
-        query = self.offset(None).limit(2)
+    async def one_flat(self, column: str, **filters: Any):
+        return (await self.one(column, **filters))[0]
+
+    async def one(self, *columns: str, named: bool = False, **filters: Any):
+        query = self.offset(None)
+        if self.state.limit != 1:
+            query = query.limit(2)
         if filters:
             query = query.filter(**filters)
 
         results = await query.all(*columns, named=named)
         if not results:
-            raise DoesNotExist()
+            mapping = self.mapper_registry.mappings[self.state.table.name]
+            raise getattr(mapping, "DoesNotExist", DoesNotExist)()
         if len(results) > 1:
-            raise MultipleObjectsReturned()
+            mapping = self.mapper_registry.mappings[self.state.table.name]
+            raise getattr(mapping, "MultipleObjectsReturned", MultipleObjectsReturned)()
 
         return results[0]
+
+    async def batch_flat(
+        self,
+        column: str,
+        cursor_column: str = "id",
+        step_size: int = 20,
+        ascending: bool = False,
+    ):
+        generator = self.batch(
+            column,
+            cursor_column,
+            cursor_column=cursor_column,
+            step_size=step_size,
+            ascending=ascending,
+        )
+        async for result in generator:
+            if isinstance(result, dict):
+                yield result[column]
+            else:
+                yield getattr(result, column)
 
     async def batch(
         self,
@@ -168,7 +206,7 @@ class Query:
             else:
                 query = base_query
 
-            results = list(await query.all(*columns))
+            results = list(await query.all(*columns, named=True))
             if len(results) > step_size:
                 results = results[:step_size]
                 last_result = results[-1]
@@ -181,6 +219,9 @@ class Query:
 
             for result in results:
                 yield result
+
+    async def all_flat(self, column: str):
+        return [r[0] for r in await self.all(column)]
 
     async def all(self, *columns: str, named: bool = False) -> List[Any]:
         if not self.state.join:
@@ -245,7 +286,7 @@ class Query:
 
 
 class RootQuery(Query):
-    async def insert(self, values: dict):
+    async def insert(self, **values: Any):
         table = self.state.table
         validate_columns(table, values.keys())
 
@@ -260,6 +301,17 @@ class RootQuery(Query):
     async def bulk_insert(self, values: List[dict]):
         query = self.state.table.insert().values(values)
         await database.execute(query)
+
+    async def update_all(self, **values: Any):
+        validate_columns(self.state.table, values.keys())
+        query = self.state.table.update(None).values(values)
+        await database.execute(query)
+
+    async def update(self, **values: Any):
+        raise NotImplementedError(
+            "'update()' method is not available on root queries. "
+            "To update all objects call 'update_all()'."
+        )
 
     async def delete_all(self):
         await database.execute(self.state.table.delete())

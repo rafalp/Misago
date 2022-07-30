@@ -55,6 +55,12 @@ async def test_one_object_can_be_retrieved_as_tuple(user):
 
 
 @pytest.mark.asyncio
+async def test_one_object_can_be_retrieved_as_single_value(user):
+    result = await mapper_registry.query_table(users).one_flat("email")
+    assert result == user.email
+
+
+@pytest.mark.asyncio
 async def test_error_is_raised_if_column_name_is_invalid(user):
     with pytest.raises(InvalidColumnError):
         await mapper_registry.query_table(users).one("id", "invalid", "email")

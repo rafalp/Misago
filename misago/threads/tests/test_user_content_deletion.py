@@ -33,7 +33,6 @@ async def test_user_posts_are_deleted(category, user):
     thread = await Thread.create(category, "Thread", starter_name="Bob")
     await Post.create(thread, poster_name="Guest")
     user_post = await Post.create(thread, poster=user)
-
     await delete_user_posts(user)
 
     assert await Thread.query.count() == 1

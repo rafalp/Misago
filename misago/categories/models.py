@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import Any, Awaitable, Dict, Optional, Union
 
 from ..context import Context
-from ..database import Model, ObjectMapperQuery, model_registry, register_model
+from ..database.models import Model, Query, mapper_registry, register_model
 from ..tables import categories
 from ..utils.strings import slugify
 
@@ -34,12 +34,12 @@ class Category(Model):
     is_closed: bool = False
 
     @property
-    def posts_query(self) -> ObjectMapperQuery:
-        return model_registry["Post"].filter(category_id=self.id)
+    def posts_query(self) -> Query:
+        return mapper_registry.query_model("Post").filter(category_id=self.id)
 
     @property
-    def threads_query(self) -> ObjectMapperQuery:
-        return model_registry["Thread"].filter(category_id=self.id)
+    def threads_query(self) -> Query:
+        return mapper_registry.query_model("Thread").filter(category_id=self.id)
 
     @classmethod
     def create(

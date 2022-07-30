@@ -3,6 +3,7 @@ from typing import Awaitable, Optional
 from ariadne_graphql_modules import ObjectType, gql
 from graphql import GraphQLResolveInfo
 
+from ...database.models import Query, RootQuery
 from ...users.loaders import users_loader
 from ...users.models import User
 from ..adminqueries import AdminQueries
@@ -65,14 +66,14 @@ class AdminUserQueries(AdminQueries):
     async def resolve_users(
         _, info: GraphQLResolveInfo, **data: dict
     ) -> ConnectionResult:
-        query = User.query
+        query: Query | RootQuery = User.query
         filters = data.get("filter")
 
         if filters:
             if filters.get("name", "").strip():
-                query = query.filter(slug__imatch=filters["name"])
+                query = query.filter(slug__simplesearch=filters["name"].lower())
             if filters.get("email", "").strip():
-                query = query.filter(email__imatch=filters["email"])
+                query = query.filter(email__isimplesearch=filters["email"])
             if filters.get("is_active") is not None:
                 query = query.filter(is_active=filters["is_active"])
             if filters.get("is_admin") is not None:

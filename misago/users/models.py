@@ -7,13 +7,8 @@ from sqlalchemy import select
 from ..avatars.store import delete_user_avatars
 from ..avatars.types import AvatarType
 from ..context import Context
-from ..database import (
-    Model,
-    ObjectMapperQuery,
-    database,
-    model_registry,
-    register_model,
-)
+from ..database import database
+from ..database.models import Model, Query, mapper_registry, register_model
 from ..passwords import check_password, hash_password
 from ..tables import user_groups, user_group_memberships, users
 from ..utils import timezone
@@ -43,12 +38,12 @@ class User(Model):
     extra: dict
 
     @property
-    def posts_query(self) -> ObjectMapperQuery:
-        return model_registry["Post"].filter(poster_id=self.id)
+    def posts_query(self) -> Query:
+        return mapper_registry.query_model("Post").filter(poster_id=self.id)
 
     @property
-    def threads_query(self) -> ObjectMapperQuery:
-        return model_registry["Thread"].filter(starter_id=self.id)
+    def threads_query(self) -> Query:
+        return mapper_registry.query_model("Thread").filter(starter_id=self.id)
 
     @classmethod
     async def create(
@@ -275,7 +270,7 @@ class UserGroup(Model):
         context: Optional[Context] = None,
     ) -> "UserGroup":
         last_group = (
-            await UserGroup.query.limit(1).order_by("-ordering").one("ordering")
+            await UserGroup.query.limit(1).order_by("-ordering").one_flat("ordering")
         )
         ordering = last_group["ordering"] + 1
 

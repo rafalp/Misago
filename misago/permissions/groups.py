@@ -46,9 +46,9 @@ async def get_groups_permissions_action(
         if group.is_moderator:
             append_unique(groups_permissions["core"], CorePermission.MODERATOR)
 
-    core_perms = await permissions_query.filter(group_id__in=state["groups_ids"]).all(
-        "permission", flat=True
-    )
+    core_perms = await permissions_query.filter(
+        group_id__in=state["groups_ids"]
+    ).all_flat("permission")
     groups_permissions["core"] = list(
         sorted(set(groups_permissions["core"] + core_perms))
     )
