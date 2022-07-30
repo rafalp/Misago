@@ -3,15 +3,16 @@ import pytest
 from ....tables import users
 from ....users.models import User
 from ..exceptions import InvalidColumnError
-from ..mapper import ObjectMapper
+from ..registry import MapperRegistry
 
-mapper = ObjectMapper()
-mapper.set_mapping(users, User)
+mapper_registry = MapperRegistry()
+mapper_registry.set_mapping(users, User)
+root_query = mapper_registry.query_table(users)
 
 
 @pytest.mark.asyncio
 async def test_all_rows_can_be_updated(user):
-    await mapper.query_table(users).update({"email": "updated@email.com"})
+    await root_query.update({"email": "updated@email.com"})
 
     user_from_db = await user.fetch_from_db()
     assert user_from_db.email == "updated@email.com"
@@ -19,9 +20,7 @@ async def test_all_rows_can_be_updated(user):
 
 @pytest.mark.asyncio
 async def test_filtered_rows_can_be_updated(user, admin):
-    await mapper.query_table(users).filter(is_admin=False).update(
-        {"email": "updated@email.com"}
-    )
+    await root_query.filter(is_admin=False).update({"email": "updated@email.com"})
 
     user_from_db = await user.fetch_from_db()
     assert user_from_db.email == "updated@email.com"
@@ -33,6 +32,4 @@ async def test_filtered_rows_can_be_updated(user, admin):
 @pytest.mark.asyncio
 async def test_update_raises_error_if_column_name_is_invalid(db):
     with pytest.raises(InvalidColumnError):
-        await mapper.query_table(users).filter(is_admin=False).update(
-            {"invalid": "updated@emai.com"}
-        )
+        await root_query.filter(is_admin=False).update({"invalid": "updated@emai.com"})

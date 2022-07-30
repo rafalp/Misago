@@ -2,12 +2,11 @@ import pytest
 
 from ....tables import users
 from ....users.models import User
-from ..mapper import ObjectMapper
+from ..registry import MapperRegistry
 
-mapper = ObjectMapper()
-
-mapper.set_mapping(users, User)
-root_query = mapper.query_table(users)
+mapper_registry = MapperRegistry()
+mapper_registry.set_mapping(users, User)
+root_query = mapper_registry.query_table(users)
 
 
 @pytest.mark.asyncio

@@ -2,36 +2,37 @@ import pytest
 
 from ....tables import users
 from ....users.models import User
-from ..mapper import ObjectMapper
+from ..registry import MapperRegistry
 
-mapper = ObjectMapper()
-mapper.set_mapping(users, User)
+mapper_registry = MapperRegistry()
+mapper_registry.set_mapping(users, User)
+root_query = mapper_registry.query_table(users)
 
 
 @pytest.mark.asyncio
 async def test_all_objects_can_be_deleted(user, admin):
-    await mapper.query_table(users).delete_all()
+    await root_query.delete_all()
 
-    count = await mapper.query_table(users).count()
+    count = await root_query.count()
     assert count == 0
 
 
 @pytest.mark.asyncio
 async def test_all_objects_cant_be_deleted_on_filtered_query(user, admin):
     with pytest.raises(NotImplementedError):
-        await mapper.query_table(users).filter(is_admin=True).delete_all()
+        await root_query.filter(is_admin=True).delete_all()
 
 
 @pytest.mark.asyncio
 async def test_selected_objects_can_be_deleted(user, admin):
-    org_count = await mapper.query_table(users).count()
-    await mapper.query_table(users).filter(is_admin=True).delete()
+    org_count = await root_query.count()
+    await root_query.filter(is_admin=True).delete()
 
-    new_count = await mapper.query_table(users).count()
+    new_count = await root_query.count()
     assert org_count - 1 == new_count
 
 
 @pytest.mark.asyncio
 async def test_selected_objects_cant_be_deleted_on_root_query(user, admin):
     with pytest.raises(NotImplementedError):
-        await mapper.query_table(users).delete()
+        await root_query.delete()

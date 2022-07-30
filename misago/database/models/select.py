@@ -13,7 +13,7 @@ from .slice import slice_query
 from .validators import validate_columns
 
 if TYPE_CHECKING:
-    from .mapper import ObjectMapper
+    from .registry import MapperRegistry
 
 
 # Result's mapping (Model, Dict, Named Tuple)
@@ -21,7 +21,7 @@ DBMapping: TypeAlias = Any
 
 
 async def select_from_one_table(
-    orm: "ObjectMapper",
+    mapper_registry: "MapperRegistry",
     state: QueryState,
     columns: Sequence[str],
     *,
@@ -49,7 +49,7 @@ async def select_from_one_table(
 
         return [record_tuple(record) for record in records]
 
-    mapping = orm.mappings.get(state.table.name, dict)
+    mapping = mapper_registry.mappings.get(state.table.name, dict)
     return [mapping(**record_dict(record)) for record in records]
 
 
@@ -58,7 +58,7 @@ TablesData: TypeAlias = Sequence[dict]
 
 
 async def select_with_joins(
-    orm: "ObjectMapper",
+    mapper_registry: "MapperRegistry",
     state: QueryState,
 ) -> List[DBMapping]:
     root = cast(TableClause, state.join_root)
@@ -79,12 +79,14 @@ async def select_with_joins(
 
     # Build tuples with primary key names and mappings
     keys: Tuple[str, ...] = (root.primary_key[0].name,)
-    mappings: Tuple[DBMapping, ...] = (orm.mappings.get(state.table.name, dict),)
+    mappings: Tuple[DBMapping, ...] = (
+        mapper_registry.mappings.get(state.table.name, dict),
+    )
 
     for join_on in joins_names:
         join_table = joins_tables[join_on]
         keys += (join_table.primary_key[0].name,)
-        mappings += (orm.mappings.get(join_table.element.name, dict),)
+        mappings += (mapper_registry.mappings.get(join_table.element.name, dict),)
 
     # Fetch results and convert them to models
     types_count = 1 + len(joins_names)

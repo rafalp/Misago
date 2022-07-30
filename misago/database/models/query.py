@@ -24,15 +24,15 @@ from .validators import (
 )
 
 if TYPE_CHECKING:
-    from .mapper import ObjectMapper
+    from .registry import MapperRegistry
 
 
 class Query:
-    orm: "ObjectMapper"
+    mapper_registry: "MapperRegistry"
     state: QueryState
 
-    def __init__(self, orm: "ObjectMapper", state: QueryState):
-        self.orm = orm
+    def __init__(self, mapper_registry: "MapperRegistry", state: QueryState):
+        self.mapper_registry = mapper_registry
         self.state = state
 
     def filter(self, *expressions, **conditions) -> "Query":
@@ -43,7 +43,7 @@ class Query:
             validate_conditions(self.state, conditions)
             filters.extend([conditions])
         new_state = replace(self.state, filter=filters)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def exclude(self, *expressions, **conditions) -> "Query":
         excludes = list(self.state.exclude or [])
@@ -53,7 +53,7 @@ class Query:
             validate_conditions(self.state, conditions)
             excludes.extend([conditions])
         new_state = replace(self.state, exclude=excludes)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def join_on(self, *columns: str) -> "Query":
         if not self.state.join_root:
@@ -88,19 +88,19 @@ class Query:
             new_join.append(join_on)
 
         new_state = replace(self.state, join=new_join, join_tables=new_join_tables)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def offset(self, offset: Optional[int]) -> "Query":
         new_state = replace(self.state, offset=offset)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def limit(self, limit: Optional[int]) -> "Query":
         new_state = replace(self.state, limit=limit)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def order_by(self, *columns: str) -> "Query":
         new_state = replace(self.state, order_by=columns or None)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     async def update(self, values: dict):
         validate_columns(self.state.table, values.keys())
@@ -185,7 +185,7 @@ class Query:
     async def all(self, *columns: str, named: bool = False) -> List[Any]:
         if not self.state.join:
             return await select_from_one_table(
-                self.orm,
+                self.mapper_registry,
                 self.state,
                 columns,
                 named=named,
@@ -197,7 +197,7 @@ class Query:
 
             return await select_with_joins_anonymous_columns(self.state, columns)
 
-        return await select_with_joins(self.orm, self.state)
+        return await select_with_joins(self.mapper_registry, self.state)
 
     def subquery(self, return_column: Optional[str] = None) -> ClauseElement:
         if return_column:
@@ -219,7 +219,7 @@ class Query:
                 return_column = self.state.table.primary_key.columns[0].name
 
         new_state = replace(self.state, subquery=return_column)
-        return Query(self.orm, new_state)
+        return Query(self.mapper_registry, new_state)
 
     def as_select_expression(self):
         subquery = self.state.subquery
@@ -254,12 +254,12 @@ class RootQuery(Query):
         if table.primary_key.columns is not None and new_row_id:
             values[table.primary_key.columns[0].name] = new_row_id
 
-        mapping = self.orm.mappings.get(table.name, dict)
+        mapping = self.mapper_registry.mappings.get(table.name, dict)
         return mapping(**values)
 
     async def bulk_insert(self, values: List[dict]):
-        new_memberships = self.state.table.insert().values(values)
-        await database.fetch_all(new_memberships)
+        query = self.state.table.insert().values(values)
+        await database.execute(query)
 
     async def delete_all(self):
         await database.execute(self.state.table.delete())

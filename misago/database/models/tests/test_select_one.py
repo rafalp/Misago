@@ -7,37 +7,42 @@ from ..exceptions import (
     InvalidColumnError,
     MultipleObjectsReturned,
 )
-from ..mapper import ObjectMapper
+from ..registry import MapperRegistry
 
-mapper = ObjectMapper()
-
-mapper.set_mapping(users, User)
-mapper.set_mapping(user_groups, UserGroup)
+mapper_registry = MapperRegistry()
+mapper_registry.set_mapping(users, User)
+mapper_registry.set_mapping(user_groups, UserGroup)
 
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved(user):
-    assert await mapper.query_table(users).one() == user
+    assert await mapper_registry.query_table(users).one() == user
 
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved_by_selector(user, admin):
-    assert await mapper.query_table(users).one(email=admin.email) == admin
+    assert await mapper_registry.query_table(users).one(email=admin.email) == admin
 
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved_by_filter(user, admin):
-    assert await mapper.query_table(users).filter(email=admin.email).one() == admin
+    assert (
+        await mapper_registry.query_table(users).filter(email=admin.email).one()
+        == admin
+    )
 
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved_by_exclude(user, admin):
-    assert await mapper.query_table(users).exclude(email=admin.email).one() == user
+    assert (
+        await mapper_registry.query_table(users).exclude(email=admin.email).one()
+        == user
+    )
 
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved_as_named_tuple(user):
-    result = await mapper.query_table(users).one("id", "email", named=True)
+    result = await mapper_registry.query_table(users).one("id", "email", named=True)
     assert result.id == user.id
     assert result.email == user.email
     assert result == (user.id, user.email)
@@ -45,23 +50,23 @@ async def test_one_object_can_be_retrieved_as_named_tuple(user):
 
 @pytest.mark.asyncio
 async def test_one_object_can_be_retrieved_as_tuple(user):
-    result = await mapper.query_table(users).one("id", "email")
+    result = await mapper_registry.query_table(users).one("id", "email")
     assert result == (user.id, user.email)
 
 
 @pytest.mark.asyncio
 async def test_error_is_raised_if_column_name_is_invalid(user):
     with pytest.raises(InvalidColumnError):
-        await mapper.query_table(users).one("id", "invalid", "email")
+        await mapper_registry.query_table(users).one("id", "invalid", "email")
 
 
 @pytest.mark.asyncio
 async def test_one_object_query_raises_error_on_multiple_results(user, admin):
     with pytest.raises(MultipleObjectsReturned):
-        await mapper.query_table(users).one()
+        await mapper_registry.query_table(users).one()
 
 
 @pytest.mark.asyncio
 async def test_one_object_query_raises_error_on_no_results(db):
     with pytest.raises(DoesNotExist):
-        await mapper.query_table(users).one()
+        await mapper_registry.query_table(users).one()

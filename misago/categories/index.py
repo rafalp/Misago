@@ -3,7 +3,7 @@ from typing import Dict, List, Optional
 
 from sqlalchemy.sql import select
 
-from ..database import database
+from ..database import fetch_all_assoc
 from .models import Category, CategoryType
 
 
@@ -46,7 +46,7 @@ async def get_categories_index() -> CategoriesIndex:
         .order_by(table.c.left)
     )
 
-    data = [IndexCategory(**row._mapping) for row in await database.fetch_all(query)]
+    data = [IndexCategory(**row) for row in await fetch_all_assoc(query)]
     index = CategoriesIndex({c.id: c for c in data})
 
     # Propagate closed status downwards

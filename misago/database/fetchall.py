@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy.sql import ClauseElement
 
 from .database import database
-from .orm import record_dict
+from .models import record_dict
 
 
 async def fetch_all_assoc(

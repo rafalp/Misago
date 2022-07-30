@@ -3,10 +3,10 @@ from typing import List
 import pytest
 
 from ....tables import attachment_types
-from ..mapper import ObjectMapper
+from ..registry import MapperRegistry
 
-mapper = ObjectMapper()
-root_query = mapper.query_table(attachment_types)
+mapper_registry = MapperRegistry()
+root_query = mapper_registry.query_table(attachment_types)
 
 
 async def consume_generator(generator) -> List[str]:

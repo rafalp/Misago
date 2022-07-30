@@ -7,7 +7,7 @@ from .query import RootQuery
 from .querystate import QueryState
 
 
-class ObjectMapper:
+class MapperRegistry:
     tables: Dict[str, TableClause]
     mappings: Dict[str, Type | Type[dict]]
     models: Dict[str, Type[Model] | Type[dict]]
@@ -29,15 +29,15 @@ class ObjectMapper:
         return RootQuery(self, state)
 
 
-object_mapper = ObjectMapper()
+mapper_registry = MapperRegistry()
 
 
 def register_model(name: str, table: TableClause):
     def register(model: Type[Model]):
-        object_mapper.set_mapping(table, model)
-        object_mapper.set_model(name, model)
+        mapper_registry.set_mapping(table, model)
+        mapper_registry.set_model(name, model)
 
-        model.query = object_mapper.query_table(table)
+        model.query = mapper_registry.query_table(table)
         model.table = table
 
         return model
