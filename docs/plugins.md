@@ -1,11 +1,9 @@
-Plugins
-=======
+# Plugins
 
 Misago implements plugin system that allows forum owners and developers to modify and extend their site without need for modifying Misago codebase.
 
 
-Plugin file structure
----------------------
+## Plugin file structure
 
 Plugins files should be organized into following (*optional):
 
@@ -37,8 +35,7 @@ plugin_directory
 ```
 
 
-Plugin manifests
-----------------
+## Plugin manifests
 
 Plugins can declare manifests which are additional information about the plugin.
 
@@ -63,3 +60,10 @@ __manifest__ = PluginManifest(
 Every item of manifest is optional.
 
 You can select any icon from [Font Awesome 5.15 free icon set](https://fontawesome.com/v5.15/icons?d=gallery).
+
+
+## Extending hooks
+
+Place code registering custom logic with hooks in `plugin.py` file.
+
+List of all available hooks is available [here](hooks/index.md).
