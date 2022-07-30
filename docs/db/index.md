@@ -13,7 +13,11 @@ Misago uses custom light-weight imperative ORM that abstracts away [SQL Alchemy'
 
 This ORM knows about [SQL Alchemy's tables](https://docs.sqlalchemy.org/en/20/core/metadata.html) and knows what Python types (mostly dataclasses but also plain dicts for simple M2M tables) to use to represent those tables rows.
 
-Misago database structure is located in [`misago.tables`](/misago/tables.py) module.
+Misago database structure is defined in [`misago.tables`](/misago/tables.py) module.
+
+ORM's implementation is located in [`misago.database.models`](/misago/database/models) with public utils being re-exported from [`misago.database.models` module itsetl](/misago/database/models/__init__.py).
+
+Individual models are defined in `models` modules (`models.py` files) or models packages.
 
 
 ## Migrations
