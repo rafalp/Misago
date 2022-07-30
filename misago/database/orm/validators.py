@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterable, Sequence, cast
+from typing import Any, Dict, Iterable, cast
 
 from sqlalchemy.sql import TableClause
 

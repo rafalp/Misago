@@ -11,7 +11,6 @@ disable=
     arguments-differ,
     assignment-from-none,
     attribute-defined-outside-init,
-    bad-continuation,
     cyclic-import,
     deprecated-module,
     duplicate-code,
