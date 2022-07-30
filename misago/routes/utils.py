@@ -6,12 +6,12 @@ from .exceptions import HTTPNotFound
 
 
 def clean_cursor_or_404(request: Request) -> Tuple[Optional[int], Optional[int]]:
-    after = request.query_params.get("after")
-    before = request.query_params.get("before")
+    query_after = request.query_params.get("after")
+    query_before = request.query_params.get("before")
 
     try:
-        after = int(after) if after is not None else None
-        before = int(before) if before is not None else None
+        after = int(query_after) if query_after is not None else None
+        before = int(query_before) if query_before is not None else None
     except (TypeError, ValueError) as exception:
         raise HTTPNotFound() from exception
 

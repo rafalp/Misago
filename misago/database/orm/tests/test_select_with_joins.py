@@ -27,16 +27,15 @@ async def test_all_objects_can_be_retrieved_with_single_join(
     results = await mapper.query_table(users).join_on("group_id").all()
     assert len(results) == 2
     for member, group in results:
+        assert member in (user, admin)
+        assert group in (admins, members)
         assert member.group_id == group.id
 
 
 @pytest.mark.asyncio
 async def test_all_objects_can_be_retrieved_with_single_join_missing_relation(thread):
     results = await mapper.query_table(threads).join_on("starter_id").all()
-    assert len(results) == 1
-    for t, s in results:
-        assert t.starter_id is None
-        assert s is None
+    assert results == [(thread, None)]
 
 
 @pytest.mark.asyncio
@@ -44,12 +43,7 @@ async def test_all_objects_can_be_retrieved_with_deep_joins(
     user_thread, user_post, user
 ):
     results = await mapper.query_table(threads).join_on("first_post_id.poster_id").all()
-
-    results_ids = []
-    for t, u in results:
-        results_ids.append((t.id, u.id))
-
-    assert results_ids == [(user_thread.id, user.id)]
+    assert results == [(user_thread, user)]
 
 
 @pytest.mark.asyncio
@@ -57,12 +51,7 @@ async def test_all_objects_can_be_retrieved_with_deep_joins_missing_relation(
     thread, post, user
 ):
     results = await mapper.query_table(threads).join_on("first_post_id.poster_id").all()
-
-    results_ids = []
-    for t, u in results:
-        results_ids.append((t.id, u))
-
-    assert results_ids == [(thread.id, None)]
+    assert results == [(thread, None)]
 
 
 @pytest.mark.asyncio
@@ -74,12 +63,7 @@ async def test_all_objects_can_be_retrieved_with_deep_and_shallow_joins(
         .join_on("first_post_id", "first_post_id.poster_id")
         .all()
     )
-
-    results_ids = []
-    for t, p, u in results:
-        results_ids.append((t.id, p.id, u.id))
-
-    assert results_ids == [(user_thread.id, user_post.id, user.id)]
+    assert results == [(user_thread, user_post, user)]
 
 
 @pytest.mark.asyncio
@@ -91,12 +75,7 @@ async def test_all_objects_can_be_retrieved_with_reversed_deep_and_shallow_joins
         .join_on("first_post_id.poster_id", "first_post_id")
         .all()
     )
-
-    results_ids = []
-    for t, u, p in results:
-        results_ids.append((t.id, u.id, p.id))
-
-    assert results_ids == [(user_thread.id, user.id, user_post.id)]
+    assert results == [(user_thread, user, user_post)]
 
 
 @pytest.mark.asyncio
@@ -110,6 +89,8 @@ async def test_all_objects_can_be_retrieved_with_multiple_joins(
     )
     assert len(results) == 3
     for m, u, g in results:
+        assert u in (user, admin, moderator)
+        assert g in (members, admins, moderator)
         assert m == {
             "id": m["id"],
             "is_main": True,
@@ -135,10 +116,7 @@ async def test_joins_can_be_filtered(user, admin, admins, members):
     results = (
         await mapper.query_table(users).join_on("group_id").filter(is_admin=True).all()
     )
-    assert len(results) == 1
-    assert len(results[0]) == 2
-    assert results[0][0].id == admin.id
-    assert results[0][1].id == admins.id
+    assert results == [(admin, admins)]
 
 
 @pytest.mark.asyncio
@@ -149,28 +127,19 @@ async def test_joins_can_be_filtered_over_relation(user, admin, admins, members)
         .filter(**{"group_id.is_admin": True})
         .all()
     )
-    assert len(results) == 1
-    assert len(results[0]) == 2
-    assert results[0][0].id == admin.id
-    assert results[0][1].id == admins.id
+    assert results == [(admin, admins)]
 
 
 @pytest.mark.asyncio
 async def test_select_raises_invalid_join_error_if_filtered_over_missing_join(db):
     with pytest.raises(InvalidJoinError):
-        (await mapper.query_table(users).filter(**{"not_join.is_admin": True}).all())
+        await mapper.query_table(users).filter(**{"not_join.is_admin": True}).all()
 
 
 @pytest.mark.asyncio
 async def test_joins_can_be_ordered(user, admin, admins, members):
     results = await mapper.query_table(users).join_on("group_id").order_by("name").all()
-    assert len(results) == 2
-    assert len(results[0]) == 2
-    assert results[0][0].id == admin.id
-    assert results[0][1].id == admins.id
-    assert len(results[1]) == 2
-    assert results[1][0].id == user.id
-    assert results[1][1].id == members.id
+    assert results == [(admin, admins), (user, members)]
 
 
 @pytest.mark.asyncio
@@ -182,10 +151,7 @@ async def test_joins_can_be_limited(user, admin, admins, members):
         .limit(1)
         .all()
     )
-    assert len(results) == 1
-    assert len(results[0]) == 2
-    assert results[0][0].id == admin.id
-    assert results[0][1].id == admins.id
+    assert results == [(admin, admins)]
 
 
 @pytest.mark.asyncio
@@ -197,10 +163,7 @@ async def test_joins_can_be_offset(user, admin, admins, members):
         .offset(1)
         .all()
     )
-    assert len(results) == 1
-    assert len(results[0]) == 2
-    assert results[0][0].id == user.id
-    assert results[0][1].id == members.id
+    assert results == [(user, members)]
 
 
 @pytest.mark.asyncio
@@ -229,10 +192,7 @@ async def test_joins_can_be_offset_limited(user, admin, admins, members):
         .limit(1)
         .all()
     )
-    assert len(results) == 1
-    assert len(results[0]) == 2
-    assert results[0][0].id == user.id
-    assert results[0][1].id == members.id
+    assert results == [(user, members)]
 
 
 @pytest.mark.asyncio

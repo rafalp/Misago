@@ -46,7 +46,7 @@ async def get_categories_index() -> CategoriesIndex:
         .order_by(table.c.left)
     )
 
-    data = [IndexCategory(**row) for row in await database.fetch_all(query)]
+    data = [IndexCategory(**row._mapping) for row in await database.fetch_all(query)]
     index = CategoriesIndex({c.id: c for c in data})
 
     # Propagate closed status downwards

@@ -1,4 +1,4 @@
-from typing import Sequence, TypedDict, Union
+from typing import Sequence, TypedDict, Tuple
 
 ROOT_LOCATION = "__root__"
 
@@ -10,7 +10,8 @@ class ErrorDict(TypedDict):
 
 
 def get_error_dict(
-    error: Exception, location: Union[str, Sequence[Union[str, int]]] = ROOT_LOCATION
+    error: Exception,
+    location: str | Sequence[str | int] | Tuple[int | str, ...] = ROOT_LOCATION,
 ) -> ErrorDict:
     return {
         "loc": get_error_location(location),
@@ -19,7 +20,9 @@ def get_error_dict(
     }
 
 
-def get_error_location(location: Union[str, Sequence[Union[str, int]]]) -> str:
+def get_error_location(
+    location: str | Sequence[str | int] | Tuple[int | str, ...]
+) -> str:
     """Normalize ["field_name", 0] to 'fieldName.0'."""
     if isinstance(location, (str, int)):
         return format_error_location_part(location)
@@ -27,7 +30,7 @@ def get_error_location(location: Union[str, Sequence[Union[str, int]]]) -> str:
     return ".".join(map(format_error_location_part, location))
 
 
-def format_error_location_part(part: Union[str, int]) -> str:
+def format_error_location_part(part: str | int) -> str:
     if isinstance(part, int):
         return str(part)
 

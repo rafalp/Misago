@@ -1,6 +1,7 @@
 from collections import namedtuple
 from typing import TYPE_CHECKING, Any, Dict, List, Sequence, Tuple, TypeAlias, cast
 
+from databases.interfaces import Record
 from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, select
 
 from ..database import database
@@ -37,19 +38,19 @@ async def select_from_one_table(
     query = slice_query(state, query)
     query = order_query(state, query)
 
-    rows = await database.fetch_all(query)
+    records = await database.fetch_all(query)
 
     mapping: DBMapping
 
     if columns:
         if named:
             mapping = namedtuple("Result", columns)  # type: ignore
-            return [mapping(**row) for row in rows]
+            return [mapping(**record_dict(record)) for record in records]
 
-        return [tuple(row.values()) for row in rows]
+        return [record_tuple(record) for record in records]
 
     mapping = orm.mappings.get(state.table.name, dict)
-    return [mapping(**row) for row in rows]
+    return [mapping(**record_dict(record)) for record in records]
 
 
 # Holds result's columns grouped per table as dicts
@@ -85,24 +86,24 @@ async def select_with_joins(
         keys += (join_table.primary_key[0].name,)
         mappings += (orm.mappings.get(join_table.element.name, dict),)
 
-    # Fetch rows and convert them to models
+    # Fetch results and convert them to models
     types_count = 1 + len(joins_names)
-    rows = []
+    results = []
 
-    for row in await database.fetch_all(query):
+    for record in await database.fetch_all(query):
         tables_data: TablesData = tuple({} for _ in range(types_count))
-        for col, value in enumerate(row.values()):
+        for col, value in enumerate(record_tuple(record)):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
 
-        rows.append(
+        results.append(
             tuple(
                 mappings[i](**data) if data[keys[i]] is not None else None
                 for i, data in enumerate(tables_data)
             )
         )
 
-    return rows
+    return results
 
 
 async def select_with_joins_named_columns(
@@ -185,28 +186,28 @@ async def select_with_joins_named_columns(
             ),
         )
 
-    # Fetch rows and convert them to models
+    # Fetch results and convert them to models
     types_count = 1 + len(joins_names)
-    rows = []
+    results = []
 
-    for row in await database.fetch_all(query):
+    for record in await database.fetch_all(query):
         tables_data: TablesData = tuple({} for _ in range(types_count))
-        for col, value in enumerate(row.values()):
+        for col, value in enumerate(record_tuple(record)):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
 
-        mapped_row: Tuple[DBMapping, ...] = tuple()
+        mapped_record: Tuple[DBMapping, ...] = tuple()
         for i, data in enumerate(tables_data):
             if data[keys[i]] is None:
-                mapped_row += (None,)
+                mapped_record += (None,)
             else:
                 if skip_columns[i]:
                     data.pop(skip_columns[i])
-                mapped_row += (mappings[i](**data),)
+                mapped_record += (mappings[i](**data),)
 
-        rows.append(mapped_row)
+        results.append(mapped_record)
 
-    return rows
+    return results
 
 
 async def select_with_joins_anonymous_columns(
@@ -235,7 +236,7 @@ async def select_with_joins_anonymous_columns(
                 ) from error
 
     query = get_select_join_query(state, cols)
-    return [tuple(row.values()) for row in await database.fetch_all(query)]
+    return [record_tuple(record) for record in await database.fetch_all(query)]
 
 
 def get_select_join_query(
@@ -268,3 +269,11 @@ def get_join_select_from(state: QueryState) -> ClauseElement:
         query_from = query_from.outerjoin(join_table, join_left == join_column)
 
     return query_from
+
+
+def record_tuple(record: Record) -> Tuple[Any, ...]:
+    return tuple(record[r] for r in record)
+
+
+def record_dict(record: Record) -> dict:
+    return {r: record[r] for r in record}

@@ -22,7 +22,7 @@ def validate_model(model: Type[BaseModel], input_data: Data) -> Tuple[Data, Erro
         return validated_data, errors_list
 
     for error in errors.errors():
-        error["loc"] = get_error_location(error["loc"])
+        error["loc"] = get_error_location(error["loc"])  # type: ignore
         errors_list.append(cast(ErrorDict, error))
 
     return validated_data, errors_list

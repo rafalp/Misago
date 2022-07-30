@@ -235,7 +235,7 @@ class User(Model):
             .where(user_group_memberships.c.user_id == self.id)
         )
         rows = await database.fetch_all(query)
-        groups = [UserGroup(**row) for row in rows]
+        groups = [UserGroup(**row._mapping) for row in rows]
         groups.sort(key=lambda x: x.ordering)
         main_group = None
         secondary_groups = []

@@ -119,8 +119,8 @@ class ObjectMapperBase:
         result = await database.fetch_all(query)
 
         if columns and len(columns) == 1 and flat:
-            return [row[columns[0]] for row in result]
-        return [model(**row) for row in result]
+            return [row[columns[0]] for row in result]  # type: ignore
+        return [model(**record_to_dict(row)) for row in result]
 
     async def iterator(self, *columns: str, batch_size: int = 20, asc: bool = False):
         base_query = self.order_by("id" if asc else "-id").offset(0)
@@ -171,9 +171,9 @@ class ObjectMapperBase:
             raise self.MultipleObjectsReturned()
 
         if columns:
-            return dict(**results[0])
+            return record_to_dict(results[0])
 
-        return model(**results[0])
+        return model(**record_to_dict(results[0]))
 
     async def exists(self) -> bool:
         query = self.limit(1)
@@ -233,8 +233,8 @@ class ObjectMapper(ObjectMapperBase):
         result = await database.fetch_all(query)
 
         if columns and len(columns) == 1 and flat:
-            return [row[columns[0]] for row in result]
-        return [model(**row) for row in result]
+            return [row[columns[0]] for row in result]  # type: ignore
+        return [model(**record_to_dict(row)) for row in result]
 
     async def delete_all(self) -> int:
         return await database.execute(self._table.delete())
@@ -287,3 +287,7 @@ class InvalidColumnError(ValueError):
             f"Valid columns are: {valid_columns}"
         )
         super().__init__(msg)
+
+
+def record_to_dict(record):
+    return dict((r, record[r]) for r in record)
