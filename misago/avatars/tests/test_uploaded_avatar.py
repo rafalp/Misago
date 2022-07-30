@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 from PIL import Image
 
 from ...conf import settings
@@ -6,7 +7,7 @@ from ...uploads.store import make_media_path, media_file_exists
 from ..upload import store_uploaded_avatar
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def uploaded_image(create_upload_file):
     return await create_upload_file("avatar.png")
 

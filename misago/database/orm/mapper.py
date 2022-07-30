@@ -1,4 +1,4 @@
-from typing import Dict, Type, Union
+from typing import Dict, Type
 
 from sqlalchemy.sql import TableClause
 
@@ -9,19 +9,19 @@ from .querystate import QueryState
 
 class ObjectMapper:
     tables: Dict[str, TableClause]
-    mappings: Dict[str, Union[Type, dict]]
-    models: Dict[str, Type[Model]]
+    mappings: Dict[str, Type | Type[dict]]
+    models: Dict[str, Type[Model] | Type[dict]]
 
     def __init__(self):
         self.tables = {}
         self.mappings = {}
         self.models = {}
 
-    def set_mapping(self, table: TableClause, repr_: Union[Type, dict]):
+    def set_mapping(self, table: TableClause, repr_: Type | Type[dict]):
         self.tables[table.name] = table
         self.mappings[table.name] = repr_
 
-    def set_model(self, name: str, model: Union[Type, dict]):
+    def set_model(self, name: str, model: Type | Type[dict]):
         self.models[name] = model
 
     def query_table(self, table: TableClause) -> "RootQuery":

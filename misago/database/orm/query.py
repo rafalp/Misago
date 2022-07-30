@@ -1,8 +1,8 @@
 from dataclasses import replace
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, cast
 
 from sqlalchemy import func
-from sqlalchemy.sql import ClauseElement, select
+from sqlalchemy.sql import ClauseElement, TableClause, select
 
 from ..database import database
 from .exceptions import DoesNotExist, MultipleObjectsReturned
@@ -108,12 +108,12 @@ class Query:
         query = filter_query(self.state, query)
         return await database.execute(query)
 
-    async def delete(self) -> int:
+    async def delete(self):
         query = self.state.table.delete()
         query = filter_query(self.state, query)
         await database.execute(query)
 
-    async def delete_all(self) -> int:
+    async def delete_all(self):
         raise NotImplementedError(
             "'delete_all()' method is not available on filtered queries. "
             "To delete filtered objects call 'delete()'."
@@ -164,7 +164,7 @@ class Query:
         loop = True
         while loop:
             if cursor:
-                query = query.filter(**{cursor_clause: cursor})
+                query = base_query.filter(**{cursor_clause: cursor})
             else:
                 query = base_query
 
@@ -204,12 +204,17 @@ class Query:
             if "." in return_column:
                 join_name, column = return_column.rsplit(".", 1)
                 validate_join(self.state, join_name)
-                validate_column(self.state.join_tables[join_name], column)
+                validate_column(
+                    cast(Dict[str, TableClause], self.state.join_tables)[join_name],
+                    column,
+                )
             else:
                 validate_column(self.state.table, return_column)
         else:
             if self.state.join:
-                return_column = self.state.join_root.primary_key.columns[0].name
+                return_column = (
+                    cast(TableClause, self.state.join_root).primary_key.columns[0].name
+                )
             else:
                 return_column = self.state.table.primary_key.columns[0].name
 
@@ -259,7 +264,7 @@ class RootQuery(Query):
     async def delete_all(self):
         await database.execute(self.state.table.delete())
 
-    async def delete(self) -> int:
+    async def delete(self):
         raise NotImplementedError(
             "'delete()' method is not available on root queries. "
             "To delete all objects call 'delete_all()'."

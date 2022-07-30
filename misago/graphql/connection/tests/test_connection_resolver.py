@@ -1,6 +1,7 @@
 from random import shuffle
 
 import pytest
+import pytest_asyncio
 
 from ....attachments.models import AttachmentType
 from ..connection import Connection
@@ -10,7 +11,7 @@ NAMES = "QWERTYUIOPASDFGHJKLZXCVBNM"
 LIMIT = 20
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def nodes(db):
     await AttachmentType.query.delete_all()
 

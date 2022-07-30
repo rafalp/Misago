@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 
 from ..threads.models import Post, Thread
 from ..users.models import User
@@ -35,7 +36,7 @@ def thread_factory(category):
     return thread_test_factory
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def thread_and_post(thread_factory):
     return await thread_factory()
 
@@ -52,33 +53,33 @@ def post(thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def reply(thread):
     reply = await Post.create(thread, poster_name="Guest")
     await thread.update(replies=1, last_post=reply)
     return reply
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def thread_and_reply(thread):
     reply = await Post.create(thread, poster_name="Guest")
     thread = await thread.update(replies=1, last_post=reply)
     return thread, reply
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def thread_with_reply(thread_and_reply):
     thread, _ = thread_and_reply
     return thread
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def thread_reply(thread_and_reply):
     _, reply = thread_and_reply
     return reply
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def user_thread_and_post(thread_factory, user):
     return await thread_factory(starter=user)
 
@@ -95,7 +96,7 @@ def user_post(user_thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def other_user_thread_and_post(thread_factory, other_user):
     return await thread_factory(starter=other_user)
 
@@ -112,7 +113,7 @@ def other_user_post(other_user_thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def closed_thread_and_post(thread_factory):
     return await thread_factory(is_closed=True)
 
@@ -129,7 +130,7 @@ def closed_thread_post(closed_thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def closed_category_thread_and_post(closed_category, thread_factory):
     return await thread_factory(category=closed_category)
 
@@ -146,7 +147,7 @@ def closed_category_post(closed_category_thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def closed_user_thread_and_post(thread_factory, user):
     return await thread_factory(is_closed=True, starter=user)
 
@@ -163,7 +164,7 @@ def closed_user_thread_post(closed_user_thread_and_post):
     return post
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def closed_category_user_thread_and_post(closed_category, thread_factory, user):
     return await thread_factory(category=closed_category, starter=user)
 

@@ -1,4 +1,5 @@
 import pytest
+import pytest_asyncio
 
 from ..users.models import User, UserGroup
 
@@ -8,7 +9,7 @@ def user_password():
     return "t3st+p4ssw0rd!"
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def user(db, user_password):
     return await User.create(
         "User",
@@ -17,7 +18,7 @@ async def user(db, user_password):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def other_user(db, user_password):
     return await User.create(
         "OtherUser",
@@ -26,7 +27,7 @@ async def other_user(db, user_password):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def inactive_user(db, user_password):
     return await User.create(
         "User",
@@ -36,12 +37,12 @@ async def inactive_user(db, user_password):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def no_password_user(db):
     return await User.create("NopassUser", "nopass-user@example.com")
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def moderator(db, user_password):
     return await User.create(
         "Moderator",
@@ -51,7 +52,7 @@ async def moderator(db, user_password):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def admin(db, user_password, admins):
     return await User.create(
         "Admin",
@@ -62,21 +63,21 @@ async def admin(db, user_password, admins):
     )
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def admins(db):
     return await UserGroup.query.one(is_admin=True)
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def moderators(db):
     return await UserGroup.query.one(is_admin=False, is_moderator=True)
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def members(db):
     return await UserGroup.query.one(is_default=True)
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def guests(db):
     return await UserGroup.query.one(is_guest=True)

@@ -2,7 +2,7 @@ from typing import Dict, List, Optional
 
 from ariadne_graphql_modules import InputType, ObjectType, gql
 from graphql import GraphQLResolveInfo
-from pydantic import BaseModel, constr
+from pydantic import BaseModel, Field
 
 from ...users.models import UserGroup
 from ...validation import Validator, validate_data, validate_model
@@ -92,11 +92,15 @@ class AdminUserGroupCreateMutation(AdminMutationType):
 
 
 class UserGroupCreateInputModel(BaseModel):
-    name: constr(strip_whitespace=True, min_length=1, max_length=255, regex=r"\w")
-    title: Optional[constr(strip_whitespace=True, min_length=0, max_length=255)] = None
-    css_suffix: Optional[
-        constr(strip_whitespace=True, min_length=0, max_length=255, regex=r"(?!\s)*")
-    ] = None
+    name: str = Field(
+        ..., strip_whitespace=True, min_length=1, max_length=255, regex=r"\w"
+    )
+    title: Optional[str] = Field(
+        None, strip_whitespace=True, min_length=0, max_length=255
+    )
+    css_suffix: Optional[str] = Field(
+        None, strip_whitespace=True, min_length=0, max_length=255, regex=r"(?!\s)*"
+    )
     is_hidden: bool = False
     is_moderator: bool = False
     is_admin: bool = False

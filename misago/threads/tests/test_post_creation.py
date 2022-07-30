@@ -1,10 +1,11 @@
 import pytest
+import pytest_asyncio
 
 from ...utils import timezone
 from ..models import Post, Thread
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def thread(category):
     return await Thread.create(category, "Test thread", starter_name="User")
 

@@ -3,6 +3,7 @@ from tempfile import TemporaryDirectory
 from unittest.mock import Mock, patch
 
 import pytest
+import pytest_asyncio
 from starlette.datastructures import UploadFile
 
 from .. import tables
@@ -20,7 +21,7 @@ def pytest_unconfigure():
     teardown_test_database()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def db():
     await database.connect()
     yield database
@@ -58,7 +59,7 @@ def cache_versions():
     return {SETTINGS_CACHE: "settings-cache"}
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def cache_version(db):
     query = tables.cache_versions.insert(None).values(
         cache="test_cache", version="version"
@@ -67,7 +68,7 @@ async def cache_version(db):
     return {"cache": "test_cache", "version": "version"}
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def other_cache_version(db):
     query = tables.cache_versions.insert(None).values(
         cache="test_other_cache", version="version"
@@ -76,7 +77,7 @@ async def other_cache_version(db):
     return {"cache": "test_other_cache", "version": "version"}
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def dynamic_settings(db, cache_versions):
     return await get_dynamic_settings(cache_versions)
 

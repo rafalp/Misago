@@ -1,11 +1,12 @@
 from dataclasses import replace
 
 import pytest
+import pytest_asyncio
 
 from ..models import Category
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def category(category):
     return await Category.create("Test category", icon="icon")
 

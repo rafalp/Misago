@@ -1,7 +1,7 @@
 from collections import namedtuple
-from typing import TYPE_CHECKING, Any, List, Sequence
+from typing import TYPE_CHECKING, Any, Dict, List, Sequence, Tuple, TypeAlias, cast
 
-from sqlalchemy.sql import ClauseElement, ColumnElement, select
+from sqlalchemy.sql import ClauseElement, ColumnElement, TableClause, select
 
 from ..database import database
 from .exceptions import InvalidColumnError
@@ -15,13 +15,17 @@ if TYPE_CHECKING:
     from .mapper import ObjectMapper
 
 
+# Result's mapping (Model, Dict, Named Tuple)
+DBMapping: TypeAlias = Any
+
+
 async def select_from_one_table(
     orm: "ObjectMapper",
     state: QueryState,
     columns: Sequence[str],
     *,
     named: bool = False,
-) -> List[Any]:
+) -> List[DBMapping]:
     """Select all columns from simple select, return them as dict/tuple/mapping"""
     if columns:
         validate_columns(state.table, columns)
@@ -35,9 +39,11 @@ async def select_from_one_table(
 
     rows = await database.fetch_all(query)
 
+    mapping: DBMapping
+
     if columns:
         if named:
-            mapping = namedtuple("Result", columns)
+            mapping = namedtuple("Result", columns)  # type: ignore
             return [mapping(**row) for row in rows]
 
         return [tuple(row.values()) for row in rows]
@@ -46,18 +52,24 @@ async def select_from_one_table(
     return [mapping(**row) for row in rows]
 
 
+# Holds result's columns grouped per table as dicts
+TablesData: TypeAlias = Sequence[dict]
+
+
 async def select_with_joins(
     orm: "ObjectMapper",
     state: QueryState,
-):
-    root = state.join_root
+) -> List[DBMapping]:
+    root = cast(TableClause, state.join_root)
+    joins_names = cast(List[str], state.join)
+    joins_tables = cast(Dict[str, TableClause], state.join_tables)
 
     # Build cols tuple and index -> name tuple
     cols = tuple(root.c.values())
     cols_mappings = tuple((0, c.name) for c in cols)
 
-    for i, join_name in enumerate(state.join, 1):
-        join_table = state.join_tables[join_name]
+    for i, join_name in enumerate(joins_names, 1):
+        join_table = joins_tables[join_name]
         cols += tuple(c.label(f"t{i}_{c.name}") for c in join_table.c.values())
         cols_mappings += tuple((i, c.name) for c in join_table.c.values())
 
@@ -65,20 +77,20 @@ async def select_with_joins(
     query = get_select_join_query(state, cols)
 
     # Build tuples with primary key names and mappings
-    keys = (root.primary_key[0].name,)
-    mappings = (orm.mappings.get(state.table.name, dict),)
+    keys: Tuple[str, ...] = (root.primary_key[0].name,)
+    mappings: Tuple[DBMapping, ...] = (orm.mappings.get(state.table.name, dict),)
 
-    for join_on in state.join:
-        join_table = state.join_tables[join_on]
+    for join_on in joins_names:
+        join_table = joins_tables[join_on]
         keys += (join_table.primary_key[0].name,)
         mappings += (orm.mappings.get(join_table.element.name, dict),)
 
     # Fetch rows and convert them to models
-    types_count = 1 + len(state.join)
+    types_count = 1 + len(joins_names)
     rows = []
 
     for row in await database.fetch_all(query):
-        tables_data = tuple({} for _ in range(types_count))
+        tables_data: TablesData = tuple({} for _ in range(types_count))
         for col, value in enumerate(row.values()):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
@@ -96,13 +108,17 @@ async def select_with_joins(
 async def select_with_joins_named_columns(
     state: QueryState,
     columns: Sequence[str],
-):
-    root = state.join_root
+) -> List[DBMapping]:
+    root = cast(TableClause, state.join_root)
+    joins_names = cast(List[str], state.join)
+    joins_tables = cast(Dict[str, TableClause], state.join_tables)
 
     # Build cols tuple and index -> name tuple
-    cols = tuple()
-    cols_mappings = tuple()
-    skip_columns = tuple()  # Columns we need to remove from result set
+    cols: Tuple[ColumnElement, ...] = tuple()
+    cols_mappings: Tuple[Tuple[int, str], ...] = tuple()
+    skip_columns: Tuple[
+        str | None, ...
+    ] = tuple()  # Columns we need to remove from result set
 
     pk = root.primary_key[0]
     if pk.name not in columns:
@@ -112,8 +128,8 @@ async def select_with_joins_named_columns(
     else:
         skip_columns += (None,)
 
-    for i, join_name in enumerate(state.join, 1):
-        join_table = state.join_tables[join_name]
+    for i, join_name in enumerate(joins_names, 1):
+        join_table = joins_tables[join_name]
         join_pk = join_table.primary_key[0]
         if f"{join_name}.{join_pk.name}" not in columns:
             cols += (join_pk,)
@@ -122,7 +138,7 @@ async def select_with_joins_named_columns(
         else:
             skip_columns += (None,)
 
-    joins_index = {join_on: i for i, join_on in enumerate(state.join, 1)}
+    joins_index = {join_on: i for i, join_on in enumerate(joins_names, 1)}
     for i, column in enumerate(columns):
         if "." not in column:
             try:
@@ -134,28 +150,28 @@ async def select_with_joins_named_columns(
         else:
             join_name, column = column.rsplit(".", 1)
             try:
-                col = state.join_tables[join_name].c[column]
+                col = joins_tables[join_name].c[column]
                 cols += (col.label(f"c{i}_{col.name}"),)
                 cols_mappings += ((joins_index[join_name], col.name),)
             except KeyError as error:
                 raise InvalidColumnError(
-                    column, state.join_tables[join_name].element
+                    column, joins_tables[join_name].element
                 ) from error
 
     # Build SELECT ... FROM ... JOIN ... query
     query = get_select_join_query(state, cols)
 
     # Build tuples with primary key names and mappings
-    keys = (root.primary_key[0].name,)
-    mappings = (
+    keys: Tuple[str, ...] = (root.primary_key[0].name,)
+    mappings: Tuple[DBMapping, ...] = (
         namedtuple(
             "Result",
             (c for c in columns if "." not in c and c != skip_columns[0]),
         ),
     )
 
-    for i, join_on in enumerate(state.join, 1):
-        keys += (state.join_tables[join_on].primary_key[0].name,)
+    for i, join_on in enumerate(joins_names, 1):
+        keys += (joins_tables[join_on].primary_key[0].name,)
 
         table_cols = []
         for table_index, col in cols_mappings:
@@ -170,16 +186,16 @@ async def select_with_joins_named_columns(
         )
 
     # Fetch rows and convert them to models
-    types_count = 1 + len(state.join)
+    types_count = 1 + len(joins_names)
     rows = []
 
     for row in await database.fetch_all(query):
-        tables_data = tuple({} for _ in range(types_count))
+        tables_data: TablesData = tuple({} for _ in range(types_count))
         for col, value in enumerate(row.values()):
             col_table, col_name = cols_mappings[col]
             tables_data[col_table][col_name] = value
 
-        mapped_row = tuple()
+        mapped_row: Tuple[DBMapping, ...] = tuple()
         for i, data in enumerate(tables_data):
             if data[keys[i]] is None:
                 mapped_row += (None,)
@@ -196,23 +212,26 @@ async def select_with_joins_named_columns(
 async def select_with_joins_anonymous_columns(
     state: QueryState,
     columns: Sequence[str],
-) -> List[Any]:
-    cols = tuple()
+) -> List[DBMapping]:
+    join_root = cast(TableClause, state.join_root)
+    joins_tables = cast(Dict[str, TableClause], state.join_tables)
+
+    cols: Tuple[ColumnElement, ...] = tuple()
     for i, column in enumerate(columns):
         if "." not in column:
             try:
-                col = state.join_root.c[column]
+                col = join_root.c[column]
                 cols += (col,)
             except KeyError as error:
                 raise InvalidColumnError(column, state.table) from error
         else:
             join_name, column = column.rsplit(".", 1)
             try:
-                col = state.join_tables[join_name].c[column]
+                col = joins_tables[join_name].c[column]
                 cols += (col.label(f"c{i}_{col.name}"),)
             except KeyError as error:
                 raise InvalidColumnError(
-                    column, state.join_tables[join_name].element
+                    column, joins_tables[join_name].element
                 ) from error
 
     query = get_select_join_query(state, cols)
@@ -233,11 +252,13 @@ def get_select_join_query(
 
 
 def get_join_select_from(state: QueryState) -> ClauseElement:
-    query_from = state.join_root
-    for join_on, join_table in state.join_tables.items():
+    joins_tables = cast(Dict[str, TableClause], state.join_tables)
+    query_from = cast(TableClause, state.join_root)
+
+    for join_on, join_table in joins_tables.items():
         if "." in join_on:
             left_table_name, join_on = join_on.rsplit(".", 1)
-            left_table = state.join_tables[left_table_name]
+            left_table = joins_tables[left_table_name]
         else:
             left_table = state.join_root
 

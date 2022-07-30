@@ -53,5 +53,8 @@ def reset_indentation(code: str) -> str:
 
 
 class MisagoHtmlFormatter(HtmlFormatter):
-    def wrap(self, source, outfile):
+    def wrap(self, source):
         yield from source
+
+    def _wrap_div(self, inner):
+        yield from inner

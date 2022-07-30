@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 import pytest
+import pytest_asyncio
 
 from ..categories.index import get_categories_index
 from ..categories.loaders import categories_children_loader, categories_loader
@@ -26,7 +27,7 @@ def request_mock():
     return Mock(headers={}, base_url="http://test.com/", user=None)
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def context(db, request_mock, cache_versions, dynamic_settings):
     context = {
         "request": request_mock,
@@ -40,7 +41,7 @@ async def context(db, request_mock, cache_versions, dynamic_settings):
     return context
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def user_context(request_mock, cache_versions, dynamic_settings, user):
     context = {
         "request": request_mock,
@@ -54,7 +55,7 @@ async def user_context(request_mock, cache_versions, dynamic_settings, user):
     return context
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def moderator_context(request_mock, cache_versions, dynamic_settings, moderator):
     context = {
         "request": request_mock,
@@ -68,7 +69,7 @@ async def moderator_context(request_mock, cache_versions, dynamic_settings, mode
     return context
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def admin_context(request_mock, cache_versions, dynamic_settings, admin):
     context = {
         "request": request_mock,

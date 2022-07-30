@@ -1,4 +1,4 @@
-from typing import Iterable, Sequence
+from typing import Any, Dict, Iterable, Sequence, cast
 
 from sqlalchemy.sql import TableClause
 
@@ -18,17 +18,17 @@ def validate_column(table: TableClause, col_name: str):
 
 
 def validate_join(state: QueryState, join_name: str):
-    if not state.join or join_name not in state.join_tables:
+    if not state.join or join_name not in cast(dict, state.join_tables):
         raise InvalidJoinError(join_name, state)
 
 
-def validate_conditions(state: QueryState, conditions: Sequence[str]):
+def validate_conditions(state: QueryState, conditions: Dict[str, Any]):
     for condition in conditions:
         if "__" in condition:
             condition, _ = condition.split("__", 1)
         if "." in condition:
             join_name, field = condition.rsplit(".", 1)
             validate_join(state, join_name)
-            validate_column(state.join_tables[join_name].element, field)
+            validate_column(cast(dict, state.join_tables)[join_name].element, field)
         else:
             validate_column(state.table, condition)

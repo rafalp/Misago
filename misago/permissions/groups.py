@@ -113,6 +113,6 @@ async def get_groups_permissions_action(
             )
 
 
-def append_unique(list_: List[int], value: int):
+def append_unique(list_: List[str], value: str):
     if value not in list_:
         list_.append(value)

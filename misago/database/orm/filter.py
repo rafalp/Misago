@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Dict, List, TypeAlias, cast
 
 from sqlalchemy.sql import ClauseElement, ColumnElement, not_
 
@@ -17,10 +17,13 @@ def filter_query(
     return query
 
 
+FilterClause: TypeAlias = ClauseElement | Dict[str, Any]
+
+
 def apply_filters(
     state: QueryState, query: ClauseElement, in_join: bool
 ) -> ClauseElement:
-    for filter_clause in state.filter:
+    for filter_clause in cast(List[FilterClause], state.filter):
         if isinstance(filter_clause, dict):
             for filter_col, filter_value in filter_clause.items():
                 if "__" in filter_col:
@@ -91,7 +94,7 @@ def apply_excludes(
     state: QueryState, query: ClauseElement, in_join: bool
 ) -> ClauseElement:
     # pylint: disable=too-many-nested-blocks
-    for exclude_clause in state.exclude:
+    for exclude_clause in cast(List[FilterClause], state.exclude):
         if isinstance(exclude_clause, dict):
             for filter_col, filter_value in exclude_clause.items():
                 if "__" in filter_col:

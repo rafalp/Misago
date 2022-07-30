@@ -1,9 +1,10 @@
 import pytest
+import pytest_asyncio
 
 from ..categories.models import Category
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def categories(db):
     top_category = await Category.create(name="Category", left=3, right=6)
     child_category = await Category.create(

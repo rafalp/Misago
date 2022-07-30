@@ -162,7 +162,7 @@ def is_admin_validator(context: Context, user: User):
     async def validate_is_admin(is_admin: bool, errors, field_name):
         context_user = cast(User, context["user"])
         if is_admin is False and user.id == context_user.id:
-            raise UserRemoveOwnAdminError(user_id=user.id)
+            raise UserRemoveOwnAdminError()
 
         return is_admin
 
