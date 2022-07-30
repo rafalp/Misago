@@ -1,15 +1,4 @@
 from .database import database
 from .fetchall import fetch_all_assoc
-from .models_old import Model, model_registry, register_model
-from .objectmapper import ObjectMapper, ObjectMapperBase, ObjectMapperQuery
 
-__all__ = [
-    "Model",
-    "database",
-    "fetch_all_assoc",
-    "model_registry",
-    "register_model",
-    "ObjectMapper",
-    "ObjectMapperBase",
-    "ObjectMapperQuery",
-]
+__all__ = ["database", "fetch_all_assoc"]

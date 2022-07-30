@@ -57,8 +57,8 @@ async def get_groups_permissions_action(
     categories_perms_query = await categories_permissions_query.filter(
         group_id__in=state["groups_ids"]
     ).all("category_id", "permission")
-    for row in categories_perms_query:
-        categories_perms[row["category_id"]].add(row["permission"])
+    for category_id, permission in categories_perms_query:
+        categories_perms[category_id].add(permission)
 
     for category in state["categories"]:
         # Skip categories with parent we can't read
