@@ -1,6 +1,6 @@
 # Misago Developer Documentation
 
-## Using database
+## [Using database](db/index.md)
 
 Guides for using database, migrations and imperative ORM.
 
