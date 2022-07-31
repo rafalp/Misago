@@ -219,16 +219,15 @@ class Report(Model):
 We can now insert new instance of `Report` to database like this:
 
 ```python
-async def example_function():
-    r = await Report.create(
-        message="Bad user!",
-        url="http://misago-project.org/t/bad-thread-2137",
-    )
+r = await Report.create(
+    message="Bad user!",
+    url="http://misago-project.org/t/bad-thread-2137",
+)
 
-    r.id  # Report's ID has been populated from database!
+r.id  # Report's ID has been populated from database!
 
-    report_from_db = await Report.query.one(id=r.id)
-    assert report_from_db == r  # Report was saved to database successfully
+report_from_db = await Report.query.one(id=r.id)
+assert report_from_db == r  # Report was saved to database successfully
 ```
 
 
@@ -237,10 +236,9 @@ async def example_function():
 To update model in the database, you can run update query:
 
 ```python
-async def update_report(r: Report):
-    await Report.query.filter(id=r.id).update(
-        message="New message value"
-    )
+await Report.query.filter(id=r.id).update(
+    message="New message value"
+)
 ```
 
 But we would like to be able to update `Report` instances we are working with in the code. To achieve that we can define `update` method that will take fields to update, compare their values against current ones and update the model in database and return updated instance:
@@ -316,10 +314,9 @@ class Report(Model):
 Now if we update our model, only values that really changed will be saved to database, and instead of mutating our instance we will get completely new one. We are avoiding unexpected side effects from state mutability or overwriting fields that are already updated by other users:
 
 ```python
-async def update_report(r: Report):
-    updated_report = await Report.update(
-        message="New message value"
-    )
+updated_report = await Report.update(
+    message="New message value"
+)
 ```
 
 `self.diff` is little handy utility that compares it's kwargs against attributes on model and returns dict with difference. This reduces amount of boilerplace. It also skips attributes where new value wouldd be `None`.
@@ -511,6 +508,92 @@ class Report(Model):
 
 ## Handling relations
 
+If `reports` table contains foreign key to `users` table, we can represent this foreign key as a field on our model:
+
+```python
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, Optional
+
+from misago.database.models import Model, register_model
+from misago.utils import timezone
+
+from myplugin.tables import reports
+
+
+@register_model(reports)
+@dataclass
+class Report(Model):
+    message: str
+    url: str
+    user_id: Optional[int]
+    created_at: datetime
+    updated_at: datetime
+    is_closed: bool
+
+    @classmethod
+    async def create(
+        cls,
+        message: str,
+        url: str,
+        user_id: Optional[int],
+        created_at: Optional[datetime],
+        updated_at: Optional[datetime],
+        is_closed: bool = False,
+    ) -> "Report":
+        now = timezone.now()
+
+        return await cls.query.insert(
+            message=message,
+            url=url,
+            user_id=user_id,
+            created_at=created_at or now,
+            updated_at=updated_at or created_at or now,
+            is_closed=is_closed,
+        )
+
+    async def update(
+        self,
+        *,
+        message: Optional[str] = None,
+        url: Optional[str] = None,
+        user_id=user_id,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+        is_closed: Optional[bool] = None,
+    ) -> "Report":
+        # Compare new values to current state
+        changes: Dict[str, Any] = self.diff(
+            message=message,
+            url=url,
+            user_id=user_id,
+            created_at=created_at,
+            updated_at=updated_at,
+            is_closed=is_closed,
+        )
+
+        if not changes:
+            return self  # No changes to make in database
+        
+        # Manually update `updated_at` value
+        if "updated_at" not in changes:
+            changes["updated_at"] = timezone.now()
+
+        await self.query.filter(id=self.id).update(**changes)
+        return self.replace(**changes)
+
+    async def delete(self):
+        await self.query.filter(id=self.id).delete()
+```
+
+The ORM doesn't provide any way to embed related objects on models or access them out of the box. If you need to pull reports together with users, you'll have to do it explicitly:
+
+```python
+for report, user in await Report.query.join_on("user_id").all():
+    # report will be `Report` model instance and `user` will be `User` model instance
+    assert report.user_id == user.id
+```
+
 
 ## Registry
 
@@ -542,4 +625,4 @@ The truth to how web apps like Misago use database is that 99% of its queries ar
 
 So I've decided to create simple ORM that addresses those 99% of cases and lets me fall-back to raw queries or SQL Alchemy expressions for remaining 1% so I can be merry on my mission to implement internet forum software and not universal async ORM for Python alike to SQL Alchemy or Django.
 
-Once async ORMs mature, I will be happy to re-investigate them and set on work to move Misago from custom solution to one of those. But as of mid 2022 we are still not there yet.
+Once async ORMs mature, I will be happy to re-investigate them and set on work to move Misago from custom solution to one of those. But as of mid 2022 we are not there yet.
