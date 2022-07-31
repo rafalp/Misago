@@ -165,7 +165,7 @@ users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
 In situations when you want to walk over large number of results from the database (eg. to process them in celery task), you can slice query into smaller batches to reduce memory usage at expense of longer iteration time:
 
 ```python
-from misago.users.threads import Thread
+from misago.threads.models import Thread
 
 async for thread in Thread.query.batch():
     ...
@@ -174,7 +174,7 @@ async for thread in Thread.query.batch():
 By default objects are pulled in batches of 20. This value can be set through `step_size` option:
 
 ```python
-from misago.users.threads import Thread
+from misago.threads.models import Thread
 
 async for thread in Thread.query.batch(step_size=50):
     ...
@@ -183,7 +183,7 @@ async for thread in Thread.query.batch(step_size=50):
 By default objects are ordered by `id` column in descending order, so most recent objects are returned first. To change column or order use `cursor_column` and `descending` options:
 
 ```python
-from misago.users.threads import Thread
+from misago.threads.models import Thread
 
 # Threads will now be returned in ascending order
 async for thread in Thread.query.batch(descending=False):
@@ -199,7 +199,7 @@ async for thread in Thread.query.batch(cursor_column="last_post_id"):
 You can also limit results to selected columns, but you need to make sure that list of columns includes cursor column. Results are then returned as named tuples:
 
 ```python
-from misago.users.threads import Thread
+from misago.threads.models import Thread
 
 # Threads will now be returned in ascending order
 async for thread in Thread.query.batch("id", "title"):
@@ -212,7 +212,7 @@ async for thread in Thread.query.batch("id", "title"):
 `batch_flat` does what `all_flat` does, but in batches:
 
 ```python
-from misago.users.threads import Thread
+from misago.threads.models import Thread
 
 # Threads will now be returned in ascending order
 async for thread_title in Thread.query.batch_flat("title"):
@@ -223,6 +223,32 @@ async for thread_title in Thread.query.batch_flat("title"):
 
 
 ### Joins
+
+If model's table specifies foreign keys, you can include related objects in query results with `join_on`. Result for query with joins is list of tuples of individual objects:
+
+```python
+from misago.threads.models import Thread
+
+async for thread, starter in Thread.query.join_on("starter_id"):
+    print(thread)  # <Thread(...)>
+    print(starter)  # <User(...)> or None
+```
+
+To follow deep relations, separate join steps with dot (`.`):
+
+```python
+from misago.threads.models import Thread
+
+async for thread, starter in Thread.query.join_on("first_post_id.poster_id"):
+    print(thread)  # <Thread(...)>
+    print(starter)  # <User(...)> or None
+
+
+async for thread, starter, post in Thread.query.join_on("first_post_id.poster_id", "first_post_id"):
+    print(thread)  # <Thread(...)>
+    print(starter)  # <User(...)> or None
+    print(post)  # <Post(...)> or None
+```
 
 
 ### Ordering results
@@ -296,7 +322,7 @@ This is useful in utilities transforming queries.
 
 ### Making results distinct
 
-Combine `all()` with `distinct()` to make results distinct:
+Combine `all` or `batch` with `distinct()` to make results distinct:
 
 ```python
 from misago.threads.models import Thread
