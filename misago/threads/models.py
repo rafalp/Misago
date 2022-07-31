@@ -138,7 +138,7 @@ class Thread(Model):
         changes: Dict[str, Any] = self.diff(
             category_id=category.id if category else None,
             title=title,
-            slug=slugify(title),
+            slug=slugify(title) if title else None,
             started_at=started_at,
             last_posted_at=last_posted_at,
             is_closed=is_closed,

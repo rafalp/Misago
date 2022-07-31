@@ -349,17 +349,17 @@ async def update(
     *,
     message: Optional[str] = None,
     user_id: Optional[int] = None,
-    clear_user_id: Optional[bool] = False,
+    user_id_clear: Optional[bool] = False,
 ):
-    if clear_user_id and user_id is not None:
-        raise ValueError("'clear_user_id' and 'user_id' can't be combined!")
+    if user_id_clear and user_id is not None:
+        raise ValueError("'user_id_clear' and 'user_id' can't be combined!")
 
     changes: Dict[str, Any] = self.diff(
         message=message,
         user_id=user_id,
     )
 
-    if clear_user_id and self.user_id:
+    if user_id_clear and self.user_id:
         changes["user_id"] = None  # Explicit unset user_id
 
     if not changes:
@@ -370,7 +370,47 @@ async def update(
 ```
 
 
-### Increments
+### Increments/decrements
+
+You could handle increments and decrements in Python, but this will introduce race condition to the app:
+
+```python
+await thread.update(replies=thread.replies + 1)
+```
+
+Recommended solution is adding `increment_value` option to `update`:
+```python
+async def update(
+    self,
+    *,
+    message: Optional[str] = None,
+    replies: Optional[int] = None,
+    replies_increment: Optional[bool] = False,
+):
+    if replies_increment and replies is not None:
+        raise ValueError("'replies_increment' and 'replies' can't be combined!")
+
+    changes: Dict[str, Any] = self.diff(
+        message=message,
+        replies=replies,
+    )
+
+    if increment_replies:
+        # Use SQL Alchemy expression to increment replies in DB
+        changes["replies"] = MyModel.table.c.replies + 1
+
+    if not changes:
+        return self  # No changes to make in database
+
+    await self.query.filter(id=self.id).update(**changes)
+
+    if increment_replies:
+        # Provide optimistic value back to Python logic
+        # Good for triggering UI updates that don't need 100% accuracy
+        changes["replies"] = self.replies + 1
+
+    return self.replace(**changes)
+```
 
 
 ## Deleting instance
