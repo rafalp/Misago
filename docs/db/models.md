@@ -7,6 +7,20 @@ After defining new database table in `tables` module in your plugin or Misago it
 - It makes it easier to query underlying database table.
 
 
+## Table of contents
+
+- [Basic model](#basic-model)
+- [Model initialization](#model initialization)
+- [Creating new instances in database](#creating-new-instances-in-database)
+- [Updating instance](#updating-instance)
+  - [`None` and nullable fields](#none-and-nullable-fields)
+  - [Increments/decrements](#increments-and-decrements)
+- [Deleting instance](#deleting-instance)
+- [Handling relations](#handling-relations)
+- [Registry](#registry)
+- [Message from creator](#message-from-creator)
+
+
 ## Basic model
 
 Misago provides `Model` base class that implements minimal contract for models:
@@ -370,7 +384,7 @@ async def update(
 ```
 
 
-### Increments/decrements
+### Increments and decrements
 
 You could handle increments and decrements in Python, but this will introduce race condition to the app:
 
