@@ -5,6 +5,7 @@
 - [Querying models](#querying-models)
 - [Select](#select)
 - [Insert](#insert)
+  - [Bulk insert](#bulk-insert)
 - [Update](#update)
 - [Delete](#delete)
 - [Lookups](#lookups)
@@ -297,6 +298,9 @@ new_thread = await Thread.query.insert(title="Thread title!", slug="thread-title
 ```
 
 `insert()` returns new model instance with attributes having values from `insert` arguments. This instance will also have its `id` attribute set to value returned by the database.
+
+
+### Bulk insert
 
 To bulk insert values pass list of dicts to `insert_bulk`:
 
