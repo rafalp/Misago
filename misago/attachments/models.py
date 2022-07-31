@@ -5,7 +5,7 @@ from ..database.models import Model, register_model
 from ..tables import attachment_types
 
 
-@register_model("AttachmentType", attachment_types)
+@register_model(attachment_types)
 @dataclass
 class AttachmentType(Model):
     id: int

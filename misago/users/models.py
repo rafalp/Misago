@@ -17,7 +17,7 @@ from .aclkey import create_acl_key
 from .email import get_email_hash, normalize_email
 
 
-@register_model("User", users)
+@register_model(users)
 @dataclass
 class User(Model):
     id: int
@@ -242,7 +242,7 @@ class User(Model):
         return [cast("UserGroup", main_group)] + secondary_groups
 
 
-@register_model("UserGroup", user_groups)
+@register_model(user_groups)
 @dataclass
 class UserGroup(Model):
     id: int

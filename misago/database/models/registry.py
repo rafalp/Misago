@@ -1,4 +1,4 @@
-from typing import Dict, Type
+from typing import Dict, Optional, Type
 
 from sqlalchemy.sql import TableClause
 
@@ -39,8 +39,10 @@ class MapperRegistry:
 mapper_registry = MapperRegistry()
 
 
-def register_model(name: str, table: TableClause):
+def register_model(table: TableClause, name: Optional[str] = None):
     def register(model: Type[Model]):
+        name = name or Model.__name__
+
         mapper_registry.set_mapping(table, model)
         mapper_registry.set_model(name, model)
 
@@ -48,21 +50,21 @@ def register_model(name: str, table: TableClause):
         model.table = table
 
         if issubclass(model, Model):
-            create_model_exceptions(model, table)
+            create_model_exceptions(name, model, table)
 
         return model
 
     return register
 
 
-def create_model_exceptions(model: Type[Model], table: TableClause):
+def create_model_exceptions(name: str, model: Type[Model], table: TableClause):
     model.DoesNotExist = type(
-        f"{model.__name__}DoesNotExist",
+        f"{name}DoesNotExist",
         (DoesNotExist,),
         {},
     )
     model.MultipleObjectsReturned = type(
-        f"{model.__name__}MultipleObjectsReturned",
+        f"{name}MultipleObjectsReturned",
         (MultipleObjectsReturned,),
         {},
     )

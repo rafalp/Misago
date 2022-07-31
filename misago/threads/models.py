@@ -11,7 +11,7 @@ from ..utils import timezone
 from ..utils.strings import slugify
 
 
-@register_model("Thread", threads)
+@register_model(threads)
 @dataclass
 class Thread(Model):
     id: int
@@ -254,7 +254,7 @@ class Thread(Model):
         return Thread.query.filter(id=self.id).delete()
 
 
-@register_model("Post", posts)
+@register_model(posts)
 @dataclass
 class Post(Model):
     id: int

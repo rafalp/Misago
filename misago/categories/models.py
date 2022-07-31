@@ -15,7 +15,7 @@ class CategoryType(enum.IntEnum):
     PRIVATE_THREADS = 2
 
 
-@register_model("Category", categories)
+@register_model(categories)
 @dataclass
 class Category(Model):
     id: int
