@@ -89,7 +89,7 @@ users_ids = await User.query.all_flat("id")  # [1, 3, 4, 5...]
 ```
 
 
-### Makings results distinct
+### Making results distinct
 
 Combine `all()` with `distinct()` to make results distinct:
 
@@ -98,6 +98,75 @@ from misago.threads.models import Thread
 
 categories_with_threads = await Thread.query.distinct().all_flat("category_id")
 ```
+
+
+### Ordering results
+
+To make select query ordered, call `order_by` on query with one or more column names:
+
+```python
+from misago.users.models import User
+
+users_sorted_by_name = await User.query.order_by("name").all()
+```
+
+To reverse the order, prefix column name with minus:
+
+```python
+from misago.users.models import User
+
+users_sorted_by_name = await User.query.order_by("-name").all()
+```
+
+To order by multiple columns, specify them one after another:
+
+```python
+from misago.threads.models import Thread
+
+threads_sorted_by_title = await Thread.query.order_by("title", "id").all()
+```
+
+
+### Limiting results
+
+To limit number of query results, call `limit` with `int` as only argument:
+
+```python
+from misago.users.models import User
+
+five_oldest_users = await User.query.order_by("id").limit(5).all()
+```
+
+To remove limit from query, call `limit` without arguments:
+
+```python
+from misago.users.models import User
+
+all_oldest_users = await User.query.order_by("id").limit(5).limit().all()
+```
+
+This is useful in utilities transforming queries.
+
+
+### Offset results
+
+To offset results (eg. for offset pagination), call `offset` with `int` as only argument:
+
+```python
+from misago.users.models import User
+
+next_oldest_users = await User.query.order_by("id").offset(5).all()
+```
+
+To remove offset from query, call `offset` without arguments:
+
+```python
+from misago.users.models import User
+
+all_oldest_users = await User.query.order_by("id").offset(5).offset().all()
+```
+
+This is useful in utilities transforming queries.
 
 
 ## Insert
