@@ -594,6 +594,16 @@ for report, user in await Report.query.join_on("user_id").all():
     assert report.user_id == user.id
 ```
 
+To implement delete cascades you can set `on_delete` option on SQL Alchemy foreign keys.
+
+You can also put extra logic for handling related objects to the `create`, `update` and `delete` methods. For example `delete` method on the `User` model can delete avatar files before deleting user from database:
+
+```python
+async def delete(self):
+    await delete_avatar_files(self)
+    await self.query.filter(id=self.id).delete()
+```
+
 
 ## Registry
 
