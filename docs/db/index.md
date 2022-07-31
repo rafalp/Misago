@@ -29,10 +29,6 @@ Further reading:
 
 [Alembic](https://alembic.sqlalchemy.org/en/latest/) is used for database migrations with [pyscopg2](https://www.psycopg.org/docs/) as backend.
 
-> **Note for Django devs**: Unlike Django which generates Migrations by diffing models with existing migrations, Alembic diffs tables to state of database running latest migrations instead.
->
-> All existing migrations need to be applied on database before new migration may be generated.
-
 To learn how to create migrations [see this reference](migrations.md).
 
 To run migrations, use `migrate` command from Misago's command line interface:
