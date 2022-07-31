@@ -10,11 +10,11 @@ After defining new database table in `tables` module in your plugin or Misago it
 ## Table of contents
 
 - [Basic model](#basic-model)
-- [Model initialization](#model initialization)
+- [Model initialization](#model-initialization)
 - [Creating new instances in database](#creating-new-instances-in-database)
 - [Updating instance](#updating-instance)
   - [`None` and nullable fields](#none-and-nullable-fields)
-  - [Increments/decrements](#increments-and-decrements)
+  - [Increments and decrements](#increments-and-decrements)
 - [Deleting instance](#deleting-instance)
 - [Handling relations](#handling-relations)
 - [Registry](#registry)
