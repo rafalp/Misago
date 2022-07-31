@@ -13,11 +13,11 @@
   - [Selecting list of all results in batches](#selecting-list-of-all-results-in-batches)
   - [Selecting column values in batches](#selecting-column-values-in-batches)
   - [Joins](#joins)
-  - [Using selects in subqueries](#using-selects-in-subqueries)
-  - [Making results distinct](#making-results-distinct)
   - [Ordering results](#ordering-results)
   - [Limiting results](#limiting-results)
   - [Offset results](#offset-results)
+  - [Making results distinct](#making-results-distinct)
+  - [Using selects in subqueries](#using-selects-in-subqueries)
 - [Insert](#insert)
   - [Bulk insert](#bulk-insert)
 - [Update](#update)
@@ -225,20 +225,6 @@ async for thread_title in Thread.query.batch_flat("title"):
 ### Joins
 
 
-### Using selects in subqueries
-
-
-### Making results distinct
-
-Combine `all()` with `distinct()` to make results distinct:
-
-```python
-from misago.threads.models import Thread
-
-categories_with_threads = await Thread.query.distinct().all_flat("category_id")
-```
-
-
 ### Ordering results
 
 To make select query ordered, call `order_by` on query with one or more column names:
@@ -306,6 +292,20 @@ all_oldest_users = await User.query.order_by("id").offset(5).offset().all()
 ```
 
 This is useful in utilities transforming queries.
+
+
+### Making results distinct
+
+Combine `all()` with `distinct()` to make results distinct:
+
+```python
+from misago.threads.models import Thread
+
+categories_with_threads = await Thread.query.distinct().all_flat("category_id")
+```
+
+
+### Using selects in subqueries
 
 
 ## Insert
